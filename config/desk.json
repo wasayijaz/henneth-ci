@@ -1,0 +1,35 @@
+{
+  "capital_pkr": 1000000,
+  "_capital_note": "EDIT ME — placeholder. Set real trading capital so sizing is in rupees.",
+  "risk": {
+    "max_positions": 4,
+    "max_pct_per_trade": 8,
+    "max_total_exposure_pct": 20,
+    "max_same_sector_positions": 1,
+    "circuit_breaker_stops": 2,
+    "circuit_breaker_window_sessions": 5,
+    "circuit_breaker_cooldown_sessions": 3,
+    "min_avg_daily_traded_value_pkr": 30000000
+  },
+  "universe": {
+    "kse100_top_n": 50,
+    "include_kmi30": true,
+    "refresh_days": 7
+  },
+  "backtest": {
+    "min_hit_rate": 0.55,
+    "min_net_expectancy_pct": 0.5,
+    "friction_pct": 0.6,
+    "min_trades": 8,
+    "history_years": 3
+  },
+  "alerts": {
+    "telegram_bot_token": "",
+    "telegram_chat_id": "",
+    "_note": "Create bot via @BotFather on Telegram, paste token + your chat id. Empty = alerts logged to state/alerts.json only."
+  },
+  "market_hours_pkt": {
+    "mon_thu": ["09:32", "15:30"],
+    "fri": ["09:17", "16:30"]
+  }
+}

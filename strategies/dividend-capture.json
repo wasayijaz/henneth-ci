@@ -1,0 +1,8 @@
+{
+  "name": "Dividend capture",
+  "pattern": null,
+  "backtestable": false,
+  "description": "Buy before book closure where historical ex-date drop < 70% of dividend. Requires state/dividends.json (agent-maintained, auditor-verified). Not price-pattern backtestable; validated per-event by the Strategist using historical ex-date behavior, and vetoed by Auditor if dates/amounts don't match announcements.",
+  "max_drop_vs_dividend": 0.7,
+  "buy_days_before_closure": 3
+}
