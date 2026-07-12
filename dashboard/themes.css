@@ -45,7 +45,7 @@ h2{margin-bottom:2px}
 body[data-theme=gemini]{
   --gap:10px;
   --bg:#f4f4f0;--panel:#ffffff;--panel2:#faf9f4;
-  --ink1:#0a0a0a;--ink2:#565650;--ink3:#8a8a80;--line:#111111;--line2:#e7e6df;--surf:#f6f5f0;--hair:#d9d9d2;
+  --ink1:#0a0a0a;--ink2:#4a4a44;--ink3:#6b6b63;--line:#111111;--line2:#e7e6df;--surf:#f6f5f0;--hair:#d9d9d2;
   --up:#0b7a5f;--dn:#be4126;--accent:#0a0a0a;
   --font-body:"JetBrains Mono",ui-monospace,"Cascadia Mono",monospace;
   --font-head:"JetBrains Mono",monospace;
@@ -76,7 +76,7 @@ body[data-theme=gemini] .two-col{gap:var(--gap)}
 body[data-theme=gemini] .cards>*{margin-bottom:var(--gap)}
 body[data-theme=gemini] .card.clickable:hover{background:var(--panel2)}
 body[data-theme=gemini] h2{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-body[data-theme=gemini] .sub{font-size:11px;color:var(--ink2);line-height:1.45}
+body[data-theme=gemini] .sub{font-size:11px;color:var(--ink2);opacity:1;line-height:1.45}
 body[data-theme=gemini] .cell{border:1px solid var(--hair);border-radius:0;padding:8px 9px;background:var(--panel2);transition:.1s}
 body[data-theme=gemini] .cell:hover{border-color:var(--line);background:var(--panel)}
 body[data-theme=gemini] .cell b{font-size:12px;font-weight:700}
@@ -93,7 +93,7 @@ body[data-theme=gemini] .ranges button.on{background:var(--ink1);color:#f4f4f0}
 body[data-theme=gemini] .tooltip{background:var(--ink1);color:#f4f4f0;border-radius:0;box-shadow:none;font-family:var(--font-body)}
 body[data-theme=gemini] .tk-head{padding:12px 12px 0}
 body[data-theme=gemini] .tk-head .sym{font-family:var(--font-pixel);font-size:36px;font-weight:700;letter-spacing:.02em}
-body[data-theme=gemini] .tk-head .px{font-family:var(--font-pixel);font-size:30px;font-weight:400}
+body[data-theme=gemini] .tk-head .px{font-family:var(--font-body);font-size:30px;font-weight:700}
 body[data-theme=gemini] .wire p{border-bottom:1px dotted var(--hair);padding:5px 0;font-size:11px}
 body[data-theme=gemini] .crumb{color:var(--ink2);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
 body[data-theme=gemini] .crumb:hover{color:var(--ink1)}
@@ -102,10 +102,50 @@ body[data-theme=gemini] .stat{background:var(--panel);padding:9px 11px}
 body[data-theme=gemini] .stat span{font-size:9.5px;letter-spacing:.05em;color:var(--ink3)}
 body[data-theme=gemini] .stat b{font-size:15px}
 /* key-facts grid */
-body[data-theme=gemini] .facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;border:1px solid var(--line);background:var(--hair);border-radius:0;overflow:hidden}
+body[data-theme=gemini] .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;border:1px solid var(--line);background:var(--hair);border-radius:0;overflow:hidden}
 body[data-theme=gemini] .fact{padding:9px 11px;border:none;background:var(--panel)}
 body[data-theme=gemini] .fact span{display:block;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
 body[data-theme=gemini] .fact b{font-size:14px;font-weight:700}
+/* value screen — expandable four-model working */
+body[data-theme=gemini] .fvrow .fvcaret{display:inline-block;color:var(--ink3);font-size:10px;transition:transform .15s ease;margin-left:2px}
+body[data-theme=gemini] .fvrow.exp .fvcaret{transform:rotate(90deg);color:var(--ink1)}
+body[data-theme=gemini] .fvdetail{display:none}
+body[data-theme=gemini] .fvdetail.open{display:table-row}
+body[data-theme=gemini] .fvdetail>td{padding:0;border-bottom:1.5px solid var(--line)}
+body[data-theme=gemini] .fvwork{padding:12px 14px;background:var(--panel2);animation:fadeIn .2s both}
+body[data-theme=gemini] .fvhdr{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:10px}
+body[data-theme=gemini] .fvmethods{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:10px}
+body[data-theme=gemini] .fvm{background:var(--panel);padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+body[data-theme=gemini] .fvm span{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .fvm b{font-size:15px;font-weight:700}
+body[data-theme=gemini] .fvm i{font-size:11px;font-style:normal;font-weight:600}
+body[data-theme=gemini] .fvline{font-size:11.5px;color:var(--ink2);padding:3px 0;border-top:1px dotted var(--hair)}
+body[data-theme=gemini] .fvline span{display:inline-block;min-width:110px;text-transform:uppercase;font-size:9px;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .fvnote{font-size:11.5px;line-height:1.55;color:var(--ink2);margin-top:10px}
+body[data-theme=gemini] .fvnote a{color:var(--ink1);text-decoration:underline}
+/* educational / risk layer on the ticker page */
+body[data-theme=gemini] .disclaimer{border:1.5px solid var(--line);border-left:4px solid var(--dn);background:var(--panel);padding:9px 13px;font-size:11px;line-height:1.5;color:var(--ink2);margin:8px 0 12px}
+body[data-theme=gemini] .prov{font-size:10px;color:var(--ink3);letter-spacing:.02em;margin:8px 0 2px;line-height:1.5}
+body[data-theme=gemini] .flaghdr{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;padding-bottom:7px;margin-bottom:6px;border-bottom:1.5px solid var(--line)}
+body[data-theme=gemini] .flaghdr.up{color:var(--up)}
+body[data-theme=gemini] .flaghdr.dn{color:var(--dn)}
+body[data-theme=gemini] .flag{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;padding:6px 0;border-bottom:1px dotted var(--hair)}
+body[data-theme=gemini] .flag span{font-size:9px;line-height:1.7;flex:none}
+body[data-theme=gemini] .flag.pro span{color:var(--up)}
+body[data-theme=gemini] .flag.con span{color:var(--dn)}
+body[data-theme=gemini] .checklist{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair)}
+body[data-theme=gemini] .qrow{display:flex;gap:10px;align-items:flex-start;background:var(--panel);padding:11px 13px}
+body[data-theme=gemini] .qrow>div:last-child b{font-size:12.5px;display:block;margin-bottom:3px}
+body[data-theme=gemini] .qmark{flex:none;width:20px;height:20px;border-radius:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;border:1.5px solid var(--line)}
+body[data-theme=gemini] .qmark.ok{background:var(--up);border-color:var(--up)}
+body[data-theme=gemini] .qmark.warn{background:var(--dn);border-color:var(--dn)}
+body[data-theme=gemini] .qmark.info{background:var(--panel);color:var(--ink2)}
+body[data-theme=gemini] .risktbl td{padding:9px 8px;border-bottom:1px dotted var(--hair);font-size:12px;vertical-align:top}
+body[data-theme=gemini] .rlvl{display:inline-block;padding:1px 7px;border:1.5px solid var(--line);border-radius:0;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+body[data-theme=gemini] .rlvl.hi{background:var(--dn);color:#fff;border-color:var(--dn)}
+body[data-theme=gemini] .rlvl.md{background:transparent;color:var(--ink1)}
+body[data-theme=gemini] .rlvl.lo{background:var(--up);color:#fff;border-color:var(--up)}
+@media(max-width:720px){body[data-theme=gemini] .checklist{grid-template-columns:1fr}}
 /* timing banner */
 body[data-theme=gemini] .timing{display:flex;gap:0;border:1.5px solid var(--line);border-radius:0;overflow:hidden;margin-bottom:12px}
 body[data-theme=gemini] .timing>div{flex:1;padding:12px 14px;border-right:1px solid var(--hair)}
@@ -119,7 +159,11 @@ body[data-theme=gemini] main>.seg:first-child{margin-top:2px}
 body[data-theme=gemini] .seg h2{white-space:nowrap}
 body[data-theme=gemini] .seg .ln{flex:1;height:1.5px;background:var(--line)}
 /* global markets ticker tape (terminal) */
-body[data-theme=gemini] .gstrip{display:flex;gap:0;overflow-x:auto;border:1.5px solid var(--line);border-radius:0;margin-bottom:12px;background:var(--ink1)}
+body[data-theme=gemini] .gstrip{display:flex;gap:0;overflow:hidden;border:1.5px solid var(--line);border-radius:0;margin-bottom:12px;background:var(--ink1)}
+body[data-theme=gemini] .gstrip .gtrack{display:flex;gap:0;flex:none;width:max-content;animation:marquee 60s linear infinite;will-change:transform}
+body[data-theme=gemini] .gstrip:hover .gtrack{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){body[data-theme=gemini] .gstrip{overflow-x:auto}body[data-theme=gemini] .gstrip .gtrack{animation:none;width:auto}}
 body[data-theme=gemini] .gstrip .gitem{flex-direction:row;align-items:baseline;gap:6px;padding:6px 14px;border-right:1px solid #333;white-space:nowrap;min-width:auto}
 body[data-theme=gemini] .gstrip .gitem span{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#c9c9c2;order:0}
 body[data-theme=gemini] .gstrip .gitem b{font-size:11px;font-weight:700;color:#f4f4f0}

@@ -16,7 +16,7 @@ STEPS = [
     "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
     "snapshot.py", "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
-    "build_dashboard.py",
+    "build_dashboard.py", "preflight.py",
 ]
 # steps allowed to exit non-zero without aborting the run
 ADVISORY = {"tv_crosscheck.py"}

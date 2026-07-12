@@ -2,9 +2,14 @@
 board always has fresh regime / movers / news / signals without depending on an LLM.
 The orchestrator may still enrich agent_wire; this guarantees the core is populated.
 Run at the end of every cycle (after data + agents)."""
+import subprocess
+import sys
 import time
+from pathlib import Path
 
 from psx_data import STATE, load_json, save_json
+
+SCRIPTS = Path(__file__).resolve().parent
 
 
 def main():
@@ -47,6 +52,16 @@ def main():
     save_json(STATE / "dashboard.json", dash)
     print(f"dashboard: regime={dash['regime']} geo={dash['geo_risk']} "
           f"movers={len(top)}/{len(bottom)} news={len(dash['news'])}")
+
+    # PRE-DEPLOY GATE — this is the last step the CI pipeline runs before it copies
+    # state/ into the published site (workflow runs it under `set -e`). preflight
+    # trips only on STRUCTURAL corruption (empty quant, missing joined fields, NaN),
+    # not on network-degraded-but-valid data, so a bad cycle aborts the job and the
+    # last-good live site stays up instead of publishing a blank/broken board.
+    gate = subprocess.run([sys.executable, str(SCRIPTS / "preflight.py")])
+    if gate.returncode != 0:
+        print("build_dashboard: PREFLIGHT FAILED — aborting so the broken board is NOT published")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

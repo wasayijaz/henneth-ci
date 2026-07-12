@@ -13,16 +13,37 @@ const fmt = (v, d = 2) => v == null ? "—" : Number(v).toLocaleString("en", { m
 const LOCAL = ["localhost", "127.0.0.1", ""].includes(location.hostname);
 const DATA_BASE = LOCAL ? "../state/" : "state/";
 
+// Some browser extensions (ad/anti-fraud blockers) monkey-patch window.fetch and
+// throw "TypeError: Failed to fetch" on same-origin requests unrelated to ads —
+// seen in the wild breaking every state/*.json load. XHR isn't patched by those
+// extensions, so it's the fallback when fetch itself throws (not just a bad response).
+function xhrJson(url) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest();
+    x.open("GET", url, true);
+    x.onload = () => { if (x.status >= 200 && x.status < 300) { try { resolve(JSON.parse(x.responseText)); } catch (e) { reject(e); } } else reject(new Error("HTTP " + x.status)); };
+    x.onerror = () => reject(new Error("xhr network error"));
+    x.send();
+  });
+}
+
 const cache = {};
 async function j(p, ttl = 25000) {
   const now = Date.now();
   if (cache[p] && now - cache[p].t < ttl) return cache[p].v;
-  try {
-    const r = await fetch(DATA_BASE + p + "?t=" + now);
-    const v = r.ok ? await r.json() : null;
-    cache[p] = { t: now, v };
-    return v;
-  } catch { return null; }
+  // several attempts across two transports; never cache a failure (a transient miss
+  // must not blank the page for 25s) — falls back to last-known-good if all fail.
+  const url = () => DATA_BASE + p + "?t=" + Date.now();
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const v = attempt < 2 ? await fetch(url()).then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
+        : await xhrJson(url()); // last attempt: bypass a fetch() an extension may have broken
+      cache[p] = { t: Date.now(), v };
+      return v;
+    } catch { /* fall through to retry */ }
+    if (attempt < 2) await new Promise(res => setTimeout(res, 300));
+  }
+  return cache[p]?.v ?? null; // serve last-known-good if we ever had it
 }
 
 /* ---------- header chips ---------- */
@@ -165,7 +186,8 @@ function globalStrip(gl) {
     return `<div class="gitem" title="${esc(v.psx_read)}"><span>${esc(v.label)}</span>
       <b class="num">${fmt(v.price)}</b><i class="num ${cls(v.chg_1d_pct)}">${sgn(v.chg_1d_pct)}%</i></div>`;
   }).join("");
-  return items ? `<div class="gstrip clickable" onclick="location.hash='#/macro'">${items}</div>` : "";
+  // duplicate the item run so the marquee loops seamlessly (translateX -50% wraps clean)
+  return items ? `<div class="gstrip clickable" onclick="location.hash='#/macro'"><div class="gtrack">${items}${items}</div></div>` : "";
 }
 
 async function pageBoard() {
@@ -211,24 +233,23 @@ async function pageBoard() {
   const aw = dash?.agent_wire || [];
   const op = pos?.open || [];
 
+  const posCard = `<div class="card"><h2>Positions</h2><div class="sub"></div>${op.length ? `<table><thead><tr><th>Ticker</th><th class="r">Entry</th><th class="r">Last</th><th class="r">P/L</th><th>Status</th></tr></thead><tbody>${
+      op.map(p => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(p.ticker)}'"><td><b>${esc(p.ticker)}</b></td><td class="r num">${p.entry}</td><td class="r num">${p.last_price ?? "—"}</td><td class="r num ${cls(p.unrealized_pct || 0)}">${p.unrealized_pct != null ? sgn(p.unrealized_pct) + "%" : "—"}</td><td>${esc(p.status || "HOLD")}</td></tr>`).join("")}</tbody></table>` : '<div class="empty">Flat — no open positions.</div>'}</div>`;
+  const provenCard = `<div class="card"><h2>Proven strategies</h2><div class="sub">cleared backtest + out-of-sample bars · click through</div>
+      <table><thead><tr><th>Ticker</th><th>Template</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
+      sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.template)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
+  const universeCard = `<div class="card"><h2>Universe</h2><div class="sub">day move · click any name</div><div class="heat">${heat}</div></div>`;
+  const predCard = `<div class="card"><h2>Predictability</h2><div class="sub"></div><table><thead><tr><th>Ticker</th><th class="r">Score</th><th class="r">RSI</th><th class="r">20d</th></tr></thead><tbody>${
+      pt.map(([s, v]) => `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b></td><td class="r num">${v.score}</td><td class="r num">${q[s]?.rsi14 ?? "—"}</td><td class="r num ${cls(q[s]?.ret_20d || 0)}">${q[s] ? sgn(q[s].ret_20d) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`;
+  const newsCard = `<div class="card"><h2>News wire</h2><div class="sub"><a href="#/news">full wire →</a></div><div class="wire">${
+      nn.length ? nn.map(n => `<p><span class="tag">${n.impact ?? ""}</span> <span class="t">${esc((n.ts || "").slice(5, 16))}</span><b>${(n.tickers || []).join(", ")}</b> ${esc(n.headline || n.summary || "")}</p>`).join("") : '<div class="empty">Wire silent.</div>'}</div></div>`;
+  const agentCard = `<div class="card"><h2>Agent wire</h2><div class="sub">this cycle</div><div class="wire">${
+      aw.length ? aw.map(a => `<p><b style="color:var(--accent)">${esc(a.agent)}</b> ${esc(a.summary)}</p>`).join("") : '<div class="empty">No cycle run yet.</div>'}</div></div>`;
+
   $("view").innerHTML = `${globalStrip(gl)}<div class="grid-board">
-    <div class="cards">
-      ${sigHtml}${trigHtml}
-      <div class="card"><h2>Positions</h2><div class="sub"></div>${op.length ? `<table><thead><tr><th>Ticker</th><th class="r">Entry</th><th class="r">Last</th><th class="r">P/L</th><th>Status</th></tr></thead><tbody>${
-        op.map(p => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(p.ticker)}'"><td><b>${esc(p.ticker)}</b></td><td class="r num">${p.entry}</td><td class="r num">${p.last_price ?? "—"}</td><td class="r num ${cls(p.unrealized_pct || 0)}">${p.unrealized_pct != null ? sgn(p.unrealized_pct) + "%" : "—"}</td><td>${esc(p.status || "HOLD")}</td></tr>`).join("")}</tbody></table>` : '<div class="empty">Flat — no open positions.</div>'}</div>
-      <div class="card"><h2>Proven strategies</h2><div class="sub">cleared backtest + out-of-sample bars · click through</div>
-        <table><thead><tr><th>Ticker</th><th>Template</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
-        sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.template)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>
-    </div>
-    <div class="cards">
-      <div class="card"><h2>Universe</h2><div class="sub">day move · click any name</div><div class="heat">${heat}</div></div>
-      <div class="card"><h2>Predictability</h2><div class="sub"></div><table><thead><tr><th>Ticker</th><th class="r">Score</th><th class="r">RSI</th><th class="r">20d</th></tr></thead><tbody>${
-        pt.map(([s, v]) => `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b></td><td class="r num">${v.score}</td><td class="r num">${q[s]?.rsi14 ?? "—"}</td><td class="r num ${cls(q[s]?.ret_20d || 0)}">${q[s] ? sgn(q[s].ret_20d) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>
-      <div class="card"><h2>News wire</h2><div class="sub"><a href="#/news">full wire →</a></div><div class="wire">${
-        nn.length ? nn.map(n => `<p><span class="tag">${n.impact ?? ""}</span> <span class="t">${esc((n.ts || "").slice(5, 16))}</span><b>${(n.tickers || []).join(", ")}</b> ${esc(n.headline || n.summary || "")}</p>`).join("") : '<div class="empty">Wire silent.</div>'}</div></div>
-      <div class="card"><h2>Agent wire</h2><div class="sub">this cycle</div><div class="wire">${
-        aw.length ? aw.map(a => `<p><b style="color:var(--accent)">${esc(a.agent)}</b> ${esc(a.summary)}</p>`).join("") : '<div class="empty">No cycle run yet.</div>'}</div></div>
-    </div>
+    <div class="cards">${sigHtml}${trigHtml}${posCard}</div>
+    <div class="cards">${universeCard}${predCard}${provenCard}</div>
+    <div class="cards">${newsCard}${agentCard}</div>
   </div>`;
 }
 
@@ -239,18 +260,39 @@ async function pageValue() {
     .sort((a, b) => b.mispricing_pct - a.mispricing_pct);
   const under = rows.filter(r => r.verdict === "undervalued");
   const over = rows.filter(r => r.verdict === "overvalued").reverse();
+  const METHODS = { relative_pe: "Peer P/E", earnings_power: "Earnings power", graham: "Graham (revised)", ddm: "Dividend discount" };
+  const fvDetail = (r) => {
+    const m = r.methods || {};
+    const used = Object.entries(METHODS).filter(([k]) => m[k] != null);
+    const cells = used.map(([k, lbl]) => {
+      const val = m[k], pct = r.price ? Math.round((val / r.price - 1) * 1000) / 10 : 0;
+      return `<div class="fvm"><span>${lbl}</span><b class="num">${fmt(val)}</b><i class="num ${cls(pct)}">${sgn(pct)}%</i></div>`;
+    }).join("");
+    const vals = used.map(([k]) => fmt(m[k])).join(", ");
+    const dir = r.verdict === "undervalued" ? "below" : "above";
+    const mag = Math.abs(r.mispricing_pct);
+    return `<div class="fvwork">
+      <div class="fvhdr">How the fair value was built — four independent models, price vs each:</div>
+      <div class="fvmethods">${cells}</div>
+      <div class="fvline"><span>composite fair</span> median(${vals}) = <b class="num">Rs ${fmt(r.composite_fair)}</b></div>
+      <div class="fvline"><span>inputs</span> EPS Rs ${fmt(r.eps)} · trailing P/E ${r.pe}× · growth est ${r.growth_est_pct}%</div>
+      <p class="fvnote">${r.s} trades at <b class="num">Rs ${fmt(r.price)}</b> against a composite fair of <b class="num">Rs ${fmt(r.composite_fair)}</b> — about <b>${mag}% ${dir}</b> the model's blended fair value. The composite is the <b>median</b> of the four models above (median resists any single model blowing out). Model estimate on public fundamentals — research, not a price target or recommendation. <a href="#/ticker/${r.s}">full page →</a></p>
+    </div>`;
+  };
   const tbl = (list, cheap) => `<table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Fair value</th><th class="r">${cheap ? "Upside" : "Downside"}</th><th>Verdict</th></tr></thead><tbody>${
-    list.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
+    list.map(r => `<tr class="clickable fvrow" onclick="this.classList.toggle('exp');this.nextElementSibling.classList.toggle('open')"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
       <td class="r num">${fmt(r.price)}</td><td class="r num">${fmt(r.composite_fair)}</td>
       <td class="r num ${cls(r.mispricing_pct)}">${sgn(r.mispricing_pct)}%</td>
-      <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${esc(r.verdict)}</span></td></tr>`).join("")}</tbody></table>`;
+      <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${r.verdict === "undervalued" ? "below fair" : r.verdict === "overvalued" ? "above fair" : esc(r.verdict)}</span> <span class="fvcaret">▸</span></td></tr>
+      <tr class="fvdetail"><td colspan="5">${fvDetail(r)}</td></tr>`).join("")}</tbody></table>`;
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Value screen — fair value vs price</h2><div class="ln"></div><span class="pill">${rows.length} valued</span></div>
-  <p class="sub" style="margin-bottom:16px">Each stock is valued four ways (peer P/E, earnings-power vs bond yield, Graham, dividend discount); the median is its <b>fair value</b>. Trading below fair = potentially cheap, above = potentially rich. Market median P/E ${fv?.inputs?.market_median_pe ?? "—"}, bond yield ${fv?.inputs?.bond_yield_pct ?? "—"}%. <b>Model estimates on public fundamentals — research, not price targets.</b> Click any name for the full breakdown.</p>
-  <div class="seg"><h2 style="color:var(--up)">Looks cheap (undervalued)</h2><div class="ln"></div><span class="pill ok">${under.length}</span></div>
-  <div class="card">${under.length ? tbl(under, true) : '<div class="empty">none screening cheap right now</div>'}</div>
-  <div class="seg"><h2 style="color:var(--dn)">Looks rich (overvalued)</h2><div class="ln"></div><span class="pill bad">${over.length}</span></div>
-  <div class="card">${over.length ? tbl(over, false) : '<div class="empty">none screening rich right now</div>'}</div>`;
+  <div class="seg" style="margin-top:4px"><h2>Value screen — price vs model fair value</h2><div class="ln"></div><span class="pill">${rows.length} valued</span></div>
+  <div class="disclaimer">Model estimates on public fundamentals for <b>research and education</b> — not price targets, not advice, not a signal to buy or sell. A price below model fair value is not a recommendation, and a low share price never means a company is cheap. Past performance does not guarantee future results.</div>
+  <p class="sub" style="margin-bottom:16px">Each stock is valued four ways (peer P/E, earnings-power vs bond yield, Graham, dividend discount); the median is its <b>model fair value</b>. Market median P/E ${fv?.inputs?.market_median_pe ?? "—"}, bond yield ${fv?.inputs?.bond_yield_pct ?? "—"}%. Click any row to expand the four-model working.</p>
+  <div class="seg"><h2 style="color:var(--up)">Priced below model fair value</h2><div class="ln"></div><span class="pill ok">${under.length}</span></div>
+  <div class="card">${under.length ? tbl(under, true) : '<div class="empty">none below model fair value right now</div>'}</div>
+  <div class="seg"><h2 style="color:var(--dn)">Priced above model fair value</h2><div class="ln"></div><span class="pill bad">${over.length}</span></div>
+  <div class="card">${over.length ? tbl(over, false) : '<div class="empty">none above model fair value right now</div>'}</div>`;
 }
 
 async function pageMacro() {
@@ -278,14 +320,21 @@ async function pageMacro() {
   const drivers = m.drivers || [];
   const macroCard = `<div class="card"><h2>Pakistan macro</h2>
     <div class="sub">regime <b>${esc((m.regime || "—").toUpperCase())}</b> · ${esc(m.global_read || "")} · updated ${esc(m.updated || "—")} ${m.updated ? "" : "(run macro-agent to populate)"}</div>
-    <div class="facts">
-      <div class="fact"><span>SBP policy rate</span><b>${esc(m.sbp_rate ?? "—")}</b></div>
-      <div class="fact"><span>CPI YoY</span><b>${esc(m.cpi_yoy ?? "—")}</b></div>
-      <div class="fact"><span>FX reserves</span><b>${esc(m.reserves_usd_bn ? "$" + m.reserves_usd_bn + "bn" : "—")}</b></div>
-      <div class="fact"><span>6m T-bill</span><b>${esc(dom.tbill_6m ?? "—")}</b></div>
-      <div class="fact"><span>10y PIB</span><b>${esc(dom.pib_10y ?? "—")}</b></div>
-      <div class="fact"><span>Remittances</span><b>${esc(dom.remittances || "—")}</b></div>
-    </div>
+    ${(() => {
+      const facts = [
+        ["SBP policy rate", m.sbp_rate],
+        ["CPI YoY", m.cpi_yoy],
+        ["FX reserves", m.reserves_usd_bn ? "$" + m.reserves_usd_bn + "bn" : null],
+        ["6m T-bill", dom.tbill_6m],
+        ["10y PIB", dom.pib_10y],
+        ["Remittances", dom.remittances],
+        ["USD/PKR", m.pkr_usd],
+      ];
+      const have = facts.filter(([, v]) => v != null && v !== "");
+      const missing = facts.filter(([, v]) => v == null || v === "").map(([k]) => k);
+      return `<div class="facts">${have.map(([k, v]) => `<div class="fact"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div>
+      ${missing.length ? `<p class="sub" style="margin-top:8px;font-size:10.5px">Pending this cycle: ${missing.join(", ")} — the macro-agent fills these from SBP/PBS primary sources on the next full run.</p>` : ""}`;
+    })()}
     ${dom.debt_note ? `<p class="sub" style="margin-top:10px"><b>Debt/borrowing:</b> ${esc(dom.debt_note)}</p>` : ""}
     ${drivers.length ? `<div class="sub" style="margin-top:10px"><b>Drivers:</b><ul style="margin:6px 0 0 16px">${drivers.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}
     ${(m.next_events || []).length ? `<p class="sub" style="margin-top:8px"><b>Next:</b> ${m.next_events.map(e => `${esc(e.date)} ${esc(e.event)}`).join(" · ")}</p>` : ""}
@@ -430,8 +479,83 @@ async function pageTicker(sym) {
   const provenIds = new Set(proven.map(p => p.id));
   const hasIntra = intra && intra.date === (live?.updated || "").slice(0, 10) && intra.points?.length > 3;
 
+  // ---- educational / risk layer (all from the data layer; no advice language) ----
+  const NUM = s => { const n = parseFloat(String(s).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? null : n; };
+  const epsN = NUM(f.eps), peN = NUM(f.pe), fpeN = NUM(f.forward_pe), betaN = NUM(f.beta),
+    dyN = NUM(f.div_yield), payN = NUM(f.payout_ratio), niN = NUM(f.net_income);
+  const tvv = q.avg_daily_traded_value || 0;
+  const liq = tvv < 20e6 ? "low" : tvv < 150e6 ? "moderate" : "adequate";
+  const vr = q.volatility_rank;
+  const vol = vr == null ? null : vr < 20 ? "low" : vr < 50 ? "moderate" : "high";
+  const peerFair = fv?.methods?.relative_pe;
+  const peerRich = (peerFair != null && fv?.price) ? peerFair < fv.price : null;   // fair-vs-peers below price ⇒ priced above peers
+  const mddAbs = Math.abs(b.mdd);
+  const lossmaking = epsN != null && epsN <= 0;
+  const priceSrc = lv?.current != null ? "DPS official feed · intraday (~real-time)" : "end-of-day close " + q.date;
+
+  // "What the data flags" — factual observations, not predictions
+  const pros = [], cons = [];
+  if (proven.length) pros.push(`${proven.length} strateg${proven.length > 1 ? "ies have" : "y has"} been historically profitable on ${sym}`);
+  if (fv && fv.mispricing_pct > 0) pros.push(`Trades ${Math.abs(fv.mispricing_pct)}% below the model's blended fair value`);
+  if (fpeN != null && peN != null && fpeN < peN) pros.push(`Market expects earnings to grow (forward P/E ${f.forward_pe} below trailing ${f.pe})`);
+  if (dyN != null && dyN >= 5 && payN != null && payN < 85) pros.push(`Above-average dividend yield (${f.div_yield}), covered by earnings`);
+  if (betaN != null && betaN < 0.7) pros.push(`Historically calmer than the market (beta ${f.beta})`);
+  if (payN != null && payN > 90) cons.push(`Dividend payout is stretched (${f.payout_ratio} of earnings)`);
+  if (vol === "high") cons.push(`High price volatility (rank ${vr.toFixed(0)}/100)`);
+  if (liq === "low") cons.push(`Low trading liquidity — can be hard to buy or sell quickly`);
+  if (peerRich === true) cons.push(`Valued above sector peers on P/E`);
+  if (b.mdd <= -50) cons.push(`Has fallen ${mddAbs.toFixed(0)}% peak-to-trough before`);
+  if (betaN != null && betaN > 1.3) cons.push(`Amplifies market swings (beta ${f.beta})`);
+  if (lossmaking) cons.push(`Currently lossmaking (EPS ${f.eps})`);
+  const flagList = (arr, kind) => arr.length
+    ? arr.map(t => `<div class="flag ${kind}"><span>${kind === "pro" ? "▲" : "▼"}</span>${esc(t)}</div>`).join("")
+    : `<div class="sub" style="padding:6px 0">No notable data flags on this measure.</div>`;
+
+  // Questions before buying — data-answered, informational
+  const qmark = (s, label, ans) => `<div class="qrow"><div class="qmark ${s}">${s === "ok" ? "✓" : s === "warn" ? "!" : "?"}</div><div><b>${label}</b><div class="sub">${ans}</div></div></div>`;
+  const checklist = [
+    lossmaking ? qmark("warn", "Is profit positive and growing?", `Reported a net loss — earnings are currently negative (EPS ${f.eps}).`)
+      : niN != null ? qmark(fpeN != null && peN != null && fpeN < peN ? "ok" : "info", "Is profit positive and growing?",
+        `Reported positive net income (${f.net_income}).${fpeN != null && peN != null && fpeN < peN ? ` Forward P/E ${f.forward_pe} below trailing ${f.pe} — the market expects earnings to rise.` : " Multi-year growth trend isn't in the feed — check the latest results."}`)
+      : qmark("info", "Is profit positive and growing?", "Earnings data unavailable in the feed right now."),
+    qmark(niN != null && niN > 0 ? "info" : "warn", "Is the company generating cash?",
+      `Net income is ${f.net_income || "—"}. The feed has no cash-flow statement, so treat net income only as a proxy — confirm operating cash flow before relying on it.`),
+    qmark("info", "Is debt manageable?", "Balance-sheet debt isn't in the desk's feed. Don't assume leverage is safe — open the company's latest financials."),
+    peerRich === true ? qmark("warn", "Is the stock expensive versus peers?", `On the peer-P/E model it screens above sector peers (model fair ~Rs ${fmt(peerFair)} vs price Rs ${fmt(fv.price)}).`)
+      : peerRich === false ? qmark("ok", "Is the stock expensive versus peers?", "In line with or below sector peers on the peer-P/E model.")
+        : qmark("info", "Is the stock expensive versus peers?", "Peer valuation unavailable for this name."),
+    payN == null || (dyN != null && dyN === 0) ? qmark("info", "Is the dividend sustainable?", "Pays no dividend on record right now.")
+      : payN > 90 ? qmark("warn", "Is the dividend sustainable?", `Payout ratio ${f.payout_ratio} — most of earnings are paid out, leaving little buffer if profits dip. ${dHist.length} payouts on record.`)
+        : qmark("ok", "Is the dividend sustainable?", `Payout ratio ${f.payout_ratio}, yield ${f.div_yield || "—"} — covered by earnings. ${dHist.length} payouts on record.`),
+    qmark(mddAbs >= 30 ? "warn" : "info", "Can I tolerate a 30–50% decline?",
+      `${sym} has dropped ${mddAbs.toFixed(0)}% peak-to-trough over its ${histYears}-year history. Only commit money you can hold through a fall like that.`),
+    qmark("info", "What is my time horizon?", "This desk is daily-timeframe swing research — not day-trading, and not a buy-and-forget rating. Match any position to your own horizon and risk tolerance."),
+  ].join("");
+
+  // Risk profile — more than volatility; honest gaps
+  const rl = (k, t) => `<span class="rlvl ${k}">${t}</span>`;
+  const NA = '<span class="sub">not scored</span>';
+  const rrow = (factor, chip, text) => `<tr><td style="width:180px;vertical-align:top"><b>${factor}</b></td><td style="width:96px;vertical-align:top">${chip}</td><td class="sub">${text}</td></tr>`;
+  const riskRows = [
+    rrow("Price volatility", vol ? rl(vol === "high" ? "hi" : vol === "moderate" ? "md" : "lo", vol) : NA,
+      `Average daily move ±${b.avgAbs.toFixed(1)}%${vr != null ? ` (volatility rank ${vr.toFixed(0)}/100 across the universe)` : ""}.`),
+    rrow("Maximum decline", rl(mddAbs > 60 ? "hi" : mddAbs > 35 ? "md" : "lo", mddAbs > 60 ? "severe" : mddAbs > 35 ? "large" : "moderate"),
+      `Fell ${mddAbs.toFixed(0)}% peak-to-trough over ${histYears}y. A drop of this size can recur.`),
+    rrow("Liquidity", rl(liq === "low" ? "hi" : liq === "moderate" ? "md" : "lo", liq === "adequate" ? "adequate" : liq),
+      `~Rs ${fmt(tvv / 1e6, 0)}M traded per day. ${liq === "low" ? "Thin — exiting quickly may move the price against you." : liq === "moderate" ? "Moderate depth." : "Deep enough to enter and exit readily."}`),
+    rrow("Market sensitivity", betaN != null ? rl(betaN > 1.3 ? "hi" : betaN > 0.8 ? "md" : "lo", "beta " + f.beta) : NA,
+      betaN != null ? `${betaN > 1 ? "Tends to move more than" : "Tends to move less than"} the broad market.` : "Beta not available."),
+    rrow("Valuation", fv ? (fv.verdict === "overvalued" ? rl("hi", "above fair") : fv.verdict === "undervalued" ? rl("lo", "below fair") : rl("md", "near fair")) : NA,
+      fv ? `Blended model fair value Rs ${fmt(fv.composite_fair)} vs price Rs ${fmt(fv.price)} (${sgn(fv.mispricing_pct)}%). A low share price does not mean a cheap company — value depends on earnings, not the rupee price.` : "Fair-value model unavailable."),
+    rrow("Dividend reliability", dHist.length >= 4 ? rl("lo", "established") : dHist.length ? rl("md", "limited") : NA,
+      dHist.length ? `${dHist.length} dividends on record; most recent closure ${dHist[0]?.bc_start || "—"}.` : "No payout on record."),
+    rrow("Debt / leverage", NA, "Balance-sheet debt is not in the desk's data feed — review the latest financial statements before relying on any leverage assumption."),
+    rrow("Earnings stability", NA, "A multi-year earnings series isn't in the feed yet, so year-to-year stability can't be scored here."),
+  ].join("");
+
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
+  <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
   <div class="card">
     <div class="tk-head">
       <span class="sym">${sym}</span>
@@ -441,6 +565,7 @@ async function pageTicker(sym) {
       <span class="tag">${(u?.in || []).join(" · ")}</span>
       <a class="tag" target="_blank" href="https://www.tradingview.com/chart/?symbol=PSX%3A${sym}">TradingView ↗ (15m delayed)</a>
     </div>
+    <div class="prov">Prices in <b>Rs (PKR)</b> · ${priceSrc} · quant as of ${q.date} close · fundamentals ${f.fetched || "—"} · long-history chart is split/bonus-adjusted (Yahoo); DPS close is unadjusted.${liq === "low" ? ' · <b class="dn">low liquidity</b>' : ""}${lossmaking ? ' · <b class="dn">earnings negative</b>' : ""}</div>
     <div class="ranges" id="ranges">
       ${hasIntra ? '<button data-d="intra">1D</button>' : ""}<button data-d="63">3M</button><button data-d="126">6M</button><button class="on" data-d="252">1Y</button><button data-d="1260">5Y</button><button data-d="99999">Max${histYears >= 5 ? " (" + histYears + "y)" : ""}</button>
     </div>
@@ -460,7 +585,7 @@ async function pageTicker(sym) {
       <td class="r num ${(t.net_expectancy_pct || 0) > 0 ? "up" : "dn"}">${sgn(t.net_expectancy_pct ?? 0)}%</td><td class="r num">${t.n}</td>
       <td class="r">${provenIds.has(t.id) ? '<span class="pill ok">proven</span>' : '<span style="opacity:.45">rejected</span>'}</td></tr>`).join("")}</tbody></table></div>` : ""}
 
-  ${fsc ? `<div class="seg"><h2>Is it a good business?</h2><div class="ln"></div><span class="pill ${fsc.rating === "attractive" ? "ok" : fsc.rating === "caution" ? "bad" : ""}">${esc(fsc.rating)}</span></div>
+  ${fsc ? `<div class="seg"><h2>Business scorecard</h2><div class="ln"></div><span class="pill ${fsc.rating === "attractive" ? "ok" : fsc.rating === "caution" ? "bad" : ""}">${esc({ attractive: "stronger scorecard", caution: "weaker scorecard", neutral: "mixed scorecard" }[fsc.rating] || fsc.rating)}</span></div>
   <div class="card"><div class="sub" style="font-size:13px;color:var(--ink2);margin-bottom:14px">${esc(fsc.overall)}</div>
     <div class="two-col" style="gap:12px">${fsc.cards.map(c => `<div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><b>${esc(c[0])}</b><span class="tag">${esc(c[1])}</span></div>
@@ -468,10 +593,11 @@ async function pageTicker(sym) {
 
   ${fv ? (() => {
     const vcol = fv.verdict === "undervalued" ? "var(--up)" : fv.verdict === "overvalued" ? "var(--dn)" : "var(--ink2)";
+    const vlabel = { undervalued: "below model fair value", overvalued: "above model fair value", fair: "near model fair value" }[fv.verdict] || fv.verdict;
     const mlabel = { relative_pe: "Peer P/E (priced like sector)", earnings_power: "Earnings power (vs bond yield)", graham: "Graham value (earnings + growth)", ddm: "Dividend discount model" };
-    return `<div class="seg"><h2>Fair value & mispricing</h2><div class="ln"></div>
-      <span class="pill" style="background:color-mix(in srgb,${vcol} 15%,transparent);color:${vcol}">${esc(fv.verdict)} · ${sgn(fv.mispricing_pct)}%</span></div>
-    <div class="card"><div class="sub" style="margin-bottom:14px">The desk values ${sym} four ways, then takes the middle (median) estimate. Today it trades at <b>${fmt(fv.price)}</b>; the blended fair value is <b style="color:${vcol}">${fmt(fv.composite_fair)}</b> — ${fv.mispricing_pct >= 0 ? "trading BELOW fair value (looks cheap)" : "trading ABOVE fair value (looks rich)"} by ${Math.abs(fv.mispricing_pct)}%. Models on public fundamentals — research, not a price target.</div>
+    return `<div class="seg"><h2>Fair value model</h2><div class="ln"></div>
+      <span class="pill" style="background:color-mix(in srgb,${vcol} 15%,transparent);color:${vcol}">${vlabel} · ${sgn(fv.mispricing_pct)}%</span></div>
+    <div class="card"><div class="sub" style="margin-bottom:14px">The desk values ${sym} four ways, then takes the middle (median) estimate. Today it trades at <b>${fmt(fv.price)}</b>; the blended model fair value is <b style="color:${vcol}">${fmt(fv.composite_fair)}</b> — ${fv.mispricing_pct >= 0 ? "the price sits <b>below</b> the model's blended fair value" : "the price sits <b>above</b> the model's blended fair value"} by ${Math.abs(fv.mispricing_pct)}%. This is a model estimate on public fundamentals — <b>not a price target or a recommendation</b>, and a low share price never means a company is cheap.</div>
       <table><thead><tr><th>Method</th><th class="r">Fair value</th><th class="r">vs price</th></tr></thead><tbody>${
       Object.entries(fv.methods).map(([k, val]) => { const up = (val / fv.price - 1) * 100; return `<tr><td>${esc(mlabel[k] || k)}</td><td class="r num">${fmt(val)}</td><td class="r num ${cls(up)}">${sgn(up.toFixed(0))}%</td></tr>`; }).join("")}
         <tr style="border-top:2px solid var(--line)"><td><b>Composite (median)</b></td><td class="r num"><b>${fmt(fv.composite_fair)}</b></td><td class="r num ${cls(fv.mispricing_pct)}"><b>${sgn(fv.mispricing_pct)}%</b></td></tr>
@@ -479,10 +605,25 @@ async function pageTicker(sym) {
       <div class="sub" style="margin-top:8px">EPS ${fv.eps} · growth est ${fv.growth_est_pct}% · P/E ${fv.pe ?? "—"}. A wide spread between methods means the models disagree — treat as a rough screen, not a precise number.</div></div>`;
   })() : ""}
 
+  <div class="seg"><h2>What the data flags</h2><div class="ln"></div></div>
+  <div class="card"><div class="sub" style="margin-bottom:12px">Factual observations pulled from the desk's data — not predictions and not advice. The absence of a flag is not a green light.</div>
+    <div class="two-col" style="gap:14px">
+      <div><div class="flaghdr up">What could go right</div>${flagList(pros, "pro")}</div>
+      <div><div class="flaghdr dn">What could go wrong</div>${flagList(cons, "con")}</div>
+    </div></div>
+
+  <div class="seg"><h2>Questions to ask before buying</h2><div class="ln"></div></div>
+  <div class="card"><div class="sub" style="margin-bottom:12px">A checklist, answered from the data where the desk has it — and honest about where it doesn't. This is a thinking aid, not a recommendation.</div>
+    <div class="checklist">${checklist}</div></div>
+
+  <div class="seg"><h2>Risk profile</h2><div class="ln"></div></div>
+  <div class="card"><div class="sub" style="margin-bottom:12px">Risk is more than volatility. A low rupee price does <b>not</b> mean a stock is cheap — a Rs 20 share can be dearer than a Rs 500 one depending on earnings.</div>
+    <table class="risktbl"><tbody>${riskRows}</tbody></table></div>
+
   <div class="card"><h2>Key facts</h2><div class="sub">fundamentals · stockanalysis.com${f.fetched ? " · " + f.fetched : ""}</div>
     <div class="facts">
       <div class="fact"><span>Market cap</span><b>${esc(f.market_cap || "—")}</b></div>
-      <div class="fact"><span>P/E (TTM)</span><b>${esc(f.pe || "—")}</b></div>
+      <div class="fact"><span>P/E (TTM)</span><b>${lossmaking ? '<span class="sub" style="font-size:11px">n/a · earnings negative</span>' : esc(f.pe || "—")}</b></div>
       <div class="fact"><span>Forward P/E</span><b>${esc(f.forward_pe || "—")}</b></div>
       <div class="fact"><span>EPS (TTM)</span><b>${esc(f.eps || "—")}</b></div>
       <div class="fact"><span>Div yield</span><b>${esc(f.div_yield || "—")}</b></div>
@@ -557,7 +698,7 @@ async function pageDividends() {
       <td class="r num up"><b>${d.buy_by || "—"}</b> ${cdBadge(d.buy_by)}</td>
       <td class="r num">${d.sell_ok_from || d.date}</td>
     </tr>`).join("")
-    : `<tr><td colspan="6" class="empty">No upcoming ex-dividend / book-closure dates in the universe right now. PSX dividends cluster right after results (Jul–Aug) — the fundamentals agent fills these the moment a company announces.</td></tr>`;
+    : `<tr><td colspan="6" class="empty">No <b>announced</b> ex-dividend / book-closure dates yet — this is data, not a gap. PSX payouts cluster right after results (Jul–Aug); the desk lists a date only once a company files it, never a guess. The <b>${past.length} recent payouts below</b> show what these names actually pay and their yields.</td></tr>`;
 
   $("view").innerHTML = `
   <div class="timing">
@@ -635,8 +776,20 @@ async function route(isPoll) {
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
   renderHeader();
   const key = page + (arg || "");
-  if (page === "ticker" && arg) { await pageTicker(arg); }
-  else { await (PAGES[page] || pageBoard)(); }
+  try {
+    if (page === "ticker" && arg) { await pageTicker(arg); }
+    else { await (PAGES[page] || pageBoard)(); }
+  } catch (err) {
+    // a page render must NEVER leave a blank screen — show the failure instead
+    console.error("page render failed:", page, arg, err);
+    const v = $("view");
+    if (v && (!v.innerHTML || v.innerText.trim().length < 40)) {
+      v.innerHTML = `<a class="crumb" href="#/board">← board</a>
+        <div class="card"><div class="empty">Couldn't render ${esc((page || "this page") + (arg ? " " + arg : ""))} — a data file may still be loading or unavailable this cycle.<br><br>
+        <b>Try:</b> reload the page (Ctrl+Shift+R to bypass cache). If it persists, the desk's data for this name may be missing this cycle.<br>
+        <span class="sub">${esc(String(err && err.message || err)).slice(0, 160)}</span></div></div>`;
+    }
+  }
   // animate only on a real navigation (not the 30s silent refresh of the same page)
   if (!isPoll && key !== lastPage) { animateIn(); if (window.scrollTo) window.scrollTo(0, 0); }
   lastPage = key;
