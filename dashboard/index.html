@@ -19,6 +19,7 @@
     <a href="#/today" data-nav="today">Today</a>
     <a href="#/board" data-nav="board">Board</a>
     <a href="#/strategies" data-nav="strategies">Strategies</a>
+    <a href="#/value" data-nav="value">Value</a>
     <a href="#/macro" data-nav="macro">Macro</a>
     <a href="#/dividends" data-nav="dividends">Dividends</a>
     <a href="#/calendar" data-nav="calendar">Earnings</a>
@@ -28,8 +29,17 @@
   <span id="health" class="pill">HEALTH —</span>
   <span id="regime" class="pill">REGIME —</span>
   <span id="georisk" class="pill" style="display:none">RISK —</span>
+  <button id="searchbtn" class="searchbtn" aria-label="Search ticker" title="Search a stock">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+  </button>
   <span class="meta" id="updated"></span>
 </header>
+<div id="searchbox" class="searchbox" hidden>
+  <div class="searchpanel">
+    <input id="searchinput" type="text" placeholder="Search a stock — symbol or name…" autocomplete="off">
+    <div id="searchresults" class="searchresults"></div>
+  </div>
+</div>
 <main id="view"></main>
 <nav class="bottomnav" id="bottomnav">
   <a href="#/today" data-nav="today"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Today</span></a>

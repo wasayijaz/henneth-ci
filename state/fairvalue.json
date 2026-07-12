@@ -1,0 +1,936 @@
+{
+ "updated": "2026-07-12 18:26",
+ "inputs": {
+  "market_median_pe": 8.97,
+  "bond_yield_pct": 11.5,
+  "required_return_pct": 17.5
+ },
+ "note": "model estimates from public fundamentals; research, not a price target",
+ "tickers": {
+  "FFC": {
+   "price": 561.9,
+   "eps": 59.82,
+   "pe": 9.39,
+   "growth_est_pct": 30.0,
+   "methods": {
+    "relative_pe": 536.59,
+    "earnings_power": 385.94,
+    "graham": 1567.8,
+    "ddm": 1411.14
+   },
+   "composite_fair": 973.87,
+   "mispricing_pct": 73.3,
+   "verdict": "undervalued",
+   "upside_pct": 73.3
+  },
+  "UBL": {
+   "price": 484.06,
+   "eps": 56.82,
+   "pe": 8.52,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 509.68,
+    "earnings_power": 366.58,
+    "graham": 184.79,
+    "ddm": 182.84
+   },
+   "composite_fair": 275.69,
+   "mispricing_pct": -43.0,
+   "verdict": "overvalued",
+   "upside_pct": -43.0
+  },
+  "ENGROH": {
+   "price": 280.7,
+   "eps": 53.18,
+   "pe": 5.28,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 477.02,
+    "earnings_power": 343.1,
+    "graham": 172.95
+   },
+   "composite_fair": 343.1,
+   "mispricing_pct": 22.2,
+   "verdict": "undervalued",
+   "upside_pct": 22.2
+  },
+  "MEBL": {
+   "price": 557.7,
+   "eps": 50.2,
+   "pe": 11.11,
+   "growth_est_pct": 9.1,
+   "methods": {
+    "relative_pe": 450.29,
+    "earnings_power": 323.87,
+    "graham": 514.19,
+    "ddm": 391.48
+   },
+   "composite_fair": 420.88,
+   "mispricing_pct": -24.5,
+   "verdict": "overvalued",
+   "upside_pct": -24.5
+  },
+  "HUBC": {
+   "price": 227.05,
+   "eps": 34.65,
+   "pe": 6.7,
+   "growth_est_pct": 12.2,
+   "methods": {
+    "relative_pe": 310.81,
+    "earnings_power": 223.55,
+    "graham": 436.91,
+    "ddm": 319.47
+   },
+   "composite_fair": 315.14,
+   "mispricing_pct": 38.8,
+   "verdict": "undervalued",
+   "upside_pct": 38.8
+  },
+  "OGDC": {
+   "price": 334.13,
+   "eps": 36.17,
+   "pe": 9.24,
+   "growth_est_pct": 17.7,
+   "methods": {
+    "relative_pe": 324.44,
+    "earnings_power": 233.35,
+    "graham": 607.72,
+    "ddm": 573.87
+   },
+   "composite_fair": 449.15,
+   "mispricing_pct": 34.4,
+   "verdict": "undervalued",
+   "upside_pct": 34.4
+  },
+  "LUCK": {
+   "price": 468.58,
+   "eps": 56.88,
+   "pe": 8.24,
+   "growth_est_pct": 20.8,
+   "methods": {
+    "relative_pe": 510.21,
+    "earnings_power": 366.97,
+    "graham": 1091.23,
+    "ddm": 152.02
+   },
+   "composite_fair": 438.59,
+   "mispricing_pct": -6.4,
+   "verdict": "fair",
+   "upside_pct": -6.4
+  },
+  "HBL": {
+   "price": 313.77,
+   "eps": 45.16,
+   "pe": 6.95,
+   "growth_est_pct": 7.6,
+   "methods": {
+    "relative_pe": 405.09,
+    "earnings_power": 291.35,
+    "graham": 408.99,
+    "ddm": 260.46
+   },
+   "composite_fair": 348.22,
+   "mispricing_pct": 11.0,
+   "verdict": "fair",
+   "upside_pct": 11.0
+  },
+  "MCB": {
+   "price": 417.37,
+   "eps": 47.99,
+   "pe": 8.7,
+   "growth_est_pct": 11.7,
+   "methods": {
+    "relative_pe": 430.47,
+    "earnings_power": 309.61,
+    "graham": 585.05,
+    "ddm": 691.37
+   },
+   "composite_fair": 507.76,
+   "mispricing_pct": 21.7,
+   "verdict": "undervalued",
+   "upside_pct": 21.7
+  },
+  "MARI": {
+   "price": 678.62,
+   "eps": 57.11,
+   "pe": 11.88,
+   "growth_est_pct": 23.6,
+   "methods": {
+    "relative_pe": 512.28,
+    "earnings_power": 368.45,
+    "graham": 1218.02,
+    "ddm": 634.57
+   },
+   "composite_fair": 573.42,
+   "mispricing_pct": -15.5,
+   "verdict": "overvalued",
+   "upside_pct": -15.5
+  },
+  "PPL": {
+   "price": 236.55,
+   "eps": 28.99,
+   "pe": 8.16,
+   "growth_est_pct": 28.9,
+   "methods": {
+    "relative_pe": 260.04,
+    "earnings_power": 187.03,
+    "graham": 735.61,
+    "ddm": 286.2
+   },
+   "composite_fair": 273.12,
+   "mispricing_pct": 15.5,
+   "verdict": "undervalued",
+   "upside_pct": 15.5
+  },
+  "BAHL": {
+   "price": 175.97,
+   "eps": 26.08,
+   "pe": 6.75,
+   "growth_est_pct": 0.7,
+   "methods": {
+    "relative_pe": 233.94,
+    "earnings_power": 168.26,
+    "graham": 99.71,
+    "ddm": 90.16
+   },
+   "composite_fair": 133.98,
+   "mispricing_pct": -23.9,
+   "verdict": "overvalued",
+   "upside_pct": -23.9
+  },
+  "SYS": {
+   "price": 143.51,
+   "eps": 7.71,
+   "pe": 18.61,
+   "growth_est_pct": 30.0,
+   "methods": {
+    "relative_pe": 69.16,
+    "earnings_power": 49.74,
+    "graham": 202.07,
+    "ddm": 76.13
+   },
+   "composite_fair": 72.64,
+   "mispricing_pct": -49.4,
+   "verdict": "overvalued",
+   "upside_pct": -49.4
+  },
+  "EFERT": {
+   "price": 196.6,
+   "eps": 17.27,
+   "pe": 11.38,
+   "growth_est_pct": 30.0,
+   "methods": {
+    "relative_pe": 154.91,
+    "earnings_power": 111.42,
+    "graham": 452.62,
+    "ddm": 572.52
+   },
+   "composite_fair": 303.76,
+   "mispricing_pct": 54.5,
+   "verdict": "undervalued",
+   "upside_pct": 54.5
+  },
+  "NBP": {
+   "price": 210.57,
+   "eps": 37.26,
+   "pe": 5.65,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 334.22,
+    "earnings_power": 240.39,
+    "graham": 121.18,
+    "ddm": 199.98
+   },
+   "composite_fair": 220.19,
+   "mispricing_pct": 4.6,
+   "verdict": "fair",
+   "upside_pct": 4.6
+  },
+  "POL": {
+   "price": 682.49,
+   "eps": 95.64,
+   "pe": 7.14,
+   "growth_est_pct": 3.2,
+   "methods": {
+    "relative_pe": 857.89,
+    "earnings_power": 617.03,
+    "graham": 543.71,
+    "ddm": 540.4
+   },
+   "composite_fair": 580.37,
+   "mispricing_pct": -15.0,
+   "verdict": "overvalued",
+   "upside_pct": -15.0
+  },
+  "BAFL": {
+   "price": 58.63,
+   "eps": 10.05,
+   "pe": 5.82,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 90.15,
+    "earnings_power": 64.84,
+    "graham": 32.68,
+    "ddm": 34.27
+   },
+   "composite_fair": 49.56,
+   "mispricing_pct": -15.5,
+   "verdict": "overvalued",
+   "upside_pct": -15.5
+  },
+  "PSO": {
+   "price": 354.3,
+   "eps": 92.73,
+   "pe": 3.82,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 831.79,
+    "earnings_power": 598.26,
+    "graham": 301.57,
+    "ddm": 57.09
+   },
+   "composite_fair": 449.91,
+   "mispricing_pct": 27.0,
+   "verdict": "undervalued",
+   "upside_pct": 27.0
+  },
+  "HMB": {
+   "price": 118.0,
+   "eps": 20.52,
+   "pe": 5.75,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 184.06,
+    "earnings_power": 132.39,
+    "graham": 66.73,
+    "ddm": 68.57
+   },
+   "composite_fair": 100.48,
+   "mispricing_pct": -14.8,
+   "verdict": "fair",
+   "upside_pct": -14.8
+  },
+  "MTL": {
+   "price": 298.67,
+   "eps": 18.64,
+   "pe": 16.02,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 167.2,
+    "earnings_power": 120.26,
+    "graham": 131.94,
+    "ddm": 251.89
+   },
+   "composite_fair": 149.57,
+   "mispricing_pct": -49.9,
+   "verdict": "overvalued",
+   "upside_pct": -49.9
+  },
+  "FATIMA": {
+   "price": 162.88,
+   "eps": 17.58,
+   "pe": 9.26,
+   "growth_est_pct": 21.2,
+   "methods": {
+    "relative_pe": 157.69,
+    "earnings_power": 113.42,
+    "graham": 342.42,
+    "ddm": 228.77
+   },
+   "composite_fair": 193.23,
+   "mispricing_pct": 18.6,
+   "verdict": "undervalued",
+   "upside_pct": 18.6
+  },
+  "BOP": {
+   "price": 36.1,
+   "eps": 5.61,
+   "pe": 6.44,
+   "growth_est_pct": 28.5,
+   "methods": {
+    "relative_pe": 50.32,
+    "earnings_power": 36.19,
+    "graham": 140.78,
+    "ddm": 114.5
+   },
+   "composite_fair": 82.41,
+   "mispricing_pct": 128.3,
+   "verdict": "undervalued",
+   "upside_pct": 128.3
+  },
+  "SRVI": {
+   "price": 2130.05,
+   "eps": 223.92,
+   "pe": 9.97,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 2008.56,
+    "earnings_power": 1444.65,
+    "graham": 1584.96,
+    "ddm": 146.72
+   },
+   "composite_fair": 1514.81,
+   "mispricing_pct": -28.9,
+   "verdict": "overvalued",
+   "upside_pct": -28.9
+  },
+  "DGKC": {
+   "price": 224.49,
+   "eps": 27.64,
+   "pe": 8.12,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 247.93,
+    "earnings_power": 178.32,
+    "graham": 195.64,
+    "ddm": 16.78
+   },
+   "composite_fair": 186.98,
+   "mispricing_pct": -16.7,
+   "verdict": "overvalued",
+   "upside_pct": -16.7
+  },
+  "MLCF": {
+   "price": 104.24,
+   "eps": 10.74,
+   "pe": 9.71,
+   "growth_est_pct": 12.8,
+   "methods": {
+    "relative_pe": 96.34,
+    "earnings_power": 69.29,
+    "graham": 139.93
+   },
+   "composite_fair": 96.34,
+   "mispricing_pct": -7.6,
+   "verdict": "fair",
+   "upside_pct": -7.6
+  },
+  "AKBL": {
+   "price": 111.85,
+   "eps": 15.38,
+   "pe": 7.27,
+   "growth_est_pct": 10.5,
+   "methods": {
+    "relative_pe": 137.96,
+    "earnings_power": 99.23,
+    "graham": 173.43,
+    "ddm": 78.76
+   },
+   "composite_fair": 118.59,
+   "mispricing_pct": 6.0,
+   "verdict": "fair",
+   "upside_pct": 6.0
+  },
+  "FCCL": {
+   "price": 55.88,
+   "eps": 5.98,
+   "pe": 9.35,
+   "growth_est_pct": 20.8,
+   "methods": {
+    "relative_pe": 53.64,
+    "earnings_power": 38.58,
+    "graham": 114.63,
+    "ddm": 47.77
+   },
+   "composite_fair": 50.7,
+   "mispricing_pct": -9.3,
+   "verdict": "fair",
+   "upside_pct": -9.3
+  },
+  "FABL": {
+   "price": 101.63,
+   "eps": 14.75,
+   "pe": 6.89,
+   "growth_est_pct": 8.8,
+   "methods": {
+    "relative_pe": 132.31,
+    "earnings_power": 95.16,
+    "graham": 147.82,
+    "ddm": 81.82
+   },
+   "composite_fair": 113.73,
+   "mispricing_pct": 11.9,
+   "verdict": "fair",
+   "upside_pct": 11.9
+  },
+  "SAZEW": {
+   "price": 2019.97,
+   "eps": 303.75,
+   "pe": 6.65,
+   "growth_est_pct": 3.3,
+   "methods": {
+    "relative_pe": 2724.64,
+    "earnings_power": 1959.68,
+    "graham": 1745.79,
+    "ddm": 376.47
+   },
+   "composite_fair": 1852.74,
+   "mispricing_pct": -8.3,
+   "verdict": "fair",
+   "upside_pct": -8.3
+  },
+  "ATRL": {
+   "price": 908.93,
+   "eps": 200.63,
+   "pe": 4.53,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 1799.65,
+    "earnings_power": 1294.39,
+    "graham": 1420.11,
+    "ddm": 41.99
+   },
+   "composite_fair": 1357.25,
+   "mispricing_pct": 49.3,
+   "verdict": "undervalued",
+   "upside_pct": 49.3
+  },
+  "CHCC": {
+   "price": 329.38,
+   "eps": 37.91,
+   "pe": 8.69,
+   "growth_est_pct": 11.0,
+   "methods": {
+    "relative_pe": 340.05,
+    "earnings_power": 244.58,
+    "graham": 441.91,
+    "ddm": 93.68
+   },
+   "composite_fair": 292.31,
+   "mispricing_pct": -11.3,
+   "verdict": "fair",
+   "upside_pct": -11.3
+  },
+  "NESTLE": {
+   "price": 7627.68,
+   "eps": 393.75,
+   "pe": 19.37,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 3531.94,
+    "earnings_power": 2540.32,
+    "graham": 2787.07,
+    "ddm": 4677.29
+   },
+   "composite_fair": 3159.51,
+   "mispricing_pct": -58.6,
+   "verdict": "overvalued",
+   "upside_pct": -58.6
+  },
+  "COLG": {
+   "price": 1255.96,
+   "eps": 73.22,
+   "pe": 17.15,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 656.78,
+    "earnings_power": 472.39,
+    "graham": 518.27,
+    "ddm": 516.95
+   },
+   "composite_fair": 517.61,
+   "mispricing_pct": -58.8,
+   "verdict": "overvalued",
+   "upside_pct": -58.8
+  },
+  "BWCL": {
+   "price": 501.54,
+   "eps": 40.64,
+   "pe": 12.34,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 364.54,
+    "earnings_power": 262.19,
+    "graham": 287.66,
+    "ddm": 336.19
+   },
+   "composite_fair": 311.93,
+   "mispricing_pct": -37.8,
+   "verdict": "overvalued",
+   "upside_pct": -37.8
+  },
+  "JVDC": {
+   "price": 155.37,
+   "eps": 10.67,
+   "pe": 14.56,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 95.71,
+    "earnings_power": 68.84,
+    "graham": 75.53,
+    "ddm": 42.02
+   },
+   "composite_fair": 72.19,
+   "mispricing_pct": -53.5,
+   "verdict": "overvalued",
+   "upside_pct": -53.5
+  },
+  "ILP": {
+   "price": 103.92,
+   "eps": 8.07,
+   "pe": 12.87,
+   "growth_est_pct": 29.6,
+   "methods": {
+    "relative_pe": 72.39,
+    "earnings_power": 52.06,
+    "graham": 209.08,
+    "ddm": 152.7
+   },
+   "composite_fair": 112.54,
+   "mispricing_pct": 8.3,
+   "verdict": "fair",
+   "upside_pct": 8.3
+  },
+  "SNGP": {
+   "price": 112.4,
+   "eps": 22.95,
+   "pe": 4.9,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 205.86,
+    "earnings_power": 148.06,
+    "graham": 162.45,
+    "ddm": 25.21
+   },
+   "composite_fair": 155.25,
+   "mispricing_pct": 38.1,
+   "verdict": "undervalued",
+   "upside_pct": 38.1
+  },
+  "INDU": {
+   "price": 2013.59,
+   "eps": 328.92,
+   "pe": 6.12,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 2950.41,
+    "earnings_power": 2122.06,
+    "graham": 1069.71,
+    "ddm": 1005.64
+   },
+   "composite_fair": 1595.88,
+   "mispricing_pct": -20.7,
+   "verdict": "overvalued",
+   "upside_pct": -20.7
+  },
+  "PSEL": {
+   "price": 919.54,
+   "eps": 5.58,
+   "pe": 135.36,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 50.05,
+    "earnings_power": 36.0,
+    "graham": 39.5
+   },
+   "composite_fair": 39.5,
+   "mispricing_pct": -95.7,
+   "verdict": "overvalued",
+   "upside_pct": -95.7
+  },
+  "SEARL": {
+   "price": 95.48,
+   "eps": 2.06,
+   "pe": 26.05,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 18.48,
+    "earnings_power": 13.29,
+    "graham": 14.58
+   },
+   "composite_fair": 14.58,
+   "mispricing_pct": -84.7,
+   "verdict": "overvalued",
+   "upside_pct": -84.7
+  },
+  "PSX": {
+   "price": 54.58,
+   "eps": 2.5,
+   "pe": 21.85,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 22.42,
+    "earnings_power": 16.13,
+    "graham": 17.7,
+    "ddm": 14.26
+   },
+   "composite_fair": 16.91,
+   "mispricing_pct": -69.0,
+   "verdict": "overvalued",
+   "upside_pct": -69.0
+  },
+  "NML": {
+   "price": 155.0,
+   "eps": 33.41,
+   "pe": 4.64,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 299.69,
+    "earnings_power": 215.55,
+    "graham": 236.48,
+    "ddm": 16.8
+   },
+   "composite_fair": 226.01,
+   "mispricing_pct": 45.8,
+   "verdict": "undervalued",
+   "upside_pct": 45.8
+  },
+  "GLAXO": {
+   "price": 373.01,
+   "eps": 33.0,
+   "pe": 11.3,
+   "growth_est_pct": 9.0,
+   "methods": {
+    "relative_pe": 296.01,
+    "earnings_power": 212.9,
+    "graham": 333.79,
+    "ddm": 217.24
+   },
+   "composite_fair": 256.62,
+   "mispricing_pct": -31.2,
+   "verdict": "overvalued",
+   "upside_pct": -31.2
+  },
+  "KOHC": {
+   "price": 101.46,
+   "eps": 10.59,
+   "pe": 9.58,
+   "growth_est_pct": 18.6,
+   "methods": {
+    "relative_pe": 94.99,
+    "earnings_power": 68.32,
+    "graham": 184.88
+   },
+   "composite_fair": 94.99,
+   "mispricing_pct": -6.4,
+   "verdict": "fair",
+   "upside_pct": -6.4
+  },
+  "NATF": {
+   "price": 396.55,
+   "eps": 110.99,
+   "pe": 12.63,
+   "growth_est_pct": 30.0,
+   "methods": {
+    "relative_pe": 995.58,
+    "earnings_power": 716.06,
+    "graham": 2908.9,
+    "ddm": 953.5
+   },
+   "composite_fair": 974.54,
+   "mispricing_pct": 145.8,
+   "verdict": "undervalued",
+   "upside_pct": 145.8
+  },
+  "PAEL": {
+   "price": 45.03,
+   "eps": 4.47,
+   "pe": 10.07,
+   "growth_est_pct": 14.0,
+   "methods": {
+    "relative_pe": 40.1,
+    "earnings_power": 28.84,
+    "graham": 62.57
+   },
+   "composite_fair": 40.1,
+   "mispricing_pct": -10.9,
+   "verdict": "fair",
+   "upside_pct": -10.9
+  },
+  "AICL": {
+   "price": 80.33,
+   "eps": 14.72,
+   "pe": 5.46,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 132.04,
+    "earnings_power": 94.97,
+    "graham": 104.19,
+    "ddm": 33.6
+   },
+   "composite_fair": 99.58,
+   "mispricing_pct": 24.0,
+   "verdict": "undervalued",
+   "upside_pct": 24.0
+  },
+  "KEL": {
+   "price": 8.1,
+   "eps": 0.15,
+   "pe": 54.0,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 1.35,
+    "earnings_power": 0.97,
+    "graham": 1.06
+   },
+   "composite_fair": 1.06,
+   "mispricing_pct": -86.9,
+   "verdict": "overvalued",
+   "upside_pct": -86.9
+  },
+  "AIRLINK": {
+   "price": 153.18,
+   "eps": 14.02,
+   "pe": 10.92,
+   "growth_est_pct": 19.5,
+   "methods": {
+    "relative_pe": 125.76,
+    "earnings_power": 90.45,
+    "graham": 254.53,
+    "ddm": 343.77
+   },
+   "composite_fair": 190.15,
+   "mispricing_pct": 24.1,
+   "verdict": "undervalued",
+   "upside_pct": 24.1
+  },
+  "GHNI": {
+   "price": 1168.32,
+   "eps": 162.32,
+   "pe": 7.2,
+   "growth_est_pct": 0.0,
+   "methods": {
+    "relative_pe": 1456.01,
+    "earnings_power": 1047.23,
+    "graham": 527.89,
+    "ddm": 57.41
+   },
+   "composite_fair": 787.56,
+   "mispricing_pct": -32.6,
+   "verdict": "overvalued",
+   "upside_pct": -32.6
+  },
+  "GAL": {
+   "price": 607.97,
+   "eps": 117.25,
+   "pe": 5.19,
+   "growth_est_pct": 10.9,
+   "methods": {
+    "relative_pe": 1051.73,
+    "earnings_power": 756.45,
+    "graham": 1359.05,
+    "ddm": 167.47
+   },
+   "composite_fair": 904.09,
+   "mispricing_pct": 48.7,
+   "verdict": "undervalued",
+   "upside_pct": 48.7
+  },
+  "NRL": {
+   "price": 397.63,
+   "eps": 108.68,
+   "pe": 3.66,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 974.86,
+    "earnings_power": 701.16,
+    "graham": 769.27
+   },
+   "composite_fair": 769.27,
+   "mispricing_pct": 93.5,
+   "verdict": "undervalued",
+   "upside_pct": 93.5
+  },
+  "CPHL": {
+   "price": 79.02,
+   "eps": 4.8,
+   "pe": 16.46,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 43.06,
+    "earnings_power": 30.97,
+    "graham": 33.98,
+    "ddm": 29.4
+   },
+   "composite_fair": 32.47,
+   "mispricing_pct": -58.9,
+   "verdict": "overvalued",
+   "upside_pct": -58.9
+  },
+  "PRL": {
+   "price": 42.07,
+   "eps": 19.07,
+   "pe": 2.21,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 171.06,
+    "earnings_power": 123.03,
+    "graham": 134.98
+   },
+   "composite_fair": 134.98,
+   "mispricing_pct": 220.8,
+   "verdict": "undervalued",
+   "upside_pct": 220.8
+  },
+  "FFL": {
+   "price": 17.57,
+   "eps": 0.44,
+   "pe": 39.55,
+   "growth_est_pct": 5.0,
+   "methods": {
+    "relative_pe": 3.95,
+    "earnings_power": 2.84,
+    "graham": 3.11
+   },
+   "composite_fair": 3.11,
+   "mispricing_pct": -82.3,
+   "verdict": "overvalued",
+   "upside_pct": -82.3
+  },
+  "HCAR": {
+   "price": 245.56,
+   "eps": 22.64,
+   "pe": 10.84,
+   "growth_est_pct": 13.6,
+   "methods": {
+    "relative_pe": 203.08,
+    "earnings_power": 146.06,
+    "graham": 309.71,
+    "ddm": 264.39
+   },
+   "composite_fair": 233.74,
+   "mispricing_pct": -4.8,
+   "verdict": "fair",
+   "upside_pct": -4.8
+  },
+  "TREET": {
+   "price": 24.73,
+   "eps": 1.13,
+   "pe": 21.97,
+   "growth_est_pct": 30.0,
+   "methods": {
+    "relative_pe": 10.14,
+    "earnings_power": 7.29,
+    "graham": 29.62
+   },
+   "composite_fair": 10.14,
+   "mispricing_pct": -59.0,
+   "verdict": "overvalued",
+   "upside_pct": -59.0
+  }
+ },
+ "most_undervalued": [
+  "PRL",
+  "NATF",
+  "BOP",
+  "NRL",
+  "FFC",
+  "EFERT",
+  "ATRL",
+  "GAL",
+  "NML",
+  "HUBC"
+ ],
+ "most_overvalued": [
+  "JVDC",
+  "NESTLE",
+  "COLG",
+  "CPHL",
+  "TREET",
+  "PSX",
+  "FFL",
+  "SEARL",
+  "KEL",
+  "PSEL"
+ ]
+}

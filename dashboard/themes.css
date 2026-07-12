@@ -114,6 +114,25 @@ body[data-theme=gemini] .gstrip:hover{border-color:#DDE1E6}
 /* shared polarity + heat tint hooks */
 body .up{color:var(--up)} body .dn{color:var(--dn)}
 
+/* ---------- ticker search ---------- */
+.searchbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:.12s}
+.searchbtn:hover{background:var(--line2);color:var(--ink1)}
+.searchbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.searchbox{position:fixed;inset:0;z-index:200;background:rgba(19,23,34,.28);backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;animation:fadeIn .15s both}
+.searchpanel{width:min(560px,92vw);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 60px rgba(19,23,34,.25);overflow:hidden;animation:fadeUp .18s both}
+.searchpanel input{width:100%;border:none;outline:none;padding:18px 20px;font:600 17px var(--font-body,sans-serif);color:var(--ink1);border-bottom:1px solid var(--line)}
+.searchresults{max-height:52vh;overflow-y:auto}
+.searchitem{display:flex;align-items:baseline;gap:10px;padding:11px 20px;cursor:pointer;border-bottom:1px solid var(--line2)}
+.searchitem:hover{background:var(--surf)}
+.searchitem b{font-size:14px;min-width:64px}
+.searchitem span{font-size:12.5px;color:var(--ink3)}
+@media (max-width:720px){
+  body[data-theme=gemini] header.app .searchbtn{margin-left:auto}
+  .searchbox{padding-top:0}
+  .searchpanel{width:100vw;height:100dvh;border-radius:0;border:none}
+  .searchresults{max-height:calc(100dvh - 60px)}
+}
+
 /* ============ ANIMATIONS (subtle, reduced-motion aware) ============ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}

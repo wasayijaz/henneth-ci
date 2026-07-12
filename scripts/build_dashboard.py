@@ -8,13 +8,13 @@ from psx_data import STATE, load_json, save_json
 
 
 def main():
-    # generate deterministic candidate signals first (free, no LLM) so the board
-    # is never empty — the already-deployed workflow runs this via build_dashboard.
-    try:
-        import build_signals
-        build_signals.main()
-    except Exception as e:  # noqa: BLE001 — never let signals break the dashboard
-        print(f"build_signals skipped: {str(e)[:80]}")
+    # deterministic derived layers (free, no LLM) — run via build_dashboard so the
+    # already-deployed workflow picks them up without a workflow edit.
+    for mod in ("compute_fairvalue", "build_signals"):
+        try:
+            __import__(mod).main()
+        except Exception as e:  # noqa: BLE001 — never let a derived layer break the board
+            print(f"{mod} skipped: {str(e)[:80]}")
 
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
     macro = load_json(STATE / "macro.json", {})

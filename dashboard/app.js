@@ -232,6 +232,27 @@ async function pageBoard() {
   </div>`;
 }
 
+async function pageValue() {
+  const [fv, uni] = await Promise.all([j("fairvalue.json"), j("universe.json")]);
+  const t = fv?.tickers || {};
+  const rows = Object.entries(t).map(([s, v]) => ({ s, ...v, name: uni?.symbols?.[s]?.name || "" }))
+    .sort((a, b) => b.mispricing_pct - a.mispricing_pct);
+  const under = rows.filter(r => r.verdict === "undervalued");
+  const over = rows.filter(r => r.verdict === "overvalued").reverse();
+  const tbl = (list, cheap) => `<table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Fair value</th><th class="r">${cheap ? "Upside" : "Downside"}</th><th>Verdict</th></tr></thead><tbody>${
+    list.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
+      <td class="r num">${fmt(r.price)}</td><td class="r num">${fmt(r.composite_fair)}</td>
+      <td class="r num ${cls(r.mispricing_pct)}">${sgn(r.mispricing_pct)}%</td>
+      <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${esc(r.verdict)}</span></td></tr>`).join("")}</tbody></table>`;
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Value screen — fair value vs price</h2><div class="ln"></div><span class="pill">${rows.length} valued</span></div>
+  <p class="sub" style="margin-bottom:16px">Each stock is valued four ways (peer P/E, earnings-power vs bond yield, Graham, dividend discount); the median is its <b>fair value</b>. Trading below fair = potentially cheap, above = potentially rich. Market median P/E ${fv?.inputs?.market_median_pe ?? "—"}, bond yield ${fv?.inputs?.bond_yield_pct ?? "—"}%. <b>Model estimates on public fundamentals — research, not price targets.</b> Click any name for the full breakdown.</p>
+  <div class="seg"><h2 style="color:var(--up)">Looks cheap (undervalued)</h2><div class="ln"></div><span class="pill ok">${under.length}</span></div>
+  <div class="card">${under.length ? tbl(under, true) : '<div class="empty">none screening cheap right now</div>'}</div>
+  <div class="seg"><h2 style="color:var(--dn)">Looks rich (overvalued)</h2><div class="ln"></div><span class="pill bad">${over.length}</span></div>
+  <div class="card">${over.length ? tbl(over, false) : '<div class="empty">none screening rich right now</div>'}</div>`;
+}
+
 async function pageMacro() {
   const [gl, macro, geo] = await Promise.all([j("global.json"), j("macro.json"), j("georisk.json")]);
   const inst = gl?.instruments || {};
@@ -382,14 +403,15 @@ function behaviorStats(hist) {
 
 async function pageTicker(sym) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000)]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
+  const fv = fvAll?.tickers?.[sym];
   // deep history (Yahoo, ~18y) preferred for chart + behavior; DPS as fallback
   const series = (deep && deep.length > (hist?.length || 0)) ? deep : hist;
   const yearsSpan = series ? ((new Date(series[series.length - 1].date) - new Date(series[0].date)) / 3.156e10) : 0;
@@ -443,6 +465,19 @@ async function pageTicker(sym) {
     <div class="two-col" style="gap:12px">${fsc.cards.map(c => `<div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><b>${esc(c[0])}</b><span class="tag">${esc(c[1])}</span></div>
       <div class="sub" style="color:var(--ink2)">${esc(c[2])}</div></div>`).join("")}</div></div>` : ""}
+
+  ${fv ? (() => {
+    const vcol = fv.verdict === "undervalued" ? "var(--up)" : fv.verdict === "overvalued" ? "var(--dn)" : "var(--ink2)";
+    const mlabel = { relative_pe: "Peer P/E (priced like sector)", earnings_power: "Earnings power (vs bond yield)", graham: "Graham value (earnings + growth)", ddm: "Dividend discount model" };
+    return `<div class="seg"><h2>Fair value & mispricing</h2><div class="ln"></div>
+      <span class="pill" style="background:color-mix(in srgb,${vcol} 15%,transparent);color:${vcol}">${esc(fv.verdict)} · ${sgn(fv.mispricing_pct)}%</span></div>
+    <div class="card"><div class="sub" style="margin-bottom:14px">The desk values ${sym} four ways, then takes the middle (median) estimate. Today it trades at <b>${fmt(fv.price)}</b>; the blended fair value is <b style="color:${vcol}">${fmt(fv.composite_fair)}</b> — ${fv.mispricing_pct >= 0 ? "trading BELOW fair value (looks cheap)" : "trading ABOVE fair value (looks rich)"} by ${Math.abs(fv.mispricing_pct)}%. Models on public fundamentals — research, not a price target.</div>
+      <table><thead><tr><th>Method</th><th class="r">Fair value</th><th class="r">vs price</th></tr></thead><tbody>${
+      Object.entries(fv.methods).map(([k, val]) => { const up = (val / fv.price - 1) * 100; return `<tr><td>${esc(mlabel[k] || k)}</td><td class="r num">${fmt(val)}</td><td class="r num ${cls(up)}">${sgn(up.toFixed(0))}%</td></tr>`; }).join("")}
+        <tr style="border-top:2px solid var(--line)"><td><b>Composite (median)</b></td><td class="r num"><b>${fmt(fv.composite_fair)}</b></td><td class="r num ${cls(fv.mispricing_pct)}"><b>${sgn(fv.mispricing_pct)}%</b></td></tr>
+      </tbody></table>
+      <div class="sub" style="margin-top:8px">EPS ${fv.eps} · growth est ${fv.growth_est_pct}% · P/E ${fv.pe ?? "—"}. A wide spread between methods means the models disagree — treat as a rough screen, not a precise number.</div></div>`;
+  })() : ""}
 
   <div class="card"><h2>Key facts</h2><div class="sub">fundamentals · stockanalysis.com${f.fetched ? " · " + f.fetched : ""}</div>
     <div class="facts">
@@ -586,7 +621,7 @@ async function pageNews() {
 }
 
 /* ---------- router ---------- */
-const PAGES = { today: pageToday, board: pageBoard, strategies: pageStrategies, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, news: pageNews };
+const PAGES = { today: pageToday, board: pageBoard, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, news: pageNews };
 let lastPage = null;
 
 function animateIn() {
@@ -609,3 +644,50 @@ async function route(isPoll) {
 window.addEventListener("hashchange", () => route(false));
 route(false);
 setInterval(() => { Object.keys(cache).forEach(k => delete cache[k]); route(true); }, 30000);
+
+/* ---------- ticker search ---------- */
+let searchIndex = null;
+async function loadSearchIndex() {
+  if (searchIndex) return searchIndex;
+  const uni = await j("universe.json");
+  searchIndex = Object.entries(uni?.symbols || {}).map(([s, v]) => ({ s, name: (v.name || "").toLowerCase() }));
+  return searchIndex;
+}
+function openSearch() {
+  const box = $("searchbox"); box.hidden = false;
+  const inp = $("searchinput"); inp.value = ""; $("searchresults").innerHTML = "";
+  loadSearchIndex(); setTimeout(() => inp.focus(), 30);
+}
+function closeSearch() { $("searchbox").hidden = true; }
+function goTicker(sym) { closeSearch(); location.hash = "#/ticker/" + sym; }
+async function runSearch(q) {
+  q = q.trim().toUpperCase();
+  const res = $("searchresults");
+  if (!q) { res.innerHTML = ""; return; }
+  const idx = await loadSearchIndex();
+  const hits = idx.filter(x => x.s.startsWith(q)).concat(
+    idx.filter(x => !x.s.startsWith(q) && (x.s.includes(q) || x.name.includes(q.toLowerCase())))
+  ).slice(0, 12);
+  res.innerHTML = hits.length
+    ? hits.map(h => `<div class="searchitem" data-sym="${h.s}"><b>${h.s}</b><span>${esc(h.name)}</span></div>`).join("")
+    : `<div class="searchitem" style="opacity:.6">No match for "${esc(q)}"</div>`;
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = $("searchbtn");
+  if (btn) btn.addEventListener("click", openSearch);
+});
+// header exists at load (script is at end of body), so wire immediately too:
+$("searchbtn")?.addEventListener("click", openSearch);
+$("searchinput")?.addEventListener("input", e => runSearch(e.target.value));
+$("searchinput")?.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSearch();
+  if (e.key === "Enter") { const first = document.querySelector(".searchitem[data-sym]"); if (first) goTicker(first.dataset.sym); }
+});
+$("searchresults")?.addEventListener("click", e => {
+  const it = e.target.closest(".searchitem[data-sym]"); if (it) goTicker(it.dataset.sym);
+});
+$("searchbox")?.addEventListener("click", e => { if (e.target.id === "searchbox") closeSearch(); });
+// keyboard shortcut: "/" opens search
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
+});
