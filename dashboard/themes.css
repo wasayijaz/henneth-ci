@@ -170,12 +170,17 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
 @media (max-width:720px){
   body[data-theme=gemini]{--gap:14px;font-size:14px}
   body[data-theme=gemini] main{padding:14px 14px calc(76px + env(safe-area-inset-bottom));max-width:100%}
-  /* header: brand + status only; primary nav moves to bottom bar */
-  body[data-theme=gemini] header.app{padding:12px 14px calc(12px);gap:8px;flex-wrap:nowrap;overflow-x:auto;position:sticky;top:0}
+  /* header: brand + market status + search only; nav moves to bottom bar.
+     no horizontal scroll — the verbose pills are hidden on mobile (status lives on the pages). */
+  body[data-theme=gemini] header.app{padding:12px 14px;gap:8px;flex-wrap:nowrap;overflow:hidden;position:sticky;top:0}
   body[data-theme=gemini] header.app nav.tabs{display:none}
   body[data-theme=gemini] header.app .meta{display:none}
-  body[data-theme=gemini] .brand{font-size:15px;margin-right:auto;white-space:nowrap}
-  body[data-theme=gemini] header .pill{font-size:10.5px;padding:3px 9px;white-space:nowrap}
+  body[data-theme=gemini] header.app #health,
+  body[data-theme=gemini] header.app #regime,
+  body[data-theme=gemini] header.app #georisk{display:none!important}
+  body[data-theme=gemini] .brand{font-size:15px;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body[data-theme=gemini] header #mkt{font-size:10.5px;padding:3px 9px;white-space:nowrap;flex:none}
+  body[data-theme=gemini] header .searchbtn{flex:none}
   /* everything stacks */
   body[data-theme=gemini] .grid-board,body[data-theme=gemini] .two-col{grid-template-columns:1fr!important;gap:var(--gap)}
   body[data-theme=gemini] main>.card,body[data-theme=gemini] main>.two-col,body[data-theme=gemini] .cards>*{margin-bottom:var(--gap)}
