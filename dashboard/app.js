@@ -176,17 +176,19 @@ async function pageBoard() {
   const lv = live?.tickers || {};
 
   const sigs = dash?.signals || [];
+  const sigBadge = s => s.audit === "PASS" ? '<span class="tag badge-ok up">audited ✓</span>'
+    : '<span class="tag" title="Triggering now, proven on this stock\'s own history. Backtest-proven, not auditor-verified. Research, not advice.">backtest-proven</span>';
   const sigHtml = sigs.length ? sigs.map(s => `
     <div class="card clickable" onclick="location.hash='#/ticker/${esc(s.ticker)}'">
       <div class="tk-head"><span class="sym">${esc(s.ticker)}</span><span class="tag">${esc(s.template || "")}</span>
-      ${s.audit === "PASS" ? '<span class="tag badge-ok up">audited ✓</span>' : ""}</div>
+      ${sigBadge(s)}${s.confidence ? `<span class="pill ${s.confidence === "high" ? "ok" : ""}">${esc(s.confidence)}</span>` : ""}</div>
       <div class="statgrid num">
         <div class="stat"><span>entry</span><b>${s.entry}</b></div>
         <div class="stat"><span>stop</span><b class="dn">${s.stop}</b></div>
         <div class="stat"><span>target</span><b class="up">${s.target}</b></div>
         <div class="stat"><span>size</span><b>${s.size_shares ?? "—"} sh</b></div>
       </div><div class="sub" style="margin-top:8px">${esc(s.thesis || "")}</div></div>`).join("")
-    : `<div class="card"><div class="empty">No active signals — desk is selective. Signals appear after an audited full cycle.</div></div>`;
+    : `<div class="card"><div class="empty">No setups triggering right now — the desk only flags a stock when a strategy proven on its own history fires. Patience is the edge.</div></div>`;
 
   const tg = trig?.triggers || [];
   const trigHtml = tg.length ? `<div class="card"><h2>Live triggers</h2><div class="sub">proven patterns firing now · unvetted</div>

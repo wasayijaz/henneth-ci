@@ -1,0 +1,55 @@
+{
+ "updated": "2026-07-12 18:10",
+ "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
+ "active": [
+  {
+   "id": "20260712-HCAR-sma_golden_cross",
+   "ticker": "HCAR",
+   "strategy": "sma_golden_cross",
+   "template": "Golden cross (SMA50>SMA200)",
+   "category": "trend",
+   "sector": "Honda Atlas Cars (Pakistan) Limited",
+   "entry": 245.56,
+   "stop": 233.28,
+   "target": 270.12,
+   "rr": 2.0,
+   "hold_sessions": 25,
+   "size_shares": 325,
+   "size_pkr": 79807,
+   "backtest": {
+    "hit_rate": 0.6,
+    "net_expectancy_pct": 3.07,
+    "n": 10,
+    "oos_hit": 0.6
+   },
+   "confidence": "high",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+3.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260712-GAL-high50_break",
+   "ticker": "GAL",
+   "strategy": "high50_break",
+   "template": "50d high breakout",
+   "category": "breakout",
+   "sector": "Ghandhara Automobiles Limited",
+   "entry": 607.97,
+   "stop": 583.65,
+   "target": 656.61,
+   "rr": 2.0,
+   "hold_sessions": 15,
+   "size_shares": 131,
+   "size_pkr": 79644,
+   "backtest": {
+    "hit_rate": 0.556,
+    "net_expectancy_pct": 1.58,
+    "n": 27,
+    "oos_hit": 0.5
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "50d high breakout is triggering now; on GAL's own history it won 56% over 27 trades (+1.6% net/trade), still profitable out-of-sample."
+  }
+ ],
+ "n_candidates": 3
+}

@@ -1,0 +1,37 @@
+"""Single entrypoint for the deterministic desk pipeline (NO agents, no tokens).
+Runs every data script in order and rebuilds signals + dashboard. Used by the
+update-live-desk skill locally, and mirrors what GitHub Actions runs in the cloud.
+
+Idempotent and safe to re-run. Deep history is skipped for tickers already cached
+(fetch_deep_history only pulls missing ones), so re-runs are fast.
+Usage: python scripts/run_cloud.py"""
+import subprocess
+import sys
+from pathlib import Path
+
+SCRIPTS = Path(__file__).resolve().parent
+STEPS = [
+    "update_universe.py", "fetch_history.py", "fetch_deep_history.py",
+    "fetch_dividends.py", "fetch_fundamentals.py", "score_fundamentals.py",
+    "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
+    "snapshot.py", "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
+    "tv_crosscheck.py", "data_health.py", "build_signals.py", "build_dashboard.py",
+]
+# steps allowed to exit non-zero without aborting the run
+ADVISORY = {"tv_crosscheck.py"}
+
+
+def main():
+    failed = []
+    for s in STEPS:
+        print(f"\n=== {s} ===")
+        r = subprocess.run([sys.executable, str(SCRIPTS / s)])
+        if r.returncode != 0 and s not in ADVISORY:
+            failed.append(s)
+            print(f"  ! {s} exited {r.returncode}")
+    print("\n" + ("ALL OK" if not failed else f"FAILED: {', '.join(failed)}"))
+    sys.exit(1 if failed else 0)
+
+
+if __name__ == "__main__":
+    main()
