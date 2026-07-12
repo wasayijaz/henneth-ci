@@ -658,7 +658,7 @@ function openSearch() {
   const inp = $("searchinput"); inp.value = ""; $("searchresults").innerHTML = "";
   loadSearchIndex(); setTimeout(() => inp.focus(), 30);
 }
-function closeSearch() { $("searchbox").hidden = true; }
+function closeSearch() { const b = $("searchbox"); if (b) b.hidden = true; }
 function goTicker(sym) { closeSearch(); location.hash = "#/ticker/" + sym; }
 async function runSearch(q) {
   q = q.trim().toUpperCase();
@@ -687,7 +687,10 @@ $("searchresults")?.addEventListener("click", e => {
   const it = e.target.closest(".searchitem[data-sym]"); if (it) goTicker(it.dataset.sym);
 });
 $("searchbox")?.addEventListener("click", e => { if (e.target.id === "searchbox") closeSearch(); });
-// keyboard shortcut: "/" opens search
+$("searchclose")?.addEventListener("click", closeSearch);
+// closing whenever the route changes (e.g. after picking a ticker) and on Escape anywhere
+window.addEventListener("hashchange", closeSearch);
 document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSearch();
   if (e.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
 });

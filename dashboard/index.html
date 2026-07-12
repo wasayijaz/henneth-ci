@@ -36,7 +36,11 @@
 </header>
 <div id="searchbox" class="searchbox" hidden>
   <div class="searchpanel">
-    <input id="searchinput" type="text" placeholder="Search a stock — symbol or name…" autocomplete="off">
+    <div class="searchhead">
+      <svg class="searchico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchinput" type="text" placeholder="Search a stock — symbol or name…" autocomplete="off">
+      <button id="searchclose" class="searchclose" aria-label="Close search">✕</button>
+    </div>
     <div id="searchresults" class="searchresults"></div>
   </div>
 </div>

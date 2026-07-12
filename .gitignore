@@ -1,4 +1,4 @@
-# regenerated each cycle / large — rebuilt in cloud, stored in Supabase
+# regenerated each cycle / large — rebuilt fresh in the cloud pipeline
 state/history_deep/
 state/history/
 state/intraday/
@@ -10,4 +10,5 @@ __pycache__/
 # never commit secrets
 .env
 *.key
-.github/workflows/
+# .github/workflows/ IS tracked now (the gh token needs 'workflow' scope to push it;
+# it currently lives on GitHub via the web UI — keep the two in sync manually)
