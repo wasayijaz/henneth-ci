@@ -43,73 +43,99 @@ h2{margin-bottom:2px}
 
 /* ---------- GEMINI · refined editorial, stockanalysis/TradingView-grade ---------- */
 body[data-theme=gemini]{
-  --gap:18px;--up:#0B7A5F;--dn:#BE4126;--accent:#131722;
-  --ink1:#131722;--ink2:#3D434B;--ink3:#5E6672;--line:#E6E9EE;--line2:#F1F3F6;--surf:#FAFBFC;
-  --font-body:"Manrope",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
-  --font-head:"Rubik","Manrope",ui-sans-serif,system-ui,sans-serif;
-  background:#FFFFFF;color:var(--ink1);letter-spacing:-.003em;
-  font-family:var(--font-body);
+  --gap:10px;
+  --bg:#f4f4f0;--panel:#ffffff;--panel2:#faf9f4;
+  --ink1:#0a0a0a;--ink2:#565650;--ink3:#8a8a80;--line:#111111;--line2:#e7e6df;--surf:#f6f5f0;--hair:#d9d9d2;
+  --up:#0b7a5f;--dn:#be4126;--accent:#0a0a0a;
+  --font-body:"JetBrains Mono",ui-monospace,"Cascadia Mono",monospace;
+  --font-head:"JetBrains Mono",monospace;
+  --font-pixel:"Pixelify Sans","JetBrains Mono",monospace;
+  background:var(--bg);color:var(--ink1);letter-spacing:0;
+  font-family:var(--font-body);font-size:12px;
 }
-body[data-theme=gemini] h2,body[data-theme=gemini] .brand,body[data-theme=gemini] .tk-head .sym,body[data-theme=gemini] .timing b{font-family:var(--font-head)}
-body[data-theme=gemini] main{max-width:1280px;margin:0 auto;padding:24px 24px 60px}
-body[data-theme=gemini] .grid-board{grid-template-columns:1.5fr 1fr;gap:20px}
-@media(max-width:900px){body[data-theme=gemini] .grid-board{grid-template-columns:1fr}}
-body[data-theme=gemini] header.app{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);padding:14px 24px;border-bottom:1px solid var(--line)}
-body[data-theme=gemini] .brand{font-size:16px;font-weight:800;letter-spacing:-.01em}
-body[data-theme=gemini] .brand em{font-style:normal;color:var(--ink3);font-weight:600}
-body[data-theme=gemini] nav.tabs a{padding:7px 15px;font-size:13.5px;font-weight:600;color:var(--ink3);border-radius:8px;transition:.12s}
-body[data-theme=gemini] nav.tabs a:hover{color:var(--ink1);background:var(--line2)}
-body[data-theme=gemini] nav.tabs a.on{color:var(--ink1);background:var(--line)}
-body[data-theme=gemini] .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;transition:box-shadow .15s}
+body[data-theme=gemini] .num{font-variant-numeric:tabular-nums}
+body[data-theme=gemini] main{max-width:1440px;margin:0 auto;padding:10px 10px 60px}
+body[data-theme=gemini] .grid-board{grid-template-columns:1.05fr 1.5fr 1.15fr;gap:var(--gap)}
+@media(max-width:1000px){body[data-theme=gemini] .grid-board{grid-template-columns:1fr}}
+body[data-theme=gemini] header.app{background:var(--panel);padding:8px 12px;border:1.5px solid var(--line);gap:12px}
+body[data-theme=gemini] .brand{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+body[data-theme=gemini] .brand em{font-style:normal;color:var(--ink3);font-weight:500}
+body[data-theme=gemini] nav.tabs{gap:0;border-left:1px solid var(--hair);padding-left:10px}
+body[data-theme=gemini] nav.tabs a{padding:5px 10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);transition:.1s}
+body[data-theme=gemini] nav.tabs a:hover{color:var(--ink1)}
+body[data-theme=gemini] nav.tabs a.on{color:var(--ink1);background:var(--ink1);color:#f4f4f0}
+body[data-theme=gemini] .card{background:var(--panel);border:1.5px solid var(--line);border-radius:0;padding:0;transition:.12s;overflow:hidden}
+body[data-theme=gemini] .card>h2,body[data-theme=gemini] .card>.sub{padding-left:12px;padding-right:12px}
+body[data-theme=gemini] .card>h2{padding-top:7px;padding-bottom:7px;border-bottom:1px solid var(--line);margin:0}
+body[data-theme=gemini] .card>.sub{padding-top:8px}
+body[data-theme=gemini] .card>*:not(h2):not(.sub){margin-left:12px;margin-right:12px}
+body[data-theme=gemini] .card>table{width:calc(100% - 24px)}
+body[data-theme=gemini] .card>*:last-child{margin-bottom:12px}
 body[data-theme=gemini] main>.card,body[data-theme=gemini] main>.two-col{margin-bottom:var(--gap)}
 body[data-theme=gemini] .two-col{gap:var(--gap)}
-body[data-theme=gemini] .card.clickable:hover{box-shadow:0 4px 18px rgba(19,23,34,.07);border-color:#DDE1E6}
-body[data-theme=gemini] h2{font-size:15px;font-weight:700;letter-spacing:-.01em}
-body[data-theme=gemini] .sub{font-size:12px;color:var(--ink3)}
-body[data-theme=gemini] .cell{border:1px solid var(--line);border-radius:10px;padding:10px 11px;transition:.12s}
-body[data-theme=gemini] .cell:hover{border-color:var(--ink3);transform:translateY(-1px)}
-body[data-theme=gemini] .cell b{font-size:13px;font-weight:700}
-body[data-theme=gemini] th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);font-weight:600;padding:7px 8px;border-bottom:1px solid var(--line)}
-body[data-theme=gemini] td{padding:9px 8px;border-bottom:1px solid var(--line2);font-size:13px}
-body[data-theme=gemini] tbody tr{transition:background .1s}
-body[data-theme=gemini] tr:hover td{background:var(--surf)}
-body[data-theme=gemini] .pill{background:var(--line2);color:var(--ink2);font-weight:600;padding:3px 11px}
-body[data-theme=gemini] .pill.ok{background:rgba(15,138,109,.1);color:#0F8A6D}
-body[data-theme=gemini] .pill.bad{background:rgba(206,74,40,.1);color:#CE4A28}
-body[data-theme=gemini] .tag{background:var(--line2);color:var(--ink2);border-radius:6px;padding:2px 9px;font-weight:500}
-body[data-theme=gemini] .ranges button{background:var(--line2);border:none;border-radius:8px;padding:5px 13px;color:var(--ink2);font-weight:600;transition:.12s}
-body[data-theme=gemini] .ranges button:hover{background:var(--line)}
-body[data-theme=gemini] .ranges button.on{background:var(--ink1);color:#fff}
-body[data-theme=gemini] .tooltip{background:var(--ink1);color:#fff;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
-body[data-theme=gemini] .tk-head .sym{font-size:30px;font-weight:800;letter-spacing:-.02em}
-body[data-theme=gemini] .tk-head .px{font-size:28px;font-weight:600}
-body[data-theme=gemini] .wire p{border-bottom:1px solid var(--line2)}
-body[data-theme=gemini] .crumb{color:var(--ink3);font-weight:600}
+body[data-theme=gemini] .cards>*{margin-bottom:var(--gap)}
+body[data-theme=gemini] .card.clickable:hover{background:var(--panel2)}
+body[data-theme=gemini] h2{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+body[data-theme=gemini] .sub{font-size:11px;color:var(--ink2);line-height:1.45}
+body[data-theme=gemini] .cell{border:1px solid var(--hair);border-radius:0;padding:8px 9px;background:var(--panel2);transition:.1s}
+body[data-theme=gemini] .cell:hover{border-color:var(--line);background:var(--panel)}
+body[data-theme=gemini] .cell b{font-size:12px;font-weight:700}
+body[data-theme=gemini] th{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600;padding:5px 7px;border-bottom:1.5px solid var(--line)}
+body[data-theme=gemini] td{padding:6px 7px;border-bottom:1px dotted var(--hair);font-size:12px}
+body[data-theme=gemini] tr:hover td{background:var(--panel2)}
+body[data-theme=gemini] .pill{background:transparent;color:var(--ink1);border:1px solid var(--line);border-radius:0;font-weight:700;padding:2px 8px;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+body[data-theme=gemini] .pill.ok{background:var(--up);color:#fff;border-color:var(--up)}
+body[data-theme=gemini] .pill.bad{background:var(--dn);color:#fff;border-color:var(--dn)}
+body[data-theme=gemini] .tag{background:transparent;color:var(--ink2);border:1px solid var(--hair);border-radius:0;padding:1px 7px;font-weight:600;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase}
+body[data-theme=gemini] .ranges button{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:4px 11px;color:var(--ink1);font-weight:600;font-size:11px;transition:.1s;font-family:var(--font-body)}
+body[data-theme=gemini] .ranges button:hover{background:var(--panel2)}
+body[data-theme=gemini] .ranges button.on{background:var(--ink1);color:#f4f4f0}
+body[data-theme=gemini] .tooltip{background:var(--ink1);color:#f4f4f0;border-radius:0;box-shadow:none;font-family:var(--font-body)}
+body[data-theme=gemini] .tk-head{padding:12px 12px 0}
+body[data-theme=gemini] .tk-head .sym{font-family:var(--font-pixel);font-size:36px;font-weight:700;letter-spacing:.02em}
+body[data-theme=gemini] .tk-head .px{font-family:var(--font-pixel);font-size:30px;font-weight:400}
+body[data-theme=gemini] .wire p{border-bottom:1px dotted var(--hair);padding:5px 0;font-size:11px}
+body[data-theme=gemini] .crumb{color:var(--ink2);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
 body[data-theme=gemini] .crumb:hover{color:var(--ink1)}
-/* key-facts grid (stockanalysis-style) */
-body[data-theme=gemini] .facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-body[data-theme=gemini] .fact{padding:12px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-body[data-theme=gemini] .fact span{display:block;font-size:11px;color:var(--ink3);margin-bottom:3px}
-body[data-theme=gemini] .fact b{font-size:16px;font-weight:700}
-/* timing banner + calendar */
-body[data-theme=gemini] .timing{display:flex;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
-body[data-theme=gemini] .timing>div{flex:1;padding:14px 16px;border-right:1px solid var(--line)}
+body[data-theme=gemini] .statgrid{gap:1px;background:var(--hair);border:1px solid var(--line)}
+body[data-theme=gemini] .stat{background:var(--panel);padding:9px 11px}
+body[data-theme=gemini] .stat span{font-size:9.5px;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .stat b{font-size:15px}
+/* key-facts grid */
+body[data-theme=gemini] .facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;border:1px solid var(--line);background:var(--hair);border-radius:0;overflow:hidden}
+body[data-theme=gemini] .fact{padding:9px 11px;border:none;background:var(--panel)}
+body[data-theme=gemini] .fact span{display:block;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
+body[data-theme=gemini] .fact b{font-size:14px;font-weight:700}
+/* timing banner */
+body[data-theme=gemini] .timing{display:flex;gap:0;border:1.5px solid var(--line);border-radius:0;overflow:hidden;margin-bottom:12px}
+body[data-theme=gemini] .timing>div{flex:1;padding:12px 14px;border-right:1px solid var(--hair)}
 body[data-theme=gemini] .timing>div:last-child{border-right:none}
-body[data-theme=gemini] .timing span{display:block;font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-body[data-theme=gemini] .timing b{font-size:18px;font-weight:700}
-body[data-theme=gemini] .cd{display:inline-block;min-width:26px;padding:2px 8px;border-radius:6px;background:var(--line2);font-weight:700;font-size:12px}
-body[data-theme=gemini] .cd.soon{background:rgba(206,74,40,.12);color:#CE4A28}
-body[data-theme=gemini] .seg{display:flex;align-items:center;gap:10px;margin:30px 0 14px}
-body[data-theme=gemini] main>.seg:first-child{margin-top:4px}
+body[data-theme=gemini] .timing span{display:block;font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+body[data-theme=gemini] .timing b{font-size:15px;font-weight:700}
+body[data-theme=gemini] .cd{display:inline-block;min-width:24px;padding:1px 7px;border-radius:0;background:var(--ink1);color:#f4f4f0;font-weight:700;font-size:11px}
+body[data-theme=gemini] .cd.soon{background:var(--dn);color:#fff}
+body[data-theme=gemini] .seg{display:flex;align-items:center;gap:10px;margin:20px 0 10px}
+body[data-theme=gemini] main>.seg:first-child{margin-top:2px}
 body[data-theme=gemini] .seg h2{white-space:nowrap}
-body[data-theme=gemini] .seg .ln{flex:1;height:1px;background:var(--line)}
-/* global markets ticker strip */
-body[data-theme=gemini] .gstrip{display:flex;gap:0;overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-bottom:20px;background:var(--surf)}
-body[data-theme=gemini] .gstrip .gitem{display:flex;flex-direction:column;gap:1px;padding:10px 16px;border-right:1px solid var(--line);white-space:nowrap;min-width:96px}
-body[data-theme=gemini] .gstrip .gitem span{font-size:10.5px;color:var(--ink3)}
-body[data-theme=gemini] .gstrip .gitem b{font-size:14px;font-weight:700}
-body[data-theme=gemini] .gstrip .gitem i{font-size:11.5px;font-style:normal;font-weight:600}
-body[data-theme=gemini] .gstrip:hover{border-color:#DDE1E6}
+body[data-theme=gemini] .seg .ln{flex:1;height:1.5px;background:var(--line)}
+/* global markets ticker tape (terminal) */
+body[data-theme=gemini] .gstrip{display:flex;gap:0;overflow-x:auto;border:1.5px solid var(--line);border-radius:0;margin-bottom:12px;background:var(--ink1)}
+body[data-theme=gemini] .gstrip .gitem{flex-direction:row;align-items:baseline;gap:6px;padding:6px 14px;border-right:1px solid #333;white-space:nowrap;min-width:auto}
+body[data-theme=gemini] .gstrip .gitem span{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#c9c9c2;order:0}
+body[data-theme=gemini] .gstrip .gitem b{font-size:11px;font-weight:700;color:#f4f4f0}
+body[data-theme=gemini] .gstrip .gitem i{font-size:10.5px;font-style:normal;font-weight:600}
+/* terminal components: hero, funnel, matrix, status footer */
+body[data-theme=gemini] .thero{font-family:var(--font-pixel);font-size:46px;font-weight:700;line-height:1;letter-spacing:.02em}
+body[data-theme=gemini] .funnel{display:flex;flex-direction:column;gap:6px}
+body[data-theme=gemini] .frow{display:flex;align-items:center;gap:8px}
+body[data-theme=gemini] .frow span{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);width:82px;flex:none}
+body[data-theme=gemini] .fbar{height:20px;background:var(--ink1);color:#f4f4f0;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700}
+body[data-theme=gemini] table.matrix{width:100%;border-collapse:collapse}
+body[data-theme=gemini] table.matrix th{border:none;text-align:center;color:var(--ink3)}
+body[data-theme=gemini] table.matrix td{text-align:center;padding:0;height:22px;border:1px solid var(--panel);font-weight:700;color:#fff;font-size:10px}
+body[data-theme=gemini] table.matrix td.sym{color:var(--ink1);text-align:left;padding-left:6px;background:var(--panel)!important;border-bottom:1px dotted var(--hair)}
+body[data-theme=gemini] .foot{margin-top:10px;border:1.5px solid var(--line);background:var(--ink1);color:#bdbdb5;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;display:flex;gap:16px;flex-wrap:wrap}
+body[data-theme=gemini] .foot b{color:#f4f4f0}
 
 /* shared polarity + heat tint hooks */
 body .up{color:var(--up)} body .dn{color:var(--dn)}
@@ -119,6 +145,7 @@ body .up{color:var(--up)} body .dn{color:var(--dn)}
 .searchbtn:hover{background:var(--line2);color:var(--ink1)}
 .searchbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .searchbox{position:fixed;inset:0;z-index:200;background:rgba(19,23,34,.28);backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;animation:fadeIn .15s both}
+.searchbox[hidden]{display:none!important}
 .searchpanel{width:min(560px,92vw);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 60px rgba(19,23,34,.25);overflow:hidden;animation:fadeUp .18s both}
 .searchhead{display:flex;align-items:center;gap:10px;padding:0 14px 0 18px;border-bottom:1px solid var(--line)}
 .searchhead .searchico{width:18px;height:18px;flex:none;fill:none;stroke:var(--ink3);stroke-width:2;stroke-linecap:round}
