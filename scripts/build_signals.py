@@ -64,9 +64,15 @@ def main():
             risk_per_share = px - stop
             if risk_per_share <= 0:
                 continue
-            # risk-based size: risk 25% of a max-per-trade slot on the stop distance
-            slot = capital * risk["max_pct_per_trade"] / 100
-            shares = int(min(slot, slot) / px)  # cap position at one slot
+            # Position sizing — CLAUDE.md Rule 4, the ONE formula (Strategist & Auditor identical):
+            # size by stop distance (risk_per_trade_pct of capital), then hard-cap position VALUE
+            # at max_pct_per_trade (8%) of capital.
+            risk_budget = capital * risk.get("risk_per_trade_pct", 1.0) / 100
+            shares_by_risk = risk_budget / risk_per_share
+            shares_by_cap = (capital * risk["max_pct_per_trade"] / 100) / px
+            shares = int(min(shares_by_risk, shares_by_cap))
+            if shares <= 0:
+                continue  # stop too wide for the risk budget at this price — invalid setup
             size_pkr = round(shares * px)
             score = p["net_expectancy_pct"] * (p["hit_rate"] or 0)
             candidates.append({

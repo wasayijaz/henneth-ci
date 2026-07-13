@@ -3,7 +3,11 @@
   "_capital_note": "EDIT ME — placeholder. Set real trading capital so sizing is in rupees.",
   "risk": {
     "max_positions": 4,
+    "risk_per_trade_pct": 1,
+    "_risk_per_trade_note": "capital risked if stopped out; drives sizing (CLAUDE.md Rule 4). Position value then hard-capped at max_pct_per_trade.",
     "max_pct_per_trade": 8,
+    "stale_setup_sessions": 10,
+    "stale_position_sessions": 20,
     "max_total_exposure_pct": 20,
     "max_same_sector_positions": 1,
     "circuit_breaker_stops": 2,

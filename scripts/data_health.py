@@ -61,6 +61,17 @@ def main():
         if cc.get("updated", "")[:10] == time.strftime("%Y-%m-%d"):
             problems.append(f"tv_crosscheck FAIL: {', '.join(cc['fails'])}")
 
+    # Calendar freshness (Ramadan guard, CLAUDE.md): if session times haven't been re-verified
+    # in 60 days, degrade — force a human check rather than silently trading wrong hours.
+    cal = load_json(STATE / "calendar.json", {})
+    stu = cal.get("session_times_updated")
+    try:
+        age = (date.today() - datetime.strptime(stu, "%Y-%m-%d").date()).days if stu else 9999
+        if age > 60:
+            problems.append(f"stale_calendar: session times last verified {stu or 'never'} ({age}d ago) — re-check vs PSX/SBP notice")
+    except (ValueError, TypeError):
+        problems.append("stale_calendar: session_times_updated missing/unparseable in calendar.json")
+
     status = "ok" if not problems else "degraded"
     save_json(STATE / "health.json", {
         "checked": time.strftime("%Y-%m-%d %H:%M"),
