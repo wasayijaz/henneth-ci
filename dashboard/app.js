@@ -519,11 +519,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
@@ -533,6 +533,23 @@ async function pageTicker(sym) {
   // broker calls on this ticker (from the weekly harvest) — the "real picture" from the houses
   const brokerDocs = ((researchIdx?.by_ticker?.[sym]) || []).filter(d => d.doc_type === "broker call");
   const brokerClaims = (claimsAll?.claims || []).filter(c => c.ticker === sym && c.source_type === "broker");
+  const ex = explainAll?.[sym];
+  const glance = ex ? (() => {
+    const tile = (label, o) => o ? `<div class="glance-tile"><span class="glance-q">${label}</span><b>${esc(o.verdict)}</b><div class="sub">${esc(o.one_line)}</div></div>` : "";
+    const rets = ex.return_by_year || [];
+    const spark = rets.length ? `<div class="glance-tile"><span class="glance-q">Yearly price change</span>
+      <div class="yearbars">${rets.map(r => `<div class="yb"><span class="ybbar ${r.ret_pct >= 0 ? "up" : "dn"}" style="height:${Math.min(100, Math.abs(r.ret_pct) / 2.2 + 6)}%"></span><i class="${cls(r.ret_pct)}">${r.ret_pct >= 0 ? "+" : ""}${Math.round(r.ret_pct)}%</i><em>${r.year.slice(2)}</em></div>`).join("")}</div></div>` : "";
+    return `<div class="seg" style="margin-top:2px"><h2>At a glance</h2><div class="ln"></div><span class="pill">plain english</span></div>
+    <div class="card"><div class="sub">The quick read for ${esc(sym)}${ex.name ? " (" + esc(ex.name) + ")" : ""} — is it healthy, is the price reasonable, and what changed. Educational, not advice.</div>
+      <div class="glance-grid">
+        ${tile("Is it healthy?", ex.health)}
+        ${tile("Is the price reasonable?", ex.value)}
+        ${tile("Which way is it moving?", ex.momentum)}
+        ${tile("Does it pay income?", ex.income)}
+        ${spark}
+        <div class="glance-tile"><span class="glance-q">What changed recently</span>${(ex.what_changed || []).map(c => `<div class="sub" style="margin-bottom:3px">• ${esc(c)}</div>`).join("")}</div>
+      </div></div>`;
+  })() : "";
   // deep history (Yahoo, ~18y) preferred for chart + behavior; DPS as fallback
   const series = (deep && deep.length > (hist?.length || 0)) ? deep : hist;
   const yearsSpan = series ? ((new Date(series[series.length - 1].date) - new Date(series[0].date)) / 3.156e10) : 0;
@@ -631,6 +648,7 @@ async function pageTicker(sym) {
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
+  ${glance}
   <div class="card">
     <div class="tk-head">
       <span class="sym">${sym}</span>

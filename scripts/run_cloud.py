@@ -18,7 +18,8 @@ STEPS = [
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
     # resolve/score any due persona+broker calls. Agents read these; they never fetch.
-    "fetch_research.py", "room_dossier.py", "room_queue.py", "room_gate.py", "room_score.py",
+    "fetch_research.py", "build_explainer.py",  # explainability layer (plain-English "at a glance")
+    "room_dossier.py", "room_queue.py", "room_gate.py", "room_score.py",
     "room_verify.py",   # deterministic QA: flags glitch-derived / inconsistent numbers before publish
     "design_lint.py",   # deterministic UI QA: flags rounded corners / padding-contract / raw-hex drift
     "build_dashboard.py", "preflight.py",

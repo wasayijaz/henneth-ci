@@ -177,6 +177,18 @@ body[data-theme=gemini] .fvline{font-size:11.5px;color:var(--ink2);padding:3px 0
 body[data-theme=gemini] .fvline span{display:inline-block;min-width:110px;text-transform:uppercase;font-size:9.5px;letter-spacing:.05em;color:var(--ink3)}
 body[data-theme=gemini] .fvnote{font-size:11.5px;line-height:1.55;color:var(--ink2);margin-top:10px}
 body[data-theme=gemini] .fvnote a{color:var(--ink1);text-decoration:underline}
+/* "At a glance" explainability tiles */
+body[data-theme=gemini] .glance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair)}
+body[data-theme=gemini] .glance-tile{background:var(--panel);padding:11px 13px}
+body[data-theme=gemini] .glance-q{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:4px}
+body[data-theme=gemini] .glance-tile>b{font-size:14px;font-weight:700;display:block;margin-bottom:3px;line-height:1.3}
+body[data-theme=gemini] .yearbars{display:flex;gap:7px;align-items:flex-end;height:76px;margin-top:4px}
+body[data-theme=gemini] .yb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+body[data-theme=gemini] .ybbar{width:60%;min-height:3px}
+body[data-theme=gemini] .ybbar.up{background:var(--up)}
+body[data-theme=gemini] .ybbar.dn{background:var(--dn)}
+body[data-theme=gemini] .yb i{font-size:8.5px;font-style:normal;font-weight:700;margin-top:3px}
+body[data-theme=gemini] .yb em{font-size:8.5px;font-style:normal;color:var(--ink3)}
 /* Research library rows */
 body[data-theme=gemini] .rdoc{padding:10px 0;border-bottom:1px dotted var(--hair)}
 body[data-theme=gemini] .rdoc:last-child{border-bottom:none}
