@@ -1,0 +1,25 @@
+{
+ "note": "Ledger of dated, falsifiable calls made by Desk Room personas AND by brokers. room_score.py resolves each past its horizon against actual prices and rolls up into leaderboard.json (personas) + broker_scorecard.json (brokers, overall + per sector). Populated as Rooms run and broker notes are digested. Same standard applied to both.",
+ "schema": {
+  "id": "unique string",
+  "source_type": "persona | broker",
+  "source": "persona name (Meher/Dr. Omar/Zoya/Khurram/Chair) or broker name (AKD/Topline/JS/...)",
+  "sector": "banks | e_and_p | cement | fertilizer | tech | power | other",
+  "ticker": "SYM",
+  "made_on": "YYYY-MM-DD",
+  "horizon_days": 90,
+  "resolve_by": "YYYY-MM-DD",
+  "kind": "direction | target | thesis",
+  "claim": {
+   "direction": "up|down",
+   "target_price": 0,
+   "text": "the falsifiable statement"
+  },
+  "made_at_price": 0.0,
+  "status": "pending | hit | miss | partial",
+  "resolved_on": null,
+  "resolved_price": null,
+  "score_detail": null
+ },
+ "claims": []
+}

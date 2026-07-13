@@ -1,0 +1,23 @@
+{
+  "note": "Token budget + cadence guardrails for the Desk Room loop. The daily/hourly tasks and room_queue.py read this. Raising limits raises cost linearly.",
+  "deep_dives_per_day": 3,
+  "max_escalations_per_day": 2,
+  "reaffirm_if_dossier_unchanged": true,
+  "models": {
+    "librarian_digest": "haiku",
+    "ta_memo": "sonnet",
+    "fa_memo": "sonnet",
+    "bull_case": "sonnet",
+    "bear_case": "sonnet",
+    "chair": "sonnet"
+  },
+  "est_tokens_per_deep_dive": 22000,
+  "circuit_breaker": {
+    "monthly_token_ceiling": 3000000,
+    "on_breach": "pause_queue_monitoring_continues"
+  },
+  "spend_ledger": {
+    "note": "room_score / the tasks append actual counts here per run so we can see real vs estimated cost.",
+    "runs": []
+  }
+}

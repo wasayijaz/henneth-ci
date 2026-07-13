@@ -116,6 +116,14 @@ def main():
         if empties:
             fail(f"fairvalue.json: tickers with empty methods: {', '.join(empties)}")
 
+    # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
+    # dossier can't block the core desk from deploying)
+    check("dossiers.json", required=False)
+    check("room_queue.json", required=False)
+    dj, _ = load("dossiers.json")
+    if dj and dj.get("_meta", {}).get("n_tickers", 0) < 10:
+        warn("dossiers.json: fewer than 10 tickers compiled")
+
     # health gate: if the desk itself says data is bad, warn loudly
     h, _ = load("health.json")
     if h and h.get("status") not in ("ok", "healthy", None):

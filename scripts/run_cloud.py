@@ -16,6 +16,9 @@ STEPS = [
     "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
     "snapshot.py", "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
+    # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
+    # resolve/score any due persona+broker calls. Agents read these; they never fetch.
+    "room_dossier.py", "room_queue.py", "room_score.py",
     "build_dashboard.py", "preflight.py",
 ]
 # steps allowed to exit non-zero without aborting the run
