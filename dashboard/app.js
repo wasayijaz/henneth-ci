@@ -519,17 +519,20 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
   const fv = fvAll?.tickers?.[sym];
   const room = roomsAll?.[sym];
   if (room) room.claims_ledger = (claimsAll?.claims || []).filter(c => c.ticker === sym);
+  // broker calls on this ticker (from the weekly harvest) — the "real picture" from the houses
+  const brokerDocs = ((researchIdx?.by_ticker?.[sym]) || []).filter(d => d.doc_type === "broker call");
+  const brokerClaims = (claimsAll?.claims || []).filter(c => c.ticker === sym && c.source_type === "broker");
   // deep history (Yahoo, ~18y) preferred for chart + behavior; DPS as fallback
   const series = (deep && deep.length > (hist?.length || 0)) ? deep : hist;
   const yearsSpan = series ? ((new Date(series[series.length - 1].date) - new Date(series[0].date)) / 3.156e10) : 0;
@@ -664,6 +667,11 @@ async function pageTicker(sym) {
       <div class="sub" style="color:var(--ink2)">${esc(c[2])}</div></div>`).join("")}</div></div>` : ""}
 
   ${renderRoom(room, sym)}
+
+  ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
+  <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="#/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
+    <table><thead><tr><th>House</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
+    brokerClaims.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || c.claim?.rating || "")}${c.source_url ? ` <a href="${esc(c.source_url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}</td><td class="r num">${esc(c.resolve_by || "—")}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
 
   ${fv ? (() => {
     const vcol = fv.verdict === "undervalued" ? "var(--up)" : fv.verdict === "overvalued" ? "var(--dn)" : "var(--ink2)";

@@ -56,11 +56,32 @@ def lint():
 
     # 3) card padding sanity: the gemini .card zeroes its own padding and pads children;
     #    flag if that contract is broken (a common source of "box has no padding")
-    if ".card{" in css.replace(" ", "") and "padding:0" not in css.replace(" ", ""):
-        pass  # structure present
     if "body[data-theme=gemini] .card>*:not(h2):not(.sub)" not in css:
         findings.append({"sev": "medium", "file": "themes.css",
                          "msg": "the .card child-padding contract is missing — inner content may touch the border"})
+
+    # 4) TYPOGRAPHY hierarchy: readable sizes + a controlled scale (info must present well)
+    sizes = [float(m.group(1)) for m in re.finditer(r"font-size:\s*([0-9]+(?:\.[0-9]+)?)px", css)]
+    tiny = sorted({s for s in sizes if s < 9})
+    if tiny:
+        findings.append({"sev": "medium", "file": "themes.css",
+                         "msg": f"font-size(s) below 9px {tiny} — too small to read comfortably on mobile"})
+    distinct = sorted(set(sizes))
+    if len(distinct) > 16:
+        findings.append({"sev": "low", "file": "themes.css",
+                         "msg": f"{len(distinct)} distinct font-sizes — a tight type scale reads as one "
+                                f"system; consider consolidating near values"})
+    # near-duplicate sizes (e.g. 12 and 12.5 and 13 all present) blur the hierarchy
+    near = [(a, b) for a, b in zip(distinct, distinct[1:]) if 0 < b - a < 0.75]
+    if len(near) > 4:
+        findings.append({"sev": "low", "file": "themes.css",
+                         "msg": f"{len(near)} pairs of near-identical font sizes (e.g. {near[0]}) — "
+                                f"collapse them so size differences signal real hierarchy"})
+    # body base should be a comfortable reading size
+    m = re.search(r"body\[data-theme=gemini\]\{[^}]*font-size:\s*([0-9.]+)px", css)
+    if m and float(m.group(1)) < 12:
+        findings.append({"sev": "low", "file": "themes.css",
+                         "msg": f"base body font-size {m.group(1)}px is small for dense financial text"})
 
     highs = sum(1 for f in findings if f["sev"] == "high")
     out = {

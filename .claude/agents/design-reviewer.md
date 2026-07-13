@@ -15,8 +15,14 @@ desktop and mobile. Read CLAUDE.md first. You edit only `dashboard/themes.css`, 
 - **Boxes** = `1.5px solid var(--line)`; nested/lighter boxes use `var(--hair)`.
 - **Colors from tokens** — `var(--ink1/--ink2/--ink3/--line/--hair/--up/--dn/--panel/--panel2)`, never
   raw hex outside the token block. up=gain green, dn=loss red, accent is chrome only.
-- **Type** — JetBrains Mono; labels are UPPERCASE with letter-spacing; Pixelify Sans only for big hero
-  numbers. `.sub` is muted but readable (opacity:1, var(--ink2)).
+- **Type & hierarchy** — JetBrains Mono; labels UPPERCASE with letter-spacing; Pixelify Sans only for
+  big hero numbers. `.sub` muted but readable (opacity:1, var(--ink2)). The purpose of this product is
+  to make investing EASIER — information must be presented well, so the type scale must read as ONE
+  system: a small, deliberate set of sizes (aim ≤10 distinct) where each step signals real hierarchy.
+  Collapse near-identical sizes (9/9.5, 12/12.5/13) toward shared values. A clear hierarchy is:
+  hero numbers (pixel) > section h2 (uppercase) > body (~12px) > labels/.sub (~11px) > micro caption
+  (~9.5px). Never go below 9px. Headings, values and captions should be instantly distinguishable by
+  size + weight + case, not by tiny fractional differences.
 - **Padding rhythm** — the `.card` zeroes its own padding and pads children via
   `.card>*:not(h2):not(.sub){margin-left/right:12px}`; new card-like boxes must follow the same 12px
   inner rhythm so nothing touches a border. Grid cells (.stat/.fact/.fvm/.room-facts) use the 1px-gap-
