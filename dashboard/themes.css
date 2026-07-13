@@ -164,7 +164,7 @@ body[data-theme=gemini] .fvdetail>td{padding:0;border-bottom:1.5px solid var(--l
 body[data-theme=gemini] .fvwork{padding:12px 14px;background:var(--panel2);animation:fadeIn .2s both}
 body[data-theme=gemini] .fvhdr{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:10px}
 body[data-theme=gemini] .fvmethods{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:10px}
-body[data-theme=gemini] .fvm{background:var(--panel);padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+body[data-theme=gemini] .fvm{background:var(--panel);padding:9px 11px;display:flex;flex-direction:column;gap:2px}
 body[data-theme=gemini] .fvm span{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
 body[data-theme=gemini] .fvm b{font-size:15px;font-weight:700}
 body[data-theme=gemini] .fvm i{font-size:11.5px;font-style:normal;font-weight:600}
@@ -336,7 +336,8 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
   /* everything stacks */
   body[data-theme=gemini] .grid-board,body[data-theme=gemini] .two-col{grid-template-columns:1fr!important;gap:var(--gap)}
   body[data-theme=gemini] main>.card,body[data-theme=gemini] main>.two-col,body[data-theme=gemini] .cards>*{margin-bottom:var(--gap)}
-  body[data-theme=gemini] .card{padding:16px;border-radius:0}
+  /* NOTE: .card keeps padding:0 + the 12px child-inset rhythm (see .card>* rules above) —
+     do not add card-level padding here, it would compound with the child margins below. */
   /* tables scroll horizontally inside their card, never break the page */
   body[data-theme=gemini] .card>table,body[data-theme=gemini] .card table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
   body[data-theme=gemini] .facts{grid-template-columns:1fr 1fr}
@@ -349,7 +350,7 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
   body[data-theme=gemini] .chartwrap canvas{height:280px!important}
   /* touch targets */
   body[data-theme=gemini] .ranges button{padding:8px 14px;font-size:13px}
-  body[data-theme=gemini] tr.clickable td,body[data-theme=gemini] td{padding:11px 8px}
+  body[data-theme=gemini] tr.clickable td,body[data-theme=gemini] td,body[data-theme=gemini] .risktbl td{padding:11px 8px}
   /* bottom nav bar */
   .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
     background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);
