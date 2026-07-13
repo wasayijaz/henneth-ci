@@ -73,11 +73,243 @@
    "ta_fa_alignment": "conflicted",
    "broker_stance": "n/a - no broker digest this session",
    "watch_next": "Confirmation or failure of ~30% EPS growth at the next quarterly print; which level resolves first - reclaiming sma20 (564.84) or breaking sma50 (545.35); and whether debt data enters the feed."
-  }
+  },
+  "reaffirmed": "2026-07-13 23:53",
+  "material_hash": "f2dc07c5fea0"
  },
  "_meta": {
-  "built": "2026-07-13 23:25",
-  "sessions": 1,
-  "note": "Desk Room sessions per ticker: ta_memo, fa_memo, bull_case, bear_case, house_view. Rendered on the ticker page Desk Room section."
+  "built": "2026-07-13 23:58",
+  "sessions": 4,
+  "note": "Desk Room sessions per ticker; rendered on the ticker page."
+ },
+ "UBL": {
+  "built": "2026-07-13 23:58",
+  "dossier_asof": "2026-07-13",
+  "price_at_session": 476.41,
+  "material_hash": "e274b479d89c",
+  "ta_memo": {
+   "read": "UBL sits well above both SMA20 (458.68) and SMA50 (422.6) after a strong 19.4% 20-day advance, but the last two sessions show a pullback (-1.58% 1d, -3.69% 5d) with volume drying up (vol_surge 0.37) rather than distribution. RSI14 at 62.6 is firm but off overbought extremes, and price is only 3.83% below its 20-day high, suggesting a shallow consolidation within an intact uptrend rather than a reversal.",
+   "structure": "uptrend",
+   "momentum": "up",
+   "liquidity_note": "avg_daily_traded_value_m of 1843.8 indicates solid liquidity; entry/exit should be clean without material slippage.",
+   "proven_now": [
+    "Consolidation break",
+    "Dry-up then surge",
+    "20d high + volume"
+   ],
+   "levels": {
+    "support": 458.68,
+    "resistance": 495.4
+   },
+   "technical_stance": "constructive",
+   "claim": {
+    "kind": "direction",
+    "direction": "up",
+    "horizon_days": 20,
+    "text": "UBL, currently pulling back on low volume above SMA20 (458.68) after a strong 20-day advance, is more likely than not to retest its 20-day high (~495) within the next 20 sessions absent a break below SMA20."
+   }
+  },
+  "fa_memo": {
+   "read": "UBL is a highly profitable large-cap bank — ~30% net margin, EPS 56.82, trailing P/E 8.52 which the scorecard calls peer-fair. But the desk's own fair-value model splits sharply: relative-PE (509.68) sits near the current price, while earnings-power (352.04), Graham (175.05) and DDM (179.95) all land well below it, pulling composite fair value to 266 and flagging -44.2% overvaluation. That gap leans heavily on a 0% growth assumption, which likely understates a bank's earnings-power/DDM value — so the 'overvalued' read should be treated with caution, not certainty. Dividend looks solid: four straight Rs16 payouts, 56% payout ratio, 6.61% yield, covered by profit.",
+   "valuation_stance": "rich_vs_fair",
+   "earnings_quality": "Strong — ~30% net margin (142.31B/469.52B revenue), positive EPS 56.82, no loss flags in the feed.",
+   "dividend_safety": "Covered — 56.31% payout, 6.61% yield, four consecutive Rs16 quarterly payouts, no cut signal in the data.",
+   "balance_sheet_flags": [
+    "debt/leverage not in feed",
+    "capital adequacy / NPL / asset-quality data not in feed (material gap for a bank)"
+   ],
+   "broker_view": null,
+   "fundamental_stance": "neutral",
+   "claim": {
+    "kind": "thesis",
+    "horizon_days": 90,
+    "text": "By 2026-10-13, absent EPS growth confirmed at the Jul 22, 2026 print, the desk expects UBL's price-to-composite-fair-value gap (currently -44.2%, driven mainly by the 0%-growth DDM/Graham inputs) to persist rather than close, i.e. price stays well above the ~266 composite fair value."
+   }
+  },
+  "bull_case": {
+   "thesis": "UBL remains in an intact uptrend after a 19.4% 20-day advance, trading above both SMA20 (458.68) and SMA50 (422.6), with the recent pullback looking like low-volume consolidation rather than distribution. A cheap trailing multiple and a well-covered 6.61% dividend give the name a valuation and income cushion while the technical structure resolves.",
+   "pillars": [
+    "Price is +19.4% over 20 days and still only 3.83% below its 20-day high (dossier technical)",
+    "RSI14 at 62.6 is firm but off overbought extremes, per Meher's TA memo",
+    "Pullback (-1.58% 1d, -3.69% 5d) came on vol_surge 0.37 — a dry-up, not a distribution signature (TA memo)",
+    "Trailing P/E of 8.52 is called peer-fair by the scorecard, and relative-PE fair value (509.68) sits near the current 476.41 price",
+    "Dividend yield 6.61% on a 56.31% payout ratio, covered by profit, per four straight Rs16 payouts (FA memo)"
+   ],
+   "best_evidence": "Price holding above SMA20/SMA50 with a low-volume pullback (vol_surge 0.37) after a 19.4% 20-day run — structurally still an uptrend, not a reversal (TA memo).",
+   "what_would_break_it": "A break below the 458.68 SMA20 support on rising volume, or a re-rating toward the earnings-power/Graham/DDM cluster (352.04/175.05/179.95), would invalidate the constructive read."
+  },
+  "bear_case": {
+   "thesis": "Three of the desk's four fair-value methods (earnings-power 352.04, Graham 175.05, DDM 179.95) converge well below the 476.41 price, pulling composite fair value to 266 and flagging -44.2% overvaluation. Layer on elevated volatility (rank 79.4), a fresh geopolitical shock (impact-5 Hormuz headline), and next earnings on Jul 22, and the near-term risk/reward looks stretched.",
+   "pillars": [
+    "Composite fair value 266.0 vs price 476.41 = -44.2% mispricing, verdict 'overvalued' (dossier valuation)",
+    "Only relative-PE (509.68) supports current pricing; earnings-power, Graham and DDM all sit 26-63% below price",
+    "volatility_rank 79.4 signals elevated risk exposure heading into a market already digesting impact-5 news (PSX 'plummets' on Strait of Hormuz escalation, Jul 13)",
+    "5-day return already -3.69%, the first real give-back after the 19.4% run, with next earnings (Jul 22) adding event risk before the pullback resolves"
+   ],
+   "attack_on_bull": "Zoya's cheap-valuation pillar leans entirely on relative-PE (509.68), the single outlier method — the other three models (earnings-power, Graham, DDM) all land 26-63% below the current price, and the scorecard's own composite (266) calls the stock overvalued, not fair.",
+   "broker_challenge": "Dr. Omar's FA memo softens the -44.2% overvaluation flag by arguing the 0% growth assumption 'likely understates' bank earnings-power/DDM value — but he offers no alternate growth number to back that; dossier growth_est_pct is literally 0.0. A caution without a quantified counter-estimate is an assertion, not a re-derivation, and shouldn't override three converging models.",
+   "worst_case": "A reversion toward the earnings-power/DDM/Graham cluster (~175-352) alongside a broader Hormuz-driven selloff (already -Rs474bn market-wide on Jul 9) would compound the existing -3.69% 5-day slide well past the 458.68 support level."
+  },
+  "house_view": {
+   "summary": "TA and FA are in open conflict on UBL. Meher's chart reads constructive - price holding above SMA20/SMA50 after a 19.4% run, low-volume pullback, RSI off extremes. Dr. Omar's valuation stack is the opposite: three of four fair-value methods (earnings-power 352, Graham 175, DDM 180) converge well below price, pulling composite fair value to 266, a -44.2% gap that survives the bull's main rebuttal since that rebuttal leans on relative-PE alone, the outlier method. The Jul 22 earnings print is the fulcrum - it can validate the growth the composite currently assumes at zero, or leave the gap unresolved. Given elevated volatility rank (79.4) and no consensus between the desk's own TA and FA reads, the house treats this as a live, unresolved conflict rather than a directional call.",
+   "conviction": "low",
+   "dissent": "A cheap trailing P/E (8.52) and a well-covered 6.61% yield, alongside price holding above both moving averages through a low-volume pullback, could keep UBL supported even if the DDM/Graham cluster is directionally right long-run - valuation gaps in banks can persist for quarters without a technical breakdown forcing the issue.",
+   "ta_fa_alignment": "conflicted",
+   "broker_stance": "n/a - no broker digest referenced this session",
+   "watch_next": "Jul 22, 2026 earnings print for EPS growth confirmation, plus whether price holds SMA20 support (458.68) or breaks it on rising volume - either resolves the TA/FA standoff."
+  }
+ },
+ "MEBL": {
+  "built": "2026-07-13 23:58",
+  "dossier_asof": "2026-07-13",
+  "price_at_session": 547.08,
+  "material_hash": "8e15960adb82",
+  "ta_memo": {
+   "read": "MEBL sits in an intact uptrend at 547.08, comfortably above both SMA20 (532.36) and SMA50 (505.12), with a strong +9.22% 20-day run now cooling — the last two sessions gave back -1.9% and the 5-day tape is -3.47%. RSI14 at 59.8 is mid-range, not overbought, leaving room either way. Price is only 3.6% off its 20-day high, so the short-term pullback has not broken structure yet.",
+   "structure": "uptrend",
+   "momentum": "up",
+   "liquidity_note": "avg_daily_traded_value_m of 1187.2 is deep liquidity — entry/exit for normal position sizing should be clean.",
+   "proven_now": [
+    "MACD signal cross (trend)",
+    "OBV accumulation",
+    "Band walk (upper)"
+   ],
+   "levels": {
+    "support": 532.36,
+    "resistance": 567.4
+   },
+   "technical_stance": "constructive",
+   "claim": {
+    "kind": "direction",
+    "direction": "up",
+    "horizon_days": 20,
+    "text": "As of 2026-07-13 at 547.08, expect MEBL to hold above its SMA20 (532.36) and retest the 20-day high near 567.4 within 20 sessions, extending the current uptrend."
+   }
+  },
+  "fa_memo": {
+   "read": "Meezan is a genuinely strong earner — 31% net margin, EPS 50.20, forward P/E of 10.18 falling from 11.11 signals expected earnings growth — but the price tag looks stretched: composite fair value of 417.16 sits 23.7% below the 547.08 quote, and even the bullish Graham (487) and relative-PE (450) methods fall short of spot while earnings-power (311) and DDM (384) are well below. That spread across methods is itself a flag — no single valuation lens agrees the current price is earned. Dividend looks well-covered at a 57% payout against strong profitability, with consistent quarterly payouts (Rs7-7.5) over the past year. Net: sound business, but investors are paying up for it.",
+   "valuation_stance": "rich_vs_fair",
+   "earnings_quality": "Strong — 31% net margin on 291.22B revenue, positive EPS 50.20, forward P/E improving vs trailing (10.18 vs 11.11), no loss flags.",
+   "dividend_safety": "Payout ratio 56.77% against strong, consistent profitability and four steady recent quarterly dividends (Rs7-7.5) suggests the 5.38% yield is currently well-covered.",
+   "balance_sheet_flags": [
+    "debt/leverage detail not in feed",
+    "capital adequacy / asset quality (NPLs) not in feed — material for a bank",
+    "cash/liquidity position not in feed"
+   ],
+   "broker_view": null,
+   "fundamental_stance": "cautious",
+   "claim": {
+    "kind": "thesis",
+    "horizon_days": 90,
+    "text": "As of 2026-07-13, MEBL at 547.08 trades ~24% above its composite fair value (417.16); absent an earnings beat at the Aug 7, 2026 report that materially lifts the fair-value estimate, expect the fundamental gap to persist or narrow toward fair value rather than widen further by 2026-10-13."
+   }
+  },
+  "bull_case": {
+   "thesis": "MEBL remains in an intact technical uptrend backed by genuinely strong bank fundamentals — EPS of 50.20, a forward P/E of 10.18 falling from 11.11, and a well-covered 5.38% dividend. The current pullback (-1.9% today, -3.47% over 5 days) looks like digestion of a +9.22% 20-day run, not a trend break.",
+   "pillars": [
+    "Price 547.08 holds above both SMA20 (532.36) and SMA50 (505.12), with structure only 3.6% off the 20-day high",
+    "RSI14 at 59.8 is mid-range, not overbought, leaving room to extend",
+    "TA desk flags three confirmed signals: MACD signal cross, OBV accumulation, and upper-band walk",
+    "Forward P/E compressing to 10.18 from 11.11 implies the market is pricing earnings growth (growth_est 9.1%)",
+    "Dividend yield 5.38% on a 56.77% payout ratio against 90.93B net income is well-covered, per Dr. Omar"
+   ],
+   "best_evidence": "Price sits above both SMA20 and SMA50 with three independently confirmed technical signals (MACD cross, OBV accumulation, band walk) still active despite the recent dip.",
+   "what_would_break_it": "A close below SMA20 support (532.36) would break the intact-uptrend read and open a path toward SMA50 (505.12), especially if the Hormuz-escalation headline (impact 5) drives a broader market selloff."
+  },
+  "bear_case": {
+   "thesis": "MEBL is priced well ahead of what any valuation lens supports — composite fair value of 417.16 implies the stock is 23.7% overvalued at 547.08 — and the recent price action (-1.9%, -3.47% over 5 days) suggests the rally that produced the 'accumulation' signals is already rolling over.",
+   "pillars": [
+    "Composite fair value 417.16 vs spot 547.08 = -23.7% mispricing, officially flagged 'overvalued'",
+    "No valuation method agrees with spot: even the bullish Graham (487.08) and relative-PE (450.29) fall short, while earnings-power (311.03) and DDM (384.03) are far below",
+    "5-day tape is -3.47% after a +9.22% 20-day run — momentum is cooling right at the top",
+    "Impact-5 news (Strait of Hormuz escalation, 2026-07-13) hit the broader PSX the same day, a macro risk untethered to MEBL's fundamentals",
+    "vol_surge reads only 0.42 — a below-average volume backdrop for a stock supposedly in 'accumulation'"
+   ],
+   "attack_on_bull": "The bull's weakest pillar is the trio of 'proven now' technical signals (MACD cross, OBV accumulation, band walk). These fired during the +9.22% run-up that has since reversed -3.47% over five days — they are lagging confirmations of a move already ending, not leading indicators, and none of them account for the -23.7% valuation gap Dr. Omar independently derived.",
+   "broker_challenge": "Meher's 'constructive' technical stance and OBV-accumulation claim were issued while vol_surge sits at just 0.42 — below-average volume undercuts the accumulation read. TA desks structurally lag price; the stance was set into strength and hasn't been re-tested against the current -1.9%/-3.47% reversal or the same-day Hormuz escalation headline.",
+   "worst_case": "A reversion toward composite fair value (417.16) would be a roughly 23.7% drawdown from 547.08; a nearer-term break of SMA20 support (532.36) opens a path to SMA50 (505.12), a 7.7% pullback, amplified if Hormuz tensions broaden the PSX-wide selloff already underway."
+  },
+  "house_view": {
+   "summary": "MEBL is caught between an intact technical uptrend and a fundamental picture that says the stock is running well ahead of itself. TA confirms structure above SMA20/SMA50 with momentum cooling but not broken; FA finds no valuation method that supports the current 547.08 print, pegging composite fair value ~24% lower. The 5-day -3.47% pullback on light volume looks like digestion to the bull case and the start of a reversion to the bear case — both readings are defensible pre-earnings. The desk treats SMA20 (532.36) as the near-term arbiter: hold it and the uptrend thesis stays live into Aug 7 earnings; lose it and the valuation gap becomes the dominant narrative.",
+   "conviction": "low",
+   "dissent": "The bull case has three confirmed, still-active technical signals (MACD cross, OBV accumulation, band walk) and price remains above both SMAs — dismissing an intact uptrend on a composite fair-value model (which carries its own estimation error) risks being early and wrong on a genuinely strong earner with a well-covered dividend.",
+   "ta_fa_alignment": "conflicted",
+   "broker_stance": "n/a — no broker digest was provided in this session, so there is nothing to weigh against the desk's own read.",
+   "watch_next": "A daily close below SMA20 (532.36) would tip the read toward the bear case and open SMA50 (505.12); a close above 567.4 would confirm bull continuation. The Aug 7, 2026 earnings print is the fundamental catalyst that resolves the valuation gap either way."
+  }
+ },
+ "HUBC": {
+  "built": "2026-07-13 23:58",
+  "dossier_asof": "2026-07-13",
+  "price_at_session": 222.78,
+  "material_hash": "8a682d2ab725",
+  "ta_memo": {
+   "read": "HUBC has pulled back 5.46% over 5 days on light volume (vol_surge 0.47), slipping below its SMA20 (229.91) though still holding above SMA50 (221.3). RSI14 at 44.8 shows momentum has cooled from the prior 20-day advance (+4.85%). Price sits 5.78% below its 20-day high, with no volume confirmation behind the recent slide.",
+   "structure": "transition",
+   "momentum": "down",
+   "liquidity_note": "avg_daily_traded_value_m of 1223.1 is high liquidity — entry/exit should be clean.",
+   "proven_now": [],
+   "levels": {
+    "support": 221.3,
+    "resistance": 229.91
+   },
+   "technical_stance": "cautious",
+   "claim": {
+    "kind": "direction",
+    "direction": null,
+    "horizon_days": 20,
+    "text": null
+   }
+  },
+  "fa_memo": {
+   "read": "HUBC screens cheap on trailing (6.70x) and forward (5.97x) P/E versus a composite fair value of 312 against a 223 price, a wide gap driven mostly by Graham (414) and DDM (313) methods while the more conservative earnings-power method (215) sits near current price — so the 'undervalued' call is method-sensitive. The 64.8% net margin (44.95B/69.33B) is unusually high for a power generator and likely reflects associate/equity income rather than pure core-generation economics, which is a quality flag, not a red flag by itself. The 6.61% yield on a 58% payout ratio looks well covered given consistent Rs 5 quarterly-style payouts plus a recent special dividend.",
+   "valuation_stance": "cheap_vs_fair",
+   "earnings_quality": "Very high (65%) net margin for an IPP — plausibly boosted by associate/other income rather than core generation spread; not confirmed by this data.",
+   "dividend_safety": "Payout ratio 58% against consistent recent dividends (Rs5 x3, Rs10 special) — appears sustainably covered.",
+   "balance_sheet_flags": [
+    "debt/leverage not in feed",
+    "receivables/circular-debt exposure — material for IPPs, not captured here"
+   ],
+   "broker_view": null,
+   "fundamental_stance": "constructive",
+   "claim": {
+    "kind": "thesis",
+    "horizon_days": 90,
+    "text": "By 2026-10-13, expect HUBC's price to narrow toward its composite fair value range (~260-290) absent a debt/receivables shock, given covered dividend and sub-6x forward earnings multiple."
+   }
+  },
+  "bull_case": {
+   "thesis": "HUBC offers a rare combination of deep statistical cheapness and a well-covered yield, trading well below its own SMA50 support test while composite valuation models imply significant upside. For a patient holder, the setup is a value-with-income story rather than a momentum chase.",
+   "pillars": [
+    "Composite fair value of 312.13 vs price 222.78 implies 40.1% undervaluation per the dossier's verdict",
+    "Trailing P/E of 6.70x and forward P/E of 5.97x are low in absolute terms, per fundamental data",
+    "6.61% dividend yield sits on a 58.01% payout ratio, which Dr. Omar's memo calls 'sustainably covered'",
+    "Price still holds above SMA50 (221.3) despite the 5-day pullback, and the sell-off ran on low volume (vol_surge 0.47), per Meher's memo",
+    "Beta of 0.47 signals defensive positioning during the current geopolitical volatility (impact-5 Hormuz headline, July 13)"
+   ],
+   "best_evidence": "40.1% composite mispricing gap (222.78 vs 312.13 fair value) combined with a covered 6.61% yield",
+   "what_would_break_it": "A break below SMA50 support (221.3) on rising volume, or confirmation that the wide valuation gap is a Graham/DDM artifact rather than earnings-grounded, would remove the core thesis"
+  },
+  "bear_case": {
+   "thesis": "HUBC's 'undervalued' call rests heavily on two aggressive valuation methods while the most operationally grounded method already puts fair value near or below the current price; meanwhile technicals have turned down and a sector-specific balance-sheet risk is explicitly unmodeled.",
+   "pillars": [
+    "Price broke below SMA20 (229.91) and momentum is 'down' per Meher, with RSI14 at 44.8 showing cooling, not basing, action",
+    "Earnings-power valuation (214.68) — the more conservative method — sits below the current price of 222.78, undercutting the 'undervalued' verdict",
+    "Dr. Omar flags the 64.8% net margin (44.95B/69.33B) as unusually high for a generator, likely equity/associate income rather than core generation economics — a quality flag",
+    "Balance-sheet flags explicitly list 'receivables/circular-debt exposure — material for IPPs, not captured here'",
+    "Macro backdrop is deteriorating: impact-5 headline (July 13) on Strait of Hormuz escalation, following an impact-4 Rs474bn market-wide loss day (July 9)"
+   ],
+   "attack_on_bull": "The bull's headline pillar — the 40.1% valuation gap — is its weakest: it's driven mostly by Graham (413.87) and DDM (313.46), while the conservative earnings-power method (214.68) is already below spot price. Dr. Omar says this himself: 'the undervalued call is method-sensitive.' The gap is a modeling artifact, not a robust margin of safety.",
+   "broker_challenge": "The composite fair value (312.13) functions like a broker target: it aggregates Graham/DDM/relative-PE without showing discount-rate or growth (12.2% est) assumptions, and — per Dr. Omar's own balance-sheet flag — omits circular-debt/receivables exposure, which is the single most sector-critical risk for PSX IPPs and has historically caused valuation models to overstate fair value in this sector.",
+   "worst_case": "A reversion toward the earnings-power anchor (214.68, ~3.6% below current 222.78) combined with a break of SMA50 support (221.3) amid continued Hormuz-driven market stress (Rs474bn single-day loss already logged July 9) — with any circular-debt/receivables impairment surfacing as an unquantified additional drag not captured in the current fair-value models."
+  },
+  "house_view": {
+   "summary": "TA and FA are in tension on HUBC: Meher's read shows a cooling downtrend testing SMA50 support (221.3) after a 5.46% five-day pullback, while Dr. Omar's constructive valuation call rests heavily on Graham/DDM, since the more conservative earnings-power method (214.68) already sits near spot — the composite 40.1% mispricing is method-sensitive, not a clean statistical edge. The 6.61% covered dividend is the strongest tangible pillar. Circular-debt/receivables exposure, the sector's central risk, is unmodeled in the fair-value composite. Net: a covered-yield holding position, not a conviction re-rating trade.",
+   "conviction": "low",
+   "dissent": "Price still holds above SMA50 despite the pullback, the dividend is well covered, and even the conservative earnings-power anchor (214.68) implies limited downside from spot — the bull case argues the desk may be underweighting genuine valuation support and yield cushion.",
+   "ta_fa_alignment": "fa_more_positive",
+   "broker_stance": "n/a — no broker digest supplied this session for HUBC",
+   "watch_next": "A daily close below SMA50 support (221.3) on rising volume would invalidate the yield-support thesis and open a path toward the earnings-power anchor (~214.68); the Aug 28, 2026 results should also clarify circular-debt/receivables exposure not captured in the composite fair value."
+  }
  }
 }

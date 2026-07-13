@@ -1,0 +1,13 @@
+{
+  "note": "Public broker-research sources for fetch_research.py. Add an entry only for a note that is PUBLICLY and freely published (respect robots/ToS). Each fetched doc is digested ONCE by the Librarian and its claims are scored (state/broker_scorecard.json). Empty is fine — the Research pipeline also surfaces filings from the news log without any broker source configured.",
+  "sources": [],
+  "source_schema": {
+    "broker": "AKD | Topline | JS | AHL | Arif Habib | ...",
+    "name": "human label, e.g. 'AKD Daily'",
+    "kind": "morning_note | company_note",
+    "url": "a stable public URL or index page listing the latest free PDF",
+    "type": "pdf | html",
+    "enabled": true
+  },
+  "sector_map_note": "The Librarian tags each note to tickers; room_score buckets a broker's claims per sector (banks/e_and_p/cement/fertilizer/tech/power/other) so a broker's bank desk and E&P desk are scored separately."
+}

@@ -815,8 +815,52 @@ async function pageNews() {
   $("nq").addEventListener("change", e => { newsFilter.q = e.target.value.toUpperCase(); pageNews(); });
 }
 
+/* ---------- Research library (broker notes + filings, digested) ---------- */
+async function pageResearch() {
+  const idx = await j("research_index.json");
+  const docs = Object.values(idx?.documents || {}).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  const brokers = docs.filter(d => d.source_type === "broker");
+  const filings = docs.filter(d => d.source_type !== "broker");
+  const dtLabel = { corporate_briefing: "corporate briefing", agm: "AGM", results: "results", board_meeting: "board meeting", filing: "filing", morning_note: "morning note", company_note: "broker note" };
+  const docRow = d => `<div class="rdoc">
+    <div class="rdoc-top"><span class="tag">${esc(dtLabel[d.doc_type] || d.doc_type)}</span>
+      <span class="rdoc-src">${esc(d.source)}${d.digest_level === "headline" ? ' · <span class="sub">headline only</span>' : ""}</span>
+      <span class="t">${esc(d.date || "")}</span>
+      ${(d.tickers || []).slice(0, 4).map(t => `<a href="#/ticker/${esc(t)}" class="tag clickable">${esc(t)}</a>`).join(" ")}</div>
+    <div class="rdoc-digest">${esc(d.digest || "")}${d.url ? ` <a href="${esc(d.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}</div>
+    ${(d.claims || []).length ? `<div class="sub" style="margin-top:4px"><b>Claims (scored later):</b> ${d.claims.map(c => esc(c.claim?.text || "")).join(" · ")}</div>` : ""}
+    ${d.omissions ? `<div class="sub" style="margin-top:4px"><b class="dn">What it glosses over:</b> ${esc(d.omissions)}</div>` : ""}</div>`;
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Research library</h2><div class="ln"></div><span class="pill">${docs.length} documents</span></div>
+  <div class="disclaimer">Broker research and company filings are <b>evidence the desk cross-examines, never takes at face value</b>. Brokers miss things, carry sector bias, and are often wrong — every broker claim here is extracted, scored against what actually happens, and ranked on the <a href="#/leaderboard" style="color:inherit;text-decoration:underline">broker leaderboard</a>. Educational, not advice.</div>
+  <div class="seg"><h2>Broker notes</h2><div class="ln"></div><span class="pill">${brokers.length}</span></div>
+  <div class="card">${brokers.length ? brokers.map(docRow).join("") : '<div class="empty">No broker notes digested yet. Add public sources in config/broker_sources.json; the desk digests each once and scores its calls. Until then, the desk forms its own view without leaning on brokers.</div>'}</div>
+  <div class="seg"><h2>Company filings & briefings</h2><div class="ln"></div><span class="pill">${filings.length}</span></div>
+  <div class="card">${filings.length ? filings.map(docRow).join("") : '<div class="empty">No filings tagged yet — the news sentinel surfaces results, board-meeting and corporate-briefing notices here as companies file them.</div>'}</div>`;
+}
+
+/* ---------- Leaderboards: our analysts + the brokers, scored on real outcomes ---------- */
+async function pageLeaderboard() {
+  const [lb, bs] = await Promise.all([j("leaderboard.json"), j("broker_scorecard.json")]);
+  const personas = lb?.personas || {};
+  const brokers = bs?.brokers || {};
+  const pRow = (name, r) => `<tr><td><b>${esc(name)}</b></td><td class="r num">${r.calls}</td><td class="r num ${r.hit_rate >= 0.55 ? "up" : r.hit_rate != null && r.hit_rate < 0.45 ? "dn" : ""}">${r.hit_rate != null ? Math.round(r.hit_rate * 100) + "%" : "—"}</td><td class="r num">${r.avg_target_err_pct != null ? r.avg_target_err_pct + "%" : "—"}</td></tr>`;
+  const sectorRow = (sect, s) => `<tr><td style="padding-left:22px" class="sub">${esc(sect.replace(/_/g, " "))}</td><td class="r num">${s.calls}</td><td class="r num ${!s.ranked ? "" : s.hit_rate >= 0.55 ? "up" : "dn"}">${s.hit_rate != null ? Math.round(s.hit_rate * 100) + "%" : "—"}${!s.ranked ? ' <span class="sub">unranked</span>' : ""}</td><td class="r num">${s.avg_target_err_pct != null ? s.avg_target_err_pct + "%" : "—"}</td></tr>`;
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Track records</h2><div class="ln"></div></div>
+  <div class="disclaimer">Every dated call — the desk's own AI analysts <b>and</b> the brokers — is scored against what prices actually did. This is accountability, not advice. A thin record (below ${bs?._meta?.min_sample_to_rank ?? 5} calls) is shown <b>unranked</b> so no one is over-trusted on luck.</div>
+
+  <div class="seg"><h2>The desk's AI analysts</h2><div class="ln"></div><span class="pill">${Object.keys(personas).length}</span></div>
+  <div class="card"><div class="sub">the desk holds itself to the same standard it holds the brokers.</div>
+    ${Object.keys(personas).length ? `<table><thead><tr><th>Analyst</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${Object.entries(personas).map(([n, r]) => pRow(n, r)).join("")}</tbody></table>` : '<div class="empty">No resolved calls yet — the desk\'s dated calls score after their horizons pass (first ones resolve from early August). Pending calls appear on each ticker\'s Desk Room.</div>'}</div>
+
+  <div class="seg"><h2>Brokers — ranked on what came true</h2><div class="ln"></div><span class="pill">${Object.keys(brokers).length}</span></div>
+  <div class="card"><div class="sub">overall and per sector — a broker's bank desk and E&P desk have different records, so they're scored separately.</div>
+    ${Object.keys(brokers).length ? Object.entries(brokers).map(([n, r]) => `<table style="margin-bottom:14px"><thead><tr><th>${esc(n)}</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${pRow("overall", r)}${Object.entries(r.by_sector || {}).map(([s, sv]) => sectorRow(s, sv)).join("")}</tbody></table>`).join("") : '<div class="empty">No broker calls on record yet. Add public broker sources in config/broker_sources.json — the desk extracts each note\'s calls, scores them against outcomes, and ranks the brokers here. This is the differentiator: nobody grades PSX brokers.</div>'}</div>`;
+}
+
 /* ---------- router ---------- */
-const PAGES = { today: pageToday, board: pageBoard, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, news: pageNews };
+const PAGES = { today: pageToday, board: pageBoard, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews };
 let lastPage = null;
 
 function animateIn() {
