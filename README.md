@@ -1,10 +1,17 @@
 # PSX Trade Desk
 
-**A multi-agent research terminal for the Pakistan Stock Exchange.**
+**A multi-agent research & analytics terminal for the Pakistan Stock Exchange.**
 It researches, values, backtests, debates, and monitors — then puts every call on the record and grades it.
-It **never places orders**; execution is manual on your broker. This is educational research, **not advice**.
+It **never places orders**; execution is manual on your broker.
 
-**Live:** https://wasayijaz.github.io/psx-trade-desk/ · Desk rules: [`CLAUDE.md`](CLAUDE.md) · System map: [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md)
+> ⚠️ **This is a research & analytics tool, not an investment adviser.** Everything here is educational
+> information — never personalized advice, a recommendation, or a promise of returns. Past performance
+> does not predict future results. Investing in PSX carries risk, including the loss of capital. You make
+> your own decisions. (A platform-wide footer + a "Research · not advice" badge repeat this on every page.)
+
+**Live:** https://wasayijaz.github.io/psx-trade-desk/
+Docs: [`CLAUDE.md`](CLAUDE.md) (desk rules) · [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) (system map)
+· [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) (path to a subscription product)
 
 ---
 
@@ -88,11 +95,20 @@ Deployed free via **GitHub Pages + Actions** (no secrets). Every `push` to `main
 - **Stack:** Python 3.14 (requests/pandas/numpy) · vanilla JS SPA (hash router, canvas charts, no framework)
   · JetBrains Mono + Pixelify Sans · GitHub Pages.
 
+## Governance (the desk can't quietly disagree with itself)
+`CLAUDE.md` is enforced, not aspirational: one **position-sizing formula** (risk by stop distance,
+capped at 8% position value — Strategist and Auditor compute it identically), a **circuit breaker**
+that won't auto-resume into a bad regime, **stale-position time-stops**, **immutable live strategy
+files** (edits create a new version + fresh backtest), an explicit **no-lookahead** rule the Auditor
+can veto on, a fixed **news impact 1–5 scale**, and a **calendar-freshness guard** (`data_health.py`
+degrades if session times go 60 days unverified, halting new signals). The **Auditor keeps veto**.
+
 ## Docs
 - [`CLAUDE.md`](CLAUDE.md) — the desk rules every agent obeys.
 - [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) — index of every agent, loop, script, and state file.
 - [`docs/DESK-ROOM-PLAN.md`](docs/DESK-ROOM-PLAN.md) — the multi-agent analyst design.
 - [`docs/AUTOMATION-PLAN.md`](docs/AUTOMATION-PLAN.md) — the whole-product loop map.
+- [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) — single-tenant → subscription product (auth, delivery, billing, compliance).
 - [`CHANGELOG.md`](CHANGELOG.md) — what changed and why.
 
 ---
