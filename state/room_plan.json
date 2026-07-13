@@ -1,21 +1,12 @@
 {
  "reaffirm": [
-  "FFC"
+  "FFC",
+  "UBL",
+  "MEBL",
+  "HUBC"
  ],
  "delta": [],
  "full": [
-  {
-   "symbol": "UBL",
-   "why": "never covered"
-  },
-  {
-   "symbol": "MEBL",
-   "why": "never covered"
-  },
-  {
-   "symbol": "HUBC",
-   "why": "never covered"
-  },
   {
    "symbol": "OGDC",
    "why": "never covered"
@@ -93,6 +84,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "NESTLE",
+   "why": "never covered"
+  },
+  {
    "symbol": "BAHL",
    "why": "never covered"
   },
@@ -154,10 +149,6 @@
   },
   {
    "symbol": "CHCC",
-   "why": "never covered"
-  },
-  {
-   "symbol": "NESTLE",
    "why": "never covered"
   },
   {
@@ -242,17 +233,14 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-13 23:52",
+  "built": "2026-07-14 00:18",
   "full_budget": 3,
   "run_full_now": [
-   "UBL",
-   "MEBL",
-   "HUBC"
-  ],
-  "deferred_full": [
    "OGDC",
    "MCB",
-   "MARI",
+   "MARI"
+  ],
+  "deferred_full": [
    "NBP",
    "PSO",
    "SNGP",
@@ -269,6 +257,7 @@
    "PRL",
    "GAL",
    "HCAR",
+   "NESTLE",
    "BAHL",
    "SYS",
    "EFERT",
@@ -285,7 +274,6 @@
    "SAZEW",
    "PTC",
    "CHCC",
-   "NESTLE",
    "COLG",
    "BWCL",
    "JVDC",
@@ -308,10 +296,10 @@
    "TREET"
   ],
   "counts": {
-   "full_due": 59,
+   "full_due": 56,
    "full_now": 3,
    "delta": 0,
-   "reaffirm": 1
+   "reaffirm": 4
   },
   "est_tokens_today": 66000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."

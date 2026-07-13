@@ -434,21 +434,38 @@ async function pageStrategies() {
       <td>${r.provenOn.slice(0, 10).map(s => `<a class="tag clickable" onclick="event.stopPropagation();location.hash='#/ticker/${s}'">${s}</a>`).join(" ") || '<span class="sub">none yet</span>'}</td></tr>`).join("")}</tbody></table></div>`).join("")}`;
 }
 
+function maxDrawdown(bars) {
+  // returns {mdd%, peakDate, troughDate} over the given bars
+  let peak = bars[0]?.close || 0, peakDate = bars[0]?.date, mdd = 0, pk = peak, pkd = peakDate, td = peakDate;
+  for (const b of bars) {
+    if (b.close > pk) { pk = b.close; pkd = b.date; }
+    const dd = b.close / pk - 1;
+    if (dd < mdd) { mdd = dd; peakDate = pkd; td = b.date; }
+  }
+  return { mdd: mdd * 100, peakDate, troughDate: td };
+}
 function behaviorStats(hist) {
   const c = hist.map(h => h.close);
   const rets = c.slice(1).map((v, i) => v / c[i] - 1);
-  let peak = c[0], mdd = 0;
-  c.forEach(v => { peak = Math.max(peak, v); mdd = Math.min(mdd, v / peak - 1); });
   const upDays = rets.filter(r => r > 0).length;
+  const full = maxDrawdown(hist);
+  // recent-era drawdown (last ~10 years) — the number that actually describes today's risk,
+  // separate from a decades-old crisis extreme
+  const cutoff = new Date(); cutoff.setFullYear(cutoff.getFullYear() - 10);
+  const cut = cutoff.toISOString().slice(0, 10);
+  const recentBars = hist.filter(b => b.date >= cut);
+  const recent = recentBars.length > 30 ? maxDrawdown(recentBars) : full;
   return {
     total: (c[c.length - 1] / c[0] - 1) * 100,
-    mdd: mdd * 100,
+    mdd: full.mdd, mddPeak: full.peakDate, mddTrough: full.troughDate,
+    mddRecent: recent.mdd, mddRecentTrough: recent.troughDate,
     upPct: upDays / rets.length * 100,
     avgAbs: rets.reduce((a, r) => a + Math.abs(r), 0) / rets.length * 100,
     best: Math.max(...rets) * 100,
     worst: Math.min(...rets) * 100,
   };
 }
+function yr(d) { return (d || "").slice(0, 4); }
 
 /* The Desk Room — named AI-analyst personas debate a ticker (from state/rooms.json). */
 function renderRoom(room, sym) {
@@ -542,6 +559,9 @@ async function pageTicker(sym) {
   const peerFair = fv?.methods?.relative_pe;
   const peerRich = (peerFair != null && fv?.price) ? peerFair < fv.price : null;   // fair-vs-peers below price ⇒ priced above peers
   const mddAbs = Math.abs(b.mdd);
+  const mddRecentAbs = Math.abs(b.mddRecent);
+  const mddIsOld = yr(b.mddTrough) && (new Date().getFullYear() - +yr(b.mddTrough)) >= 6;
+  const mddContext = `${mddAbs.toFixed(0)}% (peak ${yr(b.mddPeak)}→trough ${yr(b.mddTrough)}${mddIsOld ? `, an old extreme` : ""})${mddIsOld && mddRecentAbs > 5 ? `; ${mddRecentAbs.toFixed(0)}% in the last decade` : ""}`;
   const lossmaking = epsN != null && epsN <= 0;
   const priceSrc = lv?.current != null ? "DPS official feed · intraday (~real-time)" : "end-of-day close " + q.date;
 
@@ -556,7 +576,7 @@ async function pageTicker(sym) {
   if (vol === "high") cons.push(`High price volatility (rank ${vr.toFixed(0)}/100)`);
   if (liq === "low") cons.push(`Low trading liquidity — can be hard to buy or sell quickly`);
   if (peerRich === true) cons.push(`Valued above sector peers on P/E`);
-  if (b.mdd <= -50) cons.push(`Has fallen ${mddAbs.toFixed(0)}% peak-to-trough before`);
+  if (mddRecentAbs >= 45) cons.push(`Has fallen ${mddRecentAbs.toFixed(0)}% peak-to-trough within the last decade`);
   if (betaN != null && betaN > 1.3) cons.push(`Amplifies market swings (beta ${f.beta})`);
   if (lossmaking) cons.push(`Currently lossmaking (EPS ${f.eps})`);
   const flagList = (arr, kind) => arr.length
@@ -579,8 +599,8 @@ async function pageTicker(sym) {
     payN == null || (dyN != null && dyN === 0) ? qmark("info", "Is the dividend sustainable?", "Pays no dividend on record right now.")
       : payN > 90 ? qmark("warn", "Is the dividend sustainable?", `Payout ratio ${f.payout_ratio} — most of earnings are paid out, leaving little buffer if profits dip. ${dHist.length} payouts on record.`)
         : qmark("ok", "Is the dividend sustainable?", `Payout ratio ${f.payout_ratio}, yield ${f.div_yield || "—"} — covered by earnings. ${dHist.length} payouts on record.`),
-    qmark(mddAbs >= 30 ? "warn" : "info", "Can I tolerate a 30–50% decline?",
-      `${sym} has dropped ${mddAbs.toFixed(0)}% peak-to-trough over its ${histYears}-year history. Only commit money you can hold through a fall like that.`),
+    qmark(mddRecentAbs >= 30 ? "warn" : "info", "Can I tolerate a 30–50% decline?",
+      `${sym}'s worst drop in the last decade was ${mddRecentAbs.toFixed(0)}% (to ${yr(b.mddRecentTrough)})${mddIsOld ? `; its all-time worst was ${mddAbs.toFixed(0)}% back in the ${yr(b.mddTrough)} era` : ""}. Only commit money you can hold through a fall like that.`),
     qmark("info", "What is my time horizon?", "This desk is daily-timeframe swing research — not day-trading, and not a buy-and-forget rating. Match any position to your own horizon and risk tolerance."),
   ].join("");
 
@@ -591,8 +611,8 @@ async function pageTicker(sym) {
   const riskRows = [
     rrow("Price volatility", vol ? rl(vol === "high" ? "hi" : vol === "moderate" ? "md" : "lo", vol) : NA,
       `Average daily move ±${b.avgAbs.toFixed(1)}%${vr != null ? ` (volatility rank ${vr.toFixed(0)}/100 across the universe)` : ""}.`),
-    rrow("Maximum decline", rl(mddAbs > 60 ? "hi" : mddAbs > 35 ? "md" : "lo", mddAbs > 60 ? "severe" : mddAbs > 35 ? "large" : "moderate"),
-      `Fell ${mddAbs.toFixed(0)}% peak-to-trough over ${histYears}y. A drop of this size can recur.`),
+    rrow("Maximum decline", rl(mddRecentAbs > 60 ? "hi" : mddRecentAbs > 35 ? "md" : "lo", mddRecentAbs > 60 ? "severe" : mddRecentAbs > 35 ? "large" : "moderate"),
+      `Worst drawdown ${mddContext}. A drop of this size can recur.`),
     rrow("Liquidity", rl(liq === "low" ? "hi" : liq === "moderate" ? "md" : "lo", liq === "adequate" ? "adequate" : liq),
       `~Rs ${fmt(tvv / 1e6, 0)}M traded per day. ${liq === "low" ? "Thin — exiting quickly may move the price against you." : liq === "moderate" ? "Moderate depth." : "Deep enough to enter and exit readily."}`),
     rrow("Market sensitivity", betaN != null ? rl(betaN > 1.3 ? "hi" : betaN > 0.8 ? "md" : "lo", "beta " + f.beta) : NA,
