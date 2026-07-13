@@ -450,17 +450,69 @@ function behaviorStats(hist) {
   };
 }
 
+/* The Desk Room — named AI-analyst personas debate a ticker (from state/rooms.json). */
+function renderRoom(room, sym) {
+  const head = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>`;
+  if (!room || !room.house_view) {
+    return `${head}<div class="card"><div class="empty">No Room session for ${esc(sym)} yet. The desk's AI analysts — a technical desk, a fundamental desk, a bull, a bear and a chair — cover names in rotation (results, high-impact news and signals jump the queue). ${esc(sym)} is in the queue.</div></div>`;
+  }
+  const hv = room.house_view, ta = room.ta_memo || {}, fa = room.fa_memo || {}, bull = room.bull_case || {}, bear = room.bear_case || {};
+  const convIdx = { low: 1, medium: 2, high: 3 }[hv.conviction] || 1;
+  const convMeter = [1, 2, 3].map(i => `<span class="cvseg ${i <= convIdx ? "on" : ""}"></span>`).join("");
+  const persona = (init, name, role) => `<div class="phead"><span class="pav">${init}</span><div><b>${name}</b><span class="prole">${role}</span></div></div>`;
+  const memo = (init, name, role, stanceLabel, stance, body) =>
+    `<div class="card room-memo"><div class="memo-top">${persona(init, name, role)}${stance ? `<span class="stance ${stance}">${esc(stanceLabel)}</span>` : ""}</div>${body}</div>`;
+  const li = arr => (arr || []).map(x => `<li>${esc(x)}</li>`).join("");
+  const stanceClass = s => ({ constructive: "up", cautious: "dn", neutral: "", unclear: "", near_fair: "" }[s] || "");
+
+  const calls = (room.claims_ledger || []);
+  return `${head}
+  <p class="sub" style="margin:-4px 0 12px">Named AI analyst personas research and debate <b>${esc(sym)}</b>. The technical and fundamental desks work <b>separately</b>; a bull and a bear argue the case; the Chair synthesizes a house view with an explicit dissent. Every dated call below is scored against what actually happens. This is research, not advice.</p>
+
+  <div class="card room-house">
+    <div class="memo-top"><b style="font-size:12px;letter-spacing:.06em;text-transform:uppercase">The Chair — house view</b>
+      <span class="conv">conviction <span class="cvmeter">${convMeter}</span> ${esc(hv.conviction || "")}</span></div>
+    <p style="margin:8px 0 10px;line-height:1.55">${esc(hv.summary || "")}</p>
+    <div class="room-facts">
+      <div><span>Dissent (strongest counter)</span><b>${esc(hv.dissent || "—")}</b></div>
+      <div><span>TA vs FA</span><b>${esc((hv.ta_fa_alignment || "—").replace(/_/g, " "))}</b></div>
+      <div><span>Broker stance</span><b>${esc(hv.broker_stance || "n/a")}</b></div>
+      <div><span>Watch next</span><b>${esc(hv.watch_next || "—")}</b></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    ${memo("MC", "Meher", "The Chartist · TA", ta.technical_stance, stanceClass(ta.technical_stance), `<p class="sub" style="color:var(--ink2);line-height:1.5">${esc(ta.read || "")}</p>${ta.levels ? `<div class="sub" style="margin-top:6px">structure <b>${esc(ta.structure || "—")}</b> · momentum <b>${esc(ta.momentum || "—")}</b> · support <b>${fmt(ta.levels.support)}</b> · resistance <b>${fmt(ta.levels.resistance)}</b></div>` : ""}`)}
+    ${memo("DO", "Dr. Omar", "The Fundamentalist · FA", fa.fundamental_stance, stanceClass(fa.fundamental_stance), `<p class="sub" style="color:var(--ink2);line-height:1.5">${esc(fa.read || "")}</p><div class="sub" style="margin-top:6px">valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend: ${esc(fa.dividend_safety || "—")}</div>`)}
+  </div>
+
+  <div class="two-col">
+    <div class="card room-memo bull"><div class="memo-top">${persona("ZB", "Zoya", "The Bull")}</div>
+      <p style="line-height:1.5">${esc(bull.thesis || "")}</p><ul class="room-ul">${li(bull.pillars)}</ul>
+      ${bull.what_would_break_it ? `<div class="sub" style="margin-top:6px"><b>Breaks if:</b> ${esc(bull.what_would_break_it)}</div>` : ""}</div>
+    <div class="card room-memo bear"><div class="memo-top">${persona("KB", "Khurram", "The Bear")}</div>
+      <p style="line-height:1.5">${esc(bear.thesis || "")}</p><ul class="room-ul">${li(bear.pillars)}</ul>
+      ${bear.attack_on_bull ? `<div class="sub" style="margin-top:6px"><b>On the bull:</b> ${esc(bear.attack_on_bull)}</div>` : ""}</div>
+  </div>
+
+  ${calls.length ? `<div class="card"><h2 style="font-size:12px">Dated calls on the record</h2><div class="sub">each is scored against what actually happens — this is how the desk (and, later, the brokers) are held accountable.</div>
+    <table><thead><tr><th>Analyst</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
+    calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}`;
+}
+
 async function pageTicker(sym) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
   const fv = fvAll?.tickers?.[sym];
+  const room = roomsAll?.[sym];
+  if (room) room.claims_ledger = (claimsAll?.claims || []).filter(c => c.ticker === sym);
   // deep history (Yahoo, ~18y) preferred for chart + behavior; DPS as fallback
   const series = (deep && deep.length > (hist?.length || 0)) ? deep : hist;
   const yearsSpan = series ? ((new Date(series[series.length - 1].date) - new Date(series[0].date)) / 3.156e10) : 0;
@@ -590,6 +642,8 @@ async function pageTicker(sym) {
     <div class="two-col" style="gap:12px">${fsc.cards.map(c => `<div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><b>${esc(c[0])}</b><span class="tag">${esc(c[1])}</span></div>
       <div class="sub" style="color:var(--ink2)">${esc(c[2])}</div></div>`).join("")}</div></div>` : ""}
+
+  ${renderRoom(room, sym)}
 
   ${fv ? (() => {
     const vcol = fv.verdict === "undervalued" ? "var(--up)" : fv.verdict === "overvalued" ? "var(--dn)" : "var(--ink2)";
