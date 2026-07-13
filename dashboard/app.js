@@ -861,9 +861,13 @@ async function pageResearch() {
 
 /* ---------- Leaderboards: our analysts + the brokers, scored on real outcomes ---------- */
 async function pageLeaderboard() {
-  const [lb, bs] = await Promise.all([j("leaderboard.json"), j("broker_scorecard.json")]);
+  const [lb, bs, claimsAll] = await Promise.all([j("leaderboard.json"), j("broker_scorecard.json"), j("claims.json")]);
   const personas = lb?.personas || {};
   const brokers = bs?.brokers || {};
+  const pending = (claimsAll?.claims || []).filter(c => c.status === "pending");
+  const pendBroker = pending.filter(c => c.source_type === "broker");
+  const pendByBroker = {};
+  pendBroker.forEach(c => (pendByBroker[c.source] = pendByBroker[c.source] || []).push(c));
   const pRow = (name, r) => `<tr><td><b>${esc(name)}</b></td><td class="r num">${r.calls}</td><td class="r num ${r.hit_rate >= 0.55 ? "up" : r.hit_rate != null && r.hit_rate < 0.45 ? "dn" : ""}">${r.hit_rate != null ? Math.round(r.hit_rate * 100) + "%" : "—"}</td><td class="r num">${r.avg_target_err_pct != null ? r.avg_target_err_pct + "%" : "—"}</td></tr>`;
   const sectorRow = (sect, s) => `<tr><td style="padding-left:22px" class="sub">${esc(sect.replace(/_/g, " "))}</td><td class="r num">${s.calls}</td><td class="r num ${!s.ranked ? "" : s.hit_rate >= 0.55 ? "up" : "dn"}">${s.hit_rate != null ? Math.round(s.hit_rate * 100) + "%" : "—"}${!s.ranked ? ' <span class="sub">unranked</span>' : ""}</td><td class="r num">${s.avg_target_err_pct != null ? s.avg_target_err_pct + "%" : "—"}</td></tr>`;
   $("view").innerHTML = `
@@ -876,7 +880,12 @@ async function pageLeaderboard() {
 
   <div class="seg"><h2>Brokers — ranked on what came true</h2><div class="ln"></div><span class="pill">${Object.keys(brokers).length}</span></div>
   <div class="card"><div class="sub">overall and per sector — a broker's bank desk and E&P desk have different records, so they're scored separately.</div>
-    ${Object.keys(brokers).length ? Object.entries(brokers).map(([n, r]) => `<table style="margin-bottom:14px"><thead><tr><th>${esc(n)}</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${pRow("overall", r)}${Object.entries(r.by_sector || {}).map(([s, sv]) => sectorRow(s, sv)).join("")}</tbody></table>`).join("") : '<div class="empty">No broker calls on record yet. Add public broker sources in config/broker_sources.json — the desk extracts each note\'s calls, scores them against outcomes, and ranks the brokers here. This is the differentiator: nobody grades PSX brokers.</div>'}</div>`;
+    ${Object.keys(brokers).length ? Object.entries(brokers).map(([n, r]) => `<table style="margin-bottom:14px"><thead><tr><th>${esc(n)}</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${pRow("overall", r)}${Object.entries(r.by_sector || {}).map(([s, sv]) => sectorRow(s, sv)).join("")}</tbody></table>`).join("") : '<div class="empty">No broker calls have <b>resolved</b> yet — rankings appear once a call reaches its horizon. Calls already on the record are shown below and will be graded when they resolve.</div>'}</div>
+
+  ${pendBroker.length ? `<div class="seg"><h2>Broker calls on the record — pending</h2><div class="ln"></div><span class="pill">${pendBroker.length}</span></div>
+  <div class="card"><div class="sub">harvested from public research; each will be scored against what actually happens by its horizon. Recorded to grade the house, not to follow it.</div>
+    <table><thead><tr><th>House</th><th>Ticker</th><th>Call</th><th class="r">Resolves</th></tr></thead><tbody>${
+    pendBroker.slice(0, 40).map(c => `<tr><td><b>${esc(c.source)}</b></td><td><a href="#/ticker/${esc(c.ticker)}" style="color:var(--accent);font-weight:700">${esc(c.ticker)}</a></td><td class="sub">${esc(c.claim?.text || c.claim?.rating || "")}</td><td class="r num">${esc(c.resolve_by || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
 }
 
 /* ---------- router ---------- */
