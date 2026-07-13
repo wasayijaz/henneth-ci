@@ -1,8 +1,8 @@
 {
- "updated": "2026-07-13 16:04",
- "regime": "neutral",
+ "updated": "2026-07-13 17:44",
+ "regime": "risk-off",
  "geo_risk": {
-  "score": 47,
+  "score": 57,
   "band": "moderate"
  },
  "signals": [
@@ -31,39 +31,39 @@
    "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+3.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260713-GAL-high50_break",
+   "id": "20260713-GAL-trend_momo_combo",
    "ticker": "GAL",
-   "strategy": "high50_break",
-   "template": "50d high breakout",
-   "category": "breakout",
+   "strategy": "trend_momo_combo",
+   "template": "Trend + momentum combo",
+   "category": "momentum",
    "sector": "Ghandhara Automobiles Limited",
-   "entry": 607.97,
-   "stop": 583.65,
-   "target": 656.61,
+   "entry": 606.41,
+   "stop": 588.22,
+   "target": 642.79,
    "rr": 2.0,
-   "hold_sessions": 15,
+   "hold_sessions": 12,
    "size_shares": 131,
-   "size_pkr": 79644,
+   "size_pkr": 79440,
    "backtest": {
-    "hit_rate": 0.556,
-    "net_expectancy_pct": 1.58,
-    "n": 27,
-    "oos_hit": 0.5
+    "hit_rate": 0.568,
+    "net_expectancy_pct": 1.34,
+    "n": 37,
+    "oos_hit": 0.6
    },
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "50d high breakout is triggering now; on GAL's own history it won 56% over 27 trades (+1.6% net/trade), still profitable out-of-sample."
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 57% over 37 trades (+1.3% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
  "top_predictable": [
   {
-   "ticker": "INDU",
-   "score": 67.7
-  },
-  {
    "ticker": "FFC",
    "score": 67.3
+  },
+  {
+   "ticker": "INDU",
+   "score": 65.5
   },
   {
    "ticker": "NBP",
@@ -74,12 +74,12 @@
    "score": 61.9
   },
   {
-   "ticker": "BAFL",
-   "score": 61.7
+   "ticker": "GHNI",
+   "score": 61.9
   },
   {
-   "ticker": "GHNI",
-   "score": 61.6
+   "ticker": "BAFL",
+   "score": 61.7
   },
   {
    "ticker": "UBL",
@@ -101,91 +101,58 @@
  "movers_up": [
   {
    "ticker": "GHNI",
-   "ret_1d": 6.41,
-   "close": 1168.32
+   "ret_1d": 5.6,
+   "close": 1233.72
   },
   {
-   "ticker": "JVDC",
-   "ret_1d": 4.25,
-   "close": 155.37
+   "ticker": "NRL",
+   "ret_1d": 2.05,
+   "close": 405.79
   },
   {
-   "ticker": "AKBL",
-   "ret_1d": 3.1,
-   "close": 111.85
+   "ticker": "ATRL",
+   "ret_1d": 1.93,
+   "close": 926.51
   },
   {
-   "ticker": "MEBL",
-   "ret_1d": 2.41,
-   "close": 557.7
+   "ticker": "PRL",
+   "ret_1d": 1.57,
+   "close": 42.73
   },
   {
-   "ticker": "AIRLINK",
-   "ret_1d": 2.16,
-   "close": 153.18
+   "ticker": "PSO",
+   "ret_1d": 0.67,
+   "close": 356.66
   }
  ],
  "movers_down": [
   {
-   "ticker": "HMB",
-   "ret_1d": -0.83,
-   "close": 118.0
+   "ticker": "JVDC",
+   "ret_1d": -2.79,
+   "close": 151.04
   },
   {
-   "ticker": "ILP",
-   "ret_1d": -0.83,
-   "close": 103.92
+   "ticker": "FCCL",
+   "ret_1d": -2.97,
+   "close": 54.22
   },
   {
-   "ticker": "SRVI",
-   "ret_1d": -1.18,
-   "close": 2130.05
+   "ticker": "FATIMA",
+   "ret_1d": -2.99,
+   "close": 158.01
   },
   {
-   "ticker": "SNGP",
-   "ret_1d": -1.6,
-   "close": 112.4
+   "ticker": "MLCF",
+   "ret_1d": -3.17,
+   "close": 100.94
   },
   {
-   "ticker": "SAZEW",
-   "ret_1d": -1.68,
-   "close": 2019.97
+   "ticker": "DGKC",
+   "ret_1d": -3.2,
+   "close": 217.3
   }
  ],
  "news": [
-  {
-   "ts": "2026-07-10",
-   "source": "Mettis Global",
-   "headline": "SBP FX reserves jump $1.94bn to $18.47bn",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "SBP-held reserves rose $1.94bn (+11.76% WoW) to $18.47bn in the week ended Jul 3, 2026 - supportive for PKR and macro stability.",
-   "url": "https://mettisglobal.news/MG-Morning-Breeze-Updates-to-Skim-before-Market-61742"
-  },
-  {
-   "ts": "2026-07-10",
-   "source": "Mettis Global",
-   "headline": "Worker remittances fall to $3.47bn in June",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "June 2026 remittances $3.47bn, down 18.3% MoM but up 2% YoY.",
-   "url": "https://mettisglobal.news/MG-Morning-Breeze-Updates-to-Skim-before-Market-61742"
-  },
-  {
-   "ts": "2026-07-10",
-   "source": "Mettis Global",
-   "headline": "Bank Alfalah's Rs20bn Tier-2 TFC fully subscribed",
-   "tickers": [
-    "BAFL"
-   ],
-   "impact": 3,
-   "summary": "BAFL's Rs20,000,000,000 Tier-2 Term Finance Certificate issue fully subscribed with SBP approval - strengthens capital base.",
-   "url": "https://mettisglobal.news/MG-Morning-Breeze-Updates-to-Skim-before-Market-61742"
-  },
   {
    "ts": "2026-07-10",
    "source": "Mettis Global",
@@ -348,6 +315,45 @@
    "impact": 4,
    "summary": "Petroleum Division submitted amendments to the Brownfield Refining Policy 2023 to the Cabinet Committee on Energy: refineries (PARCO, Attock Refinery/ARL, Pakistan Refinery/PRL, National Refinery/NRL, Cnergyico) that sign OGRA Upgrade Agreements within 90 days get a seven-year package - minimum 10% customs/regulatory duty maintained on imported gasoline and diesel for seven years, a 10% deemed duty incentive on locally produced gasoline/diesel, and sales tax exemption on imported plant, machinery, equipment and materials - to unlock nearly $6 billion in upgrades.",
    "url": "https://propakistani.pk/2026/07/13/govt-unveils-new-plan-to-fast-track-6-billion-refinery-upgrade-projects/"
+  },
+  {
+   "ts": "2026-07-13",
+   "source": "Mettis Global",
+   "headline": "PSX Closing Bell: Falls Off A Cliff",
+   "tickers": [
+    "MACRO",
+    "DGKC",
+    "MLCF",
+    "GHNI",
+    "ATRL"
+   ],
+   "impact": 4,
+   "summary": "Monday final close: KSE-100 ended at 179,927.04, down 2,314.73 points (-1.27%) from previous close of 182,241.77; KSE-100 volume 365.01m shares, All-Share Index volume 845.28m shares, market value traded Rs35.55bn; breadth 13 advancers vs 87 decliners of 100 index companies; top gainers GHNI +5.60%, CNERGY +3.72%, GHGL +1.97%, ATRL +1.93%, RMPL +0.69%; top losers TGL -4.03%, HGFA -3.38%, DGKC -3.20%, MLCF -3.17%, POWER -2.99%; report attributes the drop to the surge in international oil prices and heightened geopolitical uncertainty (US-Iran Strait of Hormuz), prompting broad-based selling in banking, cement, fertilizer and energy stocks.",
+   "url": "https://mettisglobal.news/PSX-Closing-Bell-Falls-Off-a-Cliff-61797"
+  },
+  {
+   "ts": "2026-07-13",
+   "source": "Mettis Global",
+   "headline": "PKR strengthens again, hits 195-day winning run vs USD",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Rupee added 3.08 paisa in Monday's interbank session to settle at Rs278.02/USD (from Friday's close of Rs278.05), extending a 195-consecutive-day winning streak vs the dollar (cumulative +Rs3.4018, +1.22% over the streak); intraday band Rs278.20-278.00; open market Rs278.80 buy / Rs279.10 sell.",
+   "url": "https://mettisglobal.news/PKR-strengthens-again-hits-195day-winning-run-vs-USD-61801"
+  },
+  {
+   "ts": "2026-07-13",
+   "source": "Mettis Global",
+   "headline": "Pakistan car sales jump 39% in FY26",
+   "tickers": [
+    "MACRO",
+    "INDU",
+    "HCAR"
+   ],
+   "impact": 2,
+   "summary": "FY26 cumulative car/LCV/van/jeep sales reached 206,436 units, +39.4% YoY vs FY25's 148,042; June 2026 sales 22,741 units (+4.4% YoY, +28.8% MoM), though passenger cars alone fell 12.9% YoY in June (15,378 units) while LCVs/vans/jeeps rose 79.0% YoY (7,363 units); June brand figures cited: Suzuki 7,719 units (Alto 7,239, Every 480, Cultus 439, Swift 1,668), Toyota 2,650 units, Honda 2,594 units, Hyundai 288 units - no PSX-ticker-level breakdown given in the article.",
+   "url": "https://mettisglobal.news/Car-sales-rise-44-in-June-2026-61802"
   }
  ],
  "agent_wire": [],
