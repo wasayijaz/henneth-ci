@@ -974,3 +974,18 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeSearch();
   if (e.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
 });
+
+/* ---------- sidebar: collapse (desktop) + drawer (mobile) ---------- */
+const shell = $("shell");
+if (shell && localStorage.getItem("sideCollapsed") === "1") shell.classList.add("collapsed");
+$("sideToggle")?.addEventListener("click", () => {
+  const c = shell.classList.toggle("collapsed");
+  localStorage.setItem("sideCollapsed", c ? "1" : "0");
+});
+const openDrawer = () => shell.classList.add("drawer");
+const closeDrawer = () => shell.classList.remove("drawer");
+$("sideOpen")?.addEventListener("click", openDrawer);
+$("sideBackdrop")?.addEventListener("click", closeDrawer);
+// close the mobile drawer after navigating or on Escape
+window.addEventListener("hashchange", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
