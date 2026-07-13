@@ -20,8 +20,8 @@ The orchestrator hands you one ticker's dossier (from state/dossiers.json) inlin
 `technical` block, `price`, and `asof`. Every number you cite must come from there — quote none from
 memory (desk hard-rule #2). If a field is missing, say "not in the data", never guess.
 
-## Output — write your slot into state/rooms.json under this ticker as `ta_memo`
-A compact JSON object:
+## Output — return ONLY this JSON object (the orchestrator assembles it; do not write files)
+Your `ta_memo`:
 ```
 {
   "read": "2-4 sentence plain-English technical read (trend, where price sits vs SMA20/50, RSI, distance to 20d high)",

@@ -26,7 +26,8 @@ an answer. Note what it argues, but also what it omits and the source's incentiv
 carries a track-record annotation (e.g. "Topline on cement: 61% dir, n=14"), weight it accordingly —
 a weak-record source is a weak prior. Never write "the broker says X so X".
 
-## Output — write your slot into state/rooms.json under this ticker as `fa_memo`
+## Output — return ONLY this JSON object (the orchestrator assembles it; do not write files)
+Your `fa_memo`:
 ```
 {
   "read": "3-5 sentence read: is the business sound, is it cheap/dear vs peers and vs model fair value, is the dividend safe",
