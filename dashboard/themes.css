@@ -177,6 +177,53 @@ body[data-theme=gemini] .fvline{font-size:11.5px;color:var(--ink2);padding:3px 0
 body[data-theme=gemini] .fvline span{display:inline-block;min-width:110px;text-transform:uppercase;font-size:9.5px;letter-spacing:.05em;color:var(--ink3)}
 body[data-theme=gemini] .fvnote{font-size:11.5px;line-height:1.55;color:var(--ink2);margin-top:10px}
 body[data-theme=gemini] .fvnote a{color:var(--ink1);text-decoration:underline}
+/* ============ ACCOUNTS + ONBOARDING ============ */
+body[data-theme=gemini] .acct-slot{display:flex;align-items:center}
+body[data-theme=gemini] .acct-signin{background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);padding:4px 12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-body)}
+body[data-theme=gemini] .acct-btn{width:28px;height:28px;background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);font-weight:800;font-size:12px;font-family:var(--font-body)}
+body[data-theme=gemini] .acct-slot{position:relative}
+body[data-theme=gemini] .acct-menu{position:absolute;top:34px;right:0;background:var(--panel);border:1.5px solid var(--line);min-width:200px;z-index:80;display:flex;flex-direction:column}
+body[data-theme=gemini] .acct-email{padding:9px 12px;font-size:10.5px;color:var(--ink3);border-bottom:1px solid var(--hair);word-break:break-all}
+body[data-theme=gemini] .acct-menu button{background:transparent;border:none;text-align:left;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body)}
+body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
+/* auth modal */
+body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px}
+body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px}
+body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+body[data-theme=gemini] .auth-head b{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+body[data-theme=gemini] .auth-head em{font-style:normal;color:var(--ink3)}
+body[data-theme=gemini] .auth-x{background:transparent;border:1px solid var(--line);width:24px;height:24px;font-size:11px}
+body[data-theme=gemini] .auth-tabs{display:flex;margin-bottom:14px;border:1px solid var(--line)}
+body[data-theme=gemini] .auth-tabs button{flex:1;background:transparent;border:none;padding:8px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-family:var(--font-body)}
+body[data-theme=gemini] .auth-tabs button.on{background:var(--ink1);color:#f4f4f0}
+body[data-theme=gemini] .authpanel label{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:10px}
+body[data-theme=gemini] .authpanel input{display:block;width:100%;margin-top:4px;padding:9px 10px;border:1.5px solid var(--line);background:var(--panel);font:inherit;font-size:13px;color:var(--ink1)}
+body[data-theme=gemini] .authpanel input:focus{outline:2px solid var(--ink1);outline-offset:-1px}
+body[data-theme=gemini] .auth-go{width:100%;background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);padding:10px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:2px;font-family:var(--font-body)}
+body[data-theme=gemini] .auth-go:disabled{opacity:.55}
+body[data-theme=gemini] .authmsg{font-size:11.5px;color:var(--up);margin-top:10px;line-height:1.5;min-height:1em}
+body[data-theme=gemini] .authmsg.bad{color:var(--dn)}
+body[data-theme=gemini] .auth-foot{margin-top:10px;font-size:11px}
+body[data-theme=gemini] .auth-foot a{text-decoration:underline;cursor:pointer;color:var(--ink2)}
+body[data-theme=gemini] .auth-legal{margin-top:12px;padding-top:10px;border-top:1px solid var(--hair);font-size:9.5px;color:var(--ink3);line-height:1.5}
+/* onboarding wizard */
+body[data-theme=gemini] .wizbox{position:fixed;z-index:110}
+body[data-theme=gemini] .wizbox.center{inset:0;background:rgba(10,10,10,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+body[data-theme=gemini] .wizbox.corner{right:18px;bottom:18px;max-width:400px}
+body[data-theme=gemini] .wizcard{background:var(--panel);border:1.5px solid var(--line);padding:18px;width:100%;max-width:440px;box-shadow:6px 6px 0 rgba(10,10,10,.15)}
+body[data-theme=gemini] .wiz-prog{height:4px;background:var(--line2);margin-bottom:14px}
+body[data-theme=gemini] .wiz-prog span{display:block;height:100%;background:var(--ink1);transition:width .25s ease}
+body[data-theme=gemini] .wiz-title{display:block;font-size:15px;font-weight:800;margin-bottom:8px;line-height:1.35}
+body[data-theme=gemini] .wiz-body{font-size:12px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+body[data-theme=gemini] .wiz-opts{display:flex;flex-direction:column;gap:6px;margin:10px 0 4px}
+body[data-theme=gemini] .wiz-opt{text-align:left;background:var(--panel);border:1.5px solid var(--hair);padding:10px 12px;font-size:12.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body);transition:.1s}
+body[data-theme=gemini] .wiz-opt:hover{border-color:var(--line)}
+body[data-theme=gemini] .wiz-opt.on{border-color:var(--ink1);background:var(--ink1);color:#f4f4f0}
+body[data-theme=gemini] .wiz-nav{display:flex;align-items:center;gap:8px;margin-top:14px}
+body[data-theme=gemini] .wiz-next{margin-left:auto;background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);padding:8px 18px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-family:var(--font-body)}
+body[data-theme=gemini] .wiz-back,body[data-theme=gemini] .wiz-skip{background:transparent;border:1px solid var(--hair);padding:8px 12px;font-size:10.5px;color:var(--ink3);font-family:var(--font-body)}
+@media(max-width:720px){body[data-theme=gemini] .wizbox.corner{left:12px;right:12px;bottom:12px;max-width:none}}
+
 /* "At a glance" explainability tiles */
 body[data-theme=gemini] .glance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair)}
 body[data-theme=gemini] .glance-tile{background:var(--panel);padding:11px 13px}

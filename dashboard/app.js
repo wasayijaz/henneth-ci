@@ -924,6 +924,9 @@ function animateIn() {
 }
 
 async function route(isPoll) {
+  // Supabase auth callbacks (email confirm / password reset) arrive in the hash —
+  // they're not routes; auth.js consumes them and then navigates.
+  if (/access_token=|error_code=|type=recovery|type=signup/.test(location.hash)) return;
   const h = location.hash || "#/today";
   const [, page, arg] = h.split("/");
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
