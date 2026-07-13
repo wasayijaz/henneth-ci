@@ -14,9 +14,27 @@ Design rules:
   never guessed (desk hard-rule #2).
 - Numbers are rounded/trimmed for token economy; full precision stays in source.
 """
+import hashlib
+import json
 import time
 
 from psx_data import STATE, load_json, save_json
+
+
+def _material_hash(d):
+    """Hash only the fields that should trigger a fresh Room debate. Price ticking
+    around does NOT change this — valuation verdict, scorecard, documents, high-impact
+    news, and earnings proximity do. Cheap price-only moves are handled as Tier-1 deltas."""
+    mat = {
+        "verdict": (d.get("valuation") or {}).get("verdict"),
+        "scorecard": (d.get("fundamental") or {}).get("scorecard", {}) and
+                     (d["fundamental"]["scorecard"] or {}).get("rating"),
+        "docs": [x.get("hash") if isinstance(x, dict) else x for x in (d.get("documents") or [])],
+        "hi_news": [n.get("headline") for n in (d.get("recent_news") or []) if (n.get("impact") or 0) >= 4],
+        "next_earnings": (d.get("fundamental") or {}).get("next_earnings"),
+        "proven": [p.get("name") for p in (d.get("technical") or {}).get("proven_strategies", [])],
+    }
+    return hashlib.sha1(json.dumps(mat, sort_keys=True, default=str).encode()).hexdigest()[:12]
 
 
 def _r(v, d=2):
@@ -111,6 +129,7 @@ def build():
             ],
             "documents": docs,  # broker-note + filing digests tagged to this ticker (from Librarian)
         }
+        d["material_hash"] = _material_hash(d)  # the delta-gate key (Tier 0 vs Tier 2)
         dossiers[sym] = d
 
     dossiers["_meta"] = {
