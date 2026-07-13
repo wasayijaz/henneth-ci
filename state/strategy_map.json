@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-12 16:44",
+ "updated": "2026-07-13 13:08",
  "tickers": {
   "UBL": [
    {
@@ -472,6 +472,47 @@
     "hold": 15
    }
   ],
+  "AKBL": [
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 1.77,
+    "hit_rate": 0.56,
+    "n": 25,
+    "oos_n": 10,
+    "oos_hit": 0.8,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
+   },
+   {
+    "id": "stoch_reclaim_50",
+    "name": "Stochastic reclaim 50",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.66,
+    "hit_rate": 0.609,
+    "n": 46,
+    "oos_n": 14,
+    "oos_hit": 0.643,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 9
+   },
+   {
+    "id": "squeeze_break_up",
+    "name": "Bollinger squeeze breakout",
+    "category": "volatility",
+    "net_expectancy_pct": 0.56,
+    "hit_rate": 0.583,
+    "n": 24,
+    "oos_n": 14,
+    "oos_hit": 0.786,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 10
+   }
+  ],
   "DGKC": [
    {
     "id": "high52w_break",
@@ -523,47 +564,6 @@
     "oos_hit": 0.533,
     "target_pct": 5,
     "stop_pct": 2.5,
-    "hold": 10
-   }
-  ],
-  "AKBL": [
-   {
-    "id": "reclaim_sma200",
-    "name": "Reclaim 200-day",
-    "category": "trend",
-    "net_expectancy_pct": 1.77,
-    "hit_rate": 0.56,
-    "n": 25,
-    "oos_n": 10,
-    "oos_hit": 0.8,
-    "target_pct": 8,
-    "stop_pct": 4,
-    "hold": 20
-   },
-   {
-    "id": "stoch_reclaim_50",
-    "name": "Stochastic reclaim 50",
-    "category": "oscillator",
-    "net_expectancy_pct": 0.66,
-    "hit_rate": 0.609,
-    "n": 46,
-    "oos_n": 14,
-    "oos_hit": 0.643,
-    "target_pct": 5,
-    "stop_pct": 3,
-    "hold": 9
-   },
-   {
-    "id": "squeeze_break_up",
-    "name": "Bollinger squeeze breakout",
-    "category": "volatility",
-    "net_expectancy_pct": 0.56,
-    "hit_rate": 0.583,
-    "n": 24,
-    "oos_n": 14,
-    "oos_hit": 0.786,
-    "target_pct": 6,
-    "stop_pct": 3,
     "hold": 10
    }
   ],
@@ -1177,11 +1177,11 @@
     "id": "trend_momo_combo",
     "name": "Trend + momentum combo",
     "category": "momentum",
-    "net_expectancy_pct": 1.44,
-    "hit_rate": 0.579,
-    "n": 38,
-    "oos_n": 11,
-    "oos_hit": 0.636,
+    "net_expectancy_pct": 1.34,
+    "hit_rate": 0.568,
+    "n": 37,
+    "oos_n": 10,
+    "oos_hit": 0.6,
     "target_pct": 6,
     "stop_pct": 3,
     "hold": 12
@@ -1193,8 +1193,8 @@
     "net_expectancy_pct": 0.95,
     "hit_rate": 0.568,
     "n": 44,
-    "oos_n": 14,
-    "oos_hit": 0.643,
+    "oos_n": 13,
+    "oos_hit": 0.615,
     "target_pct": 5,
     "stop_pct": 3,
     "hold": 10
@@ -1211,6 +1211,99 @@
     "target_pct": 5,
     "stop_pct": 3,
     "hold": 8
+   }
+  ],
+  "ENGROH": [
+   {
+    "id": "stoch_reclaim_50",
+    "name": "Stochastic reclaim 50",
+    "category": "oscillator",
+    "net_expectancy_pct": 2.48,
+    "hit_rate": 0.769,
+    "n": 13,
+    "oos_n": 5,
+    "oos_hit": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 9
+   },
+   {
+    "id": "rsi_reclaim_50",
+    "name": "RSI reclaim 50",
+    "category": "oscillator",
+    "net_expectancy_pct": 1.82,
+    "hit_rate": 0.684,
+    "n": 19,
+    "oos_n": 8,
+    "oos_hit": 0.625,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 10
+   },
+   {
+    "id": "vol_dryup_surge",
+    "name": "Dry-up then surge",
+    "category": "volume",
+    "net_expectancy_pct": 1.11,
+    "hit_rate": 0.636,
+    "n": 11,
+    "oos_n": 5,
+    "oos_hit": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 9
+   },
+   {
+    "id": "willr_mid_cross",
+    "name": "Williams %R mid cross",
+    "category": "oscillator",
+    "net_expectancy_pct": 1.07,
+    "hit_rate": 0.63,
+    "n": 27,
+    "oos_n": 12,
+    "oos_hit": 0.5,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 9
+   },
+   {
+    "id": "stoch_bull_trend",
+    "name": "Stochastic cross in uptrend",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.91,
+    "hit_rate": 0.6,
+    "n": 15,
+    "oos_n": 8,
+    "oos_hit": 0.5,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 9
+   },
+   {
+    "id": "donch20_pullback_break",
+    "name": "Consolidation break",
+    "category": "breakout",
+    "net_expectancy_pct": 0.78,
+    "hit_rate": 0.556,
+    "n": 9,
+    "oos_n": 5,
+    "oos_hit": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 10
+   },
+   {
+    "id": "high20_vol_break",
+    "name": "20d high + volume",
+    "category": "breakout",
+    "net_expectancy_pct": 0.76,
+    "hit_rate": 0.556,
+    "n": 27,
+    "oos_n": 9,
+    "oos_hit": 0.444,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 10
    }
   ],
   "FFC": [
@@ -1741,86 +1834,6 @@
     "oos_n": 25,
     "oos_hit": 0.56,
     "target_pct": 5,
-    "stop_pct": 3,
-    "hold": 10
-   }
-  ],
-  "ENGROH": [
-   {
-    "id": "stoch_reclaim_50",
-    "name": "Stochastic reclaim 50",
-    "category": "oscillator",
-    "net_expectancy_pct": 2.48,
-    "hit_rate": 0.769,
-    "n": 13,
-    "oos_n": 5,
-    "oos_hit": 0.6,
-    "target_pct": 5,
-    "stop_pct": 3,
-    "hold": 9
-   },
-   {
-    "id": "rsi_reclaim_50",
-    "name": "RSI reclaim 50",
-    "category": "oscillator",
-    "net_expectancy_pct": 1.82,
-    "hit_rate": 0.684,
-    "n": 19,
-    "oos_n": 8,
-    "oos_hit": 0.625,
-    "target_pct": 5,
-    "stop_pct": 3,
-    "hold": 10
-   },
-   {
-    "id": "vol_dryup_surge",
-    "name": "Dry-up then surge",
-    "category": "volume",
-    "net_expectancy_pct": 1.11,
-    "hit_rate": 0.636,
-    "n": 11,
-    "oos_n": 5,
-    "oos_hit": 0.6,
-    "target_pct": 6,
-    "stop_pct": 3,
-    "hold": 9
-   },
-   {
-    "id": "willr_mid_cross",
-    "name": "Williams %R mid cross",
-    "category": "oscillator",
-    "net_expectancy_pct": 1.07,
-    "hit_rate": 0.63,
-    "n": 27,
-    "oos_n": 12,
-    "oos_hit": 0.5,
-    "target_pct": 5,
-    "stop_pct": 3,
-    "hold": 9
-   },
-   {
-    "id": "stoch_bull_trend",
-    "name": "Stochastic cross in uptrend",
-    "category": "oscillator",
-    "net_expectancy_pct": 0.91,
-    "hit_rate": 0.6,
-    "n": 15,
-    "oos_n": 8,
-    "oos_hit": 0.5,
-    "target_pct": 5,
-    "stop_pct": 3,
-    "hold": 9
-   },
-   {
-    "id": "donch20_pullback_break",
-    "name": "Consolidation break",
-    "category": "breakout",
-    "net_expectancy_pct": 0.78,
-    "hit_rate": 0.556,
-    "n": 9,
-    "oos_n": 5,
-    "oos_hit": 0.6,
-    "target_pct": 6,
     "stop_pct": 3,
     "hold": 10
    }
