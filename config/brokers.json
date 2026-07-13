@@ -1,0 +1,16 @@
+{
+  "note": "Registry of PSX research houses whose CALLS the desk tracks and scores. We do NOT scrape gated institutional PDFs. We capture each house's PUBLIC calls as reported in the business press (Mettis Global, Profit, Business Recorder, Dawn Business) — target prices, ratings, sector views — which are freely published. The Librarian extracts each call; room_score ranks the house overall and per sector on what actually came true. Aliases catch how the press names them.",
+  "brokers": [
+    {"id": "AKD",     "name": "AKD Securities",       "aliases": ["AKD", "AKD Securities", "AKD Research"], "research": "AKD Daily, sector & company notes", "strong_sectors": ["banks", "e_and_p", "cement"]},
+    {"id": "AHL",     "name": "Arif Habib Limited",   "aliases": ["Arif Habib", "AHL", "Arif Habib Limited", "Arif Habib Research"], "research": "full-service, institutional research", "strong_sectors": ["cement", "fertilizer", "banks"]},
+    {"id": "Topline", "name": "Topline Securities",   "aliases": ["Topline", "Topline Securities", "Topline Research"], "research": "most detailed equity research; Topline Morning Note", "strong_sectors": ["e_and_p", "banks", "power"]},
+    {"id": "JS",      "name": "JS Global Capital",    "aliases": ["JS Global", "JS Research", "JS Global Capital", "JS Securities"], "research": "JS morning briefing, strategy", "strong_sectors": ["banks", "tech", "fertilizer"]},
+    {"id": "BMA",     "name": "BMA Capital",          "aliases": ["BMA", "BMA Capital", "BMA Research"], "research": "macro & equity strategy", "strong_sectors": ["banks", "cement"]},
+    {"id": "IIS",     "name": "Insight Securities",   "aliases": ["Insight", "Insight Securities", "Insight Research"], "research": "company & sector notes", "strong_sectors": ["cement", "autos"]},
+    {"id": "Sherman", "name": "Sherman Securities",   "aliases": ["Sherman", "Sherman Securities"], "research": "equity research", "strong_sectors": ["fertilizer", "e_and_p"]},
+    {"id": "IGI",     "name": "IGI Securities",       "aliases": ["IGI", "IGI Securities", "IGI Research"], "research": "equity & economy research", "strong_sectors": ["banks", "power"]},
+    {"id": "Optimus", "name": "Optimus Capital",      "aliases": ["Optimus", "Optimus Capital"], "research": "thematic & sector research", "strong_sectors": ["tech", "cement"]},
+    {"id": "Foundation", "name": "Foundation Securities", "aliases": ["Foundation Securities", "Foundation Research"], "research": "equity research", "strong_sectors": ["e_and_p", "power"]}
+  ],
+  "press_sources_note": "Broker calls are harvested from public business-press coverage; add any broker's own free public research page to config/broker_sources.json for direct digestion."
+}
