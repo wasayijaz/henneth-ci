@@ -61,8 +61,8 @@ body[data-theme=gemini] main{max-width:1440px;margin:0 auto;padding:10px 10px 60
 
 /* ============ LEFT SIDEBAR SHELL ============ */
 body[data-theme=gemini] .shell{display:flex;min-height:100vh;align-items:stretch}
-body[data-theme=gemini] .sidebar{width:212px;flex:none;border-right:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width .15s ease}
-body[data-theme=gemini] .shell.collapsed .sidebar{width:56px}
+body[data-theme=gemini] .sidebar{width:212px;flex:0 0 212px;border-right:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width .15s ease,flex-basis .15s ease;min-width:0}
+body[data-theme=gemini] .shell.collapsed .sidebar{width:56px;flex:0 0 56px}
 body[data-theme=gemini] .side-top{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:12px 12px;border-bottom:1.5px solid var(--line);min-height:49px}
 body[data-theme=gemini] .side-top .brand{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;line-height:1.2;white-space:nowrap;overflow:hidden}
 body[data-theme=gemini] .side-toggle{background:transparent;border:1px solid var(--line);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink1)}
