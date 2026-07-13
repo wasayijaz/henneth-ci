@@ -13,6 +13,10 @@ th{text-align:left;font-weight:600}
 .r{text-align:right}
 button{cursor:pointer;font:inherit}
 .clickable{cursor:pointer}
+/* Base icon sizing — applies BEFORE the theme loads so an inline SVG can never flash
+   at intrinsic size (the "giant black triangle" FOUC). Theme adds stroke/color. */
+.side-nav a svg,.side-open svg,.side-toggle svg,.bottomnav a svg,.searchbtn svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8}
+.side-toggle svg,.side-open svg{width:15px;height:15px;stroke-width:2}
 .empty{text-align:center;padding:16px 0;opacity:.55;font-size:13px}
 header.app{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
 nav.tabs{display:flex;gap:4px}
@@ -61,8 +65,12 @@ body[data-theme=gemini] main{max-width:1440px;margin:0 auto;padding:10px 10px 60
 
 /* ============ LEFT SIDEBAR SHELL ============ */
 body[data-theme=gemini] .shell{display:flex;min-height:100vh;align-items:stretch}
-body[data-theme=gemini] .sidebar{width:212px;flex:0 0 212px;border-right:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width .15s ease,flex-basis .15s ease;min-width:0}
+body[data-theme=gemini] .sidebar{width:var(--side-w,212px);flex:0 0 var(--side-w,212px);border-right:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width .15s ease,flex-basis .15s ease;min-width:0}
 body[data-theme=gemini] .shell.collapsed .sidebar{width:56px;flex:0 0 56px}
+body[data-theme=gemini] .shell.resizing .sidebar{transition:none;user-select:none}
+body[data-theme=gemini] .side-resize{position:absolute;top:0;right:0;width:6px;height:100%;cursor:col-resize;z-index:60}
+body[data-theme=gemini] .side-resize:hover{background:var(--hair)}
+body[data-theme=gemini] .shell.collapsed .side-resize{display:none}
 body[data-theme=gemini] .side-top{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:12px 12px;border-bottom:1.5px solid var(--line);min-height:49px}
 body[data-theme=gemini] .side-top .brand{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;line-height:1.2;white-space:nowrap;overflow:hidden}
 body[data-theme=gemini] .side-toggle{background:transparent;border:1px solid var(--line);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink1)}

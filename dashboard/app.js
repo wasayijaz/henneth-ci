@@ -997,3 +997,28 @@ $("sideBackdrop")?.addEventListener("click", closeDrawer);
 // close the mobile drawer after navigating or on Escape
 window.addEventListener("hashchange", closeDrawer);
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+/* drag-to-resize the sidebar (desktop, expanded only), clamped + persisted */
+const SIDE_MIN = 168, SIDE_MAX = 380;
+if (shell) {
+  const savedW = parseInt(localStorage.getItem("sideW"), 10);
+  if (savedW >= SIDE_MIN && savedW <= SIDE_MAX) shell.style.setProperty("--side-w", savedW + "px");
+}
+$("sideResize")?.addEventListener("mousedown", e => {
+  if (shell.classList.contains("collapsed")) return;
+  e.preventDefault();
+  shell.classList.add("resizing");
+  const move = ev => {
+    const w = Math.min(SIDE_MAX, Math.max(SIDE_MIN, ev.clientX));
+    shell.style.setProperty("--side-w", w + "px");
+  };
+  const up = () => {
+    shell.classList.remove("resizing");
+    const w = parseInt(getComputedStyle(shell).getPropertyValue("--side-w"), 10);
+    if (w) localStorage.setItem("sideW", w);
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", up);
+  };
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", up);
+});
