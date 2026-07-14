@@ -283,6 +283,15 @@ body[data-theme=gemini] .sumtile>b.up{color:var(--up)}
 body[data-theme=gemini] .sumtile>b.dn{color:var(--dn)}
 body[data-theme=gemini] .sumtile>i{font-size:10px;font-style:normal;color:var(--ink3);line-height:1.35}
 @media(max-width:720px){body[data-theme=gemini] .sumstrip{grid-template-columns:1fr 1fr}body[data-theme=gemini] .sumstrip .sumtile:nth-child(5){grid-column:1/-1}}
+/* Today — your watchlist mini table + "yours" badge on radar names */
+body[data-theme=gemini] .wl-mini td{padding:9px 13px}
+body[data-theme=gemini] .wbadge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent,#b8860b);border:1px solid var(--accent,#b8860b);padding:1px 5px;margin-left:4px;white-space:nowrap}
+/* private per-ticker note */
+body[data-theme=gemini] .tknote{width:100%;min-height:96px;resize:vertical;background:var(--panel2,var(--panel));border:1.5px solid var(--line);color:var(--ink1);font:inherit;font-size:13px;line-height:1.55;padding:11px 13px}
+body[data-theme=gemini] .tknote:focus{outline:none;border-color:var(--ink2)}
+body[data-theme=gemini] .tknote-bar{display:flex;align-items:center;gap:12px;margin-top:10px}
+body[data-theme=gemini] .note-save{background:var(--ink1);color:var(--panel);border:1.5px solid var(--ink1);font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 16px;cursor:pointer}
+body[data-theme=gemini] .note-save:hover{opacity:.85}
 /* Desk Room — full debate collapsed behind an expander */
 body[data-theme=gemini] .room-transcript{border:1.5px solid var(--line);margin-top:12px}
 body[data-theme=gemini] .room-transcript>summary{cursor:pointer;list-style:none;padding:10px 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);display:flex;align-items:center;justify-content:space-between;gap:8px}

@@ -23,7 +23,7 @@ Produce `state/daily_read.json`:
   "date": "YYYY-MM-DD",
   "headline": "one punchy sentence — the day's story",
   "tone": "constructive | cautious | neutral | defensive",
-  "summary": "3-4 sentences a beginner understands: what's driving PSX right now (macro + global tape), and how the desk is leaning. Plain words.",
+  "summary": "≤120 words, 3-4 tight sentences a beginner understands: what's driving PSX right now (macro + global tape), and how the desk is leaning. Plain words. HARD CAP 120 words — the Today page leads with this; be concise, not exhaustive.",
   "sectors": [
     {"name":"Banks","stance":"favoured|neutral|avoid","why":"one plain sentence tied to a real driver (rates, oil, FX, results season)"}
   ],

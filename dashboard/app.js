@@ -371,12 +371,28 @@ async function pageMacro() {
 }
 
 async function pageToday() {
-  const [dr, gl] = await Promise.all([j("daily_read.json"), j("global.json")]);
+  const [dr, gl, quant, live, uni] = await Promise.all([j("daily_read.json"), j("global.json"), j("quant.json"), j("live.json"), j("universe.json")]);
   if (!dr) { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Daily read</h2><div class="ln"></div></div><div class="card"><div class="empty">The daily read is written by the market-analyst agent in the pre-market cycle. Run a full cycle to generate today's note.</div></div>`; return; }
   const toneClass = { constructive: "ok", defensive: "bad", cautious: "bad" }[dr.tone] || "";
   const stanceTag = s => `<span class="pill ${s === "favoured" ? "ok" : s === "avoid" ? "bad" : ""}">${esc(s)}</span>`;
+  const q = quant?.tickers || {}, lv = live?.tickers || {};
+
+  // ---- personal layer: your watchlist surfaces first (same desk read for everyone) ----
+  const wl = (typeof watchlist === "function" ? watchlist() : []).filter(s => q[s]);
+  const myWatch = (me && wl.length) ? `
+  <div class="seg" style="margin-top:4px"><h2>On your watchlist</h2><div class="ln"></div><span class="pill ok">${wl.length}</span></div>
+  <div class="card" style="padding:0"><table class="wl-mini"><tbody>${wl.map(s => {
+    const qq = q[s], px = lv[s]?.current ?? qq.close;
+    return `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b> <span class="sub">${esc((uni?.symbols?.[s]?.name || "").slice(0, 24))}</span></td><td class="r num">${fmt(px)}</td><td class="r num ${cls(qq.ret_1d)}">${sgn(qq.ret_1d)}%</td></tr>`;
+  }).join("")}</tbody></table></div>` : "";
+
+  // radar names: the ones you watch float to the top, badged
+  const iw = typeof isWatched === "function" ? isWatched : () => false;
+  const radar = (dr.watchlist || []).slice().sort((a, b) => (iw(b.ticker) ? 1 : 0) - (iw(a.ticker) ? 1 : 0));
+
   $("view").innerHTML = `
   ${globalStrip(gl)}
+  ${myWatch}
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="pill ${toneClass}">${esc((dr.tone || "").toUpperCase())}</span><span class="sub">${esc(dr.date || "")}</span></div>
     <h2 style="font-size:22px;line-height:1.3;margin-bottom:12px">${esc(dr.headline || "")}</h2>
@@ -390,10 +406,12 @@ async function pageToday() {
       ${(dr.catalysts || []).length ? `<div class="sub" style="margin-top:12px"><b>Catalysts:</b> ${dr.catalysts.map(c => `${esc(c.date)} ${esc(c.event)}`).join(" · ")}</div>` : ""}</div>
   </div>
   <div class="seg"><h2>Names on the desk's radar</h2><div class="ln"></div></div>
-  <div class="cards">${(dr.watchlist || []).map(w => `<div class="card clickable" onclick="location.hash='#/ticker/${esc(w.ticker)}'">
-    <div class="tk-head" style="margin-bottom:8px"><span class="sym" style="font-size:20px">${esc(w.ticker)}</span></div>
-    <p style="color:var(--ink2);line-height:1.6;margin-bottom:6px">${esc(w.angle)}</p>
-    <div class="sub"><b class="dn">Risk:</b> ${esc(w.risk)}</div></div>`).join("") || '<div class="card"><div class="empty">Patient today — nothing stacks up strongly enough to flag.</div></div>'}</div>
+  ${radar.length ? `<div class="card" style="padding:0"><table><thead><tr><th>Ticker</th><th>The desk's angle</th><th>Key risk</th></tr></thead><tbody>${
+    radar.map(w => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(w.ticker)}'">
+      <td style="white-space:nowrap"><b>${esc(w.ticker)}</b>${iw(w.ticker) ? ' <span class="wbadge">★ yours</span>' : ""}</td>
+      <td class="sub" style="color:var(--ink2)">${esc(w.angle)}</td>
+      <td class="sub"><b class="dn">Risk:</b> ${esc(w.risk)}</td></tr>`).join("")}</tbody></table></div>`
+      : '<div class="card"><div class="empty">Patient today — nothing stacks up strongly enough to flag.</div></div>'}
   <p class="sub" style="margin-top:14px">${esc(dr.disclaimer || "Research, not advice.")}</p>`;
 }
 
@@ -673,6 +691,14 @@ async function pageTicker(sym, _retry = 0) {
     ${sTile("House view", hvRoom ? `${esc(hvRoom.conviction || "—")} conviction` : "In queue", hvRoom ? "AI desk — see Room below" : "not yet covered", "")}
   </div>`;
 
+  // ---- private per-ticker note (only you can see it) ----
+  const noteCard = me
+    ? `<div class="seg"><h2>Your private note</h2><div class="ln"></div><span class="pill">only you can see this</span></div>
+    <div class="card"><textarea id="tknote" class="tknote" placeholder="Private notes on ${esc(sym)} — your own thesis, price levels you care about, reminders. Saved to your account, visible only to you.">${esc(noteFor(sym))}</textarea>
+      <div class="tknote-bar"><button class="note-save" onclick="saveTickerNote('${esc(sym)}')">Save note</button><span id="tknote-status" class="sub"></span></div></div>`
+    : `<div class="seg"><h2>Your private note</h2><div class="ln"></div></div>
+    <div class="card"><div class="empty">Sign in to keep a private note on ${esc(sym)} — your own thesis and reminders, saved to your account and visible only to you.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
+
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
@@ -694,6 +720,8 @@ async function pageTicker(sym, _retry = 0) {
     </div>
     <div class="chartwrap"><canvas id="chart" style="height:340px"></canvas><div class="tooltip" id="tt"></div></div>
   </div>
+
+  ${noteCard}
 
   <div class="seg"><h2>Strategies proven on ${sym}</h2><div class="ln"></div><span class="pill ok">${proven.length} proven</span></div>
   <div class="card"><div class="sub">Of the desk's ${bt?.n_strategies ?? 52} tested strategies, these cleared the bar on ${sym}'s own ~19-year history — win rate ≥55%, positive expectancy after costs, AND still profitable in the unseen last third (out-of-sample). This is what actually worked here, not theory.</div>
@@ -1223,6 +1251,18 @@ async function saveProfile(patch) {
 /* ---------- watchlist (per-user, persisted to profiles.watchlist) ---------- */
 function watchlist() { return (myProfile && myProfile.watchlist) || []; }
 function isWatched(sym) { return watchlist().includes(sym); }
+
+/* ---------- private per-ticker notes (persisted to profiles.notes, RLS-scoped) ---------- */
+function noteFor(sym) { return ((myProfile && myProfile.notes) || {})[sym] || ""; }
+async function saveTickerNote(sym) {
+  const ta = document.getElementById("tknote"); if (!ta) return;
+  const st = document.getElementById("tknote-status");
+  const notes = { ...((myProfile && myProfile.notes) || {}) };
+  const v = ta.value.trim(); if (v) notes[sym] = v; else delete notes[sym];
+  if (st) st.textContent = "Saving…";
+  const err = await saveProfile({ notes });
+  if (st) { st.textContent = err ? "Save failed — try again" : "Saved ✓"; setTimeout(() => { if (st) st.textContent = ""; }, 2500); }
+}
 async function toggleWatch(sym, btn) {
   if (!me) { openAuth("signup"); return; }               // must be signed in to save
   const cur = new Set(watchlist());
