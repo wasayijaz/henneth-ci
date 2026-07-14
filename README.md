@@ -76,7 +76,7 @@ Loops run locally (while the Claude app is open) and `push` to `main`; each push
 
 | Loop | When | Cost | Does |
 |---|---|---|---|
-| Hourly | weekdays, market hours | cheap | data + news sentinel + position monitor → push |
+| Market checkpoints | Mon–Thu 10:00 & 16:00, Fri 09:47/14:47/17:00 PKT | cheap | data + news sentinel + position monitor → push |
 | Daily | weekdays 17:20 PKT | ~3 agents | macro + analyst read → push |
 | Room-loop | weekdays 17:47 PKT | ≤3 debates | Desk Room debates + QA + scoring → push |
 | Weekly-harvest | Sat 11:00 PKT | 1 haiku agent | broker calls (Profit/Dawn/Mettis) + filings → push |
