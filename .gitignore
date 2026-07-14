@@ -1,8 +1,9 @@
-# regenerated each cycle / large — rebuilt fresh in the cloud pipeline
-state/history_deep/
-state/history/
-state/intraday/
+# NOTE: state/history_deep, state/history, state/intraday are now COMMITTED so the repo
+# is self-contained for Vercel (which serves the checkout, not an Actions-built _site).
+# They're regenerated + re-committed each cycle by the refresh tasks (git add -A). Deltas
+# are tiny (deep history only appends the latest bar), so history bloat stays modest.
 logs/
+public/
 __pycache__/
 *.pyc
 *.tmp
