@@ -37,6 +37,10 @@ A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite"
 Each ticker page also carries a **risk profile** (volatility, real max-drawdown with era context, liquidity,
 valuation, dividend reliability), a **"questions before buying"** checklist, and **"what the brokers say."**
 
+- **Accounts** — sign-up / sign-in (Supabase Auth), a short onboarding quiz + guided wizard, and a personal
+  **watchlist** that overlays the shared research. Per-user data is row-level-secured; the research layer is
+  shared and read-only to users.
+
 ## Principles (locked — see `CLAUDE.md`)
 
 - **Long-only, daily timeframe.** No shorts, no leverage, no intraday scalping.
@@ -68,13 +72,16 @@ small fraction of naive cost, and new AGM/broker/news data *targets* exactly the
 
 ## Automation (loops)
 
+Loops run locally (while the Claude app is open) and `push` to `main`; each push auto-deploys on Vercel.
+
 | Loop | When | Cost | Does |
 |---|---|---|---|
-| Cloud (GitHub Actions) | every 30 min + on push | free | full deterministic pipeline → deploy |
-| Hourly | weekdays, market hours | cheap | data + news sentinel + position monitor |
-| Daily | weekdays 17:20 PKT | ~3 agents | macro + analyst read |
-| Room-loop | weekdays 17:47 PKT | ≤3 debates | Desk Room debates + QA + scoring |
-| Weekly-harvest | Sat 11:00 PKT | 1 haiku agent | broker calls (Profit/Dawn/Mettis) + filings |
+| Hourly | weekdays, market hours | cheap | data + news sentinel + position monitor → push |
+| Daily | weekdays 17:20 PKT | ~3 agents | macro + analyst read → push |
+| Room-loop | weekdays 17:47 PKT | ≤3 debates | Desk Room debates + QA + scoring → push |
+| Weekly-harvest | Sat 11:00 PKT | 1 haiku agent | broker calls (Profit/Dawn/Mettis) + filings → push |
+
+Every push runs the same gate (`preflight.py`) before it publishes, so a broken cycle never reaches the live site. `scripts/publish.py "<msg>"` is the one push helper all loops use.
 
 ## Run it locally
 
@@ -94,7 +101,7 @@ static site + committed `state/` data). The refresh loops push fresh data → Ve
 - **Fundamentals:** stockanalysis.com (P/E, EPS, margins, dividends, earnings dates).
 - **Cross-check:** `tradingview-ta` (screener=pakistan) verifies the quant layer; a mismatch blocks signals.
 - **Stack:** Python 3.14 (requests/pandas/numpy) · vanilla JS SPA (hash router, canvas charts, no framework)
-  · JetBrains Mono + Pixelify Sans · GitHub Pages.
+  · JetBrains Mono + Pixelify Sans · **Supabase** (auth + per-user profiles/watchlist) · **Vercel** hosting.
 
 ## Governance (the desk can't quietly disagree with itself)
 `CLAUDE.md` is enforced, not aspirational: one **position-sizing formula** (risk by stop distance,
