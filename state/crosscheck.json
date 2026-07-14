@@ -1,39 +1,264 @@
 {
- "updated": "2026-07-13 17:42",
+ "updated": "2026-07-14 11:27",
  "checked": 8,
- "fails": [],
+ "fails": [
+  "HUBC",
+  "OGDC",
+  "LUCK",
+  "FFC",
+  "MEBL",
+  "UBL",
+  "ENGROH",
+  "PSO"
+ ],
  "results": {
   "HUBC": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 222.78,
+     "tv": 220.3,
+     "dev_pct": 1.126,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 44.8,
+     "tv": 41.7,
+     "dev_pct": 7.442,
+     "match": false
+    },
+    "sma20": {
+     "ours": 229.91,
+     "tv": 229.95,
+     "dev_pct": 0.016,
+     "match": true
+    },
+    "sma50": {
+     "ours": 221.3,
+     "tv": 221.2,
+     "dev_pct": 0.045,
+     "match": true
+    }
+   },
+   "tv_high": 221.89,
+   "tv_low": 219.11
   },
   "OGDC": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 331.59,
+     "tv": 329.04,
+     "dev_pct": 0.775,
+     "match": true
+    },
+    "rsi14": {
+     "ours": 49.4,
+     "tv": 46.8,
+     "dev_pct": 5.566,
+     "match": false
+    },
+    "sma20": {
+     "ours": 335.07,
+     "tv": 335.62,
+     "dev_pct": 0.165,
+     "match": true
+    },
+    "sma50": {
+     "ours": 326.36,
+     "tv": 326.56,
+     "dev_pct": 0.062,
+     "match": true
+    }
+   },
+   "tv_high": 331.1,
+   "tv_low": 325.5
   },
   "LUCK": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 459.46,
+     "tv": 444,
+     "dev_pct": 3.482,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 49.7,
+     "tv": 42.08,
+     "dev_pct": 18.095,
+     "match": false
+    },
+    "sma20": {
+     "ours": 468.56,
+     "tv": 468.31,
+     "dev_pct": 0.054,
+     "match": true
+    },
+    "sma50": {
+     "ours": 443.52,
+     "tv": 443.94,
+     "dev_pct": 0.094,
+     "match": true
+    }
+   },
+   "tv_high": 456.9,
+   "tv_low": 443
   },
   "FFC": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 556.15,
+     "tv": 546.55,
+     "dev_pct": 1.756,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 47.4,
+     "tv": 41.32,
+     "dev_pct": 14.706,
+     "match": false
+    },
+    "sma20": {
+     "ours": 564.84,
+     "tv": 564.35,
+     "dev_pct": 0.086,
+     "match": true
+    },
+    "sma50": {
+     "ours": 545.35,
+     "tv": 545.78,
+     "dev_pct": 0.08,
+     "match": true
+    }
+   },
+   "tv_high": 553.01,
+   "tv_low": 545
   },
   "MEBL": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 547.08,
+     "tv": 540.72,
+     "dev_pct": 1.176,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 59.8,
+     "tv": 56.16,
+     "dev_pct": 6.474,
+     "match": false
+    },
+    "sma20": {
+     "ours": 532.36,
+     "tv": 533.89,
+     "dev_pct": 0.286,
+     "match": true
+    },
+    "sma50": {
+     "ours": 505.12,
+     "tv": 505.99,
+     "dev_pct": 0.171,
+     "match": true
+    }
+   },
+   "tv_high": 544.78,
+   "tv_low": 539.9
   },
   "UBL": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 476.41,
+     "tv": 465.65,
+     "dev_pct": 2.311,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 62.6,
+     "tv": 56.47,
+     "dev_pct": 10.859,
+     "match": false
+    },
+    "sma20": {
+     "ours": 458.68,
+     "tv": 461.71,
+     "dev_pct": 0.657,
+     "match": true
+    },
+    "sma50": {
+     "ours": 422.6,
+     "tv": 423.72,
+     "dev_pct": 0.264,
+     "match": true
+    }
+   },
+   "tv_high": 472.49,
+   "tv_low": 462.2
   },
   "ENGROH": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 277.35,
+     "tv": 271.4,
+     "dev_pct": 2.192,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 46.9,
+     "tv": 41.35,
+     "dev_pct": 13.43,
+     "match": false
+    },
+    "sma20": {
+     "ours": 283.69,
+     "tv": 283.96,
+     "dev_pct": 0.097,
+     "match": true
+    },
+    "sma50": {
+     "ours": 274.47,
+     "tv": 274.26,
+     "dev_pct": 0.076,
+     "match": true
+    }
+   },
+   "tv_high": 275,
+   "tv_low": 270
   },
   "PSO": {
-   "status": "NO_TV_DATA",
-   "error": "Can't access TradingView's API. HTTP status code: 429. Check for invalid symbol, exchange, or indica"
+   "status": "FAIL",
+   "checks": {
+    "close": {
+     "ours": 356.66,
+     "tv": 352.4,
+     "dev_pct": 1.209,
+     "match": false
+    },
+    "rsi14": {
+     "ours": 54.2,
+     "tv": 49.11,
+     "dev_pct": 10.371,
+     "match": false
+    },
+    "sma20": {
+     "ours": 353.64,
+     "tv": 353.71,
+     "dev_pct": 0.02,
+     "match": true
+    },
+    "sma50": {
+     "ours": 355.19,
+     "tv": 354.49,
+     "dev_pct": 0.198,
+     "match": true
+    }
+   },
+   "tv_high": 355.44,
+   "tv_low": 351
   }
  }
 }

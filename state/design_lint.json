@@ -3,19 +3,29 @@
   {
    "sev": "low",
    "file": "themes.css",
-   "line": 241,
+   "line": 319,
    "msg": "raw hex #c9c9c2 outside the token block — prefer var(--...)"
   },
   {
    "sev": "low",
    "file": "themes.css",
-   "line": 254,
+   "line": 332,
    "msg": "raw hex #bdbdb5 outside the token block — prefer var(--...)"
+  },
+  {
+   "sev": "medium",
+   "file": "themes.css",
+   "msg": "font-size(s) below 9px [8.5] — too small to read comfortably on mobile"
+  },
+  {
+   "sev": "low",
+   "file": "themes.css",
+   "msg": "7 pairs of near-identical font sizes (e.g. (8.5, 9.0)) — collapse them so size differences signal real hierarchy"
   }
  ],
  "_meta": {
-  "built": "2026-07-14 01:06",
-  "total": 2,
+  "built": "2026-07-14 11:27",
+  "total": 4,
   "high": 0,
   "escalate": false,
   "note": "Deterministic design-language lint. 'high' = a rule violation on screen. If escalate, run the design-reviewer agent (visual web+mobile pass)."
