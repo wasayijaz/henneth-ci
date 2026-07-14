@@ -1004,7 +1004,7 @@ async function pageLegal() {
 }
 
 /* ---------- router ---------- */
-const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
@@ -1314,6 +1314,109 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-watch]");
   if (b) { e.preventDefault(); e.stopPropagation(); toggleWatch(b.dataset.watch, b); }
 });
+
+/* ---------- portfolio: read-only holdings tracker (profiles.portfolio, RLS-scoped) ---------- */
+function portfolio() { return (myProfile && myProfile.portfolio) || []; }
+async function addHolding(sym, shares, avgCost) {
+  if (!me) { openAuth("signup"); return "sign in first"; }
+  sym = (sym || "").toUpperCase().trim();
+  shares = +shares; avgCost = +avgCost;
+  if (!sym || !(shares > 0) || !(avgCost > 0)) return "enter a ticker, a share count and an average cost";
+  const p = portfolio().filter(h => h.ticker !== sym);   // one row per ticker; re-adding overwrites
+  p.push({ ticker: sym, shares, avg_cost: avgCost, added: new Date().toISOString().slice(0, 10) });
+  await saveProfile({ portfolio: p });
+  return null;
+}
+async function removeHolding(sym) {
+  await saveProfile({ portfolio: portfolio().filter(h => h.ticker !== (sym || "").toUpperCase()) });
+  if (location.hash.startsWith("#/portfolio")) pagePortfolio();
+}
+async function submitHolding() {
+  const t = document.getElementById("ph-tkr"), s = document.getElementById("ph-sh"), c = document.getElementById("ph-cost");
+  const msg = document.getElementById("ph-msg");
+  const err = await addHolding(t.value, s.value, c.value);
+  if (err) { if (msg) { msg.textContent = err; msg.className = "sub dn"; } return; }
+  t.value = s.value = c.value = "";
+  pagePortfolio();
+}
+
+async function pagePortfolio() {
+  const [quant, uni, live, divs] = await Promise.all([j("quant.json"), j("universe.json"), j("live.json"), j("dividends.json")]);
+  if (!me) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your portfolio</h2><div class="ln"></div></div>
+      <div class="card"><div class="empty">Sign in to track your holdings — enter what you own and the desk shows your live value, profit/loss, position weights and estimated dividend income. Private to you, read-only: the desk never trades. Research, not advice.<br><br>
+      <button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
+    return;
+  }
+  const q = quant?.tickers || {}, lv = live?.tickers || {}, names = uni?.symbols || {};
+  const dHist = divs?.history || [];
+  const rows = portfolio().map(h => {
+    const qq = q[h.ticker];
+    const px = lv[h.ticker]?.current ?? qq?.close ?? null;
+    const mv = px != null ? px * h.shares : null;
+    const cost = h.avg_cost * h.shares;
+    const pl = mv != null ? mv - cost : null;
+    const plPct = (mv != null && cost > 0) ? (mv / cost - 1) * 100 : null;
+    const lastDiv = dHist.filter(d => d.symbol === h.ticker).sort((a, b) => (b.bc_start || "").localeCompare(a.bc_start || ""))[0];
+    const annualDiv = lastDiv?.dividend_rs ? lastDiv.dividend_rs * h.shares : null;
+    return { ...h, px, mv, cost, pl, plPct, annualDiv, name: names[h.ticker]?.name || "", known: !!qq };
+  });
+  const totMv = rows.reduce((a, r) => a + (r.mv || 0), 0);
+  const totCost = rows.reduce((a, r) => a + r.cost, 0);
+  const totPl = totMv - totCost;
+  const totPlPct = totCost > 0 ? (totMv / totCost - 1) * 100 : null;
+  const totDiv = rows.reduce((a, r) => a + (r.annualDiv || 0), 0);
+  const withW = rows.map(r => ({ ...r, w: totMv > 0 ? (r.mv || 0) / totMv * 100 : 0 })).sort((a, b) => b.w - a.w);
+  const top = withW[0], top3 = withW.slice(0, 3).reduce((a, r) => a + r.w, 0);
+  const concFlag = !withW.length ? "" :
+    top.w >= 40 ? `Your largest position, <b>${esc(top.ticker)}</b>, is <b>${top.w.toFixed(0)}%</b> of the portfolio.`
+      : top3 >= 65 && withW.length >= 3 ? `Your top 3 positions make up <b>${top3.toFixed(0)}%</b> of the portfolio.`
+        : `Your largest position is <b>${top.w.toFixed(0)}%</b> — reasonably spread across ${withW.length} name${withW.length === 1 ? "" : "s"}.`;
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Your portfolio</h2><div class="ln"></div><span class="pill">${rows.length} holding${rows.length === 1 ? "" : "s"}</span></div>
+  <div class="disclaimer">A private, <b>read-only</b> tracker of what you own — the desk never places orders and holds no money. Every figure below is a <b>fact about your holdings</b>, computed from desk prices; none of it is advice or a recommendation to buy or sell.</div>
+
+  <div class="card ph-form">
+    <div class="ph-row">
+      <input id="ph-tkr" placeholder="Ticker (e.g. FFC)" class="ph-in" list="ph-syms" autocomplete="off">
+      <input id="ph-sh" type="number" placeholder="Shares" class="ph-in" min="0" step="1">
+      <input id="ph-cost" type="number" placeholder="Avg cost (Rs)" class="ph-in" min="0" step="0.01">
+      <button class="note-save" onclick="submitHolding()">Add holding</button>
+    </div>
+    <span id="ph-msg" class="sub"></span>
+    <datalist id="ph-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
+  </div>
+
+  ${rows.length ? `<div class="sumstrip" style="grid-template-columns:repeat(4,1fr)">
+    ${sTile("Portfolio value", "Rs " + fmt(totMv, 0), "at desk prices", "")}
+    ${sTile("Total profit / loss", (totPl >= 0 ? "+" : "") + "Rs " + fmt(totPl, 0), totPlPct != null ? sgn(totPlPct) + "% on cost" : "", totPl >= 0 ? "up" : "dn")}
+    ${sTile("Est. annual dividend", "Rs " + fmt(totDiv, 0), "from last declared payouts", "")}
+    ${sTile("Positions", rows.length, "one row per ticker", "")}
+  </div>
+
+  <div class="card"><table><thead><tr><th>Ticker</th><th class="r">Shares</th><th class="r">Avg cost</th><th class="r">Price</th><th class="r">Value</th><th class="r">P/L</th><th class="r">Weight</th><th></th></tr></thead><tbody>${
+    withW.map(r => `<tr>
+      <td class="clickable" onclick="location.hash='#/ticker/${esc(r.ticker)}'"><b>${esc(r.ticker)}</b> <span class="sub">${esc((r.name || "").slice(0, 16))}</span>${r.known ? "" : ' <span class="sub dn">not in universe</span>'}</td>
+      <td class="r num">${fmt(r.shares)}</td><td class="r num">${fmt(r.avg_cost)}</td>
+      <td class="r num">${r.px != null ? fmt(r.px) : "—"}</td>
+      <td class="r num">${r.mv != null ? fmt(r.mv, 0) : "—"}</td>
+      <td class="r num ${r.pl == null ? "" : r.pl >= 0 ? "up" : "dn"}">${r.plPct != null ? sgn(r.plPct) + "%" : "—"}${r.pl != null ? `<div class="sub">${(r.pl >= 0 ? "+" : "") + fmt(r.pl, 0)}</div>` : ""}</td>
+      <td class="r num">${r.w.toFixed(0)}%</td>
+      <td class="r"><button class="ph-del" onclick="removeHolding('${esc(r.ticker)}')" title="Remove holding">✕</button></td></tr>`).join("")}
+  </tbody><tfoot><tr><td><b>Total</b></td><td></td><td></td><td></td><td class="r num"><b>${fmt(totMv, 0)}</b></td>
+    <td class="r num ${totPl >= 0 ? "up" : "dn"}"><b>${totPlPct != null ? sgn(totPlPct) + "%" : "—"}</b></td><td></td><td></td></tr></tfoot></table></div>
+
+  <div class="seg"><h2>Concentration</h2><div class="ln"></div><span class="pill">fact, not advice</span></div>
+  <div class="card">
+    <p class="sub" style="line-height:1.6;margin-bottom:12px">${concFlag} Concentration means your portfolio rises and falls with fewer bets; diversification spreads that risk across more names. Whether that's right for you depends on your own goals and risk tolerance — the desk states the fact and the general principle, and never tells you to buy or sell. <span class="sub" style="opacity:.75">(Sector-level grouping isn't in the desk's data feed yet — weights below are by position.)</span></p>
+    <div class="ph-bars">${withW.map(r => `<div class="ph-bar-row"><span class="ph-bar-lbl">${esc(r.ticker)}</span><span class="ph-bar-track"><span class="ph-bar-fill" style="width:${Math.max(2, r.w).toFixed(0)}%"></span></span><span class="ph-bar-val num">${r.w.toFixed(0)}%</span></div>`).join("")}</div>
+  </div>
+
+  <p class="sub" style="margin-top:14px">Estimated dividend income is each holding's most recent declared dividend × your shares — an estimate from past payouts, not a promise; companies can cut or skip dividends. Prices are desk end-of-day/live figures and may differ from your broker. Research, not advice.</p>`
+    : `<div class="card"><div class="empty">No holdings yet. Add one above — enter a ticker, how many shares, and your average cost, and the desk tracks your live value, profit/loss and position weights here.</div></div>`}`;
+}
 
 async function pageWatchlist() {
   const [quant, uni, fvAll, fscore, live] = await Promise.all([
