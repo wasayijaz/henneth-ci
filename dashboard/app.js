@@ -948,7 +948,19 @@ async function pageLeaderboard() {
   const [lb, bs, claimsAll] = await Promise.all([j("leaderboard.json"), j("broker_scorecard.json"), j("claims.json")]);
   const personas = lb?.personas || {};
   const brokers = bs?.brokers || {};
-  const pending = (claimsAll?.claims || []).filter(c => c.status === "pending");
+  const allClaims = claimsAll?.claims || [];
+  const pending = allClaims.filter(c => c.status === "pending");
+  const resolved = allClaims.filter(c => c.status === "hit" || c.status === "miss");
+  const claimDates = allClaims.map(c => (c.made_on || c.made_at || "")).filter(Boolean).sort();
+  const since = claimDates.length ? claimDates[0].slice(0, 10) : null;
+  const daysSince = since ? Math.max(0, Math.round((Date.now() - new Date(since)) / 86400000)) : null;
+  const clkTile = (label, val, sub) => `<div class="clk-tile"><span>${label}</span><b>${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+  const trackClock = `<div class="trackclock">
+    ${clkTile("Scoring calls since", since || "—", daysSince != null ? `${daysSince} day${daysSince === 1 ? "" : "s"} on the record` : "the clock starts with the first dated call")}
+    ${clkTile("Calls on the record", allClaims.length, "desk analysts + brokers")}
+    ${clkTile("Resolved", resolved.length, "graded against real outcomes")}
+    ${clkTile("Pending", pending.length, "awaiting their horizon")}
+  </div>`;
   const pendBroker = pending.filter(c => c.source_type === "broker");
   const pendByBroker = {};
   pendBroker.forEach(c => (pendByBroker[c.source] = pendByBroker[c.source] || []).push(c));
@@ -956,6 +968,7 @@ async function pageLeaderboard() {
   const sectorRow = (sect, s) => `<tr><td style="padding-left:22px" class="sub">${esc(sect.replace(/_/g, " "))}</td><td class="r num">${s.calls}</td><td class="r num ${!s.ranked ? "" : s.hit_rate >= 0.55 ? "up" : "dn"}">${s.hit_rate != null ? Math.round(s.hit_rate * 100) + "%" : "—"}${!s.ranked ? ' <span class="sub">unranked</span>' : ""}</td><td class="r num">${s.avg_target_err_pct != null ? s.avg_target_err_pct + "%" : "—"}</td></tr>`;
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Track records</h2><div class="ln"></div></div>
+  ${trackClock}
   <div class="disclaimer">Every dated call — the desk's own AI analysts <b>and</b> the brokers — is scored against what prices actually did. This is accountability, not advice. A thin record (below ${bs?._meta?.min_sample_to_rank ?? 5} calls) is shown <b>unranked</b> so no one is over-trusted on luck.</div>
 
   <div class="seg"><h2>The desk's AI analysts</h2><div class="ln"></div><span class="pill">${Object.keys(personas).length}</span></div>
@@ -972,8 +985,26 @@ async function pageLeaderboard() {
     pendBroker.slice(0, 40).map(c => `<tr><td><b>${esc(c.source)}</b></td><td><a href="#/ticker/${esc(c.ticker)}" style="color:var(--accent);font-weight:700">${esc(c.ticker)}</a></td><td class="sub">${esc(c.claim?.text || c.claim?.rating || "")}</td><td class="r num">${esc(c.resolve_by || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
 }
 
+/* ---------- legal pages (Terms / Privacy / Risk) — content from state/legal.json ---------- */
+async function pageLegal() {
+  const doc = await j("legal.json");
+  const which = location.hash.split("/")[2] || "terms";
+  const tabs = [["terms", "Terms of Service"], ["privacy", "Privacy Policy"], ["risk", "Risk Disclosure"]];
+  const tabBar = `<div class="legal-tabs">${tabs.map(([k, t]) => `<a href="#/legal/${k}" class="${k === which ? "on" : ""}">${t}</a>`).join("")}</div>`;
+  const L = doc && doc[which];
+  if (!L) { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Legal</h2><div class="ln"></div></div>${tabBar}<div class="card"><div class="empty">Loading…</div></div>`; return; }
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>${esc(L.title)}</h2><div class="ln"></div><span class="pill">updated ${esc(L.updated)}</span></div>
+  ${tabBar}
+  <div class="card legal-doc">
+    <p class="legal-intro">${esc(L.intro)}</p>
+    ${(L.sections || []).map(([h, b]) => `<h3>${esc(h)}</h3><p>${esc(b)}</p>`).join("")}
+    <p class="sub" style="margin-top:20px">Contact: <a href="mailto:${esc(doc.contact || "")}" style="color:var(--accent)">${esc(doc.contact || "")}</a>${doc.jurisdiction ? ` · Governed by the laws of ${esc(doc.jurisdiction)}.` : ""}</p>
+  </div>`;
+}
+
 /* ---------- router ---------- */
-const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews };
+const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {

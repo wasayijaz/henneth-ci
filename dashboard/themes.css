@@ -292,6 +292,24 @@ body[data-theme=gemini] .tknote:focus{outline:none;border-color:var(--ink2)}
 body[data-theme=gemini] .tknote-bar{display:flex;align-items:center;gap:12px;margin-top:10px}
 body[data-theme=gemini] .note-save{background:var(--ink1);color:var(--panel);border:1.5px solid var(--ink1);font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 16px;cursor:pointer}
 body[data-theme=gemini] .note-save:hover{opacity:.85}
+/* track-record clock (Scores page) */
+body[data-theme=gemini] .trackclock{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border:1.5px solid var(--line);margin:8px 0 12px}
+body[data-theme=gemini] .clk-tile{background:var(--panel);padding:11px 13px;display:flex;flex-direction:column;gap:2px}
+body[data-theme=gemini] .clk-tile>span{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+body[data-theme=gemini] .clk-tile>b{font-size:19px;font-weight:700;line-height:1.1;font-family:"Pixelify Sans",var(--mono,monospace)}
+body[data-theme=gemini] .clk-tile>i{font-size:10px;font-style:normal;color:var(--ink3);line-height:1.35}
+@media(max-width:720px){body[data-theme=gemini] .trackclock{grid-template-columns:1fr 1fr}}
+/* legal pages */
+body[data-theme=gemini] .legal-tabs{display:flex;gap:1px;background:var(--hair);border:1.5px solid var(--line);margin-bottom:12px;flex-wrap:wrap}
+body[data-theme=gemini] .legal-tabs a{flex:1;text-align:center;padding:10px 12px;background:var(--panel);color:var(--ink2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+body[data-theme=gemini] .legal-tabs a.on{background:var(--ink1);color:var(--panel)}
+body[data-theme=gemini] .legal-doc{max-width:820px}
+body[data-theme=gemini] .legal-intro{font-size:13.5px;line-height:1.65;color:var(--ink2);margin-bottom:18px;border-left:4px solid var(--line);padding-left:12px}
+body[data-theme=gemini] .legal-doc h3{font-size:13.5px;font-weight:700;margin:18px 0 5px;color:var(--ink1)}
+body[data-theme=gemini] .legal-doc p{font-size:12.5px;line-height:1.65;color:var(--ink2)}
+/* footer legal links */
+body[data-theme=gemini] .foot-links{display:block;margin-top:8px}
+body[data-theme=gemini] .foot-links a{color:var(--ink2);text-decoration:underline;margin-right:4px}
 /* Desk Room — full debate collapsed behind an expander */
 body[data-theme=gemini] .room-transcript{border:1.5px solid var(--line);margin-top:12px}
 body[data-theme=gemini] .room-transcript>summary{cursor:pointer;list-style:none;padding:10px 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);display:flex;align-items:center;justify-content:space-between;gap:8px}
