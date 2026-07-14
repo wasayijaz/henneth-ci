@@ -34,15 +34,21 @@ async function j(p, ttl = 25000) {
   // several attempts across two transports; never cache a failure (a transient miss
   // must not blank the page for 25s) — falls back to last-known-good if all fail.
   const url = () => DATA_BASE + p + "?t=" + Date.now();
+  let lastErr = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const v = attempt < 2 ? await fetch(url()).then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
         : await xhrJson(url()); // last attempt: bypass a fetch() an extension may have broken
       cache[p] = { t: Date.now(), v };
       return v;
-    } catch { /* fall through to retry */ }
+    } catch (e) { lastErr = e; /* fall through to retry */ }
     if (attempt < 2) await new Promise(res => setTimeout(res, 300));
   }
+  // All 3 attempts (2x fetch + 1x XHR) failed — surface this, don't swallow it silently.
+  // A "Failed to fetch" with no HTTP status usually means a browser extension or network
+  // policy blocked the request before it left the browser (check the Network tab's status
+  // column for "(blocked)" / "ERR_BLOCKED_BY_CLIENT"), not a server-side data problem.
+  console.warn(`[psx-desk] j("${p}") failed after all attempts:`, lastErr);
   return cache[p]?.v ?? null; // serve last-known-good if we ever had it
 }
 
