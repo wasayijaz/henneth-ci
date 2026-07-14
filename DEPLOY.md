@@ -1,66 +1,41 @@
-# Deploying the PSX Trade Desk — free cloud (data desk)
+# Deploying the PSX Trade Desk
 
-Architecture (all free tiers):
+Hosting is **Vercel**, serving a static site straight from this repo. There is no server,
+no GitHub Actions, and no Supabase Storage bucket in the data path.
 
 ```
-GitHub Actions (cron every 30 min, market hours)  ──runs the Python pipeline──▶
-Supabase Storage (public bucket 'desk', JSON)     ◀──reads──  Vercel (static dashboard)
+Local refresh loops (Claude app)  ──git push main──▶  GitHub (private repo)
+                                                          │  push auto-triggers
+                                                          ▼
+                                              Vercel  ──builds + serves──▶  live site
 ```
 
-No LLM agents run in the cloud, so there is **zero token cost**. The cloud shows the
-deterministic desk: charts, 52 strategies, scorecards, geo-risk, dividends, calendar,
-macro/global. (The agent commentary — daily read, news tagging, signals — stays on your
-PC; run those locally and they get pushed to Supabase too.)
+`vercel.json` assembles the site on each deploy: it copies `dashboard/index.html`,
+`app.js`, `themes.css` and the committed `state/` data into `public/`. The dashboard
+fetches `state/*.json` as static files from Vercel (`DATA_BASE = "state/"`), so a `git push`
+to `main` is the entire deploy — Vercel rebuilds in ~30–60 s.
 
-Already done for you: Supabase project `qteoncckohuoatbjjykb`, public bucket **desk**,
-and the dashboard is wired to read from it when not on localhost.
-
-## 1. Put the repo on GitHub
+## Pushing an update
+Never `git push` by hand for a data refresh — use the gated helper, which runs `preflight.py`
+first and only commits/pushes if state actually changed:
 ```powershell
 cd "D:\PSX Trader X Claude"
-git init && git add -A && git commit -m "PSX Trade Desk"
-# create a repo on github.com (public = unlimited free Actions minutes), then:
-git remote add origin https://github.com/<you>/psx-trade-desk.git
-git push -u origin main
+python scripts\publish.py "Your message"
 ```
+If preflight fails (the data would render broken), it aborts and nothing publishes.
 
-## 2. Add two GitHub secrets
-Repo → Settings → Secrets and variables → Actions → New repository secret:
-- `SUPABASE_URL` = `https://qteoncckohuoatbjjykb.supabase.co`
-- `SUPABASE_SERVICE_KEY` = your **service_role** key
-  (Supabase dashboard → Project Settings → API → `service_role` secret. This is the ONLY
-  key that may write to Storage. Keep it secret — never commit it.)
+## Accounts (Supabase)
+Supabase is used **only for auth + per-user data** (profiles, watchlist), never for serving
+the research data. Project `qteoncckohuoatbjjykb`. The client uses the *publishable* key
+(safe to ship); Row-Level Security enforces that each user can read/write only their own row.
+The `service_role` (secret) key must never be committed and is not needed by the site.
 
-The workflow (`.github/workflows/desk.yml`) then runs every 30 min, 04:00–11:30 UTC
-Mon–Fri (~09:00–16:30 PKT). Trigger the first run manually: repo → Actions →
-"PSX Desk cloud pipeline" → Run workflow.
+## Free-tier notes
+- **Vercel Hobby**: static hosting + CDN, 100 GB bandwidth/month (~low-thousands of active
+  users before you'd consider Pro).
+- **Supabase free**: 50k monthly active users, 500 MB DB — plenty for auth + profiles.
 
-## 3. Deploy the dashboard to Vercel
-1. vercel.com → Add New → Project → import the GitHub repo.
-2. **Root Directory: `dashboard`**  (important — this makes `index.html` the site root).
-3. Framework preset: **Other**. No build command. Deploy.
-
-That's it. Vercel serves the dashboard; it fetches JSON from the Supabase public bucket.
-Every 30 min GitHub Actions refreshes the data and the dashboard picks it up.
-
-## Populate the bucket right now (optional, from your PC)
-To see live data before the first Actions run:
-```powershell
-cd "D:\PSX Trader X Claude"
-$env:SUPABASE_URL="https://qteoncckohuoatbjjykb.supabase.co"
-$env:SUPABASE_SERVICE_KEY="<your service_role key>"
-python scripts\upload_supabase.py --deep
-```
-
-## Cost / free-tier notes
-- **GitHub Actions**: public repo = unlimited minutes. Each run ~3–5 min.
-- **Supabase free**: 1 GB storage, 5 GB egress/month, project pauses after 1 week idle —
-  the 30-min cron keeps it awake. JSON-only bucket stays well under 1 GB.
-- **Vercel Hobby**: free static hosting + CDN. (Vercel's own cron is daily-only and its
-  functions time out at ~60 s — that's why the 30-min pipeline runs on GitHub Actions, not
-  Vercel.)
-- **Deep history** (19 y, the heavy fetch) is cached and only re-pulled once per day.
-
-## Later, if you want the agents in the cloud too
-Add `ANTHROPIC_API_KEY` as a secret and a second workflow that runs `claude -p` with the
-pre-market prompt. That costs tokens (a few $/month at daily cadence) — deferred by choice.
+## Later, if you want cloud-run agents
+The agents run locally today (token cost stays on your machine, and the loops push results).
+To move them to the cloud, add `ANTHROPIC_API_KEY` as a secret and a runner that executes
+`claude -p` with the pre-market prompt — deferred by choice (a few $/month at daily cadence).
