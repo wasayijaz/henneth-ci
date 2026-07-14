@@ -9,7 +9,7 @@ It **never places orders**; execution is manual on your broker.
 > does not predict future results. Investing in PSX carries risk, including the loss of capital. You make
 > your own decisions. (A platform-wide footer + a "Research · not advice" badge repeat this on every page.)
 
-**Live:** https://wasayijaz.github.io/psx-trade-desk/
+**Live:** https://psx-trade-desk.vercel.app/  ·  private repo, hosted on Vercel
 Docs: [`CLAUDE.md`](CLAUDE.md) (desk rules) · [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) (system map)
 · [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) (path to a subscription product)
 
@@ -84,7 +84,8 @@ python scripts/run_cloud.py       # the whole free pipeline (fetch → quant →
 python scripts/preflight.py       # deploy gate: exits non-zero if the data would render broken
 ```
 
-Deployed free via **GitHub Pages + Actions** (no secrets). Every `push` to `main` rebuilds and redeploys.
+Hosted on **Vercel** (private repo, auto-deploys on every `push` to `main`; `vercel.json` assembles the
+static site + committed `state/` data). The refresh loops push fresh data → Vercel redeploys.
 
 ## Data & stack
 
