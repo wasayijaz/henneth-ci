@@ -55,11 +55,16 @@ def main():
         except Exception:  # noqa: BLE001
             continue
 
-    # TradingView cross-check (if run this session): any FAIL degrades health
+    # TradingView cross-check (if run this session): only a GENUINE error degrades health.
+    # tv_crosscheck now separates real glitches (`fails`: close off >12%, i.e. decimal/split/
+    # wrong-symbol) from explainable `drift` (TV's 15-min lag + adjusted-vs-unadjusted feed).
+    # Per CLAUDE.md a TV-vs-DPS mismatch is NOT an error, so `drift` never degrades health.
     cc = load_json(STATE / "crosscheck.json", None)
-    if cc and cc.get("fails"):
-        if cc.get("updated", "")[:10] == time.strftime("%Y-%m-%d"):
-            problems.append(f"tv_crosscheck FAIL: {', '.join(cc['fails'])}")
+    cc_drift = []
+    if cc and cc.get("updated", "")[:10] == time.strftime("%Y-%m-%d"):
+        if cc.get("fails"):
+            problems.append(f"tv_crosscheck ERROR (likely data glitch): {', '.join(cc['fails'])}")
+        cc_drift = cc.get("drift", [])
 
     # Calendar freshness (Ramadan guard, CLAUDE.md): if session times haven't been re-verified
     # in 60 days, degrade — force a human check rather than silently trading wrong hours.
@@ -77,6 +82,7 @@ def main():
         "checked": time.strftime("%Y-%m-%d %H:%M"),
         "status": status,
         "problems": problems,
+        "advisories": ([f"tv drift (lag/adjustment, not an error): {', '.join(cc_drift)}"] if cc_drift else []),
         "history_symbols": have,
         "latest_eod": latest,
         "spot_check": spot,

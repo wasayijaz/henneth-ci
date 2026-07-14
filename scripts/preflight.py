@@ -116,6 +116,35 @@ def main():
         if empties:
             fail(f"fairvalue.json: tickers with empty methods: {', '.join(empties)}")
 
+    # Per-ticker history completeness — the "No data for XXX" class: a symbol in the
+    # universe with a missing/empty history/{sym}.json renders a dead ticker page that
+    # the client CANNOT self-heal (the file genuinely isn't on the server). Gate it here.
+    uni, _ = load("universe.json")
+    if uni and isinstance(uni.get("symbols"), dict):
+        symbols = list(uni["symbols"])
+        hist_dir = os.path.join(STATE, "history")
+        missing = []
+        for s in symbols:
+            p = os.path.join(hist_dir, f"{s}.json")
+            try:
+                if not os.path.exists(p) or os.path.getsize(p) < 20:
+                    missing.append(s)
+                    continue
+                with open(p, encoding="utf-8") as f:
+                    if len(json.load(f)) < 2:      # need at least a couple of bars to render
+                        missing.append(s)
+            except Exception:
+                missing.append(s)
+        if symbols:
+            frac = len(missing) / len(symbols)
+            # a few missing is tolerable (a new listing mid-fetch); a broad gap is a broken cycle
+            if frac > 0.10:
+                fail(f"history/: {len(missing)}/{len(symbols)} tickers missing/empty history "
+                     f"({frac:.0%}) — their ticker pages would show 'No data'. e.g. {', '.join(missing[:8])}")
+            elif missing:
+                warn(f"history/: {len(missing)} ticker(s) missing history (pages self-heal-retry but "
+                     f"stay empty until refetched): {', '.join(missing[:12])}")
+
     # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
     # dossier can't block the core desk from deploying)
     check("dossiers.json", required=False)

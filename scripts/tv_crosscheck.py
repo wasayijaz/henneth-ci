@@ -20,7 +20,17 @@ except ImportError:
     sys.exit(2)
 
 SPOT = ["HUBC", "OGDC", "LUCK", "FFC", "MEBL", "UBL", "ENGROH", "PSO"]
-TOL = {"close": 0.01, "rsi14": 0.05, "sma20": 0.01, "sma50": 0.01}  # relative tolerance
+
+# TradingView PSX is ~15 min delayed AND split/bonus-adjusted differently from DPS (unadjusted).
+# CLAUDE.md: a TV-vs-DPS mismatch is NOT an error and must never degrade health on its own.
+# So this gate has TWO bands per field:
+#   dev <= DRIFT_TOL      -> match (fine)
+#   DRIFT_TOL < dev <= ERR_TOL -> "drift" (advisory: lag / adjustment diff; recorded, does NOT fail)
+#   dev > ERR_TOL         -> "error" (genuine: decimal/split/wrong-symbol glitch -> real FAIL, degrades health)
+# ERR_TOL for close is wide enough to clear a full ±7.5% PSX circuit move + adjustment gap,
+# but a decimal error (10x) or missed split (2x+) still trips it.
+DRIFT_TOL = {"close": 0.03, "rsi14": 0.10, "sma20": 0.03, "sma50": 0.03}
+ERR_TOL = {"close": 0.12, "rsi14": 0.35, "sma20": 0.12, "sma50": 0.12}
 
 
 def fetch_tv(symbol: str) -> dict | None:
@@ -39,7 +49,7 @@ def main():
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
     syms = list(quant) if "--all" in sys.argv else [s for s in SPOT if s in quant]
 
-    results, fails = {}, []
+    results, fails, drift = {}, [], []
     for sym in syms:
         tv = fetch_tv(sym)
         if not tv or "error" in tv:
@@ -48,31 +58,39 @@ def main():
             continue
         q = quant[sym]
         checks = {}
-        ok = True
+        sym_status = "PASS"  # escalates to DRIFT then ERROR
         for field in ("close", "rsi14", "sma20", "sma50"):
             ours, theirs = q.get(field), tv.get(field)
             if ours is None or theirs is None or theirs == 0:
                 checks[field] = {"ours": ours, "tv": theirs, "match": None}
                 continue
             dev = abs(ours / theirs - 1)
-            match = dev <= TOL[field]
+            fstat = "match" if dev <= DRIFT_TOL[field] else "drift" if dev <= ERR_TOL[field] else "error"
             checks[field] = {"ours": ours, "tv": round(theirs, 2), "dev_pct": round(dev * 100, 3),
-                             "match": match}
-            ok = ok and match
-        results[sym] = {"status": "PASS" if ok else "FAIL", "checks": checks,
+                             "match": fstat == "match", "flag": fstat}
+            # only the CLOSE price gates health; indicators are advisory (they lag a bar behind TV)
+            if fstat == "error" and field == "close":
+                sym_status = "ERROR"
+            elif fstat == "drift" and sym_status == "PASS":
+                sym_status = "DRIFT"
+        results[sym] = {"status": sym_status, "checks": checks,
                         "tv_high": tv["high"], "tv_low": tv["low"]}
-        if not ok:
-            fails.append(sym)
+        if sym_status == "ERROR":
+            fails.append(sym)          # genuine data error -> degrades health (Rule 6)
+        elif sym_status == "DRIFT":
+            drift.append(sym)          # explainable lag/adjustment -> advisory only
         time.sleep(1.0)  # respect TV rate limits
 
     save_json(STATE / "crosscheck.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "checked": len(syms),
-        "fails": fails,
+        "fails": fails,     # genuine glitches only — these gate health
+        "drift": drift,     # TV lag / adjustment differences — recorded, never gate health
         "results": results,
     })
-    print(f"crosscheck: {len(syms)} checked, {len(fails)} FAIL"
-          + (f" -> {', '.join(fails)}" if fails else ""))
+    print(f"crosscheck: {len(syms)} checked, {len(fails)} ERROR, {len(drift)} drift"
+          + (f" -> ERROR: {', '.join(fails)}" if fails else "")
+          + (f" -> drift: {', '.join(drift)}" if drift else ""))
     sys.exit(1 if fails else 0)
 
 
