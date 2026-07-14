@@ -177,6 +177,12 @@ body[data-theme=gemini] .fvline{font-size:11.5px;color:var(--ink2);padding:3px 0
 body[data-theme=gemini] .fvline span{display:inline-block;min-width:110px;text-transform:uppercase;font-size:9.5px;letter-spacing:.05em;color:var(--ink3)}
 body[data-theme=gemini] .fvnote{font-size:11.5px;line-height:1.55;color:var(--ink2);margin-top:10px}
 body[data-theme=gemini] .fvnote a{color:var(--ink1);text-decoration:underline}
+/* watchlist star */
+body[data-theme=gemini] .starbtn{background:transparent;border:1.5px solid var(--line);width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;flex:none;color:var(--ink3);padding:0}
+body[data-theme=gemini] .starbtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+body[data-theme=gemini] .starbtn:hover{color:var(--ink1)}
+body[data-theme=gemini] .starbtn.on{color:var(--ink1)}
+body[data-theme=gemini] .starbtn.on svg{fill:var(--ink1);stroke:var(--ink1)}
 /* ============ ACCOUNTS + ONBOARDING ============ */
 body[data-theme=gemini] .acct-slot{display:flex;align-items:center}
 body[data-theme=gemini] .acct-signin{background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);padding:4px 12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-body)}

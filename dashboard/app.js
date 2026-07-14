@@ -657,6 +657,7 @@ async function pageTicker(sym) {
       <span class="tag">${esc(u?.name || "")}</span>${lv?.sector && isNaN(lv.sector) ? `<span class="tag">${esc(lv.sector)}</span>` : ""}
       <span class="tag">${(u?.in || []).join(" · ")}</span>
       <a class="tag" target="_blank" href="https://www.tradingview.com/chart/?symbol=PSX%3A${sym}">TradingView ↗ (15m delayed)</a>
+      ${typeof starBtn === "function" ? starBtn(sym) : ""}
     </div>
     <div class="prov">Prices in <b>Rs (PKR)</b> · ${priceSrc} · quant as of ${q.date} close · fundamentals ${f.fetched || "—"} · long-history chart is split/bonus-adjusted (Yahoo); DPS close is unadjusted.${liq === "low" ? ' · <b class="dn">low liquidity</b>' : ""}${lossmaking ? ' · <b class="dn">earnings negative</b>' : ""}</div>
     <div class="ranges" id="ranges">
@@ -915,7 +916,7 @@ async function pageLeaderboard() {
 }
 
 /* ---------- router ---------- */
-const PAGES = { today: pageToday, board: pageBoard, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews };
+const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews };
 let lastPage = null;
 
 function animateIn() {
@@ -1175,6 +1176,58 @@ async function saveProfile(patch) {
   const { error } = await sb.from("profiles").upsert(patch);
   if (!error) myProfile = { ...(myProfile || {}), ...patch };
   return error;
+}
+
+/* ---------- watchlist (per-user, persisted to profiles.watchlist) ---------- */
+function watchlist() { return (myProfile && myProfile.watchlist) || []; }
+function isWatched(sym) { return watchlist().includes(sym); }
+async function toggleWatch(sym, btn) {
+  if (!me) { openAuth("signup"); return; }               // must be signed in to save
+  const cur = new Set(watchlist());
+  cur.has(sym) ? cur.delete(sym) : cur.add(sym);
+  const next = [...cur];
+  if (btn) { btn.classList.toggle("on", cur.has(sym)); btn.disabled = true; }
+  await saveProfile({ watchlist: next });
+  if (btn) btn.disabled = false;
+  if (location.hash === "#/watchlist") pageWatchlist();   // live-refresh the list view
+}
+// star button markup (used on ticker pages). onclick wired via delegation below.
+function starBtn(sym) {
+  return `<button class="starbtn ${isWatched(sym) ? "on" : ""}" data-watch="${esc(sym)}" title="${me ? "Add to / remove from your watchlist" : "Sign in to save to a watchlist"}" aria-label="watchlist">
+    <svg viewBox="0 0 24 24"><path d="M12 3l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18l-5.9 3 1.2-6.5L2.5 9.9 9.1 9z"/></svg></button>`;
+}
+// one delegated handler for every star on the page
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-watch]");
+  if (b) { e.preventDefault(); e.stopPropagation(); toggleWatch(b.dataset.watch, b); }
+});
+
+async function pageWatchlist() {
+  const [quant, uni, fvAll, fscore, live] = await Promise.all([
+    j("quant.json"), j("universe.json"), j("fairvalue.json"), j("fundamental_scores.json"), j("live.json")]);
+  if (!me) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your watchlist</h2><div class="ln"></div></div>
+      <div class="card"><div class="empty">Sign in to build a watchlist — star any stock and it follows you here with its price, valuation and health at a glance.<br><br>
+      <button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
+    return;
+  }
+  const wl = watchlist();
+  const q = quant?.tickers || {}, fv = fvAll?.tickers || {}, fs = fscore?.tickers || {}, lv = live?.tickers || {};
+  const rows = wl.map(s => ({ s, name: uni?.symbols?.[s]?.name || "", q: q[s], fv: fv[s], fs: fs[s], px: lv[s]?.current ?? q[s]?.close }))
+    .filter(r => r.q);
+  const verdictLabel = { undervalued: "below fair", overvalued: "above fair", fair: "near fair" };
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Your watchlist</h2><div class="ln"></div><span class="pill">${rows.length}</span></div>
+  <p class="sub" style="margin-bottom:14px">The stocks you follow, with the four things that matter at a glance. Star toggles on any stock page. Research, not advice.</p>
+  ${rows.length ? `<div class="card"><table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Day</th><th class="r">Valuation</th><th>Health</th><th></th></tr></thead><tbody>${
+    rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'">
+      <td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
+      <td class="r num">${fmt(r.px)}</td>
+      <td class="r num ${cls(r.q.ret_1d)}">${sgn(r.q.ret_1d)}%</td>
+      <td class="r">${r.fv ? `<span class="pill ${r.fv.verdict === "undervalued" ? "ok" : r.fv.verdict === "overvalued" ? "bad" : ""}">${verdictLabel[r.fv.verdict] || r.fv.verdict}</span>` : "—"}</td>
+      <td>${r.fs ? `<span class="tag">${esc(r.fs.rating === "attractive" ? "stronger" : r.fs.rating === "caution" ? "weaker" : "mixed")}</span>` : "—"}</td>
+      <td class="r">${starBtn(r.s)}</td></tr>`).join("")}</tbody></table></div>`
+    : `<div class="card"><div class="empty">No stocks yet. Open any stock and tap the ★ to add it — try <a href="#/board">the Board</a> or search (top right).</div></div>`}`;
 }
 
 /* ---------- onboarding wizard: quiz + product tour ---------- */
