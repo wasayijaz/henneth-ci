@@ -498,7 +498,9 @@ function renderRoom(room, sym) {
     </div>
   </div>
 
-  <div class="two-col">
+  <details class="room-transcript">
+    <summary>Full debate — the technical desk, the fundamental desk, and the bull vs the bear <span class="exhint">click to expand</span></summary>
+  <div class="two-col" style="margin-top:12px">
     ${memo("MC", "Meher", "The Chartist · TA", ta.technical_stance, stanceClass(ta.technical_stance), `<p class="sub" style="color:var(--ink2);line-height:1.5">${esc(ta.read || "")}</p>${ta.levels ? `<div class="sub" style="margin-top:6px">structure <b>${esc(ta.structure || "—")}</b> · momentum <b>${esc(ta.momentum || "—")}</b> · support <b>${fmt(ta.levels.support)}</b> · resistance <b>${fmt(ta.levels.resistance)}</b></div>` : ""}`)}
     ${memo("DO", "Dr. Omar", "The Fundamentalist · FA", fa.fundamental_stance, stanceClass(fa.fundamental_stance), `<p class="sub" style="color:var(--ink2);line-height:1.5">${esc(fa.read || "")}</p><div class="sub" style="margin-top:6px">valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend: ${esc(fa.dividend_safety || "—")}</div>`)}
   </div>
@@ -514,7 +516,8 @@ function renderRoom(room, sym) {
 
   ${calls.length ? `<div class="card"><h2 style="font-size:12px">Dated calls on the record</h2><div class="sub">each is scored against what actually happens — this is how the desk (and, later, the brokers) are held accountable.</div>
     <table><thead><tr><th>Analyst</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
-    calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}`;
+    calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
+  </details>`;
 }
 
 async function pageTicker(sym, _retry = 0) {
@@ -655,9 +658,25 @@ async function pageTicker(sym, _retry = 0) {
     rrow("Earnings stability", NA, "A multi-year earnings series isn't in the feed yet, so year-to-year stability can't be scored here."),
   ].join("");
 
+  // ---- 5-item summary strip: the whole story in one glance, before anything else ----
+  let rg = "Moderate", rgk = "md";
+  if (vr != null) { if (vr < 20) { rg = "Lower"; rgk = "lo"; } else if (vr >= 50) { rg = "Higher"; rgk = "hi"; } }
+  if (liq === "low" || mddRecentAbs >= 55) { rg = "Higher"; rgk = "hi"; }
+  const daysToEarn = nextEarn ? daysTo(nextEarn.date) : null;
+  const hvRoom = room && room.house_view ? room.house_view : null;
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+  const summaryStrip = `<div class="sumstrip">
+    ${sTile("Fair value vs price", fv ? `Rs ${fmt(fv.composite_fair)}` : "—", fv ? `price Rs ${fmt(fv.price)} · ${sgn(fv.mispricing_pct)}%` : "model n/a", fv ? (fv.verdict === "undervalued" ? "up" : fv.verdict === "overvalued" ? "dn" : "") : "")}
+    ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
+    ${sTile("Risk grade", rg, vr != null ? `volatility ${vr.toFixed(0)}/100` : "liquidity " + liq, rgk === "hi" ? "dn" : rgk === "lo" ? "up" : "")}
+    ${sTile("Next event", nextEarn ? "Results" : "—", nextEarn ? `${nextEarn.date}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
+    ${sTile("House view", hvRoom ? `${esc(hvRoom.conviction || "—")} conviction` : "In queue", hvRoom ? "AI desk — see Room below" : "not yet covered", "")}
+  </div>`;
+
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
+  ${summaryStrip}
   ${glance}
   <div class="card">
     <div class="tk-head">
