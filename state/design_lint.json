@@ -3,13 +3,25 @@
   {
    "sev": "low",
    "file": "themes.css",
-   "line": 319,
+   "line": 288,
+   "msg": "raw hex #b8860b outside the token block — prefer var(--...)"
+  },
+  {
+   "sev": "low",
+   "file": "themes.css",
+   "line": 288,
+   "msg": "raw hex #b8860b outside the token block — prefer var(--...)"
+  },
+  {
+   "sev": "low",
+   "file": "themes.css",
+   "line": 387,
    "msg": "raw hex #c9c9c2 outside the token block — prefer var(--...)"
   },
   {
    "sev": "low",
    "file": "themes.css",
-   "line": 332,
+   "line": 400,
    "msg": "raw hex #bdbdb5 outside the token block — prefer var(--...)"
   },
   {
@@ -20,12 +32,17 @@
   {
    "sev": "low",
    "file": "themes.css",
-   "msg": "7 pairs of near-identical font sizes (e.g. (8.5, 9.0)) — collapse them so size differences signal real hierarchy"
+   "msg": "19 distinct font-sizes — a tight type scale reads as one system; consider consolidating near values"
+  },
+  {
+   "sev": "low",
+   "file": "themes.css",
+   "msg": "11 pairs of near-identical font sizes (e.g. (8.5, 9.0)) — collapse them so size differences signal real hierarchy"
   }
  ],
  "_meta": {
-  "built": "2026-07-14 13:12",
-  "total": 4,
+  "built": "2026-07-14 09:08",
+  "total": 7,
   "high": 0,
   "escalate": false,
   "note": "Deterministic design-language lint. 'high' = a rule violation on screen. If escalate, run the design-reviewer agent (visual web+mobile pass)."
