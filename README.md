@@ -113,6 +113,7 @@ degrades if session times go 60 days unverified, halting new signals). The **Aud
 
 ## Docs
 - [`CLAUDE.md`](CLAUDE.md) — the desk rules every agent obeys.
+- [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — **operations runbook**: the hybrid cloud/app model, the one publish path, safety gates, and how to run every flow without breaking live. Read this first when operating the desk.
 - [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) — index of every agent, loop, script, and state file.
 - [`docs/DESK-ROOM-PLAN.md`](docs/DESK-ROOM-PLAN.md) — the multi-agent analyst design.
 - [`docs/AUTOMATION-PLAN.md`](docs/AUTOMATION-PLAN.md) — the whole-product loop map.

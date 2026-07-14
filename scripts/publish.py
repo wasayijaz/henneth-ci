@@ -48,11 +48,31 @@ def main():
         print("publish: commit failed:\n" + (c.stderr or c.stdout)[:300])
         sys.exit(1)
 
-    # 4) push -> Vercel auto-deploys
-    p = _run(["git", "push", "origin", "main"])
-    if p.returncode != 0:
-        print("publish: push failed:\n" + (p.stderr or p.stdout)[:300])
-        sys.exit(1)
+    # 4) push -> Vercel auto-deploys. RACE-SAFE: the cloud GitHub-Actions cron and the
+    # app loops both push to main, so a push can be rejected (non-fast-forward) if the
+    # other side pushed since our last pull. On rejection, rebase our commit onto the
+    # latest origin, preferring OUR just-generated state on any conflict (`-X theirs`
+    # keeps the replayed commit's version — the fresh full state we just built), then
+    # retry. Whatever the other side raced in is regenerated next cycle, so nothing is lost.
+    def _push():
+        return _run(["git", "push", "origin", "main"]).returncode == 0
+
+    if not _push():
+        ok = False
+        for _ in range(3):
+            _run(["git", "fetch", "origin", "main"])
+            rb = _run(["git", "rebase", "-X", "theirs", "origin/main"])
+            if rb.returncode != 0:
+                _run(["git", "rebase", "--abort"])
+                print("publish: rebase conflict during concurrent push — skipping; next cycle republishes.")
+                sys.exit(1)
+            if _push():
+                ok = True
+                break
+            time.sleep(2)
+        if not ok:
+            print("publish: could not push after retries (heavy concurrent activity) — next cycle republishes.")
+            sys.exit(1)
     print(f"publish: pushed '{msg}' -> Vercel is deploying (~60s to https://psx-trade-desk.vercel.app/).")
 
 

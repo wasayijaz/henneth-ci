@@ -76,6 +76,9 @@ scores, and monitors signals. It NEVER places orders. Execution is manual by the
 - `dashboard/` — local visual layer. Reads `state/`, writes nothing.
 - `logs/` — one transcript per cycle run.
 - `config/desk.json` — capital, risk params, alert config.
+- `docs/OPERATIONS.md` — **operations runbook**: hybrid cloud/app model, the one publish path
+  (`scripts/publish.py`, race-safe + preflight-gated), safety gates, and how to run every flow without
+  breaking the live site. Any session operating the desk reads this first.
 
 ## Cycle discipline
 - Pre-market run (~08:45 PKT): full pipeline (data refresh → quant → predictability →
