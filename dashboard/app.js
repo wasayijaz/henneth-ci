@@ -517,7 +517,7 @@ function renderRoom(room, sym) {
     calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}`;
 }
 
-async function pageTicker(sym) {
+async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
   const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
@@ -556,7 +556,17 @@ async function pageTicker(sym) {
   const f = fund?.tickers?.[sym] || {};
   const nextEarn = (cal?.events || []).find(e => e.ticker === sym && e.type === "results");
   const daysTo = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
-  if (!series || !q) { $("view").innerHTML = `<div class="card"><div class="empty">No data for ${esc(sym)}.</div></div>`; return; }
+  if (!series || !q) {
+    // Almost always a transient fetch miss (the files exist server-side) — never dead-end.
+    // Auto-retry a few times, and always give a manual Retry so the page can self-heal.
+    const missing = !q ? "market data" : "price history";
+    $("view").innerHTML = `<div class="card"><div class="empty">Couldn't load ${missing} for ${esc(sym)} just now.<br>
+      <button class="acct-signin" id="tkretry" style="margin-top:12px">Retry</button></div></div>`;
+    const btn = document.getElementById("tkretry");
+    if (btn) btn.onclick = () => pageTicker(sym, 0);
+    if (_retry < 3) setTimeout(() => { if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, _retry + 1); }, 1200);
+    return;
+  }
 
   const px = lv?.current ?? q.close;
   const b = behaviorStats(series);
@@ -1078,14 +1088,27 @@ function renderAccountButton() {
         <button id="acctTour">Replay the tour</button>
         <button id="acctOut">Sign out</button>
       </div>`;
-    document.getElementById("acctBtn").onclick = () => { const m = document.getElementById("acctMenu"); m.hidden = !m.hidden; };
+    const menu = document.getElementById("acctMenu");
+    document.getElementById("acctBtn").onclick = (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
-    document.getElementById("acctTour").onclick = () => { document.getElementById("acctMenu").hidden = true; startWizard(true); };
-    document.addEventListener("click", (e) => { const m = document.getElementById("acctMenu"); if (m && !holder.contains(e.target)) m.hidden = true; });
+    document.getElementById("acctTour").onclick = () => { menu.hidden = true; startWizard(true); };
   } else {
     holder.innerHTML = `<button class="acct-signin" id="acctIn">Sign in</button>`;
     document.getElementById("acctIn").onclick = () => openAuth("signin");
   }
+}
+
+// Close the account menu on any outside click / Escape / navigation. Registered ONCE,
+// in the CAPTURE phase so a stopPropagation() elsewhere in the SPA can't keep it stuck open.
+if (!window.__acctMenuGuard) {
+  window.__acctMenuGuard = true;
+  const closeAcct = () => { const m = document.getElementById("acctMenu"); if (m) m.hidden = true; };
+  document.addEventListener("click", (e) => {
+    const m = document.getElementById("acctMenu"), holder = document.getElementById("acctSlot");
+    if (m && !m.hidden && holder && !holder.contains(e.target)) m.hidden = true;
+  }, true);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAcct(); });
+  window.addEventListener("hashchange", closeAcct);
 }
 
 /* ---------- auth modal (sign in / create account / reset) ---------- */
