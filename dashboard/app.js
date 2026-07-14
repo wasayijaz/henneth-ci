@@ -923,12 +923,15 @@ async function pageNews() {
 async function pageResearch() {
   const idx = await j("research_index.json");
   const docs = Object.values(idx?.documents || {}).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
-  const brokers = docs.filter(d => d.source_type === "broker");
+  const followed = new Set(followedBrokers());
+  // followed broker desks surface first on the wire, then by date
+  const brokers = docs.filter(d => d.source_type === "broker")
+    .sort((a, b) => (followed.has(b.source) ? 1 : 0) - (followed.has(a.source) ? 1 : 0));
   const filings = docs.filter(d => d.source_type !== "broker");
   const dtLabel = { corporate_briefing: "corporate briefing", agm: "AGM", results: "results", board_meeting: "board meeting", filing: "filing", morning_note: "morning note", company_note: "broker note" };
   const docRow = d => `<div class="rdoc">
     <div class="rdoc-top"><span class="tag">${esc(dtLabel[d.doc_type] || d.doc_type)}</span>
-      <span class="rdoc-src">${esc(d.source)}${d.digest_level === "headline" ? ' · <span class="sub">headline only</span>' : ""}</span>
+      <span class="rdoc-src">${esc(d.source)}${followed.has(d.source) ? ' <span class="wbadge">★ following</span>' : ""}${d.digest_level === "headline" ? ' · <span class="sub">headline only</span>' : ""}</span>
       <span class="t">${esc(d.date || "")}</span>
       ${(d.tickers || []).slice(0, 4).map(t => `<a href="#/ticker/${esc(t)}" class="tag clickable">${esc(t)}</a>`).join(" ")}</div>
     <div class="rdoc-digest">${esc(d.digest || "")}${d.url ? ` <a href="${esc(d.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}</div>
@@ -1004,7 +1007,67 @@ async function pageLegal() {
 }
 
 /* ---------- router ---------- */
-const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+/* ---------- followed brokers + digest preferences (profiles.followed_brokers / digest_prefs) ---------- */
+function followedBrokers() { return (myProfile && myProfile.followed_brokers) || []; }
+function digestPrefs() { return (myProfile && myProfile.digest_prefs) || {}; }
+async function toggleBroker(name) {
+  const s = new Set(followedBrokers());
+  s.has(name) ? s.delete(name) : s.add(name);
+  await saveProfile({ followed_brokers: [...s] });
+  pageSettings();
+}
+async function saveDigest(patch) {
+  await saveProfile({ digest_prefs: { ...digestPrefs(), ...patch } });
+  pageSettings();
+}
+async function toggleDigestInc(key) {
+  const inc = { ...(digestPrefs().include || {}) };
+  inc[key] = !inc[key];
+  await saveDigest({ include: inc });
+}
+
+async function pageSettings() {
+  const [bs, claimsAll] = await Promise.all([j("broker_scorecard.json"), j("claims.json")]);
+  if (!me) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Settings</h2><div class="ln"></div></div>
+      <div class="card"><div class="empty">Sign in to set your preferences — follow the broker desks you care about and choose your digest.<br><br>
+      <button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
+    return;
+  }
+  const brokerSet = new Set(Object.keys(bs?.brokers || {}));
+  (claimsAll?.claims || []).forEach(c => { if (c.source_type === "broker" && c.source) brokerSet.add(c.source); });
+  const brokers = [...brokerSet].sort();
+  const fb = new Set(followedBrokers());
+  const dp = digestPrefs();
+  const freq = dp.frequency || "off";
+  const inc = dp.include || {};
+  const freqBtn = (v, label) => `<button class="seg-opt ${freq === v ? "on" : ""}" onclick="saveDigest({frequency:'${v}'})">${label}</button>`;
+  const incRow = (key, label) => `<label class="chk-row"><input type="checkbox" ${inc[key] ? "checked" : ""} onchange="toggleDigestInc('${key}')"> <span>${label}</span></label>`;
+
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Settings</h2><div class="ln"></div><span class="pill">${esc(me.email || "")}</span></div>
+
+  <div class="seg"><h2>Your digest</h2><div class="ln"></div></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:12px">A periodic email of what changed on your watchlist and the desk. <b>Delivery isn't switched on yet</b> — we're saving your preference so it's ready the moment email sending goes live.</p>
+    <div class="sk" style="margin-bottom:6px">Frequency</div>
+    <div class="seg-opts">${freqBtn("off", "Off")}${freqBtn("daily", "Daily")}${freqBtn("weekly", "Weekly")}</div>
+    <div class="sk" style="margin:14px 0 6px">Include</div>
+    ${incRow("watchlist", "What moved on my watchlist")}
+    ${incRow("dailyread", "The desk's daily read")}
+    ${incRow("calls", "Newly resolved calls (hits / misses)")}
+    ${incRow("brokers", "New broker calls on names I follow")}
+  </div>
+
+  <div class="seg"><h2>Followed broker desks</h2><div class="ln"></div><span class="pill">${fb.size} followed</span></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:12px">Pick the research houses you want surfaced first on your Research wire. The desk still audits and scores every broker — following one never means trusting it. Research, not advice.</p>
+    ${brokers.length ? `<div class="follow-grid">${brokers.map(n => `<button class="follow-chip ${fb.has(n) ? "on" : ""}" onclick="toggleBroker('${esc(n).replace(/'/g, "\\'")}')">${fb.has(n) ? "✓ " : ""}${esc(n)}</button>`).join("")}</div>`
+      : '<div class="empty">No broker desks tracked yet — they appear here as the weekly harvest records their public calls.</div>'}
+  </div>`;
+}
+
+const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
@@ -1163,12 +1226,14 @@ function renderAccountButton() {
     holder.innerHTML = `<button class="acct-btn" id="acctBtn" title="${me.email}">${initial}</button>
       <div class="acct-menu" id="acctMenu" hidden>
         <div class="acct-email">${me.email}</div>
+        <button id="acctSettings">Settings</button>
         <button id="acctTour">Replay the tour</button>
         <button id="acctOut">Sign out</button>
       </div>`;
     const menu = document.getElementById("acctMenu");
     document.getElementById("acctBtn").onclick = (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
+    document.getElementById("acctSettings").onclick = () => { menu.hidden = true; location.hash = "#/settings"; };
     document.getElementById("acctTour").onclick = () => { menu.hidden = true; startWizard(true); };
   } else {
     holder.innerHTML = `<button class="acct-signin" id="acctIn">Sign in</button>`;

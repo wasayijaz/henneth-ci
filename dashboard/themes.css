@@ -323,6 +323,16 @@ body[data-theme=gemini] .ph-bar-lbl{width:64px;font-weight:700;font-size:12px;fl
 body[data-theme=gemini] .ph-bar-track{flex:1;height:14px;background:var(--hair);border:1px solid var(--line)}
 body[data-theme=gemini] .ph-bar-fill{display:block;height:100%;background:var(--ink1)}
 body[data-theme=gemini] .ph-bar-val{width:42px;text-align:right;flex:none;font-size:12px}
+/* settings: digest + followed brokers */
+body[data-theme=gemini] .seg-opts{display:flex;gap:1px;background:var(--hair);border:1.5px solid var(--line);width:fit-content}
+body[data-theme=gemini] .seg-opt{background:var(--panel);color:var(--ink2);border:none;font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 18px;cursor:pointer}
+body[data-theme=gemini] .seg-opt.on{background:var(--ink1);color:var(--panel)}
+body[data-theme=gemini] .chk-row{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:13px;color:var(--ink2);cursor:pointer}
+body[data-theme=gemini] .chk-row input{width:16px;height:16px;accent-color:var(--ink1)}
+body[data-theme=gemini] .follow-grid{display:flex;flex-wrap:wrap;gap:8px}
+body[data-theme=gemini] .follow-chip{background:var(--panel2,var(--panel));border:1.5px solid var(--line);color:var(--ink2);font:inherit;font-size:12px;font-weight:600;padding:7px 13px;cursor:pointer}
+body[data-theme=gemini] .follow-chip.on{background:var(--ink1);color:var(--panel);border-color:var(--ink1)}
+body[data-theme=gemini] .follow-chip:hover{border-color:var(--ink2)}
 /* Desk Room — full debate collapsed behind an expander */
 body[data-theme=gemini] .room-transcript{border:1.5px solid var(--line);margin-top:12px}
 body[data-theme=gemini] .room-transcript>summary{cursor:pointer;list-style:none;padding:10px 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);display:flex;align-items:center;justify-content:space-between;gap:8px}
