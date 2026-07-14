@@ -1,8 +1,8 @@
 {
- "updated": "2026-07-14 14:50",
+ "updated": "2026-07-14 15:09",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 60,
+  "score": 59,
   "band": "moderate"
  },
  "signals": [
@@ -29,6 +29,30 @@
    "confidence": "high",
    "basis": "backtest-proven, unaudited",
    "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+3.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260714-NPL-atr_stretch_below",
+   "ticker": "NPL",
+   "strategy": "atr_stretch_below",
+   "template": "2-ATR stretch below 20MA",
+   "category": "mean_reversion",
+   "sector": "Nishat Power Limited",
+   "entry": 67.06,
+   "stop": 65.05,
+   "target": 69.74,
+   "rr": 1.33,
+   "hold_sessions": 7,
+   "size_shares": 1192,
+   "size_pkr": 79936,
+   "backtest": {
+    "hit_rate": 0.692,
+    "net_expectancy_pct": 1.16,
+    "n": 13,
+    "oos_hit": 0.667
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "2-ATR stretch below 20MA is triggering now; on NPL's own history it won 69% over 13 trades (+1.2% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260714-GAL-trend_momo_combo",
@@ -70,6 +94,10 @@
    "score": 65.8
   },
   {
+   "ticker": "FHAM",
+   "score": 65.5
+  },
+  {
    "ticker": "NBP",
    "score": 62.5
   },
@@ -90,12 +118,8 @@
    "score": 61.1
   },
   {
-   "ticker": "HUBC",
-   "score": 60.5
-  },
-  {
-   "ticker": "HBL",
-   "score": 59.3
+   "ticker": "HINOON",
+   "score": 60.8
   }
  ],
  "movers_up": [
@@ -103,6 +127,11 @@
    "ticker": "GHNI",
    "ret_1d": 5.6,
    "close": 1233.72
+  },
+  {
+   "ticker": "CNERGY",
+   "ret_1d": 3.72,
+   "close": 10.05
   },
   {
    "ticker": "NRL",
@@ -118,28 +147,18 @@
    "ticker": "PRL",
    "ret_1d": 1.57,
    "close": 42.73
-  },
-  {
-   "ticker": "PSO",
-   "ret_1d": 0.67,
-   "close": 356.66
   }
  ],
  "movers_down": [
   {
-   "ticker": "JVDC",
-   "ret_1d": -2.79,
-   "close": 151.04
-  },
-  {
-   "ticker": "FCCL",
-   "ret_1d": -2.97,
-   "close": 54.22
-  },
-  {
    "ticker": "FATIMA",
    "ret_1d": -2.99,
    "close": 158.01
+  },
+  {
+   "ticker": "POWER",
+   "ret_1d": -2.99,
+   "close": 21.73
   },
   {
    "ticker": "MLCF",
@@ -150,6 +169,11 @@
    "ticker": "DGKC",
    "ret_1d": -3.2,
    "close": 217.3
+  },
+  {
+   "ticker": "TGL",
+   "ret_1d": -4.03,
+   "close": 193.94
   }
  ],
  "news": [

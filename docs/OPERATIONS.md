@@ -113,20 +113,44 @@ push refreshed data).
 
 ---
 
-## 7. Known gaps / honest notes
+## 7. Universe coverage — what tickers the desk tracks
+
+`config/desk.json.universe` controls this. As of 2026-07-14: **full KSE100 (100) + full KMI30 (30),
+deduped ≈ 103 symbols** (`kse100_top_n: 100`). This was previously capped at `50` — top-50-by-weight only
+— which silently excluded real constituents (e.g. KAPCO, KSE100 rank #75) from search, the Board, and
+every page. If a ticker a user searches for is a genuine index constituent and still doesn't appear,
+check `state/universe.json.symbols` first (is it there?), then `config/desk.json.universe.kse100_top_n`
+(was it capped again?) — don't assume it's a search bug.
+
+**Cost note:** the deterministic layer (prices/quant/backtests) is free regardless of universe size —
+more tickers just means more (free) compute time. Only the Desk Room **debates** are token-budgeted
+(`deep_dives_per_day` in the Room config), and that budget is independent of universe size — a bigger
+universe means the coverage queue is longer, not that any single cycle spends more tokens.
+
+**Backfill note:** widening the universe requires a one-time full run of `run_cloud.py` (fetches history/
+deep-history/fundamentals for the newly-added tickers — subsequent runs are fast again since
+`fetch_deep_history.py` only pulls missing tickers). If done via the cloud cron, the first run may run
+long; the 15-min timeout in `desk-data.yml` may need raising to ~25 min for that one run (web-UI edit
+required — see §5). Preflight/publish gating means a timeout never publishes broken state either way —
+worst case the backfill just continues on the next scheduled run.
+
+---
+
+## 8. Known gaps / honest notes
 
 - **Sector concentration** in the portfolio tracker is by POSITION, not sector — the feed only has numeric
   sector codes (e.g. `0809`), no names. Building a code→name map would enable true sector grouping.
 - **Digest email SENDING** is not wired (prefs are captured in `digest_prefs`). Needs an email provider
   (e.g. Resend) + a scheduled loop. On hold per owner.
 - **Legal pages** (`state/legal.json`, `#/legal/*`) are DRAFTS — a Pakistani lawyer must review before
-  charging (flagged in the file's `review_status`).
+  charging (flagged in the file's `review_status`). Discoverable from: page footer, the sign-in/sign-up
+  modal (`.auth-legal`), the account menu, and the Settings page.
 - **Track record** is young (see the clock on the Scores page). Do not switch on paid billing until it
   matures — that clock is the honest gate.
 
 ---
 
-## 8. If the live site looks wrong — triage order
+## 9. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
 2. If **degraded**: read `state/health.json.problems`. A `tv_crosscheck ERROR` = a real data glitch;
@@ -134,5 +158,12 @@ push refreshed data).
 3. If **stale** (`updated` old): a deploy didn't propagate or no cycle ran — run `run_cloud.py` +
    `publish.py`, or trigger the cloud workflow (Actions → Run workflow).
 4. If a **single ticker** is blank: check `state/history/<SYM>.json` exists and is non-empty; preflight
-   should have caught a broad gap. The client self-heals transient misses.
-5. Never fix by hand-pushing — fix the data, run `publish.py`, let the gates pass.
+   should have caught a broad gap. The client self-heals transient misses (retry button/auto-retry) — a
+   one-off "couldn't load" that clears on retry is normal transient behavior, not a data bug.
+5. If a ticker can't be **found in search**: see §7 — check it's actually a tracked constituent before
+   assuming a search bug.
+6. Never fix by hand-pushing — fix the data, run `publish.py`, let the gates pass.
+7. **Whenever you change something structural** (universe size, a config default, a new per-user table, a
+   new loop) — update this file (`docs/OPERATIONS.md`) and, if it affects a scheduled task's behavior, that
+   task's `SKILL.md` in the same turn. Docs going stale is how future sessions break things they don't
+   know changed.

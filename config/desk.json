@@ -16,7 +16,8 @@
     "min_avg_daily_traded_value_pkr": 30000000
   },
   "universe": {
-    "kse100_top_n": 50,
+    "kse100_top_n": 100,
+    "_kse100_top_n_note": "full KSE100 (was 50 — excluded real constituents like KAPCO, breaking search/coverage for a product users expect to be complete). Deterministic layer is free regardless of size; only Room DEBATES are token-budgeted (config/room.json deep_dives_per_day), unaffected by this.",
     "include_kmi30": true,
     "refresh_days": 7
   },

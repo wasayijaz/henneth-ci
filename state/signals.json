@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-14 14:50",
+ "updated": "2026-07-14 15:09",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -27,6 +27,30 @@
    "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+3.1% net/trade), still profitable out-of-sample."
   },
   {
+   "id": "20260714-NPL-atr_stretch_below",
+   "ticker": "NPL",
+   "strategy": "atr_stretch_below",
+   "template": "2-ATR stretch below 20MA",
+   "category": "mean_reversion",
+   "sector": "Nishat Power Limited",
+   "entry": 67.06,
+   "stop": 65.05,
+   "target": 69.74,
+   "rr": 1.33,
+   "hold_sessions": 7,
+   "size_shares": 1192,
+   "size_pkr": 79936,
+   "backtest": {
+    "hit_rate": 0.692,
+    "net_expectancy_pct": 1.16,
+    "n": 13,
+    "oos_hit": 0.667
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "2-ATR stretch below 20MA is triggering now; on NPL's own history it won 69% over 13 trades (+1.2% net/trade), still profitable out-of-sample."
+  },
+  {
    "id": "20260714-GAL-trend_momo_combo",
    "ticker": "GAL",
    "strategy": "trend_momo_combo",
@@ -51,5 +75,5 @@
    "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 57% over 37 trades (+1.3% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 3
+ "n_candidates": 4
 }

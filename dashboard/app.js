@@ -1064,7 +1064,14 @@ async function pageSettings() {
     <p class="sub" style="margin-bottom:12px">Pick the research houses you want surfaced first on your Research wire. The desk still audits and scores every broker — following one never means trusting it. Research, not advice.</p>
     ${brokers.length ? `<div class="follow-grid">${brokers.map(n => `<button class="follow-chip ${fb.has(n) ? "on" : ""}" onclick="toggleBroker('${esc(n).replace(/'/g, "\\'")}')">${fb.has(n) ? "✓ " : ""}${esc(n)}</button>`).join("")}</div>`
       : '<div class="empty">No broker desks tracked yet — they appear here as the weekly harvest records their public calls.</div>'}
-  </div>`;
+  </div>
+
+  <div class="seg"><h2>Legal</h2><div class="ln"></div></div>
+  <div class="card"><div class="follow-grid">
+    <a class="follow-chip" href="#/legal/terms">Terms of Service</a>
+    <a class="follow-chip" href="#/legal/privacy">Privacy Policy</a>
+    <a class="follow-chip" href="#/legal/risk">Risk Disclosure</a>
+  </div></div>`;
 }
 
 const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
@@ -1228,6 +1235,7 @@ function renderAccountButton() {
         <div class="acct-email">${me.email}</div>
         <button id="acctSettings">Settings</button>
         <button id="acctTour">Replay the tour</button>
+        <button id="acctLegal">Terms · Privacy · Risk</button>
         <button id="acctOut">Sign out</button>
       </div>`;
     const menu = document.getElementById("acctMenu");
@@ -1235,6 +1243,7 @@ function renderAccountButton() {
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
     document.getElementById("acctSettings").onclick = () => { menu.hidden = true; location.hash = "#/settings"; };
     document.getElementById("acctTour").onclick = () => { menu.hidden = true; startWizard(true); };
+    document.getElementById("acctLegal").onclick = () => { menu.hidden = true; location.hash = "#/legal/terms"; };
   } else {
     holder.innerHTML = `<button class="acct-signin" id="acctIn">Sign in</button>`;
     document.getElementById("acctIn").onclick = () => openAuth("signin");
@@ -1273,7 +1282,7 @@ function openAuth(mode) {
       <div class="auth-foot">
         ${mode === "signin" ? '<a id="authForgot">Forgot password?</a>' : '<span class="sub">Free account — saves your watchlist and preferences.</span>'}
       </div>
-      <div class="auth-legal">Research &amp; analytics tool, not an investment adviser. By continuing you accept that nothing here is personalized advice.</div>
+      <div class="auth-legal">Research &amp; analytics tool, not an investment adviser. By continuing you agree to the <a href="#/legal/terms" onclick="closeAuth()">Terms</a>, <a href="#/legal/privacy" onclick="closeAuth()">Privacy Policy</a> and <a href="#/legal/risk" onclick="closeAuth()">Risk Disclosure</a> — nothing here is personalized advice.</div>
     </div></div>`);
   document.body.appendChild(box);
   box.addEventListener("click", (e) => { if (e.target.id === "authbox") closeAuth(); });
