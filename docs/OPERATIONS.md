@@ -143,14 +143,30 @@ worst case the backfill just continues on the next scheduled run.
 - **Digest email SENDING** is not wired (prefs are captured in `digest_prefs`). Needs an email provider
   (e.g. Resend) + a scheduled loop. On hold per owner.
 - **Legal pages** (`state/legal.json`, `#/legal/*`) are DRAFTS — a Pakistani lawyer must review before
-  charging (flagged in the file's `review_status`). Discoverable from: page footer, the sign-in/sign-up
-  modal (`.auth-legal`), the account menu, and the Settings page.
+  charging (flagged in the file's `review_status`). Discoverable from: page footer, the sidebar bottom
+  (`.side-legal`), the sign-in/sign-up modal (`.auth-legal`), and the Settings page.
 - **Track record** is young (see the clock on the Scores page). Do not switch on paid billing until it
   matures — that clock is the honest gate.
 
 ---
 
-## 9. If the live site looks wrong — triage order
+## 9. Fixed bug class — `hidden` attribute silently overridden by CSS
+
+The account-menu dropdown never actually closed (2026-07-14): `menu.hidden = true` was set correctly in
+JS, but `.acct-menu{display:flex}` (an author-stylesheet class rule) unconditionally overrode the
+browser's native `[hidden]{display:none}` default — author-origin CSS always wins over the UA default,
+regardless of selector specificity. The element was visually always-open from the moment it was first
+rendered; the JS toggle was a no-op the whole time. Proven with `getComputedStyle(el).display` while
+`el.hidden = true`. Fixed with an explicit `.acct-menu[hidden]{display:none!important}` override — the
+same pattern already used for `.searchbox[hidden]`.
+
+**Rule going forward: any element toggled via the `hidden` DOM property MUST have a matching
+`.class[hidden]{display:none!important}` CSS rule**, or the toggle silently does nothing. Checked
+2026-07-14: only two such elements exist (`#searchbox`, `#acctMenu`), both now correctly overridden.
+
+---
+
+## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
 2. If **degraded**: read `state/health.json.problems`. A `tv_crosscheck ERROR` = a real data glitch;
@@ -160,6 +176,13 @@ worst case the backfill just continues on the next scheduled run.
 4. If a **single ticker** is blank: check `state/history/<SYM>.json` exists and is non-empty; preflight
    should have caught a broad gap. The client self-heals transient misses (retry button/auto-retry) — a
    one-off "couldn't load" that clears on retry is normal transient behavior, not a data bug.
+4b. If a user reports **every ticker / all pages** blank at once, but `curl`ing the live state files and
+   `watchdog.py` both show healthy 200s with real data: this is almost always CLIENT-side — either (a) a
+   browser extension (ad/anti-fraud blocker) monkey-patching `window.fetch` and throwing on same-origin
+   requests (the reason `j()` in app.js has an XHR fallback), or (b) the user was on the page during the
+   ~60s Vercel deploy-propagation window right after a publish. Verify server-side health FIRST (curl the
+   state files + `watchdog.py`) before assuming a data bug — don't guess from a screenshot alone. Ask the
+   user to hard-refresh or try a different browser/incognito if it's reproducible.
 5. If a ticker can't be **found in search**: see §7 — check it's actually a tracked constituent before
    assuming a search bug.
 6. Never fix by hand-pushing — fix the data, run `publish.py`, let the gates pass.

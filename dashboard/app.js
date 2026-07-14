@@ -1235,7 +1235,6 @@ function renderAccountButton() {
         <div class="acct-email">${me.email}</div>
         <button id="acctSettings">Settings</button>
         <button id="acctTour">Replay the tour</button>
-        <button id="acctLegal">Terms · Privacy · Risk</button>
         <button id="acctOut">Sign out</button>
       </div>`;
     const menu = document.getElementById("acctMenu");
@@ -1243,7 +1242,6 @@ function renderAccountButton() {
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
     document.getElementById("acctSettings").onclick = () => { menu.hidden = true; location.hash = "#/settings"; };
     document.getElementById("acctTour").onclick = () => { menu.hidden = true; startWizard(true); };
-    document.getElementById("acctLegal").onclick = () => { menu.hidden = true; location.hash = "#/legal/terms"; };
   } else {
     holder.innerHTML = `<button class="acct-signin" id="acctIn">Sign in</button>`;
     document.getElementById("acctIn").onclick = () => openAuth("signin");
