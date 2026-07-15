@@ -1019,90 +1019,125 @@ async function pageLegal() {
   </div>`;
 }
 
-/* ---------- Desk Room replay: a cinematic, staged walkthrough of the ALREADY-COMPUTED
-   analysis (zero agents run — it animates stored rooms.json data). Opened from the ticker tile. ---------- */
+/* ---------- Desk Room replay: a ~15s "running the desk" reveal (streams the REAL steps the
+   desk actually ran — genuine RSI/SMA/fair-value numbers from the data layer, paced out) that
+   lands on the parallel split-desk view with the Chair's verdict highlighted. Zero agents run
+   per view — it animates already-computed rooms.json/quant/fairvalue data. ---------- */
 async function playDeskReplay(sym) {
   sym = (sym || "").toUpperCase();
-  const [rooms, uni] = await Promise.all([j("rooms.json"), j("universe.json")]);
+  const [rooms, uni, quant, fund, fvAll] = await Promise.all([
+    j("rooms.json"), j("universe.json"), j("quant.json"), j("fundamentals.json"), j("fairvalue.json")]);
   const s = rooms && rooms[sym];
   if (!s || !s.house_view) return;   // only covered tickers have a session to replay
   const name = uni?.symbols?.[sym]?.name || "";
+  const q = quant?.tickers?.[sym] || {}, f = fund?.tickers?.[sym] || {}, fv = fvAll?.tickers?.[sym] || {};
   const ta = s.ta_memo || {}, fa = s.fa_memo || {}, bull = s.bull_case || {}, bear = s.bear_case || {}, hv = s.house_view || {};
-  const li = arr => (arr || []).map(x => `<li>${esc(x)}</li>`).join("");
-  const st = v => ({ constructive: "up", cautious: "dn", bullish: "up", bearish: "dn", positive: "up", negative: "dn" }[v] || "");
+  const li = arr => (arr || []).slice(0, 3).map(x => `<li>${esc(x)}</li>`).join("");
+  const stance = v => ({ constructive: "up", cautious: "dn", bullish: "up", bearish: "dn", positive: "up", negative: "dn" }[v] || "");
   const convIdx = { low: 1, medium: 2, high: 3 }[hv.conviction] || 1;
-  const convMeter = [1, 2, 3].map(k => `<span class="cvseg ${k <= convIdx ? "on" : ""}"></span>`).join("");
+  const nz = v => (v == null || v === "") ? "—" : (typeof v === "number" ? fmt(v) : esc(v));
 
-  const stages = [
-    { actor: "The Desk Room", role: `analysed ${esc(sym)}${name ? " · " + esc(name) : ""}`, av: "◆", accent: "",
-      blocks: [`<p class="rp-lead">Computed ${esc(s.dossier_asof || "")} at <b>Rs ${fmt(s.price_at_session)}</b>. Watch how the desk reached its view — five analysts, in their own lanes. Every figure is from the data layer; nothing here is assumed or advice.</p>`] },
-    { actor: "Meher", role: "The Chartist · reads the price action", av: "MC", accent: st(ta.technical_stance),
-      blocks: [`<p>${esc(ta.read || "")}</p>`,
-        ta.levels ? `<div class="rp-facts">structure <b>${esc(ta.structure || "—")}</b> · momentum <b>${esc(ta.momentum || "—")}</b> · support <b>${fmt(ta.levels.support)}</b> · resistance <b>${fmt(ta.levels.resistance)}</b></div>` : "",
-        (ta.proven_now && ta.proven_now.length) ? `<div class="rp-tag">strategies firing now: ${ta.proven_now.map(esc).join(" · ")}</div>` : ""] },
-    { actor: "Dr. Omar", role: "The Fundamentalist · reads the business", av: "DO", accent: st(fa.fundamental_stance),
-      blocks: [`<p>${esc(fa.read || "")}</p>`,
-        `<div class="rp-facts">valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend safety <b>${esc(fa.dividend_safety || "—")}</b></div>`] },
-    { actor: "Zoya", role: "The Bull · the strongest honest case FOR", av: "ZB", accent: "up",
-      blocks: [`<p>${esc(bull.thesis || "")}</p>`, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "",
-        bull.what_would_break_it ? `<div class="rp-break"><b>Breaks if:</b> ${esc(bull.what_would_break_it)}</div>` : ""] },
-    { actor: "Khurram", role: "The Bear · the strongest honest case AGAINST", av: "KB", accent: "dn",
-      blocks: [`<p>${esc(bear.thesis || "")}</p>`, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "",
-        bear.attack_on_bull ? `<div class="rp-break"><b>On the bull:</b> ${esc(bear.attack_on_bull)}</div>` : ""] },
-    { actor: "The Chair", role: "weighs it all into a house view", av: "CH", accent: "",
-      blocks: [`<p class="rp-lead">${esc(hv.summary || "")}</p>`,
-        `<div class="rp-facts">conviction <span class="cvmeter">${convMeter}</span> <b>${esc(hv.conviction || "")}</b></div>`,
-        hv.dissent ? `<div class="rp-break"><b>Strongest counter (the desk's own dissent):</b> ${esc(hv.dissent)}</div>` : "",
-        hv.watch_next ? `<div class="rp-facts">watch next: <b>${esc(hv.watch_next)}</b></div>` : ""] },
-    { actor: "On the record", role: "the desk holds itself accountable", av: "✓", accent: "",
-      blocks: [`<p>${s.qa ? `The desk's QA agent cross-examined this before it went live: <b>${esc(s.qa.verdict)}</b>${s.qa.note ? ` — ${esc(s.qa.note)}` : ""}` : "This is a dated, falsifiable read — not advice."}</p>`,
-        `<p class="rp-lead">When its horizon passes, this call is graded hit or miss on the <b>Scores</b> board. That accountability is the whole point.</p>`] },
+  // Steps shown while "running" — each is a REAL computation the desk performed, with real numbers.
+  const steps = [
+    `Loading price history — <b>${esc(sym)}</b>${name ? " · " + esc(name) : ""}`,
+    `Technicals · RSI14 <b>${nz(q.rsi14)}</b> · SMA20 <b>${nz(q.sma20)}</b> · SMA50 <b>${nz(q.sma50)}</b>`,
+    `Fundamentals · P/E <b>${esc(f.pe || "—")}</b> · yield <b>${esc(f.div_yield || "—")}</b> · beta <b>${esc(f.beta || "—")}</b>`,
+    `Fair value · 4 models → composite <b>Rs ${nz(fv.composite_fair)}</b> (${esc(fv.verdict || "—")})`,
+    `Strategies · scanned 52 → <b>${(ta.proven_now || []).length}</b> firing on ${esc(sym)}`,
+    `Technical desk (Meher) &amp; fundamental desk (Dr. Omar) — memos in`,
+    `Bull (Zoya) vs Bear (Khurram) — stress-testing both sides`,
+    `The Chair — weighing it into a house view`,
   ];
+  if (s.qa) steps.push(`QA agent — cross-examined the numbers · <b>${esc(s.qa.verdict)}</b>`);
 
-  let i = 0, playing = true, timer = null;
   const ov = document.createElement("div");
   ov.className = "replay-overlay";
   ov.innerHTML = `<div class="replay-box">
-    <div class="replay-head"><span class="replay-kicker">Desk Room replay · ${esc(sym)}</span>
-      <span class="replay-dots"></span><button class="replay-x" aria-label="close">✕</button></div>
+    <div class="replay-head"><span class="replay-kicker">Desk Room · ${esc(sym)}</span>
+      <span class="replay-head-r"><button class="rp-skip" data-a="skip">Skip ›</button><button class="replay-x" aria-label="close">✕</button></span></div>
     <div class="replay-body" id="rpBody"></div>
-    <div class="replay-ctrl">
-      <button class="rp-btn" data-a="prev">‹ Back</button>
-      <button class="rp-btn rp-play" data-a="play">❚❚ Pause</button>
-      <button class="rp-btn" data-a="next">Next ›</button></div>
   </div>`;
   document.body.appendChild(ov);
-  const body = ov.querySelector("#rpBody"), dotsEl = ov.querySelector(".replay-dots");
-  dotsEl.innerHTML = stages.map((_, k) => `<span class="rp-dot" data-k="${k}"></span>`).join("");
+  const body = ov.querySelector("#rpBody");
+  const skipBtn = ov.querySelector(".rp-skip");
+  let raf = null, done = false;
 
-  function render() {
-    const s2 = stages[i];
-    body.innerHTML = `<div class="replay-stage ${s2.accent ? "accent-" + s2.accent : ""}">
-      <div class="rp-persona"><span class="rp-av">${s2.av}</span><div><b>${esc(s2.actor)}</b><span class="rp-role">${s2.role}</span></div>
-        <span class="rp-step">${i + 1} / ${stages.length}</span></div>
-      <div class="rp-blocks">${s2.blocks.filter(Boolean).map((b, bi) => `<div class="rp-block" style="animation-delay:${bi * 240}ms">${b}</div>`).join("")}</div>
-    </div>`;
-    [...dotsEl.children].forEach((d, k) => d.classList.toggle("on", k <= i));
-    ov.querySelector(".rp-play").textContent = playing ? "❚❚ Pause" : "▶ Play";
-  }
-  function schedule() {
-    clearTimeout(timer);
-    if (!playing) return;
-    const chars = stages[i].blocks.join("").replace(/<[^>]+>/g, "").length;
-    const dwell = Math.min(11000, Math.max(3800, chars * 24));   // longer read = longer dwell
-    timer = setTimeout(() => { if (i < stages.length - 1) { i++; render(); schedule(); } else { playing = false; render(); } }, dwell);
-  }
-  function go(n) { i = Math.max(0, Math.min(stages.length - 1, n)); render(); schedule(); }
-  function close() { clearTimeout(timer); ov.remove(); document.removeEventListener("keydown", key); }
-  function key(e) { if (e.key === "Escape") close(); else if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go(i + 1); } else if (e.key === "ArrowLeft") go(i - 1); }
+  function close() { cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key); }
+  function key(e) { if (e.key === "Escape") close(); }
   ov.addEventListener("click", e => {
     if (e.target === ov || e.target.classList.contains("replay-x")) return close();
     const b = e.target.closest("[data-a]");
-    if (b) { const a = b.dataset.a; if (a === "next") go(i + 1); else if (a === "prev") go(i - 1); else { playing = !playing; render(); schedule(); } return; }
-    const d = e.target.closest(".rp-dot"); if (d) go(+d.dataset.k);
+    if (b && b.dataset.a === "skip") reveal();
+    if (b && b.dataset.a === "replay") runLoader();
   });
   document.addEventListener("keydown", key);
-  render(); schedule();
+
+  // ---------- phase 1: the ~15s "running the desk" loader ----------
+  function runLoader() {
+    done = false; skipBtn.style.display = "";
+    body.innerHTML = `<div class="rp-load">
+      <div class="rp-load-title">Running the desk on ${esc(sym)}</div>
+      <div class="rp-load-sub">Replaying the real analysis — the same data and math the desk used to reach its view.</div>
+      <div class="rp-prog"><div class="rp-prog-fill" id="rpFill"></div></div>
+      <div class="rp-pct" id="rpPct">0<span>%</span></div>
+      <div class="rp-steps" id="rpSteps"></div></div>`;
+    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPct"), stepsEl = ov.querySelector("#rpSteps");
+    const total = 14500, t0 = performance.now();
+    let shown = 0;
+    function tick(now) {
+      const p = Math.min(100, (now - t0) / total * 100);
+      fill.style.width = p + "%";
+      pctEl.innerHTML = Math.floor(p) + "<span>%</span>";
+      const want = Math.round(p / 100 * steps.length);
+      while (shown < want && shown < steps.length) {
+        if (shown > 0) { const prev = stepsEl.children[shown - 1]; if (prev) prev.classList.add("did"); }
+        stepsEl.insertAdjacentHTML("beforeend", `<div class="rp-step-line"><span class="rp-step-mk">▸</span><span class="rp-step-tx">${steps[shown]}</span></div>`);
+        stepsEl.lastChild.scrollIntoView({ block: "nearest" });
+        shown++;
+      }
+      if (p < 100 && !done) { raf = requestAnimationFrame(tick); }
+      else if (!done) { [...stepsEl.children].forEach(c => c.classList.add("did")); setTimeout(reveal, 550); }
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  // ---------- phase 2: the split-desk reveal, Chair highlighted ----------
+  function reveal() {
+    if (done) return;
+    done = true; cancelAnimationFrame(raf); skipBtn.style.display = "none";
+    const panel = (av, nm, role, st, read, facts) => `<div class="rp-panel ${st ? "accent-" + st : ""}">
+      <div class="rp-panel-head"><span class="rp-av sm">${av}</span><div><b>${esc(nm)}</b><span class="rp-role">${role}</span></div></div>
+      <p class="rp-panel-read">${esc(read || "—")}</p>${facts ? `<div class="rp-facts">${facts}</div>` : ""}</div>`;
+    const cvm = `<div class="cvmeter2" role="img" aria-label="conviction: ${esc(hv.conviction || "low")}">
+      <span class="cvm ${convIdx === 1 ? "act lvl-low" : ""}">Low</span>
+      <span class="cvm ${convIdx === 2 ? "act lvl-med" : ""}">Medium</span>
+      <span class="cvm ${convIdx === 3 ? "act lvl-high" : ""}">High</span></div>
+      <div class="cvcap">how sure the desk is about this read</div>`;
+
+    body.innerHTML = `<div class="rp-reveal">
+      <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span></div>
+      <div class="rp-desk">
+        ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), ta.read, ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
+        ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), fa.read, `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(fa.dividend_safety || "—")}</b>`)}
+        ${panel("ZB", "Zoya", "the bull · case FOR", "up", bull.thesis, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "")}
+        ${panel("KB", "Khurram", "the bear · case AGAINST", "dn", bear.thesis, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "")}
+      </div>
+      <div class="rp-chair">
+        <div class="rp-chair-top"><span class="rp-chair-tag">The Chair · house view</span>${s.qa ? `<span class="qabadge ${s.qa.verdict === "clean" ? "ok" : "warn"}">QA ${esc(s.qa.verdict)}</span>` : ""}</div>
+        <p class="rp-chair-summary">${esc(hv.summary || "")}</p>
+        ${cvm}
+        <div class="rp-chair-facts">
+          ${hv.dissent ? `<div><span>The strongest case against this view</span><b>${esc(hv.dissent)}</b></div>` : ""}
+          ${hv.watch_next ? `<div><span>What settles it next</span><b>${esc(hv.watch_next)}</b></div>` : ""}
+        </div>
+      </div>
+      <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
+        <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
+    </div>`;
+    body.scrollTop = 0;
+  }
+
+  runLoader();
 }
 
 /* ---------- router ---------- */
@@ -1211,7 +1246,14 @@ async function route(isPoll) {
 }
 window.addEventListener("hashchange", () => route(false));
 route(false);
-setInterval(() => { Object.keys(cache).forEach(k => delete cache[k]); route(true); }, 30000);
+// Keep only the top status pills current on a gentle cadence — do NOT re-render the whole
+// page body (that caused a jarring full-page refresh/flicker every cycle). Header-only, and
+// paused while a modal is open. The body updates on navigation or a manual reload.
+setInterval(() => {
+  if (document.querySelector(".replay-overlay, #authbox, .wizbox:not([hidden])")) return;
+  Object.keys(cache).forEach(k => delete cache[k]);   // let the header refetch fresh pills
+  if (typeof renderHeader === "function") renderHeader();
+}, 60000);
 
 /* ---------- ticker search ---------- */
 let searchIndex = null;

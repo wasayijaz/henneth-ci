@@ -388,7 +388,62 @@ body[data-theme=gemini] .rp-btn:hover{background:var(--panel2,var(--panel))}
 body[data-theme=gemini] .rp-play{font-weight:700}
 @keyframes rpUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
 @keyframes rpFade{from{opacity:0}to{opacity:1}}
-@media(max-width:720px){body[data-theme=gemini] .replay-body{padding:15px;min-height:320px}body[data-theme=gemini] .replay-kicker{display:none}}
+body[data-theme=gemini] .replay-head-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+body[data-theme=gemini] .rp-skip{background:transparent;border:1.5px solid var(--line);color:var(--ink2);font:inherit;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer}
+body[data-theme=gemini] .rp-skip:hover{border-color:var(--ink2);color:var(--ink1)}
+/* phase 1 — the "running the desk" loader */
+body[data-theme=gemini] .rp-load{padding:14px 4px}
+body[data-theme=gemini] .rp-load-title{font-size:17px;font-weight:700}
+body[data-theme=gemini] .rp-load-sub{font-size:12px;color:var(--ink3);margin:4px 0 20px;line-height:1.5}
+body[data-theme=gemini] .rp-prog{height:10px;background:var(--hair);border:1.5px solid var(--line);overflow:hidden}
+body[data-theme=gemini] .rp-prog-fill{height:100%;width:0;background:var(--ink1);transition:width .12s linear}
+body[data-theme=gemini] .rp-pct{font-family:"Pixelify Sans",var(--mono,monospace);font-size:34px;font-weight:700;line-height:1;margin:12px 0 20px}
+body[data-theme=gemini] .rp-pct span{font-size:18px;color:var(--ink3);margin-left:2px}
+body[data-theme=gemini] .rp-steps{display:flex;flex-direction:column;gap:8px;min-height:170px}
+body[data-theme=gemini] .rp-step-line{display:flex;align-items:baseline;gap:9px;font-size:12.5px;color:var(--ink1);animation:rpUp .32s ease}
+body[data-theme=gemini] .rp-step-mk{color:var(--accent,#b8860b);font-weight:700;flex:none}
+body[data-theme=gemini] .rp-step-tx{line-height:1.45}
+body[data-theme=gemini] .rp-step-line.did .rp-step-mk{color:var(--up)}
+body[data-theme=gemini] .rp-step-line.did .rp-step-mk::before{content:"✓ ";}
+body[data-theme=gemini] .rp-step-line.did .rp-step-tx{color:var(--ink3)}
+/* phase 2 — the split-desk reveal */
+body[data-theme=gemini] .rp-reveal{animation:rpFade .25s ease}
+body[data-theme=gemini] .rp-reveal-head{margin-bottom:12px}
+body[data-theme=gemini] .rp-reveal-head b{font-size:16px;display:block}
+body[data-theme=gemini] .rp-reveal-head span{font-size:11px;color:var(--ink3)}
+body[data-theme=gemini] .rp-desk{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair)}
+body[data-theme=gemini] .rp-panel{background:var(--panel);padding:11px 13px;border-top:3px solid var(--line)}
+body[data-theme=gemini] .rp-panel.accent-up{border-top-color:var(--up)}
+body[data-theme=gemini] .rp-panel.accent-dn{border-top-color:var(--dn)}
+body[data-theme=gemini] .rp-panel-head{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+body[data-theme=gemini] .rp-av.sm{width:28px;height:28px;font-size:11px}
+body[data-theme=gemini] .rp-panel-head b{display:block;font-size:13px;line-height:1.1}
+body[data-theme=gemini] .rp-panel-read{font-size:11.5px;line-height:1.5;color:var(--ink2);margin:0}
+body[data-theme=gemini] .rp-panel .rp-facts{margin-top:7px;font-size:11px;padding:6px 8px}
+body[data-theme=gemini] .rp-panel .rp-ul{margin:6px 0 0 15px;padding:0}
+body[data-theme=gemini] .rp-panel .rp-ul li{font-size:11px;line-height:1.45;margin-bottom:3px;color:var(--ink2)}
+/* the highlighted Chair verdict */
+body[data-theme=gemini] .rp-chair{border:1.5px solid var(--ink1);border-left:5px solid var(--ink1);background:var(--panel2,var(--panel));padding:14px 16px;margin-top:12px}
+body[data-theme=gemini] .rp-chair-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+body[data-theme=gemini] .rp-chair-tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+body[data-theme=gemini] .rp-chair-summary{font-size:14px;line-height:1.6;margin:0 0 14px}
+/* the clearer conviction meter */
+body[data-theme=gemini] .cvmeter2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--hair);border:1.5px solid var(--line)}
+body[data-theme=gemini] .cvm{background:var(--panel);text-align:center;padding:8px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .cvm.act{color:#fff}
+body[data-theme=gemini] .cvm.act.lvl-low{background:var(--dn)}
+body[data-theme=gemini] .cvm.act.lvl-med{background:var(--ink1)}
+body[data-theme=gemini] .cvm.act.lvl-high{background:var(--up)}
+body[data-theme=gemini] .cvcap{font-size:10.5px;color:var(--ink3);margin-top:5px;text-transform:uppercase;letter-spacing:.04em}
+body[data-theme=gemini] .rp-chair-facts{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+body[data-theme=gemini] .rp-chair-facts>div>span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);margin-bottom:3px}
+body[data-theme=gemini] .rp-chair-facts>div>b{font-weight:600;font-size:12.5px;line-height:1.5}
+body[data-theme=gemini] .rp-reveal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--hair)}
+body[data-theme=gemini] .rp-reveal-foot>span:first-child{font-size:11px;color:var(--ink3);line-height:1.5;flex:1;min-width:200px}
+body[data-theme=gemini] .rp-foot-btns{display:flex;gap:8px}
+body[data-theme=gemini] .rp-btn2{background:var(--panel);border:1.5px solid var(--line);color:var(--ink1);font:inherit;font-size:11.5px;font-weight:700;padding:7px 13px;cursor:pointer}
+body[data-theme=gemini] .rp-btn2:hover{background:var(--panel2,var(--panel));border-color:var(--ink2)}
+@media(max-width:720px){body[data-theme=gemini] .replay-body{padding:15px;min-height:320px}body[data-theme=gemini] .replay-kicker{display:none}body[data-theme=gemini] .rp-desk{grid-template-columns:1fr}}
 /* Desk Room — full debate collapsed behind an expander */
 body[data-theme=gemini] .room-transcript{border:1.5px solid var(--line);margin-top:12px}
 body[data-theme=gemini] .room-transcript>summary{cursor:pointer;list-style:none;padding:10px 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -496,9 +551,35 @@ body .up{color:var(--up)} body .dn{color:var(--dn)}
 #view.enter>*:nth-child(5){animation-delay:.18s}
 #view.enter>*:nth-child(n+6){animation-delay:.20s}
 body[data-theme=gemini] .cell{animation:fadeIn .3s both}
-/* press feedback on tappables */
-body[data-theme=gemini] .card.clickable:active,body[data-theme=gemini] .cell:active,
-body[data-theme=gemini] nav.tabs a:active,.bottomnav a:active,body[data-theme=gemini] .ranges button:active{transform:scale(.97)}
+/* ============ INTERACTION POLISH — consistent hover (web) + tap feedback (web+mobile) ============ */
+/* kill the default blue mobile tap flash everywhere; we provide our own feedback */
+body[data-theme=gemini] a,body[data-theme=gemini] button,body[data-theme=gemini] .clickable,
+body[data-theme=gemini] [onclick],body[data-theme=gemini] [data-watch],body[data-theme=gemini] [data-broker],
+body[data-theme=gemini] label{-webkit-tap-highlight-color:transparent}
+/* smooth transitions on every interactive surface */
+body[data-theme=gemini] button,body[data-theme=gemini] .card.clickable,body[data-theme=gemini] .cell,
+body[data-theme=gemini] tr.clickable,body[data-theme=gemini] .side-nav a,body[data-theme=gemini] .replay-tile,
+body[data-theme=gemini] .follow-chip,body[data-theme=gemini] .seg-opt,body[data-theme=gemini] .pill.clickable,
+body[data-theme=gemini] .rp-btn2,body[data-theme=gemini] .rp-dot,body[data-theme=gemini] .starbtn,
+body[data-theme=gemini] .crumb,body[data-theme=gemini] .rp-skip,body[data-theme=gemini] .note-save,
+body[data-theme=gemini] .acct-btn,body[data-theme=gemini] .acct-signin,body[data-theme=gemini] nav.tabs a,
+body[data-theme=gemini] .ranges button{transition:transform .09s ease,background .13s ease,border-color .13s ease,opacity .13s ease,color .13s ease}
+/* HOVER (web) — a subtle lift/tint so things feel alive under the cursor */
+@media(hover:hover){
+  body[data-theme=gemini] tr.clickable:hover>td{background:var(--panel2)}
+  body[data-theme=gemini] .replay-tile:hover,body[data-theme=gemini] .card.clickable:hover{background:var(--panel2)}
+  body[data-theme=gemini] .crumb:hover{color:var(--ink1)}
+  body[data-theme=gemini] .pill.clickable:hover{border-color:var(--ink2)}
+  body[data-theme=gemini] button:hover:not(.on):not(:disabled){border-color:var(--ink2)}
+}
+/* TAP / CLICK press feedback (works on touch too) */
+body[data-theme=gemini] button:active,body[data-theme=gemini] .card.clickable:active,body[data-theme=gemini] .cell:active,
+body[data-theme=gemini] .replay-tile:active,body[data-theme=gemini] .follow-chip:active,body[data-theme=gemini] .seg-opt:active,
+body[data-theme=gemini] .rp-btn2:active,body[data-theme=gemini] .starbtn:active,body[data-theme=gemini] .note-save:active,
+body[data-theme=gemini] .side-nav a:active,body[data-theme=gemini] nav.tabs a:active,body[data-theme=gemini] .bottomnav a:active,
+body[data-theme=gemini] .ranges button:active,body[data-theme=gemini] .acct-signin:active,body[data-theme=gemini] .rp-skip:active{transform:scale(.97);opacity:.9}
+/* rows shouldn't scale (transform on tr is janky) — just deepen the tint on press */
+body[data-theme=gemini] tr.clickable:active>td{background:var(--hair)}
 body[data-theme=gemini] .card.clickable,body[data-theme=gemini] .cell,body[data-theme=gemini] tr.clickable{transition:transform .12s ease,box-shadow .15s ease,border-color .15s ease,background .1s ease}
 body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
 /* chart fades in when (re)drawn */
