@@ -27,7 +27,9 @@ A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite"
   (win rate, expectancy after costs, out-of-sample) — you see what *actually* worked, not theory.
 - **The Desk Room** (on every ticker) — named AI analyst personas research and **debate** the stock:
   a technical desk and a fundamental desk (kept separate), a bull vs a bear, and a Chair who synthesises a
-  house view with an explicit dissent and dated, falsifiable calls.
+  house view with an explicit dissent and dated, falsifiable calls. A **"watch the desk analyse" replay**
+  plays the whole debate back as a staged, animated walkthrough (it animates the *saved* session — no
+  agents run per view, so it's free and always available).
 - **Scores** — track records. Every dated call — the desk's own analysts **and** the brokers — is scored
   against what prices actually did. Brokers are ranked overall and per sector.
 - **Research** — broker notes and company filings (results / AGM / corporate-briefing), digested and tagged.
