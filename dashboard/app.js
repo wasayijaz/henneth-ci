@@ -513,12 +513,12 @@ function renderRoom(room, sym) {
   <div class="card room-house">
     <div class="memo-top"><b style="font-size:12px;letter-spacing:.06em;text-transform:uppercase">The Chair — house view</b>
       <span class="conv">${room.qa ? `<span class="qabadge ${room.qa.verdict === "clean" ? "ok" : "warn"}" title="${esc(room.qa.note || "verified by the QA agent")}">QA ${esc(room.qa.verdict)}</span> · ` : ""}conviction <span class="cvmeter">${convMeter}</span> ${esc(hv.conviction || "")}</span></div>
-    <p style="margin:8px 0 10px;line-height:1.55">${esc(hv.summary || "")}</p>
+    <p class="hv-summary">${esc(hv.summary || "")}</p>
     <div class="room-facts">
-      <div><span>Dissent (strongest counter)</span><b>${esc(hv.dissent || "—")}</b></div>
-      <div><span>TA vs FA</span><b>${esc((hv.ta_fa_alignment || "—").replace(/_/g, " "))}</b></div>
-      <div><span>Broker stance</span><b>${esc(hv.broker_stance || "n/a")}</b></div>
-      <div><span>Watch next</span><b>${esc(hv.watch_next || "—")}</b></div>
+      <div><span>Dissent — the strongest case against this view</span><b>${esc(hv.dissent || "—")}</b></div>
+      <div><span>Do the charts &amp; the fundamentals agree?</span><b>${esc((hv.ta_fa_alignment || "—").replace(/_/g, " "))}</b></div>
+      <div><span>Do the brokers agree?</span><b>${esc((hv.broker_stance || "n/a").replace(/_/g, " "))}</b></div>
+      <div><span>What to watch next</span><b>${esc(hv.watch_next || "—")}</b></div>
     </div>
   </div>
 

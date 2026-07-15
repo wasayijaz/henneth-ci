@@ -127,6 +127,11 @@ body[data-theme=gemini] .card>h2,body[data-theme=gemini] .card>.sub{padding-left
 body[data-theme=gemini] .card>h2{padding-top:7px;padding-bottom:7px;border-bottom:1px solid var(--line);margin:0}
 body[data-theme=gemini] .card>.sub{padding-top:8px}
 body[data-theme=gemini] .card>*:not(h2):not(.sub){margin-left:12px;margin-right:12px}
+/* first child gets a top inset too, UNLESS it's an h2/.sub (those bring their own top padding).
+   Without this, any card whose first child is a bare div/p/table hugs the top border (the
+   Desk Room house-view + persona cards were cramped for exactly this reason). Completes the
+   12px child-inset rhythm (L/R + bottom already existed; top was the missing side). */
+body[data-theme=gemini] .card>*:first-child:not(h2):not(.sub){margin-top:12px}
 body[data-theme=gemini] .card>table{width:calc(100% - 24px)}
 body[data-theme=gemini] .card>*:last-child{margin-bottom:12px}
 body[data-theme=gemini] main>.card,body[data-theme=gemini] main>.two-col{margin-bottom:var(--gap)}
@@ -260,14 +265,16 @@ body[data-theme=gemini] .qabadge.warn{background:var(--dn);color:#fff;border-col
 /* The Desk Room — AI analyst personas */
 body[data-theme=gemini] .room-house{border:1.5px solid var(--line);border-left:4px solid var(--ink1);background:var(--panel2)}
 body[data-theme=gemini] .memo-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;flex-wrap:wrap}
+body[data-theme=gemini] .room-house>.memo-top{margin-bottom:10px}
+body[data-theme=gemini] .room-house .hv-summary{font-size:13.5px;line-height:1.65;margin:0 0 14px}
 body[data-theme=gemini] .conv{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);display:flex;align-items:center;gap:6px}
 body[data-theme=gemini] .cvmeter{display:inline-flex;gap:2px}
 body[data-theme=gemini] .cvseg{width:14px;height:8px;border:1px solid var(--line);background:transparent}
 body[data-theme=gemini] .cvseg.on{background:var(--ink1)}
-body[data-theme=gemini] .room-facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:6px}
-body[data-theme=gemini] .room-facts>div{background:var(--panel);padding:8px 10px}
-body[data-theme=gemini] .room-facts span{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);margin-bottom:3px}
-body[data-theme=gemini] .room-facts b{font-weight:600;font-size:11.5px;line-height:1.4}
+body[data-theme=gemini] .room-facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:2px}
+body[data-theme=gemini] .room-facts>div{background:var(--panel);padding:11px 13px}
+body[data-theme=gemini] .room-facts span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);margin-bottom:5px}
+body[data-theme=gemini] .room-facts b{font-weight:600;font-size:12.5px;line-height:1.5}
 body[data-theme=gemini] .phead{display:flex;align-items:center;gap:9px}
 body[data-theme=gemini] .pav{width:30px;height:30px;flex:none;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11.5px;background:var(--panel)}
 body[data-theme=gemini] .phead b{display:block;font-size:13px}
