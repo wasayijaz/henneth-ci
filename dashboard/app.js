@@ -3,7 +3,7 @@
    All data from ../state/*.json (DPS-sourced). No external deps. */
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const sgn = v => (v > 0 ? "+" : "") + v;
 const cls = v => v > 0.05 ? "up" : v < -0.05 ? "dn" : "";
 const fmt = (v, d = 2) => v == null ? "—" : Number(v).toLocaleString("en", { maximumFractionDigits: d });
@@ -537,11 +537,11 @@ function renderRoom(room, sym) {
       <p style="line-height:1.5">${esc(bear.thesis || "")}</p><ul class="room-ul">${li(bear.pillars)}</ul>
       ${bear.attack_on_bull ? `<div class="sub" style="margin-top:6px"><b>On the bull:</b> ${esc(bear.attack_on_bull)}</div>` : ""}</div>
   </div>
+  </details>
 
   ${calls.length ? `<div class="card"><h2 style="font-size:12px">Dated calls on the record</h2><div class="sub">each is scored against what actually happens — this is how the desk (and, later, the brokers) are held accountable.</div>
     <table><thead><tr><th>Analyst</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
-    calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
-  </details>`;
+    calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}`;
 }
 
 async function pageTicker(sym, _retry = 0) {
@@ -1017,6 +1017,7 @@ async function pageLegal() {
 function followedBrokers() { return (myProfile && myProfile.followed_brokers) || []; }
 function digestPrefs() { return (myProfile && myProfile.digest_prefs) || {}; }
 async function toggleBroker(name) {
+  if (!me) { openAuth("signup"); return; }
   const s = new Set(followedBrokers());
   s.has(name) ? s.delete(name) : s.add(name);
   await saveProfile({ followed_brokers: [...s] });
@@ -1068,7 +1069,7 @@ async function pageSettings() {
   <div class="seg"><h2>Followed broker desks</h2><div class="ln"></div><span class="pill">${fb.size} followed</span></div>
   <div class="card">
     <p class="sub" style="margin-bottom:12px">Pick the research houses you want surfaced first on your Research wire. The desk still audits and scores every broker — following one never means trusting it. Research, not advice.</p>
-    ${brokers.length ? `<div class="follow-grid">${brokers.map(n => `<button class="follow-chip ${fb.has(n) ? "on" : ""}" onclick="toggleBroker('${esc(n).replace(/'/g, "\\'")}')">${fb.has(n) ? "✓ " : ""}${esc(n)}</button>`).join("")}</div>`
+    ${brokers.length ? `<div class="follow-grid">${brokers.map(n => `<button class="follow-chip ${fb.has(n) ? "on" : ""}" data-broker="${esc(n)}">${fb.has(n) ? "✓ " : ""}${esc(n)}</button>`).join("")}</div>`
       : '<div class="empty">No broker desks tracked yet — they appear here as the weekly harvest records their public calls.</div>'}
   </div>
 
@@ -1350,7 +1351,7 @@ async function loadProfile() {
   return data;
 }
 async function saveProfile(patch) {
-  if (!me) return;
+  if (!me) return "not_signed_in";   // distinguishable from success (falsy) — never silently equated with it
   patch.id = me.id;
   const { error } = await sb.from("profiles").upsert(patch);
   if (!error) myProfile = { ...(myProfile || {}), ...patch };
@@ -1366,6 +1367,7 @@ function noteFor(sym) { return ((myProfile && myProfile.notes) || {})[sym] || ""
 async function saveTickerNote(sym) {
   const ta = document.getElementById("tknote"); if (!ta) return;
   const st = document.getElementById("tknote-status");
+  if (!me) { if (st) st.textContent = "Signed out — sign in to save"; openAuth("signin"); return; }
   const notes = { ...((myProfile && myProfile.notes) || {}) };
   const v = ta.value.trim(); if (v) notes[sym] = v; else delete notes[sym];
   if (st) st.textContent = "Saving…";
@@ -1391,6 +1393,8 @@ function starBtn(sym) {
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-watch]");
   if (b) { e.preventDefault(); e.stopPropagation(); toggleWatch(b.dataset.watch, b); }
+  const bk = e.target.closest("[data-broker]");
+  if (bk) { e.preventDefault(); e.stopPropagation(); toggleBroker(bk.dataset.broker); }
 });
 
 /* ---------- portfolio: read-only holdings tracker (profiles.portfolio, RLS-scoped) ---------- */
@@ -1402,8 +1406,8 @@ async function addHolding(sym, shares, avgCost) {
   if (!sym || !(shares > 0) || !(avgCost > 0)) return "enter a ticker, a share count and an average cost";
   const p = portfolio().filter(h => h.ticker !== sym);   // one row per ticker; re-adding overwrites
   p.push({ ticker: sym, shares, avg_cost: avgCost, added: new Date().toISOString().slice(0, 10) });
-  await saveProfile({ portfolio: p });
-  return null;
+  const saveErr = await saveProfile({ portfolio: p });
+  return saveErr ? "couldn't save — try again" : null;
 }
 async function removeHolding(sym) {
   await saveProfile({ portfolio: portfolio().filter(h => h.ticker !== (sym || "").toUpperCase()) });
