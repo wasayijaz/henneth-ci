@@ -11,8 +11,10 @@ fields; do not read them), plus raw data: `state/history/{SYM}.json`, `state/qua
 `state/backtests.json`, `state/predictability.json`, `strategies/*.json`, `config/desk.json`.
 
 Second source: `state/crosscheck.json` holds TradingView-verified close/RSI/SMA values
-(via tradingview-ta). If a setup's ticker appears there with status FAIL or NO_TV_DATA,
-run `python scripts/tv_crosscheck.py` fresh; an unresolved FAIL on that ticker = VETO.
+(via tradingview-ta). Per-ticker `results[SYM].status` is one of PASS / DRIFT / ERROR / NO_TV_DATA
+(DRIFT = explainable TV lag/adjustment, never a veto trigger on its own). If a setup's ticker
+appears there with status ERROR or NO_TV_DATA — or is listed in the top-level `fails` array —
+run `python scripts/tv_crosscheck.py` fresh; an unresolved ERROR/NO_TV_DATA on that ticker = VETO.
 
 For each approved setup, independently re-derive:
 1. Current close and ATR proxy from `state/history/{SYM}.json` directly (recompute, don't

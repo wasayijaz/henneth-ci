@@ -27,10 +27,11 @@ SPOT = ["HUBC", "OGDC", "LUCK", "FFC", "MEBL", "UBL", "ENGROH", "PSO"]
 #   dev <= DRIFT_TOL      -> match (fine)
 #   DRIFT_TOL < dev <= ERR_TOL -> "drift" (advisory: lag / adjustment diff; recorded, does NOT fail)
 #   dev > ERR_TOL         -> "error" (genuine: decimal/split/wrong-symbol glitch -> real FAIL, degrades health)
-# ERR_TOL for close is wide enough to clear a full ±7.5% PSX circuit move + adjustment gap,
-# but a decimal error (10x) or missed split (2x+) still trips it.
+# ERR_TOL for close must clear a full ±7.5% PSX circuit move STACKED with a real corporate-action
+# adjustment gap (e.g. a 1-for-5 bonus issue alone is a ~16.7% adjustment) — 20% covers that with
+# headroom, while a decimal error (10x) or missed split (2x+) still trips it by a wide margin.
 DRIFT_TOL = {"close": 0.03, "rsi14": 0.10, "sma20": 0.03, "sma50": 0.03}
-ERR_TOL = {"close": 0.12, "rsi14": 0.35, "sma20": 0.12, "sma50": 0.12}
+ERR_TOL = {"close": 0.20, "rsi14": 0.35, "sma20": 0.12, "sma50": 0.12}
 
 
 def fetch_tv(symbol: str) -> dict | None:
@@ -68,10 +69,13 @@ def main():
             fstat = "match" if dev <= DRIFT_TOL[field] else "drift" if dev <= ERR_TOL[field] else "error"
             checks[field] = {"ours": ours, "tv": round(theirs, 2), "dev_pct": round(dev * 100, 3),
                              "match": fstat == "match", "flag": fstat}
-            # only the CLOSE price gates health; indicators are advisory (they lag a bar behind TV)
+            # only the CLOSE price gates health; indicators are advisory (they lag a bar behind TV).
+            # But an "error"-level indicator deviation must still surface as at least DRIFT — never
+            # silently invisible — since it can signal a genuine bug in the desk's own indicator math,
+            # even though it shouldn't freeze new signals the way a close-price error does.
             if fstat == "error" and field == "close":
                 sym_status = "ERROR"
-            elif fstat == "drift" and sym_status == "PASS":
+            elif fstat in ("error", "drift") and sym_status == "PASS":
                 sym_status = "DRIFT"
         results[sym] = {"status": sym_status, "checks": checks,
                         "tv_high": tv["high"], "tv_low": tv["low"]}

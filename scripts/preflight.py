@@ -119,7 +119,15 @@ def main():
     # Per-ticker history completeness — the "No data for XXX" class: a symbol in the
     # universe with a missing/empty history/{sym}.json renders a dead ticker page that
     # the client CANNOT self-heal (the file genuinely isn't on the server). Gate it here.
+    #
+    # Distinguish REGRESSED tickers (previously covered — present in quant.json — now
+    # missing, a real broken-cycle signal) from BRAND-NEW-TO-THE-UNIVERSE tickers (never
+    # covered before, still backfilling — e.g. right after a universe expansion). Only
+    # regressions count toward the hard FAIL threshold; new tickers only ever WARN, so
+    # widening the universe can never block publishing everything else while it backfills.
     uni, _ = load("universe.json")
+    quant_prev, _ = load("quant.json")
+    prev_covered = set((quant_prev or {}).get("tickers", {})) if quant_prev else set()
     if uni and isinstance(uni.get("symbols"), dict):
         symbols = list(uni["symbols"])
         hist_dir = os.path.join(STATE, "history")
@@ -136,14 +144,19 @@ def main():
             except Exception:
                 missing.append(s)
         if symbols:
-            frac = len(missing) / len(symbols)
-            # a few missing is tolerable (a new listing mid-fetch); a broad gap is a broken cycle
+            regressed = [s for s in missing if s in prev_covered]
+            new_backfilling = [s for s in missing if s not in prev_covered]
+            frac = len(regressed) / len(symbols)
+            # a few missing is tolerable (a new listing mid-fetch); a broad REGRESSION is a broken cycle
             if frac > 0.10:
-                fail(f"history/: {len(missing)}/{len(symbols)} tickers missing/empty history "
-                     f"({frac:.0%}) — their ticker pages would show 'No data'. e.g. {', '.join(missing[:8])}")
-            elif missing:
-                warn(f"history/: {len(missing)} ticker(s) missing history (pages self-heal-retry but "
-                     f"stay empty until refetched): {', '.join(missing[:12])}")
+                fail(f"history/: {len(regressed)}/{len(symbols)} previously-covered tickers lost their "
+                     f"history ({frac:.0%}) — their ticker pages would show 'No data'. e.g. {', '.join(regressed[:8])}")
+            elif regressed:
+                warn(f"history/: {len(regressed)} previously-covered ticker(s) missing history (pages "
+                     f"self-heal-retry but stay empty until refetched): {', '.join(regressed[:12])}")
+            if new_backfilling:
+                warn(f"history/: {len(new_backfilling)} newly-added universe ticker(s) still backfilling "
+                     f"history (never gates publish): {', '.join(new_backfilling[:12])}")
 
     # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
     # dossier can't block the core desk from deploying)

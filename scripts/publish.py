@@ -50,28 +50,48 @@ def main():
 
     # 4) push -> Vercel auto-deploys. RACE-SAFE: the cloud GitHub-Actions cron and the
     # app loops both push to main, so a push can be rejected (non-fast-forward) if the
-    # other side pushed since our last pull. On rejection, rebase our commit onto the
-    # latest origin, preferring OUR just-generated state on any conflict (`-X theirs`
-    # keeps the replayed commit's version — the fresh full state we just built), then
-    # retry. Whatever the other side raced in is regenerated next cycle, so nothing is lost.
+    # other side pushed since our last pull. On rejection, rebase onto the latest origin.
+    #
+    # Auto-resolving a conflict is only safe for files under state/ — that's regenerated
+    # deterministic data, so preferring our freshly-built version and letting the other
+    # side's copy regenerate next cycle loses nothing. It is NOT safe for hand-authored
+    # files (dashboard/*, scripts/*, docs/*, CLAUDE.md, ...) — this repo has no CI/PR
+    # review, so silently picking a side there could permanently discard someone's actual
+    # code edit with zero visibility. So: try a plain rebase; if it conflicts, auto-resolve
+    # ONLY if every conflicted file is under state/; otherwise abort and fail loudly so a
+    # human resolves it, instead of guessing.
     def _push():
-        return _run(["git", "push", "origin", "main"]).returncode == 0
+        r = _run(["git", "push", "origin", "main"])
+        return r.returncode == 0, (r.stderr or r.stdout or "").strip()
 
-    if not _push():
-        ok = False
-        for _ in range(3):
+    ok, last_err = _push()
+    if not ok:
+        for attempt in range(3):
             _run(["git", "fetch", "origin", "main"])
-            rb = _run(["git", "rebase", "-X", "theirs", "origin/main"])
+            rb = _run(["git", "rebase", "origin/main"])
             if rb.returncode != 0:
-                _run(["git", "rebase", "--abort"])
-                print("publish: rebase conflict during concurrent push — skipping; next cycle republishes.")
-                sys.exit(1)
-            if _push():
-                ok = True
+                conflicted = _run(["git", "diff", "--name-only", "--diff-filter=U"]).stdout.split()
+                non_state = [f for f in conflicted if not f.replace("\\", "/").startswith("state/")]
+                if non_state or not conflicted:
+                    _run(["git", "rebase", "--abort"])
+                    print(f"publish: rebase conflict on hand-authored file(s) {non_state or conflicted} — "
+                          f"refusing to auto-resolve (could silently discard a real code edit). "
+                          f"Manual merge needed: git pull --rebase origin main, resolve by hand, re-run.")
+                    sys.exit(1)
+                # every conflict is confined to regeneratable state/ data — safe to keep our fresh build
+                _run(["git", "checkout", "--theirs", "--"] + conflicted)  # "theirs" in a rebase = our replayed commit
+                _run(["git", "add"] + conflicted)
+                cont = _run(["git", "rebase", "--continue"])
+                if cont.returncode != 0:
+                    _run(["git", "rebase", "--abort"])
+                    print(f"publish: rebase --continue failed after state-only auto-resolve: {(cont.stderr or cont.stdout)[:300]}")
+                    sys.exit(1)
+            ok, last_err = _push()
+            if ok:
                 break
-            time.sleep(2)
+            time.sleep(2 + attempt)  # small backoff growth so repeated collisions don't lockstep
         if not ok:
-            print("publish: could not push after retries (heavy concurrent activity) — next cycle republishes.")
+            print(f"publish: could not push after retries — last git error:\n{last_err[:400]}")
             sys.exit(1)
     print(f"publish: pushed '{msg}' -> Vercel is deploying (~60s to https://psx-trade-desk.vercel.app/).")
 
