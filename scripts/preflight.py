@@ -113,6 +113,25 @@ def check_code_syntax():
             warn(f"dashboard/app.js: JS syntax check errored — {e}")
 
 
+def check_provenance():
+    """Tier-1 accuracy QA: run provenance_lint.py (placeholder/hollow/stale rendered content).
+    A hard FAIL there means an assumed/empty/out-of-date value would reach users — block it."""
+    lint = os.path.join(ROOT, "scripts", "provenance_lint.py")
+    if not os.path.exists(lint):
+        return
+    try:
+        r = subprocess.run([sys.executable, lint], capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            # surface the lint's own FAIL lines (skip its header/blank lines)
+            for line in r.stdout.splitlines():
+                if line.strip().startswith("x "):
+                    fail("provenance: " + line.strip()[2:])
+            if not any(f.startswith("provenance:") for f in fails):
+                fail("provenance_lint.py failed (see its output) — assumed/hollow/stale content")
+    except Exception as e:  # noqa: BLE001
+        warn(f"provenance_lint.py did not run — {e}")
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")  # never die on a unicode dash in a message
@@ -124,6 +143,8 @@ def main():
 
     # --- Tier-1 code QA: instant, free, blocks a broken build before anything else runs ---
     check_code_syntax()
+    # --- Tier-1 accuracy QA: block assumed/hollow/stale content from reaching users ---
+    check_provenance()
 
     # --- files the dashboard hard-depends on, with the exact shape the UI reads ---
     check("health.json", top_keys=("status",))

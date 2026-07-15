@@ -54,7 +54,9 @@ runs on the owner's machine. The cloud never runs an agent (no API key by design
 Layered, so a bad cycle can't reach users and a transient glitch can't blank a page:
 
 - **`preflight.py`** (before publish): re-reads every file the UI joins on; asserts shape, non-empty,
-  no NaN/Infinity, and **per-ticker history completeness** (the "No data for XXX" class). Exits non-zero
+  no NaN/Infinity, and **per-ticker history completeness** (the "No data for XXX" class). Also runs two
+  free Tier-1 gates on every publish: **code syntax** (`check_code_syntax` — `ast.parse` all scripts +
+  `node -c app.js`) and **accuracy/provenance** (`provenance_lint.py` — see §3b). Exits non-zero
   → `publish.py` aborts.
 - **`watchdog.py`** (after publish): fetches the LIVE Vercel URLs a browser hits and checks they are
   reachable, fresh, non-empty, health not degraded, and sampled ticker histories serve. Wired into every
@@ -115,7 +117,36 @@ resolve by hand instead of guessing).
 
 ---
 
-## 4. The six app scheduled tasks (`~/.claude/scheduled-tasks/`)
+## 3b. Accuracy QA — "are we presenting fact, not assumption?" (2026-07-15)
+
+The desk's credibility is that it never shows an assumed/placeholder/stale number as fact. Two tiers:
+- **Tier 1 (free, every publish):** `scripts/provenance_lint.py`, wired into `preflight.py`. Hard-FAILs
+  (blocks publish) on: **stub markers** (TODO/PLACEHOLDER/TBD/lorem/`<INSERT` in any rendered state
+  field), **hollow analysis** (a Desk Room `house_view` present but its summary/conviction empty), and
+  **grossly stale analysis** (a house view computed at `price_at_session` now >30% from the live close).
+  WARNs (surfaces, doesn't block) on 15–30% staleness. Deliberately unambiguous checks only — it never
+  guesses whether a *target* price is "wrong" (that's a legit forward call, not an assumption).
+- **Tier 2 (judgment):** the existing `room-verifier` agent already cross-examines each ticker's numbers
+  against the data + web before a Room session publishes, and records its verdict in `rooms.json[SYM].qa`.
+  The desk is already partly self-aware here — house views caveat their own soft spots (e.g. "leans on an
+  unverified 30% growth assumption"). The weekly `psx-desk-product-scout` (§3c) reads those `qa` caveats to
+  propose accuracy improvements.
+
+## 3c. Self-improvement loop — the desk proposing its own upgrades (2026-07-15)
+
+`psx-desk-product-scout` (weekly, Sun ~12:00 PKT, one cheap agent session) reads the live product + the
+accuracy signals above and writes a **ranked backlog** to `state/product_backlog.json` across three
+categories — **accuracy** (grounded in provenance-lint/qa findings), **clarity** (presentation), and
+**feature** (new capability). It **proposes and ranks only — it never builds.** The owner picks items to
+implement; implementation runs on demand through the normal gated path. This split (cheap looped ideation,
+human-gated build) is the guardrail: it keeps the "improve ourselves" loop from becoming a token bonfire or
+shipping machine-written features with no human in the loop. `score = impact(3/2/1) / effort(3/2/1)`, higher
+first. Out of scope by rule: live per-visitor agent runs (impossible on static hosting) and any recurring
+heavy-token feature.
+
+---
+
+## 4. The seven app scheduled tasks (`~/.claude/scheduled-tasks/`)
 
 Only run while the Claude app is open; catch up on next open. The 5 data/agent tasks each end with
 `publish.py` + watchdog. The cloud cron now keeps DATA fresh 24/7, so these are primarily about the
@@ -130,6 +161,7 @@ and a cloud-outage fallback.
 | `psx-desk-room-loop` | weekday ~17:47 | the **Desk Room debates** — ≤3 full/day (budget gate), rest reaffirm free; QA + scoring |
 | `psx-desk-weekly-harvest` | Sat ~11:00 | broker **calls** from the business press (Profit/Dawn/Mettis) + filings refresh |
 | `psx-desk-code-review` | Sat ~12:00 | **Code QA** — see §3a. Not a data task; touches code only, never `state/`. |
+| `psx-desk-product-scout` | Sun ~12:00 | **Self-improvement** — see §3c. Writes the ranked backlog; proposes only, never builds. |
 
 Manual refresh (any session, no waiting for a task): the **`update-live-desk`** skill, or directly
 `python scripts/run_cloud.py` (free data) then `python scripts/publish.py "..."`.
