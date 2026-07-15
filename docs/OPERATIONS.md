@@ -76,15 +76,27 @@ Layered, so a bad cycle can't reach users and a transient glitch can't blank a p
 The three gates above watch **data**, **build shape**, and **design** — none of them read the actual
 **code** for correctness or security bugs. The repo has no tests and no linter (Python or JS), and pushes
 directly to `main` with no PR/CI review, so nothing was catching real defects before they went live.
+Two tiers now close this gap, deliberately NOT a `.github/workflows/*` CI file — see §5's gotcha on why
+adding those needs the GitHub web UI; both tiers below avoid that entirely and need no owner action.
 
-**`psx-desk-code-review`** (weekly, Sat ~12:00 PKT) closes this gap: it runs the `/code-review` skill
+**Tier 1 — instant, free, every publish.** `check_code_syntax()` inside `preflight.py` (added 2026-07-15)
+`ast.parse`s every `scripts/*.py` and runs `node -c dashboard/app.js`, and FAILS the gate (blocks publish)
+on a real syntax error. Since `preflight.py` is the one gate every surface already runs through — the
+cloud cron (`desk-data.yml` → `run_cloud.py` → `preflight.py`), every app-scheduled task, and any manual
+`publish.py` call — this runs on literally every publish, everywhere, for zero added cost and no new
+infrastructure. It catches "the build is broken" the moment it happens, not up to a week later.
+
+**Tier 2 — weekly deep review.** `psx-desk-code-review` (Sat ~12:00 PKT) runs the `/code-review` skill
 (8 finder angles — line-by-line, removed-behavior, cross-file, reuse, simplification, efficiency, altitude,
 CLAUDE.md conventions — each candidate independently verified CONFIRMED/PLAUSIBLE/REFUTED before it's
-reported) against the week's code diff. Clear-cut, low-risk fixes (silently-swallowed errors, missing
-guards, unescaped output, dead branches) are applied directly and published through the normal gated path;
-genuine judgment calls (thresholds, design tradeoffs, anything behavior-changing) are reported, not
-auto-fixed. Effort is `medium` for the routine weekly pass — request a `high`/`ultra` pass explicitly
-before anything high-stakes (e.g. before turning on billing).
+reported) against the week's code diff. This is the one that catches things a syntax check can't: logic
+bugs, security holes, silently-swallowed errors, dead code. Clear-cut, low-risk fixes are applied directly
+and published through the normal gated path; genuine judgment calls (thresholds, design tradeoffs,
+anything behavior-changing) are reported, not auto-fixed. Effort is `medium` for the routine weekly pass —
+request a `high`/`ultra` pass explicitly before anything high-stakes (e.g. before turning on billing).
+Weekly (not daily/per-push) by design: each pass spends real tokens (multiple agent calls), and a syntax
+break is already caught instantly by Tier 1 — the deep pass exists to catch what only careful reading
+catches, which doesn't need same-day turnaround the way a broken build does.
 
 **First pass (2026-07-15, `high` effort, ~800-line session diff, first review this repo has ever had)**
 found and fixed 10 real, verified issues, including: an XSS vector (a broker name could break out of an

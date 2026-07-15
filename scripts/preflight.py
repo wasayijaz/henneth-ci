@@ -17,9 +17,12 @@ Usage:
 Exit codes: 0 = safe to deploy, 1 = do not deploy.
 """
 import argparse
+import ast
+import glob
 import json
 import math
 import os
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -85,6 +88,31 @@ def check(name, required=True, min_tickers=0, ticker_fields=(), top_keys=()):
     return data
 
 
+def check_code_syntax():
+    """Tier-1 code QA: a free, instant syntax gate on every publish (cloud + local + app
+    tasks all route through this file). Catches "someone broke the build" before it ever
+    reaches the live site — nothing else in the desk checked CODE syntax before this.
+    This is NOT a substitute for the weekly /code-review deep pass (correctness, security,
+    design) — just the fast, zero-cost first line that runs on literally every publish."""
+    for path in sorted(glob.glob(os.path.join(ROOT, "scripts", "*.py"))):
+        try:
+            with open(path, encoding="utf-8") as f:
+                ast.parse(f.read(), filename=path)
+        except SyntaxError as e:
+            fail(f"{os.path.relpath(path, ROOT)}: Python syntax error — {e.msg} (line {e.lineno})")
+
+    js_path = os.path.join(ROOT, "dashboard", "app.js")
+    if os.path.exists(js_path):
+        try:
+            r = subprocess.run(["node", "-c", js_path], capture_output=True, text=True, timeout=15)
+            if r.returncode != 0:
+                fail(f"dashboard/app.js: JS syntax error —\n{(r.stderr or r.stdout)[:300]}")
+        except FileNotFoundError:
+            warn("dashboard/app.js: skipped JS syntax check — 'node' not found on this machine")
+        except Exception as e:  # noqa: BLE001 — never let the checker itself crash the gate
+            warn(f"dashboard/app.js: JS syntax check errored — {e}")
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")  # never die on a unicode dash in a message
@@ -93,6 +121,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--strict", action="store_true", help="treat warnings as failures")
     args = ap.parse_args()
+
+    # --- Tier-1 code QA: instant, free, blocks a broken build before anything else runs ---
+    check_code_syntax()
 
     # --- files the dashboard hard-depends on, with the exact shape the UI reads ---
     check("health.json", top_keys=("status",))

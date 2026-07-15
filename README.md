@@ -69,9 +69,9 @@ small fraction of naive cost, and new AGM/broker/news data *targets* exactly the
 1. **Data QA** — flags glitchy/inconsistent numbers (e.g. a bad "-83% drop") → verifier web-checks, can block.
 2. **Deploy QA** — `preflight.py` gates the build; a structurally broken cycle can never publish.
 3. **Design QA** — flags corner/padding/token/typography drift → design-reviewer fixes surgically.
-4. **Code QA** — weekly `/code-review` pass (8-angle finder + verify) on the week's code changes; fixes
-   clear-cut correctness/security bugs, flags judgment calls. The repo has no tests or linter, so this is
-   the only recurring check on the CODE itself (the other three watch data/build/design, not logic).
+4. **Code QA** — two tiers: an instant free syntax gate inside `preflight.py` on *every* publish, plus a
+   weekly `/code-review` deep pass (8-angle finder + verify) that fixes clear-cut correctness/security bugs
+   and flags judgment calls. The repo has no tests or linter, so this is the only check on the CODE itself.
 
 ## Automation (loops)
 
