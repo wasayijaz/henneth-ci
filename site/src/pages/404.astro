@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config.ts';
+---
+
+<Base title="Page not found" path="/404" noindex={true}>
+  <section class="section center">
+    <div class="wrap">
+      <p class="eyebrow">404</p>
+      <h1>That page moved on.</h1>
+      <p class="lead nf-lead">The page you’re after isn’t here — but the desk is.</p>
+      <div class="nf-cta">
+        <a href="/" class="btn btn-primary">Back home</a>
+        <a href={site.appUrl} class="btn btn-ghost" rel="noopener">Launch the desk</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf-lead { max-width: 460px; margin: 0 auto 28px; }
+  .nf-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>

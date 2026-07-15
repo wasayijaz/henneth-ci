@@ -694,7 +694,7 @@ async function pageTicker(sym, _retry = 0) {
     ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
     ${sTile("Risk grade", rg, vr != null ? `volatility ${vr.toFixed(0)}/100` : "liquidity " + liq, rgk === "hi" ? "dn" : rgk === "lo" ? "up" : "")}
     ${sTile("Next event", nextEarn ? "Results" : "—", nextEarn ? `${nextEarn.date}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
-    ${sTile("House view", hvRoom ? `${esc(hvRoom.conviction || "—")} conviction` : "In queue", hvRoom ? "AI desk — see Room below" : "not yet covered", "")}
+    ${sTile("House view", hvRoom ? `${esc(hvRoom.conviction || "—")} conviction` : "In queue", hvRoom ? "AI desk · run it below ↓" : "not yet covered", "")}
   </div>`;
 
   // ---- private per-ticker note (only you can see it) ----
@@ -705,17 +705,24 @@ async function pageTicker(sym, _retry = 0) {
     : `<div class="seg"><h2>Your private note</h2><div class="ln"></div></div>
     <div class="card"><div class="empty">Sign in to keep a private note on ${esc(sym)} — your own thesis and reminders, saved to your account and visible only to you.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
 
-  // ---- "watch the desk analyze" tile — cinematic replay of the stored Room session ----
-  const replayTile = hvRoom ? `<button class="replay-tile" onclick="playDeskReplay('${esc(sym)}')">
-    <span class="replay-ico">▶</span>
-    <span class="replay-txt"><b>Watch the desk analyse ${esc(sym)}</b><i>step through how the Chartist, the Fundamentalist, a bull, a bear and the Chair reached the house view — the desk's read, played out</i></span>
-    <span class="replay-go">Play ›</span></button>` : "";
+  // ---- prominent "Run the desk" bar: gates the Desk Room analysis. Running it reveals the
+  // results (in a modal + inline on the page) and shows the last-run date, so users come back
+  // as the desk's analysis refreshes on the backend. ----
+  const lastRun = room ? String(room.built || room.dossier_asof || "").slice(0, 16) : "";
+  const deskRan = (() => { try { return !!sessionStorage.getItem("deskran:" + sym); } catch (e) { return false; } })();
+  const runDeskBar = hvRoom ? `<button class="run-desk ${deskRan ? "ran" : ""}" onclick="playDeskReplay('${esc(sym)}')">
+    <span class="run-ico">▶</span>
+    <span class="run-txt"><b>Run the desk on ${esc(sym)}</b><i>A chartist, a fundamentalist, a bull, a bear and a chair debate ${esc(sym)}'s conviction and settle on a house view. Watch them work through it.</i></span>
+    <span class="run-meta">${lastRun ? `<span class="run-last">Last run · ${esc(lastRun)}</span>` : ""}<span class="run-go">${deskRan ? "Run again ›" : "Run ›"}</span></span>
+  </button>` : "";
+  const deskStub = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>
+    <div class="card"><div class="empty">Run the desk on ${esc(sym)} — use the <b>Run ›</b> button near the top ↑. Once it finishes, the full analyst debate and house view appear right here.</div></div>`;
 
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
   ${summaryStrip}
-  ${replayTile}
+  ${runDeskBar}
   ${glance}
   <div class="card">
     <div class="tk-head">
@@ -755,7 +762,7 @@ async function pageTicker(sym, _retry = 0) {
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><b>${esc(c[0])}</b><span class="tag">${esc(c[1])}</span></div>
       <div class="sub" style="color:var(--ink2)">${esc(c[2])}</div></div>`).join("")}</div></div>` : ""}
 
-  ${renderRoom(room, sym)}
+  ${!hvRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
 
   ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
   <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="#/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
@@ -1054,40 +1061,43 @@ async function playDeskReplay(sym) {
   ov.className = "replay-overlay";
   ov.innerHTML = `<div class="replay-box">
     <div class="replay-head"><span class="replay-kicker">Desk Room · ${esc(sym)}</span>
-      <span class="replay-head-r"><button class="rp-skip" data-a="skip">Skip ›</button><button class="replay-x" aria-label="close">✕</button></span></div>
+      <button class="replay-x" aria-label="close" style="margin-left:auto">✕</button></div>
     <div class="replay-body" id="rpBody"></div>
   </div>`;
   document.body.appendChild(ov);
   const body = ov.querySelector("#rpBody");
-  const skipBtn = ov.querySelector(".rp-skip");
   let raf = null, done = false;
 
-  function close() { cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key); }
+  function close() {
+    cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key);
+    // reveal the desk's results inline on the ticker page (reveal() sets the session flag once the run finishes)
+    if (typeof pageTicker === "function" && location.hash.toUpperCase().includes(sym)) pageTicker(sym);
+  }
   function key(e) { if (e.key === "Escape") close(); }
   ov.addEventListener("click", e => {
     if (e.target === ov || e.target.classList.contains("replay-x")) return close();
     const b = e.target.closest("[data-a]");
-    if (b && b.dataset.a === "skip") reveal();
     if (b && b.dataset.a === "replay") runLoader();
   });
   document.addEventListener("keydown", key);
 
   // ---------- phase 1: the ~15s "running the desk" loader ----------
   function runLoader() {
-    done = false; skipBtn.style.display = "";
+    done = false;
     body.innerHTML = `<div class="rp-load">
       <div class="rp-load-title">Running the desk on ${esc(sym)}</div>
-      <div class="rp-load-sub">Replaying the real analysis — the same data and math the desk used to reach its view.</div>
+      <div class="rp-load-sub">Working through ${esc(sym)} the way the desk does — pulling the price history, the technicals and the valuation, then letting the analysts debate it out to a house view.</div>
       <div class="rp-prog"><div class="rp-prog-fill" id="rpFill"></div></div>
       <div class="rp-pct" id="rpPct">0<span>%</span></div>
       <div class="rp-steps" id="rpSteps"></div></div>`;
-    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPct"), stepsEl = ov.querySelector("#rpSteps");
-    const total = 14500, t0 = performance.now();
+    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPct"), stepsEl = ov.querySelector("#rpSteps"), subEl = ov.querySelector(".rp-load-sub");
+    const total = 10000 + Math.floor(Math.random() * 10000), longRun = total > 15500, t0 = performance.now();  // 10–20s, varied for anticipation
     let shown = 0;
     function tick(now) {
       const p = Math.min(100, (now - t0) / total * 100);
       fill.style.width = p + "%";
       pctEl.innerHTML = Math.floor(p) + "<span>%</span>";
+      if (longRun && p > 52 && !subEl.dataset.longed) { subEl.dataset.longed = "1"; subEl.textContent = "Taking a little longer than usual on this one — the desk is being thorough."; }
       const want = Math.round(p / 100 * steps.length);
       while (shown < want && shown < steps.length) {
         if (shown > 0) { const prev = stepsEl.children[shown - 1]; if (prev) prev.classList.add("did"); }
@@ -1104,7 +1114,8 @@ async function playDeskReplay(sym) {
   // ---------- phase 2: the split-desk reveal, Chair highlighted ----------
   function reveal() {
     if (done) return;
-    done = true; cancelAnimationFrame(raf); skipBtn.style.display = "none";
+    done = true; cancelAnimationFrame(raf);
+    try { sessionStorage.setItem("deskran:" + sym, "1"); } catch (e) { /* private mode */ }
     const panel = (av, nm, role, st, read, facts) => `<div class="rp-panel ${st ? "accent-" + st : ""}">
       <div class="rp-panel-head"><span class="rp-av sm">${av}</span><div><b>${esc(nm)}</b><span class="rp-role">${role}</span></div></div>
       <p class="rp-panel-read">${esc(read || "—")}</p>${facts ? `<div class="rp-facts">${facts}</div>` : ""}</div>`;
@@ -1132,7 +1143,7 @@ async function playDeskReplay(sym) {
         </div>
       </div>
       <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
-        <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
+        <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
     </div>`;
     body.scrollTop = 0;
   }

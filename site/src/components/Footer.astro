@@ -1,0 +1,166 @@
+---
+import { site } from '../site.config.ts';
+const year = new Date().getFullYear();
+const cols = [
+  {
+    title: 'Product',
+    links: [
+      { href: '/features', label: 'Features' },
+      { href: '/pricing', label: 'Pricing' },
+      { href: site.appUrl, label: 'Launch the desk', ext: true },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { href: '/legal/terms', label: 'Terms' },
+      { href: '/legal/privacy', label: 'Privacy' },
+      { href: '/legal/risk', label: 'Risk disclosure' },
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{site.name}</span>
+        </div>
+        <p class="muted foot-tag">{site.tagline}</p>
+      </div>
+      <div class="foot-cols">
+        {
+          cols.map((c) => (
+            <div>
+              <h4>{c.title}</h4>
+              <ul>
+                {c.links.map((l) => (
+                  <li>
+                    <a href={l.href} rel={l.ext ? 'noopener' : undefined}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="foot-disclaimer">
+      <span class="pill"><span class="dot"></span>Research · not advice</span>
+      <p>
+        {site.name} is an educational research &amp; analytics tool, not an investment adviser.
+        Everything here is information, never personalised advice, a recommendation, or a promise
+        of returns. Past performance does not predict future results. Investing in the Pakistan
+        Stock Exchange carries risk, including the loss of capital. You make your own decisions.
+      </p>
+    </div>
+
+    <div class="foot-base">
+      <span class="muted">© {year} {site.name}. All rights reserved.</span>
+      <span class="muted">Built for Pakistan's markets.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--bg-tint);
+    border-top: 1px solid var(--line);
+    padding: 64px 0 32px;
+    margin-top: 40px;
+  }
+  .foot-top {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: 48px;
+    padding-bottom: 40px;
+  }
+  .foot-brand .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.16rem;
+    color: var(--ink);
+  }
+  .brand-mark {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--primary) 0%, #0f9c78 100%);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: 6px 6px auto 6px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 0 rgba(255, 255, 255, 0.55);
+  }
+  .foot-tag { margin-top: 12px; }
+  .foot-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .foot-cols h4 {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+  .foot-cols ul { list-style: none; margin: 0; padding: 0; }
+  .foot-cols li { margin-bottom: 10px; }
+  .foot-cols a { color: var(--ink-soft); font-size: 0.95rem; }
+  .foot-cols a:hover { color: var(--ink); text-decoration: none; }
+
+  .foot-disclaimer {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .foot-disclaimer p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--ink-faint);
+  }
+  .foot-base {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 24px;
+    font-size: 0.85rem;
+  }
+  @media (max-width: 760px) {
+    .foot-top { grid-template-columns: 1fr; gap: 32px; }
+    .foot-cols { grid-template-columns: repeat(3, 1fr); }
+    .foot-disclaimer { grid-template-columns: 1fr; }
+    .foot-base { flex-direction: column; gap: 6px; }
+  }
+  @media (max-width: 480px) {
+    .foot-cols { grid-template-columns: 1fr 1fr; }
+  }
+</style>

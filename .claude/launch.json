@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["scripts/serve.py"],
       "port": 8877
+    },
+    {
+      "name": "psx-desk-site",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "site", "--", "--port", "4321", "--host"],
+      "port": 4321
     }
   ]
 }

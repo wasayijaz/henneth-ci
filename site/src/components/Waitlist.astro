@@ -1,0 +1,136 @@
+---
+import { site } from '../site.config.ts';
+interface Props { source?: string; compact?: boolean; }
+const { source = 'site', compact = false } = Astro.props;
+---
+
+<div class="wl" id="waitlist" class:list={[{ compact }]}>
+  {!compact && (
+    <>
+      <p class="eyebrow">Early access</p>
+      <h2>Be first through the door.</h2>
+      <p class="lead">
+        The free desk is open now. Join the list to lock a founding-member place — the first 100
+        keep their price forever when paid plans open.
+      </p>
+    </>
+  )}
+
+  <form
+    class="wl-form"
+    id="wlForm"
+    data-url={site.supabase.url}
+    data-key={site.supabase.anonKey}
+    data-table={site.supabase.waitlistTable}
+    data-source={source}
+  >
+    <div class="wl-row">
+      <input
+        type="email"
+        name="email"
+        id="wlEmail"
+        placeholder="you@email.com"
+        required
+        autocomplete="email"
+        aria-label="Email address"
+      />
+      <!-- honeypot: bots fill this, humans never see it -->
+      <input type="text" name="company" class="wl-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button type="submit" class="btn btn-primary" id="wlBtn">Join the waitlist</button>
+    </div>
+    <p class="wl-msg" id="wlMsg" role="status" aria-live="polite"></p>
+    <p class="wl-fine muted">No spam. One email when access opens. Research, not advice.</p>
+  </form>
+</div>
+
+<style>
+  .wl { max-width: 620px; }
+  .wl.compact { max-width: 520px; }
+  .wl h2 { margin-bottom: 12px; }
+  .wl-form { margin-top: 22px; }
+  .wl-row { display: flex; gap: 10px; }
+  .wl-row input[type='email'] {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 14px 16px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--ink);
+    min-width: 0;
+  }
+  .wl-row input[type='email']:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-tint);
+  }
+  .wl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .wl-msg { margin: 12px 0 0; font-size: 0.92rem; min-height: 1.2em; font-weight: 500; }
+  .wl-msg.ok { color: var(--primary-ink); }
+  .wl-msg.err { color: var(--danger); }
+  .wl-fine { margin: 10px 0 0; font-size: 0.8rem; }
+  @media (max-width: 520px) {
+    .wl-row { flex-direction: column; }
+    .wl-row .btn { justify-content: center; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('wlForm') as HTMLFormElement | null;
+  if (form) {
+    const msg = document.getElementById('wlMsg')!;
+    const btn = document.getElementById('wlBtn') as HTMLButtonElement;
+    const email = document.getElementById('wlEmail') as HTMLInputElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'wl-msg';
+      msg.textContent = '';
+
+      // Honeypot — silently succeed for bots.
+      const hp = (form.querySelector('input[name="company"]') as HTMLInputElement)?.value;
+      if (hp) { msg.className = 'wl-msg ok'; msg.textContent = "You're on the list."; return; }
+
+      const url = form.dataset.url;
+      const key = form.dataset.key;
+      const table = form.dataset.table;
+      const source = form.dataset.source || 'site';
+
+      btn.disabled = true;
+      const orig = btn.textContent;
+      btn.textContent = 'Joining…';
+
+      try {
+        const res = await fetch(`${url}/rest/v1/${table}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: key || '',
+            Authorization: `Bearer ${key}`,
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify({ email: email.value.trim().toLowerCase(), source }),
+        });
+
+        if (res.ok || res.status === 201) {
+          msg.className = 'wl-msg ok';
+          msg.textContent = "You're on the list — we'll be in touch.";
+          form.reset();
+        } else if (res.status === 409) {
+          msg.className = 'wl-msg ok';
+          msg.textContent = "You're already on the list. Sit tight.";
+          form.reset();
+        } else {
+          throw new Error(String(res.status));
+        }
+      } catch (err) {
+        msg.className = 'wl-msg err';
+        msg.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = orig;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config.ts';
+---
+
+<Base title="Contact" path="/contact" description="Get in touch with the PSX Desk team.">
+  <section class="section page-hero">
+    <div class="wrap prose center">
+      <p class="eyebrow">Contact</p>
+      <h1>Say hello.</h1>
+      <p class="lead">
+        Questions, feedback, press, or partnerships — we’d like to hear from you.
+      </p>
+      <div class="contact-links">
+        <a class="card clink" href={`mailto:${site.contactEmail}`}>
+          <span class="clink-k">Email</span>
+          <span class="clink-v">{site.contactEmail}</span>
+        </a>
+        <a class="card clink" href={site.social.x} rel="noopener">
+          <span class="clink-k">On X</span>
+          <span class="clink-v">@MWasayI</span>
+        </a>
+      </div>
+      <p class="muted contact-fine">
+        For anything involving your account or data, please email us directly.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prose { max-width: 640px; margin: 0 auto; }
+  .contact-links { display: flex; gap: 16px; justify-content: center; margin: 36px 0 20px; flex-wrap: wrap; }
+  .clink {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 220px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.14s ease, box-shadow 0.18s ease;
+  }
+  .clink:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow); }
+  .clink-k {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .clink-v { font-weight: 600; font-size: 1.05rem; }
+  .contact-fine { font-size: 0.85rem; }
+</style>

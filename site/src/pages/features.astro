@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import Waitlist from '../components/Waitlist.astro';
+import { site } from '../site.config.ts';
+
+const groups = [
+  {
+    tag: 'Made clear',
+    title: 'The market, translated.',
+    intro: 'The hard part of investing isn’t getting numbers — it’s knowing what they mean. Every stock page answers the questions that actually matter, first.',
+    items: [
+      ['Is the price reasonable?', 'Four independent fair-value methods — peer multiples, earnings power vs. bond yield, Graham, and a dividend model — with the median as the read and the full working on show.'],
+      ['Is the business healthy?', 'A plain-English scorecard on valuation, profitability, dividend cover and stability — scored against the rest of the market, not in a vacuum.'],
+      ['What’s the real risk?', 'Volatility, maximum drawdown in its proper era context, liquidity and dividend reliability — the downside, stated honestly.'],
+      ['What changed this week?', 'Results, dividends, board meetings and high-impact news, tagged to the names they move.'],
+    ],
+  },
+  {
+    tag: 'The Desk Room',
+    title: 'Analysts who show their work.',
+    intro: 'A room of named AI analysts researches each stock and argues it out — and you watch the whole thing, not just a verdict.',
+    items: [
+      ['A technical desk and a fundamental desk', 'Kept deliberately separate, so price action and business quality each get an honest, un-blended read.'],
+      ['A bull and a bear', 'The strongest honest case for, and the strongest honest case against — each attacking the other’s weakest point.'],
+      ['A Chair who synthesises', 'One house view with a conviction level and an explicit dissent line. No false certainty.'],
+      ['Replay the debate', 'Watch the desk analyse a name as a staged walkthrough — the reasoning, step by step.'],
+    ],
+  },
+  {
+    tag: 'On the record',
+    title: 'Accountability, by design.',
+    intro: 'Research is only worth something if it can be checked. The desk is built to be graded — and to grade the brokers too.',
+    items: [
+      ['Every read is dated and sourced', 'No number is quoted from memory. If the data layer doesn’t have it, the answer is “unknown”, never a guess.'],
+      ['Calls are scored over time', 'Dated, falsifiable calls resolve against what prices actually did — losses shown, not hidden.'],
+      ['Brokers held to the same bar', 'Public broker calls are captured, dated and scored on accuracy — the one thing nobody else in this market does.'],
+      ['Research, never advice', 'No “buy”, no “strong buy”, no guaranteed returns. You get the picture; you make the call.'],
+    ],
+  },
+];
+
+const engine = [
+  ['52 backtested strategies', 'Transparent, rule-based, each tested across ~19 years of history — win rate, expectancy after costs, out-of-sample. You see what actually worked.'],
+  ['A shared data layer', 'Prices, quant, fundamentals and calendars refresh on a schedule — the whole desk reads one source of truth.'],
+  ['Self-checking systems', 'Automated gates catch bad numbers, broken builds and design drift before anything reaches you.'],
+  ['Macro & dividends', 'The global tape that moves PSX, a geo-risk radar, dividend timing and an earnings calendar — the context around every name.'],
+];
+---
+
+<Base title="Features" path="/features" description="Everything PSX Desk does: plain-English stock reads, the analyst Desk Room, and a track record built to be graded.">
+  <section class="section-tight page-hero">
+    <div class="wrap center">
+      <p class="eyebrow">Features</p>
+      <h1>Everything the desk does.</h1>
+      <p class="lead">
+        A research terminal for the Pakistan Stock Exchange that explains itself — and holds itself,
+        and the brokers, to account.
+      </p>
+    </div>
+  </section>
+
+  {
+    groups.map((g, i) => (
+      <section class="section fgroup" data-alt={i % 2 === 1}>
+        <div class="wrap">
+          <div class="fgroup-head">
+            <span class="pill"><span class="dot" />{g.tag}</span>
+            <h2>{g.title}</h2>
+            <p class="lead">{g.intro}</p>
+          </div>
+          <div class="grid fitems">
+            {g.items.map(([t, d]) => (
+              <div class="card fitem">
+                <h3>{t}</h3>
+                <p class="muted">{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section engine-sec">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Under the hood</p>
+        <h2>Serious machinery, quietly.</h2>
+      </div>
+      <div class="grid engine">
+        {engine.map(([t, d]) => (
+          <div class="eitem">
+            <h3>{t}</h3>
+            <p class="muted">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-sec">
+    <div class="wrap center">
+      <a href={site.appUrl} class="btn btn-primary btn-lg" rel="noopener">Explore the desk free →</a>
+      <div class="cta-wl"><Waitlist source="features" compact /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { padding-top: clamp(40px, 6vw, 72px); }
+  .page-hero .lead { max-width: 620px; margin-inline: auto; }
+  .fgroup[data-alt='true'] { background: var(--bg-tint); }
+  .fgroup-head { max-width: 680px; margin-bottom: 40px; }
+  .fgroup-head .pill { margin-bottom: 16px; }
+  .fitems { grid-template-columns: repeat(2, 1fr); }
+  .fitem h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .engine-sec { }
+  .engine { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  .eitem { padding-left: 20px; border-left: 3px solid var(--primary); }
+  .eitem h3 { font-size: 1.08rem; margin-bottom: 6px; }
+  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
+  .cta-wl { margin-top: 36px; display: flex; justify-content: center; }
+  @media (max-width: 760px) {
+    .fitems, .engine { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../site.config.ts';
+---
+
+<Base title="Privacy Policy" path="/legal/privacy" noindex={true} description="PSX Desk Privacy Policy.">
+  <section class="section-tight">
+    <div class="wrap legal">
+      <p class="eyebrow">Legal</p>
+      <h1>Privacy Policy</h1>
+      <div class="legal-notice">
+        <strong>Draft — pending legal review.</strong> This page is a placeholder. The final policy
+        will be reviewed by a Pakistan-licensed lawyer before any paid plan opens.
+      </div>
+
+      <h2>What we collect</h2>
+      <p>
+        If you join the waitlist, we collect your email address. If you create an account in the
+        desk, we collect your email and the data you choose to save — such as a watchlist or manually
+        entered portfolio holdings.
+      </p>
+
+      <h2>How we use it</h2>
+      <p>
+        To operate the product, to let you back into your account, and to send you the updates you
+        asked for. We do not sell your data.
+      </p>
+
+      <h2>Who processes it</h2>
+      <p>
+        We use third-party infrastructure (such as our authentication and hosting providers, and a
+        future email provider) to run the service. The full list and their roles will be finalised
+        here.
+      </p>
+
+      <h2>Your choices</h2>
+      <p>
+        You can unsubscribe from emails at any time, and you can ask us to delete your account data.
+        The complete set of rights and retention periods will be finalised here.
+      </p>
+
+      <p class="legal-contact muted">
+        Privacy questions: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal { max-width: 720px; margin: 0 auto; }
+  .legal h2 { margin-top: 32px; font-size: 1.35rem; }
+  .legal-notice {
+    background: var(--accent-tint);
+    border: 1px solid #e8cf9a;
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    margin: 20px 0 8px;
+    font-size: 0.92rem;
+    color: #7a5a12;
+  }
+  .legal-contact { margin-top: 36px; font-size: 0.9rem; }
+</style>

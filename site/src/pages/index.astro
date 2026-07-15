@@ -1,0 +1,359 @@
+---
+import Base from '../layouts/Base.astro';
+import Waitlist from '../components/Waitlist.astro';
+import { site } from '../site.config.ts';
+
+const pillars = [
+  {
+    tag: 'Made clear',
+    title: 'Plain-English answers, not a wall of numbers.',
+    body: 'Is this company healthy? Is the price reasonable? What changed this week? Every stock gets a clear read — valuation, quality, risk and dividends — in language you actually understand.',
+  },
+  {
+    tag: 'The Desk Room',
+    title: 'A room full of analysts, working every stock.',
+    body: 'Named AI analysts research each name and debate it out loud — a technical desk, a fundamental desk, a bull and a bear, and a Chair who weighs it into one honest house view, dissent included.',
+  },
+  {
+    tag: 'On the record',
+    title: 'Built to be graded — including the brokers.',
+    body: 'Research, never advice. Every read is dated and put on the record to be scored over time, and the brokers are held to the exact same standard. Accountability is the product, not a footnote.',
+  },
+];
+
+const steps = [
+  { n: '01', t: 'Pick any PSX name', d: 'Search the whole universe. Land on a stock page built to answer your first three questions before you scroll.' },
+  { n: '02', t: 'Read the desk’s work', d: 'Fair value four ways, a health scorecard, a risk profile, and the analysts’ debate — all sourced from the data, never guessed.' },
+  { n: '03', t: 'Decide for yourself', d: 'The desk never places orders and never tells you to buy. You get the full picture; the decision stays yours.' },
+];
+---
+
+<Base path="/">
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="pill"><span class="dot"></span>For the Pakistan Stock Exchange</span>
+        <h1>Understand any PSX stock<br /><span class="hl">in plain English.</span></h1>
+        <p class="lead">
+          {site.name} turns Pakistan’s market into clear answers — is this company healthy, is the
+          price reasonable, what changed this week — backed by a transparent, rules-based research
+          engine. Research, not advice.
+        </p>
+        <div class="hero-cta">
+          <a href={site.appUrl} class="btn btn-primary btn-lg" rel="noopener">Start free →</a>
+          <a href="#waitlist" class="btn btn-ghost btn-lg">Get early access</a>
+        </div>
+        <div class="hero-trust">
+          <span>✓ Free to start</span>
+          <span>✓ No advice, ever</span>
+          <span>✓ Every number sourced</span>
+        </div>
+      </div>
+
+      <!-- Terminal peek — echoes the real product -->
+      <div class="hero-peek">
+        <div class="term">
+          <div class="term-bar">
+            <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
+            <span class="tlabel">the desk · stock read</span>
+          </div>
+          <div class="term-body">
+            <div class="peek-head">
+              <span class="k">SYMBOL</span>
+              <span class="big">████</span>
+              <span class="up">healthy</span>
+            </div>
+            <div class="peek-row"><span class="k">Is the price reasonable?</span><span>Below model fair value</span></div>
+            <div class="peek-row"><span class="k">Is the business healthy?</span><span class="up">Strong scorecard</span></div>
+            <div class="peek-row"><span class="k">What changed this week?</span><span>Results filed · dividend held</span></div>
+            <div class="peek-bar"><span style="width:72%"></span></div>
+            <div class="peek-foot"><span class="k">4-method fair value · quality · risk · dividends</span></div>
+          </div>
+        </div>
+        <p class="peek-cap muted">Illustration of the stock read. Real data lives in the desk.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VALUE STRIP ============ -->
+  <section class="section-tight strip">
+    <div class="wrap">
+      <p class="strip-line">
+        Most PSX tools hand you raw prices and leave you to guess. {site.name} does the reading for
+        you — and shows its working, every time.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ PILLARS ============ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">Why it’s different</p>
+        <h2>Three things nobody else puts together.</h2>
+      </div>
+      <div class="grid pillars">
+        {
+          pillars.map((p) => (
+            <article class="card pillar">
+              <span class="pill"><span class="dot" />{p.tag}</span>
+              <h3>{p.title}</h3>
+              <p class="muted">{p.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOWCASE ============ -->
+  <section class="section showcase">
+    <div class="wrap show-grid">
+      <div class="show-copy">
+        <p class="eyebrow">The desk</p>
+        <h2>A research terminal that explains itself.</h2>
+        <p class="lead">
+          Behind the plain-English answers sits a real engine: 52 backtested strategies, four
+          independent fair-value methods, health scorecards and risk profiles — all built on the
+          data layer, so no number is ever pulled from thin air.
+        </p>
+        <ul class="show-list">
+          <li><strong>Fair value, four ways.</strong> Peer multiples, earnings power, Graham and dividend models — the median is the read.</li>
+          <li><strong>A health scorecard.</strong> Valuation, profitability, dividend cover and stability, scored and explained.</li>
+          <li><strong>A real risk profile.</strong> Volatility, drawdown in context, liquidity and dividend reliability.</li>
+        </ul>
+        <a href="/features" class="btn btn-ghost">See all the features →</a>
+      </div>
+
+      <div class="show-peek">
+        <div class="term">
+          <div class="term-bar">
+            <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
+            <span class="tlabel">the desk room · debate</span>
+          </div>
+          <div class="term-body">
+            <div class="dbt"><span class="k">CHARTIST</span><span>Trend intact · reclaiming the 50-day.</span></div>
+            <div class="dbt"><span class="k">FUNDAMENTALS</span><span>Cheap on earnings power, growth is the question.</span></div>
+            <div class="dbt bull"><span class="k up">BULL</span><span>Value + dividend cover carry it.</span></div>
+            <div class="dbt bear"><span class="k dn">BEAR</span><span>Fair value leans on an aggressive growth input.</span></div>
+            <hr class="dbt-hr" />
+            <div class="dbt chair"><span class="k">CHAIR</span><span>House view: constructive, conviction moderate. Dissent noted.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="section steps-sec">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="eyebrow">How it works</p>
+        <h2>From a ticker to a decision in three steps.</h2>
+      </div>
+      <div class="grid steps">
+        {
+          steps.map((s) => (
+            <div class="step">
+              <span class="step-n mono">{s.n}</span>
+              <h3>{s.t}</h3>
+              <p class="muted">{s.d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACCOUNTABILITY ============ -->
+  <section class="section acct">
+    <div class="wrap acct-card">
+      <p class="eyebrow">The principle</p>
+      <h2>We put our reasoning on the record — and grade it.</h2>
+      <p class="lead">
+        Anyone can sound confident. {site.name} is built so every read is dated, sourced and scored
+        over time, losses included — and the same yardstick is turned on the brokers. No “strong
+        buy”, no guaranteed returns, no hiding the misses. Just research you can check.
+      </p>
+      <a href={site.appUrl} class="btn btn-primary" rel="noopener">Explore the desk free →</a>
+    </div>
+  </section>
+
+  <!-- ============ PRICING TEASE ============ -->
+  <section class="section-tight">
+    <div class="wrap price-tease">
+      <div>
+        <p class="eyebrow">Pricing</p>
+        <h2>Free to start. More when you’re ready.</h2>
+        <p class="muted">
+          The research is open to everyone, always. Paid plans add alerts, portfolio tracking,
+          weekly digests and the full debate depth — opening soon to founding members.
+        </p>
+      </div>
+      <a href="/pricing" class="btn btn-ghost btn-lg">See the plans →</a>
+    </div>
+  </section>
+
+  <!-- ============ WAITLIST ============ -->
+  <section class="section cta-sec">
+    <div class="wrap center cta-inner">
+      <Waitlist source="home" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(900px 400px at 80% -5%, var(--primary-tint) 0%, transparent 60%),
+      radial-gradient(700px 380px at 10% 0%, var(--accent-tint) 0%, transparent 55%);
+    padding: clamp(48px, 8vw, 92px) 0 clamp(40px, 6vw, 72px);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .hero-copy .pill { margin-bottom: 22px; }
+  .hero h1 { margin-bottom: 20px; }
+  .hero .hl {
+    background: linear-gradient(120deg, var(--primary) 0%, #0f9c78 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-cta { display: flex; gap: 12px; margin: 30px 0 20px; flex-wrap: wrap; }
+  .hero-trust {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* Terminal peek in hero */
+  .hero-peek { position: relative; }
+  .peek-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+  .peek-head .big { letter-spacing: 0.1em; }
+  .peek-head .up {
+    margin-left: auto;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--term-green);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .peek-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 9px 0;
+    border-top: 1px solid var(--term-line);
+    font-size: 0.82rem;
+  }
+  .peek-bar {
+    margin: 16px 0 10px;
+    height: 8px;
+    background: var(--term-line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .peek-bar span { display: block; height: 100%; background: var(--term-green); }
+  .peek-foot { font-size: 0.72rem; }
+  .peek-cap { margin-top: 12px; font-size: 0.76rem; text-align: right; }
+
+  /* Value strip */
+  .strip { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .strip-line {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-head);
+    font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 820px;
+    margin-inline: auto;
+    line-height: 1.35;
+  }
+
+  .sec-head { max-width: 640px; margin: 0 auto 44px; }
+
+  /* Pillars */
+  .pillars { grid-template-columns: repeat(3, 1fr); }
+  .pillar .pill { margin-bottom: 16px; }
+  .pillar h3 { font-size: 1.22rem; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .pillar { transition: transform 0.16s ease, box-shadow 0.2s ease; }
+  .pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+
+  /* Showcase */
+  .showcase { background: var(--bg-tint); }
+  .show-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .show-list { list-style: none; padding: 0; margin: 22px 0 28px; }
+  .show-list li { padding: 12px 0; border-top: 1px solid var(--line); font-size: 0.98rem; color: var(--ink-soft); }
+  .show-list strong { color: var(--ink); font-weight: 600; }
+  .dbt { display: flex; gap: 14px; padding: 9px 0; font-size: 0.8rem; }
+  .dbt .k { min-width: 104px; font-size: 0.68rem; letter-spacing: 0.08em; }
+  .dbt-hr { border: 0; border-top: 1px solid var(--term-line); margin: 8px 0; }
+  .dbt.chair span:last-child { color: #fff; }
+
+  /* Steps */
+  .steps-sec { }
+  .steps { grid-template-columns: repeat(3, 1fr); }
+  .step-n {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--primary-ink);
+    background: var(--primary-tint);
+    padding: 6px 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .step h3 { font-size: 1.16rem; margin-bottom: 8px; }
+
+  /* Accountability */
+  .acct-card {
+    background: linear-gradient(135deg, #14181a 0%, #1d2529 100%);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: clamp(36px, 6vw, 68px);
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-lg);
+  }
+  .acct-card h2 { color: #fff; }
+  .acct-card .eyebrow { color: var(--term-green); }
+  .acct-card .lead { color: #c7cfd3; max-width: 660px; margin: 0 auto 28px; }
+
+  /* Pricing tease */
+  .price-tease {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: clamp(28px, 4vw, 44px);
+  }
+  .price-tease h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 8px; }
+  .price-tease p { max-width: 520px; margin: 0; }
+
+  /* CTA */
+  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
+  .cta-inner :global(.wl) { margin: 0 auto; }
+
+  @media (max-width: 900px) {
+    .hero-grid, .show-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-peek { order: 2; }
+    .pillars, .steps { grid-template-columns: 1fr; }
+    .price-tease { flex-direction: column; align-items: flex-start; }
+  }
+</style>

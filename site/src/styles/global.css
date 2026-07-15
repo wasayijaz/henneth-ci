@@ -1,0 +1,219 @@
+/* ============================================================
+   PSX Desk — marketing site design system
+   Warm, approachable, high-trust. Deliberately softer than the
+   product terminal (which is hard-cornered mono Bloomberg-lite);
+   the terminal look shows up only inside "terminal peek" panels.
+   ============================================================ */
+
+:root {
+  /* Warm neutral base */
+  --bg: #fbfaf7;
+  --bg-tint: #f4f1ea;
+  --surface: #ffffff;
+  --ink: #16191c;
+  --ink-soft: #4a5257;
+  --ink-faint: #8a9298;
+  --line: #e9e3d8;
+  --line-strong: #d8d0c1;
+
+  /* Desk green — same up-colour family as the product, warmed */
+  --primary: #0b7a5f;
+  --primary-ink: #0a5f4a;
+  --primary-tint: #e7f2ee;
+  --primary-glow: rgba(11, 122, 95, 0.18);
+
+  /* Amber accent for warmth + highlights */
+  --accent: #e0982d;
+  --accent-tint: #fbf0da;
+
+  --danger: #be4126;
+
+  /* Dark ink used by terminal-peek panels (echoes the product) */
+  --term-bg: #14181a;
+  --term-panel: #1c2124;
+  --term-line: #2b3236;
+  --term-ink: #e8eae9;
+  --term-dim: #8b959a;
+  --term-green: #3fb389;
+  --term-red: #e2725b;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 1px 2px rgba(20, 24, 26, 0.04), 0 2px 8px rgba(20, 24, 26, 0.04);
+  --shadow: 0 4px 12px rgba(20, 24, 26, 0.06), 0 12px 32px rgba(20, 24, 26, 0.07);
+  --shadow-lg: 0 8px 24px rgba(20, 24, 26, 0.08), 0 24px 60px rgba(20, 24, 26, 0.1);
+
+  --maxw: 1120px;
+  --font-head: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5em;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); }
+h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+h3 { font-size: 1.3rem; }
+
+p { margin: 0 0 1rem; }
+a { color: var(--primary-ink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img, svg { max-width: 100%; display: block; }
+
+/* ---------- Layout ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.section { padding: clamp(56px, 9vw, 112px) 0; }
+.section-tight { padding: clamp(40px, 6vw, 72px) 0; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary-ink);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.lead {
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.18s ease, background 0.18s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+.btn-primary:hover { background: var(--primary-ink); box-shadow: 0 6px 18px var(--primary-glow); }
+.btn-ghost {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-ghost:hover { border-color: var(--ink-faint); background: var(--bg); }
+.btn-lg { padding: 16px 30px; font-size: 1.06rem; }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Pill / badge ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--bg-tint);
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+.pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+
+/* ---------- Terminal peek (echoes the product) ---------- */
+.term {
+  background: var(--term-bg);
+  border: 1px solid var(--term-line);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  color: var(--term-ink);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--term-line);
+  background: var(--term-panel);
+}
+.term-bar .tdot { width: 11px; height: 11px; border-radius: 50%; background: #3a4247; }
+.term-bar .tlabel {
+  margin-left: 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--term-dim);
+}
+.term-body { padding: 22px; font-size: 0.86rem; line-height: 1.7; }
+.term .k { color: var(--term-dim); }
+.term .up { color: var(--term-green); }
+.term .dn { color: var(--term-red); }
+.term .big {
+  font-size: 1.8rem;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+/* ---------- Utilities ---------- */
+.grid { display: grid; gap: 24px; }
+.muted { color: var(--ink-faint); }
+.center { text-align: center; }
+.mono { font-family: var(--font-mono); }
+.divider { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,156 @@
+---
+import Base from '../layouts/Base.astro';
+import Waitlist from '../components/Waitlist.astro';
+import { site } from '../site.config.ts';
+
+const { currency, tiers } = site.pricing;
+const fmt = (n: number) => new Intl.NumberFormat('en-PK').format(n);
+
+const features: Record<string, string[]> = {
+  free: [
+    'The daily desk read',
+    'Universe board & heatmap',
+    'Plain-English stock reads',
+    'Fair value & health scorecards',
+    'Macro, dividends & earnings calendars',
+    'News wire',
+  ],
+  desk: [
+    'Everything in Free',
+    'Personal watchlist with alerts',
+    'Portfolio tracker (you enter holdings)',
+    'Weekly “what changed” digest',
+    'Desk Room house views',
+    'Full fair-value working',
+  ],
+  pro: [
+    'Everything in Desk',
+    'Full analyst debate transcripts',
+    'All 52 strategies with per-stock backtests',
+    'Screener with saved filters',
+    'Filing digests & data export',
+    'Priority on new coverage',
+  ],
+};
+---
+
+<Base title="Pricing" path="/pricing" description="PSX Desk pricing. The research is free for everyone. Paid plans add alerts, portfolio tracking and full depth — opening soon to founding members.">
+  <section class="section-tight page-hero">
+    <div class="wrap center">
+      <p class="eyebrow">Pricing</p>
+      <h1>Free to start. Fair when you grow.</h1>
+      <p class="lead">
+        The research is open to everyone, always — that’s the whole idea. Paid plans are opening
+        soon; join the list to lock a founding-member price.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="grid tiers">
+        {
+          tiers.map((t) => (
+            <div class="card tier" data-featured={t.featured}>
+              {t.featured && <span class="tier-badge">Most popular</span>}
+              <h3 class="tier-name">{t.name}</h3>
+              <div class="tier-price">
+                {t.priceMonthly === 0 ? (
+                  <span class="amt">Free</span>
+                ) : (
+                  <>
+                    <span class="cur">{currency}</span>
+                    <span class="amt">{fmt(t.priceMonthly)}</span>
+                    <span class="per">/mo</span>
+                  </>
+                )}
+              </div>
+              {t.priceMonthly !== 0 && 'priceYearly' in t && (
+                <p class="tier-year muted">or {currency} {fmt(t.priceYearly)}/yr · save ~33%</p>
+              )}
+              <p class="tier-blurb muted">{t.blurb}</p>
+
+              {t.id === 'free' ? (
+                <a href={site.appUrl} class="btn btn-primary tier-cta" rel="noopener">{t.cta}</a>
+              ) : (
+                <a href="#waitlist" class="btn btn-ghost tier-cta">{t.cta}</a>
+              )}
+
+              <ul class="tier-feats">
+                {features[t.id].map((f) => (
+                  <li>{f}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="price-note center muted">
+        Paid plans are not yet live — checkout opens once the desk’s public track record has matured
+        and the legal groundwork is complete. Founding members (the first 100) keep their price
+        forever.
+      </p>
+    </div>
+  </section>
+
+  <section class="section cta-sec">
+    <div class="wrap center cta-inner">
+      <Waitlist source="pricing" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero .lead { max-width: 600px; margin-inline: auto; }
+  .tiers { grid-template-columns: repeat(3, 1fr); align-items: start; }
+  .tier { position: relative; display: flex; flex-direction: column; }
+  .tier[data-featured='true'] {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary), var(--shadow);
+    transform: translateY(-6px);
+  }
+  .tier-badge {
+    position: absolute;
+    top: -12px;
+    left: 28px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--primary);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+  }
+  .tier-name { font-size: 1.3rem; margin-bottom: 12px; }
+  .tier-price { display: flex; align-items: baseline; gap: 4px; }
+  .tier-price .cur { font-family: var(--font-mono); font-size: 0.9rem; color: var(--ink-soft); }
+  .tier-price .amt { font-family: var(--font-head); font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em; }
+  .tier-price .per { color: var(--ink-faint); }
+  .tier-year { font-size: 0.82rem; margin: 4px 0 0; }
+  .tier-blurb { margin: 14px 0 20px; font-size: 0.95rem; }
+  .tier-cta { justify-content: center; width: 100%; }
+  .tier-feats { list-style: none; padding: 0; margin: 24px 0 0; }
+  .tier-feats li {
+    padding: 9px 0 9px 26px;
+    position: relative;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+  }
+  .tier-feats li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .price-note { max-width: 620px; margin: 40px auto 0; font-size: 0.88rem; }
+  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
+  .cta-inner :global(.wl) { margin: 0 auto; }
+  @media (max-width: 860px) {
+    .tiers { grid-template-columns: 1fr; }
+    .tier[data-featured='true'] { transform: none; }
+  }
+</style>
