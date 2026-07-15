@@ -718,6 +718,25 @@ async function pageTicker(sym, _retry = 0) {
   const deskStub = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>
     <div class="card"><div class="empty">Run the desk on ${esc(sym)} — use the <b>Run ›</b> button near the top ↑. Once it finishes, the full analyst debate and house view appear right here.</div></div>`;
 
+  // ---- "run the strategy library" bar: gates the backtest results the same way ----
+  const stratRan = (() => { try { return !!sessionStorage.getItem("stratran:" + sym); } catch (e) { return false; } })();
+  const runStratBar = `<button class="run-desk run-strat ${stratRan ? "ran" : ""}" onclick="playStrategyRun('${esc(sym)}')">
+    <span class="run-ico">▶</span>
+    <span class="run-txt"><b>Run the strategy library on ${esc(sym)}</b><i>Backtest all ${bt?.n_strategies ?? 52} of the desk's strategies across ${esc(sym)}'s ~19-year history and see which actually held up — win rate, expectancy, out-of-sample.</i></span>
+    <span class="run-meta"><span class="run-go">${stratRan ? "Run again ›" : "Run ›"}</span></span></button>`;
+  const stratStub = `<div class="card"><div class="empty">Run the strategy library on ${esc(sym)} — the <b>Run ›</b> button above ↑. It backtests all ${bt?.n_strategies ?? 52} strategies on ${esc(sym)}'s history and shows which ones held up here.</div></div>`;
+  const stratCards = `<div class="card"><div class="sub">Of the desk's ${bt?.n_strategies ?? 52} tested strategies, these cleared the bar on ${sym}'s own ~19-year history — win rate ≥55%, positive expectancy after costs, AND still profitable in the unseen last third (out-of-sample). This is what actually worked here, not theory.</div>
+    ${proven.length ? `<table><thead><tr><th>Strategy</th><th>Type</th><th class="r">Win rate</th><th class="r">Avg net/trade</th><th class="r">Trades</th><th class="r">Out-of-sample</th></tr></thead><tbody>${
+      proven.map(t => `<tr><td><b>${esc(t.name)}</b></td><td><span class="tag">${esc(t.category.replace("_", " "))}</span></td>
+        <td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td>
+        <td class="r num">${t.n}</td><td class="r num">${t.oos_hit != null ? Math.round(t.oos_hit * 100) + "% · n" + t.oos_n : "—"}</td></tr>`).join("")}</tbody></table>`
+      : '<div class="empty">No strategy cleared the bar on this name — the desk would not signal it. That is a finding, not a gap: its history is too choppy for these rules.</div>'}</div>
+  ${allTested.length > proven.length ? `<div class="card"><h2 style="font-size:13px">All ${allTested.length} strategies tested here</h2><div class="sub">full transparency — including the ones that failed. <span class="pill ok">proven</span> = made the cut.</div>
+    <table><thead><tr><th>Strategy</th><th class="r">Win</th><th class="r">Net</th><th class="r">n</th><th class="r">Verdict</th></tr></thead><tbody>${
+    allTested.slice(0, 20).map(t => `<tr><td>${esc(t.name || t.id)}</td><td class="r num">${t.hit_rate != null ? Math.round(t.hit_rate * 100) + "%" : "—"}</td>
+      <td class="r num ${(t.net_expectancy_pct || 0) > 0 ? "up" : "dn"}">${sgn(t.net_expectancy_pct ?? 0)}%</td><td class="r num">${t.n}</td>
+      <td class="r">${provenIds.has(t.id) ? '<span class="pill ok">proven</span>' : '<span style="opacity:.45">rejected</span>'}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
+
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
@@ -744,17 +763,8 @@ async function pageTicker(sym, _retry = 0) {
   ${noteCard}
 
   <div class="seg"><h2>Strategies proven on ${sym}</h2><div class="ln"></div><span class="pill ok">${proven.length} proven</span></div>
-  <div class="card"><div class="sub">Of the desk's ${bt?.n_strategies ?? 52} tested strategies, these cleared the bar on ${sym}'s own ~19-year history — win rate ≥55%, positive expectancy after costs, AND still profitable in the unseen last third (out-of-sample). This is what actually worked here, not theory.</div>
-    ${proven.length ? `<table><thead><tr><th>Strategy</th><th>Type</th><th class="r">Win rate</th><th class="r">Avg net/trade</th><th class="r">Trades</th><th class="r">Out-of-sample</th></tr></thead><tbody>${
-      proven.map(t => `<tr><td><b>${esc(t.name)}</b></td><td><span class="tag">${esc(t.category.replace("_", " "))}</span></td>
-        <td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td>
-        <td class="r num">${t.n}</td><td class="r num">${t.oos_hit != null ? Math.round(t.oos_hit * 100) + "% · n" + t.oos_n : "—"}</td></tr>`).join("")}</tbody></table>`
-      : '<div class="empty">No strategy cleared the bar on this name — the desk would not signal it. That is a finding, not a gap: its history is too choppy for these rules.</div>'}</div>
-  ${allTested.length > proven.length ? `<div class="card"><h2 style="font-size:13px">All ${allTested.length} strategies tested here</h2><div class="sub">full transparency — including the ones that failed. <span class="pill ok">proven</span> = made the cut.</div>
-    <table><thead><tr><th>Strategy</th><th class="r">Win</th><th class="r">Net</th><th class="r">n</th><th class="r">Verdict</th></tr></thead><tbody>${
-    allTested.slice(0, 20).map(t => `<tr><td>${esc(t.name || t.id)}</td><td class="r num">${t.hit_rate != null ? Math.round(t.hit_rate * 100) + "%" : "—"}</td>
-      <td class="r num ${(t.net_expectancy_pct || 0) > 0 ? "up" : "dn"}">${sgn(t.net_expectancy_pct ?? 0)}%</td><td class="r num">${t.n}</td>
-      <td class="r">${provenIds.has(t.id) ? '<span class="pill ok">proven</span>' : '<span style="opacity:.45">rejected</span>'}</td></tr>`).join("")}</tbody></table></div>` : ""}
+  ${runStratBar}
+  ${stratRan ? stratCards : stratStub}
 
   ${fsc ? `<div class="seg"><h2>Business scorecard</h2><div class="ln"></div><span class="pill ${fsc.rating === "attractive" ? "ok" : fsc.rating === "caution" ? "bad" : ""}">${esc({ attractive: "stronger scorecard", caution: "weaker scorecard", neutral: "mixed scorecard" }[fsc.rating] || fsc.rating)}</span></div>
   <div class="card"><div class="sub" style="font-size:13px;color:var(--ink2);margin-bottom:14px">${esc(fsc.overall)}</div>
@@ -1026,16 +1036,81 @@ async function pageLegal() {
   </div>`;
 }
 
-/* ---------- Desk Room replay: a ~15s "running the desk" reveal (streams the REAL steps the
-   desk actually ran — genuine RSI/SMA/fair-value numbers from the data layer, paced out) that
-   lands on the parallel split-desk view with the Chair's verdict highlighted. Zero agents run
-   per view — it animates already-computed rooms.json/quant/fairvalue data. ---------- */
+/* ---------- Shared "run" modal: a ~10–20s loader that streams REAL precomputed steps, then a
+   reveal. Zero agents run per view — it animates already-computed data. Used by both the Desk
+   Room run and the strategy-library run so the loader/orchestration lives in ONE place. ---------- */
+function runRevealModal(opts) {
+  // opts: { sym, kicker, title, sub, steps:[html], flagKey, renderReveal(bodyEl, {runLoader}) }
+  const ov = document.createElement("div");
+  ov.className = "replay-overlay";
+  ov.innerHTML = `<div class="replay-box">
+    <div class="replay-head"><span class="replay-kicker">${esc(opts.kicker)}</span>
+      <button class="replay-x" aria-label="close" style="margin-left:auto">✕</button></div>
+    <div class="replay-body" id="rpBody"></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const body = ov.querySelector("#rpBody");
+  let raf = null, done = false;
+
+  function close() {
+    cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key);
+    // reveal the results inline on the ticker page (reveal() sets the session flag once the run finishes)
+    if (typeof pageTicker === "function" && location.hash.toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
+  }
+  function key(e) { if (e.key === "Escape") close(); }
+  ov.addEventListener("click", e => {
+    if (e.target === ov || e.target.classList.contains("replay-x")) return close();
+    const b = e.target.closest("[data-a]");
+    if (b && b.dataset.a === "replay") runLoader();
+  });
+  document.addEventListener("keydown", key);
+
+  function runLoader() {
+    done = false;
+    body.innerHTML = `<div class="rp-load">
+      <div class="rp-load-title">${esc(opts.title)}</div>
+      <div class="rp-load-sub">${opts.sub}</div>
+      <div class="rp-prog"><div class="rp-prog-fill" id="rpFill"></div></div>
+      <div class="rp-pct" id="rpPct">0<span>%</span></div>
+      <div class="rp-steps" id="rpSteps"></div></div>`;
+    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPct"), stepsEl = ov.querySelector("#rpSteps"), subEl = ov.querySelector(".rp-load-sub");
+    const total = 10000 + Math.floor(Math.random() * 10000), longRun = total > 15500, t0 = performance.now();  // 10–20s, varied for anticipation
+    let shown = 0;
+    function tick(now) {
+      const p = Math.min(100, (now - t0) / total * 100);
+      fill.style.width = p + "%";
+      pctEl.innerHTML = Math.floor(p) + "<span>%</span>";
+      if (longRun && p > 52 && !subEl.dataset.longed) { subEl.dataset.longed = "1"; subEl.textContent = "Taking a little longer than usual on this one — the desk is being thorough."; }
+      const want = Math.round(p / 100 * opts.steps.length);
+      while (shown < want && shown < opts.steps.length) {
+        if (shown > 0) { const prev = stepsEl.children[shown - 1]; if (prev) prev.classList.add("did"); }
+        stepsEl.insertAdjacentHTML("beforeend", `<div class="rp-step-line"><span class="rp-step-mk">▸</span><span class="rp-step-tx">${opts.steps[shown]}</span></div>`);
+        stepsEl.lastChild.scrollIntoView({ block: "nearest" });
+        shown++;
+      }
+      if (p < 100 && !done) { raf = requestAnimationFrame(tick); }
+      else if (!done) { [...stepsEl.children].forEach(c => c.classList.add("did")); setTimeout(reveal, 550); }
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function reveal() {
+    if (done) return;
+    done = true; cancelAnimationFrame(raf);
+    try { sessionStorage.setItem(opts.flagKey, "1"); } catch (e) { /* private mode */ }
+    opts.renderReveal(body, { runLoader });
+    body.scrollTop = 0;
+  }
+  runLoader();
+}
+
+/* ---------- Desk Room run: streams the REAL steps the desk ran (RSI/SMA/fair-value from the data
+   layer) then lands on the parallel split-desk view with the Chair's verdict highlighted. ---------- */
 async function playDeskReplay(sym) {
   sym = (sym || "").toUpperCase();
   const [rooms, uni, quant, fund, fvAll] = await Promise.all([
     j("rooms.json"), j("universe.json"), j("quant.json"), j("fundamentals.json"), j("fairvalue.json")]);
   const s = rooms && rooms[sym];
-  if (!s || !s.house_view) return;   // only covered tickers have a session to replay
+  if (!s || !s.house_view) return;
   const name = uni?.symbols?.[sym]?.name || "";
   const q = quant?.tickers?.[sym] || {}, f = fund?.tickers?.[sym] || {}, fv = fvAll?.tickers?.[sym] || {};
   const ta = s.ta_memo || {}, fa = s.fa_memo || {}, bull = s.bull_case || {}, bear = s.bear_case || {}, hv = s.house_view || {};
@@ -1044,7 +1119,6 @@ async function playDeskReplay(sym) {
   const convIdx = { low: 1, medium: 2, high: 3 }[hv.conviction] || 1;
   const nz = v => (v == null || v === "") ? "—" : (typeof v === "number" ? fmt(v) : esc(v));
 
-  // Steps shown while "running" — each is a REAL computation the desk performed, with real numbers.
   const steps = [
     `Loading price history — <b>${esc(sym)}</b>${name ? " · " + esc(name) : ""}`,
     `Technicals · RSI14 <b>${nz(q.rsi14)}</b> · SMA20 <b>${nz(q.sma20)}</b> · SMA50 <b>${nz(q.sma50)}</b>`,
@@ -1057,98 +1131,86 @@ async function playDeskReplay(sym) {
   ];
   if (s.qa) steps.push(`QA agent — cross-examined the numbers · <b>${esc(s.qa.verdict)}</b>`);
 
-  const ov = document.createElement("div");
-  ov.className = "replay-overlay";
-  ov.innerHTML = `<div class="replay-box">
-    <div class="replay-head"><span class="replay-kicker">Desk Room · ${esc(sym)}</span>
-      <button class="replay-x" aria-label="close" style="margin-left:auto">✕</button></div>
-    <div class="replay-body" id="rpBody"></div>
-  </div>`;
-  document.body.appendChild(ov);
-  const body = ov.querySelector("#rpBody");
-  let raf = null, done = false;
+  const panel = (av, nm, role, st, read, facts) => `<div class="rp-panel ${st ? "accent-" + st : ""}">
+    <div class="rp-panel-head"><span class="rp-av sm">${av}</span><div><b>${esc(nm)}</b><span class="rp-role">${role}</span></div></div>
+    <p class="rp-panel-read">${esc(read || "—")}</p>${facts ? `<div class="rp-facts">${facts}</div>` : ""}</div>`;
 
-  function close() {
-    cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key);
-    // reveal the desk's results inline on the ticker page (reveal() sets the session flag once the run finishes)
-    if (typeof pageTicker === "function" && location.hash.toUpperCase().includes(sym)) pageTicker(sym);
-  }
-  function key(e) { if (e.key === "Escape") close(); }
-  ov.addEventListener("click", e => {
-    if (e.target === ov || e.target.classList.contains("replay-x")) return close();
-    const b = e.target.closest("[data-a]");
-    if (b && b.dataset.a === "replay") runLoader();
-  });
-  document.addEventListener("keydown", key);
-
-  // ---------- phase 1: the ~15s "running the desk" loader ----------
-  function runLoader() {
-    done = false;
-    body.innerHTML = `<div class="rp-load">
-      <div class="rp-load-title">Running the desk on ${esc(sym)}</div>
-      <div class="rp-load-sub">Working through ${esc(sym)} the way the desk does — pulling the price history, the technicals and the valuation, then letting the analysts debate it out to a house view.</div>
-      <div class="rp-prog"><div class="rp-prog-fill" id="rpFill"></div></div>
-      <div class="rp-pct" id="rpPct">0<span>%</span></div>
-      <div class="rp-steps" id="rpSteps"></div></div>`;
-    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPct"), stepsEl = ov.querySelector("#rpSteps"), subEl = ov.querySelector(".rp-load-sub");
-    const total = 10000 + Math.floor(Math.random() * 10000), longRun = total > 15500, t0 = performance.now();  // 10–20s, varied for anticipation
-    let shown = 0;
-    function tick(now) {
-      const p = Math.min(100, (now - t0) / total * 100);
-      fill.style.width = p + "%";
-      pctEl.innerHTML = Math.floor(p) + "<span>%</span>";
-      if (longRun && p > 52 && !subEl.dataset.longed) { subEl.dataset.longed = "1"; subEl.textContent = "Taking a little longer than usual on this one — the desk is being thorough."; }
-      const want = Math.round(p / 100 * steps.length);
-      while (shown < want && shown < steps.length) {
-        if (shown > 0) { const prev = stepsEl.children[shown - 1]; if (prev) prev.classList.add("did"); }
-        stepsEl.insertAdjacentHTML("beforeend", `<div class="rp-step-line"><span class="rp-step-mk">▸</span><span class="rp-step-tx">${steps[shown]}</span></div>`);
-        stepsEl.lastChild.scrollIntoView({ block: "nearest" });
-        shown++;
-      }
-      if (p < 100 && !done) { raf = requestAnimationFrame(tick); }
-      else if (!done) { [...stepsEl.children].forEach(c => c.classList.add("did")); setTimeout(reveal, 550); }
-    }
-    raf = requestAnimationFrame(tick);
-  }
-
-  // ---------- phase 2: the split-desk reveal, Chair highlighted ----------
-  function reveal() {
-    if (done) return;
-    done = true; cancelAnimationFrame(raf);
-    try { sessionStorage.setItem("deskran:" + sym, "1"); } catch (e) { /* private mode */ }
-    const panel = (av, nm, role, st, read, facts) => `<div class="rp-panel ${st ? "accent-" + st : ""}">
-      <div class="rp-panel-head"><span class="rp-av sm">${av}</span><div><b>${esc(nm)}</b><span class="rp-role">${role}</span></div></div>
-      <p class="rp-panel-read">${esc(read || "—")}</p>${facts ? `<div class="rp-facts">${facts}</div>` : ""}</div>`;
-    const cvm = `<div class="cvmeter2" role="img" aria-label="conviction: ${esc(hv.conviction || "low")}">
-      <span class="cvm ${convIdx === 1 ? "act lvl-low" : ""}">Low</span>
-      <span class="cvm ${convIdx === 2 ? "act lvl-med" : ""}">Medium</span>
-      <span class="cvm ${convIdx === 3 ? "act lvl-high" : ""}">High</span></div>
-      <div class="cvcap">how sure the desk is about this read</div>`;
-
-    body.innerHTML = `<div class="rp-reveal">
-      <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span></div>
-      <div class="rp-desk">
-        ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), ta.read, ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
-        ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), fa.read, `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(fa.dividend_safety || "—")}</b>`)}
-        ${panel("ZB", "Zoya", "the bull · case FOR", "up", bull.thesis, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "")}
-        ${panel("KB", "Khurram", "the bear · case AGAINST", "dn", bear.thesis, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "")}
-      </div>
-      <div class="rp-chair">
-        <div class="rp-chair-top"><span class="rp-chair-tag">The Chair · house view</span>${s.qa ? `<span class="qabadge ${s.qa.verdict === "clean" ? "ok" : "warn"}">QA ${esc(s.qa.verdict)}</span>` : ""}</div>
-        <p class="rp-chair-summary">${esc(hv.summary || "")}</p>
-        ${cvm}
-        <div class="rp-chair-facts">
-          ${hv.dissent ? `<div><span>The strongest case against this view</span><b>${esc(hv.dissent)}</b></div>` : ""}
-          ${hv.watch_next ? `<div><span>What settles it next</span><b>${esc(hv.watch_next)}</b></div>` : ""}
+  runRevealModal({
+    sym, kicker: `Desk Room · ${esc(sym)}`, flagKey: "deskran:" + sym,
+    title: `Running the desk on ${esc(sym)}`,
+    sub: `Working through ${esc(sym)} the way the desk does — pulling the price history, the technicals and the valuation, then letting the analysts debate it out to a house view.`,
+    steps,
+    renderReveal: (bodyEl) => {
+      const cvm = `<div class="cvmeter2" role="img" aria-label="conviction: ${esc(hv.conviction || "low")}">
+        <span class="cvm ${convIdx === 1 ? "act lvl-low" : ""}">Low</span>
+        <span class="cvm ${convIdx === 2 ? "act lvl-med" : ""}">Medium</span>
+        <span class="cvm ${convIdx === 3 ? "act lvl-high" : ""}">High</span></div>
+        <div class="cvcap">how sure the desk is about this read</div>`;
+      bodyEl.innerHTML = `<div class="rp-reveal">
+        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span></div>
+        <div class="rp-desk">
+          ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), ta.read, ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
+          ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), fa.read, `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(fa.dividend_safety || "—")}</b>`)}
+          ${panel("ZB", "Zoya", "the bull · case FOR", "up", bull.thesis, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "")}
+          ${panel("KB", "Khurram", "the bear · case AGAINST", "dn", bear.thesis, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "")}
         </div>
-      </div>
-      <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
-        <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
-    </div>`;
-    body.scrollTop = 0;
-  }
+        <div class="rp-chair">
+          <div class="rp-chair-top"><span class="rp-chair-tag">The Chair · house view</span>${s.qa ? `<span class="qabadge ${s.qa.verdict === "clean" ? "ok" : "warn"}">QA ${esc(s.qa.verdict)}</span>` : ""}</div>
+          <p class="rp-chair-summary">${esc(hv.summary || "")}</p>
+          ${cvm}
+          <div class="rp-chair-facts">
+            ${hv.dissent ? `<div><span>The strongest case against this view</span><b>${esc(hv.dissent)}</b></div>` : ""}
+            ${hv.watch_next ? `<div><span>What settles it next</span><b>${esc(hv.watch_next)}</b></div>` : ""}
+          </div>
+        </div>
+        <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
+      </div>`;
+    },
+  });
+}
 
-  runLoader();
+/* ---------- Strategy-library run: replays the REAL backtest of all ~52 strategies on this ticker
+   and reveals which ones cleared the bar, ranked. Animates precomputed backtests.json. ---------- */
+async function playStrategyRun(sym) {
+  sym = (sym || "").toUpperCase();
+  const [smap, bt, uni] = await Promise.all([j("strategy_map.json"), j("backtests.json"), j("universe.json")]);
+  const proven = ((smap?.tickers?.[sym]) || []).slice().sort((a, b) => (b.net_expectancy_pct ?? -99) - (a.net_expectancy_pct ?? -99));
+  const nTested = bt?.n_strategies || 52;
+  const allTested = Object.entries(bt?.templates || {}).map(([id, per]) => ({ id, ...(per[sym] || {}) })).filter(t => t.n);
+  const name = uni?.symbols?.[sym]?.name || "";
+  const top = proven[0];
+  const pct = h => h != null ? Math.round(h * 100) + "%" : "—";
+
+  const steps = [
+    `Loading <b>${esc(sym)}</b>'s full price history — ~19 years`,
+    `Backtesting <b>${nTested}</b> strategies bar-by-bar`,
+    `Applying trading costs &amp; slippage on every trade`,
+    `Filter · win rate ≥ 55% and positive expectancy after costs`,
+    `Out-of-sample check · must still work on the unseen last third`,
+    `Ranking survivors by net expectancy per trade`,
+    `<b>${proven.length}</b> of ${allTested.length || nTested} strategies cleared the bar on ${esc(sym)}`,
+  ];
+
+  runRevealModal({
+    sym, kicker: `Strategy library · ${esc(sym)}`, flagKey: "stratran:" + sym,
+    title: `Running the strategy library on ${esc(sym)}`,
+    sub: `Backtesting all ${nTested} of the desk's strategies across ${esc(sym)}'s own ~19 years of price history — costs included, then checked on data the strategy never saw.`,
+    steps,
+    renderReveal: (bodyEl) => {
+      bodyEl.innerHTML = `<div class="rp-reveal">
+        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>what actually worked — ${proven.length} of ${allTested.length || nTested} strategies cleared win-rate ≥55%, positive expectancy, and out-of-sample</span></div>
+        ${proven.length ? `<div class="rp-strat-top"><div class="rp-strat-rank">#1</div>
+          <div style="flex:1;min-width:0"><b>${esc(top.name)}</b><span class="rp-role">${esc((top.category || "").replace(/_/g, " "))} · the strongest on ${esc(sym)}</span>
+            <div class="rp-facts" style="margin-top:6px">win rate <b>${pct(top.hit_rate)}</b> · net/trade <b class="up">${sgn(top.net_expectancy_pct)}%</b> · trades <b>${top.n}</b> · out-of-sample <b>${pct(top.oos_hit)}</b></div></div></div>
+        <div class="card" style="margin-top:10px;padding:0"><table><thead><tr><th>Strategy</th><th class="r">Win</th><th class="r">Net/trade</th><th class="r">Trades</th><th class="r">OOS</th></tr></thead><tbody>${
+          proven.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td><td class="r num">${pct(t.hit_rate)}</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td><td class="r num">${pct(t.oos_hit)}</td></tr>`).join("")}</tbody></table></div>`
+          : `<div class="card"><div class="empty">No strategy cleared the bar on ${esc(sym)} — none held win rate ≥55%, positive expectancy after costs, AND profitability out-of-sample. The desk wouldn't signal it. That's a finding, not a gap.</div></div>`}
+        <div class="rp-reveal-foot"><span>Backtested on ${esc(sym)}'s own ~19-year history, costs included, checked on unseen data. Past performance does not predict future results. Research, not advice.</span>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" onclick="location.hash='#/strategies'">All strategies ›</button></span></div>
+      </div>`;
+    },
+  });
 }
 
 /* ---------- router ---------- */
