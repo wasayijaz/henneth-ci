@@ -61,20 +61,54 @@ Layered, so a bad cycle can't reach users and a transient glitch can't blank a p
   publishing loop; if it fails, the loop re-publishes once then reports loudly. Run ad hoc:
   `python scripts/watchdog.py`.
 - **`data_health.py`** (Rule 6): if `health.json.status != ok`, NO new signals generate that cycle
-  (monitoring continues). `tv_crosscheck` feeds it but only a **genuine glitch** (close off >12% =
-  decimal/split/wrong-symbol) degrades health; TV lag/adjustment **drift** is advisory and never freezes
-  the desk (a TV-vs-DPS mismatch is not an error — CLAUDE.md).
+  (monitoring continues). `tv_crosscheck` feeds it but only a **genuine glitch** (close off >20% =
+  decimal/split/wrong-symbol; widened 2026-07-15 to safely clear real corporate-action adjustment gaps)
+  degrades health; TV lag/adjustment **drift** is advisory and never freezes the desk (a TV-vs-DPS
+  mismatch is not an error — CLAUDE.md).
 - **Client resilience** (in `app.js`): `j()` retries + XHR fallback + last-known-good; a router try/catch
   never leaves a blank screen; a 30-second auto-refresh self-corrects transient misses; the ticker page
   self-heals with retry.
 
 ---
 
-## 4. The five app scheduled tasks (`~/.claude/scheduled-tasks/`)
+## 3a. Code QA — the layer that was missing until 2026-07-15
 
-Only run while the Claude app is open; catch up on next open. Each ends with `publish.py` + watchdog.
-The cloud cron now keeps DATA fresh 24/7, so these are primarily about the **agent** work — but they
-still run `run_cloud.py` first (cheap, idempotent) as a local-freshness prereq and a cloud-outage fallback.
+The three gates above watch **data**, **build shape**, and **design** — none of them read the actual
+**code** for correctness or security bugs. The repo has no tests and no linter (Python or JS), and pushes
+directly to `main` with no PR/CI review, so nothing was catching real defects before they went live.
+
+**`psx-desk-code-review`** (weekly, Sat ~12:00 PKT) closes this gap: it runs the `/code-review` skill
+(8 finder angles — line-by-line, removed-behavior, cross-file, reuse, simplification, efficiency, altitude,
+CLAUDE.md conventions — each candidate independently verified CONFIRMED/PLAUSIBLE/REFUTED before it's
+reported) against the week's code diff. Clear-cut, low-risk fixes (silently-swallowed errors, missing
+guards, unescaped output, dead branches) are applied directly and published through the normal gated path;
+genuine judgment calls (thresholds, design tradeoffs, anything behavior-changing) are reported, not
+auto-fixed. Effort is `medium` for the routine weekly pass — request a `high`/`ultra` pass explicitly
+before anything high-stakes (e.g. before turning on billing).
+
+**First pass (2026-07-15, `high` effort, ~800-line session diff, first review this repo has ever had)**
+found and fixed 10 real, verified issues, including: an XSS vector (a broker name could break out of an
+`onclick` attribute — `esc()` didn't escape quotes; fixed globally + the call site converted to the same
+safe `data-*` + delegated-listener pattern already used for the watchlist star), silent financial-data loss
+(the portfolio "add holding" and private-note save paths discarded the real error and showed a false
+"Saved ✓"), a governance gap (`tv_crosscheck.py`'s error/drift escalation only ever looked at the `close`
+field — a genuine indicator-only glitch was invisible to both health-gating and the advisory log; and
+`auditor.md` still instructed a literal `"FAIL"` string match against a status vocabulary that had moved to
+PASS/DRIFT/ERROR, silently defeating the Auditor's veto per CLAUDE.md Rule 7), and an architecture fix to
+`publish.py` itself (the race-safe conflict auto-resolve used to apply to the WHOLE working tree via
+`git add -A` — a rebase conflict on any hand-authored file, not just regenerated `state/` data, could be
+silently resolved by discarding the other side's edit with zero visibility; now conflict auto-resolve is
+scoped to `state/` files only, and any conflict outside that aborts and fails loudly for a human to
+resolve by hand instead of guessing).
+
+---
+
+## 4. The six app scheduled tasks (`~/.claude/scheduled-tasks/`)
+
+Only run while the Claude app is open; catch up on next open. The 5 data/agent tasks each end with
+`publish.py` + watchdog. The cloud cron now keeps DATA fresh 24/7, so these are primarily about the
+**agent** work — but they still run `run_cloud.py` first (cheap, idempotent) as a local-freshness prereq
+and a cloud-outage fallback.
 
 | Task | When (PKT) | Does |
 |---|---|---|
@@ -83,6 +117,7 @@ still run `run_cloud.py` first (cheap, idempotent) as a local-freshness prereq a
 | `psx-desk-daily-refresh` | weekday ~17:20 | macro + market-analyst **daily read** (≤120 words) |
 | `psx-desk-room-loop` | weekday ~17:47 | the **Desk Room debates** — ≤3 full/day (budget gate), rest reaffirm free; QA + scoring |
 | `psx-desk-weekly-harvest` | Sat ~11:00 | broker **calls** from the business press (Profit/Dawn/Mettis) + filings refresh |
+| `psx-desk-code-review` | Sat ~12:00 | **Code QA** — see §3a. Not a data task; touches code only, never `state/`. |
 
 Manual refresh (any session, no waiting for a task): the **`update-live-desk`** skill, or directly
 `python scripts/run_cloud.py` (free data) then `python scripts/publish.py "..."`.
