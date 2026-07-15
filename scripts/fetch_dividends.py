@@ -46,12 +46,15 @@ def parse_rows(html: str, symbol: str) -> list[dict]:
             "announced": cells[4],
         }
         if bc:
-            s = datetime.strptime(bc.group(1), "%d/%m/%Y").date()
-            e = datetime.strptime(bc.group(2), "%d/%m/%Y").date()
-            row["bc_start"] = s.isoformat()
-            row["bc_end"] = e.isoformat()
-            row["buy_by"] = (s - timedelta(days=3)).isoformat()
-            row["upcoming"] = s >= date.today()
+            try:
+                s = datetime.strptime(bc.group(1), "%d/%m/%Y").date()
+                e = datetime.strptime(bc.group(2), "%d/%m/%Y").date()
+                row["bc_start"] = s.isoformat()
+                row["bc_end"] = e.isoformat()
+                row["buy_by"] = (s - timedelta(days=3)).isoformat()
+                row["upcoming"] = s >= date.today()
+            except ValueError:
+                row["upcoming"] = False
         else:
             row["upcoming"] = False
         out.append(row)
