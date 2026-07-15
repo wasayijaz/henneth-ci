@@ -705,10 +705,17 @@ async function pageTicker(sym, _retry = 0) {
     : `<div class="seg"><h2>Your private note</h2><div class="ln"></div></div>
     <div class="card"><div class="empty">Sign in to keep a private note on ${esc(sym)} — your own thesis and reminders, saved to your account and visible only to you.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
 
+  // ---- "watch the desk analyze" tile — cinematic replay of the stored Room session ----
+  const replayTile = hvRoom ? `<button class="replay-tile" onclick="playDeskReplay('${esc(sym)}')">
+    <span class="replay-ico">▶</span>
+    <span class="replay-txt"><b>Watch the desk analyse ${esc(sym)}</b><i>step through how the Chartist, the Fundamentalist, a bull, a bear and the Chair reached the house view — the desk's read, played out</i></span>
+    <span class="replay-go">Play ›</span></button>` : "";
+
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
   ${summaryStrip}
+  ${replayTile}
   ${glance}
   <div class="card">
     <div class="tk-head">
@@ -1010,6 +1017,92 @@ async function pageLegal() {
     ${(L.sections || []).map(([h, b]) => `<h3>${esc(h)}</h3><p>${esc(b)}</p>`).join("")}
     <p class="sub" style="margin-top:20px">Contact: <a href="mailto:${esc(doc.contact || "")}" style="color:var(--accent)">${esc(doc.contact || "")}</a>${doc.jurisdiction ? ` · Governed by the laws of ${esc(doc.jurisdiction)}.` : ""}</p>
   </div>`;
+}
+
+/* ---------- Desk Room replay: a cinematic, staged walkthrough of the ALREADY-COMPUTED
+   analysis (zero agents run — it animates stored rooms.json data). Opened from the ticker tile. ---------- */
+async function playDeskReplay(sym) {
+  sym = (sym || "").toUpperCase();
+  const [rooms, uni] = await Promise.all([j("rooms.json"), j("universe.json")]);
+  const s = rooms && rooms[sym];
+  if (!s || !s.house_view) return;   // only covered tickers have a session to replay
+  const name = uni?.symbols?.[sym]?.name || "";
+  const ta = s.ta_memo || {}, fa = s.fa_memo || {}, bull = s.bull_case || {}, bear = s.bear_case || {}, hv = s.house_view || {};
+  const li = arr => (arr || []).map(x => `<li>${esc(x)}</li>`).join("");
+  const st = v => ({ constructive: "up", cautious: "dn", bullish: "up", bearish: "dn", positive: "up", negative: "dn" }[v] || "");
+  const convIdx = { low: 1, medium: 2, high: 3 }[hv.conviction] || 1;
+  const convMeter = [1, 2, 3].map(k => `<span class="cvseg ${k <= convIdx ? "on" : ""}"></span>`).join("");
+
+  const stages = [
+    { actor: "The Desk Room", role: `analysed ${esc(sym)}${name ? " · " + esc(name) : ""}`, av: "◆", accent: "",
+      blocks: [`<p class="rp-lead">Computed ${esc(s.dossier_asof || "")} at <b>Rs ${fmt(s.price_at_session)}</b>. Watch how the desk reached its view — five analysts, in their own lanes. Every figure is from the data layer; nothing here is assumed or advice.</p>`] },
+    { actor: "Meher", role: "The Chartist · reads the price action", av: "MC", accent: st(ta.technical_stance),
+      blocks: [`<p>${esc(ta.read || "")}</p>`,
+        ta.levels ? `<div class="rp-facts">structure <b>${esc(ta.structure || "—")}</b> · momentum <b>${esc(ta.momentum || "—")}</b> · support <b>${fmt(ta.levels.support)}</b> · resistance <b>${fmt(ta.levels.resistance)}</b></div>` : "",
+        (ta.proven_now && ta.proven_now.length) ? `<div class="rp-tag">strategies firing now: ${ta.proven_now.map(esc).join(" · ")}</div>` : ""] },
+    { actor: "Dr. Omar", role: "The Fundamentalist · reads the business", av: "DO", accent: st(fa.fundamental_stance),
+      blocks: [`<p>${esc(fa.read || "")}</p>`,
+        `<div class="rp-facts">valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend safety <b>${esc(fa.dividend_safety || "—")}</b></div>`] },
+    { actor: "Zoya", role: "The Bull · the strongest honest case FOR", av: "ZB", accent: "up",
+      blocks: [`<p>${esc(bull.thesis || "")}</p>`, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "",
+        bull.what_would_break_it ? `<div class="rp-break"><b>Breaks if:</b> ${esc(bull.what_would_break_it)}</div>` : ""] },
+    { actor: "Khurram", role: "The Bear · the strongest honest case AGAINST", av: "KB", accent: "dn",
+      blocks: [`<p>${esc(bear.thesis || "")}</p>`, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "",
+        bear.attack_on_bull ? `<div class="rp-break"><b>On the bull:</b> ${esc(bear.attack_on_bull)}</div>` : ""] },
+    { actor: "The Chair", role: "weighs it all into a house view", av: "CH", accent: "",
+      blocks: [`<p class="rp-lead">${esc(hv.summary || "")}</p>`,
+        `<div class="rp-facts">conviction <span class="cvmeter">${convMeter}</span> <b>${esc(hv.conviction || "")}</b></div>`,
+        hv.dissent ? `<div class="rp-break"><b>Strongest counter (the desk's own dissent):</b> ${esc(hv.dissent)}</div>` : "",
+        hv.watch_next ? `<div class="rp-facts">watch next: <b>${esc(hv.watch_next)}</b></div>` : ""] },
+    { actor: "On the record", role: "the desk holds itself accountable", av: "✓", accent: "",
+      blocks: [`<p>${s.qa ? `The desk's QA agent cross-examined this before it went live: <b>${esc(s.qa.verdict)}</b>${s.qa.note ? ` — ${esc(s.qa.note)}` : ""}` : "This is a dated, falsifiable read — not advice."}</p>`,
+        `<p class="rp-lead">When its horizon passes, this call is graded hit or miss on the <b>Scores</b> board. That accountability is the whole point.</p>`] },
+  ];
+
+  let i = 0, playing = true, timer = null;
+  const ov = document.createElement("div");
+  ov.className = "replay-overlay";
+  ov.innerHTML = `<div class="replay-box">
+    <div class="replay-head"><span class="replay-kicker">Desk Room replay · ${esc(sym)}</span>
+      <span class="replay-dots"></span><button class="replay-x" aria-label="close">✕</button></div>
+    <div class="replay-body" id="rpBody"></div>
+    <div class="replay-ctrl">
+      <button class="rp-btn" data-a="prev">‹ Back</button>
+      <button class="rp-btn rp-play" data-a="play">❚❚ Pause</button>
+      <button class="rp-btn" data-a="next">Next ›</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const body = ov.querySelector("#rpBody"), dotsEl = ov.querySelector(".replay-dots");
+  dotsEl.innerHTML = stages.map((_, k) => `<span class="rp-dot" data-k="${k}"></span>`).join("");
+
+  function render() {
+    const s2 = stages[i];
+    body.innerHTML = `<div class="replay-stage ${s2.accent ? "accent-" + s2.accent : ""}">
+      <div class="rp-persona"><span class="rp-av">${s2.av}</span><div><b>${esc(s2.actor)}</b><span class="rp-role">${s2.role}</span></div>
+        <span class="rp-step">${i + 1} / ${stages.length}</span></div>
+      <div class="rp-blocks">${s2.blocks.filter(Boolean).map((b, bi) => `<div class="rp-block" style="animation-delay:${bi * 240}ms">${b}</div>`).join("")}</div>
+    </div>`;
+    [...dotsEl.children].forEach((d, k) => d.classList.toggle("on", k <= i));
+    ov.querySelector(".rp-play").textContent = playing ? "❚❚ Pause" : "▶ Play";
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (!playing) return;
+    const chars = stages[i].blocks.join("").replace(/<[^>]+>/g, "").length;
+    const dwell = Math.min(11000, Math.max(3800, chars * 24));   // longer read = longer dwell
+    timer = setTimeout(() => { if (i < stages.length - 1) { i++; render(); schedule(); } else { playing = false; render(); } }, dwell);
+  }
+  function go(n) { i = Math.max(0, Math.min(stages.length - 1, n)); render(); schedule(); }
+  function close() { clearTimeout(timer); ov.remove(); document.removeEventListener("keydown", key); }
+  function key(e) { if (e.key === "Escape") close(); else if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go(i + 1); } else if (e.key === "ArrowLeft") go(i - 1); }
+  ov.addEventListener("click", e => {
+    if (e.target === ov || e.target.classList.contains("replay-x")) return close();
+    const b = e.target.closest("[data-a]");
+    if (b) { const a = b.dataset.a; if (a === "next") go(i + 1); else if (a === "prev") go(i - 1); else { playing = !playing; render(); schedule(); } return; }
+    const d = e.target.closest(".rp-dot"); if (d) go(+d.dataset.k);
+  });
+  document.addEventListener("keydown", key);
+  render(); schedule();
 }
 
 /* ---------- router ---------- */

@@ -339,6 +339,49 @@ body[data-theme=gemini] .follow-grid{display:flex;flex-wrap:wrap;gap:8px}
 body[data-theme=gemini] .follow-chip{display:inline-block;text-decoration:none;background:var(--panel2,var(--panel));border:1.5px solid var(--line);color:var(--ink2);font:inherit;font-size:12px;font-weight:600;padding:7px 13px;cursor:pointer}
 body[data-theme=gemini] .follow-chip.on{background:var(--ink1);color:var(--panel);border-color:var(--ink1)}
 body[data-theme=gemini] .follow-chip:hover{border-color:var(--ink2)}
+/* "Watch the desk analyse" tile + cinematic replay overlay */
+body[data-theme=gemini] .replay-tile{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--panel2,var(--panel));border:1.5px solid var(--line);border-left:4px solid var(--ink1);padding:13px 15px;margin:8px 0 12px;cursor:pointer;font:inherit;color:var(--ink1)}
+body[data-theme=gemini] .replay-tile:hover{background:var(--panel);border-left-color:var(--accent,#b8860b)}
+body[data-theme=gemini] .replay-ico{flex:none;width:34px;height:34px;border:1.5px solid var(--ink1);display:flex;align-items:center;justify-content:center;font-size:13px}
+body[data-theme=gemini] .replay-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+body[data-theme=gemini] .replay-txt b{font-size:13.5px;font-weight:700}
+body[data-theme=gemini] .replay-txt i{font-style:normal;font-size:11px;color:var(--ink3);line-height:1.4}
+body[data-theme=gemini] .replay-go{flex:none;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+body[data-theme=gemini] .replay-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:20px;animation:rpFade .18s ease}
+body[data-theme=gemini] .replay-box{width:100%;max-width:720px;max-height:90vh;background:var(--panel);border:1.5px solid var(--line);display:flex;flex-direction:column;box-shadow:0 18px 60px rgba(0,0,0,.4)}
+body[data-theme=gemini] .replay-head{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1.5px solid var(--line)}
+body[data-theme=gemini] .replay-kicker{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);white-space:nowrap}
+body[data-theme=gemini] .replay-dots{flex:1;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+body[data-theme=gemini] .rp-dot{width:16px;height:4px;background:var(--hair);cursor:pointer}
+body[data-theme=gemini] .rp-dot.on{background:var(--ink1)}
+body[data-theme=gemini] .replay-x{flex:none;background:transparent;border:none;color:var(--ink3);font-size:15px;cursor:pointer;line-height:1}
+body[data-theme=gemini] .replay-x:hover{color:var(--ink1)}
+body[data-theme=gemini] .replay-body{padding:20px;overflow-y:auto;min-height:280px}
+body[data-theme=gemini] .replay-stage{border-left:4px solid var(--line);padding-left:16px}
+body[data-theme=gemini] .replay-stage.accent-up{border-left-color:var(--up)}
+body[data-theme=gemini] .replay-stage.accent-dn{border-left-color:var(--dn)}
+body[data-theme=gemini] .rp-persona{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+body[data-theme=gemini] .rp-av{flex:none;width:38px;height:38px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:var(--panel2,var(--panel))}
+body[data-theme=gemini] .rp-persona b{display:block;font-size:16px;line-height:1.1}
+body[data-theme=gemini] .rp-role{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .rp-step{margin-left:auto;font-size:10px;color:var(--ink3);white-space:nowrap}
+body[data-theme=gemini] .rp-blocks{display:flex;flex-direction:column;gap:10px}
+body[data-theme=gemini] .rp-block{opacity:0;animation:rpUp .5s ease forwards}
+body[data-theme=gemini] .rp-block p{font-size:13.5px;line-height:1.6;color:var(--ink1)}
+body[data-theme=gemini] .rp-lead{font-size:14.5px!important;line-height:1.6}
+body[data-theme=gemini] .rp-facts{font-size:12px;color:var(--ink2);background:var(--panel2,var(--panel));border:1px solid var(--hair);padding:8px 11px}
+body[data-theme=gemini] .rp-facts .cvmeter{display:inline-flex;gap:2px;vertical-align:middle;margin:0 4px}
+body[data-theme=gemini] .rp-tag{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em}
+body[data-theme=gemini] .rp-break{font-size:12.5px;line-height:1.5;color:var(--ink2);border-left:2px solid var(--hair);padding-left:10px}
+body[data-theme=gemini] .rp-ul{margin:2px 0 0 16px;padding:0}
+body[data-theme=gemini] .rp-ul li{font-size:12.5px;line-height:1.55;margin-bottom:5px;color:var(--ink2)}
+body[data-theme=gemini] .replay-ctrl{display:flex;gap:1px;border-top:1.5px solid var(--line);background:var(--hair)}
+body[data-theme=gemini] .rp-btn{flex:1;background:var(--panel);border:none;padding:11px;font:inherit;font-size:12px;font-weight:600;color:var(--ink1);cursor:pointer}
+body[data-theme=gemini] .rp-btn:hover{background:var(--panel2,var(--panel))}
+body[data-theme=gemini] .rp-play{font-weight:700}
+@keyframes rpUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes rpFade{from{opacity:0}to{opacity:1}}
+@media(max-width:720px){body[data-theme=gemini] .replay-body{padding:15px;min-height:320px}body[data-theme=gemini] .replay-kicker{display:none}}
 /* Desk Room — full debate collapsed behind an expander */
 body[data-theme=gemini] .room-transcript{border:1.5px solid var(--line);margin-top:12px}
 body[data-theme=gemini] .room-transcript>summary{cursor:pointer;list-style:none;padding:10px 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);display:flex;align-items:center;justify-content:space-between;gap:8px}
