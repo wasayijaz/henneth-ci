@@ -70,7 +70,7 @@ Layered, so a bad cycle can't reach users and a transient glitch can't blank a p
 
 ---
 
-## 4. The six app scheduled tasks (`~/.claude/scheduled-tasks/`)
+## 4. The five app scheduled tasks (`~/.claude/scheduled-tasks/`)
 
 Only run while the Claude app is open; catch up on next open. Each ends with `publish.py` + watchdog.
 The cloud cron now keeps DATA fresh 24/7, so these are primarily about the **agent** work — but they
@@ -78,9 +78,8 @@ still run `run_cloud.py` first (cheap, idempotent) as a local-freshness prereq a
 
 | Task | When (PKT) | Does |
 |---|---|---|
-| `psx-desk-hourly-cycle` | **Mon–Thu 10:00 & 16:00** (open+30 / close+30) | data + **news-sentinel** + position **monitor**; escalates to full commentary only on impact ≥ 4 news |
-| `psx-desk-checkpoint-fri-mid` | **Fri 09:47 & 14:47** (open+30 / post-break+15) | same flow as above — see §4a |
-| `psx-desk-checkpoint-fri-close` | **Fri 17:00** (close+30) | same flow as above — see §4a |
+| `psx-desk-checkpoint-am` | **weekday 11:00** | data + **news-sentinel** + position **monitor**; escalates to full commentary only on impact ≥ 4 news |
+| `psx-desk-checkpoint-pm` | **weekday 17:00** | same flow as above — see §4a |
 | `psx-desk-daily-refresh` | weekday ~17:20 | macro + market-analyst **daily read** (≤120 words) |
 | `psx-desk-room-loop` | weekday ~17:47 | the **Desk Room debates** — ≤3 full/day (budget gate), rest reaffirm free; QA + scoring |
 | `psx-desk-weekly-harvest` | Sat ~11:00 | broker **calls** from the business press (Profit/Dawn/Mettis) + filings refresh |
@@ -88,18 +87,18 @@ still run `run_cloud.py` first (cheap, idempotent) as a local-freshness prereq a
 Manual refresh (any session, no waiting for a task): the **`update-live-desk`** skill, or directly
 `python scripts/run_cloud.py` (free data) then `python scripts/publish.py "..."`.
 
-### 4a. Market-event checkpoints, not hourly (changed 2026-07-14)
+### 4a. Two fixed daily checkpoints, not hourly (changed 2026-07-14, simplified same day)
 
-`psx-desk-hourly-cycle` no longer runs hourly — it fires only at real PSX market events (open, Friday's
-break-end, close), for token efficiency. Because a single cron expression can't hold multiple distinct
-(hour, minute) pairs, this needed **3 separate scheduled tasks**, all pointing at the **same**
-`psx-desk-hourly-cycle/SKILL.md` (the two Friday tasks' own prompts just say "read and execute that file
-verbatim"). **To change checkpoint behavior, edit only `psx-desk-hourly-cycle/SKILL.md`** — the other two
-tasks have no independent logic. Times are rounded to the nearest 5 min for a shared cron minute field
-(e.g. 10:02→10:00); the scheduler already adds several minutes of dispatch jitter on top, so this is well
-within existing tolerance. Note: the scheduler's human-readable `schedule` summary string is buggy for
-multi-value hour fields (shows only the first value/weekday) — trust `cronExpression` and `nextRunAt` from
-`list_scheduled_tasks`, not the summary text.
+The intraday task no longer runs hourly — it fires exactly **twice a day, every weekday: 11:00 and 17:00
+PKT**, for token efficiency (cut from ~8 runs/day to 2). An earlier version tried to align these to Mon–Thu
+vs Friday's different market hours (open/break/close), which needed 3 separate tasks since one cron
+expression can't hold multiple distinct (hour, minute) pairs — the owner simplified this to one uniform
+time pair across all weekdays, which collapses cleanly to **2 tasks**: `psx-desk-checkpoint-am` (cron
+`0 11 * * 1-5`) is the single source of truth for the whole flow; `psx-desk-checkpoint-pm` (cron
+`0 17 * * 1-5`) is a thin pointer whose prompt just says "read and execute psx-desk-checkpoint-am/SKILL.md
+verbatim". **To change checkpoint behavior, edit only `psx-desk-checkpoint-am/SKILL.md`.** Note: the
+scheduler's human-readable `schedule` summary string has shown bugs on multi-value hour fields in the past
+— trust `cronExpression` and `nextRunAt` from `list_scheduled_tasks`, not the summary text.
 
 ---
 
