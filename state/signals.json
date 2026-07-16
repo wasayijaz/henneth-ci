@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-16 10:41",
+ "updated": "2026-07-16 12:15",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -57,23 +57,47 @@
    "template": "Trend + momentum combo",
    "category": "momentum",
    "sector": "Ghandhara Automobiles Limited",
-   "entry": 569.11,
-   "stop": 552.04,
-   "target": 603.26,
+   "entry": 581.95,
+   "stop": 564.49,
+   "target": 616.87,
    "rr": 2.0,
    "hold_sessions": 12,
-   "size_shares": 140,
-   "size_pkr": 79675,
+   "size_shares": 137,
+   "size_pkr": 79727,
    "backtest": {
-    "hit_rate": 0.553,
-    "net_expectancy_pct": 1.21,
-    "n": 38,
-    "oos_hit": 0.545
+    "hit_rate": 0.564,
+    "net_expectancy_pct": 1.2,
+    "n": 39,
+    "oos_hit": 0.583
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 55% over 38 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 56% over 39 trades (+1.2% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260716-ENGROH-willr_mid_cross",
+   "ticker": "ENGROH",
+   "strategy": "willr_mid_cross",
+   "template": "Williams %R mid cross",
+   "category": "oscillator",
+   "sector": "Engro Holdings Limited",
+   "entry": 281.72,
+   "stop": 273.27,
+   "target": 295.81,
+   "rr": 1.67,
+   "hold_sessions": 9,
+   "size_shares": 283,
+   "size_pkr": 79727,
+   "backtest": {
+    "hit_rate": 0.63,
+    "net_expectancy_pct": 1.07,
+    "n": 27,
+    "oos_hit": 0.5
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Williams %R mid cross is triggering now; on ENGROH's own history it won 63% over 27 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 3
+ "n_candidates": 4
 }
