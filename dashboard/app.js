@@ -557,9 +557,8 @@ async function pageStrategies() {
     </div>`; }).join("");
   const addTile = `<div class="sb-tile sb-add">
       <span class="sk">Add a stock</span>
-      <input id="sb-tkr" class="ph-in" list="sb-syms" placeholder="e.g. FFC" autocomplete="off" onkeydown="if(event.key==='Enter')addBoardTicker()">
+      <input id="sb-tkr" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addBoardTicker()">
       <button class="note-save" onclick="addBoardTicker()">Add to board</button>
-      <datalist id="sb-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
     </div>`;
 
   const runBar = pending.length ? `<button class="run-desk run-strat" onclick="playBoardRun()">
@@ -601,7 +600,7 @@ async function pageStrategies() {
     <p class="sub" style="margin-bottom:12px">Trade by a rule set that isn't in the library? Explain it below — the desk codes it, backtests it on ~19 years of history the same way, and if it clears the bar it joins the library.</p>
     ${me ? `<div class="rq-form">
       <div class="ph-row"><input id="rq-title" class="ph-in" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
-      <input id="rq-tkr" class="ph-in" style="flex:0 1 150px" list="sb-syms" placeholder="Ticker (optional)" autocomplete="off"></div>
+      <input id="rq-tkr" class="ph-in combo" style="flex:0 1 150px" placeholder="Ticker (optional)" autocomplete="off"></div>
       <textarea id="rq-desc" class="tknote" style="min-height:88px" placeholder="Explain the rules in plain English: when it buys, when it exits, any filters (volume, trend, day of week…)."></textarea>
       <div class="tknote-bar"><button class="note-save" onclick="submitStratRequest()">Send to the desk</button><span id="rq-msg" class="sub"></span></div></div>`
     : `<div class="empty">Sign in to send the desk a strategy to test.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div>`}
@@ -834,9 +833,8 @@ async function pageAstro() {
     </div>`; }).join("");
   const addTile = `<div class="sb-tile sb-add">
       <span class="sk">Add a stock</span>
-      <input id="ab-tkr" class="ph-in" list="ab-syms" placeholder="e.g. UBL" autocomplete="off" onkeydown="if(event.key==='Enter')addAstroTicker()">
+      <input id="ab-tkr" class="ph-in combo" placeholder="e.g. UBL" autocomplete="off" onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addAstroTicker()">
       <button class="note-save" onclick="addAstroTicker()">Add to board</button>
-      <datalist id="ab-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
     </div>`;
   const pendingA = board.filter(s => !astroRunOn(s));
   const runBarA = board.length ? `<button class="run-desk run-strat ${pendingA.length ? "" : "ran"}" onclick="playAstroBoardRun()">
@@ -2108,9 +2106,70 @@ let searchIndex = null;
 async function loadSearchIndex() {
   if (searchIndex) return searchIndex;
   const uni = await j("universe.json");
-  searchIndex = Object.entries(uni?.symbols || {}).map(([s, v]) => ({ s, name: (v.name || "").toLowerCase() }));
+  searchIndex = Object.entries(uni?.symbols || {}).map(([s, v]) => ({ s, name: (v.name || "").toLowerCase(), disp: v.name || "" }));
   return searchIndex;
 }
+
+/* ---------- themed ticker combobox: replaces the native <datalist>, which browsers render
+   unstyled (the raw grey popup). One delegated instance serves every input with class "combo";
+   it filters the universe, is keyboard-navigable, and matches the terminal's hard-cornered look. */
+let _comboEl = null, _comboInput = null, _comboIdx = -1;
+function _comboClose() { if (_comboEl) { _comboEl.remove(); _comboEl = null; _comboInput = null; _comboIdx = -1; } }
+async function _comboOpen(input) {
+  const idx = await loadSearchIndex();
+  _comboInput = input;
+  if (!_comboEl) { _comboEl = document.createElement("div"); _comboEl.className = "combo-pop"; document.body.appendChild(_comboEl); }
+  _comboRender(idx, input.value);
+  _comboPosition();
+}
+function _comboPosition() {
+  if (!_comboEl || !_comboInput) return;
+  const r = _comboInput.getBoundingClientRect();
+  _comboEl.style.left = r.left + window.scrollX + "px";
+  _comboEl.style.top = r.bottom + window.scrollY + "px";
+  _comboEl.style.width = Math.max(180, r.width) + "px";
+}
+function _comboRender(idx, q) {
+  q = (q || "").trim().toUpperCase();
+  const hits = (q
+    ? idx.filter(x => x.s.startsWith(q)).concat(idx.filter(x => !x.s.startsWith(q) && (x.s.includes(q) || x.name.includes(q.toLowerCase()))))
+    : idx.slice()).slice(0, 40);
+  _comboIdx = -1;
+  _comboEl.innerHTML = hits.length
+    ? hits.map((h, i) => `<div class="combo-opt" data-sym="${h.s}" data-i="${i}"><b>${h.s}</b><span>${esc((h.disp || "").slice(0, 30))}</span></div>`).join("")
+    : `<div class="combo-empty">No match for "${esc(q)}"</div>`;
+}
+function _comboPick(sym) {
+  if (_comboInput) {
+    _comboInput.value = sym;
+    _comboInput.dispatchEvent(new Event("input", { bubbles: true }));
+    const btn = _comboInput.closest(".sb-add, .ph-form, .ph-row, .rq-form")?.querySelector(".note-save");
+    _comboInput.focus();
+  }
+  _comboClose();
+}
+document.addEventListener("focusin", e => { const el = e.target.closest("input.combo"); if (el) _comboOpen(el); });
+document.addEventListener("input", e => { if (e.target.closest("input.combo") && _comboEl) loadSearchIndex().then(idx => _comboRender(idx, e.target.value)); });
+document.addEventListener("click", e => {
+  const opt = e.target.closest(".combo-opt");
+  if (opt) { e.preventDefault(); _comboPick(opt.dataset.sym); return; }
+  if (!e.target.closest("input.combo") && !e.target.closest(".combo-pop")) _comboClose();
+});
+document.addEventListener("keydown", e => {
+  if (!_comboEl || !_comboInput || document.activeElement !== _comboInput) return;
+  const opts = [..._comboEl.querySelectorAll(".combo-opt")];
+  if (!opts.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    _comboIdx = (_comboIdx + (e.key === "ArrowDown" ? 1 : -1) + opts.length) % opts.length;
+    opts.forEach((o, i) => o.classList.toggle("on", i === _comboIdx));
+    opts[_comboIdx].scrollIntoView({ block: "nearest" });
+  } else if (e.key === "Enter" && _comboIdx >= 0) {
+    e.preventDefault(); _comboPick(opts[_comboIdx].dataset.sym);
+  } else if (e.key === "Escape") { _comboClose(); }
+});
+window.addEventListener("scroll", _comboPosition, true);
+window.addEventListener("resize", _comboPosition);
 function openSearch() {
   const box = $("searchbox"); box.hidden = false;
   const inp = $("searchinput"); inp.value = ""; $("searchresults").innerHTML = "";
@@ -2461,13 +2520,12 @@ async function pagePortfolio() {
 
   <div class="card ph-form">
     <div class="ph-row">
-      <input id="ph-tkr" placeholder="Ticker (e.g. FFC)" class="ph-in" list="ph-syms" autocomplete="off">
+      <input id="ph-tkr" placeholder="Ticker (e.g. FFC)" class="ph-in combo" autocomplete="off">
       <input id="ph-sh" type="number" placeholder="Shares" class="ph-in" min="0" step="1">
       <input id="ph-cost" type="number" placeholder="Avg cost (Rs)" class="ph-in" min="0" step="0.01">
       <button class="note-save" onclick="submitHolding()">Add holding</button>
     </div>
     <span id="ph-msg" class="sub"></span>
-    <datalist id="ph-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
   </div>
 
   ${rows.length ? `<div class="sumstrip s4">

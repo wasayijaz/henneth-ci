@@ -23,6 +23,7 @@ STEPS = [
     "astro_charts.py",   # verified birth dates only (Exchange workbooks first, then careful Yahoo)
     "astro_natal.py",    # natal + Vimshottari + transits-to-natal, bracketed for the unknown time
     "astro_natal_test.py",  # tests the NATAL method (Sade Sati/dashas) — weekly, honest about power
+    "astro_regime.py",   # tests whether the sky marks TURBULENCE (not direction) — weekly
     "astro_claims.py",   # files the astro readings as dated, market-relative, scoreable claims
     "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (incremental)
     "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence
