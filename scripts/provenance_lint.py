@@ -33,7 +33,7 @@ fails, warns = [], []
 RENDERED = [
     "daily_read.json", "macro.json", "rooms.json", "explainer.json", "fairvalue.json",
     "research_index.json", "leaderboard.json", "broker_scorecard.json", "dashboard.json",
-    "legal.json", "astro.json",
+    "legal.json", "astro.json", "astro_backtest.json",
 ]
 
 # The astro pillar's whole defence is that its dates are COMPUTED, never recalled (CLAUDE.md

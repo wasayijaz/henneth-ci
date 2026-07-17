@@ -146,6 +146,53 @@ heavy-token feature.
 
 ---
 
+## 3d. The astro pillar — how a differentiator stays honest (2026-07-17)
+
+The desk runs a **Vedic (sidereal) astrology lens**. It exists only because it is **falsifiable**, and it
+is built so it cannot quietly become a horoscope. Four layers, and the order matters:
+
+| Layer | File | What it is | Cost |
+|---|---|---|---|
+| 1. Sky | `scripts/astro_engine.py` → `state/astro.json` | Where the nine grahas ARE + 90 days of dated events (ingress / station / conjunction / lunation / eclipse), each with a fixed 1–5 importance | free, pure math |
+| 1b. Past sky | `scripts/astro_history.py` → `state/astro_history.json` | Daily sidereal positions 2007→today, **cached** | free, incremental |
+| 2. Claims | `state/astro_map.json` | What tradition CLAIMS (sector significators, dignities). **Hypotheses, not evidence** | one-off |
+| 2b. Falsification | `scripts/astro_backtest.py` → `state/astro_backtest.json` | Does any of it hold on 19y of PSX? | free |
+| 3. Lens | `.claude/agents/room-astro.md` | Writes the read — **may only assert what survived** | ~1 cheap agent/week |
+
+**The rules that keep it honest — do not soften these:**
+
+1. **Dates are computed, never recalled.** CLAUDE.md Rule 2 with teeth. During the build, the model's own
+   memory placed Rahu in the wrong sign, PSX's sector codes in the wrong sectors, and would have
+   hardcoded a wrong ayanamsa. The computation was right every time. **No agent may state a transit date.**
+2. **The ayanamsa is derived, not hardcoded** — Spica precessed from J2000 (Chitrapaksha definition),
+   published in the JSON so it can be audited. `provenance_lint.py` fails the publish if it leaves the
+   sane Lahiri band, if a graha goes missing, or if Rahu and Ketu stop being 180° apart.
+3. **No natal charts for companies, ever.** PSX publishes no listing dates. A birth chart from a guessed
+   date is invented input. Per-ticker astro = its sector's significators tested on its own history.
+4. **`astro_map.json` is frozen on approval** (Rule 8 discipline). Changing a mapping = a v2 file with
+   fresh tests, never an in-place edit — or every past astro score silently changes meaning.
+5. **Astro never touches a trade.** No setups, no sizing, no gating. Strategist / Risk / Auditor never
+   read it. It is a lens the desk reports and scores.
+6. **Every read is a dated claim in `claims.json`** (`source_type: "astro"`), resolved against real prices
+   and published on the Scores board — hits *and* misses, with the reason each worked or failed.
+7. **"Nothing survived" is a publishable result**, not a failure. If the backtest kills a claim, the lens
+   says the transit is happening and has no demonstrated effect, and stops there.
+
+**Statistics (the integrity of the whole pillar — read before touching `astro_backtest.py`):**
+- **Circular-shift permutation**, not day shuffling: returns are autocorrelated and astro windows are
+  contiguous blocks. Shuffling days would manufacture significance.
+- **Two-stage resampling.** A permutation p can't go below 1/(N+1). With ~350 hypotheses the Bonferroni
+  bar is ~1.4e-4, so a 2,000-shift test could **never** reach it — "zero survivors" would have been an
+  artefact of the method. Screen at 2,000; re-test anything at p≤0.01 with 50,000 (floor 2e-5).
+- **Every graha is tested against every sector** — the only fair way to let the data pick a significator
+  rather than the author. That means hundreds of hypotheses, so the Bonferroni bar is computed from the
+  real test count and published alongside the expected number of false positives.
+- **Known conservatism:** periodic masks re-align under rotation, so the test is biased *against* finding
+  astro effects (verified: a planted +0.40%/day scored p=7.6e-4, not the 2e-5 floor). A null result is
+  **"not demonstrated", never "disproved"**. Read effect sizes, not just p-values.
+
+---
+
 ## 4. The seven app scheduled tasks (`~/.claude/scheduled-tasks/`)
 
 Only run while the Claude app is open; catch up on next open. The 5 data/agent tasks each end with

@@ -17,10 +17,12 @@ STEPS = [
     "snapshot.py",
     "fetch_sectors.py",  # PSX code->name map (needs live.json); feeds Rule 4's sector limit + peer P/E
     "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
-    "astro_engine.py",  # sidereal ephemeris: positions + dated events. Pure math, no network.
+    "astro_engine.py",   # sidereal ephemeris: positions + dated events. Pure math, no network.
+    "astro_history.py",  # extends the cached daily sky (bounded per run; ~70ms/day once caught up)
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
     # resolve/score any due persona+broker calls. Agents read these; they never fetch.
+    "astro_backtest.py",  # falsifies the astro claims against real history; only survivors may be spoken
     "fetch_research.py", "build_explainer.py",  # explainability layer (plain-English "at a glance")
     "room_dossier.py", "room_queue.py", "room_gate.py", "room_score.py",
     "room_verify.py",   # deterministic QA: flags glitch-derived / inconsistent numbers before publish
