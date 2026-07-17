@@ -721,7 +721,24 @@ function vimshottariFor(moonLon, birthISO) {
   }
   const now = Date.now();
   const cur = seq.find(d => new Date(d.from).getTime() <= now && now < new Date(d.to).getTime()) || seq[0];
-  return { current: cur, sequence: seq };
+  // antardasha: the sub-period inside the running maha-dasha. Each maha of L years splits into 9
+  // antardashas of L*antarYears/120 years, in the same graha order starting from the maha lord.
+  const antar = antardashaOf(cur, now);
+  return { current: { ...cur, ...antar }, antar_sequence: antardashaSeq(cur), sequence: seq };
+}
+function antardashaSeq(maha) {
+  const YD = 365.2425, si = _DORDER.indexOf(maha.lord);
+  let s = new Date(maha.from + "T12:00:00Z").getTime(), out = [];
+  for (let k = 0; k < 9; k++) {
+    const g = _DORDER[(si + k) % 9], e = s + _DYEARS[maha.lord] * _DYEARS[g] / 120 * YD * 86400000;
+    out.push({ lord: g, from: new Date(s).toISOString().slice(0, 10), to: new Date(e).toISOString().slice(0, 10) });
+    s = e;
+  }
+  return out;
+}
+function antardashaOf(maha, at) {
+  const cur = antardashaSeq(maha).find(a => new Date(a.from).getTime() <= at && at < new Date(a.to).getTime());
+  return cur ? { antar: cur.lord, antar_from: cur.from, antar_to: cur.to } : {};
 }
 
 /* ---------- the natal orrery: a 2D SVG that reads as 3D — nine grahas on tilted concentric
@@ -799,6 +816,26 @@ function dashaTimeline(chart, amap) {
   </div>`;
 }
 
+/* The sub-period (antardasha) ribbon inside the running maha-dasha — the nearer, finer "when". */
+function antardashaStrip(chart, amap) {
+  const seq = chart.dasha?.antar_sequence || [];
+  const maha = chart.dasha?.current;
+  if (!seq.length || !maha) return "";
+  const now = Date.now();
+  const t0 = new Date(seq[0].from).getTime(), t1 = new Date(seq[seq.length - 1].to).getTime(), span = t1 - t0 || 1;
+  const nowPct = Math.max(0, Math.min(100, (now - t0) / span * 100));
+  const segs = seq.map(d => {
+    const a = new Date(d.from).getTime(), b = new Date(d.to).getTime();
+    return `<div class="dt-seg sm ${a <= now && now < b ? "on" : ""}" style="flex:${b - a}" title="${d.lord} ${d.from}–${d.to}">
+      <span class="dt-glyph">${pixelGlyph(d.lord, 12)}</span><span class="dt-lord">${esc(d.lord)}</span></div>`;
+  }).join("");
+  const cur = seq.find(d => new Date(d.from).getTime() <= now && now < new Date(d.to).getTime());
+  const domains = b => ((amap?.grahas?.[b] || {}).domains || []).slice(0, 3).join(", ");
+  return `<div class="dt-sub"><div class="dt-sub-lbl">Sub-periods within your ${esc(maha.lord)} maha</div>
+    <div class="dt-ribbon sub">${segs}<div class="dt-now" style="left:${nowPct}%"><span>now</span></div></div>
+    ${cur ? `<p class="sub" style="margin-top:8px">Now: <b>${esc(maha.lord)} / ${esc(cur.lord)}</b> to ~${esc(String(cur.to).slice(0, 7))} — tradition colours these months with ${esc(domains(cur.lord)) || "—"}.</p>` : ""}</div>`;
+}
+
 /* Which of the user's own periods a given stock brightens under — the per-stock "when". */
 function stockTiming(user, stock, sector, amap) {
   const seq = user.dasha?.sequence || [];
@@ -849,6 +886,50 @@ function taraKoota(userNakI, stockNakI) {
   if (bad[r]) return { band: "discordant", tara: bad[r], w: -1 };
   return { band: "mixed", tara: "Janma (the self)", w: 0 };
 }
+
+/* Commodities carry their own traditional rulerships in financial astrology — the metals, energy and
+   crops a Pakistani investor actually watches. Scored against the user's chart the same way a
+   chartless stock is: through the ruling graha. */
+const COMMODITIES = [
+  { name: "Gold", sig: "Sun", note: "the Sun's metal — kingship and store of value", glyph: "Sun" },
+  { name: "Silver", sig: "Moon", note: "the Moon's metal — liquidity and the public's hoard", glyph: "Moon" },
+  { name: "Crude oil", sig: "Saturn", note: "Saturn's — what is dug from deep underground", glyph: "Saturn" },
+  { name: "Natural gas", sig: "Rahu", note: "Rahu's — the volatile and the piped", glyph: "Rahu" },
+  { name: "Copper", sig: "Venus", note: "Venus's metal — wiring, comfort, industry", glyph: "Venus" },
+  { name: "Wheat", sig: "Moon", note: "the Moon's — the staple crop and its rains", glyph: "Moon" },
+  { name: "Cotton", sig: "Venus", note: "Venus's fibre — cloth and its trade", glyph: "Venus" },
+  { name: "Sugar", sig: "Venus", note: "Venus's sweetness — cane and refinery", glyph: "Venus" },
+];
+/* Resonance of the user's chart with a single ruling graha — the shared core behind both the
+   chartless-stock and commodity readings. Returns a 0-100 score + explained reasons. */
+function resonanceWithGraha(user, target, label) {
+  if (!target) return { score: null, reasons: [] };
+  const uMoon = user.grahas.Moon, uLord = SIGN_LORD[Math.floor((uMoon.lon % 360) / 30) % 12];
+  const uDasha = user.dasha?.current?.lord, uAntar = user.dasha?.current?.antar;
+  let score = 50; const reasons = [];
+  const fr = friendship(uLord, target);
+  const fw = fr === "friend" || fr === "same" ? 1 : fr === "enemy" ? -1 : 0;
+  score += fw * 14;
+  reasons.push({ k: `You & ${target}`, v: fr, why: `${label} answers to ${target}. Your Moon-lord ${uLord} is ${fr === "same" ? "that same planet" : "traditionally its " + fr}.`, w: fw });
+  if (uDasha === target) { score += 16; reasons.push({ k: "You're in its period", v: `${target} dasha`, why: `You are running a ${target} maha-dasha — the very planet that rules ${label}.`, w: 1 }); }
+  else if (uDasha) { const d = friendship(uDasha, target); const dw = d === "friend" ? 1 : d === "enemy" ? -1 : 0; score += dw * 7; reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `Your ${uDasha} period is ${d} to ${target}.`, w: dw }); }
+  if (uAntar === target) { score += 10; reasons.push({ k: "And your sub-period", v: `${uAntar} antardasha`, why: `Your running sub-period is ${uAntar}'s too — a sharper, nearer window.`, w: 1 }); }
+  const ug = user.grahas[target];
+  if (ug && SIGN_LORD[Math.floor((ug.lon % 360) / 30) % 12] === target) { score += 8; reasons.push({ k: `Your ${target}`, v: "strong", why: `${target} sits in its own sign ${ug.sign} in your chart — a dignified placement.`, w: 1 }); }
+  score = Math.max(2, Math.min(98, Math.round(score)));
+  const verdict = score >= 68 ? "harmonious" : score >= 55 ? "favourable" : score >= 45 ? "neutral" : score >= 32 ? "testing" : "discordant";
+  return { score, verdict, reasons };
+}
+
+/* Goal-tailored framing. The user's stated goal colours the LANGUAGE of the reading — which grahas
+   the tradition emphasises for that aim — never the maths. */
+const GOAL_LENS = {
+  growth: { label: "long-term growth", lead: "Jupiter", grahas: ["Jupiter", "Sun", "Mars"], line: "Tradition ties lasting growth to Jupiter's expansion — so its houses and periods carry the most weight for you." },
+  income: { label: "dividend income", lead: "Venus", grahas: ["Venus", "Moon", "Jupiter"], line: "For steady income the tradition looks to Venus and the Moon — comfort, liquidity, the recurring yield." },
+  trading: { label: "active trading", lead: "Mercury", grahas: ["Mercury", "Moon", "Mars"], line: "For quick moves the tradition watches Mercury and the fast Moon — and your nearer sub-periods matter more than the long arc." },
+  curious: { label: "exploration", lead: null, grahas: [], line: "" },
+};
+function goalLens() { return GOAL_LENS[(astroPrefs().goal || "curious")] || GOAL_LENS.curious; }
 
 /* Score a person's chart against one stock. If the stock has a verified natal chart, the full
    technique set runs; otherwise it falls back to the sector's significator graha. */
@@ -1277,6 +1358,10 @@ async function pageMyChart() {
   const harmon = scored.filter(x => x.score >= 58).slice(0, 8);
   const testing = scored.filter(x => x.score <= 44).slice(-6).reverse();
   const moon = nc.grahas.Moon, asc = nc.ascendant;
+  const gl = goalLens();
+  // commodities, scored against the chart the same way chartless stocks are
+  const comm = COMMODITIES.map(c => ({ ...c, ...resonanceWithGraha(nc, c.sig, c.name) }))
+    .filter(c => c.score != null).sort((a, b) => b.score - a.score);
 
   const rowCard = (x) => {
     const tm = x.timing;
@@ -1297,16 +1382,17 @@ async function pageMyChart() {
       <div class="ark">Your Moon</div><b style="font-size:18px">${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>
       <div class="sub">${asc ? `Rising sign ${esc(asc.sign)}` : "Chandra lagna · a Moon-led chart"}</div>
     </div>
-    <div><div class="ark">Your current period</div><b style="font-size:18px">${pixelGlyph(cur.lord, 18)} ${esc(cur.lord || "—")} dasha</b>
-      <div class="sub">to ~${esc(String(cur.to || "").slice(0, 7))} · tradition ties ${esc(cur.lord || "")} to ${esc(((amap?.grahas?.[cur.lord] || {}).domains || []).slice(0, 3).join(", "))}</div></div>
+    <div><div class="ark">Your current period</div><b style="font-size:18px">${pixelGlyph(cur.lord, 18)} ${esc(cur.lord || "—")}${cur.antar ? ` / ${esc(cur.antar)}` : ""} dasha</b>
+      <div class="sub">${cur.antar ? `${esc(cur.antar)} sub-period to ~${esc(String(cur.antar_to || "").slice(0, 7))} · ` : ""}${esc(cur.lord || "")} maha to ~${esc(String(cur.to || "").slice(0, 7))}</div></div>
     </div>
     ${natalOrrery(nc.grahas, asc)}
     <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas on their orbits at the moment you were born. Sidereal, Lahiri.</p>
+    ${gl.line ? `<p class="sub goal-line" style="text-align:center;margin-top:4px">You're here for <b>${esc(gl.label)}</b>. ${esc(gl.line)}</p>` : ""}
   </div>
 
   <div class="seg"><h2>Your timing — the map of when</h2><div class="ln"></div><span class="pill">Vimshottari</span></div>
-  <p class="sub" style="margin-bottom:12px">Vedic astrology divides a life into planetary periods (dashas). Each one, tradition says, colours the years it rules. This is your ribbon — where you are now, and what's ahead. A rhythm to understand your chart by, <b>never</b> a schedule to trade on.</p>
-  <div class="card">${dashaTimeline(nc, amap)}</div>
+  <p class="sub" style="margin-bottom:12px">Vedic astrology divides a life into planetary periods (dashas), and each into sub-periods (antardashas). Each, tradition says, colours the time it rules. This is your ribbon — the long arc above, the nearer sub-periods below. A rhythm to understand your chart by, <b>never</b> a schedule to trade on.</p>
+  <div class="card">${dashaTimeline(nc, amap)}${antardashaStrip(nc, amap)}</div>
 
   <div class="seg"><h2>The market your chart favours</h2><div class="ln"></div><span class="pill ok">your strongest</span></div>
   <p class="sub" style="margin-bottom:12px">The names the tradition reads as most in tune with your chart — by Moon-star compatibility (Tara), the friendship of your ruling planets, and your running dasha. High resonance means astrological harmony, <b>not</b> a prediction of gains.</p>
@@ -1315,6 +1401,12 @@ async function pageMyChart() {
   <div class="seg"><h2>The names that test your chart</h2><div class="ln"></div><span class="pill bad">most friction</span></div>
   <p class="sub" style="margin-bottom:12px">Where the tradition reads friction between your chart and the stock's. Not "avoid" — friction, in astrology, is simply a harder resonance to work with.</p>
   ${testing.map(rowCard).join("") || '<div class="card"><div class="empty">Nothing scores strongly discordant.</div></div>'}
+
+  <div class="seg"><h2>Commodities &amp; metals</h2><div class="ln"></div><span class="pill">${comm.length} read</span></div>
+  <p class="sub" style="margin-bottom:12px">Gold, silver, oil and the crops carry their own rulers in the tradition — read against your chart the same way. ${gl.grahas.length ? `For <b>${esc(gl.label)}</b>, the tradition would look first to ${gl.grahas.map(esc).join(", ")}.` : ""}</p>
+  <div class="comm-grid">${comm.map(c => `<div class="comm-card ${c.verdict === "harmonious" || c.verdict === "favourable" ? "up" : c.verdict === "testing" || c.verdict === "discordant" ? "dn" : ""}">
+    <div class="comm-top"><span class="comm-glyph">${pixelGlyph(c.glyph, 20)}</span><b>${esc(c.name)}</b><span class="comm-score">${c.score}</span></div>
+    <div class="sub comm-note">${esc(c.note)}. <b>${esc(c.verdict)}</b> with your chart — ${esc((c.reasons[0] || {}).why || "")}</div></div>`).join("")}</div>
 
   <div class="seg"><h2>Your whole-market map</h2><div class="ln"></div><span class="pill">${scored.length} names ranked</span></div>
   <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Resonance</th><th>Tradition's read</th></tr></thead><tbody>${
