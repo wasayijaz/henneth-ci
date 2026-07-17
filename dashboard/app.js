@@ -630,6 +630,196 @@ async function pageStrategies() {
   ${reqForm}`;
 }
 
+/* ==========================================================================================
+   PERSONAL ASTRO — a user casts their own birth chart in the browser, and the tradition reads it
+   against every PSX chart. This is a financial-astrology EXPLORATION, not investment advice: it
+   speaks in "the tradition reads / your chart resonates", never "buy" or "this will be profitable".
+   The desk's own tests found astro has no measurable edge on PSX (published on /astro); this feature
+   is the engaging, honest interpretation layer, and its calls are scored in public like any other.
+   ========================================================================================== */
+const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+const NAK = ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya",
+  "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha",
+  "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta",
+  "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"];
+const SIGN12 = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio",
+  "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+const NEPH_BODIES = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"];
+
+let _ephem = null;
+async function loadEphem() {
+  if (_ephem) return _ephem;
+  const hdr = await j("natal_ephem.json");
+  const buf = await fetch(DATA_BASE + "natal_ephem.bin?t=" + Date.now()).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error("ephem HTTP " + r.status)));
+  _ephem = { hdr, dv: new DataView(buf), start: Date.UTC(...hdr.start.split("-").map((x, i) => i === 1 ? +x - 1 : +x)) };
+  return _ephem;
+}
+function _lahiri(jd) { return 23.853 + 0.0139686 * ((jd - 2451545.0) / 365.25); }   // matches the derived table
+function _toJD(y, m, d, hourUT) {
+  if (m <= 2) { y -= 1; m += 12; }
+  const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5 + hourUT / 24;
+}
+function _lerpLon(a, b, f) { const d = ((b - a + 540) % 360) - 180; return (a + d * f + 360) % 360; }
+function nakOf(lon) { const s = 360 / 27, i = Math.floor(lon / s) % 27, p = Math.floor((lon % s) / (s / 4)) + 1; return { nak: NAK[i], pada: p, i }; }
+
+/* Compute a sidereal (Lahiri) birth chart in the browser from date/time/place.
+   grahas from the shipped daily table (interpolated to the birth minute); ascendant computed live
+   from local sidereal time + latitude. Returns positions + a moon-cusp honesty flag. */
+async function computeNatal({ date, time, tz, lat, lon, timeKnown }) {
+  const e = await loadEphem();
+  const [Y, M, D] = date.split("-").map(Number);
+  const [hh, mm] = (time || "12:00").split(":").map(Number);
+  const localH = (hh || 0) + (mm || 0) / 60;
+  const utH = localH - (tz || 0);                             // local clock -> UT
+  // day index into the table, plus fraction of day (UT), spilling across midnight if utH<0 or >=24
+  let dayMs = Date.UTC(Y, M - 1, D) + utH * 3600000;
+  const dayIdx = Math.floor((dayMs - e.start) / 86400000);
+  const frac = (dayMs - e.start) / 86400000 - dayIdx;
+  const grahas = {};
+  if (dayIdx < 0 || dayIdx >= e.hdr.n_days - 1) return { error: "birth date outside the ephemeris range (1950–2035)" };
+  const readRow = (di) => NEPH_BODIES.map((_, b) => e.dv.getUint16((di * 9 + b) * 2, true) / 10);
+  const r0 = readRow(dayIdx), r1 = readRow(dayIdx + 1);
+  let moonCusp = false;
+  NEPH_BODIES.forEach((body, b) => {
+    const lonv = _lerpLon(r0[b], r1[b], frac);
+    const si = Math.floor(lonv / 30) % 12, nk = nakOf(lonv);
+    if (body === "Moon") { const s = 360 / 27, edge = Math.min(lonv % s, s - (lonv % s)); if (edge < 0.5) moonCusp = true; }
+    grahas[body] = { lon: +lonv.toFixed(2), sign: SIGN12[si], sign_i: si, deg_in_sign: +(lonv % 30).toFixed(2), nakshatra: nk.nak, pada: nk.pada };
+  });
+  // ascendant (needs the exact minute + place)
+  let ascend = null;
+  if (timeKnown) {
+    const jd = _toJD(Y, M, D, utH);
+    const T = (jd - 2451545.0) / 36525;
+    let gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T - T * T * T / 38710000;
+    const lst = (((gmst + lon) % 360) + 360) % 360;
+    const eps = (23.4392911 - 0.0130042 * T) * D2R;
+    const ramc = lst * D2R, phi = lat * D2R;
+    let asc = Math.atan2(Math.cos(ramc), -(Math.sin(ramc) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps))) * R2D;
+    asc = ((asc % 360) + 360) % 360;
+    const sid = ((asc - _lahiri(jd)) % 360 + 360) % 360;
+    ascend = { lon: +sid.toFixed(2), sign: SIGN12[Math.floor(sid / 30) % 12], deg_in_sign: +(sid % 30).toFixed(2), nakshatra: nakOf(sid).nak };
+  }
+  return { grahas, ascendant: ascend, moon_cusp: moonCusp,
+    dasha: vimshottariFor(grahas.Moon.lon, date), computed_at: new Date().toISOString() };
+}
+
+/* Vimshottari maha-dasha sequence for a person, from the natal Moon's nakshatra. Birth time known,
+   so unlike the stock charts these dates are honest (no first-trade-time ambiguity). */
+const _DORDER = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"];
+const _DYEARS = { Ketu: 7, Venus: 20, Sun: 6, Moon: 10, Mars: 7, Rahu: 18, Jupiter: 16, Saturn: 19, Mercury: 17 };
+function vimshottariFor(moonLon, birthISO) {
+  const span = 360 / 27, nakI = Math.floor(moonLon / span) % 27, lord = _DORDER[nakI % 9];
+  const fracDone = (moonLon % span) / span, YD = 365.2425;
+  let cursor = new Date(birthISO + "T12:00:00Z").getTime() - fracDone * _DYEARS[lord] * YD * 86400000;
+  const start = _DORDER.indexOf(lord), seq = [];
+  for (let k = 0; k < 9; k++) {
+    const g = _DORDER[(start + k) % 9], end = cursor + _DYEARS[g] * YD * 86400000;
+    seq.push({ lord: g, from: new Date(cursor).toISOString().slice(0, 10), to: new Date(end).toISOString().slice(0, 10), years: _DYEARS[g] });
+    cursor = end;
+  }
+  const now = Date.now();
+  const cur = seq.find(d => new Date(d.from).getTime() <= now && now < new Date(d.to).getTime()) || seq[0];
+  return { current: cur, sequence: seq };
+}
+
+/* ---------- synastry: how the tradition reads a person's chart against a stock's.
+   Uses classical Vedic techniques (Tara koota on the Moon nakshatras, planetary friendship of the
+   sign lords, dasha resonance) — the same methods used for personal compatibility, applied to the
+   market chart. A resonance score 0–100 with an explained breakdown. This is astrological
+   interpretation, presented as such; it is never a recommendation to buy or a profit forecast. */
+const SIGN_LORD = ["Mars", "Venus", "Mercury", "Moon", "Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Saturn", "Jupiter"];
+const FRIEND = {
+  Sun: { f: ["Moon", "Mars", "Jupiter"], e: ["Venus", "Saturn"] },
+  Moon: { f: ["Sun", "Mercury"], e: [] },
+  Mars: { f: ["Sun", "Moon", "Jupiter"], e: ["Mercury"] },
+  Mercury: { f: ["Sun", "Venus"], e: ["Moon"] },
+  Jupiter: { f: ["Sun", "Moon", "Mars"], e: ["Mercury", "Venus"] },
+  Venus: { f: ["Mercury", "Saturn"], e: ["Sun", "Moon"] },
+  Saturn: { f: ["Mercury", "Venus"], e: ["Sun", "Moon", "Mars"] },
+  Rahu: { f: ["Venus", "Saturn"], e: ["Sun", "Moon"] },
+  Ketu: { f: ["Mars", "Jupiter"], e: ["Moon"] },
+};
+const NAT_BENEFIC = { Jupiter: 1, Venus: 1, Moon: 1, Mercury: 0.5 };
+const NAT_MALEFIC = { Saturn: 1, Mars: 1, Rahu: 1, Ketu: 1, Sun: 0.5 };
+function friendship(a, b) {
+  if (a === b) return "same";
+  const r = FRIEND[a] || { f: [], e: [] };
+  if (r.f.includes(b)) return "friend";
+  if (r.e.includes(b)) return "enemy";
+  return "neutral";
+}
+// Tara koota: count person's Moon nakshatra -> stock's, the classical 9-fold auspiciousness
+function taraKoota(userNakI, stockNakI) {
+  const cnt = ((stockNakI - userNakI + 27) % 27) + 1, r = cnt % 9;
+  const good = { 2: "Sampat (wealth)", 4: "Kshema (well-being)", 6: "Sadhaka (accomplishment)", 8: "Maitra (friendship)", 0: "Mitra (ally)" };
+  const bad = { 3: "Vipat (loss)", 5: "Pratyari (obstacle)", 7: "Vadha (harm)" };
+  if (good[r]) return { band: "harmonious", tara: good[r], w: 1 };
+  if (bad[r]) return { band: "discordant", tara: bad[r], w: -1 };
+  return { band: "mixed", tara: "Janma (the self)", w: 0 };
+}
+
+/* Score a person's chart against one stock. If the stock has a verified natal chart, the full
+   technique set runs; otherwise it falls back to the sector's significator graha. */
+function synastry(user, stock, sector, amap, astroNow) {
+  const reasons = [];
+  let score = 50;   // neutral start
+  const uMoon = user.grahas.Moon, uLordUser = SIGN_LORD[uMoon.sign_i];
+  const uDasha = user.dasha?.current?.lord;
+
+  const _si = p => Math.floor((p.lon % 360) / 30) % 12;   // stock natal carries lon, not sign_i
+  if (stock && stock.natal) {
+    const sMoon = stock.natal.Moon;
+    // 1. Tara koota on the Moon nakshatras — the heart of Vedic compatibility
+    const tk = taraKoota(nakOf(uMoon.lon).i, nakOf(sMoon.lon).i);
+    score += tk.w * 16;
+    reasons.push({ k: "Moon compatibility (Tara)", v: tk.band, why: `Counting from your Moon star to the stock's lands on ${tk.tara}.`, w: tk.w });
+    // 2. friendship of the Moon-sign lords
+    const sLord = SIGN_LORD[_si(sMoon)], fr = friendship(uLordUser, sLord);
+    const fw = fr === "friend" || fr === "same" ? 1 : fr === "enemy" ? -1 : 0;
+    score += fw * 10;
+    reasons.push({ k: "Sign-lord friendship", v: fr, why: `Your Moon rules through ${uLordUser}; the stock's through ${sLord} — ${fr === "same" ? "the same planet" : "traditionally " + fr + "s"}.`, w: fw });
+    // 3. your benefics / malefics landing on the stock's Sun or Moon sign
+    let bw = 0;
+    ["Jupiter", "Venus", "Saturn", "Mars"].forEach(g => {
+      const ug = user.grahas[g]; if (!ug) return;
+      [["Sun", sMoon && stock.natal.Sun], ["Moon", sMoon]].forEach(([nm, sp]) => {
+        if (sp && ug.sign_i === Math.floor(sp.lon / 30) % 12) {
+          const ben = NAT_BENEFIC[g] ? 1 : -1; bw += ben;
+          reasons.push({ k: `Your ${g} on its natal ${nm}`, v: ben > 0 ? "supportive" : "testing", why: `Your ${g} sits in ${ug.sign}, the stock's natal ${nm} sign — tradition reads ${g} there as ${ben > 0 ? "a blessing" : "a strain"}.`, w: ben });
+        }
+      });
+    });
+    score += Math.max(-14, Math.min(14, bw * 7));
+    // 4. dasha resonance: are you running a period whose lord the stock's chart welcomes?
+    if (uDasha) {
+      const dfr = friendship(uDasha, sLord);
+      const dw = dfr === "friend" || dfr === "same" ? 1 : dfr === "enemy" ? -1 : 0;
+      score += dw * 8;
+      reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `You are in a ${uDasha} period; the stock's Moon-lord ${sLord} is ${dfr === "same" ? "the very same" : "traditionally its " + dfr}.`, w: dw });
+    }
+  } else {
+    // no stock chart (listed pre-2000) — read against the sector's significator graha
+    const sig = sector ? (amap?.sector_significators?.[sector] || {}) : {};
+    const prim = sig.primary;
+    if (!prim) return { score: null, verdict: "no reading", reasons: [{ k: "No chart, no significator", v: "—", why: `${sector || "This name"} has no birth chart and no honest significator, so the tradition stays silent.`, w: 0 }] };
+    const fr = friendship(uLordUser, prim);
+    const fw = fr === "friend" || fr === "same" ? 1 : fr === "enemy" ? -1 : 0;
+    score += fw * 14;
+    reasons.push({ k: `You & ${prim}`, v: fr, why: `${sector} answers to ${prim}. Your Moon-lord ${uLordUser} is ${fr === "same" ? "that same planet" : "traditionally its " + fr}.`, w: fw });
+    // running the significator's own dasha is the strongest resonance a chartless name can offer
+    if (uDasha === prim) { score += 18; reasons.push({ k: "You're in its period", v: `${prim} dasha`, why: `You are running a ${prim} period — and ${prim} is exactly what tradition ties ${sector} to.`, w: 1 }); }
+    else if (uDasha) { const dfr = friendship(uDasha, prim); const dw = dfr === "friend" ? 1 : dfr === "enemy" ? -1 : 0; score += dw * 8; reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `Your ${uDasha} period is ${dfr} to ${sector}'s ${prim}.`, w: dw }); }
+    // is the significator well-placed in YOUR chart?
+    const ug = user.grahas[prim];
+    if (ug) { const own = SIGN_LORD[ug.sign_i] === prim; if (own) { score += 8; reasons.push({ k: `Your ${prim}`, v: "strong", why: `${prim} sits in its own sign ${ug.sign} in your chart — a dignified placement.`, w: 1 }); } }
+  }
+  score = Math.max(2, Math.min(98, Math.round(score)));
+  const verdict = score >= 68 ? "harmonious" : score >= 55 ? "favourable" : score >= 45 ? "neutral" : score >= 32 ? "testing" : "discordant";
+  return { score, verdict, reasons };
+}
+
 /* ---------- pixel grahas: 11x11 one-bit glyphs, drawn as SVG rects in currentColor.
    The classical symbols, pixelated — Saturn's ring, Jupiter's band, the Sun's rays. ---------- */
 const PIXEL_GRAHAS = {
@@ -804,6 +994,199 @@ async function playAstroBoardRun() {
       </div>`;
     },
   });
+}
+
+/* ==========================================================================================
+   YOUR CHART — the personal financial-astrology journey. A user casts their own birth chart and
+   the tradition reads the whole PSX universe against it. Framed throughout as astrological
+   exploration, never advice: "the tradition finds your chart harmonious with X", never "buy X".
+   ========================================================================================== */
+function birthData() { return me && myProfile && myProfile.birth_data; }
+function natalChart() { return me && myProfile && myProfile.natal_chart; }
+function astroPrefs() { return (me && myProfile && myProfile.astro_prefs) || {}; }
+
+const _bw = { step: 0, data: {} };
+const BW_STEPS = ["intro", "date", "time", "place", "goals", "cast"];
+function openBirthWizard() {
+  if (!me) { openAuth("signup"); return; }
+  _bw.step = 0; _bw.data = { ...(birthData() || {}) };
+  renderBirthWizard();
+}
+function bwClose() { document.querySelector(".bw-overlay")?.remove(); }
+function bwNext() { if (_bw.step < BW_STEPS.length - 1) { _bw.step++; renderBirthWizard(); } }
+function bwBack() { if (_bw.step > 0) { _bw.step--; renderBirthWizard(); } }
+function bwSet(k, v) { _bw.data[k] = v; }
+
+function renderBirthWizard() {
+  let ov = document.querySelector(".bw-overlay");
+  if (!ov) { ov = document.createElement("div"); ov.className = "bw-overlay"; document.body.appendChild(ov);
+    ov.addEventListener("click", e => { if (e.target === ov) bwClose(); }); }
+  const s = BW_STEPS[_bw.step], d = _bw.data;
+  const dots = BW_STEPS.slice(1, 5).map((_, i) => `<span class="bw-dot ${_bw.step - 1 === i ? "on" : _bw.step - 1 > i ? "did" : ""}"></span>`).join("");
+  let body = "";
+  if (s === "intro") body = `
+    <div class="bw-kick">Your chart × the market</div>
+    <h2 class="bw-h">The sky you were born under, read against every stock on the exchange.</h2>
+    <p class="bw-p">Give the desk your birth details and it casts your Vedic (sidereal) chart, then reads the whole PSX universe against it the way the tradition would — which names your chart runs <b>harmonious</b> with, which it finds <b>testing</b>, and the periods your own dasha lights up.</p>
+    <p class="bw-note">A note in plain sight: this is <b>astrological exploration</b>, not investment advice. The desk tested astrology against 19 years of PSX and found no measurable edge — the honest result is <a href="#/astro" onclick="bwClose()">published here</a>. Treat this as a lens to explore, never a reason to buy. Your birth details are private to your account.</p>
+    <button class="bw-go" onclick="bwNext()">Begin →</button>`;
+  else if (s === "date") body = `
+    <div class="bw-kick">Step 1 of 4 · ${dots}</div>
+    <h2 class="bw-h">When were you born?</h2>
+    <p class="bw-p">The date sets your planets. Everything else refines it.</p>
+    <input type="date" class="bw-in" id="bw-date" min="1950-01-01" max="2035-12-31" value="${esc(d.date || "")}" onchange="bwSet('date',this.value)">
+    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="if(document.getElementById('bw-date').value){bwSet('date',document.getElementById('bw-date').value);bwNext()}">Next →</button></div>`;
+  else if (s === "time") body = `
+    <div class="bw-kick">Step 2 of 4 · ${dots}</div>
+    <h2 class="bw-h">What time?</h2>
+    <p class="bw-p">Your birth time sets the fast-moving Moon and your rising sign (ascendant). The more exact, the sharper the reading.</p>
+    <input type="time" class="bw-in" id="bw-time" value="${esc(d.time || "")}" ${d.time_known === false ? "disabled" : ""} onchange="bwSet('time',this.value);bwSet('time_known',true)">
+    <label class="bw-check"><input type="checkbox" ${d.time_known === false ? "checked" : ""} onchange="bwSet('time_known',!this.checked);const t=document.getElementById('bw-time');t.disabled=this.checked;if(this.checked){bwSet('time','12:00')}"> I don't know my birth time</label>
+    <p class="bw-note">${d.time_known === false ? "No problem — the desk reads your Moon sign (Chandra lagna), the way Vedic astrology does when the minute is unknown. Your rising sign is left out rather than guessed." : "Even an approximate time helps. If you truly don't know it, tick the box above."}</p>
+    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwNext()">Next →</button></div>`;
+  else if (s === "place") body = `
+    <div class="bw-kick">Step 3 of 4 · ${dots}</div>
+    <h2 class="bw-h">Where?</h2>
+    <p class="bw-p">Your birthplace fixes the horizon for your rising sign.</p>
+    <input class="bw-in combo-city" id="bw-place" placeholder="Start typing a city…" autocomplete="off" value="${esc(d.place || "")}">
+    <div id="bw-place-pop" class="bw-city-pop"></div>
+    <div class="bw-tzrow"><label>UTC offset at birth <input type="number" step="0.5" class="bw-tz" id="bw-tz" value="${d.tz ?? 5}" onchange="bwSet('tz',+this.value)"></label>
+      <span class="bw-note" style="margin:0">set from the city; adjust if you were born during daylight-saving</span></div>
+    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="if(_bw.data.lat!=null){bwNext()}else{document.getElementById('bw-place').focus()}">Next →</button></div>`;
+  else if (s === "goals") body = `
+    <div class="bw-kick">Almost there</div>
+    <h2 class="bw-h">What are you here to explore?</h2>
+    <p class="bw-p">This only colours the language of your reading — pick what fits, or skip.</p>
+    <div class="bw-opts">${[["growth", "Long-term growth"], ["income", "Dividend income"], ["trading", "Active trading"], ["curious", "Just curious"]].map(([k, l]) => `<button class="bw-opt ${d.goal === k ? "on" : ""}" onclick="bwSet('goal','${k}');document.querySelectorAll('.bw-opt').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${l}</button>`).join("")}</div>
+    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwNext()">See my chart →</button></div>`;
+  else if (s === "cast") { renderBirthCast(ov); return; }
+  ov.innerHTML = `<div class="bw-box"><button class="bw-x" onclick="bwClose()">✕</button>${body}</div>`;
+  if (s === "place") wireCityCombo();
+  if (s === "date") setTimeout(() => document.getElementById("bw-date")?.focus(), 40);
+}
+
+async function wireCityCombo() {
+  const cd = await j("cities.json");
+  const inp = document.getElementById("bw-place"), pop = document.getElementById("bw-place-pop");
+  if (!inp) return;
+  const render = q => {
+    q = (q || "").toLowerCase().trim();
+    const hits = (q ? (cd.cities || []).filter(c => c.name.toLowerCase().includes(q)) : (cd.cities || [])).slice(0, 30);
+    pop.innerHTML = hits.map(c => `<div class="bw-city" data-name="${esc(c.name)}" data-lat="${c.lat}" data-lon="${c.lon}" data-tz="${c.tz}"><b>${esc(c.name)}</b><span>${esc(c.cc)}</span></div>`).join("");
+    pop.style.display = hits.length ? "block" : "none";
+  };
+  inp.addEventListener("focus", () => render(inp.value));
+  inp.addEventListener("input", () => render(inp.value));
+  pop.addEventListener("click", e => {
+    const it = e.target.closest(".bw-city"); if (!it) return;
+    inp.value = it.dataset.name; bwSet("place", it.dataset.name); bwSet("lat", +it.dataset.lat); bwSet("lon", +it.dataset.lon); bwSet("tz", +it.dataset.tz);
+    const tz = document.getElementById("bw-tz"); if (tz) tz.value = it.dataset.tz;
+    pop.style.display = "none";
+  });
+}
+
+async function renderBirthCast(ov) {
+  const d = _bw.data;
+  const steps = [
+    `Placing the nine grahas — sidereal, Lahiri ayanamsa`,
+    d.time_known === false ? `Reading from your Moon sign — the minute is unknown, so no rising sign is invented` : `Rising sign from ${esc(d.place)} at ${esc(d.time)}`,
+    `Balancing your Vimshottari dasha from the Moon's nakshatra`,
+    `Reading all ${103} PSX charts against yours — Tara, friendship, dasha`,
+    `Ranking the market by resonance with your chart`,
+  ];
+  runRevealModal({
+    sym: "", kicker: "Casting your chart", title: "Reading the market against your stars",
+    sub: "Real sidereal math on your birth chart, then the tradition's compatibility techniques across every name on the exchange.",
+    steps, flagKey: null,
+    onReveal: async () => {
+      const chart = await computeNatal(d);
+      if (!chart.error) await saveProfile({ birth_data: d, natal_chart: chart, astro_prefs: { goal: d.goal } });
+    },
+    onClose: () => { bwClose(); if (location.hash.replace(/^#\/?/, "").startsWith("mychart")) pageMyChart(); else location.hash = "#/mychart"; },
+    renderReveal: (bodyEl) => {
+      bodyEl.innerHTML = `<div class="rp-reveal"><div class="rp-reveal-head"><b>Your chart is cast</b><span>the market, read against your stars</span></div>
+        <div class="empty" style="padding:20px">Opening your reading…</div></div>`;
+      setTimeout(() => { bwClose(); location.hash = "#/mychart"; }, 900);
+    },
+  });
+  ov.remove();
+}
+
+async function pageMyChart() {
+  // yield one microtask: the initial route() runs before `let me` initializes further down the
+  // file, and unlike other pages this one reads `me` before its first data await. This defers that
+  // read past the synchronous module evaluation, avoiding a temporal-dead-zone error on cold load.
+  await Promise.resolve();
+  if (!me) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div></div>
+      <div class="card"><div class="empty">Sign in to cast your birth chart and read the market against your stars.<br><br><button class="auth-go" style="max-width:240px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
+    return;
+  }
+  const bd = birthData(), nc = natalChart();
+  if (!bd || !nc || nc.error) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">personal</span></div>
+      <div class="disclaimer">Astrological exploration, not investment advice. The desk tested astrology on 19 years of PSX and found no measurable edge — <a href="#/astro" style="color:inherit;text-decoration:underline">the honest result</a>. This is a lens to explore your own chart against the market, never a reason to buy.</div>
+      <div class="card mychart-cta">
+        <div class="mc-hero">${["Sun", "Moon", "Jupiter", "Saturn"].map(b => pixelGlyph(b, 30)).join("")}</div>
+        <h2>Read the whole market against your birth chart</h2>
+        <p class="sub">Vedic astrology has always matched two charts for compatibility. The desk turns that on the market: give it your birth details and it reads every PSX name against your stars — which your chart runs harmonious with, which it finds testing, and the periods your own dasha lights up.</p>
+        <button class="bw-go" onclick="openBirthWizard()">Cast my birth chart →</button>
+        <p class="sub" style="margin-top:10px;opacity:.7">Takes a minute. Your birth details stay private to your account.</p>
+      </div>`;
+    return;
+  }
+  const [uni, sectors, amap, natalAll, astroNow] = await Promise.all([
+    j("universe.json"), j("sectors.json"), j("astro_map.json"), j("astro_natal.json"), j("astro.json")]);
+  const names = uni?.symbols || {};
+  const cur = nc.dasha?.current || {};
+  // score every ticker
+  const scored = Object.keys(names).map(sym => {
+    const stock = natalAll?.subjects?.[sym];
+    const sector = (sectors?.tickers?.[sym] || {}).sector;
+    const r = synastry(nc, stock, sector, amap, astroNow);
+    return { sym, name: names[sym]?.name || "", sector, hasChart: !!stock, ...r };
+  }).filter(x => x.score != null).sort((a, b) => b.score - a.score);
+  // curated slices, not threshold dumps — the strongest handful each way, so "harmonious" stays meaningful
+  const harmon = scored.filter(x => x.score >= 58).slice(0, 8);
+  const testing = scored.filter(x => x.score <= 44).slice(-6).reverse();
+  const moon = nc.grahas.Moon, asc = nc.ascendant;
+
+  const rowCard = (x) => `<div class="card syn-card"><div class="syn-head clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'">
+      <span class="syn-score s-${x.verdict.replace(/\s/g, "")}">${x.score}</span>
+      <div><b>${esc(x.sym)}</b> <span class="sub">${esc((x.name || "").slice(0, 26))}</span><div class="sub">${esc(x.sector || "")}${x.hasChart ? "" : " · sector reading"}</div></div>
+      <span class="pill ${x.verdict === "harmonious" || x.verdict === "favourable" ? "ok" : x.verdict === "testing" || x.verdict === "discordant" ? "bad" : ""}">${esc(x.verdict)}</span></div>
+    <div class="syn-why">${x.reasons.slice(0, 3).map(r => `<div class="syn-r ${r.w > 0 ? "up" : r.w < 0 ? "dn" : ""}"><b>${esc(r.k)}</b> ${esc(r.why)}</div>`).join("")}</div></div>`;
+
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">${esc(bd.place || "")} · ${esc(bd.date || "")}</span></div>
+  <div class="disclaimer">Astrological exploration, <b>not investment advice</b>. The desk's own tests found astrology has no measurable edge on PSX (<a href="#/astro" style="color:inherit;text-decoration:underline">see the results</a>). This reads your chart against the market as tradition would — a lens to explore, never a recommendation to buy or a forecast of profit.</div>
+
+  <div class="card">
+    <div class="mc-chart-top"><div>
+      <div class="ark">Your Moon</div><b style="font-size:18px">${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>
+      <div class="sub">${asc ? `Rising sign ${esc(asc.sign)}` : "Rising sign not shown — birth time unknown, so it isn't invented"}${nc.moon_cusp ? " · your Moon sits near a nakshatra boundary, so read it loosely" : ""}</div>
+    </div>
+    <div><div class="ark">Your current period</div><b style="font-size:18px">${pixelGlyph(cur.lord, 18)} ${esc(cur.lord || "—")} dasha</b>
+      <div class="sub">to ~${esc(String(cur.to || "").slice(0, 7))} · tradition ties ${esc(cur.lord || "")} to ${esc(((amap?.grahas?.[cur.lord] || {}).domains || []).slice(0, 3).join(", "))}</div></div>
+    </div>
+    ${zodiacStrip(astroNow?.positions, nc.grahas)}
+    <p class="sub" style="margin-top:8px">Your birth chart (bottom lane) against the sky now (top). ${bd.time_known === false ? "Read from your Moon, since your birth time is unknown." : "Cast for your exact birth moment."} Sidereal, Lahiri.</p>
+  </div>
+
+  <div class="seg"><h2>The market your chart favours</h2><div class="ln"></div><span class="pill ok">your strongest</span></div>
+  <p class="sub" style="margin-bottom:12px">The names the tradition reads as most in tune with your chart — by Moon-star compatibility (Tara), the friendship of your ruling planets, and your running dasha. High resonance means astrological harmony, <b>not</b> a prediction of gains.</p>
+  ${harmon.map(rowCard).join("") || '<div class="card"><div class="empty">Nothing scores strongly harmonious — your chart sits neutral to most of the market.</div></div>'}
+
+  <div class="seg"><h2>The names that test your chart</h2><div class="ln"></div><span class="pill bad">most friction</span></div>
+  <p class="sub" style="margin-bottom:12px">Where the tradition reads friction between your chart and the stock's. Not "avoid" — friction, in astrology, is simply a harder resonance to work with.</p>
+  ${testing.map(rowCard).join("") || '<div class="card"><div class="empty">Nothing scores strongly discordant.</div></div>'}
+
+  <div class="seg"><h2>Your whole-market map</h2><div class="ln"></div><span class="pill">${scored.length} names ranked</span></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Resonance</th><th>Tradition's read</th></tr></thead><tbody>${
+    scored.map(x => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'"><td><b>${esc(x.sym)}</b></td><td class="sub">${esc((x.sector || "").slice(0, 20))}</td>
+      <td class="r num ${x.score >= 60 ? "up" : x.score <= 40 ? "dn" : ""}">${x.score}</td><td class="sub">${esc(x.verdict)}</td></tr>`).join("")}</tbody></table></div>
+
+  <p class="sub" style="margin-top:14px"><button class="note-save" onclick="openBirthWizard()">Edit my birth details</button> · Your resonance map is astrological interpretation. The desk found no measurable astro edge on PSX; treat this as a lens for exploration and your own decisions, never advice.</p>`;
 }
 
 /* ---------- Astro: the sky, computed — and the test that says it doesn't predict anything.
@@ -2055,7 +2438,7 @@ async function pageSettings() {
   </div></div>`;
 }
 
-const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
