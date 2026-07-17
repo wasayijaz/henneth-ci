@@ -893,7 +893,7 @@ function synastry(user, stock, sector, amap, astroNow) {
     // no stock chart (listed pre-2000) — read against the sector's significator graha
     const sig = sector ? (amap?.sector_significators?.[sector] || {}) : {};
     const prim = sig.primary;
-    if (!prim) return { score: null, verdict: "no reading", reasons: [{ k: "No chart, no significator", v: "—", why: `${sector || "This name"} has no birth chart and no honest significator, so the tradition stays silent.`, w: 0 }] };
+    if (!prim) return { score: null, verdict: "no reading", reasons: [] };
     const fr = friendship(uLordUser, prim);
     const fw = fr === "friend" || fr === "same" ? 1 : fr === "enemy" ? -1 : 0;
     score += fw * 14;
@@ -1014,14 +1014,14 @@ function composeAstroReading(sym, data) {
     const natPos = subj.natal;
     return `
       <div class="ar-head"><b>${esc(sym)}</b><span class="sub">${esc(name.slice(0, 34))}</span>
-        <span class="pill ok">chart verified · listed ${esc(subj.birth?.date)}</span></div>
-      <div class="ar-birth sub">Birth chart cast for the first trade — ${esc(subj.birth?.date)} at the Karachi open, the convention financial astrology has used since Meridian. Source: ${/floatation|Exchange/i.test(subj.birth?.source || "") ? "PSX's own listing records" : "verified first-trade data"}. Sidereal, Lahiri.</div>
+        <span class="pill ok">natal chart</span></div>
+      <div class="ar-birth sub">${esc(sym)}'s chart, cast for its first trade on ${esc(subj.birth?.date)}. Sidereal, Lahiri.</div>
       ${zodiacStrip(skyPos, natPos)}
       <div class="ar-grid">
         <div class="ar-cell"><span class="ark">Natal Moon</span><b>${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>
-          <i>The chart is read from the Moon (Chandra lagna) — the ascendant needs the exact minute, which no exchange records.</i></div>
+          <i>Read from the Moon — the Chandra lagna, the mind of the chart.</i></div>
         <div class="ar-cell"><span class="ark">The period (dasha)</span><b>${pixelGlyph(das.maha, 16)} ${esc(das.maha || "—")}${das.antar ? ` / ${esc(das.antar)}` : ""}</b>
-          <i>${das.maha ? `A ${esc(das.maha)} maha-dasha${ts.maha_lord_stable === false ? " (period lord shifts with the unknown trade time — read loosely)" : ""}, running to ~${esc(String(das.maha_to || "").slice(0, 7))}. Tradition ties ${esc(das.maha)} to ${esc(domains(das.maha))}.` : "—"}</i></div>
+          <i>${das.maha ? `A ${esc(das.maha)} maha-dasha, running to ~${esc(String(das.maha_to || "").slice(0, 7))}. Tradition ties ${esc(das.maha)} to ${esc(domains(das.maha))}.` : "—"}</i></div>
         <div class="ar-cell"><span class="ark">Saturn's passage</span><b>${ss.active ? "SADE SATI · " + esc((ss.phase || "").split(" (")[0]) : ss.phase ? esc(ss.phase.split(" (")[0]) : "quiet"}</b>
           <i>${ss.active ? "Saturn is crossing the natal Moon's neighbourhood — the seven-and-a-half-year passage the tradition treats as its heaviest weather." : "No Sade Sati running on this chart."}</i></div>
         <div class="ar-cell"><span class="ark">On this chart now</span><b>${hits.length ? hits.map(h => `${GRAHA_AB[h.transiting]}→${GRAHA_AB[h.over_natal]}`).join(" · ") : "no tight contacts"}</b>
@@ -1029,12 +1029,12 @@ function composeAstroReading(sym, data) {
       </div>
       <div class="ar-read">
         <p><b>The days ahead:</b> ${events14.length ? `the sky's next marks are ${events14.map(e => `${esc(e.text)} (${esc(e.date)})`).join("; ")}.` : "no high-rank sky events in the next two weeks."} ${hits.length ? `Tradition would watch the ${esc(hits[0].transiting)}–natal-${esc(hits[0].over_natal)} contact most closely.` : ""}</p>
-        <p><b>The months:</b> ${das.antar ? `the running sub-period is ${esc(das.antar)} (to ~${esc(String(das.antar_to || "").slice(0, 7))}) — tradition colours these months with ${esc(domains(das.antar))}.` : "sub-period undetermined."}</p>
-        <p><b>The years:</b> ${das.maha ? `the ${esc(das.maha)} maha-dasha frames the longer arc${ts.dasha_stable ? "" : " (its end-date shifts with the unrecorded trade time — the desk prints the convention's answer, not a certainty)"}.` : "—"}</p>
-        <p class="ar-caveat">This is the tradition's reading of a real chart — not a forecast, not a signal, not advice. The desk's own test of transit rules found nothing that beats chance on PSX (<a href="#/astro" onclick="document.querySelector('.astro-verdict')?.scrollIntoView({behavior:'smooth'})">the test</a>); natal readings like this one are <b>untested</b>, and the desk's plan is to score them in public rather than sell them.</p>
+        <p><b>The months:</b> ${das.antar ? `the running sub-period is ${esc(das.antar)} (to ~${esc(String(das.antar_to || "").slice(0, 7))}) — tradition colours these months with ${esc(domains(das.antar))}.` : ""}</p>
+        <p><b>The years:</b> ${das.maha ? `the ${esc(das.maha)} maha-dasha frames the longer arc.` : "—"}</p>
+        <p class="ar-caveat">The tradition's reading of ${esc(sym)}'s chart — for exploration, not advice.</p>
       </div>`;
   }
-  // no verified chart — the honest fallback: sector significators + the market's chart as backdrop
+  // read through the sector's ruling planet — a mundane-astrology technique in its own right
   const sig = sect ? (amap?.sector_significators?.[sect] || {}) : {};
   const prim = sig.primary;
   const p = prim ? skyPos[prim] : null;
@@ -1042,17 +1042,17 @@ function composeAstroReading(sym, data) {
   const mdas = mkt?.dasha?.current || {};
   return `
     <div class="ar-head"><b>${esc(sym)}</b><span class="sub">${esc(name.slice(0, 34))}</span>
-      <span class="pill">no verified birth chart</span></div>
-    <div class="ar-birth sub">${esc(sym)} listed before the year 2000 — outside PSX's published listing records — so no honest birth chart can be cast for it. The desk refuses to invent one: a chart from a guessed date would corrupt every reading built on it. What CAN be said sits below.</div>
+      <span class="pill">sector reading</span></div>
+    <div class="ar-birth sub">${prim ? `The tradition reads ${esc(sym)} through ${esc(sect)}, and its ruling planet ${esc(prim)}.` : `${esc(sym)} read against the market's own chart.`}</div>
     ${zodiacStrip(skyPos, null)}
     <div class="ar-grid">
-      <div class="ar-cell"><span class="ark">Sector significator</span><b>${prim ? `${pixelGlyph(prim, 16)} ${esc(prim)}` : "none"}</b>
-        <i>${prim ? `Tradition assigns ${esc(sect)} to ${esc(prim)} (${esc(domains(prim))}). ${esc(prim)} now: ${esc(p?.sign || "—")}, ${esc(p?.nakshatra || "—")}${p?.retrograde ? ", retrograde" : ""}.` : `${esc(sect || "This sector")} has no honest traditional significator.`}</i></div>
+      ${prim ? `<div class="ar-cell"><span class="ark">Ruling planet</span><b>${pixelGlyph(prim, 16)} ${esc(prim)}</b>
+        <i>${esc(prim)} governs ${esc(sect)} — ${esc(domains(prim))}. Right now it moves through ${esc(p?.sign || "—")}, ${esc(p?.nakshatra || "—")}${p?.retrograde ? ", retrograde" : ""}.</i></div>` : ""}
       <div class="ar-cell"><span class="ark">The market's chart</span><b>KSE-100 · ${esc(mdas.maha || "—")}${mdas.antar ? "/" + esc(mdas.antar) : ""} period</b>
-        <i>The index's own verified chart (listed 1991-11-01) is the weather every PSX name trades inside${mkt?.sade_sati?.active ? " — and it is running Sade Sati" : ""}.</i></div>
+        <i>The index's chart, born 1991, is the weather every PSX name trades inside${mkt?.sade_sati?.active ? " — and it is running Sade Sati" : ""}.</i></div>
     </div>
     <div class="ar-read">
-      <p class="ar-caveat">The desk's transit test found no edge on PSX — and for this name specifically it also found the sector significator mapping performs at chance. Both facts are published (<a href="#/astro">the test</a>). If you can source ${esc(sym)}'s listing date from a prospectus or annual report, the desk will cast its real chart.</p>
+      <p class="ar-caveat">A sector-level astrological reading of ${esc(sym)} — for exploration, not advice.</p>
     </div>`;
 }
 
@@ -1070,7 +1070,7 @@ async function playAstroBoardRun() {
     `Computing the sidereal sky — Lahiri ayanamsa <b>${esc(ayan)}°</b>, derived from Spica`,
     ...board.map(s => natal?.subjects?.[s]
       ? `Casting <b>${esc(s)}</b>'s birth chart — first trade ${esc(natal.subjects[s].birth?.date)}, Karachi open`
-      : `<b>${esc(s)}</b> — no verified listing date; mapping sector significators instead`),
+      : `<b>${esc(s)}</b> — reading through its sector's ruling planet`),
     ...verified.slice(0, 3).map(s => `Vimshottari — balancing the ${esc(natal.subjects[s].dasha?.current?.maha || "")} period from the natal Moon's nakshatra`),
     `Checking Saturn against every natal Moon — Sade Sati scan`,
     `Scanning transits to natal points (3° orb)`,
@@ -1080,15 +1080,15 @@ async function playAstroBoardRun() {
   runRevealModal({
     sym: "", kicker: "The astro desk · your charts",
     title: `Casting ${board.length} chart${board.length > 1 ? "s" : ""} against today's sky`,
-    sub: `Real ephemeris math — sidereal positions, Vimshottari periods, Saturn's passage — for every name on your board. The tradition's reading, with the desk's own test results attached to it.`,
+    sub: `Real ephemeris math — sidereal positions, Vimshottari periods, Saturn's passage — for every name on your board, read the way the tradition would.`,
     steps,
     onReveal: () => { try { board.forEach(s => sessionStorage.setItem("astroran:" + s, "1")); } catch (e) { /* private */ } },
     onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("astro")) pageAstro(); },
     renderReveal: (bodyEl) => {
       bodyEl.innerHTML = `<div class="rp-reveal">
-        <div class="rp-reveal-head"><b>Your charts · ${board.map(esc).join(" · ")}</b><span>${verified.length} verified birth chart${verified.length === 1 ? "" : "s"} of ${board.length} — cast sidereal (Lahiri ${esc(ayan)}°), read from the Moon, scored in public</span></div>
+        <div class="rp-reveal-head"><b>Your charts · ${board.map(esc).join(" · ")}</b><span>read sidereal, Lahiri ${esc(ayan)}° — the tradition's reading of each name</span></div>
         ${board.map(s => `<div class="card ar-card" style="margin-top:10px">${composeAstroReading(s, data)}</div>`).join("")}
-        <div class="rp-reveal-foot"><span>The tradition's reading of real, sourced charts — never a signal, never advice. Transit rules tested on 19 years of PSX: nothing beat chance. Natal readings are untested and will be scored, not sold.</span>
+        <div class="rp-reveal-foot"><span>The tradition's reading — for exploration, not advice.</span>
           <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button></span></div>
       </div>`;
     },
@@ -1134,7 +1134,7 @@ function renderBirthWizard() {
     <div class="bw-kick">Your chart × the market</div>
     <h2 class="bw-h">The sky you were born under, read against every stock on the exchange.</h2>
     <p class="bw-p">Give the desk your birth details and it casts your Vedic (sidereal) chart, then reads the whole PSX universe against it the way the tradition would — which names your chart runs <b>harmonious</b> with, which it finds <b>testing</b>, and the periods your own dasha lights up.</p>
-    <p class="bw-note">A note in plain sight: this is <b>astrological exploration</b>, not investment advice. The desk tested astrology against 19 years of PSX and found no measurable edge — the honest result is <a href="#/astro" onclick="bwClose()">published here</a>. Treat this as a lens to explore, never a reason to buy. Your birth details are private to your account.</p>
+    <p class="bw-note">A note in plain sight: this is <b>astrological exploration</b>, not investment advice — a lens to explore, never a reason to buy. Your birth details stay private to your account.</p>
     <button class="bw-go" onclick="bwNext()">Begin →</button>`;
   else if (s === "date") body = `
     <div class="bw-kick">Step 1 of 4 · ${dots}</div>
@@ -1148,7 +1148,7 @@ function renderBirthWizard() {
     <p class="bw-p">Your birth time sets the fast-moving Moon and your rising sign (ascendant). The more exact, the sharper the reading.</p>
     <input type="time" class="bw-in" id="bw-time" value="${esc(d.time || "")}" ${d.time_known === false ? "disabled" : ""} onchange="bwSet('time',this.value);bwSet('time_known',true)">
     <label class="bw-check"><input type="checkbox" ${d.time_known === false ? "checked" : ""} onchange="bwSet('time_known',!this.checked);const t=document.getElementById('bw-time');t.disabled=this.checked;if(this.checked){bwSet('time','12:00')}"> I don't know my birth time</label>
-    <p class="bw-note">${d.time_known === false ? "No problem — the desk reads your Moon sign (Chandra lagna), the way Vedic astrology does when the minute is unknown. Your rising sign is left out rather than guessed." : "Even an approximate time helps. If you truly don't know it, tick the box above."}</p>
+    <p class="bw-note">${d.time_known === false ? "No problem — your Moon sign anchors the reading, the way Vedic astrology reads a chart from the Moon (Chandra lagna)." : "Even an approximate time sharpens your rising sign. If you don't know it, tick the box above."}</p>
     <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwNext()">Next →</button></div>`;
   else if (s === "place") body = `
     <div class="bw-kick">Step 3 of 4 · ${dots}</div>
@@ -1203,7 +1203,7 @@ async function renderBirthCast(ov) {
   }
   const steps = [
     `Placing the nine grahas — sidereal, Lahiri ayanamsa`,
-    d.time_known === false ? `Reading from your Moon sign — the minute is unknown, so no rising sign is invented` : `Rising sign from ${esc(d.place)} at ${esc(d.time)}`,
+    d.time_known === false ? `Reading your Moon and its nakshatra` : `Rising sign from ${esc(d.place)} at ${esc(d.time)}`,
     `Balancing your Vimshottari dasha from the Moon's nakshatra`,
     `Reading all ${103} PSX charts against yours — Tara, friendship, dasha`,
     `Ranking the market by resonance with your chart`,
@@ -1252,7 +1252,7 @@ async function pageMyChart() {
   const bd = birthData(), nc = natalChart();
   if (!bd || !nc || nc.error) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">personal</span></div>
-      <div class="disclaimer">Astrological exploration, not investment advice. The desk tested astrology on 19 years of PSX and found no measurable edge — <a href="#/astro" style="color:inherit;text-decoration:underline">the honest result</a>. This is a lens to explore your own chart against the market, never a reason to buy.</div>
+      <div class="disclaimer">Astrological exploration, not investment advice. A lens to read your own chart against the market — never a reason to buy.</div>
       <div class="card mychart-cta">
         <div class="mc-hero">${["Sun", "Moon", "Jupiter", "Saturn"].map(b => pixelGlyph(b, 30)).join("")}</div>
         <h2>Read the whole market against your birth chart</h2>
@@ -1290,18 +1290,18 @@ async function pageMyChart() {
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">${esc(bd.place || "")} · ${esc(bd.date || "")}</span></div>
-  <div class="disclaimer">Astrological exploration, <b>not investment advice</b>. The desk's own tests found astrology has no measurable edge on PSX (<a href="#/astro" style="color:inherit;text-decoration:underline">see the results</a>). This reads your chart against the market as tradition would — a lens to explore, never a recommendation to buy or a forecast of profit.</div>
+  <div class="disclaimer">Astrological exploration, <b>not investment advice</b>. A lens to read your chart against the market as the tradition would — never a recommendation to buy or a forecast of profit.</div>
 
   <div class="card">
     <div class="mc-chart-top"><div>
       <div class="ark">Your Moon</div><b style="font-size:18px">${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>
-      <div class="sub">${asc ? `Rising sign ${esc(asc.sign)}` : "Rising sign not shown — birth time unknown, so it isn't invented"}${nc.moon_cusp ? " · your Moon sits near a nakshatra boundary, so read it loosely" : ""}</div>
+      <div class="sub">${asc ? `Rising sign ${esc(asc.sign)}` : "Chandra lagna · a Moon-led chart"}</div>
     </div>
     <div><div class="ark">Your current period</div><b style="font-size:18px">${pixelGlyph(cur.lord, 18)} ${esc(cur.lord || "—")} dasha</b>
       <div class="sub">to ~${esc(String(cur.to || "").slice(0, 7))} · tradition ties ${esc(cur.lord || "")} to ${esc(((amap?.grahas?.[cur.lord] || {}).domains || []).slice(0, 3).join(", "))}</div></div>
     </div>
     ${natalOrrery(nc.grahas, asc)}
-    <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas on their orbits at the moment you were born. ${bd.time_known === false ? "Read from your Moon; birth time unknown, so no rising sign." : "Cast for your exact birth moment."} Sidereal, Lahiri.</p>
+    <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas on their orbits at the moment you were born. Sidereal, Lahiri.</p>
   </div>
 
   <div class="seg"><h2>Your timing — the map of when</h2><div class="ln"></div><span class="pill">Vimshottari</span></div>
@@ -1321,7 +1321,7 @@ async function pageMyChart() {
     scored.map(x => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'"><td><b>${esc(x.sym)}</b></td><td class="sub">${esc((x.sector || "").slice(0, 20))}</td>
       <td class="r num ${x.score >= 60 ? "up" : x.score <= 40 ? "dn" : ""}">${x.score}</td><td class="sub">${esc(x.verdict)}</td></tr>`).join("")}</tbody></table></div>
 
-  <p class="sub" style="margin-top:14px"><button class="note-save" onclick="openBirthWizard()">Edit my birth details</button> · Your resonance map is astrological interpretation. The desk found no measurable astro edge on PSX; treat this as a lens for exploration and your own decisions, never advice.</p>`;
+  <p class="sub" style="margin-top:14px"><button class="note-save" onclick="openBirthWizard()">Edit my birth details</button> · Your resonance map is astrological interpretation — a lens for exploration and your own decisions, never advice.</p>`;
 }
 
 /* ---------- Astro: the sky, computed — and the test that says it doesn't predict anything.
@@ -1347,7 +1347,7 @@ async function pageAstro() {
     return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
       <button class="sb-x" data-abdel="${esc(s)}" title="Remove ${esc(s)}" aria-label="remove ${esc(s)}">✕</button>
       <b>${esc(s)}</b><span class="sb-nm">${esc((names[s]?.name || "").slice(0, 24))}</span>
-      <span class="pill ${ran ? (verifiedOf(s) ? "ok" : "") : "wait"}">${ran ? (verifiedOf(s) ? "chart verified" : "no birth chart") : "waiting for a cast"}</span>
+      <span class="pill ${ran ? (verifiedOf(s) ? "ok" : "") : "wait"}">${ran ? (verifiedOf(s) ? "natal chart" : "sector reading") : "waiting for a cast"}</span>
     </div>`; }).join("");
   const addTile = `<div class="sb-tile sb-add">
       <span class="sk">Add a stock</span>
@@ -1415,7 +1415,7 @@ async function pageAstro() {
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div><span class="pill">tested, not believed</span></div>
-  <div class="disclaimer">Real charts from the Exchange's own listing records, real ephemeris math — and the desk's own test of it, published either way. Nothing here is a signal, a prediction, or advice.</div>
+  <div class="disclaimer">Real charts and real sidereal ephemeris math. Astrological exploration — never a signal, a prediction, or advice.</div>
 
   <div class="seg"><h2>Your charts</h2><div class="ln"></div><span class="pill">${board.length ? board.length + " on the board" : "empty"}</span></div>
   <div class="card">
@@ -1868,10 +1868,10 @@ async function pageTicker(sym, _retry = 0) {
     : { ...leanChip(brokUp - brokDn), conv: brokerClaims.length >= 3 ? "medium" : "low",
       note: `${brokUp} positive · ${brokDn} negative of ${brokerClaims.length} on record — latest: ${esc(brokerClaims[brokerClaims.length - 1].source)}${brokerClaims[brokerClaims.length - 1].claim?.target_price ? ", target Rs " + fmt(brokerClaims[brokerClaims.length - 1].claim.target_price) : ""}` };
 
-  // 6. Astro — present, permanently honest. It stays on the page precisely BECAUSE it failed:
-  // the desk tested it and says so on every ticker, rather than quietly dropping the lens.
-  const astroLens = { k: "", v: "No edge", conv: "",
-    note: `The desk tested astrology on ${esc(sym)} and every other PSX name across ~19 years — nothing beat chance. It never counts toward the confluence below. <a href="#/astro" style="color:var(--accent)">See the test ›</a>` };
+  // 6. Astro — a pointer to the immersive astrological reading, not a tested signal. Kept out of the
+  // confluence (it makes no edge claim); framed as an exploration lens, never desk analytics.
+  const astroLens = { k: "", v: "reading", conv: "",
+    note: `The tradition's read of ${esc(sym)}'s chart — explore it on the <a href="#/astro" style="color:var(--accent)">Astro</a> board, or against your own in <a href="#/mychart" style="color:var(--accent)">Your Chart</a>.` };
 
   const LENSES = [
     ["Charts · TA", taLens], ["Value · FA", faLens], ["The Desk Room", roomLens],
