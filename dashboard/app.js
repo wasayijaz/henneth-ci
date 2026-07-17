@@ -584,17 +584,224 @@ async function pageStrategies() {
   ${reqForm}`;
 }
 
+/* ---------- pixel grahas: 11x11 one-bit glyphs, drawn as SVG rects in currentColor.
+   The classical symbols, pixelated — Saturn's ring, Jupiter's band, the Sun's rays. ---------- */
+const PIXEL_GRAHAS = {
+  Sun: ["....#....", ".#..#..#.", "..#####..", ".##...##.", "#.#.#.#.#", ".##...##.", "..#####..", ".#..#..#.", "....#...."],
+  Moon: ["...###...", "..##.....", ".##......", ".##......", ".##......", ".##......", ".##......", "..##.....", "...###..."],
+  Mercury: [".#.....#.", "..#####..", ".##...##.", ".##...##.", "..#####..", "....#....", "..#####..", "....#....", "....#...."],
+  Venus: ["..#####..", ".##...##.", ".##...##.", ".##...##.", "..#####..", "....#....", "..#####..", "....#....", "....#...."],
+  Mars: [".....####", "......##.", "....##.##", "..#####..", ".##...#..", ".##......", ".##......", "..#####..", "........."],
+  Jupiter: ["..#####..", ".##...##.", "#########", "#########", ".##...##.", ".##...##.", "..#####..", ".........", "........."],
+  Saturn: ["..#####..", ".##...##.", ".##...##.", "###...###", "#########", "###...###", ".##...##.", "..#####..", "........."],
+  Rahu: ["..#####..", ".##...##.", ".##...##.", ".##...##.", "..#...#..", "..#...#..", ".##...##.", "##.....##", "........."],
+  Ketu: ["##.....##", ".##...##.", "..#...#..", "..#...#..", ".##...##.", ".##...##.", ".##...##.", "..#####..", "........."],
+};
+function pixelGlyph(body, px) {
+  const g = PIXEL_GRAHAS[body];
+  if (!g) return "";
+  const n = 9, cell = Math.max(1, Math.floor(px / n));
+  let rects = "";
+  g.forEach((row, y) => { [...row].forEach((c, x) => { if (c === "#") rects += `<rect x="${x * cell}" y="${y * cell}" width="${cell}" height="${cell}"/>`; }); });
+  return `<svg class="pxg" viewBox="0 0 ${n * cell} ${n * cell}" width="${px}" height="${px}" fill="currentColor" aria-label="${body}">${rects}</svg>`;
+}
+const GRAHA_AB = { Sun: "Su", Moon: "Mo", Mercury: "Me", Venus: "Ve", Mars: "Ma", Jupiter: "Ju", Saturn: "Sa", Rahu: "Ra", Ketu: "Ke" };
+
+/* the zodiac strip: 12 sidereal signs as columns; transiting grahas on the top lane, the natal
+   chart (when one exists) on the bottom lane — so a transit sitting on a natal point is VISIBLE
+   as a vertical alignment, which is the whole thing astrologers look for. */
+function zodiacStrip(transitPos, natalPos) {
+  const SIGNS12 = ["Ari", "Tau", "Gem", "Can", "Leo", "Vir", "Lib", "Sco", "Sag", "Cap", "Aqu", "Pis"];
+  const lane = pos => {
+    const bySign = {};
+    Object.entries(pos || {}).forEach(([b, p]) => {
+      const si = Math.floor((p.lon ?? 0) / 30) % 12;
+      (bySign[si] = bySign[si] || []).push(b);
+    });
+    return SIGNS12.map((_, i) => `<div class="zs-cell">${(bySign[i] || []).map(b =>
+      `<span class="zs-g" title="${b}${pos[b].retrograde ? " (retrograde)" : ""}">${pixelGlyph(b, 18)}<i>${GRAHA_AB[b]}${pos[b].retrograde ? "ᴿ" : ""}</i></span>`).join("")}</div>`).join("");
+  };
+  return `<div class="zstrip">
+    <div class="zs-lane"><span class="zs-lbl">sky now</span>${lane(transitPos)}</div>
+    ${natalPos ? `<div class="zs-lane natal"><span class="zs-lbl">at birth</span>${lane(natalPos)}</div>` : ""}
+    <div class="zs-lane signs"><span class="zs-lbl"></span>${SIGNS12.map(s => `<div class="zs-cell sign">${s}</div>`).join("")}</div>
+  </div>`;
+}
+
+/* ---------- the astro board (profiles.astro_board; session-only for guests) ---------- */
+function astroBoard() {
+  if (me) return (myProfile && myProfile.astro_board) || [];
+  try { return JSON.parse(sessionStorage.getItem("astroboard") || "[]"); } catch (e) { return []; }
+}
+async function saveAstroBoard(list) {
+  if (me) return saveProfile({ astro_board: list });
+  try { sessionStorage.setItem("astroboard", JSON.stringify(list)); } catch (e) { /* private mode */ }
+  return null;
+}
+function astroRunOn(sym) { try { return !!sessionStorage.getItem("astroran:" + sym); } catch (e) { return false; } }
+async function addAstroTicker() {
+  const inp = document.getElementById("ab-tkr"), msg = document.getElementById("ab-msg");
+  const say = t => { if (msg) msg.textContent = t; };
+  const sym = (inp?.value || "").toUpperCase().trim();
+  if (!sym) return;
+  const uni = await j("universe.json");
+  if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
+  const cur = astroBoard();
+  if (cur.includes(sym)) return say(`${sym} is already on your board.`);
+  if (cur.length >= 8) return say("The board holds 8 charts — remove one first.");
+  const err = await saveAstroBoard([...cur, sym]);
+  if (err) return say("Couldn't save — try again.");
+  pageAstro();
+}
+async function removeAstroTicker(sym) {
+  const err = await saveAstroBoard(astroBoard().filter(s => s !== sym));
+  if (!err) pageAstro();
+}
+
+/* ---------- the reading: what the tradition says about this chart, composed strictly from the
+   computed layers (astro_natal / astro / astro_map). Template prose over real data — no agent, no
+   invention, and NEVER a call. The desk's tested-vs-untested status is stated inside the reading. */
+function composeAstroReading(sym, data) {
+  const { natal, sky, amap, sectors, uni } = data;
+  const subj = natal?.subjects?.[sym];
+  const name = uni?.symbols?.[sym]?.name || "";
+  const sect = (sectors?.tickers?.[sym] || {}).sector;
+  const domains = b => ((amap?.grahas?.[b] || {}).domains || []).slice(0, 3).join(", ");
+  const skyPos = sky?.positions || {};
+  const events14 = (sky?.events || []).filter(e => e.importance >= 3 && e.date <= new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10)).slice(0, 3);
+
+  if (subj) {
+    const moon = subj.natal?.Moon || {};
+    const das = subj.dasha?.current || {};
+    const ts = subj.time_sensitivity || {};
+    const ss = subj.sade_sati || {};
+    const hits = (subj.transits_to_natal || []).slice(0, 3);
+    const natPos = subj.natal;
+    return `
+      <div class="ar-head"><b>${esc(sym)}</b><span class="sub">${esc(name.slice(0, 34))}</span>
+        <span class="pill ok">chart verified · listed ${esc(subj.birth?.date)}</span></div>
+      <div class="ar-birth sub">Birth chart cast for the first trade — ${esc(subj.birth?.date)} at the Karachi open, the convention financial astrology has used since Meridian. Source: ${/floatation|Exchange/i.test(subj.birth?.source || "") ? "PSX's own listing records" : "verified first-trade data"}. Sidereal, Lahiri.</div>
+      ${zodiacStrip(skyPos, natPos)}
+      <div class="ar-grid">
+        <div class="ar-cell"><span class="ark">Natal Moon</span><b>${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>
+          <i>The chart is read from the Moon (Chandra lagna) — the ascendant needs the exact minute, which no exchange records.</i></div>
+        <div class="ar-cell"><span class="ark">The period (dasha)</span><b>${pixelGlyph(das.maha, 16)} ${esc(das.maha || "—")}${das.antar ? ` / ${esc(das.antar)}` : ""}</b>
+          <i>${das.maha ? `A ${esc(das.maha)} maha-dasha${ts.maha_lord_stable === false ? " (period lord shifts with the unknown trade time — read loosely)" : ""}, running to ~${esc(String(das.maha_to || "").slice(0, 7))}. Tradition ties ${esc(das.maha)} to ${esc(domains(das.maha))}.` : "—"}</i></div>
+        <div class="ar-cell"><span class="ark">Saturn's passage</span><b>${ss.active ? "SADE SATI · " + esc((ss.phase || "").split(" (")[0]) : ss.phase ? esc(ss.phase.split(" (")[0]) : "quiet"}</b>
+          <i>${ss.active ? "Saturn is crossing the natal Moon's neighbourhood — the seven-and-a-half-year passage the tradition treats as its heaviest weather." : "No Sade Sati running on this chart."}</i></div>
+        <div class="ar-cell"><span class="ark">On this chart now</span><b>${hits.length ? hits.map(h => `${GRAHA_AB[h.transiting]}→${GRAHA_AB[h.over_natal]}`).join(" · ") : "no tight contacts"}</b>
+          <i>${hits.length ? hits.map(h => `transiting ${esc(h.transiting)} sits on natal ${esc(h.over_natal)} (${h.orb_deg}°)`).join("; ") + "." : "No transiting graha within 3° of a natal point today."}</i></div>
+      </div>
+      <div class="ar-read">
+        <p><b>The days ahead:</b> ${events14.length ? `the sky's next marks are ${events14.map(e => `${esc(e.text)} (${esc(e.date)})`).join("; ")}.` : "no high-rank sky events in the next two weeks."} ${hits.length ? `Tradition would watch the ${esc(hits[0].transiting)}–natal-${esc(hits[0].over_natal)} contact most closely.` : ""}</p>
+        <p><b>The months:</b> ${das.antar ? `the running sub-period is ${esc(das.antar)} (to ~${esc(String(das.antar_to || "").slice(0, 7))}) — tradition colours these months with ${esc(domains(das.antar))}.` : "sub-period undetermined."}</p>
+        <p><b>The years:</b> ${das.maha ? `the ${esc(das.maha)} maha-dasha frames the longer arc${ts.dasha_stable ? "" : " (its end-date shifts with the unrecorded trade time — the desk prints the convention's answer, not a certainty)"}.` : "—"}</p>
+        <p class="ar-caveat">This is the tradition's reading of a real chart — not a forecast, not a signal, not advice. The desk's own test of transit rules found nothing that beats chance on PSX (<a href="#/astro" onclick="document.querySelector('.astro-verdict')?.scrollIntoView({behavior:'smooth'})">the test</a>); natal readings like this one are <b>untested</b>, and the desk's plan is to score them in public rather than sell them.</p>
+      </div>`;
+  }
+  // no verified chart — the honest fallback: sector significators + the market's chart as backdrop
+  const sig = sect ? (amap?.sector_significators?.[sect] || {}) : {};
+  const prim = sig.primary;
+  const p = prim ? skyPos[prim] : null;
+  const mkt = natal?.subjects?.KSE100;
+  const mdas = mkt?.dasha?.current || {};
+  return `
+    <div class="ar-head"><b>${esc(sym)}</b><span class="sub">${esc(name.slice(0, 34))}</span>
+      <span class="pill">no verified birth chart</span></div>
+    <div class="ar-birth sub">${esc(sym)} listed before the year 2000 — outside PSX's published listing records — so no honest birth chart can be cast for it. The desk refuses to invent one: a chart from a guessed date would corrupt every reading built on it. What CAN be said sits below.</div>
+    ${zodiacStrip(skyPos, null)}
+    <div class="ar-grid">
+      <div class="ar-cell"><span class="ark">Sector significator</span><b>${prim ? `${pixelGlyph(prim, 16)} ${esc(prim)}` : "none"}</b>
+        <i>${prim ? `Tradition assigns ${esc(sect)} to ${esc(prim)} (${esc(domains(prim))}). ${esc(prim)} now: ${esc(p?.sign || "—")}, ${esc(p?.nakshatra || "—")}${p?.retrograde ? ", retrograde" : ""}.` : `${esc(sect || "This sector")} has no honest traditional significator.`}</i></div>
+      <div class="ar-cell"><span class="ark">The market's chart</span><b>KSE-100 · ${esc(mdas.maha || "—")}${mdas.antar ? "/" + esc(mdas.antar) : ""} period</b>
+        <i>The index's own verified chart (listed 1991-11-01) is the weather every PSX name trades inside${mkt?.sade_sati?.active ? " — and it is running Sade Sati" : ""}.</i></div>
+    </div>
+    <div class="ar-read">
+      <p class="ar-caveat">The desk's transit test found no edge on PSX — and for this name specifically it also found the sector significator mapping performs at chance. Both facts are published (<a href="#/astro">the test</a>). If you can source ${esc(sym)}'s listing date from a prospectus or annual report, the desk will cast its real chart.</p>
+    </div>`;
+}
+
+/* ---------- the run: 10–20s of real computation narrated, then the readings reveal ---------- */
+async function playAstroBoardRun() {
+  const board = astroBoard();
+  if (!board.length) return;
+  const [natal, sky, amap, sectors, uni] = await Promise.all([
+    j("astro_natal.json"), j("astro.json"), j("astro_map.json"), j("sectors.json"), j("universe.json")]);
+  const data = { natal, sky, amap, sectors, uni };
+  const verified = board.filter(s => natal?.subjects?.[s]);
+  const ayan = sky?.system?.ayanamsa_deg;
+
+  const steps = [
+    `Computing the sidereal sky — Lahiri ayanamsa <b>${esc(ayan)}°</b>, derived from Spica`,
+    ...board.map(s => natal?.subjects?.[s]
+      ? `Casting <b>${esc(s)}</b>'s birth chart — first trade ${esc(natal.subjects[s].birth?.date)}, Karachi open`
+      : `<b>${esc(s)}</b> — no verified listing date; mapping sector significators instead`),
+    ...verified.slice(0, 3).map(s => `Vimshottari — balancing the ${esc(natal.subjects[s].dasha?.current?.maha || "")} period from the natal Moon's nakshatra`),
+    `Checking Saturn against every natal Moon — Sade Sati scan`,
+    `Scanning transits to natal points (3° orb)`,
+    `Composing the readings — tradition's words, the desk's tests attached`,
+  ];
+
+  runRevealModal({
+    sym: "", kicker: "The astro desk · your charts",
+    title: `Casting ${board.length} chart${board.length > 1 ? "s" : ""} against today's sky`,
+    sub: `Real ephemeris math — sidereal positions, Vimshottari periods, Saturn's passage — for every name on your board. The tradition's reading, with the desk's own test results attached to it.`,
+    steps,
+    onReveal: () => { try { board.forEach(s => sessionStorage.setItem("astroran:" + s, "1")); } catch (e) { /* private */ } },
+    onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("astro")) pageAstro(); },
+    renderReveal: (bodyEl) => {
+      bodyEl.innerHTML = `<div class="rp-reveal">
+        <div class="rp-reveal-head"><b>Your charts · ${board.map(esc).join(" · ")}</b><span>${verified.length} verified birth chart${verified.length === 1 ? "" : "s"} of ${board.length} — cast sidereal (Lahiri ${esc(ayan)}°), read from the Moon, scored in public</span></div>
+        ${board.map(s => `<div class="card ar-card" style="margin-top:10px">${composeAstroReading(s, data)}</div>`).join("")}
+        <div class="rp-reveal-foot"><span>The tradition's reading of real, sourced charts — never a signal, never advice. Transit rules tested on 19 years of PSX: nothing beat chance. Natal readings are untested and will be scored, not sold.</span>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button></span></div>
+      </div>`;
+    },
+  });
+}
+
 /* ---------- Astro: the sky, computed — and the test that says it doesn't predict anything.
    The null result LEADS. The calendar is the secondary thing, offered as calendar, not signal.
    This page exists because we tested it, not because we believe it. ---------- */
 async function pageAstro() {
-  const [a, bt] = await Promise.all([j("astro.json"), j("astro_backtest.json")]);
+  const [a, bt, natal, amap, sectors, uni] = await Promise.all([
+    j("astro.json"), j("astro_backtest.json"), j("astro_natal.json"), j("astro_map.json"),
+    j("sectors.json"), j("universe.json")]);
   if (!a || a.status !== "ok") {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">The ephemeris is unavailable this cycle${a?.error ? ` (${esc(a.error)})` : ""}. The desk shows nothing rather than something it can't compute.</div></div>`;
     return;
   }
   const h = bt?.headline || {}, sys = a.system || {};
+
+  // ---- your charts: the board. Nothing shows until the desk is RUN on it (same discipline
+  // as the strategy board) — the casting is the experience.
+  const board = astroBoard();
+  const names = uni?.symbols || {};
+  const verifiedOf = s => !!natal?.subjects?.[s];
+  const tiles = board.map(s => { const ran = astroRunOn(s);
+    return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
+      <button class="sb-x" data-abdel="${esc(s)}" title="Remove ${esc(s)}" aria-label="remove ${esc(s)}">✕</button>
+      <b>${esc(s)}</b><span class="sb-nm">${esc((names[s]?.name || "").slice(0, 24))}</span>
+      <span class="pill ${ran ? (verifiedOf(s) ? "ok" : "") : "wait"}">${ran ? (verifiedOf(s) ? "chart verified" : "no birth chart") : "waiting for a cast"}</span>
+    </div>`; }).join("");
+  const addTile = `<div class="sb-tile sb-add">
+      <span class="sk">Add a stock</span>
+      <input id="ab-tkr" class="ph-in" list="ab-syms" placeholder="e.g. UBL" autocomplete="off" onkeydown="if(event.key==='Enter')addAstroTicker()">
+      <button class="note-save" onclick="addAstroTicker()">Add to board</button>
+      <datalist id="ab-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
+    </div>`;
+  const pendingA = board.filter(s => !astroRunOn(s));
+  const runBarA = board.length ? `<button class="run-desk run-strat ${pendingA.length ? "" : "ran"}" onclick="playAstroBoardRun()">
+    <span class="run-ico">▶</span>
+    <span class="run-txt"><b>${pendingA.length ? `Cast the charts for your ${board.length} stock${board.length > 1 ? "s" : ""}` : `Cast your ${board.length} chart${board.length > 1 ? "s" : ""} again`}</b><i>Real ephemeris math against today's sky — birth charts from the Exchange's own listing records, Vimshottari periods, Saturn's passage, transits to natal points. The tradition's reading, with the desk's test attached.</i></span>
+    <span class="run-meta"><span class="run-last">Sky as of · ${esc((a.updated || "").slice(0, 10))}</span><span class="run-go">${pendingA.length ? "Cast ›" : "Cast again ›"}</span></span>
+  </button>` : "";
+  const dataPack = { natal, sky: a, amap, sectors, uni };
+  const readings = board.filter(astroRunOn).map(s =>
+    `<div class="card ar-card">${composeAstroReading(s, dataPack)}</div>`).join("");
+  const boardStub = board.length && pendingA.length === board.length
+    ? `<div class="card"><div class="empty">Your readings land here — hit <b>Cast ›</b> above and the desk works each chart against today's sky.</div></div>` : "";
   const nStocks = (bt?.method?.tested_on || "").match(/\((\d+) with/)?.[1];
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
 
@@ -645,7 +852,17 @@ async function pageAstro() {
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div><span class="pill">tested, not believed</span></div>
-  <div class="disclaimer">This page exists because the desk <b>tested</b> astrology and published what it found — including the finding that it doesn't work. Nothing here is a signal, a prediction, or advice. The sky below is a <b>calendar</b>.</div>
+  <div class="disclaimer">Real charts from the Exchange's own listing records, real ephemeris math — and the desk's own test of it, published either way. Nothing here is a signal, a prediction, or advice.</div>
+
+  <div class="seg"><h2>Your charts</h2><div class="ln"></div><span class="pill">${board.length ? board.length + " on the board" : "empty"}</span></div>
+  <div class="card">
+    <div class="sb-grid">${tiles}${addTile}</div>
+    <span id="ab-msg" class="sub" style="display:block;margin-top:8px"></span>
+    ${!me && board.length ? `<span class="sub" style="display:block;margin-top:4px">Your board lives in this session only — <a style="color:var(--accent);cursor:pointer" onclick="openAuth('signup')">sign in</a> to keep it.</span>` : ""}
+  </div>
+  ${runBarA}
+  ${boardStub}
+  ${readings}
 
   ${verdict}
 
@@ -2097,6 +2314,8 @@ document.addEventListener("click", (e) => {
   if (bk) { e.preventDefault(); e.stopPropagation(); toggleBroker(bk.dataset.broker); }
   const sd = e.target.closest("[data-sbdel]");
   if (sd) { e.preventDefault(); e.stopPropagation(); removeBoardTicker(sd.dataset.sbdel); }
+  const ad = e.target.closest("[data-abdel]");
+  if (ad) { e.preventDefault(); e.stopPropagation(); removeAstroTicker(ad.dataset.abdel); }
 });
 
 /* ---------- portfolio: read-only holdings tracker (profiles.portfolio, RLS-scoped) ---------- */
