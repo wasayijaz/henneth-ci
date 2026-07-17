@@ -455,6 +455,36 @@ body[data-theme=gemini] .rp-strat-top{display:flex;align-items:flex-start;gap:13
 body[data-theme=gemini] .rp-strat-rank{flex:none;font-family:"Pixelify Sans",var(--mono,monospace);font-size:26px;font-weight:700;line-height:1;color:var(--up)}
 body[data-theme=gemini] .rp-strat-top b{font-size:15px}
 @media(max-width:720px){body[data-theme=gemini] .replay-body{padding:15px;min-height:320px}body[data-theme=gemini] .replay-kicker{display:none}body[data-theme=gemini] .rp-desk{grid-template-columns:1fr}}
+/* Strategies page — your board (tiles + add) */
+body[data-theme=gemini] .sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+body[data-theme=gemini] .sb-tile{position:relative;display:flex;flex-direction:column;gap:5px;border:1.5px solid var(--line);background:var(--panel2,var(--panel));padding:13px 15px;min-height:104px;font:inherit;color:var(--ink1);text-align:left}
+body[data-theme=gemini] .sb-tile>b{font-size:16px;padding-right:22px}
+body[data-theme=gemini] .sb-nm{font-size:11px;color:var(--ink3);min-height:14px}
+body[data-theme=gemini] .sb-tile .pill{align-self:flex-start;margin-top:auto}
+body[data-theme=gemini] .sb-x{position:absolute;top:7px;right:7px;background:transparent;border:1.5px solid transparent;color:var(--ink3);font:inherit;font-size:11px;line-height:1;padding:3px 6px;cursor:pointer}
+body[data-theme=gemini] .sb-x:hover{border-color:var(--dn);color:var(--dn)}
+body[data-theme=gemini] .sb-add{border-style:dashed;background:var(--panel);cursor:default}
+body[data-theme=gemini] .sb-add .ph-in{width:100%;flex:none;min-width:0}
+body[data-theme=gemini] .sb-add .note-save{align-self:flex-start;margin-top:auto}
+body[data-theme=gemini] .sb-res-head{display:flex;align-items:center;gap:10px;padding:12px 17px;border-bottom:1px solid var(--hair)}
+body[data-theme=gemini] .sb-res-head .pill{margin-left:auto}
+/* Strategies page — the plain-English dictionary */
+body[data-theme=gemini] .dict{display:block;border:1.5px solid var(--line);background:var(--panel);margin:10px 0 14px}
+body[data-theme=gemini] .dict>summary{display:flex;align-items:center;gap:12px;list-style:none;cursor:pointer;padding:14px 17px}
+body[data-theme=gemini] .dict>summary::-webkit-details-marker{display:none}
+body[data-theme=gemini] .dict>summary:hover{background:var(--hair)}
+body[data-theme=gemini] .dict-arrow{margin-left:auto;color:var(--ink3)}
+body[data-theme=gemini] .dict[open] .dict-arrow{transform:rotate(180deg)}
+body[data-theme=gemini] .dict[open]>summary{border-bottom:1px solid var(--hair)}
+body[data-theme=gemini] .dict-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);padding:14px 17px 4px}
+body[data-theme=gemini] .dict-row{display:grid;grid-template-columns:230px 1fr 160px;gap:14px;align-items:baseline;padding:10px 17px;border-top:1px solid var(--hair)}
+body[data-theme=gemini] .dict-row p{font-size:12.5px;color:var(--ink2);line-height:1.55;margin:0}
+body[data-theme=gemini] .dict-meta{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px}
+body[data-theme=gemini] .dict-proven{font-size:11px;color:var(--up);text-align:right;white-space:nowrap}
+body[data-theme=gemini] .dict-proven.none{color:var(--ink3)}
+@media(max-width:720px){body[data-theme=gemini] .dict-row{grid-template-columns:1fr;gap:5px}body[data-theme=gemini] .dict-proven{text-align:left}}
+/* Strategies page — request-a-strategy form */
+body[data-theme=gemini] .rq-form{display:flex;flex-direction:column;gap:10px}
 /* Desk Room — full debate collapsed behind an expander */
 body[data-theme=gemini] .room-transcript{border:1.5px solid var(--line);margin-top:12px}
 body[data-theme=gemini] .room-transcript>summary{cursor:pointer;list-style:none;padding:10px 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);display:flex;align-items:center;justify-content:space-between;gap:8px}

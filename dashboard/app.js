@@ -422,7 +422,8 @@ async function pageToday() {
 }
 
 async function pageStrategies() {
-  const [bt, smap] = await Promise.all([j("backtests.json"), j("strategy_map.json")]);
+  const [bt, smap, lib, uni] = await Promise.all([
+    j("backtests.json"), j("strategy_map.json"), j("strategy_library.json"), j("universe.json")]);
   const tpls = bt?.templates || {};
   let rows;
   if (Object.keys(tpls).length) {
@@ -447,15 +448,93 @@ async function pageStrategies() {
   rows.sort((a, b) => b.proven - a.proven);
   const byCat = {};
   rows.forEach(r => (byCat[r.cat] = byCat[r.cat] || []).push(r));
+  const descs = {};
+  (lib?.strategies || []).forEach(s => { descs[s.id] = s; });
+
+  const names = uni?.symbols || {};
+  const nStrat = bt?.n_strategies || rows.length || 52;
+  const provenPairs = Object.values(smap?.tickers || {}).reduce((a, l) => a + l.length, 0);
+  const nCovered = Object.keys(smap?.tickers || {}).length;
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+
+  // ---- your board: pick stocks, run the whole library across them ----
+  const board = stratBoard();
+  const ran = (() => { try { return !!sessionStorage.getItem("stratboardran"); } catch (e) { return false; } })();
+  const provenCount = s => (smap?.tickers?.[s] || []).length;
+  const tiles = board.map(s => `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
+      <button class="sb-x" data-sbdel="${esc(s)}" title="Remove ${esc(s)} from the board" aria-label="remove ${esc(s)}">✕</button>
+      <b>${esc(s)}</b><span class="sb-nm">${esc((names[s]?.name || "").slice(0, 24))}</span>
+      <span class="pill ${ran && provenCount(s) ? "ok" : ""}">${ran ? provenCount(s) + " of " + nStrat + " proven" : "on the board"}</span>
+    </div>`).join("");
+  const addTile = `<div class="sb-tile sb-add">
+      <span class="sk">Add a stock</span>
+      <input id="sb-tkr" class="ph-in" list="sb-syms" placeholder="e.g. FFC" autocomplete="off" onkeydown="if(event.key==='Enter')addBoardTicker()">
+      <button class="note-save" onclick="addBoardTicker()">Add to board</button>
+      <datalist id="sb-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
+    </div>`;
+
+  const runBar = board.length ? `<button class="run-desk run-strat ${ran ? "ran" : ""}" onclick="playBoardRun()">
+    <span class="run-ico">▶</span>
+    <span class="run-txt"><b>Run the strategy library on your ${board.length} stock${board.length > 1 ? "s" : ""}</b><i>Backtests all ${nStrat} of the desk's strategies across ${board.length === 1 ? "its" : "each stock's"} ~19-year history — costs included, out-of-sample checked — then ranks every stock–strategy pair that survived.</i></span>
+    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">${ran ? "Run again ›" : "Run ›"}</span></span>
+  </button>` : "";
+
+  // ---- results: per board stock, its proven strategies (revealed by running the library) ----
+  const results = !board.length ? "" : !ran
+    ? `<div class="card"><div class="empty">Your results land here — hit <b>Run ›</b> above and the desk backtests all ${nStrat} strategies on every stock on your board, then ranks what actually held up.</div></div>`
+    : board.map(s => {
+      const list = smap?.tickers?.[s] || [];
+      return `<div class="card" style="padding:0"><div class="sb-res-head clickable" onclick="location.hash='#/ticker/${esc(s)}'"><b>${esc(s)}</b><span class="sub">${esc((names[s]?.name || "").slice(0, 30))}</span><span class="pill ${list.length ? "ok" : ""}">${list.length} proven</span></div>
+      ${list.length ? `<table><thead><tr><th>Strategy</th><th class="r">Win rate</th><th class="r">Avg net/trade</th><th class="r">Trades</th><th class="r">Out-of-sample</th></tr></thead><tbody>${
+        list.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td>
+          <td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td>
+          <td class="r num">${t.n}</td><td class="r num">${t.oos_hit != null ? Math.round(t.oos_hit * 100) + "% · n" + t.oos_n : "—"}</td></tr>`).join("")}</tbody></table>`
+        : `<div class="empty" style="padding:14px 17px">No strategy cleared the bar on ${esc(s)} — none held win rate ≥55%, positive expectancy after costs, AND out-of-sample. The desk wouldn't signal it. That's a finding, not a gap.</div>`}</div>`;
+    }).join("");
+
+  // ---- the dictionary: every strategy the desk runs, in plain English ----
+  const dict = `<details class="dict"><summary><b>What's in the library</b><span class="sub">every strategy the desk runs, and how each one works</span><span class="dict-arrow">▾</span></summary>
+    ${Object.entries(byCat).map(([cat, list]) => `<div class="dict-cat">${esc((cat || "other").replace(/_/g, " "))}</div>
+      ${list.map(r => { const d = descs[r.id] || {};
+        return `<div class="dict-row"><div><b>${esc(r.name)}</b>${d.target_pct != null ? `<span class="dict-meta">target +${d.target_pct}% · stop −${d.stop_pct}% · max ${d.hold} sessions</span>` : ""}</div>
+        <p>${esc(d.description || "")}</p>
+        <span class="dict-proven ${r.proven ? "" : "none"}">${r.proven ? `proven on ${r.proven} stock${r.proven === 1 ? "" : "s"}` : "hasn't cleared the bar anywhere yet"}</span></div>`; }).join("")}`).join("")}
+  </details>`;
+
+  // ---- request a strategy (signed-in; stored in the desk's request queue) ----
+  const reqForm = `<div class="seg"><h2>Request a strategy</h2><div class="ln"></div><span class="pill">the desk tests it</span></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:12px">Trade by a rule set that isn't in the library? Explain it below — the desk codes it, backtests it on ~19 years of history the same way, and if it clears the bar it joins the library.</p>
+    ${me ? `<div class="rq-form">
+      <div class="ph-row"><input id="rq-title" class="ph-in" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
+      <input id="rq-tkr" class="ph-in" style="flex:0 1 150px" list="sb-syms" placeholder="Ticker (optional)" autocomplete="off"></div>
+      <textarea id="rq-desc" class="tknote" style="min-height:88px" placeholder="Explain the rules in plain English: when it buys, when it exits, any filters (volume, trend, day of week…)."></textarea>
+      <div class="tknote-bar"><button class="note-save" onclick="submitStratRequest()">Send to the desk</button><span id="rq-msg" class="sub"></span></div></div>`
+    : `<div class="empty">Sign in to send the desk a strategy to test.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div>`}
+  </div>`;
 
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Strategy library</h2><div class="ln"></div><span class="pill">${rows.length} strategies</span></div>
-  <p class="sub" style="margin-bottom:16px">Every strategy is a transparent rule set backtested on each stock's own ~19-year history. A strategy is only used on a stock where it cleared the bar (win rate ≥55%, positive expectancy after costs, and still profitable out-of-sample). Click any stock chip to see it in context.</p>
-  ${Object.entries(byCat).map(([cat, list]) => `<div class="card"><h2 style="font-size:13px;text-transform:capitalize">${esc(cat.replace("_", " "))}</h2>
-    <table><thead><tr><th>Strategy</th><th class="r">Proven on</th><th class="r">Avg net/trade</th><th>Stocks it works on</th></tr></thead><tbody>${
-    list.map(r => `<tr><td><b>${esc(r.name)}</b></td><td class="r num">${r.proven}${r.tested ? "/" + r.tested : ""}</td>
-      <td class="r num ${r.avgNet > 0 ? "up" : ""}">${r.avgNet != null ? sgn(r.avgNet.toFixed(2)) + "%" : "—"}</td>
-      <td>${r.provenOn.slice(0, 10).map(s => `<a class="tag clickable" onclick="event.stopPropagation();location.hash='#/ticker/${s}'">${s}</a>`).join(" ") || '<span class="sub">none yet</span>'}</td></tr>`).join("")}</tbody></table></div>`).join("")}`;
+  <div class="seg" style="margin-top:4px"><h2>Strategies</h2><div class="ln"></div><span class="pill">${nStrat} strategies</span></div>
+  <p class="sub" style="margin-bottom:14px">Every strategy is a transparent rule set backtested on each stock's own ~19-year history — it only counts on a stock where it cleared the bar (win rate ≥55%, positive expectancy after costs, still profitable out-of-sample). Research, not advice.</p>
+  <div class="sumstrip" style="grid-template-columns:repeat(4,1fr)">
+    ${sTile("Strategies", nStrat, "transparent rule sets", "")}
+    ${sTile("Proven pairs", provenPairs, "strategy × stock, after costs + OOS", provenPairs ? "up" : "")}
+    ${sTile("Stocks with a proven edge", nCovered, "across the universe", "")}
+    ${sTile("Library updated", bt?.updated ? String(bt.updated).slice(0, 10) : "—", "full re-backtest", "")}
+  </div>
+
+  <div class="seg"><h2>Your board</h2><div class="ln"></div><span class="pill">${board.length ? board.length + " stock" + (board.length > 1 ? "s" : "") : "empty"}</span></div>
+  <div class="card">
+    <div class="sb-grid">${tiles}${addTile}</div>
+    <span id="sb-msg" class="sub" style="display:block;margin-top:8px"></span>
+    ${!me && board.length ? `<span class="sub" style="display:block;margin-top:4px">Your board lives in this session only — <a style="color:var(--accent);cursor:pointer" onclick="openAuth('signup')">sign in</a> to keep it.</span>` : ""}
+  </div>
+  ${runBar}
+  ${results}
+
+  <div class="seg"><h2>The library</h2><div class="ln"></div></div>
+  ${dict}
+  ${reqForm}`;
 }
 
 function maxDrawdown(bars) {
@@ -1054,8 +1133,9 @@ function runRevealModal(opts) {
 
   function close() {
     cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key);
-    // reveal the results inline on the ticker page (reveal() sets the session flag once the run finishes)
-    if (typeof pageTicker === "function" && location.hash.toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
+    // reveal the results inline on the page (reveal() sets the session flag once the run finishes)
+    if (opts.onClose) opts.onClose();
+    else if (opts.sym && typeof pageTicker === "function" && location.hash.toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
   }
   function key(e) { if (e.key === "Escape") close(); }
   ov.addEventListener("click", e => {
@@ -1211,6 +1291,96 @@ async function playStrategyRun(sym) {
       </div>`;
     },
   });
+}
+
+/* ---------- strategy board (profiles.strategy_board; session-only for guests) ---------- */
+function stratBoard() {
+  if (me) return (myProfile && myProfile.strategy_board) || [];
+  try { return JSON.parse(sessionStorage.getItem("stratboard") || "[]"); } catch (e) { return []; }
+}
+async function saveStratBoard(list) {
+  if (me) return saveProfile({ strategy_board: list });
+  try { sessionStorage.setItem("stratboard", JSON.stringify(list)); } catch (e) { /* private mode: board just won't persist */ }
+  return null;
+}
+async function addBoardTicker() {
+  const inp = document.getElementById("sb-tkr"), msg = document.getElementById("sb-msg");
+  const say = t => { if (msg) msg.textContent = t; };
+  const sym = (inp?.value || "").toUpperCase().trim();
+  if (!sym) return;
+  const uni = await j("universe.json");
+  if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
+  const cur = stratBoard();
+  if (cur.includes(sym)) return say(`${sym} is already on your board.`);
+  if (cur.length >= 12) return say("The board holds 12 stocks — remove one first.");
+  const err = await saveStratBoard([...cur, sym]);
+  if (err) return say("Couldn't save — try again.");
+  pageStrategies();
+}
+async function removeBoardTicker(sym) {
+  const err = await saveStratBoard(stratBoard().filter(s => s !== sym));
+  if (!err) pageStrategies();
+}
+
+/* ---------- board run: backtests the whole library across every stock on the board and
+   ranks the surviving stock–strategy pairs. Animates precomputed backtests, zero agents. ---------- */
+async function playBoardRun() {
+  const board = stratBoard();
+  if (!board.length) return;
+  const [smap, bt, uni] = await Promise.all([j("strategy_map.json"), j("backtests.json"), j("universe.json")]);
+  const nT = bt?.n_strategies || 52;
+  const pct = h => h != null ? Math.round(h * 100) + "%" : "—";
+  const pairs = board.flatMap(s => (smap?.tickers?.[s] || []).map(t => ({ sym: s, ...t })))
+    .sort((a, b) => (b.net_expectancy_pct ?? -99) - (a.net_expectancy_pct ?? -99));
+  const blanks = board.filter(s => !(smap?.tickers?.[s] || []).length);
+  const top = pairs[0];
+
+  const steps = [
+    `Loading ~19 years of price history for <b>${board.length}</b> stock${board.length > 1 ? "s" : ""}`,
+    ...board.map(s => `Backtesting <b>${nT}</b> strategies on <b>${esc(s)}</b> bar-by-bar`),
+    `Applying trading costs &amp; slippage on every trade`,
+    `Filter · win rate ≥ 55% and positive expectancy after costs`,
+    `Out-of-sample check · must still work on the unseen last third`,
+    `Ranking <b>${pairs.length}</b> surviving stock–strategy pairs by net expectancy`,
+  ];
+
+  runRevealModal({
+    sym: "", kicker: "Strategy library · your board", flagKey: "stratboardran",
+    title: `Running ${nT} strategies on your ${board.length}-stock board`,
+    sub: `Backtesting the desk's whole library across every stock on your board — costs included, then checked on data each strategy never saw — and ranking what actually held up.`,
+    steps,
+    onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("strategies")) pageStrategies(); },
+    renderReveal: (bodyEl) => {
+      bodyEl.innerHTML = `<div class="rp-reveal">
+        <div class="rp-reveal-head"><b>Your board · ${board.map(esc).join(" · ")}</b><span>what actually worked — ${pairs.length} stock–strategy pair${pairs.length === 1 ? "" : "s"} cleared win-rate ≥55%, positive expectancy after costs, and out-of-sample</span></div>
+        ${top ? `<div class="rp-strat-top"><div class="rp-strat-rank">#1</div>
+          <div style="flex:1;min-width:0"><b>${esc(top.name)} on ${esc(top.sym)}</b><span class="rp-role">${esc((top.category || "").replace(/_/g, " "))} · the strongest pair on your board</span>
+            <div class="rp-facts" style="margin-top:6px">win rate <b>${pct(top.hit_rate)}</b> · net/trade <b class="up">${sgn(top.net_expectancy_pct)}%</b> · trades <b>${top.n}</b> · out-of-sample <b>${pct(top.oos_hit)}</b></div></div></div>` : ""}
+        ${pairs.length ? `<div class="card" style="margin-top:10px;padding:0"><table><thead><tr><th>Stock</th><th>Strategy</th><th class="r">Win</th><th class="r">Net/trade</th><th class="r">Trades</th><th class="r">OOS</th></tr></thead><tbody>${
+          pairs.slice(0, 20).map(t => `<tr><td><b>${esc(t.sym)}</b></td><td>${esc(t.name)} <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td><td class="r num">${pct(t.hit_rate)}</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td><td class="r num">${pct(t.oos_hit)}</td></tr>`).join("")}</tbody></table>${pairs.length > 20 ? `<div class="sub" style="padding:10px 17px">…and ${pairs.length - 20} more — the full list is on the page behind this.</div>` : ""}</div>`
+          : `<div class="card"><div class="empty">No strategy cleared the bar on ${board.length === 1 ? "this stock" : "any of these stocks"} — none held win rate ≥55%, positive expectancy after costs, AND profitability out-of-sample. The desk wouldn't signal them. That's a finding, not a gap.</div></div>`}
+        ${blanks.length && pairs.length ? `<div class="sub" style="margin-top:10px">Nothing cleared the bar on <b>${blanks.map(esc).join(", ")}</b> — their histories are too choppy for these rules.</div>` : ""}
+        <div class="rp-reveal-foot"><span>Backtested on each stock's own ~19-year history, costs included, checked on unseen data. Past performance does not predict future results. Research, not advice.</span>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button></span></div>
+      </div>`;
+    },
+  });
+}
+
+/* ---------- request a strategy → strategy_requests (RLS: own rows only) ---------- */
+async function submitStratRequest() {
+  if (!me || !sb) { openAuth("signup"); return; }
+  const v = id => (document.getElementById(id)?.value || "").trim();
+  const msg = document.getElementById("rq-msg");
+  const say = t => { if (msg) msg.textContent = t; };
+  const title = v("rq-title"), desc = v("rq-desc"), tkr = v("rq-tkr").toUpperCase();
+  if (!title) return say("Give it a name first.");
+  if (desc.length < 20) return say("Explain the rules — a few sentences, so the desk can code it faithfully.");
+  say("Sending…");
+  const { error } = await sb.from("strategy_requests").insert({ title, description: desc, ticker: tkr || null });
+  if (error) return say("Couldn't send — try again.");
+  ["rq-title", "rq-desc", "rq-tkr"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+  say("Received ✓ — the desk backtests it, and if it clears the bar it joins the library.");
 }
 
 /* ---------- router ---------- */
@@ -1603,6 +1773,8 @@ document.addEventListener("click", (e) => {
   if (b) { e.preventDefault(); e.stopPropagation(); toggleWatch(b.dataset.watch, b); }
   const bk = e.target.closest("[data-broker]");
   if (bk) { e.preventDefault(); e.stopPropagation(); toggleBroker(bk.dataset.broker); }
+  const sd = e.target.closest("[data-sbdel]");
+  if (sd) { e.preventDefault(); e.stopPropagation(); removeBoardTicker(sd.dataset.sbdel); }
 });
 
 /* ---------- portfolio: read-only holdings tracker (profiles.portfolio, RLS-scoped) ---------- */

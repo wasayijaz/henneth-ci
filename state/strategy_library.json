@@ -1,0 +1,473 @@
+{
+ "updated": "2026-07-17 13:37",
+ "strategies": [
+  {
+   "id": "sma_golden_cross",
+   "name": "Golden cross (SMA50>SMA200)",
+   "category": "trend",
+   "description": "Classic long-term trend turn: 50-day mean crosses above the 200-day.",
+   "target_pct": 10,
+   "stop_pct": 5,
+   "hold": 25
+  },
+  {
+   "id": "reclaim_sma200",
+   "name": "Reclaim 200-day",
+   "category": "trend",
+   "description": "Price crosses back above the 200-day on volume \u2014 regime change to bullish.",
+   "target_pct": 8,
+   "stop_pct": 4,
+   "hold": 20
+  },
+  {
+   "id": "ema9_20_bull",
+   "name": "EMA 9/20 bull cross",
+   "category": "trend",
+   "description": "Fast EMA crosses slow while above the 50-day \u2014 short trend resumption.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "adx_trend_long",
+   "name": "ADX strong uptrend",
+   "category": "trend",
+   "description": "ADX>25 with +DI over -DI confirms a real (not chop) uptrend.",
+   "target_pct": 7,
+   "stop_pct": 3.5,
+   "hold": 15
+  },
+  {
+   "id": "triple_ema_align",
+   "name": "Triple EMA alignment",
+   "category": "trend",
+   "description": "Stacked EMAs (9>20>50) with price reclaiming the fast line.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "macd_bull_zero",
+   "name": "MACD cross above zero",
+   "category": "trend",
+   "description": "MACD line crosses above the zero line \u2014 momentum turns net-positive.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 15
+  },
+  {
+   "id": "donchian55_break",
+   "name": "Donchian 55 breakout (turtle)",
+   "category": "breakout",
+   "description": "Turtle-style 55-day channel breakout in a trending name.",
+   "target_pct": 10,
+   "stop_pct": 5,
+   "hold": 25
+  },
+  {
+   "id": "above_rising_sma100",
+   "name": "Rising SMA100 trend",
+   "category": "trend",
+   "description": "Pullback reclaim of the 20-day while the 100-day slopes up.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 15
+  },
+  {
+   "id": "pullback_trend",
+   "name": "Trend pullback to 20MA",
+   "category": "trend",
+   "description": "Uptrend name pulling back into the lower-middle Bollinger band, RSI cooling.",
+   "target_pct": 5,
+   "stop_pct": 2.5,
+   "hold": 10
+  },
+  {
+   "id": "sma20_slope_pullback",
+   "name": "SMA20 slope-up dip buy",
+   "category": "trend",
+   "description": "Dip back above a rising 20-day inside an uptrend.",
+   "target_pct": 5,
+   "stop_pct": 2.5,
+   "hold": 10
+  },
+  {
+   "id": "roc20_momentum",
+   "name": "20d momentum continuation",
+   "category": "momentum",
+   "description": "Strong 20-day gain, still above the 20-day and not yet overbought.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "rsi_strong_zone",
+   "name": "RSI strength band",
+   "category": "momentum",
+   "description": "RSI in the bullish 55-68 zone with positive MACD histogram.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "high20_vol_break",
+   "name": "20d high + volume",
+   "category": "breakout",
+   "description": "New 20-day high confirmed by a volume surge.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "high50_break",
+   "name": "50d high breakout",
+   "category": "breakout",
+   "description": "Breakout to a fresh ~50-day high.",
+   "target_pct": 8,
+   "stop_pct": 4,
+   "hold": 15
+  },
+  {
+   "id": "macd_hist_rising",
+   "name": "MACD histogram turning up",
+   "category": "momentum",
+   "description": "MACD histogram flips positive above the 50-day.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "three_day_thrust",
+   "name": "3-day thrust above 20MA",
+   "category": "momentum",
+   "description": "Short sharp thrust with follow-through above the 20-day.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "gap_up_hold",
+   "name": "Gap-up hold",
+   "category": "momentum",
+   "description": "Opens up on volume and closes at/above the open \u2014 news-driven continuation.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 6
+  },
+  {
+   "id": "rs_leader",
+   "name": "Relative-strength leader",
+   "category": "momentum",
+   "description": "Top-quartile 60-day performer still trending, not overbought.",
+   "target_pct": 6,
+   "stop_pct": 3.5,
+   "hold": 12
+  },
+  {
+   "id": "rsi2_meanrev",
+   "name": "RSI(2) mean reversion",
+   "category": "mean_reversion",
+   "description": "Connors RSI(2) deeply oversold while the long-term trend is up.",
+   "target_pct": 4,
+   "stop_pct": 2.5,
+   "hold": 6
+  },
+  {
+   "id": "oversold_bounce",
+   "name": "RSI oversold bounce",
+   "category": "mean_reversion",
+   "description": "First up-day after RSI dipped below 30.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "bb_lower_reclaim",
+   "name": "Bollinger lower reclaim",
+   "category": "mean_reversion",
+   "description": "Tags/pierces the lower band then closes back up.",
+   "target_pct": 4,
+   "stop_pct": 2.5,
+   "hold": 7
+  },
+  {
+   "id": "willr_reversal",
+   "name": "Williams %R reversal",
+   "category": "mean_reversion",
+   "description": "Williams %R exits oversold in a long-term uptrend.",
+   "target_pct": 4,
+   "stop_pct": 2.5,
+   "hold": 7
+  },
+  {
+   "id": "cci_snapback",
+   "name": "CCI oversold snapback",
+   "category": "mean_reversion",
+   "description": "CCI crosses back above -100 while above the 50-day.",
+   "target_pct": 4,
+   "stop_pct": 2.5,
+   "hold": 7
+  },
+  {
+   "id": "stoch_oversold_cross",
+   "name": "Stochastic oversold cross",
+   "category": "mean_reversion",
+   "description": "%K crosses %D from below 25 in an uptrend.",
+   "target_pct": 4,
+   "stop_pct": 2.5,
+   "hold": 7
+  },
+  {
+   "id": "atr_stretch_below",
+   "name": "2-ATR stretch below 20MA",
+   "category": "mean_reversion",
+   "description": "Stretched below the band but holding the long-term trend.",
+   "target_pct": 4,
+   "stop_pct": 3,
+   "hold": 7
+  },
+  {
+   "id": "deep_pullback_uptrend",
+   "name": "Deep pullback in uptrend",
+   "category": "mean_reversion",
+   "description": "Sharp dip toward support in a name that's still above its 200-day.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "bb_lower_rsi",
+   "name": "Lower band + RSI<35",
+   "category": "mean_reversion",
+   "description": "Lower-band + oversold RSI while above the 100-day.",
+   "target_pct": 4,
+   "stop_pct": 2.5,
+   "hold": 7
+  },
+  {
+   "id": "squeeze_break_up",
+   "name": "Bollinger squeeze breakout",
+   "category": "volatility",
+   "description": "Volatility contraction (narrow bands) then an upside expansion on volume.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "vol_spike_break",
+   "name": "Volume-spike breakout",
+   "category": "volume",
+   "description": "2x-average volume driving a 20-day high, closing strong.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "high52w_break",
+   "name": "52-week high breakout",
+   "category": "breakout",
+   "description": "New 52-week high \u2014 strongest names make new highs.",
+   "target_pct": 10,
+   "stop_pct": 5,
+   "hold": 20
+  },
+  {
+   "id": "atr_expansion_up",
+   "name": "ATR expansion up-close",
+   "category": "volatility",
+   "description": "Range expands with an up close on volume \u2014 start of a move.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "obv_accumulation",
+   "name": "OBV accumulation",
+   "category": "volume",
+   "description": "On-balance-volume turns up through its average \u2014 buyers stepping in.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "lowvol_pullback",
+   "name": "Low-volatility pullback",
+   "category": "volatility",
+   "description": "Quiet pullback reclaiming the fast EMA in a calm uptrend.",
+   "target_pct": 5,
+   "stop_pct": 2.5,
+   "hold": 10
+  },
+  {
+   "id": "bbpctb_momentum",
+   "name": "%b momentum ride",
+   "category": "momentum",
+   "description": "%b pushes above 0.8 with trend confirmation.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "rsi_macd_combo",
+   "name": "RSI + MACD combo",
+   "category": "oscillator",
+   "description": "RSI reclaims 50 with a positive MACD histogram.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "stoch_bull_trend",
+   "name": "Stochastic cross in uptrend",
+   "category": "oscillator",
+   "description": "Mid-range stochastic bull cross while trending.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 9
+  },
+  {
+   "id": "rsi_reclaim_50",
+   "name": "RSI reclaim 50",
+   "category": "oscillator",
+   "description": "Momentum flips bullish as RSI crosses back above 50.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "macd_rsi_trend",
+   "name": "MACD cross + RSI>50",
+   "category": "oscillator",
+   "description": "MACD signal-line cross confirmed by RSI over 50.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "cci_zero_cross",
+   "name": "CCI zero-line cross",
+   "category": "oscillator",
+   "description": "CCI crosses zero into positive territory with trend.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "willr_mid_cross",
+   "name": "Williams %R mid cross",
+   "category": "oscillator",
+   "description": "%R crosses the -50 midline upward in an uptrend.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 9
+  },
+  {
+   "id": "macd_signal_uptrend",
+   "name": "MACD signal cross (trend)",
+   "category": "oscillator",
+   "description": "Signal-line cross while MACD is already positive.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "donch20_pullback_break",
+   "name": "Consolidation break",
+   "category": "breakout",
+   "description": "Tight consolidation resolving to the upside.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "pdi_cross",
+   "name": "+DI crosses -DI",
+   "category": "trend",
+   "description": "Directional index flips bullish with trend strength.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "ema20_bounce",
+   "name": "EMA20 bounce",
+   "category": "trend",
+   "description": "Bounce off the 20-EMA with EMAs stacked bullishly.",
+   "target_pct": 5,
+   "stop_pct": 2.5,
+   "hold": 10
+  },
+  {
+   "id": "new_high_low_vol",
+   "name": "Quiet new high",
+   "category": "breakout",
+   "description": "Orderly (low-volatility) breakout to a 20-day high in a trend.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "macd_hist_accel",
+   "name": "MACD histogram accel",
+   "category": "momentum",
+   "description": "Momentum accelerating (rising positive histogram) with RSI support.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 9
+  },
+  {
+   "id": "stoch_reclaim_50",
+   "name": "Stochastic reclaim 50",
+   "category": "oscillator",
+   "description": "%K reclaims the 50 midline with MACD support.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 9
+  },
+  {
+   "id": "trend_momo_combo",
+   "name": "Trend + momentum combo",
+   "category": "momentum",
+   "description": "Above both major MAs with fresh positive momentum \u2014 high-conviction long.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "vol_dryup_surge",
+   "name": "Dry-up then surge",
+   "category": "volume",
+   "description": "Volume dries up (tight bands) then a surge with a strong close.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 9
+  },
+  {
+   "id": "adx_rising_trend",
+   "name": "ADX rising trend entry",
+   "category": "trend",
+   "description": "Trend strengthening (ADX rising) with a fast-EMA reclaim.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "roc_accel",
+   "name": "ROC acceleration",
+   "category": "momentum",
+   "description": "Both short and medium ROC positive and building.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "bb_walk_upper",
+   "name": "Band walk (upper)",
+   "category": "momentum",
+   "description": "Price walking the upper band in a strong trend (momentum persistence).",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 7
+  }
+ ]
+}

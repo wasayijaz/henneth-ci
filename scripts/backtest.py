@@ -119,6 +119,14 @@ def main():
         "n_strategies": len(library), "templates": results})
     save_json(STATE / "strategy_map.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"), "tickers": strategy_map})
+    # plain-English library index for the dashboard's strategy dictionary
+    save_json(STATE / "strategy_library.json", {
+        "updated": time.strftime("%Y-%m-%d %H:%M"),
+        "strategies": [{
+            "id": s["id"], "name": s["name"], "category": s["category"],
+            "description": s.get("description", ""),
+            "target_pct": s.get("target_pct"), "stop_pct": s.get("stop_pct"),
+            "hold": s.get("max_hold_sessions")} for s in library]})
 
     elig_total = sum(len(v) for v in strategy_map.values())
     covered = len(strategy_map)
