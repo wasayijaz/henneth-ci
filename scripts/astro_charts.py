@@ -90,8 +90,21 @@ def main():
         except Exception:
             prev = {}
 
+    # TIER 1 — the Exchange's own record. state/listing_dates.json is parsed from PSX's official
+    # floatation workbooks ("Date of Formal Listing", psx.com.pk Listings History, 2000-2013 +
+    # 2018-2026). This is the same source Meridian used, and it beats any inference: where it
+    # disagrees with Yahoo's first bar (NPL: listed 2009-10-07, Yahoo starts 2010-02-22), the
+    # Exchange is right and Yahoo was late.
+    exchange = {}
+    ldp = STATE / "listing_dates.json"
+    if ldp.exists():
+        try:
+            exchange = json.loads(ldp.read_text(encoding="utf-8")).get("tickers", {})
+        except Exception:
+            exchange = {}
+
     first = fetch_first_trades(sorted(uni))
-    if len(first) < 20:
+    if len(first) < 20 and not exchange:
         print(f"astro_charts: only {len(first)} first-trade dates fetched — keeping the existing file")
         sys.exit(0)
 
@@ -103,7 +116,21 @@ def main():
 
     charts = {"KSE100": KSE100_CHART}
     unavailable = {}
+    for sym, d in sorted(exchange.items()):
+        if sym not in uni:
+            continue
+        charts[sym] = {
+            "subject": sym, "kind": "stock", "date": d, "time": OPEN_TIME,
+            "certainty": "date_exchange_verified_time_convention",
+            "source": ("PSX's own floatation workbook, column 'Date of Formal Listing' "
+                       "(psx.com.pk > Listings > Listings History) — the Exchange's record"),
+            "note": "Time is the PSX open by convention; the Exchange records the date, not the "
+                    "minute. The ascendant depends on the minute and is not computed.",
+            **KARACHI,
+        }
     for sym, d in sorted(first.items()):
+        if sym in charts:
+            continue                      # the Exchange's record outranks any inference
         if d in sentinels:
             unavailable[sym] = (f"Yahoo reports first trade {d}, but {counts[d]} tickers share that "
                                 f"date — it is the start of Yahoo's PSX coverage, not this "
