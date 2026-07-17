@@ -1,10 +1,7 @@
 {
  "reaffirm": [
   "FFC",
-  "UBL",
   "ENGROH",
-  "MEBL",
-  "HUBC",
   "LUCK",
   "NBP",
   "PSO",
@@ -19,6 +16,10 @@
   },
   {
    "symbol": "MLCF",
+   "why": "never covered"
+  },
+  {
+   "symbol": "LOTCHEM",
    "why": "never covered"
   },
   {
@@ -62,6 +63,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "UBL",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "GAL",
    "why": "never covered"
   },
@@ -95,6 +100,10 @@
   },
   {
    "symbol": "PPL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "MEBL",
    "why": "material change since last Room"
   },
   {
@@ -298,10 +307,6 @@
    "why": "never covered"
   },
   {
-   "symbol": "LOTCHEM",
-   "why": "never covered"
-  },
-  {
    "symbol": "INIL",
    "why": "never covered"
   },
@@ -380,26 +385,32 @@
   {
    "symbol": "MARI",
    "why": "material change since last Room"
+  },
+  {
+   "symbol": "HUBC",
+   "why": "material change since last Room"
   }
  ],
  "_meta": {
-  "built": "2026-07-17 12:28",
+  "built": "2026-07-17 08:33",
   "full_budget": 6,
   "run_full_now": [
    "DCR",
    "MLCF",
+   "LOTCHEM",
    "DGKC",
    "ATRL",
-   "GHNI",
-   "RMPL"
+   "GHNI"
   ],
   "deferred_full": [
+   "RMPL",
    "NRL",
    "PRL",
    "NESTLE",
    "PTC",
    "BWCL",
    "FFL",
+   "UBL",
    "GAL",
    "NPL",
    "HCAR",
@@ -409,6 +420,7 @@
    "OGDC",
    "HBL",
    "PPL",
+   "MEBL",
    "BAHL",
    "EFERT",
    "POL",
@@ -459,7 +471,6 @@
    "KTML",
    "SCBPL",
    "HALEON",
-   "LOTCHEM",
    "INIL",
    "MUREB",
    "AHCL",
@@ -479,13 +490,14 @@
    "PGLC",
    "TREET",
    "MCB",
-   "MARI"
+   "MARI",
+   "HUBC"
   ],
   "counts": {
-   "full_due": 92,
+   "full_due": 95,
    "full_now": 6,
    "delta": 0,
-   "reaffirm": 10
+   "reaffirm": 7
   },
   "est_tokens_today": 132000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
