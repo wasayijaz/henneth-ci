@@ -519,6 +519,50 @@ body[data-theme=gemini] .room-transcript[open]>summary::after{content:"▴"}
 body[data-theme=gemini] .room-transcript[open]>summary{border-bottom:1px solid var(--hair)}
 body[data-theme=gemini] .room-transcript>.two-col,body[data-theme=gemini] .room-transcript>.card{margin:12px 13px}
 body[data-theme=gemini] .exhint{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3);font-size:10px}
+/* Full session transcript — the analysts' turns, in order, for people who read the working */
+body[data-theme=gemini] .tr-wrap{padding:14px 15px}
+body[data-theme=gemini] .tr-intro{font-size:12.5px;color:var(--ink3);line-height:1.6;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
+body[data-theme=gemini] .tr-turn{display:grid;grid-template-columns:34px 1fr;gap:12px;padding-bottom:18px}
+body[data-theme=gemini] .tr-rail{display:flex;flex-direction:column;align-items:center;gap:6px}
+body[data-theme=gemini] .tr-rail::after{content:"";flex:1;width:1.5px;background:var(--hair)}
+body[data-theme=gemini] .tr-turn:last-of-type .tr-rail::after{display:none}
+body[data-theme=gemini] .tr-av{flex:none;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--ink1);color:#f4f4f0;font-size:10.5px;font-weight:700;letter-spacing:.04em}
+body[data-theme=gemini] .tr-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+body[data-theme=gemini] .tr-head>b{font-size:14px}
+body[data-theme=gemini] .tr-role{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .tr-p{font-size:13.5px;line-height:1.65;color:var(--ink2);margin:0 0 8px}
+body[data-theme=gemini] .tr-ul{margin:0 0 8px 16px;padding:0}
+body[data-theme=gemini] .tr-ul li{font-size:13px;line-height:1.6;color:var(--ink2);margin-bottom:4px}
+body[data-theme=gemini] .tr-facts{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 8px}
+body[data-theme=gemini] .tr-facts i{font-style:normal;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+body[data-theme=gemini] .tr-facts b{font-size:12.5px}
+body[data-theme=gemini] .tr-note{font-size:12.5px;color:var(--ink2);line-height:1.55;margin-bottom:6px;padding-left:10px;border-left:2px solid var(--hair)}
+body[data-theme=gemini] .tr-note>span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);margin-bottom:1px}
+body[data-theme=gemini] .tr-claim{font-size:12.5px;color:var(--ink1);border:1.5px solid var(--line);padding:7px 10px;margin-top:8px}
+body[data-theme=gemini] .tr-claim>span{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:2px}
+body[data-theme=gemini] .tr-claim i{color:var(--ink3);font-style:normal}
+body[data-theme=gemini] .tr-close{font-size:12.5px;color:var(--ink2);background:var(--panel2,var(--panel));border:1.5px solid var(--line);padding:10px 13px}
+/* The test log — every strategy's prose verdict, pass and fail */
+body[data-theme=gemini] .testlog{display:block;border:1.5px solid var(--line);background:var(--panel);margin:10px 0 14px}
+body[data-theme=gemini] .testlog>summary{display:flex;align-items:center;gap:12px;list-style:none;cursor:pointer;padding:14px 17px}
+body[data-theme=gemini] .testlog>summary::-webkit-details-marker{display:none}
+body[data-theme=gemini] .testlog>summary:hover{background:var(--hair)}
+body[data-theme=gemini] .testlog[open]>summary{border-bottom:1px solid var(--hair)}
+body[data-theme=gemini] .testlog[open] .dict-arrow{transform:rotate(180deg)}
+body[data-theme=gemini] .tl-wrap{padding:14px 17px}
+body[data-theme=gemini] .tl-sec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:14px 0 8px}
+body[data-theme=gemini] .tl-row{border-left:3px solid var(--line);padding:2px 0 10px 12px;margin-bottom:14px}
+body[data-theme=gemini] .tl-row.pass{border-left-color:var(--up)}
+body[data-theme=gemini] .tl-row.fail{border-left-color:var(--hair)}
+body[data-theme=gemini] .tl-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+body[data-theme=gemini] .tl-head>b{font-size:14px}
+body[data-theme=gemini] .tl-verdict{margin-left:auto;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+body[data-theme=gemini] .tl-verdict.up{color:var(--up)}
+body[data-theme=gemini] .tl-rule{font-size:12.5px;color:var(--ink3);line-height:1.55;margin:0 0 6px}
+body[data-theme=gemini] .tl-rule i{font-style:normal;text-transform:uppercase;font-size:10px;letter-spacing:.05em}
+body[data-theme=gemini] .tl-p{font-size:13px;color:var(--ink2);line-height:1.65;margin:0 0 6px}
+body[data-theme=gemini] .tl-why{font-size:12.5px;color:var(--ink2);line-height:1.6;margin:0}
+@media(max-width:720px){body[data-theme=gemini] .tr-turn{grid-template-columns:26px 1fr;gap:9px}body[data-theme=gemini] .tr-av{width:26px;height:26px;font-size:9px}}
 /* educational / risk layer on the ticker page */
 body[data-theme=gemini] .disclaimer{border:1.5px solid var(--line);border-left:4px solid var(--dn);background:var(--panel);padding:9px 13px;font-size:11.5px;line-height:1.5;color:var(--ink2);margin:8px 0 12px}
 body[data-theme=gemini] .prov{font-size:10.5px;color:var(--ink3);letter-spacing:.02em;margin:8px 0 2px;line-height:1.5}

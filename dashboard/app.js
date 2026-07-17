@@ -579,6 +579,99 @@ function behaviorStats(hist) {
 }
 function yr(d) { return (d || "").slice(0, 4); }
 
+/* The test log — every strategy tested on a ticker written out in plain English, pass AND fail,
+   with the exact reason each one made or missed the bar. Composed from backtests.json + the
+   library's own descriptions, so it can never claim more than the numbers say. */
+function renderTestLog(sym, allTested, lib, cfg) {
+  if (!allTested.length) return "";
+  const descs = {}; (lib?.strategies || []).forEach(s => { descs[s.id] = s; });
+  const c = cfg || {};
+  const minHit = (c.min_hit_rate ?? 0.55) * 100, minNet = c.min_net_expectancy_pct ?? 0.5,
+    fric = c.friction_pct ?? 0.6, minN = c.min_trades ?? 8;
+  // one decimal, trailing .0 dropped — rounding to whole percent made the verdict read as a
+  // contradiction ("54.9% rejected for being below the 55% bar" showed as "55% below 55%")
+  const pct = v => v == null ? "—" : (Math.round(v * 1000) / 10).toFixed(1).replace(/\.0$/, "") + "%";
+  const entry = t => {
+    const d = descs[t.id] || {}, oos = t.oos || {};
+    const oosNet = (oos.avg_return_pct ?? 0) - fric;
+    const why = [];
+    if (t.n < minN) why.push(`it only triggered ${t.n} time${t.n === 1 ? "" : "s"} — under the ${minN}-trade minimum, too thin a sample to trust`);
+    if ((t.hit_rate ?? 0) < minHit / 100) why.push(`its ${pct(t.hit_rate)} win rate is below the ${minHit.toFixed(0)}% bar`);
+    if ((t.net_expectancy_pct ?? -99) < minNet) why.push(`after ${fric}% costs each trade averages ${sgn(t.net_expectancy_pct)}%, short of the +${minNet}% the desk demands`);
+    if (!(oos.n >= 3 && oosNet > 0)) why.push(oos.n >= 3 ? `it stopped working out-of-sample (${sgn(oosNet.toFixed(2))}% net on the unseen last third)` : `it left only ${oos.n || 0} out-of-sample trades — not enough to prove it still works on unseen data`);
+    return `<div class="tl-row ${t.eligible ? "pass" : "fail"}">
+      <div class="tl-head"><b>${esc(t.name || t.id)}</b><span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span>
+        <span class="tl-verdict ${t.eligible ? "up" : ""}">${t.eligible ? "PROVEN" : "rejected"}</span></div>
+      ${d.description ? `<p class="tl-rule"><i>The rule:</i> ${esc(d.description)}${d.target_pct != null ? ` Takes profit at +${d.target_pct}%, stops out at −${d.stop_pct}%, gives up after ${d.hold} sessions.` : ""}</p>` : ""}
+      <p class="tl-p">On ${esc(sym)}'s own history this triggered <b>${t.n}</b> time${t.n === 1 ? "" : "s"} and won <b>${pct(t.hit_rate)}</b> of them. The average trade made <b>${sgn(t.avg_return_pct)}%</b> before costs — <b class="${(t.net_expectancy_pct ?? 0) > 0 ? "up" : "dn"}">${sgn(t.net_expectancy_pct)}%</b> after the desk's ${fric}% friction assumption.${t.payoff_ratio != null ? ` Its average win was <b>${t.payoff_ratio}×</b> its average loss.` : ""}${t.worst_pct != null ? ` The worst single trade lost <b>${Math.abs(t.worst_pct)}%</b>.` : ""} Out-of-sample — the last third of the history, which the rule never saw while being judged — it took <b>${oos.n || 0}</b> trade${oos.n === 1 ? "" : "s"}${oos.n ? ` and won <b>${pct(oos.hit_rate)}</b>` : ""}.</p>
+      <p class="tl-why">${t.eligible
+        ? `<b class="up">Cleared every bar</b> — win rate above ${minHit.toFixed(0)}%, positive expectancy after costs, and still profitable on data it had never seen. The desk will use it on ${esc(sym)}.`
+        : `<b>Rejected</b> because ${why.slice(0, 2).join(", and ")}. The desk won't signal ${esc(sym)} on this rule — a strategy that works elsewhere doesn't get a pass here.`}</p>
+    </div>`;
+  };
+  const passed = allTested.filter(t => t.eligible), failed = allTested.filter(t => !t.eligible);
+  return `<details class="testlog">
+    <summary><b>The full test log</b><span class="sub">all ${allTested.length} strategies tested on ${esc(sym)} — what each rule is, what it did, and exactly why it passed or failed</span><span class="dict-arrow">▾</span></summary>
+    <div class="tl-wrap">
+      <p class="tr-intro">Every rule below was run bar-by-bar across ${esc(sym)}'s own price history — no peeking ahead, costs deducted, and then re-checked on the last third of the data it had never seen. The failures are published for the same reason as the passes: a library that only shows its winners is a sales pitch, not a test.</p>
+      ${passed.length ? `<div class="tl-sec">${passed.length} cleared the bar</div>${passed.map(entry).join("")}` : ""}
+      ${failed.length ? `<div class="tl-sec">${failed.length} rejected</div>${failed.map(entry).join("")}` : ""}
+    </div>
+  </details>`;
+}
+
+/* The full session transcript — every analyst's turn, in the order they spoke, with everything
+   they actually wrote (including the fields the summary view leaves out). For people who want to
+   read the desk's working rather than its verdict. Pure render of the stored session: no agent runs. */
+function renderTranscript(room, sym) {
+  const ta = room.ta_memo || {}, fa = room.fa_memo || {}, bull = room.bull_case || {}, bear = room.bear_case || {};
+  const stanceClass = s => ({ constructive: "up", cautious: "dn", neutral: "", unclear: "", near_fair: "" }[s] || "");
+  const P = t => t ? `<p class="tr-p">${esc(t)}</p>` : "";
+  const UL = a => (a || []).length ? `<ul class="tr-ul">${a.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const NOTE = (label, t) => t ? `<div class="tr-note"><span>${label}</span>${esc(t)}</div>` : "";
+  const facts = arr => { const f = arr.filter(x => x[1] != null && x[1] !== "" && x[1] !== "—");
+    return f.length ? `<div class="tr-facts">${f.map(([k, v]) => `<span><i>${k}</i> <b>${esc(String(v).replace(/_/g, " "))}</b></span>`).join("")}</div>` : ""; };
+  const claimOf = m => m?.claim && (m.claim.text || m.claim.direction)
+    ? `<div class="tr-claim"><span>On the record</span>${esc(m.claim.text || `${sym} ${m.claim.direction}${m.claim.horizon_days ? ` within ${m.claim.horizon_days} sessions` : ""}`)}${m.claim.hist_hit_rate ? ` <i>(this pattern has worked ${esc(m.claim.hist_hit_rate)} of the time historically)</i>` : ""}</div>` : "";
+  const turn = (av, name, role, stance, body) => `<div class="tr-turn">
+    <div class="tr-rail"><span class="tr-av">${av}</span></div>
+    <div class="tr-body"><div class="tr-head"><b>${name}</b><span class="tr-role">${role}</span>${stance ? `<span class="stance ${stanceClass(stance)}">${esc(stance)}</span>` : ""}</div>${body}</div>
+  </div>`;
+
+  return `<details class="room-transcript">
+    <summary>The full transcript — read the desk's actual working, turn by turn <span class="exhint">click to expand</span></summary>
+    <div class="tr-wrap">
+      <p class="tr-intro">The session ran on <b>${esc(String(room.built || room.dossier_asof || "").slice(0, 16))}</b> against ${esc(sym)}'s dossier at Rs ${fmt(room.price_at_session)}. The two desks work <b>in isolation</b> — the chartist never sees the fundamentals, and the fundamentalist never sees the chart — so when they agree, they agree independently. Then a bull and a bear are told to argue, hard. Nothing below is edited.</p>
+
+      ${turn("MC", "Meher", "The Chartist · technical desk · spoke first", ta.technical_stance,
+        P(ta.read) + facts([["structure", ta.structure], ["momentum", ta.momentum], ["support", ta.levels?.support != null ? fmt(ta.levels.support) : null], ["resistance", ta.levels?.resistance != null ? fmt(ta.levels.resistance) : null]])
+        + NOTE("On liquidity", ta.liquidity_note)
+        + ((ta.proven_now || []).length ? `<div class="tr-note"><span>Proven patterns firing on this bar</span>${ta.proven_now.map(esc).join(" · ")}</div>` : "")
+        + claimOf(ta))}
+
+      ${turn("DO", "Dr. Omar", "The Fundamentalist · fundamental desk · spoke second", fa.fundamental_stance,
+        P(fa.read) + facts([["valuation", fa.valuation_stance]])
+        + NOTE("Earnings quality", fa.earnings_quality) + NOTE("Dividend safety", fa.dividend_safety)
+        + NOTE("Balance-sheet flags", Array.isArray(fa.balance_sheet_flags) ? fa.balance_sheet_flags.join(" · ") : fa.balance_sheet_flags)
+        + NOTE("On the brokers", fa.broker_view) + claimOf(fa))}
+
+      ${turn("ZB", "Zoya", "The Bull · argued the case FOR", "constructive",
+        P(bull.thesis) + UL(bull.pillars) + NOTE("Her strongest evidence", bull.best_evidence)
+        + NOTE("What would break her case", bull.what_would_break_it) + claimOf(bull))}
+
+      ${turn("KB", "Khurram", "The Bear · argued the case AGAINST", "cautious",
+        P(bear.thesis) + UL(bear.pillars) + NOTE("His attack on the bull", bear.attack_on_bull)
+        + NOTE("His strongest evidence", bear.best_evidence)
+        + NOTE("What would break his case", bear.what_would_break_it) + claimOf(bear))}
+
+      ${room.qa ? turn("QA", "The Verifier", "QA · fact-checked the session against the data and live sources", "",
+        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : "dn"}">${esc(room.qa.verdict)}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(room.qa.note)) : ""}
+
+      <div class="tr-close">↑ The Chair then weighed all of it into the <b>house view above</b> — with the dissent kept in, not smoothed away.</div>
+    </div>
+  </details>`;
+}
+
 /* The Desk Room — named AI-analyst personas debate a ticker (from state/rooms.json). */
 function renderRoom(room, sym) {
   const head = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>`;
@@ -610,22 +703,7 @@ function renderRoom(room, sym) {
     </div>
   </div>
 
-  <details class="room-transcript">
-    <summary>Full debate — the technical desk, the fundamental desk, and the bull vs the bear <span class="exhint">click to expand</span></summary>
-  <div class="two-col" style="margin-top:12px">
-    ${memo("MC", "Meher", "The Chartist · TA", ta.technical_stance, stanceClass(ta.technical_stance), `<p class="sub" style="color:var(--ink2);line-height:1.5">${esc(ta.read || "")}</p>${ta.levels ? `<div class="sub" style="margin-top:6px">structure <b>${esc(ta.structure || "—")}</b> · momentum <b>${esc(ta.momentum || "—")}</b> · support <b>${fmt(ta.levels.support)}</b> · resistance <b>${fmt(ta.levels.resistance)}</b></div>` : ""}`)}
-    ${memo("DO", "Dr. Omar", "The Fundamentalist · FA", fa.fundamental_stance, stanceClass(fa.fundamental_stance), `<p class="sub" style="color:var(--ink2);line-height:1.5">${esc(fa.read || "")}</p><div class="sub" style="margin-top:6px">valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend: ${esc(fa.dividend_safety || "—")}</div>`)}
-  </div>
-
-  <div class="two-col">
-    <div class="card room-memo bull"><div class="memo-top">${persona("ZB", "Zoya", "The Bull")}</div>
-      <p style="line-height:1.5">${esc(bull.thesis || "")}</p><ul class="room-ul">${li(bull.pillars)}</ul>
-      ${bull.what_would_break_it ? `<div class="sub" style="margin-top:6px"><b>Breaks if:</b> ${esc(bull.what_would_break_it)}</div>` : ""}</div>
-    <div class="card room-memo bear"><div class="memo-top">${persona("KB", "Khurram", "The Bear")}</div>
-      <p style="line-height:1.5">${esc(bear.thesis || "")}</p><ul class="room-ul">${li(bear.pillars)}</ul>
-      ${bear.attack_on_bull ? `<div class="sub" style="margin-top:6px"><b>On the bull:</b> ${esc(bear.attack_on_bull)}</div>` : ""}</div>
-  </div>
-  </details>
+  ${renderTranscript(room, sym)}
 
   ${calls.length ? `<div class="card"><h2 style="font-size:12px">Dated calls on the record</h2><div class="sub">each is scored against what actually happens — this is how the desk (and, later, the brokers) are held accountable.</div>
     <table><thead><tr><th>Analyst</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
@@ -634,11 +712,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
@@ -899,7 +977,8 @@ async function pageTicker(sym, _retry = 0) {
     <table><thead><tr><th>Strategy</th><th class="r">Win</th><th class="r">Net</th><th class="r">n</th><th class="r">Verdict</th></tr></thead><tbody>${
     allTested.slice(0, 20).map(t => `<tr><td>${esc(t.name || t.id)}</td><td class="r num">${t.hit_rate != null ? Math.round(t.hit_rate * 100) + "%" : "—"}</td>
       <td class="r num ${(t.net_expectancy_pct || 0) > 0 ? "up" : "dn"}">${sgn(t.net_expectancy_pct ?? 0)}%</td><td class="r num">${t.n}</td>
-      <td class="r">${provenIds.has(t.id) ? '<span class="pill ok">proven</span>' : '<span style="opacity:.45">rejected</span>'}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
+      <td class="r">${provenIds.has(t.id) ? '<span class="pill ok">proven</span>' : '<span style="opacity:.45">rejected</span>'}</td></tr>`).join("")}</tbody></table></div>` : ""}
+  ${renderTestLog(sym, allTested, stratLib, bt?.bars)}`;
 
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
@@ -1228,6 +1307,11 @@ function runRevealModal(opts) {
     if (e.target === ov || e.target.classList.contains("replay-x")) return close();
     const b = e.target.closest("[data-a]");
     if (b && b.dataset.a === "replay") runLoader();
+    // "read the full transcript / test log" — close out to the page and open the deep dive there
+    if (b && b.dataset.a === "deep") { const t = b.dataset.target; close(); setTimeout(() => {
+      const d = document.querySelector("." + t);
+      if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    }, 300); }
   });
   document.addEventListener("keydown", key);
 
@@ -1331,7 +1415,7 @@ async function playDeskReplay(sym) {
           </div>
         </div>
         <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" data-a="deep" data-target="room-transcript">Read the full transcript ›</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
       </div>`;
     },
   });
@@ -1374,7 +1458,7 @@ async function playStrategyRun(sym) {
           proven.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td><td class="r num">${pct(t.hit_rate)}</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td><td class="r num">${pct(t.oos_hit)}</td></tr>`).join("")}</tbody></table></div>`
           : `<div class="card"><div class="empty">No strategy cleared the bar on ${esc(sym)} — none held win rate ≥55%, positive expectancy after costs, AND profitability out-of-sample. The desk wouldn't signal it. That's a finding, not a gap.</div></div>`}
         <div class="rp-reveal-foot"><span>Backtested on ${esc(sym)}'s own ~19-year history, costs included, checked on unseen data. Past performance does not predict future results. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" onclick="location.hash='#/strategies'">All strategies ›</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" data-a="deep" data-target="testlog">Read the full test log ›</button><button class="rp-btn2" onclick="location.hash='#/strategies'">All strategies ›</button></span></div>
       </div>`;
     },
   });
