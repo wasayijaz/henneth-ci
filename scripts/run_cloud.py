@@ -14,7 +14,9 @@ STEPS = [
     "update_universe.py", "fetch_history.py", "fetch_deep_history.py",
     "fetch_dividends.py", "fetch_fundamentals.py", "score_fundamentals.py",
     "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
-    "snapshot.py", "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
+    "snapshot.py",
+    "fetch_sectors.py",  # PSX code->name map (needs live.json); feeds Rule 4's sector limit + peer P/E
+    "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
     "astro_engine.py",  # sidereal ephemeris: positions + dated events. Pure math, no network.
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,

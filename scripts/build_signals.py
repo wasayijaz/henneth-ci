@@ -36,6 +36,10 @@ def main():
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
     live = load_json(STATE / "live.json", {"tickers": {}})["tickers"]
     universe = load_json(STATE / "universe.json", {"symbols": {}})["symbols"]
+    # Real PSX sectors (fetch_sectors.py). CLAUDE.md Rule 4 caps the desk at one position per
+    # sector — that limit was previously keyed on the COMPANY NAME, which is unique per ticker, so
+    # it could never bind and four banks could pass as four different "sectors".
+    sectors = load_json(STATE / "sectors.json", {"tickers": {}})["tickers"]
     positions = load_json(STATE / "positions.json", {"open": []})
     held = {p["ticker"] for p in positions.get("open", [])}
 
@@ -78,7 +82,7 @@ def main():
             candidates.append({
                 "id": f"{time.strftime('%Y%m%d')}-{sym}-{p['id']}",
                 "ticker": sym, "strategy": p["id"], "template": p["name"],
-                "category": p["category"], "sector": universe.get(sym, {}).get("name", ""),
+                "category": p["category"], "sector": sectors.get(sym, {}).get("sector", ""),
                 "entry": round(px, 2), "stop": stop, "target": target,
                 "rr": round((target - px) / risk_per_share, 2) if risk_per_share else None,
                 "hold_sessions": p["hold"],
@@ -101,7 +105,9 @@ def main():
             break
         if c["ticker"] in used_tickers:
             continue
-        sec = c["sector"] or c["ticker"]
+        # An unmapped ticker collapses into one shared "unknown" bucket rather than becoming its
+        # own sector: this is a RISK limit, so the unknown case must fail safe (block), not open.
+        sec = c["sector"] or "unknown"
         if sec in used_sectors:
             continue
         c.pop("_score", None)

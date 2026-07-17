@@ -38,6 +38,7 @@ def main():
     fund = load_json(STATE / "fundamentals.json", {"tickers": {}})["tickers"]
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
     universe = load_json(STATE / "universe.json", {"symbols": {}})["symbols"]
+    sectors = load_json(STATE / "sectors.json", {"tickers": {}})["tickers"]
     macro = load_json(STATE / "macro.json", {})
     dom = macro.get("domestic", {})
 
@@ -48,15 +49,23 @@ def main():
     riskfree = num(macro.get("sbp_rate")) or 11.5
     req_return = riskfree + 6.0  # equity required return %, for DDM
 
-    # sector median P/E across the universe
-    sect_pes = {}
+    # Median P/E per REAL PSX sector (fetch_sectors.py), plus the market median as a fallback.
+    # This method is documented and rendered as "priced like its PEERS"; until sectors existed it
+    # silently used the whole-market median, so the label promised peers and the number meant market.
+    # A sector needs MIN_PEERS real P/Es before its median is meaningful — below that, say so and
+    # fall back to the market rather than quietly passing off a 2-stock median as a peer group.
+    MIN_PEERS = 3
+    sect_of = {s: r.get("sector") for s, r in sectors.items()}
+    sect_pes, all_pes = {}, []
     for sym, v in fund.items():
         pe = num(v.get("pe"))
-        sec = universe.get(sym, {}).get("name") or "PSX"
-        # use broad sector via name is weak; group by DPS sector if present in quant? fall back to market
         if pe and 0 < pe < 60:
-            sect_pes.setdefault("ALL", []).append(pe)
-    market_med_pe = statistics.median(sect_pes["ALL"]) if sect_pes.get("ALL") else 7.0
+            all_pes.append(pe)
+            sec = sect_of.get(sym)
+            if sec:
+                sect_pes.setdefault(sec, []).append(pe)
+    market_med_pe = statistics.median(all_pes) if all_pes else 7.0
+    sect_med_pe = {s: statistics.median(pes) for s, pes in sect_pes.items() if len(pes) >= MIN_PEERS}
 
     out = {}
     for sym, v in fund.items():
@@ -78,8 +87,17 @@ def main():
             g = 5.0
 
         methods = {}
-        # 1. relative (market/sector median P/E)
-        methods["relative_pe"] = round(market_med_pe * eps, 2)
+        # 1. relative: priced like its actual sector peers, market median only if the peer group
+        #    is too thin to mean anything. The basis is published so the claim stays checkable.
+        my_sector = sect_of.get(sym)
+        peer_pe = sect_med_pe.get(my_sector)
+        methods["relative_pe"] = round((peer_pe if peer_pe else market_med_pe) * eps, 2)
+        rel_basis = ({"basis": "sector", "sector": my_sector, "median_pe": round(peer_pe, 2),
+                      "n_peers": len(sect_pes.get(my_sector, []))}
+                     if peer_pe else
+                     {"basis": "market", "sector": my_sector,
+                      "median_pe": round(market_med_pe, 2), "n_peers": len(all_pes),
+                      "why": f"fewer than {MIN_PEERS} peers with a usable P/E in this sector"})
         # 2. earnings power vs bond
         fair_pe_bond = 100.0 / (bond_y + 4.0)
         methods["earnings_power"] = round(fair_pe_bond * eps, 2)
@@ -101,7 +119,8 @@ def main():
         verdict = "undervalued" if mis >= 15 else "overvalued" if mis <= -15 else "fair"
         out[sym] = {
             "price": round(price, 2), "eps": eps, "pe": pe, "growth_est_pct": round(g, 1),
-            "methods": methods, "composite_fair": composite,
+            "methods": methods, "relative_pe_basis": rel_basis, "sector": my_sector,
+            "composite_fair": composite,
             "mispricing_pct": mis, "verdict": verdict,
             "upside_pct": mis,  # alias
         }
@@ -110,8 +129,11 @@ def main():
     save_json(STATE / "fairvalue.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "inputs": {"market_median_pe": round(market_med_pe, 2), "bond_yield_pct": bond_y,
-                   "required_return_pct": req_return},
-        "note": "model estimates from public fundamentals; research, not a price target",
+                   "required_return_pct": req_return, "min_peers_for_sector_median": MIN_PEERS,
+                   "sector_median_pe": {s: round(p, 2) for s, p in sorted(sect_med_pe.items())}},
+        "note": ("model estimates from public fundamentals; research, not a price target. "
+                 "relative_pe is the median P/E of the stock's own PSX sector x EPS — each ticker's "
+                 "relative_pe_basis says whether real peers or (for thin sectors) the market was used."),
         "tickers": out,
         "most_undervalued": [s for s, _ in ranked[:10]],
         "most_overvalued": [s for s, _ in ranked[-10:]],
