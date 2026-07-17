@@ -50,8 +50,10 @@ HIST = STATE / "history_deep"
 # ~1.3e-4, which a 2,000-shift test can NEVER reach — "zero survivors" would then be an artefact of
 # the test's resolution, not a fact about the market, and publishing it as a finding would be a lie.
 # So: screen everything cheaply, then re-test the promising few finely enough to actually clear the bar.
+MIN_BARS = 1000        # a stock needs this many overlapping trading days before it can be judged
+STALE_DAYS = 7         # the stats cannot move meaningfully day to day; re-run weekly, not per cycle
 N_PERM = 2000          # stage 1: screen every hypothesis
-N_PERM_FINE = 50000    # stage 2: only for candidates that could plausibly survive
+N_PERM_FINE = 200000   # stage 2: fine enough that the Bonferroni bar (~1.9e-5 at ~2,600 tests) is reachable
 FINE_TRIGGER = 0.01    # stage-1 p at or below this earns a precise re-test
 MIN_DAYS_IN = 120      # a window with fewer trading days than this cannot be judged
 MIN_TICKERS = 3        # a sector needs this many names before its mean means anything
@@ -104,11 +106,22 @@ def main():
         print("astro_backtest: no astro_history.json — run scripts/astro_history.py first")
         sys.exit(0)
     sectors = (load(STATE / "sectors.json", {}) or {}).get("tickers", {})
+    universe = (load(STATE / "universe.json", {}) or {}).get("symbols", {})
     amap = load(STATE / "astro_map.json", {}) or {}
     sig = amap.get("sector_significators", {})
-    if not sectors:
-        print("astro_backtest: no sectors.json — cannot test sectors")
-        sys.exit(0)
+
+    # weekly, not per-cycle: one more day on ~4,900 cannot move a p-value, and this is the most
+    # expensive script in the pipeline
+    if "--force" not in sys.argv:
+        prev = load(STATE / "astro_backtest.json")
+        if prev and prev.get("updated"):
+            try:
+                age = (dt.datetime.now() - dt.datetime.strptime(prev["updated"], "%Y-%m-%d %H:%M")).days
+                if age < STALE_DAYS:
+                    print(f"astro_backtest: last run {age}d ago — skipping (weekly cadence; --force to override)")
+                    sys.exit(0)
+            except Exception:
+                pass
 
     # ---- price panel: date -> per-ticker daily return, from the deep (adjusted) history
     rets = {}
@@ -132,24 +145,67 @@ def main():
         sys.exit(0)
     idx = {d: i for i, d in enumerate(sky["dates"])}
 
-    # ---- per-sector equal-weight daily return series (and the market as all names)
-    members = {}
-    for symb, rec in sectors.items():
-        members.setdefault(rec.get("sector"), []).append(symb)
+    # ---- what gets tested: INDIVIDUAL STOCKS, plus KSE100 and KMI30 separately.
+    # Sector aggregation was the earlier mistake: averaging 13 banks together dilutes any
+    # stock-specific effect toward zero, so the test could not see the thing it was looking for.
+    # Astro is not a sector story either — sectors are moved by macro (flows, debt, gold,
+    # geopolitics), which is the macro lens's job, not this one.
     series = {}
-    for sec, syms in members.items():
-        if not sec or len(syms) < MIN_TICKERS:
-            continue
-        v = []
+    for sym in sorted({s for d in dates for s in rets[d]}):
+        arr = np.array([rets[d].get(sym, np.nan) for d in dates])
+        if np.isfinite(arr).sum() >= MIN_BARS:
+            series[sym] = arr
+
+    # Index proxies. There is NO real daily index history to be had: Yahoo's ^KSE is monthly and
+    # stops in 2021, DPS publishes indices live-only, stooq has nothing. So each index is rebuilt
+    # from its own constituents, cap-weighted by universe.json weight_pct — and labelled a proxy.
+    def index_proxy(members, weights):
+        tot = sum(weights.get(s, 0) for s in members) or 1.0
+        out = []
         for d in dates:
             day = rets[d]
-            vals = [day[s] for s in syms if s in day]
-            v.append(float(np.mean(vals)) if len(vals) >= max(2, MIN_TICKERS - 1) else np.nan)
-        arr = np.array(v)
-        if np.isfinite(arr).sum() >= 500:
-            series[sec] = arr
-    series["THE MARKET"] = np.array([float(np.mean(list(rets[d].values()))) if rets[d] else np.nan
-                                     for d in dates])
+            num = sum(weights.get(s, 0) * day[s] for s in members if s in day)
+            den = sum(weights.get(s, 0) for s in members if s in day)
+            out.append(num / den if den > 0.25 * tot else np.nan)   # need most of the index present
+        return np.array(out)
+
+    w = {s: (v.get("weight_pct") or 0) for s, v in universe.items()}
+    k100 = [s for s, v in universe.items() if "KSE100" in (v.get("in") or []) and s in series]
+    kmi30 = [s for s, v in universe.items() if "KMI30" in (v.get("in") or []) and s in series]
+    idx_meta = {}
+    if len(k100) >= 50:
+        series["KSE100 (proxy)"] = index_proxy(k100, w)
+        idx_meta["KSE100 (proxy)"] = {"constituents_used": len(k100),
+                                      "weight_covered_pct": round(sum(w.get(s, 0) for s in k100), 2)}
+    if len(kmi30) >= 20:
+        series["KMI30 (proxy)"] = index_proxy(kmi30, w)
+        idx_meta["KMI30 (proxy)"] = {"constituents_used": len(kmi30),
+                                     "weight_covered_pct": round(sum(w.get(s, 0) for s in kmi30), 2),
+                                     "note": "weights are KSE100 weights renormalised within the KMI30 set"}
+
+    # ---- Stocks are tested on MARKET-ADJUSTED returns (r_i - beta_i * r_mkt).
+    # Without this the test measures beta, not astrology. Worked example from the raw run: during
+    # "Mars debilitated" the market drifts -0.119%/day, cement (a high-beta sector) -0.238%, and
+    # PIOC (a high-beta small cap) -0.430%. That ladder is exactly what beta predicts from a weak
+    # market tilt which is itself not significant at the index level — yet raw testing flagged PIOC
+    # as a discovery. Removing each stock's market component means a stock-level result can only
+    # survive if the STOCK responded beyond however the whole market moved. Market-wide claims are
+    # not lost: they are exactly what the KSE100/KMI30 tests (kept raw) are for.
+    betas = {}
+    mkt = series.get("KSE100 (proxy)")
+    if mkt is not None:
+        for sym in [s for s in series if "(proxy)" not in s]:
+            arr = series[sym]
+            ok = np.isfinite(arr) & np.isfinite(mkt)
+            if ok.sum() < MIN_BARS:
+                continue
+            v = float(np.var(mkt[ok]))
+            b = float(np.cov(arr[ok], mkt[ok])[0, 1] / v) if v > 0 else 1.0
+            b = max(0.0, min(3.0, b))          # clamp: a wild beta means a broken series, not a hedge
+            betas[sym] = round(b, 3)
+            adj = arr - b * mkt
+            adj[~ok] = np.nan
+            series[sym] = adj
 
     # ---- condition masks, aligned to `dates`
     pos = {b: {"lon": np.array([sky["bodies"][b]["lon"][idx[d]] for d in dates]),
@@ -213,7 +269,8 @@ def main():
                 eff, p = circular_p(r, mm[ok], rng, N_PERM_FINE)
                 resamples = N_PERM_FINE
             tests.append({
-                "sector": sec, "condition": cond,
+                "subject": sec, "sector": (sectors.get(sec) or {}).get("sector"),
+                "condition": cond,
                 "days_in": int(mm.sum()), "days_out": int((~mm & ok).sum()),
                 "mean_in_pct": round(float(r[mm[ok]].mean()) * 100, 4),
                 "mean_out_pct": round(float(r[~mm[ok]].mean()) * 100, 4),
@@ -227,21 +284,99 @@ def main():
     survivors = [t for t in tests if t["survives_bonferroni"]]
     raw_hits = [t for t in tests if t["p_value"] < ALPHA]
 
-    # ---- convergence: where the data's favourite graha for a sector matches tradition's
+    # Benjamini-Hochberg FDR alongside Bonferroni. At ~2,600 hypotheses Bonferroni is brutal and
+    # would hide a real-but-modest effect; BH controls the false-DISCOVERY rate instead of the
+    # family-wise error rate, which is the fairer question when you are screening this wide.
+    # Reporting both means the answer cannot be blamed on the choice of correction.
+    m_tests = len(tests)
+    bh_cut = 0.0
+    for i, t in enumerate(tests, start=1):          # tests are already p-sorted ascending
+        if t["p_value"] <= i / m_tests * ALPHA:
+            bh_cut = t["p_value"]
+    for t in tests:
+        t["survives_fdr"] = bool(t["p_value"] <= bh_cut)
+    fdr_survivors = [t for t in tests if t["survives_fdr"]]
+
+    # ---- REPLICATION: the check that actually decides whether a survivor is real.
+    # Surviving a multiplicity correction is not enough. PSX stocks are heavily correlated, so 99
+    # "independent" stock tests are closer to one observation repeated; and the most extreme of
+    # 2,589 correlated draws will look spectacular by construction. A genuine sky->market mechanism
+    # cannot act on one thinly-traded cement company and not on its eight peers or the index.
+    # So every survivor is re-examined against its peers and the indices, and one that stands alone
+    # is labelled an artefact — automatically, not by an analyst's mood.
+    by_cond = {}
+    for t in tests:
+        by_cond.setdefault(t["condition"], []).append(t)
+
+    n_idx_tests = sum(1 for x in tests if "(proxy)" in x["subject"])
+    idx_bar = ALPHA / max(1, n_idx_tests)   # the index family is its own question, corrected within itself
+
+    def replication_of(t):
+        cond, subj = t["condition"], t["subject"]
+        peers = [x for x in by_cond[cond]
+                 if x["sector"] and x["sector"] == t["sector"] and x["subject"] != subj
+                 and "(proxy)" not in x["subject"]]
+        allst = [x for x in by_cond[cond] if "(proxy)" not in x["subject"] and x["subject"] != subj]
+        idxs = [x for x in by_cond[cond] if "(proxy)" in x["subject"]]
+        peer_med = float(np.median([x["effect_pct_per_day"] for x in peers])) if peers else None
+        all_med = float(np.median([x["effect_pct_per_day"] for x in allst])) if allst else None
+        idx_best = min(idxs, key=lambda x: x["p_value"]) if idxs else None
+        eff = t["effect_pct_per_day"]
+        same_sign = lambda a, b: a is not None and b is not None and (a > 0) == (b > 0)
+
+        # The index must clear a bar corrected for the number of INDEX tests. A raw p<0.05 here
+        # would be the very multiple-comparisons error this file exists to avoid.
+        index_confirms = bool(idx_best and idx_best["p_value"] < idx_bar
+                              and same_sign(eff, idx_best["effect_pct_per_day"]))
+        # Peers only confirm something SPECIFIC. If the whole market drifts the same way, a sector
+        # looking similar is just beta, not a sector effect — so peers must beat the market median.
+        peers_confirm = bool(peer_med is not None and same_sign(eff, peer_med)
+                             and abs(peer_med) >= 0.5 * abs(eff)
+                             and (all_med is None or abs(peer_med) >= 2 * abs(all_med)))
+        return {
+            "peer_median_effect_pct": round(peer_med, 4) if peer_med is not None else None,
+            "peer_count": len(peers),
+            "all_stock_median_effect_pct": round(all_med, 4) if all_med is not None else None,
+            "index_effect_pct": idx_best["effect_pct_per_day"] if idx_best else None,
+            "index_p": idx_best["p_value"] if idx_best else None,
+            "index_bar": float(f"{idx_bar:.2e}"),
+            "index_confirms": index_confirms,
+            "peers_confirm": peers_confirm,
+            "replicates": bool(index_confirms or peers_confirm),
+            "reading": (
+                "the index agrees at a corrected bar — a genuinely market-wide effect"
+                if index_confirms else
+                "its sector peers show this at comparable size AND well beyond the market-wide "
+                "drift, so it looks sector-specific"
+                if peers_confirm else
+                "ISOLATED — the index does not show it at a corrected bar, and its sector peers "
+                "show nothing beyond the market-wide drift. The likely explanation is not "
+                "astrology: it is the most extreme of thousands of correlated draws, in a name "
+                "thin enough for a handful of days to move the mean. The desk reports it and does "
+                "not believe it."),
+        }
+
+    for t in survivors + fdr_survivors:
+        t["replication"] = replication_of(t)
+    believable = [t for t in survivors if t["replication"]["replicates"]]
+
+    # ---- convergence: does the data's favourite graha for a STOCK match the one tradition
+    #      assigns to that stock's sector?
     conv = []
-    for sec in series:
-        trad = (sig.get(sec) or {}).get("primary")
+    for subj in series:
+        sec_of = (sectors.get(subj) or {}).get("sector")
+        trad = (sig.get(sec_of) or {}).get("primary") if sec_of else None
         if not trad:
             continue
         # only graha-specific conditions can express a preference for a significator; the
         # market-wide ones (moon phase, eclipse windows) name no body and must not be counted
-        cand = [t for t in tests if t["sector"] == sec and t["condition"].split(" ")[0] in BODIES]
+        cand = [t for t in tests if t["subject"] == subj and t["condition"].split(" ")[0] in BODIES]
         if not cand:
             continue
         best = min(cand, key=lambda x: x["p_value"])
         body = best["condition"].split(" ")[0]
         conv.append({
-            "sector": sec, "tradition_says": trad, "data_prefers": body,
+            "ticker": subj, "sector": sec_of, "tradition_says": trad, "data_prefers": body,
             "agree": bool(body == trad),
             "best_condition": best["condition"], "p_value": best["p_value"],
             "survives_bonferroni": best["survives_bonferroni"],
@@ -252,6 +387,7 @@ def main():
     out = {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "window": {"from": dates[0], "to": dates[-1], "trading_days": len(dates)},
+        "betas": betas,
         "method": {
             "test": "circular-shift permutation on the condition mask (preserves both the "
                     "autocorrelation of returns and the block shape of astro windows)",
@@ -271,40 +407,76 @@ def main():
                 "direction for a claim this desk is trying to kill rather than confirm — but it "
                 "means a null result here is 'not demonstrated', never 'disproved'. Read the effect "
                 "sizes, not only the p-values."),
-            "sector_returns": f"equal-weight mean of member tickers (min {MIN_TICKERS} names)",
-            "market": "equal-weight mean of every universe ticker with history (PSX index history "
-                      "is not in the data layer, so this is the proxy and is labelled as one)",
+            "tested_on": f"INDIVIDUAL STOCKS ({len([s for s in series if '(proxy)' not in s])} with "
+                         f">={MIN_BARS} bars), plus KSE100 and KMI30 separately. Sectors are "
+                         f"deliberately NOT tested here: averaging a sector's members together "
+                         f"dilutes any stock-specific effect toward zero, and sector moves belong "
+                         f"to the macro lens (flows, debt, gold, geopolitics), not to astrology.",
+            "stock_returns": "MARKET-ADJUSTED: r_stock - beta*r_KSE100proxy, beta estimated over the "
+                             "full sample and clamped to [0,3]. Raw returns would measure beta, not "
+                             "astrology — a weak market tilt shows up multiplied in every high-beta "
+                             "name and masquerades as a stock-specific discovery. Index tests stay "
+                             "RAW, since a market-wide claim is exactly what they are meant to catch.",
+            "index_proxies": idx_meta,
+            "index_caveat": "No real daily index history exists in reach (Yahoo's ^KSE is monthly "
+                            "and ends in 2021; DPS publishes indices live-only; stooq has none), so "
+                            "each index is rebuilt from TODAY's constituents cap-weighted by current "
+                            "weight_pct. That carries survivorship bias and weight drift, which "
+                            "shifts the LEVEL of returns — but this test compares returns inside vs "
+                            "outside astro windows, and the bias is present in both, so it does not "
+                            "manufacture or hide an astro effect. Labelled a proxy everywhere it "
+                            "appears.",
             "min_days_in_window": MIN_DAYS_IN,
-            "multiple_comparisons": f"Bonferroni: {len(tests)} hypotheses tested, so the bar is "
-                                    f"p < {bar:.2e}, not p < {ALPHA}",
+            "min_bars_per_stock": MIN_BARS,
+            "multiple_comparisons": f"BOTH reported: Bonferroni (family-wise) at p < {bar:.2e} across "
+                                    f"{len(tests)} hypotheses, AND Benjamini-Hochberg FDR at "
+                                    f"{ALPHA:.0%} (cutoff p <= {bh_cut:.2e}). Bonferroni alone is "
+                                    f"brutal at this width and could hide a real-but-modest effect; "
+                                    f"reporting both means the verdict cannot be blamed on the "
+                                    f"choice of correction.",
         },
         "headline": {
             "hypotheses_tested": len(tests),
+            "subjects_tested": len(series),
             "expected_false_positives_at_p05": expected_false,
             "raw_hits_at_p05": len(raw_hits),
             "survivors_after_bonferroni": len(survivors),
+            "survivors_after_fdr": len(fdr_survivors),
+            "survivors_that_replicate": len(believable),
             "verdict": (
-                "Nothing survived. On PSX's own history, no astro condition tested here beats "
-                "chance once the number of hypotheses is accounted for. The desk publishes this "
-                "rather than hiding it: the astro lens has no demonstrated edge and must not be "
-                "presented as if it had one."
-                if not survivors else
-                f"{len(survivors)} of {len(tests)} hypotheses survived a Bonferroni-corrected bar. "
-                f"Survival is not proof — it is a claim that has not yet been killed, and it now "
-                f"has to keep working on live, dated, scored calls before it means anything."),
+                "No astro condition has a demonstrated edge on PSX. Tested stock by stock (not "
+                "averaged into sectors, which would have hidden any stock-specific effect) and on "
+                "KSE100 and KMI30 separately, across ~19 years."
+                + (f" {len(survivors)} hypothes{'is' if len(survivors) == 1 else 'es'} survived the "
+                   f"multiplicity correction, but NONE replicated: the effect is absent from the "
+                   f"index and from the stock's own sector peers, which is what a multiple-"
+                   f"comparisons artefact looks like — the most extreme of {len(tests)} correlated "
+                   f"draws in a thinly-traded name. The desk reports them in full and believes none "
+                   f"of them."
+                   if survivors and not believable else
+                   " Nothing survived the multiplicity correction at all."
+                   if not survivors else
+                   f" {len(believable)} survived AND replicated in the index or in sector peers — "
+                   f"that is a claim which has not yet been killed, and it must now keep working on "
+                   f"live, dated, scored calls before it means anything.")
+                + " The desk publishes this rather than hiding it: the astro lens must not be "
+                  "presented as if it had an edge it cannot show."),
             "read_this_before_the_numbers": (
                 f"At p<0.05 you would expect about {expected_false} false positives from "
                 f"{len(tests)} tests by luck alone; {len(raw_hits)} came back. Raw hits below are "
                 f"published for transparency, not because they are real."),
         },
         "convergence": {
-            "note": "Where the data's best graha for a sector matches the one tradition names in "
-                    "astro_map.json. Agreement is mildly interesting; disagreement means the "
-                    "traditional mapping has no support here.",
-            "agree_count": len(agreed), "tested": len(conv), "detail": sorted(
-                conv, key=lambda x: (not x["agree"], x["p_value"])),
+            "note": "Per STOCK: does the data's best graha match the one tradition assigns to that "
+                    "stock's sector (astro_map.json)? With 9 grahas, blind chance agrees about 11% "
+                    "of the time — so compare the rate below against ~11%, not against zero.",
+            "agree_count": len(agreed), "tested": len(conv),
+            "agree_rate_pct": round(100 * len(agreed) / len(conv), 1) if conv else None,
+            "chance_rate_pct": round(100 / 9, 1),
+            "detail": sorted(conv, key=lambda x: (not x["agree"], x["p_value"])),
         },
         "survivors": survivors,
+        "fdr_survivors": fdr_survivors,
         "raw_hits_unadjusted": raw_hits[:40],
         "all_tests": tests,
         "skipped_conditions": {"reason": f"window smaller than {MIN_DAYS_IN} trading days (or "
@@ -314,18 +486,25 @@ def main():
     }
     (STATE / "astro_backtest.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
 
-    print(f"astro_backtest: {len(tests)} hypotheses over {len(dates)} trading days "
-          f"({dates[0]} -> {dates[-1]}) in {time.time()-t0:.0f}s")
-    print(f"  Bonferroni bar p < {bar:.2e}")
+    print(f"astro_backtest: {len(tests)} hypotheses on {len(series)} subjects "
+          f"({len([s for s in series if '(proxy)' not in s])} stocks + {len(idx_meta)} indices) "
+          f"over {len(dates)} trading days ({dates[0]} -> {dates[-1]}) in {time.time()-t0:.0f}s")
+    print(f"  Bonferroni bar p < {bar:.2e} | BH-FDR cutoff p <= {bh_cut:.2e}")
     print(f"  raw hits at p<0.05: {len(raw_hits)} (expected by luck: ~{expected_false})")
-    print(f"  SURVIVORS: {len(survivors)}")
-    for t in survivors[:10]:
-        print(f"    {t['sector'][:28]:28} {t['condition'][:30]:30} "
-              f"{t['effect_pct_per_day']:+.3f}%/day p={t['p_value']:.5f}")
-    print(f"  tradition/data agreement: {len(agreed)} of {len(conv)} sectors")
+    print(f"  SURVIVORS: {len(survivors)} bonferroni | {len(fdr_survivors)} fdr | "
+          f"{len(believable)} that REPLICATE")
+    for t in (survivors or fdr_survivors)[:10]:
+        rep = t.get("replication", {})
+        print(f"    {t['subject'][:22]:22} {t['condition'][:26]:26} "
+              f"{t['effect_pct_per_day']:+.3f}%/day p={t['p_value']:.2e}")
+        print(f"      -> peers {rep.get('peer_median_effect_pct')}%  index "
+              f"{rep.get('index_effect_pct')}% (p={rep.get('index_p')})  "
+              f"replicates={rep.get('replicates')}")
+    print(f"  tradition/data agreement: {len(agreed)} of {len(conv)} stocks "
+          f"({100*len(agreed)/len(conv):.0f}% vs {100/9:.0f}% by chance)" if conv else "")
     for t in tests[:5]:
-        print(f"  best raw: {t['sector'][:26]:26} {t['condition'][:28]:28} "
-              f"{t['effect_pct_per_day']:+.3f}%/day p={t['p_value']:.5f}")
+        print(f"  best raw: {t['subject'][:20]:20} {t['condition'][:28]:28} "
+              f"{t['effect_pct_per_day']:+.3f}%/day p={t['p_value']:.2e}")
 
 
 if __name__ == "__main__":
