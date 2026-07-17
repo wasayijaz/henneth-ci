@@ -55,6 +55,10 @@ def build():
     divs = load_json(STATE / "dividends.json", {})
     uni = load_json(STATE / "universe.json", {}).get("symbols", {})
     live = load_json(STATE / "live.json", {}).get("tickers", {})
+    # real PSX sectors (fetch_sectors.py). Before this existed the line below resolved to "unknown"
+    # for EVERY ticker — universe.json and fundamentals.json carry no sector — so every persona
+    # claim was filed under "unknown" or whatever free text the agent happened to type.
+    sect_map = load_json(STATE / "sectors.json", {}).get("tickers", {})
     news = load_json(STATE / "newslog.json", [])
     research = load_json(STATE / "research_index.json", {})  # doc digests, if present
 
@@ -81,7 +85,7 @@ def build():
         d = {
             "symbol": sym,
             "name": u.get("name", ""),
-            "sector": u.get("sector") or f.get("sector") or "unknown",
+            "sector": (sect_map.get(sym) or {}).get("sector") or "unknown",
             "indices": u.get("in", []),
             "price": _r(live.get(sym, {}).get("current") or q.get("close")),
             "asof": q.get("date"),

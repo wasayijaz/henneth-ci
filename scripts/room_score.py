@@ -83,11 +83,21 @@ def run():
     def blank():
         return {"n": 0, "hits": 0, "target_err_sum": 0.0, "target_n": 0}
 
+    # Resolve each claim's sector from the ticker's REAL PSX sector, not the free text an agent
+    # typed. That text was a mess — "banking", "Banking" and "Commercial Banks" were three separate
+    # buckets on the leaderboard, and 11 claims said "unknown" — which silently split a broker's
+    # record across duplicate cells and made per-sector ranking meaningless.
+    sect_map = load_json(STATE / "sectors.json", {}).get("tickers", {})
+
+    def sector_of(c):
+        real = (sect_map.get(c.get("ticker")) or {}).get("sector")
+        return real or (c.get("sector") or "other")
+
     persona, broker, broker_sector = {}, {}, {}
     for c in claims:
         if c.get("status") not in ("hit", "miss"):
             continue
-        src, styp, sect = c.get("source"), c.get("source_type"), c.get("sector") or "other"
+        src, styp, sect = c.get("source"), c.get("source_type"), sector_of(c)
         bucket = persona if styp == "persona" else broker
         b = bucket.setdefault(src, blank())
         b["n"] += 1

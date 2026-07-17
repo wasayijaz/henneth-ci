@@ -750,16 +750,19 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
   const fv = fvAll?.tickers?.[sym];
   const room = roomsAll?.[sym];
+  // real PSX sector name — the feed only carries a numeric code ("0809"), so the old
+  // `isNaN(lv.sector)` guard meant this tag never rendered for any ticker
+  const mySector = (sectAll?.tickers?.[sym] || {}).sector || "";
   if (room) room.claims_ledger = (claimsAll?.claims || []).filter(c => c.ticker === sym);
   // broker calls on this ticker (from the weekly harvest) — the "real picture" from the houses
   const brokerDocs = ((researchIdx?.by_ticker?.[sym]) || []).filter(d => d.doc_type === "broker call");
@@ -1030,7 +1033,7 @@ async function pageTicker(sym, _retry = 0) {
       <span class="sym">${sym}</span>
       <span class="px num">${fmt(px)}</span>
       <span class="num ${cls(q.ret_1d)}" style="font-size:16px;font-weight:700">${sgn(q.ret_1d)}%</span>
-      <span class="tag">${esc(u?.name || "")}</span>${lv?.sector && isNaN(lv.sector) ? `<span class="tag">${esc(lv.sector)}</span>` : ""}
+      <span class="tag">${esc(u?.name || "")}</span>${mySector ? `<span class="tag">${esc(mySector)}</span>` : ""}
       <span class="tag">${(u?.in || []).join(" · ")}</span>
       <a class="tag" target="_blank" href="https://www.tradingview.com/chart/?symbol=PSX%3A${sym}">TradingView ↗ (15m delayed)</a>
       ${typeof starBtn === "function" ? starBtn(sym) : ""}
@@ -2030,7 +2033,7 @@ async function submitHolding() {
 }
 
 async function pagePortfolio() {
-  const [quant, uni, live, divs] = await Promise.all([j("quant.json"), j("universe.json"), j("live.json"), j("dividends.json")]);
+  const [quant, uni, live, divs, sectAll] = await Promise.all([j("quant.json"), j("universe.json"), j("live.json"), j("dividends.json"), j("sectors.json")]);
   if (!me) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your portfolio</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">Sign in to track your holdings — enter what you own and the desk shows your live value, profit/loss, position weights and estimated dividend income. Private to you, read-only: the desk never trades. Research, not advice.<br><br>
@@ -2048,7 +2051,8 @@ async function pagePortfolio() {
     const plPct = (mv != null && cost > 0) ? (mv / cost - 1) * 100 : null;
     const lastDiv = dHist.filter(d => d.symbol === h.ticker).sort((a, b) => (b.bc_start || "").localeCompare(a.bc_start || ""))[0];
     const annualDiv = lastDiv?.dividend_rs ? lastDiv.dividend_rs * h.shares : null;
-    return { ...h, px, mv, cost, pl, plPct, annualDiv, name: names[h.ticker]?.name || "", known: !!qq };
+    return { ...h, px, mv, cost, pl, plPct, annualDiv, name: names[h.ticker]?.name || "", known: !!qq,
+      sector: (sectAll?.tickers?.[h.ticker] || {}).sector || null };
   });
   const totMv = rows.reduce((a, r) => a + (r.mv || 0), 0);
   const totCost = rows.reduce((a, r) => a + r.cost, 0);
@@ -2061,6 +2065,17 @@ async function pagePortfolio() {
     top.w >= 40 ? `Your largest position, <b>${esc(top.ticker)}</b>, is <b>${top.w.toFixed(0)}%</b> of the portfolio.`
       : top3 >= 65 && withW.length >= 3 ? `Your top 3 positions make up <b>${top3.toFixed(0)}%</b> of the portfolio.`
         : `Your largest position is <b>${top.w.toFixed(0)}%</b> — reasonably spread across ${withW.length} name${withW.length === 1 ? "" : "s"}.`;
+
+  // ---- sector concentration: the exposure that actually bites. Two banks are one bet on rates,
+  // however different their tickers look. (This used to say sectors weren't in the feed — they are now.)
+  const secW = {};
+  withW.forEach(r => { const k = r.sector || "Unclassified"; secW[k] = (secW[k] || 0) + r.w; });
+  const secRows = Object.entries(secW).sort((a, b) => b[1] - a[1]);
+  const topSec = secRows[0];
+  const secFlag = !secRows.length ? "" :
+    secRows.length === 1 ? `Every rupee you hold is in <b>${esc(topSec[0])}</b>. One sector shock moves your whole portfolio at once.`
+      : topSec[1] >= 50 ? `<b>${topSec[1].toFixed(0)}%</b> of your portfolio sits in <b>${esc(topSec[0])}</b> — those names tend to rise and fall together, whatever their tickers say.`
+        : `Your biggest sector is <b>${esc(topSec[0])}</b> at <b>${topSec[1].toFixed(0)}%</b>, spread across ${secRows.length} sectors.`;
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
 
   $("view").innerHTML = `
@@ -2087,7 +2102,7 @@ async function pagePortfolio() {
 
   <div class="card"><table><thead><tr><th>Ticker</th><th class="r">Shares</th><th class="r">Avg cost</th><th class="r">Price</th><th class="r">Value</th><th class="r">P/L</th><th class="r">Weight</th><th></th></tr></thead><tbody>${
     withW.map(r => `<tr>
-      <td class="clickable" onclick="location.hash='#/ticker/${esc(r.ticker)}'"><b>${esc(r.ticker)}</b> <span class="sub">${esc((r.name || "").slice(0, 16))}</span>${r.known ? "" : ' <span class="sub dn">not in universe</span>'}</td>
+      <td class="clickable" onclick="location.hash='#/ticker/${esc(r.ticker)}'"><b>${esc(r.ticker)}</b> <span class="sub">${esc((r.name || "").slice(0, 16))}</span>${r.known ? "" : ' <span class="sub dn">not in universe</span>'}${r.sector ? `<div class="sub" style="opacity:.7">${esc(r.sector)}</div>` : ""}</td>
       <td class="r num">${fmt(r.shares)}</td><td class="r num">${fmt(r.avg_cost)}</td>
       <td class="r num">${r.px != null ? fmt(r.px) : "—"}</td>
       <td class="r num">${r.mv != null ? fmt(r.mv, 0) : "—"}</td>
@@ -2099,8 +2114,14 @@ async function pagePortfolio() {
 
   <div class="seg"><h2>Concentration</h2><div class="ln"></div><span class="pill">fact, not advice</span></div>
   <div class="card">
-    <p class="sub" style="line-height:1.6;margin-bottom:12px">${concFlag} Concentration means your portfolio rises and falls with fewer bets; diversification spreads that risk across more names. Whether that's right for you depends on your own goals and risk tolerance — the desk states the fact and the general principle, and never tells you to buy or sell. <span class="sub" style="opacity:.75">(Sector-level grouping isn't in the desk's data feed yet — weights below are by position.)</span></p>
+    <p class="sub" style="line-height:1.6;margin-bottom:12px">${concFlag} Concentration means your portfolio rises and falls with fewer bets; diversification spreads that risk across more names. Whether that's right for you depends on your own goals and risk tolerance — the desk states the fact and the general principle, and never tells you to buy or sell.</p>
     <div class="ph-bars">${withW.map(r => `<div class="ph-bar-row"><span class="ph-bar-lbl">${esc(r.ticker)}</span><span class="ph-bar-track"><span class="ph-bar-fill" style="width:${Math.max(2, r.w).toFixed(0)}%"></span></span><span class="ph-bar-val num">${r.w.toFixed(0)}%</span></div>`).join("")}</div>
+  </div>
+
+  <div class="seg"><h2>Sector concentration</h2><div class="ln"></div><span class="pill">${secRows.length} sector${secRows.length === 1 ? "" : "s"}</span></div>
+  <div class="card">
+    <p class="sub" style="line-height:1.6;margin-bottom:12px">${secFlag} This is the exposure position weights hide: two banks are one bet on interest rates, and two cement names are one bet on construction — however different the tickers look. Sectors are PSX's own classification. Stated as a fact about your holdings, not as advice.</p>
+    <div class="ph-bars">${secRows.map(([s, pct]) => `<div class="ph-bar-row"><span class="ph-bar-lbl" title="${esc(s)}">${esc(s.length > 22 ? s.slice(0, 21) + "…" : s)}</span><span class="ph-bar-track"><span class="ph-bar-fill" style="width:${Math.max(2, pct).toFixed(0)}%"></span></span><span class="ph-bar-val num">${pct.toFixed(0)}%</span></div>`).join("")}</div>
   </div>
 
   <p class="sub" style="margin-top:14px">Estimated dividend income is each holding's most recent declared dividend × your shares — an estimate from past payouts, not a promise; companies can cut or skip dividends. Prices are desk end-of-day/live figures and may differ from your broker. Research, not advice.</p>`
