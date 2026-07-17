@@ -724,6 +724,96 @@ function vimshottariFor(moonLon, birthISO) {
   return { current: cur, sequence: seq };
 }
 
+/* ---------- the natal orrery: a 2D SVG that reads as 3D — nine grahas on tilted concentric
+   orbits (foreshortened ellipses = perspective), each at its true sidereal longitude, with depth
+   from layered shadows and a light gradient. Pure inline SVG (CSP-safe), pixel-glyph planets. */
+const ORBIT_ORDER = ["Moon", "Mercury", "Venus", "Sun", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"];
+function natalOrrery(grahas, ascendant) {
+  const W = 440, H = 300, cx = W / 2, cy = H / 2 + 8, TILT = 0.46;   // ry/rx foreshorten
+  const rings = ORBIT_ORDER.length;
+  const rMin = 30, rMax = 196;
+  // zodiac ring (outermost) with 12 sign spokes
+  const rxZ = rMax + 16, ryZ = rxZ * TILT;
+  let spokes = "", signLbls = "";
+  for (let s = 0; s < 12; s++) {
+    const a = (s * 30) * Math.PI / 180, a2 = (s * 30 + 30) * Math.PI / 180;
+    const x1 = cx + rxZ * Math.cos(a), y1 = cy - ryZ * Math.sin(a);
+    spokes += `<line x1="${cx + (rMin - 8) * Math.cos(a)}" y1="${cy - (rMin - 8) * TILT * Math.sin(a)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" class="orr-spoke"/>`;
+    const am = (s * 30 + 15) * Math.PI / 180;
+    signLbls += `<text x="${(cx + (rxZ + 12) * Math.cos(am)).toFixed(1)}" y="${(cy - (ryZ + 12) * Math.sin(am)).toFixed(1)}" class="orr-sign">${["ARI", "TAU", "GEM", "CAN", "LEO", "VIR", "LIB", "SCO", "SAG", "CAP", "AQU", "PIS"][s]}</text>`;
+  }
+  // concentric orbit ellipses (back-to-front for depth)
+  let orbits = "";
+  ORBIT_ORDER.forEach((b, i) => {
+    const rx = rMin + (rMax - rMin) * (i / (rings - 1)), ry = rx * TILT;
+    orbits += `<ellipse cx="${cx}" cy="${cy}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" class="orr-orbit" style="opacity:${0.28 + 0.05 * i}"/>`;
+  });
+  // ascendant ray
+  let ascRay = "";
+  if (ascendant) {
+    const a = ascendant.lon * Math.PI / 180;
+    ascRay = `<line x1="${cx}" y1="${cy}" x2="${(cx + rxZ * Math.cos(a)).toFixed(1)}" y2="${(cy - ryZ * Math.sin(a)).toFixed(1)}" class="orr-asc"/>
+      <text x="${(cx + (rxZ + 6) * Math.cos(a)).toFixed(1)}" y="${(cy - (ryZ + 6) * Math.sin(a)).toFixed(1)}" class="orr-asc-lbl">ASC</text>`;
+  }
+  // planets — placed on their orbit at true longitude, drawn front-to-back so nearer ones overlap
+  const placed = ORBIT_ORDER.map((b, i) => {
+    const g = grahas[b]; if (!g) return null;
+    const rx = rMin + (rMax - rMin) * (i / (rings - 1)), ry = rx * TILT;
+    const a = g.lon * Math.PI / 180;
+    const x = cx + rx * Math.cos(a), y = cy - ry * Math.sin(a);
+    return { b, x, y, depth: y };
+  }).filter(Boolean).sort((p, q) => p.depth - q.depth);
+  const planets = placed.map(p => `<g class="orr-planet">
+      <ellipse cx="${p.x.toFixed(1)}" cy="${(p.y + 11).toFixed(1)}" rx="9" ry="2.5" class="orr-shadow"/>
+      <g class="orr-g">${pixelRects(p.b, 19, p.x, p.y)}</g></g>`).join("");
+  return `<div class="orrery"><svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet">
+    <defs><radialGradient id="orrBg" cx="50%" cy="46%" r="62%"><stop offset="0%" stop-color="var(--panel2)"/><stop offset="100%" stop-color="var(--panel)"/></radialGradient></defs>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rxZ + 26}" ry="${(rxZ + 26) * TILT + 10}" fill="url(#orrBg)"/>
+    ${orbits}${spokes}${ascRay}
+    <g class="orr-earth"><circle cx="${cx}" cy="${cy}" r="4"/><text x="${cx}" y="${cy + 15}" class="orr-earth-lbl">you</text></g>
+    ${planets}${signLbls}
+  </svg></div>`;
+}
+
+/* ---------- the dasha timeline: the "when". The user's Vimshottari maha-dasha ribbon with the
+   current period + sub-period marked, and which market each period's lord favours. This is the
+   map of TIME the owner asked for — framed as tradition's rhythm, never "invest on this date". */
+function dashaTimeline(chart, amap) {
+  const seq = chart.dasha?.sequence || [];
+  if (!seq.length) return "";
+  const now = Date.now();
+  const t0 = new Date(seq[0].from).getTime(), t1 = new Date(seq[seq.length - 1].to).getTime(), span = t1 - t0;
+  const nowPct = Math.max(0, Math.min(100, (now - t0) / span * 100));
+  const segs = seq.map(d => {
+    const a = new Date(d.from).getTime(), b = new Date(d.to).getTime();
+    const active = a <= now && now < b;
+    return `<div class="dt-seg ${active ? "on" : ""}" style="flex:${b - a}" title="${d.lord} ${d.from}–${d.to}">
+      <span class="dt-glyph">${pixelGlyph(d.lord, 16)}</span><span class="dt-lord">${esc(d.lord)}</span><span class="dt-yr">${d.from.slice(0, 4)}</span></div>`;
+  }).join("");
+  const cur = chart.dasha?.current || {};
+  const domains = b => ((amap?.grahas?.[b] || {}).domains || []).slice(0, 3).join(", ");
+  const future = seq.filter(d => new Date(d.to).getTime() > now).slice(0, 3);
+  return `<div class="dt-wrap">
+    <div class="dt-ribbon">${segs}<div class="dt-now" style="left:${nowPct}%"><span>now</span></div></div>
+    <div class="dt-legend">${future.map((d, i) => `<div class="dt-leg ${i === 0 ? "cur" : ""}"><b>${pixelGlyph(d.lord, 14)} ${esc(d.lord)} period</b><span class="sub">${d.from.slice(0, 4)}–${d.to.slice(0, 4)} · tradition lights up ${esc(domains(d.lord)) || "—"}</span></div>`).join("")}</div>
+  </div>`;
+}
+
+/* Which of the user's own periods a given stock brightens under — the per-stock "when". */
+function stockTiming(user, stock, sector, amap) {
+  const seq = user.dasha?.sequence || [];
+  const now = Date.now();
+  const target = stock && stock.natal ? SIGN_LORD[Math.floor((stock.natal.Moon.lon % 360) / 30) % 12]
+    : (sector ? (amap?.sector_significators?.[sector] || {}).primary : null);
+  if (!target) return null;
+  const horizon = now + 25 * 365.25 * 86400000;   // within a working lifetime, not centuries out
+  const windows = seq.filter(d => new Date(d.to).getTime() > now && new Date(d.from).getTime() < horizon)
+    .map(d => ({ ...d, rel: d.lord === target ? "peak" : (FRIEND[d.lord]?.f || []).includes(target) ? "warm" : (FRIEND[d.lord]?.e || []).includes(target) ? "cool" : "neutral" }))
+    .filter(d => d.rel === "peak" || d.rel === "warm").slice(0, 2);
+  if (!windows.length) return null;
+  return { target, windows };
+}
+
 /* ---------- synastry: how the tradition reads a person's chart against a stock's.
    Uses classical Vedic techniques (Tara koota on the Moon nakshatras, planetary friendship of the
    sign lords, dasha resonance) — the same methods used for personal compatibility, applied to the
@@ -842,6 +932,15 @@ function pixelGlyph(body, px) {
   return `<svg class="pxg" viewBox="0 0 ${n * cell} ${n * cell}" width="${px}" height="${px}" fill="currentColor" aria-label="${body}">${rects}</svg>`;
 }
 const GRAHA_AB = { Sun: "Su", Moon: "Mo", Mercury: "Me", Venus: "Ve", Mars: "Ma", Jupiter: "Ju", Saturn: "Sa", Rahu: "Ra", Ketu: "Ke" };
+// raw <rect> string for embedding a glyph DIRECTLY in a parent SVG (no foreignObject — which fails
+// in Safari and breaks screenshot/export renderers). Centred on (ox,oy), total size px.
+function pixelRects(body, px, ox, oy, fill) {
+  const g = PIXEL_GRAHAS[body]; if (!g) return "";
+  const n = 9, cell = Math.max(1, px / n), o0 = -px / 2;
+  let r = "";
+  g.forEach((row, y) => { [...row].forEach((c, x) => { if (c === "#") r += `<rect x="${(ox + o0 + x * cell).toFixed(1)}" y="${(oy + o0 + y * cell).toFixed(1)}" width="${cell.toFixed(1)}" height="${cell.toFixed(1)}"/>`; }); });
+  return `<g fill="${fill || "currentColor"}">${r}</g>`;
+}
 
 /* the zodiac strip: 12 sidereal signs as columns; transiting grahas on the top lane, the natal
    chart (when one exists) on the bottom lane — so a transit sitting on a natal point is VISIBLE
@@ -1144,18 +1243,22 @@ async function pageMyChart() {
     const stock = natalAll?.subjects?.[sym];
     const sector = (sectors?.tickers?.[sym] || {}).sector;
     const r = synastry(nc, stock, sector, amap, astroNow);
-    return { sym, name: names[sym]?.name || "", sector, hasChart: !!stock, ...r };
+    return { sym, name: names[sym]?.name || "", sector, hasChart: !!stock, timing: stockTiming(nc, stock, sector, amap), ...r };
   }).filter(x => x.score != null).sort((a, b) => b.score - a.score);
   // curated slices, not threshold dumps — the strongest handful each way, so "harmonious" stays meaningful
   const harmon = scored.filter(x => x.score >= 58).slice(0, 8);
   const testing = scored.filter(x => x.score <= 44).slice(-6).reverse();
   const moon = nc.grahas.Moon, asc = nc.ascendant;
 
-  const rowCard = (x) => `<div class="card syn-card"><div class="syn-head clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'">
+  const rowCard = (x) => {
+    const tm = x.timing;
+    return `<div class="card syn-card"><div class="syn-head clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'">
       <span class="syn-score s-${x.verdict.replace(/\s/g, "")}">${x.score}</span>
       <div><b>${esc(x.sym)}</b> <span class="sub">${esc((x.name || "").slice(0, 26))}</span><div class="sub">${esc(x.sector || "")}${x.hasChart ? "" : " · sector reading"}</div></div>
       <span class="pill ${x.verdict === "harmonious" || x.verdict === "favourable" ? "ok" : x.verdict === "testing" || x.verdict === "discordant" ? "bad" : ""}">${esc(x.verdict)}</span></div>
-    <div class="syn-why">${x.reasons.slice(0, 3).map(r => `<div class="syn-r ${r.w > 0 ? "up" : r.w < 0 ? "dn" : ""}"><b>${esc(r.k)}</b> ${esc(r.why)}</div>`).join("")}</div></div>`;
+    <div class="syn-why">${x.reasons.slice(0, 3).map(r => `<div class="syn-r ${r.w > 0 ? "up" : r.w < 0 ? "dn" : ""}"><b>${esc(r.k)}</b> ${esc(r.why)}</div>`).join("")}
+    ${tm ? `<div class="syn-time"><span class="dt-glyph">${pixelGlyph(tm.windows[0].lord, 14)}</span> <b>The tradition's timing:</b> your ${esc(tm.windows[0].lord)} period (${tm.windows[0].from.slice(0, 4)}–${tm.windows[0].to.slice(0, 4)}) is when your chart most resonates with ${esc(x.sym)}${tm.windows[1] ? `, again under ${esc(tm.windows[1].lord)} from ${tm.windows[1].from.slice(0, 4)}` : ""}. A rhythm, not a date to act on.</div>` : ""}</div></div>`;
+  };
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">${esc(bd.place || "")} · ${esc(bd.date || "")}</span></div>
@@ -1169,9 +1272,13 @@ async function pageMyChart() {
     <div><div class="ark">Your current period</div><b style="font-size:18px">${pixelGlyph(cur.lord, 18)} ${esc(cur.lord || "—")} dasha</b>
       <div class="sub">to ~${esc(String(cur.to || "").slice(0, 7))} · tradition ties ${esc(cur.lord || "")} to ${esc(((amap?.grahas?.[cur.lord] || {}).domains || []).slice(0, 3).join(", "))}</div></div>
     </div>
-    ${zodiacStrip(astroNow?.positions, nc.grahas)}
-    <p class="sub" style="margin-top:8px">Your birth chart (bottom lane) against the sky now (top). ${bd.time_known === false ? "Read from your Moon, since your birth time is unknown." : "Cast for your exact birth moment."} Sidereal, Lahiri.</p>
+    ${natalOrrery(nc.grahas, asc)}
+    <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas on their orbits at the moment you were born. ${bd.time_known === false ? "Read from your Moon; birth time unknown, so no rising sign." : "Cast for your exact birth moment."} Sidereal, Lahiri.</p>
   </div>
+
+  <div class="seg"><h2>Your timing — the map of when</h2><div class="ln"></div><span class="pill">Vimshottari</span></div>
+  <p class="sub" style="margin-bottom:12px">Vedic astrology divides a life into planetary periods (dashas). Each one, tradition says, colours the years it rules. This is your ribbon — where you are now, and what's ahead. A rhythm to understand your chart by, <b>never</b> a schedule to trade on.</p>
+  <div class="card">${dashaTimeline(nc, amap)}</div>
 
   <div class="seg"><h2>The market your chart favours</h2><div class="ln"></div><span class="pill ok">your strongest</span></div>
   <p class="sub" style="margin-bottom:12px">The names the tradition reads as most in tune with your chart — by Moon-star compatibility (Tara), the friendship of your ruling planets, and your running dasha. High resonance means astrological harmony, <b>not</b> a prediction of gains.</p>
@@ -3058,6 +3165,10 @@ async function initAuth() {
   renderAccountButton();
   if (me) {
     await loadProfile();
+    // the initial route() already ran (before auth resolved), so pages that depend on the signed-in
+    // user — Your Chart, Portfolio, Watchlist, Settings — rendered their signed-out state. Re-render
+    // the current page now that `me` and the profile are known.
+    if (typeof route === "function") route(true);
     if (myProfile && !myProfile.onboarded) startWizard(false);
   }
   sb.auth.onAuthStateChange(async (event, sess) => {
@@ -3067,8 +3178,10 @@ async function initAuth() {
     if (event === "SIGNED_IN") {
       closeAuth();
       await loadProfile();
+      if (typeof route === "function") route(true);   // re-render the page you're on with your account
       if (myProfile && !myProfile.onboarded) startWizard(false);
     }
+    if (event === "SIGNED_OUT") { myProfile = null; if (typeof route === "function") route(true); }
   });
 }
 initAuth();
