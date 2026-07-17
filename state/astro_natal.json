@@ -1,0 +1,2881 @@
+{
+  "updated": "2026-07-17 17:38",
+  "note": "Natal charts, Vimshottari dashas and transits-to-natal for the subjects whose birth date is genuinely sourced. No ascendant and no houses: the first-trade time is unpublished, so they would be invented. Every conclusion is bracketed across the trading session and marked unstable if the unknown time changes it.",
+  "discipline": "This is what the tradition SAYS about these charts. It is not a forecast and not advice. The transit-only claims the desk could test showed no edge on PSX (see astro_backtest.json); the natal methods here are not yet tested, and are labelled untested rather than sold as insight.",
+  "n_charts": 15,
+  "subjects": {
+    "KSE100": {
+      "subject": "KSE100",
+      "kind": "index",
+      "birth": {
+        "date": "1991-11-01",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "https://www.psx.com.pk/psx/themes/psx/uploads/KSE_100_Index_New_Brochure.pdf"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 194.522,
+          "sign": "Libra",
+          "deg_in_sign": 14.52,
+          "nakshatra": "Swati",
+          "pada": 3
+        },
+        "Moon": {
+          "lon": 128.992,
+          "sign": "Leo",
+          "deg_in_sign": 8.99,
+          "nakshatra": "Magha",
+          "pada": 3
+        },
+        "Mercury": {
+          "lon": 211.618,
+          "sign": "Scorpio",
+          "deg_in_sign": 1.62,
+          "nakshatra": "Vishakha",
+          "pada": 4
+        },
+        "Venus": {
+          "lon": 148.012,
+          "sign": "Leo",
+          "deg_in_sign": 28.01,
+          "nakshatra": "Uttara Phalguni",
+          "pada": 1
+        },
+        "Mars": {
+          "lon": 196.765,
+          "sign": "Libra",
+          "deg_in_sign": 16.77,
+          "nakshatra": "Swati",
+          "pada": 4
+        },
+        "Jupiter": {
+          "lon": 135.757,
+          "sign": "Leo",
+          "deg_in_sign": 15.76,
+          "nakshatra": "Purva Phalguni",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 277.074,
+          "sign": "Capricorn",
+          "deg_in_sign": 7.07,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 4
+        },
+        "Rahu": {
+          "lon": 259.295,
+          "sign": "Sagittarius",
+          "deg_in_sign": 19.29,
+          "nakshatra": "Purva Ashadha",
+          "pada": 2
+        },
+        "Ketu": {
+          "lon": 79.295,
+          "sign": "Gemini",
+          "deg_in_sign": 19.29,
+          "nakshatra": "Ardra",
+          "pada": 4
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 663,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Moon",
+          "maha_from": "2020-02-09",
+          "maha_to": "2030-02-08",
+          "antar": "Mercury",
+          "antar_from": "2025-12-07",
+          "antar_to": "2027-05-08"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Ketu",
+            "from": "1987-02-11",
+            "to": "1994-02-10",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "1994-02-10",
+            "to": "2014-02-09",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2014-02-09",
+            "to": "2020-02-09",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2020-02-09",
+            "to": "2030-02-08",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2030-02-08",
+            "to": "2037-02-07",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2037-02-07",
+            "to": "2055-02-07",
+            "years": 18
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 663 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": "Dhaiya (Saturn in the 8th from natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Venus",
+          "over_natal": "Jupiter",
+          "orb_deg": 1.36,
+          "sign": "Leo",
+          "text": "transiting Venus is conjunct natal Jupiter (1.36\u00b0 orb)"
+        },
+        {
+          "transiting": "Ketu",
+          "over_natal": "Moon",
+          "orb_deg": 1.49,
+          "sign": "Leo",
+          "text": "transiting Ketu is conjunct natal Moon (1.49\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Jupiter",
+          "orb_deg": 2.67,
+          "sign": "Leo",
+          "text": "transiting Moon is conjunct natal Jupiter (2.67\u00b0 orb)"
+        }
+      ]
+    },
+    "AGP": {
+      "subject": "AGP",
+      "kind": "stock",
+      "birth": {
+        "date": "2018-05-14",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for AGP.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 29.245,
+          "sign": "Aries",
+          "deg_in_sign": 29.24,
+          "nakshatra": "Krittika",
+          "pada": 1
+        },
+        "Moon": {
+          "lon": 11.862,
+          "sign": "Aries",
+          "deg_in_sign": 11.86,
+          "nakshatra": "Ashwini",
+          "pada": 4
+        },
+        "Mercury": {
+          "lon": 6.922,
+          "sign": "Aries",
+          "deg_in_sign": 6.92,
+          "nakshatra": "Ashwini",
+          "pada": 3
+        },
+        "Venus": {
+          "lon": 59.472,
+          "sign": "Taurus",
+          "deg_in_sign": 29.47,
+          "nakshatra": "Mrigashira",
+          "pada": 2
+        },
+        "Mars": {
+          "lon": 275.1,
+          "sign": "Capricorn",
+          "deg_in_sign": 5.1,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 3
+        },
+        "Jupiter": {
+          "lon": 203.603,
+          "sign": "Libra",
+          "deg_in_sign": 23.6,
+          "nakshatra": "Vishakha",
+          "pada": 2
+        },
+        "Saturn": {
+          "lon": 254.511,
+          "sign": "Sagittarius",
+          "deg_in_sign": 14.51,
+          "nakshatra": "Purva Ashadha",
+          "pada": 1
+        },
+        "Rahu": {
+          "lon": 105.75,
+          "sign": "Cancer",
+          "deg_in_sign": 15.75,
+          "nakshatra": "Pushya",
+          "pada": 4
+        },
+        "Ketu": {
+          "lon": 285.75,
+          "sign": "Capricorn",
+          "deg_in_sign": 15.75,
+          "nakshatra": "Shravana",
+          "pada": 2
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": false
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": false,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1409,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Venus",
+          "maha_from": "2019-02-20",
+          "maha_to": "2039-02-19",
+          "antar": "Rahu",
+          "antar_from": "2026-04-20",
+          "antar_to": "2029-04-19"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Ketu",
+            "from": "2012-02-21",
+            "to": "2019-02-20",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2019-02-20",
+            "to": "2039-02-19",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2039-02-19",
+            "to": "2045-02-18",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2045-02-18",
+            "to": "2055-02-18",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2055-02-18",
+            "to": "2062-02-17",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2062-02-17",
+            "to": "2080-02-17",
+            "years": 18
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1409 days here."
+      },
+      "sade_sati": {
+        "active": true,
+        "phase": "rising (Saturn in the 12th from natal Moon)"
+      },
+      "transits_to_natal": []
+    },
+    "AIRLINK": {
+      "subject": "AIRLINK",
+      "kind": "stock",
+      "birth": {
+        "date": "2021-09-22",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for AIRLINK.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 155.25,
+          "sign": "Virgo",
+          "deg_in_sign": 5.25,
+          "nakshatra": "Uttara Phalguni",
+          "pada": 3
+        },
+        "Moon": {
+          "lon": 349.238,
+          "sign": "Pisces",
+          "deg_in_sign": 19.24,
+          "nakshatra": "Revati",
+          "pada": 1
+        },
+        "Mercury": {
+          "lon": 180.048,
+          "sign": "Libra",
+          "deg_in_sign": 0.05,
+          "nakshatra": "Chitra",
+          "pada": 3
+        },
+        "Venus": {
+          "lon": 198.802,
+          "sign": "Libra",
+          "deg_in_sign": 18.8,
+          "nakshatra": "Swati",
+          "pada": 4
+        },
+        "Mars": {
+          "lon": 160.505,
+          "sign": "Virgo",
+          "deg_in_sign": 10.5,
+          "nakshatra": "Hasta",
+          "pada": 1
+        },
+        "Jupiter": {
+          "lon": 299.292,
+          "sign": "Capricorn",
+          "deg_in_sign": 29.29,
+          "nakshatra": "Dhanishta",
+          "pada": 2
+        },
+        "Saturn": {
+          "lon": 283.03,
+          "sign": "Capricorn",
+          "deg_in_sign": 13.03,
+          "nakshatra": "Shravana",
+          "pada": 1
+        },
+        "Rahu": {
+          "lon": 40.729,
+          "sign": "Taurus",
+          "deg_in_sign": 10.73,
+          "nakshatra": "Rohini",
+          "pada": 1
+        },
+        "Ketu": {
+          "lon": 220.729,
+          "sign": "Scorpio",
+          "deg_in_sign": 10.73,
+          "nakshatra": "Anuradha",
+          "pada": 3
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1460,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Mercury",
+          "maha_from": "2018-06-13",
+          "maha_to": "2035-06-13",
+          "antar": "Moon",
+          "antar_from": "2025-07-11",
+          "antar_to": "2026-12-10"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Mercury",
+            "from": "2018-06-13",
+            "to": "2035-06-13",
+            "years": 17
+          },
+          {
+            "lord": "Ketu",
+            "from": "2035-06-13",
+            "to": "2042-06-12",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2042-06-12",
+            "to": "2062-06-11",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2062-06-11",
+            "to": "2068-06-10",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2068-06-10",
+            "to": "2078-06-10",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2078-06-10",
+            "to": "2085-06-09",
+            "years": 7
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1460 days here."
+      },
+      "sade_sati": {
+        "active": true,
+        "phase": "peak (Saturn over the natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Saturn",
+          "over_natal": "Moon",
+          "orb_deg": 1.23,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Moon (1.23\u00b0 orb)"
+        }
+      ]
+    },
+    "CPHL": {
+      "subject": "CPHL",
+      "kind": "stock",
+      "birth": {
+        "date": "2021-07-12",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for CPHL.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 85.921,
+          "sign": "Gemini",
+          "deg_in_sign": 25.92,
+          "nakshatra": "Punarvasu",
+          "pada": 2
+        },
+        "Moon": {
+          "lon": 110.736,
+          "sign": "Cancer",
+          "deg_in_sign": 20.74,
+          "nakshatra": "Ashlesha",
+          "pada": 2
+        },
+        "Mercury": {
+          "lon": 66.33,
+          "sign": "Gemini",
+          "deg_in_sign": 6.33,
+          "nakshatra": "Mrigashira",
+          "pada": 4
+        },
+        "Venus": {
+          "lon": 114.012,
+          "sign": "Cancer",
+          "deg_in_sign": 24.01,
+          "nakshatra": "Ashlesha",
+          "pada": 3
+        },
+        "Mars": {
+          "lon": 114.816,
+          "sign": "Cancer",
+          "deg_in_sign": 24.82,
+          "nakshatra": "Ashlesha",
+          "pada": 3
+        },
+        "Jupiter": {
+          "lon": 307.307,
+          "sign": "Aquarius",
+          "deg_in_sign": 7.31,
+          "nakshatra": "Shatabhisha",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 287.551,
+          "sign": "Capricorn",
+          "deg_in_sign": 17.55,
+          "nakshatra": "Shravana",
+          "pada": 3
+        },
+        "Rahu": {
+          "lon": 44.544,
+          "sign": "Taurus",
+          "deg_in_sign": 14.54,
+          "nakshatra": "Rohini",
+          "pada": 2
+        },
+        "Ketu": {
+          "lon": 224.544,
+          "sign": "Scorpio",
+          "deg_in_sign": 14.54,
+          "nakshatra": "Anuradha",
+          "pada": 4
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": false
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1495,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Mercury",
+          "maha_from": "2016-05-04",
+          "maha_to": "2033-05-04",
+          "antar": "Rahu",
+          "antar_from": "2025-10-28",
+          "antar_to": "2028-05-16"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Mercury",
+            "from": "2016-05-04",
+            "to": "2033-05-04",
+            "years": 17
+          },
+          {
+            "lord": "Ketu",
+            "from": "2033-05-04",
+            "to": "2040-05-03",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2040-05-03",
+            "to": "2060-05-02",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2060-05-02",
+            "to": "2066-05-02",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2066-05-02",
+            "to": "2076-05-01",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2076-05-01",
+            "to": "2083-05-01",
+            "years": 7
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1495 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": null
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Rahu",
+          "over_natal": "Jupiter",
+          "orb_deg": 0.19,
+          "sign": "Aquarius",
+          "text": "transiting Rahu is conjunct natal Jupiter (0.19\u00b0 orb)"
+        },
+        {
+          "transiting": "Mercury",
+          "over_natal": "Sun",
+          "orb_deg": 2.07,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Sun (2.07\u00b0 orb)"
+        }
+      ]
+    },
+    "DCR": {
+      "subject": "DCR",
+      "kind": "stock",
+      "birth": {
+        "date": "2015-07-23",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for DCR.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 95.98,
+          "sign": "Cancer",
+          "deg_in_sign": 5.98,
+          "nakshatra": "Pushya",
+          "pada": 1
+        },
+        "Moon": {
+          "lon": 175.179,
+          "sign": "Virgo",
+          "deg_in_sign": 25.18,
+          "nakshatra": "Chitra",
+          "pada": 1
+        },
+        "Mercury": {
+          "lon": 95.255,
+          "sign": "Cancer",
+          "deg_in_sign": 5.26,
+          "nakshatra": "Pushya",
+          "pada": 1
+        },
+        "Venus": {
+          "lon": 126.621,
+          "sign": "Leo",
+          "deg_in_sign": 6.62,
+          "nakshatra": "Magha",
+          "pada": 2
+        },
+        "Mars": {
+          "lon": 84.989,
+          "sign": "Gemini",
+          "deg_in_sign": 24.99,
+          "nakshatra": "Punarvasu",
+          "pada": 2
+        },
+        "Jupiter": {
+          "lon": 121.87,
+          "sign": "Leo",
+          "deg_in_sign": 1.87,
+          "nakshatra": "Magha",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 214.305,
+          "sign": "Scorpio",
+          "deg_in_sign": 4.31,
+          "nakshatra": "Anuradha",
+          "pada": 1
+        },
+        "Rahu": {
+          "lon": 160.119,
+          "sign": "Virgo",
+          "deg_in_sign": 10.12,
+          "nakshatra": "Hasta",
+          "pada": 1
+        },
+        "Ketu": {
+          "lon": 340.119,
+          "sign": "Pisces",
+          "deg_in_sign": 10.12,
+          "nakshatra": "Uttara Bhadrapada",
+          "pada": 3
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 570,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Rahu",
+          "maha_from": "2021-08-03",
+          "maha_to": "2039-08-03",
+          "antar": "Jupiter",
+          "antar_from": "2024-04-15",
+          "antar_to": "2026-09-08"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Mars",
+            "from": "2014-08-04",
+            "to": "2021-08-03",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2021-08-03",
+            "to": "2039-08-03",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2039-08-03",
+            "to": "2055-08-02",
+            "years": 16
+          },
+          {
+            "lord": "Saturn",
+            "from": "2055-08-02",
+            "to": "2074-08-01",
+            "years": 19
+          },
+          {
+            "lord": "Mercury",
+            "from": "2074-08-01",
+            "to": "2091-08-01",
+            "years": 17
+          },
+          {
+            "lord": "Ketu",
+            "from": "2091-08-01",
+            "to": "2098-07-31",
+            "years": 7
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 570 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": null
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Ketu",
+          "over_natal": "Venus",
+          "orb_deg": 0.88,
+          "sign": "Leo",
+          "text": "transiting Ketu is conjunct natal Venus (0.88\u00b0 orb)"
+        },
+        {
+          "transiting": "Mercury",
+          "over_natal": "Mars",
+          "orb_deg": 1.13,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Mars (1.13\u00b0 orb)"
+        }
+      ]
+    },
+    "EFERT": {
+      "subject": "EFERT",
+      "kind": "stock",
+      "birth": {
+        "date": "2014-01-20",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for EFERT.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 275.989,
+          "sign": "Capricorn",
+          "deg_in_sign": 5.99,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 3
+        },
+        "Moon": {
+          "lon": 139.561,
+          "sign": "Leo",
+          "deg_in_sign": 19.56,
+          "nakshatra": "Purva Phalguni",
+          "pada": 2
+        },
+        "Mercury": {
+          "lon": 289.792,
+          "sign": "Capricorn",
+          "deg_in_sign": 19.79,
+          "nakshatra": "Shravana",
+          "pada": 3
+        },
+        "Venus": {
+          "lon": 262.294,
+          "sign": "Sagittarius",
+          "deg_in_sign": 22.29,
+          "nakshatra": "Purva Ashadha",
+          "pada": 3
+        },
+        "Mars": {
+          "lon": 175.337,
+          "sign": "Virgo",
+          "deg_in_sign": 25.34,
+          "nakshatra": "Chitra",
+          "pada": 1
+        },
+        "Jupiter": {
+          "lon": 79.539,
+          "sign": "Gemini",
+          "deg_in_sign": 19.54,
+          "nakshatra": "Ardra",
+          "pada": 4
+        },
+        "Saturn": {
+          "lon": 207.842,
+          "sign": "Libra",
+          "deg_in_sign": 27.84,
+          "nakshatra": "Vishakha",
+          "pada": 3
+        },
+        "Rahu": {
+          "lon": 189.212,
+          "sign": "Libra",
+          "deg_in_sign": 9.21,
+          "nakshatra": "Swati",
+          "pada": 1
+        },
+        "Ketu": {
+          "lon": 9.212,
+          "sign": "Aries",
+          "deg_in_sign": 9.21,
+          "nakshatra": "Ashwini",
+          "pada": 3
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1991,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Sun",
+          "maha_from": "2024-09-17",
+          "maha_to": "2030-09-17",
+          "antar": "Rahu",
+          "antar_from": "2025-11-09",
+          "antar_to": "2026-10-03"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Venus",
+            "from": "2004-09-18",
+            "to": "2024-09-17",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2024-09-17",
+            "to": "2030-09-17",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2030-09-17",
+            "to": "2040-09-16",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2040-09-16",
+            "to": "2047-09-16",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2047-09-16",
+            "to": "2065-09-15",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2065-09-15",
+            "to": "2081-09-14",
+            "years": 16
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1991 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": "Dhaiya (Saturn in the 8th from natal Moon)"
+      },
+      "transits_to_natal": []
+    },
+    "FATIMA": {
+      "subject": "FATIMA",
+      "kind": "stock",
+      "birth": {
+        "date": "2010-03-09",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for FATIMA.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 324.507,
+          "sign": "Aquarius",
+          "deg_in_sign": 24.51,
+          "nakshatra": "Purva Bhadrapada",
+          "pada": 2
+        },
+        "Moon": {
+          "lon": 251.678,
+          "sign": "Sagittarius",
+          "deg_in_sign": 11.68,
+          "nakshatra": "Mula",
+          "pada": 4
+        },
+        "Mercury": {
+          "lon": 319.648,
+          "sign": "Aquarius",
+          "deg_in_sign": 19.65,
+          "nakshatra": "Shatabhisha",
+          "pada": 4
+        },
+        "Venus": {
+          "lon": 338.087,
+          "sign": "Pisces",
+          "deg_in_sign": 8.09,
+          "nakshatra": "Uttara Bhadrapada",
+          "pada": 2
+        },
+        "Mars": {
+          "lon": 96.326,
+          "sign": "Cancer",
+          "deg_in_sign": 6.33,
+          "nakshatra": "Pushya",
+          "pada": 1
+        },
+        "Jupiter": {
+          "lon": 317.861,
+          "sign": "Aquarius",
+          "deg_in_sign": 17.86,
+          "nakshatra": "Shatabhisha",
+          "pada": 4
+        },
+        "Saturn": {
+          "lon": 158.3,
+          "sign": "Virgo",
+          "deg_in_sign": 8.3,
+          "nakshatra": "Uttara Phalguni",
+          "pada": 4
+        },
+        "Rahu": {
+          "lon": 264.09,
+          "sign": "Sagittarius",
+          "deg_in_sign": 24.09,
+          "nakshatra": "Purva Ashadha",
+          "pada": 4
+        },
+        "Ketu": {
+          "lon": 84.09,
+          "sign": "Gemini",
+          "deg_in_sign": 24.09,
+          "nakshatra": "Punarvasu",
+          "pada": 2
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": false
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": false
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": false,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1052,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Venus",
+          "maha_from": "2011-01-20",
+          "maha_to": "2031-01-19",
+          "antar": "Saturn",
+          "antar_from": "2023-11-17",
+          "antar_to": "2027-01-16"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Ketu",
+            "from": "2004-01-21",
+            "to": "2011-01-20",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2011-01-20",
+            "to": "2031-01-19",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2031-01-19",
+            "to": "2037-01-18",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2037-01-18",
+            "to": "2047-01-18",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2047-01-18",
+            "to": "2054-01-17",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2054-01-17",
+            "to": "2072-01-17",
+            "years": 18
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1052 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": "Dhaiya (Saturn in the 4th from natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Mercury",
+          "over_natal": "Ketu",
+          "orb_deg": 0.24,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Ketu (0.24\u00b0 orb)"
+        }
+      ]
+    },
+    "HALEON": {
+      "subject": "HALEON",
+      "kind": "stock",
+      "birth": {
+        "date": "2017-04-06",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for HALEON.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 352.484,
+          "sign": "Pisces",
+          "deg_in_sign": 22.48,
+          "nakshatra": "Revati",
+          "pada": 2
+        },
+        "Moon": {
+          "lon": 112.851,
+          "sign": "Cancer",
+          "deg_in_sign": 22.85,
+          "nakshatra": "Ashlesha",
+          "pada": 2
+        },
+        "Mercury": {
+          "lon": 9.961,
+          "sign": "Aries",
+          "deg_in_sign": 9.96,
+          "nakshatra": "Ashwini",
+          "pada": 3
+        },
+        "Venus": {
+          "lon": 334.561,
+          "sign": "Pisces",
+          "deg_in_sign": 4.56,
+          "nakshatra": "Uttara Bhadrapada",
+          "pada": 1
+        },
+        "Mars": {
+          "lon": 25.279,
+          "sign": "Aries",
+          "deg_in_sign": 25.28,
+          "nakshatra": "Bharani",
+          "pada": 4
+        },
+        "Jupiter": {
+          "lon": 174.392,
+          "sign": "Virgo",
+          "deg_in_sign": 24.39,
+          "nakshatra": "Chitra",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 243.713,
+          "sign": "Sagittarius",
+          "deg_in_sign": 3.71,
+          "nakshatra": "Mula",
+          "pada": 2
+        },
+        "Rahu": {
+          "lon": 127.105,
+          "sign": "Leo",
+          "deg_in_sign": 7.11,
+          "nakshatra": "Magha",
+          "pada": 3
+        },
+        "Ketu": {
+          "lon": 307.105,
+          "sign": "Aquarius",
+          "deg_in_sign": 7.11,
+          "nakshatra": "Shatabhisha",
+          "pada": 1
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1542,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Ketu",
+          "maha_from": "2026-05-19",
+          "maha_to": "2033-05-18",
+          "antar": "Ketu",
+          "antar_from": "2026-05-19",
+          "antar_to": "2026-10-15"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Mercury",
+            "from": "2009-05-19",
+            "to": "2026-05-19",
+            "years": 17
+          },
+          {
+            "lord": "Ketu",
+            "from": "2026-05-19",
+            "to": "2033-05-18",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2033-05-18",
+            "to": "2053-05-17",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2053-05-17",
+            "to": "2059-05-17",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2059-05-17",
+            "to": "2069-05-16",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2069-05-16",
+            "to": "2076-05-15",
+            "years": 7
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1542 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": null
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Rahu",
+          "over_natal": "Ketu",
+          "orb_deg": 0.39,
+          "sign": "Aquarius",
+          "text": "transiting Rahu is conjunct natal Ketu (0.39\u00b0 orb)"
+        },
+        {
+          "transiting": "Ketu",
+          "over_natal": "Rahu",
+          "orb_deg": 0.39,
+          "sign": "Leo",
+          "text": "transiting Ketu is conjunct natal Rahu (0.39\u00b0 orb)"
+        },
+        {
+          "transiting": "Saturn",
+          "over_natal": "Sun",
+          "orb_deg": 2.02,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Sun (2.02\u00b0 orb)"
+        }
+      ]
+    },
+    "ILP": {
+      "subject": "ILP",
+      "kind": "stock",
+      "birth": {
+        "date": "2019-04-05",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for ILP.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 350.998,
+          "sign": "Pisces",
+          "deg_in_sign": 21.0,
+          "nakshatra": "Revati",
+          "pada": 2
+        },
+        "Moon": {
+          "lon": 348.931,
+          "sign": "Pisces",
+          "deg_in_sign": 18.93,
+          "nakshatra": "Revati",
+          "pada": 1
+        },
+        "Mercury": {
+          "lon": 324.477,
+          "sign": "Aquarius",
+          "deg_in_sign": 24.48,
+          "nakshatra": "Purva Bhadrapada",
+          "pada": 2
+        },
+        "Venus": {
+          "lon": 317.172,
+          "sign": "Aquarius",
+          "deg_in_sign": 17.17,
+          "nakshatra": "Shatabhisha",
+          "pada": 4
+        },
+        "Mars": {
+          "lon": 39.149,
+          "sign": "Taurus",
+          "deg_in_sign": 9.15,
+          "nakshatra": "Krittika",
+          "pada": 4
+        },
+        "Jupiter": {
+          "lon": 240.192,
+          "sign": "Sagittarius",
+          "deg_in_sign": 0.19,
+          "nakshatra": "Mula",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 265.907,
+          "sign": "Sagittarius",
+          "deg_in_sign": 25.91,
+          "nakshatra": "Purva Ashadha",
+          "pada": 4
+        },
+        "Rahu": {
+          "lon": 88.474,
+          "sign": "Gemini",
+          "deg_in_sign": 28.47,
+          "nakshatra": "Punarvasu",
+          "pada": 3
+        },
+        "Ketu": {
+          "lon": 268.474,
+          "sign": "Sagittarius",
+          "deg_in_sign": 28.47,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 1
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1440,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Mercury",
+          "maha_from": "2016-05-16",
+          "maha_to": "2033-05-16",
+          "antar": "Rahu",
+          "antar_from": "2025-11-09",
+          "antar_to": "2028-05-28"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Mercury",
+            "from": "2016-05-16",
+            "to": "2033-05-16",
+            "years": 17
+          },
+          {
+            "lord": "Ketu",
+            "from": "2033-05-16",
+            "to": "2040-05-15",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2040-05-15",
+            "to": "2060-05-14",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2060-05-14",
+            "to": "2066-05-14",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2066-05-14",
+            "to": "2076-05-13",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2076-05-13",
+            "to": "2083-05-13",
+            "years": 7
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1440 days here."
+      },
+      "sade_sati": {
+        "active": true,
+        "phase": "peak (Saturn over the natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Saturn",
+          "over_natal": "Sun",
+          "orb_deg": 0.53,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Sun (0.53\u00b0 orb)"
+        },
+        {
+          "transiting": "Saturn",
+          "over_natal": "Moon",
+          "orb_deg": 1.53,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Moon (1.53\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Rahu",
+          "orb_deg": 2.28,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Rahu (2.28\u00b0 orb)"
+        }
+      ]
+    },
+    "ISL": {
+      "subject": "ISL",
+      "kind": "stock",
+      "birth": {
+        "date": "2011-06-01",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for ISL.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 46.369,
+          "sign": "Taurus",
+          "deg_in_sign": 16.37,
+          "nakshatra": "Rohini",
+          "pada": 2
+        },
+        "Moon": {
+          "lon": 38.362,
+          "sign": "Taurus",
+          "deg_in_sign": 8.36,
+          "nakshatra": "Krittika",
+          "pada": 4
+        },
+        "Mercury": {
+          "lon": 32.737,
+          "sign": "Taurus",
+          "deg_in_sign": 2.74,
+          "nakshatra": "Krittika",
+          "pada": 2
+        },
+        "Venus": {
+          "lon": 25.759,
+          "sign": "Aries",
+          "deg_in_sign": 25.76,
+          "nakshatra": "Bharani",
+          "pada": 4
+        },
+        "Mars": {
+          "lon": 21.545,
+          "sign": "Aries",
+          "deg_in_sign": 21.55,
+          "nakshatra": "Bharani",
+          "pada": 3
+        },
+        "Jupiter": {
+          "lon": 5.294,
+          "sign": "Aries",
+          "deg_in_sign": 5.29,
+          "nakshatra": "Ashwini",
+          "pada": 2
+        },
+        "Saturn": {
+          "lon": 166.564,
+          "sign": "Virgo",
+          "deg_in_sign": 16.56,
+          "nakshatra": "Hasta",
+          "pada": 2
+        },
+        "Rahu": {
+          "lon": 240.296,
+          "sign": "Sagittarius",
+          "deg_in_sign": 0.3,
+          "nakshatra": "Mula",
+          "pada": 1
+        },
+        "Ketu": {
+          "lon": 60.296,
+          "sign": "Gemini",
+          "deg_in_sign": 0.3,
+          "nakshatra": "Mrigashira",
+          "pada": 3
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": false
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": false,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 677,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Mars",
+          "maha_from": "2022-02-24",
+          "maha_to": "2029-02-23",
+          "antar": "Mercury",
+          "antar_from": "2025-08-23",
+          "antar_to": "2026-08-20"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Sun",
+            "from": "2006-02-25",
+            "to": "2012-02-25",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2012-02-25",
+            "to": "2022-02-24",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2022-02-24",
+            "to": "2029-02-23",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2029-02-23",
+            "to": "2047-02-23",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2047-02-23",
+            "to": "2063-02-22",
+            "years": 16
+          },
+          {
+            "lord": "Saturn",
+            "from": "2063-02-22",
+            "to": "2082-02-21",
+            "years": 19
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 677 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": null
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Mars",
+          "over_natal": "Sun",
+          "orb_deg": 2.58,
+          "sign": "Taurus",
+          "text": "transiting Mars is conjunct natal Sun (2.58\u00b0 orb)"
+        }
+      ]
+    },
+    "NPL": {
+      "subject": "NPL",
+      "kind": "stock",
+      "birth": {
+        "date": "2010-02-22",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for NPL.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 309.457,
+          "sign": "Aquarius",
+          "deg_in_sign": 9.46,
+          "nakshatra": "Shatabhisha",
+          "pada": 1
+        },
+        "Moon": {
+          "lon": 41.402,
+          "sign": "Taurus",
+          "deg_in_sign": 11.4,
+          "nakshatra": "Rohini",
+          "pada": 1
+        },
+        "Mercury": {
+          "lon": 293.79,
+          "sign": "Capricorn",
+          "deg_in_sign": 23.79,
+          "nakshatra": "Dhanishta",
+          "pada": 1
+        },
+        "Venus": {
+          "lon": 319.383,
+          "sign": "Aquarius",
+          "deg_in_sign": 19.38,
+          "nakshatra": "Shatabhisha",
+          "pada": 4
+        },
+        "Mars": {
+          "lon": 98.061,
+          "sign": "Cancer",
+          "deg_in_sign": 8.06,
+          "nakshatra": "Pushya",
+          "pada": 2
+        },
+        "Jupiter": {
+          "lon": 314.24,
+          "sign": "Aquarius",
+          "deg_in_sign": 14.24,
+          "nakshatra": "Shatabhisha",
+          "pada": 3
+        },
+        "Saturn": {
+          "lon": 159.343,
+          "sign": "Virgo",
+          "deg_in_sign": 9.34,
+          "nakshatra": "Uttara Phalguni",
+          "pada": 4
+        },
+        "Rahu": {
+          "lon": 264.885,
+          "sign": "Sagittarius",
+          "deg_in_sign": 24.88,
+          "nakshatra": "Purva Ashadha",
+          "pada": 4
+        },
+        "Ketu": {
+          "lon": 84.885,
+          "sign": "Gemini",
+          "deg_in_sign": 24.88,
+          "nakshatra": "Punarvasu",
+          "pada": 2
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 920,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Rahu",
+          "maha_from": "2026-02-02",
+          "maha_to": "2044-02-02",
+          "antar": "Rahu",
+          "antar_from": "2026-02-02",
+          "antar_to": "2028-10-15"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Moon",
+            "from": "2009-02-03",
+            "to": "2019-02-03",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2019-02-03",
+            "to": "2026-02-02",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2026-02-02",
+            "to": "2044-02-02",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2044-02-02",
+            "to": "2060-02-01",
+            "years": 16
+          },
+          {
+            "lord": "Saturn",
+            "from": "2060-02-01",
+            "to": "2079-01-31",
+            "years": 19
+          },
+          {
+            "lord": "Mercury",
+            "from": "2079-01-31",
+            "to": "2096-01-31",
+            "years": 17
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 920 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": null
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Mercury",
+          "over_natal": "Ketu",
+          "orb_deg": 1.03,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Ketu (1.03\u00b0 orb)"
+        },
+        {
+          "transiting": "Jupiter",
+          "over_natal": "Mars",
+          "orb_deg": 1.49,
+          "sign": "Cancer",
+          "text": "transiting Jupiter is conjunct natal Mars (1.49\u00b0 orb)"
+        },
+        {
+          "transiting": "Rahu",
+          "over_natal": "Sun",
+          "orb_deg": 1.96,
+          "sign": "Aquarius",
+          "text": "transiting Rahu is conjunct natal Sun (1.96\u00b0 orb)"
+        }
+      ]
+    },
+    "PABC": {
+      "subject": "PABC",
+      "kind": "stock",
+      "birth": {
+        "date": "2021-07-19",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for PABC.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 92.599,
+          "sign": "Cancer",
+          "deg_in_sign": 2.6,
+          "nakshatra": "Punarvasu",
+          "pada": 4
+        },
+        "Moon": {
+          "lon": 205.874,
+          "sign": "Libra",
+          "deg_in_sign": 25.87,
+          "nakshatra": "Vishakha",
+          "pada": 2
+        },
+        "Mercury": {
+          "lon": 77.972,
+          "sign": "Gemini",
+          "deg_in_sign": 17.97,
+          "nakshatra": "Ardra",
+          "pada": 4
+        },
+        "Venus": {
+          "lon": 122.446,
+          "sign": "Leo",
+          "deg_in_sign": 2.45,
+          "nakshatra": "Magha",
+          "pada": 1
+        },
+        "Mars": {
+          "lon": 119.181,
+          "sign": "Cancer",
+          "deg_in_sign": 29.18,
+          "nakshatra": "Ashlesha",
+          "pada": 4
+        },
+        "Jupiter": {
+          "lon": 306.768,
+          "sign": "Aquarius",
+          "deg_in_sign": 6.77,
+          "nakshatra": "Shatabhisha",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 287.071,
+          "sign": "Capricorn",
+          "deg_in_sign": 17.07,
+          "nakshatra": "Shravana",
+          "pada": 3
+        },
+        "Rahu": {
+          "lon": 44.173,
+          "sign": "Taurus",
+          "deg_in_sign": 14.17,
+          "nakshatra": "Rohini",
+          "pada": 2
+        },
+        "Ketu": {
+          "lon": 224.173,
+          "sign": "Scorpio",
+          "deg_in_sign": 14.17,
+          "nakshatra": "Anuradha",
+          "pada": 4
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 5366,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Jupiter",
+          "maha_from": "2014-07-02",
+          "maha_to": "2030-07-01",
+          "antar": "Moon",
+          "antar_from": "2025-10-28",
+          "antar_to": "2027-02-26"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Jupiter",
+            "from": "2014-07-02",
+            "to": "2030-07-01",
+            "years": 16
+          },
+          {
+            "lord": "Saturn",
+            "from": "2030-07-01",
+            "to": "2049-06-30",
+            "years": 19
+          },
+          {
+            "lord": "Mercury",
+            "from": "2049-06-30",
+            "to": "2066-06-30",
+            "years": 17
+          },
+          {
+            "lord": "Ketu",
+            "from": "2066-06-30",
+            "to": "2073-06-29",
+            "years": 7
+          },
+          {
+            "lord": "Venus",
+            "from": "2073-06-29",
+            "to": "2093-06-28",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2093-06-28",
+            "to": "2099-06-28",
+            "years": 6
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 5366 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": null
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Rahu",
+          "over_natal": "Jupiter",
+          "orb_deg": 0.73,
+          "sign": "Aquarius",
+          "text": "transiting Rahu is conjunct natal Jupiter (0.73\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Sun",
+          "orb_deg": 1.85,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Sun (1.85\u00b0 orb)"
+        }
+      ]
+    },
+    "PIBTL": {
+      "subject": "PIBTL",
+      "kind": "stock",
+      "birth": {
+        "date": "2013-12-24",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for PIBTL.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 248.48,
+          "sign": "Sagittarius",
+          "deg_in_sign": 8.48,
+          "nakshatra": "Mula",
+          "pada": 3
+        },
+        "Moon": {
+          "lon": 142.678,
+          "sign": "Leo",
+          "deg_in_sign": 22.68,
+          "nakshatra": "Purva Phalguni",
+          "pada": 3
+        },
+        "Mercury": {
+          "lon": 245.587,
+          "sign": "Sagittarius",
+          "deg_in_sign": 5.59,
+          "nakshatra": "Mula",
+          "pada": 2
+        },
+        "Venus": {
+          "lon": 274.84,
+          "sign": "Capricorn",
+          "deg_in_sign": 4.84,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 3
+        },
+        "Mars": {
+          "lon": 164.029,
+          "sign": "Virgo",
+          "deg_in_sign": 14.03,
+          "nakshatra": "Hasta",
+          "pada": 2
+        },
+        "Jupiter": {
+          "lon": 83.106,
+          "sign": "Gemini",
+          "deg_in_sign": 23.11,
+          "nakshatra": "Punarvasu",
+          "pada": 1
+        },
+        "Saturn": {
+          "lon": 205.582,
+          "sign": "Libra",
+          "deg_in_sign": 25.58,
+          "nakshatra": "Vishakha",
+          "pada": 2
+        },
+        "Rahu": {
+          "lon": 190.643,
+          "sign": "Libra",
+          "deg_in_sign": 10.64,
+          "nakshatra": "Swati",
+          "pada": 2
+        },
+        "Ketu": {
+          "lon": 10.643,
+          "sign": "Aries",
+          "deg_in_sign": 10.64,
+          "nakshatra": "Ashwini",
+          "pada": 4
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1678,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Moon",
+          "maha_from": "2025-12-17",
+          "maha_to": "2035-12-17",
+          "antar": "Moon",
+          "antar_from": "2025-12-17",
+          "antar_to": "2026-10-17"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Venus",
+            "from": "1999-12-19",
+            "to": "2019-12-18",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2019-12-18",
+            "to": "2025-12-17",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2025-12-17",
+            "to": "2035-12-17",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2035-12-17",
+            "to": "2042-12-16",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2042-12-16",
+            "to": "2060-12-15",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2060-12-15",
+            "to": "2076-12-14",
+            "years": 16
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1678 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": "Dhaiya (Saturn in the 8th from natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Mercury",
+          "over_natal": "Jupiter",
+          "orb_deg": 0.75,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Jupiter (0.75\u00b0 orb)"
+        }
+      ]
+    },
+    "PSX": {
+      "subject": "PSX",
+      "kind": "stock",
+      "birth": {
+        "date": "2017-06-29",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for PSX.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 73.551,
+          "sign": "Gemini",
+          "deg_in_sign": 13.55,
+          "nakshatra": "Ardra",
+          "pada": 3
+        },
+        "Moon": {
+          "lon": 141.528,
+          "sign": "Leo",
+          "deg_in_sign": 21.53,
+          "nakshatra": "Purva Phalguni",
+          "pada": 3
+        },
+        "Mercury": {
+          "lon": 82.574,
+          "sign": "Gemini",
+          "deg_in_sign": 22.57,
+          "nakshatra": "Punarvasu",
+          "pada": 1
+        },
+        "Venus": {
+          "lon": 29.582,
+          "sign": "Aries",
+          "deg_in_sign": 29.58,
+          "nakshatra": "Krittika",
+          "pada": 1
+        },
+        "Mars": {
+          "lon": 82.066,
+          "sign": "Gemini",
+          "deg_in_sign": 22.07,
+          "nakshatra": "Punarvasu",
+          "pada": 1
+        },
+        "Jupiter": {
+          "lon": 169.696,
+          "sign": "Virgo",
+          "deg_in_sign": 19.7,
+          "nakshatra": "Hasta",
+          "pada": 3
+        },
+        "Saturn": {
+          "lon": 239.421,
+          "sign": "Scorpio",
+          "deg_in_sign": 29.42,
+          "nakshatra": "Jyeshtha",
+          "pada": 4
+        },
+        "Rahu": {
+          "lon": 122.654,
+          "sign": "Leo",
+          "deg_in_sign": 2.65,
+          "nakshatra": "Magha",
+          "pada": 1
+        },
+        "Ketu": {
+          "lon": 302.654,
+          "sign": "Aquarius",
+          "deg_in_sign": 2.65,
+          "nakshatra": "Dhanishta",
+          "pada": 3
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": true,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1847,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Sun",
+          "maha_from": "2025-03-14",
+          "maha_to": "2031-03-14",
+          "antar": "Rahu",
+          "antar_from": "2026-05-06",
+          "antar_to": "2027-03-30"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Venus",
+            "from": "2005-03-15",
+            "to": "2025-03-14",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2025-03-14",
+            "to": "2031-03-14",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2031-03-14",
+            "to": "2041-03-13",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2041-03-13",
+            "to": "2048-03-12",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2048-03-12",
+            "to": "2066-03-12",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2066-03-12",
+            "to": "2082-03-11",
+            "years": 16
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1847 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": "Dhaiya (Saturn in the 8th from natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Mercury",
+          "over_natal": "Mercury",
+          "orb_deg": 1.28,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Mercury (1.28\u00b0 orb)"
+        },
+        {
+          "transiting": "Mercury",
+          "over_natal": "Mars",
+          "orb_deg": 1.79,
+          "sign": "Gemini",
+          "text": "transiting Mercury is conjunct natal Mars (1.79\u00b0 orb)"
+        }
+      ]
+    },
+    "SYS": {
+      "subject": "SYS",
+      "kind": "stock",
+      "birth": {
+        "date": "2015-02-16",
+        "time_convention": "09:30",
+        "place": "Karachi, Pakistan",
+        "certainty": "date_verified_time_convention",
+        "source": "Yahoo Finance firstTradeDate for SYS.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
+      },
+      "natal": {
+        "Sun": {
+          "lon": 303.114,
+          "sign": "Aquarius",
+          "deg_in_sign": 3.11,
+          "nakshatra": "Dhanishta",
+          "pada": 3
+        },
+        "Moon": {
+          "lon": 263.831,
+          "sign": "Sagittarius",
+          "deg_in_sign": 23.83,
+          "nakshatra": "Purva Ashadha",
+          "pada": 4
+        },
+        "Mercury": {
+          "lon": 278.39,
+          "sign": "Capricorn",
+          "deg_in_sign": 8.39,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 4
+        },
+        "Venus": {
+          "lon": 330.213,
+          "sign": "Pisces",
+          "deg_in_sign": 0.21,
+          "nakshatra": "Purva Bhadrapada",
+          "pada": 4
+        },
+        "Mars": {
+          "lon": 333.003,
+          "sign": "Pisces",
+          "deg_in_sign": 3.0,
+          "nakshatra": "Purva Bhadrapada",
+          "pada": 4
+        },
+        "Jupiter": {
+          "lon": 112.342,
+          "sign": "Cancer",
+          "deg_in_sign": 22.34,
+          "nakshatra": "Ashlesha",
+          "pada": 2
+        },
+        "Saturn": {
+          "lon": 220.292,
+          "sign": "Scorpio",
+          "deg_in_sign": 10.29,
+          "nakshatra": "Anuradha",
+          "pada": 3
+        },
+        "Rahu": {
+          "lon": 168.439,
+          "sign": "Virgo",
+          "deg_in_sign": 18.44,
+          "nakshatra": "Hasta",
+          "pada": 3
+        },
+        "Ketu": {
+          "lon": 348.439,
+          "sign": "Pisces",
+          "deg_in_sign": 18.44,
+          "nakshatra": "Revati",
+          "pada": 1
+        }
+      },
+      "ascendant": null,
+      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
+      "time_stability": {
+        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+        "per_graha": {
+          "Sun": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Moon": {
+            "sign": true,
+            "nakshatra": false
+          },
+          "Mercury": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Venus": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Mars": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Jupiter": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Saturn": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Rahu": {
+            "sign": true,
+            "nakshatra": true
+          },
+          "Ketu": {
+            "sign": true,
+            "nakshatra": true
+          }
+        },
+        "moon_sign_stable": true,
+        "moon_nakshatra_stable": false,
+        "dasha_stable": false,
+        "dasha_boundary_slip_days": 1687,
+        "verdict": "the unknown first-trade time changes the answer \u2014 treat the unstable parts as unknown, not as findings"
+      },
+      "dasha": {
+        "current": {
+          "maha": "Moon",
+          "maha_from": "2025-05-18",
+          "maha_to": "2035-05-18",
+          "antar": "Mars",
+          "antar_from": "2026-03-18",
+          "antar_to": "2026-10-17"
+        },
+        "stable": false,
+        "sequence": [
+          {
+            "lord": "Venus",
+            "from": "1999-05-20",
+            "to": "2019-05-19",
+            "years": 20
+          },
+          {
+            "lord": "Sun",
+            "from": "2019-05-19",
+            "to": "2025-05-18",
+            "years": 6
+          },
+          {
+            "lord": "Moon",
+            "from": "2025-05-18",
+            "to": "2035-05-18",
+            "years": 10
+          },
+          {
+            "lord": "Mars",
+            "from": "2035-05-18",
+            "to": "2042-05-17",
+            "years": 7
+          },
+          {
+            "lord": "Rahu",
+            "from": "2042-05-17",
+            "to": "2060-05-16",
+            "years": 18
+          },
+          {
+            "lord": "Jupiter",
+            "from": "2060-05-16",
+            "to": "2076-05-15",
+            "years": 16
+          }
+        ],
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1687 days here."
+      },
+      "sade_sati": {
+        "active": false,
+        "phase": "Dhaiya (Saturn in the 4th from natal Moon)"
+      },
+      "transits_to_natal": [
+        {
+          "transiting": "Saturn",
+          "over_natal": "Ketu",
+          "orb_deg": 2.03,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Ketu (2.03\u00b0 orb)"
+        }
+      ]
+    }
+  }
+}
