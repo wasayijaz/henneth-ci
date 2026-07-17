@@ -19,8 +19,10 @@ STEPS = [
     "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
     "astro_engine.py",   # sidereal ephemeris: positions + dated events. Pure math, no network.
     "astro_history.py",  # extends the cached daily sky (bounded per run; ~70ms/day once caught up)
-    "astro_charts.py",   # verified birth dates only (most PSX names honestly have none)
+    "astro_charts.py",   # verified birth dates only (Exchange workbooks first, then careful Yahoo)
     "astro_natal.py",    # natal + Vimshottari + transits-to-natal, bracketed for the unknown time
+    "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (incremental)
+    "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
     # resolve/score any due persona+broker calls. Agents read these; they never fetch.
