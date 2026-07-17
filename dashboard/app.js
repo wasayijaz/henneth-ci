@@ -291,10 +291,22 @@ async function pageValue() {
       <td class="r num ${cls(r.mispricing_pct)}">${sgn(r.mispricing_pct)}%</td>
       <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${r.verdict === "undervalued" ? "below fair" : r.verdict === "overvalued" ? "above fair" : esc(r.verdict)}</span> <span class="fvcaret">▸</span></td></tr>
       <tr class="fvdetail"><td colspan="5">${fvDetail(r)}</td></tr>`).join("")}</tbody></table>`;
+  // glance row: the four numbers that answer "what does the screen say" before any prose
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+  const fair = rows.filter(r => r.verdict === "fair");
+  const widest = under[0];
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Value screen — price vs model fair value</h2><div class="ln"></div><span class="pill">${rows.length} valued</span></div>
+  <div class="sumstrip s4">
+    ${sTile("Below fair value", under.length, `of ${rows.length} valued`, under.length ? "up" : "")}
+    ${sTile("Above fair value", over.length, `of ${rows.length} valued`, over.length ? "dn" : "")}
+    ${sTile("Near fair", fair.length, "within the model's band", "")}
+    ${sTile("Widest gap", widest ? widest.s : "—", widest ? `${sgn(widest.mispricing_pct)}% vs fair` : "—", widest ? "up" : "")}
+  </div>
   <div class="disclaimer">Model estimates on public fundamentals for <b>research and education</b> — not price targets, not advice, not a signal to buy or sell. A price below model fair value is not a recommendation, and a low share price never means a company is cheap. Past performance does not guarantee future results.</div>
-  <p class="sub" style="margin-bottom:16px">Each stock is valued four ways (peer P/E, earnings-power vs bond yield, Graham, dividend discount); the median is its <b>model fair value</b>. Market median P/E ${fv?.inputs?.market_median_pe ?? "—"}, bond yield ${fv?.inputs?.bond_yield_pct ?? "—"}%. Click any row to expand the four-model working.</p>
+  <details class="how"><summary><b>How the model works</b><span class="sub">four models, median wins</span><span class="dict-arrow">▾</span></summary>
+    <p>Each stock is valued four ways (peer P/E, earnings-power vs bond yield, Graham, dividend discount); the median is its <b>model fair value</b> — the median resists any single model blowing out. Market median P/E ${fv?.inputs?.market_median_pe ?? "—"}, bond yield ${fv?.inputs?.bond_yield_pct ?? "—"}%. Click any row below to expand its full four-model working.</p>
+  </details>
   <div class="seg"><h2 style="color:var(--up)">Priced below model fair value</h2><div class="ln"></div><span class="pill ok">${under.length}</span></div>
   <div class="card">${under.length ? tbl(under, true) : '<div class="empty">none below model fair value right now</div>'}</div>
   <div class="seg"><h2 style="color:var(--dn)">Priced above model fair value</h2><div class="ln"></div><span class="pill bad">${over.length}</span></div>
@@ -364,8 +376,22 @@ async function pageMacro() {
       ${geo.upgrade_note ? `<p class="sub" style="margin-top:8px;opacity:.7">${esc(geo.upgrade_note)}</p>` : ""}</div>`;
   })() : "";
 
+  // glance row: the regime and the three prices that actually move PSX, before any prose
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+  const iTile = (label, code, why) => { const v = inst[code];
+    return sTile(label, v ? fmt(v.price) : "—", v ? `${sgn(v.chg_1d_pct)}% today · ${why}` : why, v ? cls(v.chg_1d_pct) : ""); };
+  // the feed writes "risk-off"; don't assume a separator — strip everything but letters
+  const regime = (m.regime || "").toLowerCase().replace(/[^a-z]/g, "");
+  const glanceRow = `<div class="sumstrip s4">
+    ${sTile("Macro regime", (m.regime || "—").toUpperCase(), m.updated ? `desk read · ${esc(m.updated)}` : "run macro-agent to populate", regime === "riskon" ? "up" : regime === "riskoff" ? "dn" : "")}
+    ${iTile("USD/PKR", "PKR=X", "the biggest lever")}
+    ${iTile("Brent crude", "BZ=F", "the import bill")}
+    ${geo ? sTile("Geo risk", `${geo.score}/100`, esc(geo.band || ""), geo.band === "elevated" ? "dn" : geo.band === "calm" ? "up" : "") : iTile("Global risk", "^GSPC", "frontier flows follow")}
+  </div>`;
+
   $("view").innerHTML = `
     <div class="seg" style="margin-top:4px"><h2>What moves PSX</h2><div class="ln"></div></div>
+    ${glanceRow}
     <p class="sub" style="margin-bottom:14px">Global markets refreshed every cycle (Yahoo Finance). Pakistan-domestic numbers verified by the macro-agent from primary sources. Hover any read-through for why it matters.</p>
     ${geoCard}
     ${macroCard}
@@ -396,8 +422,20 @@ async function pageToday() {
   const iw = typeof isWatched === "function" ? isWatched : () => false;
   const radar = (dr.watchlist || []).slice().sort((a, b) => (iw(b.ticker) ? 1 : 0) - (iw(a.ticker) ? 1 : 0));
 
+  // glance row: the day in four hard items, before the read
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+  const fav = (dr.sectors || []).filter(s => s.stance === "favoured"), avoid = (dr.sectors || []).filter(s => s.stance === "avoid");
+  const nextCat = (dr.catalysts || [])[0];
+  const glanceRow = `<div class="sumstrip s4">
+    ${sTile("The desk's tone", (dr.tone || "—").toUpperCase(), esc(dr.date || ""), toneClass === "ok" ? "up" : toneClass === "bad" ? "dn" : "")}
+    ${sTile("Favoured", fav.length ? esc(fav.map(s => s.name).slice(0, 2).join(", ")) : "none", fav.length > 2 ? `+${fav.length - 2} more sectors` : "sectors", fav.length ? "up" : "")}
+    ${sTile("Avoiding", avoid.length ? esc(avoid.map(s => s.name).slice(0, 2).join(", ")) : "none", avoid.length > 2 ? `+${avoid.length - 2} more sectors` : "sectors", avoid.length ? "dn" : "")}
+    ${sTile("Next catalyst", nextCat ? esc(nextCat.date) : "—", nextCat ? esc(String(nextCat.event).slice(0, 34)) : "none dated", "")}
+  </div>`;
+
   $("view").innerHTML = `
   ${globalStrip(gl)}
+  ${glanceRow}
   ${myWatch}
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="pill ${toneClass}">${esc((dr.tone || "").toUpperCase())}</span><span class="sub">${esc(dr.date || "")}</span></div>
@@ -525,7 +563,7 @@ async function pageStrategies() {
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Strategies</h2><div class="ln"></div><span class="pill">${nStrat} strategies</span></div>
   <p class="sub" style="margin-bottom:14px">Every strategy is a transparent rule set backtested on each stock's own ~19-year history — it only counts on a stock where it cleared the bar (win rate ≥55%, positive expectancy after costs, still profitable out-of-sample). Research, not advice.</p>
-  <div class="sumstrip" style="grid-template-columns:repeat(4,1fr)">
+  <div class="sumstrip s4">
     ${sTile("Strategies", nStrat, "transparent rule sets", "")}
     ${sTile("Proven pairs", provenPairs, "strategy × stock, after costs + OOS", provenPairs ? "up" : "")}
     ${sTile("Stocks with a proven edge", nCovered, "across the universe", "")}
@@ -857,7 +895,7 @@ async function pageTicker(sym, _retry = 0) {
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
   // hard facts only — the lens verdicts live in the Signal Stack, and the desk's own view stays
   // behind its run (a tile here would spoil it)
-  const summaryStrip = `<div class="sumstrip" style="grid-template-columns:repeat(4,1fr)">
+  const summaryStrip = `<div class="sumstrip s4">
     ${sTile("Fair value vs price", fv ? `Rs ${fmt(fv.composite_fair)}` : "—", fv ? `price Rs ${fmt(fv.price)} · ${sgn(fv.mispricing_pct)}%` : "model n/a", fv ? (fv.verdict === "undervalued" ? "up" : fv.verdict === "overvalued" ? "dn" : "") : "")}
     ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed", mixed: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
     ${sTile("Risk grade", rg, vr != null ? `volatility ${vr.toFixed(0)}/100` : "liquidity " + liq, rgk === "hi" ? "dn" : rgk === "lo" ? "up" : "")}
@@ -1211,8 +1249,19 @@ async function pageResearch() {
     <div class="rdoc-digest">${esc(d.digest || "")}${d.url ? ` <a href="${esc(d.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}</div>
     ${(d.claims || []).length ? `<div class="sub" style="margin-top:4px"><b>Claims (scored later):</b> ${d.claims.map(c => esc(c.claim?.text || "")).join(" · ")}</div>` : ""}
     ${d.omissions ? `<div class="sub" style="margin-top:4px"><b class="dn">What it glosses over:</b> ${esc(d.omissions)}</div>` : ""}</div>`;
+  // glance row: what's in the library and how much of it is on the record
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+  const nClaims = docs.reduce((a, d) => a + ((d.claims || []).length), 0);
+  const houses = new Set(docs.filter(d => d.source_type === "broker").map(d => d.source));
+  const latest = docs[0]?.date || "—";
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Research library</h2><div class="ln"></div><span class="pill">${docs.length} documents</span></div>
+  <div class="sumstrip s4">
+    ${sTile("Broker notes", brokers.length, `${houses.size} house${houses.size === 1 ? "" : "s"}${followed.size ? ` · ${followed.size} you follow` : ""}`, "")}
+    ${sTile("Filings & briefings", filings.length, "results · AGM · board", "")}
+    ${sTile("Claims on the record", nClaims, "each scored when it resolves", nClaims ? "up" : "")}
+    ${sTile("Latest document", esc(latest), "the wire updates weekly", "")}
+  </div>
   <div class="disclaimer">Broker research and company filings are <b>evidence the desk cross-examines, never takes at face value</b>. Brokers miss things, carry sector bias, and are often wrong — every broker claim here is extracted, scored against what actually happens, and ranked on the <a href="#/leaderboard" style="color:inherit;text-decoration:underline">broker leaderboard</a>. Educational, not advice.</div>
   <div class="seg"><h2>Broker notes</h2><div class="ln"></div><span class="pill">${brokers.length}</span></div>
   <div class="card">${brokers.length ? brokers.map(docRow).join("") : '<div class="empty">No broker notes digested yet. Add public sources in config/broker_sources.json; the desk digests each once and scores its calls. Until then, the desk forms its own view without leaning on brokers.</div>'}</div>
@@ -2029,7 +2078,7 @@ async function pagePortfolio() {
     <datalist id="ph-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
   </div>
 
-  ${rows.length ? `<div class="sumstrip" style="grid-template-columns:repeat(4,1fr)">
+  ${rows.length ? `<div class="sumstrip s4">
     ${sTile("Portfolio value", "Rs " + fmt(totMv, 0), "at desk prices", "")}
     ${sTile("Total profit / loss", (totPl >= 0 ? "+" : "") + "Rs " + fmt(totPl, 0), totPlPct != null ? sgn(totPlPct) + "% on cost" : "", totPl >= 0 ? "up" : "dn")}
     ${sTile("Est. annual dividend", "Rs " + fmt(totDiv, 0), "from last declared payouts", "")}
