@@ -22,15 +22,12 @@ STEPS = [
     "astro_history.py",  # extends the cached daily sky (bounded per run; ~70ms/day once caught up)
     "astro_charts.py",   # verified birth dates only (Exchange workbooks first, then careful Yahoo)
     "astro_natal.py",    # natal + Vimshottari + transits-to-natal, bracketed for the unknown time
-    "astro_natal_test.py",  # tests the NATAL method (Sade Sati/dashas) — weekly, honest about power
-    "astro_regime.py",   # tests whether the sky marks TURBULENCE (not direction) — weekly
     "astro_claims.py",   # files the astro readings as dated, market-relative, scoreable claims
     "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (incremental)
     "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
     # resolve/score any due persona+broker calls. Agents read these; they never fetch.
-    "astro_backtest.py",  # falsifies the astro claims against real history; only survivors may be spoken
     "fetch_research.py", "build_explainer.py",  # explainability layer (plain-English "at a glance")
     "room_dossier.py", "room_queue.py", "room_gate.py", "room_score.py",
     "room_verify.py",   # deterministic QA: flags glitch-derived / inconsistent numbers before publish

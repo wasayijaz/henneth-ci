@@ -1328,15 +1328,15 @@ async function pageMyChart() {
    The null result LEADS. The calendar is the secondary thing, offered as calendar, not signal.
    This page exists because we tested it, not because we believe it. ---------- */
 async function pageAstro() {
-  const [a, bt, natal, amap, sectors, uni, nt, claimsAll] = await Promise.all([
-    j("astro.json"), j("astro_backtest.json"), j("astro_natal.json"), j("astro_map.json"),
-    j("sectors.json"), j("universe.json"), j("astro_natal_test.json"), j("claims.json")]);
+  const [a, natal, amap, sectors, uni] = await Promise.all([
+    j("astro.json"), j("astro_natal.json"), j("astro_map.json"),
+    j("sectors.json"), j("universe.json")]);
   if (!a || a.status !== "ok") {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div></div>
-      <div class="card"><div class="empty">The ephemeris is unavailable this cycle${a?.error ? ` (${esc(a.error)})` : ""}. The desk shows nothing rather than something it can't compute.</div></div>`;
+      <div class="card"><div class="empty">The sky is unavailable this cycle${a?.error ? ` (${esc(a.error)})` : ""}. Check back shortly.</div></div>`;
     return;
   }
-  const h = bt?.headline || {}, sys = a.system || {};
+  const sys = a.system || {};
 
   // ---- your charts: the board. Nothing shows until the desk is RUN on it (same discipline
   // as the strategy board) — the casting is the experience.
@@ -1357,7 +1357,7 @@ async function pageAstro() {
   const pendingA = board.filter(s => !astroRunOn(s));
   const runBarA = board.length ? `<button class="run-desk run-strat ${pendingA.length ? "" : "ran"}" onclick="playAstroBoardRun()">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>${pendingA.length ? `Cast the charts for your ${board.length} stock${board.length > 1 ? "s" : ""}` : `Cast your ${board.length} chart${board.length > 1 ? "s" : ""} again`}</b><i>Real ephemeris math against today's sky — birth charts from the Exchange's own listing records, Vimshottari periods, Saturn's passage, transits to natal points. The tradition's reading, with the desk's test attached.</i></span>
+    <span class="run-txt"><b>${pendingA.length ? `Cast the charts for your ${board.length} stock${board.length > 1 ? "s" : ""}` : `Cast your ${board.length} chart${board.length > 1 ? "s" : ""} again`}</b><i>Real ephemeris math against today's sky — birth charts, Vimshottari periods, Saturn's passage, transits to natal points. The tradition's reading of each name.</i></span>
     <span class="run-meta"><span class="run-last">Sky as of · ${esc((a.updated || "").slice(0, 10))}</span><span class="run-go">${pendingA.length ? "Cast ›" : "Cast again ›"}</span></span>
   </button>` : "";
   const dataPack = { natal, sky: a, amap, sectors, uni };
@@ -1365,41 +1365,9 @@ async function pageAstro() {
     `<div class="card ar-card">${composeAstroReading(s, dataPack)}</div>`).join("");
   const boardStub = board.length && pendingA.length === board.length
     ? `<div class="card"><div class="empty">Your readings land here — hit <b>Cast ›</b> above and the desk works each chart against today's sky.</div></div>` : "";
-  const nStocks = (bt?.method?.tested_on || "").match(/\((\d+) with/)?.[1];
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
 
-  // the verdict card — the first thing anyone reads on this page
-  const verdict = bt ? `<div class="card astro-verdict">
-    <div class="av-top"><span class="av-tag">The test</span><span class="pill ${h.survivors_after_bonferroni ? "" : "bad"}">${h.survivors_after_bonferroni ? h.survivors_after_bonferroni + " survived" : "no demonstrated edge"}</span></div>
-    <p class="av-lede">The desk tested astrology against <b>${bt.window?.trading_days?.toLocaleString()}</b> trading days of real PSX prices — <b>${esc(bt.window?.from)}</b> to <b>${esc(bt.window?.to)}</b>. Every stock individually, plus KSE100 and KMI30. <b>${h.hypotheses_tested?.toLocaleString()}</b> hypotheses.</p>
-    <div class="av-nums">
-      <div><span>${h.raw_hits_at_p05}</span><i>results looked significant</i></div>
-      <div><span>${h.expected_false_positives_at_p05}</span><i>expected from luck alone</i></div>
-      <div><span class="${h.survivors_after_bonferroni ? "" : "dn"}">${h.survivors_after_bonferroni}</span><i>survived once luck is accounted for</i></div>
-    </div>
-    <p class="av-read">${esc(h.verdict || "")}</p>
-    <div class="av-foot">Nobody had to publish this. We're publishing it because a lens with no error rate is a horoscope — and because the same machinery that failed to find an edge here is what grades the desk's own calls on the <a href="#/leaderboard">Scores</a> board.</div>
-  </div>` : "";
-
-  // the famous claims, killed individually — this is the part people actually want to know
-  const famous = [
-    ["Mercury retrograde", "Mercury retrograde", "The most repeated market-astrology claim there is."],
-    ["Eclipses", "eclipse window (+/-7 sessions)", "Seven sessions either side of a certain eclipse."],
-    ["Full moon", "near the full moon (+/-2d)", "Two days either side of the full moon."],
-    ["New moon", "near the new moon (+/-2d)", "Two days either side of the new moon."],
-  ];
-  const idxTests = (bt?.all_tests || []).filter(t => t.subject === "KSE100 (proxy)");
-  const famousRows = famous.map(([label, cond, why]) => {
-    const t = idxTests.find(x => x.condition === cond);
-    if (!t) return "";
-    const dead = t.p_value >= 0.05;
-    return `<tr><td><b>${esc(label)}</b><div class="sub">${esc(why)}</div></td>
-      <td class="r num ${Math.abs(t.effect_pct_per_day) < 0.05 ? "" : t.effect_pct_per_day > 0 ? "up" : "dn"}">${sgn(t.effect_pct_per_day)}%<div class="sub">per day on KSE100</div></td>
-      <td class="r num">${t.p_value}<div class="sub">p-value</div></td>
-      <td class="r"><span class="pill ${dead ? "bad" : ""}">${dead ? "no effect" : "unclear"}</span></td></tr>`;
-  }).join("");
-
-  // today's sky — offered as a calendar, explicitly not as a signal
+  // today's sky — the almanac
   const pos = a.positions || {};
   const skyRows = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"].map(b => {
     const p = pos[b]; if (!p) return "";
@@ -1414,7 +1382,7 @@ async function pageAstro() {
     <td class="r"><span class="pill ${e.importance >= 5 ? "bad" : ""}">${e.importance >= 5 ? "rare" : e.importance >= 4 ? "material" : "notable"}</span></td></tr>`).join("");
 
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div><span class="pill">tested, not believed</span></div>
+  <div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div><span class="pill">the sky, read</span></div>
   <div class="disclaimer">Real charts and real sidereal ephemeris math. Astrological exploration — never a signal, a prediction, or advice.</div>
 
   <div class="seg"><h2>Your charts</h2><div class="ln"></div><span class="pill">${board.length ? board.length + " on the board" : "empty"}</span></div>
@@ -1427,46 +1395,20 @@ async function pageAstro() {
   ${boardStub}
   ${readings}
 
-  ${verdict}
-
-  ${nt ? (() => {
-    const nh = nt.headline || {};
-    const astroClaims = (claimsAll?.claims || []).filter(c => c.source_type === "astro");
-    const res = astroClaims.filter(c => c.status === "hit" || c.status === "miss");
-    const hits = astroClaims.filter(c => c.status === "hit").length;
-    return `<div class="seg"><h2>And the natal method — the harder test</h2><div class="ln"></div><span class="pill ${nh.survivors_bonferroni ? "" : "bad"}">${nh.survivors_bonferroni || 0} survived</span></div>
-    <div class="card astro-verdict">
-      <p class="av-lede">Transits alone were never the whole tradition. So the desk sourced <b>${(natal?.n_charts || 0)}</b> real birth charts from PSX's own listing records and tested what Vedic prediction actually rests on — <b>Sade Sati</b>, <b>dasha periods</b>, <b>transits to natal points</b>. ${nh.hypotheses_tested} hypotheses across ${nh.charts_tested} charts.</p>
-      <div class="av-nums">
-        <div><span>${nh.raw_hits_at_p05}</span><i>looked significant</i></div>
-        <div><span>${nh.expected_false_positives_at_p05}</span><i>expected from luck</i></div>
-        <div><span class="${nh.survivors_bonferroni ? "" : "dn"}">${nh.survivors_bonferroni}</span><i>survived correction</i></div>
-      </div>
-      <p class="av-read"><b>But read this before you conclude anything.</b> ${esc(nt.power_warning || "")}</p>
-      <div class="av-foot">The desk files these readings as <b>dated, market-relative calls</b> anyway — ${astroClaims.length} of them are live on the <a href="#/leaderboard">Scores</a> board right now${res.length ? `, ${res.length} resolved (${hits} hit)` : `, none resolved yet — the earliest settles ${esc(astroClaims.map(c => c.resolve_by).sort()[0] || "")}`}. When a test is too weak to settle an argument, the honest move is to make the claim in public and let the market answer it.</div>
-    </div>`;
-  })() : ""}
-
-  <div class="seg"><h2>The claims people repeat</h2><div class="ln"></div><span class="pill">each one, on the record</span></div>
-  <div class="card" style="padding:0"><table><tbody>${famousRows}</tbody></table></div>
-  <p class="sub" style="margin-top:8px">Measured on the KSE100 across ~19 years. A p-value near 1 means the market did the same thing whether or not the condition held. For reference, p below 0.05 is the usual bar for "interesting" — and with ${h.hypotheses_tested?.toLocaleString()} hypotheses tested, even that bar produces ~${h.expected_false_positives_at_p05} false hits by chance.</p>
-
   <div class="sumstrip" style="grid-template-columns:repeat(4,1fr);margin-top:16px">
     ${sTile("Zodiac", "Sidereal", "Lahiri (Chitrapaksha)", "")}
-    ${sTile("Ayanamsa", (sys.ayanamsa_deg ?? "—") + "°", "derived from Spica, not hardcoded", "")}
-    ${sTile("Grahas", "9", "the classical set, no outer planets", "")}
-    ${sTile("Sky as of", esc((a.updated || "").slice(0, 10)), "recomputed every cycle", "")}
+    ${sTile("Ayanamsa", (sys.ayanamsa_deg ?? "—") + "°", "the current precession", "")}
+    ${sTile("Grahas", "9", "the classical set", "")}
+    ${sTile("Sky as of", esc((a.updated || "").slice(0, 10)), "recomputed every day", "")}
   </div>
 
-  <div class="seg"><h2>The sky right now</h2><div class="ln"></div><span class="pill">computed, never recalled</span></div>
+  <div class="seg"><h2>The sky right now</h2><div class="ln"></div><span class="pill">sidereal · Lahiri</span></div>
   <div class="card" style="padding:0"><table><thead><tr><th>Graha</th><th>Sign</th><th>Nakshatra</th><th class="r"></th></tr></thead><tbody>${skyRows}</tbody></table></div>
-  <p class="sub" style="margin-top:8px">Every position is computed from first principles (VSOP87/ELP-2000, sidereal, Lahiri ayanamsa derived each run by precessing Spica). No agent on this desk may state a transit date from memory — the machine works them out, which is why they're right.</p>
+  <p class="sub" style="margin-top:8px">Where the nine grahas stand today — sidereal positions, Lahiri ayanamsa.</p>
 
   ${evs.length ? `<div class="seg"><h2>What the sky does next</h2><div class="ln"></div><span class="pill">${a.horizon_days} days</span></div>
   <div class="card" style="padding:0"><table><thead><tr><th>Date</th><th>Event</th><th class="r">Rank</th></tr></thead><tbody>${evRows}</tbody></table></div>
-  <p class="sub" style="margin-top:8px">Dated events only, ranked 1–5 by a scale fixed in code (the Moon changes sign every ~2.3 days — that's wallpaper, and ranks 1, so it's hidden here). This is an almanac. On the evidence above, none of it tells you anything about PSX.</p>` : ""}
-
-  <p class="sub" style="margin-top:16px">${esc(a.note || "")}</p>`;
+  <p class="sub" style="margin-top:8px">The dated turns in the sky over the coming weeks — ingresses, stations, eclipses and moons, ranked by weight. An almanac.</p>` : ""}`;
 }
 
 function maxDrawdown(bars) {
