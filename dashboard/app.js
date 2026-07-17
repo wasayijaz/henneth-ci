@@ -584,6 +584,93 @@ async function pageStrategies() {
   ${reqForm}`;
 }
 
+/* ---------- Astro: the sky, computed — and the test that says it doesn't predict anything.
+   The null result LEADS. The calendar is the secondary thing, offered as calendar, not signal.
+   This page exists because we tested it, not because we believe it. ---------- */
+async function pageAstro() {
+  const [a, bt] = await Promise.all([j("astro.json"), j("astro_backtest.json")]);
+  if (!a || a.status !== "ok") {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div></div>
+      <div class="card"><div class="empty">The ephemeris is unavailable this cycle${a?.error ? ` (${esc(a.error)})` : ""}. The desk shows nothing rather than something it can't compute.</div></div>`;
+    return;
+  }
+  const h = bt?.headline || {}, sys = a.system || {};
+  const nStocks = (bt?.method?.tested_on || "").match(/\((\d+) with/)?.[1];
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+
+  // the verdict card — the first thing anyone reads on this page
+  const verdict = bt ? `<div class="card astro-verdict">
+    <div class="av-top"><span class="av-tag">The test</span><span class="pill ${h.survivors_after_bonferroni ? "" : "bad"}">${h.survivors_after_bonferroni ? h.survivors_after_bonferroni + " survived" : "no demonstrated edge"}</span></div>
+    <p class="av-lede">The desk tested astrology against <b>${bt.window?.trading_days?.toLocaleString()}</b> trading days of real PSX prices — <b>${esc(bt.window?.from)}</b> to <b>${esc(bt.window?.to)}</b>. Every stock individually, plus KSE100 and KMI30. <b>${h.hypotheses_tested?.toLocaleString()}</b> hypotheses.</p>
+    <div class="av-nums">
+      <div><span>${h.raw_hits_at_p05}</span><i>results looked significant</i></div>
+      <div><span>${h.expected_false_positives_at_p05}</span><i>expected from luck alone</i></div>
+      <div><span class="${h.survivors_after_bonferroni ? "" : "dn"}">${h.survivors_after_bonferroni}</span><i>survived once luck is accounted for</i></div>
+    </div>
+    <p class="av-read">${esc(h.verdict || "")}</p>
+    <div class="av-foot">Nobody had to publish this. We're publishing it because a lens with no error rate is a horoscope — and because the same machinery that failed to find an edge here is what grades the desk's own calls on the <a href="#/leaderboard">Scores</a> board.</div>
+  </div>` : "";
+
+  // the famous claims, killed individually — this is the part people actually want to know
+  const famous = [
+    ["Mercury retrograde", "Mercury retrograde", "The most repeated market-astrology claim there is."],
+    ["Eclipses", "eclipse window (+/-7 sessions)", "Seven sessions either side of a certain eclipse."],
+    ["Full moon", "near the full moon (+/-2d)", "Two days either side of the full moon."],
+    ["New moon", "near the new moon (+/-2d)", "Two days either side of the new moon."],
+  ];
+  const idxTests = (bt?.all_tests || []).filter(t => t.subject === "KSE100 (proxy)");
+  const famousRows = famous.map(([label, cond, why]) => {
+    const t = idxTests.find(x => x.condition === cond);
+    if (!t) return "";
+    const dead = t.p_value >= 0.05;
+    return `<tr><td><b>${esc(label)}</b><div class="sub">${esc(why)}</div></td>
+      <td class="r num ${Math.abs(t.effect_pct_per_day) < 0.05 ? "" : t.effect_pct_per_day > 0 ? "up" : "dn"}">${sgn(t.effect_pct_per_day)}%<div class="sub">per day on KSE100</div></td>
+      <td class="r num">${t.p_value}<div class="sub">p-value</div></td>
+      <td class="r"><span class="pill ${dead ? "bad" : ""}">${dead ? "no effect" : "unclear"}</span></td></tr>`;
+  }).join("");
+
+  // today's sky — offered as a calendar, explicitly not as a signal
+  const pos = a.positions || {};
+  const skyRows = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"].map(b => {
+    const p = pos[b]; if (!p) return "";
+    return `<tr><td><b>${esc(b)}</b></td><td>${esc(p.sign)} <span class="sub">${p.deg_in_sign}°</span></td>
+      <td class="sub">${esc(p.nakshatra)} <span style="opacity:.6">pada ${p.pada}</span></td>
+      <td class="r">${p.retrograde ? '<span class="tag">retrograde</span>' : ""}</td></tr>`;
+  }).join("");
+
+  const evs = (a.events || []).filter(e => e.importance >= 3).slice(0, 14);
+  const evRows = evs.map(e => `<tr><td class="num">${esc(e.date)}</td>
+    <td><b>${esc(e.text)}</b></td>
+    <td class="r"><span class="pill ${e.importance >= 5 ? "bad" : ""}">${e.importance >= 5 ? "rare" : e.importance >= 4 ? "material" : "notable"}</span></td></tr>`).join("");
+
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div><span class="pill">tested, not believed</span></div>
+  <div class="disclaimer">This page exists because the desk <b>tested</b> astrology and published what it found — including the finding that it doesn't work. Nothing here is a signal, a prediction, or advice. The sky below is a <b>calendar</b>.</div>
+
+  ${verdict}
+
+  <div class="seg"><h2>The claims people repeat</h2><div class="ln"></div><span class="pill">each one, on the record</span></div>
+  <div class="card" style="padding:0"><table><tbody>${famousRows}</tbody></table></div>
+  <p class="sub" style="margin-top:8px">Measured on the KSE100 across ~19 years. A p-value near 1 means the market did the same thing whether or not the condition held. For reference, p below 0.05 is the usual bar for "interesting" — and with ${h.hypotheses_tested?.toLocaleString()} hypotheses tested, even that bar produces ~${h.expected_false_positives_at_p05} false hits by chance.</p>
+
+  <div class="sumstrip" style="grid-template-columns:repeat(4,1fr);margin-top:16px">
+    ${sTile("Zodiac", "Sidereal", "Lahiri (Chitrapaksha)", "")}
+    ${sTile("Ayanamsa", (sys.ayanamsa_deg ?? "—") + "°", "derived from Spica, not hardcoded", "")}
+    ${sTile("Grahas", "9", "the classical set, no outer planets", "")}
+    ${sTile("Sky as of", esc((a.updated || "").slice(0, 10)), "recomputed every cycle", "")}
+  </div>
+
+  <div class="seg"><h2>The sky right now</h2><div class="ln"></div><span class="pill">computed, never recalled</span></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Graha</th><th>Sign</th><th>Nakshatra</th><th class="r"></th></tr></thead><tbody>${skyRows}</tbody></table></div>
+  <p class="sub" style="margin-top:8px">Every position is computed from first principles (VSOP87/ELP-2000, sidereal, Lahiri ayanamsa derived each run by precessing Spica). No agent on this desk may state a transit date from memory — the machine works them out, which is why they're right.</p>
+
+  ${evs.length ? `<div class="seg"><h2>What the sky does next</h2><div class="ln"></div><span class="pill">${a.horizon_days} days</span></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Date</th><th>Event</th><th class="r">Rank</th></tr></thead><tbody>${evRows}</tbody></table></div>
+  <p class="sub" style="margin-top:8px">Dated events only, ranked 1–5 by a scale fixed in code (the Moon changes sign every ~2.3 days — that's wallpaper, and ranks 1, so it's hidden here). This is an almanac. On the evidence above, none of it tells you anything about PSX.</p>` : ""}
+
+  <p class="sub" style="margin-top:16px">${esc(a.note || "")}</p>`;
+}
+
 function maxDrawdown(bars) {
   // returns {mdd%, peakDate, troughDate} over the given bars
   let peak = bars[0]?.close || 0, peakDate = bars[0]?.date, mdd = 0, pk = peak, pkd = peakDate, td = peakDate;
@@ -983,9 +1070,14 @@ async function pageTicker(sym, _retry = 0) {
     : { ...leanChip(brokUp - brokDn), conv: brokerClaims.length >= 3 ? "medium" : "low",
       note: `${brokUp} positive · ${brokDn} negative of ${brokerClaims.length} on record — latest: ${esc(brokerClaims[brokerClaims.length - 1].source)}${brokerClaims[brokerClaims.length - 1].claim?.target_price ? ", target Rs " + fmt(brokerClaims[brokerClaims.length - 1].claim.target_price) : ""}` };
 
+  // 6. Astro — present, permanently honest. It stays on the page precisely BECAUSE it failed:
+  // the desk tested it and says so on every ticker, rather than quietly dropping the lens.
+  const astroLens = { k: "", v: "No edge", conv: "",
+    note: `The desk tested astrology on ${esc(sym)} and every other PSX name across ~19 years — nothing beat chance. It never counts toward the confluence below. <a href="#/astro" style="color:var(--accent)">See the test ›</a>` };
+
   const LENSES = [
     ["Charts · TA", taLens], ["Value · FA", faLens], ["The Desk Room", roomLens],
-    ["Strategies", stratLens], ["Brokers", brokLens],
+    ["Strategies", stratLens], ["Brokers", brokLens], ["Astro", astroLens],
   ];
   // confluence counts only lenses that are BOTH revealed and directional — an honest denominator
   const revealed = LENSES.filter(([, o]) => !o.locked && (o.k === "up" || o.k === "dn"));
@@ -1682,7 +1774,7 @@ async function pageSettings() {
   </div></div>`;
 }
 
-const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
