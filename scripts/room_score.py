@@ -29,13 +29,29 @@ def _price_now(sym, quant, live):
     return (live.get(sym, {}) or {}).get("current") or (quant.get(sym, {}) or {}).get("close")
 
 
-def _resolve(c, price_now):
+def _resolve(c, price_now, bench_now=None):
     made = c.get("made_at_price")
     kind = c.get("kind")
     claim = c.get("claim") or {}
     if price_now is None or made is None:
         return None
     if kind == "direction":
+        # A market-RELATIVE claim ("underperforms the KSE100") must be graded against the index, not
+        # the absolute price. Grading it absolutely would mark a stock that fell 2% while the market
+        # fell 8% as a hit for "underperforms" — when it in fact outperformed by 6.
+        bench_made = (c.get("benchmark") or {}).get("level")
+        if claim.get("market_relative") and bench_made and bench_now:
+            stock_ret = price_now / made - 1
+            mkt_ret = bench_now / bench_made - 1
+            excess = stock_ret - mkt_ret
+            want_up = claim.get("direction") == "up"
+            hit = (excess >= 0) == want_up
+            return {"status": "hit" if hit else "miss", "resolved_price": price_now,
+                    "detail": (f"{c['ticker']} {stock_ret*100:+.1f}% vs "
+                               f"{(c.get('benchmark') or {}).get('name', 'index')} {mkt_ret*100:+.1f}% "
+                               f"= {excess*100:+.1f}% excess, claimed {claim.get('direction')}")}
+        if claim.get("market_relative"):
+            return None  # no benchmark level -> unresolvable; leave pending rather than fake a grade
         want_up = claim.get("direction") == "up"
         moved_up = price_now >= made
         hit = want_up == moved_up
@@ -58,6 +74,7 @@ def run():
     claims = led.get("claims", [])
     quant = load_json(STATE / "quant.json", {}).get("tickers", {})
     live = load_json(STATE / "live.json", {}).get("tickers", {})
+    indices = load_json(STATE / "indices.json", {})   # for market-relative claims (fetch_indices.py)
     today = datetime.now(timezone.utc).date()
 
     # 1) resolve anything past its horizon
@@ -72,7 +89,8 @@ def run():
         if not due:
             c["status"] = "pending"
             continue
-        res = _resolve(c, _price_now(c.get("ticker"), quant, live))
+        res = _resolve(c, _price_now(c.get("ticker"), quant, live),
+                       (indices.get("live") or {}).get((c.get("benchmark") or {}).get("name")))
         if res:
             c["status"] = res["status"]
             c["resolved_on"] = today.isoformat()

@@ -313,8 +313,34 @@ async function pageValue() {
   <div class="card">${over.length ? tbl(over, false) : '<div class="empty">none above model fair value right now</div>'}</div>`;
 }
 
+/* What actually moves each sector — measured, not assumed. Rendered from sector_macro.json, which
+   regresses 19 years of sector returns on the global tape with the same permutation machinery the
+   astro test used. That symmetry IS the point: the same bar that found nothing in the sky finds
+   oil in the E&P names. */
+const FACTOR_LABEL = {
+  oil: "oil (WTI)", gold: "gold", usdpkr: "USD/PKR", sp500: "S&P 500",
+  em_equity: "EM equity flows", us10y: "US 10y yield", dollar: "dollar index",
+};
+const FACTOR_PLAIN = {
+  oil: "crude", gold: "gold", usdpkr: "a weaker rupee", sp500: "Wall Street's last close",
+  em_equity: "money moving into emerging markets", us10y: "the US cost of money",
+  dollar: "a stronger dollar",
+};
+function sectorDriverLine(sm, sector) {
+  const rec = sm?.by_sector?.[sector];
+  if (!rec) return "";
+  const demo = (rec.drivers || []).filter(d => d.demonstrated);
+  if (!demo.length) {
+    return `<span class="sub">No global factor has a demonstrated effect on ${esc(sector)} — over 19 years its days have been made locally, not on the world tape.</span>`;
+  }
+  const d = demo[0];
+  const dir = d.corr > 0 ? "rises with" : "falls when";
+  return `<span class="sub"><b>${esc(sector)}</b> ${dir} <b>${esc(FACTOR_PLAIN[d.factor] || d.factor)}</b>${d.corr > 0 ? "" : " rises"}${demo.length > 1 ? `, and also tracks ${demo.slice(1, 3).map(x => esc(FACTOR_PLAIN[x.factor] || x.factor)).join(" and ")}` : ""} — measured over 19 years, correction-survived. Even so, the whole global tape explains only <b>${rec.joint_r2_pct ?? "—"}%</b> of this sector's daily moves.</span>`;
+}
+
 async function pageMacro() {
-  const [gl, macro, geo] = await Promise.all([j("global.json"), j("macro.json"), j("georisk.json")]);
+  const [gl, macro, geo, sm] = await Promise.all([
+    j("global.json"), j("macro.json"), j("georisk.json"), j("sector_macro.json")]);
   const inst = gl?.instruments || {};
   const groups = {
     energy: "Energy — oil drives Pakistan's import bill, PKR & inflation",
@@ -389,10 +415,31 @@ async function pageMacro() {
     ${geo ? sTile("Geo risk", `${geo.score}/100`, esc(geo.band || ""), geo.band === "elevated" ? "dn" : geo.band === "calm" ? "up" : "") : iTile("Global risk", "^GSPC", "frontier flows follow")}
   </div>`;
 
+  // ---- what ACTUALLY moves each sector, measured over 19 years
+  const smCard = (() => {
+    if (!sm?.by_sector) return "";
+    const h = sm.headline || {};
+    const rows = Object.entries(sm.by_sector)
+      .sort((a, b) => (b[1].joint_r2_pct ?? 0) - (a[1].joint_r2_pct ?? 0))
+      .map(([sec, rec]) => {
+        const demo = (rec.drivers || []).filter(d => d.demonstrated);
+        const chips = demo.length
+          ? demo.slice(0, 3).map(d => `<span class="mf-chip ${d.corr > 0 ? "up" : "dn"}" title="correlation ${d.corr}, p=${d.p_value}">${esc(FACTOR_LABEL[d.factor] || d.factor)} ${d.corr > 0 ? "↑" : "↓"}</span>`).join("")
+          : `<span class="sub" style="opacity:.7">nothing beat chance</span>`;
+        return `<tr><td><b>${esc(sec)}</b></td><td>${chips}</td>
+          <td class="r num">${rec.joint_r2_pct != null ? rec.joint_r2_pct + "%" : "—"}</td></tr>`;
+      }).join("");
+    return `<div class="seg"><h2>What actually moves each sector</h2><div class="ln"></div><span class="pill ok">${h.survivors_bonferroni} of ${h.hypotheses_tested} measured</span></div>
+    <div class="card" style="padding:0"><table><thead><tr><th>Sector</th><th>Demonstrated drivers</th><th class="r">Global tape explains</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="sub" style="margin-top:8px">Nineteen years of daily returns regressed on the global tape — oil, gold, USD/PKR, the S&amp;P, EM flows, the US 10y, the dollar — each lagged one PSX day, because those markets close after Karachi does. Same permutation test and same correction the desk used on <a href="#/astro" style="color:var(--accent)">astrology</a>, which found nothing: here it finds <b>${h.survivors_bonferroni}</b> real relationships. That contrast is the point.</p>
+    <p class="sub" style="margin-top:6px"><b>Read the last column before the second.</b> Even for the most globally-driven sector, the entire world tape explains only a few percent of a day's move — PSX is mostly made at home. A demonstrated driver says what <i>has tended</i> to move a sector, never what will.</p>`;
+  })();
+
   $("view").innerHTML = `
     <div class="seg" style="margin-top:4px"><h2>What moves PSX</h2><div class="ln"></div></div>
     ${glanceRow}
     <p class="sub" style="margin-bottom:14px">Global markets refreshed every cycle (Yahoo Finance). Pakistan-domestic numbers verified by the macro-agent from primary sources. Hover any read-through for why it matters.</p>
+    ${smCard}
     ${geoCard}
     ${macroCard}
     ${card("fx", groups.fx)}
@@ -764,9 +811,9 @@ async function playAstroBoardRun() {
    The null result LEADS. The calendar is the secondary thing, offered as calendar, not signal.
    This page exists because we tested it, not because we believe it. ---------- */
 async function pageAstro() {
-  const [a, bt, natal, amap, sectors, uni] = await Promise.all([
+  const [a, bt, natal, amap, sectors, uni, nt, claimsAll] = await Promise.all([
     j("astro.json"), j("astro_backtest.json"), j("astro_natal.json"), j("astro_map.json"),
-    j("sectors.json"), j("universe.json")]);
+    j("sectors.json"), j("universe.json"), j("astro_natal_test.json"), j("claims.json")]);
   if (!a || a.status !== "ok") {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">The ephemeris is unavailable this cycle${a?.error ? ` (${esc(a.error)})` : ""}. The desk shows nothing rather than something it can't compute.</div></div>`;
@@ -865,6 +912,24 @@ async function pageAstro() {
   ${readings}
 
   ${verdict}
+
+  ${nt ? (() => {
+    const nh = nt.headline || {};
+    const astroClaims = (claimsAll?.claims || []).filter(c => c.source_type === "astro");
+    const res = astroClaims.filter(c => c.status === "hit" || c.status === "miss");
+    const hits = astroClaims.filter(c => c.status === "hit").length;
+    return `<div class="seg"><h2>And the natal method — the harder test</h2><div class="ln"></div><span class="pill ${nh.survivors_bonferroni ? "" : "bad"}">${nh.survivors_bonferroni || 0} survived</span></div>
+    <div class="card astro-verdict">
+      <p class="av-lede">Transits alone were never the whole tradition. So the desk sourced <b>${(natal?.n_charts || 0)}</b> real birth charts from PSX's own listing records and tested what Vedic prediction actually rests on — <b>Sade Sati</b>, <b>dasha periods</b>, <b>transits to natal points</b>. ${nh.hypotheses_tested} hypotheses across ${nh.charts_tested} charts.</p>
+      <div class="av-nums">
+        <div><span>${nh.raw_hits_at_p05}</span><i>looked significant</i></div>
+        <div><span>${nh.expected_false_positives_at_p05}</span><i>expected from luck</i></div>
+        <div><span class="${nh.survivors_bonferroni ? "" : "dn"}">${nh.survivors_bonferroni}</span><i>survived correction</i></div>
+      </div>
+      <p class="av-read"><b>But read this before you conclude anything.</b> ${esc(nt.power_warning || "")}</p>
+      <div class="av-foot">The desk files these readings as <b>dated, market-relative calls</b> anyway — ${astroClaims.length} of them are live on the <a href="#/leaderboard">Scores</a> board right now${res.length ? `, ${res.length} resolved (${hits} hit)` : `, none resolved yet — the earliest settles ${esc(astroClaims.map(c => c.resolve_by).sort()[0] || "")}`}. When a test is too weak to settle an argument, the honest move is to make the claim in public and let the market answer it.</div>
+    </div>`;
+  })() : ""}
 
   <div class="seg"><h2>The claims people repeat</h2><div class="ln"></div><span class="pill">each one, on the record</span></div>
   <div class="card" style="padding:0"><table><tbody>${famousRows}</tbody></table></div>
@@ -1054,11 +1119,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
@@ -1348,6 +1413,7 @@ async function pageTicker(sym, _retry = 0) {
       ${typeof starBtn === "function" ? starBtn(sym) : ""}
     </div>
     <div class="prov">Prices in <b>Rs (PKR)</b> · ${priceSrc} · quant as of ${q.date} close · fundamentals ${f.fetched || "—"} · long-history chart is split/bonus-adjusted (Yahoo); DPS close is unadjusted.${liq === "low" ? ' · <b class="dn">low liquidity</b>' : ""}${lossmaking ? ' · <b class="dn">earnings negative</b>' : ""}</div>
+    ${mySector ? `<div class="tk-driver">${sectorDriverLine(smAll, mySector)}</div>` : ""}
     <div class="ranges" id="ranges">
       ${hasIntra ? '<button data-d="intra">1D</button>' : ""}<button data-d="63">3M</button><button data-d="126">6M</button><button class="on" data-d="252">1Y</button><button data-d="1260">5Y</button><button data-d="99999">Max${histYears >= 5 ? " (" + histYears + "y)" : ""}</button>
     </div>
