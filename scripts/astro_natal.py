@@ -249,11 +249,16 @@ def main():
     print(f"astro_natal: {len(out)} charts built")
     for sym, r in list(out.items())[:16]:
         d = (r["dasha"]["current"] or {})
+        st = r["time_stability"]
         ss = r["sade_sati"]
         print(f"  {sym:9} b.{r['birth']['date']} Moon {r['natal']['Moon']['sign']:11} "
-              f"{r['natal']['Moon']['nakshatra']:16} | dasha {d.get('maha','?')}/{d.get('antar','?'):8} "
-              f"stable={r['time_stability']['dasha_stable']!s:5} slip={r['time_stability']['dasha_boundary_slip_days']}d"
+              f"{r['natal']['Moon']['nakshatra']:16} | dasha {d.get('maha','?')}/{str(d.get('antar','?')):8} "
+              f"lord_ok={st['maha_lord_stable']!s:5} slip={st['dasha_timeline_slip_days']}d"
               f"{' | SADE SATI: ' + ss['phase'] if ss.get('active') else ''}")
+    ok = sum(1 for r in out.values() if r["time_stability"]["maha_lord_stable"])
+    print(f"\n  maha-dasha LORD stable across the unknown first-trade time: {ok} of {len(out)}")
+    print(f"  dated dasha predictions available: "
+          f"{sum(1 for r in out.values() if r['time_stability']['dasha_stable'])} of {len(out)}")
 
 
 if __name__ == "__main__":
