@@ -7,17 +7,27 @@ desk had not touched:
   * DASHAS — Vimshottari planetary periods, keyed to the natal Moon's nakshatra.
 This computes both, for the 15 subjects whose birth date is genuinely sourced (astro_charts.py).
 
-TWO DELIBERATE REFUSALS, because a chart is only as honest as its worst input:
+THE BIRTH MOMENT — the orthodox convention, not our invention
+Bill Meridian, who built the first-trade chart database the field runs on, started with
+INCORPORATION charts and abandoned them: "not satisfied with the relationship of the chart of
+incorporation with share price movements, he turned to the horoscope of first trade." His charts
+are "set for the time of the opening of the exchange, 10am until 1985 and 9:30 AM since... the
+moment at which one could actually buy the stock" (billmeridian.com/articles-files/history-fin-astro.htm).
+So: FIRST TRADE DATE, cast at the EXCHANGE OPEN. That is what this file computes. The time is not a
+guess we are papering over — it is how the tradition defines the chart. The incorporation-date
+alternative is the one the field already tested and rejected.
 
-1. NO ASCENDANT, NO HOUSES. PSX publishes no first-trade TIME. The ascendant moves 360 degrees a
-   day, so houses computed from a guessed time are fiction dressed as precision. We read from the
-   Moon sign (Chandra lagna) instead — which is standard Vedic practice, and stable across a
-   session. Half a chart that is true beats a whole one that is invented.
+WHAT WE STILL REFUSE, AND WHAT WE MERELY DISCLOSE
 
-2. EVERY CONCLUSION IS TESTED FOR TIME-STABILITY. The chart is computed twice, at the market open
-   AND at the close, and anything that DISAGREES between the two is marked unstable and must not be
-   published. This turns the unknown time from a hidden lie into a measured uncertainty — most
-   notably for dashas, whose start dates hinge on the Moon's exact degree and can shift by years.
+1. NO ASCENDANT, NO HOUSES — refused. The convention fixes a time, but PSX's open has itself moved
+   over the decades (09:32 today) and the ascendant travels a full degree every four minutes. Houses
+   built on that are precision theatre. We read from the Moon sign (Chandra lagna), which is
+   standard Vedic practice and survives the ambiguity.
+
+2. TIME SENSITIVITY — disclosed, not refused. The chart is ALSO computed at the close, purely to
+   measure how much the answer would move if the true first trade came later in the session. The
+   convention's answer is what we publish; the slip is published beside it so a reader knows how
+   load-bearing the convention is. For dashas that slip runs to years, and saying so is the point.
 
 Writes state/astro_natal.json. Free, deterministic, no network.
 """
@@ -177,9 +187,11 @@ def build_one(chart: dict, now_e: Epoch, now_pos: dict, today: dt.date) -> dict:
                            "ascendant moves 360° a day, so houses from a guessed time would be "
                            "fiction. This chart is read from the Moon sign (Chandra lagna), which "
                            "is standard Vedic practice and survives the unknown time."),
-        "time_stability": {
-            "method": f"the chart is computed twice — at the {chart['time']} open and the "
-                      f"{CLOSE_TIME} close — and anything that disagrees is not publishable",
+        "time_sensitivity": {
+            "published_at": f"{chart['time']} — the exchange open on the first-trade date, which is "
+                            f"the orthodox first-trade convention (Meridian). This is the chart.",
+            "method": f"the chart is ALSO computed at the {CLOSE_TIME} close, purely to measure how "
+                      f"much each conclusion depends on the convention being right",
             "per_graha": stable,
             "moon_sign_stable": moon_sign_stable,
             "moon_nakshatra_stable": moon_nak_stable,
@@ -187,21 +199,23 @@ def build_one(chart: dict, now_e: Epoch, now_pos: dict, today: dt.date) -> dict:
             "antar_lord_stable": antar_lord_stable,
             "dasha_stable": dasha_stable,
             "dasha_timeline_slip_days": slip_days,
-            "verdict": ("Everything below survives the unknown first-trade time."
+            "verdict": ("Robust: this chart reads the same whether the first trade happened at the "
+                        "open or the close, so the convention is not doing the work."
                         if dasha_stable and moon_sign_stable else
-                        f"Partly unusable. The Moon travels ~3.3° across a trading session and a "
-                        f"nakshatra is 13.3°, so an unknown birth time slides the whole Vimshottari "
-                        f"timeline by ~{slip_days} days ({slip_days / 365.25:.1f} years) here. The "
-                        f"period LORDS may still be solid — see maha_lord_stable / antar_lord_stable "
-                        f"— but DATED dasha predictions are not available for this subject and the "
-                        f"desk will not print them."),
+                        f"Convention-dependent. The Moon covers ~3.3° in a session and a nakshatra "
+                        f"is 13.3°, so had the first trade come at the close instead of the open the "
+                        f"whole Vimshottari timeline would sit ~{slip_days} days "
+                        f"({slip_days / 365.25:.1f} years) away. The published dates follow the "
+                        f"convention; treat them as convention-dependent, not measured. The period "
+                        f"LORD is the sturdier claim — see maha_lord_stable."),
         },
-        "dasha": {"current": cur_o, "stable": dasha_stable,
+        "dasha": {"current": cur_o, "convention_robust": dasha_stable,
                   "sequence": seq_o[:6],
-                  "note": ("Vimshottari, keyed to the natal Moon's nakshatra. The start of the very "
-                           "first period depends on the Moon's exact degree, so an unknown birth "
-                           "time propagates into every boundary — the slip across one trading "
-                           f"session is {slip_days} days here.")},
+                  "note": (f"Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange "
+                           f"open per the first-trade convention. Every boundary inherits the Moon's "
+                           f"exact degree, so if the true first trade came later in the session the "
+                           f"timeline moves ~{slip_days} days ({slip_days / 365.25:.1f} years). "
+                           f"Published as the convention's answer, with that dependence stated.")},
         "sade_sati": ss,
         "transits_to_natal": transits_to_natal(n_open, now_pos),
     }
@@ -234,9 +248,23 @@ def main():
     res = {
         "updated": now_utc.astimezone(ae.PKT).strftime("%Y-%m-%d %H:%M"),
         "note": ("Natal charts, Vimshottari dashas and transits-to-natal for the subjects whose "
-                 "birth date is genuinely sourced. No ascendant and no houses: the first-trade time "
-                 "is unpublished, so they would be invented. Every conclusion is bracketed across "
-                 "the trading session and marked unstable if the unknown time changes it."),
+                 "first-trade date is genuinely sourced. Cast at the exchange open on that date — "
+                 "the orthodox first-trade convention (Meridian), not a guess of ours. No ascendant "
+                 "and no houses: those turn on the minute, and PSX's open has itself shifted over "
+                 "the decades. Each conclusion carries how much it depends on the convention."),
+        "convention": {
+            "birth_moment": "first trade date, cast at the exchange open",
+            "why": ("Financial astrology's standard. Bill Meridian built the field's first-trade "
+                    "database after testing INCORPORATION charts and rejecting them — he was 'not "
+                    "satisfied with the relationship of the chart of incorporation with share price "
+                    "movements'. His charts are set to the exchange open, 'the moment at which one "
+                    "could actually buy the stock'. So the incorporation-date alternative is the one "
+                    "the tradition already tried and discarded."),
+            "source": "https://billmeridian.com/articles-files/history-fin-astro.htm",
+            "meridian_got_his_dates_from": ("the Exchange itself, from the 1970s. That is the unlock "
+                                            "for the other 88 PSX names: PSX holds the listing dates "
+                                            "even though it does not publish them."),
+        },
         "discipline": ("This is what the tradition SAYS about these charts. It is not a forecast and "
                        "not advice. The transit-only claims the desk could test showed no edge on "
                        "PSX (see astro_backtest.json); the natal methods here are not yet tested, "
@@ -249,16 +277,19 @@ def main():
     print(f"astro_natal: {len(out)} charts built")
     for sym, r in list(out.items())[:16]:
         d = (r["dasha"]["current"] or {})
-        st = r["time_stability"]
+        st = r["time_sensitivity"]
         ss = r["sade_sati"]
         print(f"  {sym:9} b.{r['birth']['date']} Moon {r['natal']['Moon']['sign']:11} "
               f"{r['natal']['Moon']['nakshatra']:16} | dasha {d.get('maha','?')}/{str(d.get('antar','?')):8} "
-              f"lord_ok={st['maha_lord_stable']!s:5} slip={st['dasha_timeline_slip_days']}d"
+              f"to {str(d.get('maha_to'))[:7]} | robust={st['dasha_stable']!s:5} slip={st['dasha_timeline_slip_days']}d"
               f"{' | SADE SATI: ' + ss['phase'] if ss.get('active') else ''}")
-    ok = sum(1 for r in out.values() if r["time_stability"]["maha_lord_stable"])
-    print(f"\n  maha-dasha LORD stable across the unknown first-trade time: {ok} of {len(out)}")
-    print(f"  dated dasha predictions available: "
-          f"{sum(1 for r in out.values() if r['time_stability']['dasha_stable'])} of {len(out)}")
+    ok = sum(1 for r in out.values() if r["time_sensitivity"]["maha_lord_stable"])
+    rob = sum(1 for r in out.values() if r["time_sensitivity"]["dasha_stable"])
+    ssn = sum(1 for r in out.values() if (r["sade_sati"] or {}).get("active"))
+    print(f"\n  dashas published at the first-trade convention (exchange open): {len(out)} of {len(out)}")
+    print(f"  ... of which the period LORD holds even at the close: {ok} of {len(out)}")
+    print(f"  ... fully convention-independent (lord AND dates): {rob} of {len(out)}")
+    print(f"  Sade Sati running: {ssn} of {len(out)}")
 
 
 if __name__ == "__main__":

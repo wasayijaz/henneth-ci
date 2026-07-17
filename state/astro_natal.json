@@ -1,6 +1,12 @@
 {
-  "updated": "2026-07-17 17:39",
-  "note": "Natal charts, Vimshottari dashas and transits-to-natal for the subjects whose birth date is genuinely sourced. No ascendant and no houses: the first-trade time is unpublished, so they would be invented. Every conclusion is bracketed across the trading session and marked unstable if the unknown time changes it.",
+  "updated": "2026-07-17 17:45",
+  "note": "Natal charts, Vimshottari dashas and transits-to-natal for the subjects whose first-trade date is genuinely sourced. Cast at the exchange open on that date \u2014 the orthodox first-trade convention (Meridian), not a guess of ours. No ascendant and no houses: those turn on the minute, and PSX's open has itself shifted over the decades. Each conclusion carries how much it depends on the convention.",
+  "convention": {
+    "birth_moment": "first trade date, cast at the exchange open",
+    "why": "Financial astrology's standard. Bill Meridian built the field's first-trade database after testing INCORPORATION charts and rejecting them \u2014 he was 'not satisfied with the relationship of the chart of incorporation with share price movements'. His charts are set to the exchange open, 'the moment at which one could actually buy the stock'. So the incorporation-date alternative is the one the tradition already tried and discarded.",
+    "source": "https://billmeridian.com/articles-files/history-fin-astro.htm",
+    "meridian_got_his_dates_from": "the Exchange itself, from the 1970s. That is the unlock for the other 88 PSX names: PSX holds the listing dates even though it does not publish them."
+  },
   "discipline": "This is what the tradition SAYS about these charts. It is not a forecast and not advice. The transit-only claims the desk could test showed no edge on PSX (see astro_backtest.json); the natal methods here are not yet tested, and are labelled untested rather than sold as insight.",
   "n_charts": 15,
   "subjects": {
@@ -81,8 +87,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -127,7 +134,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 663,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~663 days (1.8 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~663 days (1.8 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -138,7 +145,7 @@
           "antar_from": "2025-12-07",
           "antar_to": "2027-05-08"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Ketu",
@@ -177,7 +184,7 @@
             "years": 18
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 663 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~663 days (1.8 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -187,9 +194,9 @@
         {
           "transiting": "Venus",
           "over_natal": "Jupiter",
-          "orb_deg": 1.36,
+          "orb_deg": 1.35,
           "sign": "Leo",
-          "text": "transiting Venus is conjunct natal Jupiter (1.36\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Jupiter (1.35\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
@@ -201,9 +208,9 @@
         {
           "transiting": "Moon",
           "over_natal": "Jupiter",
-          "orb_deg": 2.66,
+          "orb_deg": 2.61,
           "sign": "Leo",
-          "text": "transiting Moon is conjunct natal Jupiter (2.66\u00b0 orb)"
+          "text": "transiting Moon is conjunct natal Jupiter (2.61\u00b0 orb)"
         }
       ]
     },
@@ -284,8 +291,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -330,7 +338,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1147,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1147 days (3.1 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1147 days (3.1 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -341,7 +349,7 @@
           "antar_from": "2026-04-20",
           "antar_to": "2029-04-19"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Ketu",
@@ -380,7 +388,7 @@
             "years": 18
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1147 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1147 days (3.1 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": true,
@@ -465,8 +473,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -511,7 +520,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1460,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1460 days (4.0 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1460 days (4.0 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -522,7 +531,7 @@
           "antar_from": "2025-07-11",
           "antar_to": "2026-12-10"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Mercury",
@@ -561,7 +570,7 @@
             "years": 7
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1460 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1460 days (4.0 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": true,
@@ -654,8 +663,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -700,7 +710,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1495,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1495 days (4.1 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1495 days (4.1 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -711,7 +721,7 @@
           "antar_from": "2025-10-28",
           "antar_to": "2028-05-16"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Mercury",
@@ -750,7 +760,7 @@
             "years": 7
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1495 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1495 days (4.1 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -850,8 +860,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -896,7 +907,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 570,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~570 days (1.6 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~570 days (1.6 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -907,7 +918,7 @@
           "antar_from": "2024-04-15",
           "antar_to": "2026-09-08"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Mars",
@@ -946,7 +957,7 @@
             "years": 7
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 570 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~570 days (1.6 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -963,9 +974,9 @@
         {
           "transiting": "Mercury",
           "over_natal": "Mars",
-          "orb_deg": 1.13,
+          "orb_deg": 1.14,
           "sign": "Gemini",
-          "text": "transiting Mercury is conjunct natal Mars (1.13\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mars (1.14\u00b0 orb)"
         }
       ]
     },
@@ -1046,8 +1057,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -1092,7 +1104,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1661,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1661 days (4.5 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1661 days (4.5 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -1103,7 +1115,7 @@
           "antar_from": "2025-11-09",
           "antar_to": "2026-10-03"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Venus",
@@ -1142,7 +1154,7 @@
             "years": 16
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1661 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1661 days (4.5 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -1227,8 +1239,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -1273,7 +1286,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1504,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1504 days (4.1 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1504 days (4.1 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -1284,7 +1297,7 @@
           "antar_from": "2023-11-17",
           "antar_to": "2027-01-16"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Ketu",
@@ -1323,7 +1336,7 @@
             "years": 18
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1504 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1504 days (4.1 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -1416,8 +1429,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -1462,7 +1476,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1542,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1542 days (4.2 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1542 days (4.2 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -1473,7 +1487,7 @@
           "antar_from": "2026-05-19",
           "antar_to": "2026-10-15"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Mercury",
@@ -1512,7 +1526,7 @@
             "years": 7
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1542 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1542 days (4.2 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -1619,8 +1633,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -1665,7 +1680,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1440,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1440 days (3.9 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1440 days (3.9 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -1676,7 +1691,7 @@
           "antar_from": "2025-11-09",
           "antar_to": "2028-05-28"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Mercury",
@@ -1715,7 +1730,7 @@
             "years": 7
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1440 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1440 days (3.9 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": true,
@@ -1822,8 +1837,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -1868,7 +1884,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1514,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1514 days (4.1 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1514 days (4.1 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -1879,7 +1895,7 @@
           "antar_from": "2025-08-23",
           "antar_to": "2026-08-20"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Sun",
@@ -1918,7 +1934,7 @@
             "years": 19
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1514 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1514 days (4.1 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -1928,9 +1944,9 @@
         {
           "transiting": "Mars",
           "over_natal": "Sun",
-          "orb_deg": 2.58,
+          "orb_deg": 2.59,
           "sign": "Taurus",
-          "text": "transiting Mars is conjunct natal Sun (2.58\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Sun (2.59\u00b0 orb)"
         }
       ]
     },
@@ -2011,8 +2027,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -2057,7 +2074,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 920,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~920 days (2.5 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~920 days (2.5 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -2068,7 +2085,7 @@
           "antar_from": "2026-02-02",
           "antar_to": "2028-10-15"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Moon",
@@ -2107,7 +2124,7 @@
             "years": 17
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 920 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~920 days (2.5 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -2214,8 +2231,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -2260,7 +2278,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1573,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1573 days (4.3 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1573 days (4.3 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -2271,7 +2289,7 @@
           "antar_from": "2025-10-28",
           "antar_to": "2027-02-26"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Jupiter",
@@ -2310,7 +2328,7 @@
             "years": 6
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1573 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1573 days (4.3 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -2327,9 +2345,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Sun",
-          "orb_deg": 1.85,
+          "orb_deg": 1.84,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Sun (1.85\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Sun (1.84\u00b0 orb)"
         }
       ]
     },
@@ -2410,8 +2428,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -2456,7 +2475,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1678,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1678 days (4.6 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1678 days (4.6 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -2467,7 +2486,7 @@
           "antar_from": "2025-12-17",
           "antar_to": "2026-10-17"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Venus",
@@ -2506,7 +2525,7 @@
             "years": 16
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1678 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1678 days (4.6 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -2599,8 +2618,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -2645,7 +2665,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 1805,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~1805 days (4.9 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~1805 days (4.9 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -2656,7 +2676,7 @@
           "antar_from": "2026-05-06",
           "antar_to": "2027-03-30"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Venus",
@@ -2695,7 +2715,7 @@
             "years": 16
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 1805 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1805 days (4.9 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
@@ -2795,8 +2815,9 @@
       },
       "ascendant": null,
       "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_stability": {
-        "method": "the chart is computed twice \u2014 at the 09:30 open and the 15:30 close \u2014 and anything that disagrees is not publishable",
+      "time_sensitivity": {
+        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
+        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
         "per_graha": {
           "Sun": {
             "sign": true,
@@ -2841,7 +2862,7 @@
         "antar_lord_stable": false,
         "dasha_stable": false,
         "dasha_timeline_slip_days": 5617,
-        "verdict": "Partly unusable. The Moon travels ~3.3\u00b0 across a trading session and a nakshatra is 13.3\u00b0, so an unknown birth time slides the whole Vimshottari timeline by ~5617 days (15.4 years) here. The period LORDS may still be solid \u2014 see maha_lord_stable / antar_lord_stable \u2014 but DATED dasha predictions are not available for this subject and the desk will not print them."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~5617 days (15.4 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -2852,7 +2873,7 @@
           "antar_from": "2026-03-18",
           "antar_to": "2026-10-17"
         },
-        "stable": false,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Venus",
@@ -2891,7 +2912,7 @@
             "years": 16
           }
         ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra. The start of the very first period depends on the Moon's exact degree, so an unknown birth time propagates into every boundary \u2014 the slip across one trading session is 5617 days here."
+        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~5617 days (15.4 years). Published as the convention's answer, with that dependence stated."
       },
       "sade_sati": {
         "active": false,
