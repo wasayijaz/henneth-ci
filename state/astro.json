@@ -1,0 +1,800 @@
+{
+ "updated": "2026-07-17 15:14",
+ "updated_utc": "2026-07-17 10:14",
+ "status": "ok",
+ "error": null,
+ "system": {
+  "zodiac": "sidereal",
+  "ayanamsa": "Lahiri (Chitrapaksha)",
+  "ayanamsa_deg": 24.2118,
+  "node": "mean",
+  "bodies": "the nine classical grahas (no outer planets)",
+  "method": "sidereal = tropical \u2212 ayanamsa; the ayanamsa is derived each run by precessing Spica from its J2000 position (Chitrapaksha: Spica = 180\u00b0 sidereal), never hardcoded. Positions are VSOP87/ELP-2000 (pymeeus), geocentric apparent.",
+  "engine": "scripts/astro_engine.py"
+ },
+ "horizon_days": 90,
+ "importance_scale": {
+  "1": "routine (the Moon changing sign \u2014 happens every ~2.3 days)",
+  "2": "minor (new/full moon, fast-body conjunction)",
+  "3": "notable (Sun/Mercury/Venus/Mars ingress, inner-planet station, possible eclipse)",
+  "4": "material (Jupiter/Saturn/Rahu/Ketu ingress, slow-planet station)",
+  "5": "rare (a certain eclipse)",
+  "note": "Fixed in astro_engine.py, not left to an agent \u2014 drift here would silently change what the lens calls a headline."
+ },
+ "positions": {
+  "Sun": {
+   "lon": 90.6574,
+   "sign": "Cancer",
+   "sign_sa": "Karka",
+   "deg_in_sign": 0.66,
+   "nakshatra": "Punarvasu",
+   "pada": 4,
+   "speed_deg_per_day": 0.9544,
+   "retrograde": false
+  },
+  "Moon": {
+   "lon": 131.6904,
+   "sign": "Leo",
+   "sign_sa": "Simha",
+   "deg_in_sign": 11.69,
+   "nakshatra": "Magha",
+   "pada": 4,
+   "speed_deg_per_day": 13.9332,
+   "retrograde": false
+  },
+  "Mercury": {
+   "lon": 83.9054,
+   "sign": "Gemini",
+   "sign_sa": "Mithuna",
+   "deg_in_sign": 23.91,
+   "nakshatra": "Punarvasu",
+   "pada": 2,
+   "speed_deg_per_day": -0.5066,
+   "retrograde": true
+  },
+  "Venus": {
+   "lon": 134.2911,
+   "sign": "Leo",
+   "sign_sa": "Simha",
+   "deg_in_sign": 14.29,
+   "nakshatra": "Purva Phalguni",
+   "pada": 1,
+   "speed_deg_per_day": 1.093,
+   "retrograde": false
+  },
+  "Mars": {
+   "lon": 48.883,
+   "sign": "Taurus",
+   "sign_sa": "Vrishabha",
+   "deg_in_sign": 18.88,
+   "nakshatra": "Rohini",
+   "pada": 3,
+   "speed_deg_per_day": 0.693,
+   "retrograde": false
+  },
+  "Jupiter": {
+   "lon": 99.5263,
+   "sign": "Cancer",
+   "sign_sa": "Karka",
+   "deg_in_sign": 9.53,
+   "nakshatra": "Pushya",
+   "pada": 2,
+   "speed_deg_per_day": 0.2203,
+   "retrograde": false
+  },
+  "Saturn": {
+   "lon": 350.4631,
+   "sign": "Pisces",
+   "sign_sa": "Meena",
+   "deg_in_sign": 20.46,
+   "nakshatra": "Revati",
+   "pada": 2,
+   "speed_deg_per_day": 0.016,
+   "retrograde": false
+  },
+  "Rahu": {
+   "lon": 307.503,
+   "sign": "Aquarius",
+   "sign_sa": "Kumbha",
+   "deg_in_sign": 7.5,
+   "nakshatra": "Shatabhisha",
+   "pada": 1,
+   "speed_deg_per_day": -0.053,
+   "retrograde": true
+  },
+  "Ketu": {
+   "lon": 127.503,
+   "sign": "Leo",
+   "sign_sa": "Simha",
+   "deg_in_sign": 7.5,
+   "nakshatra": "Magha",
+   "pada": 3,
+   "speed_deg_per_day": -0.053,
+   "retrograde": true
+  }
+ },
+ "moon_phase_illumination": 0.123,
+ "events": [
+  {
+   "date": "2026-07-18",
+   "at_pkt": "2026-07-18 23:28",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Moon enters Virgo (Kanya)",
+   "importance": 1
+  },
+  {
+   "date": "2026-07-21",
+   "at_pkt": "2026-07-21 07:23",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Virgo",
+   "to": "Libra",
+   "text": "Moon enters Libra (Tula)",
+   "importance": 1
+  },
+  {
+   "date": "2026-07-23",
+   "at_pkt": "2026-07-23 18:30",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Libra",
+   "to": "Scorpio",
+   "text": "Moon enters Scorpio (Vrischika)",
+   "importance": 1
+  },
+  {
+   "date": "2026-07-24",
+   "at_pkt": "2026-07-24 03:57",
+   "type": "station",
+   "body": "Mercury",
+   "direction": "direct",
+   "sign": "Gemini",
+   "text": "Mercury stations direct in Gemini",
+   "importance": 3
+  },
+  {
+   "date": "2026-07-26",
+   "at_pkt": "2026-07-26 07:03",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Scorpio",
+   "to": "Sagittarius",
+   "text": "Moon enters Sagittarius (Dhanu)",
+   "importance": 1
+  },
+  {
+   "date": "2026-07-27",
+   "at_pkt": "2026-07-27 00:24",
+   "type": "station",
+   "body": "Saturn",
+   "direction": "retrograde",
+   "sign": "Pisces",
+   "text": "Saturn stations retrograde in Pisces",
+   "importance": 4
+  },
+  {
+   "date": "2026-07-28",
+   "at_pkt": "2026-07-28 19:18",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Sagittarius",
+   "to": "Capricorn",
+   "text": "Moon enters Capricorn (Makara)",
+   "importance": 1
+  },
+  {
+   "date": "2026-07-29",
+   "type": "conjunction",
+   "body": "Sun",
+   "with": "Jupiter",
+   "sign": "Cancer",
+   "separation_deg": 0.06,
+   "text": "Sun conjunct Jupiter in Cancer (0.06 deg apart)",
+   "importance": 2
+  },
+  {
+   "date": "2026-07-29",
+   "at_pkt": "2026-07-29 19:36",
+   "type": "full_moon",
+   "body": "Moon",
+   "sign": "Capricorn",
+   "sun_node_distance_deg": 24.57,
+   "text": "Full Moon in Capricorn",
+   "importance": 2
+  },
+  {
+   "date": "2026-07-31",
+   "at_pkt": "2026-07-31 06:07",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Capricorn",
+   "to": "Aquarius",
+   "text": "Moon enters Aquarius (Kumbha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-01",
+   "at_pkt": "2026-08-01 08:33",
+   "type": "ingress",
+   "body": "Venus",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Venus enters Virgo (Kanya)",
+   "importance": 3
+  },
+  {
+   "date": "2026-08-02",
+   "at_pkt": "2026-08-02 14:55",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Aquarius",
+   "to": "Pisces",
+   "text": "Moon enters Pisces (Meena)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-02",
+   "at_pkt": "2026-08-02 21:42",
+   "type": "ingress",
+   "body": "Mars",
+   "from": "Taurus",
+   "to": "Gemini",
+   "text": "Mars enters Gemini (Mithuna)",
+   "importance": 3
+  },
+  {
+   "date": "2026-08-04",
+   "at_pkt": "2026-08-04 21:23",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Pisces",
+   "to": "Aries",
+   "text": "Moon enters Aries (Mesha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-05",
+   "at_pkt": "2026-08-05 19:03",
+   "type": "ingress",
+   "body": "Mercury",
+   "from": "Gemini",
+   "to": "Cancer",
+   "text": "Mercury enters Cancer (Karka)",
+   "importance": 3
+  },
+  {
+   "date": "2026-08-07",
+   "at_pkt": "2026-08-07 01:22",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Aries",
+   "to": "Taurus",
+   "text": "Moon enters Taurus (Vrishabha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-09",
+   "at_pkt": "2026-08-09 03:18",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Taurus",
+   "to": "Gemini",
+   "text": "Moon enters Gemini (Mithuna)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-11",
+   "at_pkt": "2026-08-11 04:12",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Gemini",
+   "to": "Cancer",
+   "text": "Moon enters Cancer (Karka)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-12",
+   "at_pkt": "2026-08-12 22:37",
+   "type": "new_moon",
+   "body": "Moon",
+   "sign": "Cancer",
+   "sun_node_distance_deg": 10.29,
+   "text": "New Moon in Cancer \u2014 certain solar eclipse",
+   "eclipse": {
+    "kind": "solar",
+    "certainty": "certain",
+    "method": "Sun 10.29 deg from the lunar node; solar eclipse limit 15.35 deg"
+   },
+   "importance": 5
+  },
+  {
+   "date": "2026-08-13",
+   "type": "conjunction",
+   "body": "Moon",
+   "with": "Ketu",
+   "sign": "Leo",
+   "separation_deg": 0.33,
+   "text": "Moon conjunct Ketu in Leo (0.33 deg apart)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-13",
+   "at_pkt": "2026-08-13 05:35",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Cancer",
+   "to": "Leo",
+   "text": "Moon enters Leo (Simha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-15",
+   "type": "conjunction",
+   "body": "Mercury",
+   "with": "Jupiter",
+   "sign": "Cancer",
+   "separation_deg": 0.08,
+   "text": "Mercury conjunct Jupiter in Cancer (0.08 deg apart)",
+   "importance": 2
+  },
+  {
+   "date": "2026-08-15",
+   "at_pkt": "2026-08-15 09:04",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Moon enters Virgo (Kanya)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-17",
+   "at_pkt": "2026-08-17 07:01",
+   "type": "ingress",
+   "body": "Sun",
+   "from": "Cancer",
+   "to": "Leo",
+   "text": "Sun enters Leo (Simha)",
+   "importance": 3
+  },
+  {
+   "date": "2026-08-17",
+   "at_pkt": "2026-08-17 15:48",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Virgo",
+   "to": "Libra",
+   "text": "Moon enters Libra (Tula)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-20",
+   "at_pkt": "2026-08-20 01:59",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Libra",
+   "to": "Scorpio",
+   "text": "Moon enters Scorpio (Vrischika)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-22",
+   "type": "conjunction",
+   "body": "Sun",
+   "with": "Ketu",
+   "sign": "Leo",
+   "separation_deg": 0.45,
+   "text": "Sun conjunct Ketu in Leo (0.45 deg apart)",
+   "importance": 2
+  },
+  {
+   "date": "2026-08-22",
+   "at_pkt": "2026-08-22 14:18",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Scorpio",
+   "to": "Sagittarius",
+   "text": "Moon enters Sagittarius (Dhanu)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-22",
+   "at_pkt": "2026-08-22 18:49",
+   "type": "ingress",
+   "body": "Mercury",
+   "from": "Cancer",
+   "to": "Leo",
+   "text": "Mercury enters Leo (Simha)",
+   "importance": 3
+  },
+  {
+   "date": "2026-08-25",
+   "type": "conjunction",
+   "body": "Mercury",
+   "with": "Ketu",
+   "sign": "Leo",
+   "separation_deg": 0.28,
+   "text": "Mercury conjunct Ketu in Leo (0.28 deg apart)",
+   "importance": 2
+  },
+  {
+   "date": "2026-08-25",
+   "at_pkt": "2026-08-25 02:35",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Sagittarius",
+   "to": "Capricorn",
+   "text": "Moon enters Capricorn (Makara)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-27",
+   "type": "conjunction",
+   "body": "Sun",
+   "with": "Mercury",
+   "sign": "Leo",
+   "separation_deg": 0.28,
+   "text": "Sun conjunct Mercury in Leo (0.28 deg apart)",
+   "importance": 2
+  },
+  {
+   "date": "2026-08-27",
+   "at_pkt": "2026-08-27 13:04",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Capricorn",
+   "to": "Aquarius",
+   "text": "Moon enters Aquarius (Kumbha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-08-28",
+   "at_pkt": "2026-08-28 09:19",
+   "type": "full_moon",
+   "body": "Moon",
+   "sign": "Aquarius",
+   "sun_node_distance_deg": 5.4,
+   "text": "Full Moon in Aquarius \u2014 certain lunar eclipse",
+   "eclipse": {
+    "kind": "lunar",
+    "certainty": "certain",
+    "method": "Sun 5.4 deg from the lunar node; lunar eclipse limit 9.5 deg"
+   },
+   "importance": 5
+  },
+  {
+   "date": "2026-08-29",
+   "at_pkt": "2026-08-29 21:06",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Aquarius",
+   "to": "Pisces",
+   "text": "Moon enters Pisces (Meena)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-01",
+   "at_pkt": "2026-09-01 02:53",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Pisces",
+   "to": "Aries",
+   "text": "Moon enters Aries (Mesha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-02",
+   "at_pkt": "2026-09-02 12:41",
+   "type": "ingress",
+   "body": "Venus",
+   "from": "Virgo",
+   "to": "Libra",
+   "text": "Venus enters Libra (Tula)",
+   "importance": 3
+  },
+  {
+   "date": "2026-09-03",
+   "at_pkt": "2026-09-03 06:55",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Aries",
+   "to": "Taurus",
+   "text": "Moon enters Taurus (Vrishabha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-05",
+   "at_pkt": "2026-09-05 09:47",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Taurus",
+   "to": "Gemini",
+   "text": "Moon enters Gemini (Mithuna)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-07",
+   "at_pkt": "2026-09-07 12:07",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Gemini",
+   "to": "Cancer",
+   "text": "Moon enters Cancer (Karka)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-07",
+   "at_pkt": "2026-09-07 12:48",
+   "type": "ingress",
+   "body": "Mercury",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Mercury enters Virgo (Kanya)",
+   "importance": 3
+  },
+  {
+   "date": "2026-09-09",
+   "at_pkt": "2026-09-09 14:43",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Cancer",
+   "to": "Leo",
+   "text": "Moon enters Leo (Simha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-11",
+   "at_pkt": "2026-09-11 08:28",
+   "type": "new_moon",
+   "body": "Moon",
+   "sign": "Leo",
+   "sun_node_distance_deg": 19.67,
+   "text": "New Moon in Leo",
+   "importance": 2
+  },
+  {
+   "date": "2026-09-11",
+   "at_pkt": "2026-09-11 18:37",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Moon enters Virgo (Kanya)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-14",
+   "type": "conjunction",
+   "body": "Moon",
+   "with": "Venus",
+   "sign": "Libra",
+   "separation_deg": 0.67,
+   "text": "Moon conjunct Venus in Libra (0.67 deg apart)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-14",
+   "at_pkt": "2026-09-14 00:55",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Virgo",
+   "to": "Libra",
+   "text": "Moon enters Libra (Tula)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-16",
+   "at_pkt": "2026-09-16 10:18",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Libra",
+   "to": "Scorpio",
+   "text": "Moon enters Scorpio (Vrischika)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-17",
+   "at_pkt": "2026-09-17 06:56",
+   "type": "ingress",
+   "body": "Sun",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Sun enters Virgo (Kanya)",
+   "importance": 3
+  },
+  {
+   "date": "2026-09-18",
+   "at_pkt": "2026-09-18 15:22",
+   "type": "ingress",
+   "body": "Mars",
+   "from": "Gemini",
+   "to": "Cancer",
+   "text": "Mars enters Cancer (Karka)",
+   "importance": 3
+  },
+  {
+   "date": "2026-09-18",
+   "at_pkt": "2026-09-18 22:13",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Scorpio",
+   "to": "Sagittarius",
+   "text": "Moon enters Sagittarius (Dhanu)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-21",
+   "at_pkt": "2026-09-21 10:44",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Sagittarius",
+   "to": "Capricorn",
+   "text": "Moon enters Capricorn (Makara)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-23",
+   "at_pkt": "2026-09-23 21:26",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Capricorn",
+   "to": "Aquarius",
+   "text": "Moon enters Aquarius (Kumbha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-26",
+   "at_pkt": "2026-09-26 05:02",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Aquarius",
+   "to": "Pisces",
+   "text": "Moon enters Pisces (Meena)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-26",
+   "at_pkt": "2026-09-26 11:50",
+   "type": "ingress",
+   "body": "Mercury",
+   "from": "Virgo",
+   "to": "Libra",
+   "text": "Mercury enters Libra (Tula)",
+   "importance": 3
+  },
+  {
+   "date": "2026-09-26",
+   "at_pkt": "2026-09-26 21:50",
+   "type": "full_moon",
+   "body": "Moon",
+   "sign": "Pisces",
+   "sun_node_distance_deg": 35.68,
+   "text": "Full Moon in Pisces",
+   "importance": 2
+  },
+  {
+   "date": "2026-09-28",
+   "at_pkt": "2026-09-28 09:45",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Pisces",
+   "to": "Aries",
+   "text": "Moon enters Aries (Mesha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-09-30",
+   "at_pkt": "2026-09-30 12:43",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Aries",
+   "to": "Taurus",
+   "text": "Moon enters Taurus (Vrishabha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-02",
+   "at_pkt": "2026-10-02 15:10",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Taurus",
+   "to": "Gemini",
+   "text": "Moon enters Gemini (Mithuna)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-03",
+   "at_pkt": "2026-10-03 12:14",
+   "type": "station",
+   "body": "Venus",
+   "direction": "retrograde",
+   "sign": "Libra",
+   "text": "Venus stations retrograde in Libra",
+   "importance": 3
+  },
+  {
+   "date": "2026-10-04",
+   "at_pkt": "2026-10-04 18:01",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Gemini",
+   "to": "Cancer",
+   "text": "Moon enters Cancer (Karka)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-06",
+   "type": "conjunction",
+   "body": "Moon",
+   "with": "Jupiter",
+   "sign": "Cancer",
+   "separation_deg": 0.09,
+   "text": "Moon conjunct Jupiter in Cancer (0.09 deg apart)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-06",
+   "at_pkt": "2026-10-06 21:46",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Cancer",
+   "to": "Leo",
+   "text": "Moon enters Leo (Simha)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-07",
+   "type": "conjunction",
+   "body": "Mercury",
+   "with": "Venus",
+   "sign": "Libra",
+   "separation_deg": 0.56,
+   "text": "Mercury conjunct Venus in Libra (0.56 deg apart)",
+   "importance": 2
+  },
+  {
+   "date": "2026-10-09",
+   "at_pkt": "2026-10-09 02:47",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Leo",
+   "to": "Virgo",
+   "text": "Moon enters Virgo (Kanya)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-10",
+   "at_pkt": "2026-10-10 20:51",
+   "type": "new_moon",
+   "body": "Moon",
+   "sign": "Virgo",
+   "sun_node_distance_deg": 50.16,
+   "text": "New Moon in Virgo",
+   "importance": 2
+  },
+  {
+   "date": "2026-10-11",
+   "at_pkt": "2026-10-11 09:33",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Virgo",
+   "to": "Libra",
+   "text": "Moon enters Libra (Tula)",
+   "importance": 1
+  },
+  {
+   "date": "2026-10-13",
+   "at_pkt": "2026-10-13 18:41",
+   "type": "ingress",
+   "body": "Moon",
+   "from": "Libra",
+   "to": "Scorpio",
+   "text": "Moon enters Scorpio (Vrischika)",
+   "importance": 1
+  }
+ ],
+ "note": "Computed, not recalled: every date here is derived from first principles so no agent has to remember one. Astrology is a research lens on this desk, not a signal source \u2014 it never generates or gates a trade setup, and every astro read is scored like a broker call."
+}

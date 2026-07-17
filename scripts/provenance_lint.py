@@ -33,8 +33,13 @@ fails, warns = [], []
 RENDERED = [
     "daily_read.json", "macro.json", "rooms.json", "explainer.json", "fairvalue.json",
     "research_index.json", "leaderboard.json", "broker_scorecard.json", "dashboard.json",
-    "legal.json",
+    "legal.json", "astro.json",
 ]
+
+# The astro pillar's whole defence is that its dates are COMPUTED, never recalled (CLAUDE.md
+# Rule 2). A degraded or silently-wrong ephemeris must not reach users wearing the same
+# confident face as a good one, so it is checked here rather than trusted.
+AYANAMSA_RANGE = (23.5, 25.0)   # Lahiri drifts ~50"/yr: ~24.2 deg now, this band holds for decades
 
 # Unambiguous stub markers only — deliberately excludes common legit words (example/test/sample
 # on their own) to avoid false positives. These have no business in rendered data.
@@ -113,6 +118,32 @@ def main():
             elif dev >= STALE_WARN_PCT:
                 warns.append(f"rooms.json[{sym}]: house view {dev:.0f}% stale vs current close "
                              f"(computed at Rs {p_sess}, now Rs {p_now}) — refresh soon")
+
+    # 4) astro: the ephemeris must be live, self-consistent, and sane — never a confident-looking stub
+    astro = load("astro.json")
+    if astro is not None:
+        if astro.get("status") != "ok":
+            warns.append(f"astro.json: status '{astro.get('status')}' ({astro.get('error')}) — "
+                         f"the astro lens will show as unavailable rather than wrong")
+        else:
+            ayan = (astro.get("system") or {}).get("ayanamsa_deg")
+            if not isinstance(ayan, (int, float)) or not (AYANAMSA_RANGE[0] <= ayan <= AYANAMSA_RANGE[1]):
+                fails.append(f"astro.json: ayanamsa {ayan} is outside the sane Lahiri band "
+                             f"{AYANAMSA_RANGE} — every sidereal position on the site would be wrong")
+            pos = astro.get("positions") or {}
+            missing = [b for b in ("Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn",
+                                   "Rahu", "Ketu") if b not in pos]
+            if missing:
+                fails.append(f"astro.json: missing grahas {missing} — the nine-graha set is what the "
+                             f"desk claims to compute")
+            # Ketu is Rahu's exact opposite: the cheapest possible check that the maths is intact
+            r, k = (pos.get("Rahu") or {}).get("lon"), (pos.get("Ketu") or {}).get("lon")
+            if isinstance(r, (int, float)) and isinstance(k, (int, float)):
+                if abs(((r - k) % 360) - 180) > 0.01:
+                    fails.append(f"astro.json: Rahu {r} and Ketu {k} are not 180 deg apart — "
+                                 f"the node computation is broken")
+            if not (astro.get("events") or []):
+                warns.append("astro.json: no events in the window — expected several per quarter")
 
     # report
     print("PSX Trade Desk - provenance/accuracy lint")
