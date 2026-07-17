@@ -1112,6 +1112,13 @@ function openBirthWizard() {
   renderBirthWizard();
 }
 function bwClose() { document.querySelector(".bw-overlay")?.remove(); }
+async function clearBirthData() {
+  if (!me) return;
+  if (!confirm("Remove your birth details and chart? You can add them again any time.")) return;
+  myProfile = { ...(myProfile || {}), birth_data: null, natal_chart: null };
+  await saveProfile({ birth_data: null, natal_chart: null });
+  if (typeof pageSettings === "function") pageSettings();
+}
 function bwNext() { if (_bw.step < BW_STEPS.length - 1) { _bw.step++; renderBirthWizard(); } }
 function bwBack() { if (_bw.step > 0) { _bw.step--; renderBirthWizard(); } }
 function bwSet(k, v) { _bw.data[k] = v; }
@@ -1186,6 +1193,14 @@ async function wireCityCombo() {
 
 async function renderBirthCast(ov) {
   const d = _bw.data;
+  // compute the chart UP FRONT (it's fast, <100ms) so the success reveal has real values to show
+  // and myProfile is set the instant the loader lands — the loader is theatre over ready data.
+  const cast = await computeNatal(d);
+  const castErr = cast.error || null;
+  if (!castErr) {
+    myProfile = { ...(myProfile || {}), birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } };
+    saveProfile({ birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } });   // persist in background
+  }
   const steps = [
     `Placing the nine grahas — sidereal, Lahiri ayanamsa`,
     d.time_known === false ? `Reading from your Moon sign — the minute is unknown, so no rising sign is invented` : `Rising sign from ${esc(d.place)} at ${esc(d.time)}`,
@@ -1197,15 +1212,28 @@ async function renderBirthCast(ov) {
     sym: "", kicker: "Casting your chart", title: "Reading the market against your stars",
     sub: "Real sidereal math on your birth chart, then the tradition's compatibility techniques across every name on the exchange.",
     steps, flagKey: null,
-    onReveal: async () => {
-      const chart = await computeNatal(d);
-      if (!chart.error) await saveProfile({ birth_data: d, natal_chart: chart, astro_prefs: { goal: d.goal } });
-    },
-    onClose: () => { bwClose(); if (location.hash.replace(/^#\/?/, "").startsWith("mychart")) pageMyChart(); else location.hash = "#/mychart"; },
+    // the ONE exit: navigate to the reading (myProfile already holds the chart)
+    onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("mychart")) pageMyChart(); else location.hash = "#/mychart"; },
     renderReveal: (bodyEl) => {
-      bodyEl.innerHTML = `<div class="rp-reveal"><div class="rp-reveal-head"><b>Your chart is cast</b><span>the market, read against your stars</span></div>
-        <div class="empty" style="padding:20px">Opening your reading…</div></div>`;
-      setTimeout(() => { bwClose(); location.hash = "#/mychart"; }, 900);
+      if (castErr) {
+        bodyEl.innerHTML = `<div class="rp-reveal"><div class="rp-reveal-head"><b>Couldn't cast the chart</b><span>${esc(castErr)}</span></div>
+          <div class="empty" style="padding:16px">Check your birth date is between 1950 and 2035, then try again.</div>
+          <div class="rp-reveal-foot"><span></span><span class="rp-foot-btns"><button class="rp-btn2" onclick="this.closest('.replay-overlay').querySelector('.replay-x').click();openBirthWizard()">Edit details</button></span></div></div>`;
+        return;
+      }
+      const moon = cast?.grahas?.Moon, cur = cast?.dasha?.current;
+      bodyEl.innerHTML = `<div class="rp-reveal cast-done">
+        <div class="cast-tick">✓</div>
+        <h2 class="cast-h">Your chart is cast, and the market is matched.</h2>
+        <p class="cast-p">The desk placed your nine grahas${moon ? `, found your Moon in <b>${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>` : ""}${cur ? `, balanced your <b>${esc(cur.lord)}</b> period` : ""}, and read all 104 PSX names against your stars.</p>
+        <div class="cast-stats">
+          <div><span>${moon ? esc(moon.sign) : "—"}</span><i>your Moon sign</i></div>
+          <div><span>${cur ? esc(cur.lord) : "—"}</span><i>your current period</i></div>
+          <div><span>104</span><i>names matched</i></div>
+        </div>
+        <button class="bw-go cast-go" onclick="this.closest('.replay-overlay').querySelector('.replay-x').click()">See my reading →</button>
+        <p class="cast-note">Astrological exploration, not advice. Saved privately to your account — edit any time in Settings.</p>
+      </div>`;
     },
   });
   ov.remove();
@@ -2515,8 +2543,25 @@ async function pageSettings() {
   const freqBtn = (v, label) => `<button class="seg-opt ${freq === v ? "on" : ""}" onclick="saveDigest({frequency:'${v}'})">${label}</button>`;
   const incRow = (key, label) => `<label class="chk-row"><input type="checkbox" ${inc[key] ? "checked" : ""} onchange="toggleDigestInc('${key}')"> <span>${label}</span></label>`;
 
+  const bd = birthData();
+  const birthRow = (l, v) => `<div class="bd-row"><span>${l}</span><b>${esc(v || "—")}</b></div>`;
+
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Settings</h2><div class="ln"></div><span class="pill">${esc(me.email || "")}</span></div>
+
+  <div class="seg"><h2>Your birth details</h2><div class="ln"></div><span class="pill">${bd ? "on file" : "not set"}</span></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:12px">The date, time and place that cast your chart on <a href="#/mychart" style="color:var(--accent)">Your Chart</a>. Made a mistake? Edit it and the desk recasts everything. Private to your account.</p>
+    ${bd ? `<div class="bd-grid">
+      ${birthRow("Date", bd.date)}
+      ${birthRow("Time", bd.time_known === false ? "unknown (read from Moon)" : bd.time)}
+      ${birthRow("Place", bd.place)}
+      ${birthRow("UTC offset", bd.tz != null ? (bd.tz >= 0 ? "+" : "") + bd.tz : "—")}
+    </div>
+    <div class="bd-bar"><button class="note-save" onclick="openBirthWizard()">Edit birth details</button>
+      <button class="bd-clear" onclick="clearBirthData()">Remove</button></div>`
+    : `<button class="note-save" onclick="openBirthWizard()">Add my birth details</button>`}
+  </div>
 
   <div class="seg"><h2>Your digest</h2><div class="ln"></div></div>
   <div class="card">
