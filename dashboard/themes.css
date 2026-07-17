@@ -149,6 +149,7 @@ body[data-theme=gemini] tr:hover td{background:var(--panel2)}
 body[data-theme=gemini] .pill{background:transparent;color:var(--ink1);border:1px solid var(--line);border-radius:0;font-weight:700;padding:2px 8px;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
 body[data-theme=gemini] .pill.ok{background:var(--up);color:#fff;border-color:var(--up)}
 body[data-theme=gemini] .pill.bad{background:var(--dn);color:#fff;border-color:var(--dn)}
+body[data-theme=gemini] .pill.wait{background:var(--ink1);color:#f4f4f0;border-color:var(--ink1)}
 body[data-theme=gemini] .tag{background:transparent;color:var(--ink2);border:1px solid var(--hair);border-radius:0;padding:1px 7px;font-weight:600;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase}
 body[data-theme=gemini] .ranges button{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:4px 11px;color:var(--ink1);font-weight:600;font-size:11.5px;transition:.1s;font-family:var(--font-body)}
 body[data-theme=gemini] .ranges button:hover{background:var(--panel2)}
@@ -455,6 +456,30 @@ body[data-theme=gemini] .rp-strat-top{display:flex;align-items:flex-start;gap:13
 body[data-theme=gemini] .rp-strat-rank{flex:none;font-family:"Pixelify Sans",var(--mono,monospace);font-size:26px;font-weight:700;line-height:1;color:var(--up)}
 body[data-theme=gemini] .rp-strat-top b{font-size:15px}
 @media(max-width:720px){body[data-theme=gemini] .replay-body{padding:15px;min-height:320px}body[data-theme=gemini] .replay-kicker{display:none}body[data-theme=gemini] .rp-desk{grid-template-columns:1fr}}
+/* The Signal Stack — every lens in one grammar: lean · conviction · why */
+body[data-theme=gemini] .sigstack{padding:0}
+body[data-theme=gemini] .sig-row{display:grid;grid-template-columns:132px 116px 118px 1fr;gap:12px;align-items:baseline;padding:11px 15px;border-bottom:1px solid var(--hair)}
+body[data-theme=gemini] .sig-lens{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+body[data-theme=gemini] .sig-chip{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:1.5px solid var(--line);padding:3px 8px;justify-self:start;white-space:nowrap}
+body[data-theme=gemini] .sig-chip.up{color:var(--up);border-color:var(--up)}
+body[data-theme=gemini] .sig-chip.dn{color:var(--dn);border-color:var(--dn)}
+body[data-theme=gemini] .sig-chip.lock{background:var(--ink1);color:#f4f4f0;border-color:var(--ink1)}
+body[data-theme=gemini] .sig-conv{font-size:11px;color:var(--ink3);white-space:nowrap}
+body[data-theme=gemini] .sig-note{font-size:12.5px;color:var(--ink2);line-height:1.5;min-width:0}
+body[data-theme=gemini] .sig-row.locked{cursor:pointer}
+body[data-theme=gemini] .sig-row.locked .sig-note{color:var(--ink3)}
+body[data-theme=gemini] .sig-conf{display:grid;grid-template-columns:132px 1fr;gap:12px;align-items:baseline;padding:12px 15px;background:var(--panel2,var(--panel))}
+body[data-theme=gemini] .sig-conf .sig-note{font-size:13px;color:var(--ink1)}
+body[data-theme=gemini] .sig-locknote{color:var(--ink3);font-size:12px}
+@media(hover:hover){body[data-theme=gemini] .sig-row.locked:hover{background:var(--hair)}}
+body[data-theme=gemini] .sig-row.locked:active{transform:scale(.995)}
+@media(max-width:720px){
+  body[data-theme=gemini] .sig-row{grid-template-columns:1fr auto;gap:5px 10px;padding:11px 13px}
+  body[data-theme=gemini] .sig-chip{grid-row:1;grid-column:2;justify-self:end}
+  body[data-theme=gemini] .sig-conv{grid-row:2;grid-column:2;text-align:right}
+  body[data-theme=gemini] .sig-note{grid-row:2;grid-column:1}
+  body[data-theme=gemini] .sig-conf{grid-template-columns:1fr;gap:4px;padding:12px 13px}
+}
 /* Strategies page — your board (tiles + add) */
 body[data-theme=gemini] .sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 body[data-theme=gemini] .sb-tile{position:relative;display:flex;flex-direction:column;gap:5px;border:1.5px solid var(--line);background:var(--panel2,var(--panel));padding:13px 15px;min-height:104px;font:inherit;color:var(--ink1);text-align:left}

@@ -458,14 +458,18 @@ async function pageStrategies() {
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
 
   // ---- your board: pick stocks, run the whole library across them ----
+  // Nothing is revealed on adding — a stock sits "waiting for a run" until the library
+  // actually runs on it. The work has to be seen to be worth anything.
   const board = stratBoard();
-  const ran = (() => { try { return !!sessionStorage.getItem("stratboardran"); } catch (e) { return false; } })();
+  const pending = board.filter(s => !stratRunOn(s));
+  const anyRan = board.some(stratRunOn);
   const provenCount = s => (smap?.tickers?.[s] || []).length;
-  const tiles = board.map(s => `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
+  const tiles = board.map(s => { const ranS = stratRunOn(s);
+    return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
       <button class="sb-x" data-sbdel="${esc(s)}" title="Remove ${esc(s)} from the board" aria-label="remove ${esc(s)}">✕</button>
       <b>${esc(s)}</b><span class="sb-nm">${esc((names[s]?.name || "").slice(0, 24))}</span>
-      <span class="pill ${ran && provenCount(s) ? "ok" : ""}">${ran ? provenCount(s) + " of " + nStrat + " proven" : "on the board"}</span>
-    </div>`).join("");
+      <span class="pill ${ranS && provenCount(s) ? "ok" : ranS ? "" : "wait"}">${ranS ? provenCount(s) + " of " + nStrat + " proven" : "waiting for a run"}</span>
+    </div>`; }).join("");
   const addTile = `<div class="sb-tile sb-add">
       <span class="sk">Add a stock</span>
       <input id="sb-tkr" class="ph-in" list="sb-syms" placeholder="e.g. FFC" autocomplete="off" onkeydown="if(event.key==='Enter')addBoardTicker()">
@@ -473,24 +477,29 @@ async function pageStrategies() {
       <datalist id="sb-syms">${Object.keys(names).map(s => `<option value="${s}">`).join("")}</datalist>
     </div>`;
 
-  const runBar = board.length ? `<button class="run-desk run-strat ${ran ? "ran" : ""}" onclick="playBoardRun()">
+  const runBar = pending.length ? `<button class="run-desk run-strat" onclick="playBoardRun()">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>Run the strategy library on your ${board.length} stock${board.length > 1 ? "s" : ""}</b><i>Backtests all ${nStrat} of the desk's strategies across ${board.length === 1 ? "its" : "each stock's"} ~19-year history — costs included, out-of-sample checked — then ranks every stock–strategy pair that survived.</i></span>
-    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">${ran ? "Run again ›" : "Run ›"}</span></span>
+    <span class="run-txt"><b>Run the strategy library on ${anyRan ? `your ${pending.length} new stock${pending.length > 1 ? "s" : ""}` : `your ${board.length} stock${board.length > 1 ? "s" : ""}`}</b><i>Backtests all ${nStrat} of the desk's strategies across ${pending.length === 1 ? "its" : "each stock's"} ~19-year history — costs included, out-of-sample checked — then ranks every stock–strategy pair that survived.</i></span>
+    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">Run ›</span></span>
+  </button>` : board.length ? `<button class="run-desk run-strat ran" onclick="playBoardRun()">
+    <span class="run-ico">▶</span>
+    <span class="run-txt"><b>Run the strategy library again on your ${board.length} stock${board.length > 1 ? "s" : ""}</b><i>The desk re-backtests all ${nStrat} strategies across every stock on your board and re-ranks what survives. Worth re-running as the library and the price history move on.</i></span>
+    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">Run again ›</span></span>
   </button>` : "";
 
-  // ---- results: per board stock, its proven strategies (revealed by running the library) ----
-  const results = !board.length ? "" : !ran
-    ? `<div class="card"><div class="empty">Your results land here — hit <b>Run ›</b> above and the desk backtests all ${nStrat} strategies on every stock on your board, then ranks what actually held up.</div></div>`
-    : board.map(s => {
-      const list = smap?.tickers?.[s] || [];
-      return `<div class="card" style="padding:0"><div class="sb-res-head clickable" onclick="location.hash='#/ticker/${esc(s)}'"><b>${esc(s)}</b><span class="sub">${esc((names[s]?.name || "").slice(0, 30))}</span><span class="pill ${list.length ? "ok" : ""}">${list.length} proven</span></div>
+  // ---- results: per board stock. A stock shows NOTHING until the library has actually run on it. ----
+  const results = !board.length ? "" : board.map(s => {
+    const list = smap?.tickers?.[s] || [];
+    const head = `<div class="sb-res-head clickable" onclick="location.hash='#/ticker/${esc(s)}'"><b>${esc(s)}</b><span class="sub">${esc((names[s]?.name || "").slice(0, 30))}</span><span class="pill ${stratRunOn(s) ? (list.length ? "ok" : "") : "wait"}">${stratRunOn(s) ? list.length + " proven" : "not run yet"}</span></div>`;
+    if (!stratRunOn(s)) return `<div class="card" style="padding:0">${head}
+      <div class="empty" style="padding:14px 17px">The desk hasn't run the library on <b>${esc(s)}</b> yet — hit <b>Run ›</b> above and it backtests all ${nStrat} strategies across ${esc(s)}'s own ~19 years of price history, then shows what actually held up right here.</div></div>`;
+    return `<div class="card" style="padding:0">${head}
       ${list.length ? `<table><thead><tr><th>Strategy</th><th class="r">Win rate</th><th class="r">Avg net/trade</th><th class="r">Trades</th><th class="r">Out-of-sample</th></tr></thead><tbody>${
         list.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td>
           <td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td>
           <td class="r num">${t.n}</td><td class="r num">${t.oos_hit != null ? Math.round(t.oos_hit * 100) + "% · n" + t.oos_n : "—"}</td></tr>`).join("")}</tbody></table>`
         : `<div class="empty" style="padding:14px 17px">No strategy cleared the bar on ${esc(s)} — none held win rate ≥55%, positive expectancy after costs, AND out-of-sample. The desk wouldn't signal it. That's a finding, not a gap.</div>`}</div>`;
-    }).join("");
+  }).join("");
 
   // ---- the dictionary: every strategy the desk runs, in plain English ----
   const dict = `<details class="dict"><summary><b>What's in the library</b><span class="sub">every strategy the desk runs, and how each one works</span><span class="dict-arrow">▾</span></summary>
@@ -625,11 +634,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
@@ -768,12 +777,13 @@ async function pageTicker(sym, _retry = 0) {
   const daysToEarn = nextEarn ? daysTo(nextEarn.date) : null;
   const hvRoom = room && room.house_view ? room.house_view : null;
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
-  const summaryStrip = `<div class="sumstrip">
+  // hard facts only — the lens verdicts live in the Signal Stack, and the desk's own view stays
+  // behind its run (a tile here would spoil it)
+  const summaryStrip = `<div class="sumstrip" style="grid-template-columns:repeat(4,1fr)">
     ${sTile("Fair value vs price", fv ? `Rs ${fmt(fv.composite_fair)}` : "—", fv ? `price Rs ${fmt(fv.price)} · ${sgn(fv.mispricing_pct)}%` : "model n/a", fv ? (fv.verdict === "undervalued" ? "up" : fv.verdict === "overvalued" ? "dn" : "") : "")}
-    ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
+    ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed", mixed: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
     ${sTile("Risk grade", rg, vr != null ? `volatility ${vr.toFixed(0)}/100` : "liquidity " + liq, rgk === "hi" ? "dn" : rgk === "lo" ? "up" : "")}
     ${sTile("Next event", nextEarn ? "Results" : "—", nextEarn ? `${nextEarn.date}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
-    ${sTile("House view", hvRoom ? `${esc(hvRoom.conviction || "—")} conviction` : "In queue", hvRoom ? "AI desk · run it below ↓" : "not yet covered", "")}
   </div>`;
 
   // ---- private per-ticker note (only you can see it) ----
@@ -798,12 +808,87 @@ async function pageTicker(sym, _retry = 0) {
     <div class="card"><div class="empty">Run the desk on ${esc(sym)} — use the <b>Run ›</b> button near the top ↑. Once it finishes, the full analyst debate and house view appear right here.</div></div>`;
 
   // ---- "run the strategy library" bar: gates the backtest results the same way ----
-  const stratRan = (() => { try { return !!sessionStorage.getItem("stratran:" + sym); } catch (e) { return false; } })();
+  const stratRan = stratRunOn(sym);
   const runStratBar = `<button class="run-desk run-strat ${stratRan ? "ran" : ""}" onclick="playStrategyRun('${esc(sym)}')">
     <span class="run-ico">▶</span>
     <span class="run-txt"><b>Run the strategy library on ${esc(sym)}</b><i>Backtest all ${bt?.n_strategies ?? 52} of the desk's strategies across ${esc(sym)}'s ~19-year history and see which actually held up — win rate, expectancy, out-of-sample.</i></span>
     <span class="run-meta"><span class="run-go">${stratRan ? "Run again ›" : "Run ›"}</span></span></button>`;
   const stratStub = `<div class="card"><div class="empty">Run the strategy library on ${esc(sym)} — the <b>Run ›</b> button above ↑. It backtests all ${bt?.n_strategies ?? 52} strategies on ${esc(sym)}'s history and shows which ones held up here.</div></div>`;
+
+  /* ---- The Signal Stack: every lens the desk has on this name, in ONE grammar
+     (lean · conviction · why), so they can be read against each other in five seconds.
+     Every lean is computed mechanically from the data layer — nothing here is invented,
+     and the note always names exactly what drove it. Lenses the user hasn't run stay
+     locked, because the desk's own view is worth watching happen. ---- */
+  const liveSig = ((sigAll?.active) || []).find(s => s.ticker === sym);
+  const stanceVal = s => /constructive|positive|bullish/i.test(s || "") ? 1 : /cautious|negative|bearish/i.test(s || "") ? -1 : 0;
+  const leanChip = n => n > 0 ? { k: "up", v: "Bullish" } : n < 0 ? { k: "dn", v: "Bearish" } : { k: "", v: "Neutral" };
+
+  // 1. Charts (quant layer — booleans straight off the indicator file)
+  const taLean = (q.above_sma20 ? 1 : -1) + (q.above_sma50 ? 1 : -1);
+  const rsiTxt = q.rsi14 != null ? `RSI14 ${q.rsi14.toFixed(0)}${q.rsi14 >= 70 ? " overbought" : q.rsi14 <= 30 ? " oversold" : ""}` : "RSI n/a";
+  const taLens = { ...leanChip(taLean), conv: Math.abs(taLean) === 2 ? "medium" : "low",
+    note: `${q.above_sma50 ? "above" : "below"} SMA50 · ${q.above_sma20 ? "above" : "below"} SMA20 · ${rsiTxt} · 20-day ${sgn(q.ret_20d)}%` };
+
+  // 2. Value (fair-value composite, corroborated by the business scorecard)
+  const fvLean = fv ? (fv.verdict === "undervalued" ? 1 : fv.verdict === "overvalued" ? -1 : 0) : 0;
+  const fsLean = fsc ? (fsc.rating === "attractive" ? 1 : fsc.rating === "caution" ? -1 : 0) : 0;
+  const fscWord = fsc ? ({ attractive: "stronger", caution: "weaker" }[fsc.rating] || "mixed") + " scorecard" : "not scored";
+  const faLens = !fv ? { k: "", v: "No model", conv: "", note: "The fair-value model can't price this name — earnings data is missing or negative." }
+    : { ...leanChip(fvLean), v: fvLean > 0 ? "Bullish" : fvLean < 0 ? "Bearish" : "Fair",
+      conv: fvLean !== 0 && fsLean === fvLean ? "high" : fvLean !== 0 ? "medium" : "low",
+      note: `${Math.abs(fv.mispricing_pct)}% ${fv.mispricing_pct > 0 ? "below" : "above"} the model's blended fair value · ${fscWord}` };
+
+  // 3. The Desk Room (gated — the debate is the product)
+  const taSt = room?.ta_memo?.technical_stance, faSt = room?.fa_memo?.fundamental_stance;
+  const deskLean = stanceVal(taSt) + stanceVal(faSt);
+  const roomLens = !hvRoom ? { k: "", v: "In queue", conv: "", note: `${esc(sym)} hasn't been through the Desk Room yet — the analysts cover names in rotation, and results or high-impact news jump the queue.` }
+    : !deskRan ? { locked: true, run: `playDeskReplay('${esc(sym)}')`, note: "A chartist, a fundamentalist, a bull and a bear argue it out; the Chair settles it. Run the desk to see where they land." }
+      : { ...leanChip(deskLean), v: deskLean > 0 ? "Bullish" : deskLean < 0 ? "Bearish" : "Split",
+        conv: hvRoom.conviction || "", note: `charts ${esc(taSt || "—")} · fundamentals ${esc(faSt || "—")}${hvRoom.ta_fa_alignment ? " · the two desks " + esc(String(hvRoom.ta_fa_alignment).replace(/_/g, " ")) : ""}` };
+
+  // 4. Strategies (gated — directional only when a proven rule is actually firing today)
+  const topProven = proven[0];
+  const stratLens = !stratRan ? { locked: true, run: `playStrategyRun('${esc(sym)}')`, note: `Backtest all ${bt?.n_strategies ?? 52} of the desk's strategies on ${esc(sym)}'s own ~19 years and see which held up.` }
+    : liveSig ? { k: "up", v: "Firing now", conv: esc(liveSig.confidence || "medium"),
+      note: `${esc(liveSig.template)} triggered today · won ${Math.round((liveSig.backtest?.hit_rate || 0) * 100)}% over ${liveSig.backtest?.n} past trades on ${esc(sym)}` }
+      : proven.length ? { k: "", v: "Edge, not firing", conv: "",
+        note: `${proven.length} rule set${proven.length > 1 ? "s have" : " has"} held up here — ${esc(topProven.name)} leads (${Math.round(topProven.hit_rate * 100)}% win, ${sgn(topProven.net_expectancy_pct)}%/trade) — but none is triggering today.` }
+        : { k: "", v: "No edge", conv: "", note: `Not one of the ${bt?.n_strategies ?? 52} strategies cleared the bar on ${esc(sym)}'s history. That's a finding, not a gap.` };
+
+  // 5. Brokers (public calls on the record — evidence to weigh, and every one of them is scored)
+  const brokDir = brokerClaims.map(c => c.claim?.direction).filter(Boolean);
+  const brokUp = brokDir.filter(d => /up|buy|overweight/i.test(d)).length;
+  const brokDn = brokDir.filter(d => /down|sell|underweight/i.test(d)).length;
+  const brokLens = !brokerClaims.length ? { k: "", v: "None on record", conv: "", note: "No PSX research house has a public call on this name in the desk's log." }
+    : { ...leanChip(brokUp - brokDn), conv: brokerClaims.length >= 3 ? "medium" : "low",
+      note: `${brokUp} positive · ${brokDn} negative of ${brokerClaims.length} on record — latest: ${esc(brokerClaims[brokerClaims.length - 1].source)}${brokerClaims[brokerClaims.length - 1].claim?.target_price ? ", target Rs " + fmt(brokerClaims[brokerClaims.length - 1].claim.target_price) : ""}` };
+
+  const LENSES = [
+    ["Charts · TA", taLens], ["Value · FA", faLens], ["The Desk Room", roomLens],
+    ["Strategies", stratLens], ["Brokers", brokLens],
+  ];
+  // confluence counts only lenses that are BOTH revealed and directional — an honest denominator
+  const revealed = LENSES.filter(([, o]) => !o.locked && (o.k === "up" || o.k === "dn"));
+  const bullN = revealed.filter(([, o]) => o.k === "up").length, bearN = revealed.filter(([, o]) => o.k === "dn").length;
+  const lockedN = LENSES.filter(([, o]) => o.locked).length;
+  const oneWay = (n, word, k) => n === 1
+    ? `<b class="${k}">The only lens that leans, leans ${word}.</b> One lens is a hint, not a case.`
+    : `<b class="${k}">All ${n} lenses that lean, lean ${word}.</b> Agreement is not proof — they can be wrong together.`;
+  const confTxt = !revealed.length ? `Nothing leans either way yet${lockedN ? ` — ${lockedN} lens${lockedN > 1 ? "es are" : " is"} still unrun` : ""}.`
+    : bullN && !bearN ? oneWay(bullN, "bullish", "up")
+      : bearN && !bullN ? oneWay(bearN, "bearish", "dn")
+        : `<b>${bullN} bullish vs ${bearN} bearish</b> — the lenses disagree. That's information: the case isn't settled.`;
+  const sigRow = (lens, o) => o.locked
+    ? `<div class="sig-row locked clickable" onclick="${o.run}"><span class="sig-lens">${lens}</span>
+        <span class="sig-chip lock">▶ Run to reveal</span><span class="sig-conv"></span><span class="sig-note">${o.note}</span></div>`
+    : `<div class="sig-row"><span class="sig-lens">${lens}</span>
+        <span class="sig-chip ${o.k}">${o.v}</span><span class="sig-conv">${o.conv ? esc(o.conv) + " conviction" : ""}</span><span class="sig-note">${o.note}</span></div>`;
+  const sigStack = `<div class="seg" style="margin-top:2px"><h2>The Signal Stack</h2><div class="ln"></div><span class="pill">every lens · one view</span></div>
+    <div class="card sigstack">
+      ${LENSES.map(([n, o]) => sigRow(n, o)).join("")}
+      <div class="sig-conf"><span class="sig-lens">Confluence</span><span class="sig-note">${confTxt}${lockedN ? ` <span class="sig-locknote">${lockedN} lens${lockedN > 1 ? "es" : ""} still to run.</span>` : ""}</span></div>
+    </div>`;
   const stratCards = `<div class="card"><div class="sub">Of the desk's ${bt?.n_strategies ?? 52} tested strategies, these cleared the bar on ${sym}'s own ~19-year history — win rate ≥55%, positive expectancy after costs, AND still profitable in the unseen last third (out-of-sample). This is what actually worked here, not theory.</div>
     ${proven.length ? `<table><thead><tr><th>Strategy</th><th>Type</th><th class="r">Win rate</th><th class="r">Avg net/trade</th><th class="r">Trades</th><th class="r">Out-of-sample</th></tr></thead><tbody>${
       proven.map(t => `<tr><td><b>${esc(t.name)}</b></td><td><span class="tag">${esc(t.category.replace("_", " "))}</span></td>
@@ -819,8 +904,9 @@ async function pageTicker(sym, _retry = 0) {
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
-  ${summaryStrip}
+  ${sigStack}
   ${runDeskBar}
+  ${summaryStrip}
   ${glance}
   <div class="card">
     <div class="tk-head">
@@ -1176,7 +1262,8 @@ function runRevealModal(opts) {
   function reveal() {
     if (done) return;
     done = true; cancelAnimationFrame(raf);
-    try { sessionStorage.setItem(opts.flagKey, "1"); } catch (e) { /* private mode */ }
+    try { if (opts.flagKey) sessionStorage.setItem(opts.flagKey, "1"); } catch (e) { /* private mode */ }
+    if (opts.onReveal) opts.onReveal();
     opts.renderReveal(body, { runLoader });
     body.scrollTop = 0;
   }
@@ -1293,6 +1380,11 @@ async function playStrategyRun(sym) {
   });
 }
 
+/* Has the strategy library actually been run on this ticker this session? One flag, shared by the
+   ticker page and the board — running it in either place counts, so the product never contradicts
+   itself. Adding a stock to the board does NOT set it: the work has to be watched to mean anything. */
+function stratRunOn(sym) { try { return !!sessionStorage.getItem("stratran:" + sym); } catch (e) { return false; } }
+
 /* ---------- strategy board (profiles.strategy_board; session-only for guests) ---------- */
 function stratBoard() {
   if (me) return (myProfile && myProfile.strategy_board) || [];
@@ -1345,10 +1437,12 @@ async function playBoardRun() {
   ];
 
   runRevealModal({
-    sym: "", kicker: "Strategy library · your board", flagKey: "stratboardran",
+    sym: "", kicker: "Strategy library · your board",
     title: `Running ${nT} strategies on your ${board.length}-stock board`,
     sub: `Backtesting the desk's whole library across every stock on your board — costs included, then checked on data each strategy never saw — and ranking what actually held up.`,
     steps,
+    // per-ticker flags: only the stocks this run actually covered unlock — anywhere in the product
+    onReveal: () => { try { board.forEach(s => sessionStorage.setItem("stratran:" + s, "1")); } catch (e) { /* private mode */ } },
     onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("strategies")) pageStrategies(); },
     renderReveal: (bodyEl) => {
       bodyEl.innerHTML = `<div class="rp-reveal">
