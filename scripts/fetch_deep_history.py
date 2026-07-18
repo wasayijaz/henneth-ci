@@ -101,7 +101,9 @@ def main():
     sess.headers.update(UA)
 
     ok, failed, skipped = 0, [], 0
-    for sym in universe["symbols"]:
+    # tier filter: deep Yahoo history is slow per ticker and only the core names get backtested.
+    # Default to "core" so a universe file without tiers behaves exactly as before.
+    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
         dest = STATE / "history_deep" / f"{sym}.json"
         if dest.exists() and not refresh:
             skipped += 1

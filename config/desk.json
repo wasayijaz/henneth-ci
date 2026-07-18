@@ -19,6 +19,8 @@
     "kse100_top_n": 100,
     "_kse100_top_n_note": "full KSE100 (was 50 — excluded real constituents like KAPCO, breaking search/coverage for a product users expect to be complete). Deterministic layer is free regardless of size; only Room DEBATES are token-budgeted (config/room.json deep_dives_per_day), unaffected by this.",
     "include_kmi30": true,
+    "cover_all_listed": true,
+    "_cover_all_listed_note": "Adds every remaining KSE All Share constituent as tier=listed, so no listed company is invisible or unsearchable (BBFL was missing entirely). tier=core keeps the expensive analysis (deep history, backtests, Desk Room); tier=listed gets prices, quant, sector and dividends plus a real page. Scripts that are expensive per ticker MUST filter to tier==core.",
     "refresh_days": 7
   },
   "backtest": {

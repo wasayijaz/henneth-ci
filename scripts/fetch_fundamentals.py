@@ -50,7 +50,8 @@ def main():
     sess.headers.update(UA)
 
     out, failed = {}, []
-    for sym in universe["symbols"]:
+    # tier filter: one scrape per ticker; the long tail of listed names has no coverage upstream.
+    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
         try:
             data = scrape(sym, sess)
             if data:

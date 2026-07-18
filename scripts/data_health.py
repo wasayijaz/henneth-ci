@@ -19,7 +19,16 @@ def main():
         problems.append("universe.json missing")
         syms = []
     else:
-        syms = list(universe["symbols"])
+        # Measure coverage against TRADEABLE symbols only. The universe is the whole KSE All Share,
+        # whose constituent list includes PSX board counters that are not companies and never have
+        # a price series (…XD ex-dividend, …XB ex-bonus, …NC non-compliant). Counting those as
+        # "missing history" drove coverage to 82% and would have flipped health to degraded — which
+        # under CLAUDE.md Rule 6 halts all new signals. A false degradation is worse than none.
+        cov = load_json(STATE / "coverage.json", None)
+        if cov and cov.get("bars"):
+            syms = [s for s in universe["symbols"] if s in cov["bars"]]
+        else:
+            syms = list(universe["symbols"])
         upd = datetime.strptime(universe["updated"][:10], "%Y-%m-%d").date()
         if (date.today() - upd).days > 10:
             problems.append(f"universe stale ({universe['updated']})")

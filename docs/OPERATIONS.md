@@ -255,12 +255,34 @@ push refreshed data).
 
 ## 7. Universe coverage — what tickers the desk tracks
 
-`config/desk.json.universe` controls this. As of 2026-07-14: **full KSE100 (100) + full KMI30 (30),
-deduped ≈ 103 symbols** (`kse100_top_n: 100`). This was previously capped at `50` — top-50-by-weight only
-— which silently excluded real constituents (e.g. KAPCO, KSE100 rank #75) from search, the Board, and
-every page. If a ticker a user searches for is a genuine index constituent and still doesn't appear,
-check `state/universe.json.symbols` first (is it there?), then `config/desk.json.universe.kse100_top_n`
-(was it capped again?) — don't assume it's a search bug.
+`config/desk.json.universe` controls this. **As of 2026-07-19 the desk covers the WHOLE listed market
+in two tiers — 554 symbols total.** `state/universe.json` writes a `tier` onto every symbol:
+
+| tier | who | count | gets |
+|---|---|---|---|
+| `core` | KSE100 (top-N by weight) + full KMI30 | ~103 | the full pipeline — deep history, backtests, fundamentals, model fair value, signals, Desk Room debates |
+| `listed` | every remaining **KSE All Share (ALLSHR)** constituent | ~451 | prices, quant measures, sector, dividends, a real searchable page — but *not* the expensive per-ticker analysis |
+
+**Why two tiers:** covering only KSE100+KMI30 meant a genuine listed company (BBFL was the reported
+case) did not exist in the product at all — search found nothing and there was no page to land on.
+For a product users expect to be complete, an unsearchable listed company is a bug. But running 70
+strategies × 19 years, plus a Yahoo deep-history pull and a fundamentals scrape, across 554 names is
+not affordable per cycle. So: everything is *visible*, the core is *researched*, and the ticker page
+says which it is (`coverageNote` in `pageTicker`) rather than letting empty sections imply the desk
+looked and found nothing.
+
+**If you add a per-ticker script, decide its tier explicitly.** Cheap pure-math scripts (`quant.py`,
+`snapshot.py`, `compute_fairvalue.py`, `build_signals.py`, `data_health.py`) run across ALL symbols.
+Anything that hits the network per ticker, or is heavy compute, MUST filter:
+`[s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]`.
+Already filtered: `fetch_deep_history`, `backtest`, `fetch_fundamentals`, `predictability`,
+`fetch_intraday`, `astro_charts`. Rotation-bounded rather than core-only: `fetch_history`
+(`LISTED_PER_RUN=90`) and `fetch_dividends` (`LISTED_DIV_PER_RUN=60`) — core refreshes every run and
+the long tail rotates stalest-first, so a 554-symbol universe cannot outrun the 30-minute cron.
+
+If a ticker a user searches for still doesn't appear, check `state/universe.json.symbols` first (is
+it there?), then `config/desk.json.universe` (`cover_all_listed` still true? `kse100_top_n` capped?)
+— don't assume it's a search bug.
 
 **Cost note:** the deterministic layer (prices/quant/backtests) is free regardless of universe size —
 more tickers just means more (free) compute time. Only the Desk Room **debates** are token-budgeted

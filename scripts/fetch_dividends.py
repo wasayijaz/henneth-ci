@@ -61,14 +61,27 @@ def parse_rows(html: str, symbol: str) -> list[dict]:
     return out
 
 
+LISTED_DIV_PER_RUN = 60      # long-tail payout refresh budget per run (~35s at 0.35s each)
+
+
 def main():
     universe = load_json(STATE / "universe.json", {"symbols": {}})
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
+    prior = load_json(STATE / "dividends.json", {"history": []})
     sess = requests.Session()
     sess.headers.update(HEADERS)
 
     all_rows, failed = [], []
-    for sym in universe["symbols"]:
+    # Payout history is genuinely useful for every listed name, but one POST per symbol across
+    # 554 names is too slow for a 30-minute cycle. Core every run; the listed tail rotates
+    # stalest-first within a budget, so full coverage still arrives within a few cycles.
+    _syms = universe["symbols"]
+    _core = [s for s, m in _syms.items() if (m or {}).get("tier", "core") == "core"]
+    _listed = [s for s in _syms if s not in set(_core)]
+    _seen = {d.get("symbol") for d in (prior.get("history") or [])} if isinstance(prior, dict) else set()
+    _fresh = [s for s in _listed if s not in _seen]          # never fetched -> first in line
+    _rest = [s for s in _listed if s in _seen]
+    for sym in _core + (_fresh + _rest)[:LISTED_DIV_PER_RUN]:
         try:
             r = sess.post("https://dps.psx.com.pk/payouts", data={"symbol": sym}, timeout=20)
             rows = parse_rows(r.text, sym) if r.status_code == 200 else []

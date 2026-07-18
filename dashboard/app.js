@@ -2388,9 +2388,21 @@ async function pageTicker(sym, _retry = 0) {
       <td class="r">${provenIds.has(t.id) ? '<span class="pill ok">proven</span>' : '<span style="opacity:.45">rejected</span>'}</td></tr>`).join("")}</tbody></table></div>` : ""}
   ${renderTestLog(sym, allTested, stratLib, bt?.bars)}`;
 
+  /* Coverage honesty. The universe covers every KSE All Share constituent, but the expensive
+     analysis (deep backtests, fundamentals, fair value, Desk Room) runs only on the core tier.
+     Say that plainly on a wider-coverage name instead of letting empty sections imply the desk
+     looked and found nothing. */
+  const coverageNote = (u?.tier === "listed") ? `
+  <div class="tnote"><b>Wider-coverage name.</b> ${esc(sym)} is a listed PSX company outside the
+  KSE100 and KMI30, so the desk carries its <b>prices, quant measures, sector and payout history</b>
+  — but not the deep backtests, fundamental scores, model fair value or Desk Room debate it runs on
+  its core names. Sections that need those will say so rather than guess. The desk covers the whole
+  market so nothing is invisible; it does not pretend to research every name equally.</div>` : "";
+
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
+  ${coverageNote}
   ${sigStack}
   ${runDeskBar}
   ${summaryStrip}
@@ -4696,8 +4708,15 @@ setInterval(() => {
 let searchIndex = null;
 async function loadSearchIndex() {
   if (searchIndex) return searchIndex;
-  const uni = await j("universe.json");
-  searchIndex = Object.entries(uni?.symbols || {}).map(([s, v]) => ({ s, name: (v.name || "").toLowerCase(), disp: v.name || "" }));
+  // The universe is the whole KSE All Share (554), but that constituent list includes PSX board
+  // counters that are not tradeable companies (…XD ex-dividend, …XB ex-bonus, …NC non-compliant)
+  // and return no price series. coverage.json lists what actually has data — searching should find
+  // every real listed company and nothing that would dead-end on an empty page.
+  const [uni, cov] = await Promise.all([j("universe.json"), j("coverage.json")]);
+  const bars = cov?.bars || null;
+  searchIndex = Object.entries(uni?.symbols || {})
+    .filter(([s]) => !bars || bars[s])          // no coverage file yet -> fail open, show everything
+    .map(([s, v]) => ({ s, name: (v.name || "").toLowerCase(), disp: v.name || "" }));
   return searchIndex;
 }
 

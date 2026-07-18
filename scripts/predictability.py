@@ -92,7 +92,8 @@ def score_ticker(hist: list[dict]) -> dict | None:
 def main():
     universe = load_json(STATE / "universe.json", {"symbols": {}})
     out = {}
-    for sym in universe["symbols"]:
+    # tier filter: predictability scores feed signals, which only exist for core names.
+    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
         hist = load_json(STATE / "history" / f"{sym}.json", None)
         row = score_ticker(hist) if hist else None
         if row:

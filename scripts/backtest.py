@@ -77,7 +77,8 @@ def main():
 
     # preload histories once (deep preferred) and compute indicators ONCE per ticker
     inds = {}
-    for sym in universe["symbols"]:
+    # tier filter: 70 strategies x 19y is far too heavy to run across the whole listed market.
+    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
         deep = load_json(STATE / "history_deep" / f"{sym}.json", None)
         dps = load_json(STATE / "history" / f"{sym}.json", None)
         h = deep if (deep and len(deep) > len(dps or [])) else dps

@@ -36,7 +36,9 @@ def main():
     sess = requests.Session()
     sess.headers.update(HEADERS)
     ok = 0
-    for sym in universe["symbols"]:
+    # Intraday ticks only matter for names the desk actually watches trade-by-trade, and one
+    # request per symbol across 554 listed names would dominate the cycle. Core tier only.
+    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
         try:
             pts = fetch(sym, sess)
             if pts and len(pts) > 3:
