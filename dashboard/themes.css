@@ -62,6 +62,9 @@ body[data-theme=gemini]{
   --bg:#f4f4f0;--panel:#ffffff;--panel2:#faf9f4;
   --ink1:#0a0a0a;--ink2:#4a4a44;--ink3:#6b6b63;--line:#111111;--line2:#e7e6df;--surf:#f6f5f0;--hair:#d9d9d2;
   --up:#0b7a5f;--dn:#be4126;--accent:#0a0a0a;
+  /* amber: the "partly / needs attention" state between --up and --dn (traffic-light checklist,
+     X-ray rule flags). A third semantic colour the palette previously lacked. */
+  --warn:#c9922b;
   --font-body:"JetBrains Mono",ui-monospace,"Cascadia Mono",monospace;
   --font-head:"JetBrains Mono",monospace;
   --font-pixel:"Pixelify Sans","JetBrains Mono",monospace;
@@ -99,8 +102,11 @@ body[data-theme=gemini] .shell.collapsed .side-nav a span,body[data-theme=gemini
 body[data-theme=gemini] .shell.collapsed .side-nav a{justify-content:center;padding:10px 0;gap:0}
 body[data-theme=gemini] .shell.collapsed .side-group{margin-top:5px}
 body[data-theme=gemini] .main-col{flex:1;min-width:0;display:flex;flex-direction:column}
-body[data-theme=gemini] .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--panel);border-bottom:1.5px solid var(--line)}
-body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3)}
+/* The topbar is a SINGLE ROW that must never grow taller. Children may shrink or hide, never wrap:
+   #updated ("quant … · live …") used to wrap onto 4+ lines at 375px and stretch the header. */
+body[data-theme=gemini] .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--panel);border-bottom:1.5px solid var(--line);flex-wrap:nowrap;min-height:48px}
+body[data-theme=gemini] .topbar>*{flex:none}
+body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
 body[data-theme=gemini] .research-badge{margin-left:auto;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--hair);padding:2px 7px;white-space:nowrap}
 body[data-theme=gemini] .topbar .meta{margin-left:10px}
 @media(max-width:900px){body[data-theme=gemini] .research-badge{display:none}}
@@ -119,6 +125,13 @@ body[data-theme=gemini] .side-backdrop{display:none}
   body[data-theme=gemini] .side-open svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
   body[data-theme=gemini] .brand-mobile{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
   body[data-theme=gemini] .topbar #health,body[data-theme=gemini] .topbar #regime,body[data-theme=gemini] .topbar #georisk{display:none}
+  /* the data timestamps are the first thing to go on a phone — they wrapped and doubled the
+     header height. The same information is on every page footer. */
+  body[data-theme=gemini] .topbar .meta{display:none}
+  body[data-theme=gemini] .topbar{gap:6px;padding:6px 10px;min-height:44px}
+  body[data-theme=gemini] .topbar .brand-mobile{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1 1 auto}
+  body[data-theme=gemini] .topbar #mkt{max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body[data-theme=gemini] .acct-slot{margin-left:auto}
   body[data-theme=gemini] .shell.drawer .side-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:45}
 }
 body[data-theme=gemini] .grid-board{grid-template-columns:1.05fr 1.5fr 1.15fr;gap:var(--gap)}
@@ -633,14 +646,24 @@ body[data-theme=gemini] .mc-hero{display:flex;justify-content:center;gap:14px;co
 body[data-theme=gemini] .mychart-cta h2{font-size:22px;margin:0 0 10px}
 body[data-theme=gemini] .mychart-cta .sub{max-width:460px;margin:0 auto 16px;line-height:1.6}
 body[data-theme=gemini] .mc-chart-top{display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between}
-/* PSX index board */
-body[data-theme=gemini] .idx-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--hair);padding:1px}
-body[data-theme=gemini] .idx-cell{background:var(--panel);padding:11px 13px;display:flex;flex-direction:column;gap:2px}
-body[data-theme=gemini] .idx-cell .sk{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
-body[data-theme=gemini] .idx-cell b{font-family:"Pixelify Sans",var(--mono,monospace);font-size:19px;line-height:1.1}
-body[data-theme=gemini] .idx-cell i{font-family:"Pixelify Sans",var(--mono,monospace);font-size:12px;font-style:normal}
-body[data-theme=gemini] .idx-cell .sub{font-size:10.5px}
-@media(max-width:720px){body[data-theme=gemini] .idx-board{grid-template-columns:1fr 1fr}}
+/* PSX index board — one compact row. Label / number / change on a single line per index;
+   the descriptions live in the title attribute so the strip stays short. */
+/* 140px min lets all seven indices sit on one row at desktop instead of wrapping 6+1 */
+body[data-theme=gemini] .idx-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  border:1.5px solid var(--line);background:var(--hair);gap:1px}
+body[data-theme=gemini] .idx-cell{background:var(--panel);padding:9px 12px;display:flex;align-items:baseline;gap:7px;min-width:0}
+body[data-theme=gemini] .idx-k{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0}
+body[data-theme=gemini] .idx-cell b{font-family:"Pixelify Sans",var(--mono,monospace);font-size:15px;line-height:1;flex:none;color:var(--ink1)}
+/* NOT Pixelify: it is a numerals face and renders prose with broken ligatures */
+body[data-theme=gemini] .idx-cell i{font-size:10px;font-style:normal;flex:none;font-family:"Pixelify Sans",var(--mono,monospace)}
+body[data-theme=gemini] .idx-cell i.idx-new{font-family:var(--font-body);font-size:9px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--ink3);border:1px solid var(--hair);padding:1px 5px}
+body[data-theme=gemini] .idx-foot{margin-top:8px}
+@media(max-width:720px){body[data-theme=gemini] .idx-board{grid-template-columns:1fr 1fr}
+  body[data-theme=gemini] .idx-cell{padding:8px 10px;gap:5px}
+  body[data-theme=gemini] .idx-cell b{font-size:13.5px}}
+@media(max-width:400px){body[data-theme=gemini] .idx-board{grid-template-columns:1fr}}
 /* sector debates + marketplace */
 body[data-theme=gemini] .debate-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 body[data-theme=gemini] .debate-cols p{font-size:14px;line-height:1.65;color:var(--ink2);margin:6px 0 10px}
@@ -690,7 +713,7 @@ body[data-theme=gemini] .xr-row{display:flex;align-items:flex-start;gap:12px;pad
 body[data-theme=gemini] .xr-row>div{flex:1;min-width:0}
 body[data-theme=gemini] .xr-row b{display:block;font-size:13.5px;margin-bottom:2px}
 body[data-theme=gemini] .xr-dot{flex:none;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:800;border:1.5px solid var(--up);color:#fff;background:var(--up)}
-body[data-theme=gemini] .xr-row.flag .xr-dot{background:var(--warn,#c9922b);border-color:var(--warn,#c9922b)}
+body[data-theme=gemini] .xr-row.flag .xr-dot{background:var(--warn);border-color:var(--warn)}
 body[data-theme=gemini] .xr-v{flex:none;font-size:11px;color:var(--ink3);font-family:"Pixelify Sans",var(--mono,monospace)}
 body[data-theme=gemini] .xr-foot{padding:11px 15px}
 /* daily market weather */
@@ -746,7 +769,7 @@ body[data-theme=gemini] .lrow{display:flex;align-items:flex-start;gap:12px;paddi
 body[data-theme=gemini] .ldot{flex:none;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);font-weight:800;font-size:14px;margin-top:1px}
 body[data-theme=gemini] .lrow.s-yes .ldot{background:var(--up);border-color:var(--up);color:#fff}
 body[data-theme=gemini] .lrow.s-no .ldot{background:var(--dn);border-color:var(--dn);color:#fff}
-body[data-theme=gemini] .lrow.s-part .ldot{background:var(--warn,#c9922b);border-color:var(--warn,#c9922b);color:#fff}
+body[data-theme=gemini] .lrow.s-part .ldot{background:var(--warn);border-color:var(--warn);color:#fff}
 body[data-theme=gemini] .lrow.s-unk .ldot,body[data-theme=gemini] .lrow.s-ask .ldot{background:var(--panel2);color:var(--ink3)}
 body[data-theme=gemini] .lbody{flex:1;min-width:0}
 body[data-theme=gemini] .lbody b{display:block;font-size:14px;margin-bottom:2px}
@@ -1293,13 +1316,15 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
   body[data-theme=gemini]{--gap:14px;font-size:14px}
   body[data-theme=gemini] main{padding:14px 14px calc(76px + env(safe-area-inset-bottom));max-width:100%}
   /* header: brand + market status + search only; nav moves to bottom bar.
-     no horizontal scroll — the verbose pills are hidden on mobile (status lives on the pages). */
-  body[data-theme=gemini] header.app{padding:12px 14px;gap:8px;flex-wrap:nowrap;overflow:hidden;position:sticky;top:0}
-  body[data-theme=gemini] header.app nav.tabs{display:none}
-  body[data-theme=gemini] header.app .meta{display:none}
-  body[data-theme=gemini] header.app #health,
-  body[data-theme=gemini] header.app #regime,
-  body[data-theme=gemini] header.app #georisk{display:none!important}
+     NOTE: the live header is <header class="topbar"> (index.html), NOT header.app — an earlier set
+     of `header.app` mobile rules here never applied to anything and has been re-scoped to .topbar.
+     Keep new header rules on .topbar or they are silently dead. */
+  body[data-theme=gemini] .topbar{padding:6px 10px;gap:6px;flex-wrap:nowrap;overflow:hidden;position:sticky;top:0}
+  body[data-theme=gemini] .topbar nav.tabs{display:none}
+  body[data-theme=gemini] .topbar .meta{display:none}
+  body[data-theme=gemini] .topbar #health,
+  body[data-theme=gemini] .topbar #regime,
+  body[data-theme=gemini] .topbar #georisk{display:none!important}
   body[data-theme=gemini] .brand{font-size:15px;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   body[data-theme=gemini] header #mkt{font-size:10.5px;padding:3px 9px;white-space:nowrap;flex:none}
   body[data-theme=gemini] header .searchbtn{flex:none}
@@ -1346,4 +1371,137 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
   body[data-theme=gemini] .seg{flex-wrap:wrap}
   body[data-theme=gemini] .seg h2{white-space:normal}
   body[data-theme=gemini] .card table,body[data-theme=gemini] .card>table{display:block;overflow-x:auto;max-width:100%}
+}
+
+/* ===========================================================================
+   INTERACTION STATES — one place, applied consistently.
+   Every clickable thing gets a hover AND a keyboard focus ring. The focus ring
+   matters more than the hover: it is the only way a keyboard user can tell
+   where they are, and it was missing entirely before this block.
+   =========================================================================== */
+body[data-theme=gemini] .note-save,
+body[data-theme=gemini] .bw-go,
+body[data-theme=gemini] .pc-btn,
+body[data-theme=gemini] .ttab,
+body[data-theme=gemini] .seg-opt,
+body[data-theme=gemini] .scr-sample,
+body[data-theme=gemini] .ls-opt,
+body[data-theme=gemini] .lsn,
+body[data-theme=gemini] .jy-lsn,
+body[data-theme=gemini] .an-row,
+body[data-theme=gemini] .dm-item,
+body[data-theme=gemini] .lang-btn,
+body[data-theme=gemini] .searchbtn,
+body[data-theme=gemini] .acct-btn,
+body[data-theme=gemini] .acct-signin,
+body[data-theme=gemini] .starbtn,
+body[data-theme=gemini] .side-open,
+body[data-theme=gemini] .pl-x,
+body[data-theme=gemini] .pl-back,
+body[data-theme=gemini] .mkt-x,
+body[data-theme=gemini] .idx-cell,
+body[data-theme=gemini] .clickable,
+body[data-theme=gemini] .ph-in,
+body[data-theme=gemini] .mkt-rule select,
+body[data-theme=gemini] .mkt-rule input{transition:background .12s ease,border-color .12s ease,color .12s ease,opacity .12s ease}
+
+/* keyboard focus: visible on every interactive element, never on mouse click */
+body[data-theme=gemini] a:focus-visible,
+body[data-theme=gemini] button:focus-visible,
+body[data-theme=gemini] input:focus-visible,
+body[data-theme=gemini] select:focus-visible,
+body[data-theme=gemini] textarea:focus-visible,
+body[data-theme=gemini] [tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* text inputs: a real focus state, not just the browser default */
+body[data-theme=gemini] .ph-in:focus,
+body[data-theme=gemini] .tknote:focus,
+body[data-theme=gemini] .mkt-rule select:focus,
+body[data-theme=gemini] .mkt-rule input:focus{border-color:var(--ink1);outline:none}
+
+/* hovers that were missing */
+body[data-theme=gemini] .note-save:hover:not(:disabled){opacity:1;background:#000}
+body[data-theme=gemini] .seg-opt:hover:not(.on):not(:disabled){background:var(--panel2);color:var(--ink1)}
+body[data-theme=gemini] .idx-cell:hover{background:var(--panel2)}
+body[data-theme=gemini] .xr-row:hover,
+body[data-theme=gemini] .lrow:hover,
+body[data-theme=gemini] .al-row:hover,
+body[data-theme=gemini] .scan-row:hover,
+body[data-theme=gemini] .ll-row:hover{background:var(--panel2)}
+body[data-theme=gemini] .sc-tile:hover,
+body[data-theme=gemini] .comm-card:hover,
+body[data-theme=gemini] .wx-card:hover,
+body[data-theme=gemini] .plan-card:hover,
+body[data-theme=gemini] .mkt-card:hover{border-color:var(--ink3)}
+body[data-theme=gemini] .pl-x:hover,
+body[data-theme=gemini] .mkt-x:hover{border-color:var(--ink1);color:var(--ink1)}
+body[data-theme=gemini] .pl-back:hover:not(:disabled){color:var(--ink1)}
+body[data-theme=gemini] .acct-btn:hover,
+body[data-theme=gemini] .acct-signin:hover{background:#000}
+body[data-theme=gemini] .side-open:hover{background:var(--panel2)}
+body[data-theme=gemini] .starbtn:hover{border-color:var(--ink1)}
+body[data-theme=gemini] a.clickable:hover,
+body[data-theme=gemini] tr.clickable:hover{background:var(--panel2)}
+
+/* nothing disabled should look interactive */
+body[data-theme=gemini] button:disabled{cursor:default;opacity:.55}
+body[data-theme=gemini] button:disabled:hover{background:inherit;border-color:inherit}
+
+/* pointer affordance everywhere it is actually clickable */
+body[data-theme=gemini] .clickable,
+body[data-theme=gemini] .idx-cell,
+body[data-theme=gemini] tr.clickable{cursor:pointer}
+
+/* respect reduced motion for every transition added above */
+@media(prefers-reduced-motion:reduce){
+  body[data-theme=gemini] *{transition:none!important;animation:none!important}
+}
+
+/* touch targets: on a phone nothing interactive should be under ~34px tall */
+@media(max-width:720px){
+  body[data-theme=gemini] .note-save,
+  body[data-theme=gemini] .bw-go,
+  body[data-theme=gemini] .pc-btn,
+  body[data-theme=gemini] .seg-opt,
+  body[data-theme=gemini] .ttab,
+  body[data-theme=gemini] .scr-sample{min-height:36px}
+  body[data-theme=gemini] .ph-in,
+  body[data-theme=gemini] .mkt-rule select,
+  body[data-theme=gemini] .mkt-rule input{min-height:38px}
+}
+
+/* ===========================================================================
+   RESPONSIVE + A11Y HARDENING (from the UI audit)
+   =========================================================================== */
+/* the sticky header must never push the page sideways: nowrap without overflow
+   lets any non-shrinkable child widen the whole document */
+body[data-theme=gemini] .topbar{overflow:hidden}
+/* global backstop — nothing should ever produce a horizontal scrollbar */
+html,body{max-width:100%;overflow-x:hidden}
+/* the account menu is absolutely positioned; keep it inside the viewport as it grows */
+body[data-theme=gemini] .acct-menu{max-width:calc(100vw - 24px)}
+
+/* the table scroll guard was scoped to .card only, so tables on the Ask page
+   (.ans-block) escaped it entirely */
+@media(max-width:720px){
+  body[data-theme=gemini] .ans-block table{display:block;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+}
+
+/* --- touch targets: nothing interactive under ~32px on a phone --- */
+body[data-theme=gemini] .auth-x,
+body[data-theme=gemini] .pl-x,
+body[data-theme=gemini] .bw-x,
+body[data-theme=gemini] .replay-x,
+body[data-theme=gemini] .sb-x,
+body[data-theme=gemini] .mkt-x,
+body[data-theme=gemini] .ph-del{min-width:32px;min-height:32px;display:inline-flex;align-items:center;justify-content:center}
+@media(max-width:900px){
+  /* the hamburger is the most-tapped control on a phone and was 30x30 */
+  body[data-theme=gemini] .side-open{width:40px;height:40px}
+  body[data-theme=gemini] .acct-btn{width:36px;height:36px}
+}
+@media(max-width:720px){
+  body[data-theme=gemini] .starbtn{width:32px;height:32px}
+  /* a 4px-tall bar was a tap target; keep the visual, grow the hit area */
+  body[data-theme=gemini] .rp-dot{padding:10px 0;background-clip:content-box}
 }

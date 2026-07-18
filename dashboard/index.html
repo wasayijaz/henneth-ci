@@ -94,11 +94,11 @@
   <div class="side-backdrop" id="sideBackdrop"></div>
 </div>
 
-<div id="searchbox" class="searchbox" hidden>
+<div id="searchbox" class="searchbox" role="dialog" aria-modal="true" aria-label="Search stocks" hidden>
   <div class="searchpanel">
     <div class="searchhead">
       <svg class="searchico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input id="searchinput" type="text" placeholder="Search a stock — symbol or name…" autocomplete="off">
+      <input id="searchinput" type="text" aria-label="Search a stock by symbol or name" placeholder="Search a stock — symbol or name…" autocomplete="off">
       <button id="searchclose" class="searchclose" aria-label="Close search">✕</button>
     </div>
     <div id="searchresults" class="searchresults"></div>

@@ -62,11 +62,21 @@ def main():
     have = {c.get("id") for c in claims}
     quant = (load(STATE / "quant.json", {}) or {}).get("tickers", {})
     sect = (load(STATE / "sectors.json", {}) or {}).get("tickers", {})
-    # every claim here is market-RELATIVE, so the benchmark level must be stamped at claim time or
-    # the claim can never be graded honestly (room_score leaves it pending rather than guess)
-    bench = ((load(STATE / "indices.json", {}) or {}).get("live") or {}).get("KSE100")
+    # Every claim here is market-RELATIVE, so the benchmark level must be stamped at claim time or
+    # the claim can never be graded honestly (room_score leaves it pending rather than guess).
+    #
+    # BENCHMARK CHOICE: the desk's universe runs well past the KSE100's constituents, so grading a
+    # mid-cap "underperforms the KSE100" measures it against an index it is not even in. ALLSHR
+    # (KSE All Share) covers EVERY listed company, so it is the honest benchmark for any name the
+    # desk covers. Fall back to KSE100 only if All Share isn't on file yet.
+    # Existing claims keep whatever benchmark they were stamped with — room_score reads the name
+    # per claim, so old KSE100-benchmarked claims stay valid and comparable to how they were made.
+    _live = ((load(STATE / "indices.json", {}) or {}).get("live") or {})
+    BENCH_NAME = "ALLSHR" if _live.get("ALLSHR") else "KSE100"
+    BENCH_LABEL = "KSE All Share" if BENCH_NAME == "ALLSHR" else "KSE100"
+    bench = _live.get(BENCH_NAME)
     if not bench:
-        print("astro_claims: no KSE100 level (run scripts/fetch_indices.py) — refusing to file "
+        print("astro_claims: no index level (run scripts/fetch_indices.py) — refusing to file "
               "market-relative claims that could never be scored")
         sys.exit(0)
     today = dt.datetime.now(PKT).date()
@@ -84,7 +94,7 @@ def main():
             "source_type": "astro", "source": "Vedic (Lahiri) natal reading",
             "sector": (sect.get(sym) or {}).get("sector") or "unknown",
             "ticker": sym, "made_on": today.isoformat(), "made_at_price": px,
-            "benchmark": {"name": "KSE100", "level": bench},
+            "benchmark": {"name": BENCH_NAME, "level": bench},
             "status": "pending",
             "basis": f"natal Moon {moon}; chart cast for the first trade {rec.get('birth', {}).get('date')} "
                      f"at the Karachi open (Meridian convention). Sidereal, Lahiri.",
@@ -104,7 +114,7 @@ def main():
                               "resolve_by": (today + dt.timedelta(days=horizon)).isoformat(),
                               "claim": {
                                   "direction": "down",
-                                  "text": f"{sym} underperforms the KSE100 over the next {horizon} days: "
+                                  "text": f"{sym} underperforms the {BENCH_LABEL} over the next {horizon} days: "
                                           f"tradition says Sade Sati ({phase}) is the heaviest passage a "
                                           f"chart runs, and Saturn is on {sym}'s natal Moon neighbourhood now.",
                                   "market_relative": True,
@@ -120,7 +130,7 @@ def main():
                               "resolve_by": (today + dt.timedelta(days=horizon)).isoformat(),
                               "claim": {
                                   "direction": "down",
-                                  "text": f"{sym} underperforms the KSE100 over the next {horizon} days: "
+                                  "text": f"{sym} underperforms the {BENCH_LABEL} over the next {horizon} days: "
                                           f"tradition reads Saturn's Dhaiya from the natal Moon as a drag.",
                                   "market_relative": True, "condition": "Dhaiya",
                               }})
@@ -139,7 +149,7 @@ def main():
                                   "resolve_by": (today + dt.timedelta(days=horizon)).isoformat(),
                                   "claim": {
                                       "direction": "up",
-                                      "text": f"{sym} outperforms the KSE100 over the next {horizon} days: "
+                                      "text": f"{sym} outperforms the {BENCH_LABEL} over the next {horizon} days: "
                                               f"Jupiter transits the {ordinal(rel + 1)} from its natal Moon, "
                                               f"which tradition counts among the benefic houses.",
                                       "market_relative": True,

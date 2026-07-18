@@ -207,18 +207,22 @@ function indexBoard(idx) {
   const live = idx?.live || {};
   const days = Object.keys(idx?.history || {}).sort();
   const prev = days.length > 1 ? idx.history[days[days.length - 2]] : null;
+  // One compact row. The descriptive line lives in the tooltip, not in the cell — it was making
+  // the board three times taller than the numbers needed, and Pixelify (a numerals face) was
+  // rendering prose like "first session" with broken ligatures.
   const cells = Object.keys(IDX_LABEL).filter(k => live[k] != null).map(k => {
     const [label, sub] = IDX_LABEL[k];
     const chg = prev && prev[k] != null ? (live[k] / prev[k] - 1) * 100 : null;
-    return `<div class="idx-cell"><span class="sk">${esc(label)}</span>
+    return `<div class="idx-cell" title="${esc(label)} — ${esc(sub)}">
+      <span class="idx-k">${esc(label)}</span>
       <b class="num">${fmt(live[k], 0)}</b>
       ${chg != null ? `<i class="num ${cls(chg)}">${sgn(+chg.toFixed(2))}%</i>`
-      : `<i class="sub" title="The desk started keeping this index today — a change needs two sessions on file.">first session</i>`}
-      <span class="sub">${esc(sub)}</span></div>`;
+      : `<i class="idx-new" title="The desk started keeping this index today — a day-change needs two sessions on file.">new</i>`}
+    </div>`;
   }).join("");
   return cells ? `<div class="seg"><h2>PSX indices</h2><div class="ln"></div><span class="pill">${days.length} session${days.length === 1 ? "" : "s"} kept</span></div>
-    <div class="card idx-board">${cells}</div>
-    <p class="sub" style="margin-top:8px">Captured from PSX's own board each cycle and kept permanently — no public source carries PSX index history, so the desk builds it. The <b>All Share</b> indices are the honest benchmark for names outside the KSE100${prev ? "" : "; day-change appears once a second session is on file"}.</p>` : "";
+    <div class="idx-board">${cells}</div>
+    <p class="sub idx-foot">Captured from PSX's own board each cycle and kept permanently — no public source carries PSX index history, so the desk builds it. The <b>All Share</b> indices are the honest benchmark for names outside the KSE100.</p>` : "";
 }
 
 async function pageBoard() {
@@ -669,8 +673,8 @@ async function pageStrategies() {
   <div class="card">
     <p class="sub" style="margin-bottom:12px">Trade by a rule set that isn't in the library? Explain it below — the desk codes it, backtests it on ~19 years of history the same way, and if it clears the bar it joins the library.</p>
     ${me ? `<div class="rq-form">
-      <div class="ph-row"><input id="rq-title" class="ph-in" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
-      <input id="rq-tkr" class="ph-in combo" style="flex:0 1 150px" placeholder="Ticker (optional)" autocomplete="off"></div>
+      <div class="ph-row"><input id="rq-title" class="ph-in" aria-label="Strategy name" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
+      <input id="rq-tkr" class="ph-in combo" aria-label="Ticker (optional)" style="flex:0 1 150px" placeholder="Ticker (optional)" autocomplete="off"></div>
       <textarea id="rq-desc" class="tknote" style="min-height:88px" placeholder="Explain the rules in plain English: when it buys, when it exits, any filters (volume, trend, day of week…)."></textarea>
       <div class="tknote-bar"><button class="note-save" onclick="submitStratRequest()">Send to the desk</button><span id="rq-msg" class="sub"></span></div></div>`
     : `<div class="empty">Sign in to send the desk a strategy to test.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div>`}
@@ -1565,7 +1569,7 @@ function renderBirthWizard() {
     <div class="bw-opts">${[["growth", "Long-term growth"], ["income", "Dividend income"], ["trading", "Active trading"], ["curious", "Just curious"]].map(([k, l]) => `<button class="bw-opt ${d.goal === k ? "on" : ""}" onclick="bwSet('goal','${k}');document.querySelectorAll('.bw-opt').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${l}</button>`).join("")}</div>
     <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwNext()">See my chart →</button></div>`;
   else if (s === "cast") { renderBirthCast(ov); return; }
-  ov.innerHTML = `<div class="bw-box"><button class="bw-x" onclick="bwClose()">✕</button>${body}</div>`;
+  ov.innerHTML = `<div class="bw-box"><button class="bw-x" aria-label="Close" title="Close" onclick="bwClose()">✕</button>${body}</div>`;
   if (s === "place") wireCityCombo();
   if (s === "date") setTimeout(() => document.getElementById("bw-date")?.focus(), 40);
 }
@@ -3385,7 +3389,7 @@ function renderPlayer() {
   ov.innerHTML = `<div class="pl-box">
     <div class="pl-top">
       <div class="pl-title"><span class="ark">${esc((_pl.cur.levels.find(l => l.id === levelId) || {}).title || "")}</span><b>${esc(lesson.title)}</b></div>
-      <button class="pl-x" onclick="closePlayer()">✕</button>
+      <button class="pl-x" aria-label="Close lesson" title="Close" onclick="closePlayer()">✕</button>
     </div>
     <div class="pl-dots">${Array.from({ length: total }, (_, i) =>
     `<span class="pl-dot ${i === _pl.i ? "on" : i < _pl.i ? "did" : ""}"></span>`).join("")}</div>
@@ -3657,8 +3661,8 @@ async function pagePractice() {
   <div class="card">
     <div class="ark">place a practice order</div>
     <div class="pp-form">
-      <input id="pp-sym" class="ph-in combo" placeholder="Ticker (e.g. FFC)" autocomplete="off" style="flex:0 1 170px">
-      <input id="pp-sh" class="ph-in" type="number" min="1" step="1" placeholder="Shares" style="flex:0 1 130px">
+      <input id="pp-sym" class="ph-in combo" aria-label="Ticker to trade" placeholder="Ticker (e.g. FFC)" autocomplete="off" style="flex:0 1 170px">
+      <input id="pp-sh" class="ph-in" aria-label="Number of shares" type="number" min="1" step="1" placeholder="Shares" style="flex:0 1 130px">
       <button class="note-save" onclick="paperTrade('buy')">Buy</button>
       <button class="note-save" onclick="paperTrade('sell')">Sell</button>
       <span id="pp-msg" class="sub"></span>
@@ -3938,7 +3942,7 @@ function toolPanel() {
       ${F("Value of shares (Rs)", "t-zval", 500000)}${F("Cash & bank (Rs)", "t-zcash", 200000)}${F("Debts due now (Rs)", "t-zowed", 0)}
       <button class="note-save" ${run}>Calculate</button></div>`;
   if (t === "divreinvest") return `<div class="tgrid">
-      <label>PSX ticker<input id="t-dsym" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" value="${esc(_tools.dsym || "FFC")}"></label>
+      <label>PSX ticker<input id="t-dsym" class="ph-in combo" aria-label="PSX ticker" placeholder="e.g. FFC" autocomplete="off" value="${esc(_tools.dsym || "FFC")}"></label>
       ${F("Amount invested (Rs)", "t-damt", 500000)}
       <label>Held for<select id="t-dyears" class="ph-in">${[1, 3, 5, 10, 15].map(y => `<option value="${y}"${(_tools.dyears || 10) === y ? " selected" : ""}>${y} year${y > 1 ? "s" : ""}</option>`).join("")}</select></label>
       <button class="note-save" onclick="toolDivRun()">Run on real history</button></div>`;
@@ -4160,7 +4164,7 @@ async function pageScreener() {
   ${locked ? planWall("The plain-English screener",
     `"Dividend above 8%, covered, below Graham value, with earnings growth" — typed as a sentence, screened across all ${rows.length} names on the desk's scored fields, with saved screens on your account.`) : `
   <div class="card">
-    <div class="scr-row"><input id="scr-in" class="ph-in" style="flex:1" value="${esc(_scr.text)}" placeholder="e.g. dividend > 8% with earnings growth, below fair value"
+    <div class="scr-row"><input id="scr-in" class="ph-in" aria-label="Describe what you are screening for" style="flex:1" value="${esc(_scr.text)}" placeholder="e.g. dividend > 8% with earnings growth, below fair value"
       onkeydown="if(event.key==='Enter'){_scr.text=this.value;pageScreener()}">
       <button class="note-save" onclick="_scr.text=document.getElementById('scr-in').value;pageScreener()">Screen</button>
       ${me && filters.length ? `<button class="note-save" onclick="saveScreen()">Save</button>` : ""}</div>
@@ -4428,7 +4432,7 @@ async function pageAsk() {
   ${locked ? planWall("Ask the desk",
     "\"Why is MEBL moving?\" · \"Is FFC cheap?\" · \"What's happening in cement?\" — answered instantly from the desk's own scored data, with the sector context, the wire, and what the models actually say.") : `
   <div class="card">
-    <div class="scr-row"><input id="ask-in" class="ph-in" style="flex:1" placeholder="Why is MEBL moving?" value="${esc(_ask.q)}"
+    <div class="scr-row"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?" value="${esc(_ask.q)}"
       onkeydown="if(event.key==='Enter')askRun()">
       <button class="note-save" onclick="askRun()">Ask</button></div>
     <div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div>
@@ -4515,7 +4519,7 @@ function mktRuleRow(r, i) {
     <select onchange="_mkt.rules[${i}].lhs=this.value">${MKT_FIELDS.map(f => opt(f, r.lhs)).join("")}</select>
     <select onchange="_mkt.rules[${i}].op=this.value">${MKT_OPS.map(([v, l]) => `<option value="${v}"${v === r.op ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>
     <input value="${esc(String(r.rhs))}" onchange="_mkt.rules[${i}].rhs=isNaN(parseFloat(this.value))?this.value:parseFloat(this.value)" placeholder="field or number">
-    ${_mkt.rules.length > 1 ? `<button class="mkt-x" onclick="_mkt.rules.splice(${i},1);pageMarket()">✕</button>` : "<span></span>"}
+    ${_mkt.rules.length > 1 ? `<button class="mkt-x" aria-label="Remove condition" title="Remove condition" onclick="_mkt.rules.splice(${i},1);pageMarket()">✕</button>` : "<span></span>"}
   </div>`;
 }
 function mktValid() {
@@ -4581,7 +4585,7 @@ async function pageMarket() {
     <div class="ark">compose a strategy</div>
     <p class="sub" style="margin:5px 0 10px">Entry fires when <b>all</b> conditions are true on the same bar. Fields are the desk's own indicators — nothing you write is executed as code, so a strategy is always safe to run.</p>
     <div class="tgrid">
-      <label>Name<input id="mkt-name" class="ph-in" maxlength="80" placeholder="e.g. Quiet base breakout"></label>
+      <label>Name<input id="mkt-name" class="ph-in" aria-label="Strategy name" maxlength="80" placeholder="e.g. Quiet base breakout"></label>
       <label>Target %<input id="mkt-target" type="number" class="ph-in" value="7" step="0.5"></label>
       <label>Stop %<input id="mkt-stop" type="number" class="ph-in" value="3.5" step="0.5"></label>
       <label>Max hold (sessions)<input id="mkt-hold" type="number" class="ph-in" value="15"></label>
@@ -4641,6 +4645,37 @@ async function route(isPoll) {
   if (!isPoll && key !== lastPage) { animateIn(); if (window.scrollTo) window.scrollTo(0, 0); }
   lastPage = key;
 }
+/* Keyboard access for click-only elements. Large parts of the UI use `onclick` on <div>, <span>
+   and <tr> — fast to write, but unreachable by keyboard and invisible to screen readers. Rather
+   than hand-editing every call site, make them focusable and Enter/Space-activatable here, once.
+   A <tr> must not take role="button" (it breaks the table's semantics), so it gets tabindex only. */
+function wireClickables(root = document) {
+  root.querySelectorAll(".clickable:not([data-kb])").forEach(el => {
+    el.dataset.kb = "1";
+    if (!el.hasAttribute("tabindex")) el.tabIndex = 0;
+    const tag = el.tagName;
+    if (!el.hasAttribute("role") && tag !== "TR" && tag !== "A" && tag !== "BUTTON") el.setAttribute("role", "button");
+  });
+}
+document.addEventListener("keydown", e => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const el = e.target.closest?.(".clickable");
+  if (!el || ["INPUT", "TEXTAREA", "SELECT", "A", "BUTTON"].includes(e.target.tagName)) return;
+  e.preventDefault();
+  el.click();
+});
+/* Pages re-render constantly, and .clickable elements also live OUTSIDE #view (the global strip,
+   modals appended to body), so observe the whole document rather than just the view container. */
+if (window.MutationObserver) {
+  let queued = false;
+  new MutationObserver(() => {                      // batch: renders fire hundreds of mutations
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; wireClickables(document); });
+  }).observe(document.body, { childList: true, subtree: true });
+}
+wireClickables(document);   // whatever is already on the page at boot
+
 document.getElementById("langBtn")?.addEventListener("click", () => setLang(lang() === "ur" ? "en" : "ur"));
 applyLang();   // safe at module top level: reads localStorage only, never `me`
 window.addEventListener("hashchange", () => route(false));
@@ -5145,9 +5180,9 @@ async function pagePortfolio() {
 
   <div class="card ph-form">
     <div class="ph-row">
-      <input id="ph-tkr" placeholder="Ticker (e.g. FFC)" class="ph-in combo" autocomplete="off">
-      <input id="ph-sh" type="number" placeholder="Shares" class="ph-in" min="0" step="1">
-      <input id="ph-cost" type="number" placeholder="Avg cost (Rs)" class="ph-in" min="0" step="0.01">
+      <input id="ph-tkr" placeholder="Ticker (e.g. FFC)" aria-label="Ticker" class="ph-in combo" autocomplete="off">
+      <input id="ph-sh" type="number" placeholder="Shares" aria-label="Shares held" class="ph-in" min="0" step="1">
+      <input id="ph-cost" type="number" placeholder="Avg cost (Rs)" aria-label="Average cost per share in rupees" class="ph-in" min="0" step="0.01">
       <button class="note-save" onclick="submitHolding()">Add holding</button>
     </div>
     <span id="ph-msg" class="sub"></span>
