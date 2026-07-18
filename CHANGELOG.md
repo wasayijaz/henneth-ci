@@ -5,6 +5,123 @@ The desk is a **live website** — nothing ships unless `python scripts/prefligh
 
 ---
 
+## 2026-07-19 — Three-plan product, the Investor desk, and entitlement enforcement
+
+Turned the single-tenant desk into a three-audience product. **Nothing here is billed** — card
+processing via international providers is unavailable in Pakistan, so a local gateway comes later.
+
+### Plans
+- `Free → Investor → Pro → Broker` (`PLANS` / `PLAN_ORDER` in app.js). The paid entry tier is
+  **Investor**, not "Learner" — a tier named for what the customer lacks is a label on the customer.
+  DB migration `rename_learner_plan_to_investor` moved the stored value and the CHECK constraint.
+- Broker renders **"coming soon"** (disabled CTA) — the plan is defined, the product is not built.
+- Plan cards show an **Upgrade CTA** for any tier above yours. `on` is evaluated before `soon`, so
+  your own plan never reads "Coming soon". `notifyUpgrade()` records interest instead of faking a
+  checkout that does not exist.
+- `#/plans` carries an **owner-only preview-as-plan** switch: re-renders the entire product as any
+  tier without touching the stored plan (in-memory, reload resets). `hasFeature`/`isSubscribed`
+  honour the preview even though `BILLING_LIVE` is false, or preview would be meaningless.
+
+### Entitlement security — a self-promotion hole found and closed
+`profiles.plan` is guarded by a CHECK constraint plus **two** triggers. The first migration added a
+`BEFORE UPDATE` trigger only. That was insufficient: the client writes profiles via **upsert**, so a
+crafted INSERT could have set `plan='pro'` and self-granted a paid tier. Migration
+`freeze_plan_on_insert_too` adds a `BEFORE INSERT` trigger forcing `plan='free'` for role
+`authenticated`. Plan changes are now a service-role-only path.
+`ui_mode` is intentionally left client-writable — it is a view preference, not an entitlement.
+`BILLING_LIVE = false` remains the single switch; while false any signed-in account reads as
+subscribed, so shipping paywalls could not strip access from accounts that already had it.
+
+### The Investor desk (`#/learn`)
+- 4 levels that **unlock in order**, 17 lessons, played **one card per screen** in a focused player.
+  A long scroller with quizzes was the first attempt and was rejected as a poor experience.
+- Card kinds are visually unmistakable and namespaced `k-*`: lesson · watch out · the point ·
+  interactive · check yourself.
+- New **Level 2, "The documents"**: the full map of what a Pakistani listed company publishes, the
+  annual report, all three financial statements, the auditor's report + pattern of shareholding +
+  related-party transactions, and announcements/AGM/material information.
+- **Interactive labelled statements** (`anatomies` in `state/curriculum.json`): tap any line for what
+  it is and what to watch. **Rule 2 compliance:** `fundamentals.json` holds revenue/net income/EPS but
+  not gross profit, opex or finance cost — so real figures appear **only** on the lines the desk
+  actually holds (anchored to a real named company), and every other line reads *"in the filing"*.
+  No statement line is fabricated to make the lesson look complete.
+- Plus a 12-document tap-to-learn map and a dividend-date timeline highlighting the ex-date.
+
+### Two bugs introduced during this build, caught before/at verification
+1. **Async render race.** `renderPlayer()` awaited the anchor fetch mid-render, letting a second
+   render interleave and leaving 3 stale `.anatomy` nodes; clicks bound to a detached copy silently
+   did nothing. Fix: fetch the anchor once in `openLesson`, keep `renderPlayer` synchronous.
+   *Prevention:* never await inside a function that fully rewrites its own container.
+2. **Class-name collision.** The card wrapper took `class="pl-card ${c.type}"`, so a card of type
+   `anatomy` matched the `.anatomy` **component** selector and inherited its border. Card kinds are
+   now namespaced `k-*`. *Prevention:* never use a raw data-driven type string as a CSS class.
+
+Also: the sidebar was regrouped (Today/Board · You · Edge · Market), the account menu rebuilt to show
+the plan you are on, and search widened from a 34 px icon to a labelled 230 px field (collapses back
+to an icon under 1100 px; palette behaviour unchanged).
+
+---
+
+## 2026-07-18 — Personal astrology pillar, its funnel, and the daily sky
+
+A Vedic (sidereal) astrology layer shipped as **exploration, never an edge claim** — because the desk
+tested it and it failed.
+
+### The test result that frames the whole pillar
+- `astro_backtest.py`: 2,589 hypotheses across 101 subjects (99 stocks + KSE100 + KMI30) → **0 survivors**
+  after Bonferroni and FDR. Expected ~129.5 false positives at p<0.05; 143 came back.
+- `astro_natal_test.py`: 379 natal-method hypotheses, 27 verified company birth charts → **0 survivors**.
+  Published with an explicit power caveat: young charts make this test weakly powered, so the finding is
+  **"not demonstrated", not "disproved"** — the desk does not claim a verdict it has not earned.
+- The honest foil: `sector_macro.py` ran the *same* machinery on ordinary macro factors and found
+  **17 Bonferroni / 34 FDR survivors of 98** (oil→E&P at p=2e-5, joint R² ≤2.6%). Same bar, real result.
+
+Two methodology bugs were found and fixed **in our own test harness** before trusting any of it:
+- **A self-rigging backtest.** A 2,000-shift permutation can never produce a p below 1/(N+1), so it
+  could not reach a ~1.4e-4 Bonferroni bar — "zero survivors" was guaranteed by the method rather than
+  by the data. Fixed with two-stage resampling (2,000 screen → 50,000/200,000 fine).
+- **A false discovery.** Raw returns surfaced 2 survivors at p=5e-6 on PIOC. Both were **beta**:
+  market −0.119%/day, cement −0.238%, PIOC β=1.243 → −0.430%. Market-adjusting returns
+  (`r − β·r_mkt`) moved p from 5.0e-6 to 1.29e-3. Two further bugs inside the replication check were
+  fixed at the same time.
+
+### The feature
+- Browser-side natal chart from a committed 552 KB packed ephemeris (1950–2035, daily, `<9H`).
+  Ascendant computed live from LST + latitude, validated against the sunrise anchor.
+- Classical synastry against every PSX name (Tara koota, Moon-lord friendship, benefic placement,
+  dasha resonance); chartless names (pre-2000 listings) read through the sector significator.
+- Vimshottari dasha + antardasha, an isometric-feel natal orrery, per-stock timing windows,
+  8 commodities read through traditional rulers, and goal-tailored *language* (never maths).
+- **The daily layer** (the actual subscription rationale, since a natal chart never changes): gochara
+  placed from the natal Moon and recomputed daily, a transit ring on the orrery, and dated
+  "worth another look" shifts. All client-side over data already shipped — zero marginal cost per user.
+- `astro_claims.py` files dated **market-relative** claims with a stamped benchmark level and grades
+  them on the public scorecard. `fetch_indices.py` was added because grading market-relative claims
+  against an absolute price would have scored a stock falling 2% in an 8%-down market as a **hit**.
+
+### The funnel
+Casting a chart requires **no account** — it is client-side maths over an ephemeris the browser
+already fetches, so the prior sign-in wall was artificial. Guests cast free into `localStorage`;
+`migrateGuestChart()` lifts the chart into the profile on sign-in so birth details are never entered
+twice. Free tier sees the real chart plus the 3 strongest matches, then one shared `planWall()`.
+
+### A silent bug this uncovered (was live, affected every user)
+`computeNatal()` read `timeKnown` while the wizard and the Supabase column both use `time_known`.
+The value was therefore always `undefined`, so **no user ever received a rising sign** — every chart
+silently fell back to Chandra lagna however exact the birth time given, and the ascendant ray in the
+orrery was dead code. Fixed by normalising `bd.timeKnown ?? bd.time_known ?? false`.
+*Prevention:* the snake_case DB column is the source of truth; accept both spellings at the boundary.
+
+### Editorial: the 4th wall
+On owner instruction, all readings stopped narrating the platform's own mechanics and limits
+("so it isn't invented", "the desk tested astrology and found no edge", source citations). Readings
+now lead with the Moon (Chandra lagna is a real technique, presented confidently). The null result is
+**not hidden** — it remains in this changelog, in the README, and in the Investor desk's astrology
+lesson, which teaches the tradition and the test result together. It is simply no longer narrated
+inside an individual reading.
+
+---
+
 ## 2026-07-12 — Ticker pages blank in real Chrome (extension breaking fetch)
 
 Wasay reported "no data" on every individual ticker, on both live and preview, in his actual

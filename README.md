@@ -13,6 +13,12 @@ It **never places orders**; execution is manual on your broker.
 Docs: [`CLAUDE.md`](CLAUDE.md) (desk rules) · [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) (system map)
 · [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) (path to a subscription product)
 
+> **Reviewing this repo?** Start with [`CHANGELOG.md`](CHANGELOG.md) — newest first, and every entry states
+> what changed, why, and for bugs how recurrence is prevented (including bugs introduced during a build and
+> caught before shipping). Then read **Entitlements & security posture** and **Known gaps** below; both are
+> written for audit rather than for marketing. Nothing is billed yet, and `state/legal.json` has not been
+> reviewed by a lawyer.
+
 ---
 
 ## What it does
@@ -42,6 +48,68 @@ valuation, dividend reliability), a **"questions before buying"** checklist, and
 - **Accounts** — sign-up / sign-in (Supabase Auth), a short onboarding quiz + guided wizard, and a personal
   **watchlist** that overlays the shared research. Per-user data is row-level-secured; the research layer is
   shared and read-only to users.
+
+### The personal astrology pillar (`#/astro`, `#/mychart`, `#/cast`)
+
+A Vedic (sidereal) financial-astrology layer, shipped as **exploration and cultural interest — explicitly
+not an edge claim.** It exists because it is engaging and differentiated; it is framed honestly because
+the desk tested it and it failed.
+
+- **The desk's own test result, stated plainly:** `astro_backtest.py` ran **2,589 hypotheses across 101
+  subjects** (99 stocks + KSE100 + KMI30) over ~19 years, and `astro_natal_test.py` ran **379** natal-method
+  hypotheses across **27** verified company birth charts. **Zero survivors** in both after Bonferroni and
+  Benjamini-Hochberg correction, on market-adjusted returns (`r − β·r_mkt`, so beta isn't mistaken for
+  signal). At p<0.05 you would expect ~129.5 false positives from 2,589 tests by luck; 143 came back.
+  The same machinery pointed at ordinary macro factors (`sector_macro.py`) *did* find real effects —
+  **17 Bonferroni / 34 FDR survivors of 98**, e.g. oil→E&P at p=2e-5, joint R² ≤2.6%. That contrast is the
+  point, and it is published in `state/astro_backtest.json` rather than summarised away.
+  **The natal test carries an explicit power caveat:** with company charts this young it is weakly powered,
+  so the result is *"not demonstrated"* — **not** *"disproved."* The desk keeps that distinction because
+  claiming disproof would be a verdict it has not earned.
+- **Your chart.** A user enters birth date/time/place; the browser casts their sidereal (Lahiri) natal
+  chart from a committed 552 KB packed ephemeris (`state/natal_ephem.bin`, 1950–2035, daily, `<9H`
+  tenths-of-a-degree) and scores every PSX name against it with classical techniques (Tara koota, Moon-lord
+  friendship, benefic placement, dasha resonance). Ascendant is computed live from LST + latitude, and is
+  **never invented** when birth time is unknown — the reading falls back to Chandra lagna, a real Vedic
+  technique.
+- **The daily layer.** The natal chart is static, so the product is the *moving* sky: gochara placed from
+  the natal Moon and recomputed every day, a transit ring on the orrery, and dated "worth another look"
+  shifts (ingresses, dasha/antardasha turnovers) — computed client-side from data already shipped, so it
+  costs nothing per user.
+- **Visuals.** An isometric-feel natal orrery (foreshortened orbits, native SVG pixel glyphs — *not*
+  `foreignObject`, which breaks in Safari), a Vimshottari dasha ribbon with an antardasha sub-period strip,
+  per-stock timing windows, and 8 commodities read through their traditional rulers.
+- **Scored like anything else.** `astro_claims.py` files dated, **market-relative** astro claims with a
+  stamped benchmark level, graded on the same public scorecard as every broker call.
+
+### Three plans, one data layer (`#/plans`)
+
+**Free → Investor → Pro → Broker.** The tier above Free is named **Investor** deliberately — a paid tier
+named for what the customer *lacks* ("Learner") reads as a label on the customer.
+
+| Plan | For | Adds |
+|---|---|---|
+| **Free** | anyone | Cast your chart, the daily desk note, the public track record |
+| **Investor** | people new to investing | The guided path, full astro reading, dividends, earnings |
+| **Pro** | TA/FA-literate investors | Model fair value, running the strategy library, research library |
+| **Broker** | research houses | *Not built.* Plan defined; their own calls scored in public |
+
+- **The Investor desk** (`#/learn`) — 4 levels that unlock in order, 17 lessons, played **one card per
+  screen** in a focused player rather than as a long scroller. Card kinds are visually unmistakable:
+  lesson · watch out · the point · interactive · check yourself. Progress persists per user.
+  Level 2 ("The documents") covers every document a Pakistani listed company publishes — annual report,
+  the three financial statements, auditor's report, pattern of shareholding, related-party transactions,
+  AGM notices, material information — with **tap-to-learn labelled statements**, a 12-document map, and a
+  dividend-date timeline.
+- **Rule 2 inside the teaching.** `fundamentals.json` holds revenue, net income and EPS but **not** gross
+  profit, opex or finance cost. So the labelled income statement shows real reported figures **only on the
+  lines the desk actually holds** (anchored to a real, named company), and every other line reads
+  *"in the filing"* — teaching the reader to go find it. No statement line is ever fabricated.
+- **The acquisition funnel.** Casting a chart requires **no account** (it is client-side maths over an
+  ephemeris the browser already fetches). A guest casts free, the chart is held in `localStorage`, and
+  `migrateGuestChart()` lifts it into their profile on sign-in — birth details are never entered twice.
+  Free users see their real chart plus their strongest 3 matches; the rest sits behind one shared
+  `planWall()` component with fixed, honest language.
 
 ## Principles (locked — see `CLAUDE.md`)
 
@@ -104,9 +172,56 @@ static site + committed `state/` data). The refresh loops push fresh data → Ve
 - **Prices:** PSX DPS portal (EOD `[ts, close, volume, open]` — no high/low, so ATR is a close-to-close
   proxy); **Yahoo Finance `.KA`** for ~19-year adjusted history (auto de-glitched) used on charts + long-run stats.
 - **Fundamentals:** stockanalysis.com (P/E, EPS, margins, dividends, earnings dates).
+- **Sectors:** parsed from PSX's own screener (`fetch_sectors.py`), verified against 19 anchor tickers and
+  kept at last-good on mismatch. This fixed two live bugs: Rule 4's same-sector limit and peer P/E, which
+  had been comparing against the **whole-market** median while labelled "priced like its peers" (8 tickers
+  changed verdict when corrected).
+- **Indices:** `fetch_indices.py` appends KSE100/KMI30 levels daily — the index history needed to grade
+  market-relative claims honestly (a stock falling 2% while the market fell 8% must not score as a hit for
+  "underperforms").
+- **Ephemeris:** `pymeeus`-derived sidereal positions (Lahiri ayanamsa from precessing Spica), pre-baked
+  into a committed binary table for the browser. Chosen over `pyswisseph` (won't build on 3.14) and
+  `skyfield` (needs a 17 MB kernel).
 - **Cross-check:** `tradingview-ta` (screener=pakistan) verifies the quant layer; a mismatch blocks signals.
 - **Stack:** Python 3.14 (requests/pandas/numpy) · vanilla JS SPA (hash router, canvas charts, no framework)
-  · JetBrains Mono + Pixelify Sans · **Supabase** (auth + per-user profiles/watchlist) · **Vercel** hosting.
+  · JetBrains Mono + Pixelify Sans · **Supabase** (auth + per-user profiles/watchlist/plan) · **Vercel** hosting.
+
+## Entitlements & security posture
+
+Billing is **not wired**. Card processing through international providers is unavailable in Pakistan, so
+payment will run through a local gateway (PayFast or similar) later. Until then plans are set manually and
+the product says so on `#/plans` rather than showing a dead checkout.
+
+- **`BILLING_LIVE = false` is the single switch.** While false, any signed-in account reads as subscribed,
+  so shipping paywalls could not strip access from accounts that already had it. Flipping it moves access
+  entirely onto the plan's feature list.
+- **A user cannot promote their own plan.** `profiles.plan` is guarded at the database by a CHECK
+  constraint plus two triggers: a `BEFORE UPDATE` trigger reverts `plan`/`plan_since` for role
+  `authenticated`, and a `BEFORE INSERT` trigger forces `plan='free'`. **The INSERT trigger is
+  load-bearing** — the client writes profiles via `upsert`, so an UPDATE-only guard would have left a
+  crafted insert able to self-grant `pro`. This was caught and closed during the build. Plan changes are a
+  service-role-only path.
+- `ui_mode` (which desk shell you see) is deliberately client-writable — it is a view preference, not an
+  entitlement.
+- **Owner preview.** `#/plans` carries an owner-only "preview as plan" switch that re-renders the whole
+  product as any tier without changing the stored plan (in-memory; a reload resets it).
+- Per-user rows (watchlist, notes, birth data, learn progress) are RLS-scoped to their owner. The research
+  layer is shared and read-only to users.
+
+### Known gaps, stated for audit
+
+- **`state/legal.json` is `review_status: DRAFT`.** Terms/Privacy/Risk are drafted but **not reviewed by a
+  Pakistani lawyer**. This is a hard gate before charging anyone.
+- **Two Supabase items are outstanding on the owner:** rotate/disable the legacy `service_role` key, and
+  enable leaked-password protection.
+- **The track record is young.** **95 dated claims are filed and 0 have resolved** (verified against
+  `state/claims.json` at the time of writing) — a waiting period, not a proven record, and the product
+  displays the real counts rather than implying otherwise.
+- **The Broker plan is defined, not built.** No leaderboard API, white-label, or broker-side scoring exists.
+- **The astrology layer has no demonstrated edge** (see above). It is excluded from signal confluence and
+  never feeds a setup.
+- The repo has **no test suite or linter**; correctness rests on `preflight.py`, `room_verify.py`,
+  `design_lint.py`, and the weekly `/code-review` pass.
 
 ## Governance (the desk can't quietly disagree with itself)
 `CLAUDE.md` is enforced, not aspirational: one **position-sizing formula** (risk by stop distance,
