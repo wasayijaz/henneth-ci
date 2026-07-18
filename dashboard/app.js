@@ -197,9 +197,10 @@ function globalStrip(gl) {
 }
 
 async function pageBoard() {
-  const [quant, pred, dash, news, pos, smap, trig, live, gl] = await Promise.all([
+  const [quant, pred, dash, news, pos, smap, trig, live, gl, fvAll, fndAll, fsAll] = await Promise.all([
     j("quant.json"), j("predictability.json"), j("dashboard.json"), j("newslog.json"),
-    j("positions.json"), j("strategy_map.json"), j("live_triggers.json"), j("live.json"), j("global.json")]);
+    j("positions.json"), j("strategy_map.json"), j("live_triggers.json"), j("live.json"), j("global.json"),
+    j("fairvalue.json"), j("fundamentals.json"), j("fundamental_scores.json")]);
   const q = quant?.tickers || {};
   const lv = live?.tickers || {};
 
@@ -252,11 +253,15 @@ async function pageBoard() {
   const agentCard = `<div class="card"><h2>Agent wire</h2><div class="sub">this cycle</div><div class="wire">${
       aw.length ? aw.map(a => `<p><b style="color:var(--accent)">${esc(a.agent)}</b> ${esc(a.summary)}</p>`).join("") : '<div class="empty">No cycle run yet.</div>'}</div></div>`;
 
+  // the daily opportunity scanner — six ranked lists from the scored data, rebuilt every cycle
+  const scanCats = scannerLists(q, fvAll?.tickers || {}, fndAll?.tickers || {}, pred?.tickers || {}, fsAll?.tickers || {});
   $("view").innerHTML = `${globalStrip(gl)}<div class="grid-board">
     <div class="cards">${sigHtml}${trigHtml}${posCard}</div>
     <div class="cards">${universeCard}${predCard}${provenCard}</div>
     <div class="cards">${newsCard}${agentCard}</div>
-  </div>`;
+  </div>
+  <div class="seg"><h2>Today's scanner</h2><div class="ln"></div><span class="pill">rebuilt every cycle</span></div>
+  ${scannerHtml(scanCats)}`;
 }
 
 async function pageValue() {
@@ -1407,10 +1412,10 @@ const PLANS = {
     features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full"] },
   pro: { label: "Pro", tag: "TA & FA",
     blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel"] },
   broker: { label: "Broker", tag: "coming soon", soon: true,
     blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "broker_tools"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "broker_tools"] },
 };
 const PLAN_ORDER = ["free", "investor", "pro", "broker"];
 /* Owner-only: preview the product as any plan without changing the stored plan. Set from the Plans
@@ -3034,6 +3039,10 @@ const FEATURE_LABEL = {
   dividends_full: "Every announced payout + buy-by dates",
   earnings_full: "The full earnings calendar",
   value_full: "Model fair value on every stock",
+  screener: "Plain-English screener on scored fields",
+  scenarios: "Scenario simulator on measured sector betas",
+  scanner: "The daily opportunity scanner",
+  watch_intel: "Watchlist intelligence — what changed",
   strategies_run: "Run the strategy library on your board",
   research_full: "The full research library",
   broker_tools: "Your desk's calls scored in public",
@@ -3914,13 +3923,244 @@ async function pageTools() {
   if (_tools.tab === "divreinvest") toolDivRun(); else toolRun();
 }
 
+/* ==========================================================================================
+   PRO WORKFLOWS — deterministic, computed from the desk's own scored data. No tokens, no
+   marginal cost, and every claim traceable to a state file. Research framing throughout.
+   ========================================================================================== */
+
+/* ---- Opportunity Scanner: six daily top-lists, each with a one-line why. Board page. ---- */
+function scannerLists(q, fvt, fnd, predT, fs) {
+  const rows = Object.keys(q).map(s => {
+    const v = q[s] || {}, fv = fvt[s] || {}, f = fnd[s] || {}, m = fs?.[s]?.metrics || {};
+    return { s, ...v, gap: fv.mispricing_pct, verdict: fv.verdict, fair: fv.composite_fair,
+      dy: parseFloat(f.div_yield) || 0, payout: parseFloat(f.payout_ratio), margin: m.net_margin,
+      pe: m.pe, fpe: m.forward_pe, pred: predT[s]?.score };
+  });
+  const liq = r => (r.avg_daily_traded_value || 0) >= 10e6;
+  return [
+    // |gap| > 150% is treated as a model artifact (usually an EPS quirk feeding one model), not a
+    // bargain — a "top opportunities" list led by a 300% number reads as broken because it is.
+    { key: "undervalued", title: "Below model fair value", rows: rows.filter(r => r.verdict === "undervalued" && liq(r) && r.gap <= 150).sort((a, b) => b.gap - a.gap).slice(0, 5)
+        .map(r => ({ s: r.s, m: sgn(r.gap) + "%", why: `Rs ${fmt(r.close)} vs blended model fair Rs ${fmt(r.fair)} — cheap on the model, which is not the same as a good business.` })) },
+    { key: "momentum", title: "Momentum", rows: rows.filter(r => r.above_sma50 && liq(r)).sort((a, b) => b.ret_20d - a.ret_20d).slice(0, 5)
+        .map(r => ({ s: r.s, m: sgn(r.ret_20d) + "%", why: `+${r.ret_20d}% over 20 sessions, holding above its 50-day average. Momentum cuts both ways.` })) },
+    { key: "dividend", title: "Covered dividend yield", rows: rows.filter(r => r.dy > 0 && r.payout != null && r.payout < 90).sort((a, b) => b.dy - a.dy).slice(0, 5)
+        .map(r => ({ s: r.s, m: r.dy + "%", why: `Yields ${r.dy}% with ${r.payout}% of earnings paid out — covered, on last reported numbers.` })) },
+    { key: "quality", title: "Quality earners", rows: rows.filter(r => (r.margin || 0) >= 12 && r.fpe && r.pe && r.fpe < r.pe && liq(r)).sort((a, b) => b.margin - a.margin).slice(0, 5)
+        .map(r => ({ s: r.s, m: r.margin + "%", why: `Net margin ${r.margin}%, and forward P/E ${r.fpe} below trailing ${r.pe} — the market expects earnings to grow.` })) },
+    { key: "predictable", title: "High predictability", rows: rows.filter(r => r.pred != null && liq(r)).sort((a, b) => b.pred - a.pred).slice(0, 5)
+        .map(r => ({ s: r.s, m: String(r.pred), why: `Predictability ${r.pred}/100 — its historical patterns resolved consistently. Past consistency, not a promise.` })) },
+    { key: "oversold", title: "Washed-out (RSI)", rows: rows.filter(r => r.rsi14 != null && r.rsi14 <= 35 && liq(r)).sort((a, b) => a.rsi14 - b.rsi14).slice(0, 5)
+        .map(r => ({ s: r.s, m: "RSI " + Math.round(r.rsi14), why: `RSI ${Math.round(r.rsi14)} after selling pressure — where bounces have historically started, and where knives keep falling. Not a signal.` })) },
+  ].filter(c => c.rows.length);
+}
+function scannerHtml(cats) {
+  if (!hasFeature("scanner")) return planWall("The daily opportunity scanner",
+    "Six ranked lists rebuilt every cycle from the desk's scored data — below fair value, momentum, covered yield, quality earners, predictability, washed-out RSI — each name with the one-line reason it qualified.");
+  return `<div class="scan-grid">${cats.map(c => `<div class="card scan-card">
+    <h2>${esc(c.title)}</h2>
+    ${c.rows.map(r => `<div class="scan-row clickable" onclick="location.hash='#/ticker/${esc(r.s)}'">
+      <b>${esc(r.s)}</b><span class="num scan-m">${esc(r.m)}</span><span class="sub">${esc(r.why)}</span></div>`).join("")}
+  </div>`).join("")}</div>
+  <p class="sub" style="margin-top:8px">Ranked from the desk's own data each cycle — screens, not recommendations. A list a stock qualifies for is a place to start reading, never a reason to buy. (Insider-dealing and Shariah-status screens await a verified data source — the desk won't fake either.)</p>`;
+}
+
+/* ---- Scenario Simulator: measured sector×macro betas, scaled to the user's what-if. ---- */
+const SCEN_FACTORS = {
+  oil: { label: "Oil (WTI)", unit: "$", presetTargets: [95, 70] },
+  usdpkr: { label: "USD/PKR", unit: "Rs", presetTargets: [340, 260] },
+  gold: { label: "Gold", unit: "$" },
+  sp500: { label: "S&P 500", unit: "" },
+  us10y: { label: "US 10-year yield", unit: "" },
+  dollar: { label: "Dollar index", unit: "" },
+  em_equity: { label: "EM equity flows", unit: "" },
+};
+let _scen = { factor: "oil", movePct: 10 };
+async function pageScenarios() {
+  await Promise.resolve();
+  const [sm, mh] = await Promise.all([j("sector_macro.json"), j("macro_history.json")]);
+  const spots = {};
+  for (const f of Object.keys(SCEN_FACTORS)) {
+    const ser = mh?.factors?.[f]?.series || {};
+    const days = Object.keys(ser).sort();
+    if (days.length) spots[f] = { v: ser[days[days.length - 1]], d: days[days.length - 1] };
+  }
+  const presets = [
+    ["oil", spots.oil ? (95 / spots.oil.v - 1) * 100 : 10, "Oil to $95"],
+    ["usdpkr", spots.usdpkr ? (340 / spots.usdpkr.v - 1) * 100 : 20, "Rupee to 340"],
+    ["gold", 10, "Gold +10%"],
+    ["sp500", -5, "Wall Street −5%"],
+    ["us10y", -10, "US yields fall 10%"],
+    ["dollar", 5, "Dollar +5%"],
+  ];
+  const run = () => {
+    const { factor, movePct } = _scen;
+    const hits = [], quiet = [];
+    for (const [sec, rec] of Object.entries(sm?.by_sector || {})) {
+      const d = (rec.drivers || []).find(x => x.factor === factor && x.demonstrated);
+      if (d) hits.push({ sec, est: d.beta * movePct, corr: d.corr, r2: rec.joint_r2_pct });
+      else quiet.push(sec);
+    }
+    hits.sort((a, b) => b.est - a.est);
+    const win = hits.filter(h => h.est > 0), lose = hits.filter(h => h.est < 0).reverse();
+    const spot = spots[factor];
+    const fl = SCEN_FACTORS[factor];
+    const tile = h => `<div class="sc-tile ${h.est > 0 ? "up" : "dn"} clickable" title="measured correlation ${h.corr} · sector joint R² ${h.r2}%">
+      <b>${esc(h.sec)}</b><span class="num">${h.est > 0 ? "+" : ""}${h.est.toFixed(2)}%</span>
+      <i>${Math.abs(h.corr) >= 0.15 ? "strong" : Math.abs(h.corr) >= 0.07 ? "clear" : "faint"} link</i></div>`;
+    return `
+    <div class="sc-verdict"><b>${esc(fl.label)} ${movePct > 0 ? "+" : ""}${movePct.toFixed(1)}%</b>
+      ${spot ? `<span class="sub">from ${fl.unit}${fmt(spot.v)} (${esc(spot.d)}) ${fl.unit ? `→ ~${fl.unit}${fmt(spot.v * (1 + movePct / 100))}` : ""}</span>` : ""}</div>
+    ${hits.length ? `<div class="sc-cols">
+      <div><div class="ark" style="color:var(--up)">historically leaned up</div>${win.length ? win.map(tile).join("") : '<div class="sub" style="padding:8px 0">none measurably</div>'}</div>
+      <div><div class="ark" style="color:var(--dn)">historically leaned down</div>${lose.length ? lose.map(tile).join("") : '<div class="sub" style="padding:8px 0">none measurably</div>'}</div>
+    </div>` : `<div class="empty">No sector shows a demonstrated link to this factor.</div>`}
+    ${quiet.length ? `<p class="sub" style="margin-top:10px"><b>${quiet.length} sectors show no measurable link</b> — over 19 years their days were made locally, not by this factor. That silence is a finding too.</p>` : ""}
+    <div class="tnote">Each estimate = the sector's <b>measured daily beta</b> to ${esc(fl.label)} (2007–2026, correction-survived) × your move — the typical <i>co-movement</i>, not a forecast. Even the strongest links explain only a few percent of a sector's daily variance, and a real ${esc(fl.label)} shock arrives tangled with everything else. History, not prophecy — and never advice.</div>`;
+  };
+  const locked = !hasFeature("scenarios");
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Scenarios</h2><div class="ln"></div><span class="pill">measured, not imagined</span></div>
+  <p class="sub" style="margin-bottom:12px">"What if oil hits $95?" — answered from what 19 years of data actually show, not from a story. Pick a question or set your own move.</p>
+  ${locked ? planWall("The scenario simulator",
+    "Oil to $95, rupee to 340, Wall Street −5% — see which PSX sectors historically leaned up or down, scaled from measured, correction-survived sector betas, with the honest R² attached.") : `
+  <div class="card">
+    <div class="sc-presets">${presets.map(([f, m, l]) => `<button class="seg-opt ${_scen.factor === f && Math.abs(_scen.movePct - m) < 0.01 ? "on" : ""}" onclick="_scen={factor:'${f}',movePct:${m.toFixed(2)}};pageScenarios()">${esc(l)}</button>`).join("")}</div>
+    <div class="sc-custom">
+      <label>Factor<select id="sc-f" class="ph-in" onchange="_scen.factor=this.value;pageScenarios()">${Object.entries(SCEN_FACTORS).map(([k, v]) => `<option value="${k}"${_scen.factor === k ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></label>
+      <label>Move %<input id="sc-m" type="number" step="0.5" class="ph-in" value="${_scen.movePct.toFixed(1)}" onchange="_scen.movePct=+this.value||0;pageScenarios()"></label>
+    </div>
+    <div id="sc-out">${run()}</div>
+  </div>
+  <p class="sub" style="margin-top:10px">Domestic SBP-rate scenarios aren't offered because the desk has only measured <b>global</b> factors against sectors — US yields are the closest measured cousin, and pretending otherwise would be a guess dressed as data.</p>`}`;
+}
+
+/* ---- Smart Screener: plain English in, transparent parsed filters out. ---- */
+let _scr = { text: "dividend > 6% and below fair value", saved: null };
+function parseScreen(text, sectorNames) {
+  const f = [], warn = [], t = " " + text.toLowerCase() + " ";
+  const num = re => { const m = t.match(re); return m ? parseFloat(m[1]) : null; };
+  const dy = num(/(?:dividend|yield)[^0-9<>]*(?:>|above|over|at least)?\s*(\d+(?:\.\d+)?)\s*%/);
+  if (dy != null) f.push({ label: `yield ≥ ${dy}%`, fn: r => r.dy >= dy });
+  else if (/dividend|yield/.test(t)) f.push({ label: "pays a dividend", fn: r => r.dy > 0 });
+  const peLt = num(/p\/?e\s*(?:<|under|below|less than)\s*(\d+(?:\.\d+)?)/);
+  if (peLt != null) f.push({ label: `P/E < ${peLt}`, fn: r => r.pe != null && r.pe > 0 && r.pe < peLt });
+  if (/below graham|graham/.test(t)) f.push({ label: "below Graham value", fn: r => r.graham != null && r.price != null && r.graham > r.price });
+  if (/undervalued|below fair/.test(t)) f.push({ label: "below model fair value", fn: r => r.verdict === "undervalued" });
+  if (/overvalued|above fair/.test(t)) f.push({ label: "above model fair value", fn: r => r.verdict === "overvalued" });
+  if (/earnings growth|growing|growth/.test(t)) f.push({ label: "earnings expected to grow (fwd P/E < trailing)", fn: r => r.fpe != null && r.pe != null && r.fpe < r.pe });
+  if (/predictab/.test(t)) f.push({ label: "predictability ≥ 60", fn: r => (r.pred || 0) >= 60 });
+  if (/momentum|rising|uptrend/.test(t)) f.push({ label: "20-day momentum > +5%, above 50-day", fn: r => (r.ret_20d || 0) > 5 && r.above_sma50 });
+  if (/liquid/.test(t)) f.push({ label: "≥ Rs 25M traded/day", fn: r => (r.liq || 0) >= 25e6 });
+  if (/defensive|low beta|calm/.test(t)) f.push({ label: "beta < 0.8", fn: r => r.beta != null && r.beta < 0.8 });
+  if (/profitab|margin/.test(t)) f.push({ label: "net margin ≥ 10%", fn: r => (r.margin || 0) >= 10 });
+  if (/covered/.test(t)) f.push({ label: "payout < 90%", fn: r => r.payout != null && r.payout < 90 });
+  // sector match: any distinctive word of a sector name appearing in the query ("banks" →
+  // "Commercial Banks"). Longest matched token wins so "oil marketing" beats plain "oil".
+  let best = null;
+  for (const sec of sectorNames) {
+    for (const w of sec.toLowerCase().split(/[^a-z]+/)) {
+      if (w.length >= 4 && t.includes(w) && (!best || w.length > best.w.length)) best = { sec, w };
+    }
+  }
+  if (best) f.push({ label: `sector: ${best.sec}`, fn: r => r.sector === best.sec });
+  if (/low debt|debt/.test(t)) warn.push("debt — balance-sheet debt isn't in the desk's feed yet, so it can't be filtered. Check the balance sheet directly.");
+  if (/shariah|halal|islamic/.test(t)) warn.push("Shariah status — needs the verified KMI-30 constituent list, which the desk doesn't hold yet. It won't guess on a religious screen.");
+  if (/insider/.test(t)) warn.push("insider dealing — no verified PSX insider-trade feed exists in the desk's data layer.");
+  return { f, warn };
+}
+async function pageScreener() {
+  await Promise.resolve();
+  const locked = !hasFeature("screener");
+  const [q, fv, fnd, pred, fs, sec, uni] = await Promise.all([
+    j("quant.json"), j("fairvalue.json"), j("fundamentals.json"), j("predictability.json"),
+    j("fundamental_scores.json"), j("sectors.json"), j("universe.json")]);
+  const sectorNames = [...new Set(Object.values(sec?.tickers || {}).map(x => x.sector).filter(Boolean))];
+  const rows = Object.keys(q?.tickers || {}).map(s => {
+    const v = q.tickers[s], t = fv?.tickers?.[s] || {}, f = fnd?.tickers?.[s] || {}, m = fs?.tickers?.[s]?.metrics || {};
+    return { s, name: uni?.symbols?.[s]?.name || "", sector: sec?.tickers?.[s]?.sector || "",
+      price: v.close, ret_20d: v.ret_20d, above_sma50: v.above_sma50, liq: v.avg_daily_traded_value,
+      dy: parseFloat(f.div_yield) || 0, payout: parseFloat(f.payout_ratio), pe: m.pe, fpe: m.forward_pe,
+      margin: m.net_margin, beta: m.beta, verdict: t.verdict, gap: t.mispricing_pct,
+      graham: t.methods?.graham, pred: pred?.tickers?.[s]?.score };
+  });
+  const { f: filters, warn } = parseScreen(_scr.text, sectorNames);
+  const out = filters.length ? rows.filter(r => filters.every(x => x.fn(r))) : [];
+  const saved = (myProfile?.saved_screens || []);
+  const SAMPLES = ["dividend > 8% and covered", "below graham value with earnings growth", "undervalued banks",
+    "predictable with momentum", "defensive with dividend > 6%", "cement below fair value"];
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Screener</h2><div class="ln"></div><span class="pill">plain English in</span></div>
+  <p class="sub" style="margin-bottom:12px">No filter panels. Say what you want — the screener shows you exactly how it understood you, then screens on the desk's <b>scored</b> fields: model fair value, Graham value, predictability, covered yield. Fields nobody else can screen on, because nobody else scores them.</p>
+  ${locked ? planWall("The plain-English screener",
+    `"Dividend above 8%, covered, below Graham value, with earnings growth" — typed as a sentence, screened across all ${rows.length} names on the desk's scored fields, with saved screens on your account.`) : `
+  <div class="card">
+    <div class="scr-row"><input id="scr-in" class="ph-in" style="flex:1" value="${esc(_scr.text)}" placeholder="e.g. dividend > 8% with earnings growth, below fair value"
+      onkeydown="if(event.key==='Enter'){_scr.text=this.value;pageScreener()}">
+      <button class="note-save" onclick="_scr.text=document.getElementById('scr-in').value;pageScreener()">Screen</button>
+      ${me && filters.length ? `<button class="note-save" onclick="saveScreen()">Save</button>` : ""}</div>
+    <div class="scr-chips">${filters.map(x => `<span class="scr-chip">${esc(x.label)}</span>`).join("")
+      || '<span class="sub">Nothing parsed yet — try one of the examples below.</span>'}</div>
+    ${warn.map(w => `<div class="tnote warn" style="margin-top:8px"><b>Can't screen on ${esc(w.split(" — ")[0])}</b> — ${esc(w.split(" — ")[1] || "")}</div>`).join("")}
+    <div class="scr-samples">${SAMPLES.map(x => `<button class="scr-sample" onclick="_scr.text='${esc(x)}';pageScreener()">${esc(x)}</button>`).join("")}
+    ${saved.map((x, i) => `<button class="scr-sample saved" onclick="_scr.text='${esc(x.text)}';pageScreener()" title="saved screen">★ ${esc(x.name)}</button>`).join("")}</div>
+  </div>
+  ${filters.length ? `<div class="seg"><h2>${out.length} match${out.length === 1 ? "" : "es"}</h2><div class="ln"></div></div>
+  <div class="card" style="padding:0">${out.length ? `<table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Price</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th><th class="r">Predict.</th></tr></thead><tbody>${
+      out.slice(0, 60).map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
+        <td class="sub">${esc((r.sector || "").slice(0, 16))}</td><td class="r num">${fmt(r.price)}</td><td class="r num">${r.pe ?? "—"}</td>
+        <td class="r num">${r.dy ? r.dy + "%" : "—"}</td><td class="r num ${r.gap > 0 ? "up" : r.gap < 0 ? "dn" : ""}">${r.gap != null ? sgn(r.gap) + "%" : "—"}</td>
+        <td class="r num">${r.pred ?? "—"}</td></tr>`).join("")}</tbody></table>`
+      : '<div class="empty">Nothing clears every condition — loosen one and try again. An empty screen is information too.</div>'}</div>
+  <p class="sub" style="margin-top:10px">A screen is a reading list, not a portfolio. Every match still deserves the checklist on its own page.</p>` : ""}`}`;
+}
+async function saveScreen() {
+  if (!me) { openAuth("signup"); return; }
+  const name = prompt("Name this screen:", _scr.text.slice(0, 30)); if (!name) return;
+  const list = [...(myProfile?.saved_screens || []), { name, text: _scr.text }].slice(-12);
+  myProfile = { ...(myProfile || {}), saved_screens: list };
+  await saveProfile({ saved_screens: list });
+  pageScreener();
+}
+
+/* ---- Watchlist intelligence: "something important changed", computed per watched name. ---- */
+function watchIntel(syms, { q, fvt, news, cal, claims, signals }) {
+  const now = Date.now(), events = [];
+  const recent = ts => ts && (now - new Date(ts).getTime()) < 72 * 3600000;
+  const within = (d, days) => d && (new Date(d) - now) > 0 && (new Date(d) - now) < days * 86400000;
+  for (const s of syms) {
+    const v = q[s] || {}, fv = fvt[s] || {};
+    if ((signals?.active || []).some(x => (x.ticker || x.sym) === s))
+      events.push({ s, w: 5, tag: "signal", msg: "A proven strategy is firing on it right now — see the Board." });
+    if (Math.abs(v.ret_1d || 0) >= 4)
+      events.push({ s, w: 4, tag: v.ret_1d > 0 ? "move ↑" : "move ↓", msg: `Moved ${sgn(v.ret_1d)}% in a session — worth knowing why before reacting.` });
+    // vol_surge alone is currently degenerate (true across the whole universe some cycles), so it
+    // only counts when the price actually moved with it — volume without movement isn't an event.
+    if (v.vol_surge && Math.abs(v.ret_1d || 0) >= 2)
+      events.push({ s, w: 3, tag: "volume", msg: `Heavy volume behind a ${sgn(v.ret_1d)}% move — someone is repositioning with size.` });
+    if (fv.mispricing_pct != null && Math.abs(fv.mispricing_pct) <= 3)
+      events.push({ s, w: 2, tag: "at fair value", msg: `Sits within 3% of the model's fair value (Rs ${fmt(fv.composite_fair)}) — the discount/premium story just changed.` });
+    for (const n of (news || []).slice(-60)) if (recent(n.ts) && (n.tickers || []).includes(s) && (n.impact || 0) >= 4)
+      events.push({ s, w: 5, tag: "news " + n.impact, msg: (n.headline || "").slice(0, 90) });
+    for (const e of (cal?.events || [])) {
+      if (e.ticker !== s) continue;
+      if (e.type === "results" && within(e.date, 7)) events.push({ s, w: 4, tag: "results", msg: `Reports ${e.date} — results gap risk inside a week.` });
+      if ((e.type === "ex_dividend" || e.type === "book_closure") && within(e.buy_by || e.date, 7))
+        events.push({ s, w: 3, tag: "ex-div", msg: `Buy-by date ${e.buy_by || e.date} to receive the announced payout.` });
+    }
+    for (const c of (claims?.claims || []).slice(-80)) if (c.source_type === "broker" && (c.tickers || [c.ticker]).includes(s) && recent(c.made || c.date))
+      events.push({ s, w: 3, tag: "broker", msg: `${c.source || "A broker"} put a fresh call on it — now on the record and scored.` });
+  }
+  return events.sort((a, b) => b.w - a.w).slice(0, 12);
+}
+
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
    The reading itself lives at /#/mychart, which this hands off to. */
 async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
 }
-const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
@@ -4444,8 +4684,9 @@ async function pagePortfolio() {
 }
 
 async function pageWatchlist() {
-  const [quant, uni, fvAll, fscore, live] = await Promise.all([
-    j("quant.json"), j("universe.json"), j("fairvalue.json"), j("fundamental_scores.json"), j("live.json")]);
+  const [quant, uni, fvAll, fscore, live, newsAll, calAll, claimsAll, sigAll] = await Promise.all([
+    j("quant.json"), j("universe.json"), j("fairvalue.json"), j("fundamental_scores.json"), j("live.json"),
+    j("newslog.json"), j("earnings_calendar.json"), j("claims.json"), j("signals.json")]);
   if (!me) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your watchlist</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">Sign in to build a watchlist — star any stock and it follows you here with its price, valuation and health at a glance.<br><br>
@@ -4457,9 +4698,24 @@ async function pageWatchlist() {
   const rows = wl.map(s => ({ s, name: uni?.symbols?.[s]?.name || "", q: q[s], fv: fv[s], fs: fs[s], px: lv[s]?.current ?? q[s]?.close }))
     .filter(r => r.q);
   const verdictLabel = { undervalued: "below fair", overvalued: "above fair", fair: "near fair" };
+  // "something important changed" — deterministic change detection across the watched names
+  let intelHtml = "";
+  if (wl.length) {
+    if (!hasFeature("watch_intel")) {
+      intelHtml = planWall("Watchlist intelligence",
+        "The desk watches your names between visits: strategies firing, 4%+ moves, volume surges, fair-value crossings, impact-4 news, results and buy-by dates inside a week, fresh broker calls — surfaced as 'what changed', not another table to scan.");
+    } else {
+      const ev = watchIntel(wl, { q, fvt: fv, news: newsAll, cal: calAll, claims: claimsAll, signals: sigAll });
+      intelHtml = `<div class="seg"><h2>What changed</h2><div class="ln"></div><span class="pill">${ev.length ? ev.length + " item" + (ev.length > 1 ? "s" : "") : "quiet"}</span></div>
+      <div class="card wl-intel">${ev.length ? ev.map(e => `<div class="wi-row clickable" onclick="location.hash='#/ticker/${esc(e.s)}'">
+        <span class="tag ${e.w >= 5 ? "hot" : ""}">${esc(e.tag)}</span><b>${esc(e.s)}</b><span class="sub">${esc(e.msg)}</span></div>`).join("")
+        : '<div class="empty">Nothing important changed on your names — a quiet watchlist is a feature, not a bug.</div>'}</div>`;
+    }
+  }
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Your watchlist</h2><div class="ln"></div><span class="pill">${rows.length}</span></div>
   <p class="sub" style="margin-bottom:14px">The stocks you follow, with the four things that matter at a glance. Star toggles on any stock page. Research, not advice.</p>
+  ${intelHtml}
   ${rows.length ? `<div class="card"><table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Day</th><th class="r">Valuation</th><th>Health</th><th></th></tr></thead><tbody>${
     rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'">
       <td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
