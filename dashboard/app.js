@@ -308,9 +308,12 @@ async function pageValue() {
     <p>Each stock is valued four ways (peer P/E, earnings-power vs bond yield, Graham, dividend discount); the median is its <b>model fair value</b> — the median resists any single model blowing out. Market median P/E ${fv?.inputs?.market_median_pe ?? "—"}, bond yield ${fv?.inputs?.bond_yield_pct ?? "—"}%. Click any row below to expand its full four-model working.</p>
   </details>
   <div class="seg"><h2 style="color:var(--up)">Priced below model fair value</h2><div class="ln"></div><span class="pill ok">${under.length}</span></div>
-  <div class="card">${under.length ? tbl(under, true) : '<div class="empty">none below model fair value right now</div>'}</div>
+  <div class="card">${under.length ? tbl(isSubscribed() ? under : under.slice(0, 3), true) : '<div class="empty">none below model fair value right now</div>'}</div>
+  ${isSubscribed() ? `
   <div class="seg"><h2 style="color:var(--dn)">Priced above model fair value</h2><div class="ln"></div><span class="pill bad">${over.length}</span></div>
-  <div class="card">${over.length ? tbl(over, false) : '<div class="empty">none above model fair value right now</div>'}</div>`;
+  <div class="card">${over.length ? tbl(over, false) : '<div class="empty">none above model fair value right now</div>'}</div>`
+    : planWall("The full value screen",
+      `${rows.length} names valued four independent ways — all ${under.length} priced below model fair value, the ${over.length} priced above it, and every stock's full four-model working.`)}`;
 }
 
 /* What actually moves each sector — measured, not assumed. Rendered from sector_macro.json, which
@@ -635,8 +638,9 @@ async function pageStrategies() {
     <span id="sb-msg" class="sub" style="display:block;margin-top:8px"></span>
     ${!me && board.length ? `<span class="sub" style="display:block;margin-top:4px">Your board lives in this session only — <a style="color:var(--accent);cursor:pointer" onclick="openAuth('signup')">sign in</a> to keep it.</span>` : ""}
   </div>
-  ${runBar}
-  ${results}
+  ${isSubscribed() ? runBar + results
+    : planWall("Run the desk on your board",
+      "Pick your stocks above, then run every strategy in the library on each — ~19 years of that stock's own history per rule, win rate, expectancy after costs and out-of-sample honesty, revealed live. The rule sets below are open; running them is the desk's work.")}
 
   <div class="seg"><h2>The library</h2><div class="ln"></div></div>
   ${dict}
@@ -763,7 +767,7 @@ function antardashaOf(maha, at) {
    orbits (foreshortened ellipses = perspective), each at its true sidereal longitude, with depth
    from layered shadows and a light gradient. Pure inline SVG (CSP-safe), pixel-glyph planets. */
 const ORBIT_ORDER = ["Moon", "Mercury", "Venus", "Sun", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"];
-function natalOrrery(grahas, ascendant) {
+function natalOrrery(grahas, ascendant, transits) {
   const W = 440, H = 300, cx = W / 2, cy = H / 2 + 8, TILT = 0.46;   // ry/rx foreshorten
   const rings = ORBIT_ORDER.length;
   const rMin = 30, rMax = 196;
@@ -801,13 +805,101 @@ function natalOrrery(grahas, ascendant) {
   const planets = placed.map(p => `<g class="orr-planet">
       <ellipse cx="${p.x.toFixed(1)}" cy="${(p.y + 11).toFixed(1)}" rx="9" ry="2.5" class="orr-shadow"/>
       <g class="orr-g">${pixelRects(p.b, 19, p.x, p.y)}</g></g>`).join("");
+  // today's sky — the same nine grahas as they stand RIGHT NOW, faint on the outermost ring.
+  // The natal chart is fixed; this ring drifts a little every day, which is the whole point.
+  let transitMarks = "";
+  if (transits) transitMarks = NEPH_BODIES.map(b => {
+    const t = transits[b]; if (!t) return "";
+    const a = t.lon * Math.PI / 180;
+    return `<g class="orr-transit">${pixelRects(b, 11, cx + rxZ * Math.cos(a), cy - ryZ * Math.sin(a))}</g>`;
+  }).join("");
   return `<div class="orrery"><svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet">
     <defs><radialGradient id="orrBg" cx="50%" cy="46%" r="62%"><stop offset="0%" stop-color="var(--panel2)"/><stop offset="100%" stop-color="var(--panel)"/></radialGradient></defs>
     <ellipse cx="${cx}" cy="${cy}" rx="${rxZ + 26}" ry="${(rxZ + 26) * TILT + 10}" fill="url(#orrBg)"/>
     ${orbits}${spokes}${ascRay}
     <g class="orr-earth"><circle cx="${cx}" cy="${cy}" r="4"/><text x="${cx}" y="${cy + 15}" class="orr-earth-lbl">you</text></g>
-    ${planets}${signLbls}
+    ${planets}${transitMarks}${signLbls}
   </svg></div>`;
+}
+
+/* ==========================================================================================
+   GOCHARA — the moving sky read against the user's natal Moon, recomputed every day from the same
+   ephemeris table the natal cast uses. The natal chart is static; THIS is what changes daily, and
+   the dated "worth another look" shifts are the reason a reading is worth returning to.
+   ========================================================================================== */
+const GOCHARA_FAV = {   // classical favourable houses counted from the natal Moon
+  Sun: [3, 6, 10, 11], Moon: [1, 3, 6, 7, 10, 11], Mars: [3, 6, 11],
+  Mercury: [2, 4, 6, 8, 10, 11], Jupiter: [2, 5, 7, 9, 11],
+  Venus: [1, 2, 3, 4, 5, 8, 9, 11, 12], Saturn: [3, 6, 11], Rahu: [3, 6, 11], Ketu: [3, 6, 11],
+};
+
+/* sidereal longitudes of the nine grahas for any instant inside the table (1950–2035) */
+async function skyOn(dateMs) {
+  const e = await loadEphem();
+  const di = Math.floor((dateMs - e.start) / 86400000);
+  if (di < 0 || di >= e.hdr.n_days - 1) return null;
+  const frac = (dateMs - e.start) / 86400000 - di;
+  const read = k => NEPH_BODIES.map((_, b) => e.dv.getUint16(((di + k) * 9 + b) * 2, true) / 10);
+  const r0 = read(0), r1 = read(1), out = {};
+  NEPH_BODIES.forEach((body, b) => {
+    const lo = _lerpLon(r0[b], r1[b], frac), si = Math.floor(lo / 30) % 12;
+    out[body] = { lon: lo, sign_i: si, sign: SIGN12[si] };
+  });
+  return out;
+}
+
+function gocharaRead(nc, sky, amap) {
+  const moonI = nc.grahas.Moon.sign_i ?? Math.floor(nc.grahas.Moon.lon / 30) % 12;
+  const tiles = NEPH_BODIES.map(g => {
+    const t = sky[g];
+    const house = ((t.sign_i - moonI + 12) % 12) + 1;
+    const fav = (GOCHARA_FAV[g] || []).includes(house);
+    // "testing" is reserved for the classical hard Saturn seats (Sade Sati houses + the 8th);
+    // everything else non-favourable is simply neutral — gochara is weather, not doom.
+    const tag = fav ? "favourable" : (g === "Saturn" && [12, 1, 2, 8].includes(house)) ? "testing" : "neutral";
+    let conj = null;
+    for (const ng of NEPH_BODIES) {
+      const d = Math.abs(((t.lon - nc.grahas[ng].lon + 540) % 360) - 180);
+      if (d <= 2.5) { conj = ng; break; }
+    }
+    const domains = (amap?.grahas?.[g]?.domains || []).slice(0, 2).join(", ");
+    return { g, sign: t.sign, house, fav, tag, conj, domains };
+  });
+  return { tiles, sadeSati: [12, 1, 2].includes(tiles.find(t => t.g === "Saturn").house) };
+}
+
+/* The comeback calendar: scan the ephemeris forward for the dates the sky re-deals THIS chart —
+   sign ingresses (house-from-Moon changes) for everything but the too-fast Moon and mirror Ketu,
+   plus the user's own dasha/antardasha turnovers. Sorted, dated, honest. */
+async function upcomingShifts(nc, horizon = 400) {
+  const e = await loadEphem();
+  const t0 = Date.now();
+  const di0 = Math.floor((t0 - e.start) / 86400000);
+  if (di0 < 0) return [];
+  const moonI = Math.floor(nc.grahas.Moon.lon / 30) % 12;
+  const bodies = ["Sun", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "Rahu"];
+  const bi = bodies.map(b => NEPH_BODIES.indexOf(b));
+  const maxDi = Math.min(di0 + horizon, e.hdr.n_days - 1);
+  const out = [];
+  let prev = bi.map(b => Math.floor((e.dv.getUint16((di0 * 9 + b) * 2, true) / 10) / 30) % 12);
+  for (let di = di0 + 1; di <= maxDi; di++) {
+    bi.forEach((b, k) => {
+      const si = Math.floor((e.dv.getUint16((di * 9 + b) * 2, true) / 10) / 30) % 12;
+      if (si !== prev[k]) {
+        const house = ((si - moonI + 12) % 12) + 1;
+        out.push({ date: new Date(e.start + di * 86400000).toISOString().slice(0, 10),
+          kind: "ingress", body: bodies[k], sign: SIGN12[si], house, fav: (GOCHARA_FAV[bodies[k]] || []).includes(house) });
+        prev[k] = si;
+      }
+    });
+  }
+  const cur = nc.dasha?.current || {};
+  for (const [d, kind, body] of [[cur.antar_to, "antar", cur.antar], [cur.to, "maha", cur.lord]]) {
+    const t = d && new Date(d).getTime();
+    if (t && t > t0 && t - t0 < horizon * 86400000) out.push({ date: String(d).slice(0, 10), kind, body });
+  }
+  out.sort((a, b) => a.date.localeCompare(b.date));
+  return out;
 }
 
 /* ---------- the dasha timeline: the "when". The user's Vimshottari maha-dasha ribbon with the
@@ -1222,6 +1314,22 @@ const BILLING_LIVE = false;
 const FREE_MATCHES = 3;                       // how many resonance cards a guest sees in full
 function isSubscribed() { return !!(me && (!BILLING_LIVE || (myProfile && myProfile.plan && myProfile.plan !== "free"))); }
 
+/* The one paywall card, used on every gated page. Language is fixed: the thing sits in "the paid
+   plan" (plans being drawn for three desks — new investors, pros, brokers). Never scare copy;
+   always name exactly what's behind the wall. Returns "" for subscribers so call sites can inline it. */
+function planWall(what, teaser) {
+  if (isSubscribed()) return "";
+  return `<div class="card plan-wall">
+    <div class="mc-lock-kick">part of the paid plan</div>
+    <h3>${what}</h3>
+    <p class="sub">${teaser}</p>
+    <p class="sub">${me
+      ? "This sits in the paid plan. Plans are being drawn for three desks — new investors, pros, and brokers."
+      : "Create a free account to start exploring — the paid plan unlocks this in full. Plans are being drawn for three desks: new investors, pros, and brokers."}</p>
+    <button class="bw-go" style="max-width:250px" onclick="${me ? "location.hash='#/settings'" : "openAuth('signup')"}">${me ? "See plans →" : "Create a free account →"}</button>
+  </div>`;
+}
+
 /* Called on sign-in: lift a guest's chart into their profile so the details survive the account
    boundary. Never clobbers a chart already on the profile. */
 async function migrateGuestChart() {
@@ -1397,6 +1505,11 @@ async function pageMyChart() {
     j("universe.json"), j("sectors.json"), j("astro_map.json"), j("astro_natal.json"), j("astro.json")]);
   const names = uni?.symbols || {};
   const cur = nc.dasha?.current || {};
+  const locked = !isSubscribed();
+  // the daily layer: today's sky over this chart, and the dates it next re-deals
+  const sky = await skyOn(Date.now()).catch(() => null);
+  const goch = sky ? gocharaRead(nc, sky, amap) : null;
+  const shifts = (goch && !locked) ? await upcomingShifts(nc).catch(() => []) : [];
   // score every ticker
   const scored = Object.keys(names).map(sym => {
     const stock = natalAll?.subjects?.[sym];
@@ -1413,7 +1526,6 @@ async function pageMyChart() {
   const comm = COMMODITIES.map(c => ({ ...c, ...resonanceWithGraha(nc, c.sig, c.name) }))
     .filter(c => c.score != null).sort((a, b) => b.score - a.score);
 
-  const locked = !isSubscribed();
   // The wall lands where desire peaks: a guest reads their real chart and their strongest few
   // matches in full, then sees that a ranked map of the whole exchange exists behind it.
   const lockCard = (kicker, what) => `<div class="card mc-lock">
@@ -1439,6 +1551,33 @@ async function pageMyChart() {
     ${tm ? `<div class="syn-time"><span class="dt-glyph">${pixelGlyph(tm.windows[0].lord, 14)}</span> <b>The tradition's timing:</b> your ${esc(tm.windows[0].lord)} period (${tm.windows[0].from.slice(0, 4)}–${tm.windows[0].to.slice(0, 4)}) is when your chart most resonates with ${esc(x.sym)}${tm.windows[1] ? `, again under ${esc(tm.windows[1].lord)} from ${tm.windows[1].from.slice(0, 4)}` : ""}. A rhythm, not a date to act on.</div>` : ""}</div></div>`;
   };
 
+  // ---- "Today, against your chart" — the section that is different every single day ----
+  const ord = n => n === 1 ? "1st" : n === 2 ? "2nd" : n === 3 ? "3rd" : n + "th";
+  let todaySection = "";
+  if (goch) {
+    const gTile = t => `<div class="goch-tile ${t.tag === "favourable" ? "up" : t.tag === "testing" ? "dn" : ""}">
+      <div class="goch-top"><span class="dt-glyph">${pixelGlyph(t.g, 16)}</span><b>${esc(t.g)}</b><span class="pill ${t.tag === "favourable" ? "ok" : t.tag === "testing" ? "bad" : ""}">${t.tag}</span></div>
+      <div class="sub">in ${esc(t.sign)} — your ${ord(t.house)} from the Moon${t.conj ? ` · <b>crossing your natal ${esc(t.conj)}</b>` : ""}${t.domains ? ` · ${esc(t.domains)}` : ""}</div></div>`;
+    const shiftLine = s => s.kind === "antar" ? `your sub-period turns to <b>${esc(s.body || "")}</b> — your readings and commodities re-rank`
+      : s.kind === "maha" ? `your <b>${esc(s.body || "")}</b> maha-dasha closes — a new long chapter opens`
+      : `<b>${esc(s.body)}</b> enters ${esc(s.sign)} — your ${ord(s.house)} from the Moon, traditionally ${s.fav ? "favourable" : "a quieter seat"}`;
+    const big = shifts.find(s => s.kind === "ingress" && ["Jupiter", "Saturn", "Rahu"].includes(s.body));
+    const list = shifts.slice(0, 4);
+    if (big && !list.includes(big)) list.push(big);
+    todaySection = `
+  <div class="seg"><h2>Today, against your chart</h2><div class="ln"></div><span class="pill">${new Date().toISOString().slice(0, 10)} · refreshes daily</span></div>
+  <p class="sub" style="margin-bottom:12px">Gochara — the tradition reads the moving sky from your natal Moon. The nine grahas that stood still the moment you were born have kept moving; this is where each stands over your chart <b>today</b>. A daily lens for exploration, never a signal.</p>
+  ${locked
+    ? `<div class="goch-grid">${goch.tiles.filter(t => t.g === "Moon").map(gTile).join("")}</div>
+       ${planWall("The daily sky, read against your chart",
+      "All nine grahas placed from your Moon and refreshed every day, the days they cross your natal points — and the dates the sky next re-deals your chart, so you know exactly when to look again.")}`
+    : `<div class="goch-grid">${goch.tiles.map(gTile).join("")}</div>
+       ${goch.sadeSati ? `<div class="disclaimer">Saturn is moving through the signs around your natal Moon — the stretch tradition calls <b>Sade Sati</b> and reads as slow-earned lessons. A weather report from the tradition, not a verdict.</div>` : ""}
+       ${list.length ? `<div class="card next-look"><div class="mc-lock-kick">worth another look</div>
+        ${list.map(s => `<div class="nl-row"><b class="num">${esc(s.date)}</b><span>${shiftLine(s)}</span></div>`).join("")}
+        <p class="sub" style="margin-top:8px">The sky re-deals a little every day — these are the dates it re-deals <b>your</b> chart meaningfully. Each is worth a fresh read.</p></div>` : ""}`}`;
+  }
+
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">${esc(bd.place || "")} · ${esc(bd.date || "")}</span></div>
   <div class="disclaimer">Astrological exploration, <b>not investment advice</b>. A lens to read your chart against the market as the tradition would — never a recommendation to buy or a forecast of profit.</div>
@@ -1451,10 +1590,11 @@ async function pageMyChart() {
     <div><div class="ark">Your current period</div><b style="font-size:18px">${pixelGlyph(cur.lord, 18)} ${esc(cur.lord || "—")}${cur.antar ? ` / ${esc(cur.antar)}` : ""} dasha</b>
       <div class="sub">${cur.antar ? `${esc(cur.antar)} sub-period to ~${esc(String(cur.antar_to || "").slice(0, 7))} · ` : ""}${esc(cur.lord || "")} maha to ~${esc(String(cur.to || "").slice(0, 7))}</div></div>
     </div>
-    ${natalOrrery(nc.grahas, asc)}
-    <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas on their orbits at the moment you were born. Sidereal, Lahiri.</p>
+    ${natalOrrery(nc.grahas, asc, sky)}
+    <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas at the moment you were born${sky ? ", with <b>today's sky</b> faint on the outer ring. It drifts a little every day" : ""}. Sidereal, Lahiri.</p>
     ${gl.line ? `<p class="sub goal-line" style="text-align:center;margin-top:4px">You're here for <b>${esc(gl.label)}</b>. ${esc(gl.line)}</p>` : ""}
   </div>
+  ${todaySection}
 
   <div class="seg"><h2>Your timing — the map of when</h2><div class="ln"></div><span class="pill">Vimshottari</span></div>
   <p class="sub" style="margin-bottom:12px">Vedic astrology divides a life into planetary periods (dashas), and each into sub-periods (antardashas). Each, tradition says, colours the time it rules. This is your ribbon — the long arc above, the nearer sub-periods below. A rhythm to understand your chart by, <b>never</b> a schedule to trade on.</p>
@@ -2154,7 +2294,9 @@ async function pageDividends() {
   const past = (divs?.history || []).filter(d => d.bc_start && !d.upcoming)
     .sort((a, b) => b.bc_start.localeCompare(a.bc_start)).slice(0, 40);
 
-  const divHtml = divUp.length ? divUp.map(d => `
+  const dvLocked = !isSubscribed();
+  const divShown = dvLocked ? divUp.slice(0, 3) : divUp;
+  const divHtml = divUp.length ? divShown.map(d => `
     <tr class="clickable" onclick="location.hash='#/ticker/${d.ticker}'">
       <td><b>${d.ticker}</b></td>
       <td>${esc(d.announcement || d.type.replace("_", " "))}</td>
@@ -2176,12 +2318,14 @@ async function pageDividends() {
   <div class="card"><div class="sub">own the share BEFORE the ex-dividend date to receive the cash · updated ${esc(cal?.updated || "—")}</div>
     <table><thead><tr><th>Ticker</th><th>Payout</th><th class="r">Rs/sh</th><th class="r">Yield</th><th class="r">Buy by</th><th class="r">Ex / sell-after</th></tr></thead><tbody>${divHtml}</tbody></table></div>
 
+  ${dvLocked ? planWall("The full dividend desk",
+    `Every announced payout with its buy-by and sell-after dates${divUp.length > 3 ? ` (${divUp.length - 3} more upcoming right now)` : ""}, plus the last ${past.length} real payouts with the yields they actually delivered — what these names truly pay, on the record.`) : `
   <div class="seg"><h2>Past payouts</h2><div class="ln"></div></div>
   <div class="card"><div class="sub">last ${past.length} closures · cash dividends (D) as % of Rs 10 face value</div>
     <table><thead><tr><th>Ticker</th><th>Payout</th><th class="r">Rs/sh</th><th class="r">Yield@now</th><th class="r">Announced</th><th class="r">Closure start</th></tr></thead><tbody>${
     past.map(d => `<tr class="clickable" onclick="location.hash='#/ticker/${d.symbol}'"><td><b>${d.symbol}</b></td><td>${esc(d.announcement)}</td>
       <td class="r num">${d.dividend_rs ?? "—"}</td><td class="r num">${d.yield_pct_at_close ? d.yield_pct_at_close + "%" : "—"}</td>
-      <td class="r num">${esc((d.announced || "").split(" ").slice(0, 3).join(" "))}</td><td class="r num">${d.bc_start}</td></tr>`).join("")}</tbody></table></div>`;
+      <td class="r num">${esc((d.announced || "").split(" ").slice(0, 3).join(" "))}</td><td class="r num">${d.bc_start}</td></tr>`).join("")}</tbody></table></div>`}`;
 }
 
 async function pageCalendar() {
@@ -2193,7 +2337,7 @@ async function pageCalendar() {
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Earnings calendar</h2><div class="ln"></div></div>
   <p class="sub" style="margin-bottom:16px">${earnings.length} upcoming results dates across the universe · <span class="pill ok">verified</span> = confirmed against a company/PSX board-meeting notice · <span class="tag">estimate</span> = scraped, pending verification. The desk won't open a swing into an unconfirmed results date inside its hold window (earnings gaps blow through stops).</p>
-  ${Object.keys(byMonth).sort().map(m => {
+  ${(isSubscribed() ? Object.keys(byMonth).sort() : Object.keys(byMonth).sort().slice(0, 1)).map(m => {
     const label = new Date(m + "-01").toLocaleDateString("en", { month: "long", year: "numeric" });
     return `<div class="card"><h2 style="font-size:13px">${label}</h2>
       <table><thead><tr><th>Date</th><th class="r">In</th><th>Ticker</th><th>Event</th><th class="r">Status</th></tr></thead><tbody>${
@@ -2201,7 +2345,9 @@ async function pageCalendar() {
         <td class="num">${e.date}</td><td class="r">${cdBadge(e.date)}</td><td><b>${e.ticker}</b></td>
         <td class="sub">${esc(e.note || "results")}</td>
         <td class="r">${e.confirmed ? '<span class="pill ok">verified</span>' : '<span class="tag">estimate</span>'}</td></tr>`).join("")}</tbody></table></div>`;
-  }).join("") || '<div class="card"><div class="empty">Calendar builds on the first full cycle.</div></div>'}`;
+  }).join("") || '<div class="card"><div class="empty">Calendar builds on the first full cycle.</div></div>'}
+  ${Object.keys(byMonth).length > 1 ? planWall("The full earnings calendar",
+    `${earnings.length} dated results across the coming months, each verified against a board-meeting notice — the dates that gap prices, known before they land.`) : ""}`;
 }
 
 let newsFilter = { imp: 0, q: "" };
@@ -2259,9 +2405,11 @@ async function pageResearch() {
   </div>
   <div class="disclaimer">Broker research and company filings are <b>evidence the desk cross-examines, never takes at face value</b>. Brokers miss things, carry sector bias, and are often wrong — every broker claim here is extracted, scored against what actually happens, and ranked on the <a href="#/leaderboard" style="color:inherit;text-decoration:underline">broker leaderboard</a>. Educational, not advice.</div>
   <div class="seg"><h2>Broker notes</h2><div class="ln"></div><span class="pill">${brokers.length}</span></div>
-  <div class="card">${brokers.length ? brokers.map(docRow).join("") : '<div class="empty">No broker notes digested yet. Add public sources in config/broker_sources.json; the desk digests each once and scores its calls. Until then, the desk forms its own view without leaning on brokers.</div>'}</div>
+  <div class="card">${brokers.length ? (isSubscribed() ? brokers : brokers.slice(0, 2)).map(docRow).join("") : '<div class="empty">No broker notes digested yet. Add public sources in config/broker_sources.json; the desk digests each once and scores its calls. Until then, the desk forms its own view without leaning on brokers.</div>'}</div>
   <div class="seg"><h2>Company filings & briefings</h2><div class="ln"></div><span class="pill">${filings.length}</span></div>
-  <div class="card">${filings.length ? filings.map(docRow).join("") : '<div class="empty">No filings tagged yet — the news sentinel surfaces results, board-meeting and corporate-briefing notices here as companies file them.</div>'}</div>`;
+  <div class="card">${filings.length ? (isSubscribed() ? filings : filings.slice(0, 2)).map(docRow).join("") : '<div class="empty">No filings tagged yet — the news sentinel surfaces results, board-meeting and corporate-briefing notices here as companies file them.</div>'}</div>
+  ${docs.length > 4 ? planWall("The full research library",
+    `${docs.length} digested documents — broker notes with every claim extracted for public scoring, results filings and corporate briefings — each cross-examined, never taken at face value.`) : ""}`;
 }
 
 /* ---------- Leaderboards: our analysts + the brokers, scored on real outcomes ---------- */

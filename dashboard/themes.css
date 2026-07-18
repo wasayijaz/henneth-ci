@@ -646,6 +646,24 @@ body[data-theme=gemini] .mc-lock-face h3{margin:0 0 8px;font-size:17px}
 body[data-theme=gemini] .mc-lock-face .sub{max-width:440px;line-height:1.6;margin-bottom:14px}
 @media(max-width:720px){body[data-theme=gemini] .mc-lock-face{padding:18px 14px}
   body[data-theme=gemini] .mc-lock-face h3{font-size:15px}}
+/* the generic paid-plan wall, used on every gated page */
+body[data-theme=gemini] .plan-wall{text-align:center;padding:28px 22px;border-left:3px solid var(--accent)}
+body[data-theme=gemini] .plan-wall h3{margin:6px 0 8px;font-size:16.5px}
+body[data-theme=gemini] .plan-wall .sub{max-width:470px;margin:0 auto 12px;line-height:1.6}
+body[data-theme=gemini] .plan-wall .bw-go{margin:2px auto 0;display:block}
+/* the daily sky (gochara) tiles + the comeback card */
+body[data-theme=gemini] .goch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px;margin-bottom:12px}
+body[data-theme=gemini] .goch-tile{border:1px solid var(--line);padding:10px 12px;background:var(--panel)}
+body[data-theme=gemini] .goch-tile.up{border-left:3px solid var(--up)}
+body[data-theme=gemini] .goch-tile.dn{border-left:3px solid var(--dn)}
+body[data-theme=gemini] .goch-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+body[data-theme=gemini] .goch-top .pill{margin-left:auto}
+body[data-theme=gemini] .next-look{border-left:3px solid var(--accent)}
+body[data-theme=gemini] .nl-row{display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--hair);align-items:baseline}
+body[data-theme=gemini] .nl-row:last-of-type{border-bottom:none}
+body[data-theme=gemini] .nl-row b.num{flex:none;font-family:"Pixelify Sans",var(--mono,monospace)}
+body[data-theme=gemini] .orr-transit{opacity:.42}
+@media(max-width:720px){body[data-theme=gemini] .goch-grid{grid-template-columns:1fr 1fr}}
 body[data-theme=gemini] .syn-card{padding:0;margin-bottom:10px}
 body[data-theme=gemini] .syn-head{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--hair)}
 body[data-theme=gemini] .syn-score{flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-family:"Pixelify Sans",var(--mono,monospace);font-size:20px;font-weight:700;border:1.5px solid var(--ink1)}
