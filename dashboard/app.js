@@ -196,11 +196,36 @@ function globalStrip(gl) {
   return items ? `<div class="gstrip clickable" onclick="location.hash='#/macro'"><div class="gtrack">${items}${items}</div></div>` : "";
 }
 
+/* PSX's own index board. ALLSHR / KMIALLSHR matter because the desk's universe runs well past the
+   KSE100 — benchmarking a mid-cap against an index it isn't in is a quiet way to be wrong. */
+const IDX_LABEL = {
+  KSE100: ["KSE100", "the headline 100"], ALLSHR: ["KSE All Share", "every listed company"],
+  KMI30: ["KMI30", "Shariah, top 30"], KMIALLSHR: ["KMI All Share", "every Shariah-compliant name"],
+  KSE30: ["KSE30", "free-float top 30"], BKTI: ["Banks", "sector index"], OGTI: ["Oil & Gas", "sector index"],
+};
+function indexBoard(idx) {
+  const live = idx?.live || {};
+  const days = Object.keys(idx?.history || {}).sort();
+  const prev = days.length > 1 ? idx.history[days[days.length - 2]] : null;
+  const cells = Object.keys(IDX_LABEL).filter(k => live[k] != null).map(k => {
+    const [label, sub] = IDX_LABEL[k];
+    const chg = prev && prev[k] != null ? (live[k] / prev[k] - 1) * 100 : null;
+    return `<div class="idx-cell"><span class="sk">${esc(label)}</span>
+      <b class="num">${fmt(live[k], 0)}</b>
+      ${chg != null ? `<i class="num ${cls(chg)}">${sgn(+chg.toFixed(2))}%</i>`
+      : `<i class="sub" title="The desk started keeping this index today — a change needs two sessions on file.">first session</i>`}
+      <span class="sub">${esc(sub)}</span></div>`;
+  }).join("");
+  return cells ? `<div class="seg"><h2>PSX indices</h2><div class="ln"></div><span class="pill">${days.length} session${days.length === 1 ? "" : "s"} kept</span></div>
+    <div class="card idx-board">${cells}</div>
+    <p class="sub" style="margin-top:8px">Captured from PSX's own board each cycle and kept permanently — no public source carries PSX index history, so the desk builds it. The <b>All Share</b> indices are the honest benchmark for names outside the KSE100${prev ? "" : "; day-change appears once a second session is on file"}.</p>` : "";
+}
+
 async function pageBoard() {
-  const [quant, pred, dash, news, pos, smap, trig, live, gl, fvAll, fndAll, fsAll] = await Promise.all([
+  const [quant, pred, dash, news, pos, smap, trig, live, gl, fvAll, fndAll, fsAll, idxAll] = await Promise.all([
     j("quant.json"), j("predictability.json"), j("dashboard.json"), j("newslog.json"),
     j("positions.json"), j("strategy_map.json"), j("live_triggers.json"), j("live.json"), j("global.json"),
-    j("fairvalue.json"), j("fundamentals.json"), j("fundamental_scores.json")]);
+    j("fairvalue.json"), j("fundamentals.json"), j("fundamental_scores.json"), j("indices.json")]);
   const q = quant?.tickers || {};
   const lv = live?.tickers || {};
 
@@ -255,7 +280,9 @@ async function pageBoard() {
 
   // the daily opportunity scanner — six ranked lists from the scored data, rebuilt every cycle
   const scanCats = scannerLists(q, fvAll?.tickers || {}, fndAll?.tickers || {}, pred?.tickers || {}, fsAll?.tickers || {});
-  $("view").innerHTML = `${globalStrip(gl)}<div class="grid-board">
+  $("view").innerHTML = `${globalStrip(gl)}
+  ${indexBoard(idxAll)}
+  <div class="grid-board">
     <div class="cards">${sigHtml}${trigHtml}${posCard}</div>
     <div class="cards">${universeCard}${predCard}${provenCard}</div>
     <div class="cards">${newsCard}${agentCard}</div>
@@ -4540,13 +4567,13 @@ async function pageMarket() {
       : `<div class="sub mkt-bt-pending">Awaiting the desk's backtest — it will appear here with real win rate, expectancy after costs, and out-of-sample results, whatever they show.</div>`}
   </div>`;
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Strategy marketplace</h2><div class="ln"></div><span class="pill">${deskN} desk + ${list.length} community</span></div>
-  <p class="sub" style="margin-bottom:12px">Build a strategy from the same rule vocabulary the desk's own ${deskN} run on, publish it, and the desk backtests it on <b>every stock's own ~19-year history</b> — win rate, expectancy after costs, out-of-sample. Results are published <b>whatever they show</b>; a strategy that failed is as useful to everyone as one that worked.</p>
+  <div class="seg" style="margin-top:4px"><h2>Strategy marketplace</h2><div class="ln"></div><span class="pill">publishing coming soon</span></div>
+  <p class="sub" style="margin-bottom:12px">Build a strategy from the same rule vocabulary the desk's own ${deskN} run on. <b>Publishing opens once the desk can backtest every submission</b> on each stock's own ~19-year history and show the result whatever it shows — a strategy that failed is as useful to everyone as one that worked, but an untested one helps nobody.</p>
   ${locked ? planWall("The strategy marketplace",
-    "Compose rules from the desk's own indicator vocabulary, publish them, and get a real backtest across the whole universe — then see how every community strategy actually performed, ranked honestly.") : `
+    "Compose rules from the desk's own indicator vocabulary and test the idea. Community publishing, honest backtests on every submission, and a ranked leaderboard follow.") : `
   <div class="ttabs">
     <button class="ttab ${_mkt.tab === "browse" ? "on" : ""}" onclick="_mkt.tab='browse';pageMarket()">Browse</button>
-    <button class="ttab ${_mkt.tab === "build" ? "on" : ""}" onclick="_mkt.tab='build';pageMarket()">Build & publish</button>
+    <button class="ttab ${_mkt.tab === "build" ? "on" : ""}" onclick="_mkt.tab='build';pageMarket()">Build a strategy</button>
     <button class="ttab ${_mkt.tab === "mine" ? "on" : ""}" onclick="_mkt.tab='mine';pageMarket()">Mine (${mine.length})</button>
   </div>
   <div class="card tpanel">
@@ -4563,13 +4590,13 @@ async function pageMarket() {
     <div class="ark" style="margin-top:14px">entry conditions — all must be true</div>
     <div class="mkt-rules">${_mkt.rules.map(mktRuleRow).join("")}</div>
     <div class="tnote"><button class="note-save" onclick="_mkt.rules.push({lhs:'rsi14',op:'lt',rhs:40});pageMarket()">+ Add condition</button>
-      <button class="bw-go" style="max-width:200px;display:inline-block;margin-left:8px" onclick="mktPublish()">Publish</button>
+      <button class="pc-btn ghost" style="max-width:220px;display:inline-block;margin-left:8px" disabled>Publishing — coming soon</button>
       <div id="mkt-msg" class="sub" style="margin-top:8px"></div></div>
-    <div class="tnote warn"><b>What publishing means.</b> Your strategy is backtested honestly and its results shown in full — including if it loses money. The desk will not hide a bad result, and a published strategy is <b>research shared with others, never advice given to them</b>. Past performance does not predict future results.</div>`
+    <div class="tnote warn"><b>Why publishing isn't open yet.</b> A published strategy is only worth reading if the numbers beside it are real, so the desk won't accept submissions until it can backtest every one on ~19 years of each stock's own history and show the result <b>whatever it shows</b> — including losses. That pipeline is being built. Until it is, the builder above is yours to experiment with, and the desk's own ${deskN} strategies on the <a href="#/strategies" style="color:var(--accent)">Strategies</a> page already carry their full, honest backtests.</div>`
       : _mkt.tab === "mine" ? (mine.length ? mine.map(card).join("")
         : `<div class="empty">You haven't published a strategy yet. Build one and the desk will test it properly.</div>`)
         : (list.length ? `<div class="mkt-grid">${list.map(card).join("")}</div>`
-          : `<div class="empty">No community strategies published yet — be the first. Meanwhile the desk's own ${deskN} are on the <a href="#/strategies" style="color:var(--accent)">Strategies</a> page, each with its real backtest.</div>`)}
+          : `<div class="empty"><b>Community publishing is coming soon.</b><br><br>The desk's own <b>${deskN}</b> strategies are live on the <a href="#/strategies" style="color:var(--accent)">Strategies</a> page right now — every one backtested on each stock's own ~19-year history, with win rate, expectancy after costs and out-of-sample results shown in full. Use <b>Build a strategy</b> to compose your own idea in the meantime.</div>`)}
   </div>`}`;
 }
 

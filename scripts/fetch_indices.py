@@ -28,7 +28,13 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATE = ROOT / "state"
 OUT = STATE / "indices.json"
 PKT = dt.timezone(dt.timedelta(hours=5))
-WANT = ("KSE100", "KMI30", "KSE30", "ALLSHR")
+# KSE100/KMI30/KSE30 are the headline benchmarks. The two ALL-SHARE indices matter more for this
+# desk than their profile suggests: the universe runs well past the KSE100 constituents, so a
+# claim about a mid-cap graded against the KSE100 is graded against an index it isn't in.
+# ALLSHR covers every listed company; KMIALLSHR is its Shariah-compliant counterpart — together
+# they give an honest benchmark for any ticker the desk covers. BKTI/OGTI are the two sector
+# indices with enough weight in the universe to be useful comparators.
+WANT = ("KSE100", "KMI30", "KSE30", "ALLSHR", "KMIALLSHR", "BKTI", "OGTI")
 
 
 def main():
