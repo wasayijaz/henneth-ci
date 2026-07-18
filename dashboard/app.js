@@ -480,9 +480,22 @@ async function pageToday() {
     ${sTile("Next catalyst", nextCat ? esc(nextCat.date) : "—", nextCat ? esc(String(nextCat.event).slice(0, 34)) : "none dated", "")}
   </div>`;
 
+  // the astro hook, surfaced where visitors actually land. Only for those without a chart yet —
+  // once cast, it's replaced by their own reading in the sidebar, so this never nags.
+  const astroTease = natalChart() ? "" : `
+  <div class="card mc-tease" onclick="location.hash='#/cast'">
+    <div class="mc-tease-glyphs">${["Sun", "Moon", "Jupiter", "Saturn"].map(b => pixelGlyph(b, 22)).join("")}</div>
+    <div class="mc-tease-txt">
+      <b>Read the whole exchange against your birth chart</b>
+      <span class="sub">Vedic astrology has always matched two charts. The desk turns that on the market — cast yours free, in your browser, in about a minute.</span>
+    </div>
+    <span class="mc-tease-go">Cast my chart →</span>
+  </div>`;
+
   $("view").innerHTML = `
   ${globalStrip(gl)}
   ${glanceRow}
+  ${astroTease}
   ${myWatch}
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="pill ${toneClass}">${esc((dr.tone || "").toUpperCase())}</span><span class="sub">${esc(dr.date || "")}</span></div>
@@ -666,7 +679,12 @@ function nakOf(lon) { const s = 360 / 27, i = Math.floor(lon / s) % 27, p = Math
 /* Compute a sidereal (Lahiri) birth chart in the browser from date/time/place.
    grahas from the shipped daily table (interpolated to the birth minute); ascendant computed live
    from local sidereal time + latitude. Returns positions + a moon-cusp honesty flag. */
-async function computeNatal({ date, time, tz, lat, lon, timeKnown }) {
+async function computeNatal(bd) {
+  const { date, time, tz, lat, lon } = bd;
+  // The wizard persists this as `time_known` (snake_case, matching the Supabase column); accept both
+  // spellings. Reading only `timeKnown` meant every chart silently fell back to Chandra lagna and no
+  // ascendant was ever computed, however exact the birth time given.
+  const timeKnown = bd.timeKnown ?? bd.time_known ?? false;
   const e = await loadEphem();
   const [Y, M, D] = date.split("-").map(Number);
   const [hh, mm] = (time || "12:00").split(":").map(Number);
@@ -1181,23 +1199,55 @@ async function playAstroBoardRun() {
    the tradition reads the whole PSX universe against it. Framed throughout as astrological
    exploration, never advice: "the tradition finds your chart harmonious with X", never "buy X".
    ========================================================================================== */
-function birthData() { return me && myProfile && myProfile.birth_data; }
-function natalChart() { return me && myProfile && myProfile.natal_chart; }
-function astroPrefs() { return (me && myProfile && myProfile.astro_prefs) || {}; }
+/* --- the funnel: casting a chart needs NO account. computeNatal() is pure client-side math over
+   an ephemeris table the browser already fetches, so a guest can cast, see their real chart and a
+   taste of the market read. The account is what PERSISTS it; the subscription is what unlocks the
+   full map and the daily sky against it. A guest chart lives in localStorage and is migrated up to
+   the profile on sign-in (GUEST_KEY), so nobody ever types their birth details twice. --- */
+const GUEST_KEY = "psx_guest_chart";
+function guestChart() {
+  try { return JSON.parse(localStorage.getItem(GUEST_KEY) || "null"); } catch { return null; }
+}
+function setGuestChart(o) {
+  try { o ? localStorage.setItem(GUEST_KEY, JSON.stringify(o)) : localStorage.removeItem(GUEST_KEY); } catch { /* private mode */ }
+}
+function birthData() { return (me && myProfile && myProfile.birth_data) || guestChart()?.birth_data || null; }
+function natalChart() { return (me && myProfile && myProfile.natal_chart) || guestChart()?.natal_chart || null; }
+function astroPrefs() { return (me && myProfile && myProfile.astro_prefs) || guestChart()?.astro_prefs || {}; }
+
+/* Billing is not live yet. Until it is, a signed-in account gets the full reading — flipping this
+   to true is the ONE switch that turns the subscription wall on, so shipping the funnel today
+   cannot silently strip access from accounts that already have it. */
+const BILLING_LIVE = false;
+const FREE_MATCHES = 3;                       // how many resonance cards a guest sees in full
+function isSubscribed() { return !!(me && (!BILLING_LIVE || (myProfile && myProfile.plan && myProfile.plan !== "free"))); }
+
+/* Called on sign-in: lift a guest's chart into their profile so the details survive the account
+   boundary. Never clobbers a chart already on the profile. */
+async function migrateGuestChart() {
+  const g = guestChart();
+  if (!me || !g || !g.natal_chart) return false;
+  if (myProfile && myProfile.birth_data) { setGuestChart(null); return false; }  // profile wins
+  const patch = { birth_data: g.birth_data, natal_chart: g.natal_chart, astro_prefs: g.astro_prefs || {} };
+  const err = await saveProfile(patch);
+  if (!err) { setGuestChart(null); return true; }
+  return false;
+}
 
 const _bw = { step: 0, data: {} };
 const BW_STEPS = ["intro", "date", "time", "place", "goals", "cast"];
 function openBirthWizard() {
-  if (!me) { openAuth("signup"); return; }
   _bw.step = 0; _bw.data = { ...(birthData() || {}) };
   renderBirthWizard();
 }
 function bwClose() { document.querySelector(".bw-overlay")?.remove(); }
 async function clearBirthData() {
-  if (!me) return;
   if (!confirm("Remove your birth details and chart? You can add them again any time.")) return;
-  myProfile = { ...(myProfile || {}), birth_data: null, natal_chart: null };
-  await saveProfile({ birth_data: null, natal_chart: null });
+  setGuestChart(null);
+  if (me) {
+    myProfile = { ...(myProfile || {}), birth_data: null, natal_chart: null };
+    await saveProfile({ birth_data: null, natal_chart: null });
+  }
   if (typeof pageSettings === "function") pageSettings();
 }
 function bwNext() { if (_bw.step < BW_STEPS.length - 1) { _bw.step++; renderBirthWizard(); } }
@@ -1215,7 +1265,9 @@ function renderBirthWizard() {
     <div class="bw-kick">Your chart × the market</div>
     <h2 class="bw-h">The sky you were born under, read against every stock on the exchange.</h2>
     <p class="bw-p">Give the desk your birth details and it casts your Vedic (sidereal) chart, then reads the whole PSX universe against it the way the tradition would — which names your chart runs <b>harmonious</b> with, which it finds <b>testing</b>, and the periods your own dasha lights up.</p>
-    <p class="bw-note">A note in plain sight: this is <b>astrological exploration</b>, not investment advice — a lens to explore, never a reason to buy. Your birth details stay private to your account.</p>
+    <p class="bw-note">A note in plain sight: this is <b>astrological exploration</b>, not investment advice — a lens to explore, never a reason to buy. ${me
+      ? "Your birth details stay private to your account."
+      : "No account needed — your chart is cast in your browser and your birth details stay on this device until you choose to save them."}</p>
     <button class="bw-go" onclick="bwNext()">Begin →</button>`;
   else if (s === "date") body = `
     <div class="bw-kick">Step 1 of 4 · ${dots}</div>
@@ -1279,8 +1331,9 @@ async function renderBirthCast(ov) {
   const cast = await computeNatal(d);
   const castErr = cast.error || null;
   if (!castErr) {
-    myProfile = { ...(myProfile || {}), birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } };
-    saveProfile({ birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } });   // persist in background
+    const rec = { birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } };
+    if (me) { myProfile = { ...(myProfile || {}), ...rec }; saveProfile(rec); }  // persist in background
+    else setGuestChart(rec);                                                     // guest: this device only
   }
   const steps = [
     `Placing the nine grahas — sidereal, Lahiri ayanamsa`,
@@ -1313,7 +1366,9 @@ async function renderBirthCast(ov) {
           <div><span>104</span><i>names matched</i></div>
         </div>
         <button class="bw-go cast-go" onclick="this.closest('.replay-overlay').querySelector('.replay-x').click()">See my reading →</button>
-        <p class="cast-note">Astrological exploration, not advice. Saved privately to your account — edit any time in Settings.</p>
+        <p class="cast-note">Astrological exploration, not advice. ${me
+          ? "Saved privately to your account — edit any time in Settings."
+          : "Your chart is on this device only. Create a free account to keep it and read it from anywhere."}</p>
       </div>`;
     },
   });
@@ -1325,11 +1380,6 @@ async function pageMyChart() {
   // file, and unlike other pages this one reads `me` before its first data await. This defers that
   // read past the synchronous module evaluation, avoiding a temporal-dead-zone error on cold load.
   await Promise.resolve();
-  if (!me) {
-    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div></div>
-      <div class="card"><div class="empty">Sign in to cast your birth chart and read the market against your stars.<br><br><button class="auth-go" style="max-width:240px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
-    return;
-  }
   const bd = birthData(), nc = natalChart();
   if (!bd || !nc || nc.error) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your chart</h2><div class="ln"></div><span class="pill">personal</span></div>
@@ -1362,6 +1412,22 @@ async function pageMyChart() {
   // commodities, scored against the chart the same way chartless stocks are
   const comm = COMMODITIES.map(c => ({ ...c, ...resonanceWithGraha(nc, c.sig, c.name) }))
     .filter(c => c.score != null).sort((a, b) => b.score - a.score);
+
+  const locked = !isSubscribed();
+  // The wall lands where desire peaks: a guest reads their real chart and their strongest few
+  // matches in full, then sees that a ranked map of the whole exchange exists behind it.
+  const lockCard = (kicker, what) => `<div class="card mc-lock">
+    <div class="mc-lock-blur" aria-hidden="true">${scored.slice(FREE_MATCHES, FREE_MATCHES + 4).map(x =>
+      `<div class="mc-lock-row"><b>${esc(x.sym)}</b><span class="sub">${esc((x.sector || "").slice(0, 18))}</span><span class="num">${x.score}</span></div>`).join("")}</div>
+    <div class="mc-lock-face">
+      <div class="mc-lock-kick">${esc(kicker)}</div>
+      <h3>${esc(what)}</h3>
+      <p class="sub">${me
+        ? "Your full reading — every name on the exchange ranked against your chart, your commodities, your timing windows, and the sky read against your chart each day."
+        : "Create a free account to keep the chart you just cast. Unlock the full reading to see every name on the exchange ranked against it, your commodities, your timing windows, and the sky read against your chart each day."}</p>
+      <button class="bw-go" style="max-width:260px" onclick="${me ? "location.hash='#/settings'" : "openAuth('signup')"}">${me ? "Unlock my full reading →" : "Create a free account →"}</button>
+      ${me ? "" : `<p class="sub" style="margin-top:8px;opacity:.7">Already have one? <a href="#" onclick="openAuth('signin');return false" style="color:var(--accent)">Sign in</a></p>`}
+    </div></div>`;
 
   const rowCard = (x) => {
     const tm = x.timing;
@@ -1396,9 +1462,10 @@ async function pageMyChart() {
 
   <div class="seg"><h2>The market your chart favours</h2><div class="ln"></div><span class="pill ok">your strongest</span></div>
   <p class="sub" style="margin-bottom:12px">The names the tradition reads as most in tune with your chart — by Moon-star compatibility (Tara), the friendship of your ruling planets, and your running dasha. High resonance means astrological harmony, <b>not</b> a prediction of gains.</p>
-  ${harmon.map(rowCard).join("") || '<div class="card"><div class="empty">Nothing scores strongly harmonious — your chart sits neutral to most of the market.</div></div>'}
+  ${(locked ? harmon.slice(0, FREE_MATCHES) : harmon).map(rowCard).join("") || '<div class="card"><div class="empty">Nothing scores strongly harmonious — your chart sits neutral to most of the market.</div></div>'}
+  ${locked ? lockCard("the rest of your map", `${scored.length - FREE_MATCHES} more names, ranked against your chart`) : ""}
 
-  <div class="seg"><h2>The names that test your chart</h2><div class="ln"></div><span class="pill bad">most friction</span></div>
+  ${locked ? "" : `<div class="seg"><h2>The names that test your chart</h2><div class="ln"></div><span class="pill bad">most friction</span></div>
   <p class="sub" style="margin-bottom:12px">Where the tradition reads friction between your chart and the stock's. Not "avoid" — friction, in astrology, is simply a harder resonance to work with.</p>
   ${testing.map(rowCard).join("") || '<div class="card"><div class="empty">Nothing scores strongly discordant.</div></div>'}
 
@@ -1411,7 +1478,7 @@ async function pageMyChart() {
   <div class="seg"><h2>Your whole-market map</h2><div class="ln"></div><span class="pill">${scored.length} names ranked</span></div>
   <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Resonance</th><th>Tradition's read</th></tr></thead><tbody>${
     scored.map(x => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'"><td><b>${esc(x.sym)}</b></td><td class="sub">${esc((x.sector || "").slice(0, 20))}</td>
-      <td class="r num ${x.score >= 60 ? "up" : x.score <= 40 ? "dn" : ""}">${x.score}</td><td class="sub">${esc(x.verdict)}</td></tr>`).join("")}</tbody></table></div>
+      <td class="r num ${x.score >= 60 ? "up" : x.score <= 40 ? "dn" : ""}">${x.score}</td><td class="sub">${esc(x.verdict)}</td></tr>`).join("")}</tbody></table></div>`}
 
   <p class="sub" style="margin-top:14px"><button class="note-save" onclick="openBirthWizard()">Edit my birth details</button> · Your resonance map is astrological interpretation — a lens for exploration and your own decisions, never advice.</p>`;
 }
@@ -2624,7 +2691,13 @@ async function pageSettings() {
   </div></div>`;
 }
 
-const PAGES = { today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+/* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
+   The reading itself lives at /#/mychart, which this hands off to. */
+async function pageCast() {
+  await pageMyChart();
+  if (!natalChart()) setTimeout(openBirthWizard, 60);
+}
+const PAGES = { cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
@@ -3244,6 +3317,7 @@ async function initAuth() {
   renderAccountButton();
   if (me) {
     await loadProfile();
+    await migrateGuestChart();   // a chart cast before signing up follows the user into their account
     // the initial route() already ran (before auth resolved), so pages that depend on the signed-in
     // user — Your Chart, Portfolio, Watchlist, Settings — rendered their signed-out state. Re-render
     // the current page now that `me` and the profile are known.
@@ -3257,6 +3331,7 @@ async function initAuth() {
     if (event === "SIGNED_IN") {
       closeAuth();
       await loadProfile();
+      await migrateGuestChart();   // the whole point of the funnel: never ask for birth details twice
       if (typeof route === "function") route(true);   // re-render the page you're on with your account
       if (myProfile && !myProfile.onboarded) startWizard(false);
     }
