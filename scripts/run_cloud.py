@@ -12,7 +12,9 @@ from pathlib import Path
 SCRIPTS = Path(__file__).resolve().parent
 STEPS = [
     "update_universe.py", "fetch_history.py", "fetch_deep_history.py",
-    "fetch_dividends.py", "fetch_fundamentals.py", "score_fundamentals.py",
+    "fetch_dividends.py",
+    "fetch_dividends_deep.py",  # 18y payout history (Yahoo events) — DPS only gives ~18 months
+    "fetch_fundamentals.py", "score_fundamentals.py",
     "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
     "snapshot.py",
     "fetch_indices.py",  # append-only KSE100/KMI30 levels — the index history nobody else has

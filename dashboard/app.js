@@ -483,6 +483,27 @@ async function pageToday() {
     ${sTile("Next catalyst", nextCat ? esc(nextCat.date) : "—", nextCat ? esc(String(nextCat.event).slice(0, 34)) : "none dated", "")}
   </div>`;
 
+  // ---- the daily lesson: one card, 60 seconds, different every day ----
+  // For a signed-in learner it is the next unfinished lesson (their real place in the journey).
+  // Otherwise it is a date-seeded pick, so everyone sees the same lesson on a given day and a
+  // different one tomorrow — deterministic, no state, no repeats until the syllabus is exhausted.
+  let dailyCard = "";
+  try {
+    const cur = await j("curriculum.json");
+    const all = (cur?.levels || []).flatMap(v => v.lessons.map(l => ({ lv: v.id, l })));
+    if (all.length) {
+      const doneKeys = learnProgress();
+      const next = all.find(x => !doneKeys[x.lv + "/" + x.l.id]);
+      const epochDay = Math.floor(Date.now() / 86400000);
+      const pick = (me && next) ? next : all[epochDay % all.length];
+      const isNext = !!(me && next);
+      dailyCard = `<div class="card daily-lesson" onclick="openLesson('${esc(pick.lv)}','${esc(pick.l.id)}')">
+        <div class="dl-left"><div class="ark">${isNext ? "your next lesson" : "today's lesson"} · ${pick.l.mins} min</div>
+          <b>${esc(pick.l.title)}</b><span class="sub">${esc(pick.l.why)}</span></div>
+        <span class="dl-go">${isNext ? "Continue" : "Learn it"} →</span></div>`;
+    }
+  } catch { /* the daily lesson is a bonus — never break Today over it */ }
+
   // the astro hook, surfaced where visitors actually land. Only for those without a chart yet —
   // once cast, it's replaced by their own reading in the sidebar, so this never nags.
   const astroTease = natalChart() ? "" : `
@@ -498,6 +519,7 @@ async function pageToday() {
   $("view").innerHTML = `
   ${globalStrip(gl)}
   ${glanceRow}
+  ${dailyCard}
   ${astroTease}
   ${myWatch}
   <div class="card">
@@ -1296,6 +1318,66 @@ async function playAstroBoardRun() {
    taste of the market read. The account is what PERSISTS it; the subscription is what unlocks the
    full map and the daily sky against it. A guest chart lives in localStorage and is migrated up to
    the profile on sign-in (GUEST_KEY), so nobody ever types their birth details twice. --- */
+/* ==========================================================================================
+   LANGUAGE — English / اردو. A plain client-side dictionary, so switching is instant with no
+   network call and no rebuild. Scope is deliberate and stated in the UI: the interface, the
+   Investor-desk surfaces and the disclaimers are translated. Market prose written by the desk's
+   agents (the daily read, Room debates, news summaries) stays in English — machine-translating
+   financial commentary would risk changing its meaning, which this desk will not do.
+   ========================================================================================== */
+const LANG_KEY = "psx_lang";
+const UR = {
+  // nav
+  "Learn": "سیکھیں", "Today": "آج", "Board": "بورڈ", "Watchlist": "واچ لسٹ", "Portfolio": "پورٹ فولیو",
+  "Your Chart": "آپ کا چارٹ", "Practice": "مشق", "Strategies": "حکمتِ عملی", "Value": "ویلیو",
+  "Research": "تحقیق", "Scores": "اسکور", "News": "خبریں", "Macro": "معیشت", "Dividends": "منافع",
+  "Earnings": "نتائج", "Astro": "فلکیات", "Tools": "اوزار", "Settings": "ترتیبات", "Plans": "پلانز",
+  "Sign in": "سائن اِن", "Sign out": "سائن آؤٹ", "Search a stock": "اسٹاک تلاش کریں",
+  // learn / journey
+  "Become an investor": "سرمایہ کار بنیں", "The investment journey": "سرمایہ کاری کا سفر",
+  "your progress": "آپ کی پیش رفت", "steps complete": "مراحل مکمل", "Deep dives": "تفصیلی کورس",
+  "today's lesson": "آج کا سبق", "your next lesson": "آپ کا اگلا سبق", "Learn it": "سیکھیں",
+  "Continue": "جاری رکھیں", "Start the journey": "سفر شروع کریں", "lesson": "سبق",
+  "watch out": "خبردار", "the point": "خلاصہ", "interactive": "انٹرایکٹو", "check yourself": "خود کو جانچیں",
+  "back": "واپس", "Next": "اگلا", "Complete lesson": "سبق مکمل کریں",
+  // practice + tools
+  "Practice portfolio": "مشقی پورٹ فولیو", "virtual money · real prices": "فرضی رقم · اصل قیمتیں",
+  "Holdings": "ملکیتیں", "Trade log": "ٹریڈ ریکارڈ", "Buy": "خریدیں", "Sell": "بیچیں",
+  "Portfolio value": "پورٹ فولیو کی مالیت", "Return": "منافع", "Cash": "نقد",
+  "Compound growth": "مرکب اضافہ", "Inflation": "مہنگائی", "Goal planner": "ہدف کا منصوبہ",
+  "Mortgage": "گھر کا قرض", "Zakat on shares": "حصص پر زکوٰۃ", "Dividend reinvestment": "منافع کی دوبارہ سرمایہ کاری",
+  "Calculate": "حساب کریں", "Years": "سال",
+  // compliance — these must always be visible in the reader's language
+  "Research · not advice": "تحقیق · مشورہ نہیں",
+  "Education, not investment advice": "تعلیم، سرمایہ کاری کا مشورہ نہیں",
+};
+function lang() {
+  try { return localStorage.getItem(LANG_KEY) === "ur" ? "ur" : "en"; } catch { return "en"; }
+}
+function t(s) { return lang() === "ur" ? (UR[s] || s) : s; }
+function setLang(l) {
+  try { localStorage.setItem(LANG_KEY, l); } catch { /* private mode */ }
+  applyLang();
+  if (me) saveProfile({ lang: l });     // follows the account across devices
+  if (typeof route === "function") route(true);
+}
+/* Translate the static chrome (nav labels, badges) in place, and flag the language on <body> so
+   CSS can switch font + text direction for Urdu. Page bodies re-render via route(). */
+function applyLang() {
+  const l = lang();
+  document.body.dataset.lang = l;
+  document.querySelectorAll("[data-nav] span").forEach(s => {
+    if (!s.dataset.en) s.dataset.en = s.textContent;
+    s.textContent = l === "ur" ? (UR[s.dataset.en] || s.dataset.en) : s.dataset.en;
+  });
+  const badge = document.querySelector(".research-badge");
+  if (badge) { if (!badge.dataset.en) badge.dataset.en = badge.textContent; badge.textContent = t(badge.dataset.en); }
+  const sb = document.querySelector(".searchbtn .sb-label");
+  if (sb) { if (!sb.dataset.en) sb.dataset.en = sb.textContent; sb.textContent = t(sb.dataset.en); }
+  const btn = document.getElementById("langBtn");
+  if (btn) btn.textContent = l === "ur" ? "EN" : "اردو";
+}
+
 const GUEST_KEY = "psx_guest_chart";
 function guestChart() {
   try { return JSON.parse(localStorage.getItem(GUEST_KEY) || "null"); } catch { return null; }
@@ -2038,6 +2120,52 @@ async function pageTicker(sym, _retry = 0) {
     qmark("info", "What is my time horizon?", "This desk is daily-timeframe swing research — not day-trading, and not a buy-and-forget rating. Match any position to your own horizon and risk tolerance."),
   ].join("");
 
+  /* ---- The beginner's checklist: seven traffic lights, no ratios on the surface ----
+     Green / amber / grey, each with one plain sentence. Grey means "the desk cannot answer this
+     from its data" — it is never dressed up as a pass, because an unknown is not a green light.
+     Ratios stay available underneath for anyone who wants them. */
+  const LIGHTS = [
+    (() => {          // 1. business understandable — honest: only the user can answer this
+      const sec = mySector;
+      return { k: "Business you can explain", s: "ask", why: sec
+        ? `${sym} operates in ${sec}. Can you say in one sentence how it earns money? If not, that is a reason to keep reading, not to buy.`
+        : `Can you say in one sentence how ${sym} earns money? Only you can answer this one — and it is the first question, not the last.` };
+    })(),
+    lossmaking ? { k: "Earnings growing", s: "no", why: `Currently lossmaking (EPS ${f.eps}). A company can recover, but it is not earning today.` }
+      : niN != null ? (fpeN != null && peN != null && fpeN < peN
+        ? { k: "Earnings growing", s: "yes", why: `Profitable, and the market expects more: forward P/E ${f.forward_pe} sits below trailing ${f.pe}.` }
+        : { k: "Earnings growing", s: "part", why: `Profitable (net income ${f.net_income}), but the desk's feed has no multi-year growth trend — check the last three annual reports.` })
+        : { k: "Earnings growing", s: "unk", why: "Earnings data is not in the desk's feed for this name right now." },
+    { k: "Debt healthy", s: "unk", why: "Balance-sheet debt is not in the desk's feed. This is a real gap — open the company's latest balance sheet and compare total debt against equity before assuming it is safe." },
+    (dyN != null && dyN > 0)
+      ? (payN != null && payN > 90
+        ? { k: "Pays a dividend", s: "part", why: `Yields ${f.div_yield}, but pays out ${f.payout_ratio} of earnings — little buffer if profits dip. ${dHist.length} payouts on record.` }
+        : { k: "Pays a dividend", s: "yes", why: `Yields ${f.div_yield}${payN != null ? `, covered by earnings (payout ${f.payout_ratio})` : ""}. ${dHist.length} payouts on record.` })
+      : { k: "Pays a dividend", s: "no", why: "No dividend on record. Not a fault — younger or reinvesting companies often pay none — but this will not produce income." },
+    fv ? (fv.verdict === "overvalued"
+      ? { k: "Fairly valued", s: "no", why: `Priced ${Math.abs(fv.mispricing_pct)}% ABOVE the desk's blended model fair value of Rs ${fmt(fv.composite_fair)}.` }
+      : fv.verdict === "undervalued"
+        ? { k: "Fairly valued", s: "yes", why: `Priced ${Math.abs(fv.mispricing_pct)}% below the blended model fair value of Rs ${fmt(fv.composite_fair)} — cheap on the model, which is not the same as a good business.` }
+        : { k: "Fairly valued", s: "part", why: `Close to the blended model fair value of Rs ${fmt(fv.composite_fair)}.` })
+      : { k: "Fairly valued", s: "unk", why: "The fair-value model could not be built for this name." },
+    { k: "Risk you can sit through", s: mddRecentAbs >= 50 ? "no" : mddRecentAbs >= 30 ? "part" : "yes",
+      why: `Worst fall in the last decade was ${mddRecentAbs.toFixed(0)}%${vol ? `, and it moves ±${b.avgAbs.toFixed(1)}% on an average day (${vol} volatility)` : ""}. Could you hold through that without selling?` },
+    { k: "Easy to buy and sell", s: liq === "low" ? "no" : liq === "moderate" ? "part" : "yes",
+      why: `About Rs ${fmt(tvv / 1e6, 0)}M changes hands daily. ${liq === "low" ? "Thin — getting out quickly can move the price against you." : liq === "moderate" ? "Moderate depth; large orders may still move it." : "Deep enough to enter and exit readily."}` },
+  ];
+  const LIGHT_LABEL = { yes: "yes", no: "no", part: "partly", unk: "unknown", ask: "your call" };
+  const nGreen = LIGHTS.filter(x => x.s === "yes").length, nRed = LIGHTS.filter(x => x.s === "no").length,
+    nGrey = LIGHTS.filter(x => x.s === "unk" || x.s === "ask").length;
+  const lightsCard = `
+  <div class="seg"><h2>The beginner's checklist</h2><div class="ln"></div><span class="pill">${nGreen} green · ${nRed} red · ${nGrey} unanswered</span></div>
+  <p class="sub" style="margin-bottom:12px">Seven questions in plain language, answered from the desk's data. <b>Grey is not a pass</b> — it means the desk cannot answer it, and you should go and find out. This is a thinking checklist, never a score to buy on.</p>
+  <div class="card lights">${LIGHTS.map(x => `<div class="lrow s-${x.s}">
+      <span class="ldot">${x.s === "yes" ? "✓" : x.s === "no" ? "✕" : x.s === "part" ? "~" : "?"}</span>
+      <div class="lbody"><b>${esc(x.k)}</b><span class="sub">${esc(x.why)}</span></div>
+      <span class="lstate">${LIGHT_LABEL[x.s]}</span></div>`).join("")}
+    <div class="sub lights-foot">Educational only — not a recommendation, not a rating, and not a substitute for reading the company's own filings.</div>
+  </div>`;
+
   // Risk profile — more than volatility; honest gaps
   const rl = (k, t) => `<span class="rlvl ${k}">${t}</span>`;
   const NA = '<span class="sub">not scored</span>';
@@ -2261,9 +2389,11 @@ async function pageTicker(sym, _retry = 0) {
       <div><div class="flaghdr dn">What could go wrong</div>${flagList(cons, "con")}</div>
     </div></div>
 
-  <div class="seg"><h2>Questions to ask before buying</h2><div class="ln"></div></div>
-  <div class="card"><div class="sub" style="margin-bottom:12px">A checklist, answered from the data where the desk has it — and honest about where it doesn't. This is a thinking aid, not a recommendation.</div>
-    <div class="checklist">${checklist}</div></div>
+  ${lightsCard}
+
+  <details class="how"><summary><b>The same questions, in full detail</b><span class="sub">ratios and the desk's working</span><span class="dict-arrow">▾</span></summary>
+    <div class="sub" style="margin-bottom:12px">Answered from the data where the desk has it — and honest about where it doesn't. A thinking aid, not a recommendation.</div>
+    <div class="checklist">${checklist}</div></details>
 
   <div class="seg"><h2>Risk profile</h2><div class="ln"></div></div>
   <div class="card"><div class="sub" style="margin-bottom:12px">Risk is more than volatility. A low rupee price does <b>not</b> mean a stock is cheap — a Rs 20 share can be dearer than a Rs 500 one depending on earnings.</div>
@@ -3628,59 +3758,82 @@ function toolZakat() {
 /* Dividend reinvestment on REAL PSX history: actual announced payouts, actual prices.
    Deep history from the desk is split/bonus-adjusted but NOT dividend-adjusted (the fetcher stores
    Yahoo's raw quote series), so applying dividends on top does not double-count them. */
+/* One reinvestment simulation over a window. Returns null if there isn't enough history. */
+function divSim(hist, pays, amount, years, todayDate) {
+  const startDate = new Date(new Date(todayDate).getTime() - years * 365.25 * 86400000).toISOString().slice(0, 10);
+  const bars = hist.filter(b => b.date >= startDate && b.close > 0);
+  if (bars.length < 30) return null;
+  const priceOn = d => { for (let i = 0; i < bars.length; i++) if (bars[i].date >= d) return bars[i].close; return bars[bars.length - 1].close; };
+  const startPx = bars[0].close, endPx = bars[bars.length - 1].close;
+  const win = pays.filter(p => p.ex >= bars[0].date && p.ex <= todayDate);
+  let shR = amount / startPx; const shC = amount / startPx;
+  let cash = 0; const events = [];
+  for (const p of win) {
+    const px = priceOn(p.ex);
+    const paidR = shR * p.rs, bought = px > 0 ? paidR / px : 0;
+    shR += bought; cash += shC * p.rs;
+    events.push({ d: p.ex, rsps: p.rs, px, paidR, bought, shR });
+  }
+  const valR = shR * endPx, valC = shC * endPx + cash, valP = shC * endPx;
+  const yrs = (new Date(todayDate) - new Date(bars[0].date)) / (365.25 * 86400000);
+  const cagr = v => yrs > 0 ? (Math.pow(v / amount, 1 / yrs) - 1) * 100 : 0;
+  return { from: bars[0].date, startPx, endPx, shR, shC, cash, valR, valC, valP, events,
+    n: win.length, yrs, cagrR: cagr(valR), cagrC: cagr(valC), cagrP: cagr(valP) };
+}
+
 async function toolDivRun() {
   const sym = (document.getElementById("t-dsym")?.value || "").trim().toUpperCase();
-  const amount = tnum("t-damt"), years = tnum("t-dyears");
+  const amount = tnum("t-damt"), years = +(document.getElementById("t-dyears")?.value || 10);
+  _tools.dsym = sym; _tools.dyears = years;
   const out = document.getElementById("t-out");
   if (!sym) { out.innerHTML = `<div class="tnote warn">Enter a PSX ticker to run it on real payout history.</div>`; return; }
   out.innerHTML = `<div class="sub" style="padding:10px 0">Running ${esc(sym)} on real dividend history…</div>`;
-  const [hist, divs, uni] = await Promise.all([
-    j("history_deep/" + sym + ".json", 600000), j("dividends.json"), j("universe.json")]);
+  const [hist, deep, uni] = await Promise.all([
+    j("history_deep/" + sym + ".json", 600000), j("dividends_deep.json"), j("universe.json")]);
   if (!hist || !hist.length) { out.innerHTML = `<div class="tnote warn">The desk holds no long price history for <b>${esc(sym)}</b>. Try a larger name.</div>`; return; }
   const today = hist[hist.length - 1].date;
-  let startDate = new Date(new Date(today).getTime() - years * 365.25 * 86400000).toISOString().slice(0, 10);
-  // The desk's announced-payout history is much shorter than its price history. Running from before
-  // the first payout on record would silently undercount dividends and understate reinvestment —
-  // so clamp the start to the dividend coverage and say so, rather than publishing a flattering lie.
-  const allBc = (divs?.history || []).filter(x => x.bc_start).map(x => x.bc_start).sort();
-  const covFrom = allBc[0];
-  let clamped = false;
-  if (covFrom && startDate < covFrom) { startDate = covFrom; clamped = true; }
-  const bars = hist.filter(b => b.date >= startDate && b.close > 0);
-  if (bars.length < 30) { out.innerHTML = `<div class="tnote warn">Not enough price history for <b>${esc(sym)}</b> over ${years} years — the desk's series starts ${esc(hist[0].date)}.</div>`; return; }
-  const priceOn = d => { for (let i = 0; i < bars.length; i++) if (bars[i].date >= d) return bars[i].close; return bars[bars.length - 1].close; };
-  const startPx = bars[0].close, endPx = bars[bars.length - 1].close;
-  const pays = (divs?.history || []).filter(x => x.symbol === sym && x.dividend_rs && x.bc_start
-    && x.bc_start >= bars[0].date && x.bc_start <= today).sort((a, b) => a.bc_start.localeCompare(b.bc_start));
-  let shR = amount / startPx;          // reinvesting
-  const shC = amount / startPx;        // taking cash
-  let cash = 0; const events = [];
-  for (const p of pays) {
-    const px = priceOn(p.bc_start);
-    const paidR = shR * p.dividend_rs, paidC = shC * p.dividend_rs;
-    const bought = px > 0 ? paidR / px : 0;
-    shR += bought; cash += paidC;
-    events.push({ d: p.bc_start, rsps: p.dividend_rs, px, paidR, bought, shR });
-  }
-  const valR = shR * endPx, valC = shC * endPx + cash, valNoDiv = shC * endPx;
-  const pct = v => ((v / amount - 1) * 100);
+  // 18 years of real payouts (Yahoo events), in the same split-adjusted space as these prices
+  const pays = (deep?.tickers?.[sym] || []).slice().sort((a, b) => a.ex.localeCompare(b.ex));
   const name = uni?.symbols?.[sym]?.name || "";
+  if (!pays.length) {
+    out.innerHTML = `<div class="tnote warn"><b>${esc(sym)}</b>${name ? ` (${esc(name.slice(0, 34))})` : ""} has no cash dividends on record in the desk's ${esc(String(deep?.coverage_from || "").slice(0, 4))}–${esc(today.slice(0, 4))} history. Reinvestment has nothing to compound — try a dividend payer.</div>`;
+    return;
+  }
+  const r = divSim(hist, pays, amount, years, today);
+  if (!r) { out.innerHTML = `<div class="tnote warn">Not enough price history for <b>${esc(sym)}</b> over ${years} years — the desk's series starts ${esc(hist[0].date)}.</div>`; return; }
+  // the comparison that makes the point: the same question at several horizons
+  const horizons = [1, 3, 5, 10, 15].map(y => ({ y, r: divSim(hist, pays, amount, y, today) })).filter(x => x.r);
+  const pct = v => ((v / amount - 1) * 100);
+  const divShare = r.valR > 0 ? (r.valR - r.valP) / r.valR * 100 : 0;
+
   out.innerHTML = `
   <div class="sumstrip s4">
-    ${toolTile("Reinvested", rs(valR), `${sgn(+pct(valR).toFixed(1))}% total`, valR >= amount ? "up" : "dn")}
-    ${toolTile("Dividends taken as cash", rs(valC), `${sgn(+pct(valC).toFixed(1))}% total`, valC >= amount ? "up" : "dn")}
-    ${toolTile("Reinvesting added", rs(valR - valC), `${pays.length} payout${pays.length === 1 ? "" : "s"} compounded`, valR >= valC ? "up" : "dn")}
-    ${toolTile("Price alone", rs(valNoDiv), "ignoring dividends entirely", valNoDiv >= amount ? "up" : "dn")}
+    ${toolTile("Reinvested", rs(r.valR), `${sgn(+pct(r.valR).toFixed(1))}% · ${r.cagrR.toFixed(1)}%/yr`, r.valR >= amount ? "up" : "dn")}
+    ${toolTile("Dividends spent", rs(r.valC), `${sgn(+pct(r.valC).toFixed(1))}% · ${r.cagrC.toFixed(1)}%/yr`, r.valC >= amount ? "up" : "dn")}
+    ${toolTile("Reinvesting added", rs(r.valR - r.valC), `${r.n} payouts compounded`, r.valR >= r.valC ? "up" : "dn")}
+    ${toolTile("Price alone", rs(r.valP), `dividends ignored · ${r.cagrP.toFixed(1)}%/yr`, r.valP >= amount ? "up" : "dn")}
   </div>
-  ${clamped ? `<div class="tnote warn"><b>Window shortened to match the data.</b> The desk holds announced payouts only from <b>${esc(covFrom)}</b>, so this runs from there rather than ${years} years back — starting earlier would count the price move but miss the dividends, understating reinvestment and flattering nothing. Price history goes back to ${esc(hist[0].date)}; payout history does not.</div>` : ""}
-  <div class="tnote">${rs(amount)} into <b>${esc(sym)}</b>${name ? ` (${esc(name.slice(0, 34))})` : ""} on <b>${esc(bars[0].date)}</b> bought
-  <b>${shC.toFixed(0)}</b> shares at Rs ${fmt(startPx)}. Over that window it announced <b>${pays.length}</b> cash payout${pays.length === 1 ? "" : "s"};
-  reinvesting each one grew the holding to <b>${shR.toFixed(0)}</b> shares, against ${shC.toFixed(0)} if you had spent the cash.
-  Price on ${esc(today)}: Rs ${fmt(endPx)}. <b>Past payouts are history, not a forecast</b> — companies cut dividends, and this is not a recommendation.</div>
-  ${pays.length ? `<div class="card" style="padding:0;margin-top:10px"><table><thead><tr><th>Book closure</th><th class="r">Rs/share</th><th class="r">Price then</th><th class="r">Cash paid</th><th class="r">Shares bought</th><th class="r">Shares held</th></tr></thead><tbody>${
-    events.slice(-14).reverse().map(e => `<tr><td class="num">${esc(e.d)}</td><td class="r num">${e.rsps}</td><td class="r num">${fmt(e.px)}</td>
+
+  <div class="tnote"><b>${rs(amount)}</b> into <b>${esc(sym)}</b>${name ? ` (${esc(name.slice(0, 34))})` : ""} on <b>${esc(r.from)}</b> bought
+  <b>${r.shC.toFixed(0)}</b> shares at Rs ${fmt(r.startPx)}. Over ${r.yrs.toFixed(1)} years it paid <b>${r.n}</b> cash dividend${r.n === 1 ? "" : "s"};
+  reinvesting each one grew the holding to <b>${r.shR.toFixed(0)}</b> shares, against ${r.shC.toFixed(0)} if the cash had been spent.
+  Price on ${esc(today)}: Rs ${fmt(r.endPx)}. <b>${divShare > 0 ? `Dividends account for ${divShare.toFixed(0)}% of the reinvested result` : "Dividends made no difference over this window"}</b> — which is the entire argument for reinvesting.
+  Past payouts are history, <b>not a forecast</b>: companies cut dividends, and this is not a recommendation.</div>
+
+  ${horizons.length > 1 ? `<div class="seg" style="margin-top:16px"><h2>Same question, different horizons</h2><div class="ln"></div></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Held for</th><th class="r">Payouts</th><th class="r">Reinvested</th><th class="r">Dividends spent</th><th class="r">Price only</th><th class="r">Reinvesting added</th></tr></thead><tbody>${
+    horizons.map(h => `<tr class="${h.y === years ? "exp" : ""}"><td><b>${h.y} year${h.y > 1 ? "s" : ""}</b> <span class="sub">from ${esc(h.r.from)}</span></td>
+      <td class="r num">${h.r.n}</td>
+      <td class="r num up">${rs(h.r.valR)} <span class="sub">${h.r.cagrR.toFixed(1)}%/yr</span></td>
+      <td class="r num">${rs(h.r.valC)}</td><td class="r num">${rs(h.r.valP)}</td>
+      <td class="r num ${h.r.valR >= h.r.valC ? "up" : "dn"}">${rs(h.r.valR - h.r.valC)}</td></tr>`).join("")}</tbody></table>
+    <div class="sub" style="padding:9px 14px">Each row is the same ${rs(amount)}, held for a different length of time to today. The gap between "reinvested" and "price only" widens with time — that widening is compounding doing its work.</div></div>` : ""}
+
+  <div class="seg" style="margin-top:16px"><h2>Every payout in the window</h2><div class="ln"></div><span class="pill">${r.n}</span></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Ex-date</th><th class="r">Rs/share</th><th class="r">Price then</th><th class="r">Cash paid</th><th class="r">Shares bought</th><th class="r">Shares held</th></tr></thead><tbody>${
+    r.events.slice(-18).reverse().map(e => `<tr><td class="num">${esc(e.d)}</td><td class="r num">${e.rsps}</td><td class="r num">${fmt(e.px)}</td>
       <td class="r num up">${rs(e.paidR)}</td><td class="r num">${e.bought.toFixed(1)}</td><td class="r num">${e.shR.toFixed(0)}</td></tr>`).join("")}</tbody></table>
-    <div class="sub" style="padding:9px 14px">Reinvested at the closing price on the book-closure date. Real reinvestment happens on the payment date at whatever price then prevails, in whole shares, after withholding tax — so treat this as the shape of the effect, not an exact record.</div></div>` : ""}`;
+    <div class="sub" style="padding:9px 14px">Payouts from Yahoo's dividend events (${esc(String(deep?.coverage_from || ""))} onward), split/bonus-adjusted to match the price series — so per-share amounts are comparable to the prices shown, and dividends are not double-counted. Reinvested at the ex-date close; real reinvestment happens on the payment date, in whole shares, after withholding tax. Announced and upcoming payouts with buy-by dates live on the <a href="#/dividends" style="color:var(--accent)">Dividends</a> page.</div></div>`;
 }
 
 function toolPanel() {
@@ -3711,8 +3864,9 @@ function toolPanel() {
       ${F("Value of shares (Rs)", "t-zval", 500000)}${F("Cash & bank (Rs)", "t-zcash", 200000)}${F("Debts due now (Rs)", "t-zowed", 0)}
       <button class="note-save" ${run}>Calculate</button></div>`;
   if (t === "divreinvest") return `<div class="tgrid">
-      <label>PSX ticker<input id="t-dsym" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" value="FFC"></label>
-      ${F("Amount invested (Rs)", "t-damt", 500000)}${F("Years back", "t-dyears", 5)}
+      <label>PSX ticker<input id="t-dsym" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" value="${esc(_tools.dsym || "FFC")}"></label>
+      ${F("Amount invested (Rs)", "t-damt", 500000)}
+      <label>Held for<select id="t-dyears" class="ph-in">${[1, 3, 5, 10, 15].map(y => `<option value="${y}"${(_tools.dyears || 10) === y ? " selected" : ""}>${y} year${y > 1 ? "s" : ""}</option>`).join("")}</select></label>
       <button class="note-save" onclick="toolDivRun()">Run on real history</button></div>`;
   return "";
 }
@@ -3801,6 +3955,8 @@ async function route(isPoll) {
   if (!isPoll && key !== lastPage) { animateIn(); if (window.scrollTo) window.scrollTo(0, 0); }
   lastPage = key;
 }
+document.getElementById("langBtn")?.addEventListener("click", () => setLang(lang() === "ur" ? "en" : "ur"));
+applyLang();   // safe at module top level: reads localStorage only, never `me`
 window.addEventListener("hashchange", () => route(false));
 // NOTE: do NOT call applyDeskMode() here — this line runs before `let me` is initialized further
 // down the file, and deskMode() reads it, which throws a TDZ error and aborts the whole module.
@@ -4400,6 +4556,8 @@ async function initAuth() {
   if (me) {
     await loadProfile();
     await migrateGuestChart();   // a chart cast before signing up follows the user into their account
+    if (myProfile?.lang && myProfile.lang !== lang()) { try { localStorage.setItem(LANG_KEY, myProfile.lang); } catch {} }
+    applyLang();
     applyDeskMode();
     // the initial route() already ran (before auth resolved), so pages that depend on the signed-in
     // user — Your Chart, Portfolio, Watchlist, Settings — rendered their signed-out state. Re-render
