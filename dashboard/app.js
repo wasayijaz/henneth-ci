@@ -1412,10 +1412,10 @@ const PLANS = {
     features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full"] },
   pro: { label: "Pro", tag: "TA & FA",
     blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray"] },
   broker: { label: "Broker", tag: "coming soon", soon: true,
     blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "broker_tools"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray", "broker_tools"] },
 };
 const PLAN_ORDER = ["free", "investor", "pro", "broker"];
 /* Owner-only: preview the product as any plan without changing the stored plan. Set from the Plans
@@ -1682,6 +1682,33 @@ async function pageMyChart() {
     ${tm ? `<div class="syn-time"><span class="dt-glyph">${pixelGlyph(tm.windows[0].lord, 14)}</span> <b>The tradition's timing:</b> your ${esc(tm.windows[0].lord)} period (${tm.windows[0].from.slice(0, 4)}–${tm.windows[0].to.slice(0, 4)}) is when your chart most resonates with ${esc(x.sym)}${tm.windows[1] ? `, again under ${esc(tm.windows[1].lord)} from ${tm.windows[1].from.slice(0, 4)}` : ""}. A rhythm, not a date to act on.</div>` : ""}</div></div>`;
   };
 
+  /* ---- Daily market weather: behavioural framing, NOT prediction. The tradition's read of the
+     day's sky against this chart, expressed as questions about the user's own temperament —
+     focus, patience, impulse — never as a claim about prices. Different daily because the sky is. ---- */
+  let weather = "";
+  if (goch) {
+    const HOUSE = ["", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
+    const g = n => goch.tiles.find(x => x.g === n);
+    const merc = g("Mercury"), mars = g("Mars"), sat = g("Saturn"), jup = g("Jupiter");
+    const fav = x => x && x.tag === "favourable";
+    const dims = [
+      { k: "Focus", v: fav(merc) ? "clear" : merc?.tag === "testing" ? "scattered" : "steady",
+        why: `Mercury — analysis, records, paperwork — sits in your ${HOUSE[merc?.house] || "—"} from the Moon. ${fav(merc) ? "Tradition associates this with reading carefully and finishing what you start." : "Tradition would say re-check what you read today rather than trusting the first pass."}` },
+      { k: "Patience", v: fav(sat) ? "long" : sat?.tag === "testing" ? "short" : "workable",
+        why: `Saturn governs endurance and delay, currently your ${HOUSE[sat?.house] || "—"} from the Moon. ${sat?.tag === "testing" ? "Read classically as a stretch where waiting feels harder than usual — worth noticing before acting on impatience." : "Placed where the tradition associates it with letting things mature."}` },
+      { k: "Impulse risk", v: fav(mars) ? "channelled" : mars?.tag === "testing" ? "elevated" : "ordinary",
+        why: `Mars is drive and haste, in your ${HOUSE[mars?.house] || "—"}. ${fav(mars) ? "Energy the tradition reads as directed rather than reactive." : "Classically a placement for acting faster than you have thought. If you feel an urge to do something decisive today, that urge is worth a second look."}` },
+      { k: "Good for", v: fav(jup) ? "learning" : fav(merc) ? "review" : "routine",
+        why: fav(jup) ? "Jupiter — teaching, perspective, expansion — is well placed from your Moon. Tradition calls this a day for study rather than action." : fav(merc) ? "A day the tradition associates with going back over your own records and reasoning." : "Nothing in the tradition marks this day out; ordinary maintenance is the honest read." },
+    ];
+    weather = `
+  <div class="seg"><h2>Your market weather</h2><div class="ln"></div><span class="pill">${new Date().toISOString().slice(0, 10)}</span></div>
+  <p class="sub" style="margin-bottom:12px">The moving sky read against your chart as a note on <b>your own temperament today</b> — focus, patience, impulse. It says nothing about prices and makes no prediction: it is a prompt to check <i>how</i> you are approaching decisions, which is the one place this tradition and sound investing practice genuinely overlap.</p>
+  <div class="weather-grid">${dims.map(d => `<div class="wx-card">
+    <div class="ark">${esc(d.k)}</div><b>${esc(d.v)}</b><span class="sub">${d.why}</span></div>`).join("")}</div>
+  <div class="tnote">Behavioural reflection drawn from Vedic gochara — <b>not a forecast, not a signal, and not a reason to trade or to avoid trading</b>. The desk tested astrology against PSX returns and found no predictive edge; this exists because reviewing your own state of mind before deciding is sound practice whatever prompts it.</div>`;
+  }
+
   // ---- "Today, against your chart" — the section that is different every single day ----
   const ord = n => n === 1 ? "1st" : n === 2 ? "2nd" : n === 3 ? "3rd" : n + "th";
   let todaySection = "";
@@ -1725,6 +1752,7 @@ async function pageMyChart() {
     <p class="sub" style="margin-top:6px;text-align:center">Your birth sky — the nine grahas at the moment you were born${sky ? ", with <b>today's sky</b> faint on the outer ring. It drifts a little every day" : ""}. Sidereal, Lahiri.</p>
     ${gl.line ? `<p class="sub goal-line" style="text-align:center;margin-top:4px">You're here for <b>${esc(gl.label)}</b>. ${esc(gl.line)}</p>` : ""}
   </div>
+  ${weather}
   ${todaySection}
 
   <div class="seg"><h2>Your timing — the map of when</h2><div class="ln"></div><span class="pill">Vimshottari</span></div>
@@ -2007,11 +2035,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
@@ -2395,6 +2423,12 @@ async function pageTicker(sym, _retry = 0) {
     </div></div>
 
   ${lightsCard}
+
+  ${hasFeature("alignment") ? alignmentCard(alignmentOf(sym, {
+    q: q || {}, fv: fv || {}, fs: fsc || {}, pred: predAll?.tickers?.[sym]?.score,
+    claims: claimsAll, news: news, sm: smAll, sector: mySector,
+  })) : planWall("Evidence alignment",
+    "Every lens the desk runs — valuation, trend, momentum, quality, income, predictability, news, brokers, macro — counted for agreement on one bar. Not a buy/sell rating: a measure of how much the evidence actually converges, including when it doesn't.")}
 
   <details class="how"><summary><b>The same questions, in full detail</b><span class="sub">ratios and the desk's working</span><span class="dict-arrow">▾</span></summary>
     <div class="sub" style="margin-bottom:12px">Answered from the data where the desk has it — and honest about where it doesn't. A thinking aid, not a recommendation.</div>
@@ -3043,6 +3077,9 @@ const FEATURE_LABEL = {
   scenarios: "Scenario simulator on measured sector betas",
   scanner: "The daily opportunity scanner",
   watch_intel: "Watchlist intelligence — what changed",
+  ask: "Ask the desk — instant answers from its data",
+  alignment: "Evidence alignment on every stock",
+  xray: "Portfolio X-ray against the desk's own rules",
   strategies_run: "Run the strategy library on your board",
   research_full: "The full research library",
   broker_tools: "Your desk's calls scored in public",
@@ -4154,13 +4191,231 @@ function watchIntel(syms, { q, fvt, news, cal, claims, signals }) {
   return events.sort((a, b) => b.w - a.w).slice(0, 12);
 }
 
+/* ==========================================================================================
+   EVIDENCE ALIGNMENT ("conviction") — how many independent lenses agree, and which way.
+   Deliberately NOT a buy/sell score and never rendered as one: it reports agreement among
+   measurements the desk already publishes, and says plainly when the lenses disagree.
+   ========================================================================================== */
+function alignmentOf(sym, d) {
+  const { q = {}, fv = {}, fs = {}, pred, claims, news, sm, sector } = d;
+  const L = [];
+  const push = (name, dir, note) => L.push({ name, dir, note });
+  if (fv.verdict === "undervalued") push("Valuation", 1, `Below the blended model fair value (${sgn(fv.mispricing_pct)}%).`);
+  else if (fv.verdict === "overvalued") push("Valuation", -1, `Above the blended model fair value (${sgn(fv.mispricing_pct)}%).`);
+  else if (fv.verdict) push("Valuation", 0, "Priced close to the model's fair value.");
+  if (q.above_sma50 != null) push("Trend", q.above_sma50 ? 1 : -1,
+    q.above_sma50 ? "Trading above its 50-day average." : "Trading below its 50-day average.");
+  if (q.ret_20d != null) push("Momentum", q.ret_20d > 3 ? 1 : q.ret_20d < -3 ? -1 : 0, `${sgn(q.ret_20d)}% over the last 20 sessions.`);
+  const m = fs.metrics || {};
+  if (m.net_margin != null || m.forward_pe != null) {
+    const good = (m.net_margin || 0) >= 12 && (m.forward_pe != null && m.pe != null ? m.forward_pe < m.pe : true);
+    const bad = (m.net_margin != null && m.net_margin < 3);
+    push("Quality", good ? 1 : bad ? -1 : 0,
+      m.net_margin != null ? `Net margin ${m.net_margin}%${m.forward_pe && m.pe ? `, forward P/E ${m.forward_pe} vs trailing ${m.pe}` : ""}.` : "Partial fundamentals only.");
+  }
+  if (m.div_yield) push("Income", m.payout_ratio != null && m.payout_ratio > 90 ? 0 : 1,
+    `${m.div_yield}% yield${m.payout_ratio != null ? `, payout ${m.payout_ratio}%` : ""}.`);
+  if (pred != null) push("Predictability", pred >= 60 ? 1 : pred <= 35 ? -1 : 0, `Historical patterns resolved ${pred}/100 consistently.`);
+  const recent = (news || []).filter(n => (n.tickers || []).includes(sym)).slice(-3);
+  const impact = recent.reduce((a, n) => Math.max(a, n.impact || 0), 0);
+  if (recent.length) push("News", impact >= 4 ? -1 : 0, impact >= 4 ? `A high-impact item (${impact}/5) landed recently.` : `${recent.length} routine item${recent.length > 1 ? "s" : ""} on the wire.`);
+  const bro = (claims?.claims || []).filter(c => c.source_type === "broker" && (c.tickers || [c.ticker]).includes(sym));
+  if (bro.length) push("Brokers", 0, `${bro.length} public broker call${bro.length > 1 ? "s" : ""} on record — scored on the leaderboard, not trusted.`);
+  const drv = (sm?.by_sector?.[sector]?.drivers || []).filter(x => x.demonstrated)[0];
+  if (drv) push("Macro", 0, `${sector} measurably tracks ${FACTOR_PLAIN[drv.factor] || drv.factor} — the sector's own weather.`);
+  const up = L.filter(x => x.dir > 0).length, dn = L.filter(x => x.dir < 0).length, neutral = L.length - up - dn;
+  const net = up - dn;
+  const label = L.length < 3 ? "too little evidence"
+    : Math.abs(net) <= 1 ? "lenses disagree"
+      : net >= 4 ? "strongly aligned, constructive" : net >= 2 ? "leaning constructive"
+        : net <= -4 ? "strongly aligned, cautious" : "leaning cautious";
+  return { lenses: L, up, dn, neutral, net, label };
+}
+function alignmentCard(a) {
+  if (!a.lenses.length) return "";
+  const tone = a.net >= 2 ? "up" : a.net <= -2 ? "dn" : "";
+  return `<div class="seg"><h2>Evidence alignment</h2><div class="ln"></div><span class="pill ${tone}">${esc(a.label)}</span></div>
+  <p class="sub" style="margin-bottom:12px">How many of the desk's independent lenses point the same way. <b>This is not a buy or sell rating</b> — it is a count of agreement, and disagreement is a legitimate and common answer.</p>
+  <div class="card align-card">
+    <div class="al-bar"><span class="al-up" style="flex:${a.up || 0.001}"></span><span class="al-nu" style="flex:${a.neutral || 0.001}"></span><span class="al-dn" style="flex:${a.dn || 0.001}"></span></div>
+    <div class="al-legend"><span><b class="up">${a.up}</b> constructive</span><span><b>${a.neutral}</b> neutral</span><span><b class="dn">${a.dn}</b> cautious</span></div>
+    <div class="al-rows">${a.lenses.map(l => `<div class="al-row"><span class="al-dot ${l.dir > 0 ? "up" : l.dir < 0 ? "dn" : ""}">${l.dir > 0 ? "+" : l.dir < 0 ? "−" : "="}</span>
+      <b>${esc(l.name)}</b><span class="sub">${esc(l.note)}</span></div>`).join("")}</div>
+  </div>`;
+}
+
+/* ==========================================================================================
+   ASK THE DESK — a responsive answer engine with NO runtime model. Intent is classified from the
+   question, facts are retrieved from the desk's own state files, and prose is composed from
+   templates around real numbers. The upside over a live LLM is not cost: it is that this
+   CANNOT invent a price, a date or a dividend (CLAUDE.md Rule 2). Agent-written prose that already
+   exists (explainer.json, written nightly) is quoted rather than regenerated.
+   ========================================================================================== */
+let _ask = { q: "", history: [] };
+const ASK_SAMPLES = ["Why is MEBL moving?", "Is FFC cheap?", "Tell me about LUCK", "FFC vs MCB",
+  "Best dividend stocks", "What's happening in cement?", "What changed today?"];
+
+function askFindSyms(text, universe) {
+  const up = text.toUpperCase();
+  const hits = Object.keys(universe).filter(s => new RegExp(`\\b${s}\\b`).test(up));
+  return [...new Set(hits)].slice(0, 2);
+}
+function askFindSector(text, sectorNames) {
+  const t = text.toLowerCase(); let best = null;
+  for (const sec of sectorNames) for (const w of sec.toLowerCase().split(/[^a-z]+/))
+    if (w.length >= 4 && t.includes(w) && (!best || w.length > best.w.length)) best = { sec, w };
+  return best?.sec || null;
+}
+async function askRun(qtext) {
+  const text = (qtext ?? document.getElementById("ask-in")?.value ?? "").trim();
+  if (!text) return;
+  _ask.q = text;
+  const out = document.getElementById("ask-out");
+  if (out) out.innerHTML = `<div class="sub" style="padding:12px 0">Reading the desk's data…</div>`;
+  const [uni, q, fvA, fndA, fsA, predA, news, sec, sm, expl, cal, claims, divs] = await Promise.all([
+    j("universe.json"), j("quant.json"), j("fairvalue.json"), j("fundamentals.json"),
+    j("fundamental_scores.json"), j("predictability.json"), j("newslog.json"), j("sectors.json"),
+    j("sector_macro.json"), j("explainer.json"), j("earnings_calendar.json"), j("claims.json"), j("dividends.json")]);
+  const U = uni?.symbols || {}, Q = q?.tickers || {}, FV = fvA?.tickers || {}, FN = fndA?.tickers || {},
+    FS = fsA?.tickers || {}, PR = predA?.tickers || {}, SEC = sec?.tickers || {};
+  const sectorNames = [...new Set(Object.values(SEC).map(x => x.sector).filter(Boolean))];
+  const syms = askFindSyms(text, U);
+  const sectorHit = askFindSector(text, sectorNames);
+  const t = text.toLowerCase();
+  const A = []; // answer blocks
+  const line = (h, b) => A.push(`<div class="ans-block"><b>${h}</b><p>${b}</p></div>`);
+  const linkTo = s => `<a href="#/ticker/${s}" style="color:var(--accent);font-weight:700">${s}</a>`;
+
+  const ctx = s => ({ q: Q[s] || {}, fv: FV[s] || {}, fs: FS[s] || {}, pred: PR[s]?.score,
+    claims, news, sm, sector: SEC[s]?.sector, f: FN[s] || {}, e: expl?.[s] || {}, name: U[s]?.name || "" });
+
+  // ---- intent: compare two names ----
+  if (syms.length === 2 && /\bvs\b|versus|compare|or\b/.test(t)) {
+    const [a, b] = syms, ca = ctx(a), cb = ctx(b);
+    const row = (label, va, vb) => `<tr><td class="sub">${label}</td><td class="r num">${va}</td><td class="r num">${vb}</td></tr>`;
+    A.push(`<div class="ans-block"><b>${a} vs ${b}</b>
+      <table class="ans-table"><thead><tr><th></th><th class="r">${a}</th><th class="r">${b}</th></tr></thead><tbody>
+      ${row("Price", fmt(ca.q.close), fmt(cb.q.close))}
+      ${row("P/E", ca.fs.metrics?.pe ?? "—", cb.fs.metrics?.pe ?? "—")}
+      ${row("Dividend yield", ca.f.div_yield || "—", cb.f.div_yield || "—")}
+      ${row("vs model fair", ca.fv.mispricing_pct != null ? sgn(ca.fv.mispricing_pct) + "%" : "—", cb.fv.mispricing_pct != null ? sgn(cb.fv.mispricing_pct) + "%" : "—")}
+      ${row("20-day move", sgn(ca.q.ret_20d) + "%", sgn(cb.q.ret_20d) + "%")}
+      ${row("Predictability", ca.pred ?? "—", cb.pred ?? "—")}
+      ${row("Sector", esc(ca.sector || "—"), esc(cb.sector || "—"))}
+      </tbody></table>
+      <p class="sub">Same fields, side by side — the desk won't pick between them for you. Open ${linkTo(a)} or ${linkTo(b)} for the full read, including each one's checklist.</p></div>`);
+  }
+  // ---- intent: why is X moving ----
+  else if (syms.length && /why|moving|falling|dropping|rising|down|up\b|crash/.test(t)) {
+    const s = syms[0], c = ctx(s);
+    const d1 = c.q.ret_1d, d20 = c.q.ret_20d;
+    const dir = d1 > 0 ? "up" : "down";
+    const secPeers = Object.keys(SEC).filter(x => SEC[x].sector === c.sector && Q[x]);
+    const secAvg = secPeers.length ? secPeers.reduce((a, x) => a + (Q[x].ret_1d || 0), 0) / secPeers.length : null;
+    const recentNews = (news || []).filter(n => (n.tickers || []).includes(s)).slice(-3).reverse();
+    let body = `${linkTo(s)} is <b class="${d1 >= 0 ? "up" : "dn"}">${sgn(d1)}%</b> today at Rs ${fmt(c.q.close)}, and ${sgn(d20)}% over 20 sessions. `;
+    if (secAvg != null) body += Math.abs(d1 - secAvg) < 0.7
+      ? `Its sector (${esc(c.sector)}) moved ${sgn(+secAvg.toFixed(2))}% on average — so this looks like <b>the sector moving together</b>, not a company-specific story. `
+      : `Its sector (${esc(c.sector)}) averaged ${sgn(+secAvg.toFixed(2))}%, so ${s} is moving <b>differently from its peers</b> — that difference is where a company-specific reason usually hides. `;
+    if (c.q.vol_surge && Math.abs(d1) >= 2) body += `Volume ran well above normal behind the move. `;
+    body += c.e.momentum?.one_line ? `The desk's read: ${esc(c.e.momentum.one_line)} ` : "";
+    line("What the data shows", body);
+    if (recentNews.length) A.push(`<div class="ans-block"><b>On the wire</b>${recentNews.map(n =>
+      `<p class="ans-news"><span class="tag">${n.impact ?? "?"}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || n.summary || "")}</p>`).join("")}
+      <p class="sub">The desk logs news but does not assert causation between a headline and a day's move — that link is usually assumed, rarely proven.</p></div>`);
+    else line("On the wire", `Nothing tagged to ${s} in the desk's recent news log. A move without news is common, and "no reason found" is a more honest answer than an invented one.`);
+    const upcoming = (cal?.events || []).filter(e => e.ticker === s && e.date >= new Date().toISOString().slice(0, 10)).slice(0, 2);
+    if (upcoming.length) line("Ahead", upcoming.map(e => `${esc(e.type.replace(/_/g, " "))} on <b>${esc(e.date)}</b>`).join(", ") + ". Results dates gap prices — a stop does not protect you across a gap.");
+  }
+  // ---- intent: valuation ----
+  else if (syms.length && /cheap|expensive|worth|valuation|overvalued|undervalued|fair value|price target/.test(t)) {
+    const s = syms[0], c = ctx(s);
+    if (c.fv.composite_fair) {
+      const meth = Object.entries(c.fv.methods || {}).filter(([, v]) => v != null);
+      line(`Is ${s} cheap?`, `${linkTo(s)} trades at <b>Rs ${fmt(c.fv.price)}</b> against a blended model fair value of <b>Rs ${fmt(c.fv.composite_fair)}</b> — ${sgn(c.fv.mispricing_pct)}%, which the model reads as <b>${esc(c.fv.verdict)}</b>. That blend is the <b>median</b> of ${meth.length} independent methods${meth.length ? ` (${meth.map(([k]) => esc(METHOD_LABEL[k] || k)).join(", ")})` : ""}, because any single method can be badly wrong on any one company. ${c.e.value?.one_line ? esc(c.e.value.one_line) : ""}`);
+      line("The honest caveat", `A model fair value is an estimate built on reported fundamentals, <b>not a price target and not advice</b>. A stock can sit below model fair value for years, and "cheap" often means the market expects earnings to fall. Check the ${linkTo(s)} page's checklist before treating this as a discount.`);
+    } else line(`Is ${s} cheap?`, `The desk could not build a fair-value model for ${s} — usually missing or negative earnings. No number is better than a made-up one.`);
+  }
+  // ---- intent: dividends / income ranking ----
+  else if (/dividend|yield|income|payout/.test(t) && !syms.length) {
+    const rows = Object.keys(Q).map(s => ({ s, dy: parseFloat(FN[s]?.div_yield) || 0, po: parseFloat(FN[s]?.payout_ratio), liq: Q[s].avg_daily_traded_value }))
+      .filter(r => r.dy > 0 && r.po != null && r.po < 90 && (r.liq || 0) > 5e6)
+      .sort((a, b) => b.dy - a.dy).slice(0, 8);
+    line("Highest covered yields", `Ranked by dividend yield, keeping only names paying out <b>under 90% of earnings</b> (so the dividend is covered) and trading with real liquidity. A very high yield is as often a warning as an opportunity — yield rises when price falls.`);
+    A.push(`<div class="ans-block"><table class="ans-table"><thead><tr><th>Stock</th><th class="r">Yield</th><th class="r">Payout</th></tr></thead><tbody>${
+      rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((U[r.s]?.name || "").slice(0, 22))}</span></td>
+        <td class="r num up">${r.dy}%</td><td class="r num">${r.po}%</td></tr>`).join("")}</tbody></table>
+      <p class="sub">A screen, not a recommendation. Check each one's payout history and cash flow — see the <a href="#/dividends" style="color:var(--accent)">Dividends</a> page for buy-by dates.</p></div>`);
+  }
+  // ---- intent: sector ----
+  else if (sectorHit && !syms.length) {
+    const peers = Object.keys(SEC).filter(x => SEC[x].sector === sectorHit && Q[x]);
+    const avg1 = peers.reduce((a, x) => a + (Q[x].ret_1d || 0), 0) / (peers.length || 1);
+    const avg20 = peers.reduce((a, x) => a + (Q[x].ret_20d || 0), 0) / (peers.length || 1);
+    const best = peers.slice().sort((a, b) => Q[b].ret_20d - Q[a].ret_20d)[0];
+    const worst = peers.slice().sort((a, b) => Q[a].ret_20d - Q[b].ret_20d)[0];
+    const rec = sm?.by_sector?.[sectorHit];
+    const demo = (rec?.drivers || []).filter(d => d.demonstrated);
+    line(`${sectorHit} right now`, `${peers.length} names in the desk's universe. Average move <b class="${avg1 >= 0 ? "up" : "dn"}">${sgn(+avg1.toFixed(2))}%</b> today and ${sgn(+avg20.toFixed(1))}% over 20 sessions. Strongest lately: ${linkTo(best)} (${sgn(Q[best].ret_20d)}%); weakest: ${linkTo(worst)} (${sgn(Q[worst].ret_20d)}%).`);
+    line("What actually moves it", demo.length
+      ? `Measured over 19 years, ${sectorHit} ${demo[0].corr > 0 ? "rises with" : "falls when"} <b>${esc(FACTOR_PLAIN[demo[0].factor] || demo[0].factor)}</b>${demo[0].corr > 0 ? "" : " rises"}${demo.length > 1 ? `, and also tracks ${demo.slice(1, 3).map(x => esc(FACTOR_PLAIN[x.factor] || x.factor)).join(" and ")}` : ""} — correction-survived. Even so, the whole global tape explains only <b>${rec.joint_r2_pct}%</b> of its daily moves. Try it in the <a href="#/scenarios" style="color:var(--accent)">scenario simulator</a>.`
+      : `No global factor shows a demonstrated effect on ${sectorHit} — over 19 years its days have been made locally, not on the world tape. That silence is a measured finding, not a gap.`);
+  }
+  // ---- intent: what changed / market today ----
+  else if (/what changed|today|market|happening|news/.test(t) && !syms.length) {
+    const movers = Object.entries(Q).sort((a, b) => b[1].ret_1d - a[1].ret_1d);
+    const up3 = movers.slice(0, 3), dn3 = movers.slice(-3).reverse();
+    const big = (news || []).filter(n => (n.impact || 0) >= 4).slice(-3).reverse();
+    line("The day", `Biggest gains: ${up3.map(([s, v]) => `${linkTo(s)} ${sgn(v.ret_1d)}%`).join(", ")}. Biggest falls: ${dn3.map(([s, v]) => `${linkTo(s)} ${sgn(v.ret_1d)}%`).join(", ")}.`);
+    if (big.length) A.push(`<div class="ans-block"><b>High-impact news</b>${big.map(n => `<p class="ans-news"><span class="tag">${n.impact}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || "")}</p>`).join("")}</div>`);
+    else line("High-impact news", "Nothing rated 4 or 5 on the desk's impact scale recently — a quiet wire.");
+  }
+  // ---- intent: general read on a name ----
+  else if (syms.length) {
+    const s = syms[0], c = ctx(s);
+    const a = alignmentOf(s, c);
+    line(`${s}${c.name ? ` — ${esc(c.name)}` : ""}`, `${esc(c.sector || "")}${c.q.close ? `, trading at Rs ${fmt(c.q.close)} (${sgn(c.q.ret_1d)}% today, ${sgn(c.q.ret_20d)}% over 20 sessions)` : ""}. ${c.e.health?.one_line ? esc(c.e.health.one_line) : ""}`);
+    ["value", "momentum", "income"].forEach(k => { if (c.e[k]?.verdict) line(esc(c.e[k].verdict), esc(c.e[k].one_line || "")); });
+    if (a.lenses.length) line("Where the lenses land", `${a.up} constructive, ${a.neutral} neutral, ${a.dn} cautious — <b>${esc(a.label)}</b>. Full breakdown on the ${linkTo(s)} page, along with the beginner's checklist.`);
+    if ((c.e.what_changed || []).length) A.push(`<div class="ans-block"><b>What changed</b>${c.e.what_changed.slice(0, 3).map(x => `<p class="ans-news">${esc(x)}</p>`).join("")}</div>`);
+  }
+  // ---- fallback ----
+  else {
+    line("I can't answer that one from the data", `The desk answers from its own state files — so it can tell you what moved, what the models say, what the wire logged, and what history measured. It won't guess at anything it hasn't computed. Try naming a stock or a sector.`);
+    A.push(`<div class="ans-block"><b>Things it answers well</b><div class="ask-chips">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div></div>`);
+  }
+
+  _ask.history = [{ q: text, at: new Date().toISOString() }, ..._ask.history].slice(0, 6);
+  if (out) out.innerHTML = `<div class="ans-q">${esc(text)}</div>${A.join("")}
+    <div class="ans-foot">Answered from the desk's own data — <b>no numbers are generated</b>, every figure above is read from a state file the desk computed. Research and education, never advice.</div>`;
+}
+const METHOD_LABEL = { relative_pe: "peer P/E", earnings_power: "earnings power", graham: "Graham", ddm: "dividend discount" };
+
+async function pageAsk() {
+  await Promise.resolve();
+  const locked = !hasFeature("ask");
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Ask the desk</h2><div class="ln"></div><span class="pill">answers from data, not guesses</span></div>
+  <p class="sub" style="margin-bottom:12px">Ask in plain English. Every answer is assembled from the desk's own computed files — so it is instant, and it <b>cannot invent</b> a price, a date or a dividend. When it doesn't know, it says so.</p>
+  ${locked ? planWall("Ask the desk",
+    "\"Why is MEBL moving?\" · \"Is FFC cheap?\" · \"What's happening in cement?\" — answered instantly from the desk's own scored data, with the sector context, the wire, and what the models actually say.") : `
+  <div class="card">
+    <div class="scr-row"><input id="ask-in" class="ph-in" style="flex:1" placeholder="Why is MEBL moving?" value="${esc(_ask.q)}"
+      onkeydown="if(event.key==='Enter')askRun()">
+      <button class="note-save" onclick="askRun()">Ask</button></div>
+    <div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div>
+  </div>
+  <div id="ask-out"></div>`}`;
+  if (!locked && _ask.q) askRun(_ask.q);
+}
+
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
    The reading itself lives at /#/mychart, which this hands off to. */
 async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
 }
-const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
@@ -4589,7 +4844,9 @@ async function submitHolding() {
 }
 
 async function pagePortfolio() {
-  const [quant, uni, live, divs, sectAll] = await Promise.all([j("quant.json"), j("universe.json"), j("live.json"), j("dividends.json"), j("sectors.json")]);
+  const [quant, uni, live, divs, sectAll, fvAll, fsAll, deepDiv] = await Promise.all([
+    j("quant.json"), j("universe.json"), j("live.json"), j("dividends.json"), j("sectors.json"),
+    j("fairvalue.json"), j("fundamental_scores.json"), j("dividends_deep.json")]);
   if (!me) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your portfolio</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">Sign in to track your holdings — enter what you own and the desk shows your live value, profit/loss, position weights and estimated dividend income. Private to you, read-only: the desk never trades. Research, not advice.<br><br>
@@ -4633,6 +4890,63 @@ async function pagePortfolio() {
       : topSec[1] >= 50 ? `<b>${topSec[1].toFixed(0)}%</b> of your portfolio sits in <b>${esc(topSec[0])}</b> — those names tend to rise and fall together, whatever their tickers say.`
         : `Your biggest sector is <b>${esc(topSec[0])}</b> at <b>${topSec[1].toFixed(0)}%</b>, spread across ${secRows.length} sectors.`;
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+
+  /* ---- X-RAY: the desk's own risk rules, run over the user's actual mix. Framed as "how the
+     desk's rules would read this", never "you should trim" — Rule 5 applies hardest here, because
+     this is the one page where the user's own money is on screen. ---- */
+  let xray = "";
+  if (rows.length) {
+    if (!hasFeature("xray")) {
+      xray = planWall("Portfolio X-ray",
+        "Run the desk's own risk rules over your actual holdings: weighted beta, blended valuation, expected dividend income from 18 years of real payout history, and how your concentration reads against the rules the desk imposes on itself.");
+    } else {
+      const FS = fsAll?.tickers || {}, FV = fvAll?.tickers || {};
+      const wsum = withW.reduce((a, r) => a + (r.mv || 0), 0) || 1;
+      // weighted beta — only over holdings that actually have a beta, and we say what we covered
+      let bW = 0, bCov = 0, yW = 0, yCov = 0, gapW = 0, gapCov = 0;
+      withW.forEach(r => {
+        const m = FS[r.ticker]?.metrics || {}, fv = FV[r.ticker] || {};
+        if (m.beta != null) { bW += m.beta * (r.mv || 0); bCov += (r.mv || 0); }
+        if (m.div_yield != null) { yW += m.div_yield * (r.mv || 0); yCov += (r.mv || 0); }
+        if (fv.mispricing_pct != null) { gapW += fv.mispricing_pct * (r.mv || 0); gapCov += (r.mv || 0); }
+      });
+      const beta = bCov ? bW / bCov : null, yld = yCov ? yW / yCov : null, gap = gapCov ? gapW / gapCov : null;
+      // expected annual dividends from REAL trailing-12m payouts (deep history), not a forward promise
+      const cutoff = new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10);
+      let expDiv = 0, divCov = 0;
+      withW.forEach(r => {
+        const pays = (deepDiv?.tickers?.[r.ticker] || []).filter(p => p.ex >= cutoff);
+        if (pays.length) { expDiv += pays.reduce((a, p) => a + p.rs, 0) * r.shares; divCov += (r.mv || 0); }
+      });
+      // desk rules, applied literally (CLAUDE.md Rule 4)
+      const dupSec = Object.entries(secW).filter(([k, v]) => k !== "Unclassified" && withW.filter(r => r.sector === k).length > 1);
+      const checks = [
+        { ok: withW.length <= 4, k: "Max 4 concurrent positions", v: `${withW.length} holding${withW.length === 1 ? "" : "s"}`,
+          why: withW.length <= 4 ? "Within the limit the desk sets itself." : `The desk caps itself at 4 open positions so each one gets real attention. You hold ${withW.length}.` },
+        { ok: !dupSec.length, k: "No two positions in one sector", v: dupSec.length ? `${dupSec.length} sector${dupSec.length > 1 ? "s" : ""} doubled` : "none doubled",
+          why: dupSec.length ? `${dupSec.map(([k, v]) => `${esc(k)} (${v.toFixed(0)}%)`).join(", ")} — the desk forbids this for itself because two names in one sector is one bet wearing two tickers.` : "No sector holds more than one of your positions." },
+        { ok: top ? top.w <= 20 : true, k: "Position ≤ 20% of capital", v: top ? `largest ${top.w.toFixed(0)}%` : "—",
+          why: top && top.w > 20 ? `${esc(top.ticker)} is ${top.w.toFixed(0)}% of the portfolio. The desk's own cap is 20% — above that, one company's bad quarter sets the whole result.` : "Largest position is inside the desk's own cap." },
+      ];
+      const nPass = checks.filter(c => c.ok).length;
+      xray = `
+      <div class="seg"><h2>Portfolio X-ray</h2><div class="ln"></div><span class="pill ${nPass === checks.length ? "ok" : ""}">${nPass}/${checks.length} desk rules met</span></div>
+      <p class="sub" style="margin-bottom:12px">The desk's own risk rules, run over your actual holdings. These are <b>the constraints the desk imposes on itself</b> — shown so you can see how your mix reads against them. Not instructions, and not a suggestion to trade.</p>
+      <div class="sumstrip s4">
+        ${sTile("Weighted beta", beta != null ? beta.toFixed(2) : "—", beta != null ? (beta > 1.1 ? "amplifies market swings" : beta < 0.9 ? "calmer than the market" : "moves with the market") + ` · ${(bCov / wsum * 100).toFixed(0)}% covered` : "no beta data", beta != null && beta > 1.2 ? "dn" : "")}
+        ${sTile("Blended yield", yld != null ? yld.toFixed(2) + "%" : "—", `${(yCov / wsum * 100).toFixed(0)}% of value covered`, "")}
+        ${sTile("Expected dividends", divCov ? "Rs " + fmt(expDiv, 0) : "—", divCov ? "from the last 12 months' real payouts" : "no payout history", divCov ? "up" : "")}
+        ${sTile("Vs model fair value", gap != null ? sgn(+gap.toFixed(1)) + "%" : "—", "value-weighted across holdings", gap > 0 ? "up" : gap < 0 ? "dn" : "")}
+      </div>
+      <div class="card xray">
+        ${checks.map(c => `<div class="xr-row ${c.ok ? "ok" : "flag"}">
+          <span class="xr-dot">${c.ok ? "✓" : "!"}</span>
+          <div><b>${esc(c.k)}</b><span class="sub">${c.why}</span></div>
+          <span class="xr-v">${esc(c.v)}</span></div>`).join("")}
+        <div class="sub xr-foot">Expected dividends are the <b>last twelve months' actual payouts</b> applied to your share counts — history, not a forecast: companies cut dividends. Beta and yield are value-weighted over the holdings the desk has data for, and the coverage is stated so a partial figure is never mistaken for a complete one.</div>
+      </div>`;
+    }
+  }
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Your portfolio</h2><div class="ln"></div><span class="pill">${rows.length} holding${rows.length === 1 ? "" : "s"}</span></div>
@@ -4678,6 +4992,8 @@ async function pagePortfolio() {
     <p class="sub" style="line-height:1.6;margin-bottom:12px">${secFlag} This is the exposure position weights hide: two banks are one bet on interest rates, and two cement names are one bet on construction — however different the tickers look. Sectors are PSX's own classification. Stated as a fact about your holdings, not as advice.</p>
     <div class="ph-bars">${secRows.map(([s, pct]) => `<div class="ph-bar-row"><span class="ph-bar-lbl" title="${esc(s)}">${esc(s.length > 22 ? s.slice(0, 21) + "…" : s)}</span><span class="ph-bar-track"><span class="ph-bar-fill" style="width:${Math.max(2, pct).toFixed(0)}%"></span></span><span class="ph-bar-val num">${pct.toFixed(0)}%</span></div>`).join("")}</div>
   </div>
+
+  ${xray}
 
   <p class="sub" style="margin-top:14px">Estimated dividend income is each holding's most recent declared dividend × your shares — an estimate from past payouts, not a promise; companies can cut or skip dividends. Prices are desk end-of-day/live figures and may differ from your broker. Research, not advice.</p>`
     : `<div class="card"><div class="empty">No holdings yet. Add one above — enter a ticker, how many shares, and your average cost, and the desk tracks your live value, profit/loss and position weights here.</div></div>`}`;
