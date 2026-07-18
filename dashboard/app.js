@@ -3484,69 +3484,280 @@ async function pagePractice() {
 }
 
 /* ==========================================================================================
-   TOOLS — the calculators people otherwise google. Pure client-side arithmetic on the user's own
-   inputs; nothing here reads market data or makes a forecast. Educational.
+   TOOLS — seven calculators, tailored to rupees and PSX rather than generic web widgets.
+   Every default that can be anchored to a REAL, sourced Pakistani number is (SBP policy rate,
+   PBS CPI, T-bill/PIB yields, gold + USD/PKR for zakat nisab), pulled live from the data layer —
+   never typed from memory (CLAUDE.md Rule 2). The dividend-reinvestment tool runs on actual PSX
+   payout history and actual prices. Nothing here forecasts or advises.
    ========================================================================================== */
-function toolCalc() {
-  const g = id => +(document.getElementById(id)?.value || 0);
-  const years = g("tc-years"), monthly = g("tc-monthly"), lump = g("tc-lump"),
-    rate = g("tc-rate") / 100, infl = g("tc-infl") / 100;
+let _tools = { tab: "compound", macro: null, mh: null };
+const TOOL_TABS = [
+  ["compound", "Compound growth"], ["sip", "SIP / monthly"], ["inflation", "Inflation"],
+  ["divreinvest", "Dividend reinvestment"], ["goal", "Goal planner"],
+  ["mortgage", "Mortgage"], ["zakat", "Zakat on shares"],
+];
+const tnum = id => +(document.getElementById(id)?.value || 0);
+const rs = n => "Rs " + fmt(Math.round(n));
+/* real anchors, read from the desk's own macro layer */
+function tAnchors() {
+  const m = _tools.macro || {};
+  return { cpi: m.cpi_yoy, policy: m.sbp_rate, tbill: m.domestic?.tbill_6m, pib: m.domestic?.pib_10y, when: (m.updated || "").slice(0, 10) };
+}
+function anchorChips() {
+  const a = tAnchors(); const c = [];
+  if (a.cpi != null) c.push(`<span class="tchip">CPI <b>${a.cpi}%</b></span>`);
+  if (a.policy != null) c.push(`<span class="tchip">SBP policy <b>${a.policy}%</b></span>`);
+  if (a.tbill != null) c.push(`<span class="tchip">6M T-bill <b>${a.tbill}%</b></span>`);
+  if (a.pib != null) c.push(`<span class="tchip">10Y PIB <b>${a.pib}%</b></span>`);
+  return c.length ? `<div class="tchips">${c.join("")}<span class="sub">live from the desk's macro layer${a.when ? ` · ${esc(a.when)}` : ""}</span></div>` : "";
+}
+function toolTile(k, v, sub, cls) { return `<div class="sumtile"><span class="sk">${k}</span><b class="${cls || ""}">${v}</b>${sub ? `<i>${sub}</i>` : ""}</div>`; }
+
+/* future value of a lump sum + monthly contributions, monthly compounding */
+function fvSeries(lump, monthly, years, annualRate) {
+  const mr = Math.pow(1 + annualRate, 1 / 12) - 1, n = Math.round(years * 12);
+  let v = lump; const yearly = [];
+  for (let i = 1; i <= n; i++) { v = v * (1 + mr) + monthly; if (i % 12 === 0) yearly.push(v); }
+  return { end: v, contributed: lump + monthly * n, yearly };
+}
+/* a small inline bar chart — contributions vs growth, year by year */
+function growthBars(yearly, lump, monthly) {
+  if (!yearly.length) return "";
+  const max = yearly[yearly.length - 1] || 1;
+  return `<div class="tbars">${yearly.map((v, i) => {
+    const put = lump + monthly * 12 * (i + 1);
+    const h = Math.max(2, v / max * 100), ph = Math.max(1, Math.min(h, put / max * 100));
+    return `<div class="tbar" title="Year ${i + 1}: ${rs(v)} (you put in ${rs(put)})">
+      <span class="tb-grow" style="height:${h}%"></span><span class="tb-put" style="height:${ph}%"></span>
+      <i>${i + 1}</i></div>`;
+  }).join("")}</div>
+  <div class="tlegend"><span><span class="sw put"></span>what you put in</span><span><span class="sw grow"></span>total value</span></div>`;
+}
+
+function toolCompound() {
+  const lump = tnum("t-lump"), years = tnum("t-years"), rate = tnum("t-rate") / 100, infl = tnum("t-infl") / 100;
+  const r = fvSeries(lump, 0, years, rate);
+  const real = r.end / Math.pow(1 + infl, years);
+  const beatsInflation = rate > infl;
+  return `<div class="sumstrip s4">
+    ${toolTile("Ending value", rs(r.end), `after ${years} years`, "up")}
+    ${toolTile("You put in", rs(r.contributed), "one lump sum", "")}
+    ${toolTile("Growth", rs(r.end - r.contributed), `at ${(rate * 100).toFixed(1)}%/yr`, r.end >= r.contributed ? "up" : "dn")}
+    ${toolTile("In today's rupees", rs(real), `after ${(infl * 100).toFixed(1)}% inflation`, real >= lump ? "up" : "dn")}
+  </div>
+  ${growthBars(r.yearly, lump, 0)}
+  <div class="tnote ${beatsInflation ? "" : "warn"}">${beatsInflation
+    ? `At ${(rate * 100).toFixed(1)}% against ${(infl * 100).toFixed(1)}% inflation, this money grows in <b>real</b> terms — the "today's rupees" tile is the honest one, and it is what your savings would actually buy.`
+    : `<b>This loses purchasing power.</b> ${(rate * 100).toFixed(1)}% against ${(infl * 100).toFixed(1)}% inflation means the ending amount buys <b>less</b> than what you put in. Beating inflation is the first job, not the last.`}</div>`;
+}
+function toolSip() {
+  const monthly = tnum("t-monthly"), lump = tnum("t-lump2"), years = tnum("t-years2"), rate = tnum("t-rate2") / 100, infl = tnum("t-infl2") / 100;
+  const r = fvSeries(lump, monthly, years, rate);
+  const real = r.end / Math.pow(1 + infl, years);
+  return `<div class="sumstrip s4">
+    ${toolTile("Ending value", rs(r.end), `${years} yrs × Rs ${fmt(monthly)}/mo`, "up")}
+    ${toolTile("You put in", rs(r.contributed), `${Math.round(years * 12)} contributions`, "")}
+    ${toolTile("Growth", rs(r.end - r.contributed), `at ${(rate * 100).toFixed(1)}%/yr`, "up")}
+    ${toolTile("In today's rupees", rs(real), `after ${(infl * 100).toFixed(1)}% inflation`, "")}
+  </div>
+  ${growthBars(r.yearly, lump, monthly)}
+  <div class="tnote">Saving a fixed amount every month buys more shares when prices are low and fewer when high — which is the whole argument for regularity over timing. Note how much of the ending value is <b>your own contributions</b> in the early years: compounding only becomes the bigger half late, which is why starting early beats starting big.</div>`;
+}
+function toolInflation() {
+  const amt = tnum("t-iamt"), years = tnum("t-iyears"), infl = tnum("t-irate") / 100;
+  const future = amt * Math.pow(1 + infl, years);      // what you'd need then to match today
+  const worth = amt / Math.pow(1 + infl, years);       // what today's amount buys then
+  const a = tAnchors();
+  return `<div class="sumstrip s3">
+    ${toolTile("Rs " + fmt(amt) + " today", rs(worth), `will buy this much in ${years} yrs`, "dn")}
+    ${toolTile("To match it you'd need", rs(future), `in ${years} years`, "")}
+    ${toolTile("Purchasing power lost", (100 - worth / amt * 100).toFixed(1) + "%", `at ${(infl * 100).toFixed(1)}%/yr`, "dn")}
+  </div>
+  <div class="tnote warn">This is the case for investing in one number. Cash left idle at ${(infl * 100).toFixed(1)}% inflation loses about <b>${(100 - worth / amt * 100).toFixed(0)}%</b> of its purchasing power over ${years} years — a certainty, not a risk.${a.cpi != null ? ` Pakistan's latest reported CPI is <b>${a.cpi}%</b>${a.tbill != null ? `, and 6-month T-bills yield about <b>${a.tbill}%</b> — the near-riskless bar any investment should be judged against` : ""}.` : ""}</div>`;
+}
+function toolGoal() {
+  const target = tnum("t-gtarget"), years = tnum("t-gyears"), rate = tnum("t-grate") / 100,
+    infl = tnum("t-ginfl") / 100, have = tnum("t-ghave");
+  const targetReal = target * Math.pow(1 + infl, years);   // the goal costs more by then
   const mr = Math.pow(1 + rate, 1 / 12) - 1, n = Math.round(years * 12);
-  let v = lump; const series = [];
-  for (let i = 1; i <= n; i++) { v = v * (1 + mr) + monthly; if (i % 12 === 0) series.push(v); }
-  const contributed = lump + monthly * n;
-  const real = v / Math.pow(1 + infl, years);
-  const el = document.getElementById("tc-out");
-  if (!el) return;
-  el.innerHTML = `
-    <div class="sumstrip s4" style="margin-top:12px">
-      <div class="sumtile"><span class="sk">Ending value</span><b class="up">Rs ${fmt(Math.round(v))}</b><i>after ${years} years</i></div>
-      <div class="sumtile"><span class="sk">You put in</span><b>Rs ${fmt(Math.round(contributed))}</b><i>lump + monthly</i></div>
-      <div class="sumtile"><span class="sk">Growth</span><b class="${v - contributed >= 0 ? "up" : "dn"}">Rs ${fmt(Math.round(v - contributed))}</b><i>at ${(rate * 100).toFixed(1)}%/yr</i></div>
-      <div class="sumtile"><span class="sk">In today's rupees</span><b>Rs ${fmt(Math.round(real))}</b><i>at ${(infl * 100).toFixed(1)}% inflation</i></div>
-    </div>
-    <p class="sub" style="margin-top:8px">Compounding at a constant rate is a teaching model — real returns arrive unevenly, and no rate is guaranteed. The "today's rupees" tile is the one that matters: it is what the money would actually feel like.</p>`;
+  const grownHave = have * Math.pow(1 + mr, n);
+  const need = Math.max(0, targetReal - grownHave);
+  // monthly payment solving FV of an ordinary annuity
+  const monthly = mr === 0 ? need / n : need * mr / (Math.pow(1 + mr, n) - 1);
+  return `<div class="sumstrip s4">
+    ${toolTile("Goal in today's money", rs(target), `${years} years away`, "")}
+    ${toolTile("What it'll actually cost", rs(targetReal), `at ${(infl * 100).toFixed(1)}% inflation`, "dn")}
+    ${toolTile("Your savings will grow to", rs(grownHave), `from ${rs(have)} today`, "up")}
+    ${toolTile("Save per month", rs(monthly), `for ${n} months at ${(rate * 100).toFixed(1)}%`, "up")}
+  </div>
+  <div class="tnote">The tile most goal calculators hide is the second one: a goal priced in <b>today's</b> rupees costs materially more by the time you reach it. Plan against ${rs(targetReal)}, not ${rs(target)}. If the monthly figure looks impossible, the honest levers are a longer horizon or a smaller goal — not a higher assumed return.</div>`;
 }
-function zakatCalc() {
-  const v = +(document.getElementById("zk-val")?.value || 0);
-  const el = document.getElementById("zk-out");
-  if (el) el.innerHTML = `<div class="sumstrip s2" style="margin-top:12px">
-    <div class="sumtile"><span class="sk">Portfolio value</span><b>Rs ${fmt(v)}</b><i>your input</i></div>
-    <div class="sumtile"><span class="sk">Zakat at 2.5%</span><b>Rs ${fmt(Math.round(v * 0.025))}</b><i>if nisab & haul conditions met</i></div></div>
-    <p class="sub" style="margin-top:8px">2.5% is the commonly applied rate on the market value of shares held for a lunar year above nisab. Schools of thought differ on details (e.g. trading vs holding intent) — confirm with your own scholar or zakat authority.</p>`;
+function toolMortgage() {
+  const price = tnum("t-mprice"), down = tnum("t-mdown"), years = tnum("t-myears"), rate = tnum("t-mrate") / 100;
+  const principal = Math.max(0, price - down);
+  const mr = rate / 12, n = Math.round(years * 12);
+  const pay = mr === 0 ? principal / n : principal * mr / (1 - Math.pow(1 + mr, -n));
+  const total = pay * n, interest = total - principal;
+  const a = tAnchors();
+  return `<div class="sumstrip s4">
+    ${toolTile("Monthly instalment", rs(pay), `${years} yrs at ${(rate * 100).toFixed(2)}%`, "")}
+    ${toolTile("You borrow", rs(principal), `${rs(down)} down on ${rs(price)}`, "")}
+    ${toolTile("Total interest", rs(interest), `over ${n} payments`, "dn")}
+    ${toolTile("Total repaid", rs(total), interest > principal ? "more than double the loan" : "principal + interest", "dn")}
+  </div>
+  <div class="tnote warn">Over ${years} years you repay <b>${rs(total)}</b> on a <b>${rs(principal)}</b> loan — interest alone is <b>${rs(interest)}</b>, ${(interest / principal * 100).toFixed(0)}% of what you borrowed.
+  Pakistani home finance is usually priced at <b>KIBOR + a bank spread</b> and re-prices as rates move, so a fixed illustration understates the risk of a rising-rate year.${a.policy != null ? ` The SBP policy rate is currently <b>${a.policy}%</b>${a.tbill != null ? ` and 6M T-bills yield <b>${a.tbill}%</b>` : ""} — home finance typically sits above these, not at them.` : ""} The desk does not hold a live KIBOR feed, so enter the rate your bank actually quotes.</div>`;
 }
+function toolZakat() {
+  const val = tnum("t-zval"), cash = tnum("t-zcash"), owed = tnum("t-zowed");
+  const net = Math.max(0, val + cash - owed);
+  const g = _tools.gold;   // {pkrPerGram, usdOz, usdpkr, date}
+  const nisabGold = g ? g.pkrPerGram * 87.48 : null;
+  const above = nisabGold != null ? net >= nisabGold : null;
+  return `<div class="sumstrip s3">
+    ${toolTile("Zakatable total", rs(net), "shares + cash − debts due", "")}
+    ${toolTile("Zakat at 2.5%", rs(net * 0.025), above === false ? "only if above nisab" : "payable if held a lunar year", "up")}
+    ${toolTile("Gold nisab (87.48g)", nisabGold != null ? rs(nisabGold) : "—", g ? `gold $${g.usdOz}/oz · USD/PKR ${g.usdpkr}` : "gold price unavailable", "")}
+  </div>
+  ${nisabGold != null ? `<div class="tnote ${above ? "" : "warn"}">${above
+    ? `Your ${rs(net)} is <b>above</b> the gold nisab of ${rs(nisabGold)}, so zakat would be due if the wealth has been held for a lunar year.`
+    : `Your ${rs(net)} is <b>below</b> the gold nisab of ${rs(nisabGold)}. Note that the <b>silver</b> nisab (612.36g) is considerably lower and is what many scholars apply — the desk does not hold a silver price, so check the current silver rate before concluding zakat is not due.`}</div>` : ""}
+  <div class="tnote">Nisab above is computed from the desk's live gold price${g ? ` ($${g.usdOz}/oz on ${esc(g.date)}) and USD/PKR (${g.usdpkr})` : ""}, at 87.48g of gold. Scholars differ on real questions here — whether shares held long-term are zakatable at full market value or only on the company's zakatable assets, and whether gold or silver nisab applies. <b>This is a calculator, not a fatwa</b> — confirm with your own scholar or zakat authority.</div>`;
+}
+
+/* Dividend reinvestment on REAL PSX history: actual announced payouts, actual prices.
+   Deep history from the desk is split/bonus-adjusted but NOT dividend-adjusted (the fetcher stores
+   Yahoo's raw quote series), so applying dividends on top does not double-count them. */
+async function toolDivRun() {
+  const sym = (document.getElementById("t-dsym")?.value || "").trim().toUpperCase();
+  const amount = tnum("t-damt"), years = tnum("t-dyears");
+  const out = document.getElementById("t-out");
+  if (!sym) { out.innerHTML = `<div class="tnote warn">Enter a PSX ticker to run it on real payout history.</div>`; return; }
+  out.innerHTML = `<div class="sub" style="padding:10px 0">Running ${esc(sym)} on real dividend history…</div>`;
+  const [hist, divs, uni] = await Promise.all([
+    j("history_deep/" + sym + ".json", 600000), j("dividends.json"), j("universe.json")]);
+  if (!hist || !hist.length) { out.innerHTML = `<div class="tnote warn">The desk holds no long price history for <b>${esc(sym)}</b>. Try a larger name.</div>`; return; }
+  const today = hist[hist.length - 1].date;
+  let startDate = new Date(new Date(today).getTime() - years * 365.25 * 86400000).toISOString().slice(0, 10);
+  // The desk's announced-payout history is much shorter than its price history. Running from before
+  // the first payout on record would silently undercount dividends and understate reinvestment —
+  // so clamp the start to the dividend coverage and say so, rather than publishing a flattering lie.
+  const allBc = (divs?.history || []).filter(x => x.bc_start).map(x => x.bc_start).sort();
+  const covFrom = allBc[0];
+  let clamped = false;
+  if (covFrom && startDate < covFrom) { startDate = covFrom; clamped = true; }
+  const bars = hist.filter(b => b.date >= startDate && b.close > 0);
+  if (bars.length < 30) { out.innerHTML = `<div class="tnote warn">Not enough price history for <b>${esc(sym)}</b> over ${years} years — the desk's series starts ${esc(hist[0].date)}.</div>`; return; }
+  const priceOn = d => { for (let i = 0; i < bars.length; i++) if (bars[i].date >= d) return bars[i].close; return bars[bars.length - 1].close; };
+  const startPx = bars[0].close, endPx = bars[bars.length - 1].close;
+  const pays = (divs?.history || []).filter(x => x.symbol === sym && x.dividend_rs && x.bc_start
+    && x.bc_start >= bars[0].date && x.bc_start <= today).sort((a, b) => a.bc_start.localeCompare(b.bc_start));
+  let shR = amount / startPx;          // reinvesting
+  const shC = amount / startPx;        // taking cash
+  let cash = 0; const events = [];
+  for (const p of pays) {
+    const px = priceOn(p.bc_start);
+    const paidR = shR * p.dividend_rs, paidC = shC * p.dividend_rs;
+    const bought = px > 0 ? paidR / px : 0;
+    shR += bought; cash += paidC;
+    events.push({ d: p.bc_start, rsps: p.dividend_rs, px, paidR, bought, shR });
+  }
+  const valR = shR * endPx, valC = shC * endPx + cash, valNoDiv = shC * endPx;
+  const pct = v => ((v / amount - 1) * 100);
+  const name = uni?.symbols?.[sym]?.name || "";
+  out.innerHTML = `
+  <div class="sumstrip s4">
+    ${toolTile("Reinvested", rs(valR), `${sgn(+pct(valR).toFixed(1))}% total`, valR >= amount ? "up" : "dn")}
+    ${toolTile("Dividends taken as cash", rs(valC), `${sgn(+pct(valC).toFixed(1))}% total`, valC >= amount ? "up" : "dn")}
+    ${toolTile("Reinvesting added", rs(valR - valC), `${pays.length} payout${pays.length === 1 ? "" : "s"} compounded`, valR >= valC ? "up" : "dn")}
+    ${toolTile("Price alone", rs(valNoDiv), "ignoring dividends entirely", valNoDiv >= amount ? "up" : "dn")}
+  </div>
+  ${clamped ? `<div class="tnote warn"><b>Window shortened to match the data.</b> The desk holds announced payouts only from <b>${esc(covFrom)}</b>, so this runs from there rather than ${years} years back — starting earlier would count the price move but miss the dividends, understating reinvestment and flattering nothing. Price history goes back to ${esc(hist[0].date)}; payout history does not.</div>` : ""}
+  <div class="tnote">${rs(amount)} into <b>${esc(sym)}</b>${name ? ` (${esc(name.slice(0, 34))})` : ""} on <b>${esc(bars[0].date)}</b> bought
+  <b>${shC.toFixed(0)}</b> shares at Rs ${fmt(startPx)}. Over that window it announced <b>${pays.length}</b> cash payout${pays.length === 1 ? "" : "s"};
+  reinvesting each one grew the holding to <b>${shR.toFixed(0)}</b> shares, against ${shC.toFixed(0)} if you had spent the cash.
+  Price on ${esc(today)}: Rs ${fmt(endPx)}. <b>Past payouts are history, not a forecast</b> — companies cut dividends, and this is not a recommendation.</div>
+  ${pays.length ? `<div class="card" style="padding:0;margin-top:10px"><table><thead><tr><th>Book closure</th><th class="r">Rs/share</th><th class="r">Price then</th><th class="r">Cash paid</th><th class="r">Shares bought</th><th class="r">Shares held</th></tr></thead><tbody>${
+    events.slice(-14).reverse().map(e => `<tr><td class="num">${esc(e.d)}</td><td class="r num">${e.rsps}</td><td class="r num">${fmt(e.px)}</td>
+      <td class="r num up">${rs(e.paidR)}</td><td class="r num">${e.bought.toFixed(1)}</td><td class="r num">${e.shR.toFixed(0)}</td></tr>`).join("")}</tbody></table>
+    <div class="sub" style="padding:9px 14px">Reinvested at the closing price on the book-closure date. Real reinvestment happens on the payment date at whatever price then prevails, in whole shares, after withholding tax — so treat this as the shape of the effect, not an exact record.</div></div>` : ""}`;
+}
+
+function toolPanel() {
+  const t = _tools.tab, a = tAnchors();
+  const cpi = a.cpi != null ? a.cpi : 11, rate = a.tbill != null ? a.tbill : 12;
+  const F = (label, id, val, step) => `<label>${label}<input id="${id}" type="number" class="ph-in" value="${val}"${step ? ` step="${step}"` : ""}></label>`;
+  const run = `onclick="toolRun()"`;
+  if (t === "compound") return `<div class="tgrid">
+      ${F("Amount today (Rs)", "t-lump", 500000)}${F("Years", "t-years", 10)}
+      ${F("Assumed return %/yr", "t-rate", 15, "0.1")}${F("Inflation %/yr", "t-infl", cpi, "0.1")}
+      <button class="note-save" ${run}>Calculate</button></div>`;
+  if (t === "sip") return `<div class="tgrid">
+      ${F("Monthly saving (Rs)", "t-monthly", 15000)}${F("Starting amount (Rs)", "t-lump2", 100000)}
+      ${F("Years", "t-years2", 10)}${F("Assumed return %/yr", "t-rate2", 15, "0.1")}${F("Inflation %/yr", "t-infl2", cpi, "0.1")}
+      <button class="note-save" ${run}>Calculate</button></div>`;
+  if (t === "inflation") return `<div class="tgrid">
+      ${F("Amount (Rs)", "t-iamt", 1000000)}${F("Years", "t-iyears", 10)}${F("Inflation %/yr", "t-irate", cpi, "0.1")}
+      <button class="note-save" ${run}>Calculate</button></div>`;
+  if (t === "goal") return `<div class="tgrid">
+      ${F("Goal in today's Rs", "t-gtarget", 5000000)}${F("Years away", "t-gyears", 8)}
+      ${F("Already saved (Rs)", "t-ghave", 200000)}${F("Assumed return %/yr", "t-grate", 15, "0.1")}${F("Inflation %/yr", "t-ginfl", cpi, "0.1")}
+      <button class="note-save" ${run}>Calculate</button></div>`;
+  if (t === "mortgage") return `<div class="tgrid">
+      ${F("Property price (Rs)", "t-mprice", 15000000)}${F("Down payment (Rs)", "t-mdown", 4500000)}
+      ${F("Years", "t-myears", 20)}${F("Rate %/yr (your bank's quote)", "t-mrate", 18, "0.01")}
+      <button class="note-save" ${run}>Calculate</button></div>`;
+  if (t === "zakat") return `<div class="tgrid">
+      ${F("Value of shares (Rs)", "t-zval", 500000)}${F("Cash & bank (Rs)", "t-zcash", 200000)}${F("Debts due now (Rs)", "t-zowed", 0)}
+      <button class="note-save" ${run}>Calculate</button></div>`;
+  if (t === "divreinvest") return `<div class="tgrid">
+      <label>PSX ticker<input id="t-dsym" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" value="FFC"></label>
+      ${F("Amount invested (Rs)", "t-damt", 500000)}${F("Years back", "t-dyears", 5)}
+      <button class="note-save" onclick="toolDivRun()">Run on real history</button></div>`;
+  return "";
+}
+function toolRun() {
+  const out = document.getElementById("t-out"); if (!out) return;
+  const f = { compound: toolCompound, sip: toolSip, inflation: toolInflation, goal: toolGoal, mortgage: toolMortgage, zakat: toolZakat }[_tools.tab];
+  if (f) out.innerHTML = f();
+}
+function toolTab(k) { _tools.tab = k; pageTools(); }
+
 async function pageTools() {
   await Promise.resolve();
+  if (!_tools.macro) {
+    const [m, mh] = await Promise.all([j("macro.json"), j("macro_history.json")]);
+    _tools.macro = m || {};
+    // zakat nisab needs a real gold price in rupees: gold is quoted USD/oz, so convert via USD/PKR
+    try {
+      const gs = mh?.factors?.gold?.series || {}, us = mh?.factors?.usdpkr?.series || {};
+      const gd = Object.keys(gs).sort(), ud = Object.keys(us).sort();
+      const usdOz = gs[gd[gd.length - 1]], usdpkr = us[ud[ud.length - 1]];
+      if (usdOz && usdpkr) _tools.gold = { usdOz, usdpkr, date: gd[gd.length - 1], pkrPerGram: usdOz * usdpkr / 31.1034768 };
+    } catch { /* nisab tile degrades to "—" rather than inventing a price */ }
+  }
+  const DESC = {
+    compound: "What one amount becomes if left to grow — and what it will actually buy after inflation.",
+    sip: "Saving a fixed amount every month. The case for regularity over timing.",
+    inflation: "What idle rupees lose. The argument for investing, in one number.",
+    divreinvest: "Real PSX payout history: what reinvesting dividends actually did, versus spending them.",
+    goal: "House, wedding, education — what you must save monthly, priced in future rupees.",
+    mortgage: "Instalment and true lifetime interest on Pakistani home finance.",
+    zakat: "2.5% on shares and cash, against a nisab computed from today's real gold price.",
+  };
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Tools</h2><div class="ln"></div><span class="pill">your numbers, your math</span></div>
-  <div class="disclaimer">Calculators run entirely on <b>your own inputs</b> — nothing here is a forecast, a promised return, or advice. Constant-rate compounding is a teaching model; real markets do not pay a steady rate.</div>
-
-  <div class="card">
-    <div class="ark">savings & compounding — lump sum + monthly (SIP), with inflation</div>
-    <div class="tc-grid">
-      <label>Starting amount (Rs)<input id="tc-lump" type="number" class="ph-in" value="100000"></label>
-      <label>Monthly addition (Rs)<input id="tc-monthly" type="number" class="ph-in" value="10000"></label>
-      <label>Years<input id="tc-years" type="number" class="ph-in" value="10"></label>
-      <label>Assumed return %/yr<input id="tc-rate" type="number" class="ph-in" value="12"></label>
-      <label>Assumed inflation %/yr<input id="tc-infl" type="number" class="ph-in" value="8"></label>
-      <button class="note-save" onclick="toolCalc()" style="align-self:end">Calculate</button>
-    </div>
-    <div id="tc-out"></div>
-  </div>
-
-  <div class="card">
-    <div class="ark">zakat on shares</div>
-    <div class="tc-grid">
-      <label>Market value of holdings (Rs)<input id="zk-val" type="number" class="ph-in" value="500000"></label>
-      <button class="note-save" onclick="zakatCalc()" style="align-self:end">Calculate</button>
-    </div>
-    <div id="zk-out"></div>
-  </div>
-
-  <div class="card">
-    <div class="ark">what these are for</div>
-    <p class="sub" style="margin-top:6px;line-height:1.65">The compounding calculator answers "what could steady saving become" — try it with a conservative rate and a realistic inflation figure, and notice how much the <b>inflation-adjusted</b> number differs from the headline. The zakat calculator keeps an obligation visible that portfolios often forget. More tools (dividend income history on real payouts, goal planning) arrive with the data to back them.</p>
+  <div class="seg" style="margin-top:4px"><h2>Tools</h2><div class="ln"></div><span class="pill">rupees · PSX · real rates</span></div>
+  <div class="disclaimer">Calculators run on <b>your own inputs</b>, with defaults anchored to Pakistan's real reported rates. Nothing here is a forecast, a promised return, or advice — assumed returns are <b>your assumption</b>, and no market pays a steady rate.</div>
+  ${anchorChips()}
+  <div class="ttabs">${TOOL_TABS.map(([k, l]) => `<button class="ttab ${_tools.tab === k ? "on" : ""}" onclick="toolTab('${k}')">${esc(l)}</button>`).join("")}</div>
+  <div class="card tpanel">
+    <div class="ark">${esc(TOOL_TABS.find(x => x[0] === _tools.tab)?.[1] || "")}</div>
+    <p class="sub" style="margin:5px 0 4px">${esc(DESC[_tools.tab] || "")}</p>
+    ${toolPanel()}
+    <div id="t-out"></div>
   </div>`;
+  // the ticker combo is wired by the delegated focusin handler — nothing to bind here
+  if (_tools.tab === "divreinvest") toolDivRun(); else toolRun();
 }
 
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.

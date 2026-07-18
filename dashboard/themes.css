@@ -704,9 +704,38 @@ body[data-theme=gemini] .today-card{border:1px solid var(--line);border-left:3px
 body[data-theme=gemini] .today-card b{display:block;font-size:15px;margin:3px 0 2px}
 /* practice + tools */
 body[data-theme=gemini] .pp-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
-body[data-theme=gemini] .tc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
-body[data-theme=gemini] .tc-grid label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em}
-body[data-theme=gemini] .sumstrip.s2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px}
+body[data-theme=gemini] .sumstrip.s2,body[data-theme=gemini] .sumstrip.s3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px}
+/* ---- tools: tabbed calculators ---- */
+body[data-theme=gemini] .tchips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+body[data-theme=gemini] .tchip{border:1px solid var(--line);padding:4px 9px;font-size:11px;color:var(--ink2);white-space:nowrap}
+body[data-theme=gemini] .tchip b{color:var(--ink1);font-family:"Pixelify Sans",var(--mono,monospace)}
+body[data-theme=gemini] .ttabs{display:flex;flex-wrap:wrap;gap:1px;background:var(--hair);border:1.5px solid var(--line);margin-bottom:-1.5px}
+body[data-theme=gemini] .ttab{background:var(--panel);color:var(--ink2);border:none;font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:10px 14px;cursor:pointer;flex:1 1 auto;white-space:nowrap}
+body[data-theme=gemini] .ttab:hover{background:var(--panel2);color:var(--ink1)}
+body[data-theme=gemini] .ttab.on{background:var(--ink1);color:var(--panel)}
+body[data-theme=gemini] .tpanel{border:1.5px solid var(--line)}
+body[data-theme=gemini] .tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px;margin:12px 0 4px;align-items:end}
+body[data-theme=gemini] .tgrid label{display:flex;flex-direction:column;gap:5px;font-size:10.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;line-height:1.3}
+body[data-theme=gemini] .tgrid .ph-in{width:100%}
+body[data-theme=gemini] .tgrid button{height:38px}
+body[data-theme=gemini] #t-out{margin-top:14px}
+body[data-theme=gemini] .tnote{border-left:3px solid var(--ink1);background:var(--panel2);padding:10px 13px;font-size:13px;line-height:1.62;margin-top:12px}
+body[data-theme=gemini] .tnote.warn{border-left-color:var(--dn)}
+/* the little contributions-vs-growth chart */
+body[data-theme=gemini] .tbars{display:flex;align-items:flex-end;gap:3px;height:120px;margin-top:14px;padding-top:6px;border-bottom:1px solid var(--line)}
+body[data-theme=gemini] .tbar{position:relative;flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center}
+body[data-theme=gemini] .tb-grow,body[data-theme=gemini] .tb-put{position:absolute;bottom:0;width:100%}
+body[data-theme=gemini] .tb-grow{background:var(--up);opacity:.85}
+body[data-theme=gemini] .tb-put{background:var(--ink1)}
+body[data-theme=gemini] .tbar i{position:absolute;bottom:-15px;font-size:8.5px;color:var(--ink3);font-style:normal}
+body[data-theme=gemini] .tlegend{display:flex;gap:16px;margin-top:20px;font-size:11px;color:var(--ink3)}
+body[data-theme=gemini] .tlegend .sw{display:inline-block;width:9px;height:9px;margin-right:5px}
+body[data-theme=gemini] .tlegend .sw.put{background:var(--ink1)}
+body[data-theme=gemini] .tlegend .sw.grow{background:var(--up);opacity:.85}
+@media(max-width:720px){body[data-theme=gemini] .ttabs{flex-direction:column}
+  body[data-theme=gemini] .ttab{flex:none;text-align:left}
+  body[data-theme=gemini] .tgrid{grid-template-columns:1fr 1fr}
+  body[data-theme=gemini] .tbar i{display:none}}
 @media(max-width:720px){body[data-theme=gemini] .jy-body{padding:10px 11px}
   body[data-theme=gemini] .lh-side{gap:8px}}
 /* levels */
