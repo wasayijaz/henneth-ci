@@ -1321,14 +1321,14 @@ const PLANS = {
     features: [] },
   // NOT "Learner" — a paid tier should be named for what the user becomes, not for what they lack.
   investor: { label: "Investor", tag: "start here",
-    blurb: "Become an investor who reads for themselves. A guided path through real PSX filings — annual reports, statements, announcements — at your own pace.",
-    features: ["learn", "astro_full", "dividends_full", "earnings_full"] },
+    blurb: "Become an investor who reads for themselves. The guided journey from 'why invest' to your first practice position — on real PSX filings and real prices.",
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full"] },
   pro: { label: "Pro", tag: "TA & FA",
     blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
-    features: ["learn", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full"] },
   broker: { label: "Broker", tag: "coming soon", soon: true,
     blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
-    features: ["learn", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "broker_tools"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "broker_tools"] },
 };
 const PLAN_ORDER = ["free", "investor", "pro", "broker"];
 /* Owner-only: preview the product as any plan without changing the stored plan. Set from the Plans
@@ -2897,7 +2897,9 @@ async function pageSettings() {
    gateway follows), so this page states plainly where things stand rather than dangling a dead
    checkout button. ---------- */
 const FEATURE_LABEL = {
-  learn: "The guided learning path",
+  learn: "The Investment Journey + deep-dive course",
+  practice: "Practice portfolio — PKR 500k virtual, real prices",
+  tools: "Compounding, SIP & zakat calculators",
   astro_full: "Your full astro reading + the daily sky",
   dividends_full: "Every announced payout + buy-by dates",
   earnings_full: "The full earnings calendar",
@@ -3217,39 +3219,92 @@ async function finishLesson() {
   await markLesson(levelId, lesson.id, true);
 }
 
+/* Streak: consecutive calendar days (ending today or yesterday) with at least one lesson completed.
+   Derived from the ISO timestamps learn_progress already stores — no extra state. */
+function learnStreak() {
+  const days = new Set(Object.values(learnProgress()).map(ts => String(ts).slice(0, 10)));
+  if (!days.size) return 0;
+  const d = new Date(); let n = 0;
+  if (!days.has(d.toISOString().slice(0, 10))) d.setDate(d.getDate() - 1);   // today not yet studied → streak may still be alive from yesterday
+  while (days.has(d.toISOString().slice(0, 10))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+/* Journey step actions: real product actions, auto-detected — never a self-declared checkbox. */
+function journeyActionState(a) {
+  if (a === "watchlist") {
+    const n = watchlist().length;
+    return { done: n >= 3, label: n >= 3 ? `Watchlist built — ${n} companies starred` : `Star at least 3 companies (${n}/3 so far)`, go: "#/board", cta: "Browse the board →" };
+  }
+  if (a === "paper") {
+    const n = (paperState().trades || []).length;
+    return { done: n > 0, label: n > 0 ? "First practice position taken" : "Open your practice portfolio and take a position", go: "#/practice", cta: "Open Practice →" };
+  }
+  return null;
+}
+
 async function pageLearn() {
   await Promise.resolve();
   const cur = await j("curriculum.json");
-  const levels = cur?.levels || [];
-  if (!levels.length) {
+  const levels = (cur?.levels || []).filter(v => !v.hidden);
+  const lessonOf = (lv, ls) => (cur?.levels || []).find(v => v.id === lv)?.lessons.find(l => l.id === ls);
+  const journey = (cur?.journey || []).map(st => ({ ...st,
+    ls: st.lessons.map(([lv, ll]) => ({ lv, ll, l: lessonOf(lv, ll) })).filter(x => x.l),
+    act: journeyActionState(st.action) }));
+  if (!journey.length && !levels.length) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Learn</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">The syllabus is being prepared.</div></div>`;
     return;
   }
-  const all = levels.flatMap(v => v.lessons.map(l => ({ s: v.id, l: l.id })));
-  const doneN = all.filter(x => lessonDone(x.s, x.l)).length;
-  const pct = Math.round(doneN / all.length * 100);
-  const totalMins = levels.flatMap(v => v.lessons).reduce((a, l) => a + (l.mins || 0), 0);
+  const stepDone = st => st.ls.every(x => lessonDone(x.lv, x.ll)) && (!st.act || st.act.done);
+  const doneSteps = journey.filter(stepDone).length;
+  // the current step is the first incomplete one; steps beyond it are locked (the path is the point)
+  const curIdx = journey.findIndex(st => !stepDone(st));
+  const streak = learnStreak();
+  // today's card: the next unfinished lesson anywhere on the journey
+  const nextLesson = journey.flatMap(st => st.ls).find(x => !lessonDone(x.lv, x.ll));
+
+  const stepHtml = (st, i) => {
+    const done = stepDone(st), lockd = curIdx >= 0 && i > curIdx;
+    return `<div class="jy-step ${done ? "done" : ""} ${i === curIdx ? "cur" : ""} ${lockd ? "locked" : ""}">
+      <div class="jy-rail"><span class="jy-node">${done ? "✓" : i + 1}</span>${i < journey.length - 1 ? '<span class="jy-line"></span>' : ""}</div>
+      <div class="jy-body">
+        <div class="jy-head"><b>${esc(st.title)}</b><span class="sub">${esc(st.sub)}</span></div>
+        ${lockd ? `<div class="sub jy-lock">Finish the step above first.</div>` : `
+        <div class="jy-lessons">${st.ls.map(x => {
+      const d = lessonDone(x.lv, x.ll);
+      return `<button class="jy-lsn ${d ? "done" : ""}" onclick="openLesson('${esc(x.lv)}','${esc(x.ll)}')">
+            <span class="jy-tick">${d ? "✓" : "○"}</span>${esc(x.l.title)}<span class="jy-min">${x.l.mins}m</span></button>`;
+    }).join("")}</div>
+        ${st.act ? `<div class="jy-act ${st.act.done ? "done" : ""}"><span class="jy-tick">${st.act.done ? "✓" : "→"}</span>
+          <span>${esc(st.act.label)}</span>${st.act.done ? "" : `<a href="${st.act.go}" class="jy-go">${esc(st.act.cta)}</a>`}</div>` : ""}`}
+      </div></div>`;
+  };
+
   const doneIn = v => v.lessons.filter(l => lessonDone(v.id, l.id)).length;
-  // a level opens when the one before it is finished — progression, but never a dead end:
-  // the first unfinished level is always open, so nobody can get stuck.
   const unlocked = i => i === 0 || doneIn(levels[i - 1]) === levels[i - 1].lessons.length;
-  const nextUp = all.find(x => !lessonDone(x.s, x.l));
 
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Become an investor</h2><div class="ln"></div><span class="pill">${levels.length} levels · ${all.length} lessons · ~${totalMins} min</span></div>
+  <div class="seg" style="margin-top:4px"><h2>Become an investor</h2><div class="ln"></div><span class="pill">${doneSteps}/${journey.length} steps</span></div>
   <div class="disclaimer">Education, <b>not investment advice</b>. This teaches you to read companies, prices and payouts for yourself — it never tells you what to buy, and nothing here is a recommendation or a forecast.</div>
 
   <div class="card learn-hero">
     <div class="lh-top">
-      <div><div class="ark">your progress</div><b style="font-size:22px">${doneN} of ${all.length}</b><span class="sub"> lessons complete</span></div>
-      <div class="lh-pct"><b>${pct}%</b></div>
+      <div><div class="ark">the investment journey</div><b style="font-size:22px">${doneSteps} of ${journey.length}</b><span class="sub"> steps complete</span></div>
+      <div class="lh-side">${streak ? `<span class="streak-chip" title="Days in a row with at least one lesson completed">◆ ${streak}-day streak</span>` : ""}
+      <div class="lh-pct"><b>${Math.round(doneSteps / journey.length * 100)}%</b></div></div>
     </div>
-    <div class="lh-bar"><span style="width:${pct}%"></span></div>
-    ${nextUp ? `<button class="bw-go" style="max-width:300px;margin-top:14px" onclick="openLesson('${esc(nextUp.s)}','${esc(nextUp.l)}')">${doneN ? "Continue where you left off" : "Start level 1"} →</button>`
-      : `<p class="sub" style="margin-top:12px"><b>You've finished every level.</b> The market keeps teaching — the News wire and Earnings calendar are where the next lessons come from.</p>`}
+    <div class="lh-bar"><span style="width:${Math.round(doneSteps / journey.length * 100)}%"></span></div>
+    ${nextLesson ? `<div class="today-card"><div class="ark">today's lesson · ${nextLesson.l.mins} min</div>
+      <b>${esc(nextLesson.l.title)}</b><span class="sub">${esc(nextLesson.l.why)}</span>
+      <button class="bw-go" style="max-width:240px;margin-top:10px" onclick="openLesson('${esc(nextLesson.lv)}','${esc(nextLesson.ll)}')">${Object.keys(learnProgress()).length ? "Continue" : "Start the journey"} →</button></div>`
+      : `<p class="sub" style="margin-top:12px"><b>Journey complete.</b> The market keeps teaching — your watchlist, the News wire and your practice portfolio are where the next lessons come from.</p>`}
   </div>
 
+  <div class="jy">${journey.map(stepHtml).join("")}</div>
+
+  <div class="seg"><h2>Deep dives</h2><div class="ln"></div><span class="pill">${levels.length} levels</span></div>
+  <p class="sub" style="margin-bottom:12px">The full course behind the journey — every document a listed company publishes, read line by line. Open in any order once unlocked.</p>
   ${levels.map((v, i) => {
     const dn = doneIn(v), open = unlocked(i), full = dn === v.lessons.length;
     return `<div class="lvl ${open ? "" : "locked"} ${full ? "full" : ""}">
@@ -3270,13 +3325,237 @@ async function pageLearn() {
   }).join("")}`;
 }
 
+/* ==========================================================================================
+   PRACTICE PORTFOLIO — virtual PKR 500k at real DPS prices. No real money, ever. The state is a
+   replayable trade log (not balances), so P/L is always re-derivable and auditable. Fills happen
+   at the live price at the moment of the order — the same thing a real market order gets — and a
+   teaching commission is charged so costs are never invisible. Educational only.
+   ========================================================================================== */
+const PAPER_START = 500000;
+function paperState() { return (me && myProfile && myProfile.paper && myProfile.paper.trades) ? myProfile.paper : { trades: [], credited: [] }; }
+function paperFee(value) { return Math.max(25, Math.round(value * 0.0015)); } // teaching fee: 0.15%, min Rs 25 — labelled as illustrative, real brokers differ
+
+function paperPositions(p) {
+  const pos = {};
+  for (const t of p.trades) {
+    const q = pos[t.sym] || (pos[t.sym] = { sh: 0, cost: 0, firstBuy: t.ts });
+    if (t.side === "buy") { q.cost += t.sh * t.px + t.fee; q.sh += t.sh; }
+    else { const avg = q.sh ? q.cost / q.sh : 0; q.cost -= avg * t.sh; q.sh -= t.sh; }
+    if (q.sh <= 0) delete pos[t.sym];
+  }
+  return pos;
+}
+function paperCash(p) {
+  let cash = PAPER_START;
+  for (const t of p.trades) cash += (t.side === "buy" ? -(t.sh * t.px + t.fee) : (t.sh * t.px - t.fee));
+  for (const c of (p.credits || [])) cash += c.amt;
+  return cash;
+}
+
+/* Credit announced cash dividends for held positions once a book closure passes. Simplified on
+   purpose (uses current share count, bc_start as the cut) and labelled as such in the UI. */
+function paperCreditDividends(p, divs) {
+  const pos = paperPositions(p);
+  const credited = new Set((p.credits || []).map(c => c.id));
+  const today = new Date().toISOString().slice(0, 10);
+  let changed = false;
+  for (const d of (divs?.history || [])) {
+    if (!d.dividend_rs || !d.bc_start || !pos[d.symbol]) continue;
+    const id = d.symbol + "|" + d.bc_start;
+    if (credited.has(id) || d.bc_start > today) continue;
+    if (new Date(pos[d.symbol].firstBuy).toISOString().slice(0, 10) >= d.bc_start) continue; // bought after the closure — not entitled
+    (p.credits = p.credits || []).push({ id, sym: d.symbol, amt: +(pos[d.symbol].sh * d.dividend_rs).toFixed(2), rs: d.dividend_rs, on: d.bc_start });
+    changed = true;
+  }
+  return changed;
+}
+
+async function paperTrade(side) {
+  const sym = (document.getElementById("pp-sym")?.value || "").trim().toUpperCase();
+  const sh = Math.floor(+(document.getElementById("pp-sh")?.value || 0));
+  const msg = document.getElementById("pp-msg");
+  const say = t => { if (msg) msg.textContent = t; };
+  if (!me) { openAuth("signup"); return; }
+  if (!sym || sh <= 0) return say("Pick a stock and a whole number of shares.");
+  const [lv, q] = await Promise.all([j("live.json"), j("quant.json")]);
+  const px = lv?.tickers?.[sym]?.current ?? q?.tickers?.[sym]?.close;
+  if (!px) return say(`No price for ${sym} in the data layer — check the symbol.`);
+  const p = { trades: [], credits: [], ...paperState() };
+  const fee = paperFee(sh * px);
+  if (side === "buy") {
+    const cash = paperCash(p);
+    if (sh * px + fee > cash) return say(`Not enough virtual cash — that's Rs ${fmt(sh * px + fee)} with the fee, you have Rs ${fmt(cash)}.`);
+  } else {
+    const held = paperPositions(p)[sym]?.sh || 0;
+    if (sh > held) return say(`You hold ${held} shares of ${sym} — can't sell ${sh}.`);
+  }
+  p.trades.push({ side, sym, sh, px, fee, ts: new Date().toISOString() });
+  myProfile = { ...(myProfile || {}), paper: p };
+  await saveProfile({ paper: p });
+  pagePractice();
+}
+async function paperReset() {
+  if (!confirm("Reset the practice portfolio to Rs 500,000? The trade history is cleared.")) return;
+  myProfile = { ...(myProfile || {}), paper: { trades: [], credits: [] } };
+  await saveProfile({ paper: { trades: [], credits: [] } });
+  pagePractice();
+}
+
+async function pagePractice() {
+  await Promise.resolve();
+  if (!me) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Practice portfolio</h2><div class="ln"></div></div>
+      <div class="disclaimer">Virtual money at real market prices — <b>education, not advice</b>, and never a forecast of real returns.</div>
+      <div class="card mychart-cta">
+        <h2>Learn with PKR 500,000 you can't lose</h2>
+        <p class="sub">A practice portfolio at real PSX prices: buy, size positions, sit through red days, collect dividends when book closures pass. Every mechanic of investing — none of the damage. Free with an account.</p>
+        <button class="bw-go" style="max-width:260px" onclick="openAuth('signup')">Create a free account →</button></div>`;
+    return;
+  }
+  const [lv, q, uni, sectors, divs, idx] = await Promise.all([
+    j("live.json"), j("quant.json"), j("universe.json"), j("sectors.json"), j("dividends.json"), j("indices.json")]);
+  const p = { trades: [], credits: [], ...paperState() };
+  if (paperCreditDividends(p, divs)) { myProfile = { ...(myProfile || {}), paper: p }; saveProfile({ paper: p }); }
+  const pos = paperPositions(p), cash = paperCash(p);
+  const pxOf = s => lv?.tickers?.[s]?.current ?? q?.tickers?.[s]?.close;
+  const rows = Object.entries(pos).map(([s, x]) => {
+    const px = pxOf(s), val = px ? px * x.sh : null, avg = x.cost / x.sh;
+    return { s, sh: x.sh, avg, px, val, pl: val != null ? val - x.cost : null, plp: val != null ? (val / x.cost - 1) * 100 : null, sector: sectors?.tickers?.[s]?.sector || "" };
+  }).sort((a, b) => (b.val || 0) - (a.val || 0));
+  const invested = rows.reduce((a, r) => a + (r.val || 0), 0);
+  const total = cash + invested, ret = (total / PAPER_START - 1) * 100;
+  // benchmark: KSE100 since the first trade — same window, honest comparison
+  let bench = null;
+  if (p.trades.length && idx?.history) {
+    const d0 = p.trades[0].ts.slice(0, 10);
+    const days = Object.keys(idx.history).sort();
+    const k0 = idx.history[days.find(d => d >= d0) || days[days.length - 1]]?.KSE100;
+    const k1 = idx.live?.KSE100 ?? idx.history[days[days.length - 1]]?.KSE100;
+    if (k0 && k1) bench = (k1 / k0 - 1) * 100;
+  }
+  // sector concentration — echo the desk's own rule as education
+  const bySec = {};
+  rows.forEach(r => { if (r.sector && r.val) bySec[r.sector] = (bySec[r.sector] || 0) + r.val; });
+  const heavy = Object.entries(bySec).filter(([, v]) => invested && v / total > 0.35).map(([k]) => k);
+  const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
+
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Practice portfolio</h2><div class="ln"></div><span class="pill">virtual money · real prices</span></div>
+  <div class="disclaimer">Virtual PKR ${fmt(PAPER_START)} at real market prices, for <b>education only</b>. Paper results overstate real ones — they can't simulate fear, and fills here ignore market depth. A teaching commission (0.15%, min Rs 25) is applied so costs are never invisible; real brokers' fees differ.</div>
+  <div class="sumstrip s4">
+    ${sTile("Portfolio value", "Rs " + fmt(total), `started Rs ${fmt(PAPER_START)}`, ret >= 0 ? "up" : "dn")}
+    ${sTile("Return", sgn(+ret.toFixed(2)) + "%", bench != null ? `KSE100 ${sgn(+bench.toFixed(2))}% same period` : "since your first trade", ret >= 0 ? "up" : "dn")}
+    ${sTile("Cash", "Rs " + fmt(Math.round(cash)), `${rows.length} position${rows.length === 1 ? "" : "s"}`, "")}
+    ${sTile("Dividends credited", "Rs " + fmt(Math.round((p.credits || []).reduce((a, c) => a + c.amt, 0))), (p.credits || []).length ? `${(p.credits || []).length} payout${(p.credits || []).length === 1 ? "" : "s"}` : "when book closures pass", "")}
+  </div>
+  ${heavy.length ? `<div class="disclaimer"><b>Concentration flag:</b> over a third of this portfolio sits in ${heavy.map(esc).join(", ")}. The desk's own rules never allow two positions in one sector — worth practising the same discipline.</div>` : ""}
+
+  <div class="card">
+    <div class="ark">place a practice order</div>
+    <div class="pp-form">
+      <input id="pp-sym" class="ph-in combo" placeholder="Ticker (e.g. FFC)" autocomplete="off" style="flex:0 1 170px">
+      <input id="pp-sh" class="ph-in" type="number" min="1" step="1" placeholder="Shares" style="flex:0 1 130px">
+      <button class="note-save" onclick="paperTrade('buy')">Buy</button>
+      <button class="note-save" onclick="paperTrade('sell')">Sell</button>
+      <span id="pp-msg" class="sub"></span>
+    </div>
+    <p class="sub" style="margin-top:8px">Fills at the current DPS price — the same price the whole desk runs on. Write one sentence for why, before you press the button; that habit is the actual lesson.</p>
+  </div>
+
+  <div class="seg"><h2>Holdings</h2><div class="ln"></div><span class="pill">${rows.length}</span></div>
+  <div class="card" style="padding:0">${rows.length ? `<table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Shares</th><th class="r">Avg cost</th><th class="r">Price</th><th class="r">Value</th><th class="r">P/L</th></tr></thead><tbody>${
+    rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((uni?.symbols?.[r.s]?.name || "").slice(0, 20))}</span></td>
+      <td class="sub">${esc((r.sector || "").slice(0, 18))}</td><td class="r num">${r.sh}</td><td class="r num">${fmt(r.avg)}</td>
+      <td class="r num">${r.px ? fmt(r.px) : "—"}</td><td class="r num">${r.val ? fmt(Math.round(r.val)) : "—"}</td>
+      <td class="r num ${r.pl >= 0 ? "up" : "dn"}">${r.pl != null ? sgn(+r.plp.toFixed(1)) + "%" : "—"}</td></tr>`).join("")}</tbody></table>`
+    : `<div class="empty">No positions yet. Study a company first — then take your first position with money that can't hurt you.</div>`}</div>
+
+  ${(p.credits || []).length ? `<div class="seg"><h2>Dividends received</h2><div class="ln"></div></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th class="r">Rs/sh</th><th class="r">Credited</th><th class="r">On closure</th></tr></thead><tbody>${
+    p.credits.map(c => `<tr><td><b>${esc(c.sym)}</b></td><td class="r num">${c.rs}</td><td class="r num up">Rs ${fmt(c.amt)}</td><td class="r num">${esc(c.on)}</td></tr>`).join("")}</tbody></table>
+  <div class="sub" style="padding:10px 15px">Simplified crediting: current shares × announced Rs/share once a book closure date passes, if the position predates it. Real settlements involve withholding tax and exact register timing.</div></div>` : ""}
+
+  ${p.trades.length ? `<div class="seg"><h2>Trade log</h2><div class="ln"></div><span class="pill">${p.trades.length}</span></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>When</th><th>Side</th><th>Stock</th><th class="r">Shares</th><th class="r">Price</th><th class="r">Fee</th></tr></thead><tbody>${
+    p.trades.slice().reverse().slice(0, 40).map(t => `<tr><td class="num sub">${esc(t.ts.slice(0, 16).replace("T", " "))}</td>
+      <td><span class="pill ${t.side === "buy" ? "ok" : "bad"}">${t.side}</span></td><td><b>${esc(t.sym)}</b></td>
+      <td class="r num">${t.sh}</td><td class="r num">${fmt(t.px)}</td><td class="r num">${t.fee}</td></tr>`).join("")}</tbody></table></div>
+  <p class="sub" style="margin-top:10px"><button class="note-save" onclick="paperReset()">Reset to Rs 500,000</button> · The log is the point — review it monthly and ask which trades had a written reason.</p>` : ""}`;
+}
+
+/* ==========================================================================================
+   TOOLS — the calculators people otherwise google. Pure client-side arithmetic on the user's own
+   inputs; nothing here reads market data or makes a forecast. Educational.
+   ========================================================================================== */
+function toolCalc() {
+  const g = id => +(document.getElementById(id)?.value || 0);
+  const years = g("tc-years"), monthly = g("tc-monthly"), lump = g("tc-lump"),
+    rate = g("tc-rate") / 100, infl = g("tc-infl") / 100;
+  const mr = Math.pow(1 + rate, 1 / 12) - 1, n = Math.round(years * 12);
+  let v = lump; const series = [];
+  for (let i = 1; i <= n; i++) { v = v * (1 + mr) + monthly; if (i % 12 === 0) series.push(v); }
+  const contributed = lump + monthly * n;
+  const real = v / Math.pow(1 + infl, years);
+  const el = document.getElementById("tc-out");
+  if (!el) return;
+  el.innerHTML = `
+    <div class="sumstrip s4" style="margin-top:12px">
+      <div class="sumtile"><span class="sk">Ending value</span><b class="up">Rs ${fmt(Math.round(v))}</b><i>after ${years} years</i></div>
+      <div class="sumtile"><span class="sk">You put in</span><b>Rs ${fmt(Math.round(contributed))}</b><i>lump + monthly</i></div>
+      <div class="sumtile"><span class="sk">Growth</span><b class="${v - contributed >= 0 ? "up" : "dn"}">Rs ${fmt(Math.round(v - contributed))}</b><i>at ${(rate * 100).toFixed(1)}%/yr</i></div>
+      <div class="sumtile"><span class="sk">In today's rupees</span><b>Rs ${fmt(Math.round(real))}</b><i>at ${(infl * 100).toFixed(1)}% inflation</i></div>
+    </div>
+    <p class="sub" style="margin-top:8px">Compounding at a constant rate is a teaching model — real returns arrive unevenly, and no rate is guaranteed. The "today's rupees" tile is the one that matters: it is what the money would actually feel like.</p>`;
+}
+function zakatCalc() {
+  const v = +(document.getElementById("zk-val")?.value || 0);
+  const el = document.getElementById("zk-out");
+  if (el) el.innerHTML = `<div class="sumstrip s2" style="margin-top:12px">
+    <div class="sumtile"><span class="sk">Portfolio value</span><b>Rs ${fmt(v)}</b><i>your input</i></div>
+    <div class="sumtile"><span class="sk">Zakat at 2.5%</span><b>Rs ${fmt(Math.round(v * 0.025))}</b><i>if nisab & haul conditions met</i></div></div>
+    <p class="sub" style="margin-top:8px">2.5% is the commonly applied rate on the market value of shares held for a lunar year above nisab. Schools of thought differ on details (e.g. trading vs holding intent) — confirm with your own scholar or zakat authority.</p>`;
+}
+async function pageTools() {
+  await Promise.resolve();
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Tools</h2><div class="ln"></div><span class="pill">your numbers, your math</span></div>
+  <div class="disclaimer">Calculators run entirely on <b>your own inputs</b> — nothing here is a forecast, a promised return, or advice. Constant-rate compounding is a teaching model; real markets do not pay a steady rate.</div>
+
+  <div class="card">
+    <div class="ark">savings & compounding — lump sum + monthly (SIP), with inflation</div>
+    <div class="tc-grid">
+      <label>Starting amount (Rs)<input id="tc-lump" type="number" class="ph-in" value="100000"></label>
+      <label>Monthly addition (Rs)<input id="tc-monthly" type="number" class="ph-in" value="10000"></label>
+      <label>Years<input id="tc-years" type="number" class="ph-in" value="10"></label>
+      <label>Assumed return %/yr<input id="tc-rate" type="number" class="ph-in" value="12"></label>
+      <label>Assumed inflation %/yr<input id="tc-infl" type="number" class="ph-in" value="8"></label>
+      <button class="note-save" onclick="toolCalc()" style="align-self:end">Calculate</button>
+    </div>
+    <div id="tc-out"></div>
+  </div>
+
+  <div class="card">
+    <div class="ark">zakat on shares</div>
+    <div class="tc-grid">
+      <label>Market value of holdings (Rs)<input id="zk-val" type="number" class="ph-in" value="500000"></label>
+      <button class="note-save" onclick="zakatCalc()" style="align-self:end">Calculate</button>
+    </div>
+    <div id="zk-out"></div>
+  </div>
+
+  <div class="card">
+    <div class="ark">what these are for</div>
+    <p class="sub" style="margin-top:6px;line-height:1.65">The compounding calculator answers "what could steady saving become" — try it with a conservative rate and a realistic inflation figure, and notice how much the <b>inflation-adjusted</b> number differs from the headline. The zakat calculator keeps an obligation visible that portfolios often forget. More tools (dividend income history on real payouts, goal planning) arrive with the data to back them.</p>
+  </div>`;
+}
+
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
    The reading itself lives at /#/mychart, which this hands off to. */
 async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
 }
-const PAGES = { learn: pageLearn, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
