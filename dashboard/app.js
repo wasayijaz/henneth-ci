@@ -1319,31 +1319,42 @@ const FREE_MATCHES = 3;                       // how many resonance cards a gues
 const PLANS = {
   free: { label: "Free", tag: "", blurb: "Cast your chart, read the daily desk note, and follow the public track record.",
     features: [] },
-  learner: { label: "Learner", tag: "new to investing",
-    blurb: "Start from zero. A guided path that teaches you to read a company using real PSX filings, at your own pace.",
+  // NOT "Learner" — a paid tier should be named for what the user becomes, not for what they lack.
+  investor: { label: "Investor", tag: "start here",
+    blurb: "Become an investor who reads for themselves. A guided path through real PSX filings — annual reports, statements, announcements — at your own pace.",
     features: ["learn", "astro_full", "dividends_full", "earnings_full"] },
   pro: { label: "Pro", tag: "TA & FA",
     blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
     features: ["learn", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full"] },
-  broker: { label: "Broker", tag: "desks & teams",
+  broker: { label: "Broker", tag: "coming soon", soon: true,
     blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
     features: ["learn", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "broker_tools"] },
 };
-const PLAN_ORDER = ["free", "learner", "pro", "broker"];
-function planOf() { return (me && myProfile && myProfile.plan) || "free"; }
+const PLAN_ORDER = ["free", "investor", "pro", "broker"];
+/* Owner-only: preview the product as any plan without changing the stored plan. Set from the Plans
+   page; lives in memory only, so a reload returns you to your real plan. */
+let _previewPlan = null;
+function realPlan() { return (me && myProfile && myProfile.plan) || "free"; }
+function isOwner() { return !!(me && (me.email || "").toLowerCase() === "mwasayi@gmail.com"); }
+function planOf() { return (_previewPlan && isOwner()) ? _previewPlan : realPlan(); }
 /* While BILLING_LIVE is false every signed-in account behaves as Pro — nobody loses what they have
    today. Once it flips, access is decided purely by the plan's feature list. */
 function hasFeature(key) {
   if (!me) return false;
-  if (!BILLING_LIVE) return true;
+  // While previewing, judge by the previewed plan — that is the entire point of the preview.
+  if (!BILLING_LIVE && !(_previewPlan && isOwner())) return true;
   return (PLANS[planOf()]?.features || []).includes(key);
 }
-function isSubscribed() { return !!(me && (!BILLING_LIVE || planOf() !== "free")); }
-/* Which product shell to render. The learner desk is a different information architecture, not a
+function isSubscribed() {
+  if (!me) return false;
+  if (_previewPlan && isOwner()) return planOf() !== "free";
+  return !BILLING_LIVE || planOf() !== "free";
+}
+/* Which product shell to render. The Investor desk is a different information architecture, not a
    reskin, so it gets its own nav and home. Pros/brokers see the full desk. */
 function deskMode() {
   if (!me) return "pro";
-  if (planOf() === "learner") return "learn";
+  if (planOf() === "investor") return "learn";
   return (myProfile && myProfile.ui_mode === "learn") ? "learn" : "pro";
 }
 
@@ -2898,21 +2909,33 @@ const FEATURE_LABEL = {
 async function pagePlans() {
   await Promise.resolve();
   const cur = planOf();
+  const rank = k => PLAN_ORDER.indexOf(k);
   const card = (k) => {
     const p = PLANS[k], on = me && cur === k;
-    return `<div class="plan-card ${on ? "on" : ""}">
-      <div class="pc-top"><b>${esc(p.label)}</b>${p.tag ? `<span class="pill">${esc(p.tag)}</span>` : ""}${on ? '<span class="pill ok">your plan</span>' : ""}</div>
+    const isUp = me && !p.soon && rank(k) > rank(cur);          // a plan above the one you're on
+    return `<div class="plan-card ${on ? "on" : ""} ${p.soon ? "soon" : ""}">
+      <div class="pc-top"><b>${esc(p.label)}</b>${p.tag ? `<span class="pill ${p.soon ? "" : "ok"}">${esc(p.tag)}</span>` : ""}${on ? '<span class="pill ok">your plan</span>' : ""}</div>
       <p class="sub">${esc(p.blurb)}</p>
       <div class="pc-feats">${(p.features.length ? p.features : ["Cast your birth chart", "The daily desk note", "The public track record"])
         .map(f => `<div class="pc-f">${esc(FEATURE_LABEL[f] || f)}</div>`).join("")}</div>
-      ${k === "free" ? "" : `<div class="pc-price sub">Pricing announced when payments open</div>`}
+      ${on
+        ? `<div class="pc-cta"><button class="pc-btn ghost" disabled>Your current plan</button></div>`
+        : p.soon ? `<div class="pc-cta"><button class="pc-btn ghost" disabled>Coming soon</button></div>`
+          : isUp ? `<div class="pc-cta"><button class="pc-btn" onclick="notifyUpgrade('${k}')">Upgrade to ${esc(p.label)} →</button>
+              <div class="pc-price sub">Pricing announced when payments open</div></div>`
+            : k === "free" ? "" : `<div class="pc-cta"><div class="pc-price sub">Included in your plan</div></div>`}
     </div>`;
   };
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Plans</h2><div class="ln"></div>${me ? `<span class="pill ${cur === "free" ? "" : "ok"}">${esc(PLANS[cur].label)}</span>` : ""}</div>
-  <p class="sub" style="margin-bottom:14px">Three desks, one data layer. The <b>Learner</b> desk teaches you to read the market from zero; <b>Pro</b> is the full analytical desk; <b>Broker</b> adds public scoring for a research house's own calls.</p>
-  <div class="disclaimer"><b>Payments aren't open yet.</b> Card processing through international providers isn't available in Pakistan, so billing will run through a local gateway. Until that's live, plans are set manually and nothing is charged — everything currently available to your account stays available.</div>
+  <p class="sub" style="margin-bottom:14px">One data layer, read three ways. <b>Investor</b> teaches you to read the market for yourself; <b>Pro</b> is the full analytical desk; <b>Broker</b> adds public scoring for a research house's own calls.</p>
+  <div class="disclaimer"><b>Payments aren't open yet.</b> Card processing through international providers isn't available in Pakistan, so billing will run through a local gateway. Until that's live, nothing is charged and everything currently available to your account stays available.</div>
   <div class="plan-grid">${PLAN_ORDER.map(card).join("")}</div>
+  <div id="upgmsg" class="sub" style="margin-top:10px"></div>
+  ${isOwner() ? `<div class="card owner-preview"><div class="ark">owner · preview as</div>
+    <p class="sub" style="margin:6px 0 10px">See exactly what each plan's product looks like. This changes only what <b>you</b> see, never your stored plan — reload to return to ${esc(PLANS[realPlan()].label)}.</p>
+    <div class="mode-row">${PLAN_ORDER.map(k => `<button class="seg-opt ${planOf() === k ? "on" : ""}" onclick="previewAs('${k}')">${esc(PLANS[k].label)}</button>`).join("")}
+      ${_previewPlan ? `<button class="seg-opt" onclick="previewAs(null)">Exit preview</button>` : ""}</div></div>` : ""}
   ${me ? `<div class="card" style="margin-top:12px"><div class="ark">how you're reading the desk</div>
     <p class="sub" style="margin:6px 0 10px">The Learner desk reorders everything around the lessons. You can switch view at any time — it doesn't change your plan.</p>
     <div class="mode-row">
@@ -2920,9 +2943,22 @@ async function pagePlans() {
       <button class="seg-opt ${deskMode() === "learn" ? "on" : ""}" onclick="setDeskMode('learn')">Learner desk</button>
     </div></div>` : ""}`;
 }
+/* No checkout to send anyone to yet, so record the interest honestly instead of faking a flow. */
+function notifyUpgrade(k) {
+  const m = document.getElementById("upgmsg");
+  if (!me) { openAuth("signup"); return; }
+  if (m) m.innerHTML = `<b>Noted — ${esc(PLANS[k].label)}.</b> Payments open once the local gateway is live; nothing has been charged. Your account keeps everything it has today.`;
+}
+function previewAs(k) {
+  if (!isOwner()) return;
+  _previewPlan = k;
+  applyDeskMode();
+  renderAccountButton();
+  pagePlans();
+}
 async function setDeskMode(m) {
   if (!me) { openAuth("signup"); return; }
-  if (planOf() === "learner" && m !== "learn") return;   // the learner plan is the learner desk
+  if (planOf() === "investor" && m !== "learn") return;   // the Investor plan is the Investor desk
   myProfile = { ...(myProfile || {}), ui_mode: m };
   await saveProfile({ ui_mode: m });
   applyDeskMode();
@@ -3006,64 +3042,203 @@ async function lessonLive(kind) {
   return "";
 }
 
-let _openLesson = null;
-async function toggleLesson(stageId, lessonId) {
-  const key = stageId + "/" + lessonId;
-  _openLesson = _openLesson === key ? null : key;
-  await pageLearn();
-  if (_openLesson) document.getElementById("ls-" + lessonId)?.scrollIntoView({ block: "center", behavior: "smooth" });
-}
+/* ---------- the lesson player: one idea per card, not a wall of text ----------
+   A lesson is played in a focused overlay. Every card type gets its own visual treatment so it is
+   never ambiguous whether you are being taught, shown real data, or tested. */
+let _pl = null;   // {levelId, lesson, i, answered}
 
-function checkAnswer(btn, correct) {
-  const wrap = btn.closest(".ls-check");
+async function openLesson(levelId, lessonId) {
+  const cur = await j("curriculum.json");
+  const lv = (cur?.levels || []).find(l => l.id === levelId);
+  const lesson = lv?.lessons.find(l => l.id === lessonId);
+  if (!lesson) return;
+  // Fetch the real anchor figures ONCE, before the first paint. renderPlayer must stay synchronous:
+  // awaiting inside it let a second render interleave and leave stale .anatomy nodes in the DOM,
+  // so clicks bound to a detached copy did nothing.
+  const anchor = (lesson.cards || []).some(c => c.type === "anatomy" && c.doc === "income_statement")
+    ? await anatomyAnchor() : null;
+  _pl = { levelId, lesson, i: 0, answered: false, cur, anchor };
+  renderPlayer();
+}
+function closePlayer() { _pl = null; document.querySelector(".pl-overlay")?.remove(); document.body.style.overflow = ""; pageLearn(); }
+function plGo(d) {
+  if (!_pl) return;
+  const total = _pl.lesson.cards.length + (_pl.lesson.check ? 1 : 0);
+  _pl.i = Math.max(0, Math.min(total - 1, _pl.i + d));
+  renderPlayer();
+}
+function plAnswer(btn, correct) {
+  const wrap = btn.closest(".pl-quiz");
   const picked = +btn.dataset.i;
   wrap.querySelectorAll(".ls-opt").forEach(b => b.disabled = true);
   btn.classList.add(picked === correct ? "right" : "wrong");
   if (picked !== correct) wrap.querySelector(`.ls-opt[data-i="${correct}"]`)?.classList.add("right");
   wrap.querySelector(".ls-explain").hidden = false;
+  _pl.answered = true;
+  const f = document.querySelector(".pl-foot-next");
+  if (f) f.hidden = false;
+}
+
+/* An interactive, labelled financial statement. Structure is general accounting form; any figure
+   shown as real is pulled from the desk's own fundamentals for a real company and labelled with
+   its source. Lines the desk does not hold are marked "find this in the filing" — never invented. */
+function anatomyHtml(kind, cur, anchor) {
+  const a = cur?.anatomies?.[kind];
+  if (!a) return "";
+  const rows = a.lines.map((ln, i) => {
+    if (ln.head) return `<div class="an-head">${esc(ln.l)}</div>`;
+    const val = ln.field && anchor?.vals?.[ln.field];
+    return `<button class="an-row ${ln.bold ? "b" : ""} ${val ? "has" : ""}" data-i="${i}" onclick="anaPick(this)">
+      <span class="an-l" style="padding-left:${(ln.ind || 0) * 16}px">${esc(ln.l)}</span>
+      <span class="an-v ${ln.neg ? "neg" : ""}">${val ? esc(val) : `<i>in the filing</i>`}</span>
+      <span class="an-i">?</span></button>`;
+  }).join("");
+  return `<div class="anatomy" data-kind="${esc(kind)}">
+    <div class="an-top"><b>${esc(a.title)}</b><span class="sub">${esc(a.subtitle)}</span></div>
+    ${anchor ? `<div class="an-src">Real reported figures for <b>${esc(anchor.sym)}</b>${anchor.name ? ` — ${esc(anchor.name)}` : ""}, from the desk's data layer. The lines marked <i>in the filing</i> are the ones to go find in the company's own annual report — the desk does not hold them, so it does not show a number.</div>` : ""}
+    <div class="an-rows">${rows}</div>
+    <div class="an-detail" id="anDetail"><span class="sub">Tap any line to learn what it is and what to watch for.</span></div>
+  </div>`;
+}
+function anaPick(btn) {
+  const i = +btn.dataset.i, kind = btn.closest(".anatomy")?.dataset.kind;
+  const a = _pl?.cur?.anatomies?.[kind]; if (!a) return;
+  const ln = a.lines[i];
+  document.querySelectorAll(".anatomy .an-row").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  const d = document.getElementById("anDetail");
+  if (d) d.innerHTML = `<div class="an-d-t">${esc(ln.l)}</div>
+    <p>${esc(ln.what)}</p>
+    <div class="an-d-w"><span class="ark">what to watch</span>${esc(ln.watch)}</div>`;
+}
+
+function docmapHtml(cur) {
+  return `<div class="docmap">${(cur?.docmap || []).map((d, i) => `<button class="dm-item" data-i="${i}" onclick="dmPick(this)">
+    <b>${esc(d.k)}</b><span class="sub">${esc(d.when)}</span></button>`).join("")}
+    <div class="dm-detail" id="dmDetail"><span class="sub">Tap a document to see what it is and what to look for.</span></div></div>`;
+}
+function dmPick(btn) {
+  const d = _pl?.cur?.docmap?.[+btn.dataset.i]; if (!d) return;
+  document.querySelectorAll(".dm-item").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  const el = document.getElementById("dmDetail");
+  if (el) el.innerHTML = `<div class="an-d-t">${esc(d.k)} <span class="pill">${esc(d.when)}</span></div>
+    <p>${esc(d.what)}</p><div class="an-d-w"><span class="ark">what to look for</span>${esc(d.look)}</div>`;
+}
+
+const DIV_TIMELINE = [
+  { k: "Announcement", d: "The board declares a dividend.", n: "Nothing is owed to anyone yet." },
+  { k: "Ex-dividend date", d: "From this day the share trades WITHOUT the dividend.", n: "You must already own it before this date. This is the one that decides whether you are paid.", hot: true },
+  { k: "Book closure", d: "The register is frozen to determine who gets paid.", n: "Transfers are not processed during this window." },
+  { k: "Payment date", d: "Cash actually reaches you.", n: "Withholding tax is deducted at this point." },
+];
+function timelineHtml() {
+  return `<div class="divtl">${DIV_TIMELINE.map((s, i) => `<div class="dt-step ${s.hot ? "hot" : ""}">
+    <div class="dt-dot">${i + 1}</div><div class="dt-c"><b>${esc(s.k)}</b><span class="sub">${esc(s.d)}</span>
+    <div class="dt-n">${esc(s.n)}</div></div></div>`).join("")}</div>`;
+}
+
+function renderPlayer() {
+  if (!_pl) return;
+  let ov = document.querySelector(".pl-overlay");
+  if (!ov) {
+    ov = document.createElement("div"); ov.className = "pl-overlay"; document.body.appendChild(ov);
+    document.body.style.overflow = "hidden";
+    ov.addEventListener("click", e => { if (e.target === ov) closePlayer(); });
+  }
+  const { lesson, levelId } = _pl;
+  const cards = lesson.cards || [];
+  const total = cards.length + (lesson.check ? 1 : 0);
+  const isQuiz = _pl.i >= cards.length;
+  const c = cards[_pl.i];
+  const KIND = { text: "lesson", warn: "watch out", key: "the point", anatomy: "interactive", docmap: "interactive", timeline: "interactive" };
+
+  let body = "";
+  if (isQuiz) {
+    body = `<div class="pl-card k-q">
+      <div class="pl-kind k-quiz">check yourself</div>
+      <div class="pl-q">${esc(lesson.check.q)}</div>
+      <div class="pl-quiz">
+        ${lesson.check.options.map((o, i) => `<button class="ls-opt" data-i="${i}" onclick="plAnswer(this,${lesson.check.answer})">${esc(o)}</button>`).join("")}
+        <div class="ls-explain" hidden>${esc(lesson.check.explain)}</div>
+      </div></div>`;
+  } else {
+    const inner = c.type === "anatomy" ? anatomyHtml(c.doc, _pl.cur, c.doc === "income_statement" ? _pl.anchor : null)
+      : c.type === "docmap" ? docmapHtml(_pl.cur)
+        : c.type === "timeline" ? timelineHtml() : "";
+    // card-kind classes are namespaced (k-*): a bare `anatomy` class would collide with the
+    // .anatomy component rendered inside the card and inherit its border.
+    body = `<div class="pl-card k-${c.type}">
+      <div class="pl-kind k-${c.type}">${esc(KIND[c.type] || "lesson")}</div>
+      ${c.h ? `<h2 class="pl-h">${esc(c.h)}</h2>` : ""}
+      ${(c.p || []).map(p => `<p>${esc(p)}</p>`).join("")}
+      ${inner}
+    </div>`;
+  }
+
+  ov.innerHTML = `<div class="pl-box">
+    <div class="pl-top">
+      <div class="pl-title"><span class="ark">${esc((_pl.cur.levels.find(l => l.id === levelId) || {}).title || "")}</span><b>${esc(lesson.title)}</b></div>
+      <button class="pl-x" onclick="closePlayer()">✕</button>
+    </div>
+    <div class="pl-dots">${Array.from({ length: total }, (_, i) =>
+    `<span class="pl-dot ${i === _pl.i ? "on" : i < _pl.i ? "did" : ""}"></span>`).join("")}</div>
+    <div class="pl-body">${body}</div>
+    <div class="pl-foot">
+      <button class="pl-back" onclick="plGo(-1)" ${_pl.i === 0 ? "disabled" : ""}>← back</button>
+      <span class="pl-count">${_pl.i + 1} / ${total}</span>
+      ${isQuiz
+      ? `<button class="bw-go pl-foot-next" ${_pl.answered ? "" : "hidden"} onclick="finishLesson()">Complete lesson →</button>`
+      : `<button class="bw-go" onclick="plGo(1)">Next →</button>`}
+    </div>
+  </div>`;
+
+}
+
+/* Pick a well-known name the desk actually holds figures for, and format them honestly. */
+async function anatomyAnchor() {
+  try {
+    const [f, uni] = await Promise.all([j("fundamentals.json"), j("universe.json")]);
+    const t = f?.tickers || {};
+    const pref = ["FFC", "OGDC", "LUCK", "MCB", "ENGRO", "PPL", "HUBC"];
+    const sym = pref.find(s => t[s]?.revenue && t[s]?.net_income && t[s]?.eps)
+      || Object.keys(t).find(s => t[s]?.revenue && t[s]?.net_income && t[s]?.eps);
+    if (!sym) return null;
+    const d = t[sym];
+    return { sym, name: uni?.symbols?.[sym]?.name || "",
+      vals: { revenue: "Rs " + d.revenue, net_income: "Rs " + d.net_income, eps: "Rs " + d.eps } };
+  } catch { return null; }
+}
+
+async function finishLesson() {
+  if (!_pl) return;
+  const { levelId, lesson } = _pl;
+  closePlayer();
+  await markLesson(levelId, lesson.id, true);
 }
 
 async function pageLearn() {
   await Promise.resolve();
   const cur = await j("curriculum.json");
-  const stages = cur?.stages || [];
-  if (!stages.length) {
+  const levels = cur?.levels || [];
+  if (!levels.length) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Learn</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">The syllabus is being prepared.</div></div>`;
     return;
   }
-  const all = stages.flatMap(s => s.lessons.map(l => ({ s: s.id, l: l.id })));
+  const all = levels.flatMap(v => v.lessons.map(l => ({ s: v.id, l: l.id })));
   const doneN = all.filter(x => lessonDone(x.s, x.l)).length;
   const pct = Math.round(doneN / all.length * 100);
+  const totalMins = levels.flatMap(v => v.lessons).reduce((a, l) => a + (l.mins || 0), 0);
+  const doneIn = v => v.lessons.filter(l => lessonDone(v.id, l.id)).length;
+  // a level opens when the one before it is finished — progression, but never a dead end:
+  // the first unfinished level is always open, so nobody can get stuck.
+  const unlocked = i => i === 0 || doneIn(levels[i - 1]) === levels[i - 1].lessons.length;
   const nextUp = all.find(x => !lessonDone(x.s, x.l));
-  const totalMins = stages.flatMap(s => s.lessons).reduce((a, l) => a + (l.mins || 0), 0);
-
-  const lessonCard = (st, l, idx) => {
-    const key = st.id + "/" + l.id, open = _openLesson === key, done = lessonDone(st.id, l.id);
-    return `<div class="ls-card ${open ? "open" : ""} ${done ? "done" : ""}" id="ls-${esc(l.id)}">
-      <div class="ls-head" onclick="toggleLesson('${esc(st.id)}','${esc(l.id)}')">
-        <span class="ls-num">${done ? "✓" : idx + 1}</span>
-        <div class="ls-t"><b>${esc(l.title)}</b><span class="sub">${esc(l.why)}</span></div>
-        <span class="ls-mins">${l.mins} min</span>
-        <span class="ls-caret">${open ? "▾" : "▸"}</span>
-      </div>
-      ${open ? `<div class="ls-body">
-        ${l.body.map(p => `<p>${esc(p)}</p>`).join("")}
-        <div class="ls-take"><span class="ark">the point</span>${esc(l.takeaway)}</div>
-        <div class="ls-live-slot" data-live="${esc(l.live || "")}"></div>
-        ${l.check ? `<div class="ls-check">
-          <div class="ls-q">${esc(l.check.q)}</div>
-          ${l.check.options.map((o, i) => `<button class="ls-opt" data-i="${i}" onclick="checkAnswer(this,${l.check.answer})">${esc(o)}</button>`).join("")}
-          <div class="ls-explain" hidden>${esc(l.check.explain)}</div></div>` : ""}
-        <div class="ls-foot">
-          <button class="${done ? "note-save" : "bw-go"}" style="max-width:240px" onclick="markLesson('${esc(st.id)}','${esc(l.id)}',${!done})">${done ? "Mark as not done" : "Mark complete →"}</button>
-        </div></div>` : ""}
-    </div>`;
-  };
 
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Learn to invest</h2><div class="ln"></div><span class="pill">${all.length} lessons · ~${totalMins} min</span></div>
-  <div class="disclaimer">Education, <b>not investment advice</b>. This teaches you how to read companies, prices and payouts for yourself — it never tells you what to buy, and nothing here is a recommendation or a forecast.</div>
+  <div class="seg" style="margin-top:4px"><h2>Become an investor</h2><div class="ln"></div><span class="pill">${levels.length} levels · ${all.length} lessons · ~${totalMins} min</span></div>
+  <div class="disclaimer">Education, <b>not investment advice</b>. This teaches you to read companies, prices and payouts for yourself — it never tells you what to buy, and nothing here is a recommendation or a forecast.</div>
 
   <div class="card learn-hero">
     <div class="lh-top">
@@ -3071,20 +3246,28 @@ async function pageLearn() {
       <div class="lh-pct"><b>${pct}%</b></div>
     </div>
     <div class="lh-bar"><span style="width:${pct}%"></span></div>
-    ${nextUp ? `<button class="bw-go" style="max-width:280px;margin-top:14px" onclick="toggleLesson('${esc(nextUp.s)}','${esc(nextUp.l)}')">${doneN ? "Continue" : "Start the first lesson"} →</button>`
-      : `<p class="sub" style="margin-top:12px"><b>You've finished the path.</b> The market keeps teaching — the desk's News wire and Earnings calendar are where the next lessons come from.</p>`}
+    ${nextUp ? `<button class="bw-go" style="max-width:300px;margin-top:14px" onclick="openLesson('${esc(nextUp.s)}','${esc(nextUp.l)}')">${doneN ? "Continue where you left off" : "Start level 1"} →</button>`
+      : `<p class="sub" style="margin-top:12px"><b>You've finished every level.</b> The market keeps teaching — the News wire and Earnings calendar are where the next lessons come from.</p>`}
   </div>
 
-  ${stages.map(st => {
-    const sDone = st.lessons.filter(l => lessonDone(st.id, l.id)).length;
-    return `<div class="seg"><h2>${esc(st.title)}</h2><div class="ln"></div><span class="pill ${sDone === st.lessons.length ? "ok" : ""}">${sDone}/${st.lessons.length}</span></div>
-    <p class="sub" style="margin-bottom:12px">${esc(st.blurb)}</p>
-    ${st.lessons.map((l, i) => lessonCard(st, l, i)).join("")}`;
+  ${levels.map((v, i) => {
+    const dn = doneIn(v), open = unlocked(i), full = dn === v.lessons.length;
+    return `<div class="lvl ${open ? "" : "locked"} ${full ? "full" : ""}">
+      <div class="lvl-head">
+        <span class="lvl-n">${full ? "✓" : v.n}</span>
+        <div class="lvl-t"><b>Level ${v.n} · ${esc(v.title)}</b><span class="sub">${esc(v.blurb)}</span></div>
+        <span class="pill ${full ? "ok" : ""}">${dn}/${v.lessons.length}</span>
+      </div>
+      ${open ? `<div class="lvl-lessons">${v.lessons.map((l, k) => {
+      const d = lessonDone(v.id, l.id);
+      return `<button class="lsn ${d ? "done" : ""}" onclick="openLesson('${esc(v.id)}','${esc(l.id)}')">
+          <span class="lsn-n">${d ? "✓" : k + 1}</span>
+          <span class="lsn-t"><b>${esc(l.title)}</b><span class="sub">${esc(l.why)}</span></span>
+          <span class="lsn-m">${l.mins} min</span></button>`;
+    }).join("")}</div>`
+        : `<div class="lvl-locked"><span class="sub">Finish Level ${v.n - 1} to open this — the lessons build on each other.</span></div>`}
+    </div>`;
   }).join("")}`;
-
-  // hydrate the "see it live" slot of whichever lesson is open — real desk data, never a mock
-  const slot = $("view").querySelector(".ls-live-slot[data-live]:not([data-live=''])");
-  if (slot) slot.innerHTML = await lessonLive(slot.dataset.live);
 }
 
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.

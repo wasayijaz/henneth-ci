@@ -1,103 +1,100 @@
 {
-  "version": 1,
-  "updated": "2026-07-18",
-  "note": "The learner desk's syllabus. Educational content only — every lesson obeys the desk's no-advice rule: it teaches how to read the market, never what to buy. `live` keys tell the renderer which real desk data to pull into the lesson so nothing is taught on a toy example.",
-  "stages": [
+  "version": 2,
+  "updated": "2026-07-19",
+  "note": "The Investor desk syllabus. Levels unlock in order; each lesson is played card-by-card, not read as a wall of text. Education only — CLAUDE.md Rule 5: this teaches how to read the market, never what to buy. `anatomy` cards render an interactive labelled document; where the desk holds a real reported figure it is shown and sourced, and where it does not the line is marked as something to find in the actual filing. No company number is ever invented.",
+  "levels": [
     {
-      "id": "start",
-      "title": "Before you buy anything",
-      "blurb": "The part almost everyone skips. Four short lessons that decide whether investing goes well for you.",
+      "id": "foundations",
+      "n": 1,
+      "title": "Foundations",
+      "blurb": "What you are actually buying, where it trades, what it costs you, and the money rules that decide whether any of this goes well.",
       "lessons": [
         {
           "id": "what-is-a-share",
           "title": "What a share actually is",
           "mins": 4,
-          "why": "Most people in Pakistan meet the stock market as rumours and tips. It is simpler and much less exciting than that.",
-          "body": [
-            "A share is a slice of ownership in a real business. When you buy one share of a cement company, you own a genuine — very small — piece of its factories, its cash, its debts, and every rupee of profit it makes from here on.",
-            "That is the whole idea. The price on the screen moves because other people are changing their minds about what that slice is worth. It is not a number the exchange decides, and nobody sets it for you.",
-            "Two consequences follow, and they matter more than anything else you will read: a share can lose value permanently if the business gets worse, and it has no maturity date — nobody owes you your money back on a fixed day, the way a bank deposit or a National Savings certificate does.",
-            "So the question stops being 'will this go up?' and becomes 'is this a business I understand, at a price that makes sense?' Everything else in this course is a tool for answering that second question."
+          "why": "Most people meet the market as rumours and tips. It is simpler, and much less exciting, than that.",
+          "cards": [
+            { "type": "text", "h": "You are buying a piece of a business",
+              "p": ["A share is a slice of ownership in a real company. Buy one share of a cement maker and you own a genuine — very small — piece of its factories, its cash, its debts, and every rupee of profit it earns from here on.", "That is the whole idea. Everything else in this course is a tool for judging that slice."] },
+            { "type": "text", "h": "Nobody sets the price for you",
+              "p": ["The number on the screen moves because other people are changing their minds about what that slice is worth. The exchange does not decide it. Your broker does not decide it.", "It is simply where buyers and sellers currently agree."] },
+            { "type": "warn", "h": "Two things that make shares different",
+              "p": ["A share can lose value permanently if the business gets worse. There is no floor under it.", "And it has no maturity date. Nobody owes you your money back on a fixed day, the way a bank deposit or a National Savings certificate does."] },
+            { "type": "key", "p": ["The question is never 'will this go up?' It is 'is this a business I understand, at a price that makes sense?'"] }
           ],
           "takeaway": "You are buying a piece of a business, not a ticket in a draw.",
           "check": {
-            "q": "You buy shares in a company and the price falls 30% the next month. What has actually happened?",
-            "options": [
-              "The exchange lowered the price",
-              "Other buyers and sellers now value the business lower than you paid",
-              "You owe the company money"
-            ],
+            "q": "You buy shares and the price falls 30% the next month. What has actually happened?",
+            "options": ["The exchange lowered the price", "Buyers and sellers now value the business lower than you paid", "You owe the company money"],
             "answer": 1,
-            "explain": "Price is just where buyers and sellers currently agree. It says what the market thinks today — it does not tell you whether the business itself got worse. Working out which of the two happened is the actual skill."
+            "explain": "Price is just where the market currently agrees. It tells you what people think today — not whether the business itself got worse. Working out which of the two happened is the real skill."
           }
         },
         {
           "id": "what-is-psx",
-          "title": "What the PSX is, and what KSE-100 measures",
+          "title": "The PSX, and what KSE-100 really measures",
           "mins": 4,
-          "why": "You will hear 'the market was up today' constantly. It is worth knowing exactly what that sentence is measuring.",
-          "body": [
-            "The Pakistan Stock Exchange is the marketplace where shares of listed Pakistani companies change hands. You do not buy from the exchange — you buy from another investor, and the exchange is the venue plus the rulebook that makes the trade safe.",
-            "The KSE-100 is an index: a single number tracking 100 of the larger listed companies, weighted so bigger companies move it more. When the news says the market rose 1%, they almost always mean this index.",
-            "Because it is weighted, the KSE-100 can rise on a day when most shares fell — a few heavyweight banks or fertiliser names can carry it. 'The market' and 'my shares' are genuinely different things.",
-            "The desk shows the index level and the day's moves on the Today page, so you can watch the difference between the headline and the individual names for yourself."
+          "why": "You will hear 'the market was up today' constantly. Worth knowing exactly what that sentence measures.",
+          "cards": [
+            { "type": "text", "h": "The exchange is a venue, not a seller",
+              "p": ["The Pakistan Stock Exchange is where shares of listed Pakistani companies change hands. You do not buy from the exchange — you buy from another investor. The exchange is the venue plus the rulebook that makes the trade safe."] },
+            { "type": "text", "h": "The index is a weighted average",
+              "p": ["The KSE-100 tracks 100 of the larger listed companies, weighted so that bigger companies move it more. When the news says the market rose 1%, they almost always mean this index.", "Because it is weighted, the KSE-100 can rise on a day when most shares fell — a few heavyweight banks or fertiliser names can carry it alone."] },
+            { "type": "key", "p": ["'The market' and 'my shares' are genuinely different things. The index being green tells you very little about what you own."] }
           ],
           "takeaway": "The index is a weighted average of the big names, not a summary of every stock.",
           "check": {
-            "q": "KSE-100 is up 0.8% today, but two-thirds of listed shares fell. Is that possible?",
-            "options": [
-              "No, the index averages all shares equally",
-              "Yes — the index is weighted, so a few large companies can lift it",
-              "Only if the exchange made an error"
-            ],
+            "q": "KSE-100 is up 0.8% but two-thirds of listed shares fell. Possible?",
+            "options": ["No — the index averages all shares equally", "Yes — it is weighted, so a few large companies can lift it", "Only if the exchange made an error"],
             "answer": 1,
-            "explain": "This happens often. It is why 'the market' being green tells you very little about what your own holdings did."
+            "explain": "This happens often, and it is why a green index says nothing reliable about your own holdings."
           }
         },
         {
           "id": "account-and-broker",
-          "title": "Opening an account, and what to ask a broker",
+          "title": "Your account, your broker, and what it costs",
           "mins": 5,
-          "why": "This is the practical step that stops most people, and it is where avoidable costs get locked in.",
-          "body": [
-            "To buy shares in Pakistan you need an account with a licensed broker (a TREC holder), and your shares are then held in your name at the Central Depository Company — the CDC. The shares sit in a depository, not in your broker's pocket, which is the protection that matters.",
-            "You can check that a broker is genuinely licensed on the PSX and SECP websites before you send anyone money. Do this. It takes two minutes.",
-            "Ask every broker the same four questions before you open: What is the commission per trade, as a percentage and as a minimum rupee amount? What other charges appear on a contract note — CDC fees, taxes, any annual fee? Is there a minimum account balance? Can I see a sample contract note?",
-            "The minimum commission is the one that quietly hurts small investors. If a broker charges a minimum of, say, Rs 100 per trade and you buy Rs 5,000 of shares, you have paid 2% to get in and will pay again to get out — the stock must rise about 4% before you break even.",
-            "This is also why frequent small trades are so expensive relative to their size, and why the desk works on a daily timeframe rather than in-and-out trading."
+          "why": "The practical step that stops most people — and where avoidable costs get locked in permanently.",
+          "cards": [
+            { "type": "text", "h": "Where your shares actually live",
+              "p": ["To buy shares in Pakistan you need an account with a licensed broker — a TREC holder — and your shares are then held in your name at the Central Depository Company, the CDC.", "The shares sit in a depository, not in your broker's pocket. That separation is the protection that matters most."] },
+            { "type": "text", "h": "Check the licence first",
+              "p": ["You can verify that a broker is genuinely licensed on the PSX and SECP websites before sending anyone money.", "Do this. It takes two minutes and it is the single cheapest piece of due diligence available to you."] },
+            { "type": "text", "h": "Four questions to ask every broker",
+              "p": ["What is the commission per trade — as a percentage AND as a minimum rupee amount?", "What else appears on a contract note: CDC charges, taxes, any annual fee?", "Is there a minimum account balance?", "Can I see a sample contract note before I open?"] },
+            { "type": "warn", "h": "The minimum commission is the one that hurts",
+              "p": ["If a broker charges a minimum of Rs 100 per trade and you buy Rs 5,000 of shares, you paid 2% to get in and will pay again to get out. The stock must rise roughly 4% before you break even.", "This is why frequent small trades are so expensive relative to their size — and why this desk works on a daily timeframe rather than trading in and out."] },
+            { "type": "key", "p": ["Costs are certain. Returns are not. Know every charge before your first trade."] }
           ],
           "takeaway": "Costs are certain and returns are not. Know every charge before your first trade.",
           "check": {
-            "q": "Your broker's minimum commission is Rs 100 per side. You buy Rs 4,000 of shares and later sell them. Roughly what must the price do before you break even?",
-            "options": [
-              "Rise about 1%",
-              "Rise about 5%",
-              "Nothing — commissions come out of the broker's profit"
-            ],
+            "q": "Minimum commission is Rs 100 per side. You buy Rs 4,000 of shares and later sell. Roughly what must the price do to break even?",
+            "options": ["Rise about 1%", "Rise about 5%", "Nothing — commission comes out of the broker's profit"],
             "answer": 1,
-            "explain": "Rs 100 in and Rs 100 out is Rs 200 on a Rs 4,000 position — about 5%. On small tickets, commission is the single biggest thing standing between you and a profit."
+            "explain": "Rs 100 in and Rs 100 out is Rs 200 on Rs 4,000 — about 5%. On small tickets, commission is the biggest thing between you and a profit."
           }
         },
         {
           "id": "money-rules",
-          "title": "The money rules that come before your first trade",
+          "title": "The money rules that come first",
           "mins": 4,
-          "why": "Nearly every painful investing story in Pakistan starts with money that should never have been in the market.",
-          "body": [
-            "Money you will need within the next three years does not belong in shares. Prices can stay depressed for years, and being forced to sell at the wrong moment is how a temporary loss becomes a permanent one.",
-            "Keep a cash buffer for emergencies before you invest a single rupee. Its whole purpose is to stop the market from becoming your emergency fund.",
-            "Never borrow to invest. Borrowed money adds a deadline and an interest bill to something that already has neither guarantees nor a timetable. This desk is long-only and never uses leverage, for exactly this reason.",
-            "Expect to be wrong regularly. Professional investors are wrong a large fraction of the time; they survive because no single position can take them out. Position size — how much of your money sits in any one name — protects you far more reliably than being clever about which name.",
-            "And treat tips as entertainment. If someone messages you a stock with urgency attached, the urgency is the product being sold to you."
+          "why": "Nearly every painful investing story starts with money that should never have been in the market.",
+          "cards": [
+            { "type": "text", "h": "Only money with no deadline",
+              "p": ["Money you will need within about three years does not belong in shares. Prices can stay depressed for years, and being forced to sell at the wrong moment turns a temporary loss into a permanent one."] },
+            { "type": "text", "h": "Cash buffer before shares",
+              "p": ["Keep an emergency fund in cash before you invest a single rupee. Its entire purpose is to stop the market from becoming your emergency fund."] },
+            { "type": "warn", "h": "Never borrow to invest",
+              "p": ["Borrowed money adds a deadline and an interest bill to something that has neither guarantees nor a timetable.", "This desk is long-only and never uses leverage, for exactly this reason."] },
+            { "type": "text", "h": "Expect to be wrong",
+              "p": ["Professionals are wrong a large fraction of the time. They survive because no single position can take them out.", "Position size — how much of your money sits in any one name — protects you far more reliably than being clever about which name."] },
+            { "type": "key", "p": ["If someone messages you a stock with urgency attached, the urgency is the product being sold to you."] }
           ],
           "takeaway": "Survive first. Returns are only available to people still in the game.",
           "check": {
-            "q": "Which money is appropriate to invest in shares?",
-            "options": [
-              "Your emergency savings, so it grows faster",
-              "Money borrowed against a committee or credit card, if the tip is good",
-              "Money you can leave untouched for years and could afford to lose"
-            ],
+            "q": "Which money belongs in shares?",
+            "options": ["Your emergency savings, so it grows faster", "Borrowed money, if the tip is good", "Money you can leave untouched for years and could afford to lose"],
             "answer": 2,
             "explain": "The market cannot be told when you need the money back. Only capital with no deadline and no obligation attached belongs here."
           }
@@ -105,248 +102,309 @@
       ]
     },
     {
-      "id": "company",
-      "title": "Reading a company",
-      "blurb": "Where real information comes from, and how to read the three statements every listed company must publish.",
+      "id": "documents",
+      "n": 2,
+      "title": "The documents",
+      "blurb": "Every document a Pakistani listed company publishes, what each one is for, and how to actually read the three financial statements line by line.",
       "lessons": [
         {
-          "id": "where-info-comes-from",
-          "title": "Where company information actually comes from",
-          "mins": 5,
-          "why": "If you know where the primary sources are, you stop needing anyone's WhatsApp forward.",
-          "body": [
-            "Every listed company must tell the whole market the same thing at the same time. That happens through announcements filed with the PSX — results, board meetings, dividends, changes in control, anything price-sensitive.",
-            "The annual report is the fullest picture: audited financial statements, the auditor's opinion, the directors' report on what happened and why, and the related-party dealings. Quarterly accounts are lighter and unaudited but far more current.",
-            "The AGM — annual general meeting — is where shareholders formally approve the accounts and the final dividend, and where you may ask the board questions. The notice of an AGM is itself a filing you can read.",
-            "'Material information' is the legal term for anything a reasonable investor would want before trading. Companies must disclose it promptly, and this rule exists so that nobody trades on something you have not been told.",
-            "The practical point: if a claim about a company cannot be traced to a filing, an audited statement or an official announcement, treat it as a rumour. The desk holds itself to the same standard — it quotes no price or date it cannot pull from its own data layer."
+          "id": "document-map",
+          "title": "The full map of company documents",
+          "mins": 6,
+          "why": "Once you know what exists and what each is for, you never need anyone's WhatsApp forward again.",
+          "cards": [
+            { "type": "text", "h": "Everyone is told at the same time",
+              "p": ["A listed company must tell the whole market the same thing at the same moment. That happens through announcements filed with the PSX.", "This is the principle behind every document below: if it matters, it must be public, and it must be public to everyone at once."] },
+            { "type": "docmap", "h": "What a listed company publishes",
+              "p": ["Tap any document to see what it is, when it appears, and what to look for inside it."] },
+            { "type": "key", "p": ["If a claim cannot be traced to a filing, an audited statement or an official announcement, it is a rumour. The desk holds itself to the same rule — it quotes no price or date it cannot pull from its own data layer."] }
           ],
           "live": "research",
           "takeaway": "Filings first. Everything else is commentary on filings.",
           "check": {
-            "q": "A friend says a company is about to announce a big dividend. What is the responsible next step?",
-            "options": [
-              "Buy before the announcement",
-              "Look for an actual filing or board-meeting notice, and treat the claim as unverified until then",
-              "Forward it to more people to see if others agree"
-            ],
+            "q": "A friend says a company is about to announce a big dividend. Responsible next step?",
+            "options": ["Buy before the announcement", "Look for an actual filing or board-meeting notice and treat it as unverified until then", "Forward it to more people to see if they agree"],
             "answer": 1,
-            "explain": "Either it has been announced, in which case it is public and verifiable, or it has not, in which case your friend either does not know or is repeating something they should not have. Neither is a reason to act."
+            "explain": "Either it has been announced — in which case it is public and verifiable — or it has not, in which case your friend either does not know or should not know. Neither is a reason to act."
+          }
+        },
+        {
+          "id": "annual-report",
+          "title": "Inside the annual report",
+          "mins": 6,
+          "why": "It is the fullest picture a company gives you all year, and most of it is readable without any accounting training.",
+          "cards": [
+            { "type": "text", "h": "The one document worth an hour",
+              "p": ["The annual report bundles almost everything: audited financial statements, the auditor's opinion, the directors' report on what happened and why, the notes that explain the numbers, and the pattern of shareholding.", "Quarterly accounts are lighter and unaudited, but far more current."] },
+            { "type": "docparts", "h": "What is inside, in order",
+              "p": ["Tap a section to see what it tells you and the trap to watch for."] },
+            { "type": "text", "h": "Read it backwards",
+              "p": ["Experienced readers often start at the auditor's report, then the notes, then the statements, and read the glossy chairman's letter last.", "The pictures are marketing. The notes are where the actual disclosures live — related-party transactions, contingencies, how revenue is recognised."] },
+            { "type": "key", "p": ["The notes are not an appendix. They are frequently the most informative part of the entire document."] }
+          ],
+          "takeaway": "Auditor's opinion, then notes, then statements. The glossy pages last.",
+          "check": {
+            "q": "Where in an annual report would you find related-party transactions and contingencies?",
+            "options": ["The chairman's letter", "The notes to the financial statements", "The cover page"],
+            "answer": 1,
+            "explain": "The notes carry the disclosures that give the headline numbers their meaning — which is exactly why they are worth reading before the narrative sections."
           }
         },
         {
           "id": "income-statement",
-          "title": "The income statement: from revenue to profit",
-          "mins": 6,
-          "why": "It answers the first question about any business — does it actually make money?",
-          "body": [
-            "The income statement covers a period — a quarter or a year — and walks from what the company sold down to what was left for shareholders.",
-            "Revenue (or turnover) is the value of goods and services sold. It is the top line, and on its own it says nothing about profitability: a company can grow revenue for years while losing money.",
-            "Subtract the direct cost of producing those goods and you get gross profit. Gross margin — gross profit divided by revenue — tells you how much room the business has before overheads. A cement maker and a software firm have completely different normal margins, so only ever compare a company to its own history and its own sector.",
-            "Then come operating expenses (salaries, selling, admin), leaving operating profit — profit from actually running the business. Then finance cost: interest on borrowings. In Pakistan, where policy rates have swung dramatically, finance cost alone can decide whether a leveraged company reports a profit or a loss.",
-            "After tax you reach profit after tax, and dividing by the number of shares gives earnings per share — EPS. EPS is the figure most valuation talk is built on, so it is worth knowing that it is the end of a long chain of assumptions, not a fact of nature.",
-            "One habit worth forming early: check whether profit grew because the business sold more, or because of a one-off — an asset sale, a tax reversal, a currency gain. The directors' report usually says. One-offs do not repeat."
+          "title": "The income statement, line by line",
+          "mins": 8,
+          "why": "It answers the first question about any business: does it actually make money, and from what?",
+          "cards": [
+            { "type": "text", "h": "A period, not a moment",
+              "p": ["The income statement covers a stretch of time — a quarter or a year — and walks from what the company sold down to what was left for shareholders.", "Every line below sits between those two ends. Learn the shape once and you can read any company's."] },
+            { "type": "anatomy", "doc": "income_statement", "h": "The statement, labelled",
+              "p": ["Tap any line to learn what it is and what to watch. Real reported figures are marked as such; the rest is the structure to look for in the filing itself."] },
+            { "type": "warn", "h": "Where profit comes from matters",
+              "p": ["Check whether profit grew because the business sold more, or because of a one-off: an asset sale, a tax reversal, a currency gain. The directors' report usually says.", "One-offs do not repeat, and a company whose profit growth is entirely one-offs has not actually grown."] },
+            { "type": "text", "h": "The Pakistan-specific line",
+              "p": ["Finance cost — interest on borrowings — deserves special attention here. Policy rates in Pakistan have swung dramatically, and for a leveraged company that single line can decide between a reported profit and a reported loss."] },
+            { "type": "key", "p": ["Revenue is activity. Profit is what survives the costs. EPS is profit per slice."] }
           ],
           "live": "earnings",
-          "takeaway": "Revenue is activity. Profit is what survives the costs. EPS is profit per slice.",
+          "takeaway": "Revenue is activity, profit is what survives costs, EPS is profit per slice.",
           "check": {
-            "q": "A company's revenue rose 20% but profit after tax fell. Which explanation is NOT plausible?",
-            "options": [
-              "Costs rose faster than sales",
-              "Finance cost jumped after interest rates rose",
-              "Revenue growth always guarantees profit growth"
-            ],
+            "q": "Revenue rose 20% but profit after tax fell. Which explanation is NOT plausible?",
+            "options": ["Costs rose faster than sales", "Finance cost jumped after rates rose", "Revenue growth always guarantees profit growth"],
             "answer": 2,
-            "explain": "Revenue is the top line; everything between it and profit can move against you. Growing sales into shrinking margins is one of the most common ways a business disappoints."
+            "explain": "Everything between revenue and profit can move against you. Growing sales into shrinking margins is one of the most common ways a business disappoints."
           }
         },
         {
           "id": "balance-sheet",
-          "title": "The balance sheet: what it owns and what it owes",
-          "mins": 6,
-          "why": "The income statement shows a year. The balance sheet shows whether the company can survive a bad one.",
-          "body": [
-            "A balance sheet is a snapshot on one date: assets on one side, liabilities and equity on the other. It always balances, because equity is defined as whatever is left after subtracting what is owed from what is owned.",
-            "Assets split into current (cash, receivables, inventory — things expected to turn into cash within a year) and non-current (plant, property, long-term investments). Liabilities split the same way: current (payable within a year, including the current portion of long-term debt) and long-term.",
-            "Two quick reads tell you most of what you need. First, current assets versus current liabilities — the current ratio. Below 1 means short-term obligations exceed short-term resources, which is not automatically fatal but demands an explanation.",
-            "Second, total debt versus equity. High debt is not automatically bad — utilities and cement carry it by nature — but it converts a bad year into a dangerous one, because interest must be paid whether or not the company earns anything.",
-            "Look at receivables too. If receivables are growing much faster than revenue, the company may be booking sales it has not been paid for. In Pakistan, receivables from government entities have historically been a real and recurring issue in certain sectors — the so-called circular debt problem in energy is the clearest example.",
-            "Book value per share is equity divided by shares outstanding: the accounting value of your slice. It is a starting point for valuation, not an answer — assets are carried at accounting values, which may sit well above or below what they would actually fetch."
+          "title": "The balance sheet, line by line",
+          "mins": 8,
+          "why": "The income statement shows one year. The balance sheet shows whether the company survives a bad one.",
+          "cards": [
+            { "type": "text", "h": "A photograph on one date",
+              "p": ["A balance sheet is a snapshot: assets on one side, liabilities and equity on the other. It always balances, because equity is defined as whatever is left after subtracting what is owed from what is owned."] },
+            { "type": "anatomy", "doc": "balance_sheet", "h": "The statement, labelled",
+              "p": ["Tap any line to see what it means and what a healthy or worrying version looks like."] },
+            { "type": "text", "h": "Two ratios do most of the work",
+              "p": ["Current assets against current liabilities — the current ratio. Below 1 means short-term obligations exceed short-term resources. Not automatically fatal, but it demands an explanation.", "Total debt against equity. High debt is not automatically bad — utilities and cement carry it by nature — but it converts a bad year into a dangerous one, because interest must be paid whether or not the company earns anything."] },
+            { "type": "warn", "h": "Watch receivables",
+              "p": ["If receivables grow much faster than revenue, the company may be booking sales it has not been paid for.", "In Pakistan, receivables from government-linked entities have been a real and recurring issue in certain sectors — the circular debt problem in energy is the clearest example."] },
+            { "type": "key", "p": ["Book value per share is equity divided by shares — the accounting value of your slice. A starting point, not an answer: assets are carried at accounting values, which may sit well above or below what they would actually fetch."] }
           ],
           "live": "value",
           "takeaway": "Assets minus liabilities is your slice. Debt decides how much bad news the company can absorb.",
           "check": {
             "q": "Why does a heavily indebted company get riskier when profits fall?",
-            "options": [
-              "Interest payments continue regardless of whether the company earns anything",
-              "Lenders automatically forgive debt in a bad year",
-              "Debt disappears when profits fall"
-            ],
+            "options": ["Interest must be paid regardless of earnings", "Lenders forgive debt in bad years", "Debt disappears when profits fall"],
             "answer": 0,
-            "explain": "Debt is a fixed claim and equity is the leftover. When earnings shrink, the fixed claim is paid first and the leftover absorbs the entire shortfall — which is why leverage magnifies losses as well as gains."
+            "explain": "Debt is a fixed claim; equity is the leftover. When earnings shrink the fixed claim is paid first and the leftover absorbs the entire shortfall — which is why leverage magnifies losses as well as gains."
           }
         },
         {
           "id": "cash-flow",
-          "title": "Cash flow: why profit is not cash",
-          "mins": 5,
+          "title": "The cash flow statement, line by line",
+          "mins": 7,
           "why": "Companies rarely fail because they were unprofitable. They fail because they ran out of cash.",
-          "body": [
-            "Profit is an accounting opinion; cash is a fact. A sale becomes revenue when the goods are delivered, not when the customer pays — so a company can report healthy profits while cash drains away.",
-            "The cash flow statement has three parts. Operating cash flow is cash generated by the actual business. Investing is cash spent on or received from long-term assets. Financing is borrowing, repayment, share issuance and dividends paid.",
-            "The single most useful comparison in all of financial statement reading: operating cash flow against profit after tax, over several years. If profit consistently exceeds operating cash flow, ask where the cash is going — usually into receivables or inventory, sometimes into a problem.",
-            "Also look at operating cash flow against capital expenditure. A business that cannot fund its own maintenance spending from operations is relying on lenders or shareholders to keep running, and that dependence has a limit.",
-            "This is where dividends become real. A dividend is paid in cash, so a company paying dividends it does not generate in cash is funding them from borrowings or reserves — which can continue for a while, but not indefinitely."
+          "cards": [
+            { "type": "text", "h": "Profit is an opinion, cash is a fact",
+              "p": ["A sale becomes revenue when goods are delivered, not when the customer pays. So a company can report healthy profits while cash quietly drains away.", "The cash flow statement is the antidote to that ambiguity."] },
+            { "type": "anatomy", "doc": "cash_flow", "h": "The statement, labelled",
+              "p": ["Tap any section to see what it captures and what a warning sign looks like."] },
+            { "type": "text", "h": "The single most useful comparison",
+              "p": ["Operating cash flow against profit after tax, over several years.", "If profit consistently exceeds operating cash flow, ask where the cash is going — usually receivables or inventory, sometimes a genuine problem. It is not proof of anything wrong, but it is the most reliable prompt to look harder."] },
+            { "type": "key", "p": ["A dividend is paid in cash. A company paying dividends it does not generate in cash is funding them from borrowings or reserves — which can continue for a while, but not indefinitely."] }
           ],
           "live": "dividends",
           "takeaway": "Follow the cash. Profit can be shaped by judgement; cash either arrived or it did not.",
           "check": {
-            "q": "A company reports rising profit every year, but operating cash flow is consistently far below profit. What is the most sensible reaction?",
-            "options": [
-              "Ignore it — profit is the number that matters",
-              "Investigate where cash is going, most commonly receivables or inventory",
-              "Assume the auditors made an error"
-            ],
+            "q": "Profit rises every year but operating cash flow is consistently far below it. Most sensible reaction?",
+            "options": ["Ignore it — profit is what matters", "Investigate where cash is going, commonly receivables or inventory", "Assume the auditors erred"],
             "answer": 1,
-            "explain": "It is not proof of anything wrong, but it is the single most reliable prompt to look harder. Persistent gaps between profit and cash deserve an explanation you can actually find in the notes."
+            "explain": "Persistent gaps between profit and cash deserve an explanation you can actually find in the notes."
+          }
+        },
+        {
+          "id": "auditor-and-governance",
+          "title": "The auditor's report and who owns the company",
+          "mins": 6,
+          "why": "Two short sections that tell you whether to trust the numbers and whose interests actually run the business.",
+          "cards": [
+            { "type": "text", "h": "The auditor's opinion is a verdict",
+              "p": ["An unqualified — 'clean' — opinion means the auditors believe the statements fairly present the company's position. This is the normal outcome.", "A qualified opinion, an adverse opinion, or a disclaimer means something is wrong or could not be verified. Any of these is a serious signal that deserves reading in full before anything else in the report."] },
+            { "type": "text", "h": "Emphasis of matter, and going concern",
+              "p": ["An 'emphasis of matter' paragraph flags something the auditors want you to notice without qualifying their opinion.", "A 'material uncertainty related to going concern' is the strongest warning in the document: the auditors are saying there is real doubt the company can continue operating. It is written in careful language and it is easy to miss if you are skimming."] },
+            { "type": "text", "h": "The pattern of shareholding",
+              "p": ["This section lists who owns the company: sponsors and directors, associated companies, banks and funds, and the general public.", "Free float — the portion genuinely available to trade — matters for liquidity. A very thin free float means the price can move violently on modest volume."] },
+            { "type": "warn", "h": "Related-party transactions",
+              "p": ["Look for dealings between the company and its own sponsors or associated companies. These can be entirely legitimate and routine.", "They are also the mechanism through which value most often leaves a company in ways minority shareholders do not benefit from — which is why they are disclosed, and why they are worth reading."] },
+            { "type": "key", "p": ["Read the auditor's opinion before the numbers. It tells you whether the numbers are worth reading."] }
+          ],
+          "takeaway": "A qualified opinion or a going-concern note outranks every other number in the report.",
+          "check": {
+            "q": "An annual report carries 'a material uncertainty related to going concern'. What does that mean?",
+            "options": ["A routine disclosure in every report", "The auditors have real doubt the company can continue operating", "The company changed auditors"],
+            "answer": 1,
+            "explain": "It is the strongest formal warning auditors give, written in restrained language. It is not routine, and it belongs at the very top of anything else you read about that company."
+          }
+        },
+        {
+          "id": "announcements",
+          "title": "Announcements, AGMs and material information",
+          "mins": 5,
+          "why": "This is the live feed — the documents that arrive between annual reports and move prices the same day.",
+          "cards": [
+            { "type": "text", "h": "Material information",
+              "p": ["'Material information' is the legal term for anything a reasonable investor would want before trading. Companies must disclose it promptly.", "The rule exists so that nobody can trade on something you have not been told."] },
+            { "type": "text", "h": "Board meeting notices",
+              "p": ["A company must announce in advance that its board will meet to consider results or a dividend.", "This is why results dates are knowable rather than surprises — and the desk will not open a new position into an unconfirmed results date for exactly this reason."] },
+            { "type": "text", "h": "The AGM",
+              "p": ["The annual general meeting is where shareholders formally approve the accounts and the final dividend, and where you may ask the board questions directly.", "The notice of an AGM is itself a filing you can read. It carries the agenda, any special resolutions, and the book closure dates."] },
+            { "type": "key", "p": ["Between annual reports, the announcement feed IS the company's story. It is free, official, and almost nobody reads it."] }
+          ],
+          "live": "earnings",
+          "takeaway": "Announcements are the live feed. Board-meeting notices make results dates knowable in advance.",
+          "check": {
+            "q": "Why must a company announce a board meeting before it considers results?",
+            "options": ["So the market knows in advance and nobody trades on private knowledge", "To attract media coverage", "It is optional"],
+            "answer": 0,
+            "explain": "Advance notice is what keeps the information symmetric. It also means a results date is something you can plan around rather than be surprised by."
           }
         }
       ]
     },
     {
-      "id": "price",
+      "id": "value",
+      "n": 3,
       "title": "Price, value and payouts",
-      "blurb": "What 'cheap' does and does not mean, how dividends actually reach your account, and why prices jump around results.",
+      "blurb": "What 'cheap' does and does not mean, how dividends actually reach your account, and why prices jump on results.",
       "lessons": [
         {
           "id": "valuation-basics",
-          "title": "P/E, book value, and the word 'cheap'",
+          "title": "P/E, book value and the word 'cheap'",
           "mins": 6,
           "why": "'Cheap' is the most misused word in investing, and the most expensive one to misunderstand.",
-          "body": [
-            "A low share price does not mean a share is cheap. A Rs 12 share and a Rs 1,200 share tell you nothing about value until you know what each buys you in earnings, assets and cash.",
-            "The price-to-earnings ratio — P/E — is price divided by earnings per share. At a P/E of 8 you are paying eight rupees for each rupee of last year's earnings. Lower looks cheaper, but only if earnings are durable.",
-            "This is the trap. P/E uses past earnings and a live price. If the market expects earnings to fall — a cyclical peak, a contract ending, a subsidy withdrawn — the price drops first and the P/E looks wonderfully low right before the earnings collapse. Value investors call this a value trap, and it catches beginners constantly.",
-            "Price-to-book compares price to accounting equity. It is more useful for banks, where assets are largely financial and carried near market value, and much less useful where the real assets are brands or people.",
-            "Dividend yield is annual dividend divided by price. A very high yield is a warning as often as an opportunity: yield rises when price falls, and the market may be pricing in a dividend cut it expects.",
-            "No single ratio is a verdict. The desk deliberately values every stock four independent ways and takes the median, precisely because any one method can be badly wrong on any one company. Ratios narrow the question; they never answer it."
+          "cards": [
+            { "type": "text", "h": "A low price is not a low valuation",
+              "p": ["A Rs 12 share and a Rs 1,200 share tell you nothing about value until you know what each buys you in earnings, assets and cash.", "Share price alone is one of the least informative numbers on the screen."] },
+            { "type": "text", "h": "P/E: what you pay per rupee of earnings",
+              "p": ["Price divided by earnings per share. At a P/E of 8 you are paying eight rupees for each rupee of last year's earnings.", "Lower looks cheaper — but only if those earnings are durable."] },
+            { "type": "warn", "h": "The value trap",
+              "p": ["P/E uses past earnings and a live price. If the market expects earnings to fall — a cyclical peak, a contract ending, a subsidy withdrawn — the price drops first and the P/E looks wonderfully low right before earnings collapse.", "This catches beginners constantly. An unusually low P/E is a question, not an answer."] },
+            { "type": "text", "h": "Book value and yield",
+              "p": ["Price-to-book compares price to accounting equity. More useful for banks, where assets are largely financial; much less useful where the real assets are brands or people.", "Dividend yield is annual dividend divided by price. A very high yield is a warning as often as an opportunity — yield rises when price falls, and the market may be pricing in a cut it expects."] },
+            { "type": "key", "p": ["No single ratio is a verdict. The desk values every stock four independent ways and takes the median, precisely because any one method can be badly wrong on any one company."] }
           ],
           "live": "value",
           "takeaway": "Cheap means cheap relative to what you get. Share price alone tells you nothing.",
           "check": {
-            "q": "A stock trades at a P/E of 4 — far below its sector. What is the first thing to consider?",
-            "options": [
-              "It is definitely a bargain",
-              "The market may expect earnings to fall sharply, making the ratio misleading",
-              "P/E below 5 is impossible"
-            ],
+            "q": "A stock trades at a P/E of 4, far below its sector. First thing to consider?",
+            "options": ["It is definitely a bargain", "The market may expect earnings to fall sharply, making the ratio misleading", "P/E below 5 is impossible"],
             "answer": 1,
-            "explain": "An unusually low P/E is a question, not an answer. Sometimes the market is wrong; often it knows something about next year's earnings that last year's number cannot show."
+            "explain": "Sometimes the market is wrong. Often it knows something about next year's earnings that last year's number cannot show."
           }
         },
         {
           "id": "dividends-mechanics",
-          "title": "Dividends: ex-dates, book closure and how the cash reaches you",
-          "mins": 5,
+          "title": "Dividends: the dates that decide if you get paid",
+          "mins": 6,
           "why": "The dates are strict, widely misunderstood, and getting them wrong means simply not being paid.",
-          "body": [
-            "A dividend is a share of profit paid out in cash. The board declares it, shareholders approve the final dividend at the AGM, and the company then pays everyone on its register on a particular date.",
-            "Four dates matter. The announcement, when the board declares. The ex-dividend date — from this day the share trades without the right to that dividend. The book closure period, when the register is frozen to determine who gets paid. And the payment date, when cash actually arrives.",
-            "The rule that follows: you must own the share BEFORE the ex-date to receive the dividend. Buying on or after the ex-date means the seller keeps it. Selling on or after the ex-date still gets you the dividend, because you owned it when it counted.",
-            "On the ex-date the price typically drops by roughly the dividend amount, for the obvious reason that new buyers no longer get that cash. This is why 'buying just before the ex-date to collect the dividend' is not free money — you are trading price for cash, and in Pakistan the dividend is taxed at withholding.",
-            "In Pakistan dividends are often quoted as a percentage of face value, usually Rs 10. A '50% dividend' means Rs 5 per share, not 50% of the market price. Confusing the two is one of the most common beginner errors, and the difference is enormous.",
-            "The desk lists announced payouts with their buy-by and sell-after dates, and only ever lists a date once a company has actually filed it."
+          "cards": [
+            { "type": "text", "h": "What a dividend is",
+              "p": ["A share of profit paid out in cash. The board declares it, shareholders approve the final dividend at the AGM, and the company pays everyone on its register on a particular date."] },
+            { "type": "timeline", "h": "The four dates, in order",
+              "p": ["Miss the middle one and you are simply not paid."] },
+            { "type": "warn", "h": "The trap: '50%' does not mean 50% of the price",
+              "p": ["In Pakistan dividends are usually quoted as a percentage of face value, which is normally Rs 10. A '50% dividend' means Rs 5 per share.", "It does not mean 50% of the market price. Confusing the two overstates the payout enormously, and it is one of the most common beginner errors."] },
+            { "type": "text", "h": "Why it is not free money",
+              "p": ["On the ex-date the price typically drops by roughly the dividend amount, because new buyers no longer receive that cash.", "So buying just before the ex-date to 'collect' the dividend trades price for cash — and the dividend is taxed at withholding."] },
+            { "type": "key", "p": ["Own it before the ex-date, or the seller keeps the dividend. Sell on or after the ex-date and you still get paid."] }
           ],
           "live": "dividends",
           "takeaway": "Own it before the ex-date, or you are not paid. A '50% dividend' means 50% of Rs 10.",
           "check": {
-            "q": "A company declares a 40% dividend on a Rs 10 face value, and the share trades at Rs 200. What do you receive per share?",
+            "q": "A company declares a 40% dividend on Rs 10 face value. The share trades at Rs 200. You receive?",
             "options": ["Rs 80", "Rs 4", "Rs 40"],
             "answer": 1,
-            "explain": "40% of the Rs 10 face value is Rs 4 per share — a yield of 2% at a Rs 200 price. Reading the percentage against the market price would have overstated it twentyfold."
+            "explain": "40% of the Rs 10 face value is Rs 4 per share — a 2% yield at Rs 200. Reading the percentage against the market price would have overstated it twentyfold."
           }
         },
         {
           "id": "results-season",
-          "title": "Results season, and why prices gap",
+          "title": "Results season and why prices gap",
           "mins": 5,
           "why": "Knowing when a company reports explains most of the sudden moves that otherwise look random.",
-          "body": [
-            "Listed companies report on a fixed rhythm: quarterly accounts through the year and audited annual results after year end. Boards announce a meeting date in advance, which is itself a filing — so results dates are knowable, not surprises.",
-            "Prices move on results relative to expectations, not relative to zero. A company can report record profit and fall, because the market already expected more. This is the single most confusing thing for new investors, and it is entirely rational once you see that today's price already contains what people expect.",
-            "Because results land outside trading hours, the adjustment often arrives as a gap — the price opens well away from where it closed, with no opportunity to trade in between. Anyone holding through it takes the full move, in either direction.",
-            "That is why a results date inside your holding window is a real risk to understand rather than ignore. The desk will not open a new swing position into an unconfirmed results date, precisely because gaps jump straight over any exit you had planned.",
-            "For a long-term holder, results are less about the day's move and more about the trend: are margins holding, is debt rising, did cash follow profit? Those questions are answered in the accounts, not in the first hour's price reaction."
+          "cards": [
+            { "type": "text", "h": "The reporting rhythm",
+              "p": ["Listed companies report quarterly through the year and publish audited annual results after year end. Boards announce meeting dates in advance, so results dates are knowable."] },
+            { "type": "text", "h": "Prices move against expectations, not against zero",
+              "p": ["A company can report record profit and fall, because the market already expected more.", "This is the single most confusing thing for new investors — and entirely rational once you see that today's price already contains what people expect."] },
+            { "type": "warn", "h": "Gaps skip over your exit",
+              "p": ["Results land outside trading hours, so the adjustment often arrives as a gap: the price opens well away from the previous close, with no chance to trade in between.", "Anyone holding through it takes the full move in either direction. A stop-loss does not protect you across a gap."] },
+            { "type": "key", "p": ["For a long-term holder the day's move matters less than the trend: are margins holding, is debt rising, did cash follow profit? Those are answered in the accounts, not in the first hour's reaction."] }
           ],
           "live": "earnings",
-          "takeaway": "Prices move against expectations, not against zero — and results gaps skip over your exit.",
+          "takeaway": "Prices move against expectations — and results gaps jump straight over any exit you planned.",
           "check": {
-            "q": "A company posts its highest ever profit and the share falls 5%. What is the most likely reason?",
-            "options": [
-              "The market expected even better, and the price already reflected that",
-              "Investors did not read the announcement",
-              "High profits always cause falls"
-            ],
+            "q": "A company posts record profit and the share falls 5%. Most likely reason?",
+            "options": ["The market expected even better, and the price already reflected that", "Investors did not read the announcement", "High profits always cause falls"],
             "answer": 0,
-            "explain": "Today's price already embeds today's expectations. The move on results day comes from the difference between what arrived and what was assumed — which is why 'good news' and 'price up' are not the same thing."
+            "explain": "Today's price already embeds today's expectations. The move comes from the difference between what arrived and what was assumed."
           }
         }
       ]
     },
     {
       "id": "lenses",
+      "n": 4,
       "title": "The desk's lenses",
-      "blurb": "How this desk tests ideas before trusting them — and how to read the astrology layer honestly.",
+      "blurb": "How this desk tests an idea before trusting it — and how to read the astrology layer honestly.",
       "lessons": [
         {
           "id": "what-ta-claims",
-          "title": "What technical analysis claims — and how the desk tests it",
+          "title": "What technical analysis claims",
           "mins": 5,
           "why": "You will meet charts and indicators everywhere. Here is how to judge whether one is worth anything.",
-          "body": [
-            "Technical analysis reads price and volume history for repeatable patterns, on the argument that prices reflect collective behaviour and behaviour repeats. Moving averages, momentum measures like RSI, and support and resistance levels are the common tools.",
-            "The honest problem is that patterns are extremely easy to see after the event. Point at any chart and you will find a shape that 'worked'. That proves nothing, because you chose it knowing the outcome.",
-            "The only real test is out-of-sample: define the rule precisely, apply it mechanically across long history, subtract realistic costs, and then check it still works on data it was never tuned on. Most rules fail that test.",
-            "The desk holds every strategy to exactly that bar — win rate above 55%, positive expectancy after costs, and still profitable out-of-sample — and a rule only counts on the individual stock where it cleared. Many rules clear on nothing at all, and the desk publishes that rather than hiding it.",
-            "The takeaway is not that charts are useless. It is that a claim without a test is decoration, and you are entitled to ask anyone showing you an indicator what happened when it was tested properly."
+          "cards": [
+            { "type": "text", "h": "The claim",
+              "p": ["Technical analysis reads price and volume history for repeatable patterns, arguing that prices reflect collective behaviour and behaviour repeats.", "Moving averages, momentum measures like RSI, and support and resistance levels are the common tools."] },
+            { "type": "warn", "h": "The honest problem",
+              "p": ["Patterns are extremely easy to see after the event. Point at any chart and you will find a shape that 'worked'.", "That proves nothing, because you chose it already knowing the outcome."] },
+            { "type": "text", "h": "The only real test",
+              "p": ["Define the rule precisely. Apply it mechanically across long history. Subtract realistic costs. Then check it still works on data it was never tuned on.", "Most rules fail this. The desk holds every strategy to exactly that bar and publishes the ones that failed."] },
+            { "type": "key", "p": ["A claim without a test is decoration. You are entitled to ask anyone showing you an indicator what happened when it was tested properly."] }
           ],
           "live": "strategies",
           "takeaway": "Any pattern can be found in hindsight. Only out-of-sample testing separates rules from decoration.",
           "check": {
-            "q": "Someone shows you a chart where their indicator called three tops perfectly. What is missing?",
-            "options": [
-              "Nothing — three correct calls is proof",
-              "Every occasion the indicator fired and was wrong, plus costs, tested on data it was not chosen from",
-              "A prettier colour scheme"
-            ],
+            "q": "Someone shows a chart where their indicator called three tops perfectly. What is missing?",
+            "options": ["Nothing — three correct calls is proof", "Every time it fired and was wrong, plus costs, tested on data it was not chosen from", "A prettier colour scheme"],
             "answer": 1,
-            "explain": "Selected successes are not evidence. Without the full record — including failures, costs, and unseen data — the three wins may just be the three cases they went looking for."
+            "explain": "Selected successes are not evidence. Without the full record the three wins may be the three cases they went looking for."
           }
         },
         {
           "id": "proven-strategy",
-          "title": "What the desk means by a 'proven' strategy",
-          "mins": 5,
+          "title": "What 'proven' actually means",
+          "mins": 6,
           "why": "So you can read the Strategies page — and challenge anyone else's performance claims.",
-          "body": [
-            "Win rate is the share of trades that made money. On its own it is nearly meaningless: a rule that wins 90% of the time and loses catastrophically on the other 10% is a losing rule.",
-            "Expectancy is the number that matters: the average result per trade, wins and losses together, after costs. Positive expectancy means the rule made money on average when applied honestly. Costs are not optional in this calculation — commissions and slippage kill a great many rules that look good on paper.",
-            "Out-of-sample means the rule was checked on a stretch of history it was never fitted to. Without it, a backtest measures how well someone tuned a rule to the past, which tells you nothing about the future.",
-            "Lookahead bias is the classic way backtests lie: using information at a moment it was not yet available — a closing price to decide a trade that supposedly happened earlier that day, for example. It produces beautiful results that cannot be repeated in real life.",
-            "Sample size matters too. A rule with nine trades over nineteen years has not been tested; it has been glimpsed. Be as suspicious of a small sample as of a missing one.",
-            "And the honest frame for all of it: a strategy that cleared every bar is a rule that used to work, tested carefully. It is evidence, not a promise, and the desk states that on every page rather than burying it."
+          "cards": [
+            { "type": "text", "h": "Win rate flatters",
+              "p": ["Win rate is the share of trades that made money. On its own it is nearly meaningless.", "A rule that wins 90% of the time and loses catastrophically on the other 10% is a losing rule."] },
+            { "type": "text", "h": "Expectancy is the number",
+              "p": ["The average result per trade, wins and losses together, after costs. Positive expectancy means the rule made money on average when applied honestly.", "Costs are not optional in this calculation — commission and slippage kill a great many rules that look good on paper."] },
+            { "type": "text", "h": "Out-of-sample, and lookahead",
+              "p": ["Out-of-sample means the rule was checked on history it was never fitted to. Without it, a backtest measures how well someone tuned a rule to the past.", "Lookahead bias is the classic way backtests lie: using information at a moment it was not yet available. It produces beautiful results that cannot be repeated in real life."] },
+            { "type": "warn", "h": "Sample size",
+              "p": ["A rule with nine trades over nineteen years has not been tested; it has been glimpsed.", "Be as suspicious of a small sample as of a missing one."] },
+            { "type": "key", "p": ["A strategy that cleared every bar is a rule that used to work, tested carefully. That is evidence, not a promise."] }
           ],
           "live": "strategies",
-          "takeaway": "Win rate flatters. Expectancy after costs, out-of-sample, on a real sample size, is the actual bar.",
+          "takeaway": "Expectancy after costs, out-of-sample, on a real sample size. Win rate alone means nothing.",
           "check": {
-            "q": "A strategy wins 80% of its trades but has negative expectancy. What does that mean?",
-            "options": [
-              "It is profitable because it wins most of the time",
-              "The rare losses are large enough to outweigh all the frequent small wins",
-              "The calculation must be wrong"
-            ],
+            "q": "A strategy wins 80% of trades but has negative expectancy. Meaning?",
+            "options": ["It is profitable because it wins often", "The rare losses outweigh all the frequent small wins", "The calculation must be wrong"],
             "answer": 1,
-            "explain": "This shape is very common and very dangerous — many small gains funding occasional severe losses. It is exactly why win rate alone is never enough."
+            "explain": "Many small gains funding occasional severe losses — a very common and very dangerous shape, and exactly why win rate alone is never enough."
           }
         },
         {
@@ -354,28 +412,95 @@
           "title": "The astrology lens, taught honestly",
           "mins": 6,
           "why": "The desk includes a Vedic astrology layer. You should understand both what the tradition says and what testing showed.",
-          "body": [
-            "Vedic (sidereal) astrology is a centuries-old system with real internal structure. It measures planetary positions against the fixed stars rather than the seasons, which is why a sidereal chart differs from the Western one you may have seen in a magazine.",
-            "A few terms you will meet on the Astro and Your Chart pages. The nine grahas are the bodies it tracks — the Sun and Moon, five planets, and the two lunar nodes Rahu and Ketu. The zodiac divides further into 27 nakshatras, or lunar mansions. Your Moon's nakshatra is the anchor of a Vedic reading, which is why the tradition often reads a chart from the Moon rather than the rising sign.",
-            "A dasha is a planetary period — the Vimshottari system divides a life into long stretches, each ruled by one graha, with sub-periods called antardashas inside them. Gochara is the moving sky read against your birth chart: where the planets stand today relative to where they stood when you were born.",
-            "That is the tradition, presented as the tradition. Now the part the desk owes you: it tested whether these signals predicted PSX returns, across thousands of hypotheses and nineteen years of data, with proper statistical correction. Nothing survived the test. Meanwhile the same machinery, pointed at ordinary market factors, did find real effects — oil genuinely moves exploration and production stocks.",
-            "So the astrology layer is offered as exploration and cultural interest, never as an edge and never as advice. It is presented with the same discipline as everything else here: the calculations are real sidereal mathematics, computed properly, and the desk does not claim they predict prices.",
-            "Holding both ideas at once — this is a rich tradition worth understanding, and it did not beat a fair test — is itself the skill this whole course is trying to build."
+          "cards": [
+            { "type": "text", "h": "What the tradition is",
+              "p": ["Vedic — sidereal — astrology is a centuries-old system with real internal structure. It measures planetary positions against the fixed stars rather than the seasons, which is why a sidereal chart differs from the Western one you may have seen."] },
+            { "type": "text", "h": "The vocabulary",
+              "p": ["The nine grahas are the bodies it tracks: the Sun and Moon, five planets, and the two lunar nodes Rahu and Ketu.", "The zodiac divides further into 27 nakshatras, or lunar mansions. Your Moon's nakshatra anchors a Vedic reading, which is why the tradition often reads a chart from the Moon rather than the rising sign.", "A dasha is a planetary period; gochara is the moving sky read against your birth chart."] },
+            { "type": "warn", "h": "What the desk owes you",
+              "p": ["The desk tested whether these signals predicted PSX returns — thousands of hypotheses, nineteen years of data, proper statistical correction. Nothing survived.", "The same machinery, pointed at ordinary market factors, did find real effects: oil genuinely moves exploration and production stocks."] },
+            { "type": "key", "p": ["Holding both ideas at once — this is a rich tradition worth understanding, and it did not beat a fair test — is itself the skill this whole course builds."] }
           ],
           "live": "astro",
           "takeaway": "Real tradition, real mathematics, tested honestly, no demonstrated edge. Explore it as exploration.",
           "check": {
-            "q": "How should the astrology layer be used when deciding what to buy?",
-            "options": [
-              "As a timing signal, since the calculations are accurate",
-              "Not at all as a basis for buying — it is exploration, and testing found no predictive edge",
-              "As the deciding factor when other analysis is unclear"
-            ],
+            "q": "How should the astrology layer inform what you buy?",
+            "options": ["As a timing signal, since the calculations are accurate", "Not at all — it is exploration, and testing found no predictive edge", "As a tiebreaker when other analysis is unclear"],
             "answer": 1,
-            "explain": "Accurate astronomy is not the same as predictive power. The mathematics being correct says nothing about whether the resulting signal forecasts prices — and when tested properly, it did not."
+            "explain": "Accurate astronomy is not predictive power. The mathematics being correct says nothing about whether the signal forecasts prices — and tested properly, it did not."
           }
         }
       ]
     }
-  ]
+  ],
+  "docmap": [
+    { "k": "Annual report", "when": "Once a year, after year end", "what": "The full picture: audited statements, auditor's opinion, directors' report, notes, pattern of shareholding.", "look": "Start with the auditor's opinion, then the notes." },
+    { "k": "Quarterly accounts", "when": "Q1, half-year, Q3", "what": "Condensed, unaudited financials — much more current than the annual report.", "look": "Compare against the same quarter last year, not the previous quarter." },
+    { "k": "Auditor's report", "when": "Inside the annual report", "what": "An independent verdict on whether the statements fairly present the position.", "look": "Anything other than a clean opinion. Going-concern language outranks every other number." },
+    { "k": "Directors' report", "when": "Inside the annual report", "what": "Management explaining the year: what moved, what they expect, why.", "look": "Whether profit came from operations or from one-offs." },
+    { "k": "Notes to the accounts", "when": "Inside the annual report", "what": "The disclosures behind every headline number.", "look": "Related-party transactions, contingencies, revenue recognition." },
+    { "k": "Pattern of shareholding", "when": "Inside the annual report", "what": "Who owns the company: sponsors, funds, banks, general public.", "look": "Free float. A thin float means violent moves on modest volume." },
+    { "k": "Board meeting notice", "when": "Before results or a dividend", "what": "Advance notice that the board will consider results or a payout.", "look": "The date — this is how results become knowable in advance." },
+    { "k": "Material information", "when": "Any time, promptly", "what": "Anything price-sensitive a reasonable investor would want before trading.", "look": "Contracts, regulatory action, plant shutdowns, changes in control." },
+    { "k": "AGM notice", "when": "Before the annual meeting", "what": "Agenda, special resolutions, book closure dates, proxy form.", "look": "Special resolutions — they change something structural." },
+    { "k": "Corporate briefing", "when": "Periodically", "what": "Management presenting to analysts and investors, often with slides.", "look": "Guidance and capacity plans stated out loud." },
+    { "k": "Prospectus", "when": "At an IPO", "what": "The offer document for a company listing for the first time.", "look": "Use of proceeds, and the risk factors section." },
+    { "k": "Credit rating report", "when": "Annually or on review", "what": "An agency's view of the company's ability to service debt.", "look": "The direction of travel — an outlook change often precedes trouble." }
+  ],
+  "anatomies": {
+    "income_statement": {
+      "title": "Income statement",
+      "subtitle": "for the year ended — covers a period of time",
+      "lines": [
+        { "l": "Revenue / Turnover", "ind": 0, "bold": true, "field": "revenue", "what": "The value of everything sold in the period.", "watch": "The top line says nothing about profitability. A company can grow revenue for years while losing money." },
+        { "l": "Cost of sales", "ind": 1, "neg": true, "what": "The direct cost of producing what was sold — raw materials, fuel, factory wages.", "watch": "Rising faster than revenue means margin is being squeezed." },
+        { "l": "Gross profit", "ind": 0, "bold": true, "what": "Revenue minus cost of sales — what is left before overheads.", "watch": "Gross margin only means something against the company's own history and its own sector." },
+        { "l": "Distribution & selling costs", "ind": 1, "neg": true, "what": "Getting the product to customers: freight, marketing, sales salaries.", "watch": "A sharp rise with flat revenue suggests the company is buying growth." },
+        { "l": "Administrative expenses", "ind": 1, "neg": true, "what": "Head office, salaries, professional fees — running the company itself.", "watch": "Should generally grow slower than revenue as a business scales." },
+        { "l": "Operating profit", "ind": 0, "bold": true, "what": "Profit from actually running the business, before financing and tax.", "watch": "This is the cleanest measure of the operation itself." },
+        { "l": "Finance cost", "ind": 1, "neg": true, "what": "Interest on borrowings.", "watch": "In Pakistan this line moves enormously with policy rates. For a leveraged company it alone can decide profit or loss." },
+        { "l": "Other income", "ind": 1, "what": "Income outside the main business — asset sales, investments, currency gains.", "watch": "The classic home of one-offs. Profit that lives here does not repeat." },
+        { "l": "Profit before tax", "ind": 0, "bold": true, "what": "What is left after financing, before the government's share.", "watch": "Compare with operating profit to see how much financing is costing." },
+        { "l": "Taxation", "ind": 1, "neg": true, "what": "Corporate tax for the period, including deferred tax.", "watch": "An unusually low charge is often a one-off reversal, not a permanent improvement." },
+        { "l": "Profit after tax", "ind": 0, "bold": true, "field": "net_income", "what": "The bottom line — what belongs to shareholders.", "watch": "Check the cash flow statement to see whether this profit actually arrived as cash." },
+        { "l": "Earnings per share (EPS)", "ind": 0, "bold": true, "field": "eps", "unit": "Rs", "what": "Profit after tax divided by the number of shares — profit per slice.", "watch": "The end of a long chain of judgements, not a fact of nature. Most valuation talk is built on it." }
+      ]
+    },
+    "balance_sheet": {
+      "title": "Balance sheet",
+      "subtitle": "as at a single date — a snapshot, not a period",
+      "lines": [
+        { "l": "ASSETS", "ind": 0, "head": true },
+        { "l": "Property, plant & equipment", "ind": 1, "what": "Land, buildings, machinery — the productive base, after depreciation.", "watch": "Compare with capital expenditure in the cash flow: is the company maintaining its base?" },
+        { "l": "Long-term investments", "ind": 1, "what": "Stakes in subsidiaries, associates or securities held for the long term.", "watch": "In group structures this is where money moves between related companies." },
+        { "l": "Stock in trade / Inventory", "ind": 1, "what": "Goods made or bought but not yet sold.", "watch": "Growing much faster than revenue suggests goods are not moving." },
+        { "l": "Trade debts / Receivables", "ind": 1, "what": "Money owed by customers for goods already delivered.", "watch": "The single most informative asset line. Growing faster than revenue means sales booked but not collected." },
+        { "l": "Cash & bank balances", "ind": 1, "what": "Actual cash available.", "watch": "Compare against short-term borrowings — cash alongside heavy short-term debt deserves a question." },
+        { "l": "EQUITY & LIABILITIES", "ind": 0, "head": true },
+        { "l": "Share capital", "ind": 1, "what": "The face value of issued shares — usually Rs 10 each in Pakistan.", "watch": "Divide by 10 to sanity-check the share count." },
+        { "l": "Reserves & unappropriated profit", "ind": 1, "what": "Profits retained in the business rather than paid out.", "watch": "The accumulated result of every year the company has traded." },
+        { "l": "Total equity", "ind": 0, "bold": true, "what": "What shareholders own after every liability is settled. Divided by shares, this is book value per share.", "watch": "Carried at accounting values, which may sit well above or below what assets would actually fetch." },
+        { "l": "Long-term financing", "ind": 1, "neg": true, "what": "Borrowings due beyond one year.", "watch": "Against equity, this is the leverage that turns a bad year into a dangerous one." },
+        { "l": "Trade & other payables", "ind": 1, "neg": true, "what": "Money the company owes suppliers.", "watch": "Stretching payables is a quiet way to fund operations — and a sign of cash strain." },
+        { "l": "Short-term borrowings", "ind": 1, "neg": true, "what": "Debt due within a year, including running finance.", "watch": "Against current assets: can the company actually meet what falls due?" }
+      ]
+    },
+    "cash_flow": {
+      "title": "Cash flow statement",
+      "subtitle": "for the year ended — where cash actually went",
+      "lines": [
+        { "l": "OPERATING ACTIVITIES", "ind": 0, "head": true },
+        { "l": "Profit before tax", "ind": 1, "what": "The starting point, taken from the income statement.", "watch": "Everything below adjusts this accounting figure back toward actual cash." },
+        { "l": "Adjustments: depreciation, finance cost", "ind": 1, "what": "Non-cash charges added back — depreciation reduced profit but no cash left.", "watch": "Large adjustments are normal in capital-heavy sectors like cement and energy." },
+        { "l": "Working capital changes", "ind": 1, "what": "Movements in receivables, inventory and payables.", "watch": "This is where a profitable company's cash disappears. Consistently negative deserves explanation." },
+        { "l": "Net cash from operating activities", "ind": 0, "bold": true, "what": "Cash the actual business generated.", "watch": "THE key comparison: against profit after tax, over several years. Profit consistently above this is a prompt to look harder." },
+        { "l": "INVESTING ACTIVITIES", "ind": 0, "head": true },
+        { "l": "Capital expenditure", "ind": 1, "neg": true, "what": "Cash spent on plant, property and equipment.", "watch": "Against operating cash flow: a business that cannot fund its own maintenance from operations depends on lenders." },
+        { "l": "FINANCING ACTIVITIES", "ind": 0, "head": true },
+        { "l": "Borrowings raised / repaid", "ind": 1, "what": "New debt taken on, and debt paid back.", "watch": "Persistent new borrowing alongside weak operating cash flow is the pattern to worry about." },
+        { "l": "Dividends paid", "ind": 1, "neg": true, "what": "Cash actually paid out to shareholders.", "watch": "Compare with operating cash flow. Dividends funded by borrowing can continue for a while, but not indefinitely." },
+        { "l": "Net change in cash", "ind": 0, "bold": true, "what": "The three sections summed — how the cash balance moved over the year.", "watch": "Read alongside which section produced it. Cash up because of borrowing is not the same as cash up from operations." }
+      ]
+    }
+  }
 }
