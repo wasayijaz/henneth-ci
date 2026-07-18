@@ -1412,10 +1412,10 @@ const PLANS = {
     features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full"] },
   pro: { label: "Pro", tag: "TA & FA",
     blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray", "marketplace"] },
   broker: { label: "Broker", tag: "coming soon", soon: true,
     blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray", "broker_tools"] },
+    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray", "marketplace", "broker_tools"] },
 };
 const PLAN_ORDER = ["free", "investor", "pro", "broker"];
 /* Owner-only: preview the product as any plan without changing the stored plan. Set from the Plans
@@ -3079,6 +3079,7 @@ const FEATURE_LABEL = {
   watch_intel: "Watchlist intelligence — what changed",
   ask: "Ask the desk — instant answers from its data",
   alignment: "Evidence alignment on every stock",
+  marketplace: "Publish strategies + community marketplace",
   xray: "Portfolio X-ray against the desk's own rules",
   strategies_run: "Run the strategy library on your board",
   research_full: "The full research library",
@@ -4409,13 +4410,176 @@ async function pageAsk() {
   if (!locked && _ask.q) askRun(_ask.q);
 }
 
+/* ==========================================================================================
+   SECTOR DEBATES — the Desk Room, one level up. Reads sessions the weekly agent run writes to
+   state/sector_debates/. Purely a renderer: no agent runs from the browser.
+   ========================================================================================== */
+async function pageSectors() {
+  await Promise.resolve();
+  const [dos, idx] = await Promise.all([j("sector_dossiers.json"), j("sector_debates/_index.json")]);
+  const secs = Object.entries(dos?.sectors || {}).sort((a, b) => b[1].n_members - a[1].n_members);
+  const sessions = idx?.sessions || {};
+  const cur = _sectorPick || secs[0]?.[0];
+  const d = dos?.sectors?.[cur];
+  const sess = sessions[cur];
+  const pctl = (n, t) => t ? Math.round(n / t * 100) : 0;
+  const drv = (d?.macro_drivers || []);
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Sectors</h2><div class="ln"></div><span class="pill">${secs.length} sectors</span></div>
+  <p class="sub" style="margin-bottom:12px">The evidence pack behind every PSX sector — breadth, valuation spread, income quality, and the global factors that <b>measurably</b> move it. One sector goes to the debate desk each week; the compiled numbers below are what the analysts argue from.</p>
+  <div class="ttabs">${secs.map(([s, v]) => `<button class="ttab ${cur === s ? "on" : ""}" onclick="_sectorPick='${esc(s)}';pageSectors()">${esc(s.length > 20 ? s.slice(0, 19) + "…" : s)} <span class="sub">${v.n_members}</span></button>`).join("")}</div>
+  ${!d ? `<div class="card"><div class="empty">Sector dossiers build on the next cycle.</div></div>` : `
+  <div class="card tpanel">
+    <div class="sumstrip s4">
+      <div class="sumtile"><span class="sk">Median 20-day</span><b class="${(d.returns.median_20d_pct || 0) >= 0 ? "up" : "dn"}">${sgn(d.returns.median_20d_pct)}%</b><i>${d.n_members} names</i></div>
+      <div class="sumtile"><span class="sk">Breadth</span><b>${d.breadth.above_sma50}/${d.n_members}</b><i>above their 50-day (${pctl(d.breadth.above_sma50, d.n_members)}%)</i></div>
+      <div class="sumtile"><span class="sk">Median P/E</span><b>${d.valuation.median_pe ?? "—"}</b><i>${d.valuation.n_undervalued} below fair · ${d.valuation.n_overvalued} above</i></div>
+      <div class="sumtile"><span class="sk">Median yield</span><b>${d.income.median_yield_pct ?? "—"}%</b><i>${d.income.n_payers}/${d.n_members} pay · payout ${d.income.median_payout_pct ?? "—"}%</i></div>
+    </div>
+    <div class="tnote">${drv.length
+      ? `<b>What measurably moves ${esc(cur)}:</b> ${drv.map(x => `${esc(FACTOR_PLAIN[x.factor] || x.factor)} (${x.corr > 0 ? "rises with" : "falls when it rises"}, β ${x.beta})`).join(", ")} — correction-survived over 19 years. But the whole global tape explains only <b>${d.macro_joint_r2_pct ?? "—"}%</b> of this sector's daily moves, so treat every macro story as a small part of the picture.`
+      : `<b>No global factor has a demonstrated effect on ${esc(cur)}.</b> Over 19 years its days have been made locally, not on the world tape — that silence is a measured finding, not missing data.`}</div>
+  </div>
+
+  ${sess?.house_view ? `
+  <div class="seg"><h2>The desk's house view</h2><div class="ln"></div><span class="pill ${sess.house_view.stance === "constructive" ? "ok" : sess.house_view.stance === "cautious" ? "bad" : ""}">${esc(sess.house_view.stance)} · ${esc(sess.house_view.conviction)} conviction</span></div>
+  <div class="card room-house">
+    <p class="hv-summary">${esc(sess.house_view.summary)}</p>
+    ${(sess.house_view.key_evidence || []).length ? `<div class="sub" style="margin-top:8px"><b>What drove it:</b> ${sess.house_view.key_evidence.map(esc).join(" · ")}</div>` : ""}
+    <div class="dissent"><span class="ark">the strongest argument against this view</span>${esc(sess.house_view.dissent)}</div>
+  </div>
+  ${sess.bull && sess.bear ? `<div class="debate-cols">
+    <div class="card"><div class="ark" style="color:var(--up)">the case for</div><p>${esc(sess.bull.case)}</p>
+      ${(sess.bull.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(p.claim)}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
+    <div class="card"><div class="ark" style="color:var(--dn)">the case against</div><p>${esc(sess.bear.case)}</p>
+      ${(sess.bear.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(p.claim)}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
+  </div>` : ""}`
+      : `<div class="card"><div class="empty"><b>${esc(cur)}</b> hasn't been to the debate desk yet. One sector is debated each week on a fixed rotation, largest sectors first — the numbers above are the evidence pack it will argue from.</div></div>`}
+
+  <div class="seg"><h2>Members</h2><div class="ln"></div><span class="pill">${d.n_members}</span></div>
+  <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th class="r">Price</th><th class="r">20d</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th></tr></thead><tbody>${
+      d.members.map(m => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(m.sym)}'"><td><b>${esc(m.sym)}</b> <span class="sub">${esc((m.name || "").slice(0, 20))}</span></td>
+        <td class="r num">${fmt(m.close)}</td><td class="r num ${(m.ret_20d || 0) >= 0 ? "up" : "dn"}">${sgn(m.ret_20d)}%</td>
+        <td class="r num">${m.pe ?? "—"}</td><td class="r num">${m.div_yield_pct ? m.div_yield_pct + "%" : "—"}</td>
+        <td class="r num ${(m.fair_gap_pct || 0) > 0 ? "up" : (m.fair_gap_pct || 0) < 0 ? "dn" : ""}">${m.fair_gap_pct != null ? sgn(m.fair_gap_pct) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`}`;
+}
+let _sectorPick = null;
+
+/* ==========================================================================================
+   STRATEGY MARKETPLACE — users publish CONFIGURED VARIANTS of the desk's own rule DSL. Nothing
+   user-written is ever executed: a published strategy is a list of {lhs, op, rhs} conditions drawn
+   from a fixed indicator vocabulary, evaluated by the same engine that runs the desk's own 70.
+   Status and backtest results are desk-owned (DB triggers block client writes to both).
+   ========================================================================================== */
+const MKT_FIELDS = ["close", "open", "high", "low", "volume", "prev_close",
+  "sma10", "sma20", "sma50", "sma100", "sma200", "ema9", "ema20", "ema50",
+  "rsi2", "rsi7", "rsi14", "macd", "macd_signal", "macd_hist",
+  "bb_upper", "bb_mid", "bb_lower", "bb_pctb", "bb_width_rank",
+  "stoch_k", "stoch_d", "atr14", "atr_pct", "adx14", "plus_di", "minus_di",
+  "willr14", "cci20", "donch_hi20", "donch_lo20", "donch_hi55", "donch_lo55",
+  "hi252", "lo252", "roc10", "roc20", "roc60", "vol_surge", "vol_rank", "obv", "obv_ema20"];
+const MKT_OPS = [["gt", "is above"], ["lt", "is below"], ["gte", "is at or above"], ["lte", "is at or below"],
+  ["cross_above", "crosses above"], ["cross_below", "crosses below"]];
+let _mkt = { tab: "browse", rules: [{ lhs: "close", op: "cross_above", rhs: "sma50" }], list: null, mine: null };
+
+function mktRuleRow(r, i) {
+  const opt = (v, sel) => `<option value="${esc(v)}"${v === sel ? " selected" : ""}>${esc(v)}</option>`;
+  return `<div class="mkt-rule">
+    <select onchange="_mkt.rules[${i}].lhs=this.value">${MKT_FIELDS.map(f => opt(f, r.lhs)).join("")}</select>
+    <select onchange="_mkt.rules[${i}].op=this.value">${MKT_OPS.map(([v, l]) => `<option value="${v}"${v === r.op ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>
+    <input value="${esc(String(r.rhs))}" onchange="_mkt.rules[${i}].rhs=isNaN(parseFloat(this.value))?this.value:parseFloat(this.value)" placeholder="field or number">
+    ${_mkt.rules.length > 1 ? `<button class="mkt-x" onclick="_mkt.rules.splice(${i},1);pageMarket()">✕</button>` : "<span></span>"}
+  </div>`;
+}
+function mktValid() {
+  return _mkt.rules.every(r => MKT_FIELDS.includes(r.lhs) && MKT_OPS.some(([v]) => v === r.op)
+    && (typeof r.rhs === "number" || MKT_FIELDS.includes(r.rhs)));
+}
+async function mktPublish() {
+  if (!me) { openAuth("signup"); return; }
+  const name = (document.getElementById("mkt-name")?.value || "").trim();
+  const desc = (document.getElementById("mkt-desc")?.value || "").trim();
+  const tgt = +(document.getElementById("mkt-target")?.value || 0);
+  const stp = +(document.getElementById("mkt-stop")?.value || 0);
+  const hold = +(document.getElementById("mkt-hold")?.value || 0);
+  const msg = document.getElementById("mkt-msg");
+  const say = t => { if (msg) msg.textContent = t; };
+  if (name.length < 3) return say("Give it a name (3+ characters).");
+  if (!mktValid()) return say("Every rule needs a valid field, operator, and a number or field on the right.");
+  if (!(tgt > 0 && stp > 0 && hold > 0)) return say("Target, stop and max hold must all be positive.");
+  if (tgt <= stp) return say("A target below or equal to the stop loses money by construction — the desk won't publish it.");
+  say("Publishing…");
+  const { error } = await sb.from("published_strategies").insert({
+    author_id: me.id, author_name: (me.email || "").split("@")[0],
+    name, description: desc, category: "custom",
+    spec: { entry: _mkt.rules, target_pct: tgt, stop_pct: stp, max_hold_sessions: hold },
+  });
+  if (error) return say("Couldn't publish — try again.");
+  say("Published ✓ — the desk backtests it on ~19 years of every stock's own history, then it appears in the marketplace with its real numbers attached.");
+  _mkt.mine = null; pageMarket();
+}
+async function pageMarket() {
+  await Promise.resolve();
+  const locked = !hasFeature("marketplace");
+  const lib = await j("strategy_library.json");
+  const deskN = (lib?.strategies || lib || []).length || 70;
+  if (sb && me && _mkt.list === null) {
+    const { data } = await sb.from("published_strategies").select("*").eq("status", "approved").order("created_at", { ascending: false }).limit(50);
+    _mkt.list = data || [];
+    const { data: mine } = await sb.from("published_strategies").select("*").eq("author_id", me.id).order("created_at", { ascending: false });
+    _mkt.mine = mine || [];
+  }
+  const list = _mkt.list || [], mine = _mkt.mine || [];
+  const card = s => `<div class="card mkt-card">
+    <div class="mkt-top"><b>${esc(s.name)}</b><span class="tag">${esc(s.category)}</span>
+      ${s.status !== "approved" ? `<span class="pill">${esc(s.status)}</span>` : ""}</div>
+    <div class="sub">${esc(s.description || "")}</div>
+    <div class="mkt-spec">${(s.spec?.entry || []).map(r => `<span class="scr-chip">${esc(r.lhs)} ${esc((MKT_OPS.find(o => o[0] === r.op) || [])[1] || r.op)} ${esc(String(r.rhs))}</span>`).join("")}</div>
+    <div class="sub mkt-meta">target ${s.spec?.target_pct}% · stop ${s.spec?.stop_pct}% · max hold ${s.spec?.max_hold_sessions} sessions · by ${esc(s.author_name || "anon")}</div>
+    ${s.backtest ? `<div class="mkt-bt"><span>win ${Math.round((s.backtest.hit_rate || 0) * 100)}%</span><span class="${(s.backtest.net_expectancy_pct || 0) >= 0 ? "up" : "dn"}">net ${sgn(s.backtest.net_expectancy_pct)}%</span><span>n ${s.backtest.n}</span></div>`
+      : `<div class="sub mkt-bt-pending">Awaiting the desk's backtest — it will appear here with real win rate, expectancy after costs, and out-of-sample results, whatever they show.</div>`}
+  </div>`;
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Strategy marketplace</h2><div class="ln"></div><span class="pill">${deskN} desk + ${list.length} community</span></div>
+  <p class="sub" style="margin-bottom:12px">Build a strategy from the same rule vocabulary the desk's own ${deskN} run on, publish it, and the desk backtests it on <b>every stock's own ~19-year history</b> — win rate, expectancy after costs, out-of-sample. Results are published <b>whatever they show</b>; a strategy that failed is as useful to everyone as one that worked.</p>
+  ${locked ? planWall("The strategy marketplace",
+    "Compose rules from the desk's own indicator vocabulary, publish them, and get a real backtest across the whole universe — then see how every community strategy actually performed, ranked honestly.") : `
+  <div class="ttabs">
+    <button class="ttab ${_mkt.tab === "browse" ? "on" : ""}" onclick="_mkt.tab='browse';pageMarket()">Browse</button>
+    <button class="ttab ${_mkt.tab === "build" ? "on" : ""}" onclick="_mkt.tab='build';pageMarket()">Build & publish</button>
+    <button class="ttab ${_mkt.tab === "mine" ? "on" : ""}" onclick="_mkt.tab='mine';pageMarket()">Mine (${mine.length})</button>
+  </div>
+  <div class="card tpanel">
+  ${_mkt.tab === "build" ? `
+    <div class="ark">compose a strategy</div>
+    <p class="sub" style="margin:5px 0 10px">Entry fires when <b>all</b> conditions are true on the same bar. Fields are the desk's own indicators — nothing you write is executed as code, so a strategy is always safe to run.</p>
+    <div class="tgrid">
+      <label>Name<input id="mkt-name" class="ph-in" maxlength="80" placeholder="e.g. Quiet base breakout"></label>
+      <label>Target %<input id="mkt-target" type="number" class="ph-in" value="7" step="0.5"></label>
+      <label>Stop %<input id="mkt-stop" type="number" class="ph-in" value="3.5" step="0.5"></label>
+      <label>Max hold (sessions)<input id="mkt-hold" type="number" class="ph-in" value="15"></label>
+    </div>
+    <textarea id="mkt-desc" class="tknote" style="min-height:64px;margin-top:10px" maxlength="600" placeholder="What is the idea, in plain English? What market behaviour are you trying to capture?"></textarea>
+    <div class="ark" style="margin-top:14px">entry conditions — all must be true</div>
+    <div class="mkt-rules">${_mkt.rules.map(mktRuleRow).join("")}</div>
+    <div class="tnote"><button class="note-save" onclick="_mkt.rules.push({lhs:'rsi14',op:'lt',rhs:40});pageMarket()">+ Add condition</button>
+      <button class="bw-go" style="max-width:200px;display:inline-block;margin-left:8px" onclick="mktPublish()">Publish</button>
+      <div id="mkt-msg" class="sub" style="margin-top:8px"></div></div>
+    <div class="tnote warn"><b>What publishing means.</b> Your strategy is backtested honestly and its results shown in full — including if it loses money. The desk will not hide a bad result, and a published strategy is <b>research shared with others, never advice given to them</b>. Past performance does not predict future results.</div>`
+      : _mkt.tab === "mine" ? (mine.length ? mine.map(card).join("")
+        : `<div class="empty">You haven't published a strategy yet. Build one and the desk will test it properly.</div>`)
+        : (list.length ? `<div class="mkt-grid">${list.map(card).join("")}</div>`
+          : `<div class="empty">No community strategies published yet — be the first. Meanwhile the desk's own ${deskN} are on the <a href="#/strategies" style="color:var(--accent)">Strategies</a> page, each with its real backtest.</div>`)}
+  </div>`}`;
+}
+
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
    The reading itself lives at /#/mychart, which this hands off to. */
 async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
 }
-const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {

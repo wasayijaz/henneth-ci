@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-17 17:31",
+ "updated": "2026-07-19 02:23",
  "strategies": [
   {
    "id": "sma_golden_cross",
@@ -14,7 +14,7 @@
    "id": "reclaim_sma200",
    "name": "Reclaim 200-day",
    "category": "trend",
-   "description": "Price crosses back above the 200-day on volume — regime change to bullish.",
+   "description": "Price crosses back above the 200-day on volume â€” regime change to bullish.",
    "target_pct": 8,
    "stop_pct": 4,
    "hold": 20
@@ -23,7 +23,7 @@
    "id": "ema9_20_bull",
    "name": "EMA 9/20 bull cross",
    "category": "trend",
-   "description": "Fast EMA crosses slow while above the 50-day — short trend resumption.",
+   "description": "Fast EMA crosses slow while above the 50-day â€” short trend resumption.",
    "target_pct": 5,
    "stop_pct": 3,
    "hold": 12
@@ -50,7 +50,7 @@
    "id": "macd_bull_zero",
    "name": "MACD cross above zero",
    "category": "trend",
-   "description": "MACD line crosses above the zero line — momentum turns net-positive.",
+   "description": "MACD line crosses above the zero line â€” momentum turns net-positive.",
    "target_pct": 6,
    "stop_pct": 3,
    "hold": 15
@@ -149,7 +149,7 @@
    "id": "gap_up_hold",
    "name": "Gap-up hold",
    "category": "momentum",
-   "description": "Opens up on volume and closes at/above the open — news-driven continuation.",
+   "description": "Opens up on volume and closes at/above the open â€” news-driven continuation.",
    "target_pct": 5,
    "stop_pct": 3,
    "hold": 6
@@ -266,7 +266,7 @@
    "id": "high52w_break",
    "name": "52-week high breakout",
    "category": "breakout",
-   "description": "New 52-week high — strongest names make new highs.",
+   "description": "New 52-week high â€” strongest names make new highs.",
    "target_pct": 10,
    "stop_pct": 5,
    "hold": 20
@@ -275,7 +275,7 @@
    "id": "atr_expansion_up",
    "name": "ATR expansion up-close",
    "category": "volatility",
-   "description": "Range expands with an up close on volume — start of a move.",
+   "description": "Range expands with an up close on volume â€” start of a move.",
    "target_pct": 5,
    "stop_pct": 3,
    "hold": 8
@@ -284,7 +284,7 @@
    "id": "obv_accumulation",
    "name": "OBV accumulation",
    "category": "volume",
-   "description": "On-balance-volume turns up through its average — buyers stepping in.",
+   "description": "On-balance-volume turns up through its average â€” buyers stepping in.",
    "target_pct": 6,
    "stop_pct": 3,
    "hold": 12
@@ -428,7 +428,7 @@
    "id": "trend_momo_combo",
    "name": "Trend + momentum combo",
    "category": "momentum",
-   "description": "Above both major MAs with fresh positive momentum — high-conviction long.",
+   "description": "Above both major MAs with fresh positive momentum â€” high-conviction long.",
    "target_pct": 6,
    "stop_pct": 3,
    "hold": 12
@@ -468,6 +468,168 @@
    "target_pct": 5,
    "stop_pct": 3,
    "hold": 7
+  },
+  {
+   "id": "donch20_break_confirm",
+   "name": "Donchian 20 break, volume confirmed",
+   "category": "breakout",
+   "description": "Breaks the 20-day channel top on heavy volume while already in an uptrend - the breakout that has participation behind it.",
+   "target_pct": 7,
+   "stop_pct": 3.5,
+   "hold": 14
+  },
+  {
+   "id": "squeeze_expansion_long",
+   "name": "Squeeze release, upside",
+   "category": "volatility",
+   "description": "Volatility compressed into the bottom 15% of its range, then price breaks the upper band - the classic coil release.",
+   "target_pct": 8,
+   "stop_pct": 4,
+   "hold": 16
+  },
+  {
+   "id": "obv_divergence_up",
+   "name": "Volume leads price",
+   "category": "volume",
+   "description": "On-balance volume is accumulating while price still sits below its 20-day mean - buying that has not yet shown up in the price.",
+   "target_pct": 6,
+   "stop_pct": 3.5,
+   "hold": 15
+  },
+  {
+   "id": "golden_pullback_50",
+   "name": "Golden-cross pullback",
+   "category": "trend",
+   "description": "Long-term trend intact, price reclaims its short mean without being overbought - buying the dip inside a confirmed uptrend.",
+   "target_pct": 7,
+   "stop_pct": 3.5,
+   "hold": 20
+  },
+  {
+   "id": "rsi2_deep_uptrend",
+   "name": "RSI(2) washout in an uptrend",
+   "category": "mean_reversion",
+   "description": "A two-day washout inside a long-term uptrend - the short-horizon mean-reversion setup, only where the primary trend still holds.",
+   "target_pct": 5,
+   "stop_pct": 3,
+   "hold": 8
+  },
+  {
+   "id": "adx_pdi_expansion",
+   "name": "Trend strength turning up",
+   "category": "trend",
+   "description": "ADX crossing up through 20 with buyers in control - a trend beginning to organise rather than one already extended.",
+   "target_pct": 7,
+   "stop_pct": 3.5,
+   "hold": 18
+  },
+  {
+   "id": "stoch_double_bottom",
+   "name": "Stochastic reclaim from oversold",
+   "category": "oscillator",
+   "description": "Stochastic turns up out of oversold while price holds its 100-day mean - a bounce with the longer trend still intact.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "roc60_leader_pullback",
+   "name": "Long-run leader, short pullback",
+   "category": "momentum",
+   "description": "Strong over three months, soft over two weeks, still above its 50-day - buying a pause in a genuine leader.",
+   "target_pct": 8,
+   "stop_pct": 4,
+   "hold": 18
+  },
+  {
+   "id": "bb_pctb_reclaim",
+   "name": "Band reclaim from the low",
+   "category": "mean_reversion",
+   "description": "Price climbs back off the lower Bollinger band on rising volume, with the long-term trend still up.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 12
+  },
+  {
+   "id": "hi252_fresh_break",
+   "name": "New 52-week high, low volatility",
+   "category": "breakout",
+   "description": "A 52-week high made calmly rather than in a spike - breakouts from quiet bases historically behave differently from panic highs.",
+   "target_pct": 9,
+   "stop_pct": 4.5,
+   "hold": 22
+  },
+  {
+   "id": "macd_zero_reclaim",
+   "name": "MACD reclaims zero",
+   "category": "momentum",
+   "description": "Momentum crosses from negative to positive with the histogram confirming - the turn, not the extension.",
+   "target_pct": 7,
+   "stop_pct": 3.5,
+   "hold": 16
+  },
+  {
+   "id": "ema50_defended",
+   "name": "50-day EMA defended",
+   "category": "trend",
+   "description": "Price dipped below the 50-day EMA intraday and closed back above it, inside a longer uptrend - the level held.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 15
+  },
+  {
+   "id": "willr_uptrend_reset",
+   "name": "Williams %R reset in trend",
+   "category": "oscillator",
+   "description": "An oversold reset inside a trending market rather than a falling one.",
+   "target_pct": 5.5,
+   "stop_pct": 3,
+   "hold": 10
+  },
+  {
+   "id": "vol_dryup_reversal",
+   "name": "Volume dry-up then surge",
+   "category": "volume",
+   "description": "Volume more than doubles on an up day above the 20-day mean - a decisive re-entry of buyers.",
+   "target_pct": 6.5,
+   "stop_pct": 3.5,
+   "hold": 12
+  },
+  {
+   "id": "cci_trend_pullback",
+   "name": "CCI pullback in uptrend",
+   "category": "oscillator",
+   "description": "CCI turning up out of oversold with three-month momentum still positive.",
+   "target_pct": 6,
+   "stop_pct": 3,
+   "hold": 14
+  },
+  {
+   "id": "donch55_trend_break",
+   "name": "Donchian 55 breakout",
+   "category": "breakout",
+   "description": "The classic long-horizon turtle channel break, filtered for an actually trending market.",
+   "target_pct": 10,
+   "stop_pct": 5,
+   "hold": 30
+  },
+  {
+   "id": "triple_screen_long",
+   "name": "Triple screen alignment",
+   "category": "trend",
+   "description": "Long-term trend up, medium-term momentum positive, short-term oscillator still low - the three-timeframe agreement setup.",
+   "target_pct": 7,
+   "stop_pct": 3.5,
+   "hold": 18
+  },
+  {
+   "id": "atr_quiet_breakout",
+   "name": "Quiet base, upside break",
+   "category": "volatility",
+   "description": "A breakout out of a genuinely quiet base - low ATR before the move, not after it.",
+   "target_pct": 7,
+   "stop_pct": 3,
+   "hold": 16
   }
  ]
 }

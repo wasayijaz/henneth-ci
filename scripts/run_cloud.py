@@ -27,6 +27,7 @@ STEPS = [
     "astro_claims.py",   # files the astro readings as dated, market-relative, scoreable claims
     "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (incremental)
     "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence
+    "sector_dossier.py", # deterministic evidence pack the weekly sector debate argues from
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
     # resolve/score any due persona+broker calls. Agents read these; they never fetch.
