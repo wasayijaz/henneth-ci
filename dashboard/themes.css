@@ -208,7 +208,17 @@ body[data-theme=gemini] .acct-btn{width:28px;height:28px;background:var(--ink1);
 body[data-theme=gemini] .acct-slot{position:relative}
 body[data-theme=gemini] .acct-menu{position:absolute;top:34px;right:0;background:var(--panel);border:1.5px solid var(--line);min-width:200px;z-index:80;display:flex;flex-direction:column}
 body[data-theme=gemini] .acct-menu[hidden]{display:none!important}
-body[data-theme=gemini] .acct-email{padding:9px 12px;font-size:10.5px;color:var(--ink3);border-bottom:1px solid var(--hair);word-break:break-all}
+body[data-theme=gemini] .acct-menu{min-width:250px}
+body[data-theme=gemini] .acct-id{display:flex;gap:10px;align-items:center;padding:12px}
+body[data-theme=gemini] .acct-av{width:30px;height:30px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--ink1);color:#f4f4f0;font-weight:800;font-size:12px}
+body[data-theme=gemini] .acct-email{padding:0;font-size:11px;color:var(--ink1);word-break:break-all;border:none;font-weight:600}
+body[data-theme=gemini] .acct-plan{font-size:10.5px;color:var(--ink3);margin-top:2px}
+body[data-theme=gemini] .acct-sep{height:1px;background:var(--hair)}
+body[data-theme=gemini] .acct-menu button{display:flex;align-items:center;justify-content:space-between;gap:10px}
+body[data-theme=gemini] .acct-chip{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--hair);padding:2px 6px;color:var(--ink3)}
+body[data-theme=gemini] .acct-chip.on{background:var(--ink1);color:var(--panel);border-color:var(--ink1)}
+body[data-theme=gemini] .plan-badge{font-size:10px;text-transform:uppercase;letter-spacing:.09em;border:1px solid var(--line);padding:4px 9px;color:var(--ink2)}
+@media(max-width:900px){body[data-theme=gemini] .plan-badge{display:none}}
 body[data-theme=gemini] .acct-menu button{background:transparent;border:none;text-align:left;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body)}
 body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
 /* auth modal */
@@ -646,6 +656,64 @@ body[data-theme=gemini] .mc-lock-face h3{margin:0 0 8px;font-size:17px}
 body[data-theme=gemini] .mc-lock-face .sub{max-width:440px;line-height:1.6;margin-bottom:14px}
 @media(max-width:720px){body[data-theme=gemini] .mc-lock-face{padding:18px 14px}
   body[data-theme=gemini] .mc-lock-face h3{font-size:15px}}
+/* ---- desk modes: one nav in the HTML, the shell decides which parts apply ----
+   Pro desk hides the Learn entry; Learner desk leads with it and drops the pro-only analysis. */
+/* these must outrank `body[data-theme=gemini] .side-nav a{display:flex}` (0,2,1), so they carry
+   both the theme attribute and the nav class */
+body[data-theme=gemini]:not([data-desk=learn]) .side-nav a.nav-learn{display:none}
+body[data-theme=gemini][data-desk=learn] .side-nav a[data-nav=strategies],
+body[data-theme=gemini][data-desk=learn] .side-nav a[data-nav=value],
+body[data-theme=gemini][data-desk=learn] .side-nav a[data-nav=leaderboard],
+body[data-theme=gemini][data-desk=learn] .side-nav a[data-nav=macro],
+body[data-theme=gemini][data-desk=learn] .side-nav a[data-nav=board]{display:none}
+/* the learner path */
+body[data-theme=gemini] .learn-hero{border-left:3px solid var(--accent)}
+body[data-theme=gemini] .lh-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+body[data-theme=gemini] .lh-pct b{font-family:"Pixelify Sans",var(--mono,monospace);font-size:30px}
+body[data-theme=gemini] .lh-bar{height:8px;background:var(--hair);margin-top:10px}
+body[data-theme=gemini] .lh-bar span{display:block;height:100%;background:var(--ink1);transition:width .4s}
+body[data-theme=gemini] .ls-card{border:1px solid var(--line);background:var(--panel);margin-bottom:8px}
+body[data-theme=gemini] .ls-card.open{border-color:var(--ink1)}
+body[data-theme=gemini] .ls-card.done .ls-num{background:var(--up);color:#fff;border-color:var(--up)}
+body[data-theme=gemini] .ls-head{display:flex;align-items:center;gap:13px;padding:13px 15px;cursor:pointer}
+body[data-theme=gemini] .ls-head:hover{background:var(--panel2)}
+body[data-theme=gemini] .ls-num{flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--ink1);font-family:"Pixelify Sans",var(--mono,monospace);font-size:14px}
+body[data-theme=gemini] .ls-t{flex:1;min-width:0}
+body[data-theme=gemini] .ls-t b{display:block;font-size:14px;margin-bottom:2px}
+body[data-theme=gemini] .ls-mins,body[data-theme=gemini] .ls-caret{flex:none;font-size:11px;color:var(--ink3)}
+body[data-theme=gemini] .ls-body{padding:2px 15px 15px;border-top:1px solid var(--hair)}
+body[data-theme=gemini] .ls-body p{font-size:14px;line-height:1.68;color:var(--ink2);margin:12px 0}
+body[data-theme=gemini] .ls-take{border-left:3px solid var(--ink1);padding:9px 13px;background:var(--panel2);font-size:13.5px;font-weight:600;margin:14px 0}
+body[data-theme=gemini] .ls-take .ark{display:block;margin-bottom:3px}
+body[data-theme=gemini] .ll-live{border:1px solid var(--line);padding:12px 14px;margin:14px 0}
+body[data-theme=gemini] .ll-live>b{display:block;font-size:12px;margin-bottom:7px}
+body[data-theme=gemini] .ll-row{display:flex;gap:12px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--hair)}
+body[data-theme=gemini] .ll-row>span:first-child{font-weight:700;min-width:62px}
+body[data-theme=gemini] .ll-row .sub{flex:1}
+body[data-theme=gemini] .ll-go{display:inline-block;margin-top:9px;font-size:12px;font-weight:700;color:var(--accent)}
+body[data-theme=gemini] .ls-check{border:1px dashed var(--line);padding:13px 14px;margin-top:14px}
+body[data-theme=gemini] .ls-q{font-size:13.5px;font-weight:700;margin-bottom:10px}
+body[data-theme=gemini] .ls-opt{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);font:inherit;font-size:13px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink1)}
+body[data-theme=gemini] .ls-opt:hover:not(:disabled){border-color:var(--ink1)}
+body[data-theme=gemini] .ls-opt:disabled{cursor:default;opacity:.75}
+body[data-theme=gemini] .ls-opt.right{border-color:var(--up);background:color-mix(in srgb,var(--up) 12%,var(--panel));opacity:1}
+body[data-theme=gemini] .ls-opt.wrong{border-color:var(--dn);background:color-mix(in srgb,var(--dn) 12%,var(--panel));opacity:1}
+body[data-theme=gemini] .ls-explain{font-size:13px;line-height:1.6;color:var(--ink2);margin-top:9px;padding-top:9px;border-top:1px solid var(--hair)}
+body[data-theme=gemini] .ls-foot{margin-top:16px}
+/* plans */
+body[data-theme=gemini] .plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:10px}
+body[data-theme=gemini] .plan-card{border:1px solid var(--line);background:var(--panel);padding:16px}
+body[data-theme=gemini] .plan-card.on{border:1.5px solid var(--ink1)}
+body[data-theme=gemini] .pc-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+body[data-theme=gemini] .pc-top b{font-size:16px}
+body[data-theme=gemini] .pc-feats{margin-top:11px;border-top:1px solid var(--hair);padding-top:9px}
+body[data-theme=gemini] .pc-f{font-size:12.5px;color:var(--ink2);padding:4px 0 4px 15px;position:relative}
+body[data-theme=gemini] .pc-f:before{content:"·";position:absolute;left:4px;font-weight:800;color:var(--ink1)}
+body[data-theme=gemini] .pc-price{margin-top:11px;padding-top:9px;border-top:1px solid var(--hair)}
+body[data-theme=gemini] .mode-row{display:flex;gap:1px;background:var(--hair);border:1.5px solid var(--line);width:fit-content}
+@media(max-width:720px){body[data-theme=gemini] .plan-grid{grid-template-columns:1fr}
+  body[data-theme=gemini] .ls-head{gap:9px;padding:11px 12px}
+  body[data-theme=gemini] .ls-mins{display:none}}
 /* the generic paid-plan wall, used on every gated page */
 body[data-theme=gemini] .plan-wall{text-align:center;padding:28px 22px;border-left:3px solid var(--accent)}
 body[data-theme=gemini] .plan-wall h3{margin:6px 0 8px;font-size:16.5px}
@@ -852,8 +920,15 @@ body[data-theme=gemini] .foot b{color:#f4f4f0}
 body .up{color:var(--up)} body .dn{color:var(--dn)}
 
 /* ---------- ticker search ---------- */
-.searchbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:.12s}
-.searchbtn:hover{background:var(--line2);color:var(--ink1)}
+/* The search is a primary action, so it reads as a field rather than an icon button. Behaviour is
+   unchanged (it still opens the palette) — only the target and the affordance grew. */
+.searchbtn{display:flex;align-items:center;gap:9px;justify-content:flex-start;min-width:230px;height:34px;padding:0 10px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:.12s}
+.searchbtn .sb-label{font:inherit;font-size:12px;color:var(--ink3);white-space:nowrap}
+.searchbtn .sb-key{margin-left:auto;font-size:10.5px;color:var(--ink3);border:1px solid var(--hair);padding:1px 6px;line-height:1.5}
+.searchbtn:hover{background:var(--line2);color:var(--ink1);border-color:var(--ink3)}
+.searchbtn:hover .sb-label{color:var(--ink1)}
+@media(max-width:1100px){.searchbtn{min-width:0;width:34px;justify-content:center;padding:0}
+  .searchbtn .sb-label,.searchbtn .sb-key{display:none}}
 .searchbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .searchbox{position:fixed;inset:0;z-index:200;background:rgba(19,23,34,.28);backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;animation:fadeIn .15s both}
 .searchbox[hidden]{display:none!important}

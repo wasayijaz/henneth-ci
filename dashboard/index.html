@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes.css">
 </head>
-<body data-theme="gemini">
+<body data-theme="gemini" data-desk="pro">
 <div class="shell" id="shell">
   <aside class="sidebar" id="sidebar">
     <div class="side-top">
@@ -22,6 +22,7 @@
       </button>
     </div>
     <nav class="side-nav">
+      <a class="nav-learn" href="#/learn" data-nav="learn" title="Learn"><svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3-9 3zM3 6v8M7 9v6l5 2 5-2V9"/></svg><span>Learn</span></a>
       <a href="#/today" data-nav="today" title="Today"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Today</span></a>
       <a href="#/board" data-nav="board" title="Board"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Board</span></a>
 
@@ -65,8 +66,11 @@
       <span id="georisk" class="pill" style="display:none">RISK —</span>
       <button id="searchbtn" class="searchbtn" aria-label="Search ticker" title="Search a stock">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="sb-label">Search a stock</span>
+        <span class="sb-key">/</span>
       </button>
       <span class="research-badge" title="This is a research & analytics tool, not an investment adviser.">Research · not advice</span>
+      <span class="plan-badge" id="planBadge" hidden></span>
       <span class="acct-slot" id="acctSlot"></span>
       <span class="meta" id="updated"></span>
     </header>

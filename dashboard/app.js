@@ -1307,12 +1307,45 @@ function birthData() { return (me && myProfile && myProfile.birth_data) || guest
 function natalChart() { return (me && myProfile && myProfile.natal_chart) || guestChart()?.natal_chart || null; }
 function astroPrefs() { return (me && myProfile && myProfile.astro_prefs) || guestChart()?.astro_prefs || {}; }
 
-/* Billing is not live yet. Until it is, a signed-in account gets the full reading — flipping this
-   to true is the ONE switch that turns the subscription wall on, so shipping the funnel today
-   cannot silently strip access from accounts that already have it. */
+/* ==========================================================================================
+   PLANS — three desks for three kinds of user, plus the free tier everyone starts on.
+   Payment is NOT wired: there is no Stripe in Pakistan, so a local gateway (PayFast or similar)
+   comes later. Until then `plan` is set by the desk owner and the DB refuses client writes to it
+   (see the freeze_plan / force_free_plan triggers). BILLING_LIVE is the ONE switch: while false,
+   any signed-in account reads as subscribed, so gating cannot strip access from existing accounts.
+   ========================================================================================== */
 const BILLING_LIVE = false;
 const FREE_MATCHES = 3;                       // how many resonance cards a guest sees in full
-function isSubscribed() { return !!(me && (!BILLING_LIVE || (myProfile && myProfile.plan && myProfile.plan !== "free"))); }
+const PLANS = {
+  free: { label: "Free", tag: "", blurb: "Cast your chart, read the daily desk note, and follow the public track record.",
+    features: [] },
+  learner: { label: "Learner", tag: "new to investing",
+    blurb: "Start from zero. A guided path that teaches you to read a company using real PSX filings, at your own pace.",
+    features: ["learn", "astro_full", "dividends_full", "earnings_full"] },
+  pro: { label: "Pro", tag: "TA & FA",
+    blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
+    features: ["learn", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full"] },
+  broker: { label: "Broker", tag: "desks & teams",
+    blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
+    features: ["learn", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "broker_tools"] },
+};
+const PLAN_ORDER = ["free", "learner", "pro", "broker"];
+function planOf() { return (me && myProfile && myProfile.plan) || "free"; }
+/* While BILLING_LIVE is false every signed-in account behaves as Pro — nobody loses what they have
+   today. Once it flips, access is decided purely by the plan's feature list. */
+function hasFeature(key) {
+  if (!me) return false;
+  if (!BILLING_LIVE) return true;
+  return (PLANS[planOf()]?.features || []).includes(key);
+}
+function isSubscribed() { return !!(me && (!BILLING_LIVE || planOf() !== "free")); }
+/* Which product shell to render. The learner desk is a different information architecture, not a
+   reskin, so it gets its own nav and home. Pros/brokers see the full desk. */
+function deskMode() {
+  if (!me) return "pro";
+  if (planOf() === "learner") return "learn";
+  return (myProfile && myProfile.ui_mode === "learn") ? "learn" : "pro";
+}
 
 /* The one paywall card, used on every gated page. Language is fixed: the thing sits in "the paid
    plan" (plans being drawn for three desks — new investors, pros, brokers). Never scare copy;
@@ -2795,8 +2828,18 @@ async function pageSettings() {
   const bd = birthData();
   const birthRow = (l, v) => `<div class="bd-row"><span>${l}</span><b>${esc(v || "—")}</b></div>`;
 
+  const pl = PLANS[planOf()];
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Settings</h2><div class="ln"></div><span class="pill">${esc(me.email || "")}</span></div>
+
+  <div class="seg"><h2>Your plan</h2><div class="ln"></div><span class="pill ${planOf() === "free" ? "" : "ok"}">${esc(pl.label)}</span></div>
+  <div class="card">
+    <div class="pc-top"><b style="font-size:16px">${esc(pl.label)} plan</b>${pl.tag ? `<span class="pill">${esc(pl.tag)}</span>` : ""}</div>
+    <p class="sub" style="margin:4px 0 10px">${esc(pl.blurb)}</p>
+    <div class="bd-bar"><button class="note-save" onclick="location.hash='#/plans'">See all plans</button>
+      <button class="note-save" onclick="setDeskMode('${deskMode() === "learn" ? "pro" : "learn"}')">Switch to the ${deskMode() === "learn" ? "Pro" : "Learner"} desk</button></div>
+    <p class="sub" style="margin-top:10px">Payments aren't open yet — card processing through international providers isn't available in Pakistan, so billing will run through a local gateway. Nothing is charged, and plans are set manually until then.</p>
+  </div>
 
   <div class="seg"><h2>Your birth details</h2><div class="ln"></div><span class="pill">${bd ? "on file" : "not set"}</span></div>
   <div class="card">
@@ -2839,13 +2882,218 @@ async function pageSettings() {
   </div></div>`;
 }
 
+/* ---------- Plans: what each desk includes. Payment is not wired (no Stripe in Pakistan — a local
+   gateway follows), so this page states plainly where things stand rather than dangling a dead
+   checkout button. ---------- */
+const FEATURE_LABEL = {
+  learn: "The guided learning path",
+  astro_full: "Your full astro reading + the daily sky",
+  dividends_full: "Every announced payout + buy-by dates",
+  earnings_full: "The full earnings calendar",
+  value_full: "Model fair value on every stock",
+  strategies_run: "Run the strategy library on your board",
+  research_full: "The full research library",
+  broker_tools: "Your desk's calls scored in public",
+};
+async function pagePlans() {
+  await Promise.resolve();
+  const cur = planOf();
+  const card = (k) => {
+    const p = PLANS[k], on = me && cur === k;
+    return `<div class="plan-card ${on ? "on" : ""}">
+      <div class="pc-top"><b>${esc(p.label)}</b>${p.tag ? `<span class="pill">${esc(p.tag)}</span>` : ""}${on ? '<span class="pill ok">your plan</span>' : ""}</div>
+      <p class="sub">${esc(p.blurb)}</p>
+      <div class="pc-feats">${(p.features.length ? p.features : ["Cast your birth chart", "The daily desk note", "The public track record"])
+        .map(f => `<div class="pc-f">${esc(FEATURE_LABEL[f] || f)}</div>`).join("")}</div>
+      ${k === "free" ? "" : `<div class="pc-price sub">Pricing announced when payments open</div>`}
+    </div>`;
+  };
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Plans</h2><div class="ln"></div>${me ? `<span class="pill ${cur === "free" ? "" : "ok"}">${esc(PLANS[cur].label)}</span>` : ""}</div>
+  <p class="sub" style="margin-bottom:14px">Three desks, one data layer. The <b>Learner</b> desk teaches you to read the market from zero; <b>Pro</b> is the full analytical desk; <b>Broker</b> adds public scoring for a research house's own calls.</p>
+  <div class="disclaimer"><b>Payments aren't open yet.</b> Card processing through international providers isn't available in Pakistan, so billing will run through a local gateway. Until that's live, plans are set manually and nothing is charged — everything currently available to your account stays available.</div>
+  <div class="plan-grid">${PLAN_ORDER.map(card).join("")}</div>
+  ${me ? `<div class="card" style="margin-top:12px"><div class="ark">how you're reading the desk</div>
+    <p class="sub" style="margin:6px 0 10px">The Learner desk reorders everything around the lessons. You can switch view at any time — it doesn't change your plan.</p>
+    <div class="mode-row">
+      <button class="seg-opt ${deskMode() === "pro" ? "on" : ""}" onclick="setDeskMode('pro')">Pro desk</button>
+      <button class="seg-opt ${deskMode() === "learn" ? "on" : ""}" onclick="setDeskMode('learn')">Learner desk</button>
+    </div></div>` : ""}`;
+}
+async function setDeskMode(m) {
+  if (!me) { openAuth("signup"); return; }
+  if (planOf() === "learner" && m !== "learn") return;   // the learner plan is the learner desk
+  myProfile = { ...(myProfile || {}), ui_mode: m };
+  await saveProfile({ ui_mode: m });
+  applyDeskMode();
+  location.hash = m === "learn" ? "#/learn" : "#/today";
+  route(true);
+}
+/* The nav is declared once in HTML; the shell just flips which group is visible, so there is one
+   source of truth for routes and no second menu to keep in sync. */
+function applyDeskMode() {
+  document.body.dataset.desk = deskMode();
+  const badge = document.getElementById("planBadge");
+  if (badge) { badge.textContent = PLANS[planOf()].label; badge.hidden = !me; }
+}
+
+/* ==========================================================================================
+   THE LEARNER DESK — a guided path for people who have never invested. Same data layer, different
+   information architecture: lessons in order, each taught on real PSX filings and real desk numbers
+   rather than toy examples. Educational only — CLAUDE.md Rule 5 applies here hardest of all: this
+   teaches how to read the market, never what to buy.
+   ========================================================================================== */
+function learnProgress() { return (me && myProfile && myProfile.learn_progress) || {}; }
+async function markLesson(stageId, lessonId, done) {
+  if (!me) { openAuth("signup"); return; }
+  const p = { ...learnProgress() };
+  const key = stageId + "/" + lessonId;
+  if (done) p[key] = new Date().toISOString(); else delete p[key];
+  myProfile = { ...(myProfile || {}), learn_progress: p };
+  await saveProfile({ learn_progress: p });
+  pageLearn();
+}
+function lessonDone(stageId, lessonId) { return !!learnProgress()[stageId + "/" + lessonId]; }
+
+/* Each lesson can pull one real slice of the desk into itself, so nothing is taught abstractly. */
+async function lessonLive(kind) {
+  try {
+    if (kind === "dividends") {
+      const d = await j("dividends.json");
+      const rows = (d?.history || []).filter(x => x.dividend_rs).slice(-3).reverse();
+      if (!rows.length) return "";
+      return `<div class="ll-live"><b>Real payouts on the desk right now</b>
+        ${rows.map(r => `<div class="ll-row"><span>${esc(r.symbol)}</span><span class="sub">${esc(r.announcement || "cash dividend")}</span><b class="num">Rs ${esc(String(r.dividend_rs))}/sh</b></div>`).join("")}
+        <a href="#/dividends" class="ll-go">See every announced payout, with its buy-by date →</a></div>`;
+    }
+    if (kind === "earnings") {
+      const c = await j("earnings_calendar.json");
+      const ev = (c?.events || []).filter(e => e.type === "results").slice(0, 3);
+      if (!ev.length) return "";
+      return `<div class="ll-live"><b>Results dates the desk already knows about</b>
+        ${ev.map(e => `<div class="ll-row"><span>${esc(e.ticker)}</span><span class="sub">${esc(e.note || "results")}</span><b class="num">${esc(e.date)}</b></div>`).join("")}
+        <a href="#/calendar" class="ll-go">See the full earnings calendar →</a></div>`;
+    }
+    if (kind === "value") {
+      const fv = await j("fairvalue.json");
+      const rows = Object.entries(fv?.tickers || {}).slice(0, 3);
+      if (!rows.length) return "";
+      return `<div class="ll-live"><b>The same ratios, on real companies</b>
+        ${rows.map(([s, v]) => `<div class="ll-row"><span>${esc(s)}</span><span class="sub">P/E ${esc(String(v.pe ?? "—"))}× · EPS Rs ${esc(String(v.eps ?? "—"))}</span><b class="num">Rs ${fmt(v.price)}</b></div>`).join("")}
+        <a href="#/value" class="ll-go">See how the desk values every stock four ways →</a></div>`;
+    }
+    if (kind === "research") {
+      const idx = await j("research_index.json");
+      const docs = Object.values(idx?.documents || {}).slice(0, 3);
+      if (!docs.length) return "";
+      return `<div class="ll-live"><b>Filings the desk has digested</b>
+        ${docs.map(d => `<div class="ll-row"><span>${esc(d.source || "")}</span><span class="sub">${esc((d.digest || "").slice(0, 70))}…</span><b class="num">${esc(d.date || "")}</b></div>`).join("")}
+        <a href="#/research" class="ll-go">Read the research library →</a></div>`;
+    }
+    if (kind === "strategies") {
+      const bt = await j("backtest.json");
+      const n = Object.keys(bt?.results || bt?.strategies || {}).length;
+      return `<div class="ll-live"><b>The bar, applied</b>
+        <p class="sub">The desk holds every rule to win rate ≥55%, positive expectancy after costs, and profitability out-of-sample${n ? ` across ${n} tested sets` : ""} — and publishes the ones that failed too.</p>
+        <a href="#/strategies" class="ll-go">See which rules actually cleared it →</a></div>`;
+    }
+    if (kind === "astro") {
+      return `<div class="ll-live"><b>Your own chart</b>
+        <p class="sub">Cast your birth chart in your browser and read the tradition against the market — framed as exploration, with the test result stated plainly.</p>
+        <a href="#/mychart" class="ll-go">Open Your Chart →</a></div>`;
+    }
+  } catch { /* a lesson must never fail to render because a data file is missing */ }
+  return "";
+}
+
+let _openLesson = null;
+async function toggleLesson(stageId, lessonId) {
+  const key = stageId + "/" + lessonId;
+  _openLesson = _openLesson === key ? null : key;
+  await pageLearn();
+  if (_openLesson) document.getElementById("ls-" + lessonId)?.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+function checkAnswer(btn, correct) {
+  const wrap = btn.closest(".ls-check");
+  const picked = +btn.dataset.i;
+  wrap.querySelectorAll(".ls-opt").forEach(b => b.disabled = true);
+  btn.classList.add(picked === correct ? "right" : "wrong");
+  if (picked !== correct) wrap.querySelector(`.ls-opt[data-i="${correct}"]`)?.classList.add("right");
+  wrap.querySelector(".ls-explain").hidden = false;
+}
+
+async function pageLearn() {
+  await Promise.resolve();
+  const cur = await j("curriculum.json");
+  const stages = cur?.stages || [];
+  if (!stages.length) {
+    $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Learn</h2><div class="ln"></div></div>
+      <div class="card"><div class="empty">The syllabus is being prepared.</div></div>`;
+    return;
+  }
+  const all = stages.flatMap(s => s.lessons.map(l => ({ s: s.id, l: l.id })));
+  const doneN = all.filter(x => lessonDone(x.s, x.l)).length;
+  const pct = Math.round(doneN / all.length * 100);
+  const nextUp = all.find(x => !lessonDone(x.s, x.l));
+  const totalMins = stages.flatMap(s => s.lessons).reduce((a, l) => a + (l.mins || 0), 0);
+
+  const lessonCard = (st, l, idx) => {
+    const key = st.id + "/" + l.id, open = _openLesson === key, done = lessonDone(st.id, l.id);
+    return `<div class="ls-card ${open ? "open" : ""} ${done ? "done" : ""}" id="ls-${esc(l.id)}">
+      <div class="ls-head" onclick="toggleLesson('${esc(st.id)}','${esc(l.id)}')">
+        <span class="ls-num">${done ? "✓" : idx + 1}</span>
+        <div class="ls-t"><b>${esc(l.title)}</b><span class="sub">${esc(l.why)}</span></div>
+        <span class="ls-mins">${l.mins} min</span>
+        <span class="ls-caret">${open ? "▾" : "▸"}</span>
+      </div>
+      ${open ? `<div class="ls-body">
+        ${l.body.map(p => `<p>${esc(p)}</p>`).join("")}
+        <div class="ls-take"><span class="ark">the point</span>${esc(l.takeaway)}</div>
+        <div class="ls-live-slot" data-live="${esc(l.live || "")}"></div>
+        ${l.check ? `<div class="ls-check">
+          <div class="ls-q">${esc(l.check.q)}</div>
+          ${l.check.options.map((o, i) => `<button class="ls-opt" data-i="${i}" onclick="checkAnswer(this,${l.check.answer})">${esc(o)}</button>`).join("")}
+          <div class="ls-explain" hidden>${esc(l.check.explain)}</div></div>` : ""}
+        <div class="ls-foot">
+          <button class="${done ? "note-save" : "bw-go"}" style="max-width:240px" onclick="markLesson('${esc(st.id)}','${esc(l.id)}',${!done})">${done ? "Mark as not done" : "Mark complete →"}</button>
+        </div></div>` : ""}
+    </div>`;
+  };
+
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Learn to invest</h2><div class="ln"></div><span class="pill">${all.length} lessons · ~${totalMins} min</span></div>
+  <div class="disclaimer">Education, <b>not investment advice</b>. This teaches you how to read companies, prices and payouts for yourself — it never tells you what to buy, and nothing here is a recommendation or a forecast.</div>
+
+  <div class="card learn-hero">
+    <div class="lh-top">
+      <div><div class="ark">your progress</div><b style="font-size:22px">${doneN} of ${all.length}</b><span class="sub"> lessons complete</span></div>
+      <div class="lh-pct"><b>${pct}%</b></div>
+    </div>
+    <div class="lh-bar"><span style="width:${pct}%"></span></div>
+    ${nextUp ? `<button class="bw-go" style="max-width:280px;margin-top:14px" onclick="toggleLesson('${esc(nextUp.s)}','${esc(nextUp.l)}')">${doneN ? "Continue" : "Start the first lesson"} →</button>`
+      : `<p class="sub" style="margin-top:12px"><b>You've finished the path.</b> The market keeps teaching — the desk's News wire and Earnings calendar are where the next lessons come from.</p>`}
+  </div>
+
+  ${stages.map(st => {
+    const sDone = st.lessons.filter(l => lessonDone(st.id, l.id)).length;
+    return `<div class="seg"><h2>${esc(st.title)}</h2><div class="ln"></div><span class="pill ${sDone === st.lessons.length ? "ok" : ""}">${sDone}/${st.lessons.length}</span></div>
+    <p class="sub" style="margin-bottom:12px">${esc(st.blurb)}</p>
+    ${st.lessons.map((l, i) => lessonCard(st, l, i)).join("")}`;
+  }).join("")}`;
+
+  // hydrate the "see it live" slot of whichever lesson is open — real desk data, never a mock
+  const slot = $("view").querySelector(".ls-live-slot[data-live]:not([data-live=''])");
+  if (slot) slot.innerHTML = await lessonLive(slot.dataset.live);
+}
+
 /* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
    The reading itself lives at /#/mychart, which this hands off to. */
 async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
 }
-const PAGES = { cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+const PAGES = { learn: pageLearn, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
 let lastPage = null;
 
 function animateIn() {
@@ -2881,6 +3129,9 @@ async function route(isPoll) {
   lastPage = key;
 }
 window.addEventListener("hashchange", () => route(false));
+// NOTE: do NOT call applyDeskMode() here — this line runs before `let me` is initialized further
+// down the file, and deskMode() reads it, which throws a TDZ error and aborts the whole module.
+// index.html ships data-desk="pro" as the default; initAuth re-stamps it once the plan is known.
 route(false);
 // Keep only the top status pills current on a gentle cadence — do NOT re-render the whole
 // page body (that caused a jarring full-page refresh/flicker every cycle). Header-only, and
@@ -3069,17 +3320,27 @@ function renderAccountButton() {
   if (!holder) return;
   if (me) {
     const initial = (me.email || "?")[0].toUpperCase();
+    const plan = PLANS[planOf()];
+    // account menu, in the shape people already know: identity at the top, the plan you're on
+    // stated plainly under it, then actions.
     holder.innerHTML = `<button class="acct-btn" id="acctBtn" title="${me.email}">${initial}</button>
       <div class="acct-menu" id="acctMenu" hidden>
-        <div class="acct-email">${me.email}</div>
+        <div class="acct-id"><span class="acct-av">${initial}</span><div><div class="acct-email">${me.email}</div>
+          <div class="acct-plan">${esc(plan.label)} plan</div></div></div>
+        <div class="acct-sep"></div>
+        <button id="acctPlans"><span>Plans</span><span class="acct-chip ${planOf() === "free" ? "" : "on"}">${esc(plan.label)}</span></button>
         <button id="acctSettings">Settings</button>
+        <button id="acctMode">${deskMode() === "learn" ? "Switch to the Pro desk" : "Switch to the Learner desk"}</button>
         <button id="acctTour">Replay the tour</button>
+        <div class="acct-sep"></div>
         <button id="acctOut">Sign out</button>
       </div>`;
     const menu = document.getElementById("acctMenu");
     document.getElementById("acctBtn").onclick = (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
     document.getElementById("acctSettings").onclick = () => { menu.hidden = true; location.hash = "#/settings"; };
+    document.getElementById("acctPlans").onclick = () => { menu.hidden = true; location.hash = "#/plans"; };
+    document.getElementById("acctMode").onclick = () => { menu.hidden = true; setDeskMode(deskMode() === "learn" ? "pro" : "learn"); };
     document.getElementById("acctTour").onclick = () => { menu.hidden = true; startWizard(true); };
   } else {
     holder.innerHTML = `<button class="acct-signin" id="acctIn">Sign in</button>`;
@@ -3466,6 +3727,7 @@ async function initAuth() {
   if (me) {
     await loadProfile();
     await migrateGuestChart();   // a chart cast before signing up follows the user into their account
+    applyDeskMode();
     // the initial route() already ran (before auth resolved), so pages that depend on the signed-in
     // user — Your Chart, Portfolio, Watchlist, Settings — rendered their signed-out state. Re-render
     // the current page now that `me` and the profile are known.
@@ -3480,10 +3742,11 @@ async function initAuth() {
       closeAuth();
       await loadProfile();
       await migrateGuestChart();   // the whole point of the funnel: never ask for birth details twice
+      applyDeskMode();
       if (typeof route === "function") route(true);   // re-render the page you're on with your account
       if (myProfile && !myProfile.onboarded) startWizard(false);
     }
-    if (event === "SIGNED_OUT") { myProfile = null; if (typeof route === "function") route(true); }
+    if (event === "SIGNED_OUT") { myProfile = null; applyDeskMode(); if (typeof route === "function") route(true); }
   });
 }
 initAuth();
