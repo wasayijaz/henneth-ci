@@ -13,7 +13,7 @@ import time
 
 import numpy as np
 
-from psx_data import ROOT, STATE, load_config, load_json, save_json
+from psx_data import ROOT, STATE, load_config, load_json, research_symbols, save_json
 from strategy_engine import compute_indicators, signals
 
 
@@ -72,18 +72,38 @@ def run_strategy(spec, ind):
 
 def main():
     cfg = load_config()["backtest"]
-    universe = load_json(STATE / "universe.json", {"symbols": {}})
     library = json.loads((ROOT / "strategies" / "library.json").read_text(encoding="utf-8"))
 
     # preload histories once (deep preferred) and compute indicators ONCE per ticker
     inds = {}
-    # tier filter: 70 strategies x 19y is far too heavy to run across the whole listed market.
-    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
+    # Liquidity research gate (see psx_data.research_symbols): core + listed names liquid and
+    # long-lived enough for a backtest to mean something. Running 70 strategies over a name
+    # that trades a few hundred thousand rupees a day produces fills that do not exist.
+    for sym in research_symbols():
         deep = load_json(STATE / "history_deep" / f"{sym}.json", None)
         dps = load_json(STATE / "history" / f"{sym}.json", None)
         h = deep if (deep and len(deep) > len(dps or [])) else dps
         if h and len(h) >= 220:
             inds[sym] = compute_indicators(h)
+
+    # PER-SYMBOL FRICTION. A flat friction across the whole market is the single easiest way
+    # to manufacture a fake edge on a thin stock: the strategies here are mostly breakout and
+    # momentum, and Lesmond, Schill & Zhou (2004, "The Illusory Nature of Momentum Profits")
+    # showed the stocks that produce the largest momentum returns are the same stocks that
+    # cost the most to trade — so a constant cost assumption flatters exactly the names it
+    # should penalise. Now that the universe reaches past the liquid core, that stops being a
+    # rounding error and starts being the difference between a real signal and an artefact.
+    #
+    # friction = max(configured floor, estimated round-trip cost) — the Corwin-Schultz / FHT /
+    # Roll estimators all return a proportional ROUND-TRIP spread, which is what one full
+    # in-and-out trade pays. Never below the configured floor (that covers commission and
+    # taxes, which the spread estimators do not).
+    liq = load_json(STATE / "liquidity.json", {}).get("tickers", {})
+    base_friction = cfg["friction_pct"]
+    friction = {}
+    for sym in inds:
+        sp = (liq.get(sym) or {}).get("spread_pct")
+        friction[sym] = round(max(base_friction, sp), 3) if sp is not None else base_friction
 
     results, strategy_map = {}, {}
     for spec in library:
@@ -93,21 +113,26 @@ def main():
             st = run_strategy(spec, ind)
             if not st or st.get("n", 0) == 0:
                 continue
-            net = (st.get("avg_return_pct") or 0) - cfg["friction_pct"]
+            fr = friction[sym]
+            net = (st.get("avg_return_pct") or 0) - fr
             st["net_expectancy_pct"] = round(net, 2)
+            st["friction_pct"] = fr        # show the cost assumption, do not bury it
             oos = st.get("oos", {"n": 0})
-            oos_ok = oos["n"] >= 3 and (oos.get("avg_return_pct") or 0) - cfg["friction_pct"] > 0
+            oos_ok = oos["n"] >= 3 and (oos.get("avg_return_pct") or 0) - fr > 0
             st["eligible"] = bool(
                 st["n"] >= cfg["min_trades"] and (st.get("hit_rate") or 0) >= cfg["min_hit_rate"]
                 and net >= cfg["min_net_expectancy_pct"] and oos_ok)
-            st["name"] = spec["name"]
-            st["category"] = spec["category"]
+            # NOTE: name/category deliberately NOT stored per (strategy,ticker). They are
+            # constant within a strategy, so writing them on all ~208 tickers repeated the
+            # same two strings 14,000+ times and was most of this file's size. They live in
+            # `meta` below; the dashboard re-attaches them on load.
             per[sym] = st
             if st["eligible"]:
                 strategy_map.setdefault(sym, []).append({
                     "id": sid, "name": spec["name"], "category": spec["category"],
                     "net_expectancy_pct": st["net_expectancy_pct"], "hit_rate": st["hit_rate"],
                     "n": st["n"], "oos_n": oos["n"], "oos_hit": oos.get("hit_rate"),
+                    "friction_pct": fr,
                     "target_pct": spec["target_pct"], "stop_pct": spec["stop_pct"],
                     "hold": spec["max_hold_sessions"]})
         results[sid] = per
@@ -117,7 +142,10 @@ def main():
 
     save_json(STATE / "backtests.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"), "bars": cfg,
-        "n_strategies": len(library), "templates": results})
+        "n_strategies": len(library),
+        # one row per strategy instead of one per (strategy, ticker) pair
+        "meta": {s["id"]: {"name": s["name"], "category": s["category"]} for s in library},
+        "templates": results})
     save_json(STATE / "strategy_map.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"), "tickers": strategy_map})
     # plain-English library index for the dashboard's strategy dictionary

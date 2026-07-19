@@ -28,6 +28,25 @@ function xhrJson(url) {
 }
 
 const cache = {};
+/* backtests.json stores each strategy's name/category ONCE in `meta`, not repeated on all
+   ~200 per-ticker rows (that duplication was most of the file's weight, and the file is
+   rewritten and committed every cycle). Re-attach them here, at the single load point, so
+   every reader downstream keeps seeing entry.name / entry.category exactly as before.
+   Tolerates the old shape: if a file without `meta` is served (stale deploy, cached copy),
+   the per-entry values are already present and nothing is overwritten. */
+function rehydrateBacktests(v) {
+  const meta = v?.meta, tpl = v?.templates;
+  if (!meta || !tpl) return v;
+  for (const [sid, per] of Object.entries(tpl)) {
+    const m = meta[sid];
+    if (!m || !per) continue;
+    for (const row of Object.values(per)) {
+      if (row && row.name == null) { row.name = m.name; row.category = m.category; }
+    }
+  }
+  return v;
+}
+
 async function j(p, ttl = 25000) {
   const now = Date.now();
   if (cache[p] && now - cache[p].t < ttl) return cache[p].v;
@@ -39,8 +58,8 @@ async function j(p, ttl = 25000) {
     try {
       const v = attempt < 2 ? await fetch(url()).then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
         : await xhrJson(url()); // last attempt: bypass a fetch() an extension may have broken
-      cache[p] = { t: Date.now(), v };
-      return v;
+      cache[p] = { t: Date.now(), v: p === "backtests.json" ? rehydrateBacktests(v) : v };
+      return cache[p].v;
     } catch (e) { lastErr = e; /* fall through to retry */ }
     if (attempt < 2) await new Promise(res => setTimeout(res, 300));
   }
@@ -2066,12 +2085,13 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll, liqAll] = await Promise.all([
     j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json")]);
   const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
+  const lq = liqAll?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
   const fv = fvAll?.tickers?.[sym];
@@ -2392,17 +2412,44 @@ async function pageTicker(sym, _retry = 0) {
      analysis (deep backtests, fundamentals, fair value, Desk Room) runs only on the core tier.
      Say that plainly on a wider-coverage name instead of letting empty sections imply the desk
      looked and found nothing. */
-  const coverageNote = (u?.tier === "listed") ? `
+  const coverageNote = (u?.tier === "listed" && !lq?.research_eligible) ? `
   <div class="tnote"><b>Wider-coverage name.</b> ${esc(sym)} is a listed PSX company outside the
-  KSE100 and KMI30, so the desk carries its <b>prices, quant measures, sector and payout history</b>
-  — but not the deep backtests, fundamental scores, model fair value or Desk Room debate it runs on
-  its core names. Sections that need those will say so rather than guess. The desk covers the whole
-  market so nothing is invisible; it does not pretend to research every name equally.</div>` : "";
+  KSE100 and KMI30 that does not clear the desk's liquidity bar for deep research, so the desk
+  carries its <b>prices, quant measures, sector and payout history</b> — but not the backtests,
+  fundamental scores, model fair value or Desk Room debate. Sections that need those will say so
+  rather than guess. The desk covers the whole market so nothing is invisible; it does not pretend
+  to research every name equally.</div>` : "";
+
+  /* Tradeability. A thin name must say WHY it carries no setup instead of showing an empty
+     signal section, which reads as "the desk looked and found nothing" when the truth is
+     "the desk will not trade something this thin at any price". */
+  const liqCard = lq ? (() => {
+    const g = lq.grade, low = g === "D" || g === "E";
+    const bucket = { highly_liquid: "Highly liquid", moderately_liquid: "Moderately liquid", illiquid: "Illiquid" }[lq.sec_bucket] || "—";
+    const pos = liqAll?.max_position_value_pkr;
+    const shareOfDay = (pos && lq.adtv_pkr) ? (pos / lq.adtv_pkr) * 100 : null;
+    return `<div class="card"><h2 style="font-size:13px">Can you actually trade it?</h2>
+    <div class="sub">Turnover says how much you can buy; the spread says what it costs you. Both are measured from ${esc(String(liqAll?.window_sessions || 60))} sessions of this stock's own tape.</div>
+    <div class="liq-grid">
+      <div class="liq-cell"><span class="liq-k">Liquidity grade</span><b class="liq-v ${low ? "dn" : "up"}">${esc(g || "—")}</b></div>
+      <div class="liq-cell"><span class="liq-k">Typical day's turnover</span><b class="liq-v">Rs ${fmt(lq.adtv_m)}M</b></div>
+      <div class="liq-cell"><span class="liq-k">Est. round-trip cost</span><b class="liq-v ${(lq.spread_pct ?? 0) > 1.5 ? "dn" : ""}">${lq.spread_pct != null ? lq.spread_pct.toFixed(2) + "%" : "unknown"}</b></div>
+      <div class="liq-cell"><span class="liq-k">Sessions to exit a full position</span><b class="liq-v ${(lq.days_to_liquidate_stress ?? 0) > 7 ? "dn" : ""}">${lq.days_to_liquidate_stress == null ? "—" : lq.days_to_liquidate_stress < 1 ? "under 1" : fmt(lq.days_to_liquidate_stress)}</b></div>
+    </div>
+    <div class="sub" style="margin-top:9px">Classified <b>${esc(bucket)}</b> on the SEC's Rule 22e-4 test, measured at the stressed 10%-of-volume rate rather than the comfortable one.${
+      shareOfDay != null ? ` A full position here would be <b>${shareOfDay < 1 ? "under 1" : Math.round(shareOfDay)}%</b> of everything that trades in a normal day.` : ""}</div>
+    ${!lq.signal_eligible ? `<div class="tnote" style="margin-top:10px"><b>No setups will be published on this name.</b>
+      It trades below the desk's liquidity floor, so even a strategy that backtests well here is one you
+      could not enter or exit at the tested price. That is a deliberate refusal, not missing analysis.</div>` : ""}
+    ${lq.spread_pct != null && lq.spread_pct > 0.6 ? `<div class="sub" style="margin-top:8px">Its backtests are charged <b>${lq.spread_pct.toFixed(2)}%</b> per round trip rather than the desk's ${esc(String(bt?.bars?.friction_pct ?? 0.6))}% floor — a wide spread eats a breakout strategy's edge first, so pretending otherwise would flatter exactly the names that deserve it least.</div>` : ""}
+    </div>`;
+  })() : "";
 
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
   ${coverageNote}
+  ${liqCard}
   ${sigStack}
   ${runDeskBar}
   ${summaryStrip}

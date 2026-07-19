@@ -12,6 +12,11 @@ from pathlib import Path
 SCRIPTS = Path(__file__).resolve().parent
 STEPS = [
     "update_universe.py", "fetch_history.py", "fetch_deep_history.py",
+    # Must run AFTER both history fetches and BEFORE fetch_fundamentals / predictability /
+    # backtest: it writes the research gate those three read (psx_data.research_symbols), and
+    # the per-symbol trading friction the backtest charges. Out of order, the gate falls back
+    # to core-only and the backtest silently reverts to a flat friction assumption.
+    "liquidity.py",
     "fetch_dividends.py",
     "fetch_dividends_deep.py",  # 18y payout history (Yahoo events) — DPS only gives ~18 months
     "fetch_fundamentals.py", "score_fundamentals.py",

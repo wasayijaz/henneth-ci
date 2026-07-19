@@ -149,3 +149,26 @@ def save_json(path: Path, obj):
 
 def load_config() -> dict:
     return json.loads((ROOT / "config" / "desk.json").read_text(encoding="utf-8"))
+
+
+def research_symbols() -> list[str]:
+    """The names the expensive pipeline (backtests, fundamentals, predictability, fair value)
+    is allowed to run on: tier=core plus any listed name that cleared the liquidity RESEARCH
+    gate in state/liquidity.json.
+
+    One helper, one definition. These scripts previously each carried their own
+    `tier == "core"` filter, so a change to the rule meant editing every copy and any missed
+    copy would silently analyse a different set than the others.
+
+    Fails CLOSED to core-only: if liquidity.json is missing or unreadable (first run, or a
+    failed cycle), we analyse the smaller known-good set rather than fanning out over the
+    whole market on a gate we cannot verify."""
+    universe = load_json(STATE / "universe.json", {"symbols": {}})
+    core = [s for s, m in universe.get("symbols", {}).items()
+            if (m or {}).get("tier", "core") == "core"]
+    liq = load_json(STATE / "liquidity.json", None)
+    if not liq or not liq.get("tickers"):
+        return core
+    promoted = [s for s, m in liq["tickers"].items()
+                if m.get("research_eligible") and s in universe.get("symbols", {})]
+    return sorted(set(core) | set(promoted))

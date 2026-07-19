@@ -6,7 +6,7 @@ import time
 import numpy as np
 
 from indicators import rolling_max, rsi, sma
-from psx_data import STATE, load_json, save_json
+from psx_data import STATE, load_json, research_symbols, save_json
 
 HORIZON = 10       # sessions to resolve
 TARGET = 0.03      # +3% counts as success
@@ -90,10 +90,10 @@ def score_ticker(hist: list[dict]) -> dict | None:
 
 
 def main():
-    universe = load_json(STATE / "universe.json", {"symbols": {}})
     out = {}
-    # tier filter: predictability scores feed signals, which only exist for core names.
-    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
+    # Liquidity research gate (see psx_data.research_symbols) — same set the backtests use,
+    # so a name never has a predictability score with no backtest behind it, or vice versa.
+    for sym in research_symbols():
         hist = load_json(STATE / "history" / f"{sym}.json", None)
         row = score_ticker(hist) if hist else None
         if row:

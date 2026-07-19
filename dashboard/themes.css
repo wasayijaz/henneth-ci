@@ -879,6 +879,13 @@ body[data-theme=gemini] .tgrid button{height:38px}
 body[data-theme=gemini] #t-out{margin-top:14px}
 body[data-theme=gemini] .tnote{border-left:3px solid var(--ink1);background:var(--panel2);padding:10px 13px;font-size:13px;line-height:1.62;margin-top:12px}
 body[data-theme=gemini] .tnote.warn{border-left-color:var(--dn)}
+/* tradeability block on the ticker page — turnover, spread, exit time */
+body[data-theme=gemini] .liq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:12px;background:var(--line)}
+body[data-theme=gemini] .liq-cell{background:var(--panel2);padding:11px 13px;display:flex;flex-direction:column;gap:5px;min-width:0}
+body[data-theme=gemini] .liq-k{font-size:10.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;line-height:1.35}
+body[data-theme=gemini] .liq-v{font-family:var(--num,inherit);font-size:17px;line-height:1.1}
+@media (max-width:720px){body[data-theme=gemini] .liq-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:400px){body[data-theme=gemini] .liq-grid{grid-template-columns:1fr}}
 /* the little contributions-vs-growth chart */
 body[data-theme=gemini] .tbars{display:flex;align-items:flex-end;gap:3px;height:120px;margin-top:14px;padding-top:6px;border-bottom:1px solid var(--line)}
 body[data-theme=gemini] .tbar{position:relative;flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center}

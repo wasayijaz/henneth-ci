@@ -1,6 +1,67 @@
 {
-  "updated": "2026-07-15",
-  "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
-  "categories": "accuracy | clarity | feature",
-  "items": []
+ "updated": "2026-07-19",
+ "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
+ "categories": "accuracy | clarity | feature",
+ "items": [
+  {
+   "id": "dossier-stale-next-earnings",
+   "category": "accuracy",
+   "title": "Dossier shows next_earnings dates already in the past",
+   "why": "room-verifier flagged PSO's dossier next_earnings (Jun 18 2026) as stale/already-past vs the 2026-07-16 asof. scripts/build_calendar.py:55-56 already guards `ed >= today` before adding an event to the calendar, but room_dossier.py surfaces the raw fundamentals.next_earnings field with no such guard, so a stale scrape leaks straight to the ticker page.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
+   "id": "confidence-pill-hide-n",
+   "category": "clarity",
+   "title": "Signal card 'confidence' pill hides the trade count behind it",
+   "why": "dashboard/app.js:261 renders a green 'high' confidence pill on the board's signal cards; the backtest sample size only appears buried in the thesis prose sentence. This week's HCAR signal is labeled 'high' confidence off a 10-trade backtest — a skimming reader sees the pill, not the n.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
+   "id": "shipped-improvements-panel",
+   "category": "feature",
+   "title": "Surface a 'recently shipped' list from the product backlog itself",
+   "why": "docs/OPERATIONS.md §3c documents the propose-only self-improvement loop but it's currently internal-only (state/product_backlog.json isn't rendered anywhere). A deterministic panel reading items with status 'done' turns an already-existing, zero-cost data source into a visible trust signal — no agent calls, no new pipeline.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
+   "id": "payout-ratio-basis-mismatch",
+   "category": "accuracy",
+   "title": "payout_ratio field recurringly disagrees with the desk's own div_yield/EPS pair",
+   "why": "scripts/fetch_fundamentals.py:26 maps the scraped payoutRatio field straight through with no cross-check. room-verifier had to hand-correct or flag this exact mismatch in 8 of ~22 QA'd tickers this week alone (UBL corrected, NBP corrected, MEBL blocked, HUBC blocked, DCR/LOTCHEM/PSX/DGKC flagged) — a systemic period-basis bug, not one-off scrape noise.",
+   "impact": "high",
+   "effort": "med",
+   "score": 1.5,
+   "status": "proposed"
+  },
+  {
+   "id": "fairvalue-card-hide-method-spread",
+   "category": "clarity",
+   "title": "Fair-value card headlines one blended number while methods disagree 3-4x",
+   "why": "FFC's value card reads '+77.2% undervalued' (state/fairvalue.json) but the 4 underlying methods span Rs381-1,542, driven by an unverified 30% growth_est_pct feeding Graham/DDM — room-verifier caveats this exact dispersion for FFC, DGKC and ATRL this week, but the caveat lives only in fa_memo prose, never on the compact card a skimming user reads first.",
+   "impact": "high",
+   "effort": "med",
+   "score": 1.5,
+   "status": "proposed"
+  },
+  {
+   "id": "ratio-stale-price-basis",
+   "category": "accuracy",
+   "title": "PE/market-cap sometimes computed off the prior session's close, not today's print",
+   "why": "room-verifier flagged ENGROH (PE 5.22 vs true ~4.99 off a -4.29% session) and MEBL ('same-session price/ratio timestamp mismatch') this week — a same pattern twice suggests fetch_fundamentals and the live price update aren't always ordered/synced within a cycle.",
+   "impact": "med",
+   "effort": "med",
+   "score": 1.0,
+   "status": "proposed"
+  }
+ ]
 }

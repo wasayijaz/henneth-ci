@@ -23,6 +23,13 @@
     "_cover_all_listed_note": "Adds every remaining KSE All Share constituent as tier=listed, so no listed company is invisible or unsearchable (BBFL was missing entirely). tier=core keeps the expensive analysis (deep history, backtests, Desk Room); tier=listed gets prices, quant, sector and dividends plus a real page. Scripts that are expensive per ticker MUST filter to tier==core.",
     "refresh_days": 7
   },
+  "liquidity": {
+    "research_min_adtv_pkr": 5000000,
+    "_research_note": "RESEARCH gate, not an execution gate. A listed name clearing this (and research_min_bars) gets the full pipeline — backtests, fundamentals, predictability, fair value — so its page carries real analysis. Deliberately looser than risk.min_avg_daily_traded_value_pkr because analysing a name and being willing to trade it are different questions.",
+    "research_min_bars": 500,
+    "_bars_note": "~2 years. Below this a backtest is too short a sample to mean anything; the name keeps prices/quant/sector/dividends and an honest 'not enough history' note.",
+    "_gate_separation_note": "TWO gates, on purpose. research_* decides what the desk ANALYSES. risk.min_avg_daily_traded_value_pkr (30M) decides what the desk will SIGNAL. A name can be researched and still never produce a setup — that is the intended outcome for thin names, and the ticker page says so rather than going silently blank."
+  },
   "backtest": {
     "min_hit_rate": 0.55,
     "min_net_expectancy_pct": 0.5,

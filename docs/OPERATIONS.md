@@ -271,14 +271,53 @@ not affordable per cycle. So: everything is *visible*, the core is *researched*,
 says which it is (`coverageNote` in `pageTicker`) rather than letting empty sections imply the desk
 looked and found nothing.
 
-**If you add a per-ticker script, decide its tier explicitly.** Cheap pure-math scripts (`quant.py`,
-`snapshot.py`, `compute_fairvalue.py`, `build_signals.py`, `data_health.py`) run across ALL symbols.
-Anything that hits the network per ticker, or is heavy compute, MUST filter:
-`[s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]`.
-Already filtered: `fetch_deep_history`, `backtest`, `fetch_fundamentals`, `predictability`,
-`fetch_intraday`, `astro_charts`. Rotation-bounded rather than core-only: `fetch_history`
-(`LISTED_PER_RUN=90`) and `fetch_dividends` (`LISTED_DIV_PER_RUN=60`) — core refreshes every run and
-the long tail rotates stalest-first, so a 554-symbol universe cannot outrun the 30-minute cron.
+### 7a. The two gates — research vs signal (do not conflate them)
+
+Tier is no longer what decides who gets analysed. **`state/liquidity.json` is**, via two
+deliberately separate gates:
+
+| gate | config | what it decides | count today |
+|---|---|---|---|
+| **research** | `liquidity.research_min_adtv_pkr` (5M) + `research_min_bars` (500) | what the desk *analyses* — backtests, fundamentals, predictability | 208 (core ∪ promoted listed) |
+| **signal** | `risk.min_avg_daily_traded_value_pkr` (30M) | what the desk will ever *publish a setup on* | 100 |
+
+They are different questions and must stay separate. A name can be fully researched and still
+never produce a setup — that is the intended outcome for a thin stock, and the ticker page says
+so out loud ("No setups will be published on this name") instead of showing an empty signal
+section that reads as "the desk looked and found nothing".
+
+Note the signal gate already excludes **38 of the ~103 core names** — index membership is not
+liquidity. IBFL is the worked example: a core-tier constituent with a **median turnover of
+~98,000 PKR/day**, where a single full position would be 82% of a normal day's entire volume.
+
+**Per-symbol friction is the reason this matters.** `backtest.py` charges each name
+`max(config friction floor, estimated round-trip spread)` from `liquidity.json`, not a flat
+0.6%. A constant cost assumption flatters exactly the wrong names — Lesmond, Schill & Zhou
+(2004) showed the stocks producing the largest momentum returns are the same stocks that cost
+the most to trade, and most of this library is breakout/momentum. Switching this on removed
+**64 of 591** previously "eligible" strategy-ticker pairs. Those were artefacts, not edges.
+
+**If you add a per-ticker script, decide its gate explicitly.** Cheap pure-math scripts
+(`quant.py`, `snapshot.py`, `compute_fairvalue.py`, `build_signals.py`, `data_health.py`,
+`liquidity.py`) run across ALL symbols. Anything that hits the network per ticker, or is heavy
+compute, MUST call the ONE shared helper — `psx_data.research_symbols()`. Do not hand-roll a
+`tier == "core"` filter: three scripts each carried their own copy, so the rule could not be
+changed in one place and a missed copy would silently analyse a different set than its peers.
+`research_symbols()` fails CLOSED to core-only if `liquidity.json` is missing.
+
+Already gated: `backtest`, `fetch_fundamentals`, `predictability`. Still core-only by tier
+(genuinely core-specific, not liquidity questions): `fetch_deep_history`, `fetch_intraday`,
+`astro_charts`. Rotation-bounded: `fetch_history` (`LISTED_PER_RUN=90`) and `fetch_dividends`
+(`LISTED_DIV_PER_RUN=60`) — core refreshes every run and the long tail rotates stalest-first,
+so a 554-symbol universe cannot outrun the 30-minute cron.
+
+**Ordering constraint:** `liquidity.py` MUST run after both history fetches and before
+`fetch_fundamentals` / `predictability` / `backtest` (it is placed accordingly in
+`run_cloud.py`). Out of order, the gate silently falls back to core-only and the backtest
+reverts to flat friction — no error, just quietly worse numbers.
+
+`fetch_fundamentals` is threaded (6 workers): it is latency-bound, and serial it took ~10 min
+at this universe size, which alone would blow the Actions budget. 208 names now take ~29s.
 
 If a ticker a user searches for still doesn't appear, check `state/universe.json.symbols` first (is
 it there?), then `config/desk.json.universe` (`cover_all_listed` still true? `kse100_top_n` capped?)
