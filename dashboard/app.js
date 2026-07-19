@@ -3682,7 +3682,8 @@ async function pagePractice() {
     return;
   }
   const [lv, q, uni, sectors, divs, idx, corr] = await Promise.all([
-    j("live.json"), j("quant.json"), j("universe.json"), j("sectors.json"), j("dividends.json"), j("indices.json"), j("correlation.json")]);
+    j("live.json"), j("quant.json"), j("universe.json"), j("sectors.json"), j("dividends.json"), j("indices.json"), j("correlation.json"),
+    loadDeskRules()]);   // Rule 4 limits from config, not the hardcoded fallback
   const p = { trades: [], credits: [], ...paperState() };
   if (paperCreditDividends(p, divs)) { myProfile = { ...(myProfile || {}), paper: p }; saveProfile({ paper: p }); }
   const pos = paperPositions(p), cash = paperCash(p);
@@ -3800,13 +3801,30 @@ async function sinceLastVisit(q, lv) {
 
 /* ==========================================================================================
    DESK RULES — the desk's own Rule 4 risk limits, checked live against the practice book.
-   These constants MIRROR config/desk.json (CLAUDE.md Rule 4). They are duplicated here because
-   vercel.json publishes only dashboard/* and state/* — config/ is never served to the browser,
-   so the client cannot read the real file. If Rule 4 changes in config, change it here too;
-   the numbers are labelled below so a drift is at least visible on screen rather than silent.
+
+   Sourced from state/desk_rules.json, which build_dashboard.py exports from config/desk.json
+   every cycle. config/ itself is deliberately NOT served: it holds capital_pkr (the owner's
+   real trading capital) and the Telegram token, so the export is an allow-list of rule
+   constants only — a secret added to desk.json later cannot leak by default.
+
+   The literals below are a FALLBACK for a failed fetch, not a second source of truth. They
+   were previously the only copy, which drifts silently the moment config changes. loadDeskRules()
+   overwrites them; if it ever can't, the checker still works and says the values are defaults.
    ========================================================================================== */
 const DESK_RULES = { max_positions: 4, max_total_exposure_pct: 20, max_same_sector_positions: 1,
   risk_per_trade_pct: 1, max_pct_per_trade: 8 };
+let DESK_RULES_SOURCE = "fallback";
+
+async function loadDeskRules() {
+  if (DESK_RULES_SOURCE !== "fallback") return DESK_RULES;
+  const d = await j("desk_rules.json");
+  const r = d?.rules;
+  if (r && r.max_pct_per_trade != null) {
+    Object.assign(DESK_RULES, r);
+    DESK_RULES_SOURCE = "config";
+  }
+  return DESK_RULES;
+}
 
 /* CLAUDE.md Rule 4's sizing formula — THE only one. Kept as a single function so the practice
    sizer and any future caller cannot drift into two different answers. */
@@ -3844,7 +3862,8 @@ function deskRulePanel(rows, total, invested, corr) {
   const check = (ok, label, detail) => `<div class="dr-row"><span class="dr-dot ${ok ? "ok" : "no"}">${ok ? "✓" : "!"}</span>
     <span class="dr-lab">${label}</span><span class="dr-det sub">${detail}</span></div>`;
   return `
-  <div class="seg"><h2>Against the desk's own rules</h2><div class="ln"></div><span class="pill">Rule 4</span></div>
+  <div class="seg"><h2>Against the desk's own rules</h2><div class="ln"></div><span class="pill">Rule 4</span>${
+    DESK_RULES_SOURCE === "fallback" ? '<span class="pill wait" title="state/desk_rules.json did not load — showing built-in defaults, which may not match the desk\'s current config">defaults</span>' : ""}</div>
   <div class="card">
     <p class="sub" style="margin-bottom:10px">The desk holds itself to hard limits it cannot override. Your practice book is checked against the same ones — as <b>education about one specific discipline</b>, not a verdict on your portfolio.</p>
     ${check(held.length <= DESK_RULES.max_positions, `Max ${DESK_RULES.max_positions} concurrent positions`, `you hold ${held.length}`)}

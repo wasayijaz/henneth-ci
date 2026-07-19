@@ -7,7 +7,7 @@ import sys
 import time
 from pathlib import Path
 
-from psx_data import STATE, load_json, save_json
+from psx_data import STATE, load_config, load_json, save_json
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -52,6 +52,27 @@ def main():
     save_json(STATE / "dashboard.json", dash)
     print(f"dashboard: regime={dash['regime']} geo={dash['geo_risk']} "
           f"movers={len(top)}/{len(bottom)} news={len(dash['news'])}")
+
+    # PUBLIC RULE CONSTANTS. The dashboard's Rule 4 checker needs the risk limits, but
+    # config/desk.json must NEVER be served: it holds capital_pkr (the owner's actual
+    # trading capital) and the Telegram bot token. So app.js had the numbers hardcoded a
+    # second time, which drifts silently the moment config changes.
+    #
+    # Export the RULE CONSTANTS ONLY — an allow-list, not a blocklist, so a future secret
+    # added to desk.json cannot leak by default. Capital stays out; the client already asks
+    # the user for their own.
+    risk = load_config().get("risk", {})
+    save_json(STATE / "desk_rules.json", {
+        "updated": time.strftime("%Y-%m-%d %H:%M"),
+        "source": "config/desk.json (risk block, rule constants only — no capital, no secrets)",
+        "rules": {k: risk.get(k) for k in (
+            "max_positions", "max_total_exposure_pct", "max_same_sector_positions",
+            "risk_per_trade_pct", "max_pct_per_trade",
+            "stale_setup_sessions", "stale_position_sessions",
+            "circuit_breaker_stops", "circuit_breaker_window_sessions",
+            "circuit_breaker_cooldown_sessions", "min_avg_daily_traded_value_pkr",
+        ) if risk.get(k) is not None},
+    })
 
     # PRE-DEPLOY GATE — this is the last step the CI pipeline runs before it copies
     # state/ into the published site (workflow runs it under `set -e`). preflight
