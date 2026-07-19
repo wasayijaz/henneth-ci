@@ -132,8 +132,31 @@ DETERMINISTIC PYTHON (free, no tokens)                 AGENTS (tokens, right-siz
 **The efficiency engine.** A per-ticker *material hash* (valuation verdict, scorecard, new documents,
 high-impact news, earnings proximity — **not** price) drives a coverage gate that tiers every ticker each
 cycle: **reaffirm** (unchanged → last view stands, 0 tokens) · **delta** (price moved → cheap refresh) ·
-**full** (material change or never covered → the ≤3/day debate). So the whole universe stays current at a
+**full** (material change or never covered → a budget-capped debate). So the whole universe stays current at a
 small fraction of naive cost, and new AGM/broker/news data *targets* exactly the ticker that changed.
+
+**Two liquidity gates, deliberately separate** (`scripts/liquidity.py` → `state/liquidity.json`).
+Coverage reaches the whole KSE All Share (554 symbols), which made ~350 thin names visible, so
+"is this worth analysing" and "would the desk ever trade it" became different questions:
+
+| gate | threshold | decides | count |
+|---|---|---|---|
+| **research** | ≥ Rs 5M ADTV + ≥ 500 bars | what gets backtests, fundamentals, predictability | 208 |
+| **signal** | ≥ Rs 30M ADTV | what can ever produce a published setup | 100 |
+
+A name can be fully researched and still never produce a setup — the ticker page says so out loud
+rather than showing an empty signal section. Liquidity is measured with the published estimators, not
+a turnover rule of thumb: **Amihud (2002)** price impact, **Corwin-Schultz (2012)** high-low spread
+(with the overnight adjustment and per-observation zero floor), **Fong-Holden-Trzcinka (2017)** for
+cost magnitude where no quote data exists, **Roll (1984)**, and **SEC Rule 22e-4** days-to-liquidate
+classified at the *stressed* participation rate.
+
+**Backtests pay a per-symbol spread, not a flat fee.** Each name is charged
+`max(config floor, estimated round-trip cost)`. Lesmond, Schill & Zhou (2004) showed the stocks
+producing the largest momentum returns are the same stocks that cost the most to trade — and most of
+this 70-strategy library is breakout/momentum, so a constant cost assumption flatters exactly the names
+it should penalise. Switching it on removed 64 of 591 previously "eligible" strategy-ticker pairs.
+Those were artefacts of an unrealistic cost assumption, not edges.
 
 **Four self-checking systems** watch different failure classes:
 1. **Data QA** — flags glitchy/inconsistent numbers (e.g. a bad "-83% drop") → verifier web-checks, can block.
@@ -151,10 +174,23 @@ Loops run locally (while the Claude app is open) and `push` to `main`; each push
 |---|---|---|---|
 | Market checkpoints | weekdays 11:00 & 17:00 PKT | cheap | data + news sentinel + position monitor → push |
 | Daily | weekdays 17:20 PKT | ~3 agents | macro + analyst read → push |
-| Room-loop | weekdays 17:47 PKT | ≤3 debates | Desk Room debates + QA + scoring → push |
+| Room-loop | weekdays 17:47 PKT | budget-capped debates | Desk Room debates + QA + scoring → push |
 | Weekly-harvest | Sat 11:00 PKT | 1 haiku agent | broker calls (Profit/Dawn/Mettis) + filings → push |
+| Code review | Sat 12:00 PKT | 1 review pass | `/code-review` on the week's diff; fixes clear-cut bugs → push |
+| Product scout | Sun 12:10 PKT | 1 lean agent | ranks a product backlog. **Proposes only, never builds.** |
+
+The Room loop is staged, not hand-orchestrated: `room_batch.py` splits the gate's plan into per-ticker
+files, the persona agents **write their own output**, and `room_assemble.py` is the single writer of
+`rooms.json`. Routing agent output back through the orchestrator's context was what previously capped
+a batch at 3; agents writing directly cost ~10 orchestrator tokens each instead of ~800.
 
 Every push runs the same gate (`preflight.py`) before it publishes, so a broken cycle never reaches the live site. `scripts/publish.py "<msg>"` is the one push helper all loops use.
+
+**`publish.py` stages `state/` only.** It used to `git add -A`, which staged the whole working tree —
+and since the cloud cron and every interactive session share one checkout, a routine data refresh could
+sweep up another session's half-finished edits and ship them under an unrelated commit message. Shipping
+code is now a deliberate `--code` opt-in; anything left unstaged is listed, never silently included or
+silently dropped. The weekly code review is the only loop that needs the flag.
 
 ## Run it locally
 
