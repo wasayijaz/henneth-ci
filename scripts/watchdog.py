@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live-site watchdog for Henneth AI.
+"""Live-site watchdog for Henneth H1.
 
 preflight.py guards data BEFORE publish. This guards the site AFTER publish —
 it fetches the actual deployed URLs a real user's browser would fetch and asserts
@@ -27,12 +27,15 @@ import time
 import urllib.request
 from datetime import date, datetime
 
-# The canonical product URL as of the 2026-07-19 rebrand to Henneth AI. The
-# *.vercel.app deployment URL still serves the same build and stays valid as a fallback —
+# The canonical TERMINAL URL. Since the 2026-07-19 domain split, henneth.app serves the
+# MARKETING site and the terminal lives on desk.henneth.app — so this must point at the
+# subdomain. Pointed at the apex it would fetch /state/*.json from the marketing site,
+# which has no /state/, and every post-publish check would fail for no reason.
+# The *.vercel.app deployment URL still serves the same build and stays valid as a fallback —
 # watch the domain users actually visit, since a DNS/cert problem there is invisible if we
 # only ever check the origin. (www.henneth.app is deliberately NOT checked: it is not yet
 # added in Vercel, so it has no certificate — see docs/OPERATIONS.md.)
-BASE_DEFAULT = "https://henneth.app"
+BASE_DEFAULT = "https://desk.henneth.app"
 BASE_FALLBACK = "https://psx-trade-desk.vercel.app"
 TIMEOUT = 20
 
@@ -118,7 +121,7 @@ def main():
                             f"— these ticker pages show 'No data'")
 
     ok = not problems
-    print("Henneth AI - live watchdog  [" + base + "]")
+    print("Henneth H1 - live watchdog  [" + base + "]")
     if notes:
         print(f"\n  NOTE ({len(notes)}):")
         for n in notes:

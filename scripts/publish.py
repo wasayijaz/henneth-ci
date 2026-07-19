@@ -138,7 +138,7 @@ def main():
         if not ok:
             print(f"publish: could not push after retries — last git error:\n{last_err[:400]}")
             sys.exit(1)
-    print(f"publish: pushed '{msg}' -> Vercel is deploying (~60s to https://henneth.app/).")
+    print(f"publish: pushed '{msg}' -> Vercel is deploying (~60s to https://desk.henneth.app/).")
 
 
 if __name__ == "__main__":
