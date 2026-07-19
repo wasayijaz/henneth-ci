@@ -1,4 +1,4 @@
-/* Henneth AI — service worker (Web Push only).
+/* Henneth Desk — service worker (Web Push only).
    INERT BY DESIGN: nothing registers this file today. It is installed only when
    push.js is explicitly enabled AND a VAPID public key exists (see docs/OPERATIONS.md §11).
 
@@ -21,7 +21,7 @@ function parsePayload(event) {
   // Only ever navigate to our own hash routes — never to a URL taken verbatim from the payload.
   const safeSym = /^[A-Z0-9.&-]{1,20}$/.test(sym) ? sym : "";
   return {
-    title: String(d.title || "Henneth AI").slice(0, 120),
+    title: String(d.title || "Henneth Desk").slice(0, 120),
     body: String(d.body || "").slice(0, 400),
     tag: String(d.tag || (safeSym ? "watch:" + safeSym : "desk")).slice(0, 60),
     route: safeSym ? "#/ticker/" + safeSym : "#/watchlist",

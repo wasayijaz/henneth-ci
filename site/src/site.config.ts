@@ -1,63 +1,110 @@
 // Single source of truth for brand-swappable values.
-// Rename the product, change the domain, or edit pricing in ONE place.
+// Rename the product, change the domain, or edit the plan ladder in ONE place.
+//
+// NAMING (owner, 2026-07-19): the product is "Henneth" everywhere public — this marketing
+// site, the brand, the domain. It is "Henneth Desk" only INSIDE the app/dashboard.
 export const site = {
-  name: 'Henneth AI',
+  name: 'Henneth',
+  // The in-app product name, used when referring to the terminal itself.
+  appName: 'Henneth Desk',
   // Short tagline used in the browser tab and OG cards.
   tagline: 'PSX research, made clear.',
   // One-line description used for meta + JSON-LD.
   description:
-    'Henneth AI turns the Pakistan Stock Exchange into plain-English answers — is this company healthy, is the price reasonable, what changed this week. A transparent, rules-based research engine. Research, not advice.',
-  // Marketing-site canonical URL. NOT changed in the 2026-07-19 rebrand: henneth.app serves the
-  // TERMINAL, so pointing the marketing canonical at it would make both claim the same URL. Set
-  // this once the marketing site has its own home (a subdomain, or henneth.app with the app moved
-  // to app.henneth.app) — a canonical pointing somewhere that doesn't host this site is worse
-  // than a stale one.
-  url: 'https://psx-desk.vercel.app',
-  // The product app users launch into (the existing terminal).
-  appUrl: 'https://henneth.app',
-  contactEmail: 'hello@example.com',
+    'Henneth turns the Pakistan Stock Exchange into plain-English answers — is this company healthy, is the price reasonable, what changed this week. A transparent, rules-based research engine. Research, not advice.',
+  // Marketing-site canonical URL — the marketing site owns the root domain.
+  url: 'https://henneth.app',
+  // The terminal users enter after picking a plan. Moved off the root so marketing can own it.
+  appUrl: 'https://desk.henneth.app',
+  contactEmail: 'hello@henneth.app',
   social: {
     x: 'https://x.com/MWasayI',
   },
-  // Supabase (waitlist capture). Publishable key is client-safe.
+  // Supabase (waitlist / plan-interest capture). Publishable key is client-safe.
   supabase: {
     url: 'https://qteoncckohuoatbjjykb.supabase.co',
     anonKey: 'sb_publishable_aQu8P4yrAY7l8Y0AcLth5g_Z3VceUnw',
     waitlistTable: 'waitlist',
   },
-  // Pricing is displayed only — checkout stays OFF until the legal + track-record
-  // gates in docs/LAUNCH-PLAYBOOK.md are cleared.
-  pricing: {
-    currency: 'PKR',
-    tiers: [
-      {
-        id: 'free',
-        name: 'Free',
-        priceMonthly: 0,
-        blurb: 'The research, open to everyone. Always free.',
-        cta: 'Start free',
-        featured: false,
-      },
-      {
-        id: 'desk',
-        name: 'Desk',
-        priceMonthly: 1500,
-        priceYearly: 12000,
-        blurb: 'For the active investor who wants the full picture.',
-        cta: 'Join the waitlist',
-        featured: true,
-      },
-      {
-        id: 'pro',
-        name: 'Desk Pro',
-        priceMonthly: 4000,
-        priceYearly: 32000,
-        blurb: 'Every strategy, every debate, full depth.',
-        cta: 'Join the waitlist',
-        featured: false,
-      },
-    ],
-  },
+
+  // ---------------------------------------------------------------------------
+  // THE PLAN LADDER — mirrors `PLANS` / `PLAN_ORDER` in dashboard/app.js.
+  // Keep these in sync; app.js is the source of truth for features/entitlement.
+  //
+  // NO PRICES ON PURPOSE. There is no payment gateway yet (Stripe is unavailable
+  // in Pakistan; a local gateway comes later) and `BILLING_LIVE = false` in the
+  // app. Plan is also DB-frozen against client writes, so choosing a plan here
+  // cannot grant it. Picking a plan records the intent and drops the user into
+  // the free desk — we say so plainly rather than faking a checkout.
+  // ---------------------------------------------------------------------------
+  plansNote: 'Pricing is announced at launch. Billing isn’t live yet, so everyone starts on the free desk — pick the plan you want and we’ll hold your place.',
+  plans: [
+    {
+      id: 'free',
+      name: 'Free',
+      tag: '',
+      blurb: 'Cast your chart, read the daily desk note, and follow the public track record.',
+      cta: 'Enter the desk',
+      soon: false,
+      featured: false,
+      features: [
+        'The daily desk note',
+        'Universe board & heatmap',
+        'Your personal chart',
+        'The public track record',
+        'News, macro & calendars',
+      ],
+    },
+    {
+      id: 'investor',
+      name: 'Investor',
+      tag: 'start here',
+      blurb:
+        'Become an investor who reads for themselves. The guided journey from “why invest” to your first practice position — on real PSX filings and real prices.',
+      cta: 'Choose Investor',
+      soon: false,
+      featured: true,
+      features: [
+        'The guided investor journey',
+        'Practice portfolio (virtual PKR 500k)',
+        'PSX calculators & tools',
+        'Dividends & earnings in full',
+        'Your chart, in full',
+      ],
+    },
+    {
+      id: 'pro',
+      name: 'Pro',
+      tag: 'TA & FA',
+      blurb:
+        'The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.',
+      cta: 'Choose Pro',
+      soon: false,
+      featured: false,
+      features: [
+        'Everything in Investor',
+        'Model fair value, in full',
+        'Run any of the tested strategies',
+        'Screener, scanner & scenarios',
+        'Ask the desk, alignment & portfolio X-ray',
+      ],
+    },
+    {
+      id: 'broker',
+      name: 'Broker',
+      tag: 'coming soon',
+      blurb:
+        'Everything in Pro, plus your own desk’s calls scored in public on the same bar as everyone else.',
+      cta: 'Coming soon',
+      soon: true,
+      featured: false,
+      features: [
+        'Everything in Pro',
+        'Your calls scored in public',
+        'Your own desk on the leaderboard',
+      ],
+    },
+  ],
 } as const;
 
 export type Site = typeof site;

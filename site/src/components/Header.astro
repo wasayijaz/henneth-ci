@@ -2,7 +2,7 @@
 import { site } from '../site.config.ts';
 const nav = [
   { href: '/features', label: 'Features' },
-  { href: '/pricing', label: 'Pricing' },
+  { href: '/plans', label: 'Plans' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
 ];
@@ -20,8 +20,8 @@ const nav = [
     </nav>
 
     <div class="hdr-cta">
-      <a href="#waitlist" class="btn btn-ghost hdr-btn">Get early access</a>
-      <a href={site.appUrl} class="btn btn-primary hdr-btn" rel="noopener">Launch the desk</a>
+      <a href={site.appUrl} class="btn btn-ghost hdr-btn" rel="noopener">Sign in</a>
+      <a href="/plans" class="btn btn-primary hdr-btn">Get started</a>
     </div>
 
     <button class="hdr-menu" id="hdrMenu" aria-label="Menu" aria-expanded="false">
@@ -31,8 +31,8 @@ const nav = [
 
   <div class="hdr-drawer" id="hdrDrawer" hidden>
     {nav.map((n) => <a href={n.href}>{n.label}</a>)}
-    <a href="#waitlist">Get early access</a>
-    <a href={site.appUrl} class="drawer-primary" rel="noopener">Launch the desk →</a>
+    <a href={site.appUrl} rel="noopener">Sign in</a>
+    <a href="/plans" class="drawer-primary">Get started →</a>
   </div>
 </header>
 

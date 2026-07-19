@@ -1,0 +1,159 @@
+---
+import Base from '../layouts/Base.astro';
+import Waitlist from '../components/Waitlist.astro';
+import { site } from '../site.config.ts';
+
+const plans = site.plans;
+// Picking a plan carries the intent into the desk. Billing isn't live, so this
+// records what they wanted and starts them on the free desk — it never pretends
+// to be a checkout.
+const enter = (id: string) => `${site.appUrl}/?plan=${id}`;
+---
+
+<Base
+  title="Plans"
+  path="/plans"
+  description="Henneth plans — Free, Investor, Pro and Broker. Pick the desk that fits how you invest. Pricing is announced at launch."
+>
+  <section class="section-tight page-hero">
+    <div class="wrap center">
+      <p class="eyebrow">Plans</p>
+      <h1>Pick your desk.</h1>
+      <p class="lead">
+        Three desks on one research engine — for new investors, for pros, and for brokers who’ll put
+        their own calls on the record.
+      </p>
+      <p class="plans-note">{site.plansNote}</p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="grid plans">
+        {
+          plans.map((p) => (
+            <div class="card plan" data-featured={p.featured} data-soon={p.soon}>
+              <div class="plan-head">
+                <h3 class="plan-name">{p.name}</h3>
+                {p.tag && <span class="plan-tag">{p.tag}</span>}
+              </div>
+              <p class="plan-blurb muted">{p.blurb}</p>
+
+              {p.soon ? (
+                <button class="btn plan-cta" disabled>
+                  {p.cta}
+                </button>
+              ) : (
+                <a class="btn plan-cta" href={enter(p.id)} rel="noopener" data-plan={p.id}>
+                  {p.cta} →
+                </a>
+              )}
+
+              <ul class="plan-feats">
+                {p.features.map((f) => (
+                  <li>{f}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="plans-fine">
+        <p class="muted">
+          Henneth is a research and analytics tool, not an adviser and not a broker. It never places
+          orders and never tells you what to buy. Choosing a plan today starts you on the free desk —
+          no card, no charge.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-sec">
+    <div class="wrap center cta-inner">
+      <Waitlist source="plans" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero .lead { max-width: 600px; margin-inline: auto; }
+  .plans-note {
+    max-width: 620px;
+    margin: 18px auto 0;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    background: var(--accent-tint);
+    border: 1px solid #e8cf9a;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+  }
+
+  .plans { grid-template-columns: repeat(4, 1fr); align-items: start; }
+  .plan { display: flex; flex-direction: column; height: 100%; }
+  .plan[data-featured='true'] {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary), var(--shadow);
+  }
+  .plan[data-soon='true'] { opacity: 0.72; }
+
+  .plan-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .plan-name { font-size: 1.3rem; margin: 0; }
+  .plan-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--primary-tint);
+    color: var(--primary-ink);
+    padding: 4px 9px;
+    border-radius: 100px;
+  }
+  .plan[data-soon='true'] .plan-tag { background: var(--bg-tint); color: var(--ink-faint); }
+
+  .plan-blurb { margin: 14px 0 22px; font-size: 0.92rem; line-height: 1.55; flex: 1; }
+
+  .plan-cta {
+    justify-content: center;
+    width: 100%;
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+  .plan-cta:hover { border-color: var(--ink-faint); background: var(--bg); }
+  .plan[data-featured='true'] .plan-cta {
+    background: var(--primary);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 2px 8px var(--primary-glow);
+  }
+  .plan[data-featured='true'] .plan-cta:hover { background: var(--primary-ink); }
+  .plan-cta[disabled] { cursor: not-allowed; opacity: 0.55; }
+  .plan-cta[disabled]:hover { transform: none; background: var(--surface); border-color: var(--line-strong); }
+
+  .plan-feats { list-style: none; padding: 0; margin: 22px 0 0; }
+  .plan-feats li {
+    padding: 9px 0 9px 24px;
+    position: relative;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+  }
+  .plan-feats li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .plan[data-soon='true'] .plan-feats li::before { color: var(--ink-faint); }
+
+  .plans-fine { max-width: 640px; margin: 40px auto 0; text-align: center; }
+  .plans-fine p { font-size: 0.85rem; margin: 0; }
+
+  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
+  .cta-inner :global(.wl) { margin: 0 auto; }
+
+  @media (max-width: 1040px) { .plans { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .plans { grid-template-columns: 1fr; } }
+</style>
