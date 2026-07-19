@@ -4669,7 +4669,149 @@ async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
 }
-const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal };
+
+/* ==========================================================================================
+   CSV EXPORT — one delegated handler serves every table on the site.
+   Rather than per-table export code, a button carrying data-csv="<filename>" serialises the
+   nearest table in its own card. That means a new table gets export for free, and a table
+   whose columns change can't drift out of sync with a hand-maintained column list.
+   ========================================================================================== */
+function csvCell(text) {
+  // Excel/Sheets dialect: quote always, double any inner quote. Serialising the RENDERED text
+  // keeps the file honest — what you exported is exactly what you were shown, em-dashes and all.
+  return '"' + String(text ?? "").replace(/\s+/g, " ").trim().replace(/"/g, '""') + '"';
+}
+function tableToCSV(table) {
+  return [...table.querySelectorAll("tr")]
+    .map(tr => [...tr.querySelectorAll("th,td")].map(c => csvCell(c.innerText)).join(","))
+    .join("\r\n");
+}
+function downloadCSV(name, csv) {
+  // A BOM makes Excel read UTF-8 correctly — without it, company names with non-ASCII
+  // characters arrive mojibake'd, which looks like a data bug and isn't one.
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url;
+  a.download = `psx-desk-${name}-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);   // let the click consume it first
+}
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-csv]");
+  if (!btn) return;
+  e.preventDefault();
+  const scope = btn.closest(".card, .seg")?.parentElement || document;
+  const table = btn.closest(".card")?.querySelector("table") || scope.querySelector("table");
+  if (!table) return;
+  downloadCSV(btn.dataset.csv || "export", tableToCSV(table));
+});
+const csvBtn = name => `<button class="note-save csv-btn" data-csv="${esc(name)}" title="Download this table as a CSV file">↓ CSV</button>`;
+
+/* ==========================================================================================
+   GLOSSARY — every badge and scored term the desk shows, defined in one place.
+   The desk invents vocabulary ("backtest-proven", "QA blocked", "composite fair"). A reader
+   who guesses at those is reading a different product than the one that was built, so the
+   definitions live in data, render as a page, and double as hover text on the badges.
+   ========================================================================================== */
+const GLOSSARY = [
+  ["backtest-proven", "signals", "This exact rule was tested on this stock's own price history and cleared the desk's bar there. It is NOT a prediction — it means the pattern has paid on this name before, after costs. Always read the trade count beside it: a rule that won 60% over 10 trades is a much weaker claim than one that won 60% over 100."],
+  ["audited ✓", "signals", "An independent Auditor agent re-derived every number in the setup from the raw data WITHOUT seeing the Strategist's reasoning, and got the same answer. Any mismatch kills the setup outright (CLAUDE.md Rule 7) — there is no override."],
+  ["confidence (high / medium / low)", "signals", "The desk's own read on how much weight the evidence carries — driven mainly by the size and consistency of the backtest sample. High confidence on a small sample is still a small sample; the trade count is always shown next to it for exactly this reason."],
+  ["out-of-sample", "signals", "The rule was fitted on an early slice of history, then tested on a later slice it had never seen. A strategy that looks good in-sample and falls apart out-of-sample was curve-fitted, not discovered — which is why both numbers are always published."],
+  ["net expectancy", "signals", "Average profit or loss per trade AFTER the desk's estimated trading friction for that specific stock. Thin stocks are charged a wider spread than liquid ones, because assuming one flat cost flatters exactly the illiquid names that are hardest to actually trade."],
+  ["composite fair value", "valuation", "The MEDIAN of four independent valuation methods (relative P/E, earnings power, Graham, dividend discount). A median is used so one method blowing out can't drag the blend. It is a model estimate on public fundamentals — research, never a price target."],
+  ["method spread", "valuation", "How far apart the four valuation methods are. A wide spread means the methods fundamentally disagree about the company, so the single blended number deserves far less weight than a tight cluster would."],
+  ["mispricing %", "valuation", "Distance between the live price and the composite fair value. Positive means the model reads it as below fair. A model reading cheap is a reason to investigate, never on its own a reason to buy."],
+  ["predictability score", "quant", "How systematically a stock's own past behaviour has related to its next move, scored on ~19 years of its history. High predictability does not mean it will go up — it means its moves have been less random than its peers'."],
+  ["QA clean / flags / blocked", "research", "The Verifier agent's adversarial fact-check of a published analysis. 'clean' = numbers verified. 'flags' = non-material caveats noted. 'blocked' = a real inconsistency was found and the analysis was corrected or explicitly caveated before publishing rather than quietly shipped."],
+  ["research gate vs signal gate", "coverage", "Two separate liquidity bars. The research gate decides which names the desk ANALYSES; the stricter signal gate decides which it will ever publish a SETUP on. A stock can be fully researched and still never produce a setup — for a thin name that is the intended outcome, not a gap."],
+  ["core / listed tier", "coverage", "'core' names get the full pipeline — deep history, backtests, fundamentals, debates. 'listed' names get prices, quant measures, sector and dividends, but not the expensive per-ticker analysis. Every listed company is visible and searchable; the ticker page says which tier it is rather than letting an empty section imply the desk looked and found nothing."],
+  ["regime (risk-on / neutral / risk-off)", "macro", "The desk's read on Pakistan's macro backdrop — policy rate, PKR, inflation, external account, oil. It is context for sizing and patience, not a trade signal in itself."],
+];
+async function pageGlossary() {
+  await Promise.resolve();
+  const groups = [...new Set(GLOSSARY.map(g => g[1]))];
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Glossary</h2><div class="ln"></div><span class="pill">${GLOSSARY.length} terms</span></div>
+  <p class="sub" style="margin-bottom:12px">Every badge and scored term this desk uses, in plain English — including what each one does <b>not</b> claim. If a word here is doing more work than you thought, that is the point of the page.</p>
+  ${groups.map(g => `
+    <div class="seg"><h2>${esc(g)}</h2><div class="ln"></div></div>
+    <div class="card gloss-list">${GLOSSARY.filter(x => x[1] === g).map(([term, , def]) => `
+      <div class="gloss-item"><div class="gloss-term">${esc(term)}</div><div class="gloss-def">${esc(def)}</div></div>`).join("")}</div>`).join("")}
+  <p class="sub" style="margin-top:10px">Research and education, not advice. The desk never places orders.</p>`;
+}
+const GLOSS_TIP = Object.fromEntries(GLOSSARY.map(([term, , def]) => [term, def]));
+
+/* ==========================================================================================
+   COMPARE — up to four names side by side on the desk's own scored fields.
+   The Ask page already answers "A vs B" in prose; this is the tabular counterpart, for when
+   you want to read the same field across names rather than a narrative about two of them.
+   ========================================================================================== */
+let _cmp = { syms: [] };
+function cmpAdd(sym) {
+  sym = (sym || "").trim().toUpperCase();
+  if (sym && !_cmp.syms.includes(sym) && _cmp.syms.length < 4) _cmp.syms.push(sym);
+  pageCompare();
+}
+function cmpDrop(sym) { _cmp.syms = _cmp.syms.filter(x => x !== sym); pageCompare(); }
+async function pageCompare() {
+  await Promise.resolve();
+  const [q, fv, fnd, fs, pred, sec, uni, bt] = await Promise.all([
+    j("quant.json"), j("fairvalue.json"), j("fundamentals.json"), j("fundamental_scores.json"),
+    j("predictability.json"), j("sectors.json"), j("universe.json"), j("backtests.json")]);
+  const syms = _cmp.syms.filter(s => q?.tickers?.[s]);
+  const missing = _cmp.syms.filter(s => !q?.tickers?.[s]);
+  // "proven here" = strategies that cleared the bar on THIS stock's own history
+  const provenCount = s => Object.values(bt?.templates || {})
+    .reduce((n, per) => n + (per?.[s]?.eligible ? 1 : 0), 0);
+  const col = s => {
+    const v = q.tickers[s] || {}, t = fv?.tickers?.[s] || {}, f = fnd?.tickers?.[s] || {}, m = fs?.tickers?.[s]?.metrics || {};
+    return { s, name: uni?.symbols?.[s]?.name || "", sector: sec?.tickers?.[s]?.sector || "—",
+      price: v.close, ret20: v.ret_20d, rsi: v.rsi14, pe: m.pe, fpe: m.forward_pe,
+      dy: parseFloat(f.div_yield) || null, payout: parseFloat(f.payout_ratio) || null,
+      fair: t.composite_fair, gap: t.mispricing_pct, verdict: t.verdict,
+      pred: pred?.tickers?.[s]?.score, proven: provenCount(s) };
+  };
+  const cols = syms.map(col);
+  // Each row states its own units and, where the number is a model output rather than a fact,
+  // says so — a compare table invites "bigger is better" reading more than a single page does.
+  const ROWS = [
+    ["Sector", c => esc(c.sector), ""],
+    ["Price (Rs)", c => fmt(c.price), "num"],
+    ["20-day move", c => c.ret20 != null ? `<b class="${cls(c.ret20)}">${sgn(c.ret20)}%</b>` : "—", "num"],
+    ["RSI (14)", c => c.rsi ?? "—", "num"],
+    ["P/E (trailing)", c => c.pe ?? "—", "num"],
+    ["P/E (forward)", c => c.fpe ?? "—", "num"],
+    ["Dividend yield", c => c.dy != null ? c.dy + "%" : "—", "num"],
+    ["Payout ratio", c => c.payout != null ? c.payout + "%" : "—", "num"],
+    ["Model fair value (Rs)", c => fmt(c.fair), "num"],
+    ["vs fair value", c => c.gap != null ? `<b class="${c.gap > 0 ? "up" : c.gap < 0 ? "dn" : ""}">${sgn(c.gap)}%</b>` : "—", "num"],
+    ["Predictability", c => c.pred ?? "—", "num"],
+    ["Strategies proven here", c => c.proven || 0, "num"],
+  ];
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Compare</h2><div class="ln"></div><span class="pill">${cols.length}/4 names</span></div>
+  <p class="sub" style="margin-bottom:12px">The same scored fields, read across names instead of down one page. Prefer a sentence? The <a href="#/ask" style="color:var(--accent)">Ask</a> page answers "A vs B" in prose.</p>
+  <div class="card">
+    <div class="scr-row">
+      <input id="cmp-in" class="ph-in combo" style="flex:1" aria-label="Add a company to compare" placeholder="Add a company — type a symbol or name"
+        onkeydown="if(event.key==='Enter'){cmpAdd(this.value);this.value=''}">
+      <button class="note-save" onclick="const i=document.getElementById('cmp-in');cmpAdd(i.value);i.value=''">Add</button>
+    </div>
+    <div class="scr-chips">${cols.length ? cols.map(c => `<span class="scr-chip">${esc(c.s)} <b class="cmp-x clickable" onclick="cmpDrop('${esc(c.s)}')" title="Remove ${esc(c.s)}">✕</b></span>`).join("")
+      : '<span class="sub">Add two or more names to compare them.</span>'}</div>
+    ${missing.length ? `<div class="tnote warn" style="margin-top:8px"><b>No data for ${missing.map(esc).join(", ")}</b> — check the symbol, or it may be a PSX board counter rather than a tradeable company.</div>` : ""}
+  </div>
+  ${cols.length < 2 ? `<div class="card"><div class="empty">Pick at least two names. Up to four fit side by side.</div></div>` : `
+  <div class="card" style="padding:0"><table class="cmp-table"><thead><tr><th>Field</th>${
+    cols.map(c => `<th class="r"><a href="#/ticker/${esc(c.s)}" style="color:var(--accent);font-weight:700">${esc(c.s)}</a><div class="sub" style="font-weight:400">${esc((c.name || "").slice(0, 18))}</div></th>`).join("")}</tr></thead>
+    <tbody>${ROWS.map(([label, render, kls]) => `<tr><td><b>${esc(label)}</b></td>${
+      cols.map(c => `<td class="r ${kls}">${render(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+  <div class="tnote" style="margin-top:10px">${csvBtn("compare")}
+    <span class="sub" style="margin-left:10px">Fair value is a <b>model estimate</b> on public fundamentals, not a price target — and the four methods behind it often disagree. "Strategies proven here" counts rules that cleared the bar on each stock's <b>own</b> history, so the counts are not directly comparable across names with different amounts of history. Terms explained in the <a href="#/glossary" style="color:var(--accent)">glossary</a>.</span></div>`}`;
+}
+
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare };
 let lastPage = null;
 
 function animateIn() {

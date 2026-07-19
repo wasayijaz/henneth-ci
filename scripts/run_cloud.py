@@ -17,6 +17,10 @@ STEPS = [
     # the per-symbol trading friction the backtest charges. Out of order, the gate falls back
     # to core-only and the backtest silently reverts to a flat friction assumption.
     "liquidity.py",
+    # Needs the history fetches for closes and liquidity.py for the research gate it iterates
+    # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
+    # other dependency and nothing downstream blocks on it. Pure local math, no network.
+    "correlation.py",
     "fetch_dividends.py",
     "fetch_dividends_deep.py",  # 18y payout history (Yahoo events) — DPS only gives ~18 months
     "fetch_fundamentals.py", "score_fundamentals.py",

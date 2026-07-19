@@ -1,25 +1,32 @@
-"""ONE-TIME deep history backfill. Pulls max available daily OHLC (~2008->today,
-18y) for every universe symbol from Yahoo Finance (PSX names carry the '.KA'
-Karachi suffix). Verified to match DPS exactly on recent bars (same close, same
-volume) and — unlike the DPS EOD feed — it INCLUDES real daily high/low.
+"""Deep history. Pulls max available daily OHLC (~2008->today, 18y) for every core
+symbol from Yahoo Finance (PSX names carry the '.KA' Karachi suffix). Verified to match
+DPS on recent bars and — unlike the DPS EOD feed — it INCLUDES real daily high/low,
+which is why the Corwin-Schultz spread estimator in liquidity.py can only run on names
+that have a file here.
 
 Stored separately in state/history_deep/{SYM}.json so it does NOT disturb the
-authoritative DPS pipeline (quant/backtest/live/crosscheck stay on DPS). The
-dashboard uses deep history for the long-range chart (5Y/10Y/Max) and the
-max-history behavior stats.
+authoritative DPS pipeline (quant/live/crosscheck stay on DPS). The dashboard uses it
+for the long-range chart (5Y/10Y/Max), and backtest.py PREFERS it over the DPS series
+because it is longer — which is exactly why it must not be allowed to go stale.
 
-Safe to re-run (idempotent). Slow (~60 symbols) — run manually once, then only
-to refresh depth occasionally.
-Usage: python scripts/fetch_deep_history.py [--refresh]
+This was originally a ONE-TIME backfill that skipped any symbol whose file already
+existed. That meant every cached series froze permanently at its first-pull date and
+nothing reported it. It now refreshes stale files on a bounded rotation each run.
+
+Safe to re-run (idempotent).
+Usage: python scripts/fetch_deep_history.py [--refresh]   (--refresh forces ALL)
 """
 import sys
 import time
+from datetime import date, datetime
 
 import requests
 
 from psx_data import STATE, load_json, save_json
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
+STALE_AFTER_DAYS = 5        # a file whose last bar is older than this is refetched
+DEEP_REFRESH_PER_RUN = 25   # bounded so a mass refresh spreads over cycles, not one 25-min job
 
 
 def fetch(symbol: str, sess: requests.Session) -> list[dict] | None:
@@ -100,14 +107,46 @@ def main():
     sess = requests.Session()
     sess.headers.update(UA)
 
-    ok, failed, skipped = 0, [], 0
+    ok, failed, skipped, stale_refreshed = 0, [], 0, []
     # tier filter: deep Yahoo history is slow per ticker and only the core names get backtested.
     # Default to "core" so a universe file without tiers behaves exactly as before.
-    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
+    core = [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]
+
+    # STALENESS REFRESH. This file used to fetch a symbol once and then skip it forever
+    # (`if dest.exists(): continue`), so every cached series silently froze at whatever date
+    # it was first pulled. That is not a cosmetic problem: backtest.py PREFERS deep history
+    # over the DPS feed, so a frozen file means the strategy numbers on that name were being
+    # computed from stale prices. IBFL was the caught case — pinned at 235.0 while the live
+    # price was 298, a 27% gap with no error anywhere.
+    #
+    # Now: never-fetched first, then the stalest files, bounded per run so a full refresh
+    # spreads over a few cycles instead of blowing the Actions budget in one.
+    stale = []
+    for sym in core:
+        fp = STATE / "history_deep" / f"{sym}.json"
+        if not fp.exists():
+            continue
+        h = load_json(fp, [])
+        last = h[-1].get("date") if isinstance(h, list) and h else None
+        try:
+            age = (date.today() - datetime.strptime(last, "%Y-%m-%d").date()).days if last else 9999
+        except (ValueError, TypeError):
+            age = 9999
+        if age > STALE_AFTER_DAYS:
+            stale.append((age, sym))
+    stale.sort(reverse=True)                      # stalest first
+    due = {s for _, s in stale[:DEEP_REFRESH_PER_RUN]}
+    if stale:
+        print(f"  deep staleness: {len(stale)} file(s) older than {STALE_AFTER_DAYS}d, "
+              f"refreshing {len(due)} this run (stalest first)")
+
+    for sym in core:
         dest = STATE / "history_deep" / f"{sym}.json"
-        if dest.exists() and not refresh:
+        if dest.exists() and not refresh and sym not in due:
             skipped += 1
             continue
+        if sym in due:
+            stale_refreshed.append(sym)
         try:
             hist = fetch(sym, sess)
             if hist and len(hist) > 250:
@@ -138,10 +177,13 @@ def main():
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "source": "Yahoo Finance (.KA)",
         "ok": ok, "skipped_existing": skipped,
+        "stale_refreshed": stale_refreshed,
+        "stale_after_days": STALE_AFTER_DAYS,
         "glitch_bars_repaired": total_fixed, "files_cleaned": files_touched,
         "failed": [{"symbol": s, "note": n} for s, n in failed],
     })
-    print(f"deep history: {ok} fetched, {skipped} cached, {total_fixed} glitch bars repaired across {files_touched} files")
+    print(f"deep history: {ok} fetched ({len(stale_refreshed)} stale-refresh), {skipped} cached, "
+          f"{total_fixed} glitch bars repaired across {files_touched} files")
     print(f"deep history: {ok} fetched, {skipped} already present, {len(failed)} failed")
 
 

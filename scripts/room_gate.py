@@ -29,9 +29,17 @@ def build():
     budget = load_json(STATE / "budget.json", {})
     cap = budget.get("deep_dives_per_day", 3)
 
+    # Scope to the same set room_queue.py ranks (signal-eligible names). The gate used to walk
+    # every dossier independently, so it reported 442 names "due" while the queue only ranked
+    # 99 — two components disagreeing about what coverage even means. Whatever the queue is
+    # scoped to, the gate must plan against exactly that, or the deferred backlog is fiction.
+    queue_syms = {r["symbol"] for r in load_json(STATE / "room_queue.json", {}).get("ranked", [])}
+
     plan = {"reaffirm": [], "delta": [], "full": [], "_meta": {}}
     for sym, d in dossiers.items():
         if sym == "_meta":
+            continue
+        if queue_syms and sym not in queue_syms:
             continue
         prior = rooms.get(sym)
         cur_hash = d.get("material_hash")

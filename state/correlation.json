@@ -1,0 +1,9937 @@
+{
+ "updated": "2026-07-19 13:27",
+ "status": "ok",
+ "lookback_sessions": 750,
+ "min_overlap_bars": 250,
+ "top_n": 8,
+ "high_corr_threshold": 0.6,
+ "symbols_covered": 208,
+ "pairs_reported": 1664,
+ "note": "how closely two stocks have actually moved together, day by day, over the last three years of closes. 1.0 means they rose and fell as one, 0 means no relationship, below 0 means they tended to move opposite. each stock lists only its eight closest companions — a pair is left out entirely unless the two names traded on at least a year of the same days, because a number off a handful of shared sessions is noise. this measures overlap of BEHAVIOUR, not of business: two stocks in different sectors can still be one bet. research, not a rule — the desk's hard limit stays one position per sector.",
+ "method": {
+  "returns": "daily log returns, ln(close_t / close_t-1), from state/history closes",
+  "correlation": "Pearson, computed pairwise on the sessions BOTH names traded (not a common intersection across all symbols, which the thinnest name would dominate)",
+  "omission": "a pair with fewer than 250 shared bars is omitted, never reported with a caveat",
+  "shape": "top 8 peers per symbol, not a full matrix — lists are truncated, so A may appear in B's list without B appearing in A's; treat a hit in either direction as a flag"
+ },
+ "caveats": [
+  "Correlation is not causation and is unstable: it rises in sell-offs, which is exactly when diversification is being relied on. A calm-period number understates crisis co-movement.",
+  "This is a whole-period average. It hides a pair that was uncorrelated for two years and has been moving as one for the last two months.",
+  "Nothing here is beta or market-adjusted. Two names can both simply be following KSE100 rather than each other."
+ ],
+ "tickers": {
+  "ABL": {
+   "bars": 730,
+   "peers": [
+    {
+     "symbol": "HBL",
+     "r": 0.48,
+     "bars": 730
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.449,
+     "bars": 730
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.44,
+     "bars": 730
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.435,
+     "bars": 730
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.416,
+     "bars": 730
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.405,
+     "bars": 730
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.395,
+     "bars": 730
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.394,
+     "bars": 730
+    }
+   ],
+   "max_r": 0.48,
+   "high_corr_peers": []
+  },
+  "ABOT": {
+   "bars": 738,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.545,
+     "bars": 736
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.525,
+     "bars": 738
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.509,
+     "bars": 738
+    },
+    {
+     "symbol": "HALEON",
+     "r": 0.506,
+     "bars": 736
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.493,
+     "bars": 738
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.473,
+     "bars": 738
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.472,
+     "bars": 738
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.449,
+     "bars": 738
+    }
+   ],
+   "max_r": 0.545,
+   "high_corr_peers": []
+  },
+  "ACPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FCCL",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.424,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.419,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.402,
+     "bars": 736
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.395,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.392,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.377,
+     "bars": 741
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.373,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.453,
+   "high_corr_peers": []
+  },
+  "ADMM": {
+   "bars": 730,
+   "peers": [
+    {
+     "symbol": "GATM",
+     "r": 0.311,
+     "bars": 730
+    },
+    {
+     "symbol": "NML",
+     "r": 0.283,
+     "bars": 730
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.262,
+     "bars": 730
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.259,
+     "bars": 730
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.259,
+     "bars": 730
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.251,
+     "bars": 730
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.25,
+     "bars": 730
+    },
+    {
+     "symbol": "IBLHL",
+     "r": 0.246,
+     "bars": 728
+    }
+   ],
+   "max_r": 0.311,
+   "high_corr_peers": []
+  },
+  "AGHA": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.477,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.448,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.436,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.529,
+   "high_corr_peers": []
+  },
+  "AGL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "AVN",
+     "r": 0.354,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.312,
+     "bars": 741
+    },
+    {
+     "symbol": "PSX",
+     "r": 0.308,
+     "bars": 741
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.307,
+     "bars": 741
+    },
+    {
+     "symbol": "OCTOPUS",
+     "r": 0.301,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.301,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.295,
+     "bars": 741
+    },
+    {
+     "symbol": "FATIMA",
+     "r": 0.293,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.354,
+   "high_corr_peers": []
+  },
+  "AGP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.593,
+     "bars": 739
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.524,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.514,
+     "bars": 741
+    },
+    {
+     "symbol": "HALEON",
+     "r": 0.513,
+     "bars": 739
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.509,
+     "bars": 738
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.499,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.482,
+     "bars": 741
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.476,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.593,
+   "high_corr_peers": []
+  },
+  "AGTL": {
+   "bars": 736,
+   "peers": [
+    {
+     "symbol": "MTL",
+     "r": 0.415,
+     "bars": 736
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.371,
+     "bars": 736
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.365,
+     "bars": 736
+    },
+    {
+     "symbol": "NML",
+     "r": 0.363,
+     "bars": 736
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.356,
+     "bars": 736
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.355,
+     "bars": 736
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.355,
+     "bars": 736
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.354,
+     "bars": 736
+    }
+   ],
+   "max_r": 0.415,
+   "high_corr_peers": []
+  },
+  "AHCL": {
+   "bars": 728,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.383,
+     "bars": 728
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.378,
+     "bars": 728
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.376,
+     "bars": 728
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.376,
+     "bars": 728
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.372,
+     "bars": 728
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.371,
+     "bars": 728
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.369,
+     "bars": 723
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.368,
+     "bars": 728
+    }
+   ],
+   "max_r": 0.383,
+   "high_corr_peers": []
+  },
+  "AICL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.463,
+     "bars": 739
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.422,
+     "bars": 739
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.401,
+     "bars": 739
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.399,
+     "bars": 739
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.394,
+     "bars": 734
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.392,
+     "bars": 739
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.385,
+     "bars": 739
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.382,
+     "bars": 737
+    }
+   ],
+   "max_r": 0.463,
+   "high_corr_peers": []
+  },
+  "AIRLINK": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NETSOL",
+     "r": 0.513,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.489,
+     "bars": 741
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.464,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.46,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.513,
+   "high_corr_peers": []
+  },
+  "AKBL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "HBL",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.45,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "ABL",
+     "r": 0.44,
+     "bars": 730
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.432,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.54,
+   "high_corr_peers": []
+  },
+  "AKDSL": {
+   "bars": 640,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.395,
+     "bars": 640
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.392,
+     "bars": 638
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.38,
+     "bars": 519
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.376,
+     "bars": 640
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.376,
+     "bars": 640
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.365,
+     "bars": 640
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.363,
+     "bars": 640
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.362,
+     "bars": 640
+    }
+   ],
+   "max_r": 0.395,
+   "high_corr_peers": []
+  },
+  "ALAC": {
+   "bars": 642,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.22,
+     "bars": 642
+    },
+    {
+     "symbol": "SHDT",
+     "r": 0.205,
+     "bars": 587
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.203,
+     "bars": 642
+    },
+    {
+     "symbol": "AKDSL",
+     "r": 0.187,
+     "bars": 589
+    },
+    {
+     "symbol": "APL",
+     "r": 0.185,
+     "bars": 642
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.182,
+     "bars": 638
+    },
+    {
+     "symbol": "DSIL",
+     "r": 0.179,
+     "bars": 639
+    },
+    {
+     "symbol": "PABC",
+     "r": 0.178,
+     "bars": 642
+    }
+   ],
+   "max_r": 0.22,
+   "high_corr_peers": []
+  },
+  "ANL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GATM",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.503,
+     "bars": 741
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.484,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.481,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.469,
+     "bars": 741
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.464,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.54,
+   "high_corr_peers": []
+  },
+  "APL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PSO",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.503,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.5,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.457,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.456,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.529,
+   "high_corr_peers": []
+  },
+  "ASL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "ISL",
+     "r": 0.582,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.581,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.505,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.483,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.475,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.582,
+   "high_corr_peers": []
+  },
+  "ASTL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MUGHAL",
+     "r": 0.559,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.551,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.467,
+     "bars": 741
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.441,
+     "bars": 741
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.429,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.559,
+   "high_corr_peers": []
+  },
+  "ATLH": {
+   "bars": 725,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.363,
+     "bars": 720
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.343,
+     "bars": 521
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.326,
+     "bars": 725
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.325,
+     "bars": 725
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.325,
+     "bars": 725
+    },
+    {
+     "symbol": "APL",
+     "r": 0.32,
+     "bars": 725
+    },
+    {
+     "symbol": "FCEPL",
+     "r": 0.317,
+     "bars": 725
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.313,
+     "bars": 725
+    }
+   ],
+   "max_r": 0.363,
+   "high_corr_peers": []
+  },
+  "ATRL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NRL",
+     "r": 0.712,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.68,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.558,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.52,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.495,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.479,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.457,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.712,
+   "high_corr_peers": [
+    "NRL",
+    "PRL"
+   ]
+  },
+  "AVN": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NETSOL",
+     "r": 0.678,
+     "bars": 741
+    },
+    {
+     "symbol": "OCTOPUS",
+     "r": 0.623,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.521,
+     "bars": 741
+    },
+    {
+     "symbol": "TRG",
+     "r": 0.518,
+     "bars": 741
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.508,
+     "bars": 739
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.488,
+     "bars": 741
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.481,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.479,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.678,
+   "high_corr_peers": [
+    "NETSOL",
+    "OCTOPUS"
+   ]
+  },
+  "BAFL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "HBL",
+     "r": 0.61,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.601,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.562,
+     "bars": 741
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.557,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.493,
+     "bars": 741
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.488,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.61,
+   "high_corr_peers": [
+    "HBL",
+    "MCB"
+   ]
+  },
+  "BAHL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "BAFL",
+     "r": 0.557,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.545,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.514,
+     "bars": 741
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.511,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.505,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.45,
+     "bars": 741
+    },
+    {
+     "symbol": "ABL",
+     "r": 0.449,
+     "bars": 730
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.439,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.557,
+   "high_corr_peers": []
+  },
+  "BECO": {
+   "bars": 735,
+   "peers": [
+    {
+     "symbol": "FCL",
+     "r": 0.351,
+     "bars": 519
+    },
+    {
+     "symbol": "FNEL",
+     "r": 0.335,
+     "bars": 735
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.329,
+     "bars": 735
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.321,
+     "bars": 735
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.314,
+     "bars": 735
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.314,
+     "bars": 735
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.305,
+     "bars": 735
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.302,
+     "bars": 735
+    }
+   ],
+   "max_r": 0.351,
+   "high_corr_peers": []
+  },
+  "BIFO": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.35,
+     "bars": 739
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.345,
+     "bars": 739
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.338,
+     "bars": 739
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.336,
+     "bars": 739
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.335,
+     "bars": 739
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.335,
+     "bars": 739
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.331,
+     "bars": 739
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.331,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.35,
+   "high_corr_peers": []
+  },
+  "BIPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FABL",
+     "r": 0.492,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.408,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.385,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.381,
+     "bars": 741
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.37,
+     "bars": 741
+    },
+    {
+     "symbol": "BWCL",
+     "r": 0.369,
+     "bars": 739
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.366,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.363,
+     "bars": 736
+    }
+   ],
+   "max_r": 0.492,
+   "high_corr_peers": []
+  },
+  "BML": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "BOP",
+     "r": 0.341,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.318,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.318,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.313,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.313,
+     "bars": 741
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.308,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.3,
+     "bars": 741
+    },
+    {
+     "symbol": "LOTCHEM",
+     "r": 0.3,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.341,
+   "high_corr_peers": []
+  },
+  "BNL": {
+   "bars": 740,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.307,
+     "bars": 740
+    },
+    {
+     "symbol": "PREMA",
+     "r": 0.301,
+     "bars": 740
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.297,
+     "bars": 740
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.296,
+     "bars": 740
+    },
+    {
+     "symbol": "NML",
+     "r": 0.292,
+     "bars": 740
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.291,
+     "bars": 740
+    },
+    {
+     "symbol": "IMAGE",
+     "r": 0.291,
+     "bars": 740
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.289,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.307,
+   "high_corr_peers": []
+  },
+  "BNWM": {
+   "bars": 700,
+   "peers": [
+    {
+     "symbol": "GHGL",
+     "r": 0.288,
+     "bars": 700
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.27,
+     "bars": 700
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.252,
+     "bars": 700
+    },
+    {
+     "symbol": "APL",
+     "r": 0.247,
+     "bars": 700
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.247,
+     "bars": 700
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.242,
+     "bars": 700
+    },
+    {
+     "symbol": "TGL",
+     "r": 0.241,
+     "bars": 700
+    },
+    {
+     "symbol": "BIPL",
+     "r": 0.24,
+     "bars": 700
+    }
+   ],
+   "max_r": 0.288,
+   "high_corr_peers": []
+  },
+  "BOP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "AKBL",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.493,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.454,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.45,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.45,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.446,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.444,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.54,
+   "high_corr_peers": []
+  },
+  "BPL": {
+   "bars": 679,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.241,
+     "bars": 679
+    },
+    {
+     "symbol": "PKGS",
+     "r": 0.232,
+     "bars": 679
+    },
+    {
+     "symbol": "AICL",
+     "r": 0.228,
+     "bars": 678
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.225,
+     "bars": 679
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.223,
+     "bars": 679
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.221,
+     "bars": 679
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.221,
+     "bars": 679
+    },
+    {
+     "symbol": "ENGROH",
+     "r": 0.219,
+     "bars": 679
+    }
+   ],
+   "max_r": 0.241,
+   "high_corr_peers": []
+  },
+  "BWCL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "FCCL",
+     "r": 0.486,
+     "bars": 739
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.483,
+     "bars": 739
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.461,
+     "bars": 739
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.448,
+     "bars": 739
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.446,
+     "bars": 734
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.44,
+     "bars": 739
+    },
+    {
+     "symbol": "APL",
+     "r": 0.439,
+     "bars": 739
+    },
+    {
+     "symbol": "NML",
+     "r": 0.439,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.486,
+   "high_corr_peers": []
+  },
+  "CEPB": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "ANL",
+     "r": 0.484,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.478,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.474,
+     "bars": 521
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.462,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.46,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.458,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.484,
+   "high_corr_peers": []
+  },
+  "CHCC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.709,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.708,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.705,
+     "bars": 741
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.669,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.66,
+     "bars": 736
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.579,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.542,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.52,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.709,
+   "high_corr_peers": [
+    "DGKC",
+    "MLCF",
+    "FCCL",
+    "KOHC",
+    "LUCK"
+   ]
+  },
+  "CLOV": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PRL",
+     "r": 0.332,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.331,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.327,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.325,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.32,
+     "bars": 521
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.319,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.319,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.318,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.332,
+   "high_corr_peers": []
+  },
+  "CNERGY": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PRL",
+     "r": 0.661,
+     "bars": 741
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.6,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.558,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.521,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.501,
+     "bars": 741
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.483,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.478,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.475,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.661,
+   "high_corr_peers": [
+    "PRL",
+    "NRL"
+   ]
+  },
+  "COLG": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PSO",
+     "r": 0.338,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.32,
+     "bars": 741
+    },
+    {
+     "symbol": "FCEPL",
+     "r": 0.316,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.316,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.313,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.305,
+     "bars": 741
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.304,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.301,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.338,
+   "high_corr_peers": []
+  },
+  "CPHL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "SEARL",
+     "r": 0.659,
+     "bars": 741
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.525,
+     "bars": 739
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.479,
+     "bars": 741
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.476,
+     "bars": 741
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.473,
+     "bars": 738
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.469,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.468,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.659,
+   "high_corr_peers": [
+    "SEARL"
+   ]
+  },
+  "CSAP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MUGHAL",
+     "r": 0.43,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.415,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.41,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.395,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.395,
+     "bars": 736
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.391,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.388,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.43,
+   "high_corr_peers": []
+  },
+  "CSIL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "KOSM",
+     "r": 0.336,
+     "bars": 741
+    },
+    {
+     "symbol": "FCSC",
+     "r": 0.331,
+     "bars": 741
+    },
+    {
+     "symbol": "YOUW",
+     "r": 0.324,
+     "bars": 741
+    },
+    {
+     "symbol": "MDTL",
+     "r": 0.322,
+     "bars": 740
+    },
+    {
+     "symbol": "PACE",
+     "r": 0.32,
+     "bars": 741
+    },
+    {
+     "symbol": "DSIL",
+     "r": 0.303,
+     "bars": 738
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.295,
+     "bars": 741
+    },
+    {
+     "symbol": "STPL",
+     "r": 0.29,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.336,
+   "high_corr_peers": []
+  },
+  "DCL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "POWER",
+     "r": 0.542,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.535,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.518,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.495,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.481,
+     "bars": 741
+    },
+    {
+     "symbol": "DFML",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.458,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.452,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.542,
+   "high_corr_peers": []
+  },
+  "DCR": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FCL",
+     "r": 0.358,
+     "bars": 521
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.348,
+     "bars": 736
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.345,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.343,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.341,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.338,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.332,
+     "bars": 741
+    },
+    {
+     "symbol": "BWCL",
+     "r": 0.324,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.358,
+   "high_corr_peers": []
+  },
+  "DFML": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DCL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.458,
+     "bars": 741
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.416,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.391,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.382,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.463,
+   "high_corr_peers": []
+  },
+  "DFSM": {
+   "bars": 740,
+   "peers": [
+    {
+     "symbol": "KOSM",
+     "r": 0.456,
+     "bars": 740
+    },
+    {
+     "symbol": "YOUW",
+     "r": 0.45,
+     "bars": 740
+    },
+    {
+     "symbol": "DCL",
+     "r": 0.37,
+     "bars": 740
+    },
+    {
+     "symbol": "DFML",
+     "r": 0.329,
+     "bars": 740
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.322,
+     "bars": 740
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.32,
+     "bars": 740
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.319,
+     "bars": 740
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.311,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.456,
+   "high_corr_peers": []
+  },
+  "DGKC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MLCF",
+     "r": 0.81,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.783,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.709,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.669,
+     "bars": 736
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.643,
+     "bars": 741
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.629,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.598,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.573,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.81,
+   "high_corr_peers": [
+    "MLCF",
+    "FCCL",
+    "CHCC",
+    "LUCK",
+    "PIOC",
+    "KOHC"
+   ]
+  },
+  "DOL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GGL",
+     "r": 0.369,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.364,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.353,
+     "bars": 741
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.346,
+     "bars": 741
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.345,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.342,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.342,
+     "bars": 521
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.341,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.369,
+   "high_corr_peers": []
+  },
+  "DSIL": {
+   "bars": 738,
+   "peers": [
+    {
+     "symbol": "KOSM",
+     "r": 0.35,
+     "bars": 738
+    },
+    {
+     "symbol": "YOUW",
+     "r": 0.335,
+     "bars": 738
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.317,
+     "bars": 738
+    },
+    {
+     "symbol": "PACE",
+     "r": 0.316,
+     "bars": 738
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.31,
+     "bars": 738
+    },
+    {
+     "symbol": "CSIL",
+     "r": 0.303,
+     "bars": 738
+    },
+    {
+     "symbol": "FCSC",
+     "r": 0.302,
+     "bars": 738
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.299,
+     "bars": 738
+    }
+   ],
+   "max_r": 0.35,
+   "high_corr_peers": []
+  },
+  "EFERT": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FFC",
+     "r": 0.495,
+     "bars": 741
+    },
+    {
+     "symbol": "ENGROH",
+     "r": 0.436,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.435,
+     "bars": 741
+    },
+    {
+     "symbol": "FATIMA",
+     "r": 0.431,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.426,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.426,
+     "bars": 736
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.422,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.417,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.495,
+   "high_corr_peers": []
+  },
+  "ENGROH": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "EFERT",
+     "r": 0.436,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.418,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.417,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.414,
+     "bars": 521
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.41,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.408,
+     "bars": 736
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.407,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.402,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.436,
+   "high_corr_peers": []
+  },
+  "EPCL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.406,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.386,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.382,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.375,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.371,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.368,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.366,
+     "bars": 741
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.356,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.406,
+   "high_corr_peers": []
+  },
+  "EPQL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.261,
+     "bars": 739
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.249,
+     "bars": 741
+    },
+    {
+     "symbol": "AGTL",
+     "r": 0.235,
+     "bars": 736
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.233,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.23,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.229,
+     "bars": 741
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.225,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.224,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.261,
+   "high_corr_peers": []
+  },
+  "FABL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MEBL",
+     "r": 0.565,
+     "bars": 741
+    },
+    {
+     "symbol": "BIPL",
+     "r": 0.492,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.482,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.422,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.419,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.419,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.565,
+   "high_corr_peers": []
+  },
+  "FATIMA": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.489,
+     "bars": 736
+    },
+    {
+     "symbol": "FFC",
+     "r": 0.488,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.469,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.462,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.442,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.433,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.489,
+   "high_corr_peers": []
+  },
+  "FCCL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.783,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.77,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.705,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.65,
+     "bars": 736
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.632,
+     "bars": 741
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.626,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.602,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.547,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.783,
+   "high_corr_peers": [
+    "DGKC",
+    "MLCF",
+    "CHCC",
+    "LUCK",
+    "KOHC",
+    "PIOC",
+    "MUGHAL"
+   ]
+  },
+  "FCEPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.473,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.424,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.417,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.414,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.409,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.403,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.402,
+     "bars": 736
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.392,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.473,
+   "high_corr_peers": []
+  },
+  "FCL": {
+   "bars": 521,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.479,
+     "bars": 521
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.474,
+     "bars": 521
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.464,
+     "bars": 521
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.456,
+     "bars": 521
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.454,
+     "bars": 521
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.453,
+     "bars": 521
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.448,
+     "bars": 521
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.448,
+     "bars": 521
+    }
+   ],
+   "max_r": 0.479,
+   "high_corr_peers": []
+  },
+  "FCSC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MDTL",
+     "r": 0.629,
+     "bars": 740
+    },
+    {
+     "symbol": "PACE",
+     "r": 0.52,
+     "bars": 741
+    },
+    {
+     "symbol": "FNEL",
+     "r": 0.368,
+     "bars": 741
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.342,
+     "bars": 741
+    },
+    {
+     "symbol": "CSIL",
+     "r": 0.331,
+     "bars": 741
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.326,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.326,
+     "bars": 741
+    },
+    {
+     "symbol": "DSIL",
+     "r": 0.302,
+     "bars": 738
+    }
+   ],
+   "max_r": 0.629,
+   "high_corr_peers": [
+    "MDTL"
+   ]
+  },
+  "FECTC": {
+   "bars": 714,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.393,
+     "bars": 714
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.392,
+     "bars": 714
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.387,
+     "bars": 709
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.387,
+     "bars": 714
+    },
+    {
+     "symbol": "POWER",
+     "r": 0.383,
+     "bars": 714
+    },
+    {
+     "symbol": "GWLC",
+     "r": 0.37,
+     "bars": 711
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.366,
+     "bars": 714
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.365,
+     "bars": 714
+    }
+   ],
+   "max_r": 0.393,
+   "high_corr_peers": []
+  },
+  "FEROZ": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.555,
+     "bars": 739
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.548,
+     "bars": 741
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.514,
+     "bars": 741
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.493,
+     "bars": 741
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.493,
+     "bars": 738
+    },
+    {
+     "symbol": "HALEON",
+     "r": 0.487,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.555,
+   "high_corr_peers": []
+  },
+  "FFC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "EFERT",
+     "r": 0.495,
+     "bars": 741
+    },
+    {
+     "symbol": "FATIMA",
+     "r": 0.488,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.422,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.418,
+     "bars": 736
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.403,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.401,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.396,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.495,
+   "high_corr_peers": []
+  },
+  "FFL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PSO",
+     "r": 0.533,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.515,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.51,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.507,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.49,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.486,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.533,
+   "high_corr_peers": []
+  },
+  "FFLM": {
+   "bars": 545,
+   "peers": [
+    {
+     "symbol": "TRSM",
+     "r": 0.215,
+     "bars": 520
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.197,
+     "bars": 545
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.183,
+     "bars": 545
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.178,
+     "bars": 545
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.177,
+     "bars": 545
+    },
+    {
+     "symbol": "PKGS",
+     "r": 0.176,
+     "bars": 545
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.175,
+     "bars": 545
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.174,
+     "bars": 545
+    }
+   ],
+   "max_r": 0.215,
+   "high_corr_peers": []
+  },
+  "FHAM": {
+   "bars": 730,
+   "peers": [
+    {
+     "symbol": "CNERGY",
+     "r": 0.22,
+     "bars": 730
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.206,
+     "bars": 730
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.183,
+     "bars": 730
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.183,
+     "bars": 730
+    },
+    {
+     "symbol": "NML",
+     "r": 0.181,
+     "bars": 730
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.181,
+     "bars": 730
+    },
+    {
+     "symbol": "PAKRI",
+     "r": 0.181,
+     "bars": 730
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.178,
+     "bars": 730
+    }
+   ],
+   "max_r": 0.22,
+   "high_corr_peers": []
+  },
+  "FML": {
+   "bars": 643,
+   "peers": [
+    {
+     "symbol": "FCL",
+     "r": 0.252,
+     "bars": 511
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.252,
+     "bars": 643
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.249,
+     "bars": 643
+    },
+    {
+     "symbol": "ILP",
+     "r": 0.242,
+     "bars": 643
+    },
+    {
+     "symbol": "KML",
+     "r": 0.233,
+     "bars": 518
+    },
+    {
+     "symbol": "NML",
+     "r": 0.232,
+     "bars": 643
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.231,
+     "bars": 643
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.23,
+     "bars": 643
+    }
+   ],
+   "max_r": 0.252,
+   "high_corr_peers": []
+  },
+  "FNEL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.38,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.374,
+     "bars": 741
+    },
+    {
+     "symbol": "FCSC",
+     "r": 0.368,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.363,
+     "bars": 741
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.352,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.348,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.336,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.336,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.38,
+   "high_corr_peers": []
+  },
+  "GADT": {
+   "bars": 703,
+   "peers": [
+    {
+     "symbol": "GATM",
+     "r": 0.364,
+     "bars": 703
+    },
+    {
+     "symbol": "NML",
+     "r": 0.342,
+     "bars": 703
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.336,
+     "bars": 519
+    },
+    {
+     "symbol": "IMAGE",
+     "r": 0.334,
+     "bars": 703
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.329,
+     "bars": 703
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.328,
+     "bars": 703
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.327,
+     "bars": 698
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.319,
+     "bars": 703
+    }
+   ],
+   "max_r": 0.364,
+   "high_corr_peers": []
+  },
+  "GAL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GHNI",
+     "r": 0.769,
+     "bars": 741
+    },
+    {
+     "symbol": "HCAR",
+     "r": 0.575,
+     "bars": 741
+    },
+    {
+     "symbol": "SAZEW",
+     "r": 0.51,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.487,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.486,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.481,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.476,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.475,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.769,
+   "high_corr_peers": [
+    "GHNI"
+   ]
+  },
+  "GATM": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.583,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.562,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "ILP",
+     "r": 0.518,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.496,
+     "bars": 741
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.494,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.491,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.583,
+   "high_corr_peers": []
+  },
+  "GCIL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GGL",
+     "r": 0.685,
+     "bars": 741
+    },
+    {
+     "symbol": "GGGL",
+     "r": 0.567,
+     "bars": 741
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.439,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.417,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.416,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.399,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.395,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.685,
+   "high_corr_peers": [
+    "GGL"
+   ]
+  },
+  "GGGL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GGL",
+     "r": 0.724,
+     "bars": 741
+    },
+    {
+     "symbol": "GCIL",
+     "r": 0.567,
+     "bars": 741
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.485,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.468,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.456,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.455,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.447,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.724,
+   "high_corr_peers": [
+    "GGL"
+   ]
+  },
+  "GGL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GGGL",
+     "r": 0.724,
+     "bars": 741
+    },
+    {
+     "symbol": "GCIL",
+     "r": 0.685,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.534,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.533,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.531,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.52,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.506,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.724,
+   "high_corr_peers": [
+    "GGGL",
+    "GCIL"
+   ]
+  },
+  "GHGL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TGL",
+     "r": 0.57,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.534,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.522,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.51,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.5,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.494,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.488,
+     "bars": 736
+    },
+    {
+     "symbol": "GGGL",
+     "r": 0.485,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.57,
+   "high_corr_peers": []
+  },
+  "GHNI": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GAL",
+     "r": 0.769,
+     "bars": 741
+    },
+    {
+     "symbol": "HCAR",
+     "r": 0.624,
+     "bars": 741
+    },
+    {
+     "symbol": "SAZEW",
+     "r": 0.568,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.489,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.467,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.455,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.769,
+   "high_corr_peers": [
+    "GAL",
+    "HCAR"
+   ]
+  },
+  "GLAXO": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "HALEON",
+     "r": 0.617,
+     "bars": 737
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.593,
+     "bars": 739
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.555,
+     "bars": 739
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.548,
+     "bars": 739
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.545,
+     "bars": 736
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.539,
+     "bars": 739
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.525,
+     "bars": 739
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.497,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.617,
+   "high_corr_peers": [
+    "HALEON"
+   ]
+  },
+  "GRR": {
+   "bars": 727,
+   "peers": [
+    {
+     "symbol": "BWCL",
+     "r": 0.213,
+     "bars": 725
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.21,
+     "bars": 519
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.206,
+     "bars": 727
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.203,
+     "bars": 727
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.2,
+     "bars": 727
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.199,
+     "bars": 727
+    },
+    {
+     "symbol": "DFSM",
+     "r": 0.195,
+     "bars": 726
+    },
+    {
+     "symbol": "ATLH",
+     "r": 0.192,
+     "bars": 714
+    }
+   ],
+   "max_r": 0.213,
+   "high_corr_peers": []
+  },
+  "GTYR": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NETSOL",
+     "r": 0.482,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.481,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.473,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.461,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.455,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.482,
+   "high_corr_peers": []
+  },
+  "GWLC": {
+   "bars": 735,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.515,
+     "bars": 735
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.501,
+     "bars": 735
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.48,
+     "bars": 735
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.47,
+     "bars": 730
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.462,
+     "bars": 735
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.448,
+     "bars": 735
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.44,
+     "bars": 735
+    },
+    {
+     "symbol": "POWER",
+     "r": 0.423,
+     "bars": 735
+    }
+   ],
+   "max_r": 0.515,
+   "high_corr_peers": []
+  },
+  "HALEON": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.617,
+     "bars": 737
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.513,
+     "bars": 739
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.506,
+     "bars": 736
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.487,
+     "bars": 739
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.479,
+     "bars": 739
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.468,
+     "bars": 739
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.446,
+     "bars": 739
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.38,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.617,
+   "high_corr_peers": [
+    "GLAXO"
+   ]
+  },
+  "HBL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "BAFL",
+     "r": 0.61,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.571,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.57,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.514,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.493,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.61,
+   "high_corr_peers": [
+    "BAFL"
+   ]
+  },
+  "HCAR": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GHNI",
+     "r": 0.624,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.575,
+     "bars": 741
+    },
+    {
+     "symbol": "SAZEW",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.446,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.442,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.421,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.411,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.624,
+   "high_corr_peers": [
+    "GHNI"
+   ]
+  },
+  "HINOON": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.548,
+     "bars": 739
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.525,
+     "bars": 738
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.524,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.497,
+     "bars": 741
+    },
+    {
+     "symbol": "HALEON",
+     "r": 0.479,
+     "bars": 739
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.46,
+     "bars": 741
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.412,
+     "bars": 736
+    }
+   ],
+   "max_r": 0.548,
+   "high_corr_peers": []
+  },
+  "HMB": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "BAHL",
+     "r": 0.511,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.488,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.477,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.455,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.432,
+     "bars": 741
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.4,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.511,
+   "high_corr_peers": []
+  },
+  "HTL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.475,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.462,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.454,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.453,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.475,
+   "high_corr_peers": []
+  },
+  "HUBC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.538,
+     "bars": 736
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.523,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.502,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.49,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.486,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.484,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.47,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.466,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.538,
+   "high_corr_peers": []
+  },
+  "HUMNL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.416,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.399,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.397,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.393,
+     "bars": 741
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.393,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.393,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.391,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.379,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.416,
+   "high_corr_peers": []
+  },
+  "IBFL": {
+   "bars": 634,
+   "peers": [
+    {
+     "symbol": "MCB",
+     "r": 0.139,
+     "bars": 634
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.123,
+     "bars": 634
+    },
+    {
+     "symbol": "NML",
+     "r": 0.121,
+     "bars": 634
+    },
+    {
+     "symbol": "TPLT",
+     "r": 0.12,
+     "bars": 620
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.115,
+     "bars": 504
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.112,
+     "bars": 629
+    },
+    {
+     "symbol": "TPL",
+     "r": 0.109,
+     "bars": 634
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.109,
+     "bars": 634
+    }
+   ],
+   "max_r": 0.139,
+   "high_corr_peers": []
+  },
+  "IBLHL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "SEARL",
+     "r": 0.488,
+     "bars": 739
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.433,
+     "bars": 739
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.417,
+     "bars": 739
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.401,
+     "bars": 739
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.396,
+     "bars": 739
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.391,
+     "bars": 737
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.389,
+     "bars": 739
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.375,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.488,
+   "high_corr_peers": []
+  },
+  "ICL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.345,
+     "bars": 734
+    },
+    {
+     "symbol": "NML",
+     "r": 0.34,
+     "bars": 739
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.338,
+     "bars": 739
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.338,
+     "bars": 739
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.329,
+     "bars": 739
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.329,
+     "bars": 739
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.325,
+     "bars": 739
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.323,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.345,
+   "high_corr_peers": []
+  },
+  "IGIHL": {
+   "bars": 730,
+   "peers": [
+    {
+     "symbol": "CEPB",
+     "r": 0.363,
+     "bars": 730
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.363,
+     "bars": 730
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.349,
+     "bars": 730
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.346,
+     "bars": 730
+    },
+    {
+     "symbol": "NML",
+     "r": 0.342,
+     "bars": 730
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.34,
+     "bars": 730
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.335,
+     "bars": 730
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.329,
+     "bars": 730
+    }
+   ],
+   "max_r": 0.363,
+   "high_corr_peers": []
+  },
+  "ILP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.518,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.496,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.473,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.454,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.451,
+     "bars": 736
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.442,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.433,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.54,
+   "high_corr_peers": []
+  },
+  "IMAGE": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.427,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.42,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.417,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.412,
+     "bars": 521
+    },
+    {
+     "symbol": "NML",
+     "r": 0.409,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.397,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.389,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.427,
+   "high_corr_peers": []
+  },
+  "IMS": {
+   "bars": 648,
+   "peers": [
+    {
+     "symbol": "MEBL",
+     "r": 0.283,
+     "bars": 648
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.267,
+     "bars": 648
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.257,
+     "bars": 648
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.253,
+     "bars": 646
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.251,
+     "bars": 648
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.249,
+     "bars": 646
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.246,
+     "bars": 648
+    },
+    {
+     "symbol": "HALEON",
+     "r": 0.245,
+     "bars": 646
+    }
+   ],
+   "max_r": 0.283,
+   "high_corr_peers": []
+  },
+  "INDU": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.365,
+     "bars": 736
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.3,
+     "bars": 741
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.296,
+     "bars": 738
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.295,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.295,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.292,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.291,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.289,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.365,
+   "high_corr_peers": []
+  },
+  "INIL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "ISL",
+     "r": 0.722,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.62,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.505,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.488,
+     "bars": 736
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.486,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.48,
+     "bars": 741
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.471,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.722,
+   "high_corr_peers": [
+    "ISL",
+    "MUGHAL"
+   ]
+  },
+  "ISL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "INIL",
+     "r": 0.722,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.684,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.582,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.581,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.551,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.538,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.53,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.53,
+     "bars": 736
+    }
+   ],
+   "max_r": 0.722,
+   "high_corr_peers": [
+    "INIL",
+    "MUGHAL"
+   ]
+  },
+  "ITTEFAQ": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "AGHA",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.503,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.483,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.473,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.423,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.416,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.529,
+   "high_corr_peers": []
+  },
+  "JDWS": {
+   "bars": 664,
+   "peers": [
+    {
+     "symbol": "AGTL",
+     "r": 0.171,
+     "bars": 661
+    },
+    {
+     "symbol": "WAFI",
+     "r": 0.153,
+     "bars": 664
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.152,
+     "bars": 664
+    },
+    {
+     "symbol": "AICL",
+     "r": 0.149,
+     "bars": 664
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.148,
+     "bars": 664
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.144,
+     "bars": 664
+    },
+    {
+     "symbol": "POWER",
+     "r": 0.144,
+     "bars": 664
+    },
+    {
+     "symbol": "RMPL",
+     "r": 0.141,
+     "bars": 621
+    }
+   ],
+   "max_r": 0.171,
+   "high_corr_peers": []
+  },
+  "JSBL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "BOP",
+     "r": 0.363,
+     "bars": 741
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.359,
+     "bars": 741
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.353,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.34,
+     "bars": 741
+    },
+    {
+     "symbol": "BIPL",
+     "r": 0.337,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.335,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.334,
+     "bars": 741
+    },
+    {
+     "symbol": "SNBL",
+     "r": 0.33,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.363,
+   "high_corr_peers": []
+  },
+  "JSCL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.445,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.435,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.428,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.426,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.416,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.413,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.413,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.445,
+   "high_corr_peers": []
+  },
+  "JSML": {
+   "bars": 712,
+   "peers": [
+    {
+     "symbol": "PIBTL",
+     "r": 0.278,
+     "bars": 712
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.26,
+     "bars": 712
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.258,
+     "bars": 519
+    },
+    {
+     "symbol": "NML",
+     "r": 0.247,
+     "bars": 712
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.245,
+     "bars": 707
+    },
+    {
+     "symbol": "PKGS",
+     "r": 0.242,
+     "bars": 712
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.241,
+     "bars": 712
+    },
+    {
+     "symbol": "STCL",
+     "r": 0.241,
+     "bars": 709
+    }
+   ],
+   "max_r": 0.278,
+   "high_corr_peers": []
+  },
+  "JVDC": {
+   "bars": 705,
+   "peers": [
+    {
+     "symbol": "NCL",
+     "r": 0.327,
+     "bars": 705
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.325,
+     "bars": 705
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.323,
+     "bars": 705
+    },
+    {
+     "symbol": "ILP",
+     "r": 0.318,
+     "bars": 705
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.318,
+     "bars": 705
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.314,
+     "bars": 700
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.311,
+     "bars": 705
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.308,
+     "bars": 705
+    }
+   ],
+   "max_r": 0.327,
+   "high_corr_peers": []
+  },
+  "KAPCO": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.335,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.333,
+     "bars": 741
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.321,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.313,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.307,
+     "bars": 741
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.307,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.307,
+     "bars": 741
+    },
+    {
+     "symbol": "FCEPL",
+     "r": 0.303,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.335,
+   "high_corr_peers": []
+  },
+  "KEL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.458,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.435,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.434,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.433,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.419,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.412,
+     "bars": 521
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.411,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.408,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.458,
+   "high_corr_peers": []
+  },
+  "KML": {
+   "bars": 564,
+   "peers": [
+    {
+     "symbol": "FML",
+     "r": 0.233,
+     "bars": 518
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.231,
+     "bars": 564
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.219,
+     "bars": 564
+    },
+    {
+     "symbol": "UNITY",
+     "r": 0.217,
+     "bars": 564
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.209,
+     "bars": 564
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.209,
+     "bars": 564
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.205,
+     "bars": 460
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.203,
+     "bars": 564
+    }
+   ],
+   "max_r": 0.233,
+   "high_corr_peers": []
+  },
+  "KOHC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "CHCC",
+     "r": 0.669,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.632,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.629,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.622,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.594,
+     "bars": 736
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.527,
+     "bars": 741
+    },
+    {
+     "symbol": "KTML",
+     "r": 0.515,
+     "bars": 734
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.504,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.669,
+   "high_corr_peers": [
+    "CHCC",
+    "FCCL",
+    "DGKC",
+    "MLCF"
+   ]
+  },
+  "KOHTM": {
+   "bars": 642,
+   "peers": [
+    {
+     "symbol": "SHDT",
+     "r": 0.222,
+     "bars": 596
+    },
+    {
+     "symbol": "DCL",
+     "r": 0.194,
+     "bars": 642
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.188,
+     "bars": 642
+    },
+    {
+     "symbol": "IBLHL",
+     "r": 0.185,
+     "bars": 641
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.18,
+     "bars": 642
+    },
+    {
+     "symbol": "ALAC",
+     "r": 0.175,
+     "bars": 587
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.172,
+     "bars": 642
+    },
+    {
+     "symbol": "PTC",
+     "r": 0.17,
+     "bars": 642
+    }
+   ],
+   "max_r": 0.222,
+   "high_corr_peers": []
+  },
+  "KOIL": {
+   "bars": 693,
+   "peers": [
+    {
+     "symbol": "KOSM",
+     "r": 0.246,
+     "bars": 693
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.243,
+     "bars": 693
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.232,
+     "bars": 693
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.229,
+     "bars": 693
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.226,
+     "bars": 693
+    },
+    {
+     "symbol": "NML",
+     "r": 0.223,
+     "bars": 693
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.221,
+     "bars": 693
+    },
+    {
+     "symbol": "PKGS",
+     "r": 0.22,
+     "bars": 693
+    }
+   ],
+   "max_r": 0.246,
+   "high_corr_peers": []
+  },
+  "KOSM": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "YOUW",
+     "r": 0.752,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.458,
+     "bars": 741
+    },
+    {
+     "symbol": "DFSM",
+     "r": 0.456,
+     "bars": 740
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.438,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.425,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.411,
+     "bars": 554
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.407,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.752,
+   "high_corr_peers": [
+    "YOUW"
+   ]
+  },
+  "KSBP": {
+   "bars": 726,
+   "peers": [
+    {
+     "symbol": "CNERGY",
+     "r": 0.31,
+     "bars": 726
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.305,
+     "bars": 521
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.303,
+     "bars": 726
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.301,
+     "bars": 726
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.3,
+     "bars": 726
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.295,
+     "bars": 726
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.293,
+     "bars": 726
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.29,
+     "bars": 726
+    }
+   ],
+   "max_r": 0.31,
+   "high_corr_peers": []
+  },
+  "KTML": {
+   "bars": 734,
+   "peers": [
+    {
+     "symbol": "KOHC",
+     "r": 0.515,
+     "bars": 734
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.49,
+     "bars": 734
+    },
+    {
+     "symbol": "NML",
+     "r": 0.476,
+     "bars": 734
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.465,
+     "bars": 734
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.444,
+     "bars": 734
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.443,
+     "bars": 734
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.441,
+     "bars": 729
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.437,
+     "bars": 734
+    }
+   ],
+   "max_r": 0.515,
+   "high_corr_peers": []
+  },
+  "LCI": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.386,
+     "bars": 736
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.374,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.372,
+     "bars": 741
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.348,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.346,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.339,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.338,
+     "bars": 741
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.335,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.386,
+   "high_corr_peers": []
+  },
+  "LOADS": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TREET",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.452,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.444,
+     "bars": 741
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.439,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.437,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.434,
+     "bars": 741
+    },
+    {
+     "symbol": "PSX",
+     "r": 0.428,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.427,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.474,
+   "high_corr_peers": []
+  },
+  "LOTCHEM": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MLCF",
+     "r": 0.406,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.399,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.396,
+     "bars": 741
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.395,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.395,
+     "bars": 736
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.39,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.387,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.387,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.406,
+   "high_corr_peers": []
+  },
+  "LSECL": {
+   "bars": 531,
+   "peers": [
+    {
+     "symbol": "WTL",
+     "r": 0.369,
+     "bars": 531
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.349,
+     "bars": 531
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.347,
+     "bars": 531
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.325,
+     "bars": 531
+    },
+    {
+     "symbol": "PAKRI",
+     "r": 0.321,
+     "bars": 531
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.319,
+     "bars": 531
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.306,
+     "bars": 531
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.305,
+     "bars": 531
+    }
+   ],
+   "max_r": 0.369,
+   "high_corr_peers": []
+  },
+  "LSEVL": {
+   "bars": 725,
+   "peers": [
+    {
+     "symbol": "LSECL",
+     "r": 0.259,
+     "bars": 530
+    },
+    {
+     "symbol": "TGL",
+     "r": 0.183,
+     "bars": 725
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.182,
+     "bars": 520
+    },
+    {
+     "symbol": "TOMCL",
+     "r": 0.179,
+     "bars": 725
+    },
+    {
+     "symbol": "IMAGE",
+     "r": 0.168,
+     "bars": 725
+    },
+    {
+     "symbol": "TPL",
+     "r": 0.167,
+     "bars": 725
+    },
+    {
+     "symbol": "SYM",
+     "r": 0.163,
+     "bars": 697
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.16,
+     "bars": 725
+    }
+   ],
+   "max_r": 0.259,
+   "high_corr_peers": []
+  },
+  "LUCK": {
+   "bars": 736,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.669,
+     "bars": 736
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.66,
+     "bars": 736
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.659,
+     "bars": 736
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.65,
+     "bars": 736
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.599,
+     "bars": 736
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.594,
+     "bars": 736
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.552,
+     "bars": 736
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.538,
+     "bars": 736
+    }
+   ],
+   "max_r": 0.669,
+   "high_corr_peers": [
+    "DGKC",
+    "CHCC",
+    "MLCF",
+    "FCCL"
+   ]
+  },
+  "MACFL": {
+   "bars": 735,
+   "peers": [
+    {
+     "symbol": "GGL",
+     "r": 0.336,
+     "bars": 735
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.313,
+     "bars": 735
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.308,
+     "bars": 521
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.307,
+     "bars": 735
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.291,
+     "bars": 735
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.283,
+     "bars": 735
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.281,
+     "bars": 735
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.278,
+     "bars": 735
+    }
+   ],
+   "max_r": 0.336,
+   "high_corr_peers": []
+  },
+  "MARI": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.186,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.175,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.16,
+     "bars": 741
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.159,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.155,
+     "bars": 741
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.151,
+     "bars": 741
+    },
+    {
+     "symbol": "STCL",
+     "r": 0.148,
+     "bars": 738
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.147,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.186,
+   "high_corr_peers": []
+  },
+  "MCB": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "BAFL",
+     "r": 0.601,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.58,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.571,
+     "bars": 741
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.545,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.533,
+     "bars": 741
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.426,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.601,
+   "high_corr_peers": [
+    "BAFL"
+   ]
+  },
+  "MDTL": {
+   "bars": 740,
+   "peers": [
+    {
+     "symbol": "FCSC",
+     "r": 0.629,
+     "bars": 740
+    },
+    {
+     "symbol": "PACE",
+     "r": 0.529,
+     "bars": 740
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.365,
+     "bars": 740
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.359,
+     "bars": 740
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.356,
+     "bars": 740
+    },
+    {
+     "symbol": "CSIL",
+     "r": 0.322,
+     "bars": 740
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.318,
+     "bars": 740
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.315,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.629,
+   "high_corr_peers": [
+    "FCSC"
+   ]
+  },
+  "MEBL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FABL",
+     "r": 0.565,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.562,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.533,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.505,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.464,
+     "bars": 736
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.455,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.565,
+   "high_corr_peers": []
+  },
+  "MEHT": {
+   "bars": 632,
+   "peers": [
+    {
+     "symbol": "BWCL",
+     "r": 0.215,
+     "bars": 630
+    },
+    {
+     "symbol": "NCPL",
+     "r": 0.195,
+     "bars": 632
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.187,
+     "bars": 632
+    },
+    {
+     "symbol": "NPL",
+     "r": 0.187,
+     "bars": 632
+    },
+    {
+     "symbol": "FECTC",
+     "r": 0.18,
+     "bars": 617
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.18,
+     "bars": 632
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.179,
+     "bars": 632
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.178,
+     "bars": 632
+    }
+   ],
+   "max_r": 0.215,
+   "high_corr_peers": []
+  },
+  "MFL": {
+   "bars": 740,
+   "peers": [
+    {
+     "symbol": "GATM",
+     "r": 0.351,
+     "bars": 740
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.322,
+     "bars": 740
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.315,
+     "bars": 740
+    },
+    {
+     "symbol": "NML",
+     "r": 0.313,
+     "bars": 740
+    },
+    {
+     "symbol": "TGL",
+     "r": 0.31,
+     "bars": 740
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.309,
+     "bars": 740
+    },
+    {
+     "symbol": "FATIMA",
+     "r": 0.308,
+     "bars": 740
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.305,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.351,
+   "high_corr_peers": []
+  },
+  "MLCF": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.81,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.77,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.708,
+     "bars": 741
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.664,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.659,
+     "bars": 736
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.622,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.599,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.583,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.81,
+   "high_corr_peers": [
+    "DGKC",
+    "FCCL",
+    "CHCC",
+    "PIOC",
+    "LUCK",
+    "KOHC"
+   ]
+  },
+  "MTL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "AGTL",
+     "r": 0.415,
+     "bars": 736
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.366,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.364,
+     "bars": 736
+    },
+    {
+     "symbol": "NML",
+     "r": 0.363,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.361,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.359,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.355,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.352,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.415,
+   "high_corr_peers": []
+  },
+  "MUGHAL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "ISL",
+     "r": 0.684,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.62,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.602,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.599,
+     "bars": 736
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.599,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.598,
+     "bars": 741
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.581,
+     "bars": 741
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.559,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.684,
+   "high_corr_peers": [
+    "ISL",
+    "INIL",
+    "FCCL"
+   ]
+  },
+  "MUREB": {
+   "bars": 737,
+   "peers": [
+    {
+     "symbol": "ANL",
+     "r": 0.301,
+     "bars": 737
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.3,
+     "bars": 734
+    },
+    {
+     "symbol": "GHGL",
+     "r": 0.3,
+     "bars": 737
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.299,
+     "bars": 737
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.297,
+     "bars": 735
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.295,
+     "bars": 737
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.291,
+     "bars": 737
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.29,
+     "bars": 737
+    }
+   ],
+   "max_r": 0.301,
+   "high_corr_peers": []
+  },
+  "NATF": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "APL",
+     "r": 0.406,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.4,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.4,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.4,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.392,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.39,
+     "bars": 736
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.385,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.377,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.406,
+   "high_corr_peers": []
+  },
+  "NBP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "HBL",
+     "r": 0.57,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.493,
+     "bars": 741
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.451,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.44,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.437,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.424,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.57,
+   "high_corr_peers": []
+  },
+  "NCL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.575,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.562,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.508,
+     "bars": 741
+    },
+    {
+     "symbol": "ILP",
+     "r": 0.496,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.496,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.466,
+     "bars": 736
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.462,
+     "bars": 741
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.46,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.575,
+   "high_corr_peers": []
+  },
+  "NCPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NPL",
+     "r": 0.699,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.429,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.419,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.417,
+     "bars": 736
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.41,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.381,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.38,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.699,
+   "high_corr_peers": [
+    "NPL"
+   ]
+  },
+  "NESTLE": {
+   "bars": 695,
+   "peers": [
+    {
+     "symbol": "HUBC",
+     "r": 0.244,
+     "bars": 695
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.236,
+     "bars": 695
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.223,
+     "bars": 695
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.223,
+     "bars": 695
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.213,
+     "bars": 695
+    },
+    {
+     "symbol": "EFERT",
+     "r": 0.212,
+     "bars": 695
+    },
+    {
+     "symbol": "APL",
+     "r": 0.209,
+     "bars": 695
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.207,
+     "bars": 695
+    }
+   ],
+   "max_r": 0.244,
+   "high_corr_peers": []
+  },
+  "NETSOL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "AVN",
+     "r": 0.678,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.545,
+     "bars": 741
+    },
+    {
+     "symbol": "TRG",
+     "r": 0.545,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.525,
+     "bars": 741
+    },
+    {
+     "symbol": "OCTOPUS",
+     "r": 0.521,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.513,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.509,
+     "bars": 741
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.494,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.678,
+   "high_corr_peers": [
+    "AVN"
+   ]
+  },
+  "NICL": {
+   "bars": 716,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.328,
+     "bars": 711
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.317,
+     "bars": 716
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.306,
+     "bars": 716
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.303,
+     "bars": 716
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.299,
+     "bars": 716
+    },
+    {
+     "symbol": "ASTL",
+     "r": 0.292,
+     "bars": 716
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.291,
+     "bars": 716
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.29,
+     "bars": 716
+    }
+   ],
+   "max_r": 0.328,
+   "high_corr_peers": []
+  },
+  "NML": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MLCF",
+     "r": 0.583,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.583,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.575,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.573,
+     "bars": 741
+    },
+    {
+     "symbol": "ILP",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.536,
+     "bars": 736
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.534,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.519,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.583,
+   "high_corr_peers": []
+  },
+  "NPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NCPL",
+     "r": 0.699,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.429,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.408,
+     "bars": 736
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.407,
+     "bars": 741
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.399,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.391,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.386,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.382,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.699,
+   "high_corr_peers": [
+    "NCPL"
+   ]
+  },
+  "NRL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PRL",
+     "r": 0.752,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.712,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.6,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.536,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.5,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.464,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.462,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.752,
+   "high_corr_peers": [
+    "PRL",
+    "ATRL",
+    "CNERGY"
+   ]
+  },
+  "OBOY": {
+   "bars": 740,
+   "peers": [
+    {
+     "symbol": "TPLP",
+     "r": 0.35,
+     "bars": 740
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.327,
+     "bars": 740
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.324,
+     "bars": 740
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.302,
+     "bars": 740
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.292,
+     "bars": 740
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.292,
+     "bars": 740
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.291,
+     "bars": 740
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.287,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.35,
+   "high_corr_peers": []
+  },
+  "OCTOPUS": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "AVN",
+     "r": 0.623,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.521,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.467,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.44,
+     "bars": 741
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.432,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.415,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.415,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.623,
+   "high_corr_peers": [
+    "AVN"
+   ]
+  },
+  "OGDC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.85,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.709,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.626,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.509,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.507,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.503,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.503,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.495,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.85,
+   "high_corr_peers": [
+    "PPL",
+    "PSO",
+    "SNGP"
+   ]
+  },
+  "PABC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.42,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.403,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.4,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.397,
+     "bars": 741
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.395,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.391,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.384,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.381,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.42,
+   "high_corr_peers": []
+  },
+  "PACE": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MDTL",
+     "r": 0.529,
+     "bars": 740
+    },
+    {
+     "symbol": "FCSC",
+     "r": 0.52,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.401,
+     "bars": 741
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.38,
+     "bars": 741
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.38,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.379,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.376,
+     "bars": 741
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.373,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.529,
+   "high_corr_peers": []
+  },
+  "PAEL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "WAVES",
+     "r": 0.581,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.567,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.551,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.542,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.532,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.527,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.525,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.581,
+   "high_corr_peers": []
+  },
+  "PAKRI": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GGL",
+     "r": 0.367,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.362,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.358,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.349,
+     "bars": 741
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.344,
+     "bars": 739
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.341,
+     "bars": 521
+    },
+    {
+     "symbol": "PTC",
+     "r": 0.339,
+     "bars": 741
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.338,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.367,
+   "high_corr_peers": []
+  },
+  "PAKT": {
+   "bars": 690,
+   "peers": [
+    {
+     "symbol": "PSO",
+     "r": 0.328,
+     "bars": 690
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.302,
+     "bars": 689
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.294,
+     "bars": 690
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.294,
+     "bars": 690
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.291,
+     "bars": 690
+    },
+    {
+     "symbol": "APL",
+     "r": 0.285,
+     "bars": 690
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.283,
+     "bars": 689
+    },
+    {
+     "symbol": "AHCL",
+     "r": 0.281,
+     "bars": 682
+    }
+   ],
+   "max_r": 0.328,
+   "high_corr_peers": []
+  },
+  "PGLC": {
+   "bars": 718,
+   "peers": [
+    {
+     "symbol": "QTECH",
+     "r": 0.151,
+     "bars": 713
+    },
+    {
+     "symbol": "ENGROH",
+     "r": 0.143,
+     "bars": 718
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.139,
+     "bars": 718
+    },
+    {
+     "symbol": "PSX",
+     "r": 0.137,
+     "bars": 718
+    },
+    {
+     "symbol": "GCIL",
+     "r": 0.137,
+     "bars": 718
+    },
+    {
+     "symbol": "WAVESAPP",
+     "r": 0.137,
+     "bars": 718
+    },
+    {
+     "symbol": "TBL",
+     "r": 0.133,
+     "bars": 621
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.133,
+     "bars": 718
+    }
+   ],
+   "max_r": 0.151,
+   "high_corr_peers": []
+  },
+  "PIAHCLA": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PTC",
+     "r": 0.37,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.356,
+     "bars": 741
+    },
+    {
+     "symbol": "TBL",
+     "r": 0.323,
+     "bars": 638
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.321,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.315,
+     "bars": 741
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.308,
+     "bars": 741
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.305,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.305,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.37,
+   "high_corr_peers": []
+  },
+  "PIBTL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PAEL",
+     "r": 0.532,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.49,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.483,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.477,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.476,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.474,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.465,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.532,
+   "high_corr_peers": []
+  },
+  "PICT": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "HUBC",
+     "r": 0.277,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.273,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.268,
+     "bars": 741
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.261,
+     "bars": 554
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.257,
+     "bars": 741
+    },
+    {
+     "symbol": "DCL",
+     "r": 0.254,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.252,
+     "bars": 741
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.251,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.277,
+   "high_corr_peers": []
+  },
+  "PIOC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MLCF",
+     "r": 0.664,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.643,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.626,
+     "bars": 741
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.579,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.552,
+     "bars": 736
+    },
+    {
+     "symbol": "KOHC",
+     "r": 0.527,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.507,
+     "bars": 741
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.47,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.664,
+   "high_corr_peers": [
+    "MLCF",
+    "DGKC",
+    "FCCL"
+   ]
+  },
+  "PKGS": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.452,
+     "bars": 736
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.422,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.418,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.418,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.414,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.413,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "INIL",
+     "r": 0.41,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.452,
+   "high_corr_peers": []
+  },
+  "PNSC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.345,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.34,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.336,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.332,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.33,
+     "bars": 741
+    },
+    {
+     "symbol": "AKDSL",
+     "r": 0.322,
+     "bars": 640
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.322,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.32,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.345,
+   "high_corr_peers": []
+  },
+  "POL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "APL",
+     "r": 0.451,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.406,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.398,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.395,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.371,
+     "bars": 741
+    },
+    {
+     "symbol": "FFC",
+     "r": 0.356,
+     "bars": 741
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.352,
+     "bars": 741
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.352,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.451,
+   "high_corr_peers": []
+  },
+  "POWER": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.551,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.55,
+     "bars": 741
+    },
+    {
+     "symbol": "DCL",
+     "r": 0.542,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.539,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.48,
+     "bars": 736
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.462,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.461,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.461,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.551,
+   "high_corr_peers": []
+  },
+  "PPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "OGDC",
+     "r": 0.85,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.741,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.683,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.547,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.546,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.523,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.52,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.85,
+   "high_corr_peers": [
+    "OGDC",
+    "PSO",
+    "SNGP"
+   ]
+  },
+  "PREMA": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.369,
+     "bars": 741
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.359,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.359,
+     "bars": 736
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.354,
+     "bars": 554
+    },
+    {
+     "symbol": "TOMCL",
+     "r": 0.347,
+     "bars": 741
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.345,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.339,
+     "bars": 741
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.339,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.369,
+   "high_corr_peers": []
+  },
+  "PRL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NRL",
+     "r": 0.752,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.68,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.661,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.58,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.52,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.506,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.492,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.482,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.752,
+   "high_corr_peers": [
+    "NRL",
+    "ATRL",
+    "CNERGY"
+   ]
+  },
+  "PSEL": {
+   "bars": 667,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.185,
+     "bars": 667
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.175,
+     "bars": 667
+    },
+    {
+     "symbol": "PKGS",
+     "r": 0.171,
+     "bars": 667
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.17,
+     "bars": 667
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.168,
+     "bars": 667
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.165,
+     "bars": 662
+    },
+    {
+     "symbol": "ABL",
+     "r": 0.165,
+     "bars": 663
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.162,
+     "bars": 667
+    }
+   ],
+   "max_r": 0.185,
+   "high_corr_peers": []
+  },
+  "PSO": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.741,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.709,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.653,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.58,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.546,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.538,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.537,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.741,
+   "high_corr_peers": [
+    "PPL",
+    "OGDC",
+    "SNGP"
+   ]
+  },
+  "PSX": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "DGKC",
+     "r": 0.482,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.48,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.467,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.465,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.461,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.45,
+     "bars": 741
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.44,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.482,
+   "high_corr_peers": []
+  },
+  "PTC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.472,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.444,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.442,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.44,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.429,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.472,
+   "high_corr_peers": []
+  },
+  "QTECH": {
+   "bars": 736,
+   "peers": [
+    {
+     "symbol": "KOSM",
+     "r": 0.38,
+     "bars": 736
+    },
+    {
+     "symbol": "YOUW",
+     "r": 0.284,
+     "bars": 736
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.264,
+     "bars": 554
+    },
+    {
+     "symbol": "TBL",
+     "r": 0.246,
+     "bars": 638
+    },
+    {
+     "symbol": "PIAHCLA",
+     "r": 0.24,
+     "bars": 736
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.23,
+     "bars": 736
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.227,
+     "bars": 736
+    },
+    {
+     "symbol": "AGL",
+     "r": 0.221,
+     "bars": 736
+    }
+   ],
+   "max_r": 0.38,
+   "high_corr_peers": []
+  },
+  "QUICE": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "FFL",
+     "r": 0.381,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.352,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.338,
+     "bars": 741
+    },
+    {
+     "symbol": "PIBTL",
+     "r": 0.333,
+     "bars": 741
+    },
+    {
+     "symbol": "TPL",
+     "r": 0.33,
+     "bars": 741
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.32,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.315,
+     "bars": 741
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.311,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.381,
+   "high_corr_peers": []
+  },
+  "RMPL": {
+   "bars": 660,
+   "peers": [
+    {
+     "symbol": "AIRLINK",
+     "r": 0.22,
+     "bars": 660
+    },
+    {
+     "symbol": "DOL",
+     "r": 0.212,
+     "bars": 660
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.21,
+     "bars": 660
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.198,
+     "bars": 660
+    },
+    {
+     "symbol": "GGGL",
+     "r": 0.193,
+     "bars": 660
+    },
+    {
+     "symbol": "NML",
+     "r": 0.192,
+     "bars": 660
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.192,
+     "bars": 660
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.189,
+     "bars": 660
+    }
+   ],
+   "max_r": 0.22,
+   "high_corr_peers": []
+  },
+  "SAZEW": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GHNI",
+     "r": 0.568,
+     "bars": 741
+    },
+    {
+     "symbol": "GAL",
+     "r": 0.51,
+     "bars": 741
+    },
+    {
+     "symbol": "HCAR",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.427,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.427,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.41,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.568,
+   "high_corr_peers": []
+  },
+  "SBL": {
+   "bars": 660,
+   "peers": [
+    {
+     "symbol": "PAKRI",
+     "r": 0.262,
+     "bars": 660
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.246,
+     "bars": 660
+    },
+    {
+     "symbol": "AKDSL",
+     "r": 0.233,
+     "bars": 595
+    },
+    {
+     "symbol": "SNBL",
+     "r": 0.232,
+     "bars": 660
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.229,
+     "bars": 660
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.226,
+     "bars": 660
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.223,
+     "bars": 660
+    },
+    {
+     "symbol": "ABL",
+     "r": 0.221,
+     "bars": 653
+    }
+   ],
+   "max_r": 0.262,
+   "high_corr_peers": []
+  },
+  "SCBPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "HMB",
+     "r": 0.305,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.302,
+     "bars": 741
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.302,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.296,
+     "bars": 741
+    },
+    {
+     "symbol": "FATIMA",
+     "r": 0.295,
+     "bars": 741
+    },
+    {
+     "symbol": "BOP",
+     "r": 0.291,
+     "bars": 741
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.289,
+     "bars": 741
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.289,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.305,
+   "high_corr_peers": []
+  },
+  "SEARL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "CPHL",
+     "r": 0.659,
+     "bars": 741
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.548,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.54,
+     "bars": 741
+    },
+    {
+     "symbol": "GLAXO",
+     "r": 0.539,
+     "bars": 739
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.536,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.533,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.523,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.516,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.659,
+   "high_corr_peers": [
+    "CPHL"
+   ]
+  },
+  "SGF": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "SRVI",
+     "r": 0.457,
+     "bars": 739
+    },
+    {
+     "symbol": "GTYR",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.397,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.394,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.387,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.387,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.374,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.373,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.457,
+   "high_corr_peers": []
+  },
+  "SGPL": {
+   "bars": 701,
+   "peers": [
+    {
+     "symbol": "QUICE",
+     "r": 0.199,
+     "bars": 701
+    },
+    {
+     "symbol": "SYM",
+     "r": 0.197,
+     "bars": 677
+    },
+    {
+     "symbol": "ADMM",
+     "r": 0.196,
+     "bars": 691
+    },
+    {
+     "symbol": "TRG",
+     "r": 0.192,
+     "bars": 701
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.186,
+     "bars": 701
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.186,
+     "bars": 701
+    },
+    {
+     "symbol": "ASL",
+     "r": 0.185,
+     "bars": 701
+    },
+    {
+     "symbol": "AHCL",
+     "r": 0.184,
+     "bars": 695
+    }
+   ],
+   "max_r": 0.199,
+   "high_corr_peers": []
+  },
+  "SHDT": {
+   "bars": 659,
+   "peers": [
+    {
+     "symbol": "KOHTM",
+     "r": 0.222,
+     "bars": 596
+    },
+    {
+     "symbol": "APL",
+     "r": 0.215,
+     "bars": 659
+    },
+    {
+     "symbol": "AHCL",
+     "r": 0.21,
+     "bars": 651
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.21,
+     "bars": 659
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.206,
+     "bars": 659
+    },
+    {
+     "symbol": "ALAC",
+     "r": 0.205,
+     "bars": 587
+    },
+    {
+     "symbol": "PSX",
+     "r": 0.204,
+     "bars": 659
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.202,
+     "bars": 654
+    }
+   ],
+   "max_r": 0.222,
+   "high_corr_peers": []
+  },
+  "SHFA": {
+   "bars": 727,
+   "peers": [
+    {
+     "symbol": "GLAXO",
+     "r": 0.456,
+     "bars": 725
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.422,
+     "bars": 725
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.403,
+     "bars": 727
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.394,
+     "bars": 724
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.391,
+     "bars": 727
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.389,
+     "bars": 727
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.388,
+     "bars": 727
+    },
+    {
+     "symbol": "CPHL",
+     "r": 0.384,
+     "bars": 727
+    }
+   ],
+   "max_r": 0.456,
+   "high_corr_peers": []
+  },
+  "SLGL": {
+   "bars": 554,
+   "peers": [
+    {
+     "symbol": "TREET",
+     "r": 0.447,
+     "bars": 554
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.415,
+     "bars": 554
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.415,
+     "bars": 554
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.413,
+     "bars": 554
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.411,
+     "bars": 554
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.41,
+     "bars": 554
+    },
+    {
+     "symbol": "JSCL",
+     "r": 0.407,
+     "bars": 554
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.404,
+     "bars": 554
+    }
+   ],
+   "max_r": 0.447,
+   "high_corr_peers": []
+  },
+  "SNBL": {
+   "bars": 740,
+   "peers": [
+    {
+     "symbol": "BOP",
+     "r": 0.37,
+     "bars": 740
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.366,
+     "bars": 740
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.363,
+     "bars": 740
+    },
+    {
+     "symbol": "UBL",
+     "r": 0.348,
+     "bars": 740
+    },
+    {
+     "symbol": "BIPL",
+     "r": 0.332,
+     "bars": 740
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.33,
+     "bars": 740
+    },
+    {
+     "symbol": "JSBL",
+     "r": 0.33,
+     "bars": 740
+    },
+    {
+     "symbol": "NML",
+     "r": 0.328,
+     "bars": 740
+    }
+   ],
+   "max_r": 0.37,
+   "high_corr_peers": []
+  },
+  "SNGP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PPL",
+     "r": 0.683,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.653,
+     "bars": 741
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.626,
+     "bars": 741
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.62,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.514,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.504,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.501,
+     "bars": 741
+    },
+    {
+     "symbol": "APL",
+     "r": 0.5,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.683,
+   "high_corr_peers": [
+    "PPL",
+    "PSO",
+    "OGDC",
+    "SSGC"
+   ]
+  },
+  "SPEL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "GAL",
+     "r": 0.411,
+     "bars": 739
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.406,
+     "bars": 739
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.393,
+     "bars": 739
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.392,
+     "bars": 739
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.388,
+     "bars": 739
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.383,
+     "bars": 739
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.378,
+     "bars": 739
+    },
+    {
+     "symbol": "GHNI",
+     "r": 0.374,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.411,
+   "high_corr_peers": []
+  },
+  "SRVI": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "SGF",
+     "r": 0.457,
+     "bars": 739
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.386,
+     "bars": 739
+    },
+    {
+     "symbol": "ABOT",
+     "r": 0.37,
+     "bars": 736
+    },
+    {
+     "symbol": "HINOON",
+     "r": 0.363,
+     "bars": 739
+    },
+    {
+     "symbol": "APL",
+     "r": 0.363,
+     "bars": 739
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.361,
+     "bars": 737
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.356,
+     "bars": 739
+    },
+    {
+     "symbol": "NML",
+     "r": 0.356,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.457,
+   "high_corr_peers": []
+  },
+  "SSGC": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "SNGP",
+     "r": 0.62,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.538,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.507,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.482,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.466,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.458,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.457,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.62,
+   "high_corr_peers": [
+    "SNGP"
+   ]
+  },
+  "SSOM": {
+   "bars": 621,
+   "peers": [
+    {
+     "symbol": "LUCK",
+     "r": 0.258,
+     "bars": 616
+    },
+    {
+     "symbol": "AGP",
+     "r": 0.256,
+     "bars": 621
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.253,
+     "bars": 621
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.252,
+     "bars": 532
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.242,
+     "bars": 621
+    },
+    {
+     "symbol": "SYM",
+     "r": 0.24,
+     "bars": 610
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.24,
+     "bars": 621
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.24,
+     "bars": 621
+    }
+   ],
+   "max_r": 0.258,
+   "high_corr_peers": []
+  },
+  "STCL": {
+   "bars": 738,
+   "peers": [
+    {
+     "symbol": "MLCF",
+     "r": 0.416,
+     "bars": 738
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.404,
+     "bars": 738
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.399,
+     "bars": 738
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.397,
+     "bars": 738
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.391,
+     "bars": 738
+    },
+    {
+     "symbol": "ISL",
+     "r": 0.387,
+     "bars": 738
+    },
+    {
+     "symbol": "BWCL",
+     "r": 0.381,
+     "bars": 736
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.379,
+     "bars": 733
+    }
+   ],
+   "max_r": 0.416,
+   "high_corr_peers": []
+  },
+  "STL": {
+   "bars": 598,
+   "peers": [
+    {
+     "symbol": "QTECH",
+     "r": 0.139,
+     "bars": 597
+    },
+    {
+     "symbol": "PACE",
+     "r": 0.131,
+     "bars": 598
+    },
+    {
+     "symbol": "YOUW",
+     "r": 0.122,
+     "bars": 598
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.12,
+     "bars": 598
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.107,
+     "bars": 598
+    },
+    {
+     "symbol": "DFML",
+     "r": 0.1,
+     "bars": 598
+    },
+    {
+     "symbol": "BML",
+     "r": 0.092,
+     "bars": 598
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.089,
+     "bars": 545
+    }
+   ],
+   "max_r": 0.139,
+   "high_corr_peers": []
+  },
+  "STPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.425,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.413,
+     "bars": 741
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.39,
+     "bars": 741
+    },
+    {
+     "symbol": "KOSM",
+     "r": 0.372,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.369,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.361,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.425,
+   "high_corr_peers": []
+  },
+  "SYM": {
+   "bars": 711,
+   "peers": [
+    {
+     "symbol": "TPLP",
+     "r": 0.394,
+     "bars": 711
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.391,
+     "bars": 711
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.387,
+     "bars": 711
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.381,
+     "bars": 711
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.38,
+     "bars": 711
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.379,
+     "bars": 711
+    },
+    {
+     "symbol": "AGHA",
+     "r": 0.378,
+     "bars": 711
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.369,
+     "bars": 554
+    }
+   ],
+   "max_r": 0.394,
+   "high_corr_peers": []
+  },
+  "SYS": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "AVN",
+     "r": 0.508,
+     "bars": 739
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.494,
+     "bars": 739
+    },
+    {
+     "symbol": "NML",
+     "r": 0.485,
+     "bars": 739
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.476,
+     "bars": 739
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.476,
+     "bars": 734
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.468,
+     "bars": 739
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.457,
+     "bars": 739
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.456,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.508,
+   "high_corr_peers": []
+  },
+  "TATM": {
+   "bars": 648,
+   "peers": [
+    {
+     "symbol": "NML",
+     "r": 0.284,
+     "bars": 648
+    },
+    {
+     "symbol": "GADT",
+     "r": 0.264,
+     "bars": 628
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.25,
+     "bars": 648
+    },
+    {
+     "symbol": "STCL",
+     "r": 0.245,
+     "bars": 647
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.243,
+     "bars": 648
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.242,
+     "bars": 643
+    },
+    {
+     "symbol": "EPCL",
+     "r": 0.242,
+     "bars": 648
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.242,
+     "bars": 648
+    }
+   ],
+   "max_r": 0.284,
+   "high_corr_peers": []
+  },
+  "TBL": {
+   "bars": 638,
+   "peers": [
+    {
+     "symbol": "TREET",
+     "r": 0.482,
+     "bars": 638
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.401,
+     "bars": 521
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.388,
+     "bars": 554
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.327,
+     "bars": 638
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.326,
+     "bars": 638
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.324,
+     "bars": 638
+    },
+    {
+     "symbol": "PIAHCLA",
+     "r": 0.323,
+     "bars": 638
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.319,
+     "bars": 638
+    }
+   ],
+   "max_r": 0.482,
+   "high_corr_peers": []
+  },
+  "TELE": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TPLP",
+     "r": 0.565,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.545,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.541,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "WTL",
+     "r": 0.528,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.527,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.521,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.521,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.565,
+   "high_corr_peers": []
+  },
+  "TGL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "GHGL",
+     "r": 0.57,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.486,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.486,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.47,
+     "bars": 736
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.457,
+     "bars": 741
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.449,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.443,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.57,
+   "high_corr_peers": []
+  },
+  "THALL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "AKBL",
+     "r": 0.358,
+     "bars": 739
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.348,
+     "bars": 739
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.339,
+     "bars": 739
+    },
+    {
+     "symbol": "PKGS",
+     "r": 0.337,
+     "bars": 739
+    },
+    {
+     "symbol": "ENGROH",
+     "r": 0.334,
+     "bars": 739
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.333,
+     "bars": 739
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.333,
+     "bars": 739
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.331,
+     "bars": 734
+    }
+   ],
+   "max_r": 0.358,
+   "high_corr_peers": []
+  },
+  "THCCL": {
+   "bars": 739,
+   "peers": [
+    {
+     "symbol": "GWLC",
+     "r": 0.371,
+     "bars": 733
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.36,
+     "bars": 739
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.345,
+     "bars": 739
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.343,
+     "bars": 739
+    },
+    {
+     "symbol": "PIOC",
+     "r": 0.343,
+     "bars": 739
+    },
+    {
+     "symbol": "SPEL",
+     "r": 0.337,
+     "bars": 737
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.325,
+     "bars": 739
+    },
+    {
+     "symbol": "CSAP",
+     "r": 0.322,
+     "bars": 739
+    }
+   ],
+   "max_r": 0.371,
+   "high_corr_peers": []
+  },
+  "TOMCL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "NML",
+     "r": 0.448,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.447,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.438,
+     "bars": 741
+    },
+    {
+     "symbol": "DGKC",
+     "r": 0.433,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.426,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.425,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.424,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.471,
+   "high_corr_peers": []
+  },
+  "TPL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TPLP",
+     "r": 0.694,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.482,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "GGGL",
+     "r": 0.423,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.423,
+     "bars": 741
+    },
+    {
+     "symbol": "MLCF",
+     "r": 0.404,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.387,
+     "bars": 741
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.385,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.694,
+   "high_corr_peers": [
+    "TPLP"
+   ]
+  },
+  "TPLP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TPL",
+     "r": 0.694,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.565,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.531,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.5,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.471,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.458,
+     "bars": 741
+    },
+    {
+     "symbol": "GGGL",
+     "r": 0.456,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.694,
+   "high_corr_peers": [
+    "TPL"
+   ]
+  },
+  "TPLRF1": {
+   "bars": 530,
+   "peers": [
+    {
+     "symbol": "TPLP",
+     "r": 0.302,
+     "bars": 530
+    },
+    {
+     "symbol": "TPL",
+     "r": 0.269,
+     "bars": 530
+    },
+    {
+     "symbol": "NML",
+     "r": 0.209,
+     "bars": 530
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.206,
+     "bars": 530
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.201,
+     "bars": 528
+    },
+    {
+     "symbol": "CHCC",
+     "r": 0.201,
+     "bars": 530
+    },
+    {
+     "symbol": "KAPCO",
+     "r": 0.195,
+     "bars": 530
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.194,
+     "bars": 516
+    }
+   ],
+   "max_r": 0.302,
+   "high_corr_peers": []
+  },
+  "TPLT": {
+   "bars": 722,
+   "peers": [
+    {
+     "symbol": "TPLP",
+     "r": 0.367,
+     "bars": 722
+    },
+    {
+     "symbol": "TPL",
+     "r": 0.364,
+     "bars": 722
+    },
+    {
+     "symbol": "DCL",
+     "r": 0.316,
+     "bars": 722
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.289,
+     "bars": 722
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.273,
+     "bars": 722
+    },
+    {
+     "symbol": "FEROZ",
+     "r": 0.272,
+     "bars": 722
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.271,
+     "bars": 722
+    },
+    {
+     "symbol": "DFML",
+     "r": 0.27,
+     "bars": 722
+    }
+   ],
+   "max_r": 0.367,
+   "high_corr_peers": []
+  },
+  "TREET": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.52,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.51,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.505,
+     "bars": 741
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.5,
+     "bars": 741
+    },
+    {
+     "symbol": "PRL",
+     "r": 0.492,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.49,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.484,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.529,
+   "high_corr_peers": []
+  },
+  "TRG": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "NETSOL",
+     "r": 0.545,
+     "bars": 741
+    },
+    {
+     "symbol": "AVN",
+     "r": 0.518,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.484,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.463,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.446,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.419,
+     "bars": 741
+    },
+    {
+     "symbol": "OCTOPUS",
+     "r": 0.405,
+     "bars": 741
+    },
+    {
+     "symbol": "AIRLINK",
+     "r": 0.404,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.545,
+   "high_corr_peers": []
+  },
+  "TRIPF": {
+   "bars": 715,
+   "peers": [
+    {
+     "symbol": "FCL",
+     "r": 0.3,
+     "bars": 516
+    },
+    {
+     "symbol": "HTL",
+     "r": 0.293,
+     "bars": 715
+    },
+    {
+     "symbol": "NML",
+     "r": 0.289,
+     "bars": 715
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.288,
+     "bars": 715
+    },
+    {
+     "symbol": "NCL",
+     "r": 0.272,
+     "bars": 715
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.272,
+     "bars": 715
+    },
+    {
+     "symbol": "SYS",
+     "r": 0.271,
+     "bars": 713
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.268,
+     "bars": 715
+    }
+   ],
+   "max_r": 0.3,
+   "high_corr_peers": []
+  },
+  "TRSM": {
+   "bars": 650,
+   "peers": [
+    {
+     "symbol": "FFLM",
+     "r": 0.215,
+     "bars": 520
+    },
+    {
+     "symbol": "FNEL",
+     "r": 0.196,
+     "bars": 650
+    },
+    {
+     "symbol": "IGIHL",
+     "r": 0.194,
+     "bars": 644
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.194,
+     "bars": 650
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.19,
+     "bars": 650
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.187,
+     "bars": 650
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.18,
+     "bars": 650
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.18,
+     "bars": 538
+    }
+   ],
+   "max_r": 0.215,
+   "high_corr_peers": []
+  },
+  "UBL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "MCB",
+     "r": 0.58,
+     "bars": 741
+    },
+    {
+     "symbol": "MEBL",
+     "r": 0.529,
+     "bars": 741
+    },
+    {
+     "symbol": "HBL",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "BAFL",
+     "r": 0.517,
+     "bars": 741
+    },
+    {
+     "symbol": "LUCK",
+     "r": 0.46,
+     "bars": 736
+    },
+    {
+     "symbol": "NBP",
+     "r": 0.451,
+     "bars": 741
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.443,
+     "bars": 741
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.443,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.58,
+   "high_corr_peers": []
+  },
+  "UNITY": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "HTL",
+     "r": 0.453,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.427,
+     "bars": 741
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.419,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.412,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.41,
+     "bars": 741
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.388,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.385,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.379,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.453,
+   "high_corr_peers": []
+  },
+  "UPFL": {
+   "bars": 644,
+   "peers": [
+    {
+     "symbol": "BWCL",
+     "r": 0.24,
+     "bars": 644
+    },
+    {
+     "symbol": "SNGP",
+     "r": 0.238,
+     "bars": 644
+    },
+    {
+     "symbol": "APL",
+     "r": 0.236,
+     "bars": 644
+    },
+    {
+     "symbol": "OGDC",
+     "r": 0.234,
+     "bars": 644
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.23,
+     "bars": 521
+    },
+    {
+     "symbol": "HUBC",
+     "r": 0.227,
+     "bars": 644
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.225,
+     "bars": 644
+    },
+    {
+     "symbol": "POWER",
+     "r": 0.221,
+     "bars": 644
+    }
+   ],
+   "max_r": 0.24,
+   "high_corr_peers": []
+  },
+  "WAFI": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "PSO",
+     "r": 0.505,
+     "bars": 741
+    },
+    {
+     "symbol": "PPL",
+     "r": 0.488,
+     "bars": 741
+    },
+    {
+     "symbol": "ATRL",
+     "r": 0.454,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.449,
+     "bars": 741
+    },
+    {
+     "symbol": "NRL",
+     "r": 0.448,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.445,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.445,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.441,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.505,
+   "high_corr_peers": []
+  },
+  "WAVES": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "WAVESAPP",
+     "r": 0.587,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.581,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.521,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.502,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.5,
+     "bars": 741
+    },
+    {
+     "symbol": "SEARL",
+     "r": 0.479,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.478,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.468,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.587,
+   "high_corr_peers": []
+  },
+  "WAVESAPP": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "WAVES",
+     "r": 0.587,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.411,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.397,
+     "bars": 741
+    },
+    {
+     "symbol": "PAEL",
+     "r": 0.394,
+     "bars": 741
+    },
+    {
+     "symbol": "FCL",
+     "r": 0.389,
+     "bars": 521
+    },
+    {
+     "symbol": "FFL",
+     "r": 0.379,
+     "bars": 741
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.376,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.372,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.587,
+   "high_corr_peers": []
+  },
+  "WTL": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "TELE",
+     "r": 0.528,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.459,
+     "bars": 741
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.448,
+     "bars": 741
+    },
+    {
+     "symbol": "GGL",
+     "r": 0.442,
+     "bars": 741
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.43,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.428,
+     "bars": 741
+    },
+    {
+     "symbol": "CEPB",
+     "r": 0.424,
+     "bars": 741
+    },
+    {
+     "symbol": "PSO",
+     "r": 0.418,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.528,
+   "high_corr_peers": []
+  },
+  "YOUW": {
+   "bars": 741,
+   "peers": [
+    {
+     "symbol": "KOSM",
+     "r": 0.752,
+     "bars": 741
+    },
+    {
+     "symbol": "DFSM",
+     "r": 0.45,
+     "bars": 740
+    },
+    {
+     "symbol": "ANL",
+     "r": 0.439,
+     "bars": 741
+    },
+    {
+     "symbol": "TELE",
+     "r": 0.407,
+     "bars": 741
+    },
+    {
+     "symbol": "GATM",
+     "r": 0.364,
+     "bars": 741
+    },
+    {
+     "symbol": "TREET",
+     "r": 0.355,
+     "bars": 741
+    },
+    {
+     "symbol": "TPLP",
+     "r": 0.352,
+     "bars": 741
+    },
+    {
+     "symbol": "ITTEFAQ",
+     "r": 0.345,
+     "bars": 741
+    }
+   ],
+   "max_r": 0.752,
+   "high_corr_peers": [
+    "KOSM"
+   ]
+  },
+  "ZTL": {
+   "bars": 573,
+   "peers": [
+    {
+     "symbol": "AVN",
+     "r": 0.214,
+     "bars": 573
+    },
+    {
+     "symbol": "WAVESAPP",
+     "r": 0.195,
+     "bars": 573
+    },
+    {
+     "symbol": "SLGL",
+     "r": 0.185,
+     "bars": 464
+    },
+    {
+     "symbol": "SSGC",
+     "r": 0.179,
+     "bars": 573
+    },
+    {
+     "symbol": "NETSOL",
+     "r": 0.17,
+     "bars": 573
+    },
+    {
+     "symbol": "WAVES",
+     "r": 0.17,
+     "bars": 573
+    },
+    {
+     "symbol": "DSIL",
+     "r": 0.168,
+     "bars": 571
+    },
+    {
+     "symbol": "CNERGY",
+     "r": 0.168,
+     "bars": 573
+    }
+   ],
+   "max_r": 0.214,
+   "high_corr_peers": []
+  }
+ }
+}

@@ -64,8 +64,24 @@ def build():
     signal_tickers = {s.get("ticker") for s in signals}
     doc_tickers = set((research.get("by_ticker") or {}).keys())
 
+    # SCOPE: only names the desk could actually act on.
+    #
+    # This used to rank every ticker in quant.json. Once the universe went to the whole KSE
+    # All Share that meant 442 names queued for a full 5-persona debate — ~74 days of budget
+    # at 6/day — and most of that spend would go to stocks below the liquidity floor, which
+    # can never produce a setup no matter what the Chair concludes. Debating them is not
+    # coverage, it is burning tokens to reach a house view nobody can trade.
+    #
+    # Restricting to signal-eligible names cuts the queue to ~100 and full coverage to ~2-3
+    # weeks, with every debate landing on a name that can carry a position.
+    # Falls back to the full list if liquidity.json is missing, so this never silently
+    # narrows coverage on a broken cycle.
+    liq = load_json(STATE / "liquidity.json", {}).get("tickers", {})
+    eligible = {s for s, m in liq.items() if m.get("signal_eligible")}
+    scope = [s for s in quant if s in eligible] if eligible else list(quant)
+
     ranked = []
-    for sym in quant:
+    for sym in scope:
         score, reasons = 0, []
         if sym in upcoming:
             score += 1000
@@ -91,8 +107,12 @@ def build():
         "_meta": {
             "built": time.strftime("%Y-%m-%d %H:%M"),
             "top": [r["symbol"] for r in ranked[:5]],
-            "note": "Room coverage queue. Daily task deep-dives the top N (budget.deep_dives_per_day). "
-                    "Events and high-impact news outrank staleness so nothing important waits.",
+            "scope": "signal_eligible" if eligible else "all_quant_fallback",
+            "scope_n": len(scope),
+            "note": "Room coverage queue, scoped to signal-eligible names (liquidity.json) — the desk "
+                    "does not spend a 5-persona debate on a stock it would refuse to trade. Daily task "
+                    "deep-dives the top N (budget.deep_dives_per_day). Events and high-impact news "
+                    "outrank staleness so nothing important waits.",
         },
     }
     save_json(STATE / "room_queue.json", out)
