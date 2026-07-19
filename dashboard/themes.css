@@ -1512,3 +1512,49 @@ body[data-theme=gemini] .ph-del{min-width:32px;min-height:32px;display:inline-fl
   /* a 4px-tall bar was a tap target; keep the visual, grow the hit area */
   body[data-theme=gemini] .rp-dot{padding:10px 0;background-clip:content-box}
 }
+/* ---------------------------------------------------------------------------
+   Scout-backlog features: CSV export · glossary · compare · desk-rule check ·
+   since-your-last-visit. Hard corners and mono labels throughout, per the
+   locked design language — no radii, no new fonts, existing tokens only.
+   --------------------------------------------------------------------------- */
+body[data-theme=gemini] .csv-btn{padding:5px 11px;font-size:10px;margin-left:auto}
+
+/* glossary */
+body[data-theme=gemini] .gloss-list{display:flex;flex-direction:column;gap:0}
+body[data-theme=gemini] .gloss-item{padding:12px 0;border-bottom:1px solid var(--line2)}
+body[data-theme=gemini] .gloss-item:last-child{border-bottom:0;padding-bottom:0}
+body[data-theme=gemini] .gloss-item:first-child{padding-top:0}
+body[data-theme=gemini] .gloss-term{font-weight:700;font-size:13px;margin-bottom:4px}
+body[data-theme=gemini] .gloss-def{font-size:13px;line-height:1.62;color:var(--ink2)}
+
+/* compare */
+body[data-theme=gemini] .cmp-table th{vertical-align:bottom}
+body[data-theme=gemini] .cmp-table td:first-child,
+body[data-theme=gemini] .cmp-table th:first-child{white-space:nowrap}
+body[data-theme=gemini] .cmp-x{margin-left:6px;cursor:pointer;opacity:.7}
+body[data-theme=gemini] .cmp-x:hover{opacity:1}
+
+/* desk-rule check + sizer */
+body[data-theme=gemini] .dr-row{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid var(--line2)}
+body[data-theme=gemini] .dr-row:last-of-type{border-bottom:0}
+body[data-theme=gemini] .dr-dot{width:18px;height:18px;flex:0 0 18px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;border:1.5px solid var(--ink1);align-self:center}
+body[data-theme=gemini] .dr-dot.ok{background:var(--up);border-color:var(--up);color:#fff}
+body[data-theme=gemini] .dr-dot.no{background:var(--warn);border-color:var(--warn);color:#000}
+body[data-theme=gemini] .dr-lab{font-size:13px;font-weight:700}
+body[data-theme=gemini] .dr-det{margin-left:auto;text-align:right}
+body[data-theme=gemini] .dr-f{display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);flex:1 1 150px}
+
+/* since your last visit */
+body[data-theme=gemini] .since-card{border-left:3px solid var(--accent)}
+body[data-theme=gemini] .since-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+body[data-theme=gemini] .since-x{margin-left:auto;background:none;border:0;color:var(--ink3);cursor:pointer;
+  font:inherit;font-size:13px;min-width:32px;min-height:32px}
+body[data-theme=gemini] .since-x:hover{color:var(--ink1)}
+body[data-theme=gemini] .since-body{font-size:13.5px;line-height:1.6}
+
+@media(max-width:720px){
+  body[data-theme=gemini] .dr-det{margin-left:0;text-align:left;flex-basis:100%}
+  body[data-theme=gemini] .dr-row{flex-wrap:wrap}
+}

@@ -391,3 +391,59 @@ same pattern already used for `.searchbox[hidden]`.
    new loop) — update this file (`docs/OPERATIONS.md`) and, if it affects a scheduled task's behavior, that
    task's `SKILL.md` in the same turn. Docs going stale is how future sessions break things they don't
    know changed.
+
+---
+
+## 11. Web Push (watchlist alerts) — **BUILT, INERT, NOT ACTIVATED** (2026-07-19)
+
+Browser push notifications for watchlist events. **Fully written and currently doing nothing.** It
+cannot activate on its own: it needs VAPID keys only the owner can generate, and absent keys are the
+designed off-state — no registration, no permission prompt, no network call, no UI. Every existing
+visitor's experience is byte-identical to before this landed.
+
+### The pieces
+
+| file | role | live today? |
+|---|---|---|
+| `dashboard/sw.js` | service worker: `push` → notification, `notificationclick` → `#/ticker/SYM` | no — nothing registers it, and it is **not copied by `vercel.json`'s buildCommand** |
+| `dashboard/push.js` | client helper, global `window.PSXPush` | no — not in `vercel.json`, not in `index.html` |
+| `docs/push_subscriptions.sql` | the per-user table + RLS | **not applied** to Supabase |
+| `scripts/push_send.py` | the sender (cron/manual; a static host can't push) | runs, prints "not configured", exits 0 |
+| `state/push_queue.json` | alerts awaiting delivery | does not exist; absent = nothing to send |
+
+`sw.js` deliberately has **no fetch handler and no caching** — the site's freshness guarantee
+(`must-revalidate`, §6) is the product, and a caching worker would be a route to serving stale prices.
+
+### The client API (`window.PSXPush`)
+
+`configure({vapidPublicKey, sb, userId})` → returns `available()`; call on sign-in and sign-out ·
+`available()` → bool, **false until keyed** · `status()` → `"unavailable" | "denied" | "on" | "off"` ·
+`subscribe()` / `unsubscribe()` → `{ok:true}` or `{ok:false, error}` with stable reasons
+(`unavailable`, `not_signed_in`, `denied`, `dismissed`, `save_failed`) · `renderToggle(hostEl)` →
+paints a toggle, or writes an **empty string and attaches nothing** when unavailable, so it is safe
+to call unconditionally. Nothing throws.
+
+### Owner action required to activate (nothing happens until all five)
+
+1. **Generate the VAPID keypair** yourself — e.g. `npx web-push generate-vapid-keys`, or
+   `python -c "from py_vapid import Vapid01 as V; v=V(); v.generate_keys(); print(v.public_key, v.private_key)"`.
+   The private key is a credential: it never enters the repo, a state file, or a log.
+2. **Add repo secrets** (GitHub → Settings → Secrets and variables → Actions):
+   `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (`mailto:you@…`), `SUPABASE_URL`,
+   `SUPABASE_SERVICE_KEY` (service-role — server-side only; it bypasses RLS, so it must never
+   reach the client bundle). Then expose them as `env:` on the push step of the workflow.
+3. **Apply the table**: run `docs/push_subscriptions.sql` in the Supabase SQL editor. It adds
+   `push_subscriptions` to the per-user layer described in §6 (owner-only RLS, four explicit
+   policies, `on delete cascade` from `auth.users`).
+4. **Ship the files**: add `dashboard/sw.js dashboard/push.js` to `vercel.json`'s `buildCommand`
+   copy list (it currently copies only `index.html app.js themes.css`), load `push.js` from
+   `index.html`, and set `window.PSX_VAPID_PUBLIC_KEY` (the *public* key only) before it — or pass
+   it via `PSXPush.configure()`. **`sw.js` must be served from the site root** for `scope:"/"`.
+5. **Install the dependency deliberately**: `push_send.py` needs `pywebpush`. It detects the absence
+   and reports it rather than installing anything — adding a package to the cron that publishes the
+   live site is a reviewed decision, not a side effect.
+
+Until step 4 the site cannot even see these files. Reverting is deleting the same five things.
+`push_send.py` is safe to schedule *now*: with no env keys it prints one line and exits 0 (Rule:
+never crash the cycle).
+

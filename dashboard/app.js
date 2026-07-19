@@ -571,8 +571,10 @@ async function pageToday() {
     <span class="mc-tease-go">Cast my chart →</span>
   </div>`;
 
+  const sinceBanner = await sinceLastVisit(q, lv);
   $("view").innerHTML = `
   ${globalStrip(gl)}
+  ${sinceBanner}
   ${glanceRow}
   ${dailyCard}
   ${astroTease}
@@ -3679,8 +3681,8 @@ async function pagePractice() {
         <button class="bw-go" style="max-width:260px" onclick="openAuth('signup')">Create a free account →</button></div>`;
     return;
   }
-  const [lv, q, uni, sectors, divs, idx] = await Promise.all([
-    j("live.json"), j("quant.json"), j("universe.json"), j("sectors.json"), j("dividends.json"), j("indices.json")]);
+  const [lv, q, uni, sectors, divs, idx, corr] = await Promise.all([
+    j("live.json"), j("quant.json"), j("universe.json"), j("sectors.json"), j("dividends.json"), j("indices.json"), j("correlation.json")]);
   const p = { trades: [], credits: [], ...paperState() };
   if (paperCreditDividends(p, divs)) { myProfile = { ...(myProfile || {}), paper: p }; saveProfile({ paper: p }); }
   const pos = paperPositions(p), cash = paperCash(p);
@@ -3716,6 +3718,7 @@ async function pagePractice() {
     ${sTile("Dividends credited", "Rs " + fmt(Math.round((p.credits || []).reduce((a, c) => a + c.amt, 0))), (p.credits || []).length ? `${(p.credits || []).length} payout${(p.credits || []).length === 1 ? "" : "s"}` : "when book closures pass", "")}
   </div>
   ${heavy.length ? `<div class="disclaimer"><b>Concentration flag:</b> over a third of this portfolio sits in ${heavy.map(esc).join(", ")}. The desk's own rules never allow two positions in one sector — worth practising the same discipline.</div>` : ""}
+  ${deskRulePanel(rows, total, invested, corr)}
 
   <div class="card">
     <div class="ark">place a practice order</div>
@@ -3729,7 +3732,7 @@ async function pagePractice() {
     <p class="sub" style="margin-top:8px">Fills at the current DPS price — the same price the whole desk runs on. Write one sentence for why, before you press the button; that habit is the actual lesson.</p>
   </div>
 
-  <div class="seg"><h2>Holdings</h2><div class="ln"></div><span class="pill">${rows.length}</span></div>
+  <div class="seg"><h2>Holdings</h2><div class="ln"></div><span class="pill">${rows.length}</span>${rows.length ? csvBtn("holdings") : ""}</div>
   <div class="card" style="padding:0">${rows.length ? `<table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Shares</th><th class="r">Avg cost</th><th class="r">Price</th><th class="r">Value</th><th class="r">P/L</th></tr></thead><tbody>${
     rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((uni?.symbols?.[r.s]?.name || "").slice(0, 20))}</span></td>
       <td class="sub">${esc((r.sector || "").slice(0, 18))}</td><td class="r num">${r.sh}</td><td class="r num">${fmt(r.avg)}</td>
@@ -3748,6 +3751,142 @@ async function pagePractice() {
       <td><span class="pill ${t.side === "buy" ? "ok" : "bad"}">${t.side}</span></td><td><b>${esc(t.sym)}</b></td>
       <td class="r num">${t.sh}</td><td class="r num">${fmt(t.px)}</td><td class="r num">${t.fee}</td></tr>`).join("")}</tbody></table></div>
   <p class="sub" style="margin-top:10px"><button class="note-save" onclick="paperReset()">Reset to Rs 500,000</button> · The log is the point — review it monthly and ask which trades had a written reason.</p>` : ""}`;
+}
+
+/* ==========================================================================================
+   SINCE YOUR LAST VISIT — what actually changed while you were away.
+   Kept entirely in localStorage: no account needed, nothing leaves the browser, and no server
+   state to keep in sync. The snapshot is only re-taken after SNAP_MIN minutes so that a reload
+   (or the 30-second auto-refresh) cannot silently consume the very diff you came back to read.
+   ========================================================================================== */
+const VISIT_KEY = "psx_visit", SNAP_MIN = 30, VISIT_MIN_GAP_H = 6;
+function visitSnap() { try { return JSON.parse(localStorage.getItem(VISIT_KEY) || "null"); } catch { return null; } }
+async function sinceLastVisit(q, lv) {
+  let prev = null;
+  try { prev = visitSnap(); } catch { return ""; }
+  const dash = await j("dashboard.json");
+  const wl = (typeof watchlist === "function" ? watchlist() : []) || [];
+  const pxOf = s => lv?.[s]?.current ?? q?.[s]?.close;
+  const now = Date.now();
+  const snap = { ts: now,
+    sigs: (dash?.signals || []).map(s => s.id).filter(Boolean),
+    news: (dash?.news || []).filter(n => (n.impact || 0) >= 4).length,
+    px: Object.fromEntries(wl.map(s => [s, pxOf(s)]).filter(([, p]) => p != null)) };
+  const save = () => { try { localStorage.setItem(VISIT_KEY, JSON.stringify(snap)); } catch { /* private mode — the feature simply doesn't persist */ } };
+  if (!prev || !prev.ts) { save(); return ""; }                       // first ever visit: nothing to diff against
+  const hours = (now - prev.ts) / 3.6e6;
+  if (hours < VISIT_MIN_GAP_H) { if (hours > SNAP_MIN / 60) save(); return ""; }   // same session — no banner, refresh the snapshot
+  const newSigs = snap.sigs.filter(id => !(prev.sigs || []).includes(id));
+  const movers = Object.entries(snap.px)
+    .map(([s, p]) => ({ s, p, was: prev.px?.[s] }))
+    .filter(x => x.was && Math.abs(x.p / x.was - 1) * 100 >= 3)
+    .map(x => ({ s: x.s, chg: (x.p / x.was - 1) * 100 }))
+    .sort((a, b) => Math.abs(b.chg) - Math.abs(a.chg)).slice(0, 4);
+  const newsDelta = Math.max(0, (snap.news || 0) - (prev.news || 0));
+  save();
+  if (!newSigs.length && !movers.length && !newsDelta) return "";
+  const ago = hours < 48 ? `${Math.round(hours)} hours` : `${Math.round(hours / 24)} days`;
+  const bits = [];
+  if (newSigs.length) bits.push(`<b>${newSigs.length} new setup${newSigs.length === 1 ? "" : "s"}</b>`);
+  if (newsDelta) bits.push(`<b>${newsDelta} material news item${newsDelta === 1 ? "" : "s"}</b> (impact 4+)`);
+  if (movers.length) bits.push(`on your watchlist: ${movers.map(m => `<a href="#/ticker/${esc(m.s)}" class="${m.chg > 0 ? "up" : "dn"}" style="font-weight:700">${esc(m.s)} ${sgn(+m.chg.toFixed(1))}%</a>`).join(", ")}`);
+  return `<div class="card since-card">
+    <div class="since-head"><span class="ark">since your last visit · ${esc(ago)} ago</span>
+      <button class="since-x" onclick="this.closest('.since-card').remove()" aria-label="Dismiss">✕</button></div>
+    <div class="since-body">${bits.join(" · ")}</div>
+    <div class="sub" style="margin-top:6px">Price moves are measured from what you last saw, not from any entry — this is a catch-up note, not a performance figure.</div>
+  </div>`;
+}
+
+/* ==========================================================================================
+   DESK RULES — the desk's own Rule 4 risk limits, checked live against the practice book.
+   These constants MIRROR config/desk.json (CLAUDE.md Rule 4). They are duplicated here because
+   vercel.json publishes only dashboard/* and state/* — config/ is never served to the browser,
+   so the client cannot read the real file. If Rule 4 changes in config, change it here too;
+   the numbers are labelled below so a drift is at least visible on screen rather than silent.
+   ========================================================================================== */
+const DESK_RULES = { max_positions: 4, max_total_exposure_pct: 20, max_same_sector_positions: 1,
+  risk_per_trade_pct: 1, max_pct_per_trade: 8 };
+
+/* CLAUDE.md Rule 4's sizing formula — THE only one. Kept as a single function so the practice
+   sizer and any future caller cannot drift into two different answers. */
+function deskSize(capital, entry, stop) {
+  if (!(capital > 0) || !(entry > 0) || !(stop >= 0) || entry <= stop) return null;   // entry<=stop is invalid, not merely zero
+  const riskBudget = capital * DESK_RULES.risk_per_trade_pct / 100;
+  const shares = Math.floor(Math.min(riskBudget / (entry - stop), capital * DESK_RULES.max_pct_per_trade / 100 / entry));
+  return shares > 0 ? { shares, value: shares * entry, risk: shares * (entry - stop),
+    capped: riskBudget / (entry - stop) > capital * DESK_RULES.max_pct_per_trade / 100 / entry } : null;
+}
+/* The correlation layer catches what the sector rule structurally cannot: two names in DIFFERENT
+   sectors that nonetheless move together (an E&P and an OMC; two affiliates filed under different
+   sector codes). Rule 4 would wave those through as diversified. This warns; it never blocks or
+   sizes anything — sector remains the hard constraint. Note the peer lists are top-N truncated and
+   therefore ASYMMETRIC, so a hit in EITHER direction counts. */
+function correlatedPairs(held, corr) {
+  const t = corr?.tickers || {}, out = [], seen = new Set();
+  for (const a of held) for (const b of held) {
+    if (a.s === b.s) continue;
+    const key = [a.s, b.s].sort().join("|");
+    if (seen.has(key)) continue;
+    const hit = (t[a.s]?.peers || []).find(p => p.symbol === b.s) || (t[b.s]?.peers || []).find(p => p.symbol === a.s);
+    if (hit && hit.r >= (corr.high_corr_threshold ?? 0.6)) { seen.add(key); out.push({ a: a.s, b: b.s, r: hit.r, sameSector: a.sector && a.sector === b.sector }); }
+  }
+  return out.sort((x, y) => y.r - x.r);
+}
+function deskRulePanel(rows, total, invested, corr) {
+  const held = rows.filter(r => r.val);
+  const secCount = {};
+  held.forEach(r => { if (r.sector) secCount[r.sector] = (secCount[r.sector] || 0) + 1; });
+  const dupes = Object.entries(secCount).filter(([, n]) => n > DESK_RULES.max_same_sector_positions);
+  const corrPairs = correlatedPairs(held, corr);
+  const crossSector = corrPairs.filter(p => !p.sameSector);
+  const expo = total ? invested / total * 100 : 0;
+  const check = (ok, label, detail) => `<div class="dr-row"><span class="dr-dot ${ok ? "ok" : "no"}">${ok ? "✓" : "!"}</span>
+    <span class="dr-lab">${label}</span><span class="dr-det sub">${detail}</span></div>`;
+  return `
+  <div class="seg"><h2>Against the desk's own rules</h2><div class="ln"></div><span class="pill">Rule 4</span></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:10px">The desk holds itself to hard limits it cannot override. Your practice book is checked against the same ones — as <b>education about one specific discipline</b>, not a verdict on your portfolio.</p>
+    ${check(held.length <= DESK_RULES.max_positions, `Max ${DESK_RULES.max_positions} concurrent positions`, `you hold ${held.length}`)}
+    ${check(expo <= DESK_RULES.max_total_exposure_pct, `Max ${DESK_RULES.max_total_exposure_pct}% total exposure`, `you are ${expo.toFixed(1)}% invested, ${(100 - expo).toFixed(1)}% cash`)}
+    ${check(!dupes.length, "No two positions in one sector", dupes.length ? `${dupes.map(([s, n]) => `${esc(s)} ×${n}`).join(", ")}` : `${Object.keys(secCount).length} sector${Object.keys(secCount).length === 1 ? "" : "s"}, no doubles`)}
+    ${corr ? check(!crossSector.length, "No two positions that move together", crossSector.length
+      ? `${crossSector.map(p => `${esc(p.a)}~${esc(p.b)} r=${p.r}`).join(", ")}`
+      : held.length > 1 ? "no pair above r=" + (corr.high_corr_threshold ?? 0.6) : "needs two or more positions") : ""}
+    <div class="tnote" style="margin-top:10px"><b>Read the exposure rule in context.</b> 20% is deliberately severe because it governs a <b>concentrated, stop-loss-driven research book</b> — four positions at most, each exited on a defined stop. It is not a claim that a long-term investor should hold 80% cash, and this panel is not telling you to sell anything. Different objective, different rules.</div>
+    ${crossSector.length ? `<div class="tnote warn" style="margin-top:8px"><b>Different sectors, same trade.</b> ${crossSector.map(p => `<b>${esc(p.a)}</b> and <b>${esc(p.b)}</b> have moved together ${Math.round(p.r * 100)}% of the way`).join("; ")} over the measured window — so the sector rule reads this book as diversified when, historically, these names have not been. Correlation is backward-looking and rises further in sell-offs, which is exactly when diversification is supposed to help.</div>` : ""}
+  </div>
+
+  <div class="seg"><h2>Position sizer</h2><div class="ln"></div><span class="pill">the desk's formula</span></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:10px">Size is decided by <b>where your stop is</b>, never by how much you like the idea. This is the exact formula the desk's Strategist and Auditor both compute — if they ever disagree, the setup is killed.</p>
+    <div class="pp-form">
+      <label class="dr-f">Capital (Rs)<input id="dz-cap" class="ph-in" type="number" min="1" value="${Math.round(total) || PAPER_START}" oninput="deskSizeRun()"></label>
+      <label class="dr-f">Entry (Rs)<input id="dz-entry" class="ph-in" type="number" min="0" step="0.01" placeholder="e.g. 245.56" oninput="deskSizeRun()"></label>
+      <label class="dr-f">Stop (Rs)<input id="dz-stop" class="ph-in" type="number" min="0" step="0.01" placeholder="e.g. 233.28" oninput="deskSizeRun()"></label>
+    </div>
+    <div id="dz-out" class="sub" style="margin-top:10px">Enter an entry and a stop to size it.</div>
+  </div>`;
+}
+function deskSizeRun() {
+  const num = id => parseFloat($(id)?.value);
+  const cap = num("dz-cap"), entry = num("dz-entry"), stop = num("dz-stop"), out = $("dz-out");
+  if (!out) return;
+  if (!(cap > 0) || !(entry > 0) || !(stop > 0)) { out.innerHTML = "Enter an entry and a stop to size it."; return; }
+  if (entry <= stop) { out.innerHTML = `<b class="dn">Invalid setup.</b> The stop must sit BELOW the entry — the desk is long-only, so a stop at or above entry has no risk-per-share to size against and the setup is rejected outright.`; return; }
+  const r = deskSize(cap, entry, stop);
+  if (!r) { out.innerHTML = `<b class="dn">Size works out to zero shares.</b> The stop is too far from the entry for this capital — at these levels a single share would risk more than the ${DESK_RULES.risk_per_trade_pct}% budget allows. The desk treats that as an invalid setup, not a reason to round up.`; return; }
+  const riskBudget = cap * DESK_RULES.risk_per_trade_pct / 100;
+  out.innerHTML = `<div class="statgrid num" style="margin-bottom:8px">
+      <div class="stat"><span>shares</span><b>${fmt(r.shares, 0)}</b></div>
+      <div class="stat"><span>position value</span><b>Rs ${fmt(Math.round(r.value), 0)}</b></div>
+      <div class="stat"><span>risked if stopped</span><b class="dn">Rs ${fmt(Math.round(r.risk), 0)}</b></div>
+      <div class="stat"><span>% of capital</span><b>${(r.value / cap * 100).toFixed(1)}%</b></div>
+    </div>
+    Risk budget is <b>${DESK_RULES.risk_per_trade_pct}% of capital = Rs ${fmt(Math.round(riskBudget), 0)}</b>; risk per share is <b>Rs ${(entry - stop).toFixed(2)}</b>.
+    ${r.capped ? `<b>The ${DESK_RULES.max_pct_per_trade}% position-value cap is what bound this size</b>, not the stop distance — meaning the stop is tight enough that the risk budget alone would have allowed a position too large to hold in one name.`
+      : `The stop distance bound this size; the position sits under the ${DESK_RULES.max_pct_per_trade}% position-value cap.`}
+    <br><br>Sizing arithmetic, not a recommendation to take this trade.`;
 }
 
 /* ==========================================================================================
@@ -4233,7 +4372,7 @@ async function pageScreener() {
     <div class="scr-samples">${SAMPLES.map(x => `<button class="scr-sample" onclick="_scr.text='${esc(x)}';pageScreener()">${esc(x)}</button>`).join("")}
     ${saved.map((x, i) => `<button class="scr-sample saved" onclick="_scr.text='${esc(x.text)}';pageScreener()" title="saved screen">★ ${esc(x.name)}</button>`).join("")}</div>
   </div>
-  ${filters.length ? `<div class="seg"><h2>${out.length} match${out.length === 1 ? "" : "es"}</h2><div class="ln"></div></div>
+  ${filters.length ? `<div class="seg"><h2>${out.length} match${out.length === 1 ? "" : "es"}</h2><div class="ln"></div>${out.length ? csvBtn("screen") : ""}</div>
   <div class="card" style="padding:0">${out.length ? `<table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Price</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th><th class="r">Predict.</th></tr></thead><tbody>${
       out.slice(0, 60).map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
         <td class="sub">${esc((r.sector || "").slice(0, 16))}</td><td class="r num">${fmt(r.price)}</td><td class="r num">${r.pe ?? "—"}</td>

@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-19 12:54",
+ "updated": "2026-07-19 13:32",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -51,30 +51,6 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260719-HCAR-sma_golden_cross",
-   "ticker": "HCAR",
-   "strategy": "sma_golden_cross",
-   "template": "Golden cross (SMA50>SMA200)",
-   "category": "trend",
-   "sector": "Automobile Assembler",
-   "entry": 245.56,
-   "stop": 233.28,
-   "target": 270.12,
-   "rr": 2.0,
-   "hold_sessions": 25,
-   "size_shares": 325,
-   "size_pkr": 79807,
-   "backtest": {
-    "hit_rate": 0.6,
-    "net_expectancy_pct": 2.7,
-    "n": 10,
-    "oos_hit": 0.6
-   },
-   "confidence": "high",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+2.7% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260719-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -97,7 +73,31 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260719-GAL-trend_momo_combo",
+   "ticker": "GAL",
+   "strategy": "trend_momo_combo",
+   "template": "Trend + momentum combo",
+   "category": "momentum",
+   "sector": "Automobile Assembler",
+   "entry": 572.23,
+   "stop": 555.06,
+   "target": 606.56,
+   "rr": 2.0,
+   "hold_sessions": 12,
+   "size_shares": 139,
+   "size_pkr": 79540,
+   "backtest": {
+    "hit_rate": 0.564,
+    "net_expectancy_pct": 1.16,
+    "n": 39,
+    "oos_hit": 0.583
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 56% over 39 trades (+1.2% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 9
+ "n_candidates": 7
 }
