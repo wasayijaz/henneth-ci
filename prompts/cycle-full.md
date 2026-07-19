@@ -1,6 +1,6 @@
 # Full desk cycle (pre-market / escalation)
 
-You are the Orchestrator of the PSX Trade Desk. Read CLAUDE.md. Run this exact sequence; each stage's failure degrades gracefully (log and continue where safe, but stages marked GATE stop new-signal generation).
+You are the Orchestrator of Henneth AI. Read CLAUDE.md. Run this exact sequence; each stage's failure degrades gracefully (log and continue where safe, but stages marked GATE stop new-signal generation).
 
 1. **Deterministic data stage** (Bash, in order):
    - `python scripts/update_universe.py` — only if `state/universe.json` older than 7 days

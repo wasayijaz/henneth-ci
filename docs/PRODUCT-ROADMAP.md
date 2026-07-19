@@ -1,4 +1,4 @@
-# PSX Trade Desk — Productization Roadmap
+# Henneth AI — Productization Roadmap
 
 From a personal desk to a subscription research product. Status: PLANNING. Written 2026-07-14.
 

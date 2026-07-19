@@ -1,4 +1,4 @@
-# PSX Trade Desk
+# Henneth AI
 
 **A multi-agent research & analytics terminal for the Pakistan Stock Exchange.**
 It researches, values, backtests, debates, and monitors — then puts every call on the record and grades it.
@@ -9,7 +9,7 @@ It **never places orders**; execution is manual on your broker.
 > does not predict future results. Investing in PSX carries risk, including the loss of capital. You make
 > your own decisions. (A platform-wide footer + a "Research · not advice" badge repeat this on every page.)
 
-**Live:** https://psx-trade-desk.vercel.app/  ·  private repo, hosted on Vercel
+**Live:** https://henneth.app/  ·  private repo, hosted on Vercel
 Docs: [`CLAUDE.md`](CLAUDE.md) (desk rules) · [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) (system map)
 · [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) (path to a subscription product)
 

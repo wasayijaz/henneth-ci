@@ -1,4 +1,4 @@
-# PSX Trade Desk cycle runner. Called by Task Scheduler every 30 min.
+# Henneth AI cycle runner. Called by Task Scheduler every 30 min.
 # Decides: skip (market closed/holiday), full (first run of day), or light cycle.
 # Logs everything to logs\.
 

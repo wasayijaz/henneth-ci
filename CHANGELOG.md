@@ -1,4 +1,4 @@
-# PSX Trade Desk — Changelog
+# Henneth AI — Changelog
 
 Newest first. Every entry = what changed, why, and (for bugs) how it's prevented from recurring.
 The desk is a **live website** — nothing ships unless `python scripts/preflight.py` exits 0.

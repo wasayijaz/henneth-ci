@@ -1,4 +1,4 @@
-/* PSX Trade Desk — Web Push client helper.
+/* Henneth AI — Web Push client helper.
    ============================================================================
    INERT UNTIL KEYED. This file ships dead: with no VAPID public key present it
    registers nothing, asks for no permission, renders no UI, and makes no network

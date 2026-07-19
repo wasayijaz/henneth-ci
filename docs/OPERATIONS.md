@@ -1,11 +1,11 @@
-# PSX Trade Desk — Operations Runbook
+# Henneth AI — Operations Runbook
 
 **Read this before touching anything that reaches the live site.** It is the single source of truth
 for how the desk runs, who does what, and how to publish without breaking the live website. Governance
 rules (position sizing, circuit breaker, no-lookahead, etc.) live in [`CLAUDE.md`](../CLAUDE.md); this
 doc is about *operations*.
 
-Live site: https://psx-trade-desk.vercel.app/ · Repo: private, hosted on Vercel · Auth/DB: Supabase.
+Live site: https://henneth.app/ · Repo: private, hosted on Vercel · Auth/DB: Supabase.
 
 ---
 

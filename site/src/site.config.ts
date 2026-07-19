@@ -1,16 +1,20 @@
 // Single source of truth for brand-swappable values.
 // Rename the product, change the domain, or edit pricing in ONE place.
 export const site = {
-  name: 'PSX Desk',
+  name: 'Henneth AI',
   // Short tagline used in the browser tab and OG cards.
   tagline: 'PSX research, made clear.',
   // One-line description used for meta + JSON-LD.
   description:
-    'PSX Desk turns the Pakistan Stock Exchange into plain-English answers — is this company healthy, is the price reasonable, what changed this week. A transparent, rules-based research engine. Research, not advice.',
-  // Marketing-site canonical URL (swap to the real domain when it lands).
+    'Henneth AI turns the Pakistan Stock Exchange into plain-English answers — is this company healthy, is the price reasonable, what changed this week. A transparent, rules-based research engine. Research, not advice.',
+  // Marketing-site canonical URL. NOT changed in the 2026-07-19 rebrand: henneth.app serves the
+  // TERMINAL, so pointing the marketing canonical at it would make both claim the same URL. Set
+  // this once the marketing site has its own home (a subdomain, or henneth.app with the app moved
+  // to app.henneth.app) — a canonical pointing somewhere that doesn't host this site is worse
+  // than a stale one.
   url: 'https://psx-desk.vercel.app',
   // The product app users launch into (the existing terminal).
-  appUrl: 'https://psx-trade-desk.vercel.app',
+  appUrl: 'https://henneth.app',
   contactEmail: 'hello@example.com',
   social: {
     x: 'https://x.com/MWasayI',

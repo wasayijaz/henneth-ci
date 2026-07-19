@@ -1,4 +1,4 @@
-/* PSX Trade Desk SPA — hash router, 4 themes, canvas charts.
+/* Henneth AI SPA — hash router, 4 themes, canvas charts.
    Routes: #/board · #/ticker/SYM · #/dividends · #/news
    All data from ../state/*.json (DPS-sourced). No external deps. */
 
@@ -5211,7 +5211,7 @@ $("sideResize")?.addEventListener("mousedown", e => {
 
 
 /* ================= ACCOUNTS + ONBOARDING (merged from auth.js: the deploy workflow only ships app.js) ================= */
-/* PSX Trade Desk — accounts + onboarding (Supabase Auth).
+/* Henneth AI — accounts + onboarding (Supabase Auth).
    Security model: the publishable key below is CLIENT-SAFE by design — all authority
    lives server-side in Row-Level Security (a user can only touch their own profiles row).
    Passwords are never handled by our code; Supabase Auth does hashing/JWT/rate limits.
@@ -5282,7 +5282,7 @@ function openAuth(mode) {
   closeAuth();
   const box = el(`<div class="authbox" id="authbox">
     <div class="authpanel">
-      <div class="auth-head"><b>PSX <em>Trade Desk</em></b><button class="auth-x" id="authX">✕</button></div>
+      <div class="auth-head"><b>Henneth <em>AI</em></b><button class="auth-x" id="authX">✕</button></div>
       <div class="auth-tabs">
         <button data-m="signin" class="${mode === "signin" ? "on" : ""}">Sign in</button>
         <button data-m="signup" class="${mode === "signup" ? "on" : ""}">Create account</button>
@@ -5637,7 +5637,7 @@ async function pageWatchlist() {
 
 /* ---------- onboarding wizard: quiz + product tour ---------- */
 const WIZ = [
-  { kind: "welcome", title: "Welcome to the desk", body: "PSX Trade Desk is a research terminal that makes Pakistani stocks understandable — plain-English company reads, tested strategies, fair-value models, and AI analysts who debate every name in the open. Two minutes, and you'll know your way around. Nothing here is investment advice — you always decide." },
+  { kind: "welcome", title: "Welcome to the desk", body: "Henneth AI is a research terminal that makes Pakistani stocks understandable — plain-English company reads, tested strategies, fair-value models, and AI analysts who debate every name in the open. Two minutes, and you'll know your way around. Nothing here is investment advice — you always decide." },
   { kind: "quiz", key: "experience", title: "How much investing experience do you have?", opts: [["new", "I'm new to this"], ["some", "I've bought a few stocks"], ["experienced", "I trade regularly"]] },
   { kind: "quiz", key: "goal", title: "What are you mostly here for?", opts: [["income", "Dividend income"], ["growth", "Long-term growth"], ["swing", "Active swing ideas"], ["learning", "Learning the market"]] },
   { kind: "quiz", key: "risk", title: "A stock you hold drops 20% in a month. You…", opts: [["conservative", "Lose sleep — I prefer stability"], ["moderate", "Feel it, but hold if the story's intact"], ["aggressive", "See it as a chance to buy more"]] },

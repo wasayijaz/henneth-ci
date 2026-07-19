@@ -1,4 +1,4 @@
-# PSX Trade Desk — Desk Rules
+# Henneth AI — Desk Rules
 
 Every agent and every cycle in this repo obeys these rules. They are not suggestions.
 

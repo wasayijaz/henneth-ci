@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live-site watchdog for the PSX Trade Desk.
+"""Live-site watchdog for Henneth AI.
 
 preflight.py guards data BEFORE publish. This guards the site AFTER publish —
 it fetches the actual deployed URLs a real user's browser would fetch and asserts
@@ -27,7 +27,13 @@ import time
 import urllib.request
 from datetime import date, datetime
 
-BASE_DEFAULT = "https://psx-trade-desk.vercel.app"
+# The canonical product URL as of the 2026-07-19 rebrand to Henneth AI. The
+# *.vercel.app deployment URL still serves the same build and stays valid as a fallback —
+# watch the domain users actually visit, since a DNS/cert problem there is invisible if we
+# only ever check the origin. (www.henneth.app is deliberately NOT checked: it is not yet
+# added in Vercel, so it has no certificate — see docs/OPERATIONS.md.)
+BASE_DEFAULT = "https://henneth.app"
+BASE_FALLBACK = "https://psx-trade-desk.vercel.app"
 TIMEOUT = 20
 
 problems, notes = [], []
@@ -112,7 +118,7 @@ def main():
                             f"— these ticker pages show 'No data'")
 
     ok = not problems
-    print("PSX Trade Desk - live watchdog  [" + base + "]")
+    print("Henneth AI - live watchdog  [" + base + "]")
     if notes:
         print(f"\n  NOTE ({len(notes)}):")
         for n in notes:

@@ -1,4 +1,4 @@
-# PSX Trade Desk — System Registry
+# Henneth AI — System Registry
 
 The single index of every moving part, so the whole system can be recalled cheaply instead of
 re-derived. If you build a new agent, loop, or script, add one line here. Last updated 2026-07-14.
