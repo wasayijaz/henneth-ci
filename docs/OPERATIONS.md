@@ -41,11 +41,43 @@ runs on the owner's machine. The cloud never runs an agent (no API key by design
 
 `publish.py` is the shared choke point every loop and the cloud use. It:
 1. runs `preflight.py` (the pre-deploy gate) — **if it fails, nothing publishes**, last-good site stays live;
-2. stages, and commits **only if state actually changed** (a no-op otherwise);
+2. stages **`state/` only**, and commits only if something actually changed (a no-op otherwise);
 3. pushes **race-safely** — the cloud cron and app loops both push to `main`, so on a rejected
    (non-fast-forward) push it rebases onto latest preferring our fresh state (`-X theirs`) and retries.
    Whatever the other side raced in regenerates next cycle, so nothing is lost.
 4. A push to `main` is the entire deploy — Vercel auto-builds in ~60s. There is no separate deploy step.
+
+### 2a. Shipping CODE — the `--code` flag (added 2026-07-19)
+
+Staging is scoped on purpose. `publish.py` used to run a blanket `git add -A`, which staged the
+whole working tree. The cloud cron and any number of interactive sessions share ONE checkout, so a
+routine data refresh would sweep up whatever anyone else had open. On 2026-07-19 three commits
+carried work their message never mentioned — a Desk Room coverage commit shipped another session's
+in-progress `dashboard/app.js` and `scripts/push_send.py`.
+
+The misleading history was the smaller problem: **committing a file nobody has finished editing can
+publish broken code**, with nothing in the message to hint it happened. The same reasoning was
+already in the file, applied to the wrong step — the rebase handler has always refused to
+auto-resolve outside `state/` because that "could permanently discard someone's actual code edit."
+
+| you are… | run |
+|---|---|
+| a data/agent loop (all but one task) | `python scripts/publish.py "<msg>"` |
+| deliberately shipping code or docs | `python scripts/publish.py "<msg>" --code` |
+
+Behaviour worth knowing:
+- files outside `state/` are **listed, never silently included or silently dropped**;
+- if only code changed and `--code` was absent, it prints **NOTHING PUBLISHED** rather than the
+  misleading "nothing changed" — a skipped code fix is loud, not silent;
+- the message argument is positional-only, so `publish.py --code` cannot commit with the literal
+  message `--code`.
+
+**Before passing `--code`, run `git status --porcelain`** and confirm every non-`state/` file is
+yours this run. If something else is dirty it belongs to a concurrent session — stage your own paths
+by name instead.
+
+`psx-desk-code-review` is the **only** scheduled task that needs `--code`; it is the only one that
+edits hand-authored files. Every other task is state-only and unaffected.
 
 ---
 
