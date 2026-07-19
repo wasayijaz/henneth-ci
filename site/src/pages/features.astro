@@ -1,126 +1,176 @@
 ---
 import Base from '../layouts/Base.astro';
-import Waitlist from '../components/Waitlist.astro';
-import { site } from '../site.config.ts';
 
-const groups = [
-  {
-    tag: 'Made clear',
-    title: 'The market, translated.',
-    intro: 'The hard part of investing isn’t getting numbers — it’s knowing what they mean. Every stock page answers the questions that actually matter, first.',
-    items: [
-      ['Is the price reasonable?', 'Four independent fair-value methods — peer multiples, earnings power vs. bond yield, Graham, and a dividend model — with the median as the read and the full working on show.'],
-      ['Is the business healthy?', 'A plain-English scorecard on valuation, profitability, dividend cover and stability — scored against the rest of the market, not in a vacuum.'],
-      ['What’s the real risk?', 'Volatility, maximum drawdown in its proper era context, liquidity and dividend reliability — the downside, stated honestly.'],
-      ['What changed this week?', 'Results, dividends, board meetings and high-impact news, tagged to the names they move.'],
-    ],
-  },
-  {
-    tag: 'The Desk Room',
-    title: 'Analysts who show their work.',
-    intro: 'A room of named AI analysts researches each stock and argues it out — and you watch the whole thing, not just a verdict.',
-    items: [
-      ['A technical desk and a fundamental desk', 'Kept deliberately separate, so price action and business quality each get an honest, un-blended read.'],
-      ['A bull and a bear', 'The strongest honest case for, and the strongest honest case against — each attacking the other’s weakest point.'],
-      ['A Chair who synthesises', 'One house view with a conviction level and an explicit dissent line. No false certainty.'],
-      ['Replay the debate', 'Watch the desk analyse a name as a staged walkthrough — the reasoning, step by step.'],
-    ],
-  },
-  {
-    tag: 'On the record',
-    title: 'Accountability, by design.',
-    intro: 'Research is only worth something if it can be checked. The desk is built to be graded — and to grade the brokers too.',
-    items: [
-      ['Every read is dated and sourced', 'No number is quoted from memory. If the data layer doesn’t have it, the answer is “unknown”, never a guess.'],
-      ['Calls are scored over time', 'Dated, falsifiable calls resolve against what prices actually did — losses shown, not hidden.'],
-      ['Brokers held to the same bar', 'Public broker calls are captured, dated and scored on accuracy — the one thing nobody else in this market does.'],
-      ['Research, never advice', 'No “buy”, no “strong buy”, no guaranteed returns. You get the picture; you make the call.'],
-    ],
-  },
+const cards = [
+  ['Today', 'The desk’s plain-English daily read — tone, favoured and avoided sectors, and a short watchlist.'],
+  ['Board', 'The whole universe on one screen: heatmap, proven signals, predictability ranks and a news wire.'],
+  ['Value', 'Every name valued four ways, with each model’s full working expandable.'],
+  ['Strategies', 'Transparent, rule-based strategies, each backtested across ~19 years of history.'],
+  ['The Desk Room', 'Named analysts debate every stock; a Chair issues a house view with explicit dissent.'],
+  ['Scores', 'Dated, falsifiable calls graded against what prices actually did — the desk’s and the brokers’.'],
+  ['Research', 'Filings, results and corporate briefings digested and tagged to the names they move.'],
+  ['Macro & calendars', 'The global tape that moves PSX, a geo-risk radar, dividend timing and earnings dates.'],
 ];
 
 const engine = [
-  ['52 backtested strategies', 'Transparent, rule-based, each tested across ~19 years of history — win rate, expectancy after costs, out-of-sample. You see what actually worked.'],
   ['A shared data layer', 'Prices, quant, fundamentals and calendars refresh on a schedule — the whole desk reads one source of truth.'],
   ['Self-checking systems', 'Automated gates catch bad numbers, broken builds and design drift before anything reaches you.'],
-  ['Macro & dividends', 'The global tape that moves PSX, a geo-risk radar, dividend timing and an earnings calendar — the context around every name.'],
+  ['Risk, stated honestly', 'Volatility, drawdown in its proper era context, liquidity and dividend reliability.'],
+  ['Nothing fabricated', 'Where the data layer is silent, the desk says so — no invented figures, ever.'],
 ];
 ---
 
-<Base title="Features" path="/features" description="Everything PSX Desk does: plain-English stock reads, the analyst Desk Room, and a track record built to be graded.">
-  <section class="section-tight page-hero">
-    <div class="wrap center">
-      <p class="eyebrow">Features</p>
-      <h1>Everything the desk does.</h1>
-      <p class="lead">
+<Base
+  title="Features"
+  path="/features"
+  active="features"
+  description="Everything the Henneth desk does: plain-English stock reads, four-way valuation, tested strategies, the analyst Desk Room, and a scorecard that grades itself."
+>
+  <section class="section-tight ph">
+    <div class="wrap">
+      <p class="kicker">Features</p>
+      <h1>Everything the desk does</h1>
+      <p class="lead ph-lead">
         A research terminal for the Pakistan Stock Exchange that explains itself — and holds itself,
         and the brokers, to account.
       </p>
     </div>
   </section>
 
-  {
-    groups.map((g, i) => (
-      <section class="section fgroup" data-alt={i % 2 === 1}>
-        <div class="wrap">
-          <div class="fgroup-head">
-            <span class="pill"><span class="dot" />{g.tag}</span>
-            <h2>{g.title}</h2>
-            <p class="lead">{g.intro}</p>
-          </div>
-          <div class="grid fitems">
-            {g.items.map(([t, d]) => (
-              <div class="card fitem">
-                <h3>{t}</h3>
-                <p class="muted">{d}</p>
-              </div>
-            ))}
-          </div>
+  <section class="wrap">
+    <div class="tilegrid cards">
+      {cards.map(([t, d]) => (
+        <div>
+          <h3>{t}</h3>
+          <p class="muted card-d">{d}</p>
         </div>
-      </section>
-    ))
-  }
+      ))}
+    </div>
+  </section>
 
-  <section class="section engine-sec">
-    <div class="wrap">
-      <div class="sec-head center">
-        <p class="eyebrow">Under the hood</p>
-        <h2>Serious machinery, quietly.</h2>
+  <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker">Board</p>
+        <h2>The whole market on one screen</h2>
+        <p class="lead">
+          Breadth, sector tone, proven rule-based signals and predictability ranks — so you know
+          where to look before you open a single chart.
+        </p>
       </div>
-      <div class="grid engine">
-        {engine.map(([t, d]) => (
-          <div class="eitem">
-            <h3>{t}</h3>
-            <p class="muted">{d}</p>
+      <div class="mock">
+        <div class="mock-bar"><span class="label">Board · universe</span><span class="mock-tag">Illustration</span></div>
+        <div class="heat">
+          {['OGDC','PPL','HUBC','FFC','LUCK','MCB','UBL','MEBL','ENGRO','PSO','SYS','TRG','MLCF','NBP','HBL'].map((s, i) => (
+            <div class="heat-cell" data-dir={i % 3 === 2 ? -1 : i % 4 === 1 ? 0 : 1}>{s}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-panel">
+    <div class="wrap two-col rev">
+      <div class="mock">
+        <div class="mock-bar"><span class="label">Valued four ways</span><span class="mock-tag">Illustration</span></div>
+        <div class="mock-body">
+          {['Peer P/E', 'Earnings power vs bond yield', 'Graham', 'Dividend discount'].map((m) => (
+            <div class="vrow"><span>{m}</span><span class="muted">model</span></div>
+          ))}
+          <hr class="hair" />
+          <p class="mock-note muted">Real figures are computed per stock inside the desk.</p>
+        </div>
+      </div>
+      <div>
+        <p class="kicker">Value</p>
+        <h2>Four valuations. All the working.</h2>
+        <p class="lead">
+          Peer multiples, earnings power against the bond yield, Graham, and a dividend-discount
+          model. The median is the read — and every step is expandable, so you can check the maths.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-dark">
+    <div class="wrap">
+      <p class="kicker dr-kicker">The Desk Room</p>
+      <h2>Four desks, one chair, nothing hidden</h2>
+      <p class="lead dr-lead deskroom-lead">
+        A technical desk and a fundamental desk read the same stock separately. A bull and a bear
+        argue it out. A Chair weighs it into a house view — and records the dissent rather than
+        burying it.
+      </p>
+      <div class="drgrid">
+        {[
+          ['Technical desk', 'Price action only. Never touches fundamentals.'],
+          ['Fundamental desk', 'Business and valuation only. Never touches charts.'],
+          ['Bull vs Bear', 'The strongest honest case each way, each attacking the other’s weakest point.'],
+          ['The Chair', 'One house view, a conviction level, and an explicit dissent line.'],
+        ].map(([t, d]) => (
+          <div class="drcell">
+            <div class="label">{t}</div>
+            <p>{d}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section cta-sec">
-    <div class="wrap center">
-      <a href="/plans" class="btn btn-primary btn-lg">Get started →</a>
-      <div class="cta-wl"><Waitlist source="features" compact /></div>
+  <section class="section">
+    <div class="wrap">
+      <p class="kicker">Under the hood</p>
+      <h2>Serious machinery, quietly</h2>
+      <div class="tilegrid engine">
+        {engine.map(([t, d]) => (
+          <div>
+            <h3>{t}</h3>
+            <p class="muted card-d">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-dark center">
+    <div class="wrap">
+      <h2>Put the whole desk behind your next trade</h2>
+      <p class="lead cta-lead">Start on the free desk. No card, no charge.</p>
+      <div class="cta-row">
+        <a href="/plans" class="btn">Get started</a>
+        <a href="/research" class="btn btn-ghost">How the desk reasons</a>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .page-hero { padding-top: clamp(40px, 6vw, 72px); }
-  .page-hero .lead { max-width: 620px; margin-inline: auto; }
-  .fgroup[data-alt='true'] { background: var(--bg-tint); }
-  .fgroup-head { max-width: 680px; margin-bottom: 40px; }
-  .fgroup-head .pill { margin-bottom: 16px; }
-  .fitems { grid-template-columns: repeat(2, 1fr); }
-  .fitem h3 { font-size: 1.1rem; margin-bottom: 8px; }
-  .engine-sec { }
-  .engine { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-  .eitem { padding-left: 20px; border-left: 3px solid var(--primary); }
-  .eitem h3 { font-size: 1.08rem; margin-bottom: 6px; }
-  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
-  .cta-wl { margin-top: 36px; display: flex; justify-content: center; }
-  @media (max-width: 760px) {
-    .fitems, .engine { grid-template-columns: 1fr; }
-  }
+  .ph-lead { max-width: 640px; }
+  .cards { grid-template-columns: repeat(4, 1fr); }
+  .card-d { font-size: 11px; margin: 8px 0 0; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .mock-bar { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: var(--rule); background: var(--panel-2); }
+  .mock-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .mock-body { padding: 14px; }
+  .mock-note { font-size: 9.5px; margin: 10px 0 0; }
+  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--ink-1); }
+  .heat-cell { background: var(--panel); padding: 14px 6px; text-align: center; font-size: 10px; font-weight: 700; }
+  .heat-cell[data-dir='1'] { background: rgba(11,122,95,.14); color: var(--up); }
+  .heat-cell[data-dir='-1'] { background: rgba(190,65,38,.13); color: var(--dn); }
+  .vrow { display: flex; justify-content: space-between; font-size: 11px; padding: 9px 0; border-bottom: 1px dotted var(--hair); }
+
+  .dr-kicker { color: #8f8f88; }
+  .dr-lead, .deskroom-lead { color: #c8c8c0; max-width: 680px; }
+  .drgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px; background: #3a3a37; border: 1.5px solid #3a3a37; margin-top: 24px; }
+  .drcell { background: #101314; padding: 16px; }
+  .drcell p { font-size: 11px; color: #c8c8c0; margin: 8px 0 0; }
+
+  .engine { grid-template-columns: repeat(2, 1fr); margin-top: 18px; }
+  .center { text-align: center; }
+  .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
+  .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 1000px) { .cards, .drgrid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) { .two-col, .engine { grid-template-columns: 1fr; gap: 28px; } .two-col.rev > :first-child { order: 2; } }
+  @media (max-width: 560px) { .cards, .drgrid { grid-template-columns: 1fr; } .heat { grid-template-columns: repeat(3, 1fr); } }
 </style>

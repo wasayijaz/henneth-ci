@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+
+const pipeline = [
+  ['01', 'Research', 'Filings, broker notes and the news log are read and summarised per name — sources, never memory.'],
+  ['02', 'Value', 'Four independent models run: peer P/E, earnings power, Graham and DDM, each with full working.'],
+  ['03', 'Backtest', 'Any rule or signal is tested across ~19 years of PSX history before it earns a place.'],
+  ['04', 'Debate', 'The Desk Room argues both sides; a Chair issues a house view with an explicit dissent.'],
+  ['05', 'Score', 'The call is dated with a falsifiable expectation, then graded against the outcome.'],
+];
+
+const philosophy = [
+  ['Multiple lenses, no black box', 'No single model decides. Four methods triangulate a fair-value band; where they disagree, the disagreement itself is the signal.'],
+  ['Anchored to the risk-free rate', 'Earnings power is judged against the prevailing bond yield, so a stock is never called cheap in a vacuum.'],
+  ['Evidence over narrative', 'A compelling story is not a reason. Every claim ties back to a filing, a price series, or a tested rule.'],
+  ['Unknown stays unknown', 'If a number isn’t in the data layer, the desk renders it as unknown rather than guessing a plausible figure.'],
+];
+
+const principles = [
+  ['01', 'Research, not advice', 'The desk never says buy or sell, never promises a return. It briefs; you decide.'],
+  ['02', 'Numbers only from the data layer', 'No price, date or dividend is quoted from memory. Sources back every figure.'],
+  ['03', 'Every call is dated and falsifiable', 'A view without a date and a disproof condition is an opinion, not research.'],
+  ['04', 'The desk grades itself in public', 'Its own calls sit on the same leaderboard as brokers’ — hits and misses both.'],
+  ['05', 'It never places orders', 'Execution is manual and yours. The desk has no path to your brokerage.'],
+];
+---
+
+<Base
+  title="Research"
+  path="/research"
+  active="research"
+  description="How the Henneth desk reasons: the pipeline every PSX ticker runs through, the valuation philosophy, and the rules the desk holds itself to."
+>
+  <section class="section-tight ph">
+    <div class="wrap">
+      <p class="kicker">Research · How the desk reasons</p>
+      <h1>The reasoning is the product</h1>
+      <p class="lead ph-lead">
+        The desk never hands you a number without the working behind it. This is how a call is
+        built — the pipeline every ticker runs through, the philosophy behind each valuation, and
+        the rules the desk holds itself to.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="tilegrid pipe">
+      {pipeline.map(([n, t, d]) => (
+        <div>
+          <div class="label muted">{n}</div>
+          <h3>{t}</h3>
+          <p class="muted pipe-d">{d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="kicker">How the desk values a stock</p>
+      <h2>Four lenses, and the honesty to disagree</h2>
+      <div class="tilegrid phil">
+        {philosophy.map(([t, d]) => (
+          <div>
+            <h3>{t}</h3>
+            <p class="muted phil-d">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Sample note: TEMPLATE, deliberately without a real company or figures.
+       A dated price expectation on a named stock would be a call, not a sample. -->
+  <section class="section band-panel">
+    <div class="wrap note-grid">
+      <div>
+        <p class="kicker">Sample research note</p>
+        <h2>A call you can check, line by line</h2>
+        <p class="lead">
+          Every note states its expectation and a date, cites the evidence, and lists what would
+          prove it wrong. When the window closes, it is graded — automatically, in public.
+        </p>
+        <ul class="pts">
+          <li>A dated expectation, stated up front</li>
+          <li>The evidence the call rests on</li>
+          <li>The condition that would prove it wrong</li>
+        </ul>
+      </div>
+
+      <div class="mock note">
+        <div class="mock-bar">
+          <span class="label">Note · structure</span>
+          <span class="mock-tag">Template</span>
+        </div>
+        <div class="note-b">
+          <div class="note-h">
+            <span class="label">The expectation</span>
+            <span class="badge"><span class="dot"></span>Dated</span>
+          </div>
+          <p class="note-p">
+            The desk expects &lt;name&gt; to &lt;stated move&gt; within &lt;window&gt;, if
+            &lt;condition&gt; confirms.
+          </p>
+          <hr class="hair" />
+          <div class="label">Evidence</div>
+          {['Consensus fair value', 'Earnings power vs 12M yield', 'Predictability rank'].map((k) => (
+            <div class="note-row"><span class="muted">{k}</span><span class="muted">—</span></div>
+          ))}
+          <hr class="hair" />
+          <div class="falsified">
+            <div class="label dn">Falsified if</div>
+            <p class="note-p">
+              Price closes below &lt;level&gt; for &lt;n&gt; sessions, or the quarter misses on
+              margins.
+            </p>
+          </div>
+          <p class="mock-note muted">
+            Structure of a real note. Live notes carry the actual name, figures and dates — computed
+            from the data layer, never written by hand.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="kicker">The rules</p>
+      <h2>The rules the desk holds itself to</h2>
+      <div class="rules">
+        {principles.map(([n, t, d]) => (
+          <div class="rule">
+            <span class="rule-n pixel">{n}</span>
+            <div>
+              <h3>{t}</h3>
+              <p class="muted rule-d">{d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-dark center">
+    <div class="wrap">
+      <h2>See the reasoning on any PSX name</h2>
+      <p class="lead cta-lead">Start free and read a full research note, working and all.</p>
+      <div class="cta-row">
+        <a href="/plans" class="btn">Get started</a>
+        <a href="/features" class="btn btn-ghost">See the features</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ph-lead { max-width: 680px; }
+  .pipe { grid-template-columns: repeat(5, 1fr); }
+  .pipe-d, .phil-d { font-size: 11px; margin: 8px 0 0; }
+  .phil { grid-template-columns: repeat(2, 1fr); margin-top: 20px; }
+
+  .note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .pts { list-style: none; padding: 0; margin: 18px 0 0; }
+  .pts li { font-size: 11.5px; padding: 9px 0 9px 18px; position: relative; border-top: 1px dotted var(--hair); }
+  .pts li::before { content: '✓'; position: absolute; left: 0; color: var(--up); font-weight: 700; }
+
+  .mock-bar { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: var(--rule); background: var(--panel-2); }
+  .mock-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .note-b { padding: 16px; }
+  .note-h { display: flex; justify-content: space-between; align-items: center; }
+  .note-p { font-size: 11.5px; margin: 10px 0; }
+  .note-row { display: flex; justify-content: space-between; font-size: 11px; padding: 8px 0; border-bottom: 1px dotted var(--hair); }
+  .falsified { border-left: 2px solid var(--dn); padding-left: 12px; }
+  .mock-note { font-size: 9.5px; margin: 14px 0 0; }
+
+  .rules { margin-top: 20px; border-top: var(--rule); }
+  .rule { display: flex; gap: 20px; padding: 20px 0; border-bottom: var(--rule); }
+  .rule-n { font-size: 26px; color: var(--ink-3); min-width: 46px; }
+  .rule-d { font-size: 11.5px; margin: 6px 0 0; max-width: 720px; }
+
+  .center { text-align: center; }
+  .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
+  .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 1000px) { .pipe { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) { .note-grid, .phil { grid-template-columns: 1fr; gap: 28px; } }
+</style>

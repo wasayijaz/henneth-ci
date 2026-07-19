@@ -1,0 +1,221 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config.ts';
+
+const enter = (p: string) => `${site.appUrl}/?plan=${p}`;
+
+const jump = [
+  { tag: '01', title: 'Retail investors', href: '#retail' },
+  { tag: '02', title: 'Active traders', href: '#traders' },
+  { tag: '03', title: 'Brokers & institutions', href: '#brokers' },
+];
+
+const segments = [
+  {
+    id: 'retail',
+    tag: '01 · Retail investors',
+    title: 'Do your own homework — properly',
+    body: 'For the self-directed investor who wants a professional workflow without a professional’s hours. The desk reads the market, values every name and shows the working, so your decisions rest on evidence — not tips.',
+    points: [
+      'A plain-English daily read of the whole market',
+      'Four-way valuations with the maths exposed',
+      'A dated, graded scorecard you can check',
+    ],
+    cta: 'Get started',
+    href: enter('investor'),
+    solid: true,
+    panelTitle: 'Individual · what you get',
+    plan: 'Rs 3,000/mo',
+    rows: [
+      ['Daily desk read', 'Included', 1],
+      ['Board + valuations', 'Included', 1],
+      ['The scorecard', 'Included', 1],
+      ['Watchlist', 'Up to 20', 0],
+    ],
+  },
+  {
+    id: 'traders',
+    tag: '02 · Active traders',
+    title: 'Move with the whole desk behind you',
+    body: 'For traders who want signals, backtests and a full analyst debate on demand. The Desk Room argues both sides of every ticker and the Chair calls it — you decide the entry, size and exit.',
+    points: [
+      'Proven-strategy signals + 19-year backtests',
+      'The Desk Room debate & replay on any name',
+      'Macro tape, dividends and earnings calendar',
+    ],
+    cta: 'Get started',
+    href: enter('pro'),
+    solid: true,
+    panelTitle: 'Pro · what you get',
+    plan: 'Rs 6,000/mo',
+    rows: [
+      ['Everything in Individual', 'Included', 1],
+      ['The Desk Room', 'Full access', 1],
+      ['Strategy backtests', 'Unlimited', 1],
+      ['Watchlists', 'Unlimited', 1],
+    ],
+  },
+  {
+    id: 'brokers',
+    tag: '03 · Brokers & institutions',
+    title: 'Research infrastructure for your desk',
+    body: 'For brokerages and institutions that need multi-seat access, an API and white-label research. Layer the desk’s evidence into your own workflow, with compliance-ready exports and custom terms.',
+    points: [
+      'Multi-seat team access & admin',
+      'Research API and data feeds',
+      'White-label notes + compliance exports',
+    ],
+    cta: 'Contact sales',
+    href: '/contact',
+    solid: false,
+    panelTitle: 'Broker · what you get',
+    plan: 'Custom',
+    rows: [
+      ['Seats', 'Multi-seat', 0],
+      ['API & feeds', 'Included', 1],
+      ['White-label research', 'Included', 1],
+      ['Compliance exports', 'Included', 1],
+    ],
+  },
+];
+
+const caps: [string, string, string, string][] = [
+  ['Daily desk read', '✓', '✓', '✓'],
+  ['Board, valuations & scorecards', '✓', '✓', '✓'],
+  ['The Desk Room debates', 'House view', 'Full transcripts', 'Full transcripts'],
+  ['Strategy backtests', '—', 'Unlimited', 'Unlimited'],
+  ['Screener, scanner & scenarios', '—', '✓', '✓'],
+  ['Research API & data feeds', '—', '—', '✓'],
+  ['White-label research & exports', '—', '—', '✓'],
+];
+---
+
+<Base
+  title="Solutions"
+  path="/solutions"
+  active="solutions"
+  description="Henneth for retail investors, active traders, and brokers. One research desk, tuned to three ways of working the Pakistan Stock Exchange."
+>
+  <section class="section-tight ph">
+    <div class="wrap">
+      <p class="kicker">Solutions</p>
+      <h1>Built for how you actually invest</h1>
+      <p class="lead ph-lead">
+        One research desk, tuned to three ways of working the PSX. Same evidence, same scoring —
+        different starting point.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="tilegrid jump">
+      {jump.map((j) => (
+        <a href={j.href} class="jump-i">
+          <span class="label muted">{j.tag}</span>
+          <span class="jump-t">{j.title}</span>
+          <span class="jump-a">›</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {segments.map((s, i) => (
+    <section class="section seg" id={s.id} data-alt={i % 2 === 1}>
+      <div class="wrap seg-grid">
+        <div>
+          <p class="kicker">{s.tag}</p>
+          <h2>{s.title}</h2>
+          <p class="lead">{s.body}</p>
+          <ul class="pts">
+            {s.points.map((p) => <li>{p}</li>)}
+          </ul>
+          <a href={s.href} class:list={['btn', { 'btn-solid': s.solid }]} rel="noopener">{s.cta}</a>
+        </div>
+        <div class="card seg-panel">
+          <div class="seg-ph">
+            <span class="label">{s.panelTitle}</span>
+            <span class="seg-plan">{s.plan}</span>
+          </div>
+          {s.rows.map(([k, v, good]) => (
+            <div class="seg-row">
+              <span class="muted">{k}</span>
+              <span class:list={[{ up: good === 1 }]}>{v}</span>
+            </div>
+          ))}
+          <p class="seg-fine muted">Indicative pricing — billing isn’t live yet.</p>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section band-panel">
+    <div class="wrap">
+      <p class="kicker">What each plan includes</p>
+      <h2>Capability by plan</h2>
+      <div class="captable">
+        <table>
+          <thead>
+            <tr><th>Capability</th><th>Individual</th><th>Pro</th><th>Broker</th></tr>
+          </thead>
+          <tbody>
+            {caps.map(([c, a, b, d]) => (
+              <tr><td>{c}</td><td>{a}</td><td>{b}</td><td>{d}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <a href="/plans" class="btn cap-cta">See pricing ›</a>
+    </div>
+  </section>
+
+  <section class="section band-dark center">
+    <div class="wrap">
+      <h2>Find your way onto the desk</h2>
+      <p class="lead cta-lead">
+        Start on the free desk, or talk to us about a broker seat. Research, not advice.
+      </p>
+      <div class="cta-row">
+        <a href="/plans" class="btn">Get started</a>
+        <a href="/contact" class="btn btn-ghost">Talk to us about brokers</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ph-lead { max-width: 620px; }
+  .jump { grid-template-columns: repeat(3, 1fr); }
+  .jump-i { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .jump-t { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .jump-a { margin-left: auto; color: var(--ink-3); }
+  .jump-i:hover { background: var(--panel-2); }
+
+  .seg[data-alt='true'] { background: var(--panel-2); }
+  .seg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .pts { list-style: none; padding: 0; margin: 18px 0 22px; }
+  .pts li { font-size: 11.5px; padding: 9px 0 9px 18px; position: relative; border-top: 1px dotted var(--hair); }
+  .pts li::before { content: '✓'; position: absolute; left: 0; color: var(--up); font-weight: 700; }
+
+  .seg-panel { padding: 0; }
+  .seg-ph { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: var(--rule); background: var(--panel-2); }
+  .seg-plan { font-size: 11px; font-weight: 700; }
+  .seg-row { display: flex; justify-content: space-between; font-size: 11px; padding: 11px 16px; border-bottom: 1px dotted var(--hair); }
+  .seg-fine { font-size: 9.5px; padding: 10px 16px; margin: 0; }
+
+  .captable { overflow-x: auto; border: var(--rule); background: var(--panel); margin-top: 18px; }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; }
+  th, td { text-align: left; padding: 12px 14px; font-size: 11px; border-bottom: 1px dotted var(--hair); }
+  th { background: var(--ink-1); color: var(--bg); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+  td:not(:first-child), th:not(:first-child) { text-align: center; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .cap-cta { margin-top: 18px; }
+
+  .center { text-align: center; }
+  .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
+  .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 900px) {
+    .seg-grid { grid-template-columns: 1fr; gap: 28px; }
+    .jump { grid-template-columns: 1fr; }
+  }
+</style>

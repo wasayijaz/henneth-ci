@@ -1,60 +1,38 @@
 ---
 import Base from '../layouts/Base.astro';
-import Waitlist from '../components/Waitlist.astro';
 import { site } from '../site.config.ts';
 ---
-
-<Base title="About" path="/about" description="Why PSX Desk exists: honest, plain-English research for Pakistan's markets — accountable by design.">
-  <section class="section-tight page-hero">
+<Base title="About" path="/about" description="Why Henneth exists: honest, plain-English research for Pakistan's markets — accountable by design.">
+  <section class="section-tight">
     <div class="wrap prose">
-      <p class="eyebrow">About</p>
-      <h1>Honest research for Pakistan’s markets.</h1>
+      <p class="kicker">About</p>
+      <h1>Honest research for Pakistan's markets</h1>
       <p class="lead">
-        Half a million Pakistanis invest on the PSX. Almost none of them have a research tool that
-        speaks plainly, shows its working, and admits when it’s wrong. {site.name} is built to be
-        that tool.
+        Around half a million Pakistanis invest on the PSX. Almost none of them have a research tool
+        that speaks plainly, shows its working, and admits when it is wrong. {site.name} is built to
+        be that tool.
       </p>
 
       <h2>The problem we started with</h2>
-      <p>
-        Research in this market comes in two flavours: raw numbers with no explanation, or confident
-        “calls” with no accountability. Beginners drown in the first and get burned by the second.
-        We wanted something a first-time investor could actually understand — and a serious one
-        could actually trust.
-      </p>
+      <p>Research in this market comes in two flavours: raw numbers with no explanation, or confident calls with no accountability. Beginners drown in the first and get burned by the second. We wanted something a first-time investor could actually understand, and a serious one could actually check.</p>
 
-      <h2>How we’re different</h2>
-      <p>
-        Three commitments run through everything. We <strong>explain</strong> — every stock gets a
-        plain-English read. We <strong>debate</strong> — analysts argue each name out in the open, bull
-        against bear. And we <strong>keep score</strong> — every read is dated and graded over time,
-        losses included, with the same yardstick turned on the brokers.
-      </p>
+      <h2>How we are different</h2>
+      <p>Three commitments run through everything. We <b>explain</b> — every stock gets a plain-English read. We <b>debate</b> — analysts argue each name out in the open, bull against bear. And we <b>keep score</b> — every read is dated and graded over time, losses included, with the same yardstick turned on the brokers.</p>
 
       <h2>What we will never do</h2>
-      <p>
-        {site.name} is a research and analytics tool, not an adviser and not a broker. It never places
-        orders. It never says “buy”. It never promises returns. The decision is always yours — our job
-        is to make it a well-informed one.
-      </p>
+      <p>{site.name} is a research and analytics tool, not an adviser and not a broker. It never places orders. It never says buy. It never promises returns. The decision is always yours — our job is to make it a well-informed one.</p>
 
-      <div class="about-cta">
-        <a href="/plans" class="btn btn-primary">Get started →</a>
-        <a href="/features" class="btn btn-ghost">See the features</a>
+      <div class="ab-cta">
+        <a href="/plans" class="btn btn-solid">Get started</a>
+        <a href="/research" class="btn">How the desk reasons</a>
       </div>
     </div>
   </section>
-
-  <section class="section cta-sec">
-    <div class="wrap center cta-inner"><Waitlist source="about" /></div>
-  </section>
 </Base>
-
 <style>
-  .prose { max-width: 720px; margin: 0 auto; }
-  .prose h2 { margin-top: 40px; font-size: 1.5rem; }
-  .prose .lead { margin-bottom: 12px; }
-  .about-cta { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
-  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
-  .cta-inner :global(.wl) { margin: 0 auto; }
+  .prose { max-width: 720px; }
+  .prose h2 { font-size: 14px; margin-top: 32px; }
+  .prose p { font-size: 12px; line-height: 1.85; color: var(--ink-2); }
+  .prose .lead { color: var(--ink-2); }
+  .ab-cta { display: flex; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
 </style>

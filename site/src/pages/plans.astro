@@ -1,159 +1,191 @@
 ---
 import Base from '../layouts/Base.astro';
-import Waitlist from '../components/Waitlist.astro';
 import { site } from '../site.config.ts';
 
-const plans = site.plans;
-// Picking a plan carries the intent into the desk. Billing isn't live, so this
-// records what they wanted and starts them on the free desk — it never pretends
-// to be a checkout.
-const enter = (id: string) => `${site.appUrl}/?plan=${id}`;
+const { currency, annualNote } = site.billing;
+// Public tier -> the desk's entitlement key, so "Individual" enters as `investor`.
+const enter = (appPlan: string | null) =>
+  appPlan ? `${site.appUrl}/?plan=${appPlan}` : '/contact';
+
+const faqs = [
+  ['Is this financial advice?', 'No. Henneth is an educational research and analytics tool. It never gives personalised advice, never says buy or sell, and never places orders. You make your own decisions.'],
+  ['Am I being charged today?', 'No. Billing isn’t live yet — there’s no payment gateway wired and no card is collected. Prices shown are indicative of what plans will cost at launch. Everyone starts on the free desk.'],
+  ['What happens when I pick a plan?', 'You go straight into the desk and we record which plan you wanted. When billing opens, you’ll be first in line for it at the price you were shown.'],
+  ['Where does the data come from?', 'Prices come from the exchange’s published end-of-day data, with a long price history used for backtests, and fundamentals scraped from public filings. Every figure on a page is sourced from that data layer — nothing is quoted from memory.'],
+  ['Do you show your losses?', 'Yes. Every dated call is scored against what prices actually did, and the misses stay on the record. A track record that only shows wins isn’t one.'],
+  ['Can my brokerage use this?', 'That’s the Broker tier — your desk’s own calls scored in public on the same bar as everyone else. Get in touch and we’ll walk through it.'],
+];
 ---
 
 <Base
   title="Plans"
   path="/plans"
-  description="Henneth plans — Free, Investor, Pro and Broker. Pick the desk that fits how you invest. Pricing is announced at launch."
+  active="plans"
+  description="Henneth plans — Individual, Pro and Broker. A whole research desk for every PSX stock. Indicative pricing; billing isn’t live yet."
 >
-  <section class="section-tight page-hero">
+  <section class="section-tight ph">
     <div class="wrap center">
-      <p class="eyebrow">Plans</p>
-      <h1>Pick your desk.</h1>
-      <p class="lead">
-        Three desks on one research engine — for new investors, for pros, and for brokers who’ll put
-        their own calls on the record.
+      <p class="kicker">Plans</p>
+      <h1>One desk. Two ways in.</h1>
+      <p class="lead ph-lead">
+        Individual and Pro — plus a Broker tier for desks and institutions.
       </p>
-      <p class="plans-note">{site.plansNote}</p>
+
+      <div class="toggle" role="group" aria-label="Billing period">
+        <button class="tg on" data-b="monthly" id="tgM">Monthly</button>
+        <button class="tg" data-b="annual" id="tgA">Annual</button>
+      </div>
+      <p class="toggle-note muted">{annualNote}</p>
+      <p class="note">{site.plansNote}</p>
     </div>
   </section>
 
   <section class="section-tight">
     <div class="wrap">
-      <div class="grid plans">
-        {
-          plans.map((p) => (
-            <div class="card plan" data-featured={p.featured} data-soon={p.soon}>
-              <div class="plan-head">
-                <h3 class="plan-name">{p.name}</h3>
-                {p.tag && <span class="plan-tag">{p.tag}</span>}
+      <div class="tiers">
+        {site.plans.map((p) => (
+          <div class="tier" data-featured={p.featured}>
+            {p.featured && <div class="ribbon">{p.tag}</div>}
+            <div class="tier-in">
+              <h3 class="tier-n">{p.name}</h3>
+              <div class="tier-price">
+                {p.priceMonthly ? (
+                  <>
+                    <span class="cur">{currency}</span>
+                    <span
+                      class="pixel amt"
+                      data-monthly={p.priceMonthly}
+                      data-annual={p.priceAnnual}
+                    >{p.priceMonthly.toLocaleString('en-PK')}</span>
+                    <span class="per">/mo</span>
+                  </>
+                ) : (
+                  <span class="pixel amt">Contact</span>
+                )}
               </div>
-              <p class="plan-blurb muted">{p.blurb}</p>
-
-              {p.soon ? (
-                <button class="btn plan-cta" disabled>
-                  {p.cta}
-                </button>
-              ) : (
-                <a class="btn plan-cta" href={enter(p.id)} rel="noopener" data-plan={p.id}>
-                  {p.cta} →
-                </a>
-              )}
-
-              <ul class="plan-feats">
-                {p.features.map((f) => (
-                  <li>{f}</li>
-                ))}
+              {p.priceAnnual && <p class="tier-billed muted" data-billed>billed monthly</p>}
+              <p class="tier-blurb">{p.blurb}</p>
+              <a href={enter(p.appPlan)} class="btn tier-cta" rel="noopener">{p.cta}</a>
+              <ul class="tier-feats">
+                {p.features.map((f) => <li>{f}</li>)}
               </ul>
             </div>
-          ))
-        }
-      </div>
-
-      <div class="plans-fine">
-        <p class="muted">
-          Henneth is a research and analytics tool, not an adviser and not a broker. It never places
-          orders and never tells you what to buy. Choosing a plan today starts you on the free desk —
-          no card, no charge.
-        </p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="section cta-sec">
-    <div class="wrap center cta-inner">
-      <Waitlist source="plans" />
+  <section class="section band-panel">
+    <div class="wrap faq-wrap">
+      <p class="kicker">Questions</p>
+      <h2>Before you start</h2>
+      <div class="faq">
+        {faqs.map(([q, a]) => (
+          <details class="fq">
+            <summary><span>{q}</span><i>+</i></summary>
+            <p class="muted">{a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-dark center">
+    <div class="wrap">
+      <h2>Put the whole desk behind your next trade</h2>
+      <p class="lead cta-lead">
+        The desk does the homework and keeps its own score — you decide what to do with it.
+      </p>
+      <div class="cta-row">
+        <a href={enter('investor')} class="btn" rel="noopener">Get started</a>
+        <a href="/contact" class="btn btn-ghost">Talk to us about brokers</a>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .page-hero .lead { max-width: 600px; margin-inline: auto; }
-  .plans-note {
-    max-width: 620px;
-    margin: 18px auto 0;
-    font-size: 0.92rem;
-    color: var(--ink-soft);
-    background: var(--accent-tint);
-    border: 1px solid #e8cf9a;
-    border-radius: var(--radius-sm);
-    padding: 14px 18px;
+  .center { text-align: center; }
+  .ph-lead { max-width: 560px; margin: 0 auto 22px; }
+  .note {
+    max-width: 620px; margin: 16px auto 0; font-size: 10.5px;
+    border: 1px solid var(--hair); padding: 10px 14px; color: var(--ink-2);
   }
-
-  .plans { grid-template-columns: repeat(4, 1fr); align-items: start; }
-  .plan { display: flex; flex-direction: column; height: 100%; }
-  .plan[data-featured='true'] {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 1px var(--primary), var(--shadow);
+  .toggle { display: inline-flex; border: var(--rule); }
+  .tg {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700; padding: 9px 18px;
+    background: var(--panel); color: var(--ink-1); border: 0; cursor: pointer;
   }
-  .plan[data-soon='true'] { opacity: 0.72; }
+  .tg + .tg { border-left: var(--rule); }
+  .tg.on { background: var(--ink-1); color: var(--bg); }
+  .toggle-note { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 8px; }
 
-  .plan-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .plan-name { font-size: 1.3rem; margin: 0; }
-  .plan-tag {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: var(--primary-tint);
-    color: var(--primary-ink);
-    padding: 4px 9px;
-    border-radius: 100px;
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: var(--ink-1); border: var(--rule); }
+  .tier { background: var(--panel); position: relative; }
+  .tier[data-featured='true'] { background: var(--ink-1); color: var(--bg); }
+  .tier-in { padding: 24px 20px; display: flex; flex-direction: column; height: 100%; }
+  .ribbon {
+    position: absolute; top: 0; right: 0; background: var(--up); color: #fff;
+    font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; padding: 5px 10px;
   }
-  .plan[data-soon='true'] .plan-tag { background: var(--bg-tint); color: var(--ink-faint); }
-
-  .plan-blurb { margin: 14px 0 22px; font-size: 0.92rem; line-height: 1.55; flex: 1; }
-
-  .plan-cta {
-    justify-content: center;
-    width: 100%;
-    background: var(--surface);
-    color: var(--ink);
-    border-color: var(--line-strong);
+  .tier-n { font-size: 14px; margin-bottom: 14px; }
+  .tier-price { display: flex; align-items: baseline; gap: 5px; }
+  .cur { font-size: 11px; color: var(--ink-3); }
+  .tier[data-featured='true'] .cur { color: #9a9a92; }
+  .amt { font-size: 34px; }
+  .per { font-size: 10px; color: var(--ink-3); }
+  .tier[data-featured='true'] .per { color: #9a9a92; }
+  .tier-billed { font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; margin: 6px 0 0; }
+  .tier-blurb { font-size: 11.5px; margin: 14px 0 18px; flex: 1; color: var(--ink-2); }
+  .tier[data-featured='true'] .tier-blurb { color: #c8c8c0; }
+  .tier-cta { justify-content: center; width: 100%; }
+  .tier[data-featured='true'] .tier-cta { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
+  .tier[data-featured='true'] .tier-cta:hover { background: #fff; }
+  .tier-feats { list-style: none; padding: 0; margin: 20px 0 0; }
+  .tier-feats li {
+    font-size: 11px; padding: 8px 0 8px 18px; position: relative;
+    border-top: 1px dotted var(--hair); color: var(--ink-2);
   }
-  .plan-cta:hover { border-color: var(--ink-faint); background: var(--bg); }
-  .plan[data-featured='true'] .plan-cta {
-    background: var(--primary);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 2px 8px var(--primary-glow);
+  .tier[data-featured='true'] .tier-feats li { border-color: #2f2f2c; color: #c8c8c0; }
+  .tier-feats li::before { content: '✓'; position: absolute; left: 0; color: var(--up); font-weight: 700; }
+
+  .faq-wrap { max-width: 800px; }
+  .faq { margin-top: 20px; border-top: var(--rule); }
+  .fq { border-bottom: var(--rule); }
+  .fq summary {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 16px 0; cursor: pointer; list-style: none;
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
   }
-  .plan[data-featured='true'] .plan-cta:hover { background: var(--primary-ink); }
-  .plan-cta[disabled] { cursor: not-allowed; opacity: 0.55; }
-  .plan-cta[disabled]:hover { transform: none; background: var(--surface); border-color: var(--line-strong); }
+  .fq summary::-webkit-details-marker { display: none; }
+  .fq summary i { font-style: normal; font-size: 18px; transition: transform 0.2s ease; }
+  .fq[open] summary i { transform: rotate(45deg); }
+  .fq p { font-size: 11.5px; padding: 0 0 16px; margin: 0; max-width: 680px; }
 
-  .plan-feats { list-style: none; padding: 0; margin: 22px 0 0; }
-  .plan-feats li {
-    padding: 9px 0 9px 24px;
-    position: relative;
-    font-size: 0.88rem;
-    color: var(--ink-soft);
-    border-top: 1px solid var(--line);
-  }
-  .plan-feats li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--primary);
-    font-weight: 700;
-  }
-  .plan[data-soon='true'] .plan-feats li::before { color: var(--ink-faint); }
+  .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
+  .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-  .plans-fine { max-width: 640px; margin: 40px auto 0; text-align: center; }
-  .plans-fine p { font-size: 0.85rem; margin: 0; }
-
-  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
-  .cta-inner :global(.wl) { margin: 0 auto; }
-
-  @media (max-width: 1040px) { .plans { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 620px) { .plans { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .tiers { grid-template-columns: 1fr; } }
 </style>
+
+<script>
+  const m = document.getElementById('tgM');
+  const a = document.getElementById('tgA');
+  const set = (mode: string) => {
+    m?.classList.toggle('on', mode === 'monthly');
+    a?.classList.toggle('on', mode === 'annual');
+    document.querySelectorAll('[data-monthly]').forEach((el) => {
+      const e = el as HTMLElement;
+      const v = mode === 'annual' ? e.dataset.annual : e.dataset.monthly;
+      if (v) e.textContent = Number(v).toLocaleString('en-PK');
+    });
+    document.querySelectorAll('[data-billed]').forEach((el) => {
+      el.textContent = mode === 'annual' ? 'billed annually' : 'billed monthly';
+    });
+  };
+  m?.addEventListener('click', () => set('monthly'));
+  a?.addEventListener('click', () => set('annual'));
+</script>

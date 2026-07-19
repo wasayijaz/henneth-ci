@@ -37,71 +37,78 @@ export const site = {
   // cannot grant it. Picking a plan records the intent and drops the user into
   // the free desk — we say so plainly rather than faking a checkout.
   // ---------------------------------------------------------------------------
-  plansNote: 'Pricing is announced at launch. Billing isn’t live yet, so everyone starts on the free desk — pick the plan you want and we’ll hold your place.',
+  // Shown on every pricing surface. Prices are INDICATIVE — there is no gateway
+  // wired, so nobody can be charged and no trial clock exists.
+  plansNote: 'Indicative pricing. Billing isn’t live yet — you won’t be charged, and everyone starts on the free desk.',
+  billing: {
+    currency: 'Rs',
+    annualNote: '2 months free on annual',
+  },
+  // Public tier names follow the design handoff (Individual / Pro / Broker).
+  // `appPlan` maps each to the entitlement key the desk actually uses, so
+  // "Individual" correctly enters the desk's `investor` plan.
   plans: [
     {
-      id: 'free',
-      name: 'Free',
+      id: 'individual',
+      appPlan: 'investor',
+      name: 'Individual',
       tag: '',
-      blurb: 'Cast your chart, read the daily desk note, and follow the public track record.',
-      cta: 'Enter the desk',
+      priceMonthly: 3000,
+      priceAnnual: 2500,
+      blurb:
+        'For the investor who wants to read a company for themselves — the guided path, real filings, real prices.',
+      cta: 'Get started',
+      href: null,
       soon: false,
       featured: false,
       features: [
-        'The daily desk note',
-        'Universe board & heatmap',
-        'Your personal chart',
-        'The public track record',
-        'News, macro & calendars',
-      ],
-    },
-    {
-      id: 'investor',
-      name: 'Investor',
-      tag: 'start here',
-      blurb:
-        'Become an investor who reads for themselves. The guided journey from “why invest” to your first practice position — on real PSX filings and real prices.',
-      cta: 'Choose Investor',
-      soon: false,
-      featured: true,
-      features: [
+        'Plain-English company reads',
         'The guided investor journey',
-        'Practice portfolio (virtual PKR 500k)',
+        'Practice portfolio (virtual Rs 500k)',
+        'Dividends, earnings & calendars',
         'PSX calculators & tools',
-        'Dividends & earnings in full',
-        'Your chart, in full',
       ],
     },
     {
       id: 'pro',
+      appPlan: 'pro',
       name: 'Pro',
-      tag: 'TA & FA',
+      tag: 'Most popular',
+      priceMonthly: 6000,
+      priceAnnual: 5000,
       blurb:
         'The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.',
-      cta: 'Choose Pro',
+      cta: 'Get started',
+      href: null,
       soon: false,
-      featured: false,
+      featured: true,
       features: [
-        'Everything in Investor',
-        'Model fair value, in full',
+        'Everything in Individual',
+        'Model fair value, four ways',
         'Run any of the tested strategies',
         'Screener, scanner & scenarios',
         'Ask the desk, alignment & portfolio X-ray',
+        'The Desk Room debates in full',
       ],
     },
     {
       id: 'broker',
+      appPlan: null,
       name: 'Broker',
-      tag: 'coming soon',
+      tag: 'Contact sales',
+      priceMonthly: null,
+      priceAnnual: null,
       blurb:
         'Everything in Pro, plus your own desk’s calls scored in public on the same bar as everyone else.',
-      cta: 'Coming soon',
-      soon: true,
+      cta: 'Contact sales',
+      href: '/contact',
+      soon: false,
       featured: false,
       features: [
         'Everything in Pro',
         'Your calls scored in public',
-        'Your own desk on the leaderboard',
+        'Your desk on the leaderboard',
+        'Team seats & onboarding',
       ],
     },
   ],

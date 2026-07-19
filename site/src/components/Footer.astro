@@ -1,21 +1,22 @@
 ---
 import { site } from '../site.config.ts';
 const year = new Date().getFullYear();
+
 const cols = [
   {
     title: 'Product',
     links: [
       { href: '/features', label: 'Features' },
+      { href: '/solutions', label: 'Solutions' },
       { href: '/plans', label: 'Plans' },
-      { href: site.appUrl, label: 'Enter the desk', ext: true },
     ],
   },
   {
-    title: 'Company',
+    title: 'Resources',
     links: [
-      { href: '/about', label: 'About' },
+      { href: '/research', label: 'Research' },
       { href: '/blog', label: 'Blog' },
-      { href: '/contact', label: 'Contact' },
+      { href: '/about', label: 'About' },
     ],
   },
   {
@@ -23,144 +24,89 @@ const cols = [
     links: [
       { href: '/legal/terms', label: 'Terms' },
       { href: '/legal/privacy', label: 'Privacy' },
-      { href: '/legal/risk', label: 'Risk disclosure' },
+      { href: '/legal/disclosures', label: 'Disclosures' },
     ],
   },
 ];
 ---
 
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="foot-top">
-      <div class="foot-brand">
-        <div class="brand">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span>{site.name}</span>
-        </div>
-        <p class="muted foot-tag">{site.tagline}</p>
-      </div>
-      <div class="foot-cols">
-        {
-          cols.map((c) => (
-            <div>
-              <h4>{c.title}</h4>
-              <ul>
-                {c.links.map((l) => (
-                  <li>
-                    <a href={l.href} rel={l.ext ? 'noopener' : undefined}>
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-
-    <div class="foot-disclaimer">
-      <span class="pill"><span class="dot"></span>Research · not advice</span>
-      <p>
-        {site.name} is an educational research &amp; analytics tool, not an investment adviser.
-        Everything here is information, never personalised advice, a recommendation, or a promise
-        of returns. Past performance does not predict future results. Investing in the Pakistan
-        Stock Exchange carries risk, including the loss of capital. You make your own decisions.
+<footer class="ft">
+  <div class="wrap ft-in">
+    <div class="ft-brand">
+      <a href="/" class="wordmark">
+        <span class="wm-1">HENNETH</span>
+      </a>
+      <p class="ft-blurb">
+        A research &amp; analytics desk for the Pakistan Stock Exchange. Plain-English company reads,
+        tested strategies, and analysts who debate every name in the open.
       </p>
+      <a href="/plans" class="btn ft-cta">Get started</a>
     </div>
 
-    <div class="foot-base">
-      <span class="muted">© {year} {site.name}. All rights reserved.</span>
-      <span class="muted">Built for Pakistan's markets.</span>
-    </div>
+    {cols.map((c) => (
+      <div class="ft-col">
+        <div class="ft-h">{c.title}</div>
+        <ul>
+          {c.links.map((l) => (
+            <li><a href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="wrap ft-base">
+    <p>
+      {site.name} is an educational research &amp; analytics tool — not an investment adviser, not a
+      broker. Nothing here is personalised advice, a recommendation, or a promise of returns. Past
+      performance does not predict future results. Investing in the Pakistan Stock Exchange carries
+      risk, including the loss of capital. You make your own decisions.
+    </p>
+    <p class="ft-copy">© {year} {site.name}. All rights reserved.</p>
   </div>
 </footer>
 
 <style>
-  .site-footer {
-    background: var(--bg-tint);
-    border-top: 1px solid var(--line);
-    padding: 64px 0 32px;
-    margin-top: 40px;
-  }
-  .foot-top {
+  .ft { background: var(--ink-1); color: var(--bg); padding: 56px 0 24px; }
+  .ft-in {
     display: grid;
-    grid-template-columns: 1.2fr 2fr;
-    gap: 48px;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 32px;
     padding-bottom: 40px;
   }
-  .foot-brand .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 1.16rem;
-    color: var(--ink);
-  }
-  .brand-mark {
-    width: 24px;
-    height: 24px;
-    border-radius: 7px;
-    background: linear-gradient(135deg, var(--primary) 0%, #0f9c78 100%);
-    position: relative;
-  }
-  .brand-mark::after {
-    content: '';
-    position: absolute;
-    inset: 6px 6px auto 6px;
-    height: 3px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 6px 0 rgba(255, 255, 255, 0.55);
-  }
-  .foot-tag { margin-top: 12px; }
-  .foot-cols {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .foot-cols h4 {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
+  .wordmark { display: flex; align-items: baseline; gap: 8px; color: var(--bg); text-decoration: none; }
+  .wm-1 { font-weight: 800; font-size: 15px; letter-spacing: 0.14em; }
+  .wm-2 { font-weight: 500; font-size: 12px; letter-spacing: 0.14em; color: #a8a8a0; text-transform: uppercase; }
+  .ft-blurb { margin: 14px 0 18px; font-size: 11.5px; line-height: 1.7; color: #a8a8a0; max-width: 320px; }
+  .ft-cta { padding: 10px 16px; }
+
+  .ft-h {
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    font-weight: 700;
+    color: #7a7a72;
     margin-bottom: 14px;
   }
-  .foot-cols ul { list-style: none; margin: 0; padding: 0; }
-  .foot-cols li { margin-bottom: 10px; }
-  .foot-cols a { color: var(--ink-soft); font-size: 0.95rem; }
-  .foot-cols a:hover { color: var(--ink); text-decoration: none; }
+  .ft-col ul { list-style: none; margin: 0; padding: 0; }
+  .ft-col li { margin-bottom: 10px; }
+  .ft-col a {
+    color: #cfcfc8;
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .ft-col a:hover { color: #fff; }
 
-  .foot-disclaimer {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 24px 0;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 20px;
-    align-items: start;
+  .ft-base { border-top: 1px solid #2a2a27; padding-top: 20px; }
+  .ft-base p { font-size: 10px; line-height: 1.7; color: #7a7a72; margin: 0 0 8px; max-width: 900px; }
+  .ft-copy { margin: 0; }
+
+  @media (max-width: 860px) {
+    .ft-in { grid-template-columns: 1fr 1fr; }
   }
-  .foot-disclaimer p {
-    margin: 0;
-    font-size: 0.82rem;
-    line-height: 1.6;
-    color: var(--ink-faint);
-  }
-  .foot-base {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 24px;
-    font-size: 0.85rem;
-  }
-  @media (max-width: 760px) {
-    .foot-top { grid-template-columns: 1fr; gap: 32px; }
-    .foot-cols { grid-template-columns: repeat(3, 1fr); }
-    .foot-disclaimer { grid-template-columns: 1fr; }
-    .foot-base { flex-direction: column; gap: 6px; }
-  }
-  @media (max-width: 480px) {
-    .foot-cols { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 520px) {
+    .ft-in { grid-template-columns: 1fr; gap: 26px; }
   }
 </style>

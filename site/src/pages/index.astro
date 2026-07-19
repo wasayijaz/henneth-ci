@@ -1,359 +1,438 @@
 ---
 import Base from '../layouts/Base.astro';
-import Waitlist from '../components/Waitlist.astro';
 import { site } from '../site.config.ts';
 
-const pillars = [
-  {
-    tag: 'Made clear',
-    title: 'Plain-English answers, not a wall of numbers.',
-    body: 'Is this company healthy? Is the price reasonable? What changed this week? Every stock gets a clear read — valuation, quality, risk and dividends — in language you actually understand.',
-  },
-  {
-    tag: 'The Desk Room',
-    title: 'A room full of analysts, working every stock.',
-    body: 'Named AI analysts research each name and debate it out loud — a technical desk, a fundamental desk, a bull and a bear, and a Chair who weighs it into one honest house view, dissent included.',
-  },
-  {
-    tag: 'On the record',
-    title: 'Built to be graded — including the brokers.',
-    body: 'Research, never advice. Every read is dated and put on the record to be scored over time, and the brokers are held to the exact same standard. Accountability is the product, not a footnote.',
-  },
+// Illustration only — symbols are real listed codes, but NO figures are shown,
+// because inventing price moves next to a real company is a false claim.
+const heat = [
+  ['OGDC', 1], ['PPL', 1], ['HUBC', 0], ['FFC', 1], ['LUCK', -1],
+  ['MCB', 1], ['UBL', 1], ['MEBL', 0], ['ENGRO', -1], ['PSO', 1],
+  ['SYS', -1], ['TRG', -1], ['MLCF', 1], ['NBP', 1], ['HBL', 0],
+];
+
+const stats = [
+  ['550+', 'Listed names covered'],
+  ['70', 'Tested strategies'],
+  ['19 yrs', 'Of price history'],
+  ['4', 'Valuation models'],
 ];
 
 const steps = [
-  { n: '01', t: 'Pick any PSX name', d: 'Search the whole universe. Land on a stock page built to answer your first three questions before you scroll.' },
-  { n: '02', t: 'Read the desk’s work', d: 'Fair value four ways, a health scorecard, a risk profile, and the analysts’ debate — all sourced from the data, never guessed.' },
-  { n: '03', t: 'Decide for yourself', d: 'The desk never places orders and never tells you to buy. You get the full picture; the decision stays yours.' },
+  ['01', 'Pick any listed name', 'Search the whole exchange. Land on a page built to answer your first three questions before you scroll.'],
+  ['02', 'The desk does the homework', 'Valued four ways, scored for quality and risk, tested against 19 years of history, and debated by the analyst desk.'],
+  ['03', 'You decide', 'The desk never places orders and never tells you to buy. You get the read; the decision stays yours.'],
+];
+
+const principles = [
+  ['Research, not advice', 'No “buy”, no “strong buy”, no promises. Every page says so, because the distinction is the product.'],
+  ['Every number is sourced', 'Nothing is quoted from memory. If the data layer doesn’t hold it, the desk says “unknown” rather than guessing.'],
+  ['Losses are shown', 'The scorecard grades the desk’s own calls, misses included. A record you can check is the only kind worth having.'],
 ];
 ---
 
-<Base path="/">
-  <!-- ============ HERO ============ -->
+<Base path="/" active="">
+  <!-- ================= HERO ================= -->
   <section class="hero">
     <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <span class="pill"><span class="dot"></span>For the Pakistan Stock Exchange</span>
-        <h1>Understand any PSX stock<br /><span class="hl">in plain English.</span></h1>
-        <p class="lead">
-          {site.name} turns Pakistan’s market into clear answers — is this company healthy, is the
-          price reasonable, what changed this week — backed by a transparent, rules-based research
-          engine. Research, not advice.
+      <div>
+        <p class="kicker">PSX Research Terminal · Now in early access</p>
+        <h1>A whole research desk<br />for every PSX stock</h1>
+        <p class="lead hero-lead">
+          Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk.
+          Then every dated call is graded against what prices actually did. You get the read. You
+          place the trade.
+        </p>
+        <p class="hero-sub muted">
+          The desk does the homework in public and keeps its own scorecard. It never places orders.
         </p>
         <div class="hero-cta">
-          <a href="/plans" class="btn btn-primary btn-lg">Get started →</a>
-          <a href="/features" class="btn btn-ghost btn-lg">See what it does</a>
+          <a href="/plans" class="btn btn-solid btn-lg">Get started</a>
+          <a href="/research" class="btn btn-lg">See how it works</a>
         </div>
-        <div class="hero-trust">
-          <span>✓ Free to start</span>
-          <span>✓ No advice, ever</span>
-          <span>✓ Every number sourced</span>
+        <div class="hero-fine">
+          <span>Free to start</span><span>·</span>
+          <span>Billing not live yet</span><span>·</span>
+          <span>Research, not advice</span>
         </div>
       </div>
 
-      <!-- Terminal peek — echoes the real product -->
-      <div class="hero-peek">
-        <div class="term">
-          <div class="term-bar">
-            <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
-            <span class="tlabel">the desk · stock read</span>
-          </div>
-          <div class="term-body">
-            <div class="peek-head">
-              <span class="k">SYMBOL</span>
-              <span class="big">████</span>
-              <span class="up">healthy</span>
-            </div>
-            <div class="peek-row"><span class="k">Is the price reasonable?</span><span>Below model fair value</span></div>
-            <div class="peek-row"><span class="k">Is the business healthy?</span><span class="up">Strong scorecard</span></div>
-            <div class="peek-row"><span class="k">What changed this week?</span><span>Results filed · dividend held</span></div>
-            <div class="peek-bar"><span style="width:72%"></span></div>
-            <div class="peek-foot"><span class="k">4-method fair value · quality · risk · dividends</span></div>
-          </div>
+      <!-- Terminal mockup -->
+      <div class="mock hero-mock">
+        <div class="mock-bar">
+          <span class="label">Board · Live universe</span>
+          <span class="mock-tag">Illustration</span>
         </div>
-        <p class="peek-cap muted">Illustration of the stock read. Real data lives in the desk.</p>
+        <div class="heat">
+          {heat.map(([sym, dir]) => (
+            <div class="heat-cell" data-dir={dir}>{sym}</div>
+          ))}
+        </div>
+        <div class="mock-sec">
+          <div class="label">Proven-strategy signals</div>
+          <div class="sig"><span>Golden cross</span><span class="muted">trend</span></div>
+          <div class="sig"><span>52-week high break</span><span class="muted">breakout</span></div>
+          <div class="sig"><span>50-day reclaim</span><span class="muted">momentum</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ VALUE STRIP ============ -->
-  <section class="section-tight strip">
+  <!-- ================= TRUST BAR ================= -->
+  <section class="band-panel trust">
     <div class="wrap">
-      <p class="strip-line">
-        Most PSX tools hand you raw prices and leave you to guess. {site.name} does the reading for
-        you — and shows its working, every time.
-      </p>
+      <div class="tilegrid trust-grid">
+        {stats.map(([n, l]) => (
+          <div>
+            <div class="pixel trust-n">{n}</div>
+            <div class="label muted trust-l">{l}</div>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
-  <!-- ============ PILLARS ============ -->
+  <!-- ================= HOW IT WORKS ================= -->
   <section class="section">
     <div class="wrap">
-      <div class="sec-head center">
-        <p class="eyebrow">Why it’s different</p>
-        <h2>Three things nobody else puts together.</h2>
-      </div>
-      <div class="grid pillars">
-        {
-          pillars.map((p) => (
-            <article class="card pillar">
-              <span class="pill"><span class="dot" />{p.tag}</span>
-              <h3>{p.title}</h3>
-              <p class="muted">{p.body}</p>
-            </article>
-          ))
-        }
+      <p class="kicker">How the desk works</p>
+      <h2>Pick a stock. The desk does the homework. You decide.</h2>
+      <div class="tilegrid steps">
+        {steps.map(([n, t, d]) => (
+          <div>
+            <div class="step-n label">{n}</div>
+            <h3>{t}</h3>
+            <p class="muted step-d">{d}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- ============ SHOWCASE ============ -->
-  <section class="section showcase">
-    <div class="wrap show-grid">
-      <div class="show-copy">
-        <p class="eyebrow">The desk</p>
-        <h2>A research terminal that explains itself.</h2>
+  <!-- ================= 01 BOARD ================= -->
+  <section class="section band-panel">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker">01 · Board</p>
+        <h2>The whole market on one screen</h2>
         <p class="lead">
-          Behind the plain-English answers sits a real engine: 52 backtested strategies, four
-          independent fair-value methods, health scorecards and risk profiles — all built on the
-          data layer, so no number is ever pulled from thin air.
+          A live universe heatmap, proven rule-based signals, predictability ranks, and a rolling
+          news wire. See where breadth is, which sectors are favoured, and what screens well today —
+          before you open a single chart.
         </p>
-        <ul class="show-list">
-          <li><strong>Fair value, four ways.</strong> Peer multiples, earnings power, Graham and dividend models — the median is the read.</li>
-          <li><strong>A health scorecard.</strong> Valuation, profitability, dividend cover and stability, scored and explained.</li>
-          <li><strong>A real risk profile.</strong> Volatility, drawdown in context, liquidity and dividend reliability.</li>
-        </ul>
-        <a href="/features" class="btn btn-ghost">See all the features →</a>
+        <a href="/features" class="btn">Explore the board</a>
       </div>
-
-      <div class="show-peek">
-        <div class="term">
-          <div class="term-bar">
-            <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
-            <span class="tlabel">the desk room · debate</span>
-          </div>
-          <div class="term-body">
-            <div class="dbt"><span class="k">CHARTIST</span><span>Trend intact · reclaiming the 50-day.</span></div>
-            <div class="dbt"><span class="k">FUNDAMENTALS</span><span>Cheap on earnings power, growth is the question.</span></div>
-            <div class="dbt bull"><span class="k up">BULL</span><span>Value + dividend cover carry it.</span></div>
-            <div class="dbt bear"><span class="k dn">BEAR</span><span>Fair value leans on an aggressive growth input.</span></div>
-            <hr class="dbt-hr" />
-            <div class="dbt chair"><span class="k">CHAIR</span><span>House view: constructive, conviction moderate. Dissent noted.</span></div>
-          </div>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="label">Predictability ranks</span>
+          <span class="mock-tag">19 yrs backtested</span>
+        </div>
+        <div class="mock-body">
+          {[82, 71, 64, 55, 47].map((w, i) => (
+            <div class="rank">
+              <span class="rank-k">RANK {i + 1}</span>
+              <div class="rank-bar"><span style={`width:${w}%`}></span></div>
+            </div>
+          ))}
+          <p class="mock-note muted">Illustration of the ranking layout.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ HOW IT WORKS ============ -->
-  <section class="section steps-sec">
-    <div class="wrap">
-      <div class="sec-head center">
-        <p class="eyebrow">How it works</p>
-        <h2>From a ticker to a decision in three steps.</h2>
+  <!-- ================= 02 VALUE ================= -->
+  <section class="section">
+    <div class="wrap two-col rev">
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="label">Valued four ways</span>
+          <span class="mock-tag">Illustration</span>
+        </div>
+        <div class="mock-body">
+          {['Peer P/E', 'Earnings power vs bond yield', 'Graham', 'Dividend discount'].map((m) => (
+            <div class="vrow"><span>{m}</span><span class="muted">model</span></div>
+          ))}
+          <hr class="hair" />
+          <div class="vband">
+            <div class="label muted">Consensus fair value</div>
+            <div class="pixel vband-v">— · —</div>
+            <p class="mock-note muted">Real figures appear in the desk, computed per stock.</p>
+          </div>
+        </div>
       </div>
-      <div class="grid steps">
-        {
-          steps.map((s) => (
-            <div class="step">
-              <span class="step-n mono">{s.n}</span>
-              <h3>{s.t}</h3>
-              <p class="muted">{s.d}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ACCOUNTABILITY ============ -->
-  <section class="section acct">
-    <div class="wrap acct-card">
-      <p class="eyebrow">The principle</p>
-      <h2>We put our reasoning on the record — and grade it.</h2>
-      <p class="lead">
-        Anyone can sound confident. {site.name} is built so every read is dated, sourced and scored
-        over time, losses included — and the same yardstick is turned on the brokers. No “strong
-        buy”, no guaranteed returns, no hiding the misses. Just research you can check.
-      </p>
-      <a href="/plans" class="btn btn-primary">Get started →</a>
-    </div>
-  </section>
-
-  <!-- ============ PRICING TEASE ============ -->
-  <section class="section-tight">
-    <div class="wrap price-tease">
       <div>
-        <p class="eyebrow">Plans</p>
-        <h2>Three desks, one research engine.</h2>
-        <p class="muted">
-          Free to start, an Investor desk that teaches you to read for yourself, and a Pro desk with
-          every lens the engine runs. Pricing is announced at launch — everyone starts free.
+        <p class="kicker">02 · Value</p>
+        <h2>Four valuations. All the working.</h2>
+        <p class="lead">
+          Every stock valued by peer P/E, earnings-power vs the bond yield, Graham, and a
+          dividend-discount model — with each model’s full working expandable, so you can check the
+          maths, not just trust a number.
+        </p>
+        <a href="/features" class="btn">See the models</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 03 DESK ROOM ================= -->
+  <section class="section band-dark deskroom">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker dr-kicker">03 · The Desk Room</p>
+        <h2>Watch an AI analyst desk argue it out</h2>
+        <p class="lead dr-lead">
+          On every ticker, named analyst personas — a technical desk, a fundamental desk, a bull and
+          a bear — debate the stock. Then a Chair synthesises a house view with an explicit dissent.
+          Nothing is hidden; you see who argued what.
+        </p>
+        <button class="btn" id="drPlay">▶ Watch the desk analyse</button>
+        <p class="dr-hint muted">Replay stages the debate in sequence — hit play</p>
+      </div>
+
+      <div class="dr-card">
+        <div class="dr-bar">
+          <span class="label">Desk Room</span>
+          <span class="muted">4 desks · 1 chair</span>
+        </div>
+        <div class="dr-body" id="drBody">
+          <div class="dr-block" data-i="0">
+            <div class="label">Technical desk</div>
+            <p>Trend intact; reclaiming the 50-day on rising volume.</p>
+          </div>
+          <div class="dr-block" data-i="1">
+            <div class="label">Fundamental desk</div>
+            <p>Cheap on earnings power. Growth is the open question.</p>
+          </div>
+          <div class="dr-block" data-i="2">
+            <div class="label up">Bull</div>
+            <p>Value plus dividend cover carries it through the cycle.</p>
+          </div>
+          <div class="dr-block" data-i="3">
+            <div class="label dn">Bear</div>
+            <p>Fair value leans on an aggressive growth input.</p>
+          </div>
+          <div class="dr-block dr-chair" data-i="4">
+            <div class="dr-chair-h">
+              <span class="label">Chair’s house view</span><span class="muted">Conviction: Med</span>
+            </div>
+            <p>
+              Constructive setup, but priced for a clean quarter. The desk watches for the payout
+              signal before adding conviction.
+            </p>
+            <p class="dr-dissent"><b>Dissent —</b> the bear’s cyclical-peak case is not resolved.</p>
+          </div>
+        </div>
+        <p class="mock-note muted dr-illus">Illustration of a session. Real debates run per stock.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 04 SCORES (method, not numbers) ================= -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">04 · Scores</p>
+        <h2>The desk grades itself in public</h2>
+        <p class="lead">
+          Every call carries a date and a falsifiable expectation. When the outcome window closes,
+          it’s scored against what prices actually did — the desk’s calls and the brokers’ alike. No
+          cherry-picking, no quiet deletions.
         </p>
       </div>
-      <a href="/plans" class="btn btn-ghost btn-lg">See the plans →</a>
+      <div class="tilegrid score-how">
+        <div>
+          <div class="label">1 · Dated</div>
+          <p class="muted">Every view is stamped with the date it was made and the window it must play out in.</p>
+        </div>
+        <div>
+          <div class="label">2 · Falsifiable</div>
+          <p class="muted">It states what would prove it wrong — so it can actually be graded, not argued about.</p>
+        </div>
+        <div>
+          <div class="label">3 · Scored</div>
+          <p class="muted">When the window closes it’s marked against real prices, and the misses stay on the record.</p>
+        </div>
+        <div>
+          <div class="label">4 · Brokers too</div>
+          <p class="muted">Public broker calls are captured and graded on the same bar. Audited, never trusted.</p>
+        </div>
+      </div>
+      <p class="score-note muted">
+        The public scorecard opens once enough calls have resolved to mean something. Until then we
+        show the method, not a number — a track record you can’t check isn’t a track record.
+      </p>
     </div>
   </section>
 
-  <!-- ============ WAITLIST ============ -->
-  <section class="section cta-sec">
-    <div class="wrap center cta-inner">
-      <Waitlist source="home" />
+  <!-- ================= PRINCIPLES ================= -->
+  <section class="section band-panel">
+    <div class="wrap">
+      <div class="tilegrid principles">
+        {principles.map(([t, d]) => (
+          <div>
+            <h3>{t}</h3>
+            <p class="muted">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICING TEASER ================= -->
+  <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker">Plans</p>
+        <h2>One desk. Two ways in.</h2>
+        <p class="lead">
+          Individual and Pro — plus a Broker tier for desks and institutions. {site.plansNote}
+        </p>
+        <a href="/plans" class="btn btn-solid">See full pricing ›</a>
+      </div>
+      <div class="tease">
+        {site.plans.map((p) => (
+          <a href={p.href || '/plans'} class="tease-row">
+            <span class="tease-n">{p.name}{p.featured && <em> · most popular</em>}</span>
+            <span class="tease-p">
+              {p.priceMonthly
+                ? <>{site.billing.currency} {p.priceMonthly.toLocaleString('en-PK')}<i>/mo</i></>
+                : <>Contact ›</>}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section class="section band-dark final">
+    <div class="wrap center">
+      <h2>Put the whole desk<br />behind your next trade</h2>
+      <p class="lead dr-lead final-lead">
+        The desk does the homework and keeps its own score — you decide what to do with it.
+      </p>
+      <div class="final-cta">
+        <a href="/plans" class="btn">Get started</a>
+        <a href="/contact" class="btn btn-ghost">Talk to us about brokers</a>
+      </div>
+      <p class="final-fine muted">Research · not advice · The desk never places orders</p>
     </div>
   </section>
 </Base>
 
 <style>
-  /* Hero */
-  .hero {
-    background:
-      radial-gradient(900px 400px at 80% -5%, var(--primary-tint) 0%, transparent 60%),
-      radial-gradient(700px 380px at 10% 0%, var(--accent-tint) 0%, transparent 55%);
-    padding: clamp(48px, 8vw, 92px) 0 clamp(40px, 6vw, 72px);
-  }
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 56px;
-    align-items: center;
-  }
-  .hero-copy .pill { margin-bottom: 22px; }
-  .hero h1 { margin-bottom: 20px; }
-  .hero .hl {
-    background: linear-gradient(120deg, var(--primary) 0%, #0f9c78 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .hero-cta { display: flex; gap: 12px; margin: 30px 0 20px; flex-wrap: wrap; }
-  .hero-trust {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    font-size: 0.88rem;
-    color: var(--ink-soft);
-    font-weight: 500;
+  .hero { padding: clamp(40px, 6vw, 72px) 0 clamp(40px, 5vw, 64px); }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 44px; align-items: center; }
+  .hero-lead { max-width: 520px; }
+  .hero-sub { font-size: 11.5px; max-width: 480px; }
+  .hero-cta { display: flex; gap: 10px; margin: 22px 0 14px; flex-wrap: wrap; }
+  .hero-fine {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
   }
 
-  /* Terminal peek in hero */
-  .hero-peek { position: relative; }
-  .peek-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
-  .peek-head .big { letter-spacing: 0.1em; }
-  .peek-head .up {
-    margin-left: auto;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    border: 1px solid var(--term-green);
-    padding: 3px 8px;
-    border-radius: 4px;
+  .mock-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-bottom: var(--rule); background: var(--panel-2);
   }
-  .peek-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 9px 0;
-    border-top: 1px solid var(--term-line);
-    font-size: 0.82rem;
-  }
-  .peek-bar {
-    margin: 16px 0 10px;
-    height: 8px;
-    background: var(--term-line);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .peek-bar span { display: block; height: 100%; background: var(--term-green); }
-  .peek-foot { font-size: 0.72rem; }
-  .peek-cap { margin-top: 12px; font-size: 0.76rem; text-align: right; }
+  .mock-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .mock-body { padding: 14px; }
+  .mock-note { font-size: 9.5px; margin: 10px 0 0; }
 
-  /* Value strip */
-  .strip { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .strip-line {
-    margin: 0;
-    text-align: center;
-    font-family: var(--font-head);
-    font-size: clamp(1.15rem, 2.4vw, 1.6rem);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    max-width: 820px;
-    margin-inline: auto;
-    line-height: 1.35;
+  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--ink-1); }
+  .heat-cell {
+    background: var(--panel); padding: 14px 6px; text-align: center;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .heat-cell[data-dir='1'] { background: rgba(11, 122, 95, 0.14); color: var(--up); }
+  .heat-cell[data-dir='-1'] { background: rgba(190, 65, 38, 0.13); color: var(--dn); }
+  .mock-sec { padding: 14px; border-top: var(--rule); }
+  .sig {
+    display: flex; justify-content: space-between; font-size: 11px;
+    padding: 8px 0; border-bottom: 1px dotted var(--hair);
   }
 
-  .sec-head { max-width: 640px; margin: 0 auto 44px; }
+  .trust { padding: 0; }
+  .trust-grid { grid-template-columns: repeat(4, 1fr); border-left: 0; border-right: 0; }
+  .trust-n { font-size: 32px; }
+  .trust-l { margin-top: 8px; }
 
-  /* Pillars */
-  .pillars { grid-template-columns: repeat(3, 1fr); }
-  .pillar .pill { margin-bottom: 16px; }
-  .pillar h3 { font-size: 1.22rem; margin-bottom: 10px; letter-spacing: -0.01em; }
-  .pillar { transition: transform 0.16s ease, box-shadow 0.2s ease; }
-  .pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .steps { grid-template-columns: repeat(3, 1fr); margin-top: 28px; }
+  .step-n { color: var(--ink-3); margin-bottom: 10px; }
+  .step-d { font-size: 11.5px; margin: 0; }
 
-  /* Showcase */
-  .showcase { background: var(--bg-tint); }
-  .show-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-  .show-list { list-style: none; padding: 0; margin: 22px 0 28px; }
-  .show-list li { padding: 12px 0; border-top: 1px solid var(--line); font-size: 0.98rem; color: var(--ink-soft); }
-  .show-list strong { color: var(--ink); font-weight: 600; }
-  .dbt { display: flex; gap: 14px; padding: 9px 0; font-size: 0.8rem; }
-  .dbt .k { min-width: 104px; font-size: 0.68rem; letter-spacing: 0.08em; }
-  .dbt-hr { border: 0; border-top: 1px solid var(--term-line); margin: 8px 0; }
-  .dbt.chair span:last-child { color: #fff; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .sec-head { max-width: 640px; margin-bottom: 26px; }
 
-  /* Steps */
-  .steps-sec { }
-  .steps { grid-template-columns: repeat(3, 1fr); }
-  .step-n {
-    display: inline-block;
-    font-size: 0.9rem;
-    color: var(--primary-ink);
-    background: var(--primary-tint);
-    padding: 6px 12px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-weight: 500;
+  .rank { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
+  .rank-k { font-size: 9px; letter-spacing: 0.1em; color: var(--ink-3); min-width: 58px; }
+  .rank-bar { flex: 1; height: 9px; border: 1px solid var(--ink-1); }
+  .rank-bar span { display: block; height: 100%; background: var(--ink-1); }
+
+  .vrow { display: flex; justify-content: space-between; font-size: 11px; padding: 9px 0; border-bottom: 1px dotted var(--hair); }
+  .vband { text-align: center; padding: 6px 0 2px; }
+  .vband-v { font-size: 26px; margin: 8px 0; letter-spacing: 0.06em; }
+
+  .deskroom .lead, .dr-lead { color: #c8c8c0; }
+  .dr-kicker { color: #8f8f88; }
+  .dr-hint { font-size: 9.5px; margin-top: 12px; color: #8f8f88; }
+  .dr-card { border: 1.5px solid #3a3a37; background: #101314; }
+  .dr-bar { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #3a3a37; font-size: 9.5px; }
+  .dr-body { padding: 14px; }
+  .dr-block { border: 1px solid #2c2f30; padding: 12px; margin-bottom: 10px; opacity: 1; }
+  .dr-block p { font-size: 11px; margin: 6px 0 0; color: #c8c8c0; }
+  .dr-block.is-hidden { opacity: 0; transform: translateY(10px); }
+  .dr-block.is-in { animation: rpUp 0.42s ease both; }
+  .dr-chair { border-color: var(--bg); }
+  .dr-chair-h { display: flex; justify-content: space-between; }
+  .dr-dissent { color: #9a9a92 !important; }
+  .dr-illus { padding: 0 14px 12px; color: #7a7a72; }
+  @keyframes rpUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .score-how { grid-template-columns: repeat(4, 1fr); }
+  .score-how p { font-size: 11px; margin: 8px 0 0; }
+  .score-note { font-size: 10.5px; margin-top: 18px; max-width: 720px; }
+
+  .principles { grid-template-columns: repeat(3, 1fr); }
+  .principles p { font-size: 11.5px; margin: 8px 0 0; }
+
+  .tease { border: var(--rule); background: var(--panel); }
+  .tease-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px; text-decoration: none; border-bottom: 1px dotted var(--hair);
   }
-  .step h3 { font-size: 1.16rem; margin-bottom: 8px; }
+  .tease-row:last-child { border-bottom: 0; }
+  .tease-row:hover { background: var(--panel-2); }
+  .tease-n { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .tease-n em { font-style: normal; color: var(--ink-3); font-weight: 400; }
+  .tease-p { font-family: var(--font-pixel); font-size: 22px; }
+  .tease-p i { font-style: normal; font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); }
 
-  /* Accountability */
-  .acct-card {
-    background: linear-gradient(135deg, #14181a 0%, #1d2529 100%);
-    color: #fff;
-    border-radius: var(--radius-lg);
-    padding: clamp(36px, 6vw, 68px);
-    text-align: center;
-    max-width: 860px;
-    margin: 0 auto;
-    box-shadow: var(--shadow-lg);
+  .center { text-align: center; }
+  .final-lead { max-width: 560px; margin: 0 auto 22px; }
+  .final-cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .final-fine { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 20px; color: #7a7a72; }
+
+  @media (max-width: 920px) {
+    .hero-grid, .two-col { grid-template-columns: 1fr; gap: 32px; }
+    .two-col.rev > :first-child { order: 2; }
+    .trust-grid, .score-how { grid-template-columns: repeat(2, 1fr); }
+    .steps, .principles { grid-template-columns: 1fr; }
   }
-  .acct-card h2 { color: #fff; }
-  .acct-card .eyebrow { color: var(--term-green); }
-  .acct-card .lead { color: #c7cfd3; max-width: 660px; margin: 0 auto 28px; }
-
-  /* Pricing tease */
-  .price-tease {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 32px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: clamp(28px, 4vw, 44px);
-  }
-  .price-tease h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 8px; }
-  .price-tease p { max-width: 520px; margin: 0; }
-
-  /* CTA */
-  .cta-sec { background: var(--bg-tint); border-top: 1px solid var(--line); }
-  .cta-inner :global(.wl) { margin: 0 auto; }
-
-  @media (max-width: 900px) {
-    .hero-grid, .show-grid { grid-template-columns: 1fr; gap: 40px; }
-    .hero-peek { order: 2; }
-    .pillars, .steps { grid-template-columns: 1fr; }
-    .price-tease { flex-direction: column; align-items: flex-start; }
+  @media (max-width: 520px) {
+    .heat { grid-template-columns: repeat(3, 1fr); }
   }
 </style>
+
+<script>
+  // Staged reveal of the debate, matching the handoff's ~450ms cadence.
+  const play = document.getElementById('drPlay');
+  const blocks = Array.from(document.querySelectorAll('.dr-block')) as HTMLElement[];
+  play?.addEventListener('click', () => {
+    blocks.forEach((b) => { b.classList.add('is-hidden'); b.classList.remove('is-in'); });
+    blocks.forEach((b, i) => {
+      setTimeout(() => {
+        b.classList.remove('is-hidden');
+        b.classList.add('is-in');
+      }, i * 450);
+    });
+  });
+</script>

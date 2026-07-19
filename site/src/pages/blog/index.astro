@@ -1,68 +1,155 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Waitlist from '../../components/Waitlist.astro';
+import { site } from '../../site.config.ts';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+const cats = ['All', 'Valuation', 'Market structure', 'Method', 'Sectors'];
 ---
 
-<Base title="Blog" path="/blog" description="Plain-English guides to the Pakistan Stock Exchange — how to read a company, understand a sector, and invest with your eyes open.">
-  <section class="section-tight page-hero">
-    <div class="wrap center">
-      <p class="eyebrow">Blog</p>
-      <h1>The market, explained.</h1>
-      <p class="lead">
-        Plain-English guides to reading PSX companies, sectors and the numbers that matter.
+<Base
+  title="Blog"
+  path="/blog"
+  active="blog"
+  description="Plain-English writing on the Pakistan Stock Exchange — how to read a company, value it, and think about risk."
+>
+  <section class="section-tight ph">
+    <div class="wrap">
+      <p class="kicker">Blog</p>
+      <h1>The market, explained</h1>
+      <p class="lead ph-lead">
+        Plain-English writing on reading PSX companies, valuing them, and thinking clearly about
+        risk.
       </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="chips">
+      {cats.map((c, i) => <button class:list={['chip', { on: i === 0 }]} data-cat={c}>{c}</button>)}
     </div>
   </section>
 
   <section class="section-tight">
     <div class="wrap">
-      {
-        posts.length === 0 ? (
-          <div class="empty center">
-            <div class="card empty-card">
-              <span class="pill"><span class="dot" />Coming soon</span>
-              <h2>Guides are on the way.</h2>
-              <p class="muted">
-                We’re writing clear, honest explainers on how to read PSX companies and sectors —
-                the kind of thing we wish existed when we started. Join the list and we’ll tell you
-                when the first ones land.
-              </p>
-              <div class="empty-wl"><Waitlist source="blog" compact /></div>
-            </div>
-          </div>
-        ) : (
-          <div class="grid posts">
-            {posts.map((p) => (
-              <a class="card post" href={`/blog/${p.id}/`}>
-                {p.data.cluster && <span class="post-cluster mono">{p.data.cluster}</span>}
-                <h3>{p.data.title}</h3>
-                <p class="muted">{p.data.description}</p>
-                <time class="post-date muted" datetime={p.data.pubDate.toISOString()}>
-                  {p.data.pubDate.toLocaleDateString('en-PK', { year: 'numeric', month: 'short', day: 'numeric' })}
-                </time>
-              </a>
-            ))}
-          </div>
-        )
-      }
+      {posts.length === 0 ? (
+        <div class="card empty">
+          <span class="badge"><span class="dot"></span>Coming soon</span>
+          <h2>The first pieces are being written</h2>
+          <p class="muted empty-p">
+            We’re writing clear, honest explainers on how to read PSX companies and sectors — the
+            kind of thing we wish existed when we started. Leave your email and we’ll send the first
+            one.
+          </p>
+        </div>
+      ) : (
+        <div class="tilegrid posts">
+          {posts.map((p) => (
+            <a class="post" href={`/blog/${p.id}/`} data-cat={p.data.cluster || 'Method'}>
+              <span class="label muted">{p.data.cluster}</span>
+              <h3>{p.data.title}</h3>
+              <p class="muted post-d">{p.data.description}</p>
+              <time class="post-t muted" datetime={p.data.pubDate.toISOString()}>
+                {p.data.pubDate.toLocaleDateString('en-PK', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section band-dark">
+    <div class="wrap news">
+      <div>
+        <p class="kicker dr-kicker">Newsletter</p>
+        <h2>One email when it’s worth your time</h2>
+        <p class="lead news-lead">No noise, no tips. Research, not advice.</p>
+      </div>
+      <form class="news-form" id="nlForm"
+        data-url={site.supabase.url} data-key={site.supabase.anonKey} data-table={site.supabase.waitlistTable}>
+        <input type="email" id="nlEmail" placeholder="you@email.com" required aria-label="Email address" />
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button type="submit" class="btn" id="nlBtn">Subscribe</button>
+      </form>
+      <p class="news-msg" id="nlMsg" role="status" aria-live="polite"></p>
     </div>
   </section>
 </Base>
 
 <style>
-  .empty-card { max-width: 560px; margin: 0 auto; }
-  .empty-card .pill { margin-bottom: 16px; }
-  .empty-wl { margin-top: 28px; display: flex; justify-content: center; }
+  .ph-lead { max-width: 560px; }
+  .chips { display: flex; gap: 1.5px; background: var(--ink-1); border: var(--rule); width: fit-content; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 700; padding: 10px 16px; background: var(--panel); border: 0; cursor: pointer; color: var(--ink-1);
+  }
+  .chip.on { background: var(--ink-1); color: var(--bg); }
+
+  .empty { max-width: 620px; padding: 28px; }
+  .empty h2 { margin: 14px 0 10px; }
+  .empty-p { font-size: 11.5px; }
+
   .posts { grid-template-columns: repeat(3, 1fr); }
-  .post { text-decoration: none; color: var(--ink); transition: transform 0.14s ease, box-shadow 0.18s ease; }
-  .post:hover { text-decoration: none; transform: translateY(-3px); box-shadow: var(--shadow); }
-  .post-cluster { font-size: 0.7rem; color: var(--primary-ink); text-transform: uppercase; letter-spacing: 0.1em; }
-  .post h3 { margin: 10px 0 8px; font-size: 1.14rem; }
-  .post-date { font-size: 0.82rem; display: block; margin-top: 14px; }
-  @media (max-width: 860px) { .posts { grid-template-columns: 1fr; } }
+  .post { text-decoration: none; display: block; }
+  .post:hover { background: var(--panel-2); }
+  .post h3 { margin: 8px 0; font-size: 13px; }
+  .post-d { font-size: 11px; }
+  .post-t { font-size: 9.5px; display: block; margin-top: 12px; }
+
+  .news { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+  .dr-kicker { color: #8f8f88; }
+  .news-lead { color: #c8c8c0; margin: 0; }
+  .news-form { display: flex; gap: 8px; }
+  .news-form input[type='email'] {
+    font-family: var(--font-mono); font-size: 12px; padding: 12px 14px; min-width: 260px;
+    background: #101314; border: 1.5px solid #3a3a37; color: var(--bg);
+  }
+  .news-form input[type='email']:focus { outline: none; border-color: var(--bg); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .news-msg { grid-column: 1 / -1; margin: 0; font-size: 11px; color: var(--up); min-height: 1em; }
+
+  @media (max-width: 900px) { .posts { grid-template-columns: 1fr; } .news { grid-template-columns: 1fr; } .news-form { flex-wrap: wrap; } .news-form input[type='email'] { min-width: 0; flex: 1; } }
 </style>
+
+<script>
+  // Category filter (client-side, matches the handoff behaviour).
+  document.querySelectorAll('.chip').forEach((c) => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach((x) => x.classList.remove('on'));
+      c.classList.add('on');
+      const cat = (c as HTMLElement).dataset.cat;
+      document.querySelectorAll('.post').forEach((p) => {
+        const el = p as HTMLElement;
+        el.style.display = cat === 'All' || el.dataset.cat === cat ? '' : 'none';
+      });
+    });
+  });
+
+  const f = document.getElementById('nlForm') as HTMLFormElement | null;
+  f?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('nlMsg')!;
+    const email = (document.getElementById('nlEmail') as HTMLInputElement).value.trim().toLowerCase();
+    if ((f.querySelector('input[name="company"]') as HTMLInputElement)?.value) { msg.textContent = 'Subscribed ✓'; return; }
+    const btn = document.getElementById('nlBtn') as HTMLButtonElement;
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${f.dataset.url}/rest/v1/${f.dataset.table}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: f.dataset.key || '',
+          Authorization: `Bearer ${f.dataset.key}`,
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ email, source: 'blog' }),
+      });
+      msg.textContent = res.ok || res.status === 201 || res.status === 409 ? 'Subscribed ✓' : 'Something went wrong — try again.';
+      if (res.ok || res.status === 201) f.reset();
+    } catch { msg.textContent = 'Something went wrong — try again.'; }
+    btn.disabled = false;
+  });
+</script>

@@ -1,68 +1,20 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Legal from '../../layouts/Legal.astro';
 import { site } from '../../site.config.ts';
 ---
+<Legal title="Terms of service" tab="terms" path="/legal/terms">
+  <h2>1. What {site.name} is</h2>
+  <p>{site.name} is an educational research and analytics tool for the Pakistan Stock Exchange. It is not an investment adviser, a broker, or a portfolio manager, and it never executes trades.</p>
 
-<Base title="Terms of Service" path="/legal/terms" noindex={true} description="PSX Desk Terms of Service.">
-  <section class="section-tight">
-    <div class="wrap legal">
-      <p class="eyebrow">Legal</p>
-      <h1>Terms of Service</h1>
-      <div class="legal-notice">
-        <strong>Draft — pending legal review.</strong> This page is a placeholder. The final Terms
-        will be reviewed by a Pakistan-licensed lawyer before any paid plan opens.
-      </div>
+  <h2>2. No advice</h2>
+  <p>Nothing on {site.name} is personalised investment advice or a recommendation to buy, sell or hold any security. All content is information only. You are solely responsible for your own investment decisions.</p>
 
-      <h2>1. What {site.name} is</h2>
-      <p>
-        {site.name} is an educational research and analytics tool for the Pakistan Stock Exchange. It
-        is not an investment adviser, a broker, or a portfolio manager, and it never executes trades.
-      </p>
+  <h2>3. No warranty on outcomes</h2>
+  <p>Past performance does not predict future results. We make no promise of returns. Investing carries risk, including the loss of capital.</p>
 
-      <h2>2. No advice</h2>
-      <p>
-        Nothing on {site.name} is personalised investment advice or a recommendation to buy, sell or
-        hold any security. All content is information only. You are solely responsible for your own
-        investment decisions.
-      </p>
+  <h2>4. Accounts, subscriptions and our research</h2>
+  <p>Terms covering account use, subscription billing, cancellation and refunds, and ownership of our derived research (fair-value estimates, scores, debate transcripts and rankings) will be finalised here before paid plans launch. Prices shown on the site today are indicative and create no obligation on either side.</p>
 
-      <h2>3. No warranty on outcomes</h2>
-      <p>
-        Past performance does not predict future results. We make no promise of returns. Investing
-        carries risk, including the loss of capital.
-      </p>
-
-      <h2>4. Accounts, subscriptions & our data</h2>
-      <p>
-        Terms covering account use, subscription billing, cancellation and refunds, and the ownership
-        of our derived research (fair-value estimates, scores, debate transcripts and rankings) will
-        be finalised here before paid plans launch.
-      </p>
-
-      <h2>5. Acceptable use</h2>
-      <p>
-        Terms covering acceptable use — including of the broker-accountability rankings — will be
-        finalised here.
-      </p>
-
-      <p class="legal-contact muted">
-        Questions about these terms: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
-      </p>
-    </div>
-  </section>
-</Base>
-
-<style>
-  .legal { max-width: 720px; margin: 0 auto; }
-  .legal h2 { margin-top: 32px; font-size: 1.35rem; }
-  .legal-notice {
-    background: var(--accent-tint);
-    border: 1px solid #e8cf9a;
-    border-radius: var(--radius-sm);
-    padding: 16px 18px;
-    margin: 20px 0 8px;
-    font-size: 0.92rem;
-    color: #7a5a12;
-  }
-  .legal-contact { margin-top: 36px; font-size: 0.9rem; }
-</style>
+  <h2>5. Acceptable use</h2>
+  <p>Terms covering acceptable use — including of the broker accountability rankings — will be finalised here.</p>
+</Legal>

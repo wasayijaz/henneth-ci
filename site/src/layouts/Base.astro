@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   path?: string;
   noindex?: boolean;
+  active?: string;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = site.description,
   path = '',
   noindex = false,
+  active = '',
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
@@ -77,7 +79,7 @@ const appLd = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
 
@@ -86,7 +88,7 @@ const appLd = {
     <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
   </head>
   <body>
-    <Header />
+    <Header active={active} />
     <main>
       <slot />
     </main>
