@@ -1,11 +1,59 @@
 {
- "updated": "2026-07-19 03:49",
+ "updated": "2026-07-19 12:54",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 65,
+  "score": 66,
   "band": "elevated"
  },
  "signals": [
+  {
+   "id": "20260719-BML-obv_divergence_up",
+   "ticker": "BML",
+   "strategy": "obv_divergence_up",
+   "template": "Volume leads price",
+   "category": "volume",
+   "sector": "Commercial Banks",
+   "entry": 59.25,
+   "stop": 57.18,
+   "target": 62.8,
+   "rr": 1.71,
+   "hold_sessions": 15,
+   "size_shares": 1350,
+   "size_pkr": 79988,
+   "backtest": {
+    "hit_rate": 0.966,
+    "net_expectancy_pct": 5.11,
+    "n": 89,
+    "oos_hit": 0.833
+   },
+   "confidence": "high",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260719-TPLT-donchian55_break",
+   "ticker": "TPLT",
+   "strategy": "donchian55_break",
+   "template": "Donchian 55 breakout (turtle)",
+   "category": "breakout",
+   "sector": "Technology & Communication",
+   "entry": 27.91,
+   "stop": 26.51,
+   "target": 30.7,
+   "rr": 1.99,
+   "hold_sessions": 25,
+   "size_shares": 2866,
+   "size_pkr": 79990,
+   "backtest": {
+    "hit_rate": 0.615,
+    "net_expectancy_pct": 3.62,
+    "n": 13,
+    "oos_hit": 0.75
+   },
+   "confidence": "high",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
+  },
   {
    "id": "20260719-HCAR-sma_golden_cross",
    "ticker": "HCAR",
@@ -22,37 +70,37 @@
    "size_pkr": 79807,
    "backtest": {
     "hit_rate": 0.6,
-    "net_expectancy_pct": 3.07,
+    "net_expectancy_pct": 2.7,
     "n": 10,
     "oos_hit": 0.6
    },
    "confidence": "high",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+3.1% net/trade), still profitable out-of-sample."
+   "thesis": "Golden cross (SMA50>SMA200) is triggering now; on HCAR's own history it won 60% over 10 trades (+2.7% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260719-NPL-atr_stretch_below",
-   "ticker": "NPL",
-   "strategy": "atr_stretch_below",
-   "template": "2-ATR stretch below 20MA",
-   "category": "mean_reversion",
-   "sector": "Power Generation & Distribution",
-   "entry": 67.06,
-   "stop": 65.05,
-   "target": 69.74,
-   "rr": 1.33,
-   "hold_sessions": 7,
-   "size_shares": 1192,
-   "size_pkr": 79936,
+   "id": "20260719-NICL-roc60_leader_pullback",
+   "ticker": "NICL",
+   "strategy": "roc60_leader_pullback",
+   "template": "Long-run leader, short pullback",
+   "category": "momentum",
+   "sector": "Chemical",
+   "entry": 220.57,
+   "stop": 211.75,
+   "target": 238.22,
+   "rr": 2.0,
+   "hold_sessions": 18,
+   "size_shares": 362,
+   "size_pkr": 79846,
    "backtest": {
-    "hit_rate": 0.692,
-    "net_expectancy_pct": 1.16,
+    "hit_rate": 0.615,
+    "net_expectancy_pct": 1.12,
     "n": 13,
     "oos_hit": 0.667
    },
-   "confidence": "medium",
+   "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "2-ATR stretch below 20MA is triggering now; on NPL's own history it won 69% over 13 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -74,6 +122,10 @@
    "score": 64.8
   },
   {
+   "ticker": "THCCL",
+   "score": 62.7
+  },
+  {
    "ticker": "NBP",
    "score": 62.3
   },
@@ -92,10 +144,6 @@
   {
    "ticker": "UBL",
    "score": 60.6
-  },
-  {
-   "ticker": "HINOON",
-   "score": 60.0
   }
  ],
  "movers_up": [
