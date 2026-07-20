@@ -3,7 +3,11 @@
 # They're regenerated + re-committed each cycle by the refresh tasks (git add -A). Deltas
 # are tiny (deep history only appends the latest bar), so history bloat stays modest.
 logs/
-public/
+# Anchored to the repo root ON PURPOSE. This ignores the terminal's Vercel build
+# output (root vercel.json does `mkdir -p public`). An unanchored `public/` also
+# matches site/public/, which silently kept robots.txt, favicon.svg and the OG
+# image out of the marketing build — they 404'd on the live site.
+/public/
 __pycache__/
 *.pyc
 *.tmp
