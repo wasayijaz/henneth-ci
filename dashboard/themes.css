@@ -900,6 +900,30 @@ body[data-theme=gemini] .tgrid button{height:38px}
 body[data-theme=gemini] #t-out{margin-top:14px}
 body[data-theme=gemini] .tnote{border-left:3px solid var(--ink1);background:var(--panel2);padding:10px 13px;font-size:13px;line-height:1.62;margin-top:12px}
 body[data-theme=gemini] .tnote.warn{border-left-color:var(--dn)}
+/* auth: google button, divider, peek toggle, inline errors, strength meter */
+body[data-theme=gemini] .auth-google{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:11px 14px;margin-bottom:14px;background:var(--panel);border:1.5px solid var(--line);color:var(--ink1);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+body[data-theme=gemini] .auth-google:hover{border-color:var(--ink1);background:var(--panel2)}
+body[data-theme=gemini] .auth-or{display:flex;align-items:center;gap:10px;margin:0 0 14px;color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+body[data-theme=gemini] .auth-or::before,body[data-theme=gemini] .auth-or::after{content:"";flex:1;height:1px;background:var(--line)}
+body[data-theme=gemini] .auth-pwwrap{position:relative;display:block}
+body[data-theme=gemini] .auth-pwwrap input{width:100%;padding-right:62px}
+body[data-theme=gemini] .auth-peek{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--ink3);font:inherit;font-size:11px;font-weight:600;cursor:pointer;padding:5px 7px;text-transform:uppercase;letter-spacing:.05em}
+body[data-theme=gemini] .auth-peek:hover{color:var(--ink1)}
+body[data-theme=gemini] .auth-err{display:block;min-height:0;color:var(--dn);font-size:11.5px;line-height:1.5;margin-top:5px}
+body[data-theme=gemini] .auth-err:empty{margin-top:0}
+body[data-theme=gemini] input.bad{border-color:var(--dn)}
+body[data-theme=gemini] .pwmeter{display:flex;align-items:center;gap:9px;margin:-4px 0 10px}
+body[data-theme=gemini] .pwbars{display:flex;gap:3px;flex:1}
+body[data-theme=gemini] .pwbars i{flex:1;height:3px;background:var(--line)}
+body[data-theme=gemini] .pwlabel{font-size:11px;color:var(--ink3);white-space:nowrap}
+body[data-theme=gemini] .pwmeter[data-s="1"] .pwbars i:nth-child(-n+1),
+body[data-theme=gemini] .pwmeter[data-s="2"] .pwbars i:nth-child(-n+2){background:var(--dn)}
+body[data-theme=gemini] .pwmeter[data-s="3"] .pwbars i:nth-child(-n+3){background:#b8860b}
+body[data-theme=gemini] .pwmeter[data-s="4"] .pwbars i{background:var(--up)}
+body[data-theme=gemini] .pwhint{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:-4px 0 12px}
+body[data-theme=gemini] .auth-go.busy{opacity:.65;cursor:progress}
+body[data-theme=gemini] .pc-soon{color:var(--ink3);font-style:normal;line-height:1.6}
+@media (min-width:900px){body[data-theme=gemini] .plan-grid-3{grid-template-columns:repeat(3,1fr)}}
 /* members-only gate — the signed-out terminal */
 body[data-theme=gemini] .gate{display:flex;align-items:center;justify-content:center;min-height:min(72vh,640px);padding:24px 16px}
 body[data-theme=gemini] .gate-card{width:100%;max-width:560px;border:1px solid var(--line);background:var(--panel);padding:32px 30px}

@@ -1465,11 +1465,22 @@ const PLANS = {
   pro: { label: "Pro", tag: "TA & FA",
     blurb: "The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.",
     features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray", "marketplace"] },
+  // Feature list intentionally EMPTY while the tier is unbuilt. Listing seventeen inherited Pro
+  // features next to a "coming soon" badge reads as a spec of what you get today, and none of it
+  // is purchasable — the honest card is the promise plus nothing else until the tier ships.
   broker: { label: "Broker", tag: "coming soon", soon: true,
     blurb: "Everything in Pro, plus your own desk's calls scored in public on the same bar as everyone else.",
-    features: ["learn", "practice", "tools", "astro_full", "dividends_full", "earnings_full", "value_full", "strategies_run", "research_full", "screener", "scenarios", "scanner", "watch_intel", "ask", "alignment", "xray", "marketplace", "broker_tools"] },
+    features: [] },
 };
+/* `free` stays here and stays FIRST: it is the internal default that realPlan() falls back to for
+   any signed-in account without a stored plan, and hasFeature() reads PLANS[planOf()].features.
+   Removing the entry would leave those undefined and break entitlement for every user. What the
+   owner asked to remove is the free CARD, not the free CONCEPT — see PLAN_CARDS. */
 const PLAN_ORDER = ["free", "investor", "pro", "broker"];
+/* The tiers actually shown on the plans page. Free is not offered as a choice: there is nothing
+   to select (every account starts there) and a fourth column of three bullets made the paid
+   tiers look like the exception rather than the product. */
+const PLAN_CARDS = ["investor", "pro", "broker"];
 /* Owner-only: preview the product as any plan without changing the stored plan. Set from the Plans
    page; lives in memory only, so a reload returns you to your real plan. */
 let _previewPlan = null;
@@ -3187,8 +3198,11 @@ async function pagePlans() {
     return `<div class="plan-card ${on ? "on" : ""} ${p.soon ? "soon" : ""}">
       <div class="pc-top"><b>${esc(p.label)}</b>${p.tag ? `<span class="pill ${p.soon ? "" : "ok"}">${esc(p.tag)}</span>` : ""}${on ? '<span class="pill ok">your plan</span>' : ""}</div>
       <p class="sub">${esc(p.blurb)}</p>
-      <div class="pc-feats">${(p.features.length ? p.features : ["Cast your birth chart", "The daily desk note", "The public track record"])
-        .map(f => `<div class="pc-f">${esc(FEATURE_LABEL[f] || f)}</div>`).join("")}</div>
+      ${p.features.length
+        ? `<div class="pc-feats">${p.features.map(f => `<div class="pc-f">${esc(FEATURE_LABEL[f] || f)}</div>`).join("")}</div>`
+        // An empty list used to fall through to the Free plan's three bullets — which would now
+        // print "Cast your birth chart" on the Broker card. A tier with nothing to list says so.
+        : `<div class="pc-feats"><div class="pc-f pc-soon">Scope is still being defined with research houses — nothing is listed here until it is real.</div></div>`}
       ${on
         ? `<div class="pc-cta"><button class="pc-btn ghost" disabled>Your current plan</button></div>`
         : p.soon ? `<div class="pc-cta"><button class="pc-btn ghost" disabled>Coming soon</button></div>`
@@ -3201,7 +3215,7 @@ async function pagePlans() {
   <div class="seg" style="margin-top:4px"><h2>Plans</h2><div class="ln"></div>${me ? `<span class="pill ${cur === "free" ? "" : "ok"}">${esc(PLANS[cur].label)}</span>` : ""}</div>
   <p class="sub" style="margin-bottom:14px">One data layer, read three ways. <b>Investor</b> teaches you to read the market for yourself; <b>Pro</b> is the full analytical desk; <b>Broker</b> adds public scoring for a research house's own calls.</p>
   <div class="disclaimer"><b>Payments aren't open yet.</b> Card processing through international providers isn't available in Pakistan, so billing will run through a local gateway. Until that's live, nothing is charged and everything currently available to your account stays available.</div>
-  <div class="plan-grid">${PLAN_ORDER.map(card).join("")}</div>
+  <div class="plan-grid plan-grid-3">${PLAN_CARDS.map(card).join("")}</div>
   <div id="upgmsg" class="sub" style="margin-top:10px"></div>
   ${isOwner() ? `<div class="card owner-preview"><div class="ark">owner · preview as</div>
     <p class="sub" style="margin:6px 0 10px">See exactly what each plan's product looks like. This changes only what <b>you</b> see, never your stored plan — reload to return to ${esc(PLANS[realPlan()].label)}.</p>
@@ -5356,9 +5370,29 @@ function openAuth(mode) {
         <button data-m="signin" class="${mode === "signin" ? "on" : ""}">Sign in</button>
         <button data-m="signup" class="${mode === "signup" ? "on" : ""}">Create account</button>
       </div>
-      <form id="authform" autocomplete="on">
-        <label>Email<input type="email" id="authEmail" required autocomplete="email" placeholder="you@example.com"></label>
-        <label id="pwRow">Password<input type="password" id="authPw" minlength="8" required autocomplete="${mode === "signup" ? "new-password" : "current-password"}" placeholder="min 8 characters"></label>
+      <button type="button" class="auth-google" id="authGoogle">
+        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.6z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3C3.7 21.4 7.6 24 12 24z"/><path fill="#FBBC05" d="M5.6 14.7a7.2 7.2 0 0 1 0-4.6v-3H1.8a12 12 0 0 0 0 10.6l3.8-3z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.2 15.1 0 12 0 7.6 0 3.7 2.6 1.8 6.4l3.8 3C6.5 6.7 9 4.8 12 4.8z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-or"><span>or</span></div>
+      <form id="authform" autocomplete="on" novalidate>
+        <label>Email
+          <input type="email" id="authEmail" required autocomplete="email" placeholder="you@example.com" aria-describedby="errEmail">
+          <span class="auth-err" id="errEmail" role="alert"></span>
+        </label>
+        <label id="pwRow">Password
+          <span class="auth-pwwrap">
+            <input type="password" id="authPw" minlength="8" required autocomplete="${mode === "signup" ? "new-password" : "current-password"}" placeholder="${mode === "signup" ? "at least 8 characters" : "your password"}" aria-describedby="errPw${mode === "signup" ? " pwHint" : ""}">
+            <button type="button" class="auth-peek" id="authPeek" aria-label="Show password" aria-pressed="false">Show</button>
+          </span>
+          <span class="auth-err" id="errPw" role="alert"></span>
+        </label>
+        ${mode === "signup" ? `
+        <div class="pwmeter" id="pwMeter" hidden>
+          <div class="pwbars"><i></i><i></i><i></i><i></i></div>
+          <span class="pwlabel" id="pwLabel"></span>
+        </div>
+        <div class="pwhint" id="pwHint">Longer beats complicated. Three unrelated words are stronger than <b>P@ssw0rd!</b> and easier to remember.</div>` : ""}
         <button type="submit" class="auth-go" id="authGo">${mode === "signup" ? "Create account" : "Sign in"}</button>
       </form>
       <div class="authmsg" id="authmsg"></div>
@@ -5381,26 +5415,119 @@ function openAuth(mode) {
     authMsg(error ? error.message : "Reset link sent — check your email.", !!error);
   };
 
+  /* ---- show / hide password. A peek toggle measurably cuts sign-in failures on mobile, and is
+     safer than the alternative users actually resort to: typing the password into the email
+     field to read it. aria-pressed so a screen reader announces the state. ---- */
+  const pwEl = document.getElementById("authPw");
+  document.getElementById("authPeek").onclick = (ev) => {
+    const b = ev.currentTarget, show = pwEl.type === "password";
+    pwEl.type = show ? "text" : "password";
+    b.textContent = show ? "Hide" : "Show";
+    b.setAttribute("aria-pressed", String(show));
+    b.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    pwEl.focus();
+  };
+
+  /* ---- strength meter (signup only). Scored on LENGTH first, because length is what actually
+     resists cracking — a 16-character passphrase beats an 8-character one with a symbol in it.
+     Advisory only: it never blocks submission, since a meter that refuses a good passphrase
+     because it lacks a digit trains people into worse passwords. ---- */
+  function pwScore(v) {
+    if (!v) return 0;
+    let s = 0;
+    if (v.length >= 8) s++;
+    if (v.length >= 12) s++;
+    if (v.length >= 16) s++;
+    if (/[^A-Za-z0-9]/.test(v) || (/[A-Za-z]/.test(v) && /\d/.test(v))) s++;
+    if (/^(.)\1+$/.test(v) || /^(12345678|password|qwerty)/i.test(v)) s = 1;  // obvious ones stay weak
+    return Math.min(s, 4);
+  }
+  const meter = document.getElementById("pwMeter");
+  if (meter) {
+    const label = document.getElementById("pwLabel");
+    pwEl.addEventListener("input", () => {
+      const v = pwEl.value, s = pwScore(v);
+      meter.hidden = !v;
+      meter.dataset.s = String(s);
+      label.textContent = !v ? "" : ["", "too easy to guess", "weak", "decent", "strong"][s];
+    });
+  }
+
+  /* ---- inline validation. Errors sit next to the field that caused them, not only in the
+     shared banner, and clear as soon as the user starts fixing them. ---- */
+  const setErr = (id, msg) => {
+    const n = document.getElementById(id);
+    if (!n) return;
+    n.textContent = msg || "";
+    const field = n.closest("label")?.querySelector("input");
+    if (field) field.classList.toggle("bad", !!msg);
+  };
+  ["authEmail", "authPw"].forEach(id => {
+    const n = document.getElementById(id);
+    n?.addEventListener("input", () => setErr(id === "authEmail" ? "errEmail" : "errPw", ""));
+  });
+
+  /* ---- Google. Supabase redirects back to this exact origin+path, so the SPA reopens where the
+     user left. Fails loudly: an OAuth provider that is not enabled in the Supabase dashboard
+     returns an error rather than throwing, and silently doing nothing on click is the worst
+     possible outcome for a sign-in button. ---- */
+  document.getElementById("authGoogle").onclick = async () => {
+    authMsg("Opening Google…");
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin + location.pathname },
+    });
+    if (error) authMsg(friendlyAuthError(error) + " (If this is new, Google sign-in may not be enabled on the server yet.)", true);
+  };
+
   document.getElementById("authform").onsubmit = async (e) => {
     e.preventDefault();
     const email = document.getElementById("authEmail").value.trim();
-    const pw = document.getElementById("authPw").value;
+    const pw = pwEl.value;
     const go = document.getElementById("authGo");
-    go.disabled = true; authMsg(mode === "signup" ? "Creating your account…" : "Signing in…");
+
+    // validate before spending a network round trip, and point at the offending field
+    let bad = false;
+    setErr("errEmail", ""); setErr("errPw", "");
+    if (!email) { setErr("errEmail", "Enter your email."); bad = true; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr("errEmail", "That doesn't look like an email address."); bad = true; }
+    if (!pw) { setErr("errPw", "Enter your password."); bad = true; }
+    else if (mode === "signup" && pw.length < 8) { setErr("errPw", "Passwords need at least 8 characters."); bad = true; }
+    if (bad) { authMsg("", false); return; }
+
+    go.disabled = true; go.classList.add("busy");
+    authMsg(mode === "signup" ? "Creating your account…" : "Signing in…");
     try {
       if (mode === "signup") {
         const { data, error } = await sb.auth.signUp({ email, password: pw });
         if (error) throw error;
-        if (!data.session) { authMsg("Almost there — we sent a confirmation link to your email. Click it to activate your account."); return; }
+        if (!data.session) { authMsg("Almost there — we sent a confirmation link to " + email + ". Click it to activate your account."); return; }
       } else {
         const { error } = await sb.auth.signInWithPassword({ email, password: pw });
         if (error) throw error;
       }
       closeAuth();
     } catch (err) {
-      authMsg(err.message || String(err), true);
-    } finally { go.disabled = false; }
+      authMsg(friendlyAuthError(err), true);
+    } finally { go.disabled = false; go.classList.remove("busy"); }
   };
+}
+
+/* Supabase's raw errors are accurate and unhelpful ("Invalid login credentials" tells a user
+   nothing about which half was wrong, and "User already registered" reads like an accusation).
+   Translate the ones people actually hit; pass anything unrecognised through unchanged rather
+   than swallowing a real error behind a generic apology. */
+function friendlyAuthError(err) {
+  const m = (err && (err.message || err.error_description)) || String(err || "");
+  const s = m.toLowerCase();
+  if (s.includes("invalid login credentials")) return "That email and password don't match. Check the password, or use “Forgot password?” below.";
+  if (s.includes("email not confirmed")) return "This account isn't activated yet — click the confirmation link we emailed you, then sign in.";
+  if (s.includes("user already registered") || s.includes("already been registered")) return "There's already an account with this email. Switch to “Sign in”, or reset the password if you've forgotten it.";
+  if (s.includes("password should be at least")) return "Passwords need at least 8 characters.";
+  if (s.includes("rate limit") || s.includes("too many")) return "Too many attempts just now. Wait a minute and try again.";
+  if (s.includes("failed to fetch") || s.includes("networkerror")) return "Couldn't reach the server. Check your connection and try again.";
+  if (s.includes("provider is not enabled")) return "Google sign-in isn't switched on for this site yet.";
+  return m || "Something went wrong. Try again.";
 }
 function closeAuth() { document.getElementById("authbox")?.remove(); }
 
