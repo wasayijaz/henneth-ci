@@ -20,6 +20,11 @@ export const site = {
   social: {
     x: 'https://x.com/MWasayI',
   },
+  analytics: {
+    // Google Analytics 4 measurement ID. Loaded in production builds only, so
+    // local dev traffic never lands in the property.
+    ga4: 'G-5PLLEK6RYC',
+  },
   // Supabase (waitlist / plan-interest capture). Publishable key is client-safe.
   supabase: {
     url: 'https://qteoncckohuoatbjjykb.supabase.co',

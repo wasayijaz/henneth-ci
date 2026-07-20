@@ -86,6 +86,33 @@ const appLd = {
     <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(siteLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
+
+    {/* Google tag (gtag.js) — production builds only, so `npm run dev` traffic
+        never reaches the property. `is:inline` is required: without it Astro
+        bundles the tags, which breaks gtag's global + script ordering.
+        `window.gtag = gtag` is deliberate: define:vars wraps the body in an
+        IIFE, so gtag would otherwise be function-scoped and later conversion
+        events would throw. Keep the body free of `//` comments — the output is
+        minified onto one line, so a line comment silently kills everything
+        after it. */}
+    {
+      import.meta.env.PROD && (
+        <>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.ga4}`}
+          />
+          <script is:inline define:vars={{ gaId: site.analytics.ga4 }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', gaId);
+          </script>
+        </>
+      )
+    }
   </head>
   <body>
     <Header active={active} />
