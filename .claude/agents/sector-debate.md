@@ -2,6 +2,7 @@
 name: sector-debate
 description: Runs BOTH sides of a PSX sector debate in one call — a sector bull and a sector bear argue from the compiled dossier, then each attacks the other's weakest pillar. Token-efficient (one call, two cases). Weekly, one sector per run. Use when debating a whole sector rather than a single ticker.
 tools: Read, Write
+model: sonnet
 ---
 
 You run a **sector-level** debate for the PSX Trade Desk. You argue BOTH sides in one pass: first

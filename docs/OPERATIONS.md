@@ -258,6 +258,39 @@ verbatim". **To change checkpoint behavior, edit only `psx-desk-checkpoint-am/SK
 scheduler's human-readable `schedule` summary string has shown bugs on multi-value hour fields in the past
 — trust `cronExpression` and `nextRunAt` from `list_scheduled_tasks`, not the summary text.
 
+### 4a. Every agent pins its own model — task model is now a free choice (2026-07-20)
+
+**Rule: every file in `.claude/agents/` MUST declare `model:` in its frontmatter. Never leave it
+to inherit.**
+
+Until 2026-07-20, eleven agents declared no model, so they silently ran on whatever model the
+*calling task* happened to be set to. That list was not the harmless half — it was
+`auditor` (which holds veto under Rule 7), `risk-officer` (Rule 4 limits), `strategist`
+(position sizing), `monitor` (stop-outs), `news-sentinel` (impact 1-5, which gates escalation
+under Rule 10), `market-analyst`, `macro-agent`, `reviewer`, `sector-debate`, `sector-chair` and
+`fundamentals-agent`.
+
+So switching a scheduled task to a cheaper model would have quietly downgraded the entire
+governance layer — the parts specifically built to stop bad output reaching a user — with no
+warning and no visible diff. The Room personas were unaffected only because they happened to pin
+`sonnet` already.
+
+All 22 agents now pin explicitly. Consequence: **the task's model only affects orchestration**,
+so you can set any scheduled task to Haiku without touching analysis quality.
+
+Worth knowing before you do: for the expensive task (the Room loop) the orchestrator is only
+about **4% of spend** — 56 agents at ~15k each vs ~35k for the orchestrator — because the agents
+write their own files rather than returning JSON through it. The tasks where a cheap orchestrator
+would actually save real money are `psx-desk-daily-refresh` (it writes the daily prose) and
+`psx-desk-code-review` (it reads the diff and edits source), and those are precisely the two
+where the orchestrator's own judgment is the product. Cheap where it matters least, expensive
+where it matters most.
+
+To check nothing has regressed:
+```
+rg -L "^model:" .claude/agents/*.md      # any file listed here inherits — fix it
+```
+
 ---
 
 ## 5. The cloud workflow — editing gotcha
