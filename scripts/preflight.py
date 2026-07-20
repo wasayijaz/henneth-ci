@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pre-deploy guard for Henneth AI.
+"""Pre-deploy guard for Henneth.
 
 Runs AFTER the data pipeline and BEFORE anything is published. It re-reads
 every state file the dashboard actually consumes and asserts the shape the
@@ -224,7 +224,7 @@ def main():
         warn(f"health.json status = '{h.get('status')}' — desk is in degraded mode")
 
     # --- report ---
-    print("Henneth AI - preflight")
+    print("Henneth - preflight")
     if warns:
         print(f"\n  WARN ({len(warns)}):")
         for w in warns:

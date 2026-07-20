@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live-site watchdog for Henneth H1.
+"""Live-site watchdog for Henneth.
 
 preflight.py guards data BEFORE publish. This guards the site AFTER publish —
 it fetches the actual deployed URLs a real user's browser would fetch and asserts
@@ -121,7 +121,7 @@ def main():
                             f"— these ticker pages show 'No data'")
 
     ok = not problems
-    print("Henneth H1 - live watchdog  [" + base + "]")
+    print("Henneth - live watchdog  [" + base + "]")
     if notes:
         print(f"\n  NOTE ({len(notes)}):")
         for n in notes:

@@ -1,4 +1,4 @@
-# Henneth AI — Desk Rules
+# Henneth — Desk Rules
 
 Every agent and every cycle in this repo obeys these rules. They are not suggestions.
 

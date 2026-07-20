@@ -1,4 +1,4 @@
-# Deploying Henneth AI
+# Deploying Henneth
 
 Hosting is **Vercel**, serving a static site straight from this repo. There is no server,
 no GitHub Actions, and no Supabase Storage bucket in the data path.

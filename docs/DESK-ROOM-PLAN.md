@@ -1,4 +1,4 @@
-# The Desk Room — Multi-Agent Analyst Loop for Henneth AI
+# The Desk Room — Multi-Agent Analyst Loop for Henneth
 
 Status: PROPOSED (awaiting owner approval). Written 2026-07-13.
 Goal: make this the best investing research platform in Pakistan — named AI analysts that

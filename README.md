@@ -1,4 +1,4 @@
-# Henneth AI
+# Henneth
 
 **A multi-agent research & analytics terminal for the Pakistan Stock Exchange.**
 It researches, values, backtests, debates, and monitors — then puts every call on the record and grades it.
@@ -9,7 +9,7 @@ It **never places orders**; execution is manual on your broker.
 > does not predict future results. Investing in PSX carries risk, including the loss of capital. You make
 > your own decisions. (A platform-wide footer + a "Research · not advice" badge repeat this on every page.)
 
-**Live:** https://henneth.app/  ·  private repo, hosted on Vercel
+**Live:** https://desk.henneth.app/  ·  private repo, hosted on Vercel
 Docs: [`CLAUDE.md`](CLAUDE.md) (desk rules) · [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) (system map)
 · [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) (path to a subscription product)
 
@@ -118,6 +118,32 @@ named for what the customer *lacks* ("Learner") reads as a label on the customer
 - **Research, never advice.** No "buy/strong buy/guaranteed" language anywhere. Losses are expected.
 - **Brokers are audited, never trusted** — every broker call is scored on the leaderboard.
 - **The Auditor keeps veto**; the Room only informs the strategist.
+
+## Repo layout — one repo, two sites, two domains
+
+Both the marketing site and the terminal live in **this single repo**. They are two *separate
+Vercel projects* pointed at the same GitHub repository but different root directories, so one
+`git push` can deploy either or both depending on what changed.
+
+| surface | source | build config | domain |
+|---|---|---|---|
+| **Marketing site** | `site/` (Astro) | `site/vercel.json` | **henneth.app** — the root domain |
+| **The terminal** | `dashboard/` + `state/` | `vercel.json` (repo root) | **desk.henneth.app** |
+
+The root `vercel.json` copies `dashboard/index.html`, `app.js`, `themes.css` and the whole
+`state/` tree into `public/` — that is the entire terminal build (no bundler, no framework).
+`site/` is a normal Astro project with its own `package.json`; its `node_modules` is gitignored,
+so only ~30 source files of it are tracked.
+
+**Why the split.** The terminal used to own the root domain. Marketing needs the root (that is
+what people type and what a link preview shows), so the terminal moved to a subdomain. Anything
+pointed at the apex expecting `/state/*.json` will now 404 — the marketing site has no `state/`.
+`watchdog.py` therefore targets `desk.henneth.app` explicitly, and says so in a comment, because
+a watchdog silently checking the wrong surface is worse than no watchdog.
+
+**Naming convention** (the single source of truth is `site/src/site.config.ts`): the product is
+**Henneth** everywhere public — the brand, the domain, this README. It is **Henneth Desk** only
+*inside* the app, where the distinction between the company and the tool actually matters.
 
 ## Architecture — free layer does the heavy lifting; agents only judge
 

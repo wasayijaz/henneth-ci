@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Accuracy / anti-assumption guard (Tier 1, deterministic, free) for Henneth AI.
+"""Accuracy / anti-assumption guard (Tier 1, deterministic, free) for Henneth.
 
 The desk's whole credibility rests on NOT presenting assumed/placeholder/stale figures as
 fact. Other gates check data shape (preflight), build (syntax), and design — none of them
@@ -146,7 +146,7 @@ def main():
                 warns.append("astro.json: no events in the window — expected several per quarter")
 
     # report
-    print("Henneth AI - provenance/accuracy lint")
+    print("Henneth - provenance/accuracy lint")
     if warns:
         print(f"\n  WARN ({len(warns)}):")
         for w in warns:

@@ -138,7 +138,7 @@ def main(argv):
 
     queue = [] if test_user else pending_alerts()
     if test_user:
-        queue = [{"user_id": test_user, "symbol": "", "title": "Henneth AI",
+        queue = [{"user_id": test_user, "symbol": "", "title": "Henneth",
                   "body": "Test alert — push is wired up correctly."}]
     if not queue:
         print("push_send: configured, queue empty - nothing to send.")
@@ -163,7 +163,7 @@ def main(argv):
             continue
         for a in alerts:
             payload = {
-                "title": a.get("title") or "Henneth AI",
+                "title": a.get("title") or "Henneth",
                 "body": a.get("body") or "",
                 "symbol": (a.get("symbol") or "").upper(),
                 "tag": a.get("tag") or "",

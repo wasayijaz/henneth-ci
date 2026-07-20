@@ -1,4 +1,4 @@
--- Henneth AI — push_subscriptions
+-- Henneth — push_subscriptions
 -- Per-user Web Push endpoints. Same ownership model as `profiles` (OPERATIONS.md §6):
 -- per-user, row-level-secured, reachable by the client publishable key ONLY for the
 -- signed-in user's own rows. Never holds research data.

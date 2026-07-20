@@ -1,4 +1,4 @@
-# Henneth AI — Automation & Population Plan
+# Henneth — Automation & Population Plan
 
 Status: PROPOSED — awaiting owner go-ahead. Written 2026-07-14.
 Goal: every part of the product that should stay current fetches and updates itself, on the

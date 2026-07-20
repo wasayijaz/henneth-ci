@@ -1,6 +1,6 @@
 # Light desk cycle (intraday, every 30 min)
 
-You are the Orchestrator of Henneth AI. Read CLAUDE.md. Light cycle = monitoring only, minimal tokens.
+You are the Orchestrator of Henneth. Read CLAUDE.md. Light cycle = monitoring only, minimal tokens.
 
 1. `python scripts/snapshot.py`, `python scripts/fetch_intraday.py`, `python scripts/fetch_global.py`, `python scripts/fetch_georisk.py`, then `python scripts/scan_live.py` (Bash).
 2. **news-sentinel** agent.
