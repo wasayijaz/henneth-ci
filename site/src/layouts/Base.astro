@@ -22,7 +22,11 @@ const {
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(path, site.url).href;
-const ogImage = new URL('/og-default.svg', site.url).href;
+// PNG, not the old og-default.svg: no social scraper renders SVG. X, WhatsApp, LinkedIn and
+// Slack all silently dropped the card and showed a bare link. 1200x630 is the 1.91:1 that
+// summary_large_image crops to, so nothing is cut off.
+const ogImage = new URL('/og.png', site.url).href;
+const ogImageAlt = `${site.appName} — a retro terminal displaying H_, above the wordmark ${site.appName} and the line "Research. Not advice."`;
 
 const orgLd = {
   '@context': 'https://schema.org',
@@ -30,6 +34,11 @@ const orgLd = {
   name: site.name,
   url: site.url,
   description: site.description,
+  // `logo` is what Google reads for the knowledge panel / rich-result brand mark. It wants a
+  // real raster it can crop, so this points at the icon PNG rather than the SVG wordmark.
+  logo: new URL('/icon-512.png', site.url).href,
+  image: ogImage,
+  email: site.contactEmail,
   sameAs: [site.social.x],
 };
 const siteLd = {
@@ -45,7 +54,18 @@ const appLd = {
   applicationCategory: 'FinanceApplication',
   operatingSystem: 'Web',
   description: site.description,
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'PKR' },
+  url: site.appUrl,
+  image: ogImage,
+  // Price 0 is accurate only while site.earlyAccess is true. If that flag flips and this stays,
+  // the structured data advertises a free product that now charges — a rich-result penalty and,
+  // more importantly, a false claim to anyone reading the card.
+  offers: site.earlyAccess
+    ? { '@type': 'Offer', price: '0', priceCurrency: 'PKR', availability: 'https://schema.org/InStock' }
+    : undefined,
+  // Named plainly in the structured data too, not only in the page copy — the desk is research
+  // tooling, and nothing in the machine-readable layer should imply advice.
+  disambiguatingDescription:
+    'Educational research and analytics tooling. Not an investment adviser; provides no personalised advice and places no orders.',
 };
 ---
 
@@ -57,7 +77,12 @@ const appLd = {
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {/* max-image-preview:large is what lets Google show the OG card in Discover and rich results
+        instead of a thumbnail; the unreviewed legal drafts still opt out entirely via noindex. */}
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -66,14 +91,32 @@ const appLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    {/* Dimensions are not decoration: without them a scraper must fetch the image before it can
+        lay the card out, and several (WhatsApp especially) give up first and render no preview. */}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@MWasayI" />
+    <meta name="twitter:creator" content="@MWasayI" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
+    <!-- Icons. SVG first (sharp at every size, dark-mode aware); the PNGs are for the clients
+         that ignore it — Safari's home screen and the web-app manifest. -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#151515" />
+    <meta name="apple-mobile-web-app-title" content={site.name} />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

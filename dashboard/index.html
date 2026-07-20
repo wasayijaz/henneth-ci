@@ -3,20 +3,87 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#151515">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Henneth Desk">
 <title>Henneth Desk — PSX research terminal</title>
+<meta name="description" content="The Henneth research terminal for the Pakistan Stock Exchange — company reads, model fair value, tested strategies and the desk's public track record. Research, not advice.">
+
+<!-- NOINDEX IS DELIBERATE, and is the one line here most likely to be "fixed" by mistake.
+     The desk is members-only and it is a hash-routed SPA, so a crawler sees exactly one thing at
+     every URL it tries: the sign-in gate. Letting that be indexed submits a few hundred URLs that
+     are byte-identical thin content, which competes with henneth.app for the brand term and wins
+     nothing. `follow` is kept so link equity still flows out to the marketing site.
+     Marketing SEO belongs to henneth.app. Flip this only if the desk ever serves real public
+     content at real crawlable URLs. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://desk.henneth.app/">
+
+<!-- Social cards. The desk gets shared in DMs and groups far more than it gets crawled, so the
+     OG card is worth more here than the search meta above. Same 1200x630 PNG as the marketing
+     site, so a link to either property previews identically. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Henneth Desk">
+<meta property="og:title" content="Henneth Desk — PSX research terminal">
+<meta property="og:description" content="The Henneth research terminal for the Pakistan Stock Exchange. Research, not advice.">
+<meta property="og:url" content="https://desk.henneth.app/">
+<meta property="og:image" content="https://desk.henneth.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Henneth Desk — a retro terminal displaying H_, above the wordmark Henneth Desk and the line &quot;Research. Not advice.&quot;">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@MWasayI">
+<meta name="twitter:title" content="Henneth Desk — PSX research terminal">
+<meta name="twitter:description" content="The Henneth research terminal for the Pakistan Stock Exchange. Research, not advice.">
+<meta name="twitter:image" content="https://desk.henneth.app/og.png">
+
+<!-- Icons: the WEBSITE logo on both properties, so the browser tab and home screen read as one
+     brand. The terminal mark is the desk's in-app identity, not its favicon. -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-96.png" type="image/png" sizes="96x96">
+<link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="site.webmanifest">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes.css">
+
+<!-- FIRST-PAINT AUTH GUESS — runs before the body exists, on purpose.
+     data-auth="pending" alone hid the shell but still cost a visible reflow: the sidebar was only
+     collapsed once route() proved the visitor was signed out, so the gate arrived with a sideways
+     jump. Supabase keeps its session in localStorage under a key derived from the project ref, and
+     reading it is synchronous, so we can settle the CHROME (sidebar in or out) before the first
+     frame and let the async getSession settle the CONTENT. A stale or expired token here is
+     harmless: it only means the shell shows for a beat before the real answer collapses it.
+     The key must track site.config.ts / SB_URL in app.js — if the Supabase project ref changes
+     and this string does not, the guess silently degrades to "signed out" and the jump returns. -->
+<script>
+(function () {
+  try {
+    var raw = localStorage.getItem("sb-qteoncckohuoatbjjykb-auth-token");
+    document.documentElement.setAttribute("data-boot-auth", raw ? "in" : "out");
+  } catch (e) {
+    document.documentElement.setAttribute("data-boot-auth", "out");
+  }
+})();
+</script>
 </head>
-<body data-theme="gemini" data-desk="pro">
+<!-- data-auth="pending" is the boot state: Supabase has not restored the session yet, so we do
+     not know whether to paint the terminal or the sign-in gate. The CSS hides both until initAuth
+     clears this attribute. Without it the shell below paints immediately and is then torn down,
+     which is the flash. -->
+<body data-theme="gemini" data-desk="pro" data-auth="pending">
 <div class="shell" id="shell">
   <aside class="sidebar" id="sidebar">
     <div class="side-top">
-      <a class="brand" href="#/today">Henneth <em>Desk</em></a>
+      <!-- alt="" on purpose: the wordmark beside it already names the product, so a described
+           image would make a screen reader announce "Henneth Desk" twice. The text is wrapped in
+           its own span so the collapsed sidebar can drop the words and keep the mark as the icon. -->
+      <a class="brand" href="#/today"><img class="brand-mark" src="logo-mark.svg" alt="" width="535" height="472" decoding="async"><span class="brand-txt">Henneth <em>Desk</em></span></a>
       <button class="side-toggle" id="sideToggle" aria-label="Collapse menu" title="Collapse menu">
         <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
       </button>

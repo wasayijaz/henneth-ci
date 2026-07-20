@@ -5027,6 +5027,39 @@ function gateAllows(page) {
   return isSignedIn() || OPEN_ROUTES.includes(page || "today");
 }
 
+/* AUTH IS UNKNOWN AT FIRST PAINT — and guessing is what caused the flash.
+   sb.auth.getSession() restores the session from localStorage asynchronously, so at module-eval
+   time `me` is not merely unset, it is in its temporal dead zone. isSignedIn() therefore fails
+   closed to `false`, and the old boot called route() immediately: a signed-in member reloading
+   the desk watched the sign-in gate paint and then get replaced, and a signed-out visitor watched
+   the terminal shell paint and then get stripped. Two symptoms, one bug.
+   The fix is to paint NOTHING until the answer is known. route() returns early while pending,
+   index.html ships body[data-auth="pending"] so the static shell is hidden from the very first
+   frame, and initAuth() is the single thing that clears the flag and triggers the first render. */
+let authReady = false;
+function authResolved() {
+  if (authReady) return;
+  authReady = true;
+  try { document.body.removeAttribute("data-auth"); } catch {}
+}
+/* Backstop. Everything that resolves auth is async and some of it is network: a blocked Supabase
+   CDN, an offline reload, or a throw anywhere between here and initAuth() would otherwise leave a
+   permanently blank page — strictly worse than the flash we are fixing. Fail CLOSED after the
+   timeout: unknown auth shows the gate, which a real member can click straight through.
+
+   8s, not 3s. This fires ONLY when the real auth path has already failed, so every second of it is
+   spent on a screen no healthy session ever sees — while 3s was short enough to fire on a genuinely
+   slow mobile connection and throw a signed-in member out to the gate for no reason. Long enough to
+   never pre-empt a working session; short enough that a truly dead one still resolves to something
+   clickable rather than hanging. */
+const AUTH_BACKSTOP_MS = 8000;
+setTimeout(() => {
+  if (authReady) return;
+  console.warn(`auth did not resolve in ${AUTH_BACKSTOP_MS}ms — failing closed to the sign-in gate`);
+  authResolved();
+  route(false);
+}, AUTH_BACKSTOP_MS);
+
 function renderGate(page) {
   capturePlanIntent();          // route() reaches here before the module-level call below runs
   // strips the sidebar + in-app header controls (see themes.css [data-gated]); cleared in route()
@@ -5062,6 +5095,9 @@ async function route(isPoll) {
   // Supabase auth callbacks (email confirm / password reset) arrive in the hash —
   // they're not routes; auth.js consumes them and then navigates.
   if (/access_token=|error_code=|type=recovery|type=signup/.test(location.hash)) return;
+  // Auth still resolving — render nothing rather than render the wrong thing and swap it out.
+  // initAuth() (or the 3s backstop) calls route() again the moment the session is known.
+  if (!authReady) return;
   const h = location.hash || "#/today";
   const [, page, arg] = h.split("/");
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
@@ -5129,6 +5165,9 @@ window.addEventListener("hashchange", () => route(false));
 // NOTE: do NOT call applyDeskMode() here — this line runs before `let me` is initialized further
 // down the file, and deskMode() reads it, which throws a TDZ error and aborts the whole module.
 // index.html ships data-desk="pro" as the default; initAuth re-stamps it once the plan is known.
+// The first render is NOT triggered here any more. route() no-ops until auth is known, and
+// initAuth() (bottom of file) performs the first paint once the session has resolved — otherwise
+// this line renders a guess that gets replaced a moment later, which is the flash.
 route(false);
 // Keep only the top status pills current on a gentle cadence — do NOT re-render the whole
 // page body (that caused a jarring full-page refresh/flicker every cycle). Header-only, and
@@ -6004,22 +6043,35 @@ async function finishWizard(replayOnly) {
 
 /* ---------- boot ---------- */
 async function initAuth() {
-  if (!sb) return; // CDN blocked — the shared research still works, accounts just hidden
-  const { data: { session } } = await sb.auth.getSession();
-  me = session?.user || null;
-  renderAccountButton();
-  if (me) {
-    await loadProfile();
-    await migrateGuestChart();   // a chart cast before signing up follows the user into their account
-    if (myProfile?.lang && myProfile.lang !== lang()) { try { localStorage.setItem(LANG_KEY, myProfile.lang); } catch {} }
-    applyLang();
-    applyDeskMode();
-    // the initial route() already ran (before auth resolved), so pages that depend on the signed-in
-    // user — Your Chart, Portfolio, Watchlist, Settings — rendered their signed-out state. Re-render
-    // the current page now that `me` and the profile are known.
-    if (typeof route === "function") route(true);
-    if (myProfile && !myProfile.onboarded) startWizard(false);
+  // NOTE: this function now owns the FIRST paint of the session. Nothing renders before it —
+  // see authResolved() in the gate section for why. Every path out of the try/catch below must
+  // therefore reach the `finally`, or the visitor is left staring at a blank page.
+  try {
+    if (sb) {   // no sb = CDN blocked; the shared research still works, accounts just hidden
+      const { data: { session } } = await sb.auth.getSession();
+      me = session?.user || null;
+      renderAccountButton();
+      if (me) {
+        // Resolved BEFORE the first render, not after it: the pages that depend on the signed-in
+        // user — Your Chart, Portfolio, Watchlist, Settings — used to paint their signed-out state
+        // and then re-render, which is visible as a second flash on exactly those pages.
+        await loadProfile();
+        await migrateGuestChart();   // a chart cast before signing up follows the user into their account
+        if (myProfile?.lang && myProfile.lang !== lang()) { try { localStorage.setItem(LANG_KEY, myProfile.lang); } catch {} }
+        applyLang();
+        applyDeskMode();
+      }
+    }
+  } catch (err) {
+    // A failed session restore or profile fetch must not strand anyone on a blank screen. Unknown
+    // auth falls back to signed-out, which shows the gate — a member can click through it.
+    console.error("auth init failed — falling back to the sign-in gate:", err);
+  } finally {
+    authResolved();
+    route(false);              // <- the first paint of the session, with auth actually known
   }
+  if (me && myProfile && !myProfile.onboarded) startWizard(false);
+  if (!sb) return;
   sb.auth.onAuthStateChange(async (event, sess) => {
     me = sess?.user || null;
     renderAccountButton();

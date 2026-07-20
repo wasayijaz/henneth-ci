@@ -126,6 +126,53 @@ body[data-gated="1"] .topbar .plan-badge,
 body[data-gated="1"] .topbar .meta,
 body[data-gated="1"] .topbar .side-open{display:none}
 body[data-gated="1"] .brand-mobile{display:inline-flex}
+
+/* AUTH-PENDING — the window between first paint and Supabase restoring the session from
+   localStorage. Auth is genuinely unknown here, and BOTH guesses flash: assume signed-out and a
+   returning member watches the gate paint and vanish; assume signed-in (which the static shell
+   above effectively does) and a stranger sees the whole terminal before it is stripped. So paint
+   neither. `visibility` rather than `display` on purpose — it reserves the layout, so when the
+   answer comes back "signed in" the shell simply becomes visible with zero reflow. The gated
+   branch still collapses the sidebar via the display:none rules above. */
+body[data-auth="pending"] .sidebar,
+body[data-auth="pending"] .side-resize,
+body[data-auth="pending"] .topbar #mkt,
+body[data-auth="pending"] .topbar #health,
+body[data-auth="pending"] .topbar #regime,
+body[data-auth="pending"] .topbar #georisk,
+body[data-auth="pending"] .topbar #searchbtn,
+body[data-auth="pending"] .topbar .plan-badge,
+body[data-auth="pending"] .topbar .meta,
+body[data-auth="pending"] .topbar .side-open,
+body[data-auth="pending"] #view{visibility:hidden}
+
+/* ...and the residual flash that `visibility` alone could not fix.
+   Hiding the sidebar without collapsing it still reserves its full width, so a signed-OUT visitor
+   got the shell's layout for a beat and then watched the whole page jump left when the gate's
+   display:none finally applied. Reserving the space is right for a member (zero reflow when the
+   shell appears) and wrong for a stranger — which means the correct behaviour depends on an answer
+   we do not have yet.
+   So index.html reads Supabase's localStorage session SYNCHRONOUSLY in <head> and stamps
+   html[data-boot-auth]. That is a guess, not authority — the token may be expired, and only
+   getSession() can say — but it is right often enough to pick the layout, and being wrong costs a
+   beat of extra chrome rather than a jump. Auth itself is still decided by initAuth(), never here;
+   nothing below grants access, it only chooses which empty frame to hold. */
+html[data-boot-auth="out"] body[data-auth="pending"] .sidebar,
+html[data-boot-auth="out"] body[data-auth="pending"] .side-resize{display:none}
+
+/* THE DESK MARK — the terminal logo is desk.henneth.app's identity (the website logo stays the
+   favicon on both properties, so tabs and home screens read as one brand).
+   `height` only, never width: the file is 535x472, and setting both would skew it. The <img>
+   carries width/height attributes purely so the browser can reserve the box before the SVG
+   arrives — without them the wordmark shifts sideways as it loads, which is the same class of
+   flash as the auth one above, just smaller. */
+body[data-theme=gemini] .side-top .brand{display:inline-flex;align-items:center;gap:8px;min-width:0}
+body[data-theme=gemini] .brand-mark{height:20px;width:auto;flex:none;display:block}
+body[data-theme=gemini] .brand-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Collapsed rail: drop the words, keep the mark. The generic collapse rule hides .brand outright,
+   which left the rail's header empty — the mark is exactly the icon that space wants. */
+body[data-theme=gemini] .shell.collapsed .side-top .brand{display:inline-flex}
+body[data-theme=gemini] .shell.collapsed .side-top .brand-txt{display:none}
 body[data-theme=gemini] .topbar>*{flex:none}
 body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
 body[data-theme=gemini] .research-badge{margin-left:auto;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--hair);padding:2px 7px;white-space:nowrap}
@@ -139,7 +186,11 @@ body[data-theme=gemini] .side-backdrop{display:none}
 @media(max-width:900px){
   body[data-theme=gemini] .sidebar{position:fixed;left:0;top:0;z-index:50;width:236px !important;transform:translateX(-100%);transition:transform .18s ease}
   body[data-theme=gemini] .shell.drawer .sidebar{transform:translateX(0)}
-  body[data-theme=gemini] .shell.drawer .side-nav a span,body[data-theme=gemini] .shell.drawer .side-head,body[data-theme=gemini] .shell.drawer .side-top .brand{display:inline}
+  body[data-theme=gemini] .shell.drawer .side-nav a span,body[data-theme=gemini] .shell.drawer .side-head{display:inline}
+  /* The brand is inline-FLEX, not inline: it now holds the desk mark next to the wordmark, and
+     `display:inline` would collapse the gap and drop the vertical centring between them. */
+  body[data-theme=gemini] .shell.drawer .side-top .brand{display:inline-flex}
+  body[data-theme=gemini] .shell.drawer .side-top .brand-txt{display:inline}
   body[data-theme=gemini] .shell.drawer .side-nav a{justify-content:flex-start;padding:9px 14px;gap:11px}
   body[data-theme=gemini] .side-toggle{display:none}
   body[data-theme=gemini] .side-open{display:flex;background:transparent;border:1px solid var(--line);width:30px;height:30px;align-items:center;justify-content:center;flex:none;color:var(--ink1)}
@@ -1552,8 +1603,16 @@ body[data-theme=gemini] tr.clickable{cursor:pointer}
    invariant enforced at page level, instead of every sticky child clipping its own children. */
 body[data-theme=gemini] .topbar{min-width:0}
 body[data-theme=gemini] .topbar>*{min-width:0}
-/* global backstop — nothing should ever produce a horizontal scrollbar */
-html,body{max-width:100%;overflow-x:hidden}
+/* Global backstop — nothing should ever produce a horizontal scrollbar.
+   `clip`, NOT `hidden`, and the comment three lines above explains why without having spotted
+   that it applied here too: when one axis is `hidden` the other computes to `auto`, so this line
+   turned html/body into a scrollport. A scrollport is a sticky container — which silently broke
+   BOTH `position:sticky` boxes in the app. The sidebar and the topbar scrolled away with the page
+   instead of holding, and the sidebar's tail was left stranded mid-document.
+   `overflow-x:clip` clips without creating a scroll container, so `overflow-y` stays `visible`
+   and sticky works. The `hidden` declaration is kept first as the fallback for engines predating
+   `clip` (Safari <16): they lose sticky, exactly as before, but never gain a sideways scrollbar. */
+html,body{max-width:100%;overflow-x:hidden;overflow-x:clip}
 /* the account menu is absolutely positioned; keep it inside the viewport as it grows */
 body[data-theme=gemini] .acct-menu{max-width:calc(100vw - 24px)}
 
