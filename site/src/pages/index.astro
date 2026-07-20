@@ -1,14 +1,89 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config.ts';
 
-// Illustration only — symbols are real listed codes, but NO figures are shown,
-// because inventing price moves next to a real company is a false claim.
-const heat = [
+/* THE HERO BOARD IS REAL DATA, READ FROM state/ AT BUILD TIME.
+
+   It used to be a hand-written illustration with no figures, carrying this note: "symbols are
+   real listed codes, but NO figures are shown, because inventing price moves next to a real
+   company is a false claim." That constraint was right and still binds — CLAUDE.md Rule 2 says
+   no price may ever come from memory. The resolution is not to relax it but to satisfy it: the
+   marketing site builds from the same repo as the desk, so the panel can show a genuine snapshot
+   of the same data layer the product runs on, stamped with the session date it came from.
+
+   That turns the hero from a mockup into the site's first proof-point — the "every number is
+   sourced" claim demonstrated rather than asserted.
+
+   It refreshes on each deploy, not live. The date stamp in the panel is therefore load-bearing:
+   it is what keeps a stale build honest instead of quietly implying real-time prices.
+
+   Every read falls back to the figure-free illustration. A missing or malformed state file must
+   degrade the hero, never fail the build — the marketing site has to be deployable even when the
+   desk's data layer is mid-refresh or absent (a standalone site checkout has no state/ at all). */
+const STATE = path.resolve(process.cwd(), '..', 'state');
+function readState<T>(file: string, fallback: T): T {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(STATE, file), 'utf-8')) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+const quant: Record<string, any> = readState<any>('quant.json', {}).tickers ?? {};
+const universe: Record<string, any> = readState<any>('universe.json', {}).symbols ?? {};
+const stratMap: Record<string, any[]> = readState<any>('strategy_map.json', {}).tickers ?? {};
+const macro: any = readState<any>('macro.json', {});
+
+// The board shows the heaviest core names — the ones a PSX reader recognises on sight.
+const coreByWeight = Object.values(universe)
+  .filter((u: any) => u?.tier === 'core' && quant[u.symbol]?.ret_1d != null)
+  .sort((a: any, b: any) => (b.weight_pct ?? 0) - (a.weight_pct ?? 0));
+
+const board = coreByWeight.slice(0, 15).map((u: any) => ({
+  sym: u.symbol,
+  pct: quant[u.symbol].ret_1d as number,
+}));
+
+/* Breadth over the WHOLE covered universe, not just the 15 on screen — a breadth number computed
+   from the same names it is displayed beside would be circular and would read far too kind on a
+   day when the heavyweights happened to hold up. */
+const withRet = Object.keys(quant).filter((s) => quant[s]?.ret_1d != null);
+const breadth = withRet.length
+  ? Math.round((withRet.filter((s) => quant[s].ret_1d > 0).length / withRet.length) * 100)
+  : null;
+
+// The desk's actual macro call, not an invented mood word.
+const regime: string = macro?.regime ?? '';
+const asOf: string = board.length ? quant[board[0].sym]?.date ?? '' : '';
+
+/* Signals: real proven-strategy pairs, ranked by the same net-expectancy the desk ranks them by,
+   one per ticker so four different companies show rather than four strategies on one name. */
+const signals = Object.entries(stratMap)
+  .filter(([sym]) => quant[sym]?.close != null && universe[sym]?.name)
+  .map(([sym, list]) => ({ sym, top: [...list].sort((a, b) => b.net_expectancy_pct - a.net_expectancy_pct)[0] }))
+  .sort((a, b) => b.top.net_expectancy_pct - a.top.net_expectancy_pct)
+  .slice(0, 4)
+  .map(({ sym, top }) => ({
+    sym,
+    // The registered name is long ("Fauji Fertilizer Company Limited"); the panel has one line.
+    name: String(universe[sym].name).replace(/\s+(Limited|Ltd\.?|Company Limited)$/i, '').toUpperCase(),
+    tag: String(top.category).toUpperCase(),
+    close: quant[sym].close as number,
+    pct: quant[sym].ret_1d as number,
+  }));
+
+// Degraded mode: no state/ available, so fall back to the original figure-free illustration
+// rather than rendering an empty panel or, worse, zeros that look like real flat prices.
+const haveLiveBoard = board.length >= 15 && signals.length === 4;
+const fallbackHeat: [string, number][] = [
   ['OGDC', 1], ['PPL', 1], ['HUBC', 0], ['FFC', 1], ['LUCK', -1],
   ['MCB', 1], ['UBL', 1], ['MEBL', 0], ['ENGRO', -1], ['PSO', 1],
   ['SYS', -1], ['TRG', -1], ['MLCF', 1], ['NBP', 1], ['HBL', 0],
 ];
+const dir = (p: number) => (p > 0 ? 1 : p < 0 ? -1 : 0);
+const fmtPct = (p: number) => `${p > 0 ? '+' : ''}${p.toFixed(1)}%`;
 
 const stats = [
   ['550+', 'Listed names covered'],
@@ -36,7 +111,7 @@ const principles = [
     <div class="wrap hero-grid">
       <div>
         <p class="kicker">PSX Research Terminal · Now in early access</p>
-        <h1>A whole research desk<br />for every PSX stock</h1>
+        <h1>A whole research desk<br />for every PSX stock<span class="h1-dot">.</span></h1>
         <p class="lead hero-lead">
           Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk.
           Then every dated call is graded against what prices actually did. You get the read. You
@@ -47,7 +122,7 @@ const principles = [
         </p>
         <div class="hero-cta">
           <a href="/plans" class="btn btn-solid btn-lg">Get started</a>
-          <a href="/research" class="btn btn-lg">See how it works</a>
+          <a href="/research" class="btn btn-lg">See the track record</a>
         </div>
         <div class="hero-fine">
           <span>Free in early access</span><span>·</span>
@@ -56,23 +131,68 @@ const principles = [
         </div>
       </div>
 
-      <!-- Terminal mockup -->
+      <!-- The board panel. Real desk data when state/ is readable at build time, the original
+           figure-free illustration when it is not. -->
       <div class="mock hero-mock">
         <div class="mock-bar">
           <span class="label">Board · Live universe</span>
-          <span class="mock-tag">Illustration</span>
+          <span class="mock-pills">
+            {haveLiveBoard && regime && <span class="pill-chip">Regime: {regime}</span>}
+            {haveLiveBoard && breadth != null && <span class="pill-chip">Breadth {breadth}%</span>}
+            {!haveLiveBoard && <span class="mock-tag">Illustration</span>}
+          </span>
         </div>
-        <div class="heat">
-          {heat.map(([sym, dir]) => (
-            <div class="heat-cell" data-dir={dir}>{sym}</div>
-          ))}
-        </div>
+
+        {haveLiveBoard ? (
+          <div class="heat">
+            {board.map((b) => (
+              <div class="heat-cell" data-dir={dir(b.pct)}>
+                <span class="hc-sym">{b.sym}</span>
+                <span class="hc-pct">{fmtPct(b.pct)}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="heat">
+            {fallbackHeat.map(([sym, d]) => (
+              <div class="heat-cell" data-dir={d}><span class="hc-sym">{sym}</span></div>
+            ))}
+          </div>
+        )}
+
         <div class="mock-sec">
           <div class="label">Proven-strategy signals</div>
-          <div class="sig"><span>Golden cross</span><span class="muted">trend</span></div>
-          <div class="sig"><span>52-week high break</span><span class="muted">breakout</span></div>
-          <div class="sig"><span>50-day reclaim</span><span class="muted">momentum</span></div>
+          {haveLiveBoard ? (
+            signals.map((s) => (
+              <div class="sig sig-row">
+                <span class="sig-id">
+                  <b>{s.sym}</b>
+                  <em>{s.name}</em>
+                </span>
+                <span class="sig-tag">{s.tag}</span>
+                <span class="sig-px" data-dir={dir(s.pct)}>
+                  {s.close.toFixed(2)}
+                  <i>{fmtPct(s.pct)}</i>
+                </span>
+              </div>
+            ))
+          ) : (
+            <>
+              <div class="sig"><span>Golden cross</span><span class="muted">trend</span></div>
+              <div class="sig"><span>52-week high break</span><span class="muted">breakout</span></div>
+              <div class="sig"><span>50-day reclaim</span><span class="muted">momentum</span></div>
+            </>
+          )}
         </div>
+
+        {/* The date stamp is the honesty guard: this rebuilds on deploy, not live, and without
+            it a stale build would quietly imply real-time prices. */}
+        {haveLiveBoard && asOf && (
+          <div class="mock-foot">
+            <span>Real desk data · session {asOf}</span>
+            <span class="mock-foot-r">Rebuilt each deploy · not live</span>
+          </div>
+        )}
       </div>
     </div>
   </section>
@@ -324,6 +444,8 @@ const principles = [
 
 <style>
   .hero { padding: clamp(40px, 6vw, 72px) 0 clamp(40px, 5vw, 64px); }
+  /* The accent full stop — the one spot of brand green in the headline. */
+  .h1-dot { color: var(--up); }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 44px; align-items: center; }
   .hero-lead { max-width: 520px; }
   .hero-sub { font-size: 11.5px; max-width: 480px; }
@@ -341,18 +463,58 @@ const principles = [
   .mock-body { padding: 14px; }
   .mock-note { font-size: 9.5px; margin: 10px 0 0; }
 
+  .mock-pills { display: flex; gap: 6px; align-items: center; }
+  .pill-chip {
+    font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+    border: 1px solid var(--hair); padding: 3px 7px; color: var(--ink-2); white-space: nowrap;
+  }
+
+  /* Cells are left-aligned with the ticker over its move — the reference's layout, and the one
+     that survives real data: centred text made the varying-width percentages jitter column to
+     column. `tabular-nums` holds the decimal points in a straight line down the grid. */
   .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--ink-1); }
   .heat-cell {
-    background: var(--panel); padding: 14px 6px; text-align: center;
+    background: var(--panel); padding: 10px 9px; display: flex; flex-direction: column; gap: 3px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
   }
+  .hc-sym { font-size: 9.5px; letter-spacing: 0.08em; }
+  .hc-pct { font-size: 10.5px; font-variant-numeric: tabular-nums; letter-spacing: 0; }
   .heat-cell[data-dir='1'] { background: rgba(11, 122, 95, 0.14); color: var(--up); }
   .heat-cell[data-dir='-1'] { background: rgba(190, 65, 38, 0.13); color: var(--dn); }
+  .heat-cell[data-dir='0'] { color: var(--ink-2); }
+
   .mock-sec { padding: 14px; border-top: var(--rule); }
   .sig {
     display: flex; justify-content: space-between; font-size: 11px;
     padding: 8px 0; border-bottom: 1px dotted var(--hair);
   }
+  /* Three columns: identity grows, tag and price stay put, so a long company name truncates
+     instead of shoving the price out of the panel. */
+  .sig-row { align-items: center; gap: 10px; }
+  .sig-id { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+  .sig-id b { font-size: 11px; letter-spacing: 0.06em; }
+  .sig-id em {
+    font-style: normal; font-size: 8.5px; letter-spacing: 0.08em; color: var(--ink-3);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sig-tag {
+    font-size: 8.5px; letter-spacing: 0.1em; font-weight: 700; color: var(--ink-2);
+    border: 1px solid var(--hair); padding: 3px 6px; white-space: nowrap; flex: none;
+  }
+  .sig-px {
+    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+    text-align: right; flex: none; min-width: 74px;
+  }
+  .sig-px[data-dir='1'] { color: var(--up); }
+  .sig-px[data-dir='-1'] { color: var(--dn); }
+  .sig-px i { display: block; font-style: normal; font-size: 9px; font-weight: 500; }
+
+  .mock-foot {
+    display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
+    border-top: var(--rule); background: var(--panel-2);
+    font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .mock-foot-r { text-align: right; }
 
   .trust { padding: 0; }
   .trust-grid { grid-template-columns: repeat(4, 1fr); border-left: 0; border-right: 0; }
