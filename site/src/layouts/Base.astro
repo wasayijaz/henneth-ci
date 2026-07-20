@@ -141,30 +141,34 @@ const appLd = {
     <script type="application/ld+json" set:html={JSON.stringify(siteLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
 
-    {/* Google tag (gtag.js) — production builds only, so `npm run dev` traffic
-        never reaches the property. `is:inline` is required: without it Astro
-        bundles the tags, which breaks gtag's global + script ordering.
-        `window.gtag = gtag` is deliberate: define:vars wraps the body in an
-        IIFE, so gtag would otherwise be function-scoped and later conversion
-        events would throw. Keep the body free of `//` comments — the output is
-        minified onto one line, so a line comment silently kills everything
-        after it. */}
+    {/* Google tag (gtag.js). `is:inline` is required: without it Astro bundles the tag, which
+        breaks gtag's global + script ordering. `window.gtag = gtag` is deliberate: define:vars
+        wraps the body in an IIFE, so gtag would otherwise be function-scoped and the conversion
+        events below would throw. Keep the body free of `//` comments — the output can be
+        collapsed onto one line, and a line comment would silently kill everything after it.
+
+        TWO guards, because `import.meta.env.PROD` alone was not enough. It is a BUILD-time flag,
+        true for every production build regardless of where that build ends up running — so the
+        tag also fired on `npm run preview`, on any locally served `dist/`, and, most expensively,
+        on every Vercel preview deployment (*.vercel.app builds in production mode). All of that
+        landed in the same property as real traffic and quietly inflated it.
+        The hostname check is the runtime half: hits count only from the live domain. Same guard
+        the desk uses, for the same reason. gtag.js is injected rather than written as a <script
+        src> so the request itself is skipped too, not just the config call. */}
     {
       import.meta.env.PROD && (
-        <>
-          <script
-            is:inline
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.ga4}`}
-          />
-          <script is:inline define:vars={{ gaId: site.analytics.ga4 }}>
+        <script is:inline define:vars={{ gaId: site.analytics.ga4, liveHost: new URL(site.url).hostname }}>
+          if (location.hostname === liveHost || location.hostname === 'www.' + liveHost) {
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+            document.head.appendChild(s);
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            window.gtag = gtag;
+            window.gtag = function(){dataLayer.push(arguments);};
             gtag('js', new Date());
             gtag('config', gaId);
-          </script>
-        </>
+          }
+        </script>
       )
     }
 
