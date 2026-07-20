@@ -2099,7 +2099,7 @@ function renderRoom(room, sym) {
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
   const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll, liqAll] = await Promise.all([
-    j("quant.json"), j("backtests.json"), j("strategy_map.json"), j("universe.json"),
+    j("quant.json"), j("backtests_meta.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
     j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json")]);
@@ -2157,7 +2157,12 @@ async function pageTicker(sym, _retry = 0) {
   const tickerNews = (news || []).filter(n => (n.tickers || []).includes(sym)).slice(-10).reverse();
   const dHist = (divs?.history || []).filter(d => d.symbol === sym);
   const dUp = (divs?.upcoming || []).filter(d => d.symbol === sym);
-  const allTested = Object.entries(bt?.templates || {}).map(([id, per]) => ({ id, ...(per[sym] || {}) })).filter(t => t.n).sort((a, b) => (b.net_expectancy_pct ?? -99) - (a.net_expectancy_pct ?? -99));
+  /* backtests.json is ~4.8 MB — 62% of everything this page fetches — and its per-ticker results
+     are only shown AFTER the "Run to reveal" click. `bt` above is now the small meta file (two
+     numbers). Pull the real thing only when this ticker's run has actually been revealed, so a
+     first visit costs 4.8 MB less and has one fewer fetch that can fail the whole page. */
+  const btFull = stratRunOn(sym) ? await j("backtests.json") : null;
+  const allTested = Object.entries(btFull?.templates || {}).map(([id, per]) => ({ id, ...(per[sym] || {}) })).filter(t => t.n).sort((a, b) => (b.net_expectancy_pct ?? -99) - (a.net_expectancy_pct ?? -99));
   const provenIds = new Set(proven.map(p => p.id));
   const hasIntra = intra && intra.date === (live?.updated || "").slice(0, 10) && intra.points?.length > 3;
 

@@ -146,6 +146,16 @@ def main():
         # one row per strategy instead of one per (strategy, ticker) pair
         "meta": {s["id"]: {"name": s["name"], "category": s["category"]} for s in library},
         "templates": results})
+    # A ticker page needs only two numbers from the backtests on first paint (how many strategies
+    # exist, and the friction floor) — the per-ticker results are behind a "Run to reveal" click.
+    # backtests.json is ~4.8 MB, so loading it eagerly meant every ticker page pulled 4.8 MB for
+    # content most visitors never open, and any one failed fetch blanked the whole page. This meta
+    # file is the cheap half; the full file is fetched only when the reveal actually runs.
+    save_json(STATE / "backtests_meta.json", {
+        "updated": time.strftime("%Y-%m-%d %H:%M"),
+        "n_strategies": len(library),
+        "bars": cfg,
+    })
     save_json(STATE / "strategy_map.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"), "tickers": strategy_map})
     # plain-English library index for the dashboard's strategy dictionary
