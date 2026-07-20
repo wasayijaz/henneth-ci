@@ -47,12 +47,33 @@ function rehydrateBacktests(v) {
   return v;
 }
 
-async function j(p, ttl = 25000) {
+/* HOW LONG A PAYLOAD MAY BE REUSED, keyed to how often the desk actually rewrites it.
+
+   This used to be a flat 25s for every file, combined with a `?t=<now>` cache-buster on the URL.
+   Together those two made mobile navigation as slow as it is: the buster gives every request a
+   unique URL, so the browser's HTTP cache can never serve or even revalidate one, and the 25s
+   window expires while somebody is still reading the page they are on. Tap through to another
+   page a minute later and the desk re-downloads the whole payload — dossiers.json alone is
+   ~840 KB, rooms.json ~286 KB — over a mobile connection, every single time.
+
+   Nothing needed that. The desk rewrites state on a 30-minute cycle, so a client-side window
+   measured in minutes is still an order of magnitude fresher than the data behind it. Only the
+   handful of files that genuinely move inside a cycle keep a short window AND the buster. */
+const TTL_LIVE = 30_000;          // moves intraday — must not be held
+const TTL_DEFAULT = 10 * 60_000;  // rewritten at most once per 30-minute cycle
+const LIVE_FILES = new Set(["live.json", "health.json", "runlog.json", "news.json", "newslog.json"]);
+
+async function j(p, ttl) {
+  if (ttl == null) ttl = LIVE_FILES.has(p) ? TTL_LIVE : TTL_DEFAULT;
   const now = Date.now();
   if (cache[p] && now - cache[p].t < ttl) return cache[p].v;
   // several attempts across two transports; never cache a failure (a transient miss
-  // must not blank the page for 25s) — falls back to last-known-good if all fail.
-  const url = () => DATA_BASE + p + "?t=" + Date.now();
+  // must not blank the page for the whole TTL) — falls back to last-known-good if all fail.
+  //
+  // The buster is now scoped to the live files only. Everything else is fetched at a STABLE url so
+  // the HTTP cache can do its job: a repeat navigation inside the Cache-Control window costs no
+  // network at all, and outside it costs a 304 with no body instead of a fresh megabyte.
+  const url = () => DATA_BASE + p + (LIVE_FILES.has(p) ? "?t=" + Date.now() : "");
   let lastErr = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {

@@ -13,6 +13,11 @@
       "_comment": "Declared AFTER the catch-all so it overrides it for static brand art. must-revalidate on every image meant a conditional request per icon per page view, for files that change maybe once a year. Not `immutable` — these filenames are unhashed, so a genuine logo change must still be able to propagate within a day.",
       "source": "/(.*)\\.(png|svg|ico|webmanifest)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }]
+    },
+    {
+      "_comment": "The desk's data layer. max-age=0 forced a full revalidation round-trip for EVERY state file on EVERY navigation — and a ticker page opens ~23 of them, which is what made mobile navigation feel broken. The desk rewrites this data on a 30-minute cycle, so a 60s browser-fresh window cannot show anything the 30-minute cycle would not have shown anyway, and stale-while-revalidate keeps a repeat navigation instant while the refresh happens behind it. Genuinely intraday files (live.json, health.json) are fetched with a per-request cache-buster in app.js, so they bypass this entirely and are never served stale.",
+      "source": "/state/(.*)\\.json",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=60, stale-while-revalidate=900" }]
     }
   ]
 }
