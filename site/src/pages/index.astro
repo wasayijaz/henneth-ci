@@ -143,8 +143,13 @@ const principles = [
           </span>
         </div>
 
+        {/* MOTION CLASS IS LOAD-BEARING, not decoration:
+            --live        real session figures -> tints FIXED, only the refresh wash animates
+            --illustrative no figures at all   -> tints free to cycle
+            Swapping the first for the second would animate a real company's cell from green to
+            red while its printed percentage says otherwise. See the motion block in global.css. */}
         {haveLiveBoard ? (
-          <div class="heat">
+          <div class="heat heat--live">
             {board.map((b) => (
               <div class="heat-cell" data-dir={dir(b.pct)}>
                 <span class="hc-sym">{b.sym}</span>
@@ -153,7 +158,7 @@ const principles = [
             ))}
           </div>
         ) : (
-          <div class="heat">
+          <div class="heat heat--illustrative">
             {fallbackHeat.map(([sym, d]) => (
               <div class="heat-cell" data-dir={d}><span class="hc-sym">{sym}</span></div>
             ))}

@@ -1,0 +1,151 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../site.config.ts';
+import { getCollection, render } from 'astro:content';
+
+// The route the blog index has been linking at since it was written. Without this file every
+// `/blog/<slug>/` href on that page 404s, so no post can be published at all — which is why the
+// content engine has been blocked regardless of how much was written.
+//
+// `[...slug]` (rest, not `[slug]`) so a post can live in a subfolder later — `valuation/pe-ratio`
+// — without needing a second route file. The glob loader already puts the folder in `entry.id`.
+export async function getStaticPaths() {
+  // Drafts are excluded here AND in the index, so a draft is unreachable rather than merely
+  // unlisted. An unlisted-but-live URL is the failure mode that leaks half-written posts to
+  // anyone who guesses the slug — and to Google, which does not need to guess.
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const path = `/blog/${post.id}/`;
+const url = new URL(path, site.url).href;
+const published = post.data.pubDate;
+const updated = post.data.updatedDate ?? post.data.pubDate;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' });
+
+// Article — the schema Google reads for the article rich result and for Discover eligibility.
+// `dateModified` is what earns the "Updated" treatment, so it is emitted even when it equals
+// `datePublished`; the alternative is looking permanently stale on an evergreen explainer.
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: published.toISOString(),
+  dateModified: updated.toISOString(),
+  image: new URL('/og.png', site.url).href,
+  author: { '@type': 'Organization', name: site.name, url: site.url },
+  publisher: {
+    '@type': 'Organization',
+    name: site.name,
+    logo: { '@type': 'ImageObject', url: new URL('/icon-512.png', site.url).href },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  isAccessibleForFree: true,
+};
+
+// Breadcrumbs give Google the Home > Blog > Post trail to show in place of a raw URL in results.
+const crumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL('/blog/', site.url).href },
+    { '@type': 'ListItem', position: 3, name: post.data.title, item: url },
+  ],
+};
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  path={path}
+  active="blog"
+  ogType="article"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />
+    <meta property="article:published_time" content={published.toISOString()} />
+    <meta property="article:modified_time" content={updated.toISOString()} />
+  </Fragment>
+
+  <section class="section-tight ph">
+    <div class="wrap">
+      <p class="kicker">{post.data.cluster || 'Method'}</p>
+      <h1 class="post-h1">{post.data.title}</h1>
+      <p class="lead post-lead">{post.data.description}</p>
+      <p class="post-meta muted">
+        <time datetime={published.toISOString()}>{fmt(published)}</time>
+        {post.data.updatedDate && <span> · Updated {fmt(post.data.updatedDate)}</span>}
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <article class="prose">
+        <Content />
+      </article>
+      <p class="post-back">
+        <a href="/blog/">← All writing</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section band-dark">
+    <div class="wrap post-cta">
+      <div>
+        <p class="kicker dr-kicker">The desk</p>
+        <h2>Read any PSX company this way</h2>
+        <p class="lead post-cta-lead">
+          Henneth does this for every listed company — in plain English, from real filings.
+          Research, not advice.
+        </p>
+      </div>
+      <a class="btn" href={`${site.appUrl}/?auth=signup`} rel="noopener">Get started</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ph { padding-bottom: 0; }
+  .post-h1 { max-width: 20ch; }
+  .post-lead { max-width: 60ch; }
+  .post-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 16px; }
+
+  /* The MDX body. Scoped styles do not reach <Content />'s markup, so this uses :global()
+     inside .prose — narrow enough not to leak into the rest of the page. */
+  .prose { max-width: 68ch; }
+  .prose :global(h2) { margin: 40px 0 12px; font-size: 16px; }
+  .prose :global(h3) { margin: 28px 0 10px; font-size: 13px; }
+  .prose :global(p) { margin: 0 0 16px; font-size: 13px; line-height: 1.75; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 16px; padding-left: 20px; font-size: 13px; line-height: 1.75; }
+  .prose :global(li) { margin-bottom: 6px; }
+  .prose :global(a) { text-decoration: underline; text-underline-offset: 2px; }
+  .prose :global(blockquote) { margin: 24px 0; padding: 12px 18px; border-left: 2px solid var(--ink-1); background: var(--panel-2); }
+  .prose :global(blockquote p) { margin: 0; }
+  .prose :global(code) { font-family: var(--font-mono); font-size: 11.5px; background: var(--panel-2); padding: 2px 5px; }
+  .prose :global(pre) { padding: 16px; background: var(--panel-2); overflow-x: auto; margin: 0 0 16px; }
+  .prose :global(pre code) { background: none; padding: 0; }
+  .prose :global(table) { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 12px; }
+  .prose :global(th), .prose :global(td) { border: var(--rule); padding: 8px 10px; text-align: left; }
+  .prose :global(th) { background: var(--panel-2); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .prose :global(img) { max-width: 100%; height: auto; }
+  .prose :global(hr) { border: 0; border-top: var(--rule); margin: 32px 0; }
+
+  .post-back { margin-top: 40px; font-size: 12px; }
+
+  .post-cta { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+  .dr-kicker { color: #8f8f88; }
+  .post-cta-lead { color: #c8c8c0; margin: 0; max-width: 52ch; }
+
+  @media (max-width: 900px) {
+    .post-cta { grid-template-columns: 1fr; }
+  }
+</style>

@@ -182,6 +182,189 @@ img, svg { max-width: 100%; display: block; }
 
 .grid { display: grid; gap: 18px; }
 
+/* ============================================================================================
+   PRODUCT-SNAPSHOT MOTION
+
+   Every mock on this site is a still image of a live terminal, which is the one thing a still
+   image cannot convey. These animations exist to make the panels read as *running*.
+
+   ONE RULE GOVERNS ALL OF IT, and it is not a style rule:
+
+     A panel showing REAL numbers may never animate its colour semantics.
+
+   The hero board renders actual session data — FFC −0.1%, UBL +1.3%. Cycling that cell from
+   green to red would state something false about a real listed company, which is CLAUDE.md
+   Rule 2 territory and exactly the reason the old hero carried no figures at all. So the motion
+   is split in two:
+
+     .heat--illustrative   invented symbols, no figures  -> tints may CYCLE freely
+     .heat--live           real data, real percentages   -> tint is FIXED; only a refresh blink
+
+   Both share the same cadence and stagger, so they read as one motion language even though only
+   one of them is allowed to change colour.
+
+   Everything is CSS-only (no JS, nothing to desync), runs on long 7–12s cycles so it reads as a
+   working instrument rather than a toy, and is fully disabled under prefers-reduced-motion.
+   ============================================================================================ */
+
+/* ---- the wave: illustrative cells cycle tint, staggered so it ripples across the grid ---- */
+@keyframes henneth-tint-cycle {
+  0%,   30% { background-color: var(--up-soft); color: var(--up); }
+  36%,  62% { background-color: var(--panel);   color: var(--ink-2); }
+  68%,  92% { background-color: var(--dn-soft); color: var(--dn); }
+  98%, 100% { background-color: var(--up-soft); color: var(--up); }
+}
+
+/* ---- the blink: live cells keep their tint, a wash passes over it ---- */
+@keyframes henneth-refresh-blink {
+  0%, 72%, 100% { opacity: 0; }
+  80%           { opacity: 0.55; }
+}
+
+/* ---- the sweep: a highlight travels across a row, like a scan line ---- */
+@keyframes henneth-sweep {
+  0%        { transform: translateX(-100%); }
+  55%, 100% { transform: translateX(100%); }
+}
+
+.heat-cell { position: relative; }
+
+/* Illustrative grids only. 9s cycle, 0.42s apart per cell = a diagonal ripple across 5 columns. */
+.heat--illustrative .heat-cell {
+  animation: henneth-tint-cycle 9s ease-in-out infinite both;
+}
+.heat--illustrative .heat-cell:nth-child(1)  { animation-delay: 0s; }
+.heat--illustrative .heat-cell:nth-child(2)  { animation-delay: -0.42s; }
+.heat--illustrative .heat-cell:nth-child(3)  { animation-delay: -0.84s; }
+.heat--illustrative .heat-cell:nth-child(4)  { animation-delay: -1.26s; }
+.heat--illustrative .heat-cell:nth-child(5)  { animation-delay: -1.68s; }
+.heat--illustrative .heat-cell:nth-child(6)  { animation-delay: -0.42s; }
+.heat--illustrative .heat-cell:nth-child(7)  { animation-delay: -0.84s; }
+.heat--illustrative .heat-cell:nth-child(8)  { animation-delay: -1.26s; }
+.heat--illustrative .heat-cell:nth-child(9)  { animation-delay: -1.68s; }
+.heat--illustrative .heat-cell:nth-child(10) { animation-delay: -2.1s; }
+.heat--illustrative .heat-cell:nth-child(11) { animation-delay: -0.84s; }
+.heat--illustrative .heat-cell:nth-child(12) { animation-delay: -1.26s; }
+.heat--illustrative .heat-cell:nth-child(13) { animation-delay: -1.68s; }
+.heat--illustrative .heat-cell:nth-child(14) { animation-delay: -2.1s; }
+.heat--illustrative .heat-cell:nth-child(15) { animation-delay: -2.52s; }
+
+/* Live grids: the cell's own colour is untouched; a white wash blinks over it on the same
+   cadence, so the board looks like it is ticking without ever restating a number's direction. */
+.heat--live .heat-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  animation: henneth-refresh-blink 9s ease-in-out infinite both;
+}
+.heat--live .heat-cell:nth-child(5n + 1)::after { animation-delay: 0s; }
+.heat--live .heat-cell:nth-child(5n + 2)::after { animation-delay: -0.5s; }
+.heat--live .heat-cell:nth-child(5n + 3)::after { animation-delay: -1s; }
+.heat--live .heat-cell:nth-child(5n + 4)::after { animation-delay: -1.5s; }
+.heat--live .heat-cell:nth-child(5n + 5)::after { animation-delay: -2s; }
+
+/* Signal rows: a scan line crosses one row at a time, top to bottom. */
+.mock-sec .sig { position: relative; overflow: hidden; }
+.mock-sec .sig::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Neutral, not --up-soft: a green wash crossing a row that happens to be down reads as a
+     colour claim about that row. The scan line must stay semantically silent. */
+  background: linear-gradient(90deg, transparent, rgba(104, 104, 128, 0.13), transparent);
+  transform: translateX(-100%);
+  animation: henneth-sweep 11s ease-in-out infinite both;
+}
+.mock-sec .sig:nth-child(2)::after { animation-delay: 0s; }
+.mock-sec .sig:nth-child(3)::after { animation-delay: -0.9s; }
+.mock-sec .sig:nth-child(4)::after { animation-delay: -1.8s; }
+.mock-sec .sig:nth-child(5)::after { animation-delay: -2.7s; }
+
+/* Valuation rows and the research-note template: same scan line, same cadence. Both are
+   placeholder structures ("—", "<name>"), so nothing here can misstate a real figure. */
+.vrow, .note-row { position: relative; overflow: hidden; }
+.vrow::after, .note-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(104, 104, 128, 0.13), transparent);
+  transform: translateX(-100%);
+  animation: henneth-sweep 11s ease-in-out infinite both;
+}
+.vrow:nth-child(2)::after, .note-row:nth-child(2)::after { animation-delay: -0.9s; }
+.vrow:nth-child(3)::after, .note-row:nth-child(3)::after { animation-delay: -1.8s; }
+.vrow:nth-child(4)::after, .note-row:nth-child(4)::after { animation-delay: -2.7s; }
+
+/* THE DESK ROOM: the one mock whose motion is literal rather than decorative. The panel depicts
+   five desks arguing in sequence, so the highlight walks the blocks in the order they speak —
+   the page copy beside it already says "replay stages the debate in sequence".
+   Positive delays, not negative: the resting (unhighlighted) state is at 0%, so a delayed block
+   fills BACKWARDS to resting rather than sitting lit before its turn. Getting this wrong lights
+   all five at once on first paint. */
+@keyframes henneth-speak {
+  0%,  4%   { border-color: #2c2f30; background: transparent; }
+  10%, 16%  { border-color: #55a16b; background: rgba(85, 161, 107, 0.07); }
+  24%, 100% { border-color: #2c2f30; background: transparent; }
+}
+.dr-block { animation: henneth-speak 12s ease-in-out infinite backwards; }
+.dr-block[data-i='1'] { animation-delay: 2.4s; }
+.dr-block[data-i='2'] { animation-delay: 4.8s; }
+.dr-block[data-i='3'] { animation-delay: 7.2s; }
+.dr-block[data-i='4'] { animation-delay: 9.6s; }
+
+/* Ranking bars: the same scan line, so the valuation mock breathes on the hero's cadence. */
+.rank-bar { position: relative; overflow: hidden; }
+.rank-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  transform: translateX(-100%);
+  animation: henneth-sweep 11s ease-in-out infinite both;
+}
+.rank:nth-child(2) .rank-bar::after { animation-delay: -0.7s; }
+.rank:nth-child(3) .rank-bar::after { animation-delay: -1.4s; }
+.rank:nth-child(4) .rank-bar::after { animation-delay: -2.1s; }
+.rank:nth-child(5) .rank-bar::after { animation-delay: -2.8s; }
+
+/* The "live" dot in a badge — the smallest possible tell that something is running.
+   Its own keyframe: the refresh blink sits at opacity 0 for most of its cycle, which is right for
+   a wash laid OVER a cell and wrong for a dot that is the thing itself. */
+@keyframes henneth-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+.badge .dot { animation: henneth-dot-pulse 2.6s ease-in-out infinite both; }
+
+/* MOTION IS OPT-OUT, NOT OPT-IN-ONLY. Everything above is decorative: none of it carries
+   information that is lost when it stops, so a blanket disable is safe and correct. */
+@media (prefers-reduced-motion: reduce) {
+  .heat--illustrative .heat-cell,
+  .heat--live .heat-cell::after,
+  .mock-sec .sig::after,
+  .rank-bar::after,
+  .vrow::after,
+  .note-row::after,
+  .dr-block,
+  .badge .dot {
+    animation: none !important;
+  }
+  /* No background override here on purpose: `animation: none` hands the cells back to the
+     cascade, so each one falls to its own [data-dir] tint and the grid keeps its variety.
+     Forcing them all to --panel would flatten the mock to a blank grid instead of stilling it. */
+  .heat--live .heat-cell::after,
+  .mock-sec .sig::after,
+  .rank-bar::after,
+  .vrow::after,
+  .note-row::after { opacity: 0; }
+}
+
 /* ---------- Badge ---------- */
 .badge {
   display: inline-flex;

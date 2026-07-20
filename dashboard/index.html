@@ -52,6 +52,44 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes.css">
 
+<!-- Google tag (gtag.js) — the SAME measurement ID as henneth.app, deliberately.
+     henneth.app and desk.henneth.app share a root domain, so GA4's default `auto` cookie domain
+     writes _ga on henneth.app and both properties read it. One property, one ID, and a visitor
+     who reads a blog post and then signs up is ONE session with the original source intact. No
+     cross-domain linker is needed (that is for genuinely different domains) and no referral
+     exclusion either — GA4 already ignores its own domain.
+     Until this tag existed the session simply went dark at the hop, so no signup could ever be
+     attributed to the keyword that produced it.
+
+     The hostname guard is this file's equivalent of the marketing site's import.meta.env.PROD
+     check: the desk has no build step (vercel.json just copies these files), so without it every
+     `file://` open and every local preview would post real hits into the property.
+
+     send_page_view:false + a manual page_view is required because this is a hash router. GA4's
+     automatic pageview fires once on load and never again, so #/today, #/board and #/ticker/HUBC
+     would all collapse into a single "/" and in-app navigation would be invisible. -->
+<script>
+if (location.hostname.indexOf('henneth.app') !== -1) {
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5PLLEK6RYC';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', 'G-5PLLEK6RYC', { send_page_view: false });
+  var sendView = function () {
+    gtag('event', 'page_view', {
+      page_location: location.href,
+      page_path: location.pathname + location.hash,
+      page_title: document.title
+    });
+  };
+  sendView();
+  window.addEventListener('hashchange', sendView);
+}
+</script>
+
 <!-- FIRST-PAINT AUTH GUESS — runs before the body exists, on purpose.
      data-auth="pending" alone hid the shell but still cost a visible reflow: the sidebar was only
      collapsed once route() proved the visitor was signed out, so the gate arrived with a sideways
@@ -84,7 +122,13 @@
            image would make a screen reader announce "Henneth Desk" twice. The text is wrapped in
            its own span so the collapsed sidebar can drop the words and keep the mark as the icon. -->
       <a class="brand" href="#/today"><img class="brand-mark" src="logo-mark.svg" alt="" width="535" height="472" decoding="async"><span class="brand-txt">Henneth <em>Desk</em></span></a>
+      <!-- Collapsed, this button IS the desk mark: the rail has no room for a wordmark, and an
+           orphan chevron over a column of icons reads like a stray control rather than a header.
+           The chevron returns on hover/focus, so the affordance is still there the moment you
+           reach for it. Both children live in the DOM and swap in CSS — no JS, so the swap cannot
+           desync from the collapsed state. -->
       <button class="side-toggle" id="sideToggle" aria-label="Collapse menu" title="Collapse menu">
+        <img class="toggle-mark" src="logo-mark.svg" alt="" width="535" height="472" decoding="async">
         <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
       </button>
     </div>

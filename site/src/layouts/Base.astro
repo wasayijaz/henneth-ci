@@ -10,6 +10,8 @@ interface Props {
   path?: string;
   noindex?: boolean;
   active?: string;
+  /** 'article' on blog posts so the OG card renders as an article, not a product page. */
+  ogType?: string;
 }
 
 const {
@@ -18,10 +20,19 @@ const {
   path = '',
   noindex = false,
   active = '',
+  ogType = 'website',
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
-const canonical = new URL(path, site.url).href;
+
+// Astro builds directory-style (`/blog/` → `blog/index.html`) and @astrojs/sitemap emits those
+// URLs WITH a trailing slash. A canonical without one is therefore a different URL than the one
+// we submit, which Search Console reports as "Alternate page with proper canonical tag" and which
+// splits signals between the two forms. Normalising here keeps canonical == sitemap == served URL.
+// The root is already '/' and must not become '//'.
+const canonicalUrl = new URL(path, site.url);
+if (!canonicalUrl.pathname.endsWith('/')) canonicalUrl.pathname += '/';
+const canonical = canonicalUrl.href;
 // PNG, not the old og-default.svg: no social scraper renders SVG. X, WhatsApp, LinkedIn and
 // Slack all silently dropped the card and showed a bare link. 1200x630 is the 1.91:1 that
 // summary_large_image crops to, so nothing is cut off.
@@ -85,7 +96,7 @@ const appLd = {
     />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -156,6 +167,51 @@ const appLd = {
         </>
       )
     }
+
+    {/* Conversion tracking. Defined in EVERY build, not just PROD: `window.hTrack` has to exist
+        in dev too, otherwise a page that calls it throws a ReferenceError locally and the failure
+        only shows up in production. It no-ops when gtag is absent, which is exactly dev.
+
+        The click handler is delegated off document rather than bound per element so that links
+        rendered later (the mobile drawer, plan cards) are covered without every component having
+        to remember to wire itself up. Three things are tracked:
+          - any link into the desk           -> `desk_click`, carrying the ?plan= intent
+          - any mailto:                      -> `contact_click`
+          - anything with data-ev="name"     -> that event, with data-ev-* as parameters
+        `desk_click` is the one that matters: it is the last thing we can see before the visitor
+        crosses to desk.henneth.app, so it is the closest proxy to a signup that the marketing
+        property can measure on its own.
+
+        Same `//`-comment hazard as the gtag block above — this is minified onto one line, so a
+        line comment would silently kill everything after it. Block comments only. */}
+    <script is:inline define:vars={{ deskOrigin: site.appUrl }}>
+      window.hTrack = function (name, params) {
+        if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+      };
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a, button') : null;
+        if (!a) return;
+        if (a.dataset && a.dataset.ev) {
+          var p = {};
+          for (var k in a.dataset) if (k.indexOf('ev') === 0 && k !== 'ev') p[k.slice(2).toLowerCase()] = a.dataset[k];
+          window.hTrack(a.dataset.ev, p);
+          return;
+        }
+        var href = a.getAttribute ? a.getAttribute('href') : null;
+        if (!href) return;
+        if (href.indexOf('mailto:') === 0) {
+          window.hTrack('contact_click', { link_url: href });
+          return;
+        }
+        if (href.indexOf(deskOrigin) === 0) {
+          var plan = '';
+          try { plan = new URL(href).searchParams.get('plan') || ''; } catch (err) { plan = ''; }
+          window.hTrack('desk_click', { plan: plan, link_url: href, page_path: location.pathname });
+        }
+      });
+    </script>
+
+    <slot name="head" />
   </head>
   <body>
     <Header active={active} />

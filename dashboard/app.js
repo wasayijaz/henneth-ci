@@ -5320,9 +5320,22 @@ document.addEventListener("keydown", e => {
 /* ---------- sidebar: collapse (desktop) + drawer (mobile) ---------- */
 const shell = $("shell");
 if (shell && localStorage.getItem("sideCollapsed") === "1") shell.classList.add("collapsed");
+/* The label has to track the state, not the artwork. Collapsed, the button shows the desk mark
+   and only reveals the chevron on hover — a screen-reader user gets neither, so "Collapse menu"
+   on an already-collapsed rail would be simply wrong. */
+function syncSideToggleLabel() {
+  const b = $("sideToggle");
+  if (!b || !shell) return;
+  const label = shell.classList.contains("collapsed") ? "Expand menu" : "Collapse menu";
+  b.setAttribute("aria-label", label);
+  b.setAttribute("title", label);
+  b.setAttribute("aria-expanded", shell.classList.contains("collapsed") ? "false" : "true");
+}
+syncSideToggleLabel();   // the collapsed class is restored from localStorage above, before this runs
 $("sideToggle")?.addEventListener("click", () => {
   const c = shell.classList.toggle("collapsed");
   localStorage.setItem("sideCollapsed", c ? "1" : "0");
+  syncSideToggleLabel();
 });
 const openDrawer = () => shell.classList.add("drawer");
 const closeDrawer = () => shell.classList.remove("drawer");

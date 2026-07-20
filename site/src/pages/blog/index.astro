@@ -147,8 +147,14 @@ const cats = ['All', 'Valuation', 'Market structure', 'Method', 'Sectors'];
         },
         body: JSON.stringify({ email, source: 'blog' }),
       });
-      msg.textContent = res.ok || res.status === 201 || res.status === 409 ? 'Subscribed ✓' : 'Something went wrong — try again.';
-      if (res.ok || res.status === 201) f.reset();
+      const ok = res.ok || res.status === 201 || res.status === 409;
+      msg.textContent = ok ? 'Subscribed ✓' : 'Something went wrong — try again.';
+      // 409 is a duplicate email, which is a real person re-subscribing, not a conversion — the
+      // signup already exists and counting it again would inflate the only number we have.
+      if (res.ok || res.status === 201) {
+        (window as any).hTrack?.('waitlist_submit', { source: 'blog' });
+        f.reset();
+      }
     } catch { msg.textContent = 'Something went wrong — try again.'; }
     btn.disabled = false;
   });

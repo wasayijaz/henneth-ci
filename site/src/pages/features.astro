@@ -60,7 +60,8 @@ const engine = [
       </div>
       <div class="mock">
         <div class="mock-bar"><span class="label">Board · universe</span><span class="mock-tag">Illustration</span></div>
-        <div class="heat">
+        {/* Symbols only, no figures — safe to cycle tints. */}
+        <div class="heat heat--illustrative">
           {['OGDC','PPL','HUBC','FFC','LUCK','MCB','UBL','MEBL','ENGRO','PSO','SYS','TRG','MLCF','NBP','HBL'].map((s, i) => (
             <div class="heat-cell" data-dir={i % 3 === 2 ? -1 : i % 4 === 1 ? 0 : 1}>{s}</div>
           ))}

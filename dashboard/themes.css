@@ -169,10 +169,30 @@ html[data-boot-auth="out"] body[data-auth="pending"] .side-resize{display:none}
 body[data-theme=gemini] .side-top .brand{display:inline-flex;align-items:center;gap:8px;min-width:0}
 body[data-theme=gemini] .brand-mark{height:20px;width:auto;flex:none;display:block}
 body[data-theme=gemini] .brand-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* Collapsed rail: drop the words, keep the mark. The generic collapse rule hides .brand outright,
-   which left the rail's header empty — the mark is exactly the icon that space wants. */
-body[data-theme=gemini] .shell.collapsed .side-top .brand{display:inline-flex}
-body[data-theme=gemini] .shell.collapsed .side-top .brand-txt{display:none}
+/* Collapsed rail: the mark moves INTO the toggle button (see .toggle-mark below), so the brand
+   link itself stays hidden by the generic collapse rule — two marks in a 56px rail is one too many. */
+
+/* THE COLLAPSED TOGGLE = THE DESK MARK, chevron on hover.
+   Expanded, this is an ordinary bordered chevron sitting beside the wordmark. Collapsed, the
+   wordmark is gone and a lone chevron above a column of icons reads as a stray control, so the
+   mark takes its place and the chevron returns on hover or keyboard focus.
+   `:focus-visible` is in the swap deliberately — without it a keyboard user tabbing to this button
+   sees the logo and no hint that it does anything. */
+body[data-theme=gemini] .toggle-mark{display:none;height:18px;width:auto}
+/* The 3px transparent border mirrors the nav links' active-indicator border below. Without it the
+   mark centres on the rail while every nav icon centres 1.2px to its right, because those links
+   reserve 3px on their left for the .on indicator and the header does not. Measured, not guessed. */
+body[data-theme=gemini] .shell.collapsed .side-top{justify-content:center;border-left:3px solid transparent}
+/* Borderless and icon-sized when collapsed, so it optically matches the 18px nav icons directly
+   below it rather than looking like a button parked above a list. */
+body[data-theme=gemini] .shell.collapsed .side-toggle{border-color:transparent;width:100%;height:28px}
+body[data-theme=gemini] .shell.collapsed .side-toggle .toggle-mark{display:block}
+body[data-theme=gemini] .shell.collapsed .side-toggle svg{display:none}
+body[data-theme=gemini] .shell.collapsed .side-toggle:hover .toggle-mark,
+body[data-theme=gemini] .shell.collapsed .side-toggle:focus-visible .toggle-mark{display:none}
+body[data-theme=gemini] .shell.collapsed .side-toggle:hover svg,
+body[data-theme=gemini] .shell.collapsed .side-toggle:focus-visible svg{display:block}
+body[data-theme=gemini] .shell.collapsed .side-toggle:hover{border-color:var(--line)}
 body[data-theme=gemini] .topbar>*{flex:none}
 body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
 body[data-theme=gemini] .research-badge{margin-left:auto;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--hair);padding:2px 7px;white-space:nowrap}
