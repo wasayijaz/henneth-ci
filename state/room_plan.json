@@ -11,7 +11,6 @@
   "KEL",
   "GHNI",
   "CNERGY",
-  "LOTCHEM",
   "SSGC",
   "FFL",
   "NRL",
@@ -19,6 +18,10 @@
  ],
  "delta": [],
  "full": [
+  {
+   "symbol": "LOTCHEM",
+   "why": "material change since last Room"
+  },
   {
    "symbol": "TBL",
    "why": "never covered"
@@ -116,7 +119,7 @@
    "why": "never covered"
   },
   {
-   "symbol": "NATF",
+   "symbol": "NML",
    "why": "never covered"
   },
   {
@@ -124,7 +127,7 @@
    "why": "never covered"
   },
   {
-   "symbol": "NML",
+   "symbol": "NATF",
    "why": "never covered"
   },
   {
@@ -164,11 +167,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "AHCL",
+   "symbol": "PIOC",
    "why": "never covered"
   },
   {
-   "symbol": "PIOC",
+   "symbol": "AHCL",
    "why": "never covered"
   },
   {
@@ -212,11 +215,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "GCIL",
+   "symbol": "NCPL",
    "why": "never covered"
   },
   {
-   "symbol": "NCPL",
+   "symbol": "GCIL",
    "why": "never covered"
   },
   {
@@ -268,6 +271,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "KOHTM",
+   "why": "never covered"
+  },
+  {
    "symbol": "KOSM",
    "why": "never covered"
   },
@@ -284,6 +291,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "TELE",
+   "why": "never covered"
+  },
+  {
    "symbol": "TPL",
    "why": "never covered"
   },
@@ -292,15 +303,7 @@
    "why": "never covered"
   },
   {
-   "symbol": "KOHTM",
-   "why": "never covered"
-  },
-  {
    "symbol": "SGPL",
-   "why": "never covered"
-  },
-  {
-   "symbol": "TELE",
    "why": "never covered"
   },
   {
@@ -349,9 +352,10 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-20 11:21",
+  "built": "2026-07-20 09:56",
   "full_budget": 14,
   "run_full_now": [
+   "LOTCHEM",
    "TBL",
    "JSML",
    "UBL",
@@ -364,10 +368,10 @@
    "EFERT",
    "POL",
    "BAFL",
-   "FABL",
-   "MTL"
+   "FABL"
   ],
   "deferred_full": [
+   "MTL",
    "FATIMA",
    "SRVI",
    "AKBL",
@@ -378,9 +382,9 @@
    "ILP",
    "JVDC",
    "SEARL",
-   "NATF",
-   "GLAXO",
    "NML",
+   "GLAXO",
+   "NATF",
    "KOHC",
    "TRG",
    "APL",
@@ -390,8 +394,8 @@
    "PIBTL",
    "HALEON",
    "NPL",
-   "AHCL",
    "PIOC",
+   "AHCL",
    "POWER",
    "CPHL",
    "TREET",
@@ -402,8 +406,8 @@
    "EPCL",
    "MUGHAL",
    "SGF",
-   "GCIL",
    "NCPL",
+   "GCIL",
    "FCL",
    "UNITY",
    "NETSOL",
@@ -416,15 +420,15 @@
    "PREMA",
    "TPLP",
    "WTL",
+   "KOHTM",
    "KOSM",
    "MACFL",
    "PACE",
    "QUICE",
+   "TELE",
    "TPL",
    "DFSM",
-   "KOHTM",
    "SGPL",
-   "TELE",
    "ZUMA",
    "OBOY",
    "MCB",
@@ -438,10 +442,10 @@
    "HCAR"
   ],
   "counts": {
-   "full_due": 82,
+   "full_due": 83,
    "full_now": 14,
    "delta": 0,
-   "reaffirm": 16
+   "reaffirm": 15
   },
   "est_tokens_today": 308000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
