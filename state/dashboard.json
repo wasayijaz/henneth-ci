@@ -1,13 +1,13 @@
 {
- "updated": "2026-07-19 14:41",
+ "updated": "2026-07-20 11:30",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 66,
+  "score": 67,
   "band": "elevated"
  },
  "signals": [
   {
-   "id": "20260719-BML-obv_divergence_up",
+   "id": "20260720-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -31,7 +31,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260719-TPLT-donchian55_break",
+   "id": "20260720-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -55,7 +55,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260719-NICL-roc60_leader_pullback",
+   "id": "20260720-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -79,7 +79,7 @@
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260719-GAL-trend_momo_combo",
+   "id": "20260720-GAL-trend_momo_combo",
    "ticker": "GAL",
    "strategy": "trend_momo_combo",
    "template": "Trend + momentum combo",
@@ -93,14 +93,14 @@
    "size_shares": 139,
    "size_pkr": 79540,
    "backtest": {
-    "hit_rate": 0.564,
-    "net_expectancy_pct": 1.16,
-    "n": 39,
+    "hit_rate": 0.553,
+    "net_expectancy_pct": 1.05,
+    "n": 38,
     "oos_hit": 0.583
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 56% over 39 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 55% over 38 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -201,56 +201,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-07-15",
-   "source": "HBL / ProPakistani / Business Recorder",
-   "headline": "HBL unveils HBL PayPak UnionPay co-badge debit card; SBP governor hails launch",
-   "tickers": [
-    "HBL"
-   ],
-   "impact": 2,
-   "summary": "HBL, described as Pakistan's largest debit-card issuer, launched the HBL PayPak UnionPay Co-Badge Debit Card at a ceremony at HBL Tower, Karachi, on Jul 15, 2026, developed with 1Link-operated PayPak and UnionPay International to combine domestic PayPak acceptance with UnionPay's international network on one card. SBP Governor Jameel Ahmad welcomed the launch as aligned with SBP's Vision 2028 and the 'Cashless Pakistan' agenda; no revenue, fee or volume figures for the card itself disclosed in the sources reviewed - reputational/strategic item for HBL, not caught in the prior checkpoint.",
-   "url": "https://www.brecorder.com/news/40430248/sbp-chief-hails-launch-of-co-badge-debit-card"
-  },
-  {
-   "ts": "2026-07-16",
-   "source": "ProPakistani",
-   "headline": "Mobile banking users reach 137 million as digital payments surge",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "Published 11:01am PKT, citing SBP Governor Jameel Ahmad: mobile banking users reached 137 million; retail digital transactions rose from 6.9bn to nearly 12bn over the past year; active merchants accepting digital payments rose from ~500,000 to over 2 million; remittances received via digital channels rose from 80% to 92%. Sector-wide digital-payments tailwind, no individual bank ticker figures disclosed.",
-   "url": "https://propakistani.pk/2026/07/16/mobile-banking-users-reach-137-million-as-digital-payments-surge/"
-  },
-  {
-   "ts": "2026-07-16",
-   "source": "Business Recorder / Express Tribune / PakTribune / Daily Patriot",
-   "headline": "PSX extends rebound - KSE-100 up nearly 3,100 points by midday as oil stabilises",
-   "tickers": [
-    "MACRO",
-    "MARI",
-    "OGDC",
-    "PPL",
-    "HUBC",
-    "PSO",
-    "MCB"
-   ],
-   "impact": 3,
-   "summary": "Thursday afternoon, continuing from the morning's +2,604.49-point read already logged this cycle (previous close 175,285.78): Business Recorder reported the index at 178,378.43 as of 12:09pm, up 3,092.65 points (+1.76%); Express Tribune's midday report had it at 178,124.14, up 2,838.36 points (+1.62%), intraday high 178,431.73 / low 175,672.33, volume 144.6m shares worth Rs13.72bn; Daily Patriot reported an intraday high of 178,431.73 (+3,145.95 pts, +1.79%). Drivers: stabilising oil prices (Brent -0.5% to $84.50/bbl, still +11% for the week) as US-Iran Strait of Hormuz tensions eased, and softer US inflation data reducing Fed rate-hike fears; Business Recorder cited buying interest in automobile assemblers, cement, commercial banks, oil & gas exploration, OMCs, power generation and refinery; Daily Patriot noted an analyst comment that 'attention is shifting to the upcoming earnings season, which is expected to drive sector-specific activity.' No confirmed final closing-bell figure found in sources reviewed as of this cycle (17:00 PKT checkpoint) - flagged as the latest available intraday read pending a Closing Bell/DPS-confirmed print.",
-   "url": "https://www.brecorder.com/news/40430295/buying-continues-at-bourse-kse-100-up-nearly-3100-points"
-  },
-  {
-   "ts": "2026-07-15",
-   "source": "PSX Data Portal (DPS)",
-   "headline": "Dolmen City REIT (DCR) - Declaration of Final Dividend for year ended June 30, 2026",
-   "tickers": [
-    "DCR"
-   ],
-   "impact": 4,
-   "summary": "DCR's DPS company announcements page shows a filing dated Jul 15, 2026 titled 'Declaration of final dividend' for the year ended June 30, 2026; specific dividend amount/percentage per unit not disclosed on the source page reviewed (only the PDF filing itself would carry the exact rate) - logged as impact 4 per desk rules (dividend announcement) pending confirmation of the exact payout figure in a follow-up cycle.",
-   "url": "https://dps.psx.com.pk/company/DCR"
-  },
   {
    "ts": "2026-07-16",
    "source": "Business Recorder / BOL News / Express Tribune / Dawn",
@@ -388,6 +338,55 @@
    "impact": 1,
    "summary": "24-karat gold in the domestic market fell Rs3,600 to Rs421,836 per tola on Friday (from Rs425,436 the previous day) per the All-Pakistan Gems and Jewelers Sarafa Association; silver also traded lower - background commodity item, no PSX-listed gold miner in the universe.",
    "url": "https://mettisglobal.news/Gold-price-in-Pakistan-falls-Rs3600-per-tola-61941"
+  },
+  {
+   "ts": "2026-07-18",
+   "source": "Dawn",
+   "headline": "PSX loses 2,321 points on geopolitical fears",
+   "tickers": [
+    "MACRO",
+    "ENGROH",
+    "UBL",
+    "LUCK"
+   ],
+   "impact": 3,
+   "summary": "Published Jul 18, 2026 07:32am PKT, corroborating the Friday confirmed close already logged this cycle (KSE-100 175,802.79, down 2,320.78 pts / -1.3%; volume 621m shares, -15.73% WoD; value Rs29.8bn, -13.65%; nine large-caps incl. Engro Holdings, United Bank and Lucky Cement together cut 1,105 points via profit-taking, quoting Topline Securities that 'the index remained under pressure' on Strait of Hormuz supply-disruption concerns). New economic data not previously logged: Pakistan's current account deficit was $649m in June 2026, but FY26 as a whole closed with only a $139m current-account deficit; technology exports hit a record $4.6bn for FY26, up 21% YoY; the Real Effective Exchange Rate (REER) rose to 106.44 in June, its highest level since September 2018; net FDI for FY26 was $1.64bn, down 34% YoY.",
+   "url": "https://www.dawn.com/news/2016376/psx-loses-2321-points-on-geopolitical-fears"
+  },
+  {
+   "ts": "2026-07-19",
+   "source": "Express Tribune",
+   "headline": "PSX extends losing streak on regional tensions (weekly review, week ended Jul 17)",
+   "tickers": [
+    "MACRO",
+    "MARI"
+   ],
+   "impact": 2,
+   "summary": "Published Jul 19, 2026 (Sunday weekly-review piece), restating the already-logged week-on-week move (KSE-100 -6,439 points / -3.5% WoW to 175,803) plus sector figures not previously captured: gas production decreased 1.3% WoW to 3,058 million cubic feet per day (Mari and Shewa gas fields cited); oil production improved 2% WoW to 71,579 barrels per day; auto sales rose 30% MoM to 22.7k units in June 2026; large-scale manufacturing fell 1% YoY in May 2026; technology exports rose 21% to $4.6bn in FY26 (consistent with the Dawn figure logged separately this cycle). Analyst commentary attributed to Arif Habib Limited and JS Global; no individual-stock dividend or results figures disclosed.",
+   "url": "https://tribune.com.pk/story/2619043/psx-extends-losing-streak-on-regional-tensions"
+  },
+  {
+   "ts": "2026-07-20",
+   "source": "PSX Terminal (dividend calendar, aggregating PSX/DPS filings)",
+   "headline": "Exide Pakistan (EXIDE) declares Rs5.00/share cash dividend, ex-date July 22, 2026",
+   "tickers": [
+    "EXIDE"
+   ],
+   "impact": 2,
+   "summary": "PSX Terminal's dividend-calendar page, checked this cycle, lists a new dividend for EXIDE: Rs5.00 per share cash dividend with ex-date July 22, 2026 - the first EXIDE dividend item logged in this newslog. Underlying primary PSX/DPS filing (period covered, book-closure dates, declaration date) not independently re-verified this cycle; logged as impact 4 per desk rules (dividend announcement) pending confirmation of the primary filing in a follow-up cycle. [Corrected to impact 2 at checkpoint review: CLAUDE.md fixed impact scale lists earnings surprise/regulatory action/major contract/index reconstitution/sharp commodity-FX move as impact-4 triggers; a routine non-surprise dividend declaration is not on that list.]",
+   "url": "https://psxterminal.com/dividends"
+  },
+  {
+   "ts": "2026-07-20",
+   "source": "PSX Terminal (dividend calendar, aggregating PSX/DPS filings)",
+   "headline": "DCR and LOTCHEM dividend ex-dates confirmed at July 24, 2026; DCR rate confirmed as Rs0.66/share",
+   "tickers": [
+    "DCR",
+    "LOTCHEM"
+   ],
+   "impact": 2,
+   "summary": "Follow-up to the DCR final-dividend (previously logged as 6.6%, book closure 25-27 Jul 2026) and LOTCHEM Rs1.50/share dividend (previously logged Jul 16, not yet reflected in the DPS payouts page at that time): PSX Terminal's dividend calendar, checked this cycle, now shows DCR's dividend as Rs0.66/share with ex-date July 24, 2026 (consistent with the previously logged 6.6% rate and 25-27 Jul book closure) and LOTCHEM's Rs1.50/share dividend with ex-date July 24, 2026. Administrative confirmation only, no new price-moving information versus what was already logged.",
+   "url": "https://psxterminal.com/dividends"
   }
  ],
  "agent_wire": [],
