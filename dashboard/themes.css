@@ -879,6 +879,19 @@ body[data-theme=gemini] .tgrid button{height:38px}
 body[data-theme=gemini] #t-out{margin-top:14px}
 body[data-theme=gemini] .tnote{border-left:3px solid var(--ink1);background:var(--panel2);padding:10px 13px;font-size:13px;line-height:1.62;margin-top:12px}
 body[data-theme=gemini] .tnote.warn{border-left-color:var(--dn)}
+/* members-only gate — the signed-out terminal */
+body[data-theme=gemini] .gate{display:flex;align-items:center;justify-content:center;min-height:min(72vh,640px);padding:24px 16px}
+body[data-theme=gemini] .gate-card{width:100%;max-width:560px;border:1px solid var(--line);background:var(--panel);padding:32px 30px}
+body[data-theme=gemini] .gate-kicker{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+body[data-theme=gemini] .gate-h{font-size:26px;line-height:1.22;margin:10px 0 12px;font-weight:600}
+body[data-theme=gemini] .gate-sub{font-size:14px;line-height:1.68;color:var(--ink2);margin:0 0 22px}
+body[data-theme=gemini] .gate-cta{display:flex;flex-direction:column;gap:9px}
+body[data-theme=gemini] .gate-cta .bw-go{width:100%}
+body[data-theme=gemini] .gate-alt{width:100%;padding:12px 14px;background:transparent;border:1px solid var(--line);color:var(--ink1);font:inherit;font-size:13px;cursor:pointer}
+body[data-theme=gemini] .gate-alt:hover{border-color:var(--ink1);background:var(--panel2)}
+body[data-theme=gemini] .gate-open{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.6;color:var(--ink2)}
+body[data-theme=gemini] .gate-legal{margin:14px 0 0;font-size:11.5px;line-height:1.6;color:var(--ink3)}
+@media (max-width:420px){body[data-theme=gemini] .gate-card{padding:24px 18px}body[data-theme=gemini] .gate-h{font-size:22px}}
 /* tradeability block on the ticker page — turnover, spread, exit time */
 body[data-theme=gemini] .liq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:12px;background:var(--line)}
 body[data-theme=gemini] .liq-cell{background:var(--panel2);padding:11px 13px;display:flex;flex-direction:column;gap:5px;min-width:0}

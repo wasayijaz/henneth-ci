@@ -8,9 +8,13 @@ const D = site.trialDays;
 const early = site.earlyAccess;
 const mail = `mailto:${site.contactEmail}?subject=Feedback%20on%20Henneth`;
 
-// In early access nothing is gated, so a CTA just opens the desk.
+// The desk is members-only, so every CTA lands on its sign-up screen with the chosen plan
+// carried across. `?plan=` is INTENT, not entitlement — it only decides which onboarding the
+// visitor gets. The actual plan comes from the database; anything the URL can set, a visitor
+// can forge. `auth=signup` opens the create-account form directly rather than making someone
+// who just clicked "Get started" hunt for it, with a log-in link alongside for returning users.
 const enter = (appPlan: string | null) =>
-  appPlan ? `${site.appUrl}/?plan=${appPlan}` : '#';
+  appPlan ? `${site.appUrl}/?plan=${appPlan}&auth=signup` : `${site.appUrl}/?auth=signup`;
 
 const why = [
   [
@@ -91,7 +95,7 @@ const faqs = [
                     {p.soon ? (
                       <button class="btn tier-cta" disabled>Coming soon</button>
                     ) : (
-                      <a href={enter(p.appPlan)} class="btn tier-cta" rel="noopener">Open the desk</a>
+                      <a href={enter(p.appPlan)} class="btn tier-cta" rel="noopener">Get started</a>
                     )}
                     <ul class="tier-feats">
                       {p.features.map((f) => <li>{f}</li>)}

@@ -4977,6 +4977,66 @@ function animateIn() {
   v.classList.remove("enter"); void v.offsetWidth; v.classList.add("enter");
 }
 
+/* ==========================================================================================
+   THE SIGN-IN GATE
+
+   The terminal is members-only. Everything below is a PRODUCT gate — it controls the funnel,
+   it is NOT a paywall: this is a static site, so every state/*.json is still fetchable by
+   anyone who knows the URL (rooms.json, backtests.json, fairvalue.json all serve 200 to an
+   anonymous curl). Real protection means serving state/ through an authenticated function or
+   moving paid slices into Supabase behind RLS. Do not mistake this screen for that.
+
+   OPEN_ROUTES is the deliberate exception list. #/cast and #/mychart stay open because casting
+   a birth chart without an account IS the acquisition funnel — guestChart() + migrateGuestChart()
+   exist precisely so that a stranger can get value first and carry it into the account they
+   create afterwards. Gating them would close the top of the funnel to protect the bottom.
+   Legal pages stay open because a visitor must be able to read terms before signing anything.
+   ========================================================================================== */
+const OPEN_ROUTES = ["cast", "mychart", "legal", "plans", "glossary"];
+
+/* `me` is declared with `let` further down this file (the accounts section), and route() runs
+   before that line is reached at boot. Touching a `let` binding in its temporal dead zone throws
+   ReferenceError — not undefined — which killed route() outright and rendered a blank page. This
+   file has hit that exact bug before (applyDeskMode reading `me` at module top level).
+   Catch it and FAIL CLOSED: unknown auth state shows the gate, and initAuth's route(true) repaints
+   the moment the session resolves. */
+function isSignedIn() {
+  try { return !!me; } catch { return false; }
+}
+
+function gateAllows(page) {
+  return isSignedIn() || OPEN_ROUTES.includes(page || "today");
+}
+
+function renderGate(page) {
+  capturePlanIntent();          // route() reaches here before the module-level call below runs
+  const intent = planIntent();
+  const p = intent && PLANS[intent];
+  $("view").innerHTML = `
+  <div class="gate">
+    <div class="gate-card">
+      <span class="gate-kicker">Henneth Desk</span>
+      <h1 class="gate-h">The terminal is members-only.</h1>
+      <p class="gate-sub">${p
+        ? `You picked <b>${esc(p.label)}</b>. Create your account to open the desk — it takes about a minute, and the walkthrough is built for exactly where you're starting from.`
+        : `Create a free account to open the desk. Free covers casting your chart, the daily read and the public track record — no card, no trial clock.`}</p>
+      <div class="gate-cta">
+        <button class="bw-go" id="gateSignup">Create your account</button>
+        <button class="gate-alt" id="gateLogin">I already have one — log in</button>
+      </div>
+      <div class="gate-open">
+        Not ready? You can still <a href="#/cast">cast your birth chart</a> without an account —
+        it follows you in when you sign up.
+      </div>
+      <p class="gate-legal">Research &amp; analytics, never investment advice. Read the
+        <a href="#/legal/terms">terms</a> and <a href="#/legal/risk">risk disclosure</a> first.</p>
+    </div>
+  </div>`;
+  // openAuth's modes are "signin" | "signup" — anything else leaves both tabs unhighlighted
+  document.getElementById("gateSignup").onclick = () => openAuth("signup");
+  document.getElementById("gateLogin").onclick = () => openAuth("signin");
+}
+
 async function route(isPoll) {
   // Supabase auth callbacks (email confirm / password reset) arrive in the hash —
   // they're not routes; auth.js consumes them and then navigates.
@@ -4986,6 +5046,9 @@ async function route(isPoll) {
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
   renderHeader();
   const key = page + (arg || "");
+  // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
+  // screen reads as broken), and before any page render so no gated page fetches or flashes.
+  if (!gateAllows(page)) return renderGate(page);
   try {
     if (page === "ticker" && arg) { await pageTicker(arg); }
     else { await (PAGES[page] || pageBoard)(); }
@@ -5636,7 +5699,78 @@ async function pageWatchlist() {
 }
 
 /* ---------- onboarding wizard: quiz + product tour ---------- */
-const WIZ = [
+/* ---------- plan intent, carried in from the marketing site ----------------------------
+   plans.astro links to `${appUrl}/?plan=investor|pro`. Persist it immediately: the visitor is
+   about to leave for an email confirmation and come back on a fresh page load, and the query
+   string will not survive that round trip. It decides which onboarding they get, and it is
+   INTENT ONLY — never an entitlement. Plan still comes from the DB (see realPlan/planOf),
+   because anything a browser can set, a browser can forge. */
+/* The key is inlined rather than held in a `const` on purpose. route() — and therefore the gate
+   that wants to read this — runs BEFORE this point in the file at boot, and a `const` referenced
+   in its temporal dead zone throws. Function declarations hoist, so these two stay callable from
+   anywhere; a const would not. (First pass had exactly this bug: the gate rendered its generic
+   copy because the intent had not been captured yet.) */
+function capturePlanIntent() {
+  try {
+    const p = new URLSearchParams(location.search).get("plan");
+    if (!p) return;
+    if (PLANS[p]) localStorage.setItem("henneth_plan_intent", p);
+    // strip ?plan= so a refresh or a shared link doesn't re-trigger it, keeping the hash route
+    history.replaceState(null, "", location.pathname + location.hash);
+  } catch { /* private mode: intent is a nicety, never required */ }
+}
+function planIntent() { try { return localStorage.getItem("henneth_plan_intent"); } catch { return null; } }
+capturePlanIntent();
+
+/* `?auth=signup` (or signin) from a marketing CTA opens the form directly. Someone who just
+   clicked "Get started" should not have to find the button again. Deferred to the next tick so
+   auth has resolved — otherwise a signed-in returning visitor gets a pointless login modal. */
+(function honourAuthParam() {
+  let want = null;
+  try { want = new URLSearchParams(location.search).get("auth"); } catch { return; }
+  if (want !== "signup" && want !== "signin") return;
+  try { history.replaceState(null, "", location.pathname + location.hash); } catch {}
+  setTimeout(() => { if (!me && typeof openAuth === "function") openAuth(want); }, 600);
+})();
+
+/* ---------- onboarding: two audiences, two flows --------------------------------------
+   One generic wizard served both a first-time investor and a chartist who already reads P/E,
+   which meant it over-explained for one and under-explained for the other. Split by the plan
+   the visitor chose on the way in:
+
+   INVESTOR — people new to markets entirely. More questions (they are engaging, and the answers
+     personalise the desk), and every tour stop explains WHY the page exists before what it does.
+   PRO — already fluent in TA/FA. No definitions, no hand-holding: two quick questions to
+     personalise, then a fast tour of the things that are actually unusual here (the Room
+     debate, the scored track record, the strategy library).
+
+   Both end at the same place; only the pacing and the vocabulary differ. */
+const WIZ_PRO = [
+  { kind: "welcome", title: "You know the terms. Here's what's different.", body: "Henneth Desk isn't another screener. Every stock gets a debate — a technical desk and a fundamental desk argue it out, a bull and a bear stress-test each other, and a Chair writes a house view with an explicit dissent. Every dated call, ours and the brokers', is scored in public afterwards. Ninety seconds and you'll know where everything lives." },
+  { kind: "quiz", key: "style", title: "How do you mostly decide?", opts: [["technical", "Charts and structure"], ["fundamental", "Financials and valuation"], ["both", "Both, depending on the name"]] },
+  { kind: "quiz", key: "sectors", multi: true, title: "Which sectors do you actually trade?", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
+  { kind: "tour", route: "#/board", title: "Board — the whole tape", body: "Live moves, signals that fired from backtested rules, predictability ranks. Everything is clickable through to the name." },
+  { kind: "tour", route: "#/strategies", title: "Strategies — 70 rules, tested per name", body: "Each strategy is backtested on every stock's own ~19-year history: win rate, expectancy AFTER costs, and out-of-sample. Names below the liquidity floor are charged their real estimated spread, not a flat fee — so a thin stock can't fake an edge." },
+  { kind: "tour", route: "#/ticker/FFC", title: "The Desk Room — where it argues with itself", body: "Open any ticker and run the desk. The TA and FA lanes are kept deliberately separate so they can disagree, and the Chair must name the strongest point against its own view. Low conviction is a valid answer here." },
+  { kind: "tour", route: "#/leaderboard", title: "Scores — everyone on the record", body: "Every call is timestamped and graded against what price actually did. Ours and the brokerage houses'. Misses included — that's the point." },
+  { kind: "done", title: "That's the tour.", body: "Search is `/` from anywhere. The desk never places orders and never tells you to buy — it shows its working and you decide." },
+];
+
+const WIZ_INVESTOR = [
+  { kind: "welcome", title: "Welcome — let's start from the beginning.", body: "Most investing tools assume you already know the words. This one doesn't. You'll get plain-English answers to the only questions that matter early on: is this company healthy, is the price sensible, and what just changed. A few quick questions first so the desk fits you — there are no wrong answers, and nothing here is advice." },
+  { kind: "quiz", key: "experience", title: "Where are you starting from?", opts: [["never", "I've never bought a stock"], ["account", "I have a broker account, haven't really used it"], ["some", "I've bought a few things"]] },
+  { kind: "quiz", key: "goal", title: "What would make this worth it for you?", opts: [["income", "Regular income from dividends"], ["growth", "Growing savings over years"], ["understand", "Just understanding what's going on"], ["confidence", "Confidence to make my first buy"]] },
+  { kind: "quiz", key: "horizon", title: "When would you want this money back?", opts: [["short", "Within a year"], ["medium", "A few years"], ["long", "Not for a long time"]] },
+  { kind: "quiz", key: "risk", title: "A stock you own falls 20% in a month. Honestly — you…", opts: [["conservative", "Can't sleep. I'd rather it stayed steady"], ["moderate", "Don't love it, but I'd hold if nothing broke"], ["aggressive", "See it as cheaper than last month"]] },
+  { kind: "quiz", key: "sectors", multi: true, title: "Anything you're already curious about?", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
+  { kind: "tour", route: "#/learn", title: "Start here — the guided path", body: "Short lessons, one card at a time, in order. It begins with what a share actually is and ends with reading a real Pakistani annual report. You can stop anywhere and pick it back up — your progress is saved." },
+  { kind: "tour", route: "#/today", title: "Today — your two-minute read", body: "Every trading day the desk writes one plain note: the mood, which sectors look favoured, and a few names worth a look with the reason attached. If you only open one page, open this one." },
+  { kind: "tour", route: "#/ticker/FFC", title: "A company page — questions, not jargon", body: "Every stock opens with the same simple checks, shown as traffic lights: is it profitable, is debt sensible, does it pay a dividend, is the price reasonable. Green, amber, red. The numbers are underneath if you ever want them." },
+  { kind: "tour", route: "#/practice", title: "Practice — Rs 500,000 that isn't real", body: "Buy and sell at real PSX prices with pretend money. Sit through a red week, collect a dividend, see what a stop-loss feels like. Every mechanic of investing, none of the damage." },
+  { kind: "done", title: "You're set.", body: "Take the guided path at your own pace, and use Practice before real money. The desk shows its working and never tells you what to buy — that decision stays yours." },
+];
+
+const WIZ_GENERIC = [
   { kind: "welcome", title: "Welcome to the desk", body: "Henneth Desk is a research terminal that makes Pakistani stocks understandable — plain-English company reads, tested strategies, fair-value models, and AI analysts who debate every name in the open. Two minutes, and you'll know your way around. Nothing here is investment advice — you always decide." },
   { kind: "quiz", key: "experience", title: "How much investing experience do you have?", opts: [["new", "I'm new to this"], ["some", "I've bought a few stocks"], ["experienced", "I trade regularly"]] },
   { kind: "quiz", key: "goal", title: "What are you mostly here for?", opts: [["income", "Dividend income"], ["growth", "Long-term growth"], ["swing", "Active swing ideas"], ["learning", "Learning the market"]] },
@@ -5650,9 +5784,28 @@ const WIZ = [
   { kind: "done", title: "You're set", body: "Explore freely — the search (top right, or press /) jumps to any stock. Everything updates automatically through the trading day. Research, not advice: the decisions are always yours." },
 ];
 
+/* Which flow this visitor gets. Chosen from the plan they clicked on the marketing site, then
+   from the plan actually on their account, then the generic flow. Deliberately re-evaluated at
+   START time, not at module load: on a fresh sign-up the profile arrives after this file parses,
+   so a constant would always pick the fallback. */
+let WIZ = WIZ_GENERIC;
+function pickWiz() {
+  const want = planIntent() || (typeof realPlan === "function" ? realPlan() : null);
+  if (want === "pro" || want === "broker") return WIZ_PRO;
+  if (want === "investor") return WIZ_INVESTOR;
+  // No stated intent: infer from the one thing we know. Someone who says they've never bought a
+  // stock should not get the Pro tour just because nobody set a query param.
+  const exp = (myProfile && myProfile.quiz && myProfile.quiz.experience) || null;
+  if (exp === "experienced") return WIZ_PRO;
+  if (exp === "new" || exp === "never") return WIZ_INVESTOR;
+  return WIZ_GENERIC;
+}
+
 let wizIdx = 0, wizAnswers = {};
 function startWizard(replayOnly) {
+  WIZ = pickWiz();
   wizIdx = replayOnly ? WIZ.findIndex(s => s.kind === "tour") : 0;
+  if (wizIdx < 0) wizIdx = 0;              // a flow with no tour steps must not start at -1
   wizAnswers = (myProfile && myProfile.quiz) || {};
   renderWizard(!!replayOnly);
 }
