@@ -24,7 +24,7 @@ const segments = [
     cta: 'Get started',
     href: enter('investor'),
     solid: true,
-    panelTitle: 'Individual · what you get',
+    panelTitle: 'Investor · what you get',
     plan: 'Rs 3,000/mo',
     rows: [
       ['Daily desk read', 'Included', 1],
@@ -47,9 +47,9 @@ const segments = [
     href: enter('pro'),
     solid: true,
     panelTitle: 'Pro · what you get',
-    plan: 'Rs 6,000/mo',
+    plan: 'Rs 8,000/mo',
     rows: [
-      ['Everything in Individual', 'Included', 1],
+      ['Everything in Investor', 'Included', 1],
       ['The Desk Room', 'Full access', 1],
       ['Strategy backtests', 'Unlimited', 1],
       ['Watchlists', 'Unlimited', 1],
@@ -142,7 +142,6 @@ const caps: [string, string, string, string][] = [
               <span class:list={[{ up: good === 1 }]}>{v}</span>
             </div>
           ))}
-          <p class="seg-fine muted">Indicative pricing — billing isn’t live yet.</p>
         </div>
       </div>
     </section>
@@ -155,7 +154,7 @@ const caps: [string, string, string, string][] = [
       <div class="captable">
         <table>
           <thead>
-            <tr><th>Capability</th><th>Individual</th><th>Pro</th><th>Broker</th></tr>
+            <tr><th>Capability</th><th>Investor</th><th>Pro</th><th>Broker</th></tr>
           </thead>
           <tbody>
             {caps.map(([c, a, b, d]) => (

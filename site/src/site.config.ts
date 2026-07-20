@@ -42,27 +42,27 @@ export const site = {
   // cannot grant it. Picking a plan records the intent and drops the user into
   // the free desk — we say so plainly rather than faking a checkout.
   // ---------------------------------------------------------------------------
-  // Shown on every pricing surface. Prices are INDICATIVE — there is no gateway
-  // wired, so nobody can be charged and no trial clock exists.
-  plansNote: 'Indicative pricing. Billing isn’t live yet — you won’t be charged, and everyone starts on the free desk.',
+  // Trial length advertised on Investor and Pro. The desk must honour this:
+  // see docs note — plan is DB-frozen, so a trial grant needs a service-role path.
+  trialDays: 14,
   billing: {
     currency: 'Rs',
-    annualNote: '2 months free on annual',
+    // Annual = 10x monthly, i.e. two months free. Kept as a round multiple so the
+    // saving is obvious without a calculator.
+    monthsFreeOnAnnual: 2,
   },
-  // Public tier names follow the design handoff (Individual / Pro / Broker).
-  // `appPlan` maps each to the entitlement key the desk actually uses, so
-  // "Individual" correctly enters the desk's `investor` plan.
   plans: [
     {
-      id: 'individual',
+      id: 'investor',
       appPlan: 'investor',
-      name: 'Individual',
+      name: 'Investor',
       tag: '',
       priceMonthly: 3000,
-      priceAnnual: 2500,
+      priceAnnual: 30000,
+      trial: true,
       blurb:
         'For the investor who wants to read a company for themselves — the guided path, real filings, real prices.',
-      cta: 'Get started',
+      cta: 'Start 14-day trial',
       href: null,
       soon: false,
       featured: false,
@@ -79,16 +79,17 @@ export const site = {
       appPlan: 'pro',
       name: 'Pro',
       tag: 'Most popular',
-      priceMonthly: 6000,
-      priceAnnual: 5000,
+      priceMonthly: 8000,
+      priceAnnual: 80000,
+      trial: true,
       blurb:
         'The full desk. Tested strategies, model fair value, the research library, and every lens the desk runs.',
-      cta: 'Get started',
+      cta: 'Start 14-day trial',
       href: null,
       soon: false,
       featured: true,
       features: [
-        'Everything in Individual',
+        'Everything in Investor',
         'Model fair value, four ways',
         'Run any of the tested strategies',
         'Screener, scanner & scenarios',
@@ -100,14 +101,15 @@ export const site = {
       id: 'broker',
       appPlan: null,
       name: 'Broker',
-      tag: 'Contact sales',
+      tag: 'Coming soon',
       priceMonthly: null,
       priceAnnual: null,
+      trial: false,
       blurb:
         'Everything in Pro, plus your own desk’s calls scored in public on the same bar as everyone else.',
-      cta: 'Contact sales',
-      href: '/contact',
-      soon: false,
+      cta: 'Coming soon',
+      href: null,
+      soon: true,
       featured: false,
       features: [
         'Everything in Pro',

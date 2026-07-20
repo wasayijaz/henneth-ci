@@ -50,8 +50,8 @@ const principles = [
           <a href="/research" class="btn btn-lg">See how it works</a>
         </div>
         <div class="hero-fine">
-          <span>Free to start</span><span>·</span>
-          <span>Billing not live yet</span><span>·</span>
+          <span>{site.trialDays}-day trial</span><span>·</span>
+          <span>No card required</span><span>·</span>
           <span>Research, not advice</span>
         </div>
       </div>
@@ -283,7 +283,8 @@ const principles = [
         <p class="kicker">Plans</p>
         <h2>One desk. Two ways in.</h2>
         <p class="lead">
-          Individual and Pro — plus a Broker tier for desks and institutions. {site.plansNote}
+          Investor and Pro, each with a {site.trialDays}-day trial — plus a Broker tier for desks
+          and institutions.
         </p>
         <a href="/plans" class="btn btn-solid">See full pricing ›</a>
       </div>
@@ -294,7 +295,7 @@ const principles = [
             <span class="tease-p">
               {p.priceMonthly
                 ? <>{site.billing.currency} {p.priceMonthly.toLocaleString('en-PK')}<i>/mo</i></>
-                : <>Contact ›</>}
+                : <>Coming soon</>}
             </span>
           </a>
         ))}
@@ -403,7 +404,7 @@ const principles = [
   .tease-row:hover { background: var(--panel-2); }
   .tease-n { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
   .tease-n em { font-style: normal; color: var(--ink-3); font-weight: 400; }
-  .tease-p { font-family: var(--font-pixel); font-size: 22px; }
+  .tease-p { font-family: var(--font-mono); font-size: 20px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .tease-p i { font-style: normal; font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); }
 
   .center { text-align: center; }

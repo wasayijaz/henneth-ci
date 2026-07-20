@@ -2,18 +2,23 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config.ts';
 
-const { currency, annualNote } = site.billing;
-// Public tier -> the desk's entitlement key, so "Individual" enters as `investor`.
-const enter = (appPlan: string | null) =>
-  appPlan ? `${site.appUrl}/?plan=${appPlan}` : '/contact';
+const { currency, monthsFreeOnAnnual } = site.billing;
+const D = site.trialDays;
+const fmt = (n: number) => n.toLocaleString('en-PK');
+
+// Public tier -> the desk's entitlement key. Trial intent rides along so the
+// desk knows to start the clock rather than drop them straight on free.
+const enter = (appPlan: string | null, trial: boolean) =>
+  appPlan ? `${site.appUrl}/?plan=${appPlan}${trial ? `&trial=${D}` : ''}` : '#';
 
 const faqs = [
+  [`How does the ${D}-day trial work?`, `Start on Investor or Pro and you get ${D} days of the full plan, no card required. At the end you choose whether to continue — nothing is charged automatically, and you are never locked out of the free desk.`],
   ['Is this financial advice?', 'No. Henneth is an educational research and analytics tool. It never gives personalised advice, never says buy or sell, and never places orders. You make your own decisions.'],
-  ['Am I being charged today?', 'No. Billing isn’t live yet — there’s no payment gateway wired and no card is collected. Prices shown are indicative of what plans will cost at launch. Everyone starts on the free desk.'],
-  ['What happens when I pick a plan?', 'You go straight into the desk and we record which plan you wanted. When billing opens, you’ll be first in line for it at the price you were shown.'],
-  ['Where does the data come from?', 'Prices come from the exchange’s published end-of-day data, with a long price history used for backtests, and fundamentals scraped from public filings. Every figure on a page is sourced from that data layer — nothing is quoted from memory.'],
+  ['What does annual actually save me?', `Annual is priced at ten months instead of twelve, so you get ${monthsFreeOnAnnual} months free. Investor works out at ${currency} 2,500 a month, Pro at ${currency} 6,667.`],
+  ['Can I change or cancel my plan?', 'Yes. You can move between plans or stop at any time, and you keep access to the free desk either way.'],
+  ['Where does the data come from?', 'Prices come from the exchange’s published end-of-day data, with a long price history used for backtests, and fundamentals from public filings. Every figure on a page traces to that data layer — nothing is quoted from memory.'],
   ['Do you show your losses?', 'Yes. Every dated call is scored against what prices actually did, and the misses stay on the record. A track record that only shows wins isn’t one.'],
-  ['Can my brokerage use this?', 'That’s the Broker tier — your desk’s own calls scored in public on the same bar as everyone else. Get in touch and we’ll walk through it.'],
+  ['Can my brokerage use this?', 'That’s the Broker tier — your desk’s own calls scored in public on the same bar as everyone else. It’s in build; get in touch and we’ll keep you posted.'],
 ];
 ---
 
@@ -21,22 +26,24 @@ const faqs = [
   title="Plans"
   path="/plans"
   active="plans"
-  description="Henneth plans — Individual, Pro and Broker. A whole research desk for every PSX stock. Indicative pricing; billing isn’t live yet."
+  description="Henneth plans — Investor and Pro, each with a 14-day trial, plus a Broker tier for desks and institutions."
 >
   <section class="section-tight ph">
     <div class="wrap center">
       <p class="kicker">Plans</p>
       <h1>One desk. Two ways in.</h1>
       <p class="lead ph-lead">
-        Individual and Pro — plus a Broker tier for desks and institutions.
+        Investor and Pro — each with a {D}-day trial, no card required. Plus a Broker tier for desks
+        and institutions.
       </p>
 
-      <div class="toggle" role="group" aria-label="Billing period">
-        <button class="tg on" data-b="monthly" id="tgM">Monthly</button>
-        <button class="tg" data-b="annual" id="tgA">Annual</button>
+      <div class="tg-wrap">
+        <div class="toggle" role="group" aria-label="Billing period">
+          <button class="tg on" data-b="monthly" id="tgM">Monthly</button>
+          <button class="tg" data-b="annual" id="tgA">Annual</button>
+        </div>
+        <span class="tg-save">{monthsFreeOnAnnual} months free</span>
       </div>
-      <p class="toggle-note muted">{annualNote}</p>
-      <p class="note">{site.plansNote}</p>
     </div>
   </section>
 
@@ -44,28 +51,45 @@ const faqs = [
     <div class="wrap">
       <div class="tiers">
         {site.plans.map((p) => (
-          <div class="tier" data-featured={p.featured}>
-            {p.featured && <div class="ribbon">{p.tag}</div>}
+          <div class="tier" data-featured={p.featured} data-soon={p.soon}>
+            {p.tag && <div class="ribbon" data-soon={p.soon}>{p.tag}</div>}
             <div class="tier-in">
               <h3 class="tier-n">{p.name}</h3>
-              <div class="tier-price">
-                {p.priceMonthly ? (
-                  <>
+
+              {p.priceMonthly ? (
+                <>
+                  <div class="tier-price">
                     <span class="cur">{currency}</span>
                     <span
-                      class="pixel amt"
+                      class="amt"
                       data-monthly={p.priceMonthly}
-                      data-annual={p.priceAnnual}
-                    >{p.priceMonthly.toLocaleString('en-PK')}</span>
+                      data-annual={Math.round(p.priceAnnual / 12)}
+                    >{fmt(p.priceMonthly)}</span>
                     <span class="per">/mo</span>
-                  </>
-                ) : (
-                  <span class="pixel amt">Contact</span>
-                )}
-              </div>
-              {p.priceAnnual && <p class="tier-billed muted" data-billed>billed monthly</p>}
+                  </div>
+                  <p class="tier-billed" data-billed data-annual-total={p.priceAnnual}>
+                    billed monthly
+                  </p>
+                  <p class="tier-save" data-save hidden>
+                    Save {currency} {fmt(p.priceMonthly * 12 - p.priceAnnual)} a year
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div class="tier-price"><span class="amt soon-amt">—</span></div>
+                  <p class="tier-billed">in build</p>
+                </>
+              )}
+
               <p class="tier-blurb">{p.blurb}</p>
-              <a href={enter(p.appPlan)} class="btn tier-cta" rel="noopener">{p.cta}</a>
+
+              {p.soon ? (
+                <button class="btn tier-cta" disabled>{p.cta}</button>
+              ) : (
+                <a href={enter(p.appPlan, p.trial)} class="btn tier-cta" rel="noopener">{p.cta}</a>
+              )}
+              {p.trial && <p class="tier-fine">{D} days free · no card required</p>}
+
               <ul class="tier-feats">
                 {p.features.map((f) => <li>{f}</li>)}
               </ul>
@@ -98,7 +122,7 @@ const faqs = [
         The desk does the homework and keeps its own score — you decide what to do with it.
       </p>
       <div class="cta-row">
-        <a href={enter('investor')} class="btn" rel="noopener">Get started</a>
+        <a href={enter('investor', true)} class="btn" rel="noopener">Start {D}-day trial</a>
         <a href="/contact" class="btn btn-ghost">Talk to us about brokers</a>
       </div>
     </div>
@@ -107,11 +131,9 @@ const faqs = [
 
 <style>
   .center { text-align: center; }
-  .ph-lead { max-width: 560px; margin: 0 auto 22px; }
-  .note {
-    max-width: 620px; margin: 16px auto 0; font-size: 10.5px;
-    border: 1px solid var(--hair); padding: 10px 14px; color: var(--ink-2);
-  }
+  .ph-lead { max-width: 600px; margin: 0 auto 24px; }
+
+  .tg-wrap { display: inline-flex; align-items: center; gap: 12px; }
   .toggle { display: inline-flex; border: var(--rule); }
   .tg {
     font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
@@ -120,37 +142,73 @@ const faqs = [
   }
   .tg + .tg { border-left: var(--rule); }
   .tg.on { background: var(--ink-1); color: var(--bg); }
-  .toggle-note { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 8px; }
+  .tg-save {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700; color: var(--up);
+    border: 1px solid var(--up); padding: 5px 9px;
+  }
 
   .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: var(--ink-1); border: var(--rule); }
   .tier { background: var(--panel); position: relative; }
   .tier[data-featured='true'] { background: var(--ink-1); color: var(--bg); }
-  .tier-in { padding: 24px 20px; display: flex; flex-direction: column; height: 100%; }
+  .tier[data-soon='true'] { background: var(--panel-2); }
+  .tier-in { padding: 26px 20px; display: flex; flex-direction: column; height: 100%; }
   .ribbon {
     position: absolute; top: 0; right: 0; background: var(--up); color: #fff;
     font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase;
     font-weight: 700; padding: 5px 10px;
   }
-  .tier-n { font-size: 14px; margin-bottom: 14px; }
-  .tier-price { display: flex; align-items: baseline; gap: 5px; }
-  .cur { font-size: 11px; color: var(--ink-3); }
-  .tier[data-featured='true'] .cur { color: #9a9a92; }
-  .amt { font-size: 34px; }
-  .per { font-size: 10px; color: var(--ink-3); }
+  .ribbon[data-soon='true'] { background: var(--ink-3); }
+
+  .tier-n { font-size: 14px; margin-bottom: 16px; }
+
+  /* Prices are JetBrains Mono — NOT Pixelify. Pixelify is a numerals-display
+     face and reads as decorative; money should read as data. */
+  .tier-price { display: flex; align-items: baseline; gap: 5px; font-family: var(--font-mono); }
+  .cur { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+  .amt {
+    font-family: var(--font-mono);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .soon-amt { color: var(--ink-3); }
+  .per { font-size: 11px; color: var(--ink-3); }
+  .tier[data-featured='true'] .cur,
   .tier[data-featured='true'] .per { color: #9a9a92; }
-  .tier-billed { font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; margin: 6px 0 0; }
-  .tier-blurb { font-size: 11.5px; margin: 14px 0 18px; flex: 1; color: var(--ink-2); }
+
+  .tier-billed {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-3); margin: 8px 0 0;
+  }
+  .tier[data-featured='true'] .tier-billed { color: #9a9a92; }
+  .tier-save {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700; color: var(--up); margin: 6px 0 0;
+  }
+
+  .tier-blurb { font-size: 11.5px; margin: 16px 0 18px; flex: 1; color: var(--ink-2); }
   .tier[data-featured='true'] .tier-blurb { color: #c8c8c0; }
+
   .tier-cta { justify-content: center; width: 100%; }
   .tier[data-featured='true'] .tier-cta { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
   .tier[data-featured='true'] .tier-cta:hover { background: #fff; }
-  .tier-feats { list-style: none; padding: 0; margin: 20px 0 0; }
+  .tier-fine {
+    font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-3); margin: 8px 0 0; text-align: center;
+  }
+  .tier[data-featured='true'] .tier-fine { color: #9a9a92; }
+
+  .tier-feats { list-style: none; padding: 0; margin: 22px 0 0; }
   .tier-feats li {
     font-size: 11px; padding: 8px 0 8px 18px; position: relative;
     border-top: 1px dotted var(--hair); color: var(--ink-2);
   }
   .tier[data-featured='true'] .tier-feats li { border-color: #2f2f2c; color: #c8c8c0; }
   .tier-feats li::before { content: '✓'; position: absolute; left: 0; color: var(--up); font-weight: 700; }
+  .tier[data-soon='true'] .tier-feats li::before { color: var(--ink-3); }
 
   .faq-wrap { max-width: 800px; }
   .faq { margin-top: 20px; border-top: var(--rule); }
@@ -174,18 +232,29 @@ const faqs = [
 <script>
   const m = document.getElementById('tgM');
   const a = document.getElementById('tgA');
-  const set = (mode: string) => {
-    m?.classList.toggle('on', mode === 'monthly');
-    a?.classList.toggle('on', mode === 'annual');
+  const nf = new Intl.NumberFormat('en-PK');
+
+  const set = (mode) => {
+    const annual = mode === 'annual';
+    m?.classList.toggle('on', !annual);
+    a?.classList.toggle('on', annual);
+
     document.querySelectorAll('[data-monthly]').forEach((el) => {
       const e = el as HTMLElement;
-      const v = mode === 'annual' ? e.dataset.annual : e.dataset.monthly;
-      if (v) e.textContent = Number(v).toLocaleString('en-PK');
+      const v = annual ? e.dataset.annual : e.dataset.monthly;
+      if (v) e.textContent = nf.format(Number(v));
     });
     document.querySelectorAll('[data-billed]').forEach((el) => {
-      el.textContent = mode === 'annual' ? 'billed annually' : 'billed monthly';
+      const e = el as HTMLElement;
+      const total = e.dataset.annualTotal;
+      e.textContent = annual && total ? `billed annually · Rs ${nf.format(Number(total))}` : 'billed monthly';
+    });
+    document.querySelectorAll('[data-save]').forEach((el) => {
+      if (annual) el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
     });
   };
+
   m?.addEventListener('click', () => set('monthly'));
   a?.addEventListener('click', () => set('annual'));
 </script>
