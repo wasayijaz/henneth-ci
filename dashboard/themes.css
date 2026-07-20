@@ -104,7 +104,28 @@ body[data-theme=gemini] .shell.collapsed .side-group{margin-top:5px}
 body[data-theme=gemini] .main-col{flex:1;min-width:0;display:flex;flex-direction:column}
 /* The topbar is a SINGLE ROW that must never grow taller. Children may shrink or hide, never wrap:
    #updated ("quant … · live …") used to wrap onto 4+ lines at 375px and stretch the header. */
-body[data-theme=gemini] .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--panel);border-bottom:1.5px solid var(--line);flex-wrap:nowrap;min-height:48px}
+/* z-index 90, not 20. `position:sticky` + z-index makes the topbar a STACKING CONTEXT, so the
+   account menu's own z-index:80 is resolved INSIDE it and was capped by the topbar's 20 — the
+   menu opened but painted underneath the page content, which read as "the button does nothing".
+   90 clears the sidebar (50), the resize handle (60) and all page content, while staying below
+   every modal layer: authbox 100, wizbox 110, pl-overlay 120, replay 200, combo 1200, bw 1400. */
+body[data-theme=gemini] .topbar{position:sticky;top:0;z-index:90;display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--panel);border-bottom:1.5px solid var(--line);flex-wrap:nowrap;min-height:48px}
+
+/* SIGNED-OUT SHELL — the gate should not tease a terminal the visitor cannot open.
+   Sidebar and the in-app header controls are removed entirely (not blurred: a blurred nav still
+   invites clicks and still announces itself to screen readers). Brand and Sign in remain, because
+   the visitor needs to know where they are and how to get in. */
+body[data-gated="1"] .sidebar{display:none}
+body[data-gated="1"] .side-resize{display:none}
+body[data-gated="1"] .topbar #mkt,
+body[data-gated="1"] .topbar #health,
+body[data-gated="1"] .topbar #regime,
+body[data-gated="1"] .topbar #georisk,
+body[data-gated="1"] .topbar #searchbtn,
+body[data-gated="1"] .topbar .plan-badge,
+body[data-gated="1"] .topbar .meta,
+body[data-gated="1"] .topbar .side-open{display:none}
+body[data-gated="1"] .brand-mobile{display:inline-flex}
 body[data-theme=gemini] .topbar>*{flex:none}
 body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
 body[data-theme=gemini] .research-badge{margin-left:auto;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--hair);padding:2px 7px;white-space:nowrap}
@@ -1339,7 +1360,9 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
      NOTE: the live header is <header class="topbar"> (index.html), NOT header.app — an earlier set
      of `header.app` mobile rules here never applied to anything and has been re-scoped to .topbar.
      Keep new header rules on .topbar or they are silently dead. */
-  body[data-theme=gemini] .topbar{padding:6px 10px;gap:6px;flex-wrap:nowrap;overflow:hidden;position:sticky;top:0}
+  /* no `overflow:hidden` here either — it clips the account dropdown on mobile exactly as the
+     desktop rule did. The global html/body backstop handles sideways overflow. */
+  body[data-theme=gemini] .topbar{padding:6px 10px;gap:6px;flex-wrap:nowrap;position:sticky;top:0}
   body[data-theme=gemini] .topbar nav.tabs{display:none}
   body[data-theme=gemini] .topbar .meta{display:none}
   body[data-theme=gemini] .topbar #health,
@@ -1493,9 +1516,18 @@ body[data-theme=gemini] tr.clickable{cursor:pointer}
 /* ===========================================================================
    RESPONSIVE + A11Y HARDENING (from the UI audit)
    =========================================================================== */
-/* the sticky header must never push the page sideways: nowrap without overflow
-   lets any non-shrinkable child widen the whole document */
-body[data-theme=gemini] .topbar{overflow:hidden}
+/* The sticky header must never push the page sideways. This used to be `overflow:hidden` on
+   .topbar — which worked, and silently broke the account menu: the topbar is 49px tall, so an
+   absolutely-positioned dropdown inside it was CLIPPED to 49px. The button appeared dead.
+   That was a stacking-independent bug; raising z-index alone did not fix it (verified by
+   hit-testing a probe at the menu's own coordinates — the probe never won).
+   `overflow-x:hidden; overflow-y:visible` is not an escape either: per spec, when one axis is
+   clipped the `visible` axis computes to `auto`, which still creates a clipping scrollport.
+   So: no overflow on the header at all. Sideways protection is already guaranteed one line
+   below by the global html/body backstop, which is the correct place for it — a page-level
+   invariant enforced at page level, instead of every sticky child clipping its own children. */
+body[data-theme=gemini] .topbar{min-width:0}
+body[data-theme=gemini] .topbar>*{min-width:0}
 /* global backstop — nothing should ever produce a horizontal scrollbar */
 html,body{max-width:100%;overflow-x:hidden}
 /* the account menu is absolutely positioned; keep it inside the viewport as it grows */

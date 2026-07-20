@@ -5010,6 +5010,8 @@ function gateAllows(page) {
 
 function renderGate(page) {
   capturePlanIntent();          // route() reaches here before the module-level call below runs
+  // strips the sidebar + in-app header controls (see themes.css [data-gated]); cleared in route()
+  try { document.body.setAttribute("data-gated", "1"); } catch {}
   const intent = planIntent();
   const p = intent && PLANS[intent];
   $("view").innerHTML = `
@@ -5049,6 +5051,10 @@ async function route(isPoll) {
   // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
   if (!gateAllows(page)) return renderGate(page);
+  // reached a permitted page: restore the full shell. Must be cleared here rather than only on
+  // sign-in, because the open routes (#/cast, legal, glossary) are reachable while signed out and
+  // would otherwise inherit the stripped-down chrome from a previous gated view.
+  try { document.body.removeAttribute("data-gated"); } catch {}
   try {
     if (page === "ticker" && arg) { await pageTicker(arg); }
     else { await (PAGES[page] || pageBoard)(); }
