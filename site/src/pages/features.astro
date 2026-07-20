@@ -153,10 +153,10 @@ const engine = [
   .mock-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
   .mock-body { padding: 14px; }
   .mock-note { font-size: 9.5px; margin: 10px 0 0; }
-  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--ink-1); }
+  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--line); }
   .heat-cell { background: var(--panel); padding: 14px 6px; text-align: center; font-size: 10px; font-weight: 700; }
-  .heat-cell[data-dir='1'] { background: rgba(11,122,95,.14); color: var(--up); }
-  .heat-cell[data-dir='-1'] { background: rgba(190,65,38,.13); color: var(--dn); }
+  .heat-cell[data-dir='1'] { background: var(--up-soft); color: var(--up); }
+  .heat-cell[data-dir='-1'] { background: var(--dn-soft); color: var(--dn); }
   .vrow { display: flex; justify-content: space-between; font-size: 11px; padding: 9px 0; border-bottom: 1px dotted var(--hair); }
 
   .dr-kicker { color: #8f8f88; }

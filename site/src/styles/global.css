@@ -6,27 +6,59 @@
    for everything, Pixelify Sans for oversized numerals ONLY.
    ============================================================ */
 
+/* PALETTE (revised 2026-07-20).
+
+   The old system drew every rule in near-black (`--line: #0a0a0a`), which is what made the site
+   read as "dark" even though its background was already cream: on a dense page the 1.5px black
+   boxes carry more visual weight than the type inside them. Rules now sit in a warm grey that
+   still reads as a deliberate terminal frame but stops competing with the content.
+
+   `--ink-1` is UNCHANGED and still near-black. It is the ink colour and the dark-surface colour —
+   the nav, the Desk Room band and the final CTA all stay black on purpose, as the contrast anchors
+   that give the page its rhythm. Softening the rules without keeping those would flatten
+   everything to one weight. So: soft frames, dark anchors.
+
+   THE DISTINCTION THAT MATTERS when editing below: `--ink-1` as a BACKGROUND means "this is a dark
+   surface" and should stay; `--ink-1` as a border, or as the background behind a 1.5px grid gap,
+   means "this is a rule" and belongs to `--line`. Several grid gaps were using the former to draw
+   the latter, which is why they had to be converted by hand. */
 :root {
-  --bg: #f4f4f0;
+  --bg: #f5f3ef;
   --panel: #ffffff;
-  --panel-2: #faf9f4;
+  --panel-2: #faf9f6;
 
-  --ink-1: #0a0a0a;
-  --ink-2: #55554e;
-  --ink-3: #7a7a72;
+  --ink-1: #0a0a0a;     /* ink + dark surfaces — NOT rules */
+  --ink-2: #5a5a63;
+  /* Slate-lavender: labels, captions, secondary names.
+     DARKER THAN IT LOOKS IN A SWATCH, and that is the point. The reference's lavender sampled at
+     roughly #8e8ea8, which measures 2.88:1 on this background — well under the 4.5:1 AA floor. It
+     would be fine for pure decoration, but `.muted` here carries real prose: the hero sub-line,
+     every step description, every FAQ answer. #686880 keeps the cool cast and measures 4.88:1 on
+     --bg / 5.41:1 on --panel. Do not lighten this without re-checking both. */
+  --ink-3: #686880;
 
-  --line: #0a0a0a;      /* 1.5px card/section outer rules */
-  --hair: #d9d9d2;      /* 1px internal dividers, often dotted */
+  --line: #ddd9d1;      /* 1.5px card/section outer rules */
+  --hair: #e8e5de;      /* 1px internal dividers, often dotted */
 
-  --up: #0b7a5f;
-  --dn: #be4126;
+  /* Tuned against the tint pairs below, not against white: the percentages in a heat cell sit on
+     --up-soft / --dn-soft, and at 10.5px bold they are NOT "large text", so they need the full
+     4.5:1. Measured 5.24:1 and 4.82:1 respectively. */
+  --up: #186b4c;
+  --dn: #ad3b26;
   --warn: #c9922b;
+
+  /* Tinted cell fills. Solid, not rgba(): these sit on top of --panel in some places and --bg in
+     others, and an alpha tint shifts hue between the two. */
+  --up-soft: #d9ecdf;
+  --dn-soft: #f8dfd9;
 
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --font-pixel: 'Pixelify Sans', var(--font-mono);
 
   --maxw: 1280px;
-  --rule: 1.5px solid var(--ink-1);
+  /* Was `solid var(--ink-1)`, which coupled every rule on the site to the ink colour and made
+     softening them impossible without also lightening the type. Rules own their own token now. */
+  --rule: 1.5px solid var(--line);
   /* The one accent shadow: hard, no blur, mockups only. */
   --shadow-hard: 8px 8px 0 rgba(10, 10, 10, 0.11);
 }
@@ -106,7 +138,10 @@ img, svg { max-width: 100%; display: block; }
   text-transform: uppercase;
   font-weight: 700;
   padding: 12px 18px;
-  border: var(--rule);
+  /* Deliberately NOT var(--rule). Structural rules softened to warm grey, but a call to action is
+     not structure — an outline button in --line reads as a disabled field next to the solid black
+     primary, and the pair stops looking like a hierarchy. Buttons keep the ink outline. */
+  border: 1.5px solid var(--ink-1);
   background: var(--panel);
   color: var(--ink-1);
   text-decoration: none;
@@ -135,11 +170,12 @@ img, svg { max-width: 100%; display: block; }
 .mock { border: var(--rule); background: var(--panel); box-shadow: var(--shadow-hard); }
 .hair { border: 0; border-top: 1px dotted var(--hair); margin: 12px 0; }
 
-/* Grid whose 1.5px gap IS the rule colour, so tiles look seamlessly divided. */
+/* Grid whose 1.5px gap IS the rule colour, so tiles look seamlessly divided.
+   The gap must therefore track --line, not --ink-1 — it is drawing a rule, not a dark surface. */
 .tilegrid {
   display: grid;
   gap: 1.5px;
-  background: var(--ink-1);
+  background: var(--line);
   border: var(--rule);
 }
 .tilegrid > * { background: var(--panel); padding: 18px; }

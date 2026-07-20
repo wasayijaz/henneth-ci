@@ -472,15 +472,15 @@ const principles = [
   /* Cells are left-aligned with the ticker over its move — the reference's layout, and the one
      that survives real data: centred text made the varying-width percentages jitter column to
      column. `tabular-nums` holds the decimal points in a straight line down the grid. */
-  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--ink-1); }
+  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--line); }
   .heat-cell {
     background: var(--panel); padding: 10px 9px; display: flex; flex-direction: column; gap: 3px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
   }
   .hc-sym { font-size: 9.5px; letter-spacing: 0.08em; }
   .hc-pct { font-size: 10.5px; font-variant-numeric: tabular-nums; letter-spacing: 0; }
-  .heat-cell[data-dir='1'] { background: rgba(11, 122, 95, 0.14); color: var(--up); }
-  .heat-cell[data-dir='-1'] { background: rgba(190, 65, 38, 0.13); color: var(--dn); }
+  .heat-cell[data-dir='1'] { background: var(--up-soft); color: var(--up); }
+  .heat-cell[data-dir='-1'] { background: var(--dn-soft); color: var(--dn); }
   .heat-cell[data-dir='0'] { color: var(--ink-2); }
 
   .mock-sec { padding: 14px; border-top: var(--rule); }
@@ -503,11 +503,13 @@ const principles = [
   }
   .sig-px {
     font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
-    text-align: right; flex: none; min-width: 74px;
+    text-align: right; flex: none; white-space: nowrap;
   }
   .sig-px[data-dir='1'] { color: var(--up); }
   .sig-px[data-dir='-1'] { color: var(--dn); }
-  .sig-px i { display: block; font-style: normal; font-size: 9px; font-weight: 500; }
+  /* Inline with the price, as in the reference — stacked, the move read as a second data point
+     instead of a qualifier on the number above it. */
+  .sig-px i { font-style: normal; font-size: 9px; font-weight: 500; margin-left: 5px; }
 
   .mock-foot {
     display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
