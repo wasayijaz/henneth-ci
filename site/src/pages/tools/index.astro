@@ -1,0 +1,158 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../site.config.ts';
+
+/* The hub. Its SEO job is to catch the generic "Pakistani investment calculator" searches and
+   pass authority down to the individual tools, each of which targets its own query. Its product
+   job is to make the free tools findable from the nav, since they are the first thing a stranger
+   can use without an account. */
+
+const tools = [
+  {
+    href: '/tools/compound-interest-calculator/',
+    name: 'Compound interest',
+    blurb: 'What a lump sum grows to — and what it buys after inflation.',
+    live: true,
+  },
+  {
+    href: '/tools/sip-calculator/',
+    name: 'Monthly investment (SIP)',
+    blurb: 'What a fixed monthly contribution turns into over time.',
+    live: true,
+  },
+  {
+    href: '/tools/inflation-calculator/',
+    name: 'Inflation',
+    blurb: "What today's rupees will be worth later, at Pakistan's real CPI.",
+    live: true,
+  },
+  {
+    href: '/tools/savings-goal-calculator/',
+    name: 'Savings goal',
+    blurb: 'What to save monthly to reach a target — priced at future cost.',
+    live: true,
+  },
+  {
+    href: '/tools/home-loan-calculator/',
+    name: 'Home loan',
+    blurb: 'Monthly instalment, and what the loan really costs in total.',
+    live: true,
+  },
+  {
+    href: null,
+    name: 'PSX trading cost',
+    blurb: 'Brokerage, CDC and NCCPL charges on a real trade size.',
+    live: false,
+  },
+  {
+    href: null,
+    name: 'Capital gains tax',
+    blurb: 'CGT on listed securities by filer status and acquisition date.',
+    live: false,
+  },
+  {
+    href: null,
+    name: 'Zakat on shares',
+    blurb: 'Zakatable total against the gold nisab, at a live gold price.',
+    live: false,
+  },
+];
+
+const itemLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Henneth PSX calculators',
+  itemListElement: tools
+    .filter((t) => t.href)
+    .map((t, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: t.name,
+      url: new URL(t.href!, site.url).href,
+    })),
+};
+---
+
+<Base
+  title="Free PSX & Pakistan Investment Calculators"
+  description="Free calculators for Pakistani investors — compound growth, monthly SIP, inflation, savings goals and home loans. In rupees, anchored to real Pakistani rates. No sign-up."
+  path="/tools/"
+  active="tools"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(itemLd)} />
+  </Fragment>
+
+  <section class="section-tight ph">
+    <div class="wrap">
+      <p class="kicker">Tools</p>
+      <h1>Calculators, in rupees</h1>
+      <p class="lead ph-lead">
+        The same calculators the Henneth desk runs, free and without an account. Built for Pakistan
+        rather than converted from a dollar template — defaults are anchored to real reported
+        figures, not round numbers typed from memory.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="tilegrid tools">
+        {
+          tools.map((t) =>
+            t.live && t.href ? (
+              <a class="tool" href={t.href}>
+                <h2>{t.name}</h2>
+                <p class="muted">{t.blurb}</p>
+                <span class="go">Open →</span>
+              </a>
+            ) : (
+              <div class="tool off">
+                <h2>{t.name}</h2>
+                <p class="muted">{t.blurb}</p>
+                <span class="go soon">Coming soon</span>
+              </div>
+            )
+          )
+        }
+      </div>
+      <p class="muted foot">
+        Every calculator runs on your own inputs, in your browser. Nothing is stored, nothing is
+        sent anywhere, and no result is a forecast or advice — assumed returns are your assumption.
+      </p>
+    </div>
+  </section>
+
+  <section class="section band-dark">
+    <div class="wrap tools-cta">
+      <div>
+        <p class="kicker dr-kicker">The desk</p>
+        <h2>The harder question is which company</h2>
+        <p class="lead tools-cta-lead">
+          Henneth reads PSX companies in plain English — what the business earns, what it's worth,
+          what changed this week. Research, not advice.
+        </p>
+      </div>
+      <a class="btn" href={`${site.appUrl}/?auth=signup`} rel="noopener">Get started</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ph-lead { max-width: 62ch; }
+  .tools { grid-template-columns: repeat(3, 1fr); }
+  .tool { text-decoration: none; display: flex; flex-direction: column; gap: 8px; }
+  .tool h2 { font-size: 14px; margin: 0; }
+  .tool p { font-size: 11.5px; margin: 0; line-height: 1.65; flex: 1; }
+  a.tool:hover { background: var(--panel-2); }
+  .go { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-top: 6px; }
+  .tool.off { opacity: 0.62; }
+  .go.soon { color: var(--ink-3); }
+  .foot { font-size: 11px; margin-top: 20px; max-width: 68ch; }
+
+  .tools-cta { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+  .dr-kicker { color: #8f8f88; }
+  .tools-cta-lead { color: #c8c8c0; margin: 0; max-width: 52ch; }
+
+  @media (max-width: 900px) { .tools { grid-template-columns: 1fr; } .tools-cta { grid-template-columns: 1fr; } }
+</style>

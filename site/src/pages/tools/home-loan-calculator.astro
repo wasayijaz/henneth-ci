@@ -1,0 +1,83 @@
+---
+import ToolPage from '../../components/ToolPage.astro';
+import { getAnchors } from '../../lib/anchors.ts';
+
+const a = getAnchors();
+
+const faqs = [
+  {
+    q: 'What rate should I enter?',
+    a: 'The one your bank actually quotes. Pakistani home finance is normally priced at KIBOR plus a bank spread, so there is no single market rate to look up — and Henneth does not carry a live KIBOR feed, so the field is deliberately left for you to fill rather than pre-filled with a guess.',
+  },
+  {
+    q: 'Why is my instalment fixed here when my bank re-prices?',
+    a: 'Because this is a fixed-rate illustration, which is what every mortgage calculator produces. Most Pakistani home finance is floating: as KIBOR moves, your instalment moves with it. Treat the figure here as a snapshot at one rate, and run it again a few percentage points higher to see what a rising-rate year would do to you.',
+  },
+  {
+    q: 'Is this Islamic (Shariah-compliant) home finance?',
+    a: 'No. The maths here is a conventional amortising loan. Diminishing musharakah and ijarah products used by Islamic banks in Pakistan are structured differently, and while the monthly outflow can look similar, the calculation and the contract are not the same thing.',
+  },
+  {
+    q: 'Does it include the other costs of buying?',
+    a: 'No. Processing fees, legal and transfer costs, stamp duty, property taxes, insurance and maintenance are all real and none are here. This calculates the loan only.',
+  },
+];
+
+const related = [
+  { href: '/tools/savings-goal-calculator/', label: 'Savings goal' },
+  { href: '/tools/inflation-calculator/', label: 'Inflation' },
+  { href: '/tools/compound-interest-calculator/', label: 'Compound growth' },
+];
+---
+
+<ToolPage
+  title="Home Loan Calculator Pakistan — Monthly Instalment in PKR"
+  h1="Home loan calculator"
+  description="Work out the monthly instalment on a Pakistani home loan, and the total interest you'd repay over the term. Free, no sign-up."
+  path="/tools/home-loan-calculator/"
+  lead="The monthly instalment, and — the number that changes minds — what the loan costs in total over its life."
+  calc="mortgage"
+  updated="2026-07-20"
+  fields={[
+    { field: 'price', label: 'Property price', prefix: 'Rs', value: 20000000, step: 500000 },
+    { field: 'down', label: 'Down payment', prefix: 'Rs', value: 5000000, step: 250000 },
+    { field: 'years', label: 'Loan term', value: 20, suffix: 'yrs' },
+    { field: 'rate', label: 'Annual rate your bank quotes', value: 16, step: 0.25, suffix: '%' },
+  ]}
+  faqs={faqs}
+  related={related}
+>
+  <h2>Look at the total, not the instalment</h2>
+  <p>
+    Mortgage conversations happen in monthly instalments because that is what feels affordable. The
+    number that actually describes the decision is the total repaid over the term, and on a long
+    Pakistani home loan the interest alone routinely exceeds the amount borrowed.
+  </p>
+  <p>
+    Shortening the term raises the instalment and cuts the total sharply. Comparing a 20-year and a
+    15-year run of the same loan is the most useful two minutes you can spend with this calculator.
+  </p>
+
+  <h2>The floating-rate problem</h2>
+  <p>
+    This is a fixed-rate illustration, and most Pakistani home finance is not fixed. It is priced at
+    <strong>KIBOR plus a spread</strong> and re-prices as rates move, so your instalment can rise
+    during the life of the loan.
+  </p>
+  <p>
+    {
+      a.policy != null
+        ? `The SBP policy rate is currently ${a.policy}%${a.tbill != null ? ` and 6-month T-bills yield about ${a.tbill}%` : ''}${a.updated ? ` (macro layer, ${a.updated})` : ''}. Home finance sits above these, not at them. `
+        : ''
+    }
+    Run the calculator two or three points above your quoted rate. If that version of the
+    instalment would break you, the loan is too large — not the rate too high.
+  </p>
+
+  <h2>What is not included</h2>
+  <p>
+    Processing fees, legal and transfer charges, stamp duty, insurance, property tax and
+    maintenance are all real costs of owning and none of them appear here. This calculates the loan
+    and nothing else.
+  </p>
+</ToolPage>
