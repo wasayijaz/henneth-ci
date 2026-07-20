@@ -50,7 +50,7 @@ const principles = [
           <a href="/research" class="btn btn-lg">See how it works</a>
         </div>
         <div class="hero-fine">
-          <span>{site.trialDays}-day trial</span><span>·</span>
+          <span>Free in early access</span><span>·</span>
           <span>No card required</span><span>·</span>
           <span>Research, not advice</span>
         </div>
@@ -281,21 +281,24 @@ const principles = [
     <div class="wrap two-col">
       <div>
         <p class="kicker">Plans</p>
-        <h2>One desk. Two ways in.</h2>
+        <h2>{site.earlyAccess ? 'Free while we get it right' : 'One desk. Two ways in.'}</h2>
         <p class="lead">
-          Investor and Pro, each with a {site.trialDays}-day trial — plus a Broker tier for desks
-          and institutions.
+          {site.earlyAccess
+            ? 'The whole desk is open during early access — no card, no trial timer. Use it properly and tell us what needs fixing.'
+            : `Investor and Pro, each with a ${site.trialDays}-day trial — plus a Broker tier for desks and institutions.`}
         </p>
-        <a href="/plans" class="btn btn-solid">See full pricing ›</a>
+        <a href="/plans" class="btn btn-solid">{site.earlyAccess ? 'Why it’s free ›' : 'See full pricing ›'}</a>
       </div>
       <div class="tease">
         {site.plans.map((p) => (
           <a href={p.href || '/plans'} class="tease-row">
             <span class="tease-n">{p.name}{p.featured && <em> · most popular</em>}</span>
             <span class="tease-p">
-              {p.priceMonthly
-                ? <>{site.billing.currency} {p.priceMonthly.toLocaleString('en-PK')}<i>/mo</i></>
-                : <>Coming soon</>}
+              {p.soon
+                ? <>Coming soon</>
+                : site.earlyAccess
+                  ? <>Free</>
+                  : <>{site.billing.currency} {p.priceMonthly.toLocaleString('en-PK')}<i>/mo</i></>}
             </span>
           </a>
         ))}

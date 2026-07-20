@@ -42,8 +42,16 @@ export const site = {
   // cannot grant it. Picking a plan records the intent and drops the user into
   // the free desk — we say so plainly rather than faking a checkout.
   // ---------------------------------------------------------------------------
-  // Trial length advertised on Investor and Pro. The desk must honour this:
-  // see docs note — plan is DB-frozen, so a trial grant needs a service-role path.
+  // EARLY ACCESS SWITCH.
+  // While true, /plans shows the free early-access page: no prices, no trial, no
+  // checkout — everything open, feedback requested. Flip to false to restore the
+  // priced Investor/Pro/Broker page (the tier data below is kept intact for it).
+  // Keep this true until the track record has resolved calls, a payment gateway
+  // exists, and the legal pages are reviewed.
+  earlyAccess: true,
+
+  // Trial length for the PAID page only. The desk must honour this before that
+  // page goes live: plan is DB-frozen, so a trial grant needs a service-role path.
   trialDays: 14,
   billing: {
     currency: 'Rs',

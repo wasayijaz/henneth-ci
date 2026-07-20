@@ -25,7 +25,7 @@ const segments = [
     href: enter('investor'),
     solid: true,
     panelTitle: 'Investor · what you get',
-    plan: 'Rs 3,000/mo',
+    plan: site.earlyAccess ? 'Free now' : 'Rs 3,000/mo',
     rows: [
       ['Daily desk read', 'Included', 1],
       ['Board + valuations', 'Included', 1],
@@ -47,7 +47,7 @@ const segments = [
     href: enter('pro'),
     solid: true,
     panelTitle: 'Pro · what you get',
-    plan: 'Rs 8,000/mo',
+    plan: site.earlyAccess ? 'Free now' : 'Rs 8,000/mo',
     rows: [
       ['Everything in Investor', 'Included', 1],
       ['The Desk Room', 'Full access', 1],
@@ -69,7 +69,7 @@ const segments = [
     href: '/contact',
     solid: false,
     panelTitle: 'Broker · what you get',
-    plan: 'Custom',
+    plan: site.earlyAccess ? 'In build' : 'Custom',
     rows: [
       ['Seats', 'Multi-seat', 0],
       ['API & feeds', 'Included', 1],
