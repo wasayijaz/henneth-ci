@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "echo no-deps",
-  "_comment_buildCommand": "Copies the WHOLE dashboard dir, not a hand-listed subset. The old list was index.html + app.js + themes.css only, so sw.js and push.js had silently never shipped, and every icon/manifest/og asset added later would have 404'd in production while working perfectly in local dev. The one deliberate exclusion is app.html: a stale duplicate shell that predates the sign-in gate, so serving it would expose an UNGATED-looking copy of the terminal at /app.html. It is removed after the copy rather than left out of it, so the wholesale copy stays self-maintaining for every future asset.",
   "buildCommand": "mkdir -p public && cp -r dashboard/. public/ && rm -f public/app.html && cp -r state public/state && printf '' > public/.nojekyll",
   "outputDirectory": "public",
   "cleanUrls": true,
@@ -10,12 +9,10 @@
   "headers": [
     { "source": "/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
     {
-      "_comment": "Declared AFTER the catch-all so it overrides it for static brand art. must-revalidate on every image meant a conditional request per icon per page view, for files that change maybe once a year. Not `immutable` — these filenames are unhashed, so a genuine logo change must still be able to propagate within a day.",
       "source": "/(.*)\\.(png|svg|ico|webmanifest)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }]
     },
     {
-      "_comment": "The desk's data layer. max-age=0 forced a full revalidation round-trip for EVERY state file on EVERY navigation — and a ticker page opens ~23 of them, which is what made mobile navigation feel broken. The desk rewrites this data on a 30-minute cycle, so a 60s browser-fresh window cannot show anything the 30-minute cycle would not have shown anyway, and stale-while-revalidate keeps a repeat navigation instant while the refresh happens behind it. Genuinely intraday files (live.json, health.json) are fetched with a per-request cache-buster in app.js, so they bypass this entirely and are never served stale.",
       "source": "/state/(.*)\\.json",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=60, stale-while-revalidate=900" }]
     }

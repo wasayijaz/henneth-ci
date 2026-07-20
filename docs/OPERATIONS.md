@@ -432,6 +432,42 @@ same pattern already used for `.searchbox[hidden]`.
 
 ---
 
+## 9a. Fixed bug class — `vercel.json` takes NO comment keys (2026-07-20)
+
+Three consecutive desk deploys went straight to **ERROR with zero build logs**. No logs at all is the
+tell: the build never started, because Vercel validates `vercel.json` against its schema when the
+deployment is *created*, and rejects unknown properties. The cause was `"_comment"` /
+`"_comment_buildCommand"` keys added to explain the config — a habit that is correct in every other
+file in this repo and silently fatal in this one.
+
+**Rule: `vercel.json` and `site/vercel.json` carry no explanatory keys.** JSON has no comments, and
+this particular JSON is schema-validated. Config reasoning goes here, in the runbook, instead.
+
+Meanwhile the marketing site kept deploying fine, so `henneth.app` picked up the new branding while
+`desk.henneth.app` sat on a commit from hours earlier. **A green marketing site is not evidence the
+desk shipped** — the two are separate Vercel projects (`henneth-site`, `psx-trade-desk`) off one repo.
+Verify the desk by fetching something only the new build would contain, not by loading the site.
+
+### What the current desk config does, and why
+
+- **`buildCommand` copies the whole `dashboard/` directory**, not a hand-listed subset. The old list
+  was `index.html app.js themes.css` only — which meant `sw.js` and `push.js` had *never shipped*, and
+  every icon/manifest/OG asset would have 404'd in production while working perfectly in local dev.
+  Wholesale copy is self-maintaining for future assets.
+- **`rm -f public/app.html`** is the one deliberate exclusion. `dashboard/app.html` is a stale
+  duplicate shell predating the sign-in gate; serving it would expose an ungated-looking copy of the
+  terminal at `/app.html`. Removed *after* the copy so the wholesale rule stays intact.
+- **`/state/*.json` gets `max-age=60, stale-while-revalidate=900`.** `max-age=0` forced a full
+  revalidation round-trip for every state file on every navigation, and a ticker page opens ~23 of
+  them — the main reason mobile navigation felt broken. The data itself is rewritten on a 30-minute
+  cycle, so a 60s browser-fresh window cannot show anything the cycle would not have shown anyway.
+  Genuinely intraday files (`live.json`, `health.json`, `runlog.json`, news) are fetched with a
+  per-request cache-buster in `app.js` and bypass this entirely, so they are never served stale.
+- **Images/manifest get 1 day + SWR.** Not `immutable`: the filenames are unhashed, so a real logo
+  change must still be able to propagate.
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
