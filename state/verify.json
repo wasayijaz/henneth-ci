@@ -200,6 +200,16 @@
    "sev": "low",
    "field": "price_series",
    "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
+  },
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Chair call was priced at 9.81 vs session price 10.61"
+  },
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Dr. Omar call was priced at 9.81 vs session price 10.61"
   }
  ],
  "GAL": [
@@ -319,6 +329,35 @@
    "sev": "low",
    "field": "fairvalue.spread",
    "msg": "methods disagree 3.4x — treat composite as a rough screen"
+  }
+ ],
+ "NRL": [
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Chair call was priced at 396.56 vs session price 430.35"
+  },
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Meher call was priced at 396.56 vs session price 430.35"
+  },
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Dr. Omar call was priced at 396.56 vs session price 430.35"
+  }
+ ],
+ "PRL": [
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Chair call was priced at 44.59 vs session price 49.05"
+  },
+  {
+   "sev": "medium",
+   "field": "claim.price",
+   "msg": "a Dr. Omar call was priced at 44.59 vs session price 49.05"
   }
  ],
  "TREET": [
@@ -507,8 +546,8 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-20 17:41",
-  "tickers_with_issues": 72,
+  "built": "2026-07-20 17:54",
+  "tickers_with_issues": 74,
   "high_severity": 3,
   "escalate_to_agent": [
    "CLCPS",
