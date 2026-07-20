@@ -309,12 +309,12 @@ const principles = [
           Nothing is hidden; you see who argued what.
         </p>
         <button class="btn" id="drPlay">▶ Watch the desk analyse</button>
-        <p class="dr-hint muted">Replay stages the debate in sequence — hit play</p>
+        <p class="dr-hint muted" id="drHint">Replay stages the debate in sequence — hit play</p>
       </div>
 
       <div class="dr-card">
         <div class="dr-bar">
-          <span class="label">Desk Room</span>
+          <span class="label">Desk Room<span class="dr-live" id="drLive"></span></span>
           <span class="muted">4 desks · 1 chair</span>
         </div>
         <div class="dr-body" id="drBody">
@@ -554,6 +554,26 @@ const principles = [
   .dr-block p { font-size: 11px; margin: 6px 0 0; color: #c8c8c0; }
   .dr-block.is-hidden { opacity: 0; transform: translateY(10px); }
   .dr-block.is-in { animation: rpUp 0.42s ease both; }
+
+  /* REPLAY MODE — a spotlight, not just a reveal.
+     While a session runs, every desk that has already spoken dims back to 45% and only the one
+     currently speaking is at full strength with a lit border. That is what makes it read as a
+     debate unfolding rather than a list appearing.
+     `animation: none` here is load-bearing: the ambient henneth-speak loop in global.css is also
+     walking these blocks, and without this the two would fight for border-colour mid-replay. */
+  .dr-body.is-replaying .dr-block { animation: none; opacity: 0.45; transition: opacity 0.3s ease, border-color 0.3s ease; }
+  .dr-body.is-replaying .dr-block.is-speaking { opacity: 1; border-color: #55a16b; }
+  .dr-body.is-replaying .dr-block.is-hidden { opacity: 0; }
+
+  /* The "recording" tell in the panel header, only present while a session is running. */
+  .dr-live { display: none; margin-left: 8px; color: #55a16b; letter-spacing: 0.08em; }
+  /* Keyed off .dr-card, not .dr-body: .dr-live sits inside .dr-bar, which is a sibling of
+     .dr-body, so no combinator from .dr-body can reach it. Only the shared ancestor can. */
+  .dr-card.is-live .dr-live { display: inline; }
+  .dr-card.is-live .dr-live::before {
+    content: '●'; margin-right: 5px; display: inline-block;
+    animation: henneth-dot-pulse 1.1s ease-in-out infinite;
+  }
   .dr-chair { border-color: var(--bg); }
   .dr-chair-h { display: flex; justify-content: space-between; }
   .dr-dissent { color: #9a9a92 !important; }
@@ -596,16 +616,54 @@ const principles = [
 </style>
 
 <script>
-  // Staged reveal of the debate, matching the handoff's ~450ms cadence.
+  /* THE DESK ROOM SESSION.
+     The old version just faded five blocks in on a timer. This runs it as a debate: each desk
+     takes the spotlight while the others dim, the panel header shows a live counter, and the
+     button reports state instead of sitting there re-clickable mid-run.
+
+     Timers are tracked and cleared on re-entry — without that, a second click part-way through
+     leaves the first run's callbacks firing into the second, and the spotlight jumps around. */
   const play = document.getElementById('drPlay');
+  const hint = document.getElementById('drHint');
+  const live = document.getElementById('drLive');
+  const card = document.querySelector('.dr-card') as HTMLElement | null;
+  const body = document.getElementById('drBody');
   const blocks = Array.from(document.querySelectorAll('.dr-block')) as HTMLElement[];
+  const NAMES = ['Technical desk', 'Fundamental desk', 'Bull', 'Bear', 'Chair'];
+  const BEAT = 900;                       // slow enough to actually read a line before the next
+  let timers: number[] = [];
+
+  function endSession() {
+    body?.classList.remove('is-replaying');
+    card?.classList.remove('is-live');
+    blocks.forEach((b) => b.classList.remove('is-speaking'));
+    if (play) { play.textContent = '▶ Replay the session'; (play as HTMLButtonElement).disabled = false; }
+    if (hint) hint.textContent = 'That is one session. The desk runs this on every ticker.';
+  }
+
   play?.addEventListener('click', () => {
-    blocks.forEach((b) => { b.classList.add('is-hidden'); b.classList.remove('is-in'); });
+    timers.forEach(clearTimeout);
+    timers = [];
+    body?.classList.add('is-replaying');
+    card?.classList.add('is-live');
+    (play as HTMLButtonElement).disabled = true;
+    play.textContent = 'Session running…';
+    blocks.forEach((b) => { b.classList.add('is-hidden'); b.classList.remove('is-in', 'is-speaking'); });
+
     blocks.forEach((b, i) => {
-      setTimeout(() => {
-        b.classList.remove('is-hidden');
-        b.classList.add('is-in');
-      }, i * 450);
+      timers.push(
+        window.setTimeout(() => {
+          blocks.forEach((x) => x.classList.remove('is-speaking'));
+          b.classList.remove('is-hidden');
+          b.classList.add('is-in', 'is-speaking');
+          if (live) live.textContent = `${NAMES[i]} — ${i + 1} of ${blocks.length}`;
+          if (hint) hint.textContent = i === blocks.length - 1
+            ? 'The Chair synthesises, and records the dissent.'
+            : `${NAMES[i]} is making its case…`;
+        }, i * BEAT)
+      );
     });
+    // The Chair's block is the payoff, so the session holds on it before releasing the spotlight.
+    timers.push(window.setTimeout(endSession, blocks.length * BEAT + 1400));
   });
 </script>

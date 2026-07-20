@@ -5058,9 +5058,33 @@ function gateAllows(page) {
    index.html ships body[data-auth="pending"] so the static shell is hidden from the very first
    frame, and initAuth() is the single thing that clears the flag and triggers the first render. */
 let authReady = false;
+
+/* Boot-screen counter. Deliberately NOT a fake progress bar: there is nothing measurable to report
+   (the work is one localStorage read plus one network call of unknown latency), so a smooth 0-100
+   would be theatre. It eases toward 92 and STOPS there, then snaps to 100 the instant auth actually
+   resolves — so the only two honest states, "still working" and "done", are the two it can show.
+   The CSS keeps the whole screen hidden for the first 260ms, so a warm session never sees it. */
+let _bootTimer = null;
+function startBootCounter() {
+  const el = document.getElementById("bootPct");
+  if (!el) return;
+  let v = 0;
+  _bootTimer = setInterval(() => {
+    v += Math.max(0.4, (92 - v) * 0.06);   // asymptotic — fast at first, never actually reaches 92
+    el.textContent = Math.min(92, Math.round(v)) + "%";
+  }, 55);
+}
+function stopBootCounter() {
+  if (_bootTimer) { clearInterval(_bootTimer); _bootTimer = null; }
+  const el = document.getElementById("bootPct");
+  if (el) el.textContent = "100%";
+}
+startBootCounter();
+
 function authResolved() {
   if (authReady) return;
   authReady = true;
+  stopBootCounter();
   try { document.body.removeAttribute("data-auth"); } catch {}
 }
 /* Backstop. Everything that resolves auth is async and some of it is network: a blocked Supabase

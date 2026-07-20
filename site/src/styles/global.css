@@ -183,6 +183,66 @@ img, svg { max-width: 100%; display: block; }
 .grid { display: grid; gap: 18px; }
 
 /* ============================================================================================
+   HOVER LANGUAGE
+
+   One gesture, applied everywhere, so the whole site feels like a single instrument: on hover a
+   surface LIFTS toward the reader (translateY) and its rule DARKENS from the soft warm grey to
+   ink. Nothing changes size — scale() on a bordered hard-corner box makes the 1.5px rule visibly
+   thicken, which fights the design language.
+
+   Everything here is transform + border-color + background: all cheap, none of them trigger
+   layout. And every rule is inside a `hover: hover` query, so touch devices never get a stuck
+   hover state after a tap.
+   ============================================================================================ */
+@media (hover: hover) {
+  .tilegrid > *,
+  .tier,
+  .post,
+  .mock,
+  .card,
+  .fq {
+    transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+  }
+  .tilegrid > *:hover,
+  .post:hover { background: var(--panel-2); transform: translateY(-2px); }
+  .tier:hover { transform: translateY(-3px); }
+  .mock:hover { transform: translateY(-2px); border-color: var(--ink-1); }
+
+  /* Links get a rule that grows from the left rather than a colour change — the palette is
+     deliberately narrow, so motion is the affordance the site can afford to spend. */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px; height: 1.5px; width: 100%;
+    background: currentColor;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+  .nav-link:hover::after, .nav-link.on::after { transform: scaleX(1); }
+
+  /* The chevron on a "›" link slides — the single most common micro-affordance on the site. */
+  .btn { transition: background 0.14s ease, color 0.14s ease, transform 0.14s ease; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  /* FAQ rows highlight the whole strip, so the hit target reads as the whole row, not the text. */
+  .fq summary:hover { color: var(--up); }
+
+  /* A heat cell lifts out of its grid on hover — the gap is the rule, so a lifted cell
+     momentarily breaks the grid line, which is exactly the "live tile" feel we want. */
+  .heat-cell { transition: transform 0.16s ease, box-shadow 0.16s ease; }
+  .heat-cell:hover { transform: translateY(-2px); box-shadow: 0 2px 0 rgba(10, 10, 10, 0.18); z-index: 1; }
+}
+
+/* Keyboard parity: everything hoverable must show the same intent on focus, or the site is only
+   navigable by mouse. :focus-visible so a click does not leave a ring behind. */
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+  outline: 2px solid var(--ink-1);
+  outline-offset: 2px;
+}
+
+/* ============================================================================================
    PRODUCT-SNAPSHOT MOTION
 
    Every mock on this site is a still image of a live terminal, which is the one thing a still

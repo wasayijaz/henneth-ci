@@ -113,18 +113,19 @@ export const site = {
       priceMonthly: null,
       priceAnnual: null,
       trial: false,
-      blurb:
-        'Everything in Pro, plus your own desk’s calls scored in public on the same bar as everyone else.',
+      // DELIBERATELY SAYS NOTHING (owner, 2026-07-20).
+      // Every prior line here was a promise — public scoring, a leaderboard, team seats — for a
+      // tier with no build date and no committed scope. Naming features before they exist sets an
+      // expectation the desk would then owe, and quietly dates the page the moment the plan
+      // changes shape. The tier stays visible so institutional readers know it is coming; what it
+      // contains is a conversation, not a published list.
+      // If features are added back, they must be things that already work in the app.
+      blurb: 'For desks and institutions. Details on request.',
       cta: 'Coming soon',
       href: null,
       soon: true,
       featured: false,
-      features: [
-        'Everything in Pro',
-        'Your calls scored in public',
-        'Your desk on the leaderboard',
-        'Team seats & onboarding',
-      ],
+      features: [],
     },
   ],
 } as const;

@@ -172,6 +172,92 @@ body[data-theme=gemini] .brand-txt{overflow:hidden;text-overflow:ellipsis;white-
 /* Collapsed rail: the mark moves INTO the toggle button (see .toggle-mark below), so the brand
    link itself stays hidden by the generic collapse rule — two marks in a 56px rail is one too many. */
 
+/* ==========================================================================================
+   COMET TRANSIT — boot screen (design handoff "Loading Screen 8a")
+
+   Fills the data-auth="pending" window, which was previously a blank screen. Sizes are driven
+   off --orb so one composition serves every breakpoint: the ring, orbit radius, candle and core
+   are all expressed in that unit, and only --orb changes per screen.
+
+   TIMING IS THE WHOLE TRICK. The reveal is delayed 260ms in CSS, so a warm session (auth resolves
+   in ~80ms) never sees it at all — the loader would otherwise be a new flash replacing the old
+   one. And it fades out rather than cutting, so a slow session does not snap.
+   ========================================================================================== */
+.boot{
+  --orb:220px;              /* orbit box; everything below scales from it */
+  --rad:92px;               /* orbit radius, per the handoff */
+  --period:6.5s;
+  position:fixed;inset:0;z-index:1500;background:var(--ink1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  opacity:0;pointer-events:none;
+  animation:bootIn .28s ease .26s forwards;
+}
+/* Only the pending state shows it. The moment initAuth clears data-auth the element is gone from
+   the layout entirely — no stray overlay can survive and swallow clicks. */
+body:not([data-auth="pending"]) .boot{display:none}
+@keyframes bootIn{to{opacity:1}}
+@keyframes orbitCW{to{transform:rotate(360deg)}}
+@keyframes orbitCCW{to{transform:rotate(-360deg)}}
+
+.boot-cap{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7a7a72}
+/* scale(1,.62) is the only "elliptical" trick — the orbit maths underneath stays circular. */
+.boot-orbit{position:relative;width:var(--orb);height:var(--orb);transform:scale(1,.62)}
+.boot-ring,.boot-ring-in{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);clip-path:circle(50%)}
+.boot-ring{width:184px;height:184px;background:#2e2e2b}
+.boot-ring-in{width:181px;height:181px;background:var(--ink1)}
+.boot-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:var(--bg)}
+
+/* Orbit mechanism: the outer box rotates, the inner box counter-rotates at the same period, so
+   the candle travels the ring without tumbling. Both must carry the same negative delay or the
+   glyph visibly spins. */
+.boot-rot{position:absolute;left:50%;top:50%;width:0;height:0;animation:orbitCW var(--period) linear infinite}
+.boot-ctr{position:absolute;left:0;top:calc(var(--rad) * -1);width:0;height:0;animation:orbitCCW var(--period) linear infinite}
+.boot-rot i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block}
+.boot-c0 .wick{width:1px;height:22px;background:var(--up)}
+.boot-c0 .body{width:6px;height:16px;background:var(--up)}
+.boot-c1 .wick,.boot-c2 .wick,.boot-c3 .wick{width:1px;height:15px}
+.boot-c1 .body,.boot-c2 .body,.boot-c3 .body{width:4px;height:9px}
+.boot-c1 .wick,.boot-c1 .body{background:rgba(11,122,95,.31)}
+.boot-c2 .wick,.boot-c2 .body{background:rgba(11,122,95,.20)}
+.boot-c3 .wick,.boot-c3 .body{background:rgba(11,122,95,.09)}
+.boot-c1 .boot-ctr,.boot-c1{animation-delay:-1.3s}
+.boot-c2 .boot-ctr,.boot-c2{animation-delay:-2.6s}
+.boot-c3 .boot-ctr,.boot-c3{animation-delay:-3.9s}
+
+/* Starfield: one element, 14 dots painted as radial-gradient background-images. Cheaper than 14
+   divs and it cannot drift out of the box on a different --orb. */
+.boot-stars{position:absolute;inset:0;opacity:.55;
+  background-image:
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px),
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px),
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px),
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px),
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px),
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px),
+    radial-gradient(circle,#5a5a55 1px,transparent 1.5px);
+  background-repeat:no-repeat;
+  background-position:14% 22%,78% 16%,34% 72%,88% 61%,9% 58%,58% 88%,66% 38%}
+
+.boot-pct{font-family:var(--font-pixel);font-size:24px;font-weight:700;color:#f4f4f0;font-variant-numeric:tabular-nums}
+.boot-fine{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#7a7a72;white-space:nowrap}
+
+/* Phones: the handoff's stacked 390x700 variant — bigger orbit, more breathing room. */
+@media(max-width:560px){
+  .boot{--orb:250px;gap:26px;padding:56px 16px 40px}
+  .boot-pct{font-size:30px}
+}
+/* Short/landscape phones: the orbit is the first thing to sacrifice, never the text. */
+@media(max-height:520px){
+  .boot{--orb:150px;--rad:62px;gap:12px}
+  .boot-ring{width:124px;height:124px}
+  .boot-ring-in{width:121px;height:121px}
+  .boot-pct{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .boot{animation:none;opacity:1}
+  .boot-rot,.boot-ctr{animation:none}
+}
+
 /* THE COLLAPSED TOGGLE = THE DESK MARK, chevron on hover.
    Expanded, this is an ordinary bordered chevron sitting beside the wordmark. Collapsed, the
    wordmark is gone and a lone chevron above a column of icons reads as a stray control, so the

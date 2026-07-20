@@ -115,6 +115,36 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
      clears this attribute. Without it the shell below paints immediately and is then torn down,
      which is the flash. -->
 <body data-theme="gemini" data-desk="pro" data-auth="pending">
+
+<!-- COMET TRANSIT — the boot screen (design handoff "Loading Screen 8a").
+     This occupies the window the auth guess opened up: data-auth="pending" deliberately paints
+     neither the terminal nor the gate, which fixed the flash but left a blank screen while
+     Supabase restores the session. This fills it.
+
+     It only appears if pending OUTLASTS 260ms — see .boot in themes.css. A loader that flashes up
+     for 90ms on a warm session is the same defect as the flash it replaces, so the reveal is
+     delayed in pure CSS rather than raced in JS.
+
+     Every circle is clip-path, never border-radius: this stylesheet enforces a global
+     `border-radius:0 !important`, so a bordered box + circular clip renders as four broken
+     dashes rather than a ring. The ring is two stacked filled circles with a 1.5px sliver
+     between them, exactly as the handoff specifies. -->
+<div class="boot" id="boot" role="status" aria-live="polite" aria-label="Loading the desk">
+  <div class="boot-cap">Tracking the market&rsquo;s path</div>
+  <div class="boot-orbit" aria-hidden="true">
+    <div class="boot-stars"></div>
+    <div class="boot-ring"></div>
+    <div class="boot-ring-in"></div>
+    <div class="boot-rot boot-c0"><div class="boot-ctr"><i class="wick"></i><i class="body"></i></div></div>
+    <div class="boot-rot boot-c1"><div class="boot-ctr"><i class="wick"></i><i class="body"></i></div></div>
+    <div class="boot-rot boot-c2"><div class="boot-ctr"><i class="wick"></i><i class="body"></i></div></div>
+    <div class="boot-rot boot-c3"><div class="boot-ctr"><i class="wick"></i><i class="body"></i></div></div>
+    <div class="boot-core"></div>
+  </div>
+  <div class="boot-pct" id="bootPct">0%</div>
+  <div class="boot-fine">Research &middot; Not Advice</div>
+</div>
+
 <div class="shell" id="shell">
   <aside class="sidebar" id="sidebar">
     <div class="side-top">
