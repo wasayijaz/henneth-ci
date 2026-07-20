@@ -1,23 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 
+/* Last element on each row is the sprite id — see IconSprite.astro. */
 const pipeline = [
-  ['01', 'Research', 'Filings, broker notes and the news log are read and summarised per name — sources, never memory.'],
-  ['02', 'Value', 'Four independent models run: peer P/E, earnings power, Graham and DDM, each with full working.'],
-  ['03', 'Backtest', 'Any rule or signal is tested across ~19 years of PSX history before it earns a place.'],
-  ['04', 'Debate', 'The Desk Room argues both sides; a Chair issues a house view with an explicit dissent.'],
-  ['05', 'Score', 'The call is dated with a falsifiable expectation, then graded against the outcome.'],
+  ['01', 'Research', 'Filings, broker notes and the news log are read and summarised per name — sources, never memory.', 'research'],
+  ['02', 'Value', 'Four independent models run: peer P/E, earnings power, Graham and DDM, each with full working.', 'value'],
+  ['03', 'Backtest', 'Any rule or signal is tested across ~19 years of PSX history before it earns a place.', 'auditor'],
+  ['04', 'Debate', 'The Desk Room argues both sides; a Chair issues a house view with an explicit dissent.', 'deskroom'],
+  ['05', 'Score', 'The call is dated with a falsifiable expectation, then graded against the outcome.', 'scores'],
 ];
 
 const philosophy = [
-  ['Multiple lenses, no black box', 'No single model decides. Four methods triangulate a fair-value band; where they disagree, the disagreement itself is the signal.'],
-  ['Anchored to the risk-free rate', 'Earnings power is judged against the prevailing bond yield, so a stock is never called cheap in a vacuum.'],
-  ['Evidence over narrative', 'A compelling story is not a reason. Every claim ties back to a filing, a price series, or a tested rule.'],
-  ['Unknown stays unknown', 'If a number isn’t in the data layer, the desk renders it as unknown rather than guessing a plausible figure.'],
-  ['No lookahead, ever', 'A signal at a given bar may use only data available at that bar’s close. Fills come from the next open — never a price the rule could not have seen.'],
-  ['Costs assumed per stock', 'Friction is estimated name by name from the spread, because a flat cost assumption flatters exactly the thin stocks that momentum rules pick.'],
-  ['Frozen once live', 'A strategy that has published a backtest cannot be edited. Changing a rule means a new version with a fresh record — so old results can never be quietly invalidated.'],
-  ['Even the sky gets tested', 'The astrology lens is held to the same bar as every rule here: written down first, permutation-tested, multiplicity-corrected, and published whatever it shows.'],
+  ['Multiple lenses, no black box', 'No single model decides. Four methods triangulate a fair-value band; where they disagree, the disagreement itself is the signal.', 'value'],
+  ['Anchored to the risk-free rate', 'Earnings power is judged against the prevailing bond yield, so a stock is never called cheap in a vacuum.', 'macro'],
+  ['Evidence over narrative', 'A compelling story is not a reason. Every claim ties back to a filing, a price series, or a tested rule.', 'research'],
+  ['Unknown stays unknown', 'If a number isn’t in the data layer, the desk renders it as unknown rather than guessing a plausible figure.', 'nofabricate'],
+  ['No lookahead, ever', 'A signal at a given bar may use only data available at that bar’s close. Fills come from the next open — never a price the rule could not have seen.', 'clock'],
+  ['Costs assumed per stock', 'Friction is estimated name by name from the spread, because a flat cost assumption flatters exactly the thin stocks that momentum rules pick.', 'tradecost'],
+  ['Frozen once live', 'A strategy that has published a backtest cannot be edited. Changing a rule means a new version with a fresh record — so old results can never be quietly invalidated.', 'selfcheck'],
+  ['Even the sky gets tested', 'The astrology lens is held to the same bar as every rule here: written down first, permutation-tested, multiplicity-corrected, and published whatever it shows.', 'astro'],
 ];
 
 /* Figures below are read from state/astro_backtest.json. Update them from that file, never by
@@ -60,8 +62,9 @@ const principles = [
 
   <section class="wrap">
     <div class="tilegrid pipe">
-      {pipeline.map(([n, t, d]) => (
-        <div>
+      {pipeline.map(([n, t, d, ic]) => (
+        <div class="tile">
+          <span class="tile-i"><Icon name={ic} size={20} /></span>
           <div class="label muted">{n}</div>
           <h3>{t}</h3>
           <p class="muted pipe-d">{d}</p>
@@ -75,8 +78,9 @@ const principles = [
       <p class="kicker">How the desk values a stock</p>
       <h2>Four lenses, and the honesty to disagree</h2>
       <div class="tilegrid phil">
-        {philosophy.map(([t, d]) => (
-          <div>
+        {philosophy.map(([t, d, ic]) => (
+          <div class="tile">
+            <span class="tile-i"><Icon name={ic} size={20} /></span>
             <h3>{t}</h3>
             <p class="muted phil-d">{d}</p>
           </div>

@@ -1,19 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { site } from '../site.config.ts';
 
 const enter = (p: string) => `${site.appUrl}/?plan=${p}`;
 
 const jump = [
-  { tag: '01', title: 'Retail investors', href: '#retail' },
-  { tag: '02', title: 'Active traders', href: '#traders' },
-  { tag: '03', title: 'The astrology-curious', href: '#astro' },
-  { tag: '04', title: 'Brokers & institutions', href: '#brokers' },
+  { tag: '01', title: 'Retail investors', href: '#retail', icon: 'learn' },
+  { tag: '02', title: 'Active traders', href: '#traders', icon: 'strategies' },
+  { tag: '03', title: 'The astrology-curious', href: '#astro', icon: 'astro' },
+  { tag: '04', title: 'Brokers & institutions', href: '#brokers', icon: 'portfolio' },
 ];
 
 const segments = [
   {
     id: 'retail',
+    icon: 'learn',
     tag: '01 · Retail investors',
     title: 'Do your own homework — properly',
     body: 'For the self-directed investor who wants a professional workflow without a professional’s hours. The desk reads the market, values every name and shows the working, so your decisions rest on evidence — not tips.',
@@ -36,6 +38,7 @@ const segments = [
   },
   {
     id: 'traders',
+    icon: 'strategies',
     tag: '02 · Active traders',
     title: 'Move with the whole desk behind you',
     body: 'For traders who want signals, backtests and a full analyst debate on demand. The Desk Room argues both sides of every ticker and the Chair calls it — you decide the entry, size and exit.',
@@ -58,6 +61,7 @@ const segments = [
   },
   {
     id: 'astro',
+    icon: 'astro',
     tag: '03 · The astrology-curious',
     title: 'Bring your chart. We’ll bring the evidence.',
     body: 'For anyone who reads their transits and wonders whether the market listens. Cast your birth chart in the browser, keep the daily gochara against it, and see the sky the desk computes — sidereal, Lahiri, nine grahas, ninety days ahead. Then see exactly how those claims held up against nineteen years of PSX prices.',
@@ -84,6 +88,7 @@ const segments = [
     // feeds, white-label notes, compliance exports. None of that exists. The tier stays listed so
     // institutional readers know it is coming; what it contains is a conversation, not a page.
     id: 'brokers',
+    icon: 'portfolio',
     tag: '04 · Brokers & institutions',
     title: 'For desks and institutions',
     body: 'A tier for brokerages and institutions is in build. We would rather talk about what your desk actually needs than publish a feature list we have not shipped yet.',
@@ -123,7 +128,7 @@ const caps: [string, string, string, string][] = [
       <p class="kicker">Solutions</p>
       <h1>Built for how you actually invest</h1>
       <p class="lead ph-lead">
-        One research desk, tuned to three ways of working the PSX. Same evidence, same scoring —
+        One research desk, tuned to four ways of working the PSX. Same evidence, same scoring —
         different starting point.
       </p>
     </div>
@@ -133,6 +138,7 @@ const caps: [string, string, string, string][] = [
     <div class="tilegrid jump">
       {jump.map((j) => (
         <a href={j.href} class="jump-i">
+          <span class="jump-ic"><Icon name={j.icon} size={18} /></span>
           <span class="label muted">{j.tag}</span>
           <span class="jump-t">{j.title}</span>
           <span class="jump-a">›</span>
@@ -145,7 +151,9 @@ const caps: [string, string, string, string][] = [
     <section class="section seg" id={s.id} data-alt={i % 2 === 1}>
       <div class="wrap seg-grid">
         <div>
-          <p class="kicker">{s.tag}</p>
+          {/* s.icon, not jump[i].icon — indexing a parallel array would put the wrong mark on a
+              section the moment either list is reordered, and nothing would fail loudly. */}
+          <p class="kicker"><Icon name={s.icon} size={14} /> {s.tag}</p>
           <h2>{s.title}</h2>
           <p class="lead">{s.body}</p>
           <ul class="pts">
@@ -205,11 +213,25 @@ const caps: [string, string, string, string][] = [
 
 <style>
   .ph-lead { max-width: 620px; }
-  .jump { grid-template-columns: repeat(3, 1fr); }
+  /* Four columns for four segments. At three it wrapped one item onto a second row and left a
+     dead cell beside it, which read as a missing card rather than a deliberate layout. */
+  .jump { grid-template-columns: repeat(4, 1fr); }
   .jump-i { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  /* Smaller well than a tile's 34px — this is a nav row, so the mark identifies without
+     competing with the label beside it. */
+  .jump-ic {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; flex: none;
+    border: 1px solid var(--hair); background: var(--panel-2); color: var(--ink-3);
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
   .jump-t { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-  .jump-a { margin-left: auto; color: var(--ink-3); }
-  .jump-i:hover { background: var(--panel-2); }
+  .jump-a { margin-left: auto; color: var(--ink-3); transition: transform 0.18s ease; }
+  @media (hover: hover) {
+    .jump-i:hover { background: var(--panel-2); }
+    .jump-i:hover .jump-ic { color: var(--ink-1); border-color: var(--ink-1); }
+    .jump-i:hover .jump-a { transform: translateX(3px); }
+  }
 
   .seg[data-alt='true'] { background: var(--panel-2); }
   .seg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
@@ -235,6 +257,7 @@ const caps: [string, string, string, string][] = [
   .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
   .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
+  @media (max-width: 1100px) { .jump { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 900px) {
     .seg-grid { grid-template-columns: 1fr; gap: 28px; }
     .jump { grid-template-columns: 1fr; }

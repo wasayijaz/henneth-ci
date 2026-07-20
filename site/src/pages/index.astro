@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 import { site } from '../site.config.ts';
 
 /* THE HERO BOARD IS REAL DATA, READ FROM state/ AT BUILD TIME.
@@ -92,16 +93,17 @@ const stats = [
   ['4', 'Valuation models'],
 ];
 
+/* Fourth element on each row is the sprite id — see IconSprite.astro. */
 const steps = [
-  ['01', 'Pick any listed name', 'Search the whole exchange. Land on a page built to answer your first three questions before you scroll.'],
-  ['02', 'The desk does the homework', 'Valued four ways, scored for quality and risk, tested against 19 years of history, and debated by the analyst desk.'],
-  ['03', 'You decide', 'The desk never places orders and never tells you to buy. You get the read; the decision stays yours.'],
+  ['01', 'Pick any listed name', 'Search the whole exchange. Land on a page built to answer your first three questions before you scroll.', 'screener'],
+  ['02', 'The desk does the homework', 'Valued four ways, scored for quality and risk, tested against 19 years of history, and debated by the analyst desk.', 'deskroom'],
+  ['03', 'You decide', 'The desk never places orders and never tells you to buy. You get the read; the decision stays yours.', 'longonly'],
 ];
 
 const principles = [
-  ['Research, not advice', 'No “buy”, no “strong buy”, no promises. Every page says so, because the distinction is the product.'],
-  ['Every number is sourced', 'Nothing is quoted from memory. If the data layer doesn’t hold it, the desk says “unknown” rather than guessing.'],
-  ['Losses are shown', 'The scorecard grades the desk’s own calls, misses included. A record you can check is the only kind worth having.'],
+  ['Research, not advice', 'No “buy”, no “strong buy”, no promises. Every page says so, because the distinction is the product.', 'nofabricate'],
+  ['Every number is sourced', 'Nothing is quoted from memory. If the data layer doesn’t hold it, the desk says “unknown” rather than guessing.', 'datalayer'],
+  ['Losses are shown', 'The scorecard grades the desk’s own calls, misses included. A record you can check is the only kind worth having.', 'scores'],
 ];
 ---
 
@@ -232,8 +234,9 @@ const principles = [
       <p class="kicker">How the desk works</p>
       <h2>Pick a stock. The desk does the homework. You decide.</h2>
       <div class="tilegrid steps">
-        {steps.map(([n, t, d]) => (
-          <div>
+        {steps.map(([n, t, d, ic]) => (
+          <div class="tile">
+            <span class="tile-i"><Icon name={ic} size={20} /></span>
             <div class="step-n label">{n}</div>
             <h3>{t}</h3>
             <p class="muted step-d">{d}</p>
@@ -446,8 +449,9 @@ const principles = [
   <section class="section band-panel">
     <div class="wrap">
       <div class="tilegrid principles">
-        {principles.map(([t, d]) => (
-          <div>
+        {principles.map(([t, d, ic]) => (
+          <div class="tile">
+            <span class="tile-i"><Icon name={ic} size={20} /></span>
             <h3>{t}</h3>
             <p class="muted">{d}</p>
           </div>
