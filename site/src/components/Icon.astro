@@ -1,0 +1,38 @@
+---
+/* One icon, referenced from the sprite in IconSprite.astro.
+
+   Usage: <Icon name="astro" /> or <Icon name="value" size={20} class="tile-i" />
+
+   `aria-hidden` is hard-coded, not optional. Every icon on this site sits beside a real text
+   label, so an accessible name here would make a screen reader announce the same thing twice.
+   If an icon ever needs to be the ONLY label, it should be a <button aria-label> around this,
+   not a change to this component. */
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+const { name, size = 22, class: cls = '' } = Astro.props;
+---
+
+<svg
+  class:list={['icn', cls]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <use href={`#i-${name}`}></use>
+</svg>
+
+<style is:global>
+  /* Global, not scoped: the icon is rendered inside other components' markup, and a scoped rule
+     would need every parent to opt in. Kept to two properties so it cannot fight page layout. */
+  .icn { display: block; flex: none; }
+</style>

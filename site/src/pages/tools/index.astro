@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import { site } from '../../site.config.ts';
 
 /* The hub. Its SEO job is to catch the generic "Pakistani investment calculator" searches and
@@ -7,56 +8,77 @@ import { site } from '../../site.config.ts';
    job is to make the free tools findable from the nav, since they are the first thing a stranger
    can use without an account. */
 
+/* `q` is the plain-English question the tool answers. The old cards led with a product name
+   ("Compound interest"), which only helps someone who already knows the term — the opposite of
+   this page's job, since it exists to catch people searching for the question, not the jargon. */
 const tools = [
   {
     href: '/tools/compound-interest-calculator/',
     name: 'Compound interest',
+    q: 'If I invest a lump sum, what is it worth later?',
     blurb: 'What a lump sum grows to — and what it buys after inflation.',
+    icon: 'compound',
     live: true,
   },
   {
     href: '/tools/sip-calculator/',
     name: 'Monthly investment (SIP)',
+    q: 'If I save every month, where do I end up?',
     blurb: 'What a fixed monthly contribution turns into over time.',
+    icon: 'sip',
     live: true,
   },
   {
     href: '/tools/inflation-calculator/',
     name: 'Inflation',
+    q: 'What will my rupees actually buy in ten years?',
     blurb: "What today's rupees will be worth later, at Pakistan's real CPI.",
+    icon: 'inflation',
     live: true,
   },
   {
     href: '/tools/savings-goal-calculator/',
     name: 'Savings goal',
+    q: 'I need a set amount by a set date — what monthly?',
     blurb: 'What to save monthly to reach a target — priced at future cost.',
+    icon: 'savings',
     live: true,
   },
   {
     href: '/tools/home-loan-calculator/',
     name: 'Home loan',
+    q: 'What is the instalment, and the true total cost?',
     blurb: 'Monthly instalment, and what the loan really costs in total.',
+    icon: 'homeloan',
     live: true,
   },
   {
     href: null,
     name: 'PSX trading cost',
+    q: 'What does one round trip actually cost me?',
     blurb: 'Brokerage, CDC and NCCPL charges on a real trade size.',
+    icon: 'tradecost',
     live: false,
   },
   {
     href: null,
     name: 'Capital gains tax',
+    q: 'What CGT will I owe on this sale?',
     blurb: 'CGT on listed securities by filer status and acquisition date.',
+    icon: 'cgt',
     live: false,
   },
   {
     href: null,
     name: 'Zakat on shares',
+    q: 'How much zakat is due on my holdings?',
     blurb: 'Zakatable total against the gold nisab, at a live gold price.',
+    icon: 'zakat',
     live: false,
   },
 ];
+const liveTools = tools.filter((t) => t.live);
+const soonTools = tools.filter((t) => !t.live);
 
 const itemLd = {
   '@context': 'https://schema.org',
@@ -97,25 +119,35 @@ const itemLd = {
 
   <section class="section-tight">
     <div class="wrap">
+      {/* Live tools first and unmuted. The old grid interleaved five working calculators with
+          three disabled ones, so a third of the page's real estate was spent on things you
+          cannot use — on the one page whose entire job is to get a stranger using something. */}
+      <p class="kicker grp-k"><Icon name="tools" size={14} /> Ready to use</p>
       <div class="tilegrid tools">
-        {
-          tools.map((t) =>
-            t.live && t.href ? (
-              <a class="tool" href={t.href}>
-                <h2>{t.name}</h2>
-                <p class="muted">{t.blurb}</p>
-                <span class="go">Open →</span>
-              </a>
-            ) : (
-              <div class="tool off">
-                <h2>{t.name}</h2>
-                <p class="muted">{t.blurb}</p>
-                <span class="go soon">Coming soon</span>
-              </div>
-            )
-          )
-        }
+        {liveTools.map((t) => (
+          <a class="tool tile" href={t.href!} data-ev="tool_open" data-ev-tool={t.name}>
+            <span class="tile-i"><Icon name={t.icon} size={20} /></span>
+            <h2>{t.name}</h2>
+            <p class="tool-q">{t.q}</p>
+            <p class="muted">{t.blurb}</p>
+            <span class="go">Open <Icon name="arrow" size={13} /></span>
+          </a>
+        ))}
       </div>
+
+      <p class="kicker grp-k soon-k"><Icon name="clock" size={14} /> In build</p>
+      <div class="tilegrid tools soon-grid">
+        {soonTools.map((t) => (
+          <div class="tool tile off">
+            <span class="tile-i"><Icon name={t.icon} size={20} /></span>
+            <h2>{t.name}</h2>
+            <p class="tool-q">{t.q}</p>
+            <p class="muted">{t.blurb}</p>
+            <span class="go soon">Coming soon</span>
+          </div>
+        ))}
+      </div>
+
       <p class="muted foot">
         Every calculator runs on your own inputs, in your browser. Nothing is stored, nothing is
         sent anywhere, and no result is a forecast or advice — assumed returns are your assumption.
@@ -140,15 +172,25 @@ const itemLd = {
 
 <style>
   .ph-lead { max-width: 62ch; }
+  .grp-k { margin-bottom: 12px; }
+  .soon-k { margin-top: 34px; }
   .tools { grid-template-columns: repeat(3, 1fr); }
-  .tool { text-decoration: none; display: flex; flex-direction: column; gap: 8px; }
-  .tool h2 { font-size: 14px; margin: 0; }
-  .tool p { font-size: 11.5px; margin: 0; line-height: 1.65; flex: 1; }
-  a.tool:hover { background: var(--panel-2); }
-  .go { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-top: 6px; }
-  .tool.off { opacity: 0.62; }
+  .tool { text-decoration: none; }
+  .tool h2 { font-size: 14px; margin: 0 0 6px; }
+  /* The question leads, in ink; the mechanical description follows, muted. */
+  .tool-q { font-size: 12px; margin: 0 0 8px; line-height: 1.55; color: var(--ink-1); font-weight: 500; }
+  .tool p.muted { font-size: 11px; margin: 0; line-height: 1.65; flex: 1; }
+  .go {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700; margin-top: 12px;
+  }
+  /* The arrow travels on hover — the affordance the whole card is for. */
+  .go .icn { transition: transform 0.18s ease; }
+  @media (hover: hover) { a.tool:hover .go .icn { transform: translateX(3px); } }
+  .tool.off { opacity: 0.6; }
   .go.soon { color: var(--ink-3); }
-  .foot { font-size: 11px; margin-top: 20px; max-width: 68ch; }
+  .foot { font-size: 11px; margin-top: 24px; max-width: 68ch; }
 
   .tools-cta { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
   .dr-kicker { color: #8f8f88; }

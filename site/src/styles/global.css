@@ -183,6 +183,43 @@ img, svg { max-width: 100%; display: block; }
 .grid { display: grid; gap: 18px; }
 
 /* ============================================================================================
+   ICON TILES
+
+   The pages were wall-to-wall type. An icon per tile gives the eye an anchor to scan by, but the
+   rule that keeps it from turning into clip-art: the icon is a MARK, not a picture. It sits in a
+   fixed 34px hard-cornered well, one weight, one colour, inheriting currentColor so the same
+   glyph works on cream tiles and on the near-black bands without a second asset.
+
+   It is muted at rest and goes to ink on hover, so a grid reads as texture until you engage with
+   a specific tile — the opposite of a page of competing coloured badges.
+   ============================================================================================ */
+.tile { display: flex; flex-direction: column; }
+.tile-i {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; margin-bottom: 12px;
+  border: 1px solid var(--hair); background: var(--panel-2);
+  color: var(--ink-3);
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+@media (hover: hover) {
+  .tile:hover .tile-i, a.tile:hover .tile-i {
+    color: var(--ink-1); border-color: var(--ink-1); background: var(--panel);
+  }
+}
+/* Dark bands: the well inverts rather than punching a light hole in the panel. */
+.band-dark .tile-i, .astro-band .tile-i, .sky .tile-i {
+  border-color: #3a3a37; background: #171a1b; color: #8f8f88;
+}
+@media (hover: hover) {
+  .band-dark .tile:hover .tile-i, .astro-band .tile:hover .tile-i {
+    color: var(--bg); border-color: #55a16b; background: #101314;
+  }
+}
+
+/* A kicker can carry a small mark too — same family, half the size, baseline-aligned with caps. */
+.kicker .icn { display: inline-block; vertical-align: -2px; margin-right: 4px; }
+
+/* ============================================================================================
    HOVER LANGUAGE
 
    One gesture, applied everywhere, so the whole site feels like a single instrument: on hover a

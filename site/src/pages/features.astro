@@ -1,67 +1,75 @@
 ---
 import Base from '../layouts/Base.astro';
 
+import Icon from '../components/Icon.astro';
+
 /* Every card below is a screen that exists in the terminal today (the nav list in
-   dashboard/index.html). Nothing aspirational — if it is named here, it opens. */
+   dashboard/index.html). Nothing aspirational — if it is named here, it opens.
+   Third element is the sprite id; see IconSprite.astro. */
 const groups = [
   {
     k: 'Start here',
+    ic: 'today',
     items: [
-      ['Today', 'The desk’s plain-English daily read — tone, favoured and avoided sectors, and a short watchlist.'],
-      ['Ask', 'Put a question to the desk in plain English and get an answer traced back to the data layer.'],
-      ['Learn', 'A 14-lesson path from “what is a share” to reading a cash-flow statement, built for a first-time investor.'],
-      ['Your Chart', 'Cast your birth chart in the browser and keep it — no account needed to start.'],
+      ['Today', 'The desk’s plain-English daily read — tone, favoured and avoided sectors, and a short watchlist.', 'today'],
+      ['Ask', 'Put a question to the desk in plain English and get an answer traced back to the data layer.', 'ask'],
+      ['Learn', 'A 14-lesson path from “what is a share” to reading a cash-flow statement, built for a first-time investor.', 'learn'],
+      ['Your Chart', 'Cast your birth chart in the browser and keep it — no account needed to start.', 'mychart'],
     ],
   },
   {
     k: 'Read a company',
+    ic: 'research',
     items: [
-      ['Value', 'Every name valued four ways, with each model’s full working expandable.'],
-      ['Research', 'Filings, results and corporate briefings digested and tagged to the names they move.'],
-      ['The Desk Room', 'Named analysts debate every stock; a Chair issues a house view with explicit dissent.'],
-      ['Compare', 'Put two or more names side by side on the numbers that actually separate them.'],
+      ['Value', 'Every name valued four ways, with each model’s full working expandable.', 'value'],
+      ['Research', 'Filings, results and corporate briefings digested and tagged to the names they move.', 'research'],
+      ['The Desk Room', 'Named analysts debate every stock; a Chair issues a house view with explicit dissent.', 'deskroom'],
+      ['Compare', 'Put two or more names side by side on the numbers that actually separate them.', 'compare'],
     ],
   },
   {
     k: 'Find something',
+    ic: 'screener',
     items: [
-      ['Board', 'The whole universe on one screen: heatmap, proven signals, predictability ranks and a news wire.'],
-      ['Screener', 'Filter the exchange on quality, value, momentum, yield and liquidity.'],
-      ['Strategies', 'Transparent, rule-based strategies, each backtested across ~19 years of history.'],
-      ['Sectors', 'Sector-level debates and dossiers, not just a list of constituents.'],
-      ['Scenarios', 'Ask what a rate move, an oil move or a rupee move would do to a name.'],
-      ['Marketplace', 'Strategies published with their full record attached, good and bad.'],
+      ['Board', 'The whole universe on one screen: heatmap, proven signals, predictability ranks and a news wire.', 'board'],
+      ['Screener', 'Filter the exchange on quality, value, momentum, yield and liquidity.', 'screener'],
+      ['Strategies', 'Transparent, rule-based strategies, each backtested across ~19 years of history.', 'strategies'],
+      ['Sectors', 'Sector-level debates and dossiers, not just a list of constituents.', 'sectors'],
+      ['Scenarios', 'Ask what a rate move, an oil move or a rupee move would do to a name.', 'scenarios'],
+      ['Marketplace', 'Strategies published with their full record attached, good and bad.', 'marketplace'],
     ],
   },
   {
     k: 'Track it',
+    ic: 'portfolio',
     items: [
-      ['Watchlist', 'The names you care about, with the desk’s read attached to each.'],
-      ['Portfolio', 'Your positions X-rayed for concentration, sector overlap and correlated risk.'],
-      ['Practice', 'A virtual Rs 500,000 book, so you can be wrong without paying for it.'],
-      ['Scores', 'Dated, falsifiable calls graded against what prices actually did — the desk’s and the brokers’.'],
+      ['Watchlist', 'The names you care about, with the desk’s read attached to each.', 'watchlist'],
+      ['Portfolio', 'Your positions X-rayed for concentration, sector overlap and correlated risk.', 'portfolio'],
+      ['Practice', 'A virtual Rs 500,000 book, so you can be wrong without paying for it.', 'practice'],
+      ['Scores', 'Dated, falsifiable calls graded against what prices actually did — the desk’s and the brokers’.', 'scores'],
     ],
   },
   {
     k: 'Context',
+    ic: 'macro',
     items: [
-      ['Macro', 'The global tape that moves PSX, the SBP path, the rupee, and a geo-risk radar.'],
-      ['News', 'The announcement wire, tagged to tickers and scored 1–5 for impact.'],
-      ['Dividends', 'Yield, cover, book-closure dates and how reliably a payer has actually paid.'],
-      ['Earnings', 'The results calendar, with what the desk expects and what it would falsify.'],
-      ['Astro', 'The computed sky, what tradition claims it governs, and what survived testing.'],
-      ['Tools', 'PSX-specific calculators — position size, CGT, dividend yield, break-even.'],
+      ['Macro', 'The global tape that moves PSX, the SBP path, the rupee, and a geo-risk radar.', 'macro'],
+      ['News', 'The announcement wire, tagged to tickers and scored 1–5 for impact.', 'news'],
+      ['Dividends', 'Yield, cover, book-closure dates and how reliably a payer has actually paid.', 'dividends'],
+      ['Earnings', 'The results calendar, with what the desk expects and what it would falsify.', 'earnings'],
+      ['Astro', 'The computed sky, what tradition claims it governs, and what survived testing.', 'astro'],
+      ['Tools', 'PSX-specific calculators — position size, CGT, dividend yield, break-even.', 'tools'],
     ],
   },
 ];
 
 const engine = [
-  ['A shared data layer', 'Prices, quant, fundamentals and calendars refresh on a schedule — the whole desk reads one source of truth.'],
-  ['Self-checking systems', 'Automated gates catch bad numbers, broken builds and design drift before anything reaches you.'],
-  ['Risk, stated honestly', 'Volatility, drawdown in its proper era context, liquidity and dividend reliability.'],
-  ['Nothing fabricated', 'Where the data layer is silent, the desk says so — no invented figures, ever.'],
-  ['Long only, no leverage', 'No shorts, no derivatives, no margin. Daily timeframe. The desk never places an order.'],
-  ['An auditor with a veto', 'Every setup is independently re-derived. If the two answers disagree, the setup dies — no override.'],
+  ['A shared data layer', 'Prices, quant, fundamentals and calendars refresh on a schedule — the whole desk reads one source of truth.', 'datalayer'],
+  ['Self-checking systems', 'Automated gates catch bad numbers, broken builds and design drift before anything reaches you.', 'selfcheck'],
+  ['Risk, stated honestly', 'Volatility, drawdown in its proper era context, liquidity and dividend reliability.', 'risk'],
+  ['Nothing fabricated', 'Where the data layer is silent, the desk says so — no invented figures, ever.', 'nofabricate'],
+  ['Long only, no leverage', 'No shorts, no derivatives, no margin. Daily timeframe. The desk never places an order.', 'longonly'],
+  ['An auditor with a veto', 'Every setup is independently re-derived. If the two answers disagree, the setup dies — no override.', 'auditor'],
 ];
 ---
 
@@ -84,10 +92,11 @@ const engine = [
 
   {groups.map((g) => (
     <section class="wrap grp">
-      <p class="kicker grp-k">{g.k}</p>
+      <p class="kicker grp-k"><Icon name={g.ic} size={14} /> {g.k}</p>
       <div class="tilegrid cards">
-        {g.items.map(([t, d]) => (
-          <div>
+        {g.items.map(([t, d, ic]) => (
+          <div class="tile">
+            <span class="tile-i"><Icon name={ic} size={20} /></span>
             <h3>{t}</h3>
             <p class="muted card-d">{d}</p>
           </div>
@@ -184,7 +193,8 @@ const engine = [
       </p>
 
       <div class="tilegrid astro-grid">
-        <div>
+        <div class="tile">
+          <span class="tile-i"><Icon name="astro" size={20} /></span>
           <h3>Computed, not looked up</h3>
           <p class="muted card-d">
             Sidereal zodiac, Lahiri (Chitrapaksha) ayanamsa, the nine classical grahas, mean node.
@@ -192,7 +202,8 @@ const engine = [
             ingresses, stations and combustions, each stamped in PKT.
           </p>
         </div>
-        <div>
+        <div class="tile">
+          <span class="tile-i"><Icon name="list" size={20} /></span>
           <h3>Claims, written down first</h3>
           <p class="muted card-d">
             Each graha is mapped to the PSX sectors tradition assigns it, keyed to the exchange’s
@@ -200,7 +211,8 @@ const engine = [
             rewritten to fit the result.
           </p>
         </div>
-        <div>
+        <div class="tile">
+          <span class="tile-i"><Icon name="auditor" size={20} /></span>
           <h3>Tested like any strategy</h3>
           <p class="muted card-d">
             Circular-shift permutation on the condition mask, stock by stock — never averaged into
@@ -208,7 +220,8 @@ const engine = [
             the 52 rule-based strategies.
           </p>
         </div>
-        <div>
+        <div class="tile">
+          <span class="tile-i"><Icon name="mychart" size={20} /></span>
           <h3>Your own chart</h3>
           <p class="muted card-d">
             Cast your birth chart in the browser — nothing leaves your device to do it — and keep
@@ -252,8 +265,9 @@ const engine = [
       <p class="kicker">Under the hood</p>
       <h2>Serious machinery, quietly</h2>
       <div class="tilegrid engine">
-        {engine.map(([t, d]) => (
-          <div>
+        {engine.map(([t, d, ic]) => (
+          <div class="tile">
+            <span class="tile-i"><Icon name={ic} size={20} /></span>
             <h3>{t}</h3>
             <p class="muted card-d">{d}</p>
           </div>
