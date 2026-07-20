@@ -9,7 +9,14 @@ import { site } from './src/site.config.ts';
 // serverless adapter is needed for phase 1.
 export default defineConfig({
   site: site.url,
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    // The legal pages carry <meta robots="noindex"> while they are unreviewed
+    // drafts, so they must not be submitted in the sitemap — Search Console
+    // reports that pairing as "Submitted URL marked noindex". Drop the filter
+    // once a lawyer has signed them off and the noindex comes off.
+    sitemap({ filter: (page) => !page.includes('/legal/') }),
+  ],
   build: { inlineStylesheets: 'auto' },
   devToolbar: { enabled: false },
 });
