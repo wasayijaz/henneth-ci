@@ -10,13 +10,23 @@
   "PAEL",
   "KEL",
   "GHNI",
-  "CNERGY",
   "SSGC",
-  "FFL",
-  "NRL",
-  "PRL"
+  "FFL"
  ],
- "delta": [],
+ "delta": [
+  {
+   "symbol": "CNERGY",
+   "why": "price moved 8.2% since last Room"
+  },
+  {
+   "symbol": "NRL",
+   "why": "price moved 8.5% since last Room"
+  },
+  {
+   "symbol": "PRL",
+   "why": "price moved 10.0% since last Room"
+  }
+ ],
  "full": [
   {
    "symbol": "LOTCHEM",
@@ -87,11 +97,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "AKBL",
+   "symbol": "BOP",
    "why": "never covered"
   },
   {
-   "symbol": "BOP",
+   "symbol": "AKBL",
    "why": "never covered"
   },
   {
@@ -119,15 +129,15 @@
    "why": "never covered"
   },
   {
-   "symbol": "NML",
-   "why": "never covered"
-  },
-  {
    "symbol": "GLAXO",
    "why": "never covered"
   },
   {
    "symbol": "NATF",
+   "why": "never covered"
+  },
+  {
+   "symbol": "NML",
    "why": "never covered"
   },
   {
@@ -247,6 +257,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "TPLP",
+   "why": "never covered"
+  },
+  {
    "symbol": "AGHA",
    "why": "never covered"
   },
@@ -263,15 +277,7 @@
    "why": "never covered"
   },
   {
-   "symbol": "TPLP",
-   "why": "never covered"
-  },
-  {
    "symbol": "WTL",
-   "why": "never covered"
-  },
-  {
-   "symbol": "KOHTM",
    "why": "never covered"
   },
   {
@@ -300,6 +306,10 @@
   },
   {
    "symbol": "DFSM",
+   "why": "never covered"
+  },
+  {
+   "symbol": "KOHTM",
    "why": "never covered"
   },
   {
@@ -352,7 +362,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-20 09:56",
+  "built": "2026-07-20 12:36",
   "full_budget": 14,
   "run_full_now": [
    "LOTCHEM",
@@ -374,17 +384,17 @@
    "MTL",
    "FATIMA",
    "SRVI",
-   "AKBL",
    "BOP",
+   "AKBL",
    "FCCL",
    "PTC",
    "CHCC",
    "ILP",
    "JVDC",
    "SEARL",
-   "NML",
    "GLAXO",
    "NATF",
+   "NML",
    "KOHC",
    "TRG",
    "APL",
@@ -414,13 +424,12 @@
    "ZAL",
    "CSAP",
    "TOMCL",
+   "TPLP",
    "AGHA",
    "DCL",
    "LOADS",
    "PREMA",
-   "TPLP",
    "WTL",
-   "KOHTM",
    "KOSM",
    "MACFL",
    "PACE",
@@ -428,6 +437,7 @@
    "TELE",
    "TPL",
    "DFSM",
+   "KOHTM",
    "SGPL",
    "ZUMA",
    "OBOY",
@@ -444,10 +454,10 @@
   "counts": {
    "full_due": 83,
    "full_now": 14,
-   "delta": 0,
-   "reaffirm": 15
+   "delta": 3,
+   "reaffirm": 12
   },
-  "est_tokens_today": 308000,
+  "est_tokens_today": 323000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
