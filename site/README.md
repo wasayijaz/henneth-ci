@@ -1,0 +1,73 @@
+# Henneth — marketing site
+
+The public site at **https://henneth.app**. Astro, static output, deployed by the
+Vercel project `henneth-site` with **Root Directory `site/`**.
+
+The product terminal is a separate thing entirely: `dashboard/` in this repo,
+deployed by the `psx-trade-desk` project to **https://desk.henneth.app**.
+
+```bash
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # -> dist/
+```
+
+## Everything brand-shaped lives in one file
+
+`src/site.config.ts` holds the name, tagline, URLs, contact address, GA4 id and
+the whole plan ladder. Change it there, not in the pages.
+
+Naming rule: the product is **Henneth** everywhere public, and **Henneth Desk**
+only inside the app.
+
+## The early-access switch
+
+`site.earlyAccess` decides which pricing story the site tells.
+
+| Value | `/plans` shows |
+|---|---|
+| `true` (current) | Everything free, why it's free, feedback CTA. No prices, no trial. |
+| `false` | The priced Investor / Pro / Broker page from `components/PlansPaid.astro`. |
+
+The home teaser, hero strapline and Solutions panels all read the same flag, so
+the site never contradicts itself.
+
+**Before flipping it to `false`**, three things must be true, or the site is
+making promises the product can't keep:
+
+1. The public track record has a meaningful number of **resolved** calls.
+2. A payment gateway exists (no Stripe in Pakistan — a local gateway).
+3. The legal pages are reviewed, and the desk honours `?trial=14` — `plan` is
+   DB-frozen against client writes, so a trial grant needs a service-role path.
+
+## Things that have already bitten us
+
+- **`public/` and `.gitignore`.** A bare `public/` rule matches at *any* depth
+  and silently kept `site/public/` out of the build — robots.txt, favicon and
+  the OG image 404'd live while the sitemap worked. The rule is anchored to
+  `/public/` now. Watch this for any new subdirectory.
+- **Vercel's import wizard copies the repo-root `vercel.json`** into a new
+  project's build settings. That's the terminal's build and it breaks this one.
+  `site/vercel.json` pins the correct Astro config and wins over dashboard
+  settings.
+- **Astro inline scripts.** `define:vars` wraps the body in an IIFE and the
+  output is minified onto one line. So a global must be assigned explicitly
+  (`window.gtag = gtag`), and a `//` line comment will comment out everything
+  after it. Always check `dist/`, not the source, when adding a third-party tag.
+- **Ignored Build Step and merge commits.** The skip rule
+  `git diff --quiet HEAD^ HEAD ./` diffs against the *first parent*, so a merge
+  that brings in someone else's commits looks like "no site change" and gets
+  skipped even when the site did change. Use this instead, which always builds
+  a merge:
+
+  ```sh
+  [ $(git rev-list --parents -n1 HEAD | wc -w) -gt 2 ] && exit 1; git diff --quiet HEAD^ HEAD ./
+  ```
+
+## Claims discipline
+
+This is a financial research product, so the site does not assert things the
+data can't support. No fabricated track record, no invented testimonials, no
+price targets on named companies in mockups — panels that look like product are
+labelled *Illustration*, and the sample research note is a labelled *Template*.
+Keep it that way.
