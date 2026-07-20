@@ -1,0 +1,81 @@
+---
+import ToolPage from '../../components/ToolPage.astro';
+import { getAnchors, anchoredDefault } from '../../lib/anchors.ts';
+
+const a = getAnchors();
+const inflDefault = anchoredDefault(a.cpi, 11);
+
+const faqs = [
+  {
+    q: "What is Pakistan's current inflation rate?",
+    a:
+      a.cpi != null
+        ? `The latest CPI reading carried by the Henneth data layer is ${a.cpi}% year-on-year${a.updated ? `, as of ${a.updated}` : ''}. CPI is published monthly by the Pakistan Bureau of Statistics and moves a lot month to month, so check the current print before relying on any single figure.`
+        : 'CPI is published monthly by the Pakistan Bureau of Statistics. This page shows the reading carried by the Henneth data layer when one is available; check the latest PBS release before relying on any single figure.',
+  },
+  {
+    q: 'Why does my money lose value even in a savings account?',
+    a: 'Because the return has to clear inflation before anything is left over. If a deposit pays less than the inflation rate, the balance grows in rupees while shrinking in what it can buy. That is a certainty, not a risk — which is the honest case for investing rather than a sales pitch.',
+  },
+  {
+    q: 'Is CPI the right measure for me personally?',
+    a: 'Only roughly. CPI is a national basket. If your spending is concentrated in food, fuel, rent or school fees, your personal inflation can run well above or below the headline number. Use CPI as a floor for planning, not a precise personal figure.',
+  },
+  {
+    q: 'What rate should I use for long-term planning?',
+    a: 'Most people use something near the recent average rather than the latest month, because single months are noisy. Running the calculator at a low and a high assumption tells you more than any single number will.',
+  },
+];
+
+const related = [
+  { href: '/tools/compound-interest-calculator/', label: 'Compound growth' },
+  { href: '/tools/savings-goal-calculator/', label: 'Savings goal' },
+  { href: '/tools/sip-calculator/', label: 'Monthly SIP' },
+];
+---
+
+<ToolPage
+  title="Inflation Calculator Pakistan — What Your Rupees Will Be Worth"
+  h1="Inflation calculator"
+  description="See what an amount in rupees will be worth after Pakistani inflation, and what you'd need to match it. Free, anchored to the latest reported CPI."
+  path="/tools/inflation-calculator/"
+  lead="What today's rupees will buy later — and how much you would need then to stand still."
+  calc="inflation"
+  updated="2026-07-20"
+  fields={[
+    { field: 'amount', label: 'Amount today', prefix: 'Rs', value: 1000000, step: 50000 },
+    { field: 'years', label: 'Years ahead', value: 10, suffix: 'yrs' },
+    { field: 'rate', label: 'Assumed inflation', value: inflDefault, step: 0.1, suffix: '%' },
+  ]}
+  faqs={faqs}
+  related={related}
+>
+  <h2>The case for investing, in one number</h2>
+  <p>
+    Cash is not the safe option it feels like. Money left idle loses purchasing power every year at
+    exactly the inflation rate, with no volatility to warn you it is happening. The loss is quiet,
+    it is compounding, and it is certain.
+  </p>
+  <p>
+    {
+      a.cpi != null && a.tbill != null
+        ? `Pakistan's latest reported CPI is ${a.cpi}%, while 6-month T-bills yield about ${a.tbill}%${a.updated ? ` (macro layer, ${a.updated})` : ''}. That T-bill yield is the near-riskless bar — any investment carrying real risk should be judged against it, not against zero.`
+        : 'The near-riskless T-bill yield is the bar any riskier investment should be judged against — not zero.'
+    }
+  </p>
+
+  <h2>Two ways to read the same fact</h2>
+  <p>
+    The calculator shows both directions because people think in both. The first tile is what
+    today's amount will buy later. The second is what you would need later to match today's amount.
+    They describe one phenomenon, and seeing both usually lands harder than seeing either alone.
+  </p>
+
+  <h2>Where the default comes from</h2>
+  <p>
+    The inflation field is pre-filled from the latest CPI figure in the Henneth data layer rather
+    than a round number typed from memory — the same rule the desk applies to every price it
+    publishes. Change it freely: the assumption is yours, and a single month's print is a poor
+    guide to a ten-year horizon.
+  </p>
+</ToolPage>

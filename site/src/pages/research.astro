@@ -14,6 +14,21 @@ const philosophy = [
   ['Anchored to the risk-free rate', 'Earnings power is judged against the prevailing bond yield, so a stock is never called cheap in a vacuum.'],
   ['Evidence over narrative', 'A compelling story is not a reason. Every claim ties back to a filing, a price series, or a tested rule.'],
   ['Unknown stays unknown', 'If a number isn’t in the data layer, the desk renders it as unknown rather than guessing a plausible figure.'],
+  ['No lookahead, ever', 'A signal at a given bar may use only data available at that bar’s close. Fills come from the next open — never a price the rule could not have seen.'],
+  ['Costs assumed per stock', 'Friction is estimated name by name from the spread, because a flat cost assumption flatters exactly the thin stocks that momentum rules pick.'],
+  ['Frozen once live', 'A strategy that has published a backtest cannot be edited. Changing a rule means a new version with a fresh record — so old results can never be quietly invalidated.'],
+  ['Even the sky gets tested', 'The astrology lens is held to the same bar as every rule here: written down first, permutation-tested, multiplicity-corrected, and published whatever it shows.'],
+];
+
+/* Figures below are read from state/astro_backtest.json. Update them from that file, never by
+   hand — the whole point of this section is that the number is the measured one. */
+const astroFacts = [
+  ['2,589', 'hypotheses tested'],
+  ['101', 'subjects, tested stock by stock'],
+  ['4,893', 'trading days (2007–2026)'],
+  ['143', 'raw hits at p ≤ .05'],
+  ['129.5', 'expected by chance alone'],
+  ['0', 'survived multiplicity correction'],
 ];
 
 const principles = [
@@ -124,6 +139,40 @@ const principles = [
     </div>
   </section>
 
+  {/* THE WORKED EXAMPLE. Every other page describes the method; this shows it producing a result
+      the desk did not want. That is the strongest evidence the method is real. */}
+  <section class="section band-dark astro-proof">
+    <div class="wrap">
+      <p class="kicker dr-kicker">The method, applied to its hardest case</p>
+      <h2>We tested astrology. It failed. Here is the result anyway.</h2>
+      <p class="lead dr-lead astro-p-lead">
+        The astrology lens is the easiest thing on this desk to sell and the easiest to fake, which
+        makes it the honest test of whether any of the rules above are real. So it ran the full
+        gauntlet: traditional claims recorded first, then a circular-shift permutation test on the
+        condition mask — preserving both the autocorrelation of returns and the block shape of the
+        astro windows — stock by stock, never averaged into sectors where a single name’s effect
+        could hide.
+      </p>
+
+      <div class="astro-facts">
+        {astroFacts.map(([n, l], i) => (
+          <div class:list={['af', { 'af-zero': i === astroFacts.length - 1 }]}>
+            <span class="af-n pixel">{n}</span>
+            <span class="af-l">{l}</span>
+          </div>
+        ))}
+      </div>
+
+      <p class="astro-p-note">
+        143 raw hits against 129.5 expected by chance is not a signal — it is what noise looks like.
+        Nothing survived Bonferroni, nothing survived FDR, and nothing replicated.
+        <b> The desk publishes this rather than hiding it</b>, and the lens is barred from
+        generating or gating a single trade setup. If a condition ever does survive, the evidence
+        will be published on exactly the same terms.
+      </p>
+    </div>
+  </section>
+
   <section class="section">
     <div class="wrap">
       <p class="kicker">The rules</p>
@@ -174,6 +223,38 @@ const principles = [
   .falsified { border-left: 2px solid var(--dn); padding-left: 12px; }
   .mock-note { font-size: 9.5px; margin: 14px 0 0; }
 
+  /* THE NULL-RESULT BAND. The zero is the only coloured figure on the page — it is the finding. */
+  .astro-proof { position: relative; overflow: hidden; }
+  .astro-proof > * { position: relative; z-index: 1; }
+  .astro-proof h2 { max-width: 780px; }
+  .astro-p-lead { max-width: 780px; }
+  .astro-facts {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+    background: #3a3a37; border: 1.5px solid #3a3a37; margin: 26px 0 22px;
+  }
+  .af { background: #101314; padding: 18px; display: flex; flex-direction: column; gap: 7px; }
+  .af-n { font-size: 28px; line-height: 1; color: var(--bg); font-variant-numeric: tabular-nums; }
+  .af-l { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8f8f88; }
+  .af-zero .af-n, .af-zero .af-l { color: #55a16b; }
+  .astro-p-note { font-size: 12px; line-height: 1.8; color: #c8c8c0; max-width: 780px; }
+  .astro-p-note b { color: var(--bg); }
+
+  .astro-proof::before {
+    content: ''; position: absolute; inset: -40% -12% auto -12%; height: 180%;
+    pointer-events: none; opacity: 0.4; z-index: 0;
+    background-image:
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #6f6f88 1px, transparent 1.6px),
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #55a16b 1px, transparent 1.6px),
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px);
+    background-repeat: no-repeat;
+    background-position: 9% 16%, 71% 11%, 38% 61%, 88% 71%, 24% 86%;
+    animation: skyDrift 90s linear infinite;
+  }
+  @keyframes skyDrift { to { transform: translate3d(5%, -3%, 0); } }
+  @media (prefers-reduced-motion: reduce) { .astro-proof::before { animation: none; } }
+
   .rules { margin-top: 20px; border-top: var(--rule); }
   .rule { display: flex; gap: 20px; padding: 20px 0; border-bottom: var(--rule); }
   .rule-n { font-size: 26px; color: var(--ink-3); min-width: 46px; }
@@ -184,5 +265,6 @@ const principles = [
   .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
   @media (max-width: 1000px) { .pipe { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 900px) { .note-grid, .phil { grid-template-columns: 1fr; gap: 28px; } }
+  @media (max-width: 900px) { .note-grid, .phil { grid-template-columns: 1fr; gap: 28px; } .astro-facts { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .astro-facts { grid-template-columns: 1fr; } }
 </style>

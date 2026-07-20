@@ -114,11 +114,12 @@ const principles = [
         <h1>A whole research desk<br />for every PSX stock<span class="h1-dot">.</span></h1>
         <p class="lead hero-lead">
           Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk.
-          Then every dated call is graded against what prices actually did. You get the read. You
-          place the trade.
+          We even compute the sky and test what tradition claims it governs. Then every dated call,
+          astrological ones included, is graded against what prices actually did.
         </p>
         <p class="hero-sub muted">
-          The desk does the homework in public and keeps its own scorecard. It never places orders.
+          The desk does the homework in public and keeps its own scorecard — including the tests
+          that failed. It never places orders.
         </p>
         <div class="hero-cta">
           <a href="/plans" class="btn btn-solid btn-lg">Get started</a>
@@ -387,6 +388,51 @@ const principles = [
     </div>
   </section>
 
+  {/* ================= THE SKY =================
+      Figures read from state/astro.json and state/astro_backtest.json. The null result IS the
+      pitch — no edge is claimed anywhere in this block, per astro_map.json's own discipline
+      ("a lens the desk reports and scores, nothing more"). */}
+  <section class="section band-dark sky">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker dr-kicker">04 · The sky</p>
+        <h2>The only desk that tests its own astrology</h2>
+        <p class="lead dr-lead">
+          Sidereal positions, Lahiri ayanamsa, the nine classical grahas — computed to the degree,
+          ninety days ahead. What tradition claims each one governs is written down <em>first</em>,
+          then tested against nineteen years of PSX prices on the same bar as every other strategy
+          here.
+        </p>
+        <p class="sky-verdict">
+          So far: <b>2,589 hypotheses tested, none survived correction.</b> We publish that, because
+          a lens you refuse to test isn’t research — it’s a horoscope with a Bloomberg terminal.
+        </p>
+        <div class="sky-cta">
+          <a href="/features" class="btn">How the sky lens works ›</a>
+          <a href={site.appUrl} class="btn btn-ghost" rel="noopener">Cast your chart free</a>
+        </div>
+      </div>
+
+      <div class="sky-card">
+        <div class="dr-bar">
+          <span class="label">Astro · computed</span>
+          <span class="muted">sidereal · Lahiri</span>
+        </div>
+        <div class="sky-body">
+          <div class="sky-row"><span class="muted">Zodiac</span><span>Sidereal (Lahiri)</span></div>
+          <div class="sky-row"><span class="muted">Bodies</span><span>9 classical grahas</span></div>
+          <div class="sky-row"><span class="muted">Horizon</span><span>90 days ahead</span></div>
+          <div class="sky-row"><span class="muted">Granularity</span><span>Nakshatra &amp; pada</span></div>
+          <div class="sky-rule"></div>
+          <div class="sky-row sky-null"><span>Conditions with a proven edge</span><span class="pixel">0</span></div>
+          <p class="sky-fine muted">
+            Published, not buried. The lens never generates or gates a trade setup.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= PRINCIPLES ================= -->
   <section class="section band-panel">
     <div class="wrap">
@@ -547,6 +593,38 @@ const principles = [
   .deskroom .lead, .dr-lead { color: #c8c8c0; }
   .dr-kicker { color: #8f8f88; }
   .dr-hint { font-size: 9.5px; margin-top: 12px; color: #8f8f88; }
+  /* ---- The sky band ---- */
+  .sky { position: relative; overflow: hidden; }
+  .sky > * { position: relative; z-index: 1; }
+  .sky-verdict { font-size: 12px; line-height: 1.8; color: #c8c8c0; margin: 18px 0 22px; max-width: 560px; }
+  .sky-verdict b { color: var(--bg); }
+  .sky-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .sky-card { border: 1.5px solid #3a3a37; background: #101314; }
+  .sky-body { padding: 14px; }
+  .sky-row { display: flex; justify-content: space-between; gap: 12px; font-size: 11px; padding: 9px 0; color: #c8c8c0; }
+  .sky-rule { height: 1px; background: #2c2f30; margin: 8px 0; }
+  .sky-null { align-items: center; color: var(--bg); font-weight: 700; }
+  .sky-null .pixel { font-size: 26px; color: #55a16b; line-height: 1; }
+  .sky-fine { font-size: 9.5px; margin: 10px 0 0; color: #8f8f88; }
+
+  /* Drifting starfield behind the band. `inset` overshoots so the drift never exposes an edge. */
+  .sky::before {
+    content: ''; position: absolute; inset: -40% -12% auto -12%; height: 180%;
+    pointer-events: none; opacity: 0.45; z-index: 0;
+    background-image:
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #6f6f88 1px, transparent 1.6px),
+      radial-gradient(circle, #55a16b 1px, transparent 1.6px),
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #6f6f88 1px, transparent 1.6px);
+    background-repeat: no-repeat;
+    background-position: 6% 14%, 74% 9%, 33% 58%, 90% 68%, 18% 82%, 55% 34%;
+    animation: skyDrift 90s linear infinite;
+  }
+  @keyframes skyDrift { to { transform: translate3d(5%, -3%, 0); } }
+  @media (prefers-reduced-motion: reduce) { .sky::before { animation: none; } }
+
   .dr-card { border: 1.5px solid #3a3a37; background: #101314; }
   .dr-bar { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #3a3a37; font-size: 9.5px; }
   .dr-body { padding: 14px; }

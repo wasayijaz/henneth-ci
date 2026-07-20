@@ -1,0 +1,81 @@
+---
+import ToolPage from '../../components/ToolPage.astro';
+import { getAnchors, anchoredDefault } from '../../lib/anchors.ts';
+
+const a = getAnchors();
+const inflDefault = anchoredDefault(a.cpi, 11);
+
+const faqs = [
+  {
+    q: 'What is a SIP?',
+    a: 'A systematic investment plan — putting a fixed amount in every month regardless of what the market is doing, rather than trying to pick moments. In Pakistan the term is most associated with mutual funds, but the arithmetic is identical whether you are buying units or shares on the PSX.',
+  },
+  {
+    q: 'Does investing monthly beat investing a lump sum?',
+    a: 'Not reliably, and anyone who tells you otherwise is selling something. Investing monthly reduces the damage of buying everything at a single bad price, and it matches how most people actually receive income. Those are the honest arguments for it — not higher returns.',
+  },
+  {
+    q: 'Why is so much of the ending value just my own money?',
+    a: 'Because early on, it is. Compounding needs a base to work on, so in the first several years your contributions dominate and growth is the smaller share. The bars above make this visible. It is the single most useful thing a SIP calculator can show you.',
+  },
+  {
+    q: 'Can I stop and restart?',
+    a: 'The calculator assumes an uninterrupted monthly contribution, which is the simplifying assumption every SIP calculator makes. Real gaps reduce the outcome roughly in proportion to the months missed and when they were missed.',
+  },
+];
+
+const related = [
+  { href: '/tools/compound-interest-calculator/', label: 'Compound growth' },
+  { href: '/tools/savings-goal-calculator/', label: 'Savings goal' },
+  { href: '/tools/inflation-calculator/', label: 'Inflation' },
+];
+---
+
+<ToolPage
+  title="SIP Calculator Pakistan — Monthly Investment in PKR"
+  h1="Monthly investment (SIP) calculator"
+  description="See what investing a fixed amount every month grows to in rupees, and what it's worth after inflation. Free Pakistani SIP calculator, no sign-up."
+  path="/tools/sip-calculator/"
+  lead="What a fixed monthly contribution turns into — and how much of it is your own money rather than growth."
+  calc="sip"
+  updated="2026-07-20"
+  fields={[
+    { field: 'monthly', label: 'Monthly contribution', prefix: 'Rs', value: 25000, step: 1000 },
+    { field: 'lump', label: 'Starting amount', prefix: 'Rs', value: 0, step: 10000 },
+    { field: 'years', label: 'Years investing', value: 15, suffix: 'yrs' },
+    { field: 'rate', label: 'Assumed annual return', value: 15, step: 0.5, suffix: '%' },
+    { field: 'infl', label: 'Assumed inflation', value: inflDefault, step: 0.1, suffix: '%' },
+  ]}
+  faqs={faqs}
+  related={related}
+>
+  <h2>Regularity beats timing, for a boring reason</h2>
+  <p>
+    A fixed monthly amount buys more units when prices are low and fewer when they are high. That
+    is the whole mechanism. It is not a strategy for higher returns — it is a way of removing the
+    decision that most often goes wrong, which is choosing when to buy.
+  </p>
+  <p>
+    It also matches how salaries arrive. For most PSX investors the realistic question is not
+    "lump sum or monthly" but "how much per month", because there is no lump sum.
+  </p>
+
+  <h2>Read the bars, not the headline</h2>
+  <p>
+    The dark portion of each bar is what you put in; the full height is total value. For the first
+    several years the dark portion is nearly all of it. Growth overtakes contributions late, which
+    is why a smaller amount started earlier usually beats a larger amount started later — and why
+    extending the horizon is a more powerful lever than raising your assumed return.
+  </p>
+
+  <h2>The inflation tile</h2>
+  <p>
+    {
+      a.cpi != null
+        ? `Against Pakistan's latest reported CPI of ${a.cpi}%${a.updated ? ` (macro layer, ${a.updated})` : ''}, `
+        : 'Against double-digit Pakistani inflation, '
+    }
+    a large nominal ending figure can still represent very little real gain. The
+    "in today's rupees" tile is the one to plan against.
+  </p>
+</ToolPage>

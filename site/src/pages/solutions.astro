@@ -7,7 +7,8 @@ const enter = (p: string) => `${site.appUrl}/?plan=${p}`;
 const jump = [
   { tag: '01', title: 'Retail investors', href: '#retail' },
   { tag: '02', title: 'Active traders', href: '#traders' },
-  { tag: '03', title: 'Brokers & institutions', href: '#brokers' },
+  { tag: '03', title: 'The astrology-curious', href: '#astro' },
+  { tag: '04', title: 'Brokers & institutions', href: '#brokers' },
 ];
 
 const segments = [
@@ -56,37 +57,58 @@ const segments = [
     ],
   },
   {
-    id: 'brokers',
-    tag: '03 · Brokers & institutions',
-    title: 'Research infrastructure for your desk',
-    body: 'For brokerages and institutions that need multi-seat access, an API and white-label research. Layer the desk’s evidence into your own workflow, with compliance-ready exports and custom terms.',
+    id: 'astro',
+    tag: '03 · The astrology-curious',
+    title: 'Bring your chart. We’ll bring the evidence.',
+    body: 'For anyone who reads their transits and wonders whether the market listens. Cast your birth chart in the browser, keep the daily gochara against it, and see the sky the desk computes — sidereal, Lahiri, nine grahas, ninety days ahead. Then see exactly how those claims held up against nineteen years of PSX prices.',
     points: [
-      'Multi-seat team access & admin',
-      'Research API and data feeds',
-      'White-label notes + compliance exports',
+      'Your birth chart, cast in the browser — no account to start',
+      'The computed sky: nakshatra and pada, 90 days ahead',
+      'Every traditional claim written down, then tested and scored',
     ],
-    cta: 'Contact sales',
+    cta: 'Cast your chart free',
+    href: `${site.appUrl}/#/cast`,
+    solid: true,
+    panelTitle: 'Astro · what you get',
+    plan: 'Free',
+    rows: [
+      ['Birth chart & daily transits', 'Included', 1],
+      ['The computed sky', '90-day horizon', 1],
+      ['Traditional sector claims', 'Published', 1],
+      ['Conditions with a proven edge', 'None yet — and we say so', 0],
+    ],
+  },
+  {
+    // DELIBERATELY MAKES NO CLAIMS (owner, 2026-07-20) — matches site.config.ts.
+    // Every line here used to promise something unbuilt: multi-seat admin, a research API, data
+    // feeds, white-label notes, compliance exports. None of that exists. The tier stays listed so
+    // institutional readers know it is coming; what it contains is a conversation, not a page.
+    id: 'brokers',
+    tag: '04 · Brokers & institutions',
+    title: 'For desks and institutions',
+    body: 'A tier for brokerages and institutions is in build. We would rather talk about what your desk actually needs than publish a feature list we have not shipped yet.',
+    points: [],
+    cta: 'Talk to us',
     href: '/contact',
     solid: false,
-    panelTitle: 'Broker · what you get',
-    plan: site.earlyAccess ? 'In build' : 'Custom',
-    rows: [
-      ['Seats', 'Multi-seat', 0],
-      ['API & feeds', 'Included', 1],
-      ['White-label research', 'Included', 1],
-      ['Compliance exports', 'Included', 1],
-    ],
+    panelTitle: 'Broker',
+    plan: 'In build',
+    rows: [],
   },
 ];
 
+/* The Broker column is intentionally blank throughout. It previously carried ticks for a research
+   API, data feeds and white-label exports — none of which are built. A comparison table is the
+   worst place to promise vapour, because a tick reads as a shipped fact. */
 const caps: [string, string, string, string][] = [
-  ['Daily desk read', '✓', '✓', '✓'],
-  ['Board, valuations & scorecards', '✓', '✓', '✓'],
-  ['The Desk Room debates', 'House view', 'Full transcripts', 'Full transcripts'],
-  ['Strategy backtests', '—', 'Unlimited', 'Unlimited'],
-  ['Screener, scanner & scenarios', '—', '✓', '✓'],
-  ['Research API & data feeds', '—', '—', '✓'],
-  ['White-label research & exports', '—', '—', '✓'],
+  ['Daily desk read', '✓', '✓', ''],
+  ['Board, valuations & scorecards', '✓', '✓', ''],
+  ['The Desk Room debates', 'House view', 'Full transcripts', ''],
+  ['Strategy backtests', '—', 'Unlimited', ''],
+  ['Screener, scanner & scenarios', '—', '✓', ''],
+  ['Your birth chart & daily transits', '✓', '✓', ''],
+  ['The computed sky (90-day horizon)', '✓', '✓', ''],
+  ['Astro claims, tested & scored', '✓', '✓', ''],
 ];
 ---
 
@@ -94,7 +116,7 @@ const caps: [string, string, string, string][] = [
   title="Solutions"
   path="/solutions"
   active="solutions"
-  description="Henneth for retail investors, active traders, and brokers. One research desk, tuned to three ways of working the Pakistan Stock Exchange."
+  description="Henneth for retail investors, active traders, the astrology-curious, and brokers. One research desk, tuned to four ways of working the Pakistan Stock Exchange."
 >
   <section class="section-tight ph">
     <div class="wrap">

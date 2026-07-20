@@ -1,15 +1,58 @@
 ---
 import Base from '../layouts/Base.astro';
 
-const cards = [
-  ['Today', 'The desk’s plain-English daily read — tone, favoured and avoided sectors, and a short watchlist.'],
-  ['Board', 'The whole universe on one screen: heatmap, proven signals, predictability ranks and a news wire.'],
-  ['Value', 'Every name valued four ways, with each model’s full working expandable.'],
-  ['Strategies', 'Transparent, rule-based strategies, each backtested across ~19 years of history.'],
-  ['The Desk Room', 'Named analysts debate every stock; a Chair issues a house view with explicit dissent.'],
-  ['Scores', 'Dated, falsifiable calls graded against what prices actually did — the desk’s and the brokers’.'],
-  ['Research', 'Filings, results and corporate briefings digested and tagged to the names they move.'],
-  ['Macro & calendars', 'The global tape that moves PSX, a geo-risk radar, dividend timing and earnings dates.'],
+/* Every card below is a screen that exists in the terminal today (the nav list in
+   dashboard/index.html). Nothing aspirational — if it is named here, it opens. */
+const groups = [
+  {
+    k: 'Start here',
+    items: [
+      ['Today', 'The desk’s plain-English daily read — tone, favoured and avoided sectors, and a short watchlist.'],
+      ['Ask', 'Put a question to the desk in plain English and get an answer traced back to the data layer.'],
+      ['Learn', 'A 14-lesson path from “what is a share” to reading a cash-flow statement, built for a first-time investor.'],
+      ['Your Chart', 'Cast your birth chart in the browser and keep it — no account needed to start.'],
+    ],
+  },
+  {
+    k: 'Read a company',
+    items: [
+      ['Value', 'Every name valued four ways, with each model’s full working expandable.'],
+      ['Research', 'Filings, results and corporate briefings digested and tagged to the names they move.'],
+      ['The Desk Room', 'Named analysts debate every stock; a Chair issues a house view with explicit dissent.'],
+      ['Compare', 'Put two or more names side by side on the numbers that actually separate them.'],
+    ],
+  },
+  {
+    k: 'Find something',
+    items: [
+      ['Board', 'The whole universe on one screen: heatmap, proven signals, predictability ranks and a news wire.'],
+      ['Screener', 'Filter the exchange on quality, value, momentum, yield and liquidity.'],
+      ['Strategies', 'Transparent, rule-based strategies, each backtested across ~19 years of history.'],
+      ['Sectors', 'Sector-level debates and dossiers, not just a list of constituents.'],
+      ['Scenarios', 'Ask what a rate move, an oil move or a rupee move would do to a name.'],
+      ['Marketplace', 'Strategies published with their full record attached, good and bad.'],
+    ],
+  },
+  {
+    k: 'Track it',
+    items: [
+      ['Watchlist', 'The names you care about, with the desk’s read attached to each.'],
+      ['Portfolio', 'Your positions X-rayed for concentration, sector overlap and correlated risk.'],
+      ['Practice', 'A virtual Rs 500,000 book, so you can be wrong without paying for it.'],
+      ['Scores', 'Dated, falsifiable calls graded against what prices actually did — the desk’s and the brokers’.'],
+    ],
+  },
+  {
+    k: 'Context',
+    items: [
+      ['Macro', 'The global tape that moves PSX, the SBP path, the rupee, and a geo-risk radar.'],
+      ['News', 'The announcement wire, tagged to tickers and scored 1–5 for impact.'],
+      ['Dividends', 'Yield, cover, book-closure dates and how reliably a payer has actually paid.'],
+      ['Earnings', 'The results calendar, with what the desk expects and what it would falsify.'],
+      ['Astro', 'The computed sky, what tradition claims it governs, and what survived testing.'],
+      ['Tools', 'PSX-specific calculators — position size, CGT, dividend yield, break-even.'],
+    ],
+  },
 ];
 
 const engine = [
@@ -17,6 +60,8 @@ const engine = [
   ['Self-checking systems', 'Automated gates catch bad numbers, broken builds and design drift before anything reaches you.'],
   ['Risk, stated honestly', 'Volatility, drawdown in its proper era context, liquidity and dividend reliability.'],
   ['Nothing fabricated', 'Where the data layer is silent, the desk says so — no invented figures, ever.'],
+  ['Long only, no leverage', 'No shorts, no derivatives, no margin. Daily timeframe. The desk never places an order.'],
+  ['An auditor with a veto', 'Every setup is independently re-derived. If the two answers disagree, the setup dies — no override.'],
 ];
 ---
 
@@ -37,16 +82,19 @@ const engine = [
     </div>
   </section>
 
-  <section class="wrap">
-    <div class="tilegrid cards">
-      {cards.map(([t, d]) => (
-        <div>
-          <h3>{t}</h3>
-          <p class="muted card-d">{d}</p>
-        </div>
-      ))}
-    </div>
-  </section>
+  {groups.map((g) => (
+    <section class="wrap grp">
+      <p class="kicker grp-k">{g.k}</p>
+      <div class="tilegrid cards">
+        {g.items.map(([t, d]) => (
+          <div>
+            <h3>{t}</h3>
+            <p class="muted card-d">{d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
 
   <section class="section">
     <div class="wrap two-col">
@@ -118,6 +166,87 @@ const engine = [
     </div>
   </section>
 
+  {/* THE ASTRO SECTION.
+      Every figure here is read from the desk's own files and none of it claims an edge:
+      astro.json (sidereal, Lahiri ayanamsa, nine grahas, 90-day horizon) and
+      astro_backtest.json (2,589 hypotheses, 0 survivors after correction).
+      astro_map.json states the rule this copy obeys: "Astro NEVER generates or gates a trade
+      setup... It is a lens the desk reports and scores, nothing more." Keep it that way. */}
+  <section class="section astro-band">
+    <div class="wrap">
+      <p class="kicker astro-k">The sky</p>
+      <h2>We compute the sky. Then we try to prove it doesn’t work.</h2>
+      <p class="lead astro-lead">
+        Most people either dismiss financial astrology or sell it. The desk does neither: it
+        computes the positions properly, writes down exactly what tradition claims they govern,
+        and then tests those claims against nineteen years of PSX prices — publishing the result
+        either way.
+      </p>
+
+      <div class="tilegrid astro-grid">
+        <div>
+          <h3>Computed, not looked up</h3>
+          <p class="muted card-d">
+            Sidereal zodiac, Lahiri (Chitrapaksha) ayanamsa, the nine classical grahas, mean node.
+            Positions to the degree, with nakshatra and pada — a 90-day forward horizon of
+            ingresses, stations and combustions, each stamped in PKT.
+          </p>
+        </div>
+        <div>
+          <h3>Claims, written down first</h3>
+          <p class="muted card-d">
+            Each graha is mapped to the PSX sectors tradition assigns it, keyed to the exchange’s
+            own sector names. Recorded <em>before</em> testing so the mapping cannot be quietly
+            rewritten to fit the result.
+          </p>
+        </div>
+        <div>
+          <h3>Tested like any strategy</h3>
+          <p class="muted card-d">
+            Circular-shift permutation on the condition mask, stock by stock — never averaged into
+            sectors, which would hide a stock-specific effect. Multiplicity corrected. Same bar as
+            the 52 rule-based strategies.
+          </p>
+        </div>
+        <div>
+          <h3>Your own chart</h3>
+          <p class="muted card-d">
+            Cast your birth chart in the browser — nothing leaves your device to do it — and keep
+            the daily transits against it. No account needed to start.
+          </p>
+        </div>
+      </div>
+
+      {/* The scoreboard. This is the differentiator: a published null result. */}
+      <div class="astro-score">
+        <div class="as-row">
+          <span class="as-n pixel">2,589</span>
+          <span class="as-l muted">hypotheses tested</span>
+        </div>
+        <div class="as-row">
+          <span class="as-n pixel">101</span>
+          <span class="as-l muted">subjects, stock by stock</span>
+        </div>
+        <div class="as-row">
+          <span class="as-n pixel">4,893</span>
+          <span class="as-l muted">trading days, 2007–2026</span>
+        </div>
+        <div class="as-row as-zero">
+          <span class="as-n pixel">0</span>
+          <span class="as-l">survived correction</span>
+        </div>
+      </div>
+
+      <p class="astro-verdict">
+        <b>So the desk says so, in the product.</b> No astro condition has shown a demonstrated
+        edge on PSX. The lens never generates a trade setup, never gates one, and never touches the
+        Strategist, the Risk Officer or the Auditor. It is reported and scored like everything else
+        here — and if a condition ever does survive, you will see the same evidence we did.
+      </p>
+      <a href="/research" class="btn astro-cta">See how the desk tests things ›</a>
+    </div>
+  </section>
+
   <section class="section">
     <div class="wrap">
       <p class="kicker">Under the hood</p>
@@ -166,12 +295,61 @@ const engine = [
   .drcell { background: #101314; padding: 16px; }
   .drcell p { font-size: 11px; color: #c8c8c0; margin: 8px 0 0; }
 
-  .engine { grid-template-columns: repeat(2, 1fr); margin-top: 18px; }
+  .engine { grid-template-columns: repeat(3, 1fr); margin-top: 18px; }
+
+  .grp { margin-bottom: 34px; }
+  .grp-k { margin-bottom: 12px; }
+
+  /* THE SKY BAND. Near-black like the Desk Room band — the one place on the site where a
+     starfield reads as anything other than decoration. */
+  .astro-band { background: var(--ink-1); color: var(--bg); position: relative; overflow: hidden; }
+  .astro-k { color: #8f8f88; }
+  .astro-band h2 { max-width: 760px; }
+  .astro-lead { max-width: 720px; color: #c8c8c0; margin-bottom: 26px; }
+  .astro-grid { grid-template-columns: repeat(4, 1fr); background: #2c2f30; border-color: #3a3a37; }
+  .astro-grid > * { background: #101314; }
+  .astro-grid h3 { color: var(--bg); }
+  .astro-grid .card-d { color: #a9a9a2; }
+
+  /* The scoreboard. The zero is the point, so it is the only coloured figure. */
+  .astro-score {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px;
+    background: #3a3a37; border: 1.5px solid #3a3a37; margin-top: 24px;
+  }
+  .as-row { background: #101314; padding: 18px; display: flex; flex-direction: column; gap: 7px; }
+  .as-n { font-size: 30px; line-height: 1; color: var(--bg); font-variant-numeric: tabular-nums; }
+  .as-l { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .as-zero .as-n { color: #55a16b; }
+  .as-zero .as-l { color: #55a16b; }
+
+  .astro-verdict { font-size: 12px; line-height: 1.8; max-width: 760px; margin: 24px 0 20px; color: #c8c8c0; }
+  .astro-verdict b { color: var(--bg); }
+  .astro-cta { background: transparent; color: var(--bg); border-color: #3a3a37; }
+  .astro-cta:hover { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
+
+  /* A slow drift across the band — the sky moving, at a pace you notice only if you stay.
+     Pointer-events none so it can never intercept a click on the CTA beneath it. */
+  .astro-band::before {
+    content: ''; position: absolute; inset: -50% -10% auto -10%; height: 200%;
+    pointer-events: none; opacity: 0.5;
+    background-image:
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #6f6f88 1px, transparent 1.6px),
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
+      radial-gradient(circle, #55a16b 1px, transparent 1.6px),
+      radial-gradient(circle, #5a5a55 1px, transparent 1.6px);
+    background-repeat: no-repeat;
+    background-position: 8% 12%, 82% 20%, 41% 66%, 92% 74%, 22% 84%;
+    animation: skyDrift 90s linear infinite;
+  }
+  @keyframes skyDrift { to { transform: translateX(6%) translateY(-3%); } }
+  @media (prefers-reduced-motion: reduce) { .astro-band::before { animation: none; } }
   .center { text-align: center; }
   .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
   .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
   @media (max-width: 1000px) { .cards, .drgrid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 900px) { .two-col, .engine { grid-template-columns: 1fr; gap: 28px; } .two-col.rev > :first-child { order: 2; } }
-  @media (max-width: 560px) { .cards, .drgrid { grid-template-columns: 1fr; } .heat { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 1000px) { .astro-grid { grid-template-columns: repeat(2, 1fr); } .cards { grid-template-columns: repeat(2, 1fr); } .engine { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 28px; } .two-col.rev > :first-child { order: 2; } .astro-score { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .cards, .drgrid, .astro-grid, .engine { grid-template-columns: 1fr; } .heat { grid-template-columns: repeat(3, 1fr); } .as-n { font-size: 24px; } }
 </style>
