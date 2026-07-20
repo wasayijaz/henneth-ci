@@ -1964,6 +1964,15 @@ function maxDrawdown(bars) {
   return { mdd: mdd * 100, peakDate, troughDate: td };
 }
 function behaviorStats(hist) {
+  /* Null-safe at the source. The ticker page no longer dead-ends when the price history alone
+     fails to fetch, so this can now legitimately be called with nothing. Returning a shape of
+     nulls (rather than throwing, or returning zeros) keeps every caller's optional-chaining and
+     "—" fallbacks working, and — more importantly — means a missing file can never be rendered
+     as a real statistic of 0%. */
+  if (!hist || hist.length < 2) {
+    return { total: null, mdd: null, mddPeak: null, mddTrough: null, mddRecent: null,
+             mddRecentTrough: null, upPct: null, avgAbs: null, best: null, worst: null };
+  }
   const c = hist.map(h => h.close);
   const rets = c.slice(1).map((v, i) => v / c[i] - 1);
   const upDays = rets.filter(r => r > 0).length;
@@ -2124,7 +2133,12 @@ async function pageTicker(sym, _retry = 0) {
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
     j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json")]);
-  const q = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
+  /* qRaw vs q: `qRaw` answers "did the quant snapshot arrive?", `q` is what the rest of the page
+     reads from. Keeping them separate is what lets the page render without quant instead of
+     throwing on the first `q.avg_daily_traded_value` — the fields simply come back undefined and
+     the existing "—" fallbacks handle them. */
+  const qRaw = quant?.tickers?.[sym], u = uni?.symbols?.[sym], lv = live?.tickers?.[sym];
+  const q = qRaw || {};
   const lq = liqAll?.tickers?.[sym];
   const proven = (smap?.tickers?.[sym]) || [];
   const fsc = fscore?.tickers?.[sym];
@@ -2160,19 +2174,62 @@ async function pageTicker(sym, _retry = 0) {
   const f = fund?.tickers?.[sym] || {};
   const nextEarn = (cal?.events || []).find(e => e.ticker === sym && e.type === "results");
   const daysTo = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
-  if (!series || !q) {
-    // Almost always a transient fetch miss (the files exist server-side) — never dead-end.
-    // Auto-retry a few times, and always give a manual Retry so the page can self-heal.
-    const missing = !q ? "market data" : "price history";
-    $("view").innerHTML = `<div class="card"><div class="empty">Couldn't load ${missing} for ${esc(sym)} just now.<br>
+  /* THE ALL-OR-NOTHING GUARD — narrowed, deliberately.
+
+     This page fetches 24 files in one Promise.all and used to dead-end if EITHER quant or the
+     price history was missing. That is why "Couldn't load market data for <SYM> just now" kept
+     appearing on different tickers (UBL, then BML) even though every file for those names exists
+     server-side: any ONE of 24 concurrent requests losing all three of its attempts threw away the
+     other 23 and blanked a page that had everything it needed to render.
+
+     Two sources carry price independently — quant.json (close, ret_1d) and live.json (ldcp, open,
+     high, low) — and the chart needs only `series`. Losing one of those is a degraded page, not a
+     dead one. So the hard stop now fires only when we have NO price from ANY source AND no series;
+     everything softer renders what arrived and says plainly what did not.
+
+     `_retry` still re-fetches in the background, so a genuinely transient miss self-heals while the
+     visitor is already reading the parts that did load. */
+  /* WHERE THE LINE SITS, and why it is not "render no matter what".
+
+     Missing QUANT is survivable: it carries the close, the traded value and the volatility rank,
+     and every consumer of those already falls back to "—". That was the reported failure — the
+     screenshot said "market data", which is this branch — and it now renders.
+
+     Missing HISTORY is not survivable, and pretending otherwise would be worse than the bug. The
+     chart, the drawdown, the up-day share, the average daily move and the whole risk profile are
+     all computed from the series. With it gone the page is a shell, and the only alternatives are
+     to print a dozen "—" or to fabricate zeros. So this stops, says so, and retries.
+
+     I tested the render-anyway version: it threw `null.toFixed` from the behaviour stats. Rather
+     than scatter null-guards through a dozen formatting sites and hope none were missed, the
+     dependency is stated honestly here. */
+  if (!series || series.length < 2) {
+    $("view").innerHTML = `<a class="crumb" href="#/board">← board</a>
+      <div class="card"><div class="empty">Couldn't load the price history for ${esc(sym)} just now.<br><br>
+      Everything on a ticker page — the chart, the drawdown, the risk profile — is computed from it, so the desk would rather show you nothing than a page of dashes. This is almost always a network blip, not a missing stock.<br>
       <button class="acct-signin" id="tkretry" style="margin-top:12px">Retry</button></div></div>`;
     const btn = document.getElementById("tkretry");
     if (btn) btn.onclick = () => pageTicker(sym, 0);
     if (_retry < 3) setTimeout(() => { if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, _retry + 1); }, 1200);
     return;
   }
+  /* Partial load: render, but never let a missing file masquerade as a fact. The banner names
+     exactly what is absent so nothing on the page is silently computed from a hole. */
+  const _gaps = [];
+  if (!qRaw) _gaps.push("the quant snapshot");
+  if (!lv) _gaps.push("the live tape");
+  if (_gaps.length && _retry < 3) {
+    setTimeout(() => { if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, _retry + 1); }, 1500);
+  }
+  const gapBanner = _gaps.length
+    ? `<div class="card" style="border-color:var(--dn)"><div class="sub" style="padding:10px 12px">
+        Showing a partial page for ${esc(sym)}: ${_gaps.join(", ")} didn't load this time.
+        The desk is retrying in the background — nothing below is estimated to fill the gap.
+        <button class="acct-signin" id="tkretry" style="margin-left:8px">Retry now</button></div></div>`
+    : "";
 
-  const px = lv?.current ?? q.close;
+  // Price falls back across both sources rather than assuming quant is present.
+  const px = lv?.current ?? q?.close ?? lv?.ldcp ?? (series?.length ? series[series.length - 1].close : null);
   const b = behaviorStats(series);
   const histYears = Math.max(1, Math.round(yearsSpan));
   const tickerNews = (news || []).filter(n => (n.tickers || []).includes(sym)).slice(-10).reverse();
@@ -2486,6 +2543,7 @@ async function pageTicker(sym, _retry = 0) {
 
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
+  ${gapBanner}
   <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
   ${coverageNote}
   ${liqCard}
@@ -2614,16 +2672,31 @@ async function pageTicker(sym, _retry = 0) {
   <div class="card"><h2>News & developments</h2><div class="sub">sentinel-tagged for ${sym}</div><div class="wire">${
     tickerNews.length ? tickerNews.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>${esc(n.headline || "")} ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}<br><span class="t">${esc(n.summary || "")}</span></p>`).join("") : '<div class="empty">Nothing tagged yet — sentinel populates this each cycle.</div>'}</div></div>`;
 
-  const redraw = d => {
-    if (d === "intra") drawIntraday($("chart"), $("tt"), intra.points, q.close);
-    else drawChart($("chart"), $("tt"), series, +d);
-  };
-  $("ranges").addEventListener("click", e => {
-    if (!e.target.dataset.d) return;
-    $("ranges").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === e.target));
-    redraw(e.target.dataset.d);
-  });
-  redraw(252);
+  // The partial-load banner's button, when the page rendered without one of its inputs.
+  const gapBtn = document.getElementById("tkretry");
+  if (gapBtn) gapBtn.onclick = () => pageTicker(sym, 0);
+
+  /* Chart wiring is now conditional. `series` can legitimately be null here (that is the whole
+     point of the narrowed guard above), and drawChart would throw on it — which would surface as
+     "Couldn't render ticker" and put us right back where we started, just with a different
+     message. No history, no chart; the rest of the page still stands. */
+  const canvas = $("chart"), ranges = $("ranges");
+  if (canvas && series && series.length > 1) {
+    const redraw = d => {
+      if (d === "intra") drawIntraday(canvas, $("tt"), intra.points, q.close);
+      else drawChart(canvas, $("tt"), series, +d);
+    };
+    ranges?.addEventListener("click", e => {
+      if (!e.target.dataset.d) return;
+      ranges.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === e.target));
+      redraw(e.target.dataset.d);
+    });
+    redraw(252);
+  } else if (canvas) {
+    const holder = canvas.parentElement;
+    if (holder) holder.innerHTML = `<div class="empty" style="padding:28px 12px">No price history loaded for ${esc(sym)} — the chart is unavailable on this render. The desk is retrying.</div>`;
+    if (ranges) ranges.style.display = "none";
+  }
 }
 
 function daysFromNow(d) { return d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null; }

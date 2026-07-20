@@ -111,7 +111,16 @@ const principles = [
     <div class="wrap hero-grid">
       <div>
         <p class="kicker">PSX Research Terminal · Now in early access</p>
-        <h1>A whole research desk<br />for every PSX stock<span class="h1-dot">.</span></h1>
+        {/* The astro line is IN the headline, not buried in the lead — it is the thing no other
+            PSX desk does. The claim is deliberately about testing, never about predicting. */}
+        <h1>
+          A whole research desk<br />for every PSX stock<span class="h1-dot">.</span><br />
+          <span class="h1-sky">And the sky above it<span class="h1-dot">.</span></span>
+        </h1>
+        <p class="hero-astro">
+          <span class="ha-dot" aria-hidden="true"></span>
+          Vedic astro lens — computed, tested against 19 years, and published even when it fails
+        </p>
         <p class="lead hero-lead">
           Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk.
           We even compute the sky and test what tradition claims it governs. Then every dated call,
@@ -497,6 +506,21 @@ const principles = [
   .hero { padding: clamp(40px, 6vw, 72px) 0 clamp(40px, 5vw, 64px); }
   /* The accent full stop — the one spot of brand green in the headline. */
   .h1-dot { color: var(--up); }
+  /* The sky line reads as a coda, not a third equal claim — lighter weight, same scale. */
+  .h1-sky { color: var(--ink-2); font-weight: 500; }
+
+  .hero-astro {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 16px 0 0; padding: 7px 12px;
+    border: 1px solid var(--hair); background: var(--panel);
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-2); line-height: 1.5;
+  }
+  .ha-dot {
+    width: 6px; height: 6px; background: var(--up); flex: none;
+    animation: henneth-dot-pulse 2.6s ease-in-out infinite;
+  }
+  @media (max-width: 560px) { .hero-astro { font-size: 9px; letter-spacing: 0.06em; } }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 44px; align-items: center; }
   .hero-lead { max-width: 520px; }
   .hero-sub { font-size: 11.5px; max-width: 480px; }
