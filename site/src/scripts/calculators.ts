@@ -209,12 +209,15 @@ export function mountCalculators(anchors: Anchors) {
     inputs.forEach((el) => el.addEventListener('input', run));
     run();
 
-    // One event per calculator, fired once per visit rather than on every keystroke — otherwise a
-    // visitor dragging a number would generate dozens of identical events and the engagement
-    // signal would be meaningless.
+    // Fires on `input`, NOT `change`. `change` only fires when a field is committed — on blur, or
+    // via the spinner — so a visitor who typed a number, read the answer and left triggered
+    // nothing at all. That is the single most common way this tool is used, which made the event
+    // close to unreachable: GA4 recorded zero of these while page_view was recording fine.
+    // The `sent` latch still keeps it to one event per calculator per page, so switching to the
+    // noisier trigger costs nothing — a visitor dragging a number is one event, not thirty.
     let sent = false;
     inputs.forEach((el) =>
-      el.addEventListener('change', () => {
+      el.addEventListener('input', () => {
         if (sent) return;
         sent = true;
         (window as any).hTrack?.('calculator_use', { calculator: root.dataset.calc });

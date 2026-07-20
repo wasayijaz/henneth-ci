@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import IconSprite from '../components/IconSprite.astro';
 import { site } from '../site.config.ts';
 
 interface Props {
@@ -166,7 +167,7 @@ const appLd = {
             window.dataLayer = window.dataLayer || [];
             window.gtag = function(){dataLayer.push(arguments);};
             gtag('js', new Date());
-            gtag('config', gaId);
+            gtag('config', gaId, { transport_type: 'beacon' });
           }
         </script>
       )
@@ -186,15 +187,28 @@ const appLd = {
         crosses to desk.henneth.app, so it is the closest proxy to a signup that the marketing
         property can measure on its own.
 
+        BOUND ON `pointerdown` AS WELL AS `click`, which is not belt-and-braces — it is the fix
+        for a real miss. A click on a desk link starts navigating immediately, and the hit was
+        dying with the page before gtag could dispatch it: GA4 logged 24 page_views and zero
+        desk_clicks over the same two days. `pointerdown` fires earlier in the interaction, before
+        the browser begins tearing the page down, which is what buys gtag the time to send.
+        `click` is kept because pointerdown never fires for keyboard activation, and a visitor
+        tabbing to a link and pressing Enter is still a conversion. `lastEl`/`lastAt` dedupe the
+        two so one interaction is one event, not two.
+
         Same `//`-comment hazard as the gtag block above — this is minified onto one line, so a
         line comment would silently kill everything after it. Block comments only. */}
     <script is:inline define:vars={{ deskOrigin: site.appUrl }}>
       window.hTrack = function (name, params) {
         if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
       };
-      document.addEventListener('click', function (e) {
+      var lastEl = null, lastAt = 0;
+      function hHandle(e) {
         var a = e.target && e.target.closest ? e.target.closest('a, button') : null;
         if (!a) return;
+        var now = Date.now();
+        if (a === lastEl && now - lastAt < 1000) return;
+        lastEl = a; lastAt = now;
         if (a.dataset && a.dataset.ev) {
           var p = {};
           for (var k in a.dataset) if (k.indexOf('ev') === 0 && k !== 'ev') p[k.slice(2).toLowerCase()] = a.dataset[k];
@@ -212,12 +226,17 @@ const appLd = {
           try { plan = new URL(href).searchParams.get('plan') || ''; } catch (err) { plan = ''; }
           window.hTrack('desk_click', { plan: plan, link_url: href, page_path: location.pathname });
         }
-      });
+      }
+      document.addEventListener('pointerdown', hHandle);
+      document.addEventListener('click', hHandle);
     </script>
 
     <slot name="head" />
   </head>
   <body>
+    {/* The icon sprite, once per page, before anything that references it. It is display:none,
+        so it costs no layout — only the handful of <use> refs on the page actually paint. */}
+    <IconSprite />
     <Header active={active} />
     <main>
       <slot />
