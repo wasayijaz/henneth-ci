@@ -75,7 +75,11 @@ const divYears = t.dividends.length
   ? [t.dividends[0].ex.slice(0, 4), t.dividends[t.dividends.length - 1].ex.slice(0, 4)]
   : null;
 
-const title = `${t.name} (${sym}) — share price context, dividends & sector`;
+/* "and" rather than "&" on purpose. Astro correctly escapes the ampersand to &amp; in the title
+   tag, and a real HTML parser decodes it — but several social scrapers extract the tag by regex
+   and render the entity literally, so the card reads "dividends &amp; sector". Avoiding the
+   character is cheaper than trusting every scraper to parse properly. */
+const title = `${t.name} (${sym}) — share price context, dividends and sector`;
 const description =
   `${t.name} (${sym}) on the Pakistan Stock Exchange: sector, index membership, dividend record` +
   `${t.pe ? `, P/E ${t.pe}` : ''}${t.div_yield ? `, dividend yield ${t.div_yield}` : ''}. ` +
