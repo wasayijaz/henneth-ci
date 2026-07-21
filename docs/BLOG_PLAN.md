@@ -21,6 +21,31 @@ rank for nothing. One complete cluster ranks.
 The post template already supports this — `[...slug].astro` picks related posts from the same
 cluster and the TOC/breadcrumbs are automatic. The wiring exists; it needs the content.
 
+### A cluster is 4–8 pages. It is NOT 100–200.
+
+This is the most expensive misconception in SEO and it needs saying plainly, because the instinct
+to scale is exactly backwards for this site:
+
+- **Google's helpful content system explicitly targets scaled content production.** A domain with
+  no history publishing 150 pages in a quarter is the pattern it looks for. There is no authority
+  buffer to absorb a hit, and the classification is site-wide — it would drag down the good pages
+  too.
+- **Crawl budget.** Google will not crawl 200 URLs on a new site quickly. The realistic outcome is
+  200 published, a few dozen crawled, and whatever authority is earned divided 200 ways instead of
+  concentrated on 8.
+- **Nothing gets deep enough to win.** The entire edge here is being right where competitors are
+  wrong or absent, and that requires reading the actual PSX Regulations. That cannot be done 150
+  times.
+
+Target: **~10 blog posts plus the tool pages by month 4.** Ten genuinely good pages out-rank two
+hundred thin ones on a domain this young, and it is not close.
+
+**Where high page counts DO become legitimate — later.** A page per PSX company generated from
+`state/`, carrying real model fair value, real dividend history and real strategy signals, is
+programmatic SEO with an actual data moat, and few people in Pakistan could build it. But it needs
+authority first, and it only works if each page carries genuinely differentiated data. A template
+with a ticker swapped in is precisely the thin content that gets penalised. Phase 3, not now.
+
 ---
 
 ## 2. The clusters, in build order
@@ -45,24 +70,27 @@ Being *right* beats being established when the established answer is provably wr
 
 Sources: PSX Regulations v09-Feb-2026 Ch.10, NCCPL circular. Already verified.
 
-### Cluster 2 — Costs and tax `Method`
+### Costs and tax — NOT a blog cluster. It lives on the tool pages.
 
-**Why second:** we now hold verified primary rates that the open web gets wrong — brokerage is a
-*regulated range* (floor 0.15%, ceiling 2.5%), Sindh SST is 15% **on commission, not turnover**,
-and every published non-filer CGT figure is incorrect. This cluster is also the one that links
-naturally to `/tools/*`, so it feeds the calculators and vice versa.
+This was originally planned as a four-post cluster and that was wrong: a post at
+`/blog/capital-gains-tax-on-shares/` and a calculator at `/tools/capital-gains-tax-calculator/`
+target the *same query*. Two pages competing for one keyword split the signal rather than doubling
+it — textbook cannibalisation, and self-inflicted.
 
-| # | Page | Role |
-|---|---|---|
-| 1 | What it actually costs to trade on the PSX | **Pillar** |
-| 2 | Capital gains tax on shares: filer, non-filer, acquisition date | Spoke |
-| 3 | Tax on dividends in Pakistan | Spoke |
-| 4 | Zakat on shares (deferred until the fiqh position is sourced) | Spoke |
+**Resolution: one URL per topic, tool and explanation together.** `ToolPage.astro` already renders
+a prose `<slot />` and an FAQ block beneath every calculator, so the explainer becomes the body of
+the calculator page. Same content, half the URLs, no internal competition — and the prose is what
+satisfies the YMYL bar that makes a tax page rank at all. A bare widget with no text ranks for
+nothing.
 
-⚠️ Every number gated by PSX_COSTS_VERIFIED.md. No blog-sourced rates. Non-filer CGT gets the
+So the verified material in PSX_COSTS_VERIFIED.md (brokerage as a *regulated range*, floor 0.15%
+ceiling 2.5%; Sindh SST 15% **on commission, not turnover**; every published non-filer CGT figure
+being wrong) ships as **richer tool pages**, not as posts.
+
+⚠️ Every number still gated by PSX_COSTS_VERIFIED.md. No blog-sourced rates. Non-filer CGT gets the
 mechanism and a range, never a single figure, until FBR Circular 01 of 2026-27 lands (~Aug 2026).
 
-### Cluster 3 — Getting started `Method`
+### Cluster 2 — Getting started `Method`
 
 Beginner intent, feeds the Individual plan. SERP splits between dry official PDFs and broker
 marketing; nobody writes the actual decision.
@@ -73,7 +101,7 @@ marketing; nobody writes the actual decision.
 | 2 | CDC sub-account vs investor account: which to open | Spoke |
 | 3 | What you need to open a brokerage account | Spoke |
 
-### Cluster 4 — Valuation `Valuation`
+### Cluster 3 — Valuation `Valuation`
 
 Highest long-term value, hardest to win cold. Needs the authority the first three clusters build.
 
