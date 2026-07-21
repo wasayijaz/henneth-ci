@@ -1,0 +1,330 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../site.config.ts';
+import data from '../../data/public/tickers.json';
+
+/* PUBLIC TICKER PAGE — Layer 1 of the growth plan (docs/ORGANIC_GROWTH_PLAN.md).
+ *
+ * Statically generated at build time from the committed extract, exactly as the blog route is.
+ * Reads NOTHING outside `site/`: the extract is produced by scripts/build_public_slice.py, which
+ * owns the allow-list. If a field is not in that file it cannot appear here, which is the point —
+ * this page can never accidentally publish a valuation working, a backtest or a Desk Room debate.
+ *
+ * WHAT THIS PAGE IS FOR. It is an advertisement for the desk, not a substitute for it. It says
+ * enough to be genuinely useful and to rank — a real company, a real dividend record, a real
+ * description of how the models sit — and stops exactly where the paid product begins. The
+ * "model disagreement" block is the deliberate open loop: it states that the methods disagree
+ * without resolving it, because resolving it is what an account is for.
+ *
+ * RULE 5 (no advice language) BINDS EVERY LINE HERE. Nothing on this page tells anyone what to
+ * do. No "buy", no "cheap", no "undervalued" — see the extractor's docstring for why the verdict
+ * word is withheld rather than merely styled down.
+ */
+
+type Ticker = {
+  symbol: string; name: string; sector: string; indices: string[];
+  liquidity: string | null; market_cap: string | null; pe: string | null;
+  div_yield: string | null;
+  model_disagreement: { total: number; above_price: number; below_price: number; near_price: number; spread: string } | null;
+  dividends: { ex: string; rs: number }[];
+  read: string; as_of: string | null;
+};
+
+const ALL = (data as any).tickers as Record<string, Ticker>;
+
+export function getStaticPaths() {
+  const all = (data as any).tickers as Record<string, Ticker>;
+  return Object.keys(all).map((t) => ({ params: { ticker: t.toLowerCase() }, props: { sym: t } }));
+}
+
+const { sym } = Astro.props as { sym: string };
+const t = ALL[sym];
+
+const path = `/psx/${sym.toLowerCase()}/`;
+const url = new URL(path, site.url).href;
+
+/* Siblings: same sector first. Seven of the eleven sectors in the pilot hold a single name, so a
+   sector-only rule would leave most pages with no onward link — and internal linking is most of
+   what makes a programmatic layer work. Falls back to other covered names so every page always
+   offers somewhere to go next. */
+const others = Object.values(ALL).filter((x) => x.symbol !== sym);
+const sameSector = others.filter((x) => x.sector === t.sector);
+const siblings = (sameSector.length ? sameSector : others).slice(0, 3);
+
+/* The calculator each page points at is chosen by what the page actually contains, so the link is
+   relevant rather than decorative: a dividend payer leads to compounding, a name without a
+   payout record leads to what inflation does to money that is simply held. */
+const tool = t.dividends.length
+  ? { href: '/tools/compound-interest-calculator/', label: 'Compound interest calculator',
+      why: 'See what a lump sum becomes if returns are reinvested.' }
+  : { href: '/tools/inflation-calculator/', label: 'Inflation calculator',
+      why: "See what today's rupees are worth after Pakistan's real CPI." };
+
+const LIQ_COPY: Record<string, string> = {
+  signal: 'Trades heavily enough that a normal order is unlikely to move the price.',
+  research: 'Trades enough to research, but a large order can move the price.',
+  thin: 'Trades lightly. The gap between buying and selling prices matters more here than the headline price.',
+};
+
+const fmtDate = (d: string) =>
+  new Date(d + 'T00:00:00Z').toLocaleDateString('en-PK', { year: 'numeric', month: 'short', day: 'numeric' });
+
+const divs = [...t.dividends].reverse().slice(0, 12);
+const divYears = t.dividends.length
+  ? [t.dividends[0].ex.slice(0, 4), t.dividends[t.dividends.length - 1].ex.slice(0, 4)]
+  : null;
+
+const title = `${t.name} (${sym}) — share price context, dividends & sector`;
+const description =
+  `${t.name} (${sym}) on the Pakistan Stock Exchange: sector, index membership, dividend record` +
+  `${t.pe ? `, P/E ${t.pe}` : ''}${t.div_yield ? `, dividend yield ${t.div_yield}` : ''}. ` +
+  `Research, not advice.`;
+
+/* Corporation, not FinancialProduct: this page is about the company, and `tickerSymbol` is a
+   Corporation property. isAccessibleForFree stays true while Layer 1 is open — it MUST flip to
+   false with a hasPart/cssSelector block on the day a paywall lands here, or the structured data
+   advertises free content that charges (ORGANIC_GROWTH_PLAN.md §5). */
+const corpLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Corporation',
+  name: t.name,
+  tickerSymbol: `PSX:${sym}`,
+  url,
+  description,
+  ...(t.sector ? { industry: t.sector } : {}),
+  isAccessibleForFree: true,
+};
+
+const crumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
+    { '@type': 'ListItem', position: 2, name: 'PSX companies', item: new URL('/psx/', site.url).href },
+    { '@type': 'ListItem', position: 3, name: `${t.name} (${sym})`, item: url },
+  ],
+};
+---
+
+<Base title={title} description={description} path={path} active="">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(corpLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />
+  </Fragment>
+
+  <section class="section-tight ph">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span>/</span><a href="/psx/">PSX companies</a><span>/</span><b>{sym}</b>
+      </nav>
+
+      <div class="tk-top">
+        <h1 class="tk-h1"><span class="tk-sym">{sym}</span> {t.name}</h1>
+        <div class="tk-chips">
+          <span class="chip">{t.sector}</span>
+          {t.indices.map((i) => <span class="chip">{i}</span>)}
+          {t.liquidity && <span class="chip">{t.liquidity} liquidity</span>}
+        </div>
+      </div>
+
+      {/* YMYL surface: dated and sourced, or it does not ship (SEO_PLAN.md §4). */}
+      {t.as_of && (
+        <p class="asof muted">
+          <Icon name="clock" size={13} /> Figures as of the {fmtDate(t.as_of)} session ·
+          prices in Rs (PKR) · educational research, not investment advice
+        </p>
+      )}
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap tk-grid">
+      <div class="tk-main">
+        <div class="card tk-read">
+          <p class="kicker"><Icon name="ask" size={14} /> The short version</p>
+          <p class="read-p">{t.read}</p>
+        </div>
+
+        {t.model_disagreement && (
+          <>
+            <p class="kicker sec-k"><Icon name="value" size={14} /> How the valuation models sit</p>
+            <div class="card">
+              <div class="dis-row">
+                {[
+                  ['above today’s price', t.model_disagreement.above_price],
+                  ['near today’s price', t.model_disagreement.near_price],
+                  ['below today’s price', t.model_disagreement.below_price],
+                ].map(([label, n]) => (
+                  <div class="dis-cell">
+                    <span class="dis-n pixel">{n}</span>
+                    <span class="dis-l muted">{label}</span>
+                  </div>
+                ))}
+              </div>
+              <p class="muted dis-note">
+                The desk values {sym} {t.model_disagreement.total} independent ways — a peer
+                multiple, its earnings power against the bond yield, a Graham-style estimate and a
+                dividend model. Those are the counts above; the spread between them is
+                <b> {t.model_disagreement.spread}</b>.
+                {t.model_disagreement.spread === 'wide'
+                  ? ' A wide spread means the methods genuinely disagree, and no single number from them should be leaned on.'
+                  : ' A narrower spread means the methods broadly agree with each other.'}
+                {' '}Which methods, what they produced and the workings behind each are in the desk.
+              </p>
+            </div>
+          </>
+        )}
+
+        <p class="kicker sec-k"><Icon name="earnings" size={14} /> Key figures</p>
+        <div class="tilegrid facts">
+          <div class="tile"><span class="f-l muted">Market cap</span><span class="f-v">{t.market_cap ?? '—'}</span></div>
+          <div class="tile"><span class="f-l muted">P/E (trailing)</span><span class="f-v">{t.pe ?? 'n/a'}</span></div>
+          <div class="tile"><span class="f-l muted">Dividend yield</span><span class="f-v">{t.div_yield ?? '—'}</span></div>
+          <div class="tile"><span class="f-l muted">Sector</span><span class="f-v f-sm">{t.sector}</span></div>
+        </div>
+        {!t.pe && (
+          <p class="muted fine">
+            No trailing P/E is shown because {sym} does not currently report positive trailing
+            earnings — a multiple would be meaningless rather than merely high.
+          </p>
+        )}
+
+        {divs.length > 0 && (
+          <>
+            <p class="kicker sec-k"><Icon name="dividends" size={14} /> Dividend record</p>
+            <div class="card">
+              <p class="muted dis-note">
+                Ex-dividend dates and amounts as announced to the exchange
+                {divYears && <> — the record here runs from {divYears[0]} to {divYears[1]}</>}.
+                Public record; shown so the pattern of payment is visible, not as a forecast that
+                it continues.
+              </p>
+              <div class="tbl-wrap">
+                <table class="divtbl">
+                  <thead><tr><th>Ex-date</th><th class="r">Rs / share</th></tr></thead>
+                  <tbody>
+                    {divs.map((d) => (
+                      <tr><td>{fmtDate(d.ex)}</td><td class="r num">{d.rs.toFixed(2)}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* The conversion moment. Names what is missing rather than teasing vaguely — a reader
+            should know exactly what an account buys them. */}
+        <div class="card cta-card">
+          <p class="kicker"><Icon name="deskroom" size={14} /> What the desk holds on {sym}</p>
+          <ul class="cta-list">
+            <li>The four valuation methods, their values and full workings</li>
+            <li>Rule-based strategies tested on {sym}'s own ~19-year price history</li>
+            <li>The analyst Desk Room debate — a bull case, a bear case and a chair's view with its dissent recorded</li>
+            <li>Dated, falsifiable calls scored in public against what prices actually did</li>
+          </ul>
+          <a class="btn btn-solid" href={`${site.appUrl}/?auth=signup`} rel="noopener"
+             data-ev="desk_click" data-ev-from="psx_ticker" data-ev-sym={sym}>
+            Open the desk on {sym}
+          </a>
+          <p class="fine muted">Free account. Research and analytics, never investment advice.</p>
+        </div>
+      </div>
+
+      <aside class="tk-side">
+        <p class="kicker"><Icon name="sectors" size={14} /> {sameSector.length ? 'Same sector' : 'Also covered'}</p>
+        <div class="sib">
+          {siblings.map((s) => (
+            <a class="sib-a" href={`/psx/${s.symbol.toLowerCase()}/`}>
+              <b>{s.symbol}</b>
+              <span class="muted">{s.name}</span>
+            </a>
+          ))}
+          <a class="sib-a sib-all" href="/psx/"><b>All companies</b><span class="muted">The full covered list</span></a>
+        </div>
+
+        <p class="kicker sec-k"><Icon name="tools" size={14} /> Work it out yourself</p>
+        <a class="sib-a" href={tool.href}>
+          <b>{tool.label}</b>
+          <span class="muted">{tool.why}</span>
+        </a>
+
+        {t.liquidity && LIQ_COPY[t.liquidity] && (
+          <>
+            <p class="kicker sec-k"><Icon name="risk" size={14} /> Tradability</p>
+            <div class="card liq-card">
+              <b class="liq-t">{t.liquidity}</b>
+              <p class="muted fine">{LIQ_COPY[t.liquidity]}</p>
+            </div>
+          </>
+        )}
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .crumbs { display: flex; gap: 8px; align-items: center; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px; }
+  .crumbs a { color: var(--ink-3); text-decoration: none; }
+  .crumbs a:hover { color: var(--ink-1); }
+
+  .tk-h1 { font-size: clamp(22px, 3.4vw, 34px); margin: 0 0 12px; line-height: 1.15; }
+  .tk-sym { font-family: var(--font-pixel); letter-spacing: 0.02em; }
+  .tk-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--hair); padding: 4px 8px; color: var(--ink-2); }
+  .asof { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; margin: 16px 0 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+  .tk-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; align-items: start; }
+  .tk-main > * + * { margin-top: 22px; }
+  .sec-k { margin-bottom: 10px; }
+  .card { padding: 20px; }
+  .tk-read .read-p { font-size: 13.5px; line-height: 1.8; margin: 8px 0 0; }
+
+  .dis-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: var(--line); border: 1px solid var(--line); }
+  .dis-cell { background: var(--panel); padding: 16px 12px; display: flex; flex-direction: column; gap: 6px; text-align: center; }
+  .dis-n { font-size: 30px; line-height: 1; }
+  .dis-l { font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .dis-note { font-size: 11.5px; line-height: 1.7; margin: 14px 0 0; }
+
+  .facts { grid-template-columns: repeat(4, 1fr); }
+  .facts .tile { gap: 6px; }
+  .f-l { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .f-v { font-family: var(--font-mono); font-size: 17px; font-weight: 700; }
+  .f-sm { font-size: 11px; line-height: 1.4; }
+  .fine { font-size: 10.5px; line-height: 1.6; margin: 10px 0 0; }
+
+  .tbl-wrap { overflow-x: auto; margin-top: 12px; }
+  .divtbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .divtbl th, .divtbl td { border-bottom: 1px dotted var(--hair); padding: 8px 6px; text-align: left; }
+  .divtbl th { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .r { text-align: right; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .cta-card { background: var(--ink-1); color: var(--bg); border-color: var(--ink-1); }
+  .cta-card .kicker { color: #8f8f88; }
+  .cta-list { list-style: none; padding: 0; margin: 12px 0 18px; }
+  .cta-list li { font-size: 12px; line-height: 1.6; padding: 8px 0 8px 18px; position: relative; border-top: 1px dotted #3a3a37; color: #c8c8c0; }
+  .cta-list li::before { content: '\2192'; position: absolute; left: 0; color: var(--up); }
+  .cta-card .btn-solid { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
+  .cta-card .fine { color: #8f8f88; }
+
+  .tk-side > * + * { margin-top: 10px; }
+  .sib { display: grid; gap: 1.5px; background: var(--line); border: 1px solid var(--line); }
+  .sib-a { display: flex; flex-direction: column; gap: 3px; background: var(--panel); padding: 12px 14px; text-decoration: none; transition: background 0.15s ease; }
+  .sib-a b { font-size: 12px; }
+  .sib-a span { font-size: 10.5px; line-height: 1.45; }
+  .sib-a:hover { background: var(--panel-2); }
+  .sib-all { border-top: 1px solid var(--hair); }
+  .liq-card { padding: 14px; }
+  .liq-t { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  @media (max-width: 900px) {
+    .tk-grid { grid-template-columns: 1fr; gap: 26px; }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .dis-row { grid-template-columns: 1fr; }
+    .facts { grid-template-columns: 1fr; }
+  }
+</style>
