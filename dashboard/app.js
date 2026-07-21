@@ -2614,13 +2614,6 @@ async function pageTicker(sym, _retry = 0) {
   $("view").innerHTML = `
   <a class="crumb" href="#/board">← board</a>
   ${gapBanner}
-  <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
-  ${coverageNote}
-  ${liqCard}
-  ${sigStack}
-  ${runDeskBar}
-  ${summaryStrip}
-  ${glance}
   <div class="card">
     <div class="tk-head">
       <span class="sym">${sym}</span>
@@ -2639,24 +2632,17 @@ async function pageTicker(sym, _retry = 0) {
     <div class="chartwrap"><canvas id="chart" style="height:340px"></canvas><div class="tooltip" id="tt"></div></div>
   </div>
 
-  ${noteCard}
+  <div class="disclaimer">Educational and informational research only — <b>not personalized investment advice</b>. Past performance does not guarantee future results. Investing in PSX carries risk, including the possible loss of capital. The desk never places orders; any decision and its outcome are your own.</div>
 
-  <div class="seg"><h2>Strategies proven on ${sym}</h2><div class="ln"></div><span class="pill ok">${proven.length} proven</span></div>
-  ${runStratBar}
-  ${stratRan ? stratCards : stratStub}
+  ${glance}
+  ${noteCard}
+  ${summaryStrip}
 
   ${fsc ? `<div class="seg"><h2>Business scorecard</h2><div class="ln"></div><span class="pill ${fsc.rating === "attractive" ? "ok" : fsc.rating === "caution" ? "bad" : ""}">${esc({ attractive: "stronger scorecard", caution: "weaker scorecard", neutral: "mixed scorecard" }[fsc.rating] || fsc.rating)}</span></div>
   <div class="card"><div class="sub" style="font-size:13px;color:var(--ink2);margin-bottom:14px">${esc(fsc.overall)}</div>
     <div class="two-col" style="gap:12px">${fsc.cards.map(c => `<div style="border:1px solid var(--line);border-radius:0;padding:12px 14px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><b>${esc(c[0])}</b><span class="tag">${esc(c[1])}</span></div>
       <div class="sub" style="color:var(--ink2)">${esc(c[2])}</div></div>`).join("")}</div></div>` : ""}
-
-  ${!hvRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
-
-  ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
-  <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="#/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
-    <table><thead><tr><th>House</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
-    brokerClaims.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || c.claim?.rating || "")}${c.source_url ? ` <a href="${esc(c.source_url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}</td><td class="r num">${esc(c.resolve_by || "—")}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
 
   ${fv ? (() => {
     const vcol = fv.verdict === "undervalued" ? "var(--up)" : fv.verdict === "overvalued" ? "var(--dn)" : "var(--ink2)";
@@ -2671,6 +2657,20 @@ async function pageTicker(sym, _retry = 0) {
       </tbody></table>
       <div class="sub" style="margin-top:8px">EPS ${fv.eps} · growth est ${fv.growth_est_pct}% · P/E ${fv.pe ?? "—"}. A wide spread between methods means the models disagree — treat as a rough screen, not a precise number.</div></div>`;
   })() : ""}
+
+  ${runDeskBar}
+  ${!hvRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
+
+  ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
+  <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="#/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
+    <table><thead><tr><th>House</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
+    brokerClaims.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || c.claim?.rating || "")}${c.source_url ? ` <a href="${esc(c.source_url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}</td><td class="r num">${esc(c.resolve_by || "—")}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
+
+  ${sigStack}
+
+  <div class="seg"><h2>Strategies proven on ${sym}</h2><div class="ln"></div><span class="pill ok">${proven.length} proven</span></div>
+  ${runStratBar}
+  ${stratRan ? stratCards : stratStub}
 
   <div class="seg"><h2>What the data flags</h2><div class="ln"></div></div>
   <div class="card"><div class="sub" style="margin-bottom:12px">Factual observations pulled from the desk's data — not predictions and not advice. The absence of a flag is not a green light.</div>
@@ -2691,9 +2691,13 @@ async function pageTicker(sym, _retry = 0) {
     <div class="sub" style="margin-bottom:12px">Answered from the data where the desk has it — and honest about where it doesn't. A thinking aid, not a recommendation.</div>
     <div class="checklist">${checklist}</div></details>
 
+  ${liqCard}
+
   <div class="seg"><h2>Risk profile</h2><div class="ln"></div></div>
   <div class="card"><div class="sub" style="margin-bottom:12px">Risk is more than volatility. A low rupee price does <b>not</b> mean a stock is cheap — a Rs 20 share can be dearer than a Rs 500 one depending on earnings.</div>
     <table class="risktbl"><tbody>${riskRows}</tbody></table></div>
+
+  ${coverageNote}
 
   <div class="card"><h2>Key facts</h2><div class="sub">fundamentals · stockanalysis.com${f.fetched ? " · " + f.fetched : ""}</div>
     <div class="facts">
