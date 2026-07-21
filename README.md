@@ -89,10 +89,17 @@ named for what the customer *lacks* ("Learner") reads as a label on the customer
 
 | Plan | For | Adds |
 |---|---|---|
-| **Free** | anyone | Cast your chart, the daily desk note, the public track record |
+| **Free** | anyone with an account | Cast your chart, the daily desk note, the track record |
 | **Investor** | people new to investing | The guided path, full astro reading, dividends, earnings |
 | **Pro** | TA/FA-literate investors | Model fair value, running the strategy library, research library |
-| **Broker** | research houses | *Not built.* Plan defined; their own calls scored in public |
+| **Broker** | research houses | *Not built.* Plan defined internally; **the site claims nothing** |
+
+**"Free" means free, not open.** Since the account gate (2026-07-21) every one of these tiers,
+Free included, needs a signed-in account — the research data is no longer fetchable without one.
+The single exception is casting a birth chart at `#/cast`, which stays open as the acquisition
+funnel. And the **Broker** row is an internal plan only: the public site deliberately makes no
+feature claims for it, because promising multi-seat admin, an API and white-label exports before
+any of it is built dates the page and creates an expectation the desk would owe.
 
 - **The Investor desk** (`#/learn`) — 4 levels that unlock in order, 17 lessons, played **one card per
   screen** in a focused player rather than as a long scroller. Card kinds are visually unmistakable:
@@ -130,8 +137,13 @@ Vercel projects* pointed at the same GitHub repository but different root direct
 | **Marketing site** | `site/` (Astro) | `site/vercel.json` | **henneth.app** — the root domain |
 | **The terminal** | `dashboard/` + `state/` | `vercel.json` (repo root) | **desk.henneth.app** |
 
-The root `vercel.json` copies `dashboard/index.html`, `app.js`, `themes.css` and the whole
-`state/` tree into `public/` — that is the entire terminal build (no bundler, no framework).
+The root `vercel.json` copies the **whole** `dashboard/` directory plus the `state/` tree into
+`public/` — that is the entire terminal build (no bundler, no framework). It used to copy a
+hand-listed three files, which meant `sw.js` and `push.js` had silently never shipped and every
+asset added later 404'd in production while working perfectly in local dev. The one deliberate
+exclusion is `dashboard/app.html`, a stale duplicate shell that predates the sign-in gate; it is
+deleted after the copy so the wholesale rule stays self-maintaining.
+
 `site/` is a normal Astro project with its own `package.json`; its `node_modules` is gitignored,
 so only ~30 source files of it are tracked.
 
@@ -267,8 +279,40 @@ the product says so on `#/plans` rather than showing a dead checkout.
   entitlement.
 - **Owner preview.** `#/plans` carries an owner-only "preview as plan" switch that re-renders the whole
   product as any tier without changing the stored plan (in-memory; a reload resets it).
-- Per-user rows (watchlist, notes, birth data, learn progress) are RLS-scoped to their owner. The research
-  layer is shared and read-only to users.
+- Per-user rows (watchlist, notes, birth data, learn progress) are RLS-scoped to their owner.
+- **The research layer requires an account (2026-07-21).** It is shared and read-only *to signed-in
+  users* — not to the public. Until this date the sign-in screen gated the interface but not the
+  data: every file under `/state/` was a plain static asset, so `curl .../state/backtests.json`
+  returned 4.7 MB to anyone. The whole product — Room debates, dossiers, fair values, claims,
+  strategy map — was one `wget` away.
+
+  `middleware.js` at the repo root closes it. Vercel Edge Middleware on `/state/:path*` verifies
+  the Supabase access token before the CDN serves anything. Verification is a local Web Crypto
+  check against Supabase's published **ES256** JWKS, so there is no shared secret to store and no
+  auth round trip per request; if the project is ever moved back to legacy HS256 keys, `alg` stops
+  matching and every request fails **closed**.
+
+  **One deliberate exception:** `natal_ephem.bin` / `.json` stay public. `#/cast` is the top of the
+  acquisition funnel, and those two files are an astronomical ephemeris — public-domain physics
+  anyone can compute, containing zero desk output.
+
+  Tested against 12 forgeries including `alg:none`, HS256 alg-confusion, expired tokens and a
+  self-signed token carrying the real `kid`. Full reasoning in `docs/OPERATIONS.md` §9b.
+  **Regression check — this must stay 401 forever:**
+  `curl -s -o /dev/null -w "%{http_code}" https://desk.henneth.app/state/rooms.json`
+- **Bot protection is live (2026-07-21).** Cloudflare Turnstile on signup, sign-in and password
+  reset — the last one included because it sends mail, so it is the same spam vector. Without it a
+  bot could POST thousands of addresses at signup, each triggering a confirmation email, burning
+  the Supabase quota and getting the sending domain flagged as a spam source, which then silently
+  kills delivery to real users. Verified server-side: a signup with no token returns
+  `400 captcha_failed`. The site key is public and lives in `app.js`; the secret exists only in the
+  Supabase dashboard.
+- **Password floor is 10 characters**, enforced server-side (Supabase) and mirrored client-side.
+  Length rather than composition rules, per NIST SP 800-63B — forcing a symbol and a digit
+  reliably produces `P@ssw0rd1`, while length is what actually resists cracking.
+- **Google sign-in was removed (2026-07-21, owner)** — email and password only. Worth knowing if it
+  returns: Supabase's captcha does **not** apply to the OAuth redirect flow, so a Google button is
+  an unprotected path to account creation.
 
 ### Known gaps, stated for audit
 
@@ -278,8 +322,10 @@ the product says so on `#/plans` rather than showing a dead checkout.
   legacy `anon` key is rejected at the API gateway (401), and legacy `anon`/`service_role` are
   disabled as a pair. The client uses the publishable key, which is safe to ship. Any future
   server-side job needs a new-style `sb_secret_...` key, never the old service_role JWT.
-- **One Supabase item is outstanding on the owner:**
-  enable leaked-password protection.
+- **Leaked-password protection is OFF and cannot be switched on — it is a Pro-plan feature and the
+  org is on Free.** Not an oversight. The mitigation is the 10-character floor above, which blocks
+  the entire bottom tier of guessable passwords that HaveIBeenPwned would otherwise catch. Revisit
+  only if the project moves to Pro for other reasons.
 - **The track record is young.** **95 dated claims are filed and 0 have resolved** (verified against
   `state/claims.json` at the time of writing) — a waiting period, not a proven record, and the product
   displays the real counts rather than implying otherwise.
