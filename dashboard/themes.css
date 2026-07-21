@@ -331,6 +331,9 @@ body[data-theme=gemini] .card>*:not(h2):not(.sub){margin-left:12px;margin-right:
    Desk Room house-view + persona cards were cramped for exactly this reason). Completes the
    12px child-inset rhythm (L/R + bottom already existed; top was the missing side). */
 body[data-theme=gemini] .card>*:first-child:not(h2):not(.sub){margin-top:12px}
+/* Only matches before enhanceTables() wraps tables in `.tscroll` (after which the table is a
+   grandchild, and `.tscroll`'s own inherited 12px margins give the same result). Kept because that
+   pre-hydration frame is real and would otherwise paint a full-bleed table for an instant. */
 body[data-theme=gemini] .card>table{width:calc(100% - 24px)}
 body[data-theme=gemini] .card>*:last-child{margin-bottom:12px}
 body[data-theme=gemini] main>.card,body[data-theme=gemini] main>.two-col{margin-bottom:var(--gap)}
@@ -1566,8 +1569,6 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
   body[data-theme=gemini] main>.card,body[data-theme=gemini] main>.two-col,body[data-theme=gemini] .cards>*{margin-bottom:var(--gap)}
   /* NOTE: .card keeps padding:0 + the 12px child-inset rhythm (see .card>* rules above) —
      do not add card-level padding here, it would compound with the child margins below. */
-  /* tables scroll horizontally inside their card, never break the page */
-  body[data-theme=gemini] .card>table,body[data-theme=gemini] .card table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
   body[data-theme=gemini] .facts{grid-template-columns:1fr 1fr}
   body[data-theme=gemini] .statgrid{grid-template-columns:1fr 1fr}
   body[data-theme=gemini] .heat{grid-template-columns:repeat(3,1fr)}
@@ -1577,7 +1578,7 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
   body[data-theme=gemini] .tk-head .px{font-size:22px}
   body[data-theme=gemini] .chartwrap canvas{height:280px!important}
   /* touch targets */
-  body[data-theme=gemini] .ranges button{padding:8px 14px;font-size:13px}
+  body[data-theme=gemini] .ranges button{padding:8px 14px;font-size:13px;min-height:36px}
   body[data-theme=gemini] tr.clickable td,body[data-theme=gemini] td,body[data-theme=gemini] .risktbl td{padding:11px 8px}
   /* bottom nav bar */
   .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
@@ -1603,8 +1604,102 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
 @media(max-width:720px){
   body[data-theme=gemini] .seg{flex-wrap:wrap}
   body[data-theme=gemini] .seg h2{white-space:normal}
-  body[data-theme=gemini] .card table,body[data-theme=gemini] .card>table{display:block;overflow-x:auto;max-width:100%}
 }
+
+/* ===========================================================================================
+   TABLES ON MOBILE.
+
+   WHAT WAS WRONG. The old rule was `.card table{display:block;overflow-x:auto;white-space:nowrap}`
+   — "let it scroll sideways". Measured on a 375px viewport, that produced a Radar table 4,393px
+   wide and a ticker-page risk table 1,113px wide, because `nowrap` forces a whole prose column
+   ("The desk's angle", "Key risk", the risk commentary) onto a single unbreakable line. A reader
+   had to drag a two-sentence paragraph past four screen-widths to finish it. `display:block` also
+   quietly dropped `width:100%` — a block box shrink-wraps — so even narrow tables sat misaligned
+   inside their card.
+
+   WHAT HAPPENS NOW, in three tiers, because tables here are not one kind of thing:
+
+   ≤720px — prose wraps. Numbers keep `nowrap` (a price broken across two lines is unreadable),
+   everything else is free to wrap, and inline `width:150px` attributes baked into the HTML
+   templates are overridden. Most tables now simply fit. The `.tscroll` wrapper (added by
+   enhanceTables() in app.js) catches the ones that still cannot.
+
+   ≤560px — tables with 5+ columns stack. At phone width there is no honest way to show seven
+   numeric columns; a sideways scrollbar just hides four of them behind a gesture most people
+   never make. Each row becomes its own block and each cell prints `label  value`, which is the
+   same information in a shape that reads top-to-bottom like the rest of the page.
+
+   Tables with 4 or fewer columns are NOT stacked — they already fit, and stacking would turn a
+   19-row list into 76 lines and destroy the column-scan that makes a table worth using.
+   =========================================================================================== */
+.tscroll{max-width:100%}
+@media(max-width:720px){
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Keyed to `.tscroll`, not `.card`. Two tables on the Ask page live in `.ans-block` rather than
+     a card, and a `.card`-scoped guard missed them — which is why a separate `.ans-block table`
+     patch had grown at the bottom of this file. Every table gets a `.tscroll` wrapper, so one
+     selector now covers all of them wherever they sit. */
+  body[data-theme=gemini] .tscroll table{
+    display:table;width:100%;max-width:100%;white-space:normal}
+  /* inline width="150px"/"180px" live in the HTML string templates (geo factors, ticker risk
+     table). At 375px a 180px label column leaves 140px for a sentence. Release them.
+
+     `overflow-wrap:break-word`, NOT `anywhere`: per spec `anywhere` also shrinks the box's
+     min-content contribution to a single character, which is exactly what auto table layout uses
+     to allocate column widths. With `anywhere`, the macro sector column collapsed to 24px while
+     "Global tape explains" claimed 177px for a column whose values are all "2.6%". `break-word`
+     still breaks a genuinely over-long word but leaves column sizing alone. */
+  body[data-theme=gemini] .tscroll table th,body[data-theme=gemini] .tscroll table td{
+    width:auto!important;min-width:0!important;max-width:none!important;overflow-wrap:break-word}
+  /* ...but never break a number, a date, or a short status chip across lines.
+     TD ONLY — not TH. `class="r"` marks a right-aligned COLUMN, so it sits on the header too, and
+     holding a header like "Global tape explains" on one line reserved 177px for a column whose
+     widest value is "2.6%", crushing the sector name beside it to 24px. Headers wrap; data does not. */
+  body[data-theme=gemini] .tscroll table td.r,
+  body[data-theme=gemini] .tscroll table td.num,body[data-theme=gemini] .tscroll table .pill,
+  body[data-theme=gemini] .tscroll table .tag,body[data-theme=gemini] .tscroll table .cd{
+    white-space:nowrap;overflow-wrap:normal}
+}
+
+/* ---- STACKED ROWS ----
+   `data-stack` is set by restackTables() in app.js, which MEASURES each table against its card
+   and only marks the ones that do not fit. Nothing here is keyed to a column count.
+
+   TD horizontal padding is 0, not 12px, on purpose: the table already sits inside the `.tscroll`
+   wrapper, which inherits an inset from whatever contains it — 12px from `.card>*:not(h2):not(.sub)`
+   in a card, or `.ans-block`'s own 13px/15px padding on the Ask page. Repeating 12px here would
+   double it, the same mistake the child-inset contract exists to prevent elsewhere. Same reasoning
+   as `.fvline` (padding:3px 0): a row inside an already-inset container relies on that outer inset
+   rather than adding its own. */
+body[data-theme=gemini] .tscroll table[data-stack]{display:block}
+body[data-theme=gemini] .tscroll table[data-stack] thead{display:none}
+body[data-theme=gemini] .tscroll table[data-stack] tbody{display:block}
+body[data-theme=gemini] .tscroll table[data-stack] tbody tr{
+  display:block;padding:9px 0 10px;border-bottom:1.5px solid var(--line)}
+body[data-theme=gemini] .tscroll table[data-stack] tbody tr:last-child{border-bottom:none}
+/* `flex-wrap:wrap` matters: a cell whose value is a row of chips (the macro sector table's
+   "demonstrated drivers") forms one anonymous flex item with `min-width:auto`, which refuses to
+   shrink and pushed the card 166px wide even after stacking. Wrapping drops the value onto its
+   own line, where it is free to reflow. */
+body[data-theme=gemini] .tscroll table[data-stack] tbody td{
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 14px;
+  padding:3px 0;border:none;text-align:right}
+body[data-theme=gemini] .tscroll table[data-stack] tbody td[data-l]::before{
+  content:attr(data-l);flex:0 0 auto;font-size:9.5px;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--ink3);font-weight:600;text-align:left}
+/* The first cell is the row's subject (the ticker, the date, the house). It gets no label and
+   reads as a heading — otherwise every stacked row opens with "TICKER  UBL", which is noise. */
+body[data-theme=gemini] .tscroll table[data-stack] tbody td:first-child{
+  display:block;text-align:left;font-size:14px;font-weight:700;padding-bottom:5px}
+body[data-theme=gemini] .tscroll table[data-stack] tbody td:first-child::before{content:none}
+/* a cell with no header label (the caret / action column) has nothing to announce */
+body[data-theme=gemini] .tscroll table[data-stack] tbody td:not([data-l]):not(:first-child){
+  justify-content:flex-end}
+/* Headless tables have no labels to print, so their cells stack as plain full-width blocks
+   rather than label/value pairs. The first cell is still the subject line. */
+body[data-theme=gemini] .tscroll table[data-stack][data-nohead] tbody td{
+  display:block;text-align:left;padding:2px 0}
+body[data-theme=gemini] .tscroll table[data-stack][data-nohead] tbody td:first-child{padding-bottom:4px}
 
 /* ===========================================================================
    INTERACTION STATES — one place, applied consistently.
@@ -1731,11 +1826,11 @@ html,body{max-width:100%;overflow-x:hidden;overflow-x:clip}
 /* the account menu is absolutely positioned; keep it inside the viewport as it grows */
 body[data-theme=gemini] .acct-menu{max-width:calc(100vw - 24px)}
 
-/* the table scroll guard was scoped to .card only, so tables on the Ask page
-   (.ans-block) escaped it entirely */
-@media(max-width:720px){
-  body[data-theme=gemini] .ans-block table{display:block;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
-}
+/* (The old `.ans-block table{display:block;overflow-x:auto}` patch lived here. It existed because
+   the table guard used to be scoped to `.card`, so the Ask page's tables escaped it. The guard is
+   now keyed to the `.tscroll` wrapper, which every table gets regardless of what contains it, so
+   this rule is redundant — and harmful: being last in the file it won on equal specificity and
+   re-imposed the `display:block` shrink-wrap the new rules exist to undo.) */
 
 /* --- touch targets: nothing interactive under ~32px on a phone --- */
 body[data-theme=gemini] .auth-x,

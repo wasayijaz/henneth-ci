@@ -332,7 +332,7 @@ function indexBoard(idx) {
   }).join("");
   return cells ? `<div class="seg"><h2>PSX indices</h2><div class="ln"></div><span class="pill">${days.length} session${days.length === 1 ? "" : "s"} kept</span></div>
     <div class="idx-board">${cells}</div>
-    <p class="sub idx-foot">Captured from PSX's own board each cycle and kept permanently — no public source carries PSX index history, so the desk builds it. The <b>All Share</b> indices are the honest benchmark for names outside the KSE100.</p>` : "";
+    <p class="sub idx-foot">No public source keeps PSX index history — the desk records it each cycle. <b>All Share</b> is the honest benchmark for names outside the KSE100.</p>` : "";
 }
 
 async function pageBoard() {
@@ -580,14 +580,14 @@ async function pageMacro() {
       }).join("");
     return `<div class="seg"><h2>What actually moves each sector</h2><div class="ln"></div><span class="pill ok">${h.survivors_bonferroni} of ${h.hypotheses_tested} measured</span></div>
     <div class="card" style="padding:0"><table><thead><tr><th>Sector</th><th>Demonstrated drivers</th><th class="r">Global tape explains</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="sub" style="margin-top:8px">Nineteen years of daily returns regressed on the global tape — oil, gold, USD/PKR, the S&amp;P, EM flows, the US 10y, the dollar — each lagged one PSX day, because those markets close after Karachi does. Same permutation test and same correction the desk used on <a href="#/astro" style="color:var(--accent)">astrology</a>, which found nothing: here it finds <b>${h.survivors_bonferroni}</b> real relationships. That contrast is the point.</p>
-    <p class="sub" style="margin-top:6px"><b>Read the last column before the second.</b> Even for the most globally-driven sector, the entire world tape explains only a few percent of a day's move — PSX is mostly made at home. A demonstrated driver says what <i>has tended</i> to move a sector, never what will.</p>`;
+    <p class="sub" style="margin-top:8px">Nineteen years of daily returns against the global tape — oil, gold, USD/PKR, the S&amp;P, EM flows, the US 10y — each lagged a day, since those markets close after Karachi. The same test found nothing in <a href="#/astro" style="color:var(--accent)">astrology</a>. Here it finds <b>${h.survivors_bonferroni}</b>. That contrast is the point.</p>
+    <p class="sub" style="margin-top:6px"><b>Read the last column first.</b> Even at its strongest, the world tape explains a few percent of a day's move — PSX is made at home. A driver says what <i>has tended</i> to move a sector, never what will.</p>`;
   })();
 
   $("view").innerHTML = `
     <div class="seg" style="margin-top:4px"><h2>What moves PSX</h2><div class="ln"></div></div>
     ${glanceRow}
-    <p class="sub" style="margin-bottom:14px">Global markets refreshed every cycle (Yahoo Finance). Pakistan-domestic numbers verified by the macro-agent from primary sources. Hover any read-through for why it matters.</p>
+    <p class="sub" style="margin-bottom:14px">Global markets refresh every cycle (Yahoo Finance); Pakistan numbers are verified from primary sources. Hover a read-through for why it matters.</p>
     ${smCard}
     ${geoCard}
     ${macroCard}
@@ -783,7 +783,7 @@ async function pageStrategies() {
   // ---- request a strategy (signed-in; stored in the desk's request queue) ----
   const reqForm = `<div class="seg"><h2>Request a strategy</h2><div class="ln"></div><span class="pill">the desk tests it</span></div>
   <div class="card">
-    <p class="sub" style="margin-bottom:12px">Trade by a rule set that isn't in the library? Explain it below — the desk codes it, backtests it on ~19 years of history the same way, and if it clears the bar it joins the library.</p>
+    <p class="sub" style="margin-bottom:12px">Trade by a rule that isn't in the library? Explain it below. The desk codes it, backtests it on ~19 years, and if it clears the bar it joins the library.</p>
     ${me ? `<div class="rq-form">
       <div class="ph-row"><input id="rq-title" class="ph-in" aria-label="Strategy name" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
       <input id="rq-tkr" class="ph-in combo" aria-label="Ticker (optional)" style="flex:0 1 150px" placeholder="Ticker (optional)" autocomplete="off"></div>
@@ -794,7 +794,7 @@ async function pageStrategies() {
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Strategies</h2><div class="ln"></div><span class="pill">${nStrat} strategies</span></div>
-  <p class="sub" style="margin-bottom:14px">Every strategy is a transparent rule set backtested on each stock's own ~19-year history — it only counts on a stock where it cleared the bar (win rate ≥55%, positive expectancy after costs, still profitable out-of-sample). Research, not advice.</p>
+  <p class="sub" style="margin-bottom:14px">An open rule set, backtested on each stock's own ~19 years. It counts only where it cleared the bar — win rate ≥55%, positive expectancy after costs, profitable out-of-sample. Research, not advice.</p>
   <div class="sumstrip s4">
     ${sTile("Strategies", nStrat, "transparent rule sets", "")}
     ${sTile("Proven pairs", provenPairs, "strategy × stock, after costs + OOS", provenPairs ? "up" : "")}
@@ -810,7 +810,7 @@ async function pageStrategies() {
   </div>
   ${isSubscribed() ? runBar + results
     : planWall("Run the desk on your board",
-      "Pick your stocks above, then run every strategy in the library on each — ~19 years of that stock's own history per rule, win rate, expectancy after costs and out-of-sample honesty, revealed live. The rule sets below are open; running them is the desk's work.")}
+      "Pick your stocks above, then run every strategy on each — ~19 years of that stock's own history per rule, with win rate, expectancy after costs and out-of-sample honesty shown live.")}
 
   <div class="seg"><h2>The library</h2><div class="ln"></div></div>
   ${dict}
@@ -1610,7 +1610,7 @@ function planWall(what, teaser) {
     <p class="sub">${teaser}</p>
     <p class="sub">${me
       ? "This sits in the paid plan. Plans are being drawn for three desks — new investors, pros, and brokers."
-      : "Create a free account to start exploring — the paid plan unlocks this in full. Plans are being drawn for three desks: new investors, pros, and brokers."}</p>
+      : "Create a free account to start exploring. Three desks are being drawn: new investors, pros, and brokers."}</p>
     <button class="bw-go" style="max-width:250px" onclick="${me ? "location.hash='#/settings'" : "openAuth('signup')"}">${me ? "See plans →" : "Create a free account →"}</button>
   </div>`;
 }
@@ -2808,7 +2808,7 @@ async function pageDividends() {
     <table><thead><tr><th>Ticker</th><th>Payout</th><th class="r">Rs/sh</th><th class="r">Yield</th><th class="r">Buy by</th><th class="r">Ex / sell-after</th></tr></thead><tbody>${divHtml}</tbody></table></div>
 
   ${dvLocked ? planWall("The full dividend desk",
-    `Every announced payout with its buy-by and sell-after dates${divUp.length > 3 ? ` (${divUp.length - 3} more upcoming right now)` : ""}, plus the last ${past.length} real payouts with the yields they actually delivered — what these names truly pay, on the record.`) : `
+    `Every announced payout with its buy-by and sell-after dates${divUp.length > 3 ? ` (${divUp.length - 3} more upcoming)` : ""}, plus the last ${past.length} real payouts and the yields they actually delivered.`) : `
   <div class="seg"><h2>Past payouts</h2><div class="ln"></div></div>
   <div class="card"><div class="sub">last ${past.length} closures · cash dividends (D) as % of Rs 10 face value</div>
     <table><thead><tr><th>Ticker</th><th>Payout</th><th class="r">Rs/sh</th><th class="r">Yield@now</th><th class="r">Announced</th><th class="r">Closure start</th></tr></thead><tbody>${
@@ -2825,7 +2825,7 @@ async function pageCalendar() {
 
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Earnings calendar</h2><div class="ln"></div></div>
-  <p class="sub" style="margin-bottom:16px">${earnings.length} upcoming results dates across the universe · <span class="pill ok">verified</span> = confirmed against a company/PSX board-meeting notice · <span class="tag">estimate</span> = scraped, pending verification. The desk won't open a swing into an unconfirmed results date inside its hold window (earnings gaps blow through stops).</p>
+  <p class="sub" style="margin-bottom:16px">${earnings.length} upcoming results dates · <span class="pill ok">verified</span> = confirmed against a board-meeting notice · <span class="tag">estimate</span> = scraped, pending. The desk won't hold a swing through an unconfirmed results date — earnings gaps blow through stops.</p>
   ${(isSubscribed() ? Object.keys(byMonth).sort() : Object.keys(byMonth).sort().slice(0, 1)).map(m => {
     const label = new Date(m + "-01").toLocaleDateString("en", { month: "long", year: "numeric" });
     return `<div class="card"><h2 style="font-size:13px">${label}</h2>
@@ -2898,7 +2898,7 @@ async function pageResearch() {
   <div class="seg"><h2>Company filings & briefings</h2><div class="ln"></div><span class="pill">${filings.length}</span></div>
   <div class="card">${filings.length ? (isSubscribed() ? filings : filings.slice(0, 2)).map(docRow).join("") : '<div class="empty">No filings tagged yet — the news sentinel surfaces results, board-meeting and corporate-briefing notices here as companies file them.</div>'}</div>
   ${docs.length > 4 ? planWall("The full research library",
-    `${docs.length} digested documents — broker notes with every claim extracted for public scoring, results filings and corporate briefings — each cross-examined, never taken at face value.`) : ""}`;
+    `${docs.length} digested documents — broker notes, results filings and corporate briefings, each cross-examined with every claim extracted for public scoring.`) : ""}`;
 }
 
 /* ---------- Leaderboards: our analysts + the brokers, scored on real outcomes ---------- */
@@ -2931,7 +2931,7 @@ async function pageLeaderboard() {
 
   <div class="seg"><h2>The desk's AI analysts</h2><div class="ln"></div><span class="pill">${Object.keys(personas).length}</span></div>
   <div class="card"><div class="sub">the desk holds itself to the same standard it holds the brokers.</div>
-    ${Object.keys(personas).length ? `<table><thead><tr><th>Analyst</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${Object.entries(personas).map(([n, r]) => pRow(n, r)).join("")}</tbody></table>` : '<div class="empty">No resolved calls yet — the desk\'s dated calls score after their horizons pass (first ones resolve from early August). Pending calls appear on each ticker\'s Desk Room.</div>'}</div>
+    ${Object.keys(personas).length ? `<table><thead><tr><th>Analyst</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${Object.entries(personas).map(([n, r]) => pRow(n, r)).join("")}</tbody></table>` : '<div class="empty">No resolved calls yet — dated calls score once their horizons pass (first from early August). Pending ones appear on each ticker\'s Desk Room.</div>'}</div>
 
   <div class="seg"><h2>Brokers — ranked on what came true</h2><div class="ln"></div><span class="pill">${Object.keys(brokers).length}</span></div>
   <div class="card"><div class="sub">overall and per sector — a broker's bank desk and E&P desk have different records, so they're scored separately.</div>
@@ -3864,7 +3864,7 @@ async function pagePractice() {
       <div class="disclaimer">Virtual money at real market prices — <b>education, not advice</b>, and never a forecast of real returns.</div>
       <div class="card mychart-cta">
         <h2>Learn with PKR 500,000 you can't lose</h2>
-        <p class="sub">A practice portfolio at real PSX prices: buy, size positions, sit through red days, collect dividends when book closures pass. Every mechanic of investing — none of the damage. Free with an account.</p>
+        <p class="sub">Real PSX prices, no real money: buy, size, sit through red days, collect dividends at book closure. Every mechanic of investing, none of the damage. Free with an account.</p>
         <button class="bw-go" style="max-width:260px" onclick="openAuth('signup')">Create a free account →</button></div>`;
     return;
   }
@@ -4429,7 +4429,7 @@ function scannerLists(q, fvt, fnd, predT, fs) {
 }
 function scannerHtml(cats) {
   if (!hasFeature("scanner")) return planWall("The daily opportunity scanner",
-    "Six ranked lists rebuilt every cycle from the desk's scored data — below fair value, momentum, covered yield, quality earners, predictability, washed-out RSI — each name with the one-line reason it qualified.");
+    "Six ranked lists, rebuilt every cycle from the desk's scored data — below fair value, momentum, covered yield, quality, predictability, washed-out RSI — each with the reason it qualified.");
   return `<div class="scan-grid">${cats.map(c => `<div class="card scan-card">
     <h2>${esc(c.title)}</h2>
     ${c.rows.map(r => `<div class="scan-row clickable" onclick="location.hash='#/ticker/${esc(r.s)}'">
@@ -4496,7 +4496,7 @@ async function pageScenarios() {
   <div class="seg" style="margin-top:4px"><h2>Scenarios</h2><div class="ln"></div><span class="pill">measured, not imagined</span></div>
   <p class="sub" style="margin-bottom:12px">"What if oil hits $95?" — answered from what 19 years of data actually show, not from a story. Pick a question or set your own move.</p>
   ${locked ? planWall("The scenario simulator",
-    "Oil to $95, rupee to 340, Wall Street −5% — see which PSX sectors historically leaned up or down, scaled from measured, correction-survived sector betas, with the honest R² attached.") : `
+    "Oil to $95, rupee to 340, Wall Street −5% — which PSX sectors historically leaned up or down, from measured sector betas, with the honest R² attached.") : `
   <div class="card">
     <div class="sc-presets">${presets.map(([f, m, l]) => `<button class="seg-opt ${_scen.factor === f && Math.abs(_scen.movePct - m) < 0.01 ? "on" : ""}" onclick="_scen={factor:'${f}',movePct:${m.toFixed(2)}};pageScenarios()">${esc(l)}</button>`).join("")}</div>
     <div class="sc-custom">
@@ -4564,9 +4564,9 @@ async function pageScreener() {
     "predictable with momentum", "defensive with dividend > 6%", "cement below fair value"];
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Screener</h2><div class="ln"></div><span class="pill">plain English in</span></div>
-  <p class="sub" style="margin-bottom:12px">No filter panels. Say what you want — the screener shows you exactly how it understood you, then screens on the desk's <b>scored</b> fields: model fair value, Graham value, predictability, covered yield. Fields nobody else can screen on, because nobody else scores them.</p>
+  <p class="sub" style="margin-bottom:12px">No filter panels — say what you want. It shows how it read you, then screens the desk's <b>scored</b> fields: fair value, Graham value, predictability, covered yield. Nobody else screens these, because nobody else scores them.</p>
   ${locked ? planWall("The plain-English screener",
-    `"Dividend above 8%, covered, below Graham value, with earnings growth" — typed as a sentence, screened across all ${rows.length} names on the desk's scored fields, with saved screens on your account.`) : `
+    `"Dividend above 8%, covered, below Graham value, with earnings growth" — one sentence, screened across all ${rows.length} names on the desk's scored fields.`) : `
   <div class="card">
     <div class="scr-row"><input id="scr-in" class="ph-in" aria-label="Describe what you are screening for" style="flex:1" value="${esc(_scr.text)}" placeholder="e.g. dividend > 8% with earnings growth, below fair value"
       onkeydown="if(event.key==='Enter'){_scr.text=this.value;pageScreener()}">
@@ -4832,9 +4832,9 @@ async function pageAsk() {
   const locked = !hasFeature("ask");
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Ask the desk</h2><div class="ln"></div><span class="pill">answers from data, not guesses</span></div>
-  <p class="sub" style="margin-bottom:12px">Ask in plain English. Every answer is assembled from the desk's own computed files — so it is instant, and it <b>cannot invent</b> a price, a date or a dividend. When it doesn't know, it says so.</p>
+  <p class="sub" style="margin-bottom:12px">Plain English in, the desk's own computed files out. Instant, and it <b>cannot invent</b> a price, date or dividend. When it doesn't know, it says so.</p>
   ${locked ? planWall("Ask the desk",
-    "\"Why is MEBL moving?\" · \"Is FFC cheap?\" · \"What's happening in cement?\" — answered instantly from the desk's own scored data, with the sector context, the wire, and what the models actually say.") : `
+    "\"Why is MEBL moving?\" · \"Is FFC cheap?\" · \"What's happening in cement?\" — answered from the desk's own scored data, with sector context, the wire, and what the models say.") : `
   <div class="card">
     <div class="scr-row"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?" value="${esc(_ask.q)}"
       onkeydown="if(event.key==='Enter')askRun()">
@@ -4976,9 +4976,9 @@ async function pageMarket() {
   </div>`;
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Strategy marketplace</h2><div class="ln"></div><span class="pill">publishing coming soon</span></div>
-  <p class="sub" style="margin-bottom:12px">Build a strategy from the same rule vocabulary the desk's own ${deskN} run on. <b>Publishing opens once the desk can backtest every submission</b> on each stock's own ~19-year history and show the result whatever it shows — a strategy that failed is as useful to everyone as one that worked, but an untested one helps nobody.</p>
+  <p class="sub" style="margin-bottom:12px">Build from the same rule vocabulary the desk's own ${deskN} run on. <b>Publishing opens once every submission can be backtested</b> and shown whatever it shows — a failed strategy is as useful as one that worked. An untested one helps nobody.</p>
   ${locked ? planWall("The strategy marketplace",
-    "Compose rules from the desk's own indicator vocabulary and test the idea. Community publishing, honest backtests on every submission, and a ranked leaderboard follow.") : `
+    "Compose rules from the desk's indicator vocabulary and test the idea. Publishing, honest backtests and a ranked leaderboard follow.") : `
   <div class="ttabs">
     <button class="ttab ${_mkt.tab === "browse" ? "on" : ""}" onclick="_mkt.tab='browse';pageMarket()">Browse</button>
     <button class="ttab ${_mkt.tab === "build" ? "on" : ""}" onclick="_mkt.tab='build';pageMarket()">Build a strategy</button>
@@ -5332,6 +5332,83 @@ function wireClickables(root = document) {
     if (!el.hasAttribute("role") && tag !== "TR" && tag !== "A" && tag !== "BUTTON") el.setAttribute("role", "button");
   });
 }
+/* ------------------------------------------------------------------------------------------
+   TABLES ON A PHONE.
+
+   ~40 tables are built as raw HTML string templates all over this file. Rather than edit every
+   call site, fix them all once, here, after each render.
+
+   Two things happen:
+
+   1. Each <table> gets wrapped in a `.tscroll` div. A <table> cannot scroll itself — the old CSS
+      forced `display:block` on it, which silently drops `width:100%` (a block box shrink-wraps
+      its content) and was half the reason tables looked broken on mobile. A wrapper scrolls
+      properly and lets the table stay a real table that fills its card.
+
+   2. Each <td> gets `data-l` = the text of the <th> above it, so the stacked mobile layout can
+      print the column name next to the value. Without this a stacked row is a list of naked
+      numbers with nothing saying which is the price and which is the yield.
+
+   Idempotent: both steps mark what they touch and skip it next time. The MutationObserver below
+   fires on every render, and this must not re-wrap on each pass. */
+function enhanceTables(root = document) {
+  root.querySelectorAll("table:not([data-tbl])").forEach(t => {
+    t.dataset.tbl = "1";
+    const heads = [...t.querySelectorAll("thead th")].map(h => h.textContent.trim());
+    if (heads.length) {
+      // A header cell may be deliberately blank (the caret/action column). Blank stays blank —
+      // printing an empty label would leave a stray colon on every stacked row.
+      t.querySelectorAll("tbody tr").forEach(tr => {
+        [...tr.children].forEach((td, i) => {
+          if (heads[i]) td.setAttribute("data-l", heads[i]);
+        });
+      });
+      t.dataset.cols = heads.length;
+    } else {
+      /* Headless tables (the macro geo-factor grid, the ticker risk table) are built as bare
+         <tbody> rows. They still need a column count so the stacking rule can reach them —
+         the widest of these is 5 columns including a rendered bar, which at 321px squeezed its
+         label column to 23px. Count the widest row, and mark it so the stacked cells render as
+         plain blocks: there are no headers to print as labels. */
+      const wid = Math.max(0, ...[...t.querySelectorAll("tbody tr")].map(tr => tr.children.length));
+      if (wid) { t.dataset.cols = wid; t.dataset.nohead = "1"; }
+    }
+    const p = t.parentElement;
+    if (p && p.classList.contains("tscroll")) return;
+    const wrap = document.createElement("div");
+    wrap.className = "tscroll";
+    p.insertBefore(wrap, t);
+    wrap.appendChild(t);
+  });
+  restackTables();
+}
+
+/* WHICH TABLES STACK IS MEASURED, NOT GUESSED.
+   The first version of this keyed off the column count — "5 or more columns stacks". That was
+   wrong in both directions: a 3-column sector table whose middle column holds three driver chips
+   needs 460px and does not fit, while a 5-column table of short numbers fits fine. Column count
+   is a proxy for width; width is available for free, so use it.
+
+   Measure each table with stacking OFF, and turn it on only for the ones that genuinely do not
+   fit their card. A table that fits stays a table — stacking a list that already works would
+   triple its height and destroy the down-the-column scan that is the point of a table. */
+function restackTables() {
+  const narrow = window.innerWidth <= 560;
+  document.querySelectorAll(".tscroll>table[data-cols]").forEach(t => {
+    t.removeAttribute("data-stack");                 // always measure in the unstacked state
+    if (!narrow) return;
+    const room = t.parentElement.clientWidth;
+    if (room && t.scrollWidth > room + 2) t.setAttribute("data-stack", "1");
+  });
+}
+/* Rotating the phone changes the answer. Attribute writes don't trip the childList observer, so
+   this cannot loop. */
+let _restackT = null;
+window.addEventListener("resize", () => {
+  clearTimeout(_restackT);
+  _restackT = setTimeout(restackTables, 150);
+});
+
 document.addEventListener("keydown", e => {
   if (e.key !== "Enter" && e.key !== " ") return;
   const el = e.target.closest?.(".clickable");
@@ -5343,13 +5420,19 @@ document.addEventListener("keydown", e => {
    modals appended to body), so observe the whole document rather than just the view container. */
 if (window.MutationObserver) {
   let queued = false;
+  const flush = () => { queued = false; wireClickables(document); enhanceTables(document); };
   new MutationObserver(() => {                      // batch: renders fire hundreds of mutations
     if (queued) return;
     queued = true;
-    requestAnimationFrame(() => { queued = false; wireClickables(document); });
+    requestAnimationFrame(flush);
+    /* rAF does not run in a hidden tab. The desk re-renders every 30s on a poll, so a page
+       rendered while the tab was in the background used to come back with none of this applied
+       until something else forced a repaint. Timers still fire when hidden — catch up with one. */
+    setTimeout(() => { if (queued) flush(); }, 300);
   }).observe(document.body, { childList: true, subtree: true });
 }
 wireClickables(document);   // whatever is already on the page at boot
+enhanceTables(document);
 
 document.getElementById("langBtn")?.addEventListener("click", () => setLang(lang() === "ur" ? "en" : "ur"));
 applyLang();   // safe at module top level: reads localStorage only, never `me`
@@ -6031,7 +6114,7 @@ async function pagePortfolio() {
     j("fairvalue.json"), j("fundamental_scores.json"), j("dividends_deep.json")]);
   if (!me) {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Your portfolio</h2><div class="ln"></div></div>
-      <div class="card"><div class="empty">Sign in to track your holdings — enter what you own and the desk shows your live value, profit/loss, position weights and estimated dividend income. Private to you, read-only: the desk never trades. Research, not advice.<br><br>
+      <div class="card"><div class="empty">Sign in to track your holdings — live value, profit/loss, weights and estimated dividend income. Private to you, read-only: the desk never trades. Research, not advice.<br><br>
       <button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
     return;
   }
