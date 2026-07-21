@@ -13,7 +13,14 @@ Environment (all required to actually send):
     VAPID_PRIVATE_KEY   base64url private key  (SECRET — repo secret only)
     VAPID_SUBJECT       "mailto:you@example.com"
     SUPABASE_URL        https://<project>.supabase.co
-    SUPABASE_SERVICE_KEY  service-role key (SECRET — server-side only, bypasses RLS)
+    SUPABASE_SERVICE_KEY  server-side secret key (SECRET — bypasses RLS, never ships to a client)
+
+    ^^ THIS MUST BE A NEW-STYLE `sb_secret_...` KEY, not the legacy service_role JWT.
+    Verified 2026-07-21: this project has JWT-based legacy keys DISABLED — the legacy anon key is
+    rejected at the API gateway with 401, and legacy anon/service_role are disabled as a pair. So
+    a legacy service_role JWT pasted here would fail every request the moment Web Push is switched
+    on, and the failure would look like "no subscribers" rather than "bad key".
+    Mint the replacement in Supabase → Project Settings → API Keys → Secret keys.
 
 Usage:
     python scripts/push_send.py                 # dry run: report config, send nothing

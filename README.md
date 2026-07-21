@@ -274,7 +274,11 @@ the product says so on `#/plans` rather than showing a dead checkout.
 
 - **`state/legal.json` is `review_status: DRAFT`.** Terms/Privacy/Risk are drafted but **not reviewed by a
   Pakistani lawyer**. This is a hard gate before charging anyone.
-- **Two Supabase items are outstanding on the owner:** rotate/disable the legacy `service_role` key, and
+- **Supabase key hygiene — DONE (verified 2026-07-21).** JWT-based legacy keys are disabled: the
+  legacy `anon` key is rejected at the API gateway (401), and legacy `anon`/`service_role` are
+  disabled as a pair. The client uses the publishable key, which is safe to ship. Any future
+  server-side job needs a new-style `sb_secret_...` key, never the old service_role JWT.
+- **One Supabase item is outstanding on the owner:**
   enable leaked-password protection.
 - **The track record is young.** **95 dated claims are filed and 0 have resolved** (verified against
   `state/claims.json` at the time of writing) — a waiting period, not a proven record, and the product
