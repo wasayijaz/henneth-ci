@@ -5551,6 +5551,100 @@ const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
 }) : null;
 
+/* ==========================================================================================
+   BOT PROTECTION — Cloudflare Turnstile on the auth endpoints.
+
+   Why it matters more than it looks: an unprotected signup endpoint lets a bot POST thousands of
+   addresses, and every one triggers a confirmation email. That burns the Supabase email quota and,
+   worse, gets the sending domain flagged as a spam source — which then silently kills delivery of
+   the real confirmation emails to real users. Paid traffic pointed at an unprotected form is
+   exactly the condition that invites it.
+
+   ────────────────────────────────────────────────────────────────────────────────────────────
+   TO SWITCH IT ON (two steps, in THIS ORDER — reversing them breaks signup for everyone):
+
+     1. Paste the Turnstile SITE key below and deploy. Nothing changes for users: the widget
+        renders and sends a token, and Supabase ignores tokens while its own captcha setting is
+        off. This is deliberately the safe half, and it can sit live for as long as you like.
+     2. THEN enable it in Supabase → Authentication → Attack Protection → "Enable Captcha
+        protection", provider "Turnstile", pasting the SECRET key there.
+
+   Doing 2 before 1 means the server starts demanding a token the client is not yet sending, and
+   every signup and sign-in fails until the deploy lands.
+
+   Keys come from Cloudflare dashboard → Turnstile → Add site (free, unlimited). You get a SITE
+   key (public — belongs here, safe to commit) and a SECRET key (server-side — belongs only in
+   the Supabase dashboard, never in this file).
+   ────────────────────────────────────────────────────────────────────────────────────────────
+
+   Empty string = feature entirely inert: no script fetched, no widget, no token, and the auth
+   calls below are byte-identical to what they were before this existed. */
+const CAPTCHA_SITE_KEY = "";
+
+let _tsLoading = null;
+let _tsWidget = null;
+let _tsToken = null;
+
+const captchaOn = () => !!CAPTCHA_SITE_KEY;
+
+function loadTurnstile() {
+  if (!captchaOn()) return Promise.resolve(false);
+  if (window.turnstile) return Promise.resolve(true);
+  if (_tsLoading) return _tsLoading;
+  _tsLoading = new Promise(resolve => {
+    const s = document.createElement("script");
+    s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    s.async = true; s.defer = true;
+    s.onload = () => resolve(true);
+    // Blocked by an extension or offline. Resolve false rather than hanging: the SERVER is the
+    // real gate, so a client that cannot produce a token simply gets a clear rejection from
+    // Supabase instead of a form that never submits.
+    s.onerror = () => resolve(false);
+    document.head.appendChild(s);
+  });
+  return _tsLoading;
+}
+
+/* Renders into #capBox if the auth form is showing one. Managed mode usually solves silently;
+   the callback caches the token so submit does not have to wait for it. */
+async function mountCaptcha() {
+  if (!captchaOn()) return;
+  const host = document.getElementById("capBox");
+  if (!host) return;
+  const ok = await loadTurnstile();
+  if (!ok || !window.turnstile) return;
+  _tsToken = null;
+  _tsWidget = window.turnstile.render(host, {
+    sitekey: CAPTCHA_SITE_KEY,
+    callback: t => { _tsToken = t; },
+    "expired-callback": () => { _tsToken = null; },
+    "error-callback": () => { _tsToken = null; },
+    theme: "light",
+  });
+}
+
+/* A Turnstile token is SINGLE USE. After any failed submit the widget must be reset or the next
+   attempt reuses a spent token and fails with a confusing "captcha verification failed". */
+function resetCaptcha() {
+  _tsToken = null;
+  try { if (window.turnstile && _tsWidget !== null) window.turnstile.reset(_tsWidget); } catch {}
+}
+
+/* Returns the token, waiting briefly if the challenge is still solving. `undefined` (not null or
+   "") is returned when the feature is off, because that is what makes the options object below
+   collapse to exactly the call we made before captcha existed. */
+async function captchaToken() {
+  if (!captchaOn()) return undefined;
+  if (_tsToken) return _tsToken;
+  const ok = await loadTurnstile();
+  if (!ok || !window.turnstile) return undefined;
+  for (let i = 0; i < 25 && !_tsToken; i++) {          // up to ~5s
+    await new Promise(r => setTimeout(r, 200));
+    try { const t = window.turnstile.getResponse(_tsWidget); if (t) _tsToken = t; } catch {}
+  }
+  return _tsToken || undefined;
+}
+
 let me = null;        // auth user
 let myProfile = null; // profiles row
 
@@ -5627,7 +5721,10 @@ function openAuth(mode) {
         </label>
         <label id="pwRow">Password
           <span class="auth-pwwrap">
-            <input type="password" id="authPw" minlength="8" required autocomplete="${mode === "signup" ? "new-password" : "current-password"}" placeholder="${mode === "signup" ? "at least 8 characters" : "your password"}" aria-describedby="errPw${mode === "signup" ? " pwHint" : ""}">
+            <!-- minlength is applied on SIGNUP ONLY. On sign-in it would lock out anyone whose
+                 password predates the 10-character floor — they must still be able to type the
+                 password they actually have. -->
+            <input type="password" id="authPw" ${mode === "signup" ? 'minlength="10"' : ""} required autocomplete="${mode === "signup" ? "new-password" : "current-password"}" placeholder="${mode === "signup" ? "at least 10 characters" : "your password"}" aria-describedby="errPw${mode === "signup" ? " pwHint" : ""}">
             <button type="button" class="auth-peek" id="authPeek" aria-label="Show password" aria-pressed="false">Show</button>
           </span>
           <span class="auth-err" id="errPw" role="alert"></span>
@@ -5638,6 +5735,9 @@ function openAuth(mode) {
           <span class="pwlabel" id="pwLabel"></span>
         </div>
         <div class="pwhint" id="pwHint">Longer beats complicated. Three unrelated words are stronger than <b>P@ssw0rd!</b> and easier to remember.</div>` : ""}
+        <!-- Turnstile mounts here. Stays an empty div while CAPTCHA_SITE_KEY is blank, so it
+             costs nothing and shifts no layout until the feature is switched on. -->
+        <div class="capbox" id="capBox"></div>
         <button type="submit" class="auth-go" id="authGo">${mode === "signup" ? "Create account" : "Sign in"}</button>
       </form>
       <div class="authmsg" id="authmsg"></div>
@@ -5749,16 +5849,23 @@ function openAuth(mode) {
     go.disabled = true; go.classList.add("busy");
     authMsg(mode === "signup" ? "Creating your account…" : "Signing in…");
     try {
+      /* `undefined` when captcha is off, which makes `options` collapse to the exact call this
+         was before bot protection existed — no behaviour change while the key is blank. */
+      const captchaTok = await captchaToken();
+      const opts = captchaTok ? { captchaToken: captchaTok } : undefined;
       if (mode === "signup") {
-        const { data, error } = await sb.auth.signUp({ email, password: pw });
+        const { data, error } = await sb.auth.signUp({ email, password: pw, options: opts });
         if (error) throw error;
         if (!data.session) { authMsg("Almost there — we sent a confirmation link to " + email + ". Click it to activate your account."); return; }
       } else {
-        const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+        const { error } = await sb.auth.signInWithPassword({ email, password: pw, options: opts });
         if (error) throw error;
       }
       closeAuth();
     } catch (err) {
+      // A Turnstile token is spent on use; without this reset the retry sends a used token and
+      // fails with "captcha verification failed" no matter what the user types.
+      resetCaptcha();
       authMsg(friendlyAuthError(err), true);
     } finally { go.disabled = false; go.classList.remove("busy"); }
   };
