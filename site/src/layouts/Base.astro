@@ -37,7 +37,12 @@ const canonical = canonicalUrl.href;
 // PNG, not the old og-default.svg: no social scraper renders SVG. X, WhatsApp, LinkedIn and
 // Slack all silently dropped the card and showed a bare link. 1200x630 is the 1.91:1 that
 // summary_large_image crops to, so nothing is cut off.
-const ogImage = new URL('/og.png', site.url).href;
+/* JPEG, not PNG. The brand card is 1200x630 of photographic artwork: as a PNG it weighs 668 KB,
+   as a q90 JPEG 88 KB with no visible loss. That matters because several scrapers — WhatsApp
+   most strictly — quietly skip a preview image over a few hundred KB, so the heavier file was
+   costing exactly the previews this is for. og.png is left in place, same artwork, so anything
+   that already cached the old URL still resolves. */
+const ogImage = new URL('/og.jpg', site.url).href;
 const ogImageAlt = `${site.appName} — a retro terminal displaying H_, above the wordmark ${site.appName} and the line "Research. Not advice."`;
 
 const orgLd = {
@@ -107,7 +112,7 @@ const appLd = {
         lay the card out, and several (WhatsApp especially) give up first and render no preview. */}
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content="en_US" />
 
