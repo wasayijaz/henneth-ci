@@ -5737,7 +5737,13 @@ function openAuth(mode) {
     if (!email) { setErr("errEmail", "Enter your email."); bad = true; }
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr("errEmail", "That doesn't look like an email address."); bad = true; }
     if (!pw) { setErr("errPw", "Enter your password."); bad = true; }
-    else if (mode === "signup" && pw.length < 8) { setErr("errPw", "Passwords need at least 8 characters."); bad = true; }
+    /* 10, matching the server floor set in Supabase (Auth → Sign In / Providers → Email →
+       Minimum password length). Keep the two in step: this check is only a courtesy that saves a
+       round trip and points at the right field — the server is the actual gate, because anyone
+       can POST to the Supabase auth API directly and never load this form.
+       Length rather than composition rules is deliberate, per NIST SP 800-63B: forcing a symbol
+       and a digit reliably produces "P@ssw0rd1", while length is what actually resists cracking. */
+    else if (mode === "signup" && pw.length < 10) { setErr("errPw", "Passwords need at least 10 characters. A short phrase works well."); bad = true; }
     if (bad) { authMsg("", false); return; }
 
     go.disabled = true; go.classList.add("busy");
