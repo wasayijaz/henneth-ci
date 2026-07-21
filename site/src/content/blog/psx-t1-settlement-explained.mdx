@@ -1,119 +1,225 @@
 ---
-title: PSX settlement explained — what T+1 changed
-description: The PSX moved from T+2 to T+1 settlement on 9 February 2026. What that means for when your shares and money actually arrive, and what most guides still get wrong.
+title: Pakistan moved to T+1. Here's what the evidence says it changed
+description: The PSX halved its settlement cycle in February 2026. What happened when the US, India and Canada did the same — and why it probably won't help Pakistan's index classification.
 pubDate: 2026-07-21
 cluster: Market structure
 draft: true
 ---
 
-Most guides to the Pakistan Stock Exchange still tell you that trades settle on a **T+2** basis.
-That has been wrong since **9 February 2026**.
+import Snapshot from '../../components/explain/Snapshot.astro';
+import Timeline from '../../components/explain/Timeline.astro';
+import Ledger from '../../components/explain/Ledger.astro';
+import Matrix from '../../components/explain/Matrix.astro';
 
-The PSX moved to a **T+1 settlement cycle** on that date. If you buy shares today, they are
-credited to your account the next trading day. If you sell, your money is available the next
-trading day. One session, not two.
+On 9 February 2026 the Pakistan Stock Exchange halved the time between a trade and its settlement,
+moving from T+2 to T+1. Buy shares today and they are yours tomorrow; sell today and the money is
+available tomorrow.
 
-This sounds like a technicality. It is not. Settlement timing decides whether you qualify for a
-dividend, when you can reuse your money, and how long your broker carries the risk of your trade.
-Getting it wrong by one day is how people miss payouts they thought they had earned.
+The domestic coverage framed this as Pakistan joining the modern world, with the implication that
+foreign money would notice. Several markets made exactly this move before us, and there is now
+enough published evidence to check that claim rather than repeat it.
 
-## What settlement actually means
+The short version: the benefit is real but modest, the costs land mostly on foreign investors
+rather than on the market that made the change, and it will almost certainly do nothing for
+Pakistan's index classification. That last part is the opposite of what was widely reported.
 
-There are two separate moments in every share transaction, and confusing them is the root of most
-of the confusion here.
+<Snapshot
+  title="T+1 in short"
+  items={[
+    { k: 'Settlement now', v: 'T+1', note: 'One trading day after the trade', tone: 'up' },
+    { k: 'Changed on', v: '9 Feb 2026', note: 'Previously T+2' },
+    { k: 'Applies to', v: 'Ready Market', note: 'Ordinary buying and selling' },
+    { k: 'Counted in', v: 'Trading days', note: 'Weekends and holidays push it out' },
+  ]}
+/>
 
-**The trade** is when your buy or sell is matched with someone else's order on the exchange. This
-is instant during market hours, and it is the moment your price is fixed.
+## Even PSX has not finished updating its own documents
 
-**The settlement** is when the exchange of ownership and money is finalised — shares moved into
-your CDC account, money moved out of it, or the reverse. This happens later.
+Before anything else, a warning about sources — including official ones.
 
-"T+1" names the gap. **T** is the trade day. **+1** is one trading day after it. So a trade
-executed on Monday settles on Tuesday. A trade executed on Thursday settles on Friday.
+Five months after the switch, PSX's own published material still contradicts itself. The KSE-100
+methodology brochure linked from its indices page still quotes the old two-day rule. The All Shares
+Islamic Index brochure, updated in June 2026 — four months *after* the change — still says
+transactions settle "on T+2 settlement basis". PSX's equity product page manages to say
+transactions are "settled in two days (T+1)" in a single sentence.
 
-Note that these are **trading days**, not calendar days. A trade on Friday settles on Monday,
-because the market is closed over the weekend. A public holiday pushes it further. The PSX
-publishes a trading calendar, and settlement follows it.
+This is worth knowing for its own sake. If you are checking a settlement question, go to the Rule
+Book and look at the version date on the cover. Almost every guide you will find is downstream of
+one of these stale documents, which is why almost every guide is wrong.
 
-## What changed, and when
+## What actually changed
 
-Until 9 February 2026, the PSX used **T+2** — two trading days between the trade and its
-settlement. On that date it moved to **T+1**, halving the gap.
+<Timeline
+  rows={[
+    {
+      name: 'Before',
+      tone: 'old',
+      note: 'until Feb 2026',
+      steps: [
+        { d: 'T', label: 'You buy', trade: true },
+        { d: 'T+1', label: 'Waiting' },
+        { d: 'T+2', label: 'Shares yours', settle: true },
+      ],
+    },
+    {
+      name: 'Now',
+      tone: 'new',
+      note: 'from 9 Feb 2026',
+      steps: [
+        { d: 'T', label: 'You buy', trade: true },
+        { d: 'T+1', label: 'Shares yours', settle: true },
+      ],
+    },
+  ]}
+  caption="Trading days, not calendar days — a Friday trade settles on Monday, and holidays push it further."
+/>
 
-This is recorded in the PSX Regulations, in the version dated 9 February 2026. Clause 2.4(lxxvii)
-now defines a Ready Market Contract as one ready for settlement on a T+1 cycle, and Chapter 10,
-which governs clearing and settlement, matches throughout. The change was approved by the SECP in
-October 2025 with a deliberate lead time so brokers and the clearing infrastructure could prepare.
-The National Clearing Company of Pakistan (NCCPL), which actually operates the settlement system,
-issued its own circular to clearing members ahead of the switch.
+One consequence matters more than the rest, and it is the one that costs people money: **the
+ex-dividend date moved with it.** Under the old cycle the ex-price applied two settlement days
+before book closure. It is now one. Any rule of thumb you learned before February 2026 for the
+last day to buy and still collect a dividend is off by a session.
 
-Pakistan is not unusual in doing this. The United States, Canada, Mexico and China had already
-moved to shorter cycles; the UK, Switzerland and the EU are scheduled to follow. Shorter
-settlement reduces the window in which either side of a trade can fail to deliver, which is the
-main argument for it.
+That deserves its own treatment, and gets it in a separate piece.
 
-## What it changes for you
+## Who else has done this
 
-**Your money comes back a day sooner.** Sell on Monday under the old cycle and the proceeds were
-available Wednesday. Now they are available Tuesday. If you sell one position to buy another, you
-wait one session instead of two.
+<Matrix
+  cols={['Market', 'Cycle', 'When']}
+  rows={[
+    ['India', { v: 'T+1', tone: 'up' }, 'Phased Feb 2022 – Jan 2023'],
+    ['United States', { v: 'T+1', tone: 'up' }, '28 May 2024'],
+    ['Canada, Mexico, Argentina, Jamaica', { v: 'T+1', tone: 'up' }, '27 May 2024'],
+    ['Pakistan', { v: 'T+1', tone: 'up' }, '9 Feb 2026'],
+    ['Nigeria', { v: 'T+1', tone: 'up' }, '1 June 2026'],
+    ['UK, EU, Switzerland', { v: 'T+2', tone: 'muted' }, 'Moving 11 Oct 2027'],
+    ['Hong Kong', { v: 'T+2', tone: 'muted' }, 'Consulted, indicative Q4 2027'],
+    ['Saudi Arabia, UAE', { v: 'T+2', tone: 'muted' }, 'No announced move'],
+  ]}
+  caption="You may see a claim that Pakistan is one of only eight T+1 markets. No institutional body publishes such a count — the figure is an informal reconstruction, and it depends on how you treat China and partial adopters. Fewer than ten is defensible; eight is not a fact."
+/>
 
-**Your shares arrive a day sooner.** The same shift in the other direction.
+Two things are worth noticing here.
 
-**Dividend eligibility moves.** This is the one that costs people money, and it gets its own
-section below.
+**Most of the world is still on T+2, including every market Pakistan competes with for frontier
+money.** The Gulf exchanges have announced nothing. Europe and the UK do not move until October
+2027.
 
-**Less counterparty risk.** Between trade and settlement, each side is exposed to the other
-failing to deliver. Halving that window halves the exposure. You will probably never notice this
-directly — it is mostly a benefit to the clearing system — but it is the reason regulators push
-for it.
+**China is usually counted and probably should not be.** Its A-share market settles securities the
+same day and cash the next, which is a different construct, and MSCI describes it as an
+operational problem rather than an achievement.
 
-## The part that catches people out: dividends
+## What happened when others did it
 
-To receive a dividend, you must be on the company's register of shareholders when the book closes.
-You do not get there by buying on the last day. You get there by buying early enough that your
-purchase has **settled** before the register is taken.
+This is where the evidence is genuinely useful, because the predictions were dramatic and mostly
+wrong.
 
-That is why the **ex-dividend date** exists. Buy on or after the ex-date and the trade will not
-settle in time, so the dividend belongs to the seller, not you. Buy before it, and it is yours.
+**The clearing house saved real money.** In the US, the fund that clearing members must post
+against unsettled trades fell by roughly a quarter — about three billion dollars returned to the
+market. India's was more dramatic: daily margin at its main clearing corporation fell from around
+₹12,000 crore to ₹4,000 crore after its own move.
 
-Because the ex-date is derived from the settlement cycle, **shortening the cycle moves it**. Under
-T+2 you needed to buy earlier than you do under T+1. Any guide, spreadsheet or rule of thumb
-written before February 2026 that tells you the last safe day to buy is now off by one session.
+That is the honest core of the case for T+1. Less time between trade and settlement means less
+time for either side to fail, so less collateral has to sit idle against that risk.
 
-If you are buying specifically to capture a dividend, check the ex-date on the company's own
-announcement rather than working backwards from a rule you remember. The gap between "I own the
-shares" and "I own the dividend" is exactly one settlement cycle, and that number changed this
-year.
+**The predicted settlement failures did not happen.** This was the loudest warning before the US
+move, and it simply did not materialise — fail rates stayed at their long-run level. Canada's
+regulator went further and studied four and a half years of data across the transition, concluding
+there was no significant change. Even exchange-traded funds, the segment everyone expected to
+break, held up.
 
-## What did not change
+**Foreign exchange did not break either.** Another confident prediction, also wrong: settlement
+volumes through the main global FX settlement system went *up* after the US transition, not down,
+and Europe's markets regulator found no evidence of the negative effects it had been warned about.
 
-**Negotiated deals still settle differently.** The T+1 cycle applies to the Ready Market — ordinary
-buying and selling through the continuous auction, which is what almost every retail investor
-uses. Separately negotiated transactions settle on their own terms.
+## But the costs were real, and they landed somewhere specific
 
-**Your broker's internal timing is their own.** T+1 is when settlement completes at the clearing
-level. When funds appear as withdrawable in your particular broker's app, and how quickly a
-withdrawal reaches your bank, are matters of that broker's process. The regulated cycle is the
-floor, not a promise about any one platform.
+<Ledger
+  left={{
+    kicker: 'Who gains',
+    title: 'The domestic market',
+    tone: 'up',
+    points: [
+      'Clearing houses hold <strong>materially less collateral</strong> against unsettled trades — around a quarter less in the US, dramatically less in India.',
+      'Local investors get their money back a session sooner after selling.',
+      'Half the window in which a counterparty can fail to deliver.',
+    ],
+  }}
+  right={{
+    kicker: 'Who pays',
+    title: 'Foreign and cross-border investors',
+    tone: 'dn',
+    points: [
+      'A buyer in another time zone must source local currency <strong>overnight</strong>, often before their own market opens.',
+      'European funds holding US assets developed a <strong>"Thursday effect"</strong> — a purchase late in the week leaves a funding gap into the following Monday.',
+      'Back offices in Asia moved to <strong>night shifts</strong> to process errors during American trading hours.',
+      'Pressure toward pre-funding: paying before you receive.',
+    ],
+  }}
+  caption="The asymmetry is the point. The market that shortens its cycle collects most of the benefit; the investors who have to fund from another time zone absorb most of the cost."
+/>
 
-**The trading calendar still governs.** T+1 counts trading days. Weekends and public holidays push
-settlement out, and Ramadan hours change session times without changing the cycle itself.
+This asymmetry is the part Pakistani coverage skipped, and it is the part that matters here.
+Pakistan wants foreign portfolio investment. A shorter settlement cycle makes the operational side
+of investing in Pakistan *harder* for exactly those investors, not easier — they have less time to
+convert currency and instruct settlement from a different time zone.
 
-## How to check any claim about this yourself
+The industry body representing large Asian and international investors made this point when India
+moved, and their framing is the fairest available: going from two days to one was uncomfortable
+but absorbable. Going from one day to zero, they argued, would be a completely different category
+of change requiring a full overhaul. Pakistan has taken the absorbable step.
 
-Settlement rules are published, not folklore. The PSX Regulations are on psx.com.pk under the
-legal framework section, with the version date on the cover — check that date first, because an
-older copy will still say T+2 and will still look official. Chapter 10 covers clearing and
-settlement. NCCPL publishes its circulars to clearing members separately.
+## The claim that does not survive checking
 
-If a source about PSX settlement does not carry a date, treat it as unreliable. As of writing,
-most of the freely available material on this topic still describes a cycle the exchange stopped
-using in February 2026 — which is a useful reminder that "widely repeated" and "currently true"
-are different things.
+Several reports suggested the move would strengthen Pakistan's case for index reclassification —
+getting back to MSCI Emerging Markets, or off FTSE's frontier tier.
+
+**It will not, and the index providers' own documents say why.**
+
+Neither MSCI nor FTSE scores settlement cycle *length*. What they score is whether settlement is
+delivery-versus-payment, whether omnibus account structures exist, whether overdraft facilities are
+available — and, crucially, whether the market forces investors to **pre-fund**. Pre-funding counts
+against you. A shorter cycle pushes in that direction, not away from it.
+
+MSCI's 2026 review noted Pakistan's move in a single descriptive line and changed nothing.
+Pakistan's clearing-and-settlement rating stayed in the lowest band, for reasons MSCI names
+precisely: omnibus structures are not available, and direct overdraft facilities remain prohibited.
+T+1 addressed neither of those.
+
+The clearest evidence is Israel. It ran a T+1 cycle for years and was *penalised* for it, because
+being out of step with everyone else created operational friction. MSCI upgraded its settlement
+rating in 2026 — and the stated reason was that T+1 "is no longer an outlier characteristic" now
+that developed markets have converged on it.
+
+**What index providers reward is alignment, not speed.** Pakistan is now aligned with the US,
+Canada and India, and out of step with Europe, the UK, the Gulf and most of Asia until late 2027.
+The alignment argument gets stronger in October 2027, not today.
+
+## What to watch next
+
+The most interesting development since February is that the regulator reopened the question. The
+SECP began a post-implementation consultation covering implementation problems, liquidity, investor
+participation and the higher capital requirements the change imposed on brokers. Reported
+friction includes funding mismatches caused by limited banking hours during Ramadan and a
+cheque-based settlement culture that does not fit a one-day cycle. There are reports that the
+brokers' association has argued for reverting to T+2.
+
+That is the live story, and it is a more honest description of where Pakistan is than
+"successfully modernised". A settlement cycle is plumbing. It works when the banking system,
+broker balance sheets and market hours around it can keep up — and that is what the consultation
+is actually about.
+
+## Checking any of this yourself
+
+Settlement rules are published, not folklore. The PSX Rule Book is on psx.com.pk under the legal
+framework section; check the version date on the cover, because older copies still describe the
+two-day cycle and still look official. Chapter 10 covers ready-market settlement. NCCPL publishes
+its circulars to clearing members separately.
+
+If a source about PSX settlement carries no date, treat it as unreliable — including, at the
+moment, some of PSX's own material.
 
 ---
 
-*Research, not advice. This explains how settlement works on the Pakistan Stock Exchange; it is
-not a recommendation to buy or sell anything. Figures and rules are dated — check the current PSX
+*Research, not advice. This explains how settlement works and what the published evidence shows;
+it is not a recommendation to buy or sell anything. Rules are dated — check the current PSX
 Regulations before acting on anything time-sensitive.*
