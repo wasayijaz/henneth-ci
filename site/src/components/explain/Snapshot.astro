@@ -1,0 +1,65 @@
+---
+/* =============================================================================================
+   SNAPSHOT — the "answer the question before they scroll" panel.
+
+   Goes near the top of an explainer. A reader who lands from a search wants the answer in five
+   seconds; the article earns their attention AFTER that, not before it. Burying the answer under
+   600 words of context is the single most common reason a technically-correct page loses to a
+   worse one — the visitor bounces before reaching it, and Google reads the bounce.
+
+   It is also the block most likely to be screenshotted and shared, and the one an LLM will lift
+   when answering the same question, so it must be self-contained and exact.
+   ============================================================================================= */
+
+export interface Item {
+  k: string;
+  v: string;
+  note?: string;
+  /** 'up' | 'dn' tint the value — use only where a direction genuinely applies. */
+  tone?: 'up' | 'dn' | '';
+}
+
+interface Props {
+  title?: string;
+  items: Item[];
+}
+
+const { title = 'In short', items } = Astro.props;
+const cols = Math.min(items.length, 4);
+---
+
+<figure class="snap">
+  <figcaption class="snap-h">{title}</figcaption>
+  <div class="snap-g" style={`--cols:${cols}`}>
+    {
+      items.map((i) => (
+        <div class="snap-i">
+          <span class="snap-k">{i.k}</span>
+          <b class={`snap-v ${i.tone || ''}`}>{i.v}</b>
+          {i.note && <i class="snap-n">{i.note}</i>}
+        </div>
+      ))
+    }
+  </div>
+</figure>
+
+<style>
+  .snap { margin: 0 0 28px; border: var(--rule); background: var(--line); }
+  .snap-h {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; background: var(--ink-1); color: var(--bg); padding: 9px 14px;
+  }
+  .snap-g { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 1.5px; }
+  .snap-i { background: var(--panel); padding: 14px; display: flex; flex-direction: column; gap: 5px; }
+  .snap-k {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .snap-v { font-family: var(--font-mono); font-size: 18px; font-weight: 800; line-height: 1.15; }
+  .snap-v.up { color: var(--up); }
+  .snap-v.dn { color: var(--dn); }
+  .snap-n { font-style: normal; font-size: 10.5px; color: var(--ink-3); line-height: 1.5; }
+
+  @media (max-width: 760px) { .snap-g { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 420px) { .snap-g { grid-template-columns: 1fr; } }
+</style>

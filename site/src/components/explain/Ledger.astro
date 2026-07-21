@@ -1,0 +1,78 @@
+---
+/* =============================================================================================
+   LEDGER — a two-sided breakdown. Gains against costs, before against after, us against them.
+
+   The honest shape for an explainer. A page that lists only benefits reads as marketing and gets
+   treated as such; showing what a change actually costs is what makes the upside believable, and
+   it is the part competitors leave out.
+
+   Deliberately NOT colour-coded green/red by default. A trade-off is not a scoreboard, and
+   tinting one column "bad" editorialises a judgement the reader should make. Pass tone only when
+   a direction is genuinely factual.
+   ============================================================================================= */
+
+export interface Side {
+  title: string;
+  /** Small label above the title, e.g. "For investors". */
+  kicker?: string;
+  points: string[];
+  tone?: 'up' | 'dn' | '';
+}
+
+interface Props {
+  left: Side;
+  right: Side;
+  caption?: string;
+}
+
+const { left, right, caption } = Astro.props;
+const sides = [left, right];
+---
+
+<figure class="ldg">
+  <div class="ldg-g">
+    {
+      sides.map((s) => (
+        <div class="ldg-s">
+          <div class={`ldg-h ${s.tone || ''}`}>
+            {s.kicker && <span class="ldg-k">{s.kicker}</span>}
+            <b>{s.title}</b>
+          </div>
+          <ul class="ldg-l">
+            {s.points.map((p) => (
+              <li set:html={p} />
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+  {caption && <figcaption class="ldg-cap">{caption}</figcaption>}
+</figure>
+
+<style>
+  .ldg { margin: 0 0 28px; border: var(--rule); background: var(--line); }
+  .ldg-g { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; }
+  .ldg-s { background: var(--panel); }
+
+  .ldg-h { padding: 12px 16px; border-bottom: var(--rule); background: var(--panel-2); }
+  .ldg-h b { font-size: 13px; display: block; }
+  .ldg-h.up { box-shadow: inset 3px 0 0 var(--up); }
+  .ldg-h.dn { box-shadow: inset 3px 0 0 var(--dn); }
+  .ldg-k {
+    display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px;
+  }
+
+  .ldg-l { margin: 0; padding: 14px 16px 16px 30px; }
+  .ldg-l li { font-size: 12px; line-height: 1.65; color: var(--ink-2); margin-bottom: 9px; }
+  .ldg-l li:last-child { margin-bottom: 0; }
+  .ldg-l li :global(strong) { color: var(--ink-1); }
+
+  .ldg-cap {
+    grid-column: 1 / -1; background: var(--panel); font-size: 10.5px; color: var(--ink-3);
+    line-height: 1.6; padding: 12px 16px; border-top: var(--rule);
+  }
+
+  @media (max-width: 640px) { .ldg-g { grid-template-columns: 1fr; } }
+</style>
