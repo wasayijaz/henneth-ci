@@ -17,14 +17,71 @@ const DATA_BASE = LOCAL ? "../state/" : "state/";
 // throw "TypeError: Failed to fetch" on same-origin requests unrelated to ads —
 // seen in the wild breaking every state/*.json load. XHR isn't patched by those
 // extensions, so it's the fallback when fetch itself throws (not just a bad response).
-function xhrJson(url) {
+function xhrJson(url, token) {
   return new Promise((resolve, reject) => {
     const x = new XMLHttpRequest();
     x.open("GET", url, true);
+    if (token) x.setRequestHeader("Authorization", "Bearer " + token);
     x.onload = () => { if (x.status >= 200 && x.status < 300) { try { resolve(JSON.parse(x.responseText)); } catch (e) { reject(e); } } else reject(new Error("HTTP " + x.status)); };
     x.onerror = () => reject(new Error("xhr network error"));
     x.send();
   });
+}
+
+/* ==========================================================================================
+   THE ACCOUNT GATE, CLIENT SIDE
+
+   Every /state/ request now carries the Supabase access token, which middleware.js verifies at
+   the edge before the CDN will serve the file. Without it the desk's research is a public
+   download; see that file's header for the full reasoning.
+
+   READ ORDER MATTERS. localStorage is read FIRST and the Supabase client only as a fallback:
+   `sb` is declared with `const` far below this line, and j() runs long before that line is
+   evaluated. Touching a const in its temporal dead zone throws ReferenceError — and `typeof`
+   does NOT save you, it throws too. This file has hit that exact bug three times (applyDeskMode,
+   isSignedIn, and the boot flash), so the primary path deliberately avoids `sb` entirely and the
+   fallback is wrapped in try/catch that swallows the TDZ throw.
+
+   The storage key is derived from the Supabase project ref and must track SB_URL below and the
+   boot script in index.html. If the project ref ever changes and this string does not, every
+   request silently loses its token and the desk 401s on everything. */
+const SB_STORAGE_KEY = "sb-qteoncckohuoatbjjykb-auth-token";
+
+function tokenFromStorage() {
+  try {
+    const raw = localStorage.getItem(SB_STORAGE_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    return s?.access_token || null;
+  } catch { return null; }
+}
+
+async function authToken() {
+  const stored = tokenFromStorage();
+  if (stored) return stored;
+  // Fallback only — and only if `sb` has actually been initialised by now.
+  try {
+    const { data } = await sb.auth.getSession();
+    return data?.session?.access_token || null;
+  } catch { return null; }
+}
+
+/* Access tokens live about an hour. The Supabase client refreshes them in the background and
+   writes the new one back to localStorage, but a tab left open past expiry can still fire a
+   request with a stale token and get a 401. Rather than surface that as a data failure, force one
+   refresh and let the caller retry — this is the difference between "the desk broke" and a hiccup
+   the user never sees. */
+let _refreshing = null;
+async function refreshSession() {
+  if (_refreshing) return _refreshing;
+  _refreshing = (async () => {
+    try {
+      const { data } = await sb.auth.refreshSession();
+      return data?.session?.access_token || null;
+    } catch { return null; }
+    finally { setTimeout(() => { _refreshing = null; }, 1000); }
+  })();
+  return _refreshing;
 }
 
 const cache = {};
@@ -75,10 +132,23 @@ async function j(p, ttl) {
   // network at all, and outside it costs a 304 with no body instead of a fresh megabyte.
   const url = () => DATA_BASE + p + (LIVE_FILES.has(p) ? "?t=" + Date.now() : "");
   let lastErr = null;
+  let tok = await authToken();
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const v = attempt < 2 ? await fetch(url()).then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
-        : await xhrJson(url()); // last attempt: bypass a fetch() an extension may have broken
+      const hdrs = tok ? { Authorization: "Bearer " + tok } : undefined;
+      const v = attempt < 2
+        ? await fetch(url(), { headers: hdrs }).then(async r => {
+            // 401 from the edge gate means the token is stale, not that the data is gone.
+            // Refresh once and let the retry loop use the new one. Distinguished from every
+            // other HTTP error so a genuine 404 is not masked as an auth problem.
+            if (r.status === 401) {
+              const fresh = await refreshSession();
+              if (fresh && fresh !== tok) tok = fresh;
+              return Promise.reject(new Error("HTTP 401 (auth refreshed, retrying)"));
+            }
+            return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status));
+          })
+        : await xhrJson(url(), tok); // last attempt: bypass a fetch() an extension may have broken
       cache[p] = { t: Date.now(), v: p === "backtests.json" ? rehydrateBacktests(v) : v };
       return cache[p].v;
     } catch (e) { lastErr = e; /* fall through to retry */ }
