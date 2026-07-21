@@ -5578,8 +5578,15 @@ const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY, {
    ────────────────────────────────────────────────────────────────────────────────────────────
 
    Empty string = feature entirely inert: no script fetched, no widget, no token, and the auth
-   calls below are byte-identical to what they were before this existed. */
-const CAPTCHA_SITE_KEY = "";
+   calls below are byte-identical to what they were before this existed.
+
+   This is the SITE key and it is PUBLIC by design — Turnstile embeds it in page source on every
+   site that uses it, and it is useless without the secret half. The SECRET key lives only in the
+   Supabase dashboard (Authentication → Attack Protection) and must never appear in this repo.
+   Widget: Cloudflare → Turnstile → "Henneth Desk", Managed mode, hostnames desk.henneth.app +
+   localhost. If the widget stops rendering, check the hostname list first — Turnstile silently
+   refuses to render on a domain that is not on it. */
+const CAPTCHA_SITE_KEY = "0x4AAAAAAD6UK0K_7bHULZry";
 
 let _tsLoading = null;
 let _tsWidget = null;
