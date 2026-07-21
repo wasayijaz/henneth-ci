@@ -468,6 +468,63 @@ Verify the desk by fetching something only the new build would contain, not by l
 
 ---
 
+## 9b. THE ACCOUNT GATE — `/state/` is no longer public (2026-07-21)
+
+Until this date the sign-in screen gated the INTERFACE but not the DATA. Every file under
+`/state/` was a plain static asset, so this returned 4.7 MB to anyone, with no account:
+
+```
+curl https://desk.henneth.app/state/backtests.json
+```
+
+The whole research product — `rooms.json`, `dossiers.json`, `fairvalue.json`, `claims.json`,
+`strategy_map.json`, `quant.json` — was one `wget` away. **`middleware.js` at the repo root now
+closes that.**
+
+### How it works
+- Vercel **Edge Middleware**, matcher `/state/:path*`. It runs BEFORE the static asset is served,
+  so files stay on the CDN and only gain an auth check. A serverless proxy was rejected: `state/`
+  is ~92 MB across 729 files, which would blow the function bundle and add a cold start to each of
+  the ~23 fetches a ticker page makes.
+- Verification is **local Web Crypto against Supabase's published JWKS**. This project signs
+  access tokens with **ES256** (asymmetric P-256) and publishes the public half at
+  `/auth/v1/.well-known/jwks.json`, so there is **no shared secret to store** and no auth round
+  trip per request. If the project is ever switched back to legacy HS256 symmetric keys, `alg`
+  stops matching and every request fails CLOSED — the correct direction to fail.
+- `dashboard/app.js` attaches `Authorization: Bearer <access_token>` on every `state/` fetch.
+  On a 401 it refreshes the session once and retries, so an hour-old tab recovers instead of
+  appearing broken.
+
+### The one deliberate exception
+`natal_ephem.bin` and `natal_ephem.json` stay public (`PUBLIC_FILES` in `middleware.js`).
+`#/cast` is the top of the acquisition funnel — a stranger casts a birth chart, gets value, and it
+follows them into the account they create. Those two files are an astronomical ephemeris: public-
+domain physics anyone can compute, containing zero desk output. **Add to that set only if the same
+test passes** — is it public knowledge that happens to be cached here, rather than something the
+desk produced?
+
+### Do not "simplify" this
+The token read in `app.js` uses **localStorage first and the `sb` client only as a fallback**.
+That is not redundancy: `sb` is a `const` declared ~5,400 lines below `j()`, and touching a const
+in its temporal dead zone throws ReferenceError — `typeof` does not save you, it throws too. This
+file has hit that exact bug three times. The fallback is wrapped in try/catch for the same reason.
+
+`SB_STORAGE_KEY` in `app.js` must track `SB_URL` and the boot script in `index.html`. If the
+Supabase project ref changes and that string does not, every request silently loses its token and
+the desk 401s on everything.
+
+### Verified (2026-07-21)
+12 adversarial cases pass, including `alg:none`, HS256 alg-confusion, unsigned tokens, missing
+`exp`, expired tokens, and a self-signed token carrying the real `kid`. Live: all research files
+401, ephemeris 200, app shell 200.
+
+**Regression check** — this must stay 401 forever:
+```
+curl -s -o /dev/null -w "%{http_code}" https://desk.henneth.app/state/rooms.json   # expect 401
+```
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.

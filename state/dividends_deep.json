@@ -1,10 +1,10 @@
 {
- "updated": "2026-07-20",
+ "updated": "2026-07-21",
  "source": "Yahoo Finance chart API dividend events (.KA symbols)",
  "note": "Split/bonus-adjusted per-share cash dividends, in the SAME adjustment space as state/history_deep (which stores Yahoo indicators.quote[0], split-adjusted and NOT dividend-adjusted). Dates are EX-dividend dates, not book-closure dates. For announced/upcoming payouts with buy-by and book-closure dates, use state/dividends.json (PSX DPS), which is authoritative but only ~18 months deep.",
  "coverage_from": "2007-09-21",
- "n_tickers": 368,
- "n_payouts": 5135,
+ "n_tickers": 369,
+ "n_payouts": 5142,
  "_fetched_at": {
   "ABL": 1784405892.143008,
   "ABOT": 1784405892.143008,
@@ -373,7 +373,8 @@
   "SNAI": 1784549859.7661352,
   "SNBL": 1784549859.7661352,
   "SPEL": 1784549859.7661352,
-  "SPWL": 1784550682.539946
+  "SPWL": 1784550682.539946,
+  "STCL": 1784614707.6056247
  },
  "tickers": {
   "ABL": [
@@ -21594,6 +21595,36 @@
    },
    {
     "ex": "2026-04-17",
+    "rs": 0.75
+   }
+  ],
+  "STCL": [
+   {
+    "ex": "2013-10-22",
+    "rs": 0.3674
+   },
+   {
+    "ex": "2018-10-12",
+    "rs": 0.5
+   },
+   {
+    "ex": "2019-10-11",
+    "rs": 0.25
+   },
+   {
+    "ex": "2021-10-13",
+    "rs": 1.25
+   },
+   {
+    "ex": "2021-10-14",
+    "rs": 1.25
+   },
+   {
+    "ex": "2022-10-12",
+    "rs": 0.75
+   },
+   {
+    "ex": "2024-10-16",
     "rs": 0.75
    }
   ]

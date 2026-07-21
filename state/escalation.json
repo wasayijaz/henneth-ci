@@ -1,23 +1,6 @@
 {
-  "escalate": true,
-  "reason": "Multiple impact-4 items logged in recent cycle (2026-07-11 to 2026-07-20): fuel-price hike, US-Iran Strait-of-Hormuz naval blockade, refinery-upgrade policy, Brent crude surge to $90/bbl, RMPL Nishat Group M&A, LOTCHEM earnings surprise, KSE-100 sharp reversals (-3.56% Jul 14, -1.32% Jul 17, volatile around macro shocks)",
-  "impact_4_items_this_cycle": [
-    "2026-07-11: Petrol, diesel prices hiked by Rs13.18 and Rs13.80 per litre",
-    "2026-07-13: Govt unveils new plan to fast track $6 billion refinery upgrade projects",
-    "2026-07-13: PSX opens week in the red, plummets amid US-Iran Strait of Hormuz escalation",
-    "2026-07-13: PSX Closing Bell: Falls Off A Cliff",
-    "2026-07-14: PSX plunges over 2% intraday as US reimposes naval blockade on Iran",
-    "2026-07-14: Selling grips PSX, KSE-100 tumbles nearly 5,000 points as US reimposes naval blockade",
-    "2026-07-14: Hormuz tensions wipe out over 6,400 points at PSX - KSE-100 confirmed close",
-    "2026-07-14: Dada Partners advises Nishat Group on Pakistan's largest private cross-border listed-company acquisition (Rafhan Maize)",
-    "2026-07-15: DCR final dividend confirmed at 6.6%",
-    "2026-07-16: LOTCHEM Q2CY26 results with EPS Rs1.87 and Rs1.50/share dividend",
-    "2026-07-17: PSX Closing Bell: The Show Is Over (current-account data shock)",
-    "2026-07-17: Dolmen City REIT (DCR) final dividend confirmed at 6.6%",
-    "2026-07-20: Brent oil tops $90 as US, Iran expand strikes in the Middle East",
-    "2026-07-20: KSE-100 confirmed Monday close: index recovers to end up 124.95 points after opening-session slide"
-  ],
-  "ts": "2026-07-21T23:12:00+0500",
-  "escalation_triggered_by": "Rule 10 (news impact >= 4)",
-  "recommended_action": "Activate full pipeline re-trigger per CLAUDE.md Rule 4 circuit-breaker and Rule 6 data-health gates. Monitor FX reserves, SBP stance, oil prices (still >$85/bbl) and escalating US-Iran Middle East tensions through to next full cycle."
+  "escalate": false,
+  "reason": "0 new news items appended this checkpoint (2026-07-21). The impact>=4 items the sentinel flagged (2026-07-11 to 2026-07-20) are historical and already reflected in the 2026-07-20 pre-market full cycle (macro.json, daily_read.json both stamped 2026-07-20). Escalation criterion per checkpoint step 6 is a NEW impact>=4 item THIS run, not presence of old items in the log.",
+  "ts": "2026-07-21T11:00:00+0500",
+  "checked_by": "psx-desk-checkpoint-am"
 }
