@@ -5750,14 +5750,24 @@ function openAuth(mode) {
   box.addEventListener("click", (e) => { if (e.target.id === "authbox") closeAuth(); });
   document.getElementById("authX").onclick = closeAuth;
   box.querySelectorAll(".auth-tabs button").forEach(b => b.onclick = () => openAuth(b.dataset.m));
+  // No-op while CAPTCHA_SITE_KEY is blank. Fired here rather than on submit so the challenge has
+  // the whole time the user spends typing to solve itself — by submit there is nothing to wait for.
+  mountCaptcha();
 
   const forgot = document.getElementById("authForgot");
   if (forgot) forgot.onclick = async () => {
     const email = document.getElementById("authEmail").value.trim();
     if (!email) return authMsg("Enter your email above first, then click reset.", true);
     authMsg("Sending reset link…");
-    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-    authMsg(error ? error.message : "Reset link sent — check your email.", !!error);
+    // Password reset is captcha-protected server-side too — it sends mail, so it is the same
+    // spam vector as signup and Supabase enforces the token on it as well.
+    const tok = await captchaToken();
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: location.origin + location.pathname,
+      ...(tok ? { captchaToken: tok } : {}),
+    });
+    if (error) resetCaptcha();
+    authMsg(error ? friendlyAuthError(error) : "Reset link sent — check your email.", !!error);
   };
 
   /* ---- show / hide password. A peek toggle measurably cuts sign-in failures on mobile, and is
@@ -5881,8 +5891,16 @@ function friendlyAuthError(err) {
   if (s.includes("invalid login credentials")) return "That email and password don't match. Check the password, or use “Forgot password?” below.";
   if (s.includes("email not confirmed")) return "This account isn't activated yet — click the confirmation link we emailed you, then sign in.";
   if (s.includes("user already registered") || s.includes("already been registered")) return "There's already an account with this email. Switch to “Sign in”, or reset the password if you've forgotten it.";
-  if (s.includes("password should be at least")) return "Passwords need at least 8 characters.";
+  if (s.includes("password should be at least")) return "Passwords need at least 10 characters. A short phrase works well.";
   if (s.includes("rate limit") || s.includes("too many")) return "Too many attempts just now. Wait a minute and try again.";
+  /* Captcha failures. The second case is the one that matters in the wild: a privacy extension or
+     a blocked challenges.cloudflare.com means the token never exists, and without naming that the
+     user just sees a form that refuses them for no visible reason. */
+  if (s.includes("captcha")) {
+    return captchaOn()
+      ? "The bot check didn't complete. If you use a privacy blocker, allow challenges.cloudflare.com and try again."
+      : "The server is asking for a bot check this page can't provide yet. Please tell us at hello@henneth.app.";
+  }
   if (s.includes("failed to fetch") || s.includes("networkerror")) return "Couldn't reach the server. Check your connection and try again.";
   if (s.includes("provider is not enabled")) return "Google sign-in isn't switched on for this site yet.";
   return m || "Something went wrong. Try again.";

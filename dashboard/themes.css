@@ -1078,6 +1078,12 @@ body[data-theme=gemini] .pwmeter[data-s="2"] .pwbars i:nth-child(-n+2){backgroun
 body[data-theme=gemini] .pwmeter[data-s="3"] .pwbars i:nth-child(-n+3){background:#b8860b}
 body[data-theme=gemini] .pwmeter[data-s="4"] .pwbars i{background:var(--up)}
 body[data-theme=gemini] .pwhint{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:-4px 0 12px}
+/* Turnstile mount. `:empty` collapses it entirely while CAPTCHA_SITE_KEY is blank, so the auth
+   form has no phantom gap before bot protection is switched on. The widget's own iframe is a
+   fixed 300x65; letting it overflow rather than clipping keeps it from being cut off if
+   Cloudflare ever changes that size. */
+body[data-theme=gemini] .capbox{margin:4px 0 10px;min-height:0}
+body[data-theme=gemini] .capbox:empty{display:none}
 body[data-theme=gemini] .auth-go.busy{opacity:.65;cursor:progress}
 body[data-theme=gemini] .pc-soon{color:var(--ink3);font-style:normal;line-height:1.6}
 @media (min-width:900px){body[data-theme=gemini] .plan-grid-3{grid-template-columns:repeat(3,1fr)}}
