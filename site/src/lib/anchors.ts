@@ -1,31 +1,27 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import ctx from '../data/public/context.json';
 
 /* =============================================================================================
-   REAL PAKISTANI FIGURES FOR THE CALCULATORS, READ FROM state/ AT BUILD TIME.
+   REAL PAKISTANI FIGURES FOR THE CALCULATORS.
 
-   Same contract as the hero board in index.astro: the marketing site builds from the same repo as
-   the desk, so a calculator can anchor its defaults to the SBP policy rate and the latest reported
-   CPI instead of a number someone typed from memory (CLAUDE.md Rule 2).
+   A calculator anchors its defaults to the SBP policy rate and the latest reported CPI rather
+   than a number someone typed from memory (CLAUDE.md Rule 2). One that quietly defaults to
+   "8% inflation" in a year Pakistan printed 11.1% produces answers wrong in the direction that
+   flatters the product, and every visitor who accepts the default gets a misleading result.
 
-   This matters more here than on the hero. A calculator that quietly defaults to "8% inflation"
-   in a year Pakistan printed 11.1% produces answers that are wrong in the direction that flatters
-   the product, and every visitor who accepts the default gets a misleading result.
+   READS THE COMMITTED PUBLIC EXTRACT, NOT `../state/`  (changed 2026-07-21)
+   This used to `fs.readFileSync` its way up into `../state/macro.json`, which is why Vercel's
+   "Include source files outside the Root Directory" had to be switched on for the marketing
+   project — putting the entire 93 MB data layer inside the marketing build, one careless route
+   away from being served. `scripts/build_public_slice.py` now writes a narrow, allow-listed
+   `context.json` into `site/`, so the Astro build reads nothing above its own root and that
+   setting can stay off.
 
-   Every read degrades to null, never throws — a standalone site checkout has no state/ at all,
-   and a missing figure must soften the page (the anchor chip disappears, the calculator still
-   works on the visitor's own inputs) rather than fail the build.
+   Regenerate with `python scripts/build_public_slice.py` whenever the macro layer moves; the file
+   is committed so the build is hermetic and reproducible.
+
+   Still degrades to null rather than throwing: a missing figure must soften the page (the anchor
+   chip disappears, the calculator still works on the visitor's own inputs), never fail the build.
    ============================================================================================= */
-
-const STATE = path.resolve(process.cwd(), '..', 'state');
-
-function readState<T>(file: string, fallback: T): T {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(STATE, file), 'utf-8')) as T;
-  } catch {
-    return fallback;
-  }
-}
 
 export type Anchors = {
   cpi: number | null;
@@ -36,13 +32,15 @@ export type Anchors = {
 };
 
 export function getAnchors(): Anchors {
-  const m = readState<any>('macro.json', {});
+  // The extract has already flattened `domestic.tbill_6m` and trimmed `updated` to a date, so the
+  // shape here is deliberately simpler than macro.json's.
+  const m: any = (ctx as any)?.macro ?? {};
   const num = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
   return {
     cpi: num(m.cpi_yoy),
     policy: num(m.sbp_rate),
-    tbill: num(m.domestic?.tbill_6m),
-    updated: typeof m.updated === 'string' ? m.updated.slice(0, 10) : null,
+    tbill: num(m.tbill_6m),
+    updated: typeof m.updated === 'string' ? m.updated : null,
   };
 }
 

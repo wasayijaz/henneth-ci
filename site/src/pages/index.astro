@@ -1,79 +1,42 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
+import ctx from '../data/public/context.json';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../site.config.ts';
 
-/* THE HERO BOARD IS REAL DATA, READ FROM state/ AT BUILD TIME.
+/* THE HERO BOARD IS REAL DATA — from the committed public extract.
 
    It used to be a hand-written illustration with no figures, carrying this note: "symbols are
    real listed codes, but NO figures are shown, because inventing price moves next to a real
    company is a false claim." That constraint was right and still binds — CLAUDE.md Rule 2 says
    no price may ever come from memory. The resolution is not to relax it but to satisfy it: the
-   marketing site builds from the same repo as the desk, so the panel can show a genuine snapshot
-   of the same data layer the product runs on, stamped with the session date it came from.
+   panel shows a genuine snapshot of the same data layer the product runs on, stamped with the
+   session date it came from. That makes the hero the site's first proof-point — the "every
+   number is sourced" claim demonstrated rather than asserted.
 
-   That turns the hero from a mockup into the site's first proof-point — the "every number is
-   sourced" claim demonstrated rather than asserted.
+   NO LONGER READS `../state/`  (changed 2026-07-21)
+   This used to walk up out of `site/` with fs.readFileSync, which forced Vercel's "Include source
+   files outside the Root Directory" on for the marketing project — pulling the whole 93 MB data
+   layer into the marketing build, one careless route away from being served. It now imports the
+   narrow allow-listed extract written by `scripts/build_public_slice.py`, so the Astro build
+   reads nothing above its own root.
 
-   It refreshes on each deploy, not live. The date stamp in the panel is therefore load-bearing:
-   it is what keeps a stale build honest instead of quietly implying real-time prices.
+   Refreshes on each deploy, not live. The date stamp in the panel is therefore load-bearing: it
+   is what keeps a stale build honest instead of quietly implying real-time prices.
 
-   Every read falls back to the figure-free illustration. A missing or malformed state file must
-   degrade the hero, never fail the build — the marketing site has to be deployable even when the
-   desk's data layer is mid-refresh or absent (a standalone site checkout has no state/ at all). */
-const STATE = path.resolve(process.cwd(), '..', 'state');
-function readState<T>(file: string, fallback: T): T {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(STATE, file), 'utf-8')) as T;
-  } catch {
-    return fallback;
-  }
-}
+   Still degrades to the figure-free illustration if the extract is absent or short — a fresh
+   checkout without the generated file must build, not fail. */
+const board: { sym: string; pct: number }[] = (ctx as any)?.board ?? [];
+const breadth: number | null = (ctx as any)?.breadth_pct ?? null;
+const regime: string = (ctx as any)?.macro?.regime ?? '';
+const asOf: string = (ctx as any)?.as_of ?? '';
 
-const quant: Record<string, any> = readState<any>('quant.json', {}).tickers ?? {};
-const universe: Record<string, any> = readState<any>('universe.json', {}).symbols ?? {};
-const stratMap: Record<string, any[]> = readState<any>('strategy_map.json', {}).tickers ?? {};
-const macro: any = readState<any>('macro.json', {});
-
-// The board shows the heaviest core names — the ones a PSX reader recognises on sight.
-const coreByWeight = Object.values(universe)
-  .filter((u: any) => u?.tier === 'core' && quant[u.symbol]?.ret_1d != null)
-  .sort((a: any, b: any) => (b.weight_pct ?? 0) - (a.weight_pct ?? 0));
-
-const board = coreByWeight.slice(0, 15).map((u: any) => ({
-  sym: u.symbol,
-  pct: quant[u.symbol].ret_1d as number,
-}));
-
-/* Breadth over the WHOLE covered universe, not just the 15 on screen — a breadth number computed
-   from the same names it is displayed beside would be circular and would read far too kind on a
-   day when the heavyweights happened to hold up. */
-const withRet = Object.keys(quant).filter((s) => quant[s]?.ret_1d != null);
-const breadth = withRet.length
-  ? Math.round((withRet.filter((s) => quant[s].ret_1d > 0).length / withRet.length) * 100)
-  : null;
-
-// The desk's actual macro call, not an invented mood word.
-const regime: string = macro?.regime ?? '';
-const asOf: string = board.length ? quant[board[0].sym]?.date ?? '' : '';
-
-/* Signals: real proven-strategy pairs, ranked by the same net-expectancy the desk ranks them by,
-   one per ticker so four different companies show rather than four strategies on one name. */
-const signals = Object.entries(stratMap)
-  .filter(([sym]) => quant[sym]?.close != null && universe[sym]?.name)
-  .map(([sym, list]) => ({ sym, top: [...list].sort((a, b) => b.net_expectancy_pct - a.net_expectancy_pct)[0] }))
-  .sort((a, b) => b.top.net_expectancy_pct - a.top.net_expectancy_pct)
-  .slice(0, 4)
-  .map(({ sym, top }) => ({
-    sym,
-    // The registered name is long ("Fauji Fertilizer Company Limited"); the panel has one line.
-    name: String(universe[sym].name).replace(/\s+(Limited|Ltd\.?|Company Limited)$/i, '').toUpperCase(),
-    tag: String(top.category).toUpperCase(),
-    close: quant[sym].close as number,
-    pct: quant[sym].ret_1d as number,
-  }));
+/* Signals: names that currently carry a setup which cleared the desk's bar.
+   Ordered by index weight, NOT by the backtest's own ranking — see the note in
+   build_public_slice.py. The generic category stays; the strategy name, its win rate and its
+   expectancy never leave the gate. */
+const signals: { sym: string; name: string; tag: string; close: number; pct: number }[] =
+  (ctx as any)?.signals ?? [];
 
 // Degraded mode: no state/ available, so fall back to the original figure-free illustration
 // rather than rendering an empty panel or, worse, zeros that look like real flat prices.
