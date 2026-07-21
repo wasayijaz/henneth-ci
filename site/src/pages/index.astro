@@ -711,6 +711,7 @@ const principles = [
   }
 
   play?.addEventListener('click', () => {
+    (window as any).posthog?.capture('desk_room_demo_played');
     timers.forEach(clearTimeout);
     timers = [];
     body?.classList.add('is-replaying');
@@ -734,5 +735,18 @@ const principles = [
     });
     // The Chair's block is the payoff, so the session holds on it before releasing the spotlight.
     timers.push(window.setTimeout(endSession, blocks.length * BEAT + 1400));
+  });
+</script>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.hero-cta a').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('hero_cta_clicked', {
+          cta_label: el.textContent.trim(),
+          cta_destination: el.getAttribute('href')
+        });
+      });
+    });
   });
 </script>

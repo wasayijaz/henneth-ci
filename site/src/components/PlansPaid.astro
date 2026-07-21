@@ -203,6 +203,12 @@ const faqs = [
       else el.setAttribute('hidden', '');
     });
   };
-  m?.addEventListener('click', () => set('monthly'));
-  a?.addEventListener('click', () => set('annual'));
+  m?.addEventListener('click', () => {
+    set('monthly');
+    (window as any).posthog?.capture('billing_period_switched', { period: 'monthly' });
+  });
+  a?.addEventListener('click', () => {
+    set('annual');
+    (window as any).posthog?.capture('billing_period_switched', { period: 'annual' });
+  });
 </script>

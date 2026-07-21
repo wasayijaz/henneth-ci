@@ -235,3 +235,26 @@ const faqs = [
 
   @media (max-width: 900px) { .tiers, .why { grid-template-columns: 1fr; } }
 </style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    /* plan_started — capture which plan a visitor clicked through on */
+    document.querySelectorAll('.tier-cta:not([disabled])').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var tier = el.closest('.tier');
+        var planName = tier ? (tier.querySelector('.tier-n') || {}).textContent || '' : '';
+        window.posthog?.capture('plan_started', { plan_name: planName.trim() });
+      });
+    });
+
+    /* faq_expanded — fires when a FAQ item is opened */
+    document.querySelectorAll('.fq').forEach(function (el) {
+      el.addEventListener('toggle', function () {
+        if (el.open) {
+          var question = (el.querySelector('summary span') || {}).textContent || '';
+          window.posthog?.capture('faq_expanded', { question: question.trim() });
+        }
+      });
+    });
+  });
+</script>

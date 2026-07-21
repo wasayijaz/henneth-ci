@@ -43,3 +43,16 @@ import { site } from '../site.config.ts';
   .ct-fine { font-size: 10.5px; margin-top: 20px; }
   @media (max-width: 860px) { .ct-grid { grid-template-columns: 1fr; } }
 </style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    var types = ['broker', 'general', 'social'];
+    document.querySelectorAll('.ct-i').forEach(function (el, i) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('contact_link_clicked', {
+          contact_type: types[i] || 'general'
+        });
+      });
+    });
+  });
+</script>

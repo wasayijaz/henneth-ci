@@ -164,5 +164,18 @@ const links = [
     if (willOpen) d?.removeAttribute('hidden');
     else d?.setAttribute('hidden', '');
     b.setAttribute('aria-expanded', String(!!willOpen));
+    if (willOpen) (window as any).posthog?.capture('mobile_nav_opened');
+  });
+</script>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.nav-signin, .nav-cta').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('nav_cta_clicked', {
+          cta_label: el.textContent.trim()
+        });
+      });
+    });
   });
 </script>

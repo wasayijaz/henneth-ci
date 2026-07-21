@@ -90,6 +90,17 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
 }
 </script>
 
+<!-- PostHog product analytics — same live-host guard as the GA tag above (matches henneth.app and
+     desk.henneth.app). Hash-route $pageview is sent manually on hashchange, for the same reason GA
+     needs it here. phc_ is PostHog's PUBLIC project key (shipped to the browser by design). -->
+<script>
+if (location.hostname.indexOf('henneth.app') !== -1) {
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId setPersonPropertiesForFlags captureException".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init('phc_wU2HSFb2bsTr7ngo3noCJsgscF8dvcXW34DXJH3rZxjb',{api_host:'https://us.i.posthog.com',defaults:'2026-01-30'});
+  window.addEventListener('hashchange', function(){ if (window.posthog) posthog.capture('$pageview'); });
+}
+</script>
+
 <!-- FIRST-PAINT AUTH GUESS — runs before the body exists, on purpose.
      data-auth="pending" alone hid the shell but still cost a visible reflow: the sidebar was only
      collapsed once route() proved the visitor was signed out, so the gate arrived with a sideways

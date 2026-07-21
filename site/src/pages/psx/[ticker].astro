@@ -332,3 +332,10 @@ const crumbLd = {
     .facts { grid-template-columns: 1fr; }
   }
 </style>
+
+<script is:inline define:vars={{ tickerSymbol: sym, tickerSector: t.sector }}>
+  window.posthog?.capture('ticker_viewed', {
+    ticker_symbol: tickerSymbol,
+    sector: tickerSector
+  });
+</script>

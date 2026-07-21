@@ -221,6 +221,7 @@ export function mountCalculators(anchors: Anchors) {
         if (sent) return;
         sent = true;
         (window as any).hTrack?.('calculator_use', { calculator: root.dataset.calc });
+        (window as any).posthog?.capture('tool_calculated', { tool_name: root.dataset.calc });
       })
     );
   });

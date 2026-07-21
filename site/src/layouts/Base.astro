@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import IconSprite from '../components/IconSprite.astro';
+import PostHog from '../components/posthog.astro';
 import { site } from '../site.config.ts';
 
 interface Props {
@@ -177,6 +178,8 @@ const appLd = {
         </script>
       )
     }
+
+    {import.meta.env.PROD && <PostHog />}
 
     {/* Conversion tracking. Defined in EVERY build, not just PROD: `window.hTrack` has to exist
         in dev too, otherwise a page that calls it throws a ReferenceError locally and the failure

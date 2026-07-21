@@ -71,3 +71,15 @@ data can't support. No fabricated track record, no invented testimonials, no
 price targets on named companies in mockups — panels that look like product are
 labelled *Illustration*, and the sample research note is a labelled *Template*.
 Keep it that way.
+
+
+## Environment variables
+
+Analytics needs two public PostHog keys (see `.env.example`). Copy it to `.env`:
+
+```
+PUBLIC_POSTHOG_PROJECT_TOKEN=phc_...   # PostHog project 522643 (public client key)
+PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+```
+
+PostHog and GA4 both load in production only (build-time `PROD` + a live-hostname guard), so localhost and Vercel previews never pollute real analytics.
