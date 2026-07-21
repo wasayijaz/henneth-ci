@@ -156,21 +156,84 @@ Corroborating: NCCPL circular NCCPL/CM/OCTOBER-25/17 (24 Oct 2025) via
 
 Caveats: no gazette/SRO number located; **leverage/MTS segment coverage UNVERIFIED**.
 
-## 7. Still UNVERIFIED — CDC and NCCPL
+## 7. NCCPL fees — VERIFIED PRIMARY
 
-Both sites sit behind Cloudflare bot-detection that blocks automated retrieval of the PDF paths
-(HTML scrapes fine; documents 403). **We do not bypass bot detection**, so these must be downloaded
-manually in a normal browser.
+**Source:** *National Clearing Company of Pakistan Limited — Amendment in Fee, Charges and Deposits
+Schedule*, NOTIFICATION, Karachi **8 January 2026**, issued under Regulation 3.6 of the NCCPL
+Regulations with prior SECP approval. Obtained as a PDF (the site blocks automated retrieval).
+
+> **Provenance note.** This copy was supplied to the desk rather than fetched from nccpl.com.pk
+> directly. It corroborates independently: a separate research pass identified a document with
+> exactly this title and date on NCCPL's own downloads listing, and the file's metadata (authored
+> in Karachi, +05:00, Jan 2026) is consistent. Before any figure here goes on a public page,
+> re-check it against NCCPL's published copy — a shared file is one step weaker than a fetched one.
+
+### Trade fees — per Rs 100,000 of trade value, levied on the **Clearing Member**, collected monthly
+
+| Item | Retail | Corporate |
+|---|---|---|
+| Regular Market Fee / GEM | **1.70** | 2.00 |
+| Non-Deliverable / Cash-Settled Future Contract Fee | 1.70 | 2.00 |
+| Deliverable Future Contract Market Fee | 1.70 | 2.00 |
+| NDM Fee | 1.00 | 2.00 |
+| Trade-for-Trade Settlement Fee | 2.00 | 2.00 |
+| Commission fee — Regular Market / GEM | 0.30 | 0.30 |
+| RMS Fee — Regular Market / GEM | 1.00 | 1.00 |
+| RMS Fee — DFC / CSF Market | 1.00 | 1.00 |
+
+Rs 1.70 per Rs 100,000 = **0.0017%** of trade value for a retail regular-market trade.
+
+⚠️ **Open question — do not sum these blindly.** Whether the Regular Market Fee, the Commission
+fee and the RMS Fee all apply simultaneously to one ordinary equity trade is not stated in the
+schedule. Confirm against a real contract note before presenting a combined figure.
+
+### Fixed annual CGT fee — by traded value, levied on the **Clearing Member**, collected half-yearly
+
+| Traded value | Fee (retail and corporate) |
+|---|---|
+| < Rs 100,000 | Rs 100 |
+| Rs 100,000 – < 5m | **Rs 200** |
+| Rs 5m – < 10m | Rs 300 |
+| Rs 10m – < 50m | Rs 800 |
+| Rs 50m – < 100m | Rs 2,500 |
+| Rs 100m – < 500m | Rs 10,000 |
+| Rs 500m – < 1bn | Rs 30,000 |
+| Rs 1bn – < 5bn | Rs 40,000 |
+| ≥ Rs 5bn | Rs 60,000 |
+
+This is the administrative fee for NCCPL *computing* your CGT. It is **not** the tax itself (§4).
+A separate equivalent scale exists for PMEX commodity futures.
+
+### UIN maintenance
+
+**Rs 300 per year, individual** (corporate Rs 4,000), per UIN record, client-code-wise, levied on
+the Clearing Member annually.
+
+**Note M:** charged on registration of an investor, and **waived in recurring years if the investor
+has not traded for the entire year**. A dormant account therefore costs nothing.
+
+### Incidence, again
+
+Every line above is levied on the **Clearing Member** — your broker — and collected through NCSS
+Pay & Collect, not billed to you. Pass-through is customary; the regulated fact is what the broker
+owes. Label accordingly (§8).
+
+## 7b. Still UNVERIFIED — CDC, and NCCPL's KYC schedule
+
+**Biometric, KYC and account-admission fees are NOT in the January 2026 schedule** — confirmed by
+search: the terms do not appear. They live in the separate Centralized KYC Organization (CKO)
+schedule, which is still needed.
+
+Both remaining sites sit behind Cloudflare bot-detection that blocks automated retrieval of the PDF
+paths (HTML scrapes fine; documents 403). **We do not bypass bot detection**, so these must be
+downloaded manually in a normal browser.
 
 **CDC** — from https://www.cdcpakistan.com/downloads-category/tariff-fee-structure/
 - CDS Schedule of Fees, 14 Mar 2025 (participant/broker-side: transaction, custody, handling)
 - Investor Account Services Schedule of Fees, Dec 2024 (direct investor account: annual fee etc.)
 
 **NCCPL** — from https://www.nccpl.com.pk/downloads ("Schedule of Fees and deposits")
-- NCCPL Regulations — Fee Charges and Deposits Schedule, 8 Jan 2026
-- Centralized KYC Organization — Fee Charges and Deposits Schedule (biometric/KYC and UIN fees)
-
-Admission fee, biometric/KYC fee, annual fee, per-trade clearing fee: **all UNVERIFIED.**
+- Centralized KYC Organization — Fee Charges and Deposits Schedule (biometric/KYC fees)
 
 ## 8. Incidence — who the law actually charges
 
