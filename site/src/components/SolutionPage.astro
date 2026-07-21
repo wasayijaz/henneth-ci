@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import TickerTape from './explain/TickerTape.astro';
+import DeskPeek from './explain/DeskPeek.astro';
 import { site } from '../site.config.ts';
 
 /* =============================================================================================
@@ -50,6 +52,10 @@ interface Props {
   /** Entitlement key for the desk sign-up, or null for a contact CTA. */
   appPlan?: string | null;
   ctaLabel?: string;
+  /** Live desk visuals. Both read the committed public slice, so they cost nothing per page. */
+  showTape?: boolean;
+  showPeek?: boolean;
+  peekTitle?: string;
 }
 
 const {
@@ -65,6 +71,9 @@ const {
   faqs = [],
   appPlan = null,
   ctaLabel = 'Get started',
+  showTape = true,
+  showPeek = true,
+  peekTitle,
 } = Astro.props;
 
 const url = new URL(path, site.url).href;
@@ -114,12 +123,23 @@ const faqLd = faqs.length
     </div>
   </section>
 
+  {
+    showTape && (
+      <section class="sp-tape">
+        <div class="wrap">
+          <TickerTape />
+        </div>
+      </section>
+    )
+  }
+
   <section class="section-tight">
-    <div class="wrap">
+    <div class="wrap sp-two">
       <div class="sp-prob">
         <p class="kicker">The problem</p>
         <p class="sp-prob-b">{problem}</p>
       </div>
+      {showPeek && <DeskPeek title={peekTitle} />}
     </div>
   </section>
 
@@ -188,7 +208,12 @@ const faqLd = faqs.length
   .sp-lead { max-width: 60ch; margin-top: 12px; }
   .sp-cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
 
-  .sp-prob { border-left: 3px solid var(--ink-1); padding-left: 20px; max-width: 68ch; }
+  .sp-tape { padding: 0 0 4px; }
+
+  /* Problem statement beside the live panel. Stacks below 900px with the panel FIRST — on a phone
+     the visual is what stops the scroll, and mobile is where most of this traffic will land. */
+  .sp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .sp-prob { border-left: 3px solid var(--ink-1); padding-left: 20px; }
   .sp-prob-b { font-size: 15px; line-height: 1.7; margin: 8px 0 0; }
 
   .sp-f { grid-template-columns: repeat(3, 1fr); }
@@ -208,5 +233,10 @@ const faqLd = faqs.length
   .dr-kicker { color: #8f8f88; }
   .sp-end-l { color: #c8c8c0; margin: 0; max-width: 52ch; }
 
-  @media (max-width: 900px) { .sp-f { grid-template-columns: 1fr; } .sp-end { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) {
+    .sp-f { grid-template-columns: 1fr; }
+    .sp-end { grid-template-columns: 1fr; }
+    .sp-two { grid-template-columns: 1fr; gap: 28px; }
+    .sp-two > :global(.dp) { order: -1; }
+  }
 </style>
