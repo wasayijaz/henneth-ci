@@ -61,14 +61,25 @@ Being *right* beats being established when the established answer is provably wr
 
 **This advantage is perishable.** It ends the moment competitors update.
 
-| # | Page | Role |
-|---|---|---|
-| 1 | How PSX settlement works: T+1 explained | **Pillar** |
-| 2 | Book closure, ex-date and buy-by, under T+1 | Spoke |
-| 3 | Ready, spot, futures: PSX market types | Spoke |
-| 4 | How the KSE-100 actually works (free-float, divisor, sector rule) | Spoke |
+| # | Page | Role | Status |
+|---|---|---|---|
+| 1 | How PSX settlement works: T+1 explained | **Pillar** | drafted, `draft: true` |
+| 2 | Book closure, ex-date and buy-by, under T+1 | Spoke | ⛔ blocked — see below |
+| 3 | Ready, spot, futures: PSX market types | Spoke | needs clause text |
+| 4 | How the KSE-100 actually works (free-float, divisor, sector rule) | Spoke | needs methodology PDF |
 
-Sources: PSX Regulations v09-Feb-2026 Ch.10, NCCPL circular. Already verified.
+Sources: PSX Regulations v09-Feb-2026 Ch.10, NCCPL circular. Already verified for the pillar.
+
+⛔ **Spoke 2 is gated, and the reason generalises.** Under T+2 the widely-cited rule was
+"ex-date = book closure start − 2". It is *obvious* that T+1 makes this − 1. **Do not write that
+until a regulation or PSX notice actually says it.** This spoke's entire value is being right
+where every other guide is stale; publishing our own unverified arithmetic would make us wrong in
+a more confident voice than the sources we are correcting. Same standard as Rule 2 on prices:
+derived is not sourced.
+
+(The desk has the mirror-image bug internally — `scripts/fetch_dividends.py` still computes
+`buy_by = book-closure start − 3 calendar days`, calibrated under T+2. It errs safe, but it is
+stale and is tracked separately.)
 
 ### Costs and tax — NOT a blog cluster. It lives on the tool pages.
 
