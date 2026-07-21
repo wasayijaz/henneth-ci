@@ -3,11 +3,17 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import { site } from '../../site.config.ts';
 import { getCollection } from 'astro:content';
+import { CLUSTERS } from '../../content.config.ts';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-const cats = ['All', 'Valuation', 'Market structure', 'Method', 'Sectors'];
+/* Derived from the schema's CLUSTERS rather than hand-listed. The hand-written version had drifted:
+   it offered 4 of the 6 clusters the schema knows, so a post tagged Macro or Astro rendered fine
+   and was unreachable from every chip. Only clusters that actually have posts are shown, so the
+   filter never offers a chip that leads to an empty grid. */
+const used = new Set(posts.map((p) => p.data.cluster).filter(Boolean));
+const cats = ['All', ...CLUSTERS.filter((c) => used.has(c))];
 
 /* Cluster -> sprite id. Falls back to the compass ("method") for a cluster the SEO agent invents
    later, so an unmapped value degrades to a sensible mark instead of a broken <use> ref. */

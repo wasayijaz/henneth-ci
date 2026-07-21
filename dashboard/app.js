@@ -5716,11 +5716,11 @@ function openAuth(mode) {
         <button data-m="signin" class="${mode === "signin" ? "on" : ""}">Sign in</button>
         <button data-m="signup" class="${mode === "signup" ? "on" : ""}">Create account</button>
       </div>
-      <button type="button" class="auth-google" id="authGoogle">
-        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.6z"/><path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3C3.7 21.4 7.6 24 12 24z"/><path fill="#FBBC05" d="M5.6 14.7a7.2 7.2 0 0 1 0-4.6v-3H1.8a12 12 0 0 0 0 10.6l3.8-3z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.2 15.1 0 12 0 7.6 0 3.7 2.6 1.8 6.4l3.8 3C6.5 6.7 9 4.8 12 4.8z"/></svg>
-        Continue with Google
-      </button>
-      <div class="auth-or"><span>or</span></div>
+      <!-- GOOGLE SIGN-IN REMOVED (owner, 2026-07-21) — email + password only for now.
+           To restore: put back a <button id="authGoogle"> here plus the "or" divider, and
+           re-add the signInWithOAuth handler below (kept in git history at this commit).
+           Worth knowing if it comes back: Supabase's captcha does NOT apply to the OAuth
+           redirect flow, so a Google button is an unprotected path to account creation. -->
       <form id="authform" autocomplete="on" novalidate>
         <label>Email
           <input type="email" id="authEmail" required autocomplete="email" placeholder="you@example.com" aria-describedby="errEmail">
@@ -5782,12 +5782,27 @@ function openAuth(mode) {
      field to read it. aria-pressed so a screen reader announces the state. ---- */
   const pwEl = document.getElementById("authPw");
   document.getElementById("authPeek").onclick = (ev) => {
+    /* preventDefault is the actual fix for the "laggy" toggle, and it is not obvious why.
+       This button sits INSIDE the <label> that wraps the password field, so a click on it is
+       also forwarded by the browser as an implicit activation of the labelled control — the
+       input gets a second synthetic click and refocus on every press. Two focus events plus a
+       type swap per tap is what produced the stutter; the handler itself measures ~0.1ms.
+       Stopping the label forwarding leaves exactly one state change per click. */
+    ev.preventDefault();
     const b = ev.currentTarget, show = pwEl.type === "password";
+    /* Swapping `type` resets the caret to the end in most browsers, so a peek mid-edit throws
+       the cursor away. Capture and restore it. Guarded: setSelectionRange is not supported on
+       every input type and throws rather than no-ops where it is not. */
+    let s = null, e2 = null;
+    try { s = pwEl.selectionStart; e2 = pwEl.selectionEnd; } catch {}
     pwEl.type = show ? "text" : "password";
     b.textContent = show ? "Hide" : "Show";
     b.setAttribute("aria-pressed", String(show));
     b.setAttribute("aria-label", show ? "Hide password" : "Show password");
-    pwEl.focus();
+    // preventScroll matters on phones: without it the refocus scrolls the modal and re-triggers
+    // the on-screen keyboard, which reads as a lurch every time you tap Show.
+    try { pwEl.focus({ preventScroll: true }); } catch { pwEl.focus(); }
+    if (s !== null) { try { pwEl.setSelectionRange(s, e2); } catch {} }
   };
 
   /* ---- strength meter (signup only). Scored on LENGTH first, because length is what actually
@@ -5829,18 +5844,10 @@ function openAuth(mode) {
     n?.addEventListener("input", () => setErr(id === "authEmail" ? "errEmail" : "errPw", ""));
   });
 
-  /* ---- Google. Supabase redirects back to this exact origin+path, so the SPA reopens where the
-     user left. Fails loudly: an OAuth provider that is not enabled in the Supabase dashboard
-     returns an error rather than throwing, and silently doing nothing on click is the worst
-     possible outcome for a sign-in button. ---- */
-  document.getElementById("authGoogle").onclick = async () => {
-    authMsg("Opening Google…");
-    const { error } = await sb.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: location.origin + location.pathname },
-    });
-    if (error) authMsg(friendlyAuthError(error) + " (If this is new, Google sign-in may not be enabled on the server yet.)", true);
-  };
+  /* The Google handler lived here and was removed with its button. It is deleted rather than
+     left behind guarded, because `document.getElementById("authGoogle").onclick = ...` throws on
+     a null element and would take the entire auth form down with it — the submit handler below
+     never gets attached, so the form silently does nothing when clicked. */
 
   document.getElementById("authform").onsubmit = async (e) => {
     e.preventDefault();
