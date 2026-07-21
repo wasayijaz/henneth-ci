@@ -11,11 +11,24 @@ const cols = [
       { href: '/plans', label: 'Plans' },
     ],
   },
+  /* The use-case pages are listed here AND in the Solutions nav, deliberately. A page built to
+     rank but reachable only from a footer is the doorway pattern Google targets — if it is worth
+     ranking it is worth navigating to. This column also does the internal-linking job: it points
+     site-wide authority at the pages that actually convert. */
+  {
+    title: 'Use cases',
+    links: [
+      { href: '/solutions/psx-research-for-new-investors', label: 'New investors' },
+      { href: '/solutions/psx-screener-and-strategies', label: 'Screener & strategies' },
+      { href: '/solutions/psx-broker-research-scorecard', label: 'Brokers & institutions' },
+    ],
+  },
   {
     title: 'Resources',
     links: [
       { href: '/research', label: 'Research' },
       { href: '/blog', label: 'Blog' },
+      { href: '/tools', label: 'Calculators' },
       { href: '/about', label: 'About' },
     ],
   },
@@ -70,7 +83,9 @@ const cols = [
   .ft { background: var(--ink-1); color: var(--bg); padding: 56px 0 24px; }
   .ft-in {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    /* Brand + four link columns. Was 1.5fr and three; a fourth column was added for the use-case
+       pages, and without widening this the last column wrapped. */
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
     gap: 32px;
     padding-bottom: 40px;
   }

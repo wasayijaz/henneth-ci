@@ -5,11 +5,18 @@ import { site } from '../site.config.ts';
 
 const enter = (p: string) => `${site.appUrl}/?plan=${p}`;
 
+/* Three of these now point at REAL URLs rather than anchors on this page. An anchor cannot rank:
+   four audiences sharing one URL means one title and one description competing across four
+   different searches, so the page ranks for none of them well. Each use-case page targets its own
+   commercial-intent query, and this page becomes the hub that links them.
+
+   The astrology segment stays an anchor for now — it has no separate page yet, and shipping a thin
+   fourth variant purely for symmetry is the doorway pattern the others are built to avoid. */
 const jump = [
-  { tag: '01', title: 'Retail investors', href: '#retail', icon: 'learn' },
-  { tag: '02', title: 'Active traders', href: '#traders', icon: 'strategies' },
+  { tag: '01', title: 'New investors', href: '/solutions/psx-research-for-new-investors', icon: 'learn' },
+  { tag: '02', title: 'Screener & strategies', href: '/solutions/psx-screener-and-strategies', icon: 'strategies' },
   { tag: '03', title: 'The astrology-curious', href: '#astro', icon: 'astro' },
-  { tag: '04', title: 'Brokers & institutions', href: '#brokers', icon: 'portfolio' },
+  { tag: '04', title: 'Brokers & institutions', href: '/solutions/psx-broker-research-scorecard', icon: 'portfolio' },
 ];
 
 const segments = [

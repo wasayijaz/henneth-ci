@@ -1,0 +1,76 @@
+---
+import SolutionPage from '../../components/SolutionPage.astro';
+---
+
+<SolutionPage
+  title="PSX Research for New Investors — Start Without Guessing"
+  h1="PSX research for people starting out"
+  description="A guided way to read Pakistani companies — plain-English company reads, a practice portfolio with virtual money, and calculators in rupees. Research, not tips."
+  path="/solutions/psx-research-for-new-investors/"
+  kicker="For new investors"
+  icon="learn"
+  lead="Learn to read a company properly, on real PSX data, before you risk anything."
+  problem="Most people start investing in Pakistan by asking someone what to buy. The tips are free and the losses are not. What is genuinely missing is not another signal — it is a way to look at a company and understand whether the business is healthy and whether the price is reasonable, without needing a finance degree to do it."
+  appPlan="investor"
+  features={[
+    {
+      icon: 'learn',
+      title: 'Company reads in plain English',
+      body: 'What the business earns, what it owes, and what changed this quarter — written the way you would explain it to a friend, from real filings.',
+    },
+    {
+      icon: 'practice',
+      title: 'A practice portfolio first',
+      body: 'Virtual money at real market prices, with a teaching commission applied so costs are never invisible. Make your early mistakes where they cost nothing.',
+    },
+    {
+      icon: 'method',
+      title: 'The working is shown',
+      body: 'Every valuation exposes its arithmetic. You are meant to disagree with it — that is easier when you can see how it was reached.',
+    },
+  ]}
+  faqs={[
+    {
+      q: 'Do I need to know accounting to use this?',
+      a: 'No. That is the point of the plain-English reads. Where a term matters — book closure, free float, settlement — it is explained the first time it appears rather than assumed.',
+    },
+    {
+      q: 'Will it tell me what to buy?',
+      a: 'No, and that is deliberate. Henneth is research tooling, not an advisory service. It shows you what a company earns, what it might be worth and what changed, then you decide. Anything that promises certainty about a share price is selling something.',
+    },
+    {
+      q: 'How much money do I need to start?',
+      a: 'You can use the practice portfolio with no money at all. For real investing, the PSX minimum is low — the harder constraint is understanding what you are buying, which is what the desk is for.',
+    },
+    {
+      q: 'Is the data real or delayed?',
+      a: 'Prices and filings come from the desk’s own data layer and carry the date they were pulled. Where a figure is unavailable, the desk says unknown rather than estimating.',
+    },
+  ]}
+>
+  <h2 class="mid-h">Start with the free calculators</h2>
+  <p class="mid-p">
+    You do not need an account to use these, and they answer the questions most new investors
+    actually have first — what a lump sum becomes, what monthly saving adds up to, and what
+    inflation quietly takes back.
+  </p>
+  <ul class="mid-l">
+    <li><a href="/tools/compound-interest-calculator/">Compound interest calculator</a> — what a lump sum grows to, and what it buys after inflation</li>
+    <li><a href="/tools/sip-calculator/">Monthly investment calculator</a> — what saving a fixed amount each month turns into</li>
+    <li><a href="/tools/inflation-calculator/">Inflation calculator</a> — anchored to Pakistan's latest reported CPI</li>
+    <li><a href="/tools/savings-goal-calculator/">Savings goal calculator</a> — priced at what the goal will actually cost</li>
+  </ul>
+  <p class="mid-p">
+    When you want to understand how the market itself works, the
+    <a href="/blog/">writing</a> covers the mechanics — settlement, book closure, how the KSE-100
+    is actually built — with the primary sources linked so you can check them.
+  </p>
+</SolutionPage>
+
+<style>
+  .mid-h { font-size: 16px; margin: 0 0 12px; }
+  .mid-p { font-size: 13px; line-height: 1.75; color: var(--ink-2); max-width: 68ch; margin: 0 0 14px; }
+  .mid-l { max-width: 68ch; padding-left: 20px; font-size: 13px; line-height: 1.75; color: var(--ink-2); margin: 0 0 16px; }
+  .mid-l li { margin-bottom: 7px; }
+  .mid-l a, .mid-p a { text-decoration: underline; text-underline-offset: 2px; }
+</style>
