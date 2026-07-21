@@ -15,8 +15,9 @@ const enter = (p: string) => `${site.appUrl}/?plan=${p}`;
 const jump = [
   { tag: '01', title: 'New investors', href: '/solutions/psx-research-for-new-investors', icon: 'learn' },
   { tag: '02', title: 'Screener & strategies', href: '/solutions/psx-screener-and-strategies', icon: 'strategies' },
-  { tag: '03', title: 'The astrology-curious', href: '#astro', icon: 'astro' },
-  { tag: '04', title: 'Brokers & institutions', href: '/solutions/psx-broker-research-scorecard', icon: 'portfolio' },
+  { tag: '03', title: 'Dividend calendar & yields', href: '/solutions/psx-dividend-calendar-and-yields', icon: 'dividends' },
+  { tag: '04', title: 'The astrology-curious', href: '#astro', icon: 'astro' },
+  { tag: '05', title: 'Brokers & institutions', href: '/solutions/psx-broker-research-scorecard', icon: 'portfolio' },
 ];
 
 const segments = [
@@ -222,7 +223,7 @@ const caps: [string, string, string, string][] = [
   .ph-lead { max-width: 620px; }
   /* Four columns for four segments. At three it wrapped one item onto a second row and left a
      dead cell beside it, which read as a missing card rather than a deliberate layout. */
-  .jump { grid-template-columns: repeat(4, 1fr); }
+  .jump { grid-template-columns: repeat(5, 1fr); }
   .jump-i { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   /* Smaller well than a tile's 34px — this is a nav row, so the mark identifies without
      competing with the label beside it. */
