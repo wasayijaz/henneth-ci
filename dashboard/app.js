@@ -5179,11 +5179,24 @@ function animateIn() {
 /* ==========================================================================================
    THE SIGN-IN GATE
 
-   The terminal is members-only. Everything below is a PRODUCT gate — it controls the funnel,
-   it is NOT a paywall: this is a static site, so every state/*.json is still fetchable by
-   anyone who knows the URL (rooms.json, backtests.json, fairvalue.json all serve 200 to an
-   anonymous curl). Real protection means serving state/ through an authenticated function or
-   moving paid slices into Supabase behind RLS. Do not mistake this screen for that.
+   The terminal is members-only. Everything below is the PRODUCT gate — it decides which ROUTES
+   render for a signed-out visitor, and it controls the funnel.
+
+   IT IS NOT THE ONLY GATE ANY MORE, and the distinction matters. This comment used to end
+   "every state/*.json is still fetchable by anyone who knows the URL — do not mistake this screen
+   for that", which was true and important right up until 2026-07-21. It is now wrong. The DATA
+   layer is gated independently by `middleware.js`, Vercel Edge Middleware matching `/state/:path*`,
+   which verifies a Supabase ES256 access token against the project's published JWKS before the
+   CDN serves the file. `curl https://desk.henneth.app/state/rooms.json` returns 401, and
+   docs/OPERATIONS.md §9b keeps that as a standing regression check.
+
+   So there are two independent gates and they fail independently:
+     * THIS one hides routes in the browser. Bypassable by anyone reading the JS — it always was.
+     * middleware.js withholds the research itself. Not bypassable from the client.
+
+   Which means: do not add a route here and assume the data behind it is protected, and do not
+   remove a file from middleware.js's PUBLIC_FILES set expecting this screen to cover it. They
+   guard different things.
 
    OPEN_ROUTES is the deliberate exception list. #/cast and #/mychart stay open because casting
    a birth chart without an account IS the acquisition funnel — guestChart() + migrateGuestChart()
