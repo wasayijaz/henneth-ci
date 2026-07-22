@@ -218,11 +218,16 @@ function openWhatsNew(cl) {
     </div>`).join("");
   const ov = document.createElement("div");
   ov.className = "pl-overlay wn-overlay";
-  ov.innerHTML = `<div class="pl-panel wn-panel">
-    <button class="pl-x" aria-label="Close">✕</button>
-    <h2>What's new</h2>
-    <p class="sub">Changes a reader would notice. The full engineering record stays in the repo.</p>
-    ${body}
+  // `wn-panel` carries its own box (background, border, max-height, scroll). It used to also carry
+  // `pl-panel` — a class that has never existed: the lesson player's box is `.pl-box`. Nothing
+  // styled the panel, so it rendered as bare text floating over the dimmed page.
+  ov.innerHTML = `<div class="wn-panel" role="dialog" aria-modal="true" aria-label="What's new">
+    <div class="wn-top">
+      <h2>What's new</h2>
+      <button class="pl-x wn-x" aria-label="Close">✕</button>
+    </div>
+    <p class="sub wn-sub">Changes a reader would notice. The full engineering record stays in the repo.</p>
+    <div class="wn-body">${body}</div>
   </div>`;
   const close = () => { ov.remove(); renderVersion(); };
   ov.onclick = e => { if (e.target === ov || e.target.classList.contains("pl-x")) close(); };
