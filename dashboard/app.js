@@ -187,7 +187,7 @@ async function renderHeader() {
     gc.title = `Geopolitical & market-stress radar: ${geo.score}/100 (${geo.band}). Click for the factors.`;
     gc.onclick = () => location.hash = "#/macro";
   } else if (gc) { gc.style.display = "none"; }
-  $("regime").title = reg === "—" ? "Macro regime — run the desk to populate" :
+  $("regime").title = reg === "—" ? "Macro regime — not published yet this cycle" :
     `Macro regime = the desk's risk posture (${reg}). ${reg === "risk-on" ? "Full setups allowed." : reg === "risk-off" ? "Max 2 setups, defensive only." : "Neutral — normal caution."} Click for the drivers.`;
   $("updated").textContent = "quant " + (quant?.updated || "—") + " · live " + (live?.updated || "—");
 }
@@ -747,14 +747,18 @@ async function pageStrategies() {
       <button class="note-save" onclick="addBoardTicker()">Add to board</button>
     </div>`;
 
+  /* Publication frame (§4). These read the backtests already computed by backtest.py in the
+     deterministic cycle — no user action starts a backtest, and the numbers are identical for
+     every subscriber. The copy says "read", not "run", because "run" described work being done
+     for this reader on request, which is not what happens. */
   const runBar = pending.length ? `<button class="run-desk run-strat" onclick="playBoardRun()">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>Run the strategy library on ${anyRan ? `your ${pending.length} new stock${pending.length > 1 ? "s" : ""}` : `your ${board.length} stock${board.length > 1 ? "s" : ""}`}</b><i>Backtests all ${nStrat} of the desk's strategies across ${pending.length === 1 ? "its" : "each stock's"} ~19-year history — costs included, out-of-sample checked — then ranks every stock–strategy pair that survived.</i></span>
-    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">Run ›</span></span>
+    <span class="run-txt"><b>The strategy library on ${anyRan ? `your ${pending.length} new stock${pending.length > 1 ? "s" : ""}` : `your ${board.length} stock${board.length > 1 ? "s" : ""}`}</b><i>All ${nStrat} of the desk's strategies, backtested across ${pending.length === 1 ? "its" : "each stock's"} ~19-year history — costs included, out-of-sample checked — with every stock–strategy pair that survived, ranked.</i></span>
+    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">Read ›</span></span>
   </button>` : board.length ? `<button class="run-desk run-strat ran" onclick="playBoardRun()">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>Run the strategy library again on your ${board.length} stock${board.length > 1 ? "s" : ""}</b><i>The desk re-backtests all ${nStrat} strategies across every stock on your board and re-ranks what survives. Worth re-running as the library and the price history move on.</i></span>
-    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">Run again ›</span></span>
+    <span class="run-txt"><b>The strategy library on your ${board.length} stock${board.length > 1 ? "s" : ""}</b><i>All ${nStrat} strategies across every stock on your board, re-ranked by what survives. Worth revisiting as the library and the price history move on.</i></span>
+    <span class="run-meta">${bt?.updated ? `<span class="run-last">Library updated · ${esc(String(bt.updated).slice(0, 10))}</span>` : ""}<span class="run-go">Replay ›</span></span>
   </button>` : "";
 
   // ---- results: per board stock. A stock shows NOTHING until the library has actually run on it. ----
@@ -762,7 +766,7 @@ async function pageStrategies() {
     const list = smap?.tickers?.[s] || [];
     const head = `<div class="sb-res-head clickable" onclick="location.hash='#/ticker/${esc(s)}'"><b>${esc(s)}</b><span class="sub">${esc((names[s]?.name || "").slice(0, 30))}</span><span class="pill ${stratRunOn(s) ? (list.length ? "ok" : "") : "wait"}">${stratRunOn(s) ? list.length + " proven" : "not run yet"}</span></div>`;
     if (!stratRunOn(s)) return `<div class="card" style="padding:0">${head}
-      <div class="empty" style="padding:14px 17px">The desk hasn't run the library on <b>${esc(s)}</b> yet — hit <b>Run ›</b> above and it backtests all ${nStrat} strategies across ${esc(s)}'s own ~19 years of price history, then shows what actually held up right here.</div></div>`;
+      <div class="empty" style="padding:14px 17px">The library's results for <b>${esc(s)}</b> aren't open yet — hit <b>Read ›</b> above for all ${nStrat} strategies backtested across ${esc(s)}'s own ~19 years of price history, and what actually held up.</div></div>`;
     return `<div class="card" style="padding:0">${head}
       ${list.length ? `<table><thead><tr><th>Strategy</th><th class="r">Win rate</th><th class="r">Avg net/trade</th><th class="r">Trades</th><th class="r">Out-of-sample</th></tr></thead><tbody>${
         list.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td>
@@ -809,8 +813,8 @@ async function pageStrategies() {
     ${!me && board.length ? `<span class="sub" style="display:block;margin-top:4px">Your board lives in this session only — <a style="color:var(--accent);cursor:pointer" onclick="openAuth('signup')">sign in</a> to keep it.</span>` : ""}
   </div>
   ${isSubscribed() ? runBar + results
-    : planWall("Run the desk on your board",
-      "Pick your stocks above, then run every strategy on each — ~19 years of that stock's own history per rule, with win rate, expectancy after costs and out-of-sample honesty shown live.")}
+    : planWall("The strategy library on your board",
+      "Pick your stocks above to read every strategy's results on each — ~19 years of that stock's own history per rule, with win rate, expectancy after costs and out-of-sample honesty.")}
 
   <div class="seg"><h2>The library</h2><div class="ln"></div></div>
   ${dict}
@@ -1450,7 +1454,7 @@ async function playAstroBoardRun() {
         <div class="rp-reveal-head"><b>Your charts · ${board.map(esc).join(" · ")}</b><span>read sidereal, Lahiri ${esc(ayan)}° — the tradition's reading of each name</span></div>
         ${board.map(s => `<div class="card ar-card" style="margin-top:10px">${composeAstroReading(s, data)}</div>`).join("")}
         <div class="rp-reveal-foot"><span>The tradition's reading — for exploration, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button></span></div>
       </div>`;
     },
   });
@@ -2461,26 +2465,34 @@ async function pageTicker(sym, _retry = 0) {
     : `<div class="seg"><h2>Your private note</h2><div class="ln"></div></div>
     <div class="card"><div class="empty">Sign in to keep a private note on ${esc(sym)} — your own thesis and reminders, saved to your account and visible only to you.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div></div>`;
 
-  // ---- prominent "Run the desk" bar: gates the Desk Room analysis. Running it reveals the
-  // results (in a modal + inline on the page) and shows the last-run date, so users come back
-  // as the desk's analysis refreshes on the backend. ----
+  /* ---- The Desk Room reveal bar.
+     PUBLICATION FRAME (docs/PUBLICATION_RESTRUCTURE.md §4). This button has never triggered
+     anything: it renders only when `hvRoom` exists — i.e. when the session is ALREADY in
+     state/rooms.json — and playDeskReplay() replays a debate that was written on the desk's own
+     editorial schedule by room_queue.py, identically for every subscriber.
+     The old copy ("Run the desk on FFC", "Run ›", "Once it finishes…") claimed the opposite:
+     on-demand analysis performed for this reader. That is the advisory framing the restructure
+     exists to remove, and it was never even true — the desk was publication-shaped underneath and
+     marketing itself as something riskier than it is.
+     So: reveal is described as reveal, and the publication date leads. ---- */
   const lastRun = room ? String(room.built || room.dossier_asof || "").slice(0, 16) : "";
   const deskRan = (() => { try { return !!sessionStorage.getItem("deskran:" + sym); } catch (e) { return false; } })();
   const runDeskBar = hvRoom ? `<button class="run-desk ${deskRan ? "ran" : ""}" onclick="playDeskReplay('${esc(sym)}')">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>Run the desk on ${esc(sym)}</b><i>A chartist, a fundamentalist, a bull, a bear and a chair debate ${esc(sym)}'s conviction and settle on a house view. Watch them work through it.</i></span>
-    <span class="run-meta">${lastRun ? `<span class="run-last">Last run · ${esc(lastRun)}</span>` : ""}<span class="run-go">${deskRan ? "Run again ›" : "Run ›"}</span></span>
+    <span class="run-txt"><b>The desk's debate on ${esc(sym)}</b><i>A chartist, a fundamentalist, a bull, a bear and a chair argue ${esc(sym)} and settle on a house view. Watch it play out.</i></span>
+    <span class="run-meta">${lastRun ? `<span class="run-last">Published · ${esc(lastRun)}</span>` : ""}<span class="run-go">${deskRan ? "Replay ›" : "Read ›"}</span></span>
   </button>` : "";
   const deskStub = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>
-    <div class="card"><div class="empty">Run the desk on ${esc(sym)} — use the <b>Run ›</b> button near the top ↑. Once it finishes, the full analyst debate and house view appear right here.</div></div>`;
+    <div class="card"><div class="empty">The desk's published debate on ${esc(sym)} — open it with <b>Read ›</b> near the top ↑. The full analyst argument and house view appear right here.</div></div>`;
 
-  // ---- "run the strategy library" bar: gates the backtest results the same way ----
+  // ---- The strategy-library reveal bar. Same correction: playStrategyRun() reads the backtests
+  // already computed by backtest.py in the deterministic cycle. It does not run a backtest. ----
   const stratRan = stratRunOn(sym);
   const runStratBar = `<button class="run-desk run-strat ${stratRan ? "ran" : ""}" onclick="playStrategyRun('${esc(sym)}')">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>Run the strategy library on ${esc(sym)}</b><i>Backtest all ${bt?.n_strategies ?? 52} of the desk's strategies across ${esc(sym)}'s ~19-year history and see which actually held up — win rate, expectancy, out-of-sample.</i></span>
-    <span class="run-meta"><span class="run-go">${stratRan ? "Run again ›" : "Run ›"}</span></span></button>`;
-  const stratStub = `<div class="card"><div class="empty">Run the strategy library on ${esc(sym)} — the <b>Run ›</b> button above ↑. It backtests all ${bt?.n_strategies ?? 52} strategies on ${esc(sym)}'s history and shows which ones held up here.</div></div>`;
+    <span class="run-txt"><b>The strategy library on ${esc(sym)}</b><i>All ${bt?.n_strategies ?? 52} of the desk's strategies, backtested across ${esc(sym)}'s ~19-year history — which held up, and which did not.</i></span>
+    <span class="run-meta"><span class="run-go">${stratRan ? "Replay ›" : "Read ›"}</span></span></button>`;
+  const stratStub = `<div class="card"><div class="empty">All ${bt?.n_strategies ?? 52} strategies, backtested on ${esc(sym)}'s history — open the results with <b>Read ›</b> above ↑.</div></div>`;
 
   /* ---- The Signal Stack: every lens the desk has on this name, in ONE grammar
      (lean · conviction · why), so they can be read against each other in five seconds.
@@ -2510,7 +2522,7 @@ async function pageTicker(sym, _retry = 0) {
   const taSt = room?.ta_memo?.technical_stance, faSt = room?.fa_memo?.fundamental_stance;
   const deskLean = stanceVal(taSt) + stanceVal(faSt);
   const roomLens = !hvRoom ? { k: "", v: "In queue", conv: "", note: `${esc(sym)} hasn't been through the Desk Room yet — the analysts cover names in rotation, and results or high-impact news jump the queue.` }
-    : !deskRan ? { locked: true, run: `playDeskReplay('${esc(sym)}')`, note: "A chartist, a fundamentalist, a bull and a bear argue it out; the Chair settles it. Run the desk to see where they land." }
+    : !deskRan ? { locked: true, run: `playDeskReplay('${esc(sym)}')`, note: "A chartist, a fundamentalist, a bull and a bear argue it out; the Chair settles it. Read the debate to see where they landed." }
       : { ...leanChip(deskLean), v: deskLean > 0 ? "Bullish" : deskLean < 0 ? "Bearish" : "Split",
         conv: hvRoom.conviction || "", note: `charts ${esc(taSt || "—")} · fundamentals ${esc(faSt || "—")}${hvRoom.ta_fa_alignment ? " · the two desks " + esc(String(hvRoom.ta_fa_alignment).replace(/_/g, " ")) : ""}` };
 
@@ -3096,7 +3108,7 @@ async function playDeskReplay(sym) {
           </div>
         </div>
         <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" data-a="deep" data-target="room-transcript">Read the full transcript ›</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="room-transcript">Read the full transcript ›</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
       </div>`;
     },
   });
@@ -3139,7 +3151,7 @@ async function playStrategyRun(sym) {
           proven.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td><td class="r num">${pct(t.hit_rate)}</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td><td class="r num">${pct(t.oos_hit)}</td></tr>`).join("")}</tbody></table></div>`
           : `<div class="card"><div class="empty">No strategy cleared the bar on ${esc(sym)} — none held win rate ≥55%, positive expectancy after costs, AND profitability out-of-sample. The desk wouldn't signal it. That's a finding, not a gap.</div></div>`}
         <div class="rp-reveal-foot"><span>Backtested on ${esc(sym)}'s own ~19-year history, costs included, checked on unseen data. Past performance does not predict future results. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button><button class="rp-btn2" data-a="deep" data-target="testlog">Read the full test log ›</button><button class="rp-btn2" onclick="location.hash='#/strategies'">All strategies ›</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="testlog">Read the full test log ›</button><button class="rp-btn2" onclick="location.hash='#/strategies'">All strategies ›</button></span></div>
       </div>`;
     },
   });
@@ -3220,7 +3232,7 @@ async function playBoardRun() {
           : `<div class="card"><div class="empty">No strategy cleared the bar on ${board.length === 1 ? "this stock" : "any of these stocks"} — none held win rate ≥55%, positive expectancy after costs, AND profitability out-of-sample. The desk wouldn't signal them. That's a finding, not a gap.</div></div>`}
         ${blanks.length && pairs.length ? `<div class="sub" style="margin-top:10px">Nothing cleared the bar on <b>${blanks.map(esc).join(", ")}</b> — their histories are too choppy for these rules.</div>` : ""}
         <div class="rp-reveal-foot"><span>Backtested on each stock's own ~19-year history, costs included, checked on unseen data. Past performance does not predict future results. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Run again</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button></span></div>
       </div>`;
     },
   });
@@ -6218,7 +6230,7 @@ async function pagePortfolio() {
   if (rows.length) {
     if (!hasFeature("xray")) {
       xray = planWall("Portfolio X-ray",
-        "Run the desk's own risk rules over your actual holdings: weighted beta, blended valuation, expected dividend income from 18 years of real payout history, and how your concentration reads against the rules the desk imposes on itself.");
+        "Your holdings measured against the desk's own published risk rules: weighted beta, blended valuation, expected dividend income from 18 years of real payout history, and how your concentration reads against the limits the desk imposes on itself.");
     } else {
       const FS = fsAll?.tickers || {}, FV = fvAll?.tickers || {};
       const wsum = withW.reduce((a, r) => a + (r.mv || 0), 0) || 1;
@@ -6416,7 +6428,7 @@ const WIZ_PRO = [
   { kind: "quiz", key: "sectors", multi: true, title: "Which sectors do you actually trade?", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
   { kind: "tour", route: "#/board", title: "Board — the whole tape", body: "Live moves, signals that fired from backtested rules, predictability ranks. Everything is clickable through to the name." },
   { kind: "tour", route: "#/strategies", title: "Strategies — 70 rules, tested per name", body: "Each strategy is backtested on every stock's own ~19-year history: win rate, expectancy AFTER costs, and out-of-sample. Names below the liquidity floor are charged their real estimated spread, not a flat fee — so a thin stock can't fake an edge." },
-  { kind: "tour", route: "#/ticker/FFC", title: "The Desk Room — where it argues with itself", body: "Open any ticker and run the desk. The TA and FA lanes are kept deliberately separate so they can disagree, and the Chair must name the strongest point against its own view. Low conviction is a valid answer here." },
+  { kind: "tour", route: "#/ticker/FFC", title: "The Desk Room — where it argues with itself", body: "Open any ticker and read the desk's debate. The TA and FA lanes are kept deliberately separate so they can disagree, and the Chair must name the strongest point against its own view. Low conviction is a valid answer here." },
   { kind: "tour", route: "#/leaderboard", title: "Scores — everyone on the record", body: "Every call is timestamped and graded against what price actually did. Ours and the brokerage houses'. Misses included — that's the point." },
   { kind: "done", title: "That's the tour.", body: "Search is `/` from anywhere. The desk never places orders and never tells you to buy — it shows its working and you decide." },
 ];

@@ -58,7 +58,16 @@ TIMEOUT = 20
 
 # The public exception carved out of the account gate (middleware.js PUBLIC_FILES).
 # Used here as the one content check we can still do without a token.
-PUBLIC_PROBE_FILE = "natal_ephem.json"
+#
+# This was natal_ephem.json until 2026-07-22, borrowed from the #/cast funnel. Two reasons it
+# moved to a purpose-built file (written by build_dashboard.py):
+#   * docs/PUBLICATION_RESTRUCTURE.md §5 cuts personal astro from launch. Flag natal off with the
+#     probe still pointed at it and this check silently stops testing anything — it would not fail
+#     loudly, it would pass meaninglessly, which is the worst failure mode a watchdog can have.
+#   * An ephemeris is STATIC physics. It cannot go stale, so it could never detect the stale
+#     deploy this script exists to catch. public_probe.json carries the cycle timestamp, so
+#     freshness is now checkable WITHOUT a token for the first time.
+PUBLIC_PROBE_FILE = "public_probe.json"
 
 # A file that is ALWAYS gated (no legitimate reason it would ever be public) — used as the
 # security-regression tripwire from docs/OPERATIONS.md §9b: "this must stay 401 forever".
@@ -146,8 +155,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=BASE_DEFAULT)
     ap.add_argument("--max-age-days", type=int, default=5,
-                    help="how stale the freshest data may be, IF a gated file is ever "
-                         "unauthenticated-reachable (should not normally happen)")
+                    help="how stale the freshest data may be. Applies to the public probe "
+                         "(always checkable) and to any gated file that is ever "
+                         "unauthenticated-reachable (which should not normally happen)")
     args = ap.parse_args()
     base = args.base
     BASE_CHECKED = base
@@ -172,6 +182,18 @@ def main():
     if eph is None:
         problems.append(f"{PUBLIC_PROBE_FILE} (public, ungated) unreachable/empty "
                         f"({err}) — /state/ may be broken, not just gated")
+    else:
+        # Freshness, checkable without a credential now that the probe carries the cycle stamp.
+        # A propagated-but-stale deploy is invisible to every other unauthenticated check here:
+        # the shell loads, the gated files 401 correctly, and everything looks healthy while the
+        # site serves last week's data.
+        stamp = eph.get("updated")
+        age_d = days_old(stamp)
+        if age_d is None:
+            notes.append(f"{PUBLIC_PROBE_FILE} has no readable `updated` stamp ({stamp!r})")
+        elif age_d > args.max_age_days:
+            problems.append(f"{PUBLIC_PROBE_FILE} is {age_d}d old (updated {stamp}) — "
+                            f"the live deploy is stale, not just gated")
 
     # 2) the security-regression tripwire: an always-gated file must stay 401.
     def _regression_content_check(_data):

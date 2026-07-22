@@ -74,6 +74,26 @@ def main():
         ) if risk.get(k) is not None},
     })
 
+    # THE PUBLIC PROBE. One file, deliberately ungated, whose entire job is to be fetchable
+    # without a token so watchdog.py can prove /state/ is reachable and the deploy propagated.
+    #
+    # That role used to be played by natal_ephem.json, which was public for an unrelated reason
+    # (the #/cast funnel). Two problems with borrowing it. First, PUBLICATION_RESTRUCTURE.md §5
+    # cuts personal astro — flag natal off and the watchdog's only unauthenticated content check
+    # silently stops testing anything, passing meaninglessly. Second, an ephemeris is STATIC
+    # physics: it cannot go stale, so it could never detect the stale deploy the watchdog exists
+    # to catch.
+    #
+    # A purpose-built probe fixes both. It carries a timestamp, so staleness is now detectable
+    # without a token for the first time. It follows desk_rules.json's allow-list discipline
+    # above: it is built from a literal, so nothing can leak into it by default.
+    save_json(STATE / "public_probe.json", {
+        "updated": time.strftime("%Y-%m-%d %H:%M"),
+        "gate": "account-required",
+        "note": "Deliberately public. Exists so the deploy can be health-checked without a "
+                "credential. Carries no desk output — every research file requires an account.",
+    })
+
     # PRE-DEPLOY GATE — this is the last step the CI pipeline runs before it copies
     # state/ into the published site (workflow runs it under `set -e`). preflight
     # trips only on STRUCTURAL corruption (empty quant, missing joined fields, NaN),

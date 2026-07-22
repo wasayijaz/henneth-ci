@@ -24,20 +24,28 @@
 
 const JWKS_URL = 'https://qteoncckohuoatbjjykb.supabase.co/auth/v1/.well-known/jwks.json';
 
-/* THE ONE DELIBERATE EXCEPTION (owner decision, 2026-07-21).
- * #/cast — casting a birth chart — stays open, because it is the top of the acquisition funnel:
- * a stranger gets real value first and the chart follows them into the account they create
- * afterwards (see migrateGuestChart in app.js). Gating it would close the funnel that the paid
- * traffic is about to land on.
+/* THE DELIBERATE EXCEPTIONS. Two different reasons; keep them distinguishable.
  *
- * These two files are an ASTRONOMICAL EPHEMERIS — planetary positions over time. They are public
- * domain physics that anyone can compute with open-source libraries. They are not research, they
- * contain no desk output, and they reveal nothing about how the desk reasons. Everything that IS
- * proprietary — every backtest, valuation, debate, score and claim — requires an account.
+ * 1. natal_ephem.bin / natal_ephem.json (owner decision, 2026-07-21).
+ *    #/cast — casting a birth chart — stays open, because it is the top of the acquisition funnel:
+ *    a stranger gets real value first and the chart follows them into the account they create
+ *    afterwards (see migrateGuestChart in app.js).
+ *    These are an ASTRONOMICAL EPHEMERIS — planetary positions over time. Public-domain physics
+ *    anyone can compute with open-source libraries. Not research, no desk output, and they reveal
+ *    nothing about how the desk reasons.
+ *    NOTE: docs/PUBLICATION_RESTRUCTURE.md §5 cuts personal astro from launch. When that lands,
+ *    these two come OUT of this set — but only after the probe below is live, never before, or
+ *    watchdog.py loses its unauthenticated health check.
+ *
+ * 2. public_probe.json — written by build_dashboard.py, exists solely to be fetched without a
+ *    credential so watchdog.py can prove the deploy propagated and /state/ is reachable. Built
+ *    from a literal with a timestamp and nothing else.
  *
  * Add to this set ONLY if the same test passes: is the file public knowledge that happens to be
- * cached here, rather than something the desk produced? */
-const PUBLIC_FILES = new Set(['natal_ephem.bin', 'natal_ephem.json']);
+ * cached here (or infrastructure with no desk output), rather than something the desk produced?
+ * Everything proprietary — every backtest, valuation, debate, score and claim — requires an
+ * account. */
+const PUBLIC_FILES = new Set(['natal_ephem.bin', 'natal_ephem.json', 'public_probe.json']);
 
 /* JWKS cached per edge isolate. Supabase rotates signing keys rarely; an hour of staleness costs
  * at most one failed verification after a rotation, and the next request refetches. */
