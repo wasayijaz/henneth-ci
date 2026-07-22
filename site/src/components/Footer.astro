@@ -144,4 +144,25 @@ const cols = [
   @media (max-width: 520px) {
     .ft-in { grid-template-columns: 1fr; gap: 26px; }
   }
+
+  /* The footer carries seventeen links, and on a phone every one of them was an 11px word 14px
+     tall — the densest cluster of unhittable targets on the site. Each link becomes its own 44px
+     row instead, which is why the li margin goes to zero: the row supplies the spacing now. */
+  @media (max-width: 720px) {
+    .ft { padding: 44px 0 24px; }
+    .ft-h { font-size: 11px; margin-bottom: 6px; }
+    .ft-blurb { font-size: 13px; }
+    .ft-col li { margin-bottom: 0; }
+    .ft-col a {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      font-size: 12px;
+    }
+    .ft-base p { font-size: 11.5px; }
+    /* Stacked, the wordmark becomes a full-width row — so it reads as a big target while actually
+       being 25px of it. align-self keeps the box from stretching to the column width it does not
+       need; the height is what was missing. */
+    .wordmark { min-height: 44px; align-items: center; align-self: start; }
+  }
 </style>

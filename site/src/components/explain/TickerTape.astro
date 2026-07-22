@@ -73,10 +73,20 @@ const rows = board.length ? board : [];
   .tape-i i.up { color: #4ec38a; }
   .tape-i i.dn { color: #ef7d63; }
 
+  /* #8f8f88, not #6f6f72: this is the one line under the tape that says the numbers are real, and
+     against #101314 the darker grey landed at about 4:1 — under AA for text this small. Same muted
+     tone every other dark surface on the site uses. */
   .tape-s {
     margin: 0; padding: 7px 16px; border-top: 1px solid #2a2a28; background: #101314;
     font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: #6f6f72;
+    text-transform: uppercase; color: #8f8f88;
+  }
+
+  /* The caption is provenance, not part of the marquee it sits under — the tape can stay
+     decorative at 10.5px, but "real closes from the desk's data layer" is the sentence that makes
+     the whole component mean anything. It wraps freely, so width is not a constraint. */
+  @media (max-width: 720px) {
+    .tape-s { font-size: 11px; letter-spacing: 0.06em; }
   }
 
   @keyframes tape {

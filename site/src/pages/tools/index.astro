@@ -105,7 +105,7 @@ const itemLd = {
 
 <Base
   title="Free PSX & Pakistan Investment Calculators"
-  description="Free calculators for Pakistani investors — compound growth, monthly SIP, inflation, savings goals and home loans. In rupees, anchored to real Pakistani rates. No sign-up."
+  description="Free calculators for Pakistani investors — compound growth, monthly SIP, inflation, savings goals and home loans. In rupees, no sign-up."
   path="/tools/"
   active="tools"
 >
@@ -205,4 +205,12 @@ const itemLd = {
   .tools-cta-lead { color: #c8c8c0; margin: 0; max-width: 52ch; }
 
   @media (max-width: 900px) { .tools { grid-template-columns: 1fr; } .tools-cta { grid-template-columns: 1fr; } }
+  /* One column below 900px, so each card is the full width of the phone and its description has
+     no reason to stay at 11px. */
+  @media (max-width: 720px) {
+    .tool p.muted { font-size: 12.5px; }
+    .tool-q { font-size: 13px; }
+    .go { font-size: 11px; }
+    .foot { font-size: 12.5px; }
+  }
 </style>

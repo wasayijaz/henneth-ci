@@ -79,9 +79,13 @@ const divYears = t.dividends.length
    tag, and a real HTML parser decodes it — but several social scrapers extract the tag by regex
    and render the entity literally, so the card reads "dividends &amp; sector". Avoiding the
    character is cheaper than trusting every scraper to parse properly. */
-const title = `${t.name} (${sym}) — share price context, dividends and sector`;
+/* Ticker first, company name dropped. Search intent here is "OGDC share price" / "OGDC dividend",
+   and the full name pushed the title to 106 characters — Google truncates near 60, so the part
+   that actually matched the query fell off the end. The name is not lost: it is the <h1> and the
+   opening of the meta description, both of which Google reads. */
+const title = `${sym} share price context, dividends and sector`;
 const description =
-  `${t.name} (${sym}) on the Pakistan Stock Exchange: sector, index membership, dividend record` +
+  `${t.name} (${sym}): sector, index membership and dividend record on the PSX` +
   `${t.pe ? `, P/E ${t.pe}` : ''}${t.div_yield ? `, dividend yield ${t.div_yield}` : ''}. ` +
   `Research, not advice.`;
 
@@ -328,6 +332,22 @@ const corpLd = {
   @media (max-width: 560px) {
     .dis-row { grid-template-columns: 1fr; }
     .facts { grid-template-columns: 1fr; }
+  }
+  /* Eighteen of these pages exist and they are the site's deepest long-tail surface — someone
+     arrives from a search for one symbol and every word here has to justify the visit. The fact
+     tiles and the dividend table are one column by 560px, so nothing here is width-constrained. */
+  @media (max-width: 720px) {
+    .crumbs { font-size: 11px; }
+    .crumbs a { display: inline-flex; align-items: center; min-height: 44px; }
+    .chip { font-size: 10.5px; padding: 6px 9px; }
+    .asof { font-size: 11px; }
+    .dis-l { font-size: 11px; }
+    .dis-note, .sib-a span { font-size: 13px; }
+    .f-l { font-size: 10.5px; }
+    .f-sm { font-size: 12.5px; }
+    .fine { font-size: 12px; }
+    .divtbl th { font-size: 10.5px; }
+    .liq-t { font-size: 12px; }
   }
 </style>
 

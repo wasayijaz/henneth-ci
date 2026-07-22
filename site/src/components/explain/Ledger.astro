@@ -75,4 +75,11 @@ const sides = [left, right];
   }
 
   @media (max-width: 640px) { .ldg-g { grid-template-columns: 1fr; } }
+  /* One column below 640px, so the panel is the full width of the phone and there is no reason
+     for the section key or the caption to stay at diagram scale. */
+  @media (max-width: 720px) {
+    .ldg-k { font-size: 10.5px; }
+    .ldg-l li { font-size: 13px; }
+    .ldg-cap { font-size: 12.5px; }
+  }
 </style>

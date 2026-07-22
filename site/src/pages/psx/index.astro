@@ -50,8 +50,8 @@ const SECTOR_ICON: Record<string, string> = {
 const iconFor = (s: string) => SECTOR_ICON[s] ?? 'sectors';
 
 const description =
-  `Every Pakistan Stock Exchange company the Henneth desk covers, grouped by sector — dividend ` +
-  `records, sector and index membership, and how the valuation models sit. Research, not advice.`;
+  `Pakistan Stock Exchange companies Henneth covers, grouped by sector — dividend records, ` +
+  `index membership and model fair value. Research, not advice.`;
 
 const listLd = {
   '@context': 'https://schema.org',
@@ -152,4 +152,14 @@ const listLd = {
   @media (max-width: 1000px) { .cos { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 900px) { .psx-cta { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .cos { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) {
+    /* The directory is a list of company names, and the name is the whole reason to tap the row.
+       At 11.5px over a 9.5px sector line it read as caption text on a phone. Both go up, and the
+       breadcrumb gets a row tall enough to be a target rather than a word. */
+    .crumbs { font-size: 11px; }
+    .crumbs a { display: inline-flex; align-items: center; min-height: 44px; }
+    .asof { font-size: 11px; }
+    .co-name { font-size: 13px; }
+    .co-meta { font-size: 11px; }
+  }
 </style>

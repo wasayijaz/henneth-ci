@@ -62,4 +62,11 @@ const cols = Math.min(items.length, 4);
 
   @media (max-width: 760px) { .snap-g { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 420px) { .snap-g { grid-template-columns: 1fr; } }
+  /* Two columns at most on a phone, so there is width to spare — the key and the note under each
+     figure were the smallest text in any of the explainer components. */
+  @media (max-width: 720px) {
+    .snap-h { font-size: 11px; letter-spacing: 0.1em; }
+    .snap-k { font-size: 10.5px; }
+    .snap-n { font-size: 12px; }
+  }
 </style>

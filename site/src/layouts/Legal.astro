@@ -67,4 +67,14 @@ const tabs = [
     .lg-grid { grid-template-columns: 1fr; }
     .lg-rail { position: static; }
   }
+  /* Terms and privacy are the pages a reader is least willing to work for, so they get the same
+     type floor as everything else rather than being treated as fine print by default. The rail
+     tabs become 46px rows: three links stacked at 11px was a column of near-misses. */
+  @media (max-width: 720px) {
+    .lg-tab { font-size: 12px; padding: 0 14px; min-height: 46px; display: flex; align-items: center; }
+    .lg-callout { font-size: 12.5px; }
+    .lg-body { padding: 20px; }
+    .lg-body :global(p) { font-size: 13.5px; }
+    .lg-contact { font-size: 12.5px; }
+  }
 </style>

@@ -83,4 +83,12 @@ const cell = (c: (typeof rows)[number][number]) => (typeof c === 'string' ? { v:
       text-transform: uppercase; color: var(--ink-3); flex: none;
     }
   }
+  /* Below 700px the header row is hidden and its text is re-drawn per cell as ::before — so on a
+     phone that pseudo-element IS the column heading, and 9px is far too small for the only label
+     telling you what the number beside it means. Ordered after the 700px block so it wins. */
+  @media (max-width: 720px) {
+    .mx-t tbody td { font-size: 12.5px; }
+    .mx-t tbody td::before { font-size: 11px; }
+    .mx-cap { font-size: 12.5px; }
+  }
 </style>

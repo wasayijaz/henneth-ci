@@ -151,7 +151,8 @@ const caps: [string, string, string, string][] = [
 ---
 
 <Base
-  title="Solutions"
+  title="PSX research for investors, traders and brokers"
+  crumbLeaf="Solutions"
   path="/solutions"
   active="solutions"
   description="Henneth for retail investors, active traders, the astrology-curious and brokers — PSX research in depth, US and global index context, on a published schedule."
@@ -317,5 +318,17 @@ const caps: [string, string, string, string][] = [
   @media (max-width: 900px) {
     .seg-grid { grid-template-columns: 1fr; gap: 28px; }
     .jump { grid-template-columns: 1fr; }
+  }
+  /* .seg-2 is the free-thing-to-try link under each segment — the lowest-commitment call on the
+     page and, at 9.5px in a 16px-tall box, the hardest to hit. It gets a 44px row. */
+  @media (max-width: 720px) {
+    .pts li { font-size: 13px; padding: 11px 0 11px 18px; }
+    .seg-plan, .seg-row { font-size: 12.5px; }
+    .seg-fine { font-size: 11px; }
+    .seg-2 { font-size: 11px; min-height: 44px; }
+    /* The capability table scrolls sideways here on purpose, so its header travels off-screen and
+       back — which makes it the one thing on the page a reader has to re-read repeatedly. 9.5px
+       uppercase was too small to do that with. */
+    th { font-size: 11px; letter-spacing: 0.08em; }
   }
 </style>

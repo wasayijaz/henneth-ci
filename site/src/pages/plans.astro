@@ -242,6 +242,19 @@ const faqLd = early ? faqs.map(([q, a]) => ({ q, a })) : undefined;
   .fq p { font-size: 11.5px; padding: 0 0 16px; margin: 0; max-width: 680px; }
 
   @media (max-width: 900px) { .tiers, .why { grid-template-columns: 1fr; } }
+  /* The one page whose only job is to be read and acted on. Everything that argues for a plan —
+     blurb, feature list, the note under the tiers, the FAQ answers — was 11.5px or under. The
+     ribbon stays at 8.5px: it is a corner flag, not a sentence, and growing it eats the tier's
+     top-right corner. */
+  @media (max-width: 720px) {
+    .ph-fine { font-size: 11px; letter-spacing: 0.09em; }
+    .tier-billed { font-size: 11px; }
+    .tier-blurb { font-size: 13px; }
+    .tier-feats li { font-size: 12.5px; padding: 11px 0 11px 18px; }
+    .tiers-note { font-size: 12px; }
+    .why-d, .fq p { font-size: 13px; }
+    .fb-fine { font-size: 11px; letter-spacing: 0.09em; }
+  }
 </style>
 
 <script is:inline>

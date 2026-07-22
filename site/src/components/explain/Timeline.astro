@@ -104,6 +104,14 @@ const span = Math.max(...rows.map((r) => r.steps.length));
 
   @media (max-width: 640px) {
     .tl-row { grid-template-columns: 1fr; gap: 10px; }
-    .tl-l { font-size: 9.5px; }
+  }
+  /* The step labels used to be pushed DOWN to 9.5px here, on the theory that narrower columns
+     need smaller text. They do not: the track columns are 1fr, so a longer label wraps and the
+     row grows taller, which costs nothing on a page that already scrolls. Everything goes up. */
+  @media (max-width: 720px) {
+    .tl-name, .tl-name i { font-size: 11px; }
+    .tl-d { font-size: 12px; }
+    .tl-l { font-size: 11.5px; }
+    .tl-cap { font-size: 12.5px; }
   }
 </style>

@@ -27,7 +27,7 @@ export const site = {
      and CLAUDE.md Rule 5. Astro is no longer named here only because 160 characters will not hold
      it — /financial-astrology owns that query and carries the null result in its own meta. */
   description:
-    'Scheduled research on the Pakistan Stock Exchange — company health, fair value, backtested strategies — plus US and global index context. Research, not advice.',
+    'Scheduled research on the Pakistan Stock Exchange — company health, fair value, backtested strategies — plus global index context. Research, not advice.',
   // Marketing-site canonical URL — the marketing site owns the root domain.
   url: 'https://henneth.app',
   // The terminal users enter after picking a plan. Moved off the root so marketing can own it.

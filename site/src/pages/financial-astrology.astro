@@ -35,10 +35,10 @@ import lite from '../data/public/astro_lite.json';
 
 /* Base.astro renders "<title> — <site.name>", so the brand is NOT repeated here — doing so
    produced "… — Henneth — Henneth" in the tab and in link previews. */
-const title = 'Financial astrology, tested like any other signal';
+const title = 'Financial astrology, tested like a signal';
 const description =
   'Your Moon sign, the elements it runs with, and the PSX sectors and commodities tradition ' +
-  'attaches to them. Scored the same way every other rule on the desk is — including when it finds nothing.';
+  'ties to them — scored like every desk rule, including the nulls.';
 
 type Sign = { name: string; element: string; ruler: string };
 const signs = (lite.signs ?? []) as Sign[];
@@ -800,9 +800,13 @@ const faq = [
     .fa .fa-sky-note { font-size: 11.5px; color: #a8a8a0; margin: 20px 0 0; max-width: 720px; }
 
     .fa .fa-prov { margin-top: 18px; border-top: 1px solid #2a2a27; padding-top: 14px; }
+    /* The disclosure that says where the sky numbers come from. At 9.5px it rendered a 16px-tall
+       target — the least tappable control on the site, guarding the page's most load-bearing
+       claim. min-height, not padding, so the row height is stated rather than inferred. */
     .fa .fa-prov summary {
-      cursor: pointer; font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase;
+      cursor: pointer; font-size: 10.5px; letter-spacing: 0.13em; text-transform: uppercase;
       font-weight: 700; color: #8f8f88; list-style: none;
+      display: flex; align-items: center; min-height: 44px;
     }
     .fa .fa-prov summary::-webkit-details-marker { display: none; }
     .fa .fa-prov summary::before { content: '+ '; }
@@ -887,6 +891,25 @@ const faq = [
       .fa .fa-sgn b { font-size: 11px; }
       .fa .fa-res-top { grid-template-columns: 1fr; }
       .fa .fa-score-row--big .pixel { font-size: 26px; }
+    }
+    /* The page argues a null result, which is the hardest thing on the site to get read to the
+       end — so on a phone it stops being set in fine print. Ordered after the 640px block so the
+       shared rules win; the two things that block deliberately shrinks (.fa-sky-cell i and
+       .fa-sgn b) are left alone, because they sit in a three-across grid at 375px where type
+       trades directly against the column width. */
+    @media (max-width: 720px) {
+      .fa .fa-hero-fine, .fa .fa-cast-fine, .fa .fa-res-foot, .fa .fa-legend { font-size: 12px; }
+      .fa .fa-score-row { font-size: 12.5px; }
+      .fa .fa-score-fine, .fa .fa-res-note, .fa .fa-prov-method { font-size: 12px; }
+      .fa .fa-cast-l, .fa .fa-res-sub { font-size: 11px; letter-spacing: 0.1em; }
+      .fa .fa-w-cap { font-size: 11px; }
+      .fa .fa-chip { font-size: 10.5px; }
+      .fa .fa-list li b { font-size: 13px; }
+      .fa .fa-list li span, .fa .fa-empty, .fa .fa-sky-note { font-size: 13px; }
+      .fa .fa-conf { font-size: 10px; }
+      .fa .fa-prov-row { font-size: 12px; }
+      .fa .fa-sgn .muted { font-size: 10.5px; }
+      .fa .fa-disclaimer { font-size: 12px; }
     }
   </style>
 </Base>

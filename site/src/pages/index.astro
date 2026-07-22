@@ -623,7 +623,10 @@ const principles = [
     width: 6px; height: 6px; background: var(--up); flex: none;
     animation: henneth-dot-pulse 2.6s ease-in-out infinite;
   }
-  @media (max-width: 560px) { .hero-astro { font-size: 9px; letter-spacing: 0.06em; } }
+  /* Was shrinking to 9px here, which is backwards: the pill is a real sentence sitting above the
+     fold on the site's most-landed-on page, and it is the only place the astro lens is introduced.
+     It is inline-flex, so a longer line wraps inside the pill rather than forcing width. */
+  @media (max-width: 560px) { .hero-astro { letter-spacing: 0.06em; } }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 44px; align-items: center; }
   .hero-lead { max-width: 520px; }
   .hero-sub { font-size: 11.5px; max-width: 480px; }
@@ -841,6 +844,30 @@ const principles = [
   }
   @media (max-width: 520px) {
     .heat { grid-template-columns: repeat(3, 1fr); }
+  }
+  /* The home page is where most phones land first, and almost every explanatory line on it was
+     11.5px or under. Everything that carries an argument goes up; the mock chrome (.mock-tag,
+     .hc-sym, .hc-pct, .sig-*, .rank-k, .dr-bar) deliberately does not — those are labels drawn
+     inside fixed-size illustrations of a screen, and growing them breaks the boxes. */
+  @media (max-width: 720px) {
+    .hero-sub { font-size: 13px; }
+    .hero-astro { font-size: 10.5px; }
+    /* "Free in early access · No card required · Research, not advice" — the three objections a
+       stranger has, answered directly under the button. Not fine print. */
+    .hero-fine { font-size: 11px; letter-spacing: 0.08em; }
+    .mock-note { font-size: 11.5px; }
+    .step-d, .psz-body, .principles p { font-size: 13px; }
+    .vrow, .sky-row, .dr-block p, .score-how p { font-size: 12.5px; }
+    .score-note { font-size: 12px; }
+    .sky-fine, .dr-hint { font-size: 11px; }
+    .final-fine { font-size: 11px; letter-spacing: 0.09em; }
+    /* The rest of the mock stays decorative on purpose, but this strip is not decoration — it is
+       the line that says the numbers above are real closes and that the panel is not live. At
+       8.5px on one row it was the smallest text on the page saying the most load-bearing thing.
+       Stacked rather than shrunk: two 30-odd-character lines fit 375px at 10.5px, side by side
+       they do not. */
+    .mock-foot { flex-direction: column; gap: 4px; font-size: 10.5px; }
+    .mock-foot-r { text-align: left; }
   }
 </style>
 

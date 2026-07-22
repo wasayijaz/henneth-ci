@@ -2,7 +2,12 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config.ts';
 ---
-<Base title="Contact" path="/contact" description="Contact Henneth — broker and institutional enquiries, press, feedback.">
+<Base
+  title="Contact the desk"
+  crumbLeaf="Contact"
+  path="/contact"
+  description="Contact Henneth — broker and institutional enquiries, press, feedback."
+>
   <section class="section-tight">
     <div class="wrap ct">
       <p class="kicker">Contact</p>
@@ -42,6 +47,11 @@ import { site } from '../site.config.ts';
   .ct-d { font-size: 10.5px; }
   .ct-fine { font-size: 10.5px; margin-top: 20px; }
   @media (max-width: 860px) { .ct-grid { grid-template-columns: 1fr; } }
+  /* Three contact cards and a line of fine print — the whole page is small type, and it is the
+     page someone reaches when something has already gone wrong for them. */
+  @media (max-width: 720px) {
+    .ct-d, .ct-fine { font-size: 12.5px; }
+  }
 </style>
 
 {/* The label comes from each link's own data-contact, not from its position in the list.

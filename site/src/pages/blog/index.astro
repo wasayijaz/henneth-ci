@@ -40,7 +40,8 @@ const [featured, ...rest] = posts;
 ---
 
 <Base
-  title="Blog"
+  title="PSX blog — reading and valuing companies"
+  crumbLeaf="Blog"
   path="/blog"
   active="blog"
   description="Plain-English writing on the Pakistan Stock Exchange — how to read a company, value it, and think about risk."
@@ -227,6 +228,18 @@ const [featured, ...rest] = posts;
     .feat { grid-template-columns: 1fr; }
     .feat-i { height: 64px; }
     .feat-h { font-size: 17px; }
+  }
+  /* The category chips are the only interactive control on the page and were 33px tall — under
+     every published thumb minimum. They become 44px rows. Everything else here is a card
+     description or a date, i.e. the text that decides whether a post gets opened. */
+  @media (max-width: 720px) {
+    .chip { font-size: 11.5px; padding: 0 16px; min-height: 44px; }
+    .empty-p, .card-d, .post-d { font-size: 12.5px; }
+    .feat-k, .go { font-size: 11px; }
+    .feat-d { font-size: 13.5px; }
+    .post-cl { font-size: 10.5px; }
+    .post-t { font-size: 11px; }
+    .news-msg { font-size: 12.5px; }
   }
 </style>
 

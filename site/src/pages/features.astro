@@ -111,7 +111,7 @@ const engine = [
   title="PSX Research Terminal Features"
   path="/features"
   active="features"
-  description="Every surface of the Henneth desk — plain-English PSX company reads, fair value four ways, backtested strategies, the analyst Desk Room, and US and global index context."
+  description="Every surface of the Henneth desk — plain-English PSX company reads, fair value four ways, backtested strategies, and US and global index context."
 >
   <section class="section-tight ph">
     <div class="wrap">
@@ -467,4 +467,20 @@ const engine = [
   @media (max-width: 1000px) { .astro-grid { grid-template-columns: repeat(2, 1fr); } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .engine { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 28px; } .two-col.rev > :first-child { order: 2; } .astro-score { grid-template-columns: repeat(2, 1fr); } .sched { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .cards, .drgrid, .astro-grid, .engine { grid-template-columns: 1fr; } .heat { grid-template-columns: repeat(3, 1fr); } .as-n { font-size: 24px; } }
+  /* This page carries 38 card descriptions at 11px — the largest block of small type on the site,
+     and the page most likely to be read end to end by someone deciding whether to sign up.
+     The mock chrome (.mock-tag, .heat-cell) is deliberately left alone: it is an illustration of a
+     screen, and enlarging its labels breaks the fixed boxes they sit in. */
+  @media (max-width: 720px) {
+    .card-d { font-size: 13px; }
+    .sched-foot { font-size: 12.5px; }
+    .mock-note { font-size: 11.5px; }
+    .vrow { font-size: 12.5px; }
+    .drcell p { font-size: 12.5px; }
+    .as-l { font-size: 11px; }
+    /* The card's only link, and at 28px tall it was the one control on this page under the thumb
+       minimum. Full-width row, so the height comes free. */
+    .card-go { font-size: 11px; min-height: 44px; padding-top: 0; }
+    .sc-t { font-size: 11px; }
+  }
 </style>

@@ -203,4 +203,10 @@ const href = appPlan ? `${site.appUrl}/?plan=${appPlan}&auth=signup` : '/contact
     .sp-two { grid-template-columns: 1fr; gap: 28px; }
     .sp-two > :global(.dp) { order: -1; }
   }
+  @media (max-width: 720px) {
+    /* 10px caps at 13px tall is the smallest link on the page and the one that gets people back
+       up the tree. Raised, and given a row of its own height to be tapped in. */
+    .crumbs { font-size: 11px; }
+    .crumbs a { display: inline-flex; align-items: center; min-height: 44px; }
+  }
 </style>

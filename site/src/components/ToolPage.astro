@@ -265,6 +265,33 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
   @media (max-width: 520px) {
     .calcout :global(.sumstrip.s3), .calcout :global(.sumstrip.s4) { grid-template-columns: 1fr; }
   }
+
+  /* A calculator is the one page type here that is genuinely BETTER on a phone than a desktop —
+     it is the thing someone opens standing in front of a broker screen. It was also the page type
+     with the smallest labels and the shortest fields. Field type is handled globally (iOS zooms
+     under 16px); everything around the fields is raised here. */
+  @media (max-width: 720px) {
+    .crumbs { font-size: 11px; }
+    /* 44, not 40: the crumb words are short, so their width is whatever the label happens to be —
+       "Home" lands around 30px. The height is the only dimension this rule controls, so it takes
+       the full thumb minimum and the narrow width stops mattering. */
+    .crumbs a { display: inline-flex; align-items: center; min-height: 44px; }
+    .upd { font-size: 11px; }
+    .calcin { padding: 18px; gap: 18px; }
+    .calcout { padding: 18px; }
+    .cflabel { font-size: 11px; }
+    .cfaffix { font-size: 12.5px; }
+    .calcout :global(.sumtile .sk) { font-size: 11px; }
+    .calcout :global(.sumtile i) { font-size: 11.5px; }
+    .calcout :global(.tnote) { font-size: 13px; }
+    .calcout :global(.tlegend) { font-size: 11px; }
+    .toolprose :global(p), .toolprose :global(ul) { font-size: 14px; }
+    .relx { font-size: 11.5px; padding: 13px 16px; }
+    /* Year numbers under the bars. 8px is a mark, not a label — and the x-axis is what turns the
+       chart from a shape into an answer ("this is where I am in year 12"). Two digits at 10px is
+       ~12px of mono against a bar pitch that never goes below ~17px at 375px, so nothing collides. */
+    .calcout :global(.tbar i) { font-size: 10px; }
+  }
 </style>
 
 <script>

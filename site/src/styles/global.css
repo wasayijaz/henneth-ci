@@ -499,6 +499,34 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+/* ==============================================================================================
+   MOBILE
+
+   Everything above this line is a fixed px size tuned on a desktop monitor, and until now it
+   shipped verbatim to a 375px phone: body copy at 13px, micro-labels at 9.5px, buttons at 11px.
+   That is readable at arm's length on a desk and squinting on a train. Two floors apply below
+   720px — 11px for anything carrying words, 44px for anything a thumb has to hit — and they are
+   set here rather than per page so a new page inherits them for free.
+   ============================================================================================== */
 @media (max-width: 720px) {
-  .btn { padding: 12px 16px; min-height: 38px; }
+  body { font-size: 14px; }
+  h3 { font-size: 16px; }
+  .lead { font-size: 15px; }
+  /* Tracking eases as the size grows: 0.14em on 11px caps is wider than the same ratio looked
+     at 9.5px, and the words start to come apart. */
+  .kicker, .label { font-size: 11px; letter-spacing: 0.12em; }
+  .badge { font-size: 10.5px; }
+  .btn { padding: 13px 18px; min-height: 44px; font-size: 12.5px; }
+  .btn-lg { padding: 15px 24px; font-size: 13px; }
+
+  /* iOS Safari zooms the entire viewport when a focused field's type is under 16px, and does not
+     zoom back out. Nothing else on the site moves the viewport without being asked, so this is a
+     floor rather than a preference. It needs !important because every field on the site is sized
+     from a component's scoped block, whose [data-astro-cid] selector outranks a bare element
+     selector no matter where it sits in the cascade.
+     Checkboxes and radios are excluded: a 44px min-height on a 13px box just adds dead space. */
+  input:not([type='checkbox']):not([type='radio']), select, textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
 }

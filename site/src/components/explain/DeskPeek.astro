@@ -162,6 +162,21 @@ const fmt = (n: number) => new Intl.NumberFormat('en-PK', { minimumFractionDigit
      position, which is exactly what we want. */
   @keyframes dpin { from { transform: translateY(7px); } to { transform: none; } }
 
+  /* Restrained on purpose. The row is a fixed two-column grid whose right side is a single
+     nowrap line of price and percent, so type here trades directly against horizontal room at
+     375px. The footer — the as-of stamp and the source, the only words in the panel a reader has
+     to actually read — wraps freely and goes up properly. */
+  @media (max-width: 720px) {
+    .dp-t { font-size: 10.5px; }
+    .dp-pct { font-size: 11.5px; }
+    .dp-meta em { font-size: 10.5px; }
+    .dp-as { font-size: 11px; }
+    /* The regime word — "risk-off" — is the one piece of judgment in the panel, and it was set
+       smaller than anything around it. It sits in the header's free space, not the price grid,
+       so it costs nothing to read properly. */
+    .dp-live { font-size: 10.5px; }
+  }
+
   @media (max-width: 420px) {
     .dp-name { display: none; }
     .dp-tag { display: none; }
