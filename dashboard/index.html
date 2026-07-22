@@ -213,6 +213,10 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
     <div class="side-legal">
       <a href="#/glossary">Glossary</a><a href="#/legal/terms">Terms</a><a href="#/legal/privacy">Privacy</a><a href="#/legal/risk">Risk</a>
     </div>
+    <!-- Version + what's new. Filled by renderVersion() from state/changelog.json; stays empty
+         (and therefore invisible) if that file is missing, so a failed changelog build degrades to
+         "no badge" rather than to a broken row. -->
+    <button class="side-ver" id="sideVer" hidden></button>
     <div class="side-resize" id="sideResize" title="Drag to resize"></div>
   </aside>
 

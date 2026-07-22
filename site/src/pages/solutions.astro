@@ -20,7 +20,16 @@ const jump = [
   { tag: '05', title: 'Brokers & institutions', href: '/solutions/psx-broker-research-scorecard', icon: 'portfolio' },
 ];
 
-const segments = [
+/* Typed rather than inferred: without this the array widens to a union, and `s.cta2` — present on
+   three members and absent on the broker one — becomes an editor error on every access. */
+type Segment = {
+  id: string; icon: string; tag: string; title: string; body: string; points: string[];
+  cta: string; href: string; solid: boolean; panelTitle: string; plan: string;
+  rows: [string, string, number][];
+  cta2?: string; href2?: string;
+};
+
+const segments: Segment[] = [
   {
     id: 'retail',
     icon: 'learn',
@@ -35,6 +44,12 @@ const segments = [
     cta: 'Get started',
     href: enter('investor'),
     solid: true,
+    /* SECONDARY LINK — a free page on this site, no account. Each segment gets the one that
+       matches what it came here for: the investor gets the sizing calculator, because "how many
+       shares" is the question that follows every read; the trader gets the global coverage list;
+       the astrology reader gets the tested lens before being asked to cast anything. */
+    cta2: 'Size a position free',
+    href2: '/tools/position-size-calculator/',
     panelTitle: 'Investor · what you get',
     plan: site.earlyAccess ? 'Free now' : 'Rs 3,000/mo',
     rows: [
@@ -49,15 +64,20 @@ const segments = [
     icon: 'strategies',
     tag: '02 · Active traders',
     title: 'Move with the whole desk behind you',
-    body: 'For traders who want signals, backtests and a full analyst debate on demand. The Desk Room argues both sides of every ticker and the Chair calls it — you decide the entry, size and exit.',
+    /* "on demand" removed (WEBSITE_BRIEF §5.2e). It described the desk as a service that answers
+       requests. It publishes to a fixed calendar instead, and that distinction is the whole
+       difference between a publication and an advisory relationship — not a wording preference. */
+    body: 'For traders who want backtested signals and a full analyst debate — published on a schedule, not written on request. The Desk Room argues both sides of every ticker and the Chair calls it; you decide the entry, size and exit.',
     points: [
       'Backtested-strategy signals + 19-year history',
       'The Desk Room debate & replay on any name',
-      'Macro tape, dividends and earnings calendar',
+      'Macro tape, US and global index context, dividends and earnings',
     ],
     cta: 'Get started',
     href: enter('pro'),
     solid: true,
+    cta2: 'What the desk covers globally',
+    href2: '/global-markets/',
     panelTitle: 'Pro · what you get',
     plan: site.earlyAccess ? 'Free now' : 'Rs 8,000/mo',
     rows: [
@@ -81,6 +101,8 @@ const segments = [
     cta: 'Cast your chart free',
     href: `${site.appUrl}/#/cast`,
     solid: true,
+    cta2: 'Read the tested lens first',
+    href2: '/financial-astrology/',
     panelTitle: 'Astro · what you get',
     plan: 'Free',
     rows: [
@@ -119,6 +141,9 @@ const caps: [string, string, string, string][] = [
   ['The Desk Room debates', 'House view', 'Full transcripts', ''],
   ['Strategy backtests', '—', 'Unlimited', ''],
   ['Screener, scanner & scenarios', '—', '✓', ''],
+  /* Research tier only. config/markets.json sets signals_enabled:false for the US book, so the
+     honest cell says "context" — not a tick, which would read as "the desk trades these". */
+  ['US & global index context', 'Context', 'Context', ''],
   ['Your birth chart & daily transits', '✓', '✓', ''],
   ['The computed sky (90-day horizon)', '✓', '✓', ''],
   ['Astro claims, tested & scored', '✓', '✓', ''],
@@ -129,7 +154,7 @@ const caps: [string, string, string, string][] = [
   title="Solutions"
   path="/solutions"
   active="solutions"
-  description="Henneth for retail investors, active traders, the astrology-curious, and brokers. One research desk, tuned to four ways of working the Pakistan Stock Exchange."
+  description="Henneth for retail investors, active traders, the astrology-curious and brokers — PSX research in depth, US and global index context, on a published schedule."
 >
   <section class="section-tight ph">
     <div class="wrap">
@@ -167,7 +192,14 @@ const caps: [string, string, string, string][] = [
           <ul class="pts">
             {s.points.map((p) => <li>{p}</li>)}
           </ul>
-          <a href={s.href} class:list={['btn', { 'btn-solid': s.solid }]} rel="noopener">{s.cta}</a>
+          <div class="cta-row seg-cta">
+            <a href={s.href} class:list={['btn', { 'btn-solid': s.solid }]} rel="noopener">{s.cta}</a>
+            {s.cta2 && (
+              <a href={s.href2} class="seg-2" data-ev="segment_free_link" data-ev-seg={s.id}>
+                {s.cta2} <Icon name="arrow" size={12} />
+              </a>
+            )}
+          </div>
         </div>
         <div class="card seg-panel">
           <div class="seg-ph">
@@ -246,6 +278,22 @@ const caps: [string, string, string, string][] = [
   .pts { list-style: none; padding: 0; margin: 18px 0 22px; }
   .pts li { font-size: 11.5px; padding: 9px 0 9px 18px; position: relative; border-top: 1px dotted var(--hair); }
   .pts li::before { content: '✓'; position: absolute; left: 0; color: var(--up); font-weight: 700; }
+
+  /* .cta-row is centred for the dark band at the foot of this page; inside a segment it is a
+     left-aligned pair. The secondary is a text link, not a second button, so the free page never
+     competes visually with the plan CTA it sits beside. */
+  .seg-cta { justify-content: flex-start; align-items: center; gap: 18px; }
+  .seg-2 {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink-3); text-decoration: none; border-bottom: 0;
+  }
+  .seg-2 :global(.icn) { transition: transform 0.18s ease; }
+  @media (hover: hover) {
+    .seg-2:hover { color: var(--ink-1); }
+    .seg-2:hover :global(.icn) { transform: translateX(3px); }
+  }
 
   .seg-panel { padding: 0; }
   .seg-ph { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: var(--rule); background: var(--panel-2); }

@@ -3,6 +3,95 @@
 Newest first. Every entry = what changed, why, and (for bugs) how it's prevented from recurring.
 The desk is a **live website** — nothing ships unless `python scripts/preflight.py` exits 0.
 
+## How to write an entry
+
+**Heading:** `## YYYY-MM-DD — vYYYY.MM.DD — Short title`
+
+Versions are **CalVer**: the release date, plus `.2`, `.3`… for a second release the same day.
+Chosen over semver because releases here are date-driven, and because the version should answer
+the question a reader actually has — *how current is my desk?* — which `v1.14.2` does not.
+
+**This file is the ENGINEERING record and stays that way.** It names migrations, internals and, in
+at least one entry, a security hole that was found and closed. None of that goes in front of a
+subscriber.
+
+What subscribers see comes from a `public` block you add per release:
+
+```
+## 2026-07-22 — v2026.07.22 — Mobile tables
+
+<!--public
+Tables fit your phone screen now instead of scrolling sideways.
+A free position-size calculator is on the website.
+-->
+
+### Everything else — the engineering detail, unpublished.
+```
+
+`scripts/build_changelog.py` extracts only those blocks into `state/changelog.json`, which the
+terminal reads to show the version and a "what's new" note. It **fails closed**: no block means
+nothing is published for that release. Forgetting the marker costs a shrug; an opt-out design
+would leak an internal detail the first time someone forgot. It also refuses to build if a public
+note contains an obviously internal term.
+
+Write the public lines for a user: what they can now do, or what stopped being annoying. Not
+which file changed.
+
+---
+
+## 2026-07-22 — v2026.07.22 — The publication restructure, global coverage, mobile tables
+
+<!--public
+Tables fit your phone screen now. The widest one needed 4,393px before — twelve screen-widths of
+sideways dragging to finish one sentence. Wide tables restack as readable cards instead.
+
+The Desk Room shows when a debate was published, and says "Read" rather than "Run". Nothing was
+ever run on request: the analysts work to the desk's own rotation, and the wording now says so.
+
+Signals show risk per share instead of a share count. The desk does not know your capital, so
+sizing is yours — there is a free position-size calculator on the website using the desk's own rule.
+
+The desk now covers 23 global symbols: the S&P 500, Nasdaq, Dow, Russell, VIX, all eleven US
+sector ETFs, EM and developed baskets, rates, gold and oil. Index and sector level, for the context
+they give PSX — no US stock picks, and no signals on them.
+
+A free financial-astrology lens is on the website — your Moon sign, its element, and the sectors
+and commodities tradition attaches to it, plus what nineteen years of testing actually found.
+-->
+
+Implements `docs/PUBLICATION_RESTRUCTURE.md` §2a, §3, §4, §5 step 1, §6b and §7. Five of the doc's
+own instructions were wrong when checked against the code and are corrected in place there.
+
+### §4 — the Desk Room was already compliant; the copy was the violation
+`runDeskBar` renders only when `hvRoom` exists, and `playDeskReplay()` replays a pre-computed
+debate. No user action ever triggered an agent or spent a token. The copy ("Run the desk on FFC",
+"Once it finishes…") claimed on-demand personal analysis — the advisory framing the restructure
+exists to remove, for something the product does not do. Reframed to reveal-as-reveal.
+
+### §5 step 1 — repointing the watchdog probe
+`watchdog.py` used `natal_ephem.json` as its public-access probe: the one file that must serve 200
+while everything else 401s. Flagging natal off would have left that check passing meaninglessly.
+`build_dashboard.py` now emits a purpose-built `public_probe.json`; because it carries the cycle
+stamp, deploy staleness is detectable without a credential for the first time.
+
+### §3 — sizing out of published output
+`size_shares`/`size_pkr` removed from the signal payload; `risk_per_share` added. The computation
+stays because `shares <= 0` is the Rule 4 validity guard. `prompts/cycle-full.md` also instructed
+the auditor step to write sizes into `signals.json`, so the script change alone would have been
+undone by the next full cycle.
+
+### §7 — US coverage, and the seam held
+`quant.py` computed close, RSI and 20-day returns for US500, XLE and GLD with **no code change**:
+`state/history/{SYM}.json` is a market-agnostic seam and only `liquidity.py` was currency-bound.
+Yahoo spells the S&P 500 `^GSPC`; a symbol here becomes a filename and then a URL path, so the desk
+calls it `US500` and maps it. Never let a vendor's punctuation become a filename.
+
+### Routines
+Adding a second market silently widened every script that iterates the universe, including those
+whose source is PSX-specific. No crashes — the harm was bounded per-run fetch budgets being spent
+on symbols that can never return, starving real PSX names in the rotation. `market_symbols()`
+applied to the five PSX-source fetchers; the market-agnostic maths deliberately left alone.
+
 ---
 
 ## 2026-07-19 — Three-plan product, the Investor desk, and entitlement enforcement

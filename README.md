@@ -1,8 +1,13 @@
 # Henneth
 
-**A multi-agent research & analytics terminal for the Pakistan Stock Exchange.**
+**A multi-agent research & analytics publication covering the Pakistan Stock Exchange in depth, and the global tape for context.**
 It researches, values, backtests, debates, and monitors — then puts every call on the record and grades it.
 It **never places orders**; execution is manual on your broker.
+
+It is shaped as a **publication**, not an advisory service: output is scheduled, impersonal, and
+identical for every subscriber. It does not know the reader, does not tailor output to them, and
+does not tell anyone what to buy. See [`docs/PUBLICATION_RESTRUCTURE.md`](docs/PUBLICATION_RESTRUCTURE.md).
+The one deliberate exception is the personal astrology lens, which is disclaimed on every surface.
 
 > ⚠️ **This is a research & analytics tool, not an investment adviser.** Everything here is educational
 > information — never personalized advice, a recommendation, or a promise of returns. Past performance
@@ -41,6 +46,27 @@ A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite"
 - **Research** — broker notes and company filings (results / AGM / corporate-briefing), digested and tagged.
 - **Macro / Dividends / Earnings / News** — the global tape that moves PSX, a geo-risk radar, dividend
   timing (buy-by / ex-date), the earnings calendar, and a permanent news log.
+- **Global coverage** — 23 US and global symbols (S&P 500, Nasdaq 100, Dow, Russell, VIX, all eleven
+  SPDR sectors, EEM/EFA/ACWI, TLT/HYG/GLD/USO), defined in [`config/markets.json`](config/markets.json).
+  Index and sector level only, for the context they give PSX: **no US single stocks and no US signals**
+  (`signals_enabled: false`). Data is the same free Yahoo endpoint the desk already used —
+  `fetch_deep_history.py` differed only by a `.KA` suffix, so a second market cost no new vendor.
+
+### Versioning and release notes
+
+Versions are **CalVer** — `vYYYY.MM.DD`, plus `.2` for a second release the same day. Chosen over
+semver because releases here are date-driven, and because the version should answer the question a
+reader actually has (*how current is my desk?*), which `v1.14.2` does not.
+
+The terminal shows the current version at the foot of the sidebar, with a dot when it has moved
+since that browser last acknowledged one. Clicking it opens **What's new**.
+
+Those notes come from `<!--public ... -->` blocks inside [`CHANGELOG.md`](CHANGELOG.md), extracted by
+`scripts/build_changelog.py` into `state/changelog.json`. **CHANGELOG.md itself is the engineering
+record and is never published** — it names migrations, internals, and a security hole that was found
+and closed. The extractor **fails closed**: a release with no public block publishes nothing, and the
+build aborts outright if a public note contains an obviously internal term. Forgetting a marker costs
+a shrug; an opt-out design would leak the first time someone forgot.
 
 Each ticker page also carries a **risk profile** (volatility, real max-drawdown with era context, liquidity,
 valuation, dividend reliability), a **"questions before buying"** checklist, and **"what the brokers say."**
@@ -146,6 +172,13 @@ deleted after the copy so the wholesale rule stays self-maintaining.
 
 `site/` is a normal Astro project with its own `package.json`; its `node_modules` is gitignored,
 so only ~30 source files of it are tracked.
+
+**The marketing build is hermetic** — it never reads `state/`. Where it needs desk data, the
+pipeline hands it a generated slice under `site/src/data/public/` (`tickers.json`, `context.json`,
+`astro_lite.json`, `coverage.json`) plus `site/public/moon_ephem.bin`. Those are regenerated
+deterministic output, so `scripts/publish.py` stages them by default alongside `state/` rather than
+behind `--code`. Before that they were rewritten by every cycle and committed by none, which meant
+the public astro page would have kept serving whatever sky was current the day it shipped.
 
 **Why the split.** The terminal used to own the root domain. Marketing needs the root (that is
 what people type and what a link preview shows), so the terminal moved to a subdomain. Anything

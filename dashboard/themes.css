@@ -1661,6 +1661,33 @@ body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
     white-space:nowrap;overflow-wrap:normal}
 }
 
+/* ============ VERSION BADGE + WHAT'S NEW ============ */
+body[data-theme=gemini] .side-ver{display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;background:none;border:none;border-top:1px solid var(--hair);color:var(--ink3);
+  font:inherit;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:9px 8px;
+  cursor:pointer;transition:color .12s ease}
+body[data-theme=gemini] .side-ver.fresh{color:var(--accent)}
+body[data-theme=gemini] .ver-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;
+  display:inline-block;flex:none}
+@media(hover:hover){body[data-theme=gemini] .side-ver:hover{color:var(--ink1)}}
+/* collapsed sidebar: the number is the whole point, so drop the "v" prefix room, not the badge */
+body[data-theme=gemini] .sidebar.collapsed .side-ver span{display:none}
+body[data-theme=gemini] .sidebar.collapsed .side-ver::after{content:"v";font-size:11px}
+
+body[data-theme=gemini] .wn-panel{max-width:560px}
+body[data-theme=gemini] .wn-rel{border-top:1.5px solid var(--line);padding:14px 0 4px}
+body[data-theme=gemini] .wn-rel:first-of-type{border-top:none}
+body[data-theme=gemini] .wn-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:8px}
+body[data-theme=gemini] .wn-h b{font-size:14px}
+body[data-theme=gemini] .wn-h span{font-size:12.5px;color:var(--ink2)}
+body[data-theme=gemini] .wn-h i{margin-left:auto;font-style:normal;font-size:10.5px;color:var(--ink3)}
+body[data-theme=gemini] .wn-now .wn-h b{color:var(--accent)}
+body[data-theme=gemini] .wn-rel ul{list-style:none;padding:0;margin:0}
+body[data-theme=gemini] .wn-rel li{font-size:13px;line-height:1.6;color:var(--ink2);
+  padding:5px 0 5px 14px;position:relative}
+body[data-theme=gemini] .wn-rel li::before{content:"";position:absolute;left:0;top:12px;
+  width:5px;height:1.5px;background:var(--ink3)}
+
 /* ---- STACKED ROWS ----
    `data-stack` is set by restackTables() in app.js, which MEASURES each table against its card
    and only marks the ones that do not fit. Nothing here is keyed to a column count.

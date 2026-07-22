@@ -170,7 +170,70 @@ function marketStatus() {
   if (day === 5) return bt(557, 720) || bt(872, 990) ? ["LIVE", true] : ["CLOSED", false];
   return bt(572, 930) ? ["LIVE", true] : ["CLOSED", false];
 }
+/* ------------------------------------------------------------------------------------------
+   VERSION + WHAT'S NEW.
+
+   Reads state/changelog.json, which scripts/build_changelog.py extracts from the `public` blocks
+   in CHANGELOG.md. That file is the ENGINEERING record — it names migrations and describes a
+   security hole that was closed — so nothing here ever renders it directly. Only the curated
+   notes reach a reader, and the extractor fails closed when a release has no public block.
+
+   The badge is always visible so "how current is my desk?" is answerable at a glance. The dot,
+   and the panel, appear only when the published version differs from the last one this browser
+   acknowledged — so a returning reader is told once, not nagged every visit.
+
+   VERSIONING is CalVer (YYYY.MM.DD, plus .2 for a second release the same day). Comparison is a
+   plain string inequality on purpose: any change at all is "something is new", and trying to
+   decide whether a version is NEWER would need parsing, which buys nothing here — the desk only
+   ever moves forward. */
+const VER_SEEN_KEY = "henneth:ver-seen";
+
+async function renderVersion() {
+  const el = $("sideVer");
+  if (!el) return;
+  const cl = await j("changelog.json");
+  const cur = cl?.current;
+  if (!cur) return;                       // no changelog yet -> no badge, not a broken row
+  let seen = null;
+  try { seen = localStorage.getItem(VER_SEEN_KEY); } catch {}
+  const fresh = seen !== cur;
+  el.hidden = false;
+  el.className = "side-ver" + (fresh ? " fresh" : "");
+  el.innerHTML = `<span>v${esc(cur)}</span>${fresh ? '<i class="ver-dot"></i>' : ""}`;
+  el.title = fresh ? "New in this release — click to read" : "What's new";
+  el.onclick = () => openWhatsNew(cl);
+  // First run on a browser that has never stored a version: record it WITHOUT showing the panel.
+  // Otherwise every new visitor is greeted by a changelog for a product they have not used yet.
+  if (seen === null) { try { localStorage.setItem(VER_SEEN_KEY, cur); } catch {} el.className = "side-ver"; el.innerHTML = `<span>v${esc(cur)}</span>`; }
+}
+
+function openWhatsNew(cl) {
+  const rels = (cl?.releases || []).slice(0, 5);
+  if (!rels.length) return;
+  try { localStorage.setItem(VER_SEEN_KEY, cl.current); } catch {}
+  const body = rels.map((r, i) => `
+    <div class="wn-rel${i === 0 ? " wn-now" : ""}">
+      <div class="wn-h"><b>v${esc(r.version)}</b>${r.title ? `<span>${esc(r.title)}</span>` : ""}<i>${esc(r.date)}</i></div>
+      <ul>${(r.notes || []).map(n => `<li>${esc(n)}</li>`).join("")}</ul>
+    </div>`).join("");
+  const ov = document.createElement("div");
+  ov.className = "pl-overlay wn-overlay";
+  ov.innerHTML = `<div class="pl-panel wn-panel">
+    <button class="pl-x" aria-label="Close">✕</button>
+    <h2>What's new</h2>
+    <p class="sub">Changes a reader would notice. The full engineering record stays in the repo.</p>
+    ${body}
+  </div>`;
+  const close = () => { ov.remove(); renderVersion(); };
+  ov.onclick = e => { if (e.target === ov || e.target.classList.contains("pl-x")) close(); };
+  document.addEventListener("keydown", function esc2(e) {
+    if (e.key === "Escape") { close(); document.removeEventListener("keydown", esc2); }
+  });
+  document.body.appendChild(ov);
+}
+
 async function renderHeader() {
+  renderVersion();          // fire and forget — the badge must never delay the header
   const [health, quant, live, macro, dash] = await Promise.all([j("health.json"), j("quant.json"), j("live.json"), j("macro.json"), j("dashboard.json")]);
   const [mt, mo] = marketStatus();
   $("mkt").textContent = "PSX " + mt; $("mkt").className = "pill " + (mo ? "ok" : "");

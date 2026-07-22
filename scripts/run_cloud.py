@@ -48,6 +48,10 @@ STEPS = [
     # sky) and after build_natal_ephemeris (it slices the Moon column out of that table). Writes
     # only into site/, never state/, so it cannot affect the desk's own data layer.
     "build_astro_lite.py",
+    # Public release notes for the terminal's version badge. Extracts ONLY the `public` blocks
+    # from CHANGELOG.md and refuses to build if one contains an internal term — so a bad note
+    # fails the step rather than shipping. Cheap, no network.
+    "build_changelog.py",
     "build_dashboard.py", "preflight.py",
 ]
 # steps allowed to exit non-zero without aborting the run

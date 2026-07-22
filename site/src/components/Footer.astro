@@ -8,6 +8,10 @@ const cols = [
     links: [
       { href: '/features', label: 'Features' },
       { href: '/solutions', label: 'Solutions' },
+      /* Sits under Product, not Resources: global coverage is part of what the subscription is,
+         not a reading-room extra. It is also the only site-wide link to /global-markets/ — the nav
+         deliberately stays at seven items, so the footer carries the crawl path. */
+      { href: '/global-markets', label: 'Global coverage' },
       { href: '/plans', label: 'Plans' },
     ],
   },
@@ -31,6 +35,10 @@ const cols = [
       { href: '/financial-astrology', label: 'Financial astrology' },
       { href: '/blog', label: 'Blog' },
       { href: '/tools', label: 'Calculators' },
+      /* Deep-linked past /tools on purpose. It is the one free page that demonstrates a house rule
+         (Rule 4 sizing) rather than describing one, so it is the highest-intent entry point on the
+         site for someone who has not signed up. */
+      { href: '/tools/position-size-calculator', label: 'Position size calculator' },
       { href: '/about', label: 'About' },
     ],
   },
@@ -52,8 +60,9 @@ const cols = [
         <span class="wm-1">HENNETH</span>
       </a>
       <p class="ft-blurb">
-        A research &amp; analytics desk for the Pakistan Stock Exchange. Plain-English company reads,
-        tested strategies, and analysts who debate every name in the open.
+        A research &amp; analytics desk that covers the Pakistan Stock Exchange in depth and the
+        global tape for context. Plain-English company reads, backtested strategies, and analysts
+        who debate every name in the open — published on a schedule.
       </p>
       <a href="/plans" class="btn ft-cta">Get started</a>
     </div>

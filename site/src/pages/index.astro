@@ -1,8 +1,22 @@
 ---
 import ctx from '../data/public/context.json';
+import coverage from '../data/public/coverage.json';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../site.config.ts';
+
+/* Global coverage is COUNTED, never typed. Same reasoning as global-markets.astro: the number comes
+   from config/markets.json via the generated slice, so adding a symbol to the desk updates the
+   homepage claim in the same commit. A hard-coded "23" would be a factual claim with no owner. */
+const usGroups: Record<string, { symbol: string; name: string }[]> =
+  (coverage as any)?.markets?.US?.groups ?? {};
+const globalCount = Object.values(usGroups).reduce((n, g) => n + g.length, 0);
+const globalGroups: [string, string][] = [
+  ['Indices', 'indices'],
+  ['US sector ETFs', 'sectors'],
+  ['Global & EM baskets', 'global'],
+  ['Rates & commodities', 'rates_commodity'],
+];
 
 /* THE HERO BOARD IS REAL DATA — from the committed public extract.
 
@@ -49,11 +63,17 @@ const fallbackHeat: [string, number][] = [
 const dir = (p: number) => (p > 0 ? 1 : p < 0 ? -1 : 0);
 const fmtPct = (p: number) => `${p > 0 ? '+' : ''}${p.toFixed(1)}%`;
 
+/* Six, not four. The global row had to appear here — the trust bar is the first place a visitor
+   checks the scale of the thing, and coverage that only shows up three sections down reads as an
+   afterthought. Six divides cleanly by the 3-column desktop grid AND the 2-column tablet one, so
+   no orphan cell is left showing the grid's line colour. */
 const stats = [
-  ['550+', 'Listed names covered'],
-  ['70', 'Tested strategies'],
+  ['550+', 'PSX names covered'],
+  [String(globalCount), 'Global symbols for context'],
+  ['70', 'Backtested strategies'],
   ['19 yrs', 'Of price history'],
   ['4', 'Valuation models'],
+  ['2,589', 'Astro hypotheses tested'],
 ];
 
 /* Fourth element on each row is the sprite id — see IconSprite.astro. */
@@ -75,7 +95,7 @@ const principles = [
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <p class="kicker">PSX Research Terminal · Now in early access</p>
+        <p class="kicker">PSX Research Terminal · Global context · Now in early access</p>
         {/* The astro line is IN the headline, not buried in the lead — it is the thing no other
             PSX desk does. The claim is deliberately about testing, never about predicting. */}
         <h1>
@@ -87,9 +107,10 @@ const principles = [
           Vedic astro lens — computed, tested against 19 years, and published even when it fails
         </p>
         <p class="lead hero-lead">
-          Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk.
-          We even compute the sky and test what tradition claims it governs. Then every dated call,
-          astrological ones included, is graded against what prices actually did.
+          Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk,
+          read against the global tape that moves Karachi second-hand. We even compute the sky and
+          test what tradition claims it governs. Then every dated call, astrological ones included,
+          is graded against what prices actually did.
         </p>
         <p class="hero-sub muted">
           The desk does the homework in public and keeps its own scorecard — including the tests
@@ -326,11 +347,57 @@ const principles = [
     </div>
   </section>
 
-  <!-- ================= 04 SCORES (method, not numbers) ================= -->
+  {/* ================= 04 THE WORLD =================
+      The counts come from coverage.json, so this block cannot drift from what the pipeline covers.
+      It states the limit in the same breath as the claim: index and sector level, context only, no
+      signals. config/markets.json sets signals_enabled:false for the US book and this section is
+      the public face of that flag — describing it as a track record would be false. */}
   <section class="section">
+    <div class="wrap two-col rev">
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="label">Global coverage</span>
+          <span class="mock-tag">{globalCount} symbols · end of day</span>
+        </div>
+        <div class="mock-body">
+          {globalGroups.map(([label, key]) => (
+            <div class="vrow">
+              <span>{label}</span>
+              <span class="muted">{(usGroups[key] ?? []).length}</span>
+            </div>
+          ))}
+          <hr class="hair" />
+          <div class="vrow gw-row">
+            <span>Signals generated on these</span>
+            <span class="pixel gw-zero">0</span>
+          </div>
+          <p class="mock-note muted">
+            Context for the PSX book. The desk’s risk rules are calibrated on PSX behaviour, so a
+            global symbol never produces a setup.
+          </p>
+        </div>
+      </div>
+      <div>
+        <p class="kicker"><Icon name="global" size={14} /> 04 · The world</p>
+        <h2>Karachi does not trade in isolation</h2>
+        <p class="lead">
+          The tape that moves PSX is not listed on it. The desk tracks {globalCount} global symbols —
+          the broad indices, the eleven US sector ETFs, the EM and developed baskets a foreign
+          allocator rotates between, and the rates, credit, gold and oil that set Pakistan’s import
+          bill — and reads them against its own PSX sector work.
+        </p>
+        <a href="/global-markets/" class="btn" data-ev="home_section_link" data-ev-section="global">
+          What the desk covers ›
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 05 SCORES (method, not numbers) ================= -->
+  <section class="section band-panel">
     <div class="wrap">
       <div class="sec-head">
-        <p class="kicker">04 · Scores</p>
+        <p class="kicker">05 · Scores</p>
         <h2>The desk grades itself in public</h2>
         <p class="lead">
           Every call carries a date and a falsifiable expectation. When the outcome window closes,
@@ -370,7 +437,7 @@ const principles = [
   <section class="section band-dark sky">
     <div class="wrap two-col">
       <div>
-        <p class="kicker dr-kicker">04 · The sky</p>
+        <p class="kicker dr-kicker">06 · The sky</p>
         <h2>The only desk that tests its own astrology</h2>
         <p class="lead dr-lead">
           Sidereal positions, Lahiri ayanamsa, the nine classical grahas — computed to the degree,
@@ -383,7 +450,12 @@ const principles = [
           a lens you refuse to test isn’t research — it’s a horoscope with a Bloomberg terminal.
         </p>
         <div class="sky-cta">
-          <a href="/features" class="btn">How the sky lens works ›</a>
+          {/* Points at the dedicated page, not /features. That page carries the full method, the
+              multiplicity correction and the null result — and it is the one the homepage should
+              pass authority to, since it is what an "is astrology real for markets" search lands on. */}
+          <a href="/financial-astrology/" class="btn" data-ev="home_section_link" data-ev-section="astro">
+            Read the tested lens ›
+          </a>
           <a href={site.appUrl} class="btn btn-ghost" rel="noopener">Cast your chart free</a>
         </div>
       </div>
