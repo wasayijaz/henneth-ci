@@ -1,7 +1,6 @@
 {
  "reaffirm": [
   "FFC",
-  "UBL",
   "ENGROH",
   "MEBL",
   "OGDC",
@@ -19,12 +18,10 @@
   "MLCF",
   "PTC",
   "SAZEW",
-  "ATRL",
   "SNGP",
   "PAEL",
   "KEL",
   "CNERGY",
-  "GAL",
   "LOTCHEM",
   "SSGC",
   "FFL",
@@ -36,8 +33,20 @@
  "delta": [],
  "full": [
   {
+   "symbol": "UBL",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "PIOC",
    "why": "never covered"
+  },
+  {
+   "symbol": "HCAR",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "GAL",
+   "why": "material change since last Room"
   },
   {
    "symbol": "FATIMA",
@@ -172,11 +181,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "NETSOL",
+   "symbol": "UNITY",
    "why": "never covered"
   },
   {
-   "symbol": "UNITY",
+   "symbol": "NETSOL",
    "why": "never covered"
   },
   {
@@ -232,10 +241,6 @@
    "why": "never covered"
   },
   {
-   "symbol": "TELE",
-   "why": "never covered"
-  },
-  {
    "symbol": "TPL",
    "why": "never covered"
   },
@@ -249,6 +254,10 @@
   },
   {
    "symbol": "SGPL",
+   "why": "never covered"
+  },
+  {
+   "symbol": "TELE",
    "why": "never covered"
   },
   {
@@ -280,23 +289,26 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "HCAR",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "HUBC",
    "why": "material change since last Room"
   },
   {
    "symbol": "MARI",
    "why": "material change since last Room"
+  },
+  {
+   "symbol": "ATRL",
+   "why": "material change since last Room"
   }
  ],
  "_meta": {
-  "built": "2026-07-21 21:42",
+  "built": "2026-07-22 06:16",
   "full_budget": 14,
   "run_full_now": [
+   "UBL",
    "PIOC",
+   "HCAR",
+   "GAL",
    "FATIMA",
    "SRVI",
    "BOP",
@@ -306,12 +318,12 @@
    "ILP",
    "JVDC",
    "SEARL",
-   "GLAXO",
-   "NATF",
-   "NML",
-   "KOHC"
+   "GLAXO"
   ],
   "deferred_full": [
+   "NATF",
+   "NML",
+   "KOHC",
    "TRG",
    "AGP",
    "AIRLINK",
@@ -332,8 +344,8 @@
    "GCIL",
    "NCPL",
    "FCL",
-   "NETSOL",
    "UNITY",
+   "NETSOL",
    "ZAL",
    "CSAP",
    "TOMCL",
@@ -347,11 +359,11 @@
    "MACFL",
    "PACE",
    "QUICE",
-   "TELE",
    "TPL",
    "DFSM",
    "KOHTM",
    "SGPL",
+   "TELE",
    "ZUMA",
    "OBOY",
    "MCB",
@@ -359,15 +371,15 @@
    "DGKC",
    "PSX",
    "GHNI",
-   "HCAR",
    "HUBC",
-   "MARI"
+   "MARI",
+   "ATRL"
   ],
   "counts": {
-   "full_due": 64,
+   "full_due": 67,
    "full_now": 14,
    "delta": 0,
-   "reaffirm": 32
+   "reaffirm": 29
   },
   "est_tokens_today": 308000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
