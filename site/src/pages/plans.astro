@@ -44,12 +44,20 @@ const faqs = [
   ['Do you show your losses?', 'Yes. Every dated call is scored against what prices actually did, and the misses stay on the record. A track record that only shows wins isn’t one.'],
   ['How do I send feedback?', `Email ${site.contactEmail}. Anything — a number that looks wrong, a page that confused you, a feature you expected and couldn’t find. It all gets read.`],
 ];
+
+/* FAQPage schema is built FROM the same array the page renders below, not typed a second time.
+   Google requires the marked-up answer to be the visible one, and "is this free / what's the catch
+   / is this advice" is exactly the query set this page should own. Only emitted in early access —
+   the paid variant (PlansPaid) renders different questions, so marking these up there would
+   describe copy that isn't on the page. */
+const faqLd = early ? faqs.map(([q, a]) => ({ q, a })) : undefined;
 ---
 
 <Base
   title={early ? 'Plans — free during early access' : 'Plans'}
   path="/plans"
   active="plans"
+  faq={faqLd}
   description={
     early
       ? 'Henneth is free during early access. The whole research desk is open — come in, use it, and tell us what needs fixing.'
@@ -218,7 +226,7 @@ const faqs = [
 
   .dr-kicker { color: #8f8f88; }
   .fb-lead { max-width: 620px; margin: 0 auto 24px; color: #c8c8c0; }
-  .fb-fine { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 22px; color: #7a7a72; }
+  .fb-fine { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 22px; color: #8f8f88; }
 
   .faq-wrap { max-width: 800px; }
   .faq { margin-top: 20px; border-top: var(--rule); }

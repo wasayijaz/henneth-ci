@@ -18,6 +18,7 @@
  */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
 import { site } from '../site.config.ts';
 import coverage from '../data/public/coverage.json';
 
@@ -40,12 +41,42 @@ const GROUPS: [string, string, string, string][] = [
 ];
 
 const total = GROUPS.reduce((n, [k]) => n + group(k).length, 0);
+
+/* The same array is rendered by <Faq> and marked up as FAQPage by <Base>. The counts interpolate
+   from the slice for the same reason the page body does — an answer that says "23" while the grid
+   above shows 24 is exactly the drift this page was built to avoid.
+   These are written as the questions a search actually carries ("does it cover US stocks", "is the
+   data live"), because that is what an FAQ rich result competes on. Every answer is a limit or a
+   fact, none is a pitch. */
+const faq = [
+  {
+    q: 'Does Henneth signal on US or global markets?',
+    a: `No. The desk covers ${total} global symbols at index and sector level for context only, and generates no setups on them. Its risk rules — position sizing, one position per sector, the circuit breaker — are calibrated on PSX behaviour, so a global symbol never produces a trade setup. Signals are PSX-only.`,
+  },
+  {
+    q: 'Why does a Pakistan Stock Exchange desk track the S&P 500, gold and oil?',
+    a: 'Because Karachi does not trade in isolation. Global risk appetite drives the frontier flows that reach PSX second-hand, and oil, gold and US rates set Pakistan’s import bill, inflation path and discount rate. The desk reads that tape against its own PSX sector work rather than pretending PSX moves alone.',
+  },
+  {
+    q: 'Is the global market data live or delayed?',
+    a: 'End of day, not live. US regular hours fall outside every cycle the desk runs, and a scheduled daily read is what this publication is. Nothing in the global layer is a real-time feed.',
+  },
+  {
+    q: 'Which global symbols does the desk cover?',
+    a: `${total} in four groups: the broad US indices including the volatility index, the eleven US sector ETFs, the emerging and developed-market baskets a foreign allocator rotates between, and the rates, credit, gold and oil that matter to Pakistan. The list is generated from the desk’s own configuration, so this page cannot fall out of step with what the pipeline actually covers.`,
+  },
+  {
+    q: 'Does Henneth cover individual US stocks?',
+    a: 'No. On a single US name the desk would be the ten-thousandth source of the same chart. The depth is Pakistani — nineteen years of PSX history, four-way valuation on every covered name, and an analyst room that debates them in the open. The global layer is the context around that.',
+  },
+];
 ---
 
 <Base
   title="Global markets coverage"
   path="/global-markets"
   active="features"
+  faq={faq}
   description={`The ${total} global symbols the Henneth desk covers — indices, the eleven US sector ETFs, EM and developed baskets, rates and commodities — at index and sector level, for the context they give PSX.`}
 >
   <section class="section-tight">
@@ -60,10 +91,13 @@ const total = GROUPS.reduce((n, [k]) => n + group(k).length, 0);
     </div>
   </section>
 
-  {GROUPS.map(([key, heading, ic, why]) => {
+  {/* Banded alternately. Seven sections on one surface reads as one endless page, and the groups
+      are the page's actual structure — the band is what says "new group" before the kicker does. */}
+  {GROUPS.map(([key, heading, ic, why], i) => {
     const rows = group(key);
     return rows.length ? (
-      <section class="wrap gm-grp">
+      <section class:list={['section-tight', 'gm-grp', i % 2 === 1 && 'band-panel']}>
+      <div class="wrap">
         <p class="kicker gm-k"><Icon name={ic} size={14} /> {heading}</p>
         <p class="muted gm-why">{why}</p>
         <div class="gm-grid">
@@ -74,11 +108,13 @@ const total = GROUPS.reduce((n, [k]) => n + group(k).length, 0);
             </div>
           ))}
         </div>
+      </div>
       </section>
     ) : null;
   })}
 
-  <section class="wrap gm-limits">
+  <section class="section-tight gm-limits">
+    <div class="wrap">
     <h2>What this is not</h2>
     <ul class="gm-list">
       <li>
@@ -100,29 +136,58 @@ const total = GROUPS.reduce((n, [k]) => n + group(k).length, 0);
         provenance and should be read that way.
       </li>
     </ul>
+    </div>
   </section>
 
-  <section class="wrap cta-band gm-cta">
-    <h2>The depth is still Pakistani</h2>
-    <p>
-      Nineteen years of PSX history, four-way valuation on every covered name, the analyst Desk Room,
-      and a scorecard that grades its own calls. The global layer is the context around it.
-    </p>
-    <a href={site.appUrl} class="btn btn-lg" rel="noopener">Open the desk →</a>
+  <Faq items={faq} heading="Global coverage, asked and answered" band="panel" />
+
+  {/* Was class="cta-band", which is defined nowhere in site/ — the closing pitch of the page has
+      been rendering as unstyled body text. .band-dark is the site's real closing surface. */}
+  <section class="section band-dark gm-cta">
+    <div class="wrap">
+      <h2>The depth is still Pakistani</h2>
+      <p class="lead gm-cta-l">
+        Nineteen years of PSX history, four-way valuation on every covered name, the analyst Desk
+        Room, and a scorecard that grades its own calls. The global layer is the context around it.
+      </p>
+      <a href={site.appUrl} class="btn btn-lg" rel="noopener">Open the desk →</a>
+    </div>
   </section>
 
   <style>
-    .gm-grp { margin-top: 34px; }
+    /* No margin-based spacing here any more. Every section carries .section-tight, so this page
+       breathes on the same clamp() as the rest of the site instead of roughly half of it. */
     .gm-why { max-width: 62ch; margin: 4px 0 14px; }
+    /* NOT the gap-as-rule pattern used by .tilegrid. That trick paints the container and lets the
+       gap show through, which only works when the column count divides the item count — here the
+       groups hold 5, 11, 3 and 4 tickers against 6 auto-filled columns, so every group's last row
+       left empty cells rendering as solid grey blocks. Instead each cell draws its own outline:
+       with gap and outline both 1.5px, adjacent outlines land exactly on top of each other in the
+       gap, the outermost cells draw the perimeter, and an unfilled tail is simply page. */
     .gm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 1px; background: var(--line); border: var(--rule); }
+      gap: 1.5px; }
     .gm-cell { background: var(--panel); padding: 11px 13px; display: flex;
-      flex-direction: column; gap: 3px; min-width: 0; }
-    .gm-cell b { font-size: 13px; letter-spacing: .02em; }
-    .gm-cell span { font-size: 12.5px; color: var(--ink-3); }
-    .gm-limits { margin-top: 44px; border-top: var(--rule); padding-top: 26px; }
+      flex-direction: column; gap: 3px; min-width: 0;
+      outline: 1.5px solid var(--line); outline-offset: 0; }
+    /* Weight and colour carry the hierarchy, not size: 13px against 12.5px is not a hierarchy, it
+       is a rendering artefact. The ticker is the thing being looked up, so it wins on weight. */
+    .gm-cell b { font-size: 12.5px; font-weight: 700; letter-spacing: .02em; }
+    .gm-cell span { font-size: 11px; color: var(--ink-3); }
+
+    /* The only tile surface on the site without a hover, until now. z-index matters: with rules
+       drawn as outlines, the neighbour's outline would otherwise paint over the darkened one. */
+    @media (hover: hover) {
+      .gm-cell { transition: transform .18s ease, outline-color .18s ease, background .18s ease; }
+      .gm-cell:hover {
+        transform: translateY(-2px); outline-color: var(--ink-1);
+        background: var(--panel-2); position: relative; z-index: 1;
+      }
+    }
+
+    .gm-limits { border-top: var(--rule); }
     .gm-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; max-width: 76ch; }
-    .gm-list li { padding-left: 14px; border-left: 2px solid var(--line); }
-    .gm-cta { margin-top: 44px; }
+    /* var(--rule), not 2px — one rule weight site-wide is the whole visual argument. */
+    .gm-list li { padding-left: 14px; border-left: var(--rule); }
+    .gm-cta-l { color: #c8c8c0; max-width: 62ch; margin: 0 0 22px; }
   </style>
 </Base>

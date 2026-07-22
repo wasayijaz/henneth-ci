@@ -146,7 +146,10 @@ const principles = [
             red while its printed percentage says otherwise. See the motion block in global.css. */}
         {haveLiveBoard ? (
           <div class="heat heat--live">
-            {board.map((b) => (
+            {/* slice(0,15), not map over the whole board: .heat is repeat(5,1fr) drawing its rules
+                with the gap, so any count that is not a multiple of 5 leaves the final row painting
+                the line colour as solid blocks. The gate is >= 15, so the slice can never starve. */}
+            {board.slice(0, 15).map((b) => (
               <div class="heat-cell" data-dir={dir(b.pct)}>
                 <span class="hc-sym">{b.sym}</span>
                 <span class="hc-pct">{fmtPct(b.pct)}</span>
@@ -483,6 +486,12 @@ const principles = [
   <!-- ================= PRINCIPLES ================= -->
   <section class="section band-panel">
     <div class="wrap">
+      {/* Headed, because a bare tile strip floating between two banded sections reads as leftover
+          layout rather than as a section with something to say. */}
+      <div class="sec-head">
+        <p class="kicker"><Icon name="risk" size={14} /> How the desk works</p>
+        <h2>Rules it cannot talk itself out of</h2>
+      </div>
       <div class="tilegrid principles">
         {principles.map(([t, d, ic]) => (
           <div class="tile">
@@ -495,8 +504,63 @@ const principles = [
     </div>
   </section>
 
-  <!-- ================= PRICING TEASER ================= -->
+  {/* ================= THE SIZING PROOF =================
+      "Research, not advice" is a claim every desk makes. This is the one place it cost something,
+      so it is the one worth showing: the share count came out of the published setup and went into
+      a free calculator the reader drives. The formula shown here is CLAUDE.md Rule 4 verbatim —
+      if that rule ever changes, this block and the calculator must change with it. */}
   <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker"><Icon name="risk" size={14} /> Research, not advice</p>
+        <h2>We deleted our own share count</h2>
+        <p class="lead">
+          Setups used to carry a number of shares. It was honest arithmetic — and it was arithmetic
+          on <em>our</em> capital and <em>our</em> risk budget, printed next to a ticker where it read
+          like an instruction. So it came out.
+        </p>
+        <p class="psz-body muted">
+          The formula stayed, in the open. It is now a calculator you drive: your capital, your risk
+          per trade, your stop. Same rule the desk sizes by, no account needed, nothing sent anywhere.
+        </p>
+        <a
+          href="/tools/position-size-calculator/"
+          class="btn btn-solid"
+          data-ev="home_section_link"
+          data-ev-section="position_size"
+        >Size a position free ›</a>
+      </div>
+
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="label">Rule 4 · position sizing</span>
+          <span class="mock-tag">The whole formula</span>
+        </div>
+        <div class="mock-body">
+          <div class="psz-step">
+            <span class="label muted">Risk budget</span>
+            <code>capital × risk per trade</code>
+          </div>
+          <div class="psz-step">
+            <span class="label muted">Risk per share</span>
+            <code>entry − stop</code>
+          </div>
+          <div class="psz-step">
+            <span class="label muted">Shares</span>
+            <code>floor( min( budget ÷ risk per share, 8% of capital ÷ entry ) )</code>
+          </div>
+          <hr class="hair" />
+          <p class="mock-note muted">
+            Size by stop distance, then cap the position’s value at 8%. A setup where the stop sits
+            above the entry, or where the maths returns zero shares, is invalid — not rounded up.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICING TEASER ================= -->
+  <section class="section band-panel">
     <div class="wrap two-col">
       <div>
         <p class="kicker">Plans</p>
@@ -633,8 +697,11 @@ const principles = [
   .mock-foot-r { text-align: right; }
 
   .trust { padding: 0; }
-  .trust-grid { grid-template-columns: repeat(4, 1fr); border-left: 0; border-right: 0; }
-  .trust-n { font-size: 32px; }
+  /* Three, because there are six stats. Four columns would leave a two-cell orphan row showing the
+     grid's line colour through the gap — the tilegrid draws its rules with background, so an
+     incomplete final row is a visible defect, not just loose spacing. */
+  .trust-grid { grid-template-columns: repeat(3, 1fr); border-left: 0; border-right: 0; }
+  .trust-n { font-size: 32px; font-variant-numeric: tabular-nums; }
   .trust-l { margin-top: 8px; }
 
   .steps { grid-template-columns: repeat(3, 1fr); margin-top: 28px; }
@@ -642,7 +709,7 @@ const principles = [
   .step-d { font-size: 11.5px; margin: 0; }
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
-  .sec-head { max-width: 640px; margin-bottom: 26px; }
+  /* .sec-head moved to global.css — <Faq> uses it too, and a scoped rule cannot reach it. */
 
   .rank { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
   .rank-k { font-size: 9px; letter-spacing: 0.1em; color: var(--ink-3); min-width: 58px; }
@@ -651,7 +718,22 @@ const principles = [
 
   .vrow { display: flex; justify-content: space-between; font-size: 11px; padding: 9px 0; border-bottom: 1px dotted var(--hair); }
   .vband { text-align: center; padding: 6px 0 2px; }
-  .vband-v { font-size: 26px; margin: 8px 0; letter-spacing: 0.06em; }
+  .vband-v { font-size: 26px; margin: 8px 0; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+
+  /* The global panel's closing row. The zero is the point of the section, so it gets the pixel face
+     the desk reserves for figures that carry weight — and it stays --ink-1, never --dn: it is a
+     deliberate design limit, not a bad reading. */
+  .gw-row { border-bottom: 0; align-items: center; padding-bottom: 0; }
+  .gw-zero { font-size: 22px; line-height: 1; letter-spacing: 0.04em; }
+
+  .psz-body { font-size: 11.5px; max-width: 52ch; margin: 0 0 20px; }
+  .psz-step { padding: 10px 0; border-bottom: 1px dotted var(--hair); }
+  .psz-step:last-of-type { border-bottom: 0; }
+  .psz-step code {
+    display: block; margin-top: 6px;
+    font-family: var(--font-mono); font-size: 11.5px; line-height: 1.6;
+    color: var(--ink-1); word-break: break-word;
+  }
 
   .deskroom .lead, .dr-lead { color: #c8c8c0; }
   .dr-kicker { color: #8f8f88; }
@@ -718,7 +800,7 @@ const principles = [
   .dr-chair { border-color: var(--bg); }
   .dr-chair-h { display: flex; justify-content: space-between; }
   .dr-dissent { color: #9a9a92 !important; }
-  .dr-illus { padding: 0 14px 12px; color: #7a7a72; }
+  .dr-illus { padding: 0 14px 12px; color: #8f8f88; }
   @keyframes rpUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
   .score-how { grid-template-columns: repeat(4, 1fr); }
@@ -734,7 +816,12 @@ const principles = [
     padding: 18px; text-decoration: none; border-bottom: 1px dotted var(--hair);
   }
   .tease-row:last-child { border-bottom: 0; }
-  .tease-row:hover { background: var(--panel-2); }
+  /* Gated: ungated, a tap on a phone leaves the row stuck in its hover state until the next tap
+     lands elsewhere, which reads as "this row is selected" on a row that selects nothing. */
+  @media (hover: hover) {
+    .tease-row { transition: background 0.16s ease, transform 0.16s ease; }
+    .tease-row:hover { background: var(--panel-2); transform: translateY(-2px); }
+  }
   .tease-n { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
   .tease-n em { font-style: normal; color: var(--ink-3); font-weight: 400; }
   .tease-p { font-family: var(--font-mono); font-size: 20px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
@@ -743,7 +830,8 @@ const principles = [
   .center { text-align: center; }
   .final-lead { max-width: 560px; margin: 0 auto 22px; }
   .final-cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .final-fine { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 20px; color: #7a7a72; }
+  /* #8f8f88 is the site's dark-surface muted value and clears 4.5:1; #7a7a72 did not. */
+  .final-fine { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 20px; color: #8f8f88; }
 
   @media (max-width: 920px) {
     .hero-grid, .two-col { grid-template-columns: 1fr; gap: 32px; }

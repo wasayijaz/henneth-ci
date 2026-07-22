@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Faq from './Faq.astro';
 import TickerTape from './explain/TickerTape.astro';
 import DeskPeek from './explain/DeskPeek.astro';
 import { site } from '../site.config.ts';
@@ -76,37 +77,21 @@ const {
   peekTitle,
 } = Astro.props;
 
-const url = new URL(path, site.url).href;
 const href = appPlan ? `${site.appUrl}/?plan=${appPlan}&auth=signup` : '/contact';
 
-const crumbLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
-    { '@type': 'ListItem', position: 2, name: 'Solutions', item: new URL('/solutions/', site.url).href },
-    { '@type': 'ListItem', position: 3, name: h1, item: url },
-  ],
-};
-
-const faqLd = faqs.length
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqs.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-    }
-  : null;
+/* Neither BreadcrumbList nor FAQPage is built here — Base emits both, from `path` and from the
+   `faq` prop below, so a page can never ship two of either. `crumbLeaf={h1}` keeps the trail ending
+   in the short on-page heading rather than the long search-facing <title>. */
 ---
 
-<Base title={title} description={description} path={path} active="solutions">
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />
-    {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
-  </Fragment>
+<Base
+  title={title}
+  description={description}
+  path={path}
+  active="solutions"
+  crumbLeaf={h1}
+  faq={faqs.length ? faqs : undefined}
+>
 
   <section class="section-tight">
     <div class="wrap">
@@ -165,23 +150,8 @@ const faqLd = faqs.length
     </div>
   </section>
 
-  {
-    faqs.length > 0 && (
-      <section class="section-tight">
-        <div class="wrap">
-          <h2 class="sp-fh">Common questions</h2>
-          <div class="faqs">
-            {faqs.map((f) => (
-              <details class="faq">
-                <summary>{f.q}</summary>
-                <p set:html={f.a} />
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  {/* Shared <Faq> — same treatment and the same faq_expanded event as every other FAQ on the site. */}
+  <Faq items={faqs} heading="Common questions" />
 
   <section class="section band-dark">
     <div class="wrap sp-end">
@@ -201,7 +171,9 @@ const faqLd = faqs.length
 <style>
   .crumbs { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px; }
   .crumbs a { color: var(--ink-3); text-decoration: none; }
-  .crumbs a:hover { color: var(--ink-1); }
+  @media (hover: hover) {
+    .crumbs a:hover { color: var(--ink-1); }
+  }
   .crumbs span { margin: 0 6px; }
 
   .sp-h1 { max-width: 20ch; }
@@ -213,21 +185,13 @@ const faqLd = faqs.length
   /* Problem statement beside the live panel. Stacks below 900px with the panel FIRST — on a phone
      the visual is what stops the scroll, and mobile is where most of this traffic will land. */
   .sp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-  .sp-prob { border-left: 3px solid var(--ink-1); padding-left: 20px; }
+  /* 1.5px like every other rule on the site — see the same correction on .fa-straddle. */
+  .sp-prob { border-left: 1.5px solid var(--ink-1); padding-left: 20px; }
   .sp-prob-b { font-size: 15px; line-height: 1.7; margin: 8px 0 0; }
 
   .sp-f { grid-template-columns: repeat(3, 1fr); }
   .sp-fi h2 { font-size: 13px; margin: 0 0 6px; }
   .sp-fi p { font-size: 11.5px; margin: 0; line-height: 1.65; }
-
-  .sp-fh { font-size: 16px; margin-bottom: 16px; }
-  .faqs { border: var(--rule); background: var(--line); display: grid; gap: 1.5px; max-width: 68ch; }
-  .faq { background: var(--panel); }
-  .faq summary { cursor: pointer; padding: 14px 18px; font-size: 12.5px; font-weight: 600; list-style: none; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: '+'; float: right; font-family: var(--font-mono); color: var(--ink-3); }
-  .faq[open] summary::after { content: '−'; }
-  .faq p { margin: 0; padding: 0 18px 16px; font-size: 12.5px; line-height: 1.7; color: var(--ink-2); }
 
   .sp-end { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
   .dr-kicker { color: #8f8f88; }

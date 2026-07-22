@@ -100,21 +100,19 @@ const corpLd = {
   isAccessibleForFree: true,
 };
 
-const crumbLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
-    { '@type': 'ListItem', position: 2, name: 'PSX companies', item: new URL('/psx/', site.url).href },
-    { '@type': 'ListItem', position: 3, name: `${t.name} (${sym})`, item: url },
-  ],
-};
+/* No BreadcrumbList here — Base derives it from `path`. `crumbLeaf` keeps the trail ending in the
+   company name rather than the long search-facing <title>. */
 ---
 
-<Base title={title} description={description} path={path} active="">
+<Base
+  title={title}
+  description={description}
+  path={path}
+  active=""
+  crumbLeaf={`${t.name} (${sym})`}
+>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(corpLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />
   </Fragment>
 
   <section class="section-tight ph">

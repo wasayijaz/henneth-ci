@@ -84,16 +84,8 @@ const articleLd = {
   isAccessibleForFree: true,
 };
 
-// Breadcrumbs give Google the Home > Blog > Post trail to show in place of a raw URL in results.
-const crumbLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
-    { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL('/blog/', site.url).href },
-    { '@type': 'ListItem', position: 3, name: post.data.title, item: url },
-  ],
-};
+/* No BreadcrumbList here — Base derives the Home > Blog > Post trail from `path`, and the leaf
+   already resolves to `title`, which is the post title. */
 ---
 
 <Base
@@ -105,7 +97,6 @@ const crumbLd = {
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />
     <meta property="article:published_time" content={published.toISOString()} />
     <meta property="article:modified_time" content={updated.toISOString()} />
   </Fragment>
@@ -222,7 +213,7 @@ const crumbLd = {
   .prose :global(ul), .prose :global(ol) { margin: 0 0 16px; padding-left: 20px; font-size: 13px; line-height: 1.75; }
   .prose :global(li) { margin-bottom: 6px; }
   .prose :global(a) { text-decoration: underline; text-underline-offset: 2px; }
-  .prose :global(blockquote) { margin: 24px 0; padding: 12px 18px; border-left: 2px solid var(--ink-1); background: var(--panel-2); }
+  .prose :global(blockquote) { margin: 24px 0; padding: 12px 18px; border-left: 1.5px solid var(--ink-1); background: var(--panel-2); }
   .prose :global(blockquote p) { margin: 0; }
   .prose :global(code) { font-family: var(--font-mono); font-size: 11.5px; background: var(--panel-2); padding: 2px 5px; }
   .prose :global(pre) { padding: 16px; background: var(--panel-2); overflow-x: auto; margin: 0 0 16px; }
@@ -249,7 +240,7 @@ const crumbLd = {
   .toc nav { display: flex; flex-direction: column; gap: 9px; }
   .toc-a {
     font-size: 11px; line-height: 1.5; color: var(--ink-2); text-decoration: none;
-    border-left: 2px solid transparent; padding-left: 10px; margin-left: -12px;
+    border-left: 1.5px solid transparent; padding-left: 10px; margin-left: -12px;
     transition: color 0.15s ease, border-color 0.15s ease;
   }
   .toc-a:hover { color: var(--ink-1); }

@@ -29,6 +29,7 @@
  */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
 import { site } from '../site.config.ts';
 import lite from '../data/public/astro_lite.json';
 
@@ -80,9 +81,41 @@ const scorecard: [string, string, boolean][] = [
   ['Years of PSX history', '19', false],
   ['Conditions with a proven edge', '0', true],
 ];
+
+/* This page is the one most likely to be reached by a question rather than a brand search —
+   "does financial astrology work", "is astrology real for stock markets" — so the FAQ is written to
+   answer those queries literally, and to answer them with the null result rather than around it.
+   The numbers here are the scorecard's numbers; if that sweep is re-run, both move together.
+   Rendered below by <Faq> and marked up by <Base> from this same array. */
+const faq = [
+  {
+    q: 'Does financial astrology actually work on the stock market?',
+    a: 'On this desk’s testing, no. 2,589 astrological hypotheses were tested across 101 subjects and 4,893 trading days of PSX history. After correcting for the number of tests — the correction that strips out rules which only look profitable because enough of them were tried — zero conditions showed a real edge. That is the published result, and it is why nothing here is presented as predictive.',
+  },
+  {
+    q: 'Then why does Henneth compute astrology at all?',
+    a: 'Because it is testable, and most places that sell it never test it. The sky is computed the same way every cycle, the claims tradition makes about it are written down in advance, and the outcome is scored against what prices actually did. A tradition held to the same bar as a moving-average crossover is worth more than one that is never checked. It is kept as a lens for reading the market, not a reason to buy anything.',
+  },
+  {
+    q: 'Does astrology influence Henneth’s trade setups?',
+    a: 'Never. Astro generates no setups and gates no setups. It is reported and scored every cycle, and that is the whole of its role. Setups come from price, fundamentals and backtested strategies, and the risk rules that size them make no reference to the sky.',
+  },
+  {
+    q: 'What kind of astrology does the desk use?',
+    a: 'Vedic — sidereal positions with the Lahiri ayanamsa, computed from an ephemeris rather than read from anyone’s almanac. Every position, the system used, and the moment it was computed are shown on this page so the arithmetic can be checked against any other ephemeris.',
+  },
+  {
+    q: 'Is the personal birth-chart reading free?',
+    a: 'The chart on this page casts free in your browser and nothing is sent anywhere. The ticker-level reading — the same chart read against every name on the exchange, with birth time so the sign changes resolve exactly — is an account feature inside the desk, and accounts are free during early access.',
+  },
+  {
+    q: 'Is any of this investment advice?',
+    a: 'No. It is astrological exploration published as research. Henneth is not a licensed investment adviser, does not manage money, does not execute trades, and gives no personalised advice. Nothing here is a recommendation to buy or sell.',
+  },
+];
 ---
 
-<Base title={title} description={description} path="/financial-astrology" active="astro">
+<Base title={title} description={description} path="/financial-astrology" active="astro" faq={faq} crumbLeaf="Financial astrology">
   <div class="fa">
     <section class="section-tight">
       <div class="wrap fa-hero">
@@ -122,7 +155,10 @@ const scorecard: [string, string, boolean][] = [
       </div>
     </section>
 
-    <section class="section-tight" id="cast">
+    {/* band-panel: the hero above it and this card both sat on --bg, so the page's single most
+        important interaction had no surface change announcing it. The band is what makes the
+        "Read my Moon ↓" jump land somewhere. */}
+    <section class="section-tight band-panel" id="cast">
       <div class="wrap">
         <p class="kicker">01 · Your chart</p>
         <h2>Start with your own Moon</h2>
@@ -298,6 +334,8 @@ const scorecard: [string, string, boolean][] = [
         </div>
       </div>
     </section>
+
+    <Faq items={faq} kicker="05 · Questions" heading="What people ask before they trust this page" />
 
     <section class="section band-dark fa-cta">
       <div class="wrap">
@@ -603,7 +641,9 @@ const scorecard: [string, string, boolean][] = [
     /* The zero is the whole argument, so it gets the oversized numeral treatment the rest of the
        site reserves for headline figures. */
     .fa .fa-score-row--big { padding: 14px 16px; align-items: baseline; }
-    .fa .fa-score-row--big .pixel { font-size: 40px; }
+    /* 32px is that treatment — the same step .trust-n uses on the homepage. 40px was a size the
+       type scale does not contain, which made the figure look enlarged rather than featured. */
+    .fa .fa-score-row--big .pixel { font-size: 32px; }
     .fa .fa-score-fine { font-size: 10.5px; line-height: 1.65; margin: 0; padding: 12px 16px; }
 
     /* ---------- cast card ---------- */
@@ -618,7 +658,11 @@ const scorecard: [string, string, boolean][] = [
       padding: 12px 13px; border: var(--rule); background: var(--bg); color: var(--ink-1);
       transition: border-color 0.18s ease;
     }
-    .fa .fa-cast-row input:hover { border-color: var(--ink-1); }
+    /* Gated: on a phone an ungated :hover sticks after the tap that focuses the field, so the
+       input reads as permanently active. Focus already has its own ring. */
+    @media (hover: hover) {
+      .fa .fa-cast-row input:hover { border-color: var(--ink-1); }
+    }
     .fa .fa-cast-fine { font-size: 11px; color: var(--ink-3); margin: 12px 0 0; max-width: 640px; }
     .fa .fa-out { margin-top: 20px; border-top: var(--rule); padding-top: 18px; }
 
@@ -668,8 +712,10 @@ const scorecard: [string, string, boolean][] = [
     }
     .fa .fa-w-cap { font-size: 9.5px; letter-spacing: 0.06em; color: var(--ink-3); text-align: center; }
 
+    /* 1.5px, not 3px. One rule weight site-wide is the entire visual argument of this design;
+       a 3px spine here was the only double-weight line on the page. */
     .fa .fa-straddle {
-      border-left: 3px solid var(--ink-1); background: var(--panel-2);
+      border-left: 1.5px solid var(--ink-1); background: var(--panel-2);
       padding: 12px 14px; margin: 20px 0 0; font-size: 12px;
       animation: fa-rise 0.36s ease 0.06s both;
     }
@@ -678,7 +724,9 @@ const scorecard: [string, string, boolean][] = [
       animation: fa-rise 0.36s ease 0.12s both;
     }
     .fa .fa-res-block + .fa-res-block { animation-delay: 0.2s; }
-    .fa .fa-res-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 18px; font-weight: 800; }
+    /* 16px: the site's h2 step. 18px was a size that exists nowhere else, so the readout heading
+       outranked the section headings above it. */
+    .fa .fa-res-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 16px; font-weight: 800; }
     .fa .fa-res-blurb { margin: 8px 0 0; font-size: 12px; }
     .fa .fa-chip {
       font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
@@ -702,7 +750,7 @@ const scorecard: [string, string, boolean][] = [
     }
     .fa .fa-conf--high { color: var(--up); border-color: var(--up-soft); background: var(--up-soft); }
     .fa .fa-empty {
-      font-size: 11.5px; color: var(--ink-3); border-left: 2px solid var(--line);
+      font-size: 11.5px; color: var(--ink-3); border-left: var(--rule);
       padding: 6px 0 6px 12px; margin: 0;
     }
     .fa .fa-res-foot { font-size: 11px; margin-top: 16px; }
@@ -712,8 +760,14 @@ const scorecard: [string, string, boolean][] = [
     .fa .fa-sky-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
     .fa .fa-sky-lead { color: #c8c8c0; max-width: 640px; }
     .fa .fa-sky-stamp { flex: none; }
+    /* Fixed at 3, not auto-fit. This is the gap-as-rule pattern — the container paints the line
+       colour and the gap shows it through — which only holds when the column count DIVIDES the
+       item count. There are exactly nine grahas, so 3 always fills its last row; auto-fit would
+       land on 4 or 5 columns at wide viewports and paint the tail as solid #2a2a27 blocks.
+       The ::after wash stagger below is written as nth-child(3n + …) for the same reason: it is a
+       diagonal only while the grid is three wide. */
     .fa .fa-sky-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1.5px; background: #2a2a27; border: 1.5px solid #2a2a27; margin-top: 24px;
     }
     .fa .fa-sky-cell {
@@ -753,7 +807,9 @@ const scorecard: [string, string, boolean][] = [
     .fa .fa-prov summary::-webkit-details-marker { display: none; }
     .fa .fa-prov summary::before { content: '+ '; }
     .fa .fa-prov[open] summary::before { content: '− '; }
-    .fa .fa-prov summary:hover { color: var(--bg); }
+    @media (hover: hover) {
+      .fa .fa-prov summary:hover { color: var(--bg); }
+    }
     .fa .fa-prov-body { margin-top: 12px; max-width: 720px; }
     .fa .fa-prov-row {
       display: flex; justify-content: space-between; gap: 16px;
@@ -783,6 +839,12 @@ const scorecard: [string, string, boolean][] = [
     .fa .fa-sgn[aria-pressed='true'] { background: var(--ink-1); color: var(--bg); }
     .fa .fa-sgn[aria-pressed='true'] .fa-glyph,
     .fa .fa-sgn[aria-pressed='true'] .muted { color: #a8a8a0; }
+    /* The selected tile is ink-on-ink, and the site's focus ring is ink. Keyboard users stepping
+       across the twelve signs would lose the cursor exactly on the tile they had selected, so the
+       pressed state inverts the ring and pulls it inside the fill. */
+    .fa .fa-sgn[aria-pressed='true']:focus-visible {
+      outline-color: var(--bg); outline-offset: -4px;
+    }
     @media (hover: hover) {
       .fa .fa-sgn:hover .fa-glyph { color: var(--ink-1); }
       .fa .fa-sgn[aria-pressed='true']:hover .fa-glyph { color: var(--bg); }
@@ -809,13 +871,22 @@ const scorecard: [string, string, boolean][] = [
     @media (max-width: 640px) {
       .fa .fa-cast, .fa .fa-sp { padding: 16px; }
       .fa .fa-cast-row .btn { width: 100%; justify-content: center; }
+      /* 16px exactly. iOS Safari zooms the whole viewport when a focused input is under 16px, and
+         this field is the page's primary interaction — a birth date that punts the reader into a
+         zoomed layout they have to pinch back out of is the worst place on the site for it. */
+      .fa .fa-cast-row input { font-size: 16px; }
+      /* Stays three wide (see .fa-sky-grid) — the padding gives way instead of the column count,
+         because dropping to two would orphan the ninth cell as a solid rule-coloured block. */
+      .fa .fa-sky-cell { padding: 11px 9px; }
+      .fa .fa-sky-sign { font-size: 13px; }
+      .fa .fa-sky-cell i { font-size: 9.5px; }
       .fa .fa-signs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       /* Tighter tile at phone width so the longest name still sits on one line inside a
          third of 375px rather than wrapping mid-word. */
       .fa .fa-sgn { padding: 12px; }
       .fa .fa-sgn b { font-size: 11px; }
       .fa .fa-res-top { grid-template-columns: 1fr; }
-      .fa .fa-score-row--big .pixel { font-size: 32px; }
+      .fa .fa-score-row--big .pixel { font-size: 26px; }
     }
   </style>
 </Base>

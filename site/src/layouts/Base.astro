@@ -14,6 +14,19 @@ interface Props {
   active?: string;
   /** 'article' on blog posts so the OG card renders as an article, not a product page. */
   ogType?: string;
+  /**
+   * Question/answer pairs that appear VERBATIM in the page body. Emits FAQPage schema.
+   * Google's guideline is explicit that the marked-up answer must be the visible answer, so a page
+   * may only pass this if it actually renders the same text — schema written for the crawler alone
+   * is a manual-action risk, not a shortcut.
+   */
+  faq?: { q: string; a: string }[];
+  /**
+   * Overrides the last breadcrumb's name. Needed where `title` is a long search-facing title
+   * ("Position Size Calculator PSX — Shares by Risk and Stop Loss") but the trail should end in the
+   * short label a reader sees in the <h1>.
+   */
+  crumbLeaf?: string;
 }
 
 const {
@@ -23,6 +36,8 @@ const {
   noindex = false,
   active = '',
   ogType = 'website',
+  faq,
+  crumbLeaf,
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
@@ -85,6 +100,66 @@ const appLd = {
   disambiguatingDescription:
     'Educational research and analytics tooling. Not an investment adviser; provides no personalised advice and places no orders.',
 };
+
+/* BREADCRUMBS — derived from `path`, never hand-written per page.
+   Two reasons it lives here rather than in each page: a breadcrumb that disagrees with the URL is
+   worse than none (Google drops the whole trail), and the site already has three nested families
+   (/solutions/*, /tools/*, /legal/*) that would each have to remember. Deriving it means a new page
+   gets the trail by existing.
+   The visible <nav> is NOT emitted — the trail is short and the header carries the same hierarchy —
+   but the crumb NAMES are the words already on screen (the nav label for a section, the page's own
+   <title> for the leaf), so the markup still describes what a reader sees. */
+const CRUMB_LABELS: Record<string, string> = {
+  solutions: 'Solutions',
+  tools: 'Calculators',
+  legal: 'Legal',
+  blog: 'Blog',
+  research: 'Research',
+  features: 'Features',
+  plans: 'Plans',
+  psx: 'PSX companies',
+};
+/* Slug → words, with the acronyms this desk uses left upper-case. Without this, "psx-screener"
+   becomes "Psx screener", which reads as a typo in a rich result. */
+const ACRONYMS: Record<string, string> = { psx: 'PSX', us: 'US', sip: 'SIP', cgt: 'CGT', etf: 'ETF' };
+const prettify = (slug: string): string =>
+  slug
+    .split('-')
+    .map((w, i) => ACRONYMS[w] ?? (i === 0 ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+    .join(' ');
+const segments = canonicalUrl.pathname.split('/').filter(Boolean);
+const breadcrumbLd = segments.length && !noindex
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', site.url).href },
+        ...segments.map((seg, i) => ({
+          '@type': 'ListItem',
+          position: i + 2,
+          // The leaf takes `crumbLeaf` if given, else the page's own title, so the trail ends in
+          // words a reader has seen rather than a de-slugged guess. Ancestors take the nav label.
+          name:
+            i === segments.length - 1 && (crumbLeaf || title)
+              ? crumbLeaf || title
+              : (CRUMB_LABELS[seg] ?? prettify(seg)),
+          item: new URL(segments.slice(0, i + 1).join('/') + '/', site.url).href,
+        })),
+      ],
+    }
+  : undefined;
+
+const faqLd = faq?.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : undefined;
 ---
 
 <!doctype html>
@@ -147,6 +222,8 @@ const appLd = {
     <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(siteLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
+    {breadcrumbLd && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />}
+    {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
 
     {/* Google tag (gtag.js). `is:inline` is required: without it Astro bundles the tag, which
         breaks gtag's global + script ordering. `window.gtag = gtag` is deliberate: define:vars

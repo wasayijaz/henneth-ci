@@ -8,20 +8,26 @@ export const site = {
   // The in-app product name, used when referring to the terminal itself.
   appName: 'Henneth Desk',
   /* Short tagline used in the browser tab and OG cards. Kept under ~50 characters because
-     Base.astro renders "<name> — <tagline>" and search results truncate a title past ~60. */
-  tagline: 'PSX research and financial astrology, made clear.',
-  /* One-line description used for meta + JSON-LD.
-     Trimmed from 210 characters to fit the ~160 Google actually shows — the old one was being cut
-     mid-sentence, so the closing "Research, not advice" never appeared in a result.
+     Base.astro renders "<name> — <tagline>" and search results truncate a title past ~60.
+
+     WIDENED 2026-07-22: the desk now covers 23 US and global index / sector-ETF symbols
+     alongside PSX. The accurate description is a global-markets publication that covers PSX in
+     depth, not a PSX-only one — and "PSX" stays first because it is both the depth and the
+     search term that brings people here. */
+  tagline: 'PSX research, global markets, made clear.',
+  /* One-line description used for meta + JSON-LD, and the homepage's meta description (index.astro
+     passes no `description`, so editing this line edits the homepage's search snippet).
+     Kept near 160 characters, which is what Google actually renders — the original 210-character
+     version was cut mid-sentence, so the closing "Research, not advice" never appeared at all.
 
      ON THE ASTROLOGY WORDING: the lens is described as tested and scored, never as predictive.
      state/astro_backtest.json records 2,589 hypotheses and zero survivors after correction, and
      astro_map.json's own discipline says astro "NEVER generates or gates a trade setup". A meta
      description implying it forecasts returns would contradict the desk's published null result
-     and CLAUDE.md Rule 5. "Tested and scored like any other" is the claim that is actually true —
-     and it is the differentiator, since nobody else tests theirs at all. */
+     and CLAUDE.md Rule 5. Astro is no longer named here only because 160 characters will not hold
+     it — /financial-astrology owns that query and carries the null result in its own meta. */
   description:
-    'Pakistan Stock Exchange, in plain English: company health, fair value, tested strategies, and a financial-astrology lens scored like any other. Research, not advice.',
+    'Scheduled research on the Pakistan Stock Exchange — company health, fair value, backtested strategies — plus US and global index context. Research, not advice.',
   // Marketing-site canonical URL — the marketing site owns the root domain.
   url: 'https://henneth.app',
   // The terminal users enter after picking a plan. Moved off the root so marketing can own it.

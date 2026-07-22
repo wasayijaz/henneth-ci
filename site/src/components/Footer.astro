@@ -102,7 +102,6 @@ const cols = [
   }
   .wordmark { display: flex; align-items: baseline; gap: 8px; color: var(--bg); text-decoration: none; }
   .wm-1 { font-weight: 800; font-size: 15px; letter-spacing: 0.14em; }
-  .wm-2 { font-weight: 500; font-size: 12px; letter-spacing: 0.14em; color: #a8a8a0; text-transform: uppercase; }
   .ft-blurb { margin: 14px 0 18px; font-size: 11.5px; line-height: 1.7; color: #a8a8a0; max-width: 320px; }
   .ft-cta { padding: 10px 16px; }
 
@@ -111,7 +110,7 @@ const cols = [
     letter-spacing: 0.13em;
     text-transform: uppercase;
     font-weight: 700;
-    color: #7a7a72;
+    color: #8f8f88;
     margin-bottom: 14px;
   }
   .ft-col ul { list-style: none; margin: 0; padding: 0; }
@@ -123,14 +122,24 @@ const cols = [
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
-  .ft-col a:hover { color: #fff; }
+  /* var(--bg), not #fff: the site's paper white is not pure white, and one hover state that jumps
+     past it is the kind of half-degree difference that reads as a rendering bug. */
+  @media (hover: hover) {
+    .ft-col a:hover { color: var(--bg); }
+  }
 
   .ft-base { border-top: 1px solid #2a2a27; padding-top: 20px; }
-  .ft-base p { font-size: 10px; line-height: 1.7; color: #7a7a72; margin: 0 0 8px; max-width: 900px; }
+  /* #8f8f88, not #7a7a72. This paragraph is the risk disclaimer — the one block on the site that
+     has to be legible on principle, and it was the least legible thing on it. */
+  .ft-base p { font-size: 10px; line-height: 1.7; color: #8f8f88; margin: 0 0 8px; max-width: 900px; }
   .ft-copy { margin: 0; }
 
   @media (max-width: 860px) {
+    /* Five items into two columns leaves Legal alone on a row with a hole beside it. The brand
+       block takes the full width instead, so the four link columns pair off 2 + 2. */
     .ft-in { grid-template-columns: 1fr 1fr; }
+    .ft-brand { grid-column: 1 / -1; }
+    .ft-blurb { max-width: 60ch; }
   }
   @media (max-width: 520px) {
     .ft-in { grid-template-columns: 1fr; gap: 26px; }

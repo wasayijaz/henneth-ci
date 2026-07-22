@@ -124,6 +124,17 @@ img, svg { max-width: 100%; display: block; }
 .lead { font-size: 14px; line-height: 1.7; color: var(--ink-2); }
 .muted { color: var(--ink-3); }
 .pixel { font-family: var(--font-pixel); font-weight: 700; line-height: 1; }
+
+/* Section heading block. Lived in index.astro's scoped <style> until it acquired a second consumer
+   in <Faq>, where it silently did nothing — an Astro scoped rule compiles to a [data-astro-cid-*]
+   attribute selector and cannot reach another component's markup. Two consumers is the definition
+   of a global. */
+.sec-head { max-width: 640px; margin-bottom: 26px; }
+
+/* Lining figures everywhere a number is displayed. Proportional digits shift the whole glyph run
+   when a 1 sits next to a 4, which on a site whose argument is "these are real, checkable numbers"
+   undercuts the claim before a word is read. */
+.pixel, .num, [data-num] { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }
 .up { color: var(--up); }
 .dn { color: var(--dn); }
 
@@ -263,8 +274,10 @@ img, svg { max-width: 100%; display: block; }
   .btn:hover { transform: translateY(-1px); }
   .btn:active { transform: translateY(0); }
 
-  /* FAQ rows highlight the whole strip, so the hit target reads as the whole row, not the text. */
-  .fq summary:hover { color: var(--up); }
+  /* FAQ rows highlight the whole strip, so the hit target reads as the whole row, not the text.
+     Ink, not --up: green means "up" everywhere else on this site, and one place where it instead
+     means "hoverable" is one place the colour language breaks. */
+  .fq summary:hover { color: var(--ink-1); }
 
   /* A heat cell lifts out of its grid on hover — the gap is the rule, so a lifted cell
      momentarily breaks the grid line, which is exactly the "live tile" feel we want. */
@@ -273,8 +286,12 @@ img, svg { max-width: 100%; display: block; }
 }
 
 /* Keyboard parity: everything hoverable must show the same intent on focus, or the site is only
-   navigable by mouse. :focus-visible so a click does not leave a ring behind. */
-a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+   navigable by mouse. :focus-visible so a click does not leave a ring behind.
+   THE ONLY FOCUS RING ON THE SITE. There was a second block further down in --up green, which won
+   the cascade for a/button/input but not for summary — so tabbing one page showed ink, then green,
+   then ink again. One ring, one colour, declared once. */
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   outline: 2px solid var(--ink-1);
   outline-offset: 2px;
 }
@@ -478,10 +495,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .band-dark .badge { color: #9a9a92; border-color: #3a3a37; }
 
 /* ---------- Accessibility ---------- */
-a:focus-visible, button:focus-visible, input:focus-visible {
-  outline: 2px solid var(--up);
-  outline-offset: 2px;
-}
+/* Focus ring lives with the hover rules above, not here — see the note there. */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

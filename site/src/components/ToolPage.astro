@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Faq from './Faq.astro';
 import { site } from '../site.config.ts';
 
 /* =============================================================================================
@@ -48,15 +49,11 @@ const { title, h1, description, path, lead, calc, fields, faqs = [], updated, re
 
 const url = new URL(path, site.url).href;
 
-const crumbLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: site.url },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: new URL('/tools/', site.url).href },
-    { '@type': 'ListItem', position: 3, name: h1, item: url },
-  ],
-};
+/* BreadcrumbList and FAQPage are NOT built here — Base emits both, derived from `path` and from the
+   `faq` prop below. Two blocks of the same type on one page is a conflict Google resolves by
+   ignoring the trail, and the hand-written version here had already drifted (it labelled the middle
+   crumb "Tools" while the header calls that section Calculators). `crumbLeaf={h1}` keeps the trail
+   ending in the short on-page heading rather than the long search-facing <title>. */
 
 // WebApplication rather than Article: the primary thing on the page is a working tool, and that
 // is what the result should describe. `price: 0` is true and stays true — these are free forever,
@@ -76,20 +73,6 @@ const appLd = {
   dateModified: updated,
 };
 
-// FAQPage is emitted only when there are real questions to answer. Marking up invented filler
-// questions to chase the rich result is exactly what the spam policies target.
-const faqLd = faqs.length
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqs.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-    }
-  : null;
-
 const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
   year: 'numeric',
   month: 'long',
@@ -97,11 +80,16 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
 });
 ---
 
-<Base title={title} description={description} path={path} active="tools">
+<Base
+  title={title}
+  description={description}
+  path={path}
+  active="tools"
+  crumbLeaf={h1}
+  faq={faqs.length ? faqs : undefined}
+>
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
-    {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
   </Fragment>
 
   <section class="section-tight">
@@ -154,23 +142,10 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
     </div>
   </section>
 
-  {
-    faqs.length > 0 && (
-      <section class="section-tight">
-        <div class="wrap">
-          <h2 class="faq-h">Common questions</h2>
-          <div class="faqs">
-            {faqs.map((f) => (
-              <details class="faq">
-                <summary>{f.q}</summary>
-                <p set:html={f.a} />
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  {/* The shared <Faq>, not a local copy. Two FAQ treatments on one site is two things to keep in
+      step, and only one of them fired the faq_expanded event — which question a visitor opens is
+      the cheapest read there is on why they came. */}
+  <Faq items={faqs} heading="Common questions" />
 
   {
     related.length > 0 && (
@@ -207,7 +182,9 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
 <style>
   .crumbs { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px; }
   .crumbs a { color: var(--ink-3); text-decoration: none; }
-  .crumbs a:hover { color: var(--ink-1); }
+  @media (hover: hover) {
+    .crumbs a:hover { color: var(--ink-1); }
+  }
   .crumbs span { margin: 0 6px; }
 
   .tool-h1 { max-width: 22ch; }
@@ -238,7 +215,7 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
   .calcout :global(.sumtile b.dn) { color: var(--dn); }
   .calcout :global(.sumtile i) { font-style: normal; font-size: 10.5px; color: var(--ink-3); }
 
-  .calcout :global(.tnote) { margin-top: 16px; font-size: 12px; line-height: 1.7; color: var(--ink-2); border-left: 2px solid var(--line); padding-left: 14px; }
+  .calcout :global(.tnote) { margin-top: 16px; font-size: 12px; line-height: 1.7; color: var(--ink-2); border-left: var(--rule); padding-left: 14px; }
   .calcout :global(.tnote.warn) { border-left-color: var(--warn); }
 
   .calcout :global(.tbars) { display: flex; align-items: flex-end; gap: 3px; height: 120px; margin-top: 18px; }
@@ -260,18 +237,17 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
   .toolprose :global(a) { text-decoration: underline; text-underline-offset: 2px; }
   .toolprose :global(strong) { color: var(--ink-1); }
 
-  .faq-h { font-size: 16px; margin-bottom: 16px; }
-  .faqs { border: var(--rule); background: var(--line); display: grid; gap: 1.5px; max-width: 68ch; }
-  .faq { background: var(--panel); }
-  .faq summary { cursor: pointer; padding: 14px 18px; font-size: 12.5px; font-weight: 600; list-style: none; }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: '+'; float: right; font-family: var(--font-mono); color: var(--ink-3); }
-  .faq[open] summary::after { content: '−'; }
-  .faq p { margin: 0; padding: 0 18px 16px; font-size: 12.5px; line-height: 1.7; color: var(--ink-2); }
 
-  .rel { display: flex; flex-wrap: wrap; gap: 1.5px; background: var(--line); border: var(--rule); width: fit-content; }
-  .relx { background: var(--panel); padding: 11px 16px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; text-decoration: none; }
-  .relx:hover { background: var(--panel-2); }
+  /* Outline-as-rule, not the gap-as-rule trick the strips use. This is a WRAPPING flex row: the
+     moment it wraps, the trailing space on the short row is container background — i.e. a bar of
+     --line hanging off the end of the last chip. Each chip drawing its own 1.5px outline against a
+     1.5px gap puts adjacent outlines exactly on top of each other, and an unfilled tail is page. */
+  .rel { display: flex; flex-wrap: wrap; gap: 1.5px; width: fit-content; }
+  .relx { background: var(--panel); padding: 11px 16px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; text-decoration: none; outline: 1.5px solid var(--line); outline-offset: 0; }
+  @media (hover: hover) {
+    .relx { transition: background 0.16s ease, outline-color 0.16s ease; }
+    .relx:hover { background: var(--panel-2); outline-color: var(--ink-1); position: relative; z-index: 1; }
+  }
 
   .tool-cta { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
   .dr-kicker { color: #8f8f88; }
@@ -279,7 +255,11 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
 
   @media (max-width: 900px) {
     .calcwrap { grid-template-columns: 1fr; }
-    .calcout :global(.sumstrip.s3), .calcout :global(.sumstrip.s4) { grid-template-columns: repeat(2, 1fr); }
+    /* s4 halves cleanly; s3 does NOT. .sumstrip draws its rules with the gap over a --line
+       background, so three tiles in two columns leave the fourth slot painting as a solid grey
+       block. A three-up strip goes straight to one column instead. */
+    .calcout :global(.sumstrip.s4) { grid-template-columns: repeat(2, 1fr); }
+    .calcout :global(.sumstrip.s3) { grid-template-columns: 1fr; }
     .tool-cta { grid-template-columns: 1fr; }
   }
   @media (max-width: 520px) {
