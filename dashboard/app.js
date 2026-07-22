@@ -354,7 +354,7 @@ async function pageBoard() {
         <div class="stat"><span>entry</span><b>${s.entry}</b></div>
         <div class="stat"><span>stop</span><b class="dn">${s.stop}</b></div>
         <div class="stat"><span>target</span><b class="up">${s.target}</b></div>
-        <div class="stat"><span>size</span><b>${s.size_shares ?? "—"} sh</b></div>
+        <div class="stat"><span>risk/share</span><b>${s.risk_per_share ?? "—"}</b></div>
       </div><div class="sub" style="margin-top:8px">${esc(s.thesis || "")}</div></div>`).join("")
     : `<div class="card"><div class="empty">No setups triggering right now — the desk only flags a stock when a strategy proven on its own history fires. Patience is the edge.</div></div>`;
 
@@ -6252,13 +6252,27 @@ async function pagePortfolio() {
       });
       // desk rules, applied literally (CLAUDE.md Rule 4)
       const dupSec = Object.entries(secW).filter(([k, v]) => k !== "Unclassified" && withW.filter(r => r.sector === k).length > 1);
+      /* PUBLICATION FRAME (docs/PUBLICATION_RESTRUCTURE.md §2a). The split here is deliberate and
+         it is the whole point of this block:
+
+           `k` and `why`  — the desk's OWN rule and the reason the desk holds it. Impersonal,
+                            identical for every reader, and already published methodology.
+           `v` and `ok`   — arithmetic over the reader's own holdings. That is tracking, which the
+                            restructure explicitly allows.
+
+         What was removed is the third thing that used to sit in `why`: prose that read the
+         reader's specific mix back to them — "You hold 6", "FFC is 34% of the portfolio… one
+         company's bad quarter sets the whole result". Stating a rule and showing someone their
+         number is reference. Narrating what their particular portfolio means is the advisory line,
+         and it was the only part of this surface that crossed it. The numbers all survive; the
+         reader draws the conclusion. */
       const checks = [
         { ok: withW.length <= 4, k: "Max 4 concurrent positions", v: `${withW.length} holding${withW.length === 1 ? "" : "s"}`,
-          why: withW.length <= 4 ? "Within the limit the desk sets itself." : `The desk caps itself at 4 open positions so each one gets real attention. You hold ${withW.length}.` },
-        { ok: !dupSec.length, k: "No two positions in one sector", v: dupSec.length ? `${dupSec.length} sector${dupSec.length > 1 ? "s" : ""} doubled` : "none doubled",
-          why: dupSec.length ? `${dupSec.map(([k, v]) => `${esc(k)} (${v.toFixed(0)}%)`).join(", ")} — the desk forbids this for itself because two names in one sector is one bet wearing two tickers.` : "No sector holds more than one of your positions." },
-        { ok: top ? top.w <= 20 : true, k: "Position ≤ 20% of capital", v: top ? `largest ${top.w.toFixed(0)}%` : "—",
-          why: top && top.w > 20 ? `${esc(top.ticker)} is ${top.w.toFixed(0)}% of the portfolio. The desk's own cap is 20% — above that, one company's bad quarter sets the whole result.` : "Largest position is inside the desk's own cap." },
+          why: "The desk caps itself at 4 open positions so each one gets real attention." },
+        { ok: !dupSec.length, k: "No two positions in one sector", v: dupSec.length ? `${dupSec.map(([k]) => esc(k)).join(", ")} doubled` : "none doubled",
+          why: "The desk allows itself one position per sector — two names in one sector is one bet wearing two tickers." },
+        { ok: top ? top.w <= 20 : true, k: "Position ≤ 20% of capital", v: top ? `largest ${esc(top.ticker)} ${top.w.toFixed(0)}%` : "—",
+          why: "The desk caps any single position at 20% of capital, so one company's bad quarter cannot set the whole result." },
       ];
       const nPass = checks.filter(c => c.ok).length;
       xray = `

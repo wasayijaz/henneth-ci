@@ -71,13 +71,22 @@ def main():
             # Position sizing — CLAUDE.md Rule 4, the ONE formula (Strategist & Auditor identical):
             # size by stop distance (risk_per_trade_pct of capital), then hard-cap position VALUE
             # at max_pct_per_trade (8%) of capital.
+            #
+            # STILL COMPUTED, NO LONGER PUBLISHED (docs/PUBLICATION_RESTRUCTURE.md §3). A share
+            # count against a capital figure the desk holds is the single most advisory-looking
+            # output in the product — the difference between "here is the setup" and "here is what
+            # you should buy". The reader sizes it themselves at /tools/position-size-calculator/,
+            # against their own capital, in their own browser.
+            #
+            # The computation stays because `shares <= 0` is the Rule 4 VALIDITY GUARD: it rejects
+            # a setup whose stop is too wide for the risk budget at this price. Delete the maths
+            # along with the output fields and invalid setups start publishing.
             risk_budget = capital * risk.get("risk_per_trade_pct", 1.0) / 100
             shares_by_risk = risk_budget / risk_per_share
             shares_by_cap = (capital * risk["max_pct_per_trade"] / 100) / px
             shares = int(min(shares_by_risk, shares_by_cap))
             if shares <= 0:
                 continue  # stop too wide for the risk budget at this price — invalid setup
-            size_pkr = round(shares * px)
             score = p["net_expectancy_pct"] * (p["hit_rate"] or 0)
             candidates.append({
                 "id": f"{time.strftime('%Y%m%d')}-{sym}-{p['id']}",
@@ -86,7 +95,9 @@ def main():
                 "entry": round(px, 2), "stop": stop, "target": target,
                 "rr": round((target - px) / risk_per_share, 2) if risk_per_share else None,
                 "hold_sessions": p["hold"],
-                "size_shares": shares, "size_pkr": size_pkr,
+                # risk_per_share is a LEVEL (entry minus stop), not a size — it is what the
+                # reader's own calculator needs, and it carries no capital figure of ours.
+                "risk_per_share": round(risk_per_share, 2),
                 "backtest": {"hit_rate": p["hit_rate"], "net_expectancy_pct": p["net_expectancy_pct"],
                              "n": p["n"], "oos_hit": p.get("oos_hit")},
                 "confidence": "high" if score > 1.5 else "medium" if score > 0.7 else "low",

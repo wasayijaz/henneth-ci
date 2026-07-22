@@ -40,7 +40,7 @@ import statistics as st
 import sys
 import time
 
-from psx_data import STATE, load_config, load_json, save_json
+from psx_data import STATE, load_config, load_json, load_markets, market_of, save_json
 
 WINDOW = 60          # sessions (~3 months) — long enough to survive one quiet week
 MIN_BARS = 30        # below this, no liquidity claim is made at all
@@ -80,7 +80,21 @@ def sec_bucket(days):
 # ADTV bands (PKR) for the headline grade. The B floor is deliberately 30M so it lines up
 # with risk.min_avg_daily_traded_value_pkr — the existing signal gate — instead of inventing
 # a second, conflicting notion of "liquid".
+#
+# THIS IS THE ONE GENUINELY CURRENCY-BOUND FILE in the analysis stack. quant.py, backtest.py,
+# predictability.py, compute_fairvalue.py and correlation.py are all market-agnostic — they read
+# state/history/{SYM}.json and never touch a currency. Here the numbers ARE rupees, so a second
+# market needs its own ladder or every US name grades "A" on a PKR scale and the gate stops
+# meaning anything. config/markets.json carries the per-market bands.
 BANDS = [("A", 100e6), ("B", 30e6), ("C", 10e6), ("D", 2e6), ("E", 0)]
+
+
+def bands_for(market: str, markets: dict):
+    """Per-market ADTV ladder, falling back to the PSX bands above."""
+    cfg = ((markets.get(market) or {}).get("liquidity") or {}).get("bands")
+    if not cfg:
+        return BANDS
+    return [(g, float(floor)) for g, floor in cfg]
 
 
 def _returns(closes):
@@ -255,14 +269,18 @@ def measure(sym, bars, deep):
     }
 
 
-def grade(m):
+def grade(m, bands=None):
     """Headline A-E from turnover, downgraded one notch for a wide spread or stale trading.
-    Turnover says how much you can trade; spread and staleness say what it costs you."""
-    letter = next(g for g, floor in BANDS if m["adtv_pkr"] >= floor)
+    Turnover says how much you can trade; spread and staleness say what it costs you.
+
+    `bands` is per-market (see bands_for) — the turnover figure is in the market's own currency,
+    so it must be graded against that market's ladder."""
+    bands = bands or BANDS
+    letter = next(g for g, floor in bands if m["adtv_pkr"] >= floor)
     sp, zv = m.get("spread_pct"), m.get("zero_volume_days_pct") or 0
     if (sp is not None and sp > 1.5) or zv > 10:
-        i = min([g for g, _ in BANDS].index(letter) + 1, len(BANDS) - 1)
-        letter = BANDS[i][0]
+        i = min([g for g, _ in bands].index(letter) + 1, len(bands) - 1)
+        letter = bands[i][0]
     return letter
 
 
@@ -277,6 +295,7 @@ def main():
     max_pos_value = capital * risk.get("max_pct_per_trade", 8) / 100
 
     universe = load_json(STATE / "universe.json", {"symbols": {}})
+    markets = load_markets()
     out = {}
     for sym in universe["symbols"]:
         bars = load_json(STATE / "history" / f"{sym}.json", None)
@@ -295,9 +314,22 @@ def main():
         sig = (m.get("daily_sigma_pct") or 0) / 100
         if sig > 0:
             m["capacity_at_50bp_pkr"] = round(m["adtv_pkr"] * (IMPACT_BUDGET / (IMPACT_Y * sig)) ** 2)
-        m["grade"] = grade(m)
-        m["research_eligible"] = bool(m["adtv_pkr"] >= research_min and m["bars"] >= research_min_bars)
-        m["signal_eligible"] = bool(m["adtv_pkr"] >= signal_min)
+        # Per-market thresholds. `adtv_pkr` keeps its name for schema compatibility with every
+        # existing consumer, but for a non-PSX symbol the figure is in THAT market's currency —
+        # which is exactly why it cannot be graded or gated against the rupee ladder.
+        mkt = market_of(sym, universe)
+        mcfg = (markets.get(mkt) or {}).get("liquidity") or {}
+        m["market"] = mkt
+        m["currency"] = (markets.get(mkt) or {}).get("currency", "PKR")
+        m["grade"] = grade(m, bands_for(mkt, markets))
+        m["research_eligible"] = bool(
+            m["adtv_pkr"] >= mcfg.get("research_min_adtv", research_min)
+            and m["bars"] >= research_min_bars)
+        # A market with signals_enabled:false can never produce a setup, whatever its turnover.
+        # US coverage is research-tier by decision, not by accident — see config/markets.json.
+        m["signal_eligible"] = bool(
+            (markets.get(mkt) or {}).get("signals_enabled", True)
+            and m["adtv_pkr"] >= mcfg.get("signal_min_adtv", signal_min))
         out[sym] = m
 
     # Amihud is scale-dependent and NOT comparable across markets, so an absolute threshold

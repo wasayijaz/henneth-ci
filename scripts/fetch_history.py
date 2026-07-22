@@ -18,9 +18,48 @@ names the desk shows prices and basic quant for but does not trade or backtest.
 import sys
 import time
 
-from psx_data import STATE, eod_history, load_config, load_json, save_json
+import requests
+
+from psx_data import (STATE, eod_history, load_config, load_json, market_of, save_json,
+                      yahoo_symbol)
 
 LISTED_PER_RUN = 90        # long-tail refresh budget per run (~3 min at 1.9s each)
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
+
+
+def _yahoo_daily(symbol: str, universe: dict, years: int) -> list[dict]:
+    """Daily EOD for a NON-PSX market, in the exact shape psx_data.eod_history returns.
+
+    The shape is the whole point. `state/history/{SYM}.json` is the seam every expensive consumer
+    reads — quant.py, backtest.py, predictability.py, compute_fairvalue.py, correlation.py — and
+    none of them contains PSX-specific logic. Write a US series in the same shape and the entire
+    analysis stack works on it unmodified. Nothing downstream needed changing to cover a second
+    market; that is why this is four characters of URL and one dispatch, not a port."""
+    rng = f"{max(2, years + 1)}y"
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{yahoo_symbol(symbol, universe)}"
+           f"?interval=1d&range={rng}")
+    r = requests.get(url, headers=UA, timeout=20)
+    if r.status_code != 200:
+        raise RuntimeError(f"HTTP {r.status_code}")
+    res = (r.json().get("chart") or {}).get("result")
+    if not res:
+        raise RuntimeError("no result")
+    ts = res[0].get("timestamp") or []
+    q = res[0]["indicators"]["quote"][0]
+    out = []
+    for i, t in enumerate(ts):
+        c, o, v = q["close"][i], q["open"][i], q["volume"][i]
+        if c is None:
+            continue
+        out.append({
+            "date": time.strftime("%Y-%m-%d", time.gmtime(t)),
+            "close": round(float(c), 2),
+            "volume": int(v) if v else 0,
+            # An index (^GSPC, ^VIX) has no open on some bars; fall back to the close rather than
+            # dropping the bar, which would silently shorten the series the backtest sees.
+            "open": round(float(o if o is not None else c), 2),
+        })
+    return out
 
 
 def _pick(universe):
@@ -54,8 +93,12 @@ def main():
     todo, n_listed = _pick(universe)
     ok, failed = 0, []
     for sym in todo:
+        mkt = market_of(sym, universe)
         try:
-            hist = [d for d in eod_history(sym) if d["date"] >= cutoff]
+            # DPS is authoritative for PSX (CLAUDE.md: prices come from the data layer). Every
+            # other market has no DPS entry at all, so it routes to Yahoo — same output shape.
+            src = eod_history(sym) if mkt == "PSX" else _yahoo_daily(sym, universe, years)
+            hist = [d for d in src if d["date"] >= cutoff]
             # A recent listing legitimately has few bars — that is not a failure, and dropping it
             # would make the company invisible again. Keep anything with a usable series; only the
             # core tier needs the long history that signals and backtests depend on.
@@ -68,7 +111,7 @@ def main():
             ok += 1
         except Exception as e:  # noqa: BLE001 — degrade, don't crash the cycle
             failed.append((sym, str(e)[:80]))
-        time.sleep(0.4)  # be polite to DPS
+        time.sleep(0.4)  # be polite to the upstream feed
 
     # Coverage map: which symbols actually have a usable price series. The All Share constituent
     # list includes PSX board artifacts that are not tradeable companies — ex-dividend (…XD) and

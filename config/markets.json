@@ -1,0 +1,80 @@
+{
+  "_doc": "Per-market configuration. PSX is the desk's home market and its behaviour is unchanged by this file existing — every symbol in state/universe.json without a `market` field is treated as PSX, so nothing that predates markets.json changes shape. See docs/PUBLICATION_RESTRUCTURE.md section 7.",
+
+  "_why_us": "Positioning, not coverage. The desk's edge on PSX is structural — scripts/fetch_indices.py exists because no public source carries PSX index history. None of that transfers: on a US single stock the desk would be the ten-thousandth chart. What DOES transfer is the astro lens scored against indices and the Desk Room format. So US coverage is deliberately an index-and-sector layer, not a stock universe.",
+
+  "_why_cheap": "scripts/fetch_deep_history.py already fetches query1.finance.yahoo.com/v8/finance/chart/{symbol}.KA — the .KA is the Karachi suffix. For a US ticker you drop four characters. No API key, no vendor, no bill, and scripts/fetch_global.py has used the same endpoint every cycle for months.",
+
+  "markets": {
+    "PSX": {
+      "label": "Pakistan Stock Exchange",
+      "currency": "PKR",
+      "yahoo_suffix": ".KA",
+      "primary_source": "dps.psx.com.pk",
+      "_source_note": "DPS is authoritative for PSX prices (CLAUDE.md: all prices come from the data layer). Yahoo is used only for the deep history and dividends, both cross-checked.",
+      "intraday": true,
+      "liquidity": {
+        "research_min_adtv": 5000000,
+        "signal_min_adtv": 30000000,
+        "bands": [["A", 300000000], ["B", 30000000], ["C", 5000000], ["D", 0]]
+      }
+    },
+
+    "US": {
+      "label": "United States",
+      "currency": "USD",
+      "yahoo_suffix": "",
+      "primary_source": "query1.finance.yahoo.com",
+      "_source_note": "Yahoo is the only source here and the desk says so. There is no second feed to cross-check against, unlike PSX where DPS and Yahoo corroborate each other — so a US number carries slightly weaker provenance and must not be presented as though it did not.",
+
+      "intraday": false,
+      "_intraday_note": "DELIBERATELY OFF. scripts/fetch_intraday.py runs on the PKT 30-minute cycle, and US regular hours are 18:30-01:00 PKT — outside every cycle the desk runs. EOD-only is cheaper AND more publication-shaped: a scheduled daily read is exactly the frame the restructure is building toward.",
+
+      "liquidity": {
+        "_note": "USD-denominated, so the PKR floors are meaningless here. These are set so an S&P sector ETF clears comfortably and nothing thin sneaks into the research tier. ADTV in USD.",
+        "research_min_adtv": 20000000,
+        "signal_min_adtv": 100000000,
+        "bands": [["A", 1000000000], ["B", 100000000], ["C", 20000000], ["D", 0]]
+      },
+
+      "_signal_note": "US names are RESEARCH-tier only for now. The desk does not signal on them: CLAUDE.md Rule 4's sizing, sector limits and circuit breaker are calibrated on PSX behaviour, and the owner trades PSX. Coverage first, signals never until that is a deliberate separate decision.",
+      "signals_enabled": false,
+
+      "symbols": {
+        "_note": "~25 by design. Broad tape, the eleven SPDR sectors, global/EM context, and rates/commodity. No single stocks — see _why_us.",
+        "_symbol_note": "Index keys are the DESK's symbol, not Yahoo's. A symbol becomes a filename (state/history/{SYM}.json) and then a URL path the browser fetches, and `^` is unsafe in a URL — so `^GSPC` is stored as US500 with the Yahoo spelling in `yahoo`. Never let a vendor's punctuation become a filename.",
+        "indices": {
+          "US500":  { "name": "S&P 500", "yahoo": "^GSPC" },
+          "USNDX":  { "name": "Nasdaq 100", "yahoo": "^NDX" },
+          "USDJI":  { "name": "Dow Jones Industrial", "yahoo": "^DJI" },
+          "USRUT":  { "name": "Russell 2000", "yahoo": "^RUT" },
+          "USVIX":  { "name": "Volatility index", "yahoo": "^VIX" }
+        },
+        "sectors": {
+          "XLE": "Energy",
+          "XLF": "Financials",
+          "XLK": "Technology",
+          "XLV": "Health care",
+          "XLI": "Industrials",
+          "XLU": "Utilities",
+          "XLP": "Consumer staples",
+          "XLY": "Consumer discretionary",
+          "XLB": "Materials",
+          "XLRE": "Real estate",
+          "XLC": "Communication services"
+        },
+        "global": {
+          "EEM": "EM equities",
+          "EFA": "Developed ex-US",
+          "ACWI": "All-country world"
+        },
+        "rates_commodity": {
+          "TLT": "US 20y+ Treasuries",
+          "HYG": "US high yield credit",
+          "GLD": "Gold",
+          "USO": "Crude oil"
+        }
+      }
+    }
+  }
+}

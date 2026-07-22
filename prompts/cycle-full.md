@@ -24,7 +24,9 @@ You are the Orchestrator of Henneth. Read CLAUDE.md. Run this exact sequence; ea
    sources and flips `confirmed:true`. Skip otherwise (it's weekly-cadence reference work).
 3. **strategist** agent.
 4. **risk-officer** agent (only if proposed.json has setups).
-5. **auditor** agent (only if vetted.json has approved setups). Setups that PASS audit become published signals: append them to `state/signals.json` with status "active_signal", and for each run `python scripts/alert.py "NEW SIGNAL" "<ticker> entry <e> stop <s> target <t> size <n> shares — <template>"`.
+5. **auditor** agent (only if vetted.json has approved setups). Setups that PASS audit become published signals: append them to `state/signals.json` with status "active_signal".
+   **Do NOT copy `size_shares` or `size_pkr` into `signals.json`** — per docs/PUBLICATION_RESTRUCTURE.md §3 no subscriber-facing surface carries a share count derived from the desk's own capital. They stay in `vetted.json`, where the Auditor's Rule 4/7 re-derivation still needs them, and readers size against their own capital at `/tools/position-size-calculator/`.
+   Then for each run `python scripts/alert.py "NEW SIGNAL" "<ticker> entry <e> stop <s> target <t> risk/share <r> — <template>"`. (The alert is the owner's private Telegram, not a published surface, but it cites the level rather than a size so the two agree.)
 6. **monitor** agent (if any open positions in state/positions.json).
 6b. **market-analyst** agent — writes `state/daily_read.json` (the day's plain-English read: tone, sectors, watchlist, risks). Once per day, in the pre-market full run only.
 7. **Report**: run `python scripts/build_dashboard.py` (Bash) — it assembles the core of

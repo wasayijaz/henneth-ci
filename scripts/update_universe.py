@@ -22,7 +22,7 @@ Writes state/universe.json. Run weekly (run_cycle.py handles cadence).
 import sys
 import time
 
-from psx_data import STATE, index_constituents, load_config, save_json
+from psx_data import STATE, index_constituents, load_config, load_markets, save_json
 
 
 def main():
@@ -70,6 +70,36 @@ def main():
         if s in members and "KMIALLSHR" not in members[s]["in"]:
             members[s]["in"].append("KMIALLSHR")
 
+    # ---- non-PSX markets, merged in from config/markets.json --------------------------------
+    # This file REGENERATES universe.json from the PSX indices every cycle, so anything not
+    # re-derived here disappears. Without this merge the US symbols would be written once by hand
+    # and silently vanish on the next run — the classic "it worked yesterday" data bug.
+    # Symbols are declared in config, not scraped, because a fixed index-and-sector list is the
+    # whole point (see markets.json _why_us): there is no upstream membership feed to follow.
+    n_foreign = 0
+    for mkt, mcfg in (load_markets() or {}).items():
+        if mkt == "PSX":
+            continue
+        for group, entries in (mcfg.get("symbols") or {}).items():
+            if group.startswith("_") or not isinstance(entries, dict):
+                continue
+            for sym, spec in entries.items():
+                if sym.startswith("_"):
+                    continue
+                # A plain string is just the name; a dict may also carry `yahoo` for symbols whose
+                # vendor spelling is not filename/URL-safe (see markets.json _symbol_note).
+                name = spec if isinstance(spec, str) else spec.get("name", sym)
+                rec = {
+                    "symbol": sym, "name": name, "market": mkt,
+                    # core so the full analysis stack runs (quant, backtests, predictability);
+                    # `in` records the group so the UI can section them without a second file.
+                    "tier": "core", "in": [f"{mkt}:{group.upper()}"],
+                }
+                if isinstance(spec, dict) and spec.get("yahoo"):
+                    rec["yahoo"] = spec["yahoo"]
+                members[sym] = rec
+                n_foreign += 1
+
     n_listed = sum(1 for m in members.values() if m["tier"] == "listed")
     save_json(STATE / "universe.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
@@ -87,7 +117,7 @@ def main():
         "symbols": members,
     })
     print(f"universe: {len(members)} symbols ({n_core} core [{top_n} KSE100 + {len(kmi)} KMI30], "
-          f"{n_listed} listed from ALLSHR)")
+          f"{n_listed} listed from ALLSHR, {n_foreign} non-PSX)")
 
 
 if __name__ == "__main__":

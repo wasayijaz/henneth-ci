@@ -17,18 +17,27 @@ def main():
     universe = load_json(STATE / "universe.json", None)
     if not universe:
         problems.append("universe.json missing")
-        syms = []
+        syms, foreign = [], []
     else:
         # Measure coverage against TRADEABLE symbols only. The universe is the whole KSE All Share,
         # whose constituent list includes PSX board counters that are not companies and never have
         # a price series (…XD ex-dividend, …XB ex-bonus, …NC non-compliant). Counting those as
         # "missing history" drove coverage to 82% and would have flipped health to degraded — which
         # under CLAUDE.md Rule 6 halts all new signals. A false degradation is worse than none.
+        #
+        # NON-PSX SYMBOLS ARE EXCLUDED FROM THIS GATE, deliberately. Under Rule 6 a degraded
+        # status halts every new signal, and the desk's signals are PSX-only (US coverage is
+        # research-tier — config/markets.json signals_enabled:false). A Yahoo hiccup on XLE must
+        # not be able to stop the desk publishing PSX research. Their freshness is still reported
+        # below as `foreign_*`, so a US outage is visible; it just cannot gate the home market.
         cov = load_json(STATE / "coverage.json", None)
+        home = [s for s, m in universe["symbols"].items()
+                if ((m or {}).get("market") or "PSX") == "PSX"]
         if cov and cov.get("bars"):
-            syms = [s for s in universe["symbols"] if s in cov["bars"]]
+            syms = [s for s in home if s in cov["bars"]]
         else:
-            syms = list(universe["symbols"])
+            syms = list(home)
+        foreign = [s for s in universe["symbols"] if s not in set(home)]
         upd = datetime.strptime(universe["updated"][:10], "%Y-%m-%d").date()
         if (date.today() - upd).days > 10:
             problems.append(f"universe stale ({universe['updated']})")
@@ -86,13 +95,22 @@ def main():
     except (ValueError, TypeError):
         problems.append("stale_calendar: session_times_updated missing/unparseable in calendar.json")
 
+    # Non-PSX coverage: REPORTED, never gating (see the note above `home`). A US outage shows up
+    # here as an advisory so it is visible and fixable, without halting PSX signals under Rule 6.
+    f_have = sum(1 for s in foreign if load_json(STATE / "history" / f"{s}.json", None))
+    advisories = ([f"tv drift (lag/adjustment, not an error): {', '.join(cc_drift)}"] if cc_drift else [])
+    if foreign and f_have < len(foreign):
+        advisories.append(f"non-PSX history {f_have}/{len(foreign)} — research-tier only, does not gate signals")
+
     status = "ok" if not problems else "degraded"
     save_json(STATE / "health.json", {
         "checked": time.strftime("%Y-%m-%d %H:%M"),
         "status": status,
         "problems": problems,
-        "advisories": ([f"tv drift (lag/adjustment, not an error): {', '.join(cc_drift)}"] if cc_drift else []),
+        "advisories": advisories,
         "history_symbols": have,
+        "foreign_symbols": len(foreign),
+        "foreign_with_history": f_have,
         "latest_eod": latest,
         "spot_check": spot,
     })

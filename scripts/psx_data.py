@@ -151,6 +151,53 @@ def load_config() -> dict:
     return json.loads((ROOT / "config" / "desk.json").read_text(encoding="utf-8"))
 
 
+# ---------------------------------------------------------------------------------------------
+# MARKETS. PSX is the home market and everything here defaults to it, so a universe entry with no
+# `market` field behaves exactly as it did before config/markets.json existed. See
+# docs/PUBLICATION_RESTRUCTURE.md section 7.
+
+_DEFAULT_MARKET = "PSX"
+
+
+def load_markets() -> dict:
+    """Per-market config. Missing file degrades to a PSX-only desk rather than crashing —
+    a US layer that fails to load must never take the home market down with it."""
+    try:
+        return json.loads((ROOT / "config" / "markets.json").read_text(encoding="utf-8"))["markets"]
+    except (OSError, ValueError, KeyError):
+        return {}
+
+
+def market_of(symbol: str, universe: dict | None = None) -> str:
+    """Which market a symbol belongs to. Defaults to PSX for every pre-existing entry."""
+    if universe is None:
+        universe = load_json(STATE / "universe.json", {"symbols": {}})
+    return ((universe.get("symbols", {}).get(symbol) or {}).get("market") or _DEFAULT_MARKET)
+
+
+def yahoo_symbol(symbol: str, universe: dict | None = None) -> str:
+    """The ticker as Yahoo spells it.
+
+    This one function is the entire data-layer cost of adding a market. PSX names carry the
+    Karachi suffix (`FFC` -> `FFC.KA`); a US ticker is itself.
+
+    An EXPLICIT `yahoo` field on the universe entry wins, and index symbols rely on it. Yahoo
+    spells the S&P 500 `^GSPC`, but the desk's own symbol has to survive being a FILENAME
+    (state/history/{SYM}.json) and then a URL PATH the browser fetches — and `^` is unsafe in a
+    URL, so it would arrive percent-encoded or not at all. So the desk calls it `US500` and maps
+    it here. Never let an upstream vendor's punctuation become a filename."""
+    if universe is None:
+        universe = load_json(STATE / "universe.json", {"symbols": {}})
+    meta = universe.get("symbols", {}).get(symbol) or {}
+    if meta.get("yahoo"):
+        return meta["yahoo"]
+    mkt = meta.get("market") or _DEFAULT_MARKET
+    suffix = (load_markets().get(mkt) or {}).get("yahoo_suffix", ".KA")
+    if symbol.startswith("^") or symbol.endswith(suffix or "\0"):
+        return symbol
+    return f"{symbol}{suffix}"
+
+
 def research_symbols() -> list[str]:
     """The names the expensive pipeline (backtests, fundamentals, predictability, fair value)
     is allowed to run on: tier=core plus any listed name that cleared the liquidity RESEARCH

@@ -1,0 +1,92 @@
+---
+/* The user-driven half of docs/PUBLICATION_RESTRUCTURE.md §3.
+ *
+ * The desk used to publish a share count computed against ITS OWN capital figure. That is the
+ * single most advisory-looking output a research product can emit — "here is what you should buy"
+ * rather than "here is the setup". The arithmetic has not changed; who supplies the capital has.
+ * Rule 4's formula is ported unchanged into src/scripts/calculators.ts so the desk's published
+ * methodology and this tool cannot disagree.
+ */
+import ToolPage from '../../components/ToolPage.astro';
+
+const faqs = [
+  {
+    q: 'Why does the desk not just tell me how many shares to buy?',
+    a: 'Because it does not know your capital, and a share count against someone else’s capital is worse than useless — it looks like an instruction. Henneth publishes the setup: entry, stop, target and risk per share. The size is arithmetic on top of a number only you have, so it belongs here rather than in the research.',
+  },
+  {
+    q: 'Where does this formula come from?',
+    a: 'It is Rule 4 of the desk’s own risk rules, applied to the desk’s own model portfolio, and it is ported here unchanged: size by stop distance so a stop-out costs a fixed fraction of capital, then hard-cap the position value at 8% so no single name can dominate. The same code path runs on both sides.',
+  },
+  {
+    q: 'Why 1% risk and an 8% cap?',
+    a: 'They answer different failure modes. The 1% decides what a single stop-out costs you — at that level a run of losses is survivable arithmetic rather than a crisis. The 8% caps what one company can be worth in the book regardless of how tight its stop looks, because a tight stop on a big position is still a big position when a stock gaps through it overnight.',
+  },
+  {
+    q: 'It says zero shares. Is that a bug?',
+    a: 'No, it is the answer. A zero means your stop is too wide for that risk budget at that price — the setup does not fit your capital. The desk drops such setups rather than publishing them. Widening the risk until a position appears is exactly what the rule exists to prevent.',
+  },
+  {
+    q: 'Does this account for brokerage, CGT or slippage?',
+    a: 'No. It sizes the position; it does not model the round trip. PSX costs run roughly 0.15–0.5% per side depending on your broker, and the desk charges an estimated friction per stock inside its backtests rather than assuming a flat figure. Treat the output as the size before costs.',
+  },
+];
+
+const related = [
+  { href: '/tools/compound-interest-calculator/', label: 'Compound growth' },
+  { href: '/tools/sip-calculator/', label: 'Monthly investment' },
+  { href: '/tools/inflation-calculator/', label: 'Inflation' },
+];
+---
+
+<ToolPage
+  title="Position Size Calculator PSX — Shares by Risk and Stop Loss"
+  h1="Position size calculator"
+  description="How many shares to buy for a fixed rupee risk, using the desk's own Rule 4: size by stop distance, then cap the position at 8% of capital. Free, nothing stored."
+  path="/tools/position-size-calculator/"
+  lead="Your capital, your risk tolerance, your stop. The same formula the desk applies to itself."
+  calc="position"
+  updated="2026-07-22"
+  fields={[
+    { field: 'capital', label: 'Your trading capital', prefix: 'Rs', value: 1000000, step: 50000 },
+    { field: 'riskPct', label: 'Risk per trade', value: 1, step: 0.25, suffix: '%' },
+    { field: 'entry', label: 'Entry price', prefix: 'Rs', value: 100, step: 1 },
+    { field: 'stop', label: 'Stop price', prefix: 'Rs', value: 94, step: 1 },
+  ]}
+  faqs={faqs}
+  related={related}
+>
+  <h2>Two constraints, and the tighter one wins</h2>
+  <p>
+    The first sizes off your stop: if you are willing to lose 1% of capital on a trade and the stop
+    is Rs 6 below the entry, you can hold capital &divide; 6 &times; 1% shares. The second ignores
+    the stop entirely and caps the position at 8% of capital by value. Whichever produces fewer
+    shares is the answer.
+  </p>
+  <p>
+    The second constraint is the one people skip, and it is the one that matters on a bad day. A
+    very tight stop implies a very large position, and a large position does not respect its stop
+    when a stock gaps through it overnight on an earnings surprise. The cap is what stops a
+    well-reasoned trade from becoming a concentrated one.
+  </p>
+
+  <h2>A zero is an answer, not an error</h2>
+  <p>
+    If the tool returns zero shares, the setup does not fit your capital at that stop distance.
+    The desk's own pipeline discards those candidates rather than publishing them. The temptation
+    is to widen the risk until a position appears; that converts a sizing rule into a wish, which
+    is the failure the rule was written to prevent.
+  </p>
+
+  <h2>Why this is a tool and not part of the research</h2>
+  <p>
+    Henneth publishes levels — entry, stop, target, risk per share — identically for every reader,
+    on a schedule. It does not publish a share count, because a share count requires a capital
+    figure, and the only honest capital figure is yours. That line is deliberate: it is the
+    difference between research anyone can read and a personal instruction.
+  </p>
+  <p class="muted">
+    Nothing you type here is stored, sent anywhere, or attached to any analytics event. Research,
+    not advice — the desk never executes trades and this is not a recommendation to take a position.
+  </p>
+</ToolPage>

@@ -176,7 +176,70 @@ const zakat: CalcFn = (v, a) => {
   return { tiles, note, noteWarn: above === false };
 };
 
-export const CALCS: Record<string, CalcFn> = { compound, sip, inflation, goal, mortgage, zakat };
+/* POSITION SIZE — CLAUDE.md Rule 4, the ONE formula, ported unchanged from
+   scripts/build_signals.py so the desk's published methodology and the reader's tool agree
+   exactly. If Rule 4 ever changes, change it in both places in the same commit.
+
+     risk_budget    = capital x risk_per_trade_pct
+     risk_per_share = entry - stop
+     shares         = floor( min( risk_budget / risk_per_share , (capital x 8%) / entry ) )
+
+   i.e. size by stop distance, then hard-cap the position VALUE at 8% of capital.
+
+   WHY THIS PAGE EXISTS (docs/PUBLICATION_RESTRUCTURE.md §3): the desk used to publish a share
+   count computed against its OWN capital figure, which is the difference between "here is the
+   setup" and "here is what you should buy". The arithmetic did not change — who supplies the
+   capital did. Nothing here is stored or transmitted. */
+const position: CalcFn = (v) => {
+  const { capital, riskPct, entry, stop } = v;
+  const riskPerShare = entry - stop;
+
+  // A stop at or above entry is not a long setup. Rule 4 calls this invalid rather than
+  // clamping it, and build_signals.py drops such a candidate outright — so say the same thing.
+  if (riskPerShare <= 0) {
+    return {
+      tiles: [
+        { k: 'Shares', v: '—', sub: 'stop must sit below entry' },
+        { k: 'Risk per share', v: '—' },
+        { k: 'Position value', v: '—' },
+        { k: 'At risk if stopped', v: '—' },
+      ],
+      note: 'For a long position the stop has to be <b>below</b> the entry — otherwise there is no '
+          + 'defined risk to size against. The desk treats this as an invalid setup rather than '
+          + 'adjusting it for you.',
+      noteWarn: true,
+    };
+  }
+
+  const riskBudget = capital * (riskPct / 100);
+  const byRisk = riskBudget / riskPerShare;
+  const byCap = (capital * 0.08) / entry;          // Rule 4's 8% position-VALUE cap
+  const shares = Math.floor(Math.min(byRisk, byCap));
+  const value = shares * entry;
+  const atRisk = shares * riskPerShare;
+  const capped = byCap < byRisk;
+
+  return {
+    tiles: [
+      { k: 'Shares', v: shares > 0 ? fmt(shares) : '0', sub: capped ? 'limited by the 8% value cap' : 'limited by your stop distance' },
+      { k: 'Risk per share', v: rs(riskPerShare), sub: `entry ${fmt(entry)} − stop ${fmt(stop)}` },
+      { k: 'Position value', v: rs(value), sub: capital ? pct((value / capital) * 100) + ' of capital' : '' },
+      { k: 'At risk if stopped', v: rs(atRisk), sub: capital ? pct((atRisk / capital) * 100) + ' of capital' : '', cls: 'dn' },
+    ],
+    note: shares <= 0
+      ? 'Zero shares: your stop is too wide for this risk budget at this price. The desk treats '
+        + 'that as an <b>invalid setup</b> and will not publish it — widening the risk to force a '
+        + 'position is the thing the rule exists to prevent.'
+      : capped
+        ? `The 8% cap is binding here, not your stop. Sizing purely off the stop would allow `
+          + `${fmt(Math.floor(byRisk))} shares; the cap holds it to ${fmt(shares)} so one name `
+          + `cannot dominate the book.`
+        : 'Your stop distance is the binding constraint — the position sits inside the 8% value cap.',
+    noteWarn: shares <= 0,
+  };
+};
+
+export const CALCS: Record<string, CalcFn> = { compound, sip, inflation, goal, mortgage, zakat, position };
 
 // ---------------------------------------------------------------------------- DOM wiring
 /**

@@ -22,15 +22,17 @@ from datetime import date, datetime
 
 import requests
 
-from psx_data import STATE, load_json, save_json
+from psx_data import STATE, load_json, save_json, yahoo_symbol
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 STALE_AFTER_DAYS = 5        # a file whose last bar is older than this is refetched
 DEEP_REFRESH_PER_RUN = 25   # bounded so a mass refresh spreads over cycles, not one 25-min job
 
 
-def fetch(symbol: str, sess: requests.Session) -> list[dict] | None:
-    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}.KA"
+def fetch(symbol: str, sess: requests.Session, universe: dict | None = None) -> list[dict] | None:
+    # yahoo_symbol() applies the market's suffix — `.KA` for PSX, nothing for US. This one call is
+    # the entire data-layer cost of covering a second market (see psx_data.yahoo_symbol).
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{yahoo_symbol(symbol, universe)}"
            f"?interval=1d&range=25y")
     r = sess.get(url, timeout=25)
     if r.status_code != 200:
@@ -148,7 +150,7 @@ def main():
         if sym in due:
             stale_refreshed.append(sym)
         try:
-            hist = fetch(sym, sess)
+            hist = fetch(sym, sess, universe)
             if hist and len(hist) > 250:
                 save_json(dest, hist)
                 ok += 1
