@@ -83,3 +83,26 @@ PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 
 PostHog and GA4 both load in production only (build-time `PROD` + a live-hostname guard), so localhost and Vercel previews never pollute real analytics.
+
+`.env` is gitignored, so **both variables must also exist in the Vercel project**
+(`henneth-site` → Settings → Environment Variables), **scoped to Production**.
+
+Two things about that are worth knowing before they cost you an afternoon:
+
+- **The failure is silent.** A build with no token still succeeds, the page still
+  loads, and every `capture()` call still returns normally — it just records
+  nothing, with no error anywhere. `components/posthog.astro` refuses to
+  initialise without a token precisely so the symptom is an honest "no data"
+  rather than a phantom install, but nothing will *tell* you. Verify with:
+
+  ```sh
+  curl -s https://henneth.app/ | grep -c "phc_"   # 1 = the token reached the build
+  ```
+
+- **Changing an environment variable does not rebuild anything**, and an empty
+  commit will not either — the Ignored Build Step above skips any commit that
+  did not touch `site/`. To apply a variable change, either hit Redeploy in the
+  Vercel dashboard or push a real change under `site/`.
+
+Neither key needs Vercel's "Sensitive" flag. Both are public and ship in the
+HTML of every page; marking them sensitive only stops *you* reading them back.
