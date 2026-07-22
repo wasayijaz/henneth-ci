@@ -1,7 +1,6 @@
 {
  "reaffirm": [
   "FFC",
-  "ENGROH",
   "LUCK",
   "HBL",
   "BAHL",
@@ -11,7 +10,6 @@
   "BAFL",
   "FABL",
   "MTL",
-  "MLCF",
   "PTC",
   "SAZEW",
   "PAEL",
@@ -21,8 +19,17 @@
   "FFL",
   "TBL"
  ],
- "delta": [],
+ "delta": [
+  {
+   "symbol": "MLCF",
+   "why": "price moved 6.1% since last Room"
+  }
+ ],
  "full": [
+  {
+   "symbol": "UBL",
+   "why": "material change since last Room"
+  },
   {
    "symbol": "OGDC",
    "why": "material change since last Room"
@@ -64,10 +71,6 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "UBL",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "PIOC",
    "why": "never covered"
   },
@@ -81,6 +84,10 @@
   },
   {
    "symbol": "GAL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "ENGROH",
    "why": "material change since last Room"
   },
   {
@@ -329,9 +336,10 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-22 11:29",
+  "built": "2026-07-22 17:47",
   "full_budget": 14,
   "run_full_now": [
+   "UBL",
    "OGDC",
    "PPL",
    "HUBC",
@@ -342,13 +350,13 @@
    "SSGC",
    "PRL",
    "NRL",
-   "UBL",
    "PIOC",
    "HCAR",
    "JSML"
   ],
   "deferred_full": [
    "GAL",
+   "ENGROH",
    "MEBL",
    "FATIMA",
    "SRVI",
@@ -412,12 +420,12 @@
    "GHNI"
   ],
   "counts": {
-   "full_due": 76,
+   "full_due": 77,
    "full_now": 14,
-   "delta": 0,
-   "reaffirm": 20
+   "delta": 1,
+   "reaffirm": 18
   },
-  "est_tokens_today": 308000,
+  "est_tokens_today": 313000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
