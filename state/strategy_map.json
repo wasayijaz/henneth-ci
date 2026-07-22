@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-22 11:18",
+ "updated": "2026-07-22 11:26",
  "tickers": {
   "APL": [
    {
@@ -481,6 +481,428 @@
     "hold": 16
    }
   ],
+  "US500": [
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 1.49,
+    "hit_rate": 0.833,
+    "n": 12,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "triple_screen_long",
+    "name": "Triple screen alignment",
+    "category": "trend",
+    "net_expectancy_pct": 0.87,
+    "hit_rate": 0.667,
+    "n": 12,
+    "oos_n": 4,
+    "oos_hit": 0.5,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   }
+  ],
+  "USDJI": [
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 1.57,
+    "hit_rate": 0.882,
+    "n": 17,
+    "oos_n": 4,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 1.17,
+    "hit_rate": 0.688,
+    "n": 16,
+    "oos_n": 5,
+    "oos_hit": 0.8,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 1.06,
+    "hit_rate": 0.765,
+    "n": 17,
+    "oos_n": 4,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   }
+  ],
+  "USNDX": [
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 1.96,
+    "hit_rate": 0.812,
+    "n": 16,
+    "oos_n": 4,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 1.41,
+    "hit_rate": 0.714,
+    "n": 14,
+    "oos_n": 6,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 1.32,
+    "hit_rate": 0.643,
+    "n": 14,
+    "oos_n": 6,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   },
+   {
+    "id": "macd_zero_reclaim",
+    "name": "MACD reclaims zero",
+    "category": "momentum",
+    "net_expectancy_pct": 1.03,
+    "hit_rate": 0.694,
+    "n": 62,
+    "oos_n": 20,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 16
+   },
+   {
+    "id": "high20_vol_break",
+    "name": "20d high + volume",
+    "category": "breakout",
+    "net_expectancy_pct": 1.0,
+    "hit_rate": 0.778,
+    "n": 9,
+    "oos_n": 5,
+    "oos_hit": 0.8,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 10
+   },
+   {
+    "id": "donch55_trend_break",
+    "name": "Donchian 55 breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.97,
+    "hit_rate": 0.597,
+    "n": 72,
+    "oos_n": 26,
+    "oos_hit": 0.692,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 30
+   },
+   {
+    "id": "new_high_low_vol",
+    "name": "Quiet new high",
+    "category": "breakout",
+    "net_expectancy_pct": 0.58,
+    "hit_rate": 0.655,
+    "n": 55,
+    "oos_n": 18,
+    "oos_hit": 0.722,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "adx_pdi_expansion",
+    "name": "Trend strength turning up",
+    "category": "trend",
+    "net_expectancy_pct": 0.58,
+    "hit_rate": 0.618,
+    "n": 68,
+    "oos_n": 21,
+    "oos_hit": 0.714,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   }
+  ],
+  "XLI": [
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 0.84,
+    "hit_rate": 0.6,
+    "n": 15,
+    "oos_n": 8,
+    "oos_hit": 0.625,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 0.82,
+    "hit_rate": 0.714,
+    "n": 14,
+    "oos_n": 6,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "adx_pdi_expansion",
+    "name": "Trend strength turning up",
+    "category": "trend",
+    "net_expectancy_pct": 0.73,
+    "hit_rate": 0.661,
+    "n": 59,
+    "oos_n": 19,
+    "oos_hit": 0.632,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   },
+   {
+    "id": "triple_screen_long",
+    "name": "Triple screen alignment",
+    "category": "trend",
+    "net_expectancy_pct": 0.6,
+    "hit_rate": 0.577,
+    "n": 26,
+    "oos_n": 12,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   }
+  ],
+  "XLK": [
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 1.61,
+    "hit_rate": 0.688,
+    "n": 16,
+    "oos_n": 5,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "adx_pdi_expansion",
+    "name": "Trend strength turning up",
+    "category": "trend",
+    "net_expectancy_pct": 0.78,
+    "hit_rate": 0.672,
+    "n": 61,
+    "oos_n": 19,
+    "oos_hit": 0.737,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   },
+   {
+    "id": "vol_dryup_surge",
+    "name": "Dry-up then surge",
+    "category": "volume",
+    "net_expectancy_pct": 0.53,
+    "hit_rate": 0.7,
+    "n": 30,
+    "oos_n": 3,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 9
+   }
+  ],
+  "XLU": [
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 1.73,
+    "hit_rate": 0.714,
+    "n": 14,
+    "oos_n": 4,
+    "oos_hit": 0.5,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   }
+  ],
+  "XLY": [
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 2.51,
+    "hit_rate": 0.6,
+    "n": 15,
+    "oos_n": 5,
+    "oos_hit": 0.8,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 0.69,
+    "hit_rate": 0.65,
+    "n": 20,
+    "oos_n": 8,
+    "oos_hit": 0.625,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "cci_trend_pullback",
+    "name": "CCI pullback in uptrend",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.61,
+    "hit_rate": 0.65,
+    "n": 40,
+    "oos_n": 18,
+    "oos_hit": 0.556,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 14
+   },
+   {
+    "id": "macd_zero_reclaim",
+    "name": "MACD reclaims zero",
+    "category": "momentum",
+    "net_expectancy_pct": 0.6,
+    "hit_rate": 0.643,
+    "n": 56,
+    "oos_n": 21,
+    "oos_hit": 0.524,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 16
+   }
+  ],
+  "ACWI": [
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 1.75,
+    "hit_rate": 0.875,
+    "n": 8,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 1.12,
+    "hit_rate": 0.643,
+    "n": 14,
+    "oos_n": 3,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
+   },
+   {
+    "id": "adx_rising_trend",
+    "name": "ADX rising trend entry",
+    "category": "trend",
+    "net_expectancy_pct": 1.0,
+    "hit_rate": 0.75,
+    "n": 8,
+    "oos_n": 3,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "bb_pctb_reclaim",
+    "name": "Band reclaim from the low",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.72,
+    "hit_rate": 0.706,
+    "n": 34,
+    "oos_n": 14,
+    "oos_hit": 0.571,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   }
+  ],
   "AGP": [
    {
     "id": "reclaim_sma200",
@@ -569,6 +991,92 @@
     "target_pct": 8,
     "stop_pct": 4,
     "hold": 20
+   }
+  ],
+  "EFA": [
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 1.28,
+    "hit_rate": 0.769,
+    "n": 26,
+    "oos_n": 7,
+    "oos_hit": 0.857,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
+   },
+   {
+    "id": "rs_leader",
+    "name": "Relative-strength leader",
+    "category": "momentum",
+    "net_expectancy_pct": 0.84,
+    "hit_rate": 0.643,
+    "n": 14,
+    "oos_n": 6,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3.5,
+    "hold": 12
+   },
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 0.68,
+    "hit_rate": 0.6,
+    "n": 10,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "squeeze_expansion_long",
+    "name": "Squeeze release, upside",
+    "category": "volatility",
+    "net_expectancy_pct": 0.65,
+    "hit_rate": 0.647,
+    "n": 17,
+    "oos_n": 7,
+    "oos_hit": 0.857,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 16
+   },
+   {
+    "id": "atr_stretch_below",
+    "name": "2-ATR stretch below 20MA",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.64,
+    "hit_rate": 0.783,
+    "n": 23,
+    "oos_n": 9,
+    "oos_hit": 0.778,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 3,
+    "hold": 7
+   },
+   {
+    "id": "new_high_low_vol",
+    "name": "Quiet new high",
+    "category": "breakout",
+    "net_expectancy_pct": 0.57,
+    "hit_rate": 0.743,
+    "n": 35,
+    "oos_n": 12,
+    "oos_hit": 0.917,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
    }
   ],
   "INDU": [
@@ -997,6 +1505,110 @@
     "target_pct": 5,
     "stop_pct": 2.5,
     "hold": 10
+   }
+  ],
+  "USO": [
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 1.41,
+    "hit_rate": 0.577,
+    "n": 26,
+    "oos_n": 13,
+    "oos_hit": 0.538,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
+   },
+   {
+    "id": "adx_rising_trend",
+    "name": "ADX rising trend entry",
+    "category": "trend",
+    "net_expectancy_pct": 1.25,
+    "hit_rate": 0.571,
+    "n": 14,
+    "oos_n": 4,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   }
+  ],
+  "XLF": [
+   {
+    "id": "bb_lower_rsi",
+    "name": "Lower band + RSI<35",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.97,
+    "hit_rate": 0.778,
+    "n": 9,
+    "oos_n": 5,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 2.5,
+    "hold": 7
+   },
+   {
+    "id": "triple_screen_long",
+    "name": "Triple screen alignment",
+    "category": "trend",
+    "net_expectancy_pct": 0.83,
+    "hit_rate": 0.741,
+    "n": 27,
+    "oos_n": 12,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   },
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 0.62,
+    "hit_rate": 0.556,
+    "n": 27,
+    "oos_n": 8,
+    "oos_hit": 0.5,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
+   }
+  ],
+  "XLP": [
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 1.43,
+    "hit_rate": 0.821,
+    "n": 28,
+    "oos_n": 12,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
+   },
+   {
+    "id": "triple_screen_long",
+    "name": "Triple screen alignment",
+    "category": "trend",
+    "net_expectancy_pct": 0.85,
+    "hit_rate": 0.667,
+    "n": 18,
+    "oos_n": 6,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
    }
   ],
   "BML": [
@@ -3227,6 +3839,106 @@
     "hold": 10
    }
   ],
+  "USRUT": [
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 1.59,
+    "hit_rate": 0.682,
+    "n": 22,
+    "oos_n": 8,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "stoch_reclaim_50",
+    "name": "Stochastic reclaim 50",
+    "category": "oscillator",
+    "net_expectancy_pct": 1.43,
+    "hit_rate": 0.857,
+    "n": 35,
+    "oos_n": 15,
+    "oos_hit": 0.8,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 9
+   },
+   {
+    "id": "triple_screen_long",
+    "name": "Triple screen alignment",
+    "category": "trend",
+    "net_expectancy_pct": 0.8,
+    "hit_rate": 0.571,
+    "n": 14,
+    "oos_n": 8,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   },
+   {
+    "id": "rsi_macd_combo",
+    "name": "RSI + MACD combo",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.66,
+    "hit_rate": 0.705,
+    "n": 44,
+    "oos_n": 16,
+    "oos_hit": 0.812,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 10
+   },
+   {
+    "id": "rsi2_deep_uptrend",
+    "name": "RSI(2) washout in an uptrend",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.65,
+    "hit_rate": 0.645,
+    "n": 93,
+    "oos_n": 33,
+    "oos_hit": 0.758,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
+   },
+   {
+    "id": "atr_stretch_below",
+    "name": "2-ATR stretch below 20MA",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.57,
+    "hit_rate": 0.655,
+    "n": 29,
+    "oos_n": 9,
+    "oos_hit": 0.556,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 3,
+    "hold": 7
+   },
+   {
+    "id": "macd_bull_zero",
+    "name": "MACD cross above zero",
+    "category": "trend",
+    "net_expectancy_pct": 0.54,
+    "hit_rate": 0.607,
+    "n": 84,
+    "oos_n": 29,
+    "oos_hit": 0.552,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 15
+   }
+  ],
   "WAVESAPP": [
    {
     "id": "macd_bull_zero",
@@ -3641,6 +4353,106 @@
     "target_pct": 6,
     "stop_pct": 3,
     "hold": 12
+   }
+  ],
+  "GLD": [
+   {
+    "id": "donch20_break_confirm",
+    "name": "Donchian 20 break, volume confirmed",
+    "category": "breakout",
+    "net_expectancy_pct": 0.86,
+    "hit_rate": 0.648,
+    "n": 54,
+    "oos_n": 17,
+    "oos_hit": 0.765,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 14
+   },
+   {
+    "id": "atr_stretch_below",
+    "name": "2-ATR stretch below 20MA",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.74,
+    "hit_rate": 0.667,
+    "n": 18,
+    "oos_n": 7,
+    "oos_hit": 0.714,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 3,
+    "hold": 7
+   },
+   {
+    "id": "donch55_trend_break",
+    "name": "Donchian 55 breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.74,
+    "hit_rate": 0.569,
+    "n": 58,
+    "oos_n": 21,
+    "oos_hit": 0.571,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 30
+   },
+   {
+    "id": "adx_pdi_expansion",
+    "name": "Trend strength turning up",
+    "category": "trend",
+    "net_expectancy_pct": 0.73,
+    "hit_rate": 0.636,
+    "n": 55,
+    "oos_n": 17,
+    "oos_hit": 0.882,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   },
+   {
+    "id": "donchian55_break",
+    "name": "Donchian 55 breakout (turtle)",
+    "category": "breakout",
+    "net_expectancy_pct": 0.71,
+    "hit_rate": 0.581,
+    "n": 62,
+    "oos_n": 25,
+    "oos_hit": 0.6,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "atr_quiet_breakout",
+    "name": "Quiet base, upside break",
+    "category": "volatility",
+    "net_expectancy_pct": 0.57,
+    "hit_rate": 0.587,
+    "n": 121,
+    "oos_n": 48,
+    "oos_hit": 0.604,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3,
+    "hold": 16
+   },
+   {
+    "id": "high50_break",
+    "name": "50d high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.56,
+    "hit_rate": 0.59,
+    "n": 78,
+    "oos_n": 33,
+    "oos_hit": 0.697,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 15
    }
   ],
   "HCAR": [
@@ -4159,6 +4971,148 @@
     "target_pct": 6,
     "stop_pct": 3,
     "hold": 15
+   }
+  ],
+  "XLC": [
+   {
+    "id": "cci_trend_pullback",
+    "name": "CCI pullback in uptrend",
+    "category": "oscillator",
+    "net_expectancy_pct": 1.74,
+    "hit_rate": 0.824,
+    "n": 17,
+    "oos_n": 5,
+    "oos_hit": 0.8,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 14
+   },
+   {
+    "id": "deep_pullback_uptrend",
+    "name": "Deep pullback in uptrend",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 1.42,
+    "hit_rate": 0.833,
+    "n": 18,
+    "oos_n": 8,
+    "oos_hit": 0.875,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
+   },
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 1.35,
+    "hit_rate": 0.7,
+    "n": 10,
+    "oos_n": 5,
+    "oos_hit": 0.6,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   },
+   {
+    "id": "adx_rising_trend",
+    "name": "ADX rising trend entry",
+    "category": "trend",
+    "net_expectancy_pct": 1.25,
+    "hit_rate": 0.692,
+    "n": 13,
+    "oos_n": 8,
+    "oos_hit": 0.625,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "donchian55_break",
+    "name": "Donchian 55 breakout (turtle)",
+    "category": "breakout",
+    "net_expectancy_pct": 1.02,
+    "hit_rate": 0.778,
+    "n": 18,
+    "oos_n": 9,
+    "oos_hit": 0.889,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.83,
+    "hit_rate": 0.636,
+    "n": 11,
+    "oos_n": 6,
+    "oos_hit": 0.5,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "golden_pullback_50",
+    "name": "Golden-cross pullback",
+    "category": "trend",
+    "net_expectancy_pct": 0.78,
+    "hit_rate": 0.59,
+    "n": 39,
+    "oos_n": 19,
+    "oos_hit": 0.526,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 20
+   },
+   {
+    "id": "bb_lower_reclaim",
+    "name": "Bollinger lower reclaim",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.64,
+    "hit_rate": 0.737,
+    "n": 19,
+    "oos_n": 7,
+    "oos_hit": 0.714,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 2.5,
+    "hold": 7
+   },
+   {
+    "id": "ema50_defended",
+    "name": "50-day EMA defended",
+    "category": "trend",
+    "net_expectancy_pct": 0.55,
+    "hit_rate": 0.611,
+    "n": 36,
+    "oos_n": 14,
+    "oos_hit": 0.643,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 15
+   },
+   {
+    "id": "macd_zero_reclaim",
+    "name": "MACD reclaims zero",
+    "category": "momentum",
+    "net_expectancy_pct": 0.54,
+    "hit_rate": 0.588,
+    "n": 17,
+    "oos_n": 8,
+    "oos_hit": 0.625,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 16
    }
   ],
   "AKDSL": [
@@ -4697,6 +5651,106 @@
     "hold": 10
    }
   ],
+  "XLE": [
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 0.92,
+    "hit_rate": 0.556,
+    "n": 36,
+    "oos_n": 15,
+    "oos_hit": 0.4,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "vol_spike_break",
+    "name": "Volume-spike breakout",
+    "category": "volume",
+    "net_expectancy_pct": 0.9,
+    "hit_rate": 0.733,
+    "n": 15,
+    "oos_n": 3,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 8
+   },
+   {
+    "id": "rsi_macd_combo",
+    "name": "RSI + MACD combo",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.79,
+    "hit_rate": 0.674,
+    "n": 46,
+    "oos_n": 19,
+    "oos_hit": 0.684,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 10
+   },
+   {
+    "id": "donch20_break_confirm",
+    "name": "Donchian 20 break, volume confirmed",
+    "category": "breakout",
+    "net_expectancy_pct": 0.76,
+    "hit_rate": 0.619,
+    "n": 21,
+    "oos_n": 9,
+    "oos_hit": 0.556,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 14
+   },
+   {
+    "id": "high50_break",
+    "name": "50d high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.56,
+    "hit_rate": 0.571,
+    "n": 49,
+    "oos_n": 16,
+    "oos_hit": 0.562,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 15
+   },
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.56,
+    "hit_rate": 0.55,
+    "n": 20,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 0.52,
+    "hit_rate": 0.55,
+    "n": 20,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   }
+  ],
   "FECTC": [
    {
     "id": "macd_rsi_trend",
@@ -5191,6 +6245,22 @@
     "target_pct": 6,
     "stop_pct": 3,
     "hold": 12
+   }
+  ],
+  "XLRE": [
+   {
+    "id": "oversold_bounce",
+    "name": "RSI oversold bounce",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 1.03,
+    "hit_rate": 0.731,
+    "n": 26,
+    "oos_n": 9,
+    "oos_hit": 0.889,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
    }
   ],
   "EPQL": [
@@ -5731,6 +6801,36 @@
     "hold": 7
    }
   ],
+  "TLT": [
+   {
+    "id": "roc_accel",
+    "name": "ROC acceleration",
+    "category": "momentum",
+    "net_expectancy_pct": 0.59,
+    "hit_rate": 0.706,
+    "n": 34,
+    "oos_n": 11,
+    "oos_hit": 0.818,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
+   },
+   {
+    "id": "atr_stretch_below",
+    "name": "2-ATR stretch below 20MA",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.52,
+    "hit_rate": 0.688,
+    "n": 16,
+    "oos_n": 6,
+    "oos_hit": 0.833,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 3,
+    "hold": 7
+   }
+  ],
   "LCI": [
    {
     "id": "squeeze_expansion_long",
@@ -6129,6 +7229,64 @@
     "target_pct": 10,
     "stop_pct": 5,
     "hold": 20
+   }
+  ],
+  "EEM": [
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 1.1,
+    "hit_rate": 0.593,
+    "n": 27,
+    "oos_n": 6,
+    "oos_hit": 1.0,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "macd_zero_reclaim",
+    "name": "MACD reclaims zero",
+    "category": "momentum",
+    "net_expectancy_pct": 1.06,
+    "hit_rate": 0.6,
+    "n": 45,
+    "oos_n": 17,
+    "oos_hit": 0.588,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 16
+   },
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.71,
+    "hit_rate": 0.583,
+    "n": 24,
+    "oos_n": 7,
+    "oos_hit": 0.714,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "donch55_trend_break",
+    "name": "Donchian 55 breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.5,
+    "hit_rate": 0.604,
+    "n": 53,
+    "oos_n": 16,
+    "oos_hit": 0.562,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 30
    }
   ],
   "HALEON": [
@@ -7469,6 +8627,22 @@
     "target_pct": 5.5,
     "stop_pct": 3,
     "hold": 10
+   }
+  ],
+  "XLB": [
+   {
+    "id": "cci_trend_pullback",
+    "name": "CCI pullback in uptrend",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.61,
+    "hit_rate": 0.646,
+    "n": 48,
+    "oos_n": 15,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 14
    }
   ],
   "FCSC": [

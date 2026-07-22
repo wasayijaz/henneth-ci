@@ -1,6 +1,12 @@
 {
  "findings": [
   {
+   "sev": "high",
+   "file": "themes.css",
+   "line": 1670,
+   "msg": "non-zero border-radius '50%' — the UI is hard-cornered (radius 0)"
+  },
+  {
    "sev": "low",
    "file": "themes.css",
    "line": 202,
@@ -125,10 +131,10 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-22 11:23",
-  "total": 21,
-  "high": 0,
-  "escalate": false,
+  "built": "2026-07-22 11:29",
+  "total": 22,
+  "high": 1,
+  "escalate": true,
   "note": "Deterministic design-language lint. 'high' = a rule violation on screen. If escalate, run the design-reviewer agent (visual web+mobile pass)."
  }
 }
