@@ -44,6 +44,10 @@ STEPS = [
     "room_dossier.py", "room_queue.py", "room_gate.py", "room_score.py",
     "room_verify.py",   # deterministic QA: flags glitch-derived / inconsistent numbers before publish
     "design_lint.py",   # deterministic UI QA: flags rounded corners / padding-contract / raw-hex drift
+    # The marketing site's public astro slice. Must run AFTER astro_engine (it reads the current
+    # sky) and after build_natal_ephemeris (it slices the Moon column out of that table). Writes
+    # only into site/, never state/, so it cannot affect the desk's own data layer.
+    "build_astro_lite.py",
     "build_dashboard.py", "preflight.py",
 ]
 # steps allowed to exit non-zero without aborting the run

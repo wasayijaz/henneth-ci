@@ -1,0 +1,278 @@
+---
+/* The public, lighter half of the astro pillar.
+ *
+ * WHAT THIS DELIBERATELY DOES NOT DO (docs/PUBLICATION_RESTRUCTURE.md §5a):
+ * no named security, no price, no call. A reader gets their Moon sign, its element and ruling
+ * graha, and the SECTORS and COMMODITIES tradition attaches to that graha. The ticker-level
+ * reading — every PSX name scored against the chart — is what the account is for, and the page
+ * says so rather than teasing it vaguely.
+ *
+ * WHY MOON-ONLY, AND WHY DATE-ONLY:
+ * Vedic practice reads from the Moon sign (Chandra lagna); the terminal refuses ascendants and
+ * houses for the same reason (scripts/astro_natal.py). Asking only for a date keeps the most
+ * sensitive fields — birth time and place — out of a public page entirely. The cost is that the
+ * Moon moves ~13°/day and can change sign inside one day; where that happens this page SAYS so
+ * instead of picking one, which is both honest and the most natural place to point at the
+ * terminal.
+ *
+ * NOTHING IS STORED. The chart is computed in the visitor's browser against a 61 KB ephemeris
+ * slice; no birth date is transmitted, persisted, or sent to any analytics event.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../site.config.ts';
+import lite from '../data/public/astro_lite.json';
+
+/* Base.astro renders "<title> — <site.name>", so the brand is NOT repeated here — doing so
+   produced "… — Henneth — Henneth" in the tab and in link previews. */
+const title = 'Financial astrology, tested like any other signal';
+const description =
+  'Your Moon sign, the elements it runs with, and the PSX sectors and commodities tradition ' +
+  'attaches to them. Scored the same way every other rule on the desk is — including when it finds nothing.';
+
+/* ELEMENT_BLURB lives in the client script below, not here: the readout is rendered in the
+   browser after the ephemeris resolves, so a build-time copy would be dead weight. */
+---
+
+<Base title={title} description={description}>
+  <section class="wrap astro-hero">
+    <span class="eyebrow"><Icon name="astro" /> The astro lens</span>
+    <h1>The sky, scored like every other rule here.</h1>
+    <p class="lead">
+      Most financial astrology asks you to take it on faith. This desk writes the claim down first,
+      tests it against nineteen years of PSX history, corrects for multiple comparisons, and
+      publishes the result <em>whatever it shows</em>. Start with your own chart below.
+    </p>
+  </section>
+
+  <section class="wrap">
+    <div class="cast-card">
+      <label class="cast-l" for="bd">Your date of birth</label>
+      <div class="cast-row">
+        <input type="date" id="bd" min="1950-01-01" max="2035-12-31" />
+        <button id="go" class="btn btn-lg">Read my Moon →</button>
+      </div>
+      <p class="cast-fine">
+        Date only — no time, no place, no name. It is computed in your browser and never sent
+        anywhere, stored, or attached to any analytics.
+      </p>
+      <div id="out" class="cast-out" hidden></div>
+    </div>
+  </section>
+
+  <section class="wrap sky-now">
+    <h2>The sky right now</h2>
+    <p class="muted">
+      Sidereal, Lahiri ayanamsa — identical for every reader, updated each cycle.
+      {lite.sky?.updated ? ` Last computed ${lite.sky.updated}.` : ''}
+    </p>
+    <div class="sky-grid">
+      {Object.entries(lite.sky?.positions ?? {}).map(([graha, p]: [string, any]) => (
+        <div class="sky-cell">
+          <b>{graha}</b>
+          <span>{p.sign}</span>
+          {p.nakshatra && <i>{p.nakshatra}</i>}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap honesty">
+    <h2>What the testing actually found</h2>
+    <p>
+      Nothing that survives. <b>2,589 hypotheses</b> tested across 101 subjects and 4,893 trading
+      days; after correcting for the number of tests, <b>zero</b> conditions showed a real edge.
+      That result is published on the desk and is not hidden here to make this page nicer.
+    </p>
+    <p class="muted">
+      So this is a lens for reading the market, not a reason to buy anything. It is kept because it
+      is <em>testable</em> — and because a tradition held to the same bar as a moving-average
+      crossover is worth more than one that is never checked at all.
+    </p>
+  </section>
+
+  <section class="wrap cta-band">
+    <h2>The ticker-level reading lives in the desk</h2>
+    <p>
+      Inside the terminal the same chart is read against every name on the exchange — which ones
+      run harmonious with yours, which it finds testing, and the periods your own dasha lights up.
+      That is an account feature, and the account is currently free.
+    </p>
+    <a href={site.appUrl} class="btn btn-lg" rel="noopener">Open the desk →</a>
+  </section>
+
+  <p class="wrap disclaimer-fine">
+    Astrological exploration, not investment advice, and never a reason to buy. Henneth publishes
+    research; it is not a licensed investment adviser and does not manage money or execute trades.
+  </p>
+
+  <script is:inline define:vars={{ LITE: lite }}>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+      const out = $('out');
+      let table = null;
+
+      const SIGNS = LITE.signs;
+      const EPOCH = Date.UTC(1950, 0, 1);
+      const DAY = 86400000;
+
+      const ELEMENT_BLURB = {
+        Fire: 'initiative, energy, things that burn and drive',
+        Earth: 'material substance, what is built, mined and held',
+        Air: 'exchange, information, what moves between people',
+        Water: 'liquidity, mood, what flows and what the public feels',
+      };
+
+      async function ephem() {
+        if (table) return table;
+        const buf = await fetch(LITE.ephem.file).then((r) => {
+          if (!r.ok) throw new Error('ephemeris ' + r.status);
+          return r.arrayBuffer();
+        });
+        table = new Uint16Array(buf);
+        return table;
+      }
+
+      const signAt = (tenths) => SIGNS[Math.floor((tenths / 10) / 30) % 12];
+
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, (c) =>
+          ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      }
+
+      function listFor(graha) {
+        const sectors = (LITE.sectors_by_graha || {})[graha] || [];
+        const comms = (LITE.commodities_by_graha || {})[graha] || [];
+        return { sectors, comms };
+      }
+
+      async function read() {
+        const v = $('bd').value;
+        if (!v) return;
+        out.hidden = false;
+        out.innerHTML = '<p class="muted">Computing…</p>';
+        let t;
+        try {
+          t = await ephem();
+        } catch (e) {
+          out.innerHTML = '<p class="muted">Could not load the ephemeris just now. Please retry.</p>';
+          return;
+        }
+        const idx = Math.round((Date.parse(v + 'T00:00:00Z') - EPOCH) / DAY);
+        if (idx < 0 || idx >= t.length - 1) {
+          out.innerHTML = '<p class="muted">That date is outside the table (1950–2035).</p>';
+          return;
+        }
+
+        /* The Moon covers ~13°/day, so it changes sign inside a single day roughly 44% of the
+           time. With no birth time we cannot say which side of that a reader falls on — but we
+           CAN say when the crossing happened, which is far more useful than "we can't tell" and
+           still refuses to guess. A reader who knows roughly what time they were born resolves it
+           themselves; anyone who doesn't is pointed at the terminal, where the birth time is
+           asked for precisely because of this. */
+        const a = signAt(t[idx]);
+        const b = signAt(t[idx + 1]);
+        const straddles = a.name !== b.name;
+
+        let crossPkt = null;
+        if (straddles) {
+          const lonA = t[idx] / 10;
+          let lonB = t[idx + 1] / 10;
+          if (lonB < lonA) lonB += 360;                 // wrapped past Pisces -> Aries
+          const boundary = Math.ceil(lonA / 30) * 30;
+          const frac = (boundary - lonA) / (lonB - lonA);
+          if (frac > 0 && frac < 1) {
+            // Table is 00:00 UT. Pakistan is UT+5, and the audience reads local time.
+            const mins = Math.round(frac * 24 * 60) + 5 * 60;
+            const hh = Math.floor(mins / 60) % 24;
+            const mm = mins % 60;
+            crossPkt = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')} PKT`
+              + (mins >= 24 * 60 ? ' the following day' : '');
+          }
+        }
+
+        const blocks = [a].concat(straddles ? [b] : []).map((s) => {
+          const { sectors, comms } = listFor(s.ruler);
+          return `
+            <div class="res-block">
+              <div class="res-head">
+                <b>Moon in ${esc(s.name)}</b>
+                <span class="chip">${esc(s.element)}</span>
+                <span class="chip">ruled by ${esc(s.ruler)}</span>
+              </div>
+              <p class="muted">${esc(s.element)} — ${esc(ELEMENT_BLURB[s.element] || '')}.</p>
+              ${comms.length ? `<div class="res-sub">Commodities under ${esc(s.ruler)}</div>
+                <ul class="res-list">${comms.map((c) =>
+                  `<li><b>${esc(c.name)}</b><span>${esc(c.note)}</span></li>`).join('')}</ul>` : ''}
+              ${sectors.length ? `<div class="res-sub">PSX sectors under ${esc(s.ruler)}</div>
+                <ul class="res-list">${sectors.slice(0, 6).map((x) =>
+                  `<li><b>${esc(x.sector)}</b><span>${esc(x.why)}</span></li>`).join('')}</ul>` : ''}
+            </div>`;
+        }).join('');
+
+        out.innerHTML =
+          (straddles
+            ? `<p class="straddle"><b>Your Moon changed sign that day${crossPkt ? `, at about ${esc(crossPkt)}` : ''}.</b>
+               ${crossPkt
+                 ? `Born before that, read ${esc(a.name)}; after it, ${esc(b.name)}. Both are below.`
+                 : `Without a birth time both readings below are live.`}
+               The desk settles this exactly once it knows your time of birth.</p>`
+            : '') +
+          blocks +
+          `<p class="muted res-foot">Tradition's attribution, not a measured effect — see what the
+           testing found below.</p>`;
+      }
+
+      $('go')?.addEventListener('click', read);
+      $('bd')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') read(); });
+    })();
+  </script>
+
+  <style>
+    .astro-hero { padding-top: 8px; }
+    .astro-hero h1 { max-width: 18ch; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin-bottom: 14px; }
+
+    .cast-card { border: var(--rule); background: var(--panel); padding: 22px; }
+    .cast-l { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--ink-3); margin-bottom: 8px; }
+    .cast-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .cast-row input { flex: 1 1 200px; min-width: 0; font: inherit; font-size: 15px;
+      padding: 11px 13px; border: var(--rule); background: var(--bg); color: var(--ink-1); }
+    .cast-fine { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+    .cast-out { margin-top: 18px; }
+
+    .straddle { border-left: 3px solid var(--ink-1); padding: 10px 0 10px 12px; margin-bottom: 14px; }
+    .res-block { border-top: var(--rule); padding-top: 14px; margin-top: 14px; }
+    .res-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 18px; }
+    .chip { font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+      border: 1px solid var(--line); padding: 2px 8px; color: var(--ink-3); }
+    .res-sub { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--ink-3); margin: 14px 0 6px; }
+    .res-list { list-style: none; padding: 0; margin: 0; }
+    .res-list li { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dotted var(--hair);
+      flex-wrap: wrap; }
+    .res-list li b { flex: 0 0 auto; }
+    .res-list li span { color: var(--ink-3); font-size: 13px; flex: 1 1 220px; }
+    .res-foot { margin-top: 14px; font-size: 12px; }
+
+    .sky-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1px; background: var(--line); border: var(--rule); margin-top: 14px; }
+    .sky-cell { background: var(--panel); padding: 11px 13px; display: flex; flex-direction: column; gap: 2px; }
+    .sky-cell b { font-size: 13px; }
+    .sky-cell span { font-size: 13px; color: var(--ink-2); }
+    .sky-cell i { font-size: 11px; color: var(--ink-3); font-style: normal; }
+
+    .honesty { border-top: var(--rule); padding-top: 26px; }
+    .cta-band { border: var(--rule); background: var(--ink-1); color: var(--bg); padding: 28px; }
+    .cta-band h2, .cta-band p { color: var(--bg); }
+    .cta-band .btn { background: var(--bg); color: var(--ink-1); border-color: var(--bg); margin-top: 8px; }
+    .disclaimer-fine { font-size: 12px; color: var(--ink-3); }
+
+    @media (max-width: 640px) {
+      .cast-card { padding: 16px; }
+      .cast-row .btn { width: 100%; }
+    }
+  </style>
+</Base>

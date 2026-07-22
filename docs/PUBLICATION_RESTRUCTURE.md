@@ -168,12 +168,34 @@ carve-out equivalent. This is the actual reason to widen coverage (§7) — not 
 impersonal test on their own, and they introduce sensitive personal data (birth date, time,
 place) into the product.
 
-**Affected:**
+**CORRECTED — the original "Affected" list conflated two different things and would have deleted
+a core IMPERSONAL asset.** "natal" appears in both, but they are not the same feature.
 
-- `scripts/astro_natal.py`, `scripts/astro_natal_test.py`, `scripts/build_natal_ephemeris.py`
-- `state/astro_natal.json`, `state/astro_natal_test.json`, `state/natal_ephem.json`
-- `dashboard/app.js` — natal surfaces
-- `scripts/run_cloud.py`, `scripts/watchdog.py` — natal steps in the cycle
+`scripts/astro_natal.py` computes natal charts for **COMPANIES** — first-trade dates for the 15
+listed subjects sourced by `astro_charts.py`, cast at the exchange open per the Bill Meridian
+convention (`astro_natal.py:1-18`). `state/astro_natal.json` has keys `n_charts` / `subjects`, and
+it feeds three impersonal surfaces in `dashboard/app.js` (`:1429` the astro board, `:1794` the
+whole-market map, `:1948` the ticker astro lens).
+
+That is scheduled, impersonal and identical for every subscriber. **It passes all three tests and
+must STAY.** It is part of the astro pillar, not the personal feature.
+
+What is actually personal is the browser-side chart casting —
+`scripts/build_natal_ephemeris.py:1` states its purpose outright: *"A compact daily ephemeris table
+the BROWSER can use to cast a person's birth chart… each user's birth date/time/place."*
+
+| Cut | Keep |
+|---|---|
+| `scripts/build_natal_ephemeris.py` | `scripts/astro_natal.py` — company first-trade charts |
+| `state/natal_ephem.json` / `.bin` | `state/astro_natal.json` |
+| `#/cast` — the birth-data wizard (`app.js:1635` `BW_STEPS`, `:1698` `renderBirthCast`) | `scripts/astro_natal_test.py` — tests the company charts |
+| `#/mychart` — `pageMyChart`, synastry, personal gochara | `app.js:1429`, `:1794`, `:1948` — impersonal consumers |
+| birth-data intake (`app.js:3314`) | `astro`, `astro_regime`, `astro_backtest` |
+| `"cast"`, `"mychart"` in `OPEN_ROUTES` (`app.js:5194`) | |
+| funnel entry points: `app.js:656`, `:3509`, `:5312` | |
+
+`scripts/run_cloud.py:35` drops `build_natal_ephemeris` only — **`astro_natal.py` stays in the
+cycle.** `scripts/watchdog.py` no longer references natal at all (probe repointed, §5 step 1).
 
 **CORRECTED — point 3 is understated, and getting it wrong disarms a live safety check.**
 
@@ -203,7 +225,33 @@ anything. It will not fail loudly. It will pass, meaninglessly.
 4. Skip natal steps in the cloud cycle (`run_cloud.py:35`); confirm `watchdog.py` still passes.
 5. Keep `astro`, `astro_regime`, `astro_backtest` fully live. Impersonal astro is the pillar.
 
-**Acceptance:** no birth-data intake anywhere in the launch product; no natal output published.
+### 5a. OWNER DECISION, 2026-07-22 — §5 is NOT being implemented as written
+
+The owner has decided to **keep** `#/cast` and `#/mychart` in the terminal, and to additionally
+build a **lighter public version on the marketing site**: birth chart → elemental affinities with
+sectors and commodities (cement, gold…) plus current transits, leading to sign-up for the
+ticker-level reading.
+
+**Record the trade-off plainly, because this reverses the section above.**
+
+- The impersonal test in §1 is **not met** by this surface, by choice. `dashboard/app.js:1803-1816`
+  scores **every PSX ticker** against the user's birth chart via `synastry()`, plus the eight
+  commodities in `COMMODITIES` (`app.js:1177`). Output differs per reader by construction. It is
+  the most personalized surface in the product — more so than the position sizing §3 removes.
+- It already carries a disclaimer (`app.js:1783`): *"Astrological exploration, not investment
+  advice. A lens to read your own chart against the market — never a reason to buy."*
+- The marketing-site version is **softer than what already ships**, not an escalation: sector and
+  commodity level rather than named tickers.
+- Sensitive personal data (birth date/time/place) stays in the product. `state/legal.json` privacy
+  section must cover it explicitly, and it is `review_status: DRAFT`.
+
+**This is the one item to put in front of the lawyer first**, ahead of the §8 SECP query — it is
+the surface most likely to attract the "personalized advice" reading, and the owner is choosing to
+grow it rather than cut it. That is a legitimate product call; it just needs to be a *known* one.
+
+**Acceptance (revised):** ~~no birth-data intake anywhere~~ — personal astro ships. Instead: the
+disclaimer stays on every personal surface, birth data stays private to the account, and the
+marketing-site version stays at sector/commodity level with no named-security reading.
 
 ---
 
