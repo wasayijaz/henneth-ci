@@ -1,0 +1,28 @@
+{
+  "ticker": "PSO",
+  "verdict": "clean",
+  "findings": [
+    {
+      "severity": "low",
+      "claim": "verify.json: PSO fairvalue.spread — 'methods disagree 10.4x — treat composite as a rough screen'",
+      "issue": "Confirmed accurate, not a data-layer bug: 591.01 (earnings_power) / 57.02 (DDM) = 10.36x ≈ 10.4x. The spread is explained by PSO's 10.60% payout ratio and 0% growth_est_pct depressing the dividend-based DDM method while relative_pe/earnings_power (which don't key off the dividend) run 500-591. composite_fair (402.19) correctly equals the median of the four methods {57.02, 296.67, 507.7, 591.01} = (296.67+507.7)/2 = 402.185, and mispricing_pct (16.5%) = (402.19-345.26)/345.26 = 16.49%, both check out. The room's fa_memo/bear_case/house_view already decompose this explicitly (fa_memo: 'that composite masks a huge spread... DDM says just 57'; bear_case names it as the attack_on_bull), so the wide spread is disclosed to the reader rather than hidden behind the single 'undervalued' headline.",
+      "evidence": "state/dossiers.json PSO.valuation.methods {relative_pe:507.7, earnings_power:591.01, graham:296.67, ddm:57.02}; state/verify.json PSO entry; state/rooms.json PSO.fa_memo/bear_case",
+      "fix": "None required. Recommend keeping valuation_stance as 'unclear' (already the case) rather than a flat 'undervalued', which the room text already does correctly."
+    },
+    {
+      "severity": "low",
+      "claim": "fa_memo.read: 'Net margin is thin (~1.4%...)' vs fundamental.scorecard card: 'Net margin only 1%'",
+      "issue": "Minor wording inconsistency between two dossier-derived text fields for the same underlying figure (net_income 43.53B / revenue 3.21T = 1.356%). Both round in different directions; not material and not a fabricated number.",
+      "evidence": "state/dossiers.json PSO.fundamental {net_income:'43.53B', revenue:'3.21T'} -> 43.53/3210 = 1.356%",
+      "fix": "Cosmetic only — could standardize both mentions to '~1.4%' for consistency, no numeric correction needed."
+    },
+    {
+      "severity": "low",
+      "claim": "recent_news: KSE-100 close 'down 1,703.64 points' on 2026-07-22 amid Strait of Hormuz/Houthi escalation, and Brent 'tops $92/bbl' same day",
+      "issue": "Web-verified as plausible and directionally consistent with real reporting, not a stale/glitch figure. Brent was reported trading around $92-95/bbl on 2026-07-22 amid continued US-Iran strikes; KSE-100 was reported down roughly 1,800-1,849 points intraday the same day (a different Business Recorder snapshot than the dossier's final-close 1,703.64). The small numeric variance is consistent with intraday-vs-close reporting differences across sources, not an error in the dossier.",
+      "evidence": "https://www.cnbc.com/2026/07/22/oil-prices-iran-war-macro-rubio-brent-wti.html ; https://www.brecorder.com/news/40431234/negative-sentiments-drive-selling-at-psx-kse-100-down-1800-points ; state/dossiers.json PSO.recent_news",
+      "fix": "None required — figures are within normal cross-source variance for the same trading session."
+    }
+  ],
+  "summary": "PSO's composite fair value correctly equals the median of its four valuation methods, the 16.5% mispricing_pct is arithmetically correct, and the flagged 10.4x method-spread is a legitimate artifact of a low-payout DDM input that the room's own fa_memo/bear_case already surface rather than paper over. Technicals (price, SMA20/50, RSI14, returns, volume) all match the dossier, the empty documents[] array is correctly reflected as 'no broker digest' rather than a fabricated citation, no advice-language leaks were found, and the cited macro/oil news checks out against independent reporting for 2026-07-22. No correction is required before publish."
+}

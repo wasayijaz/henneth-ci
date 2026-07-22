@@ -1,0 +1,28 @@
+{
+  "ticker": "UBL",
+  "verdict": "blocked",
+  "findings": [
+    {
+      "severity": "high",
+      "claim": "dossier.fundamental.recent_dividends shows four Rs16.0/share declarations (closures 2026-04-24, 2026-03-26, 2025-10-27, 2025-07-22, each labeled '160%'); fa_memo.dividend_safety: 'recent quarterly/interim payouts of Rs16/share recurring through FY25-26'; bull_case pillar: 'a consistent Rs16/share quarterly cadence through FY25-26'.",
+      "issue": "The per-share cash amount is doubled. UBL's real declared dividend for each of these four dates was Rs8.00/share (160% of Rs5 face value), not Rs16.00. stockanalysis.com's dividend history lists Apr 23 2026, Mar 19 2026, Oct 23 2025 and Jul 18 2025 (the same closures, within a day or two) all at exactly 8.000 PKR, and Investing.com/UBL's own Q1-2026 results announcement states the board 'declared an interim cash dividend of Rs.8/- per share (160%)' -- confirming 160% = Rs8, not Rs16. Interestingly the aggregate div_yield (6.75%) and payout_ratio (50.96%) in the same dossier are internally consistent with the CORRECT Rs8 x 4 = Rs32 annual total (32/464.79=6.9%, 32/60.36=53%, both close to the stated 6.75%/50.96%), so only the per-entry line items (and the two memos quoting them) carry the 2x error -- likely a face-value assumption bug (treating 160% as % of Rs10 instead of UBL's actual Rs5 face value).",
+      "evidence": "https://stockanalysis.com/quote/psx/UBL/dividend/ ; https://ng.investing.com/news/company-news/united-bank-limited-declares-rs8-per-share-interim-dividend-93CH-2151302 ; https://www.investegate.co.uk/announcement/rns/united-bank-limited--ubls/financial-results-for-the-1st-qtr-2026-of-ubl/9522220",
+      "fix": "Correct every 'rs' value in recent_dividends from 16.0 to 8.0 (and halve the corresponding yield_pct entries, e.g. 3.44% -> ~1.72% per declaration); update fa_memo.dividend_safety and the bull_case pillar text from 'Rs16/share' to 'Rs8/share'. Leave div_yield (6.75%) and payout_ratio (50.96%) unchanged -- they already reflect the correct real-world total."
+    },
+    {
+      "severity": "medium",
+      "claim": "dossier.fundamental.pe = '8.35' with price 464.79 and eps '60.36'.",
+      "issue": "Price divided by EPS gives 464.79/60.36 = 7.70x, not the stated 8.35x trailing P/E -- an internal arithmetic mismatch of about 8.5%. Both figures (P/E 8.35 read as 'mid-pack for PSX' and EPS 60.36 feeding the valuation model) are quoted verbatim in the fa_memo and bull/bear cases, so the inconsistency propagates into the memos even though it doesn't flip the qualitative verdict (still a single-digit multiple either way).",
+      "evidence": "Arithmetic check within state/dossiers.json UBL entry: 464.79 / 60.36 = 7.70 (not 8.35).",
+      "fix": "Recompute trailing P/E as price/EPS (7.70x) or reconcile which input is stale -- confirm whether the EPS field was refreshed with today's (2026-07-22) Q2CY26 print while the P/E field was computed on an older EPS basis, and re-run both from the same trailing-EPS figure."
+    },
+    {
+      "severity": "low",
+      "claim": "dossier.fundamental.next_earnings = 'Jul 22, 2026'.",
+      "issue": "Today's dossier asof date IS Jul 22, 2026, and the recent_news/documents confirm the Q2CY26 results were already announced today (262nd board meeting, profit +33% YoY). The 'next_earnings' field is now stale -- it should point to the next (Q3CY26) results date rather than a date that has already passed within the same session.",
+      "evidence": "state/dossiers.json UBL.recent_news (2026-07-22 items) and UBL.documents (results filing dated 2026-07-22).",
+      "fix": "Update next_earnings to the upcoming Q3CY26 reporting date once scheduled/known, rather than leaving it on the just-reported date."
+    }
+  ],
+  "summary": "UBL's composite fair value (288.9) is exactly the median of its four valuation methods and the mispricing/verdict math checks out, all TA levels (SMA20/50, RSI, volatility) match the dossier, and the H1 2026 profit-rise, Rs6.1tn deposits and Rs40bn strategic-investment headlines all verify against real sources -- but the recent_dividends line items and two memos state Rs16/share where the real declared dividend was Rs8/share (a 2x error, even though the aggregate yield/payout figures are correctly computed from the true amount), and the trailing P/E doesn't arithmetically match price/EPS; both should be corrected before this reaches a user."
+}

@@ -1,0 +1,14 @@
+{
+  "ticker": "NRL",
+  "verdict": "flags",
+  "findings": [
+    {
+      "severity": "low",
+      "claim": "Task scope: check NRL's rooms.json entry (ta_memo, fa_memo, bull_case, bear_case, house_view).",
+      "issue": "No 'NRL' key exists in state/rooms.json at all — confirmed by scanning the full file (3333 lines, all 42 covered tickers accounted for: FFC, UBL, MEBL, HUBC, OGDC, MCB, MARI, ENGROH, LUCK, HBL, PPL, NBP, PSO, SNGP, SSGC, ATRL, PRL, FFL, HCAR, SYS, PTC, POL, FABL, MTL, PIOC, etc.). NRL has no Desk Room debate session this cycle, so its bull/bear/house-view content could not be cross-examined — there is nothing there to check.",
+      "evidence": "state/rooms.json _meta: {\"sessions\":21,\"covered\":42} out of 576-ticker universe (state/coverage.json); NRL absent from the key list.",
+      "fix": "Do not publish NRL bull/bear/house_view content since none exists; treat NRL as dossier-only coverage this cycle, or flag it for Room-session generation before any debate-style narrative is attributed to it."
+    }
+  ],
+  "summary": "NRL's raw dossier numbers check out clean — composite fair value (692.67) is exactly the median of its three valuation methods (403.75/692.67/756.76), mispricing_pct (68.9%) and the above-SMA20/above-SMA50 technical flags arithmetically match, news dates are all fresh through the 2026-07-22 asof, and verify.json raised zero deterministic flags for NRL. The one real gap: NRL has no Desk Room session in rooms.json this cycle, so no ta_memo/fa_memo/bull_case/bear_case/house_view exists to audit for this ticker."
+}
