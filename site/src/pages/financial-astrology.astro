@@ -16,7 +16,16 @@
  * terminal.
  *
  * NOTHING IS STORED. The chart is computed in the visitor's browser against a 61 KB ephemeris
- * slice; no birth date is transmitted, persisted, or sent to any analytics event.
+ * slice; no birth date is transmitted, persisted, or sent to any analytics event. That is why the
+ * cast button carries no data-ev: Base.astro's delegated tracker would otherwise log the click,
+ * and a page that promises "not attached to any analytics" should not have to qualify it.
+ *
+ * WHY THE STYLE BLOCK IS `is:global` AND EVERYTHING IS PREFIXED `.fa`:
+ * the readout is built as an HTML string and injected into #out, so those elements never receive
+ * Astro's scope attribute — a scoped `.res-block { … }` compiles to `.res-block[data-astro-cid-…]`
+ * and silently does not match injected markup. (It did not match before this rewrite either: the
+ * result panel was rendering unstyled.) Everything is namespaced under the `.fa` wrapper instead
+ * of relying on the scoper.
  */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -30,110 +39,328 @@ const description =
   'Your Moon sign, the elements it runs with, and the PSX sectors and commodities tradition ' +
   'attaches to them. Scored the same way every other rule on the desk is — including when it finds nothing.';
 
-/* ELEMENT_BLURB lives in the client script below, not here: the readout is rendered in the
-   browser after the ephemeris resolves, so a build-time copy would be dead weight. */
+type Sign = { name: string; element: string; ruler: string };
+const signs = (lite.signs ?? []) as Sign[];
+
+/* Shared between the server-rendered sign explorer and the browser-side readout, so it is defined
+   once here and handed to the script through define:vars rather than duplicated. */
+const ELEMENT_BLURB: Record<string, string> = {
+  Fire: 'initiative, energy, things that burn and drive',
+  Earth: 'material substance, what is built, mined and held',
+  Air: 'exchange, information, what moves between people',
+  Water: 'liquidity, mood, what flows and what the public feels',
+};
+
+const sectorsFor = (ruler: string): any[] => (lite.sectors_by_graha as any)?.[ruler] ?? [];
+const commsFor = (ruler: string): any[] => (lite.commodities_by_graha as any)?.[ruler] ?? [];
+
+/* Glyphs come from the system symbol fonts, not from an icon set — JetBrains Mono has no
+   astrological block, so these fall through to Segoe UI Symbol / Apple Symbols / Noto. That is
+   fine and deliberate: nine characters beats nine SVGs, and the fallback face reads as a different
+   register, which is what these are. */
+const GRAHA_GLYPH: Record<string, string> = {
+  Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
+  Jupiter: '♃', Saturn: '♄', Rahu: '☊', Ketu: '☋',
+};
+const SIGN_GLYPH: Record<string, string> = {
+  Aries: '♈', Taurus: '♉', Gemini: '♊', Cancer: '♋', Leo: '♌', Virgo: '♍',
+  Libra: '♎', Scorpio: '♏', Sagittarius: '♐', Capricorn: '♑', Aquarius: '♒', Pisces: '♓',
+};
+
+const positions = Object.entries((lite.sky as any)?.positions ?? {}) as [string, any][];
+const system = (lite.sky as any)?.system ?? {};
+
+/* The scorecard in the hero. Hard-coded because it describes a finished, published run, not a
+   figure the data layer refreshes — and the whole point of the page is that this number does not
+   move quietly. If the sweep is re-run these change together with the copy below. */
+const scorecard: [string, string, boolean][] = [
+  ['Hypotheses tested', '2,589', false],
+  ['Subjects', '101', false],
+  ['Trading days', '4,893', false],
+  ['Years of PSX history', '19', false],
+  ['Conditions with a proven edge', '0', true],
+];
 ---
 
-<Base title={title} description={description}>
-  <section class="wrap astro-hero">
-    <span class="eyebrow"><Icon name="astro" /> The astro lens</span>
-    <h1>The sky, scored like every other rule here.</h1>
-    <p class="lead">
-      Most financial astrology asks you to take it on faith. This desk writes the claim down first,
-      tests it against nineteen years of PSX history, corrects for multiple comparisons, and
-      publishes the result <em>whatever it shows</em>. Start with your own chart below.
-    </p>
-  </section>
-
-  <section class="wrap">
-    <div class="cast-card">
-      <label class="cast-l" for="bd">Your date of birth</label>
-      <div class="cast-row">
-        <input type="date" id="bd" min="1950-01-01" max="2035-12-31" />
-        <button id="go" class="btn btn-lg">Read my Moon →</button>
-      </div>
-      <p class="cast-fine">
-        Date only — no time, no place, no name. It is computed in your browser and never sent
-        anywhere, stored, or attached to any analytics.
-      </p>
-      <div id="out" class="cast-out" hidden></div>
-    </div>
-  </section>
-
-  <section class="wrap sky-now">
-    <h2>The sky right now</h2>
-    <p class="muted">
-      Sidereal, Lahiri ayanamsa — identical for every reader, updated each cycle.
-      {lite.sky?.updated ? ` Last computed ${lite.sky.updated}.` : ''}
-    </p>
-    <div class="sky-grid">
-      {Object.entries(lite.sky?.positions ?? {}).map(([graha, p]: [string, any]) => (
-        <div class="sky-cell">
-          <b>{graha}</b>
-          <span>{p.sign}</span>
-          {p.nakshatra && <i>{p.nakshatra}</i>}
+<Base title={title} description={description} path="/financial-astrology" active="astro">
+  <div class="fa">
+    <section class="section-tight">
+      <div class="wrap fa-hero">
+        <div>
+          <p class="kicker"><Icon name="astro" size={14} /> The astro lens</p>
+          <h1>The sky, scored like every other rule here.</h1>
+          <p class="lead fa-lead">
+            Most financial astrology asks you to take it on faith. This desk writes the claim down
+            first, tests it against nineteen years of PSX history, corrects for multiple
+            comparisons, and publishes the result <em>whatever it shows</em>.
+          </p>
+          <div class="fa-hero-cta">
+            <a href="#cast" class="btn btn-solid">Read my Moon ↓</a>
+            <a href="#findings" class="btn">What the testing found</a>
+          </div>
+          <p class="fa-hero-fine muted">
+            Date only. Computed in your browser. Nothing sent, nothing stored.
+          </p>
         </div>
-      ))}
+
+        <div class="card fa-score">
+          <div class="fa-score-h">
+            <span class="label">The null result</span>
+            <span class="badge"><span class="dot"></span>Published</span>
+          </div>
+          {scorecard.map(([k, v, big]) => (
+            <div class:list={['fa-score-row', { 'fa-score-row--big': big }]}>
+              <span class="muted">{k}</span>
+              <span class:list={[{ pixel: big }]}>{v}</span>
+            </div>
+          ))}
+          <p class="fa-score-fine muted">
+            After correcting for the number of tests, nothing survived. It is on the desk, and it is
+            not hidden here to make this page nicer.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight" id="cast">
+      <div class="wrap">
+        <p class="kicker">01 · Your chart</p>
+        <h2>Start with your own Moon</h2>
+        <div class="card fa-cast">
+          <label class="fa-cast-l" for="bd">Your date of birth</label>
+          <div class="fa-cast-row">
+            <input type="date" id="bd" min="1950-01-01" max="2035-12-31" />
+            <button id="go" class="btn btn-solid btn-lg">Read my Moon →</button>
+          </div>
+          <p class="fa-cast-fine">
+            <b>Date only</b> — no time, no place, no name. It is computed in your browser against a
+            61 KB ephemeris and never sent anywhere, stored, or attached to any analytics.
+          </p>
+          <div id="out" class="fa-out" aria-live="polite" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section band-dark fa-skyband">
+      <div class="wrap">
+        <div class="fa-sky-h">
+          <div>
+            <p class="kicker">02 · The computed sky</p>
+            <h2>The sky right now</h2>
+            <p class="lead fa-sky-lead">
+              Sidereal, Lahiri ayanamsa — identical for every reader, recomputed each cycle. No
+              outer planets: the nine classical grahas, as the tradition being tested actually uses.
+            </p>
+          </div>
+          {(lite.sky as any)?.updated && (
+            <span class="badge fa-sky-stamp"><span class="dot"></span>Computed {(lite.sky as any).updated} PKT</span>
+          )}
+        </div>
+
+        <div class="fa-sky-grid">
+          {positions.map(([graha, p]) => (
+            <div class="fa-sky-cell">
+              <span class="fa-glyph" aria-hidden="true">{GRAHA_GLYPH[graha] ?? '·'}</span>
+              <b>{graha}</b>
+              <span class="fa-sky-sign">{p.sign}</span>
+              {p.nakshatra && <i>{p.nakshatra}</i>}
+            </div>
+          ))}
+        </div>
+
+        <p class="fa-sky-note">
+          <b>Nakshatra</b> is the finer division — twenty-seven lunar mansions across the same
+          circle, so a graha's mansion says more about its flavour than its sign alone. The desk
+          reports both because the tested claims are written at that resolution.
+        </p>
+
+        <details class="fa-prov">
+          <summary>How this sky is computed</summary>
+          <div class="fa-prov-body">
+            {system.zodiac && <div class="fa-prov-row"><span>Zodiac</span><span>{system.zodiac}</span></div>}
+            {system.ayanamsa && (
+              <div class="fa-prov-row">
+                <span>Ayanamsa</span>
+                <span>{system.ayanamsa}{system.ayanamsa_deg ? ` · ${system.ayanamsa_deg}°` : ''}</span>
+              </div>
+            )}
+            {system.node && <div class="fa-prov-row"><span>Node</span><span>{system.node}</span></div>}
+            {system.bodies && <div class="fa-prov-row"><span>Bodies</span><span>{system.bodies}</span></div>}
+            {system.engine && <div class="fa-prov-row"><span>Engine</span><span>{system.engine}</span></div>}
+            {system.method && <p class="fa-prov-method">{system.method}</p>}
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <p class="kicker">03 · The map</p>
+        <h2>Every sign, and what tradition hangs on it</h2>
+        <p class="lead fa-exp-lead">
+          You do not need a birth date to read the map. Each sign has a ruling graha, and the desk's
+          published attribution table hangs specific PSX sectors and commodities on that graha.
+          Written down first, so it can be tested — which is the whole point.
+        </p>
+
+        <div class="fa-signs tilegrid" role="group" aria-label="Choose a sign">
+          {signs.map((s, i) => (
+            <button class="fa-sgn" data-i={i} type="button" aria-pressed={i === 0}>
+              <span class="fa-glyph" aria-hidden="true">{SIGN_GLYPH[s.name] ?? '·'}</span>
+              <b>{s.name}</b>
+              <span class="muted">{s.element} · {s.ruler}</span>
+            </button>
+          ))}
+        </div>
+
+        {signs.map((s, i) => {
+          const sec = sectorsFor(s.ruler);
+          const com = commsFor(s.ruler);
+          return (
+            <div class="fa-sp card" data-panel={i}>
+              <div class="fa-res-head">
+                <span class="fa-glyph fa-glyph-lg" aria-hidden="true">{SIGN_GLYPH[s.name] ?? '·'}</span>
+                <b>{s.name}</b>
+                <span class="fa-chip">{s.element}</span>
+                <span class="fa-chip">ruled by {s.ruler}</span>
+              </div>
+              <p class="muted fa-res-blurb">{s.element} — {ELEMENT_BLURB[s.element] ?? ''}.</p>
+
+              <div class="fa-res-sub">PSX sectors under {s.ruler}</div>
+              {sec.length ? (
+                <ul class="fa-list">
+                  {sec.slice(0, 6).map((x: any) => (
+                    <li>
+                      <b>{x.sector}</b>
+                      <span>{x.why}</span>
+                      {x.confidence && <em class:list={['fa-conf', `fa-conf--${x.confidence}`]}>{x.confidence}</em>}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p class="fa-empty">The map attaches no PSX sector to {s.ruler}. Nothing invented to fill the row.</p>
+              )}
+
+              <div class="fa-res-sub">Commodities under {s.ruler}</div>
+              {com.length ? (
+                <ul class="fa-list">
+                  {com.map((c: any) => (
+                    <li><b>{c.name}</b><span>{c.note}</span></li>
+                  ))}
+                </ul>
+              ) : (
+                <p class="fa-empty">
+                  Tradition assigns metals and crops to the luminaries, Venus, Saturn and Rahu — not
+                  to {s.ruler}. The gap is left as a gap.
+                </p>
+              )}
+            </div>
+          );
+        })}
+
+        <p class="fa-legend muted">
+          <b>Confidence</b> is the desk's own tag for how firmly the tradition makes that
+          attribution — how old and how consistent the claim is. It is <em>not</em> evidence of a
+          market effect. On that question the testing found nothing at all.
+        </p>
+      </div>
+    </section>
+
+    <section class="section band-panel" id="findings">
+      <div class="wrap fa-find">
+        <div>
+          <p class="kicker">04 · The result</p>
+          <h2>What the testing actually found</h2>
+          <p class="lead">
+            Nothing that survives. <b>2,589 hypotheses</b> tested across 101 subjects and 4,893
+            trading days; after correcting for the number of tests, <b>zero</b> conditions showed a
+            real edge.
+          </p>
+          <p class="muted">
+            Test enough rules against enough history and some will look profitable by luck alone —
+            that is what a multiple-comparisons correction exists to strip out. Every claim on this
+            page went through it. None came out the other side.
+          </p>
+          <p class="muted">
+            So this is a lens for reading the market, not a reason to buy anything. It is kept
+            because it is <em>testable</em> — and a tradition held to the same bar as a
+            moving-average crossover is worth more than one that is never checked at all.
+          </p>
+        </div>
+        <div class="card fa-disc">
+          <span class="label">Where astro sits on this desk</span>
+          <p class="fa-disc-q">{(lite as any).discipline}</p>
+          <div class="fa-disc-rows">
+            <div class="fa-prov-row"><span>Generates setups</span><span class="dn">Never</span></div>
+            <div class="fa-prov-row"><span>Gates a setup</span><span class="dn">Never</span></div>
+            <div class="fa-prov-row"><span>Reported &amp; scored</span><span class="up">Every cycle</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section band-dark fa-cta">
+      <div class="wrap">
+        <h2>The ticker-level reading lives in the desk</h2>
+        <p class="lead fa-cta-lead">
+          Inside the terminal the same chart is read against every name on the exchange — which ones
+          run harmonious with yours, which it finds testing, and the periods your own dasha lights
+          up. Birth time included, so the sign changes above resolve exactly. That is an account
+          feature, and the account is currently free.
+        </p>
+        <a href={site.appUrl} class="btn btn-lg" rel="noopener">Open the desk →</a>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <p class="fa-disclaimer">
+        Astrological exploration, not investment advice, and never a reason to buy. Henneth
+        publishes research; it is not a licensed investment adviser and does not manage money or
+        execute trades.
+      </p>
     </div>
-  </section>
+  </div>
 
-  <section class="wrap honesty">
-    <h2>What the testing actually found</h2>
-    <p>
-      Nothing that survives. <b>2,589 hypotheses</b> tested across 101 subjects and 4,893 trading
-      days; after correcting for the number of tests, <b>zero</b> conditions showed a real edge.
-      That result is published on the desk and is not hidden here to make this page nicer.
-    </p>
-    <p class="muted">
-      So this is a lens for reading the market, not a reason to buy anything. It is kept because it
-      is <em>testable</em> — and because a tradition held to the same bar as a moving-average
-      crossover is worth more than one that is never checked at all.
-    </p>
-  </section>
-
-  <section class="wrap cta-band">
-    <h2>The ticker-level reading lives in the desk</h2>
-    <p>
-      Inside the terminal the same chart is read against every name on the exchange — which ones
-      run harmonious with yours, which it finds testing, and the periods your own dasha lights up.
-      That is an account feature, and the account is currently free.
-    </p>
-    <a href={site.appUrl} class="btn btn-lg" rel="noopener">Open the desk →</a>
-  </section>
-
-  <p class="wrap disclaimer-fine">
-    Astrological exploration, not investment advice, and never a reason to buy. Henneth publishes
-    research; it is not a licensed investment adviser and does not manage money or execute trades.
-  </p>
-
-  <script is:inline define:vars={{ LITE: lite }}>
+  {/* NO `//` COMMENTS ANYWHERE IN HERE. Astro can collapse a define:vars body onto a single line,
+      at which point a line comment eats the rest of the script. Block comments only. */}
+  <script is:inline define:vars={{ LITE: lite, EB: ELEMENT_BLURB, SG: SIGN_GLYPH }}>
     (function () {
       const $ = (id) => document.getElementById(id);
       const out = $('out');
-      let table = null;
+      const bd = $('bd');
+      const go = $('go');
 
       const SIGNS = LITE.signs;
       const EPOCH = Date.UTC(1950, 0, 1);
       const DAY = 86400000;
 
-      const ELEMENT_BLURB = {
-        Fire: 'initiative, energy, things that burn and drive',
-        Earth: 'material substance, what is built, mined and held',
-        Air: 'exchange, information, what moves between people',
-        Water: 'liquidity, mood, what flows and what the public feels',
-      };
+      let table = null;
+      let pending = null;
 
-      async function ephem() {
-        if (table) return table;
-        const buf = await fetch(LITE.ephem.file).then((r) => {
-          if (!r.ok) throw new Error('ephemeris ' + r.status);
-          return r.arrayBuffer();
-        });
-        table = new Uint16Array(buf);
-        return table;
+      /* Prefetched on first intent rather than on submit. The file is 61 KB and the reader spends
+         a few seconds in a date picker before pressing anything, which is exactly long enough to
+         make the readout feel instant instead of stalled. */
+      function ephem() {
+        if (table) return Promise.resolve(table);
+        if (pending) return pending;
+        pending = fetch(LITE.ephem.file)
+          .then((r) => {
+            if (!r.ok) throw new Error('ephemeris ' + r.status);
+            return r.arrayBuffer();
+          })
+          .then((buf) => {
+            table = new Uint16Array(buf);
+            return table;
+          })
+          .catch((e) => {
+            pending = null;
+            throw e;
+          });
+        return pending;
       }
 
       const signAt = (tenths) => SIGNS[Math.floor((tenths / 10) / 30) % 12];
+      const signIndex = (name) => SIGNS.findIndex((s) => s.name === name);
 
       function esc(s) {
         return String(s).replace(/[&<>"']/g, (c) =>
@@ -146,21 +373,110 @@ const description =
         return { sectors, comms };
       }
 
+      /* ---- the wheel -------------------------------------------------------------------
+         A 360° ring with the twelve 30° divisions ticked, the reader's sign arc drawn heavy,
+         and a marker at the Moon's ACTUAL longitude for that date. Every coordinate here comes
+         from the ephemeris, so the drawing states only what was computed. 0° Aries sits at the
+         top and the circle runs clockwise, which is how the divisions are read. */
+      const C = 96;
+      const R = 74;
+      function pt(deg, r) {
+        const a = ((deg - 90) * Math.PI) / 180;
+        return [C + r * Math.cos(a), C + r * Math.sin(a)];
+      }
+      function arc(fromDeg, r) {
+        const [x1, y1] = pt(fromDeg, r);
+        const [x2, y2] = pt(fromDeg + 30, r);
+        return 'M' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+          ' A ' + r + ' ' + r + ' 0 0 1 ' + x2.toFixed(2) + ' ' + y2.toFixed(2);
+      }
+      function wheel(lon, activeNames) {
+        let ticks = '';
+        for (let i = 0; i < 12; i++) {
+          const [x1, y1] = pt(i * 30, R - 7);
+          const [x2, y2] = pt(i * 30, R + 7);
+          ticks += '<line x1="' + x1.toFixed(2) + '" y1="' + y1.toFixed(2) +
+            '" x2="' + x2.toFixed(2) + '" y2="' + y2.toFixed(2) + '" class="fa-w-tick"/>';
+        }
+        let arcs = '';
+        activeNames.forEach((n) => {
+          const i = signIndex(n);
+          if (i >= 0) arcs += '<path d="' + arc(i * 30, R) + '" class="fa-w-arc"/>';
+        });
+        const [mx, my] = pt(lon, R);
+        const [ix, iy] = pt(lon, R - 26);
+        const deg = lon % 30;
+        const sign = signAt(Math.round(lon * 10));
+        return '<div class="fa-wheel">' +
+          '<svg viewBox="0 0 192 192" role="img" aria-label="The Moon at ' + esc(deg.toFixed(1)) +
+            ' degrees of ' + esc(sign.name) + '">' +
+            '<circle cx="' + C + '" cy="' + C + '" r="' + R + '" class="fa-w-ring"/>' +
+            ticks + arcs +
+            '<line x1="' + ix.toFixed(2) + '" y1="' + iy.toFixed(2) + '" x2="' + mx.toFixed(2) +
+              '" y2="' + my.toFixed(2) + '" class="fa-w-ray"/>' +
+            '<circle cx="' + mx.toFixed(2) + '" cy="' + my.toFixed(2) + '" r="5" class="fa-w-moon"/>' +
+            '<text x="' + C + '" y="' + (C - 4) + '" class="fa-w-t1">' + esc(SG[sign.name] || '') + '</text>' +
+            '<text x="' + C + '" y="' + (C + 18) + '" class="fa-w-t2">' + esc(deg.toFixed(1)) + '°</text>' +
+          '</svg>' +
+          '<span class="fa-w-cap">Moon at ' + esc(deg.toFixed(1)) + '° ' + esc(sign.name) +
+            ', 00:00 UT on your date</span>' +
+        '</div>';
+      }
+
+      function block(s) {
+        const l = listFor(s.ruler);
+        const sectors = l.sectors;
+        const comms = l.comms;
+        return '<div class="fa-res-block">' +
+          '<div class="fa-res-head">' +
+            '<span class="fa-glyph fa-glyph-lg" aria-hidden="true">' + esc(SG[s.name] || '·') + '</span>' +
+            '<b>Moon in ' + esc(s.name) + '</b>' +
+            '<span class="fa-chip">' + esc(s.element) + '</span>' +
+            '<span class="fa-chip">ruled by ' + esc(s.ruler) + '</span>' +
+          '</div>' +
+          '<p class="muted fa-res-blurb">' + esc(s.element) + ' — ' + esc(EB[s.element] || '') + '.</p>' +
+          '<div class="fa-res-sub">PSX sectors under ' + esc(s.ruler) + '</div>' +
+          (sectors.length
+            ? '<ul class="fa-list">' + sectors.slice(0, 6).map((x) =>
+                '<li><b>' + esc(x.sector) + '</b><span>' + esc(x.why) + '</span>' +
+                (x.confidence ? '<em class="fa-conf fa-conf--' + esc(x.confidence) + '">' +
+                  esc(x.confidence) + '</em>' : '') + '</li>').join('') + '</ul>'
+            : '<p class="fa-empty">The map attaches no PSX sector to ' + esc(s.ruler) +
+              '. Nothing invented to fill the row.</p>') +
+          '<div class="fa-res-sub">Commodities under ' + esc(s.ruler) + '</div>' +
+          (comms.length
+            ? '<ul class="fa-list">' + comms.map((c) =>
+                '<li><b>' + esc(c.name) + '</b><span>' + esc(c.note) + '</span></li>').join('') + '</ul>'
+            : '<p class="fa-empty">Tradition assigns metals and crops to the luminaries, Venus, ' +
+              'Saturn and Rahu — not to ' + esc(s.ruler) + '. The gap is left as a gap.</p>') +
+        '</div>';
+      }
+
+      const SKELETON =
+        '<div class="fa-skel"><span></span><span></span><span></span><span></span></div>';
+
+      function fail(msg) {
+        out.innerHTML = '<p class="fa-empty">' + esc(msg) + '</p>';
+      }
+
       async function read() {
-        const v = $('bd').value;
-        if (!v) return;
+        const v = bd.value;
+        if (!v) {
+          bd.focus();
+          return;
+        }
         out.hidden = false;
-        out.innerHTML = '<p class="muted">Computing…</p>';
+        out.innerHTML = SKELETON;
         let t;
         try {
           t = await ephem();
         } catch (e) {
-          out.innerHTML = '<p class="muted">Could not load the ephemeris just now. Please retry.</p>';
+          fail('Could not load the ephemeris just now. Please retry.');
           return;
         }
         const idx = Math.round((Date.parse(v + 'T00:00:00Z') - EPOCH) / DAY);
         if (idx < 0 || idx >= t.length - 1) {
-          out.innerHTML = '<p class="muted">That date is outside the table (1950–2035).</p>';
+          fail('That date is outside the table (1950–2035).');
           return;
         }
 
@@ -174,105 +490,332 @@ const description =
         const b = signAt(t[idx + 1]);
         const straddles = a.name !== b.name;
 
+        const lonA = t[idx] / 10;
+        let lonB = t[idx + 1] / 10;
+        if (lonB < lonA) lonB += 360;                 /* wrapped past Pisces -> Aries */
+        const speed = lonB - lonA;
+
         let crossPkt = null;
         if (straddles) {
-          const lonA = t[idx] / 10;
-          let lonB = t[idx + 1] / 10;
-          if (lonB < lonA) lonB += 360;                 // wrapped past Pisces -> Aries
           const boundary = Math.ceil(lonA / 30) * 30;
           const frac = (boundary - lonA) / (lonB - lonA);
           if (frac > 0 && frac < 1) {
-            // Table is 00:00 UT. Pakistan is UT+5, and the audience reads local time.
+            /* Table is 00:00 UT. Pakistan is UT+5, and the audience reads local time. */
             const mins = Math.round(frac * 24 * 60) + 5 * 60;
             const hh = Math.floor(mins / 60) % 24;
             const mm = mins % 60;
-            crossPkt = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')} PKT`
+            crossPkt = String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0') + ' PKT'
               + (mins >= 24 * 60 ? ' the following day' : '');
           }
         }
 
-        const blocks = [a].concat(straddles ? [b] : []).map((s) => {
-          const { sectors, comms } = listFor(s.ruler);
-          return `
-            <div class="res-block">
-              <div class="res-head">
-                <b>Moon in ${esc(s.name)}</b>
-                <span class="chip">${esc(s.element)}</span>
-                <span class="chip">ruled by ${esc(s.ruler)}</span>
-              </div>
-              <p class="muted">${esc(s.element)} — ${esc(ELEMENT_BLURB[s.element] || '')}.</p>
-              ${comms.length ? `<div class="res-sub">Commodities under ${esc(s.ruler)}</div>
-                <ul class="res-list">${comms.map((c) =>
-                  `<li><b>${esc(c.name)}</b><span>${esc(c.note)}</span></li>`).join('')}</ul>` : ''}
-              ${sectors.length ? `<div class="res-sub">PSX sectors under ${esc(s.ruler)}</div>
-                <ul class="res-list">${sectors.slice(0, 6).map((x) =>
-                  `<li><b>${esc(x.sector)}</b><span>${esc(x.why)}</span></li>`).join('')}</ul>` : ''}
-            </div>`;
-        }).join('');
+        const names = [a.name].concat(straddles ? [b.name] : []);
+        const head =
+          '<div class="fa-res-top">' +
+            wheel(lonA, names) +
+            '<div class="fa-res-facts">' +
+              '<div class="fa-prov-row"><span>Moon sign</span><span>' +
+                esc(names.join(' → ')) + '</span></div>' +
+              '<div class="fa-prov-row"><span>Longitude 00:00 UT</span><span>' +
+                esc(lonA.toFixed(2)) + '° sidereal</span></div>' +
+              '<div class="fa-prov-row"><span>Moved that day</span><span>' +
+                esc(speed.toFixed(2)) + '°</span></div>' +
+              '<div class="fa-prov-row"><span>Ayanamsa</span><span>Lahiri</span></div>' +
+              '<p class="fa-res-note">Chandra lagna — the Vedic reading starts from the Moon, ' +
+                'not the ascendant, which is why no birth time is needed to get this far.</p>' +
+            '</div>' +
+          '</div>';
 
-        out.innerHTML =
-          (straddles
-            ? `<p class="straddle"><b>Your Moon changed sign that day${crossPkt ? `, at about ${esc(crossPkt)}` : ''}.</b>
-               ${crossPkt
-                 ? `Born before that, read ${esc(a.name)}; after it, ${esc(b.name)}. Both are below.`
-                 : `Without a birth time both readings below are live.`}
-               The desk settles this exactly once it knows your time of birth.</p>`
-            : '') +
-          blocks +
-          `<p class="muted res-foot">Tradition's attribution, not a measured effect — see what the
-           testing found below.</p>`;
+        const straddleNote = straddles
+          ? '<p class="fa-straddle"><b>Your Moon changed sign that day' +
+            (crossPkt ? ', at about ' + esc(crossPkt) : '') + '.</b> ' +
+            (crossPkt
+              ? 'Born before that, read ' + esc(a.name) + '; after it, ' + esc(b.name) + '. Both are below.'
+              : 'Without a birth time both readings below are live.') +
+            ' The desk settles this exactly once it knows your time of birth.</p>'
+          : '';
+
+        out.innerHTML = head + straddleNote +
+          [a].concat(straddles ? [b] : []).map(block).join('') +
+          '<p class="muted fa-res-foot">Tradition’s attribution, not a measured effect — ' +
+          '<a href="#findings">see what the testing found</a>.</p>';
+
+        /* Land the reader's sign in the explorer below, so scrolling on continues their own
+           thread rather than resetting to Aries. */
+        selectSign(signIndex(a.name));
       }
 
-      $('go')?.addEventListener('click', read);
-      $('bd')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') read(); });
+      /* ---- sign explorer ---------------------------------------------------------------
+         All twelve panels are rendered server-side and are visible with JS off — this only
+         collapses them to one at a time. That keeps the attribution table crawlable and
+         readable without scripting, which a tab widget built in the browser would not. */
+      const tiles = Array.prototype.slice.call(document.querySelectorAll('.fa-sgn'));
+      const panels = Array.prototype.slice.call(document.querySelectorAll('.fa-sp'));
+
+      function selectSign(i) {
+        if (i < 0 || !panels.length) return;
+        tiles.forEach((t, n) => t.setAttribute('aria-pressed', String(n === i)));
+        panels.forEach((p, n) => {
+          if (n === i) p.removeAttribute('hidden');
+          else p.setAttribute('hidden', '');
+        });
+      }
+
+      tiles.forEach((t) =>
+        t.addEventListener('click', () => selectSign(Number(t.dataset.i))));
+      selectSign(0);
+
+      /* ---- wiring ---- */
+      ['focus', 'pointerenter'].forEach((ev) => {
+        bd?.addEventListener(ev, () => { ephem().catch(() => {}); }, { once: true });
+        go?.addEventListener(ev, () => { ephem().catch(() => {}); }, { once: true });
+      });
+      go?.addEventListener('click', read);
+      bd?.addEventListener('keydown', (e) => { if (e.key === 'Enter') read(); });
     })();
   </script>
 
-  <style>
-    .astro-hero { padding-top: 8px; }
-    .astro-hero h1 { max-width: 18ch; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px;
-      text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin-bottom: 14px; }
+  <style is:global>
+    /* Everything is namespaced under `.fa` because the readout is injected as an HTML string and
+       would not match Astro's scoped selectors. See the note at the top of this file. */
+    .fa .fa-glyph {
+      font-family: 'Segoe UI Symbol', 'Apple Symbols', 'Noto Sans Symbols 2', var(--font-mono);
+      line-height: 1;
+    }
+    .fa .fa-glyph-lg { font-size: 22px; }
 
-    .cast-card { border: var(--rule); background: var(--panel); padding: 22px; }
-    .cast-l { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
-      color: var(--ink-3); margin-bottom: 8px; }
-    .cast-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .cast-row input { flex: 1 1 200px; min-width: 0; font: inherit; font-size: 15px;
-      padding: 11px 13px; border: var(--rule); background: var(--bg); color: var(--ink-1); }
-    .cast-fine { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
-    .cast-out { margin-top: 18px; }
+    /* ---------- hero ---------- */
+    .fa .fa-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: start; }
+    .fa .fa-hero h1 { max-width: 16ch; }
+    .fa .fa-lead { max-width: 620px; }
+    .fa .fa-hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .fa .fa-hero-fine { font-size: 11px; margin-top: 12px; }
 
-    .straddle { border-left: 3px solid var(--ink-1); padding: 10px 0 10px 12px; margin-bottom: 14px; }
-    .res-block { border-top: var(--rule); padding-top: 14px; margin-top: 14px; }
-    .res-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 18px; }
-    .chip { font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
-      border: 1px solid var(--line); padding: 2px 8px; color: var(--ink-3); }
-    .res-sub { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
-      color: var(--ink-3); margin: 14px 0 6px; }
-    .res-list { list-style: none; padding: 0; margin: 0; }
-    .res-list li { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dotted var(--hair);
-      flex-wrap: wrap; }
-    .res-list li b { flex: 0 0 auto; }
-    .res-list li span { color: var(--ink-3); font-size: 13px; flex: 1 1 220px; }
-    .res-foot { margin-top: 14px; font-size: 12px; }
+    .fa .fa-score { padding: 0; }
+    .fa .fa-score-h {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px; border-bottom: var(--rule); background: var(--panel-2);
+    }
+    .fa .fa-score-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      font-size: 11.5px; padding: 11px 16px; border-bottom: 1px dotted var(--hair);
+    }
+    /* The zero is the whole argument, so it gets the oversized numeral treatment the rest of the
+       site reserves for headline figures. */
+    .fa .fa-score-row--big { padding: 14px 16px; align-items: baseline; }
+    .fa .fa-score-row--big .pixel { font-size: 40px; }
+    .fa .fa-score-fine { font-size: 10.5px; line-height: 1.65; margin: 0; padding: 12px 16px; }
 
-    .sky-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 1px; background: var(--line); border: var(--rule); margin-top: 14px; }
-    .sky-cell { background: var(--panel); padding: 11px 13px; display: flex; flex-direction: column; gap: 2px; }
-    .sky-cell b { font-size: 13px; }
-    .sky-cell span { font-size: 13px; color: var(--ink-2); }
-    .sky-cell i { font-size: 11px; color: var(--ink-3); font-style: normal; }
+    /* ---------- cast card ---------- */
+    .fa .fa-cast { padding: 22px; }
+    .fa .fa-cast-l {
+      display: block; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.13em;
+      font-weight: 700; color: var(--ink-3); margin-bottom: 8px;
+    }
+    .fa .fa-cast-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .fa .fa-cast-row input {
+      flex: 1 1 220px; min-width: 0; font: inherit; font-size: 15px;
+      padding: 12px 13px; border: var(--rule); background: var(--bg); color: var(--ink-1);
+      transition: border-color 0.18s ease;
+    }
+    .fa .fa-cast-row input:hover { border-color: var(--ink-1); }
+    .fa .fa-cast-fine { font-size: 11px; color: var(--ink-3); margin: 12px 0 0; max-width: 640px; }
+    .fa .fa-out { margin-top: 20px; border-top: var(--rule); padding-top: 18px; }
 
-    .honesty { border-top: var(--rule); padding-top: 26px; }
-    .cta-band { border: var(--rule); background: var(--ink-1); color: var(--bg); padding: 28px; }
-    .cta-band h2, .cta-band p { color: var(--bg); }
-    .cta-band .btn { background: var(--bg); color: var(--ink-1); border-color: var(--bg); margin-top: 8px; }
-    .disclaimer-fine { font-size: 12px; color: var(--ink-3); }
+    /* Loading is four rules that breathe, not the word "Computing…". It occupies the space the
+       answer will occupy, so nothing jumps when the ephemeris lands. */
+    .fa .fa-skel { display: grid; gap: 10px; }
+    .fa .fa-skel span {
+      height: 13px; background: var(--hair); display: block;
+      animation: fa-pulse 1.1s ease-in-out infinite both;
+    }
+    .fa .fa-skel span:nth-child(1) { width: 42%; }
+    .fa .fa-skel span:nth-child(2) { width: 88%; animation-delay: -0.9s; }
+    .fa .fa-skel span:nth-child(3) { width: 74%; animation-delay: -0.7s; }
+    .fa .fa-skel span:nth-child(4) { width: 61%; animation-delay: -0.5s; }
+    @keyframes fa-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+    /* ---------- readout ---------- */
+    /* Every reveal animates FROM a transformed state to the resting one and sets nothing in the
+       base rule, so `animation: none` under prefers-reduced-motion leaves the content visible
+       rather than stranded at opacity 0. */
+    @keyframes fa-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .fa .fa-res-top {
+      display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: center;
+      animation: fa-rise 0.36s ease both;
+    }
+    .fa .fa-res-facts .fa-prov-row { border-bottom: 1px dotted var(--hair); }
+    .fa .fa-res-note { font-size: 10.5px; color: var(--ink-3); margin: 10px 0 0; }
+
+    .fa .fa-wheel { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .fa .fa-wheel svg { width: 100%; max-width: 200px; overflow: visible; }
+    .fa .fa-w-ring { fill: none; stroke: var(--hair); stroke-width: 1.5; }
+    .fa .fa-w-tick { stroke: var(--line); stroke-width: 1.5; }
+    .fa .fa-w-arc {
+      fill: none; stroke: var(--ink-1); stroke-width: 4;
+      animation: fa-rise 0.5s ease 0.1s both;
+    }
+    .fa .fa-w-ray { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 2 3; }
+    .fa .fa-w-moon { fill: var(--ink-1); animation: fa-rise 0.4s ease 0.25s both; }
+    .fa .fa-w-t1 {
+      text-anchor: middle; font-size: 26px; fill: var(--ink-1);
+      font-family: 'Segoe UI Symbol', 'Apple Symbols', 'Noto Sans Symbols 2', var(--font-mono);
+    }
+    .fa .fa-w-t2 {
+      text-anchor: middle; font-size: 13px; fill: var(--ink-3);
+      font-family: var(--font-mono); font-weight: 700;
+    }
+    .fa .fa-w-cap { font-size: 9.5px; letter-spacing: 0.06em; color: var(--ink-3); text-align: center; }
+
+    .fa .fa-straddle {
+      border-left: 3px solid var(--ink-1); background: var(--panel-2);
+      padding: 12px 14px; margin: 20px 0 0; font-size: 12px;
+      animation: fa-rise 0.36s ease 0.06s both;
+    }
+    .fa .fa-res-block {
+      border-top: var(--rule); padding-top: 16px; margin-top: 20px;
+      animation: fa-rise 0.36s ease 0.12s both;
+    }
+    .fa .fa-res-block + .fa-res-block { animation-delay: 0.2s; }
+    .fa .fa-res-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 18px; font-weight: 800; }
+    .fa .fa-res-blurb { margin: 8px 0 0; font-size: 12px; }
+    .fa .fa-chip {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+      border: 1px solid var(--line); padding: 3px 8px; color: var(--ink-3);
+    }
+    .fa .fa-res-sub {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.13em; font-weight: 700;
+      color: var(--ink-3); margin: 18px 0 6px;
+    }
+    .fa .fa-list { list-style: none; padding: 0; margin: 0; }
+    .fa .fa-list li {
+      display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+      padding: 9px 0; border-bottom: 1px dotted var(--hair);
+    }
+    .fa .fa-list li b { flex: 0 0 auto; font-size: 12px; }
+    .fa .fa-list li span { color: var(--ink-3); font-size: 11.5px; flex: 1 1 240px; }
+    .fa .fa-conf {
+      font-style: normal; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 700; padding: 2px 6px; border: 1px solid var(--hair); color: var(--ink-3);
+      flex: 0 0 auto;
+    }
+    .fa .fa-conf--high { color: var(--up); border-color: var(--up-soft); background: var(--up-soft); }
+    .fa .fa-empty {
+      font-size: 11.5px; color: var(--ink-3); border-left: 2px solid var(--line);
+      padding: 6px 0 6px 12px; margin: 0;
+    }
+    .fa .fa-res-foot { font-size: 11px; margin-top: 16px; }
+
+    /* ---------- the sky band ---------- */
+    .fa .fa-skyband { position: relative; overflow: hidden; }
+    .fa .fa-sky-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .fa .fa-sky-lead { color: #c8c8c0; max-width: 640px; }
+    .fa .fa-sky-stamp { flex: none; }
+    .fa .fa-sky-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5px; background: #2a2a27; border: 1.5px solid #2a2a27; margin-top: 24px;
+    }
+    .fa .fa-sky-cell {
+      background: #101314; padding: 14px 15px; display: flex; flex-direction: column; gap: 3px;
+      position: relative; overflow: hidden;
+      transition: background-color 0.18s ease;
+    }
+    .fa .fa-sky-cell .fa-glyph { font-size: 20px; color: #8f8f88; margin-bottom: 4px; }
+    .fa .fa-sky-cell b { font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; color: #8f8f88; }
+    .fa .fa-sky-sign { font-size: 15px; font-weight: 700; color: var(--bg); }
+    .fa .fa-sky-cell i { font-size: 10.5px; color: #8f8f88; font-style: normal; }
+    @media (hover: hover) {
+      .fa .fa-sky-cell:hover { background: #171a1b; }
+      .fa .fa-sky-cell:hover .fa-glyph { color: #55a16b; }
+    }
+    /* These are REAL computed positions, so the motion must be semantically silent: a wash passes
+       over the cell on the site's refresh cadence and never restates the value underneath.
+       Same rule the live heat board obeys in global.css — but at its own, much lower ceiling:
+       henneth-refresh-blink peaks at 0.55, which is tuned for a pale heat cell and would strobe
+       against #101314. */
+    @keyframes fa-wash { 0%, 72%, 100% { opacity: 0; } 80% { opacity: 0.07; } }
+    .fa .fa-sky-cell::after {
+      content: ''; position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none;
+      animation: fa-wash 9s ease-in-out infinite both;
+    }
+    .fa .fa-sky-cell:nth-child(3n + 1)::after { animation-delay: 0s; }
+    .fa .fa-sky-cell:nth-child(3n + 2)::after { animation-delay: -1.2s; }
+    .fa .fa-sky-cell:nth-child(3n + 3)::after { animation-delay: -2.4s; }
+
+    .fa .fa-sky-note { font-size: 11.5px; color: #a8a8a0; margin: 20px 0 0; max-width: 720px; }
+
+    .fa .fa-prov { margin-top: 18px; border-top: 1px solid #2a2a27; padding-top: 14px; }
+    .fa .fa-prov summary {
+      cursor: pointer; font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase;
+      font-weight: 700; color: #8f8f88; list-style: none;
+    }
+    .fa .fa-prov summary::-webkit-details-marker { display: none; }
+    .fa .fa-prov summary::before { content: '+ '; }
+    .fa .fa-prov[open] summary::before { content: '− '; }
+    .fa .fa-prov summary:hover { color: var(--bg); }
+    .fa .fa-prov-body { margin-top: 12px; max-width: 720px; }
+    .fa .fa-prov-row {
+      display: flex; justify-content: space-between; gap: 16px;
+      font-size: 11px; padding: 8px 0; border-bottom: 1px dotted var(--hair);
+    }
+    .fa .fa-prov-row span:first-child { color: var(--ink-3); }
+    .fa .fa-skyband .fa-prov-row { border-bottom-color: #2a2a27; }
+    .fa .fa-skyband .fa-prov-row span:first-child { color: #8f8f88; }
+    .fa .fa-prov-method { font-size: 10.5px; color: #8f8f88; margin: 12px 0 0; line-height: 1.7; }
+
+    /* ---------- sign explorer ---------- */
+    .fa .fa-exp-lead { max-width: 720px; }
+    /* minmax(0, 1fr), not 1fr: a bare 1fr floors at the column's min-content, so the single
+       longest name (Sagittarius) silently widened its column and left the row of tiles
+       visibly uneven. Zero-floor columns stay equal and the name wraps instead. */
+    .fa .fa-signs {
+      grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: 22px;
+    }
+    .fa .fa-sgn {
+      font: inherit; text-align: left; cursor: pointer; border: 0;
+      display: flex; flex-direction: column; gap: 2px;
+      color: var(--ink-1);
+    }
+    .fa .fa-sgn .fa-glyph { font-size: 18px; color: var(--ink-3); margin-bottom: 4px; transition: color 0.18s ease; }
+    .fa .fa-sgn b { font-size: 12px; }
+    .fa .fa-sgn .muted { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .fa .fa-sgn[aria-pressed='true'] { background: var(--ink-1); color: var(--bg); }
+    .fa .fa-sgn[aria-pressed='true'] .fa-glyph,
+    .fa .fa-sgn[aria-pressed='true'] .muted { color: #a8a8a0; }
+    @media (hover: hover) {
+      .fa .fa-sgn:hover .fa-glyph { color: var(--ink-1); }
+      .fa .fa-sgn[aria-pressed='true']:hover .fa-glyph { color: var(--bg); }
+    }
+    .fa .fa-sp { margin-top: 18px; padding: 20px; animation: fa-rise 0.3s ease both; }
+    .fa .fa-sp[hidden] { display: none; }
+    .fa .fa-legend { font-size: 11px; margin-top: 18px; max-width: 720px; }
+
+    /* ---------- findings ---------- */
+    .fa .fa-find { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: start; }
+    .fa .fa-disc { padding: 0; }
+    .fa .fa-disc .label { display: block; padding: 12px 16px; border-bottom: var(--rule); background: var(--panel-2); }
+    .fa .fa-disc-q { font-size: 12px; line-height: 1.7; padding: 16px 16px 4px; margin: 0; }
+    .fa .fa-disc-rows { padding: 0 16px 8px; }
+
+    /* ---------- cta ---------- */
+    .fa .fa-cta-lead { color: #c8c8c0; max-width: 700px; margin-bottom: 20px; }
+    .fa .fa-disclaimer { font-size: 10.5px; color: var(--ink-3); padding: 28px 0 40px; margin: 0; max-width: 900px; }
+
+    @media (max-width: 1000px) {
+      .fa .fa-hero, .fa .fa-find { grid-template-columns: 1fr; gap: 28px; }
+      .fa .fa-signs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
     @media (max-width: 640px) {
-      .cast-card { padding: 16px; }
-      .cast-row .btn { width: 100%; }
+      .fa .fa-cast, .fa .fa-sp { padding: 16px; }
+      .fa .fa-cast-row .btn { width: 100%; justify-content: center; }
+      .fa .fa-signs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      /* Tighter tile at phone width so the longest name still sits on one line inside a
+         third of 375px rather than wrapping mid-word. */
+      .fa .fa-sgn { padding: 12px; }
+      .fa .fa-sgn b { font-size: 11px; }
+      .fa .fa-res-top { grid-template-columns: 1fr; }
+      .fa .fa-score-row--big .pixel { font-size: 32px; }
     }
   </style>
 </Base>
