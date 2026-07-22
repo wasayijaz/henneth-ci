@@ -1,0 +1,128 @@
+---
+/* /global-markets/ — the destination for the "Global markets" card on /features/.
+ *
+ * WHY IT READS A GENERATED SLICE RATHER THAN A HAND-WRITTEN LIST:
+ * the symbols here are the ones the pipeline actually covers. scripts/build_astro_lite.py derives
+ * coverage.json from config/markets.json each cycle, and update_universe.py merges that same file
+ * into state/universe.json — so a symbol added or removed there changes the desk and this page
+ * together. A hand-typed list would be right the day it shipped and quietly wrong afterwards, which
+ * is the exact class of drift docs/WEBSITE_BRIEF.md exists to correct.
+ *
+ * AND WHY NOT IMPORT config/markets.json DIRECTLY: the marketing build is HERMETIC. It never reads
+ * outside site/ (see scripts/build_public_slice.py). Reaching up into the repo root would couple an
+ * Astro build to the desk's private layout and break the guarantee that this site can build alone.
+ *
+ * WHAT THIS PAGE MUST NOT BECOME: a US research page. The desk covers these at index and sector
+ * level for the context they give PSX. No US single stocks, no US signals, no targets —
+ * config/markets.json sets signals_enabled:false for exactly that reason.
+ */
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../site.config.ts';
+import coverage from '../data/public/coverage.json';
+
+const US = (coverage as any).markets?.US ?? {};
+const SYMS = US.groups ?? {};
+
+type Row = { sym: string; name: string };
+const group = (key: string): Row[] =>
+  ((SYMS[key] ?? []) as any[]).map((r) => ({ sym: r.symbol, name: r.name }));
+
+const GROUPS: [string, string, string, string][] = [
+  ['indices', 'The broad tape', 'today',
+   'Where global risk appetite actually sits. Frontier flows follow it, so PSX feels it second-hand.'],
+  ['sectors', 'The eleven SPDR sectors', 'sectors',
+   'Sector rotation in the world’s deepest market, read against the desk’s own PSX sector work.'],
+  ['global', 'Global and emerging', 'macro',
+   'The EM and developed-market baskets a foreign allocator moves between before Karachi sees a rupee of it.'],
+  ['rates_commodity', 'Rates and commodities', 'value',
+   'The rates, credit, gold and oil that set Pakistan’s import bill, inflation path and discount rate.'],
+];
+
+const total = GROUPS.reduce((n, [k]) => n + group(k).length, 0);
+---
+
+<Base
+  title="Global markets coverage"
+  path="/global-markets"
+  active="features"
+  description={`The ${total} global symbols the Henneth desk covers — indices, the eleven US sector ETFs, EM and developed baskets, rates and commodities — at index and sector level, for the context they give PSX.`}
+>
+  <section class="section-tight">
+    <div class="wrap">
+      <p class="kicker"><Icon name="macro" size={14} /> Coverage</p>
+      <h1>PSX in depth. The world for context.</h1>
+      <p class="lead">
+        The desk covers <b>{total} global symbols</b> at index and sector level. Not to compete with
+        the ten thousand places you can already read about Apple — but because Karachi does not
+        trade in isolation, and the tape that moves it is not listed on it.
+      </p>
+    </div>
+  </section>
+
+  {GROUPS.map(([key, heading, ic, why]) => {
+    const rows = group(key);
+    return rows.length ? (
+      <section class="wrap gm-grp">
+        <p class="kicker gm-k"><Icon name={ic} size={14} /> {heading}</p>
+        <p class="muted gm-why">{why}</p>
+        <div class="gm-grid">
+          {rows.map((r) => (
+            <div class="gm-cell">
+              <b>{r.sym}</b>
+              <span>{r.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    ) : null;
+  })}
+
+  <section class="wrap gm-limits">
+    <h2>What this is not</h2>
+    <ul class="gm-list">
+      <li>
+        <b>No US stock picks.</b> Index and sector level only. On a single US name the desk would be
+        the ten-thousandth source of the same chart, and it says so rather than pretending otherwise.
+      </li>
+      <li>
+        <b>No signals on these.</b> The desk’s risk rules — position sizing, the one-per-sector
+        limit, the circuit breaker — are calibrated on PSX behaviour. Global symbols are research
+        and context; they never produce a setup.
+      </li>
+      <li>
+        <b>End of day, not live.</b> US regular hours fall outside every cycle the desk runs, and a
+        scheduled daily read is what this publication is. Nothing here is a real-time feed.
+      </li>
+      <li>
+        <b>One source, and we name it.</b> These come from a single public price feed. PSX prices are
+        cross-checked between two independent sources; these are not, so they carry slightly weaker
+        provenance and should be read that way.
+      </li>
+    </ul>
+  </section>
+
+  <section class="wrap cta-band gm-cta">
+    <h2>The depth is still Pakistani</h2>
+    <p>
+      Nineteen years of PSX history, four-way valuation on every covered name, the analyst Desk Room,
+      and a scorecard that grades its own calls. The global layer is the context around it.
+    </p>
+    <a href={site.appUrl} class="btn btn-lg" rel="noopener">Open the desk →</a>
+  </section>
+
+  <style>
+    .gm-grp { margin-top: 34px; }
+    .gm-why { max-width: 62ch; margin: 4px 0 14px; }
+    .gm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1px; background: var(--line); border: var(--rule); }
+    .gm-cell { background: var(--panel); padding: 11px 13px; display: flex;
+      flex-direction: column; gap: 3px; min-width: 0; }
+    .gm-cell b { font-size: 13px; letter-spacing: .02em; }
+    .gm-cell span { font-size: 12.5px; color: var(--ink-3); }
+    .gm-limits { margin-top: 44px; border-top: var(--rule); padding-top: 26px; }
+    .gm-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; max-width: 76ch; }
+    .gm-list li { padding-left: 14px; border-left: 2px solid var(--line); }
+    .gm-cta { margin-top: 44px; }
+  </style>
+</Base>

@@ -82,7 +82,12 @@ def fetch_first_trades(symbols) -> dict:
 
 def main():
     STATE.mkdir(exist_ok=True)
-    uni = json.loads((STATE / "universe.json").read_text(encoding="utf-8"))["symbols"]
+    # PSX ONLY. fetch_first_trades() below asks Yahoo for `{sym}.KA` firstTradeDate, so a US
+    # symbol would be requested as `XLE.KA` and return nothing. More to the point, a first-trade
+    # chart for an ETF is not a company horoscope — the Meridian convention this file implements
+    # is about a listed COMPANY's first trade, and an index fund has no birth in that sense.
+    _uni_all = json.loads((STATE / "universe.json").read_text(encoding="utf-8"))["symbols"]
+    uni = {s: m for s, m in _uni_all.items() if (m or {}).get("market", "PSX") == "PSX"}
     prev = {}
     if OUT.exists():
         try:

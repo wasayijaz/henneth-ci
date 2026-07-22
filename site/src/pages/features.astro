@@ -5,7 +5,12 @@ import Icon from '../components/Icon.astro';
 
 /* Every card below is a screen that exists in the terminal today (the nav list in
    dashboard/index.html). Nothing aspirational — if it is named here, it opens.
-   Third element is the sprite id; see IconSprite.astro. */
+   Third element is the sprite id; see IconSprite.astro.
+
+   Fourth and fifth are an OPTIONAL href + link label. Only a handful of cards carry them: the
+   ones whose subject also has a free, no-account page on this site. That is the only entry point
+   /financial-astrology/ and /tools/position-size-calculator/ have outside the nav, and a feature
+   grid is where someone reading about a capability is most likely to want to try it. */
 const groups = [
   {
     k: 'Start here',
@@ -36,7 +41,9 @@ const groups = [
       ['Strategies', 'Transparent, rule-based strategies, each backtested across ~19 years of history.', 'strategies'],
       ['Sectors', 'Sector-level debates and dossiers, not just a list of constituents.', 'sectors'],
       ['Scenarios', 'Ask what a rate move, an oil move or a rupee move would do to a name.', 'scenarios'],
-      ['Marketplace', 'Strategies published with their full record attached, good and bad.', 'marketplace'],
+      /* NOT a marketplace yet, and the copy must not imply one. Publishing opens once every
+         submission can be backtested; today the surface composes and tests. */
+      ['Strategy builder', 'Compose a rule set and backtest it on the same history the desk uses. Publishing to other readers opens once every submission can be tested.', 'marketplace'],
     ],
   },
   {
@@ -44,7 +51,9 @@ const groups = [
     ic: 'portfolio',
     items: [
       ['Watchlist', 'The names you care about, with the desk’s read attached to each.', 'watchlist'],
-      ['Portfolio', 'Your positions X-rayed for concentration, sector overlap and correlated risk.', 'portfolio'],
+      /* The X-ray computes weighted beta, blended yield, expected dividends, gap vs fair value and
+         three rule checks. It does NOT compute correlation — that word was in here and was false. */
+      ['Portfolio', 'Your holdings X-rayed: weighted beta, blended yield, expected dividends, the gap to fair value, and the desk’s own rules checked against what you hold.', 'portfolio'],
       ['Practice', 'A virtual Rs 500,000 book, so you can be wrong without paying for it.', 'practice'],
       ['Scores', 'Dated, falsifiable calls graded against what prices actually did — the desk’s and the brokers’.', 'scores'],
     ],
@@ -57,10 +66,35 @@ const groups = [
       ['News', 'The announcement wire, tagged to tickers and scored 1–5 for impact.', 'news'],
       ['Dividends', 'Yield, cover, book-closure dates and how reliably a payer has actually paid.', 'dividends'],
       ['Earnings', 'The results calendar, with what the desk expects and what it would falsify.', 'earnings'],
-      ['Astro', 'The computed sky, what tradition claims it governs, and what survived testing.', 'astro'],
-      ['Tools', 'PSX-specific calculators — position size, CGT, dividend yield, break-even.', 'tools'],
+      ['Global markets', 'Twenty-three US and global symbols — the S&P 500, Nasdaq 100, Dow, Russell, VIX, all eleven SPDR sectors, EEM, EFA, ACWI, TLT, HYG, gold and oil — covered at index and sector level for the context they give PSX. No US stock picks, and the desk does not signal on them.', 'global', '/global-markets/', 'What the desk covers'],
+      ['Astro', 'The computed sky, what tradition claims it governs, and what survived testing.', 'astro', '/financial-astrology/', 'Read the public lens'],
+      /* The seven that are actually in the terminal. The four this line used to name — position
+         size, CGT, dividend yield, break-even — did not exist in it. Position size now exists, but
+         on this website, so it is linked rather than claimed. */
+      ['Tools', 'Calculators in rupees — compound growth, monthly SIP, inflation, dividend reinvestment, savings goal, mortgage and zakat.', 'tools', '/tools/position-size-calculator/', 'Size a position free'],
     ],
   },
+];
+
+/* THE SCHEDULE. Load-bearing, not decoration: a fixed calendar is the difference between a
+   publication and an advisory service, and until now no page on the site stated one. Times are
+   the real cycle discipline in CLAUDE.md, not marketing rounding. */
+const schedule = [
+  [
+    'Pre-market · daily',
+    '08:45 PKT',
+    'The full pipeline. Prices and fundamentals refresh, quant and predictability re-run, strategies re-backtest, then the desk writes its daily read.',
+  ],
+  [
+    'Intraday · every 30 min',
+    'To 15:30 PKT',
+    'Monitoring, not day trading. Open setups are checked against their plans and the announcement wire is scored 1–5. Only an item scored 4 or higher re-triggers the full pipeline.',
+  ],
+  [
+    'Desk Room · weekly rotation',
+    'By name',
+    'The five analysts debate names on the desk’s own editorial rotation. Nothing is written on request — you read what was published, dated.',
+  ],
 ];
 
 const engine = [
@@ -74,31 +108,58 @@ const engine = [
 ---
 
 <Base
-  title="Features"
+  title="PSX Research Terminal Features"
   path="/features"
   active="features"
-  description="Everything the Henneth desk does: plain-English stock reads, four-way valuation, tested strategies, the analyst Desk Room, and a scorecard that grades itself."
+  description="Every surface of the Henneth desk — plain-English PSX company reads, fair value four ways, backtested strategies, the analyst Desk Room, and US and global index context."
 >
   <section class="section-tight ph">
     <div class="wrap">
       <p class="kicker">Features</p>
       <h1>Everything the desk does</h1>
       <p class="lead ph-lead">
-        A research terminal for the Pakistan Stock Exchange that explains itself — and holds itself,
-        and the brokers, to account.
+        A global-markets research desk that covers the Pakistan Stock Exchange in depth — and
+        explains itself, on a schedule, holding itself and the brokers to account.
       </p>
     </div>
+  </section>
+
+  {/* The schedule sits directly under the hero, before any feature card. Someone deciding whether
+      this is a publication or a service should not have to scroll to find out. */}
+  <section class="wrap sched-wrap">
+    <p class="kicker grp-k"><Icon name="clock" size={14} /> When it publishes</p>
+    <div class="tilegrid sched">
+      {schedule.map(([w, t, d]) => (
+        <div class="tile">
+          <div class="sc-top">
+            <h3>{w}</h3>
+            <span class="sc-t">{t}</span>
+          </div>
+          <p class="muted card-d">{d}</p>
+        </div>
+      ))}
+    </div>
+    <p class="muted sched-foot">
+      Fixed calendar, identical for every reader, open to anyone who subscribes. That is what makes
+      this a publication rather than an advisory service — and it is why nothing here is written
+      for you, about your holdings, or on request.
+    </p>
   </section>
 
   {groups.map((g) => (
     <section class="wrap grp">
       <p class="kicker grp-k"><Icon name={g.ic} size={14} /> {g.k}</p>
       <div class="tilegrid cards">
-        {g.items.map(([t, d, ic]) => (
+        {g.items.map(([t, d, ic, href, ll]) => (
           <div class="tile">
             <span class="tile-i"><Icon name={ic} size={20} /></span>
             <h3>{t}</h3>
             <p class="muted card-d">{d}</p>
+            {href && (
+              <a class="card-go" href={href} data-ev="feature_link" data-ev-card={t}>
+                {ll} <Icon name="arrow" size={12} />
+              </a>
+            )}
           </div>
         ))}
       </div>
@@ -256,7 +317,10 @@ const engine = [
         Strategist, the Risk Officer or the Auditor. It is reported and scored like everything else
         here — and if a condition ever does survive, you will see the same evidence we did.
       </p>
-      <a href="/research" class="btn astro-cta">See how the desk tests things ›</a>
+      <div class="cta-row astro-cta">
+        <a href="/financial-astrology/" class="btn" data-ev="astro_page_open">Read the public astro lens</a>
+        <a href="/research" class="btn btn-ghost">See how the desk tests things</a>
+      </div>
     </div>
   </section>
 
@@ -290,8 +354,39 @@ const engine = [
 
 <style>
   .ph-lead { max-width: 640px; }
-  .cards { grid-template-columns: repeat(4, 1fr); }
+  /* minmax(0,·) not 1fr: a bare 1fr floors at min-content, so one long unbreakable label
+     ("Strategy builder", "Global markets") silently widens its column and the row goes uneven. */
+  .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .card-d { font-size: 11px; margin: 8px 0 0; }
+
+  /* The free-page link. margin-top:auto pins it to the tile floor (.tile is a flex column), so
+     the three linked cards line up with each other despite different copy lengths. */
+  .card-go {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: auto; padding-top: 12px;
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink-1); text-decoration: none;
+    border-bottom: 0;
+  }
+  .card-go :global(.icn) { transition: transform 0.18s ease; }
+  @media (hover: hover) {
+    .card-go:hover { color: var(--up); }
+    .card-go:hover :global(.icn) { transform: translateX(3px); }
+  }
+
+  /* THE SCHEDULE STRIP */
+  .sched-wrap { margin-bottom: 40px; }
+  .sched { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sc-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .sc-top h3 { margin: 0; }
+  /* The time is the fact on this card, so it gets the mono treatment the desk reserves for
+     figures — it must not read as another line of prose. */
+  .sc-t {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
+    color: var(--ink-3); white-space: nowrap;
+  }
+  .sched-foot { font-size: 11px; margin: 16px 0 0; max-width: 74ch; line-height: 1.7; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
   .mock-bar { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: var(--rule); background: var(--panel-2); }
   .mock-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
@@ -338,8 +433,14 @@ const engine = [
 
   .astro-verdict { font-size: 12px; line-height: 1.8; max-width: 760px; margin: 24px 0 20px; color: #c8c8c0; }
   .astro-verdict b { color: var(--bg); }
-  .astro-cta { background: transparent; color: var(--bg); border-color: #3a3a37; }
-  .astro-cta:hover { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
+  /* .astro-band is its own dark section, not .band-dark, so it does not inherit the global
+     dark-band button inversion — the two buttons are re-stated here. Solid one goes to the free
+     public astro page, ghost one to the method; the free page is the primary action. */
+  .astro-cta { justify-content: flex-start; margin-top: 22px; }
+  .astro-cta .btn { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
+  .astro-cta .btn:hover { background: #fff; }
+  .astro-cta .btn-ghost { background: transparent; color: var(--bg); border-color: #3a3a37; }
+  .astro-cta .btn-ghost:hover { background: var(--bg); color: var(--ink-1); border-color: var(--bg); }
 
   /* A slow drift across the band — the sky moving, at a pace you notice only if you stay.
      Pointer-events none so it can never intercept a click on the CTA beneath it. */
@@ -362,8 +463,8 @@ const engine = [
   .cta-lead { max-width: 520px; margin: 0 auto 20px; color: #c8c8c0; }
   .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-  @media (max-width: 1000px) { .cards, .drgrid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 1000px) { .astro-grid { grid-template-columns: repeat(2, 1fr); } .cards { grid-template-columns: repeat(2, 1fr); } .engine { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 28px; } .two-col.rev > :first-child { order: 2; } .astro-score { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1000px) { .cards, .drgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 1000px) { .astro-grid { grid-template-columns: repeat(2, 1fr); } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .engine { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 28px; } .two-col.rev > :first-child { order: 2; } .astro-score { grid-template-columns: repeat(2, 1fr); } .sched { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .cards, .drgrid, .astro-grid, .engine { grid-template-columns: 1fr; } .heat { grid-template-columns: repeat(3, 1fr); } .as-n { font-size: 24px; } }
 </style>

@@ -75,7 +75,10 @@ def main():
     # Payout history is genuinely useful for every listed name, but one POST per symbol across
     # 554 names is too slow for a 30-minute cycle. Core every run; the listed tail rotates
     # stalest-first within a budget, so full coverage still arrives within a few cycles.
-    _syms = universe["symbols"]
+    # PSX ONLY — this posts to the DPS announcements endpoint, which has no US symbols, and
+    # LISTED_DIV_PER_RUN is a bounded budget that must not be spent on names that cannot return.
+    _syms = {s: m for s, m in universe["symbols"].items()
+             if ((m or {}).get("market") or "PSX") == "PSX"}
     _core = [s for s, m in _syms.items() if (m or {}).get("tier", "core") == "core"]
     _listed = [s for s in _syms if s not in set(_core)]
     _seen = {d.get("symbol") for d in (prior.get("history") or [])} if isinstance(prior, dict) else set()

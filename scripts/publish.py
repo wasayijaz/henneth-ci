@@ -60,10 +60,27 @@ def main():
     code_mode = "--code" in sys.argv
     _run(["git", "add", "-A", "--", "state/"])
 
+    # GENERATED ARTEFACTS THAT LIVE OUTSIDE state/.
+    # The marketing build is hermetic — it never reads state/ — so the pipeline hands it data by
+    # writing these instead (scripts/build_astro_lite.py, scripts/build_public_slice.py). They are
+    # regenerated deterministic output exactly like state/, not hand-authored code, so they belong
+    # in the default publish rather than behind --code.
+    #
+    # Without this they were rewritten by every cycle and committed by none: the live astro page
+    # would keep serving whatever sky was current the day it shipped, and both files would sit
+    # permanently dirty, adding noise to the "hand-authored files" warning below until someone
+    # swept them into an unrelated --code release.
+    GENERATED = ["site/src/data/public/", "site/public/moon_ephem.bin"]
+    _run(["git", "add", "-A", "--", *GENERATED])
+
+    def _is_auto(path: str) -> bool:
+        p = path.replace("\\", "/")
+        return p.startswith("state/") or any(p.startswith(g) for g in GENERATED)
+
     # what else is dirty? report it rather than silently including or silently dropping it
     other = [ln[3:].strip().strip('"') for ln in
              _run(["git", "status", "--porcelain"]).stdout.splitlines()
-             if ln[3:].strip().strip('"') and not ln[3:].strip().strip('"').replace("\\", "/").startswith("state/")]
+             if ln[3:].strip().strip('"') and not _is_auto(ln[3:].strip().strip('"'))]
 
     if code_mode and other:
         _run(["git", "add", "-A"])

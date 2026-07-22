@@ -9,7 +9,7 @@ import time
 
 import requests
 
-from psx_data import HEADERS, STATE, load_json, save_json
+from psx_data import HEADERS, STATE, load_json, market_symbols, save_json
 
 BASE = "https://dps.psx.com.pk"
 
@@ -38,7 +38,13 @@ def main():
     ok = 0
     # Intraday ticks only matter for names the desk actually watches trade-by-trade, and one
     # request per symbol across 554 listed names would dominate the cycle. Core tier only.
-    for sym in [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]:
+    #
+    # PSX ONLY, and the market filter is load-bearing: non-PSX symbols are also tier=core, so
+    # without it this would ask DPS for XLE on every 30-minute cycle. The source here is the DPS
+    # tick feed, which has no concept of a US symbol. config/markets.json also sets
+    # US.intraday:false — US regular hours are 18:30-01:00 PKT, outside every cycle the desk runs.
+    core = [s for s, m in universe["symbols"].items() if (m or {}).get("tier", "core") == "core"]
+    for sym in market_symbols("PSX", core):
         try:
             pts = fetch(sym, sess)
             if pts and len(pts) > 3:

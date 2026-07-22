@@ -198,6 +198,25 @@ def yahoo_symbol(symbol: str, universe: dict | None = None) -> str:
     return f"{symbol}{suffix}"
 
 
+def market_symbols(market: str = _DEFAULT_MARKET, symbols: list[str] | None = None) -> list[str]:
+    """Filter to one market. Defaults to PSX.
+
+    WHY THIS EXISTS. Adding a second market to universe.json silently widened the input of every
+    script that iterates it — including the ones whose SOURCE is PSX-specific. `fetch_intraday.py`
+    would ask DPS for XLE, `fetch_dividends_deep.py` would ask Yahoo for `US500.KA`, and
+    `fetch_fundamentals.py` would look for a Karachi filing for an American sector ETF. None of
+    those crash; they just fail 23 times a cycle and, worse, spend a bounded per-run fetch budget
+    on symbols that can never succeed — which STARVES the real PSX names those budgets exist for.
+
+    So: anything whose data SOURCE is PSX wraps its symbol list in this. Anything that is pure
+    maths over state/history/{SYM}.json (quant, backtest, predictability, correlation, fair value)
+    deliberately does NOT — those are market-agnostic and US coverage is the point."""
+    universe = load_json(STATE / "universe.json", {"symbols": {}})
+    syms = universe.get("symbols", {})
+    pool = symbols if symbols is not None else list(syms)
+    return [s for s in pool if ((syms.get(s) or {}).get("market") or _DEFAULT_MARKET) == market]
+
+
 def research_symbols() -> list[str]:
     """The names the expensive pipeline (backtests, fundamentals, predictability, fair value)
     is allowed to run on: tier=core plus any listed name that cleared the liquidity RESEARCH

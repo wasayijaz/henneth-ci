@@ -17,7 +17,7 @@ import time
 
 import requests
 
-from psx_data import STATE, load_json, research_symbols, save_json
+from psx_data import STATE, load_json, market_symbols, research_symbols, save_json
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 FIELDS = {
@@ -84,7 +84,11 @@ def main():
     # An earlier version of this filter claimed the listed tail "has no coverage upstream".
     # That was an untested assumption and it was wrong — a 25-name sample came back 100%
     # covered. The gate is now liquidity, which is a real reason, not a guessed one.
-    symbols = research_symbols()
+    # PSX ONLY. research_symbols() is market-agnostic on purpose — quant, backtest and
+    # predictability all want the US names — but a fundamentals scrape looks for a Karachi filing,
+    # and there is no P/E or book value to find for an American sector ETF. Filtering here keeps
+    # the WORKERS pool working on names that can actually return something.
+    symbols = market_symbols("PSX", research_symbols())
     with cf.ThreadPoolExecutor(max_workers=WORKERS) as ex:
         for sym, data, err in ex.map(_one, symbols):
             if data:

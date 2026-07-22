@@ -144,9 +144,42 @@ def main():
         "discipline": (amap.get("discipline") or {}).get("research_lens_only", ""),
     }, indent=1, ensure_ascii=False), encoding="utf-8")
 
+    # ---- coverage.json: which markets/symbols the desk actually covers -----------------------
+    # Emitted here rather than imported by the page, because the marketing build is HERMETIC — it
+    # must never reach outside site/ (see build_public_slice.py, and site/README.md's note about
+    # what happens when this boundary is crossed). /global-markets/ renders from this file, so a
+    # symbol added to or removed from config/markets.json changes the desk and the public page
+    # together. A hand-typed list on the page would be correct the day it shipped and quietly wrong
+    # afterwards, which is the exact class of drift docs/WEBSITE_BRIEF.md exists to correct.
+    cov = {}
+    for mkt, mcfg in (load(ROOT / "config" / "markets.json", {}) or {}).get("markets", {}).items():
+        if mkt == "PSX" or not isinstance(mcfg, dict):
+            continue
+        groups = {}
+        for gname, entries in (mcfg.get("symbols") or {}).items():
+            if gname.startswith("_") or not isinstance(entries, dict):
+                continue
+            groups[gname] = [
+                {"symbol": s, "name": v if isinstance(v, str) else v.get("name", s)}
+                for s, v in entries.items() if not s.startswith("_")
+            ]
+        cov[mkt] = {
+            "label": mcfg.get("label", mkt),
+            "currency": mcfg.get("currency"),
+            "signals_enabled": mcfg.get("signals_enabled", True),
+            "intraday": mcfg.get("intraday", False),
+            "groups": groups,
+        }
+    n_cov = sum(len(g) for m in cov.values() for g in m["groups"].values())
+    (SITE_DATA / "coverage.json").write_text(json.dumps({
+        "generated": time.strftime("%Y-%m-%d %H:%M"),
+        "source": "config/markets.json via scripts/build_astro_lite.py",
+        "markets": cov,
+    }, indent=1, ensure_ascii=False), encoding="utf-8")
+
     print(f"astro_lite: moon {moon['n_days']} days ({moon['bytes'] // 1024} KB) · "
           f"{len(by_graha)} grahas -> {sum(len(v) for v in by_graha.values())} sectors · "
-          f"{len(positions)} sky positions")
+          f"{len(positions)} sky positions · coverage {n_cov} non-PSX symbols")
     sys.exit(0)
 
 

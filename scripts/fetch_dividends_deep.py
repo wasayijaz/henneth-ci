@@ -71,7 +71,12 @@ def fetch_symbol(sess, sym):
 
 def main():
     uni = load(UNIVERSE, {})
-    symbols = sorted((uni.get("symbols") or {}).keys())
+    # PSX ONLY. The URL below hardcodes the `.KA` suffix, so a US symbol would be requested as
+    # `US500.KA` and 404 — harmless in isolation, except MAX_FETCH is a bounded per-run budget and
+    # those wasted slots come straight out of the real PSX names waiting their turn in the
+    # staleness rotation. Filter before the budget is spent, not after.
+    symbols = sorted(s for s in (uni.get("symbols") or {})
+                     if ((uni["symbols"].get(s) or {}).get("market") or "PSX") == "PSX")
     if not symbols:
         print("dividends_deep: no universe yet, nothing to do")
         return
