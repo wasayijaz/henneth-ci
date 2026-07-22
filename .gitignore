@@ -20,3 +20,11 @@ __pycache__/
 
 # scratch diff dumps - internal noise, never ship
 full_diff.txt
+
+# Tooling scaffolding dropped into the tree by the PostHog wizard (2026-07-22).
+# Neither is part of either Vercel build, but `publish.py --code` stages with
+# `git add -A`, so without these lines the next unrelated code release quietly
+# carries ~90KB of vendor docs — the same class of accident documented in
+# docs/OPERATIONS.md section 2a.
+_analytics/
+site/.claude/

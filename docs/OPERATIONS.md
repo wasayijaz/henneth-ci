@@ -525,6 +525,49 @@ curl -s -o /dev/null -w "%{http_code}" https://desk.henneth.app/state/rooms.json
 
 ---
 
+## 9c. ANALYTICS — two tags, two properties, and one failure mode that is silent (2026-07-22)
+
+Both properties carry **GA4** (`G-5PLLEK6RYC`, deliberately the same measurement ID on both, so a
+visitor who reads a blog post and then signs up stays one session) and **PostHog** (US cloud,
+project 522643).
+
+| surface | GA4 | PostHog token comes from |
+|---|---|---|
+| `site/` → henneth.app | `Base.astro`, PROD **+ hostname guard** | `PUBLIC_POSTHOG_PROJECT_TOKEN` at **build time** |
+| `dashboard/` → desk.henneth.app | `index.html`, hostname guard | **hardcoded** in `index.html` — the desk has no build step |
+
+**The silent failure.** `site/.env` is gitignored, so the marketing build's token can only come
+from Vercel. If `PUBLIC_POSTHOG_PROJECT_TOKEN` is missing or scoped to the wrong environment, the
+build **succeeds**, the page **loads**, every `capture()` call **returns normally**, and nothing is
+ever recorded. There is no error anywhere. `posthog.astro` now refuses to initialise without a
+token specifically so the failure is "no data" rather than a phantom install, but you still have to
+know to look.
+
+- Both variables live in Vercel → **henneth-site** → Settings → Environment Variables.
+- **Scope them to Production.** Every Vercel preview builds in production mode, so a
+  Preview-scoped token pours preview traffic into the same project as real visitors — the
+  identical mistake GA4 made here once (see the comment above the gtag block in `Base.astro`).
+- Neither needs the "Sensitive" flag. Both are public keys that ship in page HTML; marking them
+  sensitive only stops *you* reading them back.
+
+**Check it's alive** (expects the token in the built HTML — empty means the env var did not reach
+the build):
+```
+curl -s https://henneth.app/ | grep -c "phc_"      # expect 1, not 0
+```
+
+**The desk's funnel events** are in `dashboard/app.js` via one `track()` helper that fires to GA4
+and PostHog together: `gate_viewed`, `auth_validation_failed`, `signup_started` / `signin_started`,
+`signup_pending_confirmation`, `signup_completed` / `signin_completed`, `signup_failed` /
+`signin_failed` (carrying the raw Supabase reason). `identifyUser()` binds the PostHog session to
+the Supabase **user id — never the email**, and calls `posthog.reset()` on sign-out.
+
+`signup_pending_confirmation` and `signup_completed` are deliberately separate. With email
+confirmation on, a successful `signUp()` returns no session: the account exists but the person is
+not in yet. Merging the two would report a conversion rate the desk does not have.
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.

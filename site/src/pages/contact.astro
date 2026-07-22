@@ -12,17 +12,17 @@ import { site } from '../site.config.ts';
         directly.
       </p>
       <div class="tilegrid ct-grid">
-        <a class="ct-i" href={`mailto:${site.contactEmail}?subject=Broker%20plan`}>
+        <a class="ct-i" data-contact="broker" href={`mailto:${site.contactEmail}?subject=Broker%20plan`}>
           <span class="label muted">Brokers &amp; institutions</span>
           <span class="ct-v">{site.contactEmail}</span>
           <span class="muted ct-d">Multi-seat access, API and white-label research.</span>
         </a>
-        <a class="ct-i" href={`mailto:${site.contactEmail}`}>
+        <a class="ct-i" data-contact="general" href={`mailto:${site.contactEmail}`}>
           <span class="label muted">Everything else</span>
           <span class="ct-v">{site.contactEmail}</span>
           <span class="muted ct-d">Questions, press, feedback, or a bug you found.</span>
         </a>
-        <a class="ct-i" href={site.social.x} rel="noopener">
+        <a class="ct-i" data-contact="social" href={site.social.x} rel="noopener">
           <span class="label muted">On X</span>
           <span class="ct-v">@MWasayI</span>
           <span class="muted ct-d">Day-to-day notes on the market and the build.</span>
@@ -44,13 +44,16 @@ import { site } from '../site.config.ts';
   @media (max-width: 860px) { .ct-grid { grid-template-columns: 1fr; } }
 </style>
 
+{/* The label comes from each link's own data-contact, not from its position in the list.
+    The generated version used `['broker','general','social'][i]`, which is correct only for as
+    long as nobody adds, removes or reorders a tile — and when that breaks it does not throw, it
+    just silently files every click under the wrong heading. */}
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
-    var types = ['broker', 'general', 'social'];
-    document.querySelectorAll('.ct-i').forEach(function (el, i) {
+    document.querySelectorAll('.ct-i').forEach(function (el) {
       el.addEventListener('click', function () {
         window.posthog?.capture('contact_link_clicked', {
-          contact_type: types[i] || 'general'
+          contact_type: el.dataset.contact || 'general'
         });
       });
     });

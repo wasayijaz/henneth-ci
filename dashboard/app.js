@@ -5252,7 +5252,33 @@ setTimeout(() => {
   route(false);
 }, AUTH_BACKSTOP_MS);
 
+/* ------------------------------------------------------------------------------------------
+   ONE TRACKING CALL, TWO DESTINATIONS.
+
+   Both analytics tags on this page are loaded conditionally (see index.html — each is wrapped in
+   a live-host check), so on localhost, on a file:// open and on any preview build BOTH `gtag` and
+   `posthog` are simply undefined. Every call here therefore has to be optional-chained, and this
+   helper exists so that is done in exactly one place rather than at thirty call sites.
+
+   WHY THIS EXISTS AT ALL: until now the desk fired no events whatsoever — `gtag(` appeared zero
+   times in this file. GA4 could see that somebody loaded the sign-in gate and nothing after that.
+   Whether they read it and left, started typing and gave up, failed the captcha, or actually
+   created an account were all the same event: one pageview. That is the single most expensive
+   blind spot in the funnel, because it is the exact step paid traffic has to survive.
+
+   NO PII. Never pass an email address, a password field, or anything derived from them. The
+   properties below are counts, reasons and modes — enough to find where people fall out, not
+   enough to identify who they were. */
+function track(name, props) {
+  try { window.posthog?.capture(name, props || {}); } catch {}
+  try { window.gtag?.("event", name, props || {}); } catch {}
+}
+
 function renderGate(page) {
+  /* The funnel's first measurable step: somebody hit a members-only page while signed out.
+     `page` matters — arriving at the gate from a shared /ticker/ link is a different intent
+     from landing on it cold, and the two convert differently. */
+  track("gate_viewed", { page: page || "today", plan_intent: planIntent() || "none" });
   capturePlanIntent();          // route() reaches here before the module-level call below runs
   // strips the sidebar + in-app header controls (see themes.css [data-gated]); cleared in route()
   try { document.body.setAttribute("data-gated", "1"); } catch {}
@@ -5955,10 +5981,22 @@ function openAuth(mode) {
        Length rather than composition rules is deliberate, per NIST SP 800-63B: forcing a symbol
        and a digit reliably produces "P@ssw0rd1", while length is what actually resists cracking. */
     else if (mode === "signup" && pw.length < 10) { setErr("errPw", "Passwords need at least 10 characters. A short phrase works well."); bad = true; }
-    if (bad) { authMsg("", false); return; }
+    /* Client-side validation rejections are tracked, because they are friction the desk CHOSE.
+       The 10-character floor and the captcha are both deliberate, both correct, and both cost
+       some proportion of signups — a proportion nobody could previously measure. `field` says
+       which rule bit, never what was typed. */
+    if (bad) {
+      authMsg("", false);
+      track("auth_validation_failed", {
+        mode,
+        field: document.getElementById("errEmail")?.textContent ? "email" : "password",
+      });
+      return;
+    }
 
     go.disabled = true; go.classList.add("busy");
     authMsg(mode === "signup" ? "Creating your account…" : "Signing in…");
+    track(mode === "signup" ? "signup_started" : "signin_started", { plan_intent: planIntent() || "none" });
     try {
       /* `undefined` when captcha is off, which makes `options` collapse to the exact call this
          was before bot protection existed — no behaviour change while the key is blank. */
@@ -5967,16 +6005,33 @@ function openAuth(mode) {
       if (mode === "signup") {
         const { data, error } = await sb.auth.signUp({ email, password: pw, options: opts });
         if (error) throw error;
-        if (!data.session) { authMsg("Almost there — we sent a confirmation link to " + email + ". Click it to activate your account."); return; }
+        /* Two DIFFERENT successes, and conflating them would flatter the numbers badly. With
+           email confirmation on, no session comes back — the account exists but the person is
+           not in yet, and whether they return from that email is the real question. Counting
+           this as a completed signup would report a conversion rate the desk does not have. */
+        if (!data.session) {
+          track("signup_pending_confirmation");
+          authMsg("Almost there — we sent a confirmation link to " + email + ". Click it to activate your account."); return;
+        }
+        track("signup_completed", { plan_intent: planIntent() || "none" });
       } else {
         const { error } = await sb.auth.signInWithPassword({ email, password: pw, options: opts });
         if (error) throw error;
+        track("signin_completed");
       }
       closeAuth();
     } catch (err) {
       // A Turnstile token is spent on use; without this reset the retry sends a used token and
       // fails with "captcha verification failed" no matter what the user types.
       resetCaptcha();
+      /* The REASON is the point of this event. "captcha verification failed" repeating means the
+         bot protection is eating real people; "User already registered" means they want the
+         sign-in tab and cannot find it. Those need opposite fixes, and without the reason they
+         look identical in the funnel. Supabase's own message is used rather than the friendly
+         rewrite, since the rewrite is tuned for humans and would blur the categories. */
+      track(mode === "signup" ? "signup_failed" : "signin_failed", {
+        reason: String((err && err.message) || err).slice(0, 80),
+      });
       authMsg(friendlyAuthError(err), true);
     } finally { go.disabled = false; go.classList.remove("busy"); }
   };
@@ -6474,6 +6529,23 @@ async function finishWizard(replayOnly) {
   location.hash = "#/today";
 }
 
+/* Ties the anonymous session that arrived from an ad to the account it became, so the whole
+   path — ad click, marketing page, gate, signup, first ticker opened — reads as one person
+   instead of two strangers who happen to share a browser.
+
+   The Supabase user id is used, NOT the email. The id is already an opaque UUID that means
+   nothing outside this system, whereas shipping email addresses into a third-party analytics
+   product is a materially bigger promise than "we measure usage" — and state/legal.json is still
+   review_status: DRAFT. Plan goes on as a property because it is the one dimension worth
+   segmenting every other number by. */
+function identifyUser() {
+  try {
+    if (!window.posthog) return;
+    if (me?.id) posthog.identify(me.id, { plan: (myProfile && myProfile.plan) || "free" });
+    else posthog.reset();   // signed out: stop attributing this browser to the previous account
+  } catch {}
+}
+
 /* ---------- boot ---------- */
 async function initAuth() {
   // NOTE: this function now owns the FIRST paint of the session. Nothing renders before it —
@@ -6484,6 +6556,7 @@ async function initAuth() {
       const { data: { session } } = await sb.auth.getSession();
       me = session?.user || null;
       renderAccountButton();
+      identifyUser();
       if (me) {
         // Resolved BEFORE the first render, not after it: the pages that depend on the signed-in
         // user — Your Chart, Portfolio, Watchlist, Settings — used to paint their signed-out state
@@ -6514,10 +6587,11 @@ async function initAuth() {
       await loadProfile();
       await migrateGuestChart();   // the whole point of the funnel: never ask for birth details twice
       applyDeskMode();
+      identifyUser();              // after loadProfile, so the plan property is the real one
       if (typeof route === "function") route(true);   // re-render the page you're on with your account
       if (myProfile && !myProfile.onboarded) startWizard(false);
     }
-    if (event === "SIGNED_OUT") { myProfile = null; applyDeskMode(); if (typeof route === "function") route(true); }
+    if (event === "SIGNED_OUT") { myProfile = null; applyDeskMode(); identifyUser(); if (typeof route === "function") route(true); }
   });
 }
 initAuth();
