@@ -1,0 +1,21 @@
+{
+  "ticker": "ATRL",
+  "verdict": "flags",
+  "findings": [
+    {
+      "severity": "medium",
+      "claim": "Composite fair value Rs1,012.03 (mispricing +10.8%, verdict \"fair\") — dossier valuation.methods: relative_pe 745.34, earnings_power 1278.71, graham 1397.03, ddm 41.44.",
+      "issue": "Composite is arithmetically correct (median of the four methods = (745.34+1278.71)/2 = 1012.025 ≈ 1012.03; mispricing (1012.03-913.67)/913.67 = 10.77% ≈ 10.8% — both check out). But the pre-loaded verify.json flag (fairvalue.spread: methods disagree 33.7x = 1397.03/41.44) understates the real problem: the four methods don't just disagree in magnitude, they split on direction — relative_pe (745.34) and ddm (41.44) both imply ATRL is overvalued vs the Rs913.67 price, while earnings_power (1278.71) and graham (1397.03) imply it's meaningfully undervalued. The median formula happens to average the two \"undervalued\" methods, producing a headline +10.8%/\"fair\" read that conceals a 2-vs-2 directional split. The extreme DDM outlier (41.44, ~4.5% of price) is explained by ATRL's very low payout ratio (3.73%) — DDM breaks down for low-payout names — so it is a real methodological artifact, not a data glitch, but it should not be read as a precision fair-value estimate.",
+      "evidence": "state/dossiers.json ATRL.valuation: {price 913.67, composite_fair 1012.03, mispricing_pct 10.8, verdict \"fair\", methods: {relative_pe 745.34, earnings_power 1278.71, graham 1397.03, ddm 41.44}}; state/verify.json ATRL: [{\"sev\":\"low\",\"field\":\"fairvalue.spread\",\"msg\":\"methods disagree 33.7x — treat composite as a rough screen\"}]",
+      "fix": "Keep the verify.json caveat attached to any published fair-value figure for ATRL: treat composite_fair (Rs1,012.03) as a rough cross-sectional screen only, not a precision target, and note explicitly that the DDM leg (Rs41.44) is not usable for this name given its 3.73% payout ratio — it should be down-weighted or excluded rather than averaged in as a full voting method."
+    },
+    {
+      "severity": "low",
+      "claim": "fundamental.pe \"4.59\" for ATRL at price 913.67 / eps 200.63.",
+      "issue": "913.67 / 200.63 = 4.5545, not 4.59 — a small (~0.8%) rounding/period mismatch (trailing EPS or price snapshot basis likely differs slightly from the displayed rounded fields). Not unique to ATRL: the same small PE-recompute gap appears on DGKC (204.93/27.64=7.41 vs displayed 7.47) and MLCF (92.16/10.74=8.58 vs displayed 8.79) in the same dossier file, so this is a systemic display-rounding artifact across the desk's fundamentals pipeline, not an ATRL-specific error.",
+      "evidence": "state/dossiers.json ATRL.fundamental: {\"price\":913.67 (top-level), \"pe\":\"4.59\", \"eps\":\"200.63\"}",
+      "fix": "No ATRL-specific correction needed; flag to the data layer that displayed PE should be recomputed from the same price/EPS pair shown alongside it, or document that PE uses a different trailing window than the displayed spot EPS."
+    }
+  ],
+  "summary": "ATRL's headline numbers check out: composite_fair (1012.03) is exactly the median of the four valuation methods, mispricing_pct (10.8%) is correctly derived, and every technical/predictability figure quoted in the Room session (RSI14 55.1, SMA20/50, predictability 50.0, 52-week-high-breakout 55% hit / 29 trades) matches the dossier verbatim. The recent-news macro claims (Brent topping $92 on a Houthi Red Sea/Saudi blockade threat, US-Iran strikes, KSE-100 down ~1,700 points) are sourced to dossier entries and independently corroborate against real July-2026 reporting — not stale or fabricated. The one real defect is qualitative, not arithmetic: the verify.json-flagged 33.7x method spread reflects a 2-vs-2 directional disagreement (not just magnitude) masked by the median, driven by a DDM leg that is structurally unreliable for ATRL's low payout ratio — composite fair value should be published only as a rough screen, as verify.json already instructs. A separate, systemic (not ATRL-specific) small PE-rounding mismatch is noted for completeness. No advice-language leaks found in the memos."
+}

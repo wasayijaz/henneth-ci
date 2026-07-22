@@ -1,0 +1,21 @@
+{
+  "ticker": "PRL",
+  "verdict": "flags",
+  "findings": [
+    {
+      "severity": "medium",
+      "claim": "verify.json: two medium claim.price flags — 'a Chair call was priced at 44.59 vs session price 50.86' and 'a Dr. Omar call was priced at 44.59 vs session price 50.86'",
+      "issue": "44.59 does not appear anywhere in the current live rooms.json PRL entry (built 2026-07-22 17:56, price_at_session 50.86). Every price citation across ta_memo, fa_memo, bull_case, bear_case and house_view consistently uses 50.86 (e.g. bull_case best_evidence 'a 2.58x trailing... vs a 50.86 price', bear_case worst_case 'A pullback... from 50.86', house_view 'trading at a P/E of 2.58... a 50.86 price'). Cross-checked against state/history/PRL.json: 44.59 is PRL's genuine, real closing price on 2026-07-17 (bar: date 2026-07-17, close 44.59, open 41.8, volume 38,580,070) — three trading sessions before the 2026-07-22 session, mid-way through the same real rally (41.65 -> 44.59 -> 49.05 -> 49.19 -> 50.86). So 44.59 is NOT a data glitch or a stale/decades-old artifact — it is a legitimate, verifiable different-day price. But since it is not present in the current published room text at all, the verify.json flag is orphaned: it most likely fired against an earlier (pre-rebuild) PRL room version dated on/around 2026-07-17 whose Chair/Dr. Omar calls referenced that day's 44.59 close, and which has since been fully superseded by today's 17:56 rebuild (material_hash c47c764e0639 matches identically between dossiers.json and rooms.json, confirming the current room is built from the current dossier). No wrong number is currently on screen for PRL.",
+      "evidence": "D:\\PSX Trader X Claude\\state\\rooms.json PRL entry (lines ~1975-2050, built 2026-07-22 17:56, price_at_session 50.86); D:\\PSX Trader X Claude\\state\\history\\PRL.json line ~4430-4435 (date 2026-07-17, close 44.59); D:\\PSX Trader X Claude\\state\\dossiers.json PRL entry (price 50.86, material_hash c47c764e0639, matches room's material_hash)",
+      "fix": "Confirm the deterministic verifier ran against the current 17:56 rebuild rather than a cached/pre-refresh snapshot; if the flag traces to a superseded 2026-07-17-era PRL room, mark it resolved/stale in verify.json rather than carrying it forward as an open medium flag, since the live, currently-published PRL text needs no price correction — it is internally consistent throughout at 50.86."
+    },
+    {
+      "severity": "low",
+      "claim": "fundamental.payout_ratio: \"0.01%\" for PRL",
+      "issue": "PRL pays no dividend (recent_dividends: [], div_yield: null, fa_memo explicitly states 'no dividend is paid'), yet payout_ratio is recorded as a non-zero 0.01% instead of 0%/null. Cosmetically inconsistent, not materially misleading (fa_memo correctly narrates it as no-dividend), and the same near-zero artifact appears on other zero-dividend names (e.g. NRL) in this batch, suggesting a systemic data-layer rounding quirk rather than a PRL-specific error.",
+      "evidence": "D:\\PSX Trader X Claude\\state\\dossiers.json PRL.fundamental (payout_ratio \"0.01%\", recent_dividends [], div_yield null)",
+      "fix": "Normalize payout_ratio to 0% or null when recent_dividends is empty and div_yield is null, in the fundamentals-computation script (scripts/), so 'no dividend' names don't carry a spurious non-zero payout figure."
+    }
+  ],
+  "summary": "PRL's live, currently-published dossier and room text (both built 2026-07-22, matching material_hash c47c764e0639) are internally consistent throughout at the 50.86 session price — composite fair value 121.54 correctly equals the median of the three methods, mispricing_pct recomputes to 139.0%, TA levels (support 40.38=SMA20, resistance 52.6=20d high) tie out, and no advice-language or unsourced broker claims are present. The flagged 44.59-vs-50.86 mismatch traces to a real, verified PRL close on 2026-07-17 (confirmed in state/history/PRL.json) from earlier in the same rally, not a glitch — but it appears nowhere in the current room text, meaning the verify.json flag is most likely an orphaned artifact from a room build that has since been fully superseded, not a live wrong number on screen."
+}
