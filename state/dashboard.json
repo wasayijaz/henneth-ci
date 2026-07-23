@@ -1,13 +1,13 @@
 {
- "updated": "2026-07-22 18:20",
+ "updated": "2026-07-23 06:22",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 56,
+  "score": 64,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260722-BML-obv_divergence_up",
+   "id": "20260723-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -30,7 +30,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260722-TPLT-donchian55_break",
+   "id": "20260723-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -53,7 +53,30 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260722-NICL-roc60_leader_pullback",
+   "id": "20260723-POWER-bb_pctb_reclaim",
+   "ticker": "POWER",
+   "strategy": "bb_pctb_reclaim",
+   "template": "Band reclaim from the low",
+   "category": "mean_reversion",
+   "sector": "Cement",
+   "entry": 21.3,
+   "stop": 20.66,
+   "target": 22.58,
+   "rr": 2.0,
+   "hold_sessions": 12,
+   "risk_per_share": 0.64,
+   "backtest": {
+    "hit_rate": 0.571,
+    "net_expectancy_pct": 1.25,
+    "n": 14,
+    "oos_hit": 0.714
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Band reclaim from the low is triggering now; on POWER's own history it won 57% over 14 trades (+1.2% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260723-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -74,29 +97,6 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260722-GAL-trend_momo_combo",
-   "ticker": "GAL",
-   "strategy": "trend_momo_combo",
-   "template": "Trend + momentum combo",
-   "category": "momentum",
-   "sector": "Automobile Assembler",
-   "entry": 573.79,
-   "stop": 556.58,
-   "target": 608.22,
-   "rr": 2.0,
-   "hold_sessions": 12,
-   "risk_per_share": 17.21,
-   "backtest": {
-    "hit_rate": 0.553,
-    "net_expectancy_pct": 1.06,
-    "n": 38,
-    "oos_hit": 0.545
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 55% over 38 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
