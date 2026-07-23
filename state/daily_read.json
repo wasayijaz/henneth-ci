@@ -1,79 +1,57 @@
 {
-  "date": "2026-07-22",
-  "headline": "A blowout UBL earnings beat gets swamped by an oil-driven risk-off tape — KSE-100 closes down 1,703 points even as Brent eases off its intraday spike.",
+  "date": "2026-07-23",
+  "headline": "Oil crosses $96 on the first direct Houthi tanker strikes — PSX is shrugging it off so far, but refiners are the only names actually pricing it in.",
   "tone": "cautious",
-  "summary": "PSX closed down 0.98% today at 174,429.92 (down 1,703 points) even though Brent eased back to $84.78 after spiking past $92 intraday on a tenth day of US-Iran strikes. The real story: UBL posted a strong H1 profit, up 33% year-on-year, yet its own stock still fell 2% on the day — a clear sign macro fear is beating good company news right now. The regime stays risk-off: high rates, a soft rupee, and oil still up over 8% on the month keep banks and E&P better placed than cement, autos, and fuel retailers, whose costs rise with crude. Banks and E&P remain the desk's preferred ground into the next few sessions.",
+  "summary": "Brent crude has climbed three straight sessions to $96, driven by the first-ever direct Houthi missile strikes on Saudi oil tankers in the Red Sea — a genuinely new escalation route, not just noise. Global markets are shrugging it off (the VIX actually fell) and PSX opened roughly flat too, but this market has sold off hard on similar headlines before even when the world stayed calm, so a quiet morning shouldn't be read as a green light. The clearest reaction so far sits in refiners (ATRL, NRL), already trending higher on the crude spike. Banks stay favoured into next week's rate decision; cement, fuel retailers, and exporters carry the most oil-shock risk.",
   "sectors": [
-    {
-      "name": "Banks",
-      "stance": "favoured",
-      "why": "High policy rates (11.5%) keep the funding-cost carry trade intact, and UBL's 33% profit jump confirms the sector's earnings engine is healthy even though the stock itself sold off today on macro fear."
-    },
-    {
-      "name": "E&P (Oil & Gas)",
-      "stance": "favoured",
-      "why": "Brent is still up over 8% for the month despite today's pullback to $84.78, and the desk's own risk radar flags E&P (OGDC/PPL/MARI) as a direct beneficiary of the ongoing oil shock."
-    },
-    {
-      "name": "Fertilizer",
-      "stance": "favoured",
-      "why": "Demand is domestic and largely insulated from the oil/shipping story — a defensive tilt while the Iran conflict runs into its second week, and FFC has a dated results catalyst on 2026-07-29."
-    },
-    {
-      "name": "OMCs & Refining",
-      "stance": "avoid",
-      "why": "The desk's risk radar names OMCs and cement as the two sectors most exposed to the fuel/energy-cost side of the oil shock — PSO's margins stay thin without E&P's offsetting upside."
-    },
-    {
-      "name": "Cement",
-      "stance": "avoid",
-      "why": "Cement is energy-cost sensitive; a firmer oil bill and a soft rupee (277.63, near a one-month high) squeeze input costs just as the sector already sits on the macro desk's avoid list."
-    },
-    {
-      "name": "Autos & Textiles/Exporters",
-      "stance": "avoid",
-      "why": "Imported-input costs rise with the oil bill and a weaker rupee, and the sector is explicitly flagged as unfavoured in the current high-rate, risk-off regime."
-    }
+    {"name": "Banks", "stance": "favoured", "why": "High-rate carry still works into the July 27 SBP decision — six-month T-bills are yielding below the policy rate, and a hold is the consensus call."},
+    {"name": "E&P (OGDC, PPL, MARI)", "stance": "favoured", "why": "Direct beneficiaries of a sustained Brent move above $96, though the share prices haven't caught up to the story yet — all three are still below their 20- and 50-day averages."},
+    {"name": "Refining (ATRL, NRL, PRL)", "stance": "favoured", "why": "The part of the oil complex actually reacting in price right now — ATRL and NRL are both trading above their key averages near recent highs; PRL has already run hard and looks stretched."},
+    {"name": "Fertilizer", "stance": "favoured", "why": "Domestic-demand business with low direct exposure to the oil-import bill, a defensive tilt while crude is volatile."},
+    {"name": "OMCs (PSO)", "stance": "avoid", "why": "Daily fuel-price pass-through plus a weaker current-account backdrop means a sustained oil spike is a margin and circular-debt risk, not a windfall."},
+    {"name": "Cement (LUCK, BWCL)", "stance": "avoid", "why": "Energy costs eat into margins — BWCL's own results out today show gross profit falling even before this fresh oil leg."},
+    {"name": "Textiles & exporters", "stance": "avoid", "why": "The Red Sea shipping-route risk just went from theoretical to concrete now that tankers have actually been hit."}
   ],
   "watchlist": [
     {
       "ticker": "BML",
-      "angle": "The desk's OBV-accumulation trigger fired on BML with high confidence — on its own history this setup has won 96.6% of 89 trades (net expectancy +5.11%/trade, still 83% out-of-sample). Fundamentals back it up: cheap at roughly 6.4x earnings with a 32% net margin, and it sits in Commercial Banks, one of the desk's two favoured sectors right now. Live levels: entry 59.25, stop 57.18, target 62.80.",
-      "risk": "A fresh leg down in the oil/Iran story would likely drag banks broadly lower regardless of BML's own setup — the stop is tight relative to entry, so a gap-down open on bad headlines could take it out fast."
+      "angle": "A proven technical trigger is live: an OBV volume-divergence signal with a 96.6% historical hit rate and +5.11% average return across 89 backtested trades (high confidence) — volume has been leading price higher. Fundamentals back it up (cheap P/E 6.33, 32% profit margin), and banking is the macro desk's favoured sector into next week's rate decision.",
+      "risk": "A broad oil-shock risk-off day, or a surprise at the MPC, can still drag a strong technical setup down with the tape."
+    },
+    {
+      "ticker": "ATRL",
+      "angle": "The clearest live price reaction to today's oil story: ATRL is trading above both its 20- and 50-day averages, RSI 55, within about 2.5% of its 20-day high — refiners react to a crude spike faster than upstream E&Ps do. Valuation is cheap (P/E 4.55) against the market.",
+      "risk": "Refining margins are thin (net margin around 7%), and the whole move depends on the escalation holding — a ceasefire headline, a pattern seen repeatedly this month, could unwind it fast."
+    },
+    {
+      "ticker": "POL",
+      "angle": "Fundamentals screen attractive — cheap (P/E 7.07), highly profitable (48% margin), an 11% dividend yield that's comfortably covered. The desk's backtest library shows multiple positive-expectancy setups on this name historically (an ADX/PDI expansion strategy with a 68% hit rate over 44 trades), and the price is holding up better than the rest of the oil complex today — down just over 1% and still close to its 20-day high on elevated volume.",
+      "risk": "No strategy is actively firing today — this is a watch, not a live setup — and it carries the same de-escalation risk as the rest of the oil trade."
+    },
+    {
+      "ticker": "BWCL",
+      "angle": "Today's other big headline: FY26 profit up 7% with a Rs10/share dividend declared. But the desk's own digging into the filing shows the nine-month print was only +2% YoY with gross profit down 18% on rising costs — the full-year number was carried by associate income and lower financing charges, not the core cement business. Worth watching precisely because the headline and the substance don't match.",
+      "risk": "Cement is the macro desk's flagged avoid sector today on energy-cost sensitivity, and BWCL's own numbers are the evidence for that call — a dividend doesn't offset a core margin trend that's actually worsening."
     },
     {
       "ticker": "UBL",
-      "angle": "Today's actual headline story: consolidated H1 profit of Rs85.9bn (EPS Rs34.3), up 33% year-on-year, on record deposits of Rs6.1trn — a genuine earnings beat. The fundamental read is attractive: a fair PE near 8.3x and a dividend yield of 6.75% covered by only about half of profit. That the stock still closed down 2% on the day is itself the day's clearest 'good news, bad tape' example.",
-      "risk": "There's no active technical trigger here — this is a fundamentals-and-news story, not a chart breakout — and Q2 alone showed cost-to-income creeping up (40% vs 33% a year ago) and a heavy 52% effective tax rate, so the quality of the beat isn't spotless. Further oil-driven selling could keep the stock under pressure regardless of the print."
-    },
-    {
-      "ticker": "FFC",
-      "angle": "Fertilizer is one of the desk's macro-favoured sectors (domestic demand, insulated from the oil-and-shipping story hitting cement and OMCs), FFC sits near the top of the desk's predictability rankings, and it has a real, dated catalyst: results due 2026-07-29.",
-      "risk": "The payout ratio is already high (82%), so a soft results print would test the dividend story the stock is partly priced for."
-    },
-    {
-      "ticker": "DCR",
-      "angle": "Dolmen City REIT carries a confirmed, dated catalyst: book closure runs 2026-07-25 to 2026-07-27, with today (2026-07-22) the last day to buy and still qualify for the Rs0.66/share dividend (about 1.71% yield). It also tops the desk's predictability screen, and as a rental-income REIT it's less directly exposed to the oil shock than cyclical names.",
-      "risk": "The payout ratio runs over 100% of earnings — a stretched dividend that a soft year could force to be cut — and REIT prices typically adjust down by roughly the dividend amount once the stock goes ex."
-    },
-    {
-      "ticker": "TPLT",
-      "angle": "A Donchian-55 breakout trigger fired on TPLT with the dashboard's high-confidence tag — a strategy that has won 61.5% of past trades on the name (net expectancy +3.62%, 75% hit rate out-of-sample). Live levels: entry 27.91, stop 26.51, target 30.70.",
-      "risk": "The fundamental picture is the opposite of clean: TPLT is currently loss-making with no dividend, small (Rs5.4bn market cap) and higher-beta (1.3x) than the market — this is a pure technical, momentum-driven read, not one backed by the underlying business, and it's the highest-risk name on this list."
+      "angle": "A confirmed, dated catalyst: a Rs16/share dividend with book closure on August 3, on the back of H1 profit up 33% YoY and record deposits. Fundamentals screen attractive (fair P/E 7.7, 31% margin, a covered 6.75% yield), and banking is the favoured sector into next week's rate decision.",
+      "risk": "No live technical trigger here today — the case rests on fundamentals and the calendar, so a broad pullback could still weigh on the shares into the book-closure date."
     }
   ],
   "catalysts": [
-    {"date": "2026-07-22", "event": "DCR book-closure buy-by (last day to qualify for the Rs0.66/share, ~1.71% yield dividend; book closure runs 2026-07-25 to 2026-07-27)", "which_tickers": ["DCR"]},
-    {"date": "2026-07-24", "event": "LOTCHEM ex-dividend/buy-by ahead of its confirmed book closure (2026-07-27 to 2026-07-29, Rs1.5/share, ~5.12% yield)", "which_tickers": ["LOTCHEM"]},
-    {"date": "2026-07-27", "event": "SBP MPC — first FY27 rate decision; a hold at 11.5% is widely expected (97% of surveyed analysts)", "which_tickers": []},
-    {"date": "2026-07-28", "event": "SBP post-MPC briefing", "which_tickers": []},
-    {"date": "2026-07-29", "event": "FFC results (also COLG, EFERT, HCAR, JSML — scraped estimates, unconfirmed)", "which_tickers": ["FFC", "COLG", "EFERT", "HCAR", "JSML"]},
-    {"date": "2026-08-01", "event": "PBS CPI print", "which_tickers": []}
+    {"date": "2026-07-25", "event": "DCR book closure — confirmed Rs0.66/share dividend", "which_tickers": ["DCR"]},
+    {"date": "2026-07-27", "event": "SBP MPC rate decision — hold at 11.5% widely expected (97% poll), but landing inside the live oil-escalation window", "which_tickers": []},
+    {"date": "2026-07-27", "event": "LOTCHEM book closure — confirmed Rs1.50/share dividend", "which_tickers": ["LOTCHEM"]},
+    {"date": "2026-08-01", "event": "PBS July CPI release — first print to capture fuel-price pass-through from the current oil shock", "which_tickers": []},
+    {"date": "2026-08-03", "event": "UBL book closure — confirmed Rs16/share dividend", "which_tickers": ["UBL"]},
+    {"date": "2026-08-07", "event": "MARI results (unconfirmed scraped estimate — not yet verified against a primary filing)", "which_tickers": ["MARI"]},
+    {"date": "2026-08-11", "event": "ATRL, NRL and POL results (unconfirmed scraped estimates — not yet verified against primary filings)", "which_tickers": ["ATRL", "NRL", "POL"]}
   ],
   "risks": [
-    "Conflict escalation: a tenth day of US strikes on Iran and Brent's intraday spike past $92 show the oil shock isn't over — a further leg up would deepen import-bill and rupee pressure even after today's pullback to $84.78.",
-    "Currency and rates: USD/PKR sits near 277.63 (a one-month high) with CPI still at 11.1% — a weaker rupee keeps the SBP hawkish into the July 27 MPC and is a standing equity headwind.",
-    "The UBL pattern — a genuine earnings beat that still closed lower — is a warning that broad macro fear can keep overwhelming individually good company results through the rest of results season."
+    "The escalation could deepen further — another direct tanker strike or a wider Red Sea blockade would widen the import bill and pressure the rupee, and could force the SBP's hand at Thursday's MPC even though a hold is the current consensus.",
+    "Global calm isn't a reliable signal for PSX — this market has sold off hard on similar Hormuz/Red Sea headlines before even when global indices and the VIX stayed quiet, so today's flat tape doesn't rule out a sharp domestic move.",
+    "SBP's reserve cushion hasn't been re-verified past the week ended July 10 ($17.2bn, down $1.2bn week-on-week) — if it has eroded further heading into the MPC, that's a real vulnerability the market hasn't priced in yet."
   ],
   "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."
 }

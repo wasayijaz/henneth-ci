@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-23 06:22",
+ "updated": "2026-07-23 12:12",
  "regime": "risk-off",
  "geo_risk": {
   "score": 64,
@@ -53,27 +53,27 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260723-POWER-bb_pctb_reclaim",
-   "ticker": "POWER",
-   "strategy": "bb_pctb_reclaim",
-   "template": "Band reclaim from the low",
-   "category": "mean_reversion",
+   "id": "20260723-LUCK-ema50_defended",
+   "ticker": "LUCK",
+   "strategy": "ema50_defended",
+   "template": "50-day EMA defended",
+   "category": "trend",
    "sector": "Cement",
-   "entry": 21.3,
-   "stop": 20.66,
-   "target": 22.58,
+   "entry": 450.0,
+   "stop": 436.5,
+   "target": 477.0,
    "rr": 2.0,
-   "hold_sessions": 12,
-   "risk_per_share": 0.64,
+   "hold_sessions": 15,
+   "risk_per_share": 13.5,
    "backtest": {
-    "hit_rate": 0.571,
-    "net_expectancy_pct": 1.25,
-    "n": 14,
-    "oos_hit": 0.714
+    "hit_rate": 0.625,
+    "net_expectancy_pct": 1.46,
+    "n": 64,
+    "oos_hit": 0.526
    },
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Band reclaim from the low is triggering now; on POWER's own history it won 57% over 14 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "50-day EMA defended is triggering now; on LUCK's own history it won 62% over 64 trades (+1.5% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260723-NICL-roc60_leader_pullback",
@@ -197,93 +197,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-07-21",
-   "source": "KSEStocks (PSX Board Meetings Schedule, aggregating PSX/DPS filing)",
-   "headline": "Pakistan Oxygen Limited (PAKOXY) board meeting - other than financial results and closed period",
-   "tickers": [
-    "PAKOXY"
-   ],
-   "impact": 1,
-   "summary": "PSX board-meetings schedule shows a PAKOXY announcement dated July 21, 2026 at 08:42:51 titled 'Board Meeting Other Than Financial Results And Closed Period'; no results, dividend or agenda detail disclosed in the source reviewed - routine administrative notice.",
-   "url": "https://ksestocks.com/blog/psx-kse-board-meetings-schedule/"
-  },
-  {
-   "ts": "2026-07-20",
-   "source": "Mettis Global",
-   "headline": "PSX Closing Bell: Keeps the Momentum Alive (Monday sector/stock detail)",
-   "tickers": [
-    "MACRO",
-    "CNERGY",
-    "PIOC",
-    "ATRL",
-    "GHNI",
-    "PIBTL",
-    "GHGL",
-    "KTML",
-    "AIRLINK",
-    "GADT",
-    "KOHC"
-   ],
-   "impact": 2,
-   "summary": "Follow-up detail on Monday Jul 20's already-logged close (KSE-100 175,927.73, +124.95 pts / +0.07%): Mettis's own closing-bell print adds volume of 343.88m shares and a 2,492.90-point trading range (high 176,129.35, low 173,636.45), plus stock-level breadth not previously captured - top gainers CNERGY +8.16%, PIOC +5.93%, ATRL +4.10%, GHNI +3.57%, PIBTL +1.88%; top losers GHGL -2.81%, KTML -2.80%, AIRLINK -2.41%, GADT -2.37%, KOHC -2.23%. Attributed to 'value buying in select blue-chip stocks' plus late-session buying in heavyweight banking and refinery names offsetting earlier declines. No new price-moving macro information versus the PSX-official close already logged this cycle.",
-   "url": "https://mettisglobal.news/PSX-Closing-Bell-Keeps-the-Momentum-Alive-61981"
-  },
-  {
-   "ts": "2026-07-21",
-   "source": "Investegate (UBL RNS filing) / KSEStocks (PSX Board Meetings Schedule) / MarketScreener",
-   "headline": "United Bank (UBL) schedules 262nd board meeting for July 22 to approve Q2CY26 results and declare entitlements; Bestway Cement (BWCL) and Habib Sugar Mills (HABSM) also schedule July 22 board meetings",
-   "tickers": [
-    "UBL",
-    "BWCL",
-    "HABSM"
-   ],
-   "impact": 3,
-   "summary": "United Bank Limited's 262nd Board of Directors meeting is scheduled for July 22, 2026, 10:00am in Islamabad 'to consider and approve the Condensed Interim Financial Statements for the second quarter ended June 30, 2026, and to declare any entitlements' per its RNS filing on Investegate; UBL has been in a closed period for share dealing by directors/CEO/executives from July 14 to July 22, 2026 under PSX Clause 5.6.4. Separately, PSX's board-meetings schedule (via KSEStocks) lists Bestway Cement Limited (BWCL) at 15:30 and Habib Sugar Mills Limited (HABSM) at 12:15, both also on July 22, 2026; specific agenda (results vs. other business) for BWCL and HABSM not confirmed beyond the schedule listing itself. No results or dividend figures exist yet for any of the three - this is a forward results-date notice, logged per desk scale (3 = notable, results date) for UBL given its 8.29% index weight; actual figures to be confirmed in a follow-up cycle once the meetings occur.",
-   "url": "https://www.investegate.co.uk/announcement/rns/united-bank-limited--ubls/board-meeting-of-united-bank-limited-bank-/9663538"
-  },
-  {
-   "ts": "2026-07-21",
-   "source": "ProPakistani (citing Topline Securities survey)",
-   "headline": "SBP likely to keep interest rate unchanged at 11.5% at July 27 MPC meeting, survey shows",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Published Jul 21, 2026: a Topline Securities survey found 97% of market participants expect the State Bank of Pakistan's Monetary Policy Committee to hold the policy rate at 11.5% when it meets July 27, 2026 (only 3% expect a 100bps cut), citing heightened geopolitical uncertainty and the recent rebound in international oil prices despite contained inflation; the SBP last reviewed policy on June 15, 2026, also holding at 11.5%. About 49% of respondents expect the rate to remain at 11.5% by December 2026 while 46% foresee further easing; Topline Research itself expects the rate to fall below 11.5% by year-end. This is a market-expectation survey ahead of the decision, not the decision itself - logged as impact 3 (notable/guidance) pending the actual MPC outcome on July 27.",
-   "url": "https://propakistani.pk/2026/07/21/sbp-likely-to-keep-interest-rate-unchanged/"
-  },
-  {
-   "ts": "2026-07-21",
-   "source": "Mettis Global",
-   "headline": "PSX Closing Bell: Bulls Hold the Winning Hand (Tuesday sector/stock detail)",
-   "tickers": [
-    "MACRO",
-    "PAEL",
-    "POWER",
-    "FCCL",
-    "KEL",
-    "GHGL",
-    "CNERGY",
-    "SSGC",
-    "MLCF",
-    "ATRL"
-   ],
-   "impact": 2,
-   "summary": "Follow-up stock-level detail on Tuesday Jul 21's already-logged close (KSE-100 176,133.56, +205.83 pts / +0.12%; published Jul 21, 2026 4:09pm PKT): volume 448.77m shares, value traded Rs35.70bn; top gainers PAEL +3.42%, POWER +3.15%, FCCL +1.79%, KEL +1.65%, GHGL +1.54%; top losers CNERGY -6.13%, SSGC -3.05%, HGFA -2.19%, MLCF -2.08%, ATRL -1.63%. Mettis attributes the session to 'selective buying in heavyweight banking and cement stocks' offsetting selling pressure in oil, fertilizer and refinery shares, plus easing global oil prices on ceasefire-negotiation optimism. No new price-moving macro information versus the PSX-official close already logged.",
-   "url": "https://mettisglobal.news/PSX-Closing-Bell-Bulls-Hold-the-Winning-Hand-62016"
-  },
-  {
-   "ts": "2026-07-22",
-   "source": "ProPakistani / Reuters / Express Tribune / Geo News",
-   "headline": "Pakistan seeks $10 billion US exchange stabilisation facility to bolster forex reserves",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Reported Jul 21-22, 2026 (Reuters exclusive, citing a source): Pakistan has formally requested a $10 billion bilateral exchange stabilization facility from the US Treasury (addressed to US Treasury Secretary Scott Bessent), with a maturity of up to five years, aimed at strengthening forex reserves, supporting the rupee and reducing reliance on multilateral lenders; the request followed Finance Minister Muhammad Aurangzeb's meeting with Bessent in Washington on Tuesday (Jul 21). Pakistan remains under its existing $7 billion IMF programme. Not yet approved/finalised by the US side per sources reviewed - logged as impact 3 (relevant, moderate) pending confirmation of any agreement.",
-   "url": "https://propakistani.pk/2026/07/22/pakistan-requests-10-billion-us-facility-to-support-foreign-exchange-reserves/"
-  },
   {
    "ts": "2026-07-22",
    "source": "Bloomberg / Rigzone / Athens Times / TradingEconomics",
@@ -423,6 +336,82 @@
    "impact": 1,
    "summary": "Rupee closed at Rs277.91/USD Wednesday, appreciating 0.71 paisa from Tuesday's Rs277.92 close; intraday range Rs277.95 (high) to Rs277.90 (low), extending its stability in the interbank market.",
    "url": "https://mettisglobal.news/PKR-closes-firmer-against-USD-62053"
+  },
+  {
+   "ts": "2026-07-23",
+   "source": "Bloomberg / TradingEconomics / CNBC / Prokerala",
+   "headline": "Brent crude tops $96/bbl (+2.5%) after Houthis claim first direct attacks on Saudi oil tankers in the Red Sea",
+   "tickers": [
+    "MACRO",
+    "PSO",
+    "ATRL",
+    "NRL",
+    "PRL",
+    "MARI",
+    "OGDC",
+    "PPL",
+    "HUBC",
+    "SNGP",
+    "SSGC"
+   ],
+   "impact": 4,
+   "summary": "Published Jul 23, 2026 (~10:40 IST / ~10:10 PKT): Brent crude rose 2.5% (+$2.42) to above $96/bbl (TradingEconomics quoted $96.65, +2.75% on the day, +2.66% on the month), building on the prior session's six-week high; WTI rose about 2% (+$1.84) to near $88/bbl. Driver: Iran-backed Houthi militants claimed responsibility for missile-and-drone strikes on two Saudi Arabian oil tankers (named Encelia and Layla) in the Red Sea, alleging the vessels breached a blockade the group had imposed; UK Maritime Trade Operations confirmed a commercial vessel was struck by a projectile off Saudi Arabia's coast, causing an onboard fire - described by analysts as the first direct attacks on oil tankers operating in the Red Sea, a major escalation. Separately, President Trump was quoted stating Iran is 'not ready for deal, but will be soon.' Third consecutive session of sharp oil-price escalation (following the $90.19 read on Jul 20 and $92.71 read on Jul 22, both already logged) - sharp commodity move per desk news-impact criteria (Rule 10), with direct read-through for Pakistan's OMC (PSO), refiners (ATRL, NRL, PRL), E&P names (MARI, OGDC, PPL), gas utilities (SNGP, SSGC) and HUBC, plus renewed inflation/import-bill and current-account pressure; escalation flagged.",
+   "url": "https://tradingeconomics.com/commodity/brent-crude-oil"
+  },
+  {
+   "ts": "2026-07-23",
+   "source": "PSX Official Market Summary (psx.com.pk)",
+   "headline": "KSE-100 intraday: index up 103.36 points by mid-morning, holding steady despite overnight oil spike",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "Per PSX's own market-summary page (psx.com.pk/market-summary/, page captured 2026-07-23 11:45:06 PKT, market status 'Open'): KSE-100 at 174,533.28, up 103.36 points (+0.06%) from Wednesday's confirmed close of 174,429.92; volume 154,508,304 shares across 102,243 trades so far in the session; breadth 241 advancing vs 207 declining vs 116 unchanged of 564 listed. Muted, roughly flat morning session despite the overnight Brent crude spike to above $96/bbl logged separately this cycle - no sector/stock-level narrative located in sources reviewed as of this checkpoint (11:00 PKT); flagged as an intraday read pending the official close.",
+   "url": "https://www.psx.com.pk/market-summary/"
+  },
+  {
+   "ts": "2026-07-23",
+   "source": "Mettis Global (citing PSX/DPS filing)",
+   "headline": "Bestway Cement (BWCL) FY26 profit rises 7% to Rs25.57bn, declares Rs10/share cash dividend",
+   "tickers": [
+    "BWCL"
+   ],
+   "impact": 4,
+   "summary": "Published Jul 23, 2026 11:10am PKT: BWCL FY2026 (year ended June 30, 2026) net profit Rs25.57bn, up 7% YoY from Rs23.86bn; EPS Rs42.88 (vs Rs40.02 prior year); net turnover Rs108.28bn, up 0.5% YoY (essentially flat); gross profit Rs32.46bn, down 12.9% YoY as cost of sales grew 8% against near-flat revenue, compressing margins. Profit growth was 'propelled by the surging associate profits and lower financial charges' rather than core operations. Board declared a cash dividend of Rs10.00 per share; no book-closure date disclosed in the source reviewed. Logged as impact 4 (material earnings result + dividend declaration for a core-tier KSE100/KMI30 constituent) per desk news-impact scale; exact book-closure/ex-date to be confirmed in a follow-up cycle.",
+   "url": "https://mettisglobal.news/BWCL-FY26-profit-grows-7-declares-Rs10-dividend-62074"
+  },
+  {
+   "ts": "2026-07-23",
+   "source": "Mettis Global (citing PSX/DPS filing)",
+   "headline": "Bestway Cement (BWCL) to seek shareholder approval for Rs6bn capital injection into new auto subsidiary Bestway Automotive",
+   "tickers": [
+    "BWCL"
+   ],
+   "impact": 3,
+   "summary": "Published Jul 23, 2026 11:01am PKT: Bestway Automotive (Private) Limited (BAL), a BWCL subsidiary, decided on July 22, 2026 to increase its paid-up capital via a rights issue of 599,990,000 shares, representing a Rs6bn capital injection; BWCL's board unanimously approved placing the matter before shareholders, citing 'BAL's projected enhanced capital requirements and other available opportunities' without further detail on intended use. Shareholder vote to accept/reject the rights offer is scheduled at BWCL's Annual General Meeting on August 31, 2026. Logged as impact 3 (notable capital-allocation decision) pending the AGM outcome and further disclosure on BAL's business purpose.",
+   "url": "https://mettisglobal.news/BWCL-to-decide-on-Rs6bn-capital-injection-into-auto-subsidiary-62073"
+  },
+  {
+   "ts": "2026-07-23",
+   "source": "Mettis Global (citing PSX/DPS filing) / GlobeNewswire (Nestle S.A. / Platinum Equity)",
+   "headline": "Nestle Pakistan to be included in Nestle S.A.'s global Peranel water/premium-beverages joint venture with Platinum Equity",
+   "tickers": [
+    "NESTLE"
+   ],
+   "impact": 3,
+   "summary": "Published Jul 23, 2026 11:17am PKT, corroborated by a same-day GlobeNewswire release: Nestle S.A. (Nestle Pakistan's majority shareholder) and Platinum Equity announced a proposed 50/50 global joint venture, Peranel, combining Nestle's waters and premium-beverages business (30+ brands incl. S.Pellegrino, Perrier, Nestle Pure Life, across 120 countries, led by CEO designate Muriel Lienau from Paris) - separately reported elsewhere as a transaction valuing Peranel at $5.6bn. Nestle's water operations in Pakistan are included in the global business covered by the proposed transaction; the deal is expected to close in H1 2027, subject to regulatory approvals and finalisation of corporate procedures. At this stage, Nestle Pakistan Limited (PSX: NESTLE) 'intends only to incorporate a local entity,' with the company stating further disclosures will follow if material developments occur - no financial terms specific to the Pakistan business, no NESTLE-level stake or valuation figure disclosed in the sources reviewed. Logged as impact 3 (notable corporate development, effect on NESTLE's own financials not yet quantified) pending further disclosure.",
+   "url": "https://mettisglobal.news/Nestle-Pakistan-to-be-part-of-global-Peranel-joint-venture-62075"
+  },
+  {
+   "ts": "2026-07-23",
+   "source": "Mettis Global (citing Gallup Pakistan Business Confidence Index)",
+   "headline": "Pakistan business confidence recovers, future outlook turns positive - Gallup survey",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Published Jul 23, 2026 11:26am PKT: Gallup Pakistan's Business Confidence Index, surveying 527 businesses across 40 districts/cities in all four provinces plus AJK and Malakand (survey period July 2-7, 2026) across manufacturing, services, construction, financial services and wholesale/retail trade, found current-business-conditions score improved to -10% (from -19% in Q1 2026) and future-business-conditions score rose to +12%; the direction-of-country score improved to -20%. Gallup executive director Bilal I. Gilani quoted: 'There is no doubt there is recovery in business confidence in the country; however, indicators remain in the negative despite this recovery.' 72% of businesses reported power outages and 34% cited inflation as their primary concern requiring government intervention. Background macro sentiment survey, no PSX-ticker-level figures disclosed - logged as impact 2 (minor/background) consistent with prior confidence-survey items in this newslog.",
+   "url": "https://mettisglobal.news/Business-confidence-recovers-in-Pakistan-future-outlook-turns-positive-62076"
   }
  ],
  "agent_wire": [],
