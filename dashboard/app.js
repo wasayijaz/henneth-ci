@@ -5792,7 +5792,7 @@ const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY, {
    Widget: Cloudflare → Turnstile → "Henneth Desk", Managed mode, hostnames desk.henneth.app +
    localhost. If the widget stops rendering, check the hostname list first — Turnstile silently
    refuses to render on a domain that is not on it. */
-const CAPTCHA_SITE_KEY = "0x4AAAAAAD6UK0K_7bHULZry";
+const CAPTCHA_SITE_KEY = "";  // DISABLED 2026-07-23: Turnstile was blocking real signups (mobile + privacy blockers could not produce a token; see PostHog auth funnel). MUST stay blank UNLESS Supabase Auth → Attack Protection → Captcha is also re-enabled first, or every auth call fails "captcha required". Old site key: 0x4AAAAAAD6UK0K_7bHULZry
 
 let _tsLoading = null;
 let _tsWidget = null;
