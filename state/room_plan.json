@@ -1,36 +1,67 @@
 {
  "reaffirm": [
   "FFC",
-  "HUBC",
-  "OGDC",
   "HBL",
-  "MARI",
-  "PPL",
   "SYS",
   "EFERT",
   "POL",
-  "PSO",
   "BAFL",
   "FABL",
   "MTL",
   "MLCF",
   "PTC",
-  "ATRL",
-  "SNGP",
   "PAEL",
   "KEL",
   "CNERGY",
   "LOTCHEM",
   "PIOC",
-  "SSGC",
   "FFL",
   "HCAR",
-  "PRL",
   "TBL",
   "JSML"
  ],
  "delta": [],
  "full": [
+  {
+   "symbol": "OGDC",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "PPL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "HUBC",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "MARI",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "PSO",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "ATRL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "SNGP",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "SSGC",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "PRL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "NRL",
+   "why": "material change since last Room"
+  },
   {
    "symbol": "LUCK",
    "why": "material change since last Room"
@@ -64,11 +95,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "AKBL",
+   "symbol": "FCCL",
    "why": "never covered"
   },
   {
-   "symbol": "FCCL",
+   "symbol": "AKBL",
    "why": "never covered"
   },
   {
@@ -172,11 +203,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "NCPL",
+   "symbol": "GCIL",
    "why": "never covered"
   },
   {
-   "symbol": "GCIL",
+   "symbol": "NCPL",
    "why": "never covered"
   },
   {
@@ -298,32 +329,38 @@
   {
    "symbol": "GAL",
    "why": "material change since last Room"
-  },
-  {
-   "symbol": "NRL",
-   "why": "material change since last Room"
   }
  ],
  "_meta": {
-  "built": "2026-07-23 11:44",
+  "built": "2026-07-23 09:27",
   "full_budget": 14,
   "run_full_now": [
+   "OGDC",
+   "PPL",
+   "HUBC",
+   "MARI",
+   "PSO",
+   "ATRL",
+   "SNGP",
+   "SSGC",
+   "PRL",
+   "NRL",
    "LUCK",
    "ENGROH",
    "SAZEW",
-   "MEBL",
+   "MEBL"
+  ],
+  "deferred_full": [
    "UBL",
    "FATIMA",
    "SRVI",
    "BOP",
-   "AKBL",
    "FCCL",
+   "AKBL",
    "CHCC",
    "ILP",
    "JVDC",
-   "SEARL"
-  ],
-  "deferred_full": [
+   "SEARL",
    "GLAXO",
    "NATF",
    "NML",
@@ -345,8 +382,8 @@
    "EPCL",
    "MUGHAL",
    "SGF",
-   "NCPL",
    "GCIL",
+   "NCPL",
    "FCL",
    "NETSOL",
    "UNITY",
@@ -376,14 +413,13 @@
    "PSX",
    "BAHL",
    "GHNI",
-   "GAL",
-   "NRL"
+   "GAL"
   ],
   "counts": {
-   "full_due": 68,
+   "full_due": 77,
    "full_now": 14,
    "delta": 0,
-   "reaffirm": 28
+   "reaffirm": 19
   },
   "est_tokens_today": 308000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
