@@ -1,19 +1,16 @@
 {
  "reaffirm": [
   "FFC",
-  "HBL",
   "SYS",
   "EFERT",
   "POL",
   "BAFL",
   "FABL",
   "MTL",
-  "MLCF",
   "PTC",
   "PAEL",
   "KEL",
   "CNERGY",
-  "LOTCHEM",
   "FFL",
   "HCAR",
   "TBL",
@@ -67,6 +64,26 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "MLCF",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "UBL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "AKBL",
+   "why": "never covered"
+  },
+  {
+   "symbol": "EPCL",
+   "why": "never covered"
+  },
+  {
+   "symbol": "CSAP",
+   "why": "never covered"
+  },
+  {
    "symbol": "LUCK",
    "why": "material change since last Room"
   },
@@ -83,7 +100,7 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "UBL",
+   "symbol": "HBL",
    "why": "material change since last Room"
   },
   {
@@ -96,10 +113,6 @@
   },
   {
    "symbol": "BOP",
-   "why": "never covered"
-  },
-  {
-   "symbol": "AKBL",
    "why": "never covered"
   },
   {
@@ -195,10 +208,6 @@
    "why": "never covered"
   },
   {
-   "symbol": "EPCL",
-   "why": "never covered"
-  },
-  {
    "symbol": "MUGHAL",
    "why": "never covered"
   },
@@ -219,19 +228,15 @@
    "why": "never covered"
   },
   {
-   "symbol": "NETSOL",
-   "why": "never covered"
-  },
-  {
    "symbol": "UNITY",
    "why": "never covered"
   },
   {
-   "symbol": "ZAL",
+   "symbol": "NETSOL",
    "why": "never covered"
   },
   {
-   "symbol": "CSAP",
+   "symbol": "ZAL",
    "why": "never covered"
   },
   {
@@ -336,7 +341,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-23 13:21",
+  "built": "2026-07-24 06:16",
   "full_budget": 14,
   "run_full_now": [
    "OGDC",
@@ -349,17 +354,21 @@
    "SSGC",
    "PRL",
    "NRL",
+   "MLCF",
+   "UBL",
+   "AKBL",
+   "EPCL"
+  ],
+  "deferred_full": [
+   "CSAP",
    "LUCK",
    "ENGROH",
    "SAZEW",
-   "MEBL"
-  ],
-  "deferred_full": [
-   "UBL",
+   "MEBL",
+   "HBL",
    "SRVI",
    "FATIMA",
    "BOP",
-   "AKBL",
    "FCCL",
    "CHCC",
    "ILP",
@@ -383,16 +392,14 @@
    "FCEPL",
    "IGIHL",
    "THCCL",
-   "EPCL",
    "MUGHAL",
    "SGF",
    "GCIL",
    "NCPL",
    "FCL",
-   "NETSOL",
    "UNITY",
+   "NETSOL",
    "ZAL",
-   "CSAP",
    "TOMCL",
    "TPLP",
    "AGHA",
@@ -420,10 +427,10 @@
    "GAL"
   ],
   "counts": {
-   "full_due": 77,
+   "full_due": 79,
    "full_now": 14,
    "delta": 1,
-   "reaffirm": 18
+   "reaffirm": 15
   },
   "est_tokens_today": 313000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
