@@ -114,14 +114,15 @@ def main():
     # app loops both push to main, so a push can be rejected (non-fast-forward) if the
     # other side pushed since our last pull. On rejection, rebase onto the latest origin.
     #
-    # Auto-resolving a conflict is only safe for files under state/ — that's regenerated
-    # deterministic data, so preferring our freshly-built version and letting the other
-    # side's copy regenerate next cycle loses nothing. It is NOT safe for hand-authored
-    # files (dashboard/*, scripts/*, docs/*, CLAUDE.md, ...) — this repo has no CI/PR
-    # review, so silently picking a side there could permanently discard someone's actual
-    # code edit with zero visibility. So: try a plain rebase; if it conflicts, auto-resolve
-    # ONLY if every conflicted file is under state/; otherwise abort and fail loudly so a
-    # human resolves it, instead of guessing.
+    # Auto-resolving a conflict is only safe for regenerated deterministic data — files under
+    # state/ AND the GENERATED artefacts outside it (site/src/data/public/, moon_ephem.bin). For
+    # those, preferring our freshly-built version and letting the other side's copy regenerate next
+    # cycle loses nothing. It is NOT safe for hand-authored files (dashboard/*, scripts/*, docs/*,
+    # CLAUDE.md, ...) — this repo has no CI/PR review, so silently picking a side there could
+    # permanently discard someone's actual code edit with zero visibility. So: try a plain rebase;
+    # if it conflicts, auto-resolve ONLY if every conflicted file passes _is_auto() (the same
+    # deterministic-data test used to stage them above); otherwise abort and fail loudly so a human
+    # resolves it, instead of guessing.
     def _push():
         r = _run(["git", "push", "origin", "main"])
         return r.returncode == 0, (r.stderr or r.stdout or "").strip()
@@ -133,20 +134,20 @@ def main():
             rb = _run(["git", "rebase", "origin/main"])
             if rb.returncode != 0:
                 conflicted = _run(["git", "diff", "--name-only", "--diff-filter=U"]).stdout.split()
-                non_state = [f for f in conflicted if not f.replace("\\", "/").startswith("state/")]
-                if non_state or not conflicted:
+                hand_authored = [f for f in conflicted if not _is_auto(f)]
+                if hand_authored or not conflicted:
                     _run(["git", "rebase", "--abort"])
-                    print(f"publish: rebase conflict on hand-authored file(s) {non_state or conflicted} — "
+                    print(f"publish: rebase conflict on hand-authored file(s) {hand_authored or conflicted} — "
                           f"refusing to auto-resolve (could silently discard a real code edit). "
                           f"Manual merge needed: git pull --rebase origin main, resolve by hand, re-run.")
                     sys.exit(1)
-                # every conflict is confined to regeneratable state/ data — safe to keep our fresh build
+                # every conflict is regeneratable deterministic data (state/ or GENERATED) — safe to keep our fresh build
                 _run(["git", "checkout", "--theirs", "--"] + conflicted)  # "theirs" in a rebase = our replayed commit
                 _run(["git", "add"] + conflicted)
                 cont = _run(["git", "rebase", "--continue"])
                 if cont.returncode != 0:
                     _run(["git", "rebase", "--abort"])
-                    print(f"publish: rebase --continue failed after state-only auto-resolve: {(cont.stderr or cont.stdout)[:300]}")
+                    print(f"publish: rebase --continue failed after data-only auto-resolve: {(cont.stderr or cont.stdout)[:300]}")
                     sys.exit(1)
             ok, last_err = _push()
             if ok:
