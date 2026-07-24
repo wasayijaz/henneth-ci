@@ -5388,9 +5388,39 @@ function renderGate(page) {
   document.getElementById("gateLogin").onclick = () => openAuth("signin");
 }
 
+// Supabase email links (confirm / recovery) can bounce back an ERROR in the URL hash when the link
+// is expired or already used, e.g. #error=access_denied&error_code=otp_expired&error_description=...
+// detectSessionInUrl consumes SUCCESS tokens but leaves an error hash sitting in the URL — and
+// route() bails on any error_code= hash, so without this the visitor is stranded on a permanently
+// blank page with no explanation (the top signup-failure symptom in production). Parse the error,
+// tell them plainly, offer a fresh link, then CLEAR the hash so routing resumes instead of looping.
+function consumeAuthErrorHash() {
+  const h = location.hash || "";
+  if (!/error=|error_code=|error_description=/.test(h)) return false;
+  const p = new URLSearchParams(h.replace(/^#\/?/, ""));
+  const code = (p.get("error_code") || p.get("error") || "").toLowerCase();
+  const desc = (p.get("error_description") || "").replace(/\+/g, " ");
+  // Clear the hash FIRST so a reload or a re-entrant route() cannot loop on it.
+  try { history.replaceState(null, "", location.pathname + location.search); }
+  catch { try { location.hash = ""; } catch {} }
+  try { track("auth_link_error", { code: code.slice(0, 40) }); } catch {}
+  const expired = /otp_expired|expired|invalid/.test(code + " " + desc);
+  // Expired link is almost always a confirmation link. Land the visitor on the SIGN-UP tab:
+  // re-submitting the same email for an unconfirmed account makes Supabase resend the confirmation
+  // (an already-confirmed email returns "already registered", which friendlyAuthError routes to
+  // sign in). That's a recovery path the form actually performs, not an empty promise.
+  const tab = expired ? "signup" : "signin";
+  const msg = expired
+    ? "That email link has expired or was already used. Re-enter your email below and we'll send a fresh confirmation link."
+    : (desc || "That sign-in link didn't work. Enter your email below and try again.");
+  try { openAuth(tab); authMsg(msg, true); } catch {}
+  return true;
+}
+
 async function route(isPoll) {
   // Supabase auth callbacks (email confirm / password reset) arrive in the hash —
-  // they're not routes; auth.js consumes them and then navigates.
+  // they're not routes; the client's detectSessionInUrl consumes SUCCESS tokens and fires
+  // onAuthStateChange. Error hashes are handled up-front by consumeAuthErrorHash() in initAuth.
   if (/access_token=|error_code=|type=recovery|type=signup/.test(location.hash)) return;
   // Auth still resolving — render nothing rather than render the wrong thing and swap it out.
   // initAuth() (or the 3s backstop) calls route() again the moment the session is known.
@@ -6127,6 +6157,12 @@ function friendlyAuthError(err) {
   if (s.includes("email not confirmed")) return "This account isn't activated yet — click the confirmation link we emailed you, then sign in.";
   if (s.includes("user already registered") || s.includes("already been registered")) return "There's already an account with this email. Switch to “Sign in”, or reset the password if you've forgotten it.";
   if (s.includes("password should be at least")) return "Passwords need at least 10 characters. A short phrase works well.";
+  /* Email-send quota (Supabase over_email_send_rate_limit). This is the SERVER's cap on how many
+     confirmation emails it will send per hour — NOT the user retrying too fast — so "wait a minute"
+     is wrong and blames them for our limit. Say what's true: it's on us, their details are fine. */
+  if (s.includes("email rate limit") || s.includes("over_email_send") || s.includes("email send rate")) {
+    return "We're sending confirmation emails faster than our mail service allows right now. Your details are fine — please try again in a few minutes, and if it keeps happening, email hello@henneth.app.";
+  }
   if (s.includes("rate limit") || s.includes("too many")) return "Too many attempts just now. Wait a minute and try again.";
   /* Captcha failures. The second case is the one that matters in the wild: a privacy extension or
      a blocked challenges.cloudflare.com means the token never exists, and without naming that the
@@ -6667,6 +6703,10 @@ async function initAuth() {
     console.error("auth init failed — falling back to the sign-in gate:", err);
   } finally {
     authResolved();
+    // Surface & clear any expired/invalid email-link error hash BEFORE routing — otherwise route()
+    // sees error_code= in the hash, bails, and leaves a permanently blank page (top signup-failure
+    // symptom). This shows the message and clears the hash so the paint below succeeds.
+    try { consumeAuthErrorHash(); } catch (e) { console.error("auth error-hash handling failed:", e); }
     route(false);              // <- the first paint of the session, with auth actually known
   }
   if (me && myProfile && !myProfile.onboarded) startWizard(false);
