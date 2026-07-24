@@ -30,9 +30,11 @@ Your `ta_memo`:
   "liquidity_note": "one line on avg_daily_traded_value_m — can a position be entered/exited cleanly?",
   "proven_now": ["strategy names from proven_strategies that are relevant to the current setup"],
   "levels": {"support": <number or null>, "resistance": <number or null>},
-  "technical_stance": "constructive | neutral | cautious",
-  "claim": {"kind":"direction","direction":"up|down","horizon_days":20,"text":"one dated falsifiable technical call, or null if you have no conviction"}
+  "technical_stance": "constructive | neutral | cautious"
 }
 ```
-Rules: no advice words ("buy/sell/should"). The `claim` (if any) will be scored later against real
-prices — only make one you'd stand behind. Keep the whole memo under ~180 words.
+Rules: no advice words ("buy/sell/should"). Do **not** emit a directional call, a price/level target,
+a stop, or any dated falsifiable prediction on this named ticker — under SECP Reg 2(ha)
+(S.R.O.7(I)/2026) a published TA signal on a named security is a licensed research service the desk
+cannot offer (see `docs/PUBLICATION_RESTRUCTURE_V2.md` §3). Your memo is general commentary (Reg 2(h)):
+describe the structure, do not direct. Keep the whole memo under ~180 words.

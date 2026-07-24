@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Faq from './Faq.astro';
 import { site } from '../site.config.ts';
+import type { Anchors } from '../scripts/calculators.ts';
 
 /* =============================================================================================
    The shell every public calculator sits in.
@@ -24,6 +25,10 @@ export interface Field {
   step?: number;
   prefix?: string;
   suffix?: string;
+  /** When present the field renders as a <select> instead of a number input. `value` is the
+      initially-selected option value; the calculator reads it the same way (Number(el.value)),
+      so options carry numeric values (typically an index into anchors.strategies). */
+  options?: { label: string; value: number }[];
 }
 export interface Faq {
   q: string;
@@ -42,9 +47,13 @@ interface Props {
   /** ISO date the page's figures/method were last checked. Shown, and used in schema. */
   updated: string;
   related?: { href: string; label: string }[];
+  /** Real Pakistani figures / the strategy library, injected as window.__hAnchors BEFORE the
+      client module runs so the calculator never invents a number (CLAUDE.md Rule 2). Omit for a
+      pure-input tool. */
+  anchors?: Anchors;
 }
 
-const { title, h1, description, path, lead, calc, fields, faqs = [], updated, related = [] } =
+const { title, h1, description, path, lead, calc, fields, faqs = [], updated, related = [], anchors } =
   Astro.props;
 
 const url = new URL(path, site.url).href;
@@ -90,6 +99,11 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
+    {
+      anchors && (
+        <script is:inline set:html={`window.__hAnchors=${JSON.stringify(anchors)}`} />
+      )
+    }
   </Fragment>
 
   <section class="section-tight">
@@ -113,14 +127,24 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
                 <span class="cflabel">{f.label}</span>
                 <span class="cfin">
                   {f.prefix && <i class="cfaffix">{f.prefix}</i>}
-                  <input
-                    type="number"
-                    inputmode="decimal"
-                    data-field={f.field}
-                    value={f.value}
-                    step={f.step ?? 1}
-                    min="0"
-                  />
+                  {f.options ? (
+                    <select data-field={f.field}>
+                      {f.options.map((o) => (
+                        <option value={o.value} selected={o.value === f.value}>
+                          {o.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="number"
+                      inputmode="decimal"
+                      data-field={f.field}
+                      value={f.value}
+                      step={f.step ?? 1}
+                      min="0"
+                    />
+                  )}
                   {f.suffix && <i class="cfaffix">{f.suffix}</i>}
                 </span>
               </label>
@@ -202,6 +226,11 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-PK', {
   .cfaffix { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); padding: 0 10px; font-style: normal; }
   .cfin input { font-family: var(--font-mono); font-size: 13px; font-weight: 600; padding: 11px 10px; border: 0; background: none; width: 100%; color: var(--ink-1); }
   .cfin input:focus { outline: none; }
+  /* Strategy picker on /tools/strategy-level-calculator/. Mirrors .cfin input so the dropdown reads
+     as the same control; appearance:none drops the native chrome that would otherwise clash with the
+     desk's flat, hard-cornered fields. */
+  .cfin select { font-family: var(--font-mono); font-size: 13px; font-weight: 600; padding: 11px 10px; border: 0; background: none; width: 100%; color: var(--ink-1); appearance: none; -webkit-appearance: none; cursor: pointer; }
+  .cfin select:focus { outline: none; }
 
   /* Result tiles. Class names match the desk's (sumstrip/sumtile/tnote) so the two implementations
      stay visually recognisable as the same tool. */

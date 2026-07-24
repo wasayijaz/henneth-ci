@@ -88,16 +88,19 @@ def main():
             if shares <= 0:
                 continue  # stop too wide for the risk budget at this price — invalid setup
             score = p["net_expectancy_pct"] * (p["hit_rate"] or 0)
+            # PUBLICATION_RESTRUCTURE_V2 §4a — the published record carries NO named-security level:
+            # no entry, stop, target, rr or risk_per_share. Under SECP Reg 2(ha) (S.R.O.7(I)/2026) a
+            # price target or stop-loss on a named security IS a "research service"; without the Reg 3
+            # licence the product must stay inside the 2(h) general-commentary exemption — describe,
+            # never direct. The reader derives their own levels from the strategy's published %s at
+            # /tools/strategy-level-calculator/. stop/target/risk_per_share above are still computed
+            # because `shares <= 0` (Rule 4 validity guard) rejects setups whose stop is too wide;
+            # they are computed and thrown away, exactly like the sizing fields.
             candidates.append({
                 "id": f"{time.strftime('%Y%m%d')}-{sym}-{p['id']}",
                 "ticker": sym, "strategy": p["id"], "template": p["name"],
                 "category": p["category"], "sector": sectors.get(sym, {}).get("sector", ""),
-                "entry": round(px, 2), "stop": stop, "target": target,
-                "rr": round((target - px) / risk_per_share, 2) if risk_per_share else None,
                 "hold_sessions": p["hold"],
-                # risk_per_share is a LEVEL (entry minus stop), not a size — it is what the
-                # reader's own calculator needs, and it carries no capital figure of ours.
-                "risk_per_share": round(risk_per_share, 2),
                 "backtest": {"hit_rate": p["hit_rate"], "net_expectancy_pct": p["net_expectancy_pct"],
                              "n": p["n"], "oos_hit": p.get("oos_hit")},
                 "confidence": "high" if score > 1.5 else "medium" if score > 0.7 else "low",
@@ -135,7 +138,7 @@ def main():
     })
     print(f"signals: {len(active)} active from {len(candidates)} triggering candidates")
     for s in active:
-        print(f"  {s['ticker']:6} {s['template']:24} entry {s['entry']} stop {s['stop']} tgt {s['target']} ({s['confidence']})")
+        print(f"  {s['ticker']:6} {s['template']:24} {s['category']:12} ({s['confidence']})")
 
 
 if __name__ == "__main__":

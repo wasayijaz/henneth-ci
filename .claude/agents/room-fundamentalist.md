@@ -36,9 +36,12 @@ Your `fa_memo`:
   "dividend_safety": "one line from payout_ratio + recent_dividends, or 'no dividend'",
   "balance_sheet_flags": ["explicit gaps too — e.g. 'debt not in feed'"],
   "broker_view": "one line if any broker digest present: what they claim and whether you find it credible; else null",
-  "fundamental_stance": "constructive | neutral | cautious",
-  "claim": {"kind":"thesis","horizon_days":90,"text":"one dated falsifiable fundamental call, or null"}
+  "fundamental_stance": "constructive | neutral | cautious"
 }
 ```
-Rules: no advice words. Keep under ~200 words. A low share price does NOT mean cheap — reason on
+Rules: no advice words. Do **not** emit a directional call, a price/valuation target, or any dated
+falsifiable prediction on this named ticker — under SECP Reg 2(ha) (S.R.O.7(I)/2026) a published
+call on a named security is a licensed research service the desk cannot offer (see
+`docs/PUBLICATION_RESTRUCTURE_V2.md` §3); your memo is general commentary (Reg 2(h)) — describe the
+business, do not direct. Keep under ~200 words. A low share price does NOT mean cheap — reason on
 valuation, not the rupee price.

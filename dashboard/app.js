@@ -414,16 +414,26 @@ async function pageBoard() {
   const sigs = dash?.signals || [];
   const sigBadge = s => s.audit === "PASS" ? '<span class="tag badge-ok up">audited ✓</span>'
     : '<span class="tag" title="Triggering now, proven on this stock\'s own history. Backtest-proven, not auditor-verified. Research, not advice.">backtest-proven</span>';
-  const sigHtml = sigs.length ? sigs.map(s => `
+  // PUBLICATION_RESTRUCTURE_V2 §4a/§4b — the card shows only what a research publication may:
+  // strategy, its backtest track record, the reworded thesis, and a route into the reader's own
+  // level tool. No entry/stop/target/risk-per-share on a named security (SECP Reg 2(ha)); the
+  // reader derives their own at /tools/strategy-level-calculator/ (Reg 2(h) general commentary).
+  const sigHtml = sigs.length ? sigs.map(s => {
+    const bt = s.backtest || {};
+    const hit = bt.hit_rate != null ? Math.round(bt.hit_rate * 100) + "%" : "—";
+    const nx = bt.net_expectancy_pct;
+    return `
     <div class="card clickable" onclick="location.hash='#/ticker/${esc(s.ticker)}'">
       <div class="tk-head"><span class="sym">${esc(s.ticker)}</span><span class="tag">${esc(s.template || "")}</span>
       ${sigBadge(s)}${s.confidence ? `<span class="pill ${s.confidence === "high" ? "ok" : ""}">${esc(s.confidence)}</span>` : ""}</div>
       <div class="statgrid num">
-        <div class="stat"><span>entry</span><b>${s.entry}</b></div>
-        <div class="stat"><span>stop</span><b class="dn">${s.stop}</b></div>
-        <div class="stat"><span>target</span><b class="up">${s.target}</b></div>
-        <div class="stat"><span>risk/share</span><b>${s.risk_per_share ?? "—"}</b></div>
-      </div><div class="sub" style="margin-top:8px">${esc(s.thesis || "")}</div></div>`).join("")
+        <div class="stat"><span>hit rate</span><b>${hit}</b></div>
+        <div class="stat"><span>sample</span><b>${bt.n != null ? "n" + bt.n : "—"}</b></div>
+        <div class="stat"><span>net/trade</span><b class="${nx > 0 ? "up" : nx < 0 ? "dn" : ""}">${nx != null ? (nx > 0 ? "+" : "") + nx + "%" : "—"}</b></div>
+        <div class="stat"><span>hold</span><b>${s.hold_sessions != null ? s.hold_sessions + "d" : "—"}</b></div>
+      </div><div class="sub" style="margin-top:8px">${esc(s.thesis || "")}</div>
+      <a class="tool-cta" href="/tools/strategy-level-calculator/" onclick="event.stopPropagation()">Work out your own levels →</a></div>`;
+  }).join("")
     : `<div class="card"><div class="empty">No setups triggering right now — the desk only flags a stock when a strategy proven on its own history fires. Patience is the edge.</div></div>`;
 
   const tg = trig?.triggers || [];
@@ -2189,8 +2199,6 @@ function renderTranscript(room, sym) {
   const NOTE = (label, t) => t ? `<div class="tr-note"><span>${label}</span>${esc(t)}</div>` : "";
   const facts = arr => { const f = arr.filter(x => x[1] != null && x[1] !== "" && x[1] !== "—");
     return f.length ? `<div class="tr-facts">${f.map(([k, v]) => `<span><i>${k}</i> <b>${esc(String(v).replace(/_/g, " "))}</b></span>`).join("")}</div>` : ""; };
-  const claimOf = m => m?.claim && (m.claim.text || m.claim.direction)
-    ? `<div class="tr-claim"><span>On the record</span>${esc(m.claim.text || `${sym} ${m.claim.direction}${m.claim.horizon_days ? ` within ${m.claim.horizon_days} sessions` : ""}`)}${m.claim.hist_hit_rate ? ` <i>(this pattern has worked ${esc(m.claim.hist_hit_rate)} of the time historically)</i>` : ""}</div>` : "";
   const turn = (av, name, role, stance, body) => `<div class="tr-turn">
     <div class="tr-rail"><span class="tr-av">${av}</span></div>
     <div class="tr-body"><div class="tr-head"><b>${name}</b><span class="tr-role">${role}</span>${stance ? `<span class="stance ${stanceClass(stance)}">${esc(stance)}</span>` : ""}</div>${body}</div>
@@ -2204,28 +2212,27 @@ function renderTranscript(room, sym) {
       ${turn("MC", "Meher", "The Chartist · technical desk · spoke first", ta.technical_stance,
         P(ta.read) + facts([["structure", ta.structure], ["momentum", ta.momentum], ["support", ta.levels?.support != null ? fmt(ta.levels.support) : null], ["resistance", ta.levels?.resistance != null ? fmt(ta.levels.resistance) : null]])
         + NOTE("On liquidity", ta.liquidity_note)
-        + ((ta.proven_now || []).length ? `<div class="tr-note"><span>Proven patterns firing on this bar</span>${ta.proven_now.map(esc).join(" · ")}</div>` : "")
-        + claimOf(ta))}
+        + ((ta.proven_now || []).length ? `<div class="tr-note"><span>Proven patterns firing on this bar</span>${ta.proven_now.map(esc).join(" · ")}</div>` : ""))}
 
       ${turn("DO", "Dr. Omar", "The Fundamentalist · fundamental desk · spoke second", fa.fundamental_stance,
         P(fa.read) + facts([["valuation", fa.valuation_stance]])
         + NOTE("Earnings quality", fa.earnings_quality) + NOTE("Dividend safety", fa.dividend_safety)
         + NOTE("Balance-sheet flags", Array.isArray(fa.balance_sheet_flags) ? fa.balance_sheet_flags.join(" · ") : fa.balance_sheet_flags)
-        + NOTE("On the brokers", fa.broker_view) + claimOf(fa))}
+        + NOTE("On the brokers", fa.broker_view))}
 
       ${turn("ZB", "Zoya", "The Bull · argued the case FOR", "constructive",
         P(bull.thesis) + UL(bull.pillars) + NOTE("Her strongest evidence", bull.best_evidence)
-        + NOTE("What would break her case", bull.what_would_break_it) + claimOf(bull))}
+        + NOTE("What would break her case", bull.what_would_break_it))}
 
       ${turn("KB", "Khurram", "The Bear · argued the case AGAINST", "cautious",
         P(bear.thesis) + UL(bear.pillars) + NOTE("His attack on the bull", bear.attack_on_bull)
         + NOTE("His strongest evidence", bear.best_evidence)
-        + NOTE("What would break his case", bear.what_would_break_it) + claimOf(bear))}
+        + NOTE("What would break his case", bear.what_would_break_it))}
 
       ${room.qa ? turn("QA", "The Verifier", "QA · fact-checked the session against the data and live sources", "",
         `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : "dn"}">${esc(room.qa.verdict)}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(room.qa.note)) : ""}
 
-      <div class="tr-close">↑ The Chair then weighed all of it into the <b>house view above</b> — with the dissent kept in, not smoothed away.</div>
+      <div class="tr-close">↑ That is where the session ends — the desk publishes the debate, not a verdict. No house view, no call, no target on ${esc(sym)}.</div>
     </div>
   </details>`;
 }
@@ -2233,39 +2240,15 @@ function renderTranscript(room, sym) {
 /* The Desk Room — named AI-analyst personas debate a ticker (from state/rooms.json). */
 function renderRoom(room, sym) {
   const head = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>`;
-  if (!room || !room.house_view) {
-    return `${head}<div class="card"><div class="empty">No Room session for ${esc(sym)} yet. The desk's AI analysts — a technical desk, a fundamental desk, a bull, a bear and a chair — cover names in rotation (results, high-impact news and signals jump the queue). ${esc(sym)} is in the queue.</div></div>`;
+  // The session is terminal at the bull/bear debate now (no Chair verdict) — bull_case is present
+  // in every real session, so it, not the removed house_view, is what marks a room as covered.
+  if (!room || !room.bull_case) {
+    return `${head}<div class="card"><div class="empty">No Room session for ${esc(sym)} yet. The desk's AI analysts — a technical desk, a fundamental desk, a bull and a bear — cover names in rotation (results, high-impact news and signals jump the queue). ${esc(sym)} is in the queue.</div></div>`;
   }
-  const hv = room.house_view, ta = room.ta_memo || {}, fa = room.fa_memo || {}, bull = room.bull_case || {}, bear = room.bear_case || {};
-  const convIdx = { low: 1, medium: 2, high: 3 }[hv.conviction] || 1;
-  const convMeter = [1, 2, 3].map(i => `<span class="cvseg ${i <= convIdx ? "on" : ""}"></span>`).join("");
-  const persona = (init, name, role) => `<div class="phead"><span class="pav">${init}</span><div><b>${name}</b><span class="prole">${role}</span></div></div>`;
-  const memo = (init, name, role, stanceLabel, stance, body) =>
-    `<div class="card room-memo"><div class="memo-top">${persona(init, name, role)}${stance ? `<span class="stance ${stance}">${esc(stanceLabel)}</span>` : ""}</div>${body}</div>`;
-  const li = arr => (arr || []).map(x => `<li>${esc(x)}</li>`).join("");
-  const stanceClass = s => ({ constructive: "up", cautious: "dn", neutral: "", unclear: "", near_fair: "" }[s] || "");
-
-  const calls = (room.claims_ledger || []);
   return `${head}
-  <p class="sub" style="margin:-4px 0 12px">Named AI analyst personas research and debate <b>${esc(sym)}</b>. The technical and fundamental desks work <b>separately</b>; a bull and a bear argue the case; the Chair synthesizes a house view with an explicit dissent. Every dated call below is scored against what actually happens. This is research, not advice.</p>
+  <p class="sub" style="margin:-4px 0 12px">Named AI analyst personas research and debate <b>${esc(sym)}</b>. The technical and fundamental desks work <b>separately</b>, then a bull and a bear argue the case, hard. This is general commentary — research, not advice: no house view, no call, no target.</p>
 
-  <div class="card room-house">
-    <div class="memo-top"><b style="font-size:12px;letter-spacing:.06em;text-transform:uppercase">The Chair — house view</b>
-      <span class="conv">${room.qa ? `<span class="qabadge ${room.qa.verdict === "clean" ? "ok" : "warn"}" title="${esc(room.qa.note || "verified by the QA agent")}">QA ${esc(room.qa.verdict)}</span> · ` : ""}conviction <span class="cvmeter">${convMeter}</span> ${esc(hv.conviction || "")}</span></div>
-    <p class="hv-summary">${esc(hv.summary || "")}</p>
-    <div class="room-facts">
-      <div><span>Dissent — the strongest case against this view</span><b>${esc(hv.dissent || "—")}</b></div>
-      <div><span>Do the charts &amp; the fundamentals agree?</span><b>${esc((hv.ta_fa_alignment || "—").replace(/_/g, " "))}</b></div>
-      <div><span>Do the brokers agree?</span><b>${esc((hv.broker_stance || "n/a").replace(/_/g, " "))}</b></div>
-      <div><span>What to watch next</span><b>${esc(hv.watch_next || "—")}</b></div>
-    </div>
-  </div>
-
-  ${renderTranscript(room, sym)}
-
-  ${calls.length ? `<div class="card"><h2 style="font-size:12px">Dated calls on the record</h2><div class="sub">each is scored against what actually happens — this is how the desk (and, later, the brokers) are held accountable.</div>
-    <table><thead><tr><th>Analyst</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
-    calls.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || "")}</td><td class="r num">${esc(c.resolve_by)}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}`;
+  ${renderTranscript(room, sym)}`;
 }
 
 async function pageTicker(sym, _retry = 0) {
@@ -2289,7 +2272,6 @@ async function pageTicker(sym, _retry = 0) {
   // real PSX sector name — the feed only carries a numeric code ("0809"), so the old
   // `isNaN(lv.sector)` guard meant this tag never rendered for any ticker
   const mySector = (sectAll?.tickers?.[sym] || {}).sector || "";
-  if (room) room.claims_ledger = (claimsAll?.claims || []).filter(c => c.ticker === sym);
   // broker calls on this ticker (from the weekly harvest) — the "real picture" from the houses
   const brokerDocs = ((researchIdx?.by_ticker?.[sym]) || []).filter(d => d.doc_type === "broker call");
   const brokerClaims = (claimsAll?.claims || []).filter(c => c.ticker === sym && c.source_type === "broker");
@@ -2514,7 +2496,9 @@ async function pageTicker(sym, _retry = 0) {
   if (vr != null) { if (vr < 20) { rg = "Lower"; rgk = "lo"; } else if (vr >= 50) { rg = "Higher"; rgk = "hi"; } }
   if (liq === "low" || mddRecentAbs >= 55) { rg = "Higher"; rgk = "hi"; }
   const daysToEarn = nextEarn ? daysTo(nextEarn.date) : null;
-  const hvRoom = room && room.house_view ? room.house_view : null;
+  // The Room ends at the bull/bear debate now (no Chair house view) — bull_case marks a covered
+  // session, and that presence, not a verdict, is what the reveal bar and Signal Stack key off.
+  const hasRoom = !!(room && room.bull_case);
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
   // hard facts only — the lens verdicts live in the Signal Stack, and the desk's own view stays
   // behind its run (a tile here would spoil it)
@@ -2535,7 +2519,7 @@ async function pageTicker(sym, _retry = 0) {
 
   /* ---- The Desk Room reveal bar.
      PUBLICATION FRAME (docs/PUBLICATION_RESTRUCTURE.md §4). This button has never triggered
-     anything: it renders only when `hvRoom` exists — i.e. when the session is ALREADY in
+     anything: it renders only when `hasRoom` is true — i.e. when the session is ALREADY in
      state/rooms.json — and playDeskReplay() replays a debate that was written on the desk's own
      editorial schedule by room_queue.py, identically for every subscriber.
      The old copy ("Run the desk on FFC", "Run ›", "Once it finishes…") claimed the opposite:
@@ -2545,13 +2529,13 @@ async function pageTicker(sym, _retry = 0) {
      So: reveal is described as reveal, and the publication date leads. ---- */
   const lastRun = room ? String(room.built || room.dossier_asof || "").slice(0, 16) : "";
   const deskRan = (() => { try { return !!sessionStorage.getItem("deskran:" + sym); } catch (e) { return false; } })();
-  const runDeskBar = hvRoom ? `<button class="run-desk ${deskRan ? "ran" : ""}" onclick="playDeskReplay('${esc(sym)}')">
+  const runDeskBar = hasRoom ? `<button class="run-desk ${deskRan ? "ran" : ""}" onclick="playDeskReplay('${esc(sym)}')">
     <span class="run-ico">▶</span>
-    <span class="run-txt"><b>The desk's debate on ${esc(sym)}</b><i>A chartist, a fundamentalist, a bull, a bear and a chair argue ${esc(sym)} and settle on a house view. Watch it play out.</i></span>
+    <span class="run-txt"><b>The desk's debate on ${esc(sym)}</b><i>A chartist and a fundamentalist work ${esc(sym)} separately, then a bull and a bear argue it out. Watch the debate play out — no verdict, no call.</i></span>
     <span class="run-meta">${lastRun ? `<span class="run-last">Published · ${esc(lastRun)}</span>` : ""}<span class="run-go">${deskRan ? "Replay ›" : "Read ›"}</span></span>
   </button>` : "";
   const deskStub = `<div class="seg"><h2>The Desk Room</h2><div class="ln"></div><span class="pill">AI analysts · research, not advice</span></div>
-    <div class="card"><div class="empty">The desk's published debate on ${esc(sym)} — open it with <b>Read ›</b> near the top ↑. The full analyst argument and house view appear right here.</div></div>`;
+    <div class="card"><div class="empty">The desk's published debate on ${esc(sym)} — open it with <b>Read ›</b> near the top ↑. The full analyst argument, both sides, appears right here.</div></div>`;
 
   // ---- The strategy-library reveal bar. Same correction: playStrategyRun() reads the backtests
   // already computed by backtest.py in the deterministic cycle. It does not run a backtest. ----
@@ -2589,10 +2573,10 @@ async function pageTicker(sym, _retry = 0) {
   // 3. The Desk Room (gated — the debate is the product)
   const taSt = room?.ta_memo?.technical_stance, faSt = room?.fa_memo?.fundamental_stance;
   const deskLean = stanceVal(taSt) + stanceVal(faSt);
-  const roomLens = !hvRoom ? { k: "", v: "In queue", conv: "", note: `${esc(sym)} hasn't been through the Desk Room yet — the analysts cover names in rotation, and results or high-impact news jump the queue.` }
-    : !deskRan ? { locked: true, run: `playDeskReplay('${esc(sym)}')`, note: "A chartist, a fundamentalist, a bull and a bear argue it out; the Chair settles it. Read the debate to see where they landed." }
-      : { ...leanChip(deskLean), v: deskLean > 0 ? "Bullish" : deskLean < 0 ? "Bearish" : "Split",
-        conv: hvRoom.conviction || "", note: `charts ${esc(taSt || "—")} · fundamentals ${esc(faSt || "—")}${hvRoom.ta_fa_alignment ? " · the two desks " + esc(String(hvRoom.ta_fa_alignment).replace(/_/g, " ")) : ""}` };
+  const roomLens = !hasRoom ? { k: "", v: "In queue", conv: "", note: `${esc(sym)} hasn't been through the Desk Room yet — the analysts cover names in rotation, and results or high-impact news jump the queue.` }
+    : !deskRan ? { locked: true, run: `playDeskReplay('${esc(sym)}')`, note: "A chartist and a fundamentalist work it separately, then a bull and a bear argue it out. Read the debate to see where each desk landed." }
+      : { ...leanChip(deskLean), v: deskLean > 0 ? "Constructive" : deskLean < 0 ? "Cautious" : "Split",
+        conv: "", note: `charts read ${esc(taSt || "—")} · fundamentals read ${esc(faSt || "—")} — the debate, not a verdict` };
 
   // 4. Strategies (gated — directional only when a proven rule is actually firing today)
   const topProven = proven[0];
@@ -2739,7 +2723,7 @@ async function pageTicker(sym, _retry = 0) {
   })() : ""}
 
   ${runDeskBar}
-  ${!hvRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
+  ${!hasRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
 
   ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
   <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="#/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
@@ -2986,7 +2970,11 @@ async function pageLeaderboard() {
   const [lb, bs, claimsAll] = await Promise.all([j("leaderboard.json"), j("broker_scorecard.json"), j("claims.json")]);
   const personas = lb?.personas || {};
   const brokers = bs?.brokers || {};
-  const allClaims = claimsAll?.claims || [];
+  // SECP Reg 2(ha) (§4, S.R.O.7(I)/2026): the desk does NOT publish a track record of its OWN calls
+  // on a named security. Legacy per-named-stock persona claims still sit in claims.json but are
+  // neither scored (scripts/room_score.py drops them) nor shown — filter them out of every count and
+  // table here so the page only reflects the desk's sector/macro commentary + third-party brokers.
+  const allClaims = (claimsAll?.claims || []).filter(c => !(c.source_type === "persona" && c.ticker));
   const pending = allClaims.filter(c => c.status === "pending");
   const resolved = allClaims.filter(c => c.status === "hit" || c.status === "miss");
   const claimDates = allClaims.map(c => (c.made_on || c.made_at || "")).filter(Boolean).sort();
@@ -3010,8 +2998,8 @@ async function pageLeaderboard() {
   <div class="disclaimer">Every dated call — the desk's own AI analysts <b>and</b> the brokers — is scored against what prices actually did. This is accountability, not advice. A thin record (below ${bs?._meta?.min_sample_to_rank ?? 5} calls) is shown <b>unranked</b> so no one is over-trusted on luck.</div>
 
   <div class="seg"><h2>The desk's AI analysts</h2><div class="ln"></div><span class="pill">${Object.keys(personas).length}</span></div>
-  <div class="card"><div class="sub">the desk holds itself to the same standard it holds the brokers.</div>
-    ${Object.keys(personas).length ? `<table><thead><tr><th>Analyst</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${Object.entries(personas).map(([n, r]) => pRow(n, r)).join("")}</tbody></table>` : '<div class="empty">No resolved calls yet — dated calls score once their horizons pass (first from early August). Pending ones appear on each ticker\'s Desk Room.</div>'}</div>
+  <div class="card"><div class="sub">the desk scores its own <b>sector and macro commentary</b> against outcomes — the same standard it holds the brokers to. It does not publish or track calls on individual stocks.</div>
+    ${Object.keys(personas).length ? `<table><thead><tr><th>Analyst</th><th class="r">Calls</th><th class="r">Hit rate</th><th class="r">Avg target err</th></tr></thead><tbody>${Object.entries(personas).map(([n, r]) => pRow(n, r)).join("")}</tbody></table>` : '<div class="empty">No resolved calls yet. The desk scores its own sector and macro reads the same way it scores brokers; calls on individual stocks aren\'t published, so nothing is tracked per name here.</div>'}</div>
 
   <div class="seg"><h2>Brokers — ranked on what came true</h2><div class="ln"></div><span class="pill">${Object.keys(brokers).length}</span></div>
   <div class="card"><div class="sub">overall and per sector — a broker's bank desk and E&P desk have different records, so they're scored separately.</div>
@@ -3116,19 +3104,19 @@ function runRevealModal(opts) {
 }
 
 /* ---------- Desk Room run: streams the REAL steps the desk ran (RSI/SMA/fair-value from the data
-   layer) then lands on the parallel split-desk view with the Chair's verdict highlighted. ---------- */
+   layer) then lands on the parallel split-desk view — the two desks and the bull/bear debate. The
+   session is terminal at the debate (no Chair verdict): general commentary, not a call. ---------- */
 async function playDeskReplay(sym) {
   sym = (sym || "").toUpperCase();
   const [rooms, uni, quant, fund, fvAll] = await Promise.all([
     j("rooms.json"), j("universe.json"), j("quant.json"), j("fundamentals.json"), j("fairvalue.json")]);
   const s = rooms && rooms[sym];
-  if (!s || !s.house_view) return;
+  if (!s || !s.bull_case) return;
   const name = uni?.symbols?.[sym]?.name || "";
   const q = quant?.tickers?.[sym] || {}, f = fund?.tickers?.[sym] || {}, fv = fvAll?.tickers?.[sym] || {};
-  const ta = s.ta_memo || {}, fa = s.fa_memo || {}, bull = s.bull_case || {}, bear = s.bear_case || {}, hv = s.house_view || {};
+  const ta = s.ta_memo || {}, fa = s.fa_memo || {}, bull = s.bull_case || {}, bear = s.bear_case || {};
   const li = arr => (arr || []).slice(0, 3).map(x => `<li>${esc(x)}</li>`).join("");
   const stance = v => ({ constructive: "up", cautious: "dn", bullish: "up", bearish: "dn", positive: "up", negative: "dn" }[v] || "");
-  const convIdx = { low: 1, medium: 2, high: 3 }[hv.conviction] || 1;
   const nz = v => (v == null || v === "") ? "—" : (typeof v === "number" ? fmt(v) : esc(v));
 
   const steps = [
@@ -3139,7 +3127,6 @@ async function playDeskReplay(sym) {
     `Strategies · scanned 52 → <b>${(ta.proven_now || []).length}</b> firing on ${esc(sym)}`,
     `Technical desk (Meher) &amp; fundamental desk (Dr. Omar) — memos in`,
     `Bull (Zoya) vs Bear (Khurram) — stress-testing both sides`,
-    `The Chair — weighing it into a house view`,
   ];
   if (s.qa) steps.push(`QA agent — cross-examined the numbers · <b>${esc(s.qa.verdict)}</b>`);
 
@@ -3150,33 +3137,19 @@ async function playDeskReplay(sym) {
   runRevealModal({
     sym, kicker: `Desk Room · ${esc(sym)}`, flagKey: "deskran:" + sym,
     title: `Running the desk on ${esc(sym)}`,
-    sub: `Working through ${esc(sym)} the way the desk does — pulling the price history, the technicals and the valuation, then letting the analysts debate it out to a house view.`,
+    sub: `Working through ${esc(sym)} the way the desk does — pulling the price history, the technicals and the valuation, then letting the two desks and a bull and a bear argue it out. No verdict at the end — the debate is the point.`,
     steps,
     renderReveal: (bodyEl) => {
-      const cvm = `<div class="cvmeter2" role="img" aria-label="conviction: ${esc(hv.conviction || "low")}">
-        <span class="cvm ${convIdx === 1 ? "act lvl-low" : ""}">Low</span>
-        <span class="cvm ${convIdx === 2 ? "act lvl-med" : ""}">Medium</span>
-        <span class="cvm ${convIdx === 3 ? "act lvl-high" : ""}">High</span></div>
-        <div class="cvcap">how sure the desk is about this read</div>`;
       bodyEl.innerHTML = `<div class="rp-reveal">
-        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span></div>
+        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}${s.qa ? "" : ""}</span>${s.qa ? `<span class="qabadge ${s.qa.verdict === "clean" ? "ok" : "warn"}">QA ${esc(s.qa.verdict)}</span>` : ""}</div>
         <div class="rp-desk">
           ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), ta.read, ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
           ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), fa.read, `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(fa.dividend_safety || "—")}</b>`)}
           ${panel("ZB", "Zoya", "the bull · case FOR", "up", bull.thesis, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "")}
           ${panel("KB", "Khurram", "the bear · case AGAINST", "dn", bear.thesis, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "")}
         </div>
-        <div class="rp-chair">
-          <div class="rp-chair-top"><span class="rp-chair-tag">The Chair · house view</span>${s.qa ? `<span class="qabadge ${s.qa.verdict === "clean" ? "ok" : "warn"}">QA ${esc(s.qa.verdict)}</span>` : ""}</div>
-          <p class="rp-chair-summary">${esc(hv.summary || "")}</p>
-          ${cvm}
-          <div class="rp-chair-facts">
-            ${hv.dissent ? `<div><span>The strongest case against this view</span><b>${esc(hv.dissent)}</b></div>` : ""}
-            ${hv.watch_next ? `<div><span>What settles it next</span><b>${esc(hv.watch_next)}</b></div>` : ""}
-          </div>
-        </div>
-        <div class="rp-reveal-foot"><span>Dated, falsifiable, and scored on the <b>Scores</b> board when its horizon passes. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="room-transcript">Read the full transcript ›</button><button class="rp-btn2" onclick="location.hash='#/leaderboard'">Scores ›</button></span></div>
+        <div class="rp-reveal-foot"><span>Two desks, two sides — the desk's read on ${esc(sym)}, argued both ways. No call, no target: general commentary, not advice.</span>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="room-transcript">Read the full transcript ›</button></span></div>
       </div>`;
     },
   });
@@ -6518,12 +6491,12 @@ capturePlanIntent();
 
    Both end at the same place; only the pacing and the vocabulary differ. */
 const WIZ_PRO = [
-  { kind: "welcome", title: "You know the terms. Here's what's different.", body: "Henneth Desk isn't another screener. Every stock gets a debate — a technical desk and a fundamental desk argue it out, a bull and a bear stress-test each other, and a Chair writes a house view with an explicit dissent. Every dated call, ours and the brokers', is scored in public afterwards. Ninety seconds and you'll know where everything lives." },
+  { kind: "welcome", title: "You know the terms. Here's what's different.", body: "Henneth Desk isn't another screener. Every stock gets a debate — a technical desk and a fundamental desk argue it out, then a bull and a bear stress-test each other, each naming the strongest point against their own side. It ends on the argument in the open, not a verdict handed down. The brokerage houses' own public calls are scored against what price actually did. Ninety seconds and you'll know where everything lives." },
   { kind: "quiz", key: "style", title: "How do you mostly decide?", opts: [["technical", "Charts and structure"], ["fundamental", "Financials and valuation"], ["both", "Both, depending on the name"]] },
   { kind: "quiz", key: "sectors", multi: true, title: "Which sectors do you actually trade?", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
   { kind: "tour", route: "#/board", title: "Board — the whole tape", body: "Live moves, signals that fired from backtested rules, predictability ranks. Everything is clickable through to the name." },
   { kind: "tour", route: "#/strategies", title: "Strategies — 70 rules, tested per name", body: "Each strategy is backtested on every stock's own ~19-year history: win rate, expectancy AFTER costs, and out-of-sample. Names below the liquidity floor are charged their real estimated spread, not a flat fee — so a thin stock can't fake an edge." },
-  { kind: "tour", route: "#/ticker/FFC", title: "The Desk Room — where it argues with itself", body: "Open any ticker and read the desk's debate. The TA and FA lanes are kept deliberately separate so they can disagree, and the Chair must name the strongest point against its own view. Low conviction is a valid answer here." },
+  { kind: "tour", route: "#/ticker/FFC", title: "The Desk Room — where it argues with itself", body: "Open any ticker and read the desk's debate. The TA and FA lanes are kept deliberately separate so they can disagree, and the bull and the bear each have to name the strongest point against their own case. It ends on the argument, not a call — no verdict, no target." },
   { kind: "tour", route: "#/leaderboard", title: "Scores — everyone on the record", body: "Every call is timestamped and graded against what price actually did. Ours and the brokerage houses'. Misses included — that's the point." },
   { kind: "done", title: "That's the tour.", body: "Search is `/` from anywhere. The desk never places orders and never tells you to buy — it shows its working and you decide." },
 ];

@@ -38,6 +38,7 @@ export function fvSeries(lump: number, monthly: number, years: number, annualRat
 
 // ---------------------------------------------------------------------------- calculators
 export type CalcFn = (v: Record<string, number>, anchors: Anchors) => Result;
+export type StrategyRule = { name: string; stopPct: number; targetPct: number };
 export type Anchors = {
   cpi?: number | null;
   policy?: number | null;
@@ -46,6 +47,11 @@ export type Anchors = {
   goldUsdOz?: number | null;
   usdpkr?: number | null;
   goldDate?: string | null;
+  /** The published strategy library (id/name/stop%/target%), seeded at build time by
+      /tools/strategy-level-calculator/. A strategy's stop/target %s are METHODOLOGY, not a call on
+      a named stock — the reader supplies the stock and the price, which is what keeps the tool
+      inside SECP Reg 2(h). See docs/PUBLICATION_RESTRUCTURE_V2.md §4b. */
+  strategies?: StrategyRule[];
 };
 
 const compound: CalcFn = (v) => {
@@ -190,13 +196,38 @@ const zakat: CalcFn = (v, a) => {
    count computed against its OWN capital figure, which is the difference between "here is the
    setup" and "here is what you should buy". The arithmetic did not change — who supplies the
    capital did. Nothing here is stored or transmitted. */
+export type Sizing = {
+  riskPerShare: number;
+  shares: number;
+  value: number;
+  atRisk: number;
+  capped: boolean;   // the 8% value cap bound, not the stop
+  invalid: boolean;  // stop at or above entry — no defined risk to size against
+};
+
+/** Rule 4, the ONE formula, as a pure function so BOTH the position tool and the strategy tool
+    (and, by intent, build_signals.py) size a trade identically. If Rule 4 changes, change it here
+    and in scripts/build_signals.py in the same commit. */
+export function sizePosition(capital: number, riskPct: number, entry: number, stop: number): Sizing {
+  const riskPerShare = entry - stop;
+  if (!(riskPerShare > 0) || !(entry > 0)) {
+    return { riskPerShare, shares: 0, value: 0, atRisk: 0, capped: false, invalid: true };
+  }
+  const riskBudget = capital * (riskPct / 100);
+  const byRisk = riskBudget / riskPerShare;
+  const byCap = (capital * 0.08) / entry;          // Rule 4's 8% position-VALUE cap
+  const shares = Math.floor(Math.min(byRisk, byCap));
+  return { riskPerShare, shares, value: shares * entry, atRisk: shares * riskPerShare, capped: byCap < byRisk, invalid: false };
+}
+
 const position: CalcFn = (v) => {
   const { capital, riskPct, entry, stop } = v;
-  const riskPerShare = entry - stop;
+  const sz = sizePosition(capital, riskPct, entry, stop);
+  const riskPerShare = sz.riskPerShare;
 
   // A stop at or above entry is not a long setup. Rule 4 calls this invalid rather than
   // clamping it, and build_signals.py drops such a candidate outright — so say the same thing.
-  if (riskPerShare <= 0) {
+  if (sz.invalid) {
     return {
       tiles: [
         { k: 'Shares', v: '—', sub: 'stop must sit below entry' },
@@ -211,13 +242,11 @@ const position: CalcFn = (v) => {
     };
   }
 
-  const riskBudget = capital * (riskPct / 100);
-  const byRisk = riskBudget / riskPerShare;
-  const byCap = (capital * 0.08) / entry;          // Rule 4's 8% position-VALUE cap
-  const shares = Math.floor(Math.min(byRisk, byCap));
-  const value = shares * entry;
-  const atRisk = shares * riskPerShare;
-  const capped = byCap < byRisk;
+  const byRisk = (capital * (riskPct / 100)) / riskPerShare;
+  const shares = sz.shares;
+  const value = sz.value;
+  const atRisk = sz.atRisk;
+  const capped = sz.capped;
 
   return {
     tiles: [
@@ -239,7 +268,71 @@ const position: CalcFn = (v) => {
   };
 };
 
-export const CALCS: Record<string, CalcFn> = { compound, sip, inflation, goal, mortgage, zakat, position };
+/* STRATEGY LEVELS — docs/PUBLICATION_RESTRUCTURE_V2.md §4b.
+   The Board no longer publishes entry/stop/target on a named security (that is a "research service"
+   under SECP Reg 2(ha) and the desk holds no Reg 3 licence). Instead the reader picks a strategy —
+   whose stop%/target% are published METHODOLOGY — supplies THEIR OWN stock's price, and derives
+   THEIR OWN levels here, in their browser. No named-security call is ever published; that is what
+   keeps this inside the 2(h) general-commentary exemption.
+
+     stop   = entry x (1 - stop_pct/100)
+     target = entry x (1 + target_pct/100)
+   then the same Rule 4 sizing as the position tool (sizePosition), so the two cannot disagree. */
+const strategy: CalcFn = (v, a) => {
+  const list = a.strategies || [];
+  const strat = list[Math.max(0, Math.min(list.length - 1, v.strat | 0))];
+  const { entry, capital, riskPct } = v;
+
+  if (!strat) {
+    return {
+      tiles: [
+        { k: 'Stop', v: '—' }, { k: 'Target', v: '—' }, { k: 'Risk : reward', v: '—' }, { k: 'Shares', v: '—' },
+      ],
+      note: 'Pick a strategy to see the levels its rules imply on your price.',
+    };
+  }
+  if (!(entry > 0)) {
+    return {
+      tiles: [
+        { k: 'Stop', v: '—', sub: `${strat.stopPct}% below entry` },
+        { k: 'Target', v: '—', sub: `${strat.targetPct}% above entry` },
+        { k: 'Risk : reward', v: (strat.targetPct / strat.stopPct).toFixed(2) + ' : 1', sub: 'fixed by the strategy' },
+        { k: 'Shares', v: '—' },
+      ],
+      note: `Enter the price <b>you</b> would pay for the stock you are watching. <b>${strat.name}</b> `
+          + `stops out ${strat.stopPct}% below your entry and targets ${strat.targetPct}% above it — `
+          + `those percentages are the strategy's published rule, not a call on any particular share.`,
+      noteWarn: true,
+    };
+  }
+
+  const stop = entry * (1 - strat.stopPct / 100);
+  const target = entry * (1 + strat.targetPct / 100);
+  const rr = strat.targetPct / strat.stopPct;
+  const sz = sizePosition(capital, riskPct, entry, stop);
+
+  return {
+    tiles: [
+      { k: 'Stop', v: rs(stop), sub: `${strat.stopPct}% below your entry`, cls: 'dn' },
+      { k: 'Target', v: rs(target), sub: `${strat.targetPct}% above your entry`, cls: 'up' },
+      { k: 'Risk : reward', v: rr.toFixed(2) + ' : 1', sub: rr >= 1 ? 'reward exceeds risk' : 'risk exceeds reward', cls: rr >= 1 ? 'up' : 'dn' },
+      { k: 'Shares', v: sz.shares > 0 ? fmt(sz.shares) : '0', sub: sz.shares > 0 ? (sz.capped ? 'held by the 8% cap' : 'held by your stop') : 'setup too big for your capital' },
+    ],
+    note: sz.shares <= 0
+      ? `At <b>${rs(entry)}</b> with a ${strat.stopPct}% stop, this setup does not fit your capital `
+        + `at ${riskPct}% risk — the position it implies is zero shares. That is the honest answer, `
+        + `not an error: widen nothing. A smaller stop distance or a different strategy is the lever, `
+        + `not a bigger risk budget.`
+      : `Risk per share is <b>${rs(sz.riskPerShare)}</b> (entry ${fmt(entry)} − stop ${fmt(stop)}); at `
+        + `${riskPct}% of ${rs(capital)} you can hold <b>${fmt(sz.shares)}</b> shares, `
+        + `${rs(sz.value)} of stock, risking <b>${rs(sz.atRisk)}</b> if the stop is hit. `
+        + `The ${strat.stopPct}%/${strat.targetPct}% levels are the strategy's own rule applied to the `
+        + `price <b>you</b> chose — the desk names no stock and sets no target for you.`,
+    noteWarn: sz.shares <= 0,
+  };
+};
+
+export const CALCS: Record<string, CalcFn> = { compound, sip, inflation, goal, mortgage, zakat, position, strategy };
 
 // ---------------------------------------------------------------------------- DOM wiring
 /**

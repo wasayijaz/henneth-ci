@@ -75,6 +75,8 @@ def run():
     quant = load_json(STATE / "quant.json", {}).get("tickers", {})
     live = load_json(STATE / "live.json", {}).get("tickers", {})
     indices = load_json(STATE / "indices.json", {})   # for market-relative claims (fetch_indices.py)
+    # Real PSX securities — used to keep the desk's OWN per-named-stock calls off its leaderboard.
+    uni_syms = set((load_json(STATE / "universe.json", {}).get("symbols") or {}).keys())
     today = datetime.now(timezone.utc).date()
 
     # 1) resolve anything past its horizon
@@ -116,6 +118,15 @@ def run():
         if c.get("status") not in ("hit", "miss"):
             continue
         src, styp, sect = c.get("source"), c.get("source_type"), sector_of(c)
+        # SECP Reg 2(ha) (S.R.O.7(I)/2026, see docs/PUBLICATION_RESTRUCTURE_V2.md §4): the desk may
+        # not publish a track record of its OWN buy/sell/hold calls on a NAMED security. The Chair
+        # stage that produced those is gone (§3) and no longer writes claims; this drops any legacy
+        # per-named-stock persona claim still sitting in claims.json so it can never reach the desk
+        # leaderboard. Non-security-specific desk claims (sector debate, macro) still roll up here.
+        # Broker (third-party) and astro scoring are unchanged — a publication may score others'
+        # public calls, and the astro lens is out of scope this pass.
+        if styp == "persona" and c.get("ticker") in uni_syms:
+            continue
         bucket = persona if styp == "persona" else broker
         b = bucket.setdefault(src, blank())
         b["n"] += 1
@@ -142,8 +153,11 @@ def run():
     leaderboard = {
         "personas": {k: finalize(v) for k, v in sorted(persona.items(), key=lambda kv: -(kv[1]["hits"]))},
         "_meta": {"built": time.strftime("%Y-%m-%d %H:%M"), "resolved_calls": sum(v["n"] for v in persona.values()),
-                  "note": "Desk persona track records. Every persona's future prompt includes its own hit "
-                          "rate + recent misses, so the desk is held to the standard it holds brokers to."},
+                  "scope": "sector_macro_only",
+                  "note": "Desk track record on NON-security-specific commentary only (sector debate, "
+                          "macro). Per-named-stock desk calls are not published or scored (SECP Reg 2(ha), "
+                          "S.R.O.7(I)/2026 — see docs/PUBLICATION_RESTRUCTURE_V2.md §4). The broker scorecard "
+                          "scores third parties' public calls and is unaffected."},
     }
     scorecard = {"brokers": {}, "_meta": {
         "built": time.strftime("%Y-%m-%d %H:%M"),

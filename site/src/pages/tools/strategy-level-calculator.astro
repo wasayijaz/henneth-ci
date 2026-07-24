@@ -1,0 +1,122 @@
+---
+/* docs/PUBLICATION_RESTRUCTURE_V2.md §4b — the reader derives their OWN levels.
+ *
+ * Under SECP Reg 2(ha) (as amended by S.R.O.7(I)/2026) a price target or stop-loss on a NAMED
+ * security, once published to the public, is a "research service" — and the desk holds no Reg 3
+ * licence. So the Board no longer publishes entry/stop/target per ticker. The stop%/target% of a
+ * STRATEGY, though, are methodology (a rule of the strategy), not a call on any stock. This tool
+ * hands the reader those published percentages and lets THEM supply the security and the price, so
+ * no named-security level is ever published. That is what keeps the product inside the Reg 2(h)
+ * general-commentary exemption: describe, never direct.
+ *
+ * The strategy library is read at BUILD time and the stop/target %s are frozen into the page as
+ * window.__hAnchors (ToolPage `anchors` prop). The Rule 4 sizing and the stop/target maths live in
+ * src/scripts/calculators.ts, shared verbatim with the position tool and ported from
+ * scripts/build_signals.py, so the three cannot disagree.
+ */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import ToolPage from '../../components/ToolPage.astro';
+
+// Read the published strategy library from the repo root. utf-8 is REQUIRED: the file carries
+// multi-byte characters, and reading it under Windows' default cp1252 mangles them. Keep only the
+// non-directive methodology fields — id/name and the stop/target percentages.
+const libPath = fileURLToPath(new URL('../../../../strategies/library.json', import.meta.url));
+const raw = JSON.parse(readFileSync(libPath, 'utf-8')) as {
+  id: string; name: string; category?: string; stop_pct: number; target_pct: number;
+}[];
+
+// One row per strategy, sorted by category then name so the dropdown reads in sensible blocks.
+// Index into this array is the option value the calculator reads back (v.strat).
+const strategies = raw
+  .filter((s) => s.stop_pct > 0 && s.target_pct > 0)
+  .sort((a, b) => (a.category || '').localeCompare(b.category || '') || a.name.localeCompare(b.name))
+  .map((s) => ({ name: s.name, stopPct: s.stop_pct, targetPct: s.target_pct }));
+
+const options = strategies.map((s, i) => ({
+  label: `${s.name} · stop ${s.stopPct}% / target ${s.targetPct}%`,
+  value: i,
+}));
+
+const faqs = [
+  {
+    q: 'Does the desk tell me the entry, stop and target for a specific stock?',
+    a: 'No. A price target or stop-loss on a named stock, once published to the public, is a regulated research service and the desk is not licensed for that. What the desk publishes is which strategy is triggering on a name and how that strategy has performed on its own history — general commentary. The stop and target percentages are the strategy’s own rules; you apply them to a price you choose, here, in your browser.',
+  },
+  {
+    q: 'Where do the stop and target percentages come from?',
+    a: 'Each is a fixed rule of the strategy itself, published in the desk’s strategy library and used unchanged in its backtests. Picking a strategy loads its two percentages; the stop sits that far below the price you enter and the target that far above. Nothing about the number depends on which stock you have in mind — that is the whole point.',
+  },
+  {
+    q: 'Is the share count the same as the position size calculator?',
+    a: 'Yes — it is the same Rule 4 formula, running the same code. Size by stop distance so a stop-out costs a fixed fraction of your capital, then cap the position value at 8% of capital. If you plug the same entry, stop, capital and risk into the position size calculator you will get the identical share count.',
+  },
+  {
+    q: 'It shows zero shares. Is that broken?',
+    a: 'No, it is the honest answer. Zero means that at the price you entered, this strategy’s stop is too wide for your risk budget — the position it implies rounds to nothing. The lever is a tighter setup or a different strategy, never a bigger risk budget. The desk discards its own candidates the same way.',
+  },
+  {
+    q: 'Does this mean I should buy?',
+    a: 'No. This is a calculator that turns a strategy’s published rules into levels on a price you supply. It is not a recommendation, the desk does not execute trades, and losses are a normal part of any strategy. Research, not advice.',
+  },
+];
+
+const related = [
+  { href: '/tools/position-size-calculator/', label: 'Position size' },
+  { href: '/tools/compound-interest-calculator/', label: 'Compound growth' },
+  { href: '/tools/sip-calculator/', label: 'Monthly investment' },
+  { href: '/tools/inflation-calculator/', label: 'Inflation' },
+];
+---
+
+<ToolPage
+  title="Strategy Level Calculator PSX — Your Entry, Stop and Target"
+  h1="Strategy level calculator"
+  description="Pick a strategy, enter the price you would pay, and get the stop, target, risk-reward and Rule 4 share count — from the strategy's own published rules, on your price. Free, nothing stored."
+  path="/tools/strategy-level-calculator/"
+  lead="The strategy's rules are fixed. The price, and the levels that fall out of it, are yours."
+  calc="strategy"
+  updated="2026-07-24"
+  anchors={{ strategies }}
+  fields={[
+    { field: 'strat', label: 'Strategy', value: 0, options },
+    { field: 'entry', label: 'Your entry price', prefix: 'Rs', value: 100, step: 1 },
+    { field: 'capital', label: 'Your trading capital', prefix: 'Rs', value: 1000000, step: 50000 },
+    { field: 'riskPct', label: 'Risk per trade', value: 1, step: 0.25, suffix: '%' },
+  ]}
+  faqs={faqs}
+  related={related}
+>
+  <h2>The strategy sets the percentages. You set the price.</h2>
+  <p>
+    Every strategy in the desk's library carries two numbers that never change: how far below entry
+    it stops out, and how far above it takes profit. Those are rules of the method, tested that way
+    across the desk's whole history. This tool loads them for the strategy you pick and lays them on
+    a price <strong>you</strong> type — so the stop, the target and the risk-to-reward are yours,
+    derived from a published rule, not a call the desk made on a particular share.
+  </p>
+
+  <h2>Then it sizes the trade the desk's way</h2>
+  <p>
+    Once you add your capital and how much of it you are willing to risk on the trade, the share
+    count follows Rule 4 — the desk's own sizing rule, the same code that runs in the position size
+    calculator. It sizes off the stop distance so a stop-out costs a fixed fraction of your capital,
+    then caps the position at 8% of capital by value so one name cannot dominate. Whichever
+    constraint bites first is the one you see.
+  </p>
+
+  <h2>A zero is the answer, not an error</h2>
+  <p>
+    If the share count comes back zero, the strategy's stop is too wide for your risk budget at the
+    price you entered — the setup does not fit your capital. That is a real answer. The temptation is
+    to widen the risk until a position appears; that is exactly the move the rule exists to stop.
+    A tighter setup or a different strategy is the honest lever.
+  </p>
+
+  <p class="muted">
+    Nothing you type here is stored, sent anywhere, or attached to any analytics event. The stop and
+    target percentages are a strategy's published methodology, not a target on a named security.
+    Research, not advice — the desk never executes trades and this is not a recommendation to take a
+    position.
+  </p>
+</ToolPage>

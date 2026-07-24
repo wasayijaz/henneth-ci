@@ -12,7 +12,7 @@ import ToolPage from '../../components/ToolPage.astro';
 const faqs = [
   {
     q: 'Why does the desk not just tell me how many shares to buy?',
-    a: 'Because it does not know your capital, and a share count against someone else’s capital is worse than useless — it looks like an instruction. Henneth publishes the setup: entry, stop, target and risk per share. The size is arithmetic on top of a number only you have, so it belongs here rather than in the research.',
+    a: 'Because it does not know your capital, and a share count against someone else’s capital is worse than useless — it looks like an instruction. Henneth publishes which strategy is triggering on a name and how it has performed; the levels and the size are arithmetic on top of numbers only you have — your entry, your capital — so they belong here and in the strategy level calculator rather than in the research.',
   },
   {
     q: 'Where does this formula come from?',
@@ -33,6 +33,7 @@ const faqs = [
 ];
 
 const related = [
+  { href: '/tools/strategy-level-calculator/', label: 'Strategy levels' },
   { href: '/tools/compound-interest-calculator/', label: 'Compound growth' },
   { href: '/tools/sip-calculator/', label: 'Monthly investment' },
   { href: '/tools/inflation-calculator/', label: 'Inflation' },
@@ -80,10 +81,12 @@ const related = [
 
   <h2>Why this is a tool and not part of the research</h2>
   <p>
-    Henneth publishes levels — entry, stop, target, risk per share — identically for every reader,
-    on a schedule. It does not publish a share count, because a share count requires a capital
-    figure, and the only honest capital figure is yours. That line is deliberate: it is the
-    difference between research anyone can read and a personal instruction.
+    Henneth publishes which strategy is firing on a name and how that strategy has performed — general
+    commentary, identical for every reader. It does not publish a level or a share count on a named
+    stock, because both require numbers only you have: the price you would actually pay, and your
+    capital. You derive the levels yourself in the <a href="/tools/strategy-level-calculator/">strategy
+    level calculator</a> and the size here. That line is deliberate — it is the difference between
+    research anyone can read and a personal instruction.
   </p>
   <p class="muted">
     Nothing you type here is stored, sent anywhere, or attached to any analytics event. Research,

@@ -41,5 +41,7 @@ The ticker's dossier + the `ta_memo` (Meher) and `fa_memo` (Dr. Omar).
   }
 }
 ```
-Rules: no advice words. Both cases traceable to the provided data. Each case under ~180 words. The Chair
-rewards calibration over volume.
+Rules: no advice words. Both cases traceable to the provided data. Each case under ~180 words. This is
+the final stage — there is no Chair. Do not emit a house view, a direction/target/stop, or any dated
+call on the named ticker; the debate is general commentary (Reg 2(h)), not a signal. Calibration over
+volume: argue honestly, land no verdict.
