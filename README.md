@@ -35,14 +35,21 @@ A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite"
 - **Value** — every stock valued four ways (peer P/E, earnings-power vs bond yield, Graham, DDM); the
   median is the model fair value, with the full working expandable per row.
 - **Strategies** — 52 transparent, rule-based strategies, each backtested on every stock's ~19-year history
-  (win rate, expectancy after costs, out-of-sample) — you see what *actually* worked, not theory.
+  (win rate, expectancy after costs, out-of-sample) — you see what *actually* worked, not theory. The
+  Board itself no longer publishes entry/stop/target on a named ticker (same regulatory line as the
+  Desk Room, above); a **free strategy-level calculator** on the website lets a reader pick a
+  strategy and their own price and derive their own levels — the desk states the rule, the reader
+  supplies the stock and the price.
 - **The Desk Room** (on every ticker) — named AI analyst personas research and **debate** the stock:
-  a technical desk and a fundamental desk (kept separate), a bull vs a bear, and a Chair who synthesises a
-  house view with an explicit dissent and dated, falsifiable calls. A **"watch the desk analyse" replay**
-  plays the whole debate back as a staged, animated walkthrough (it animates the *saved* session — no
-  agents run per view, so it's free and always available).
-- **Scores** — track records. Every dated call — the desk's own analysts **and** the brokers — is scored
-  against what prices actually did. Brokers are ranked overall and per sector.
+  a technical desk and a fundamental desk (kept separate), then a bull case vs a bear case. No Chair
+  verdict — under SECP's amended research-analyst rules (S.R.O.7(I)/2026), a house view or a dated
+  call on a named stock is a licensed research service, so the Room ends at the debate: commentary,
+  not a direction. A **"watch the desk analyse" replay** plays the whole debate back as a staged,
+  animated walkthrough (it animates the *saved* session — no agents run per view, so it's free and
+  always available).
+- **Scores** — track records, scoped to what the desk is allowed to call: sector, macro and astro
+  reads (never a named-stock verdict, since the Room no longer issues one) plus the brokers, ranked
+  overall and per sector on their own public calls.
 - **Research** — broker notes and company filings (results / AGM / corporate-briefing), digested and tagged.
 - **Macro / Dividends / Earnings / News** — the global tape that moves PSX, a geo-risk radar, dividend
   timing (buy-by / ex-date), the earnings calendar, and a permanent news log.

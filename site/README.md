@@ -27,6 +27,7 @@ never hand-typed lists, so they cannot drift from what the desk actually does:
 | `/financial-astrology/` | `src/data/public/astro_lite.json` + `public/moon_ephem.bin` | `scripts/build_astro_lite.py` |
 | `/global-markets/` | `src/data/public/coverage.json` | `scripts/build_astro_lite.py` |
 | `/tools/position-size-calculator/` | nothing — pure client maths | — |
+| `/tools/strategy-level-calculator/` | `src/data/public/strategy_levels.json` | `scripts/build_public_slice.py` |
 
 `moon_ephem.bin` is the **Moon column sliced out of the terminal's own verified ephemeris** (9
 bodies × uint16 → 1, so 552 KB → 61 KB), not a second table computed independently. That matters:
@@ -36,6 +37,15 @@ said Taurus, the paid one says Gemini"* is the worst possible bug in an astrolog
 The position-size calculator ports **Rule 4 unchanged** from `scripts/build_signals.py`, so the
 desk's published methodology and the reader's tool cannot disagree. Change one, change both in the
 same commit.
+
+The strategy-level calculator is the same idea one step further: the Board no longer publishes
+entry/stop/target on a named ticker (a price target or stop-loss on a named security is a licensed
+research service under SECP's S.R.O.7(I)/2026 amendment), so this tool hands the reader a
+strategy's published stop%/target% and lets them supply the stock and the price — Rule 4 runs
+identically underneath. `strategy_levels.json` is a build-time extract of `strategies/library.json`
+written by `scripts/build_public_slice.py` — the same hermetic-build pattern as `tickers.json`, never
+a direct read of `strategies/` at build time (that ENOENT'd the page once already; Vercel's build
+root doesn't include the repo root's `strategies/` folder).
 
 ```bash
 npm install
