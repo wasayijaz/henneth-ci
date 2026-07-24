@@ -2188,6 +2188,13 @@ function renderTestLog(sym, allTested, lib, cfg) {
   </details>`;
 }
 
+/* QA verdicts are internal ops vocabulary (clean/flags/blocked) — never surface that raw to a
+   reader. "blocked" means the verifier found a wrong number on screen, so that case is gated out
+   entirely before this ever renders (see renderRoom); this map only ever has to soften clean/flags. */
+function qaLabel(v) {
+  return { clean: "Verified", flags: "Notes pending" }[v] || "Checked";
+}
+
 /* The full session transcript — every analyst's turn, in the order they spoke, with everything
    they actually wrote (including the fields the summary view leaves out). For people who want to
    read the desk's working rather than its verdict. Pure render of the stored session: no agent runs. */
@@ -2230,7 +2237,7 @@ function renderTranscript(room, sym) {
         + NOTE("What would break his case", bear.what_would_break_it))}
 
       ${room.qa ? turn("QA", "The Verifier", "QA · fact-checked the session against the data and live sources", "",
-        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : "dn"}">${esc(room.qa.verdict)}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(room.qa.note)) : ""}
+        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : ""}">${esc(qaLabel(room.qa.verdict))}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(room.qa.note)) : ""}
 
       <div class="tr-close">↑ That is where the session ends — the desk publishes the debate, not a verdict. No house view, no call, no target on ${esc(sym)}.</div>
     </div>
@@ -2244,6 +2251,11 @@ function renderRoom(room, sym) {
   // in every real session, so it, not the removed house_view, is what marks a room as covered.
   if (!room || !room.bull_case) {
     return `${head}<div class="card"><div class="empty">No Room session for ${esc(sym)} yet. The desk's AI analysts — a technical desk, a fundamental desk, a bull and a bear — cover names in rotation (results, high-impact news and signals jump the queue). ${esc(sym)} is in the queue.</div></div>`;
+  }
+  // The verifier's "blocked" verdict means a wrong number is on screen — do not publish that
+  // content as-is, softened label or not. Withhold the session and say so plainly instead.
+  if (room.qa && room.qa.verdict === "blocked") {
+    return `${head}<div class="card"><div class="empty">The desk's session on ${esc(sym)} is being re-checked before it republishes — nothing shown here right now. It'll be back once the recheck clears.</div></div>`;
   }
   return `${head}
   <p class="sub" style="margin:-4px 0 12px">Named AI analyst personas research and debate <b>${esc(sym)}</b>. The technical and fundamental desks work <b>separately</b>, then a bull and a bear argue the case, hard. This is general commentary — research, not advice: no house view, no call, no target.</p>

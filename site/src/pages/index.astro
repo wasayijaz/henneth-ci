@@ -305,8 +305,8 @@ const principles = [
         <h2>Watch an AI analyst desk argue it out</h2>
         <p class="lead dr-lead">
           On every ticker, named analyst personas — a technical desk, a fundamental desk, a bull and
-          a bear — debate the stock. Then a Chair synthesises a house view with an explicit dissent.
-          Nothing is hidden; you see who argued what.
+          a bear — debate the stock, hard. No verdict, no house view, no target: nothing is hidden,
+          you see who argued what and call it yourself.
         </p>
         <button class="btn" id="drPlay">▶ Watch the desk analyse</button>
         <p class="dr-hint muted" id="drHint">Replay stages the debate in sequence — hit play</p>
@@ -315,7 +315,7 @@ const principles = [
       <div class="dr-card">
         <div class="dr-bar">
           <span class="label">Desk Room<span class="dr-live" id="drLive"></span></span>
-          <span class="muted">4 desks · 1 chair</span>
+          <span class="muted">4 desks · no verdict</span>
         </div>
         <div class="dr-body" id="drBody">
           <div class="dr-block" data-i="0">
@@ -333,16 +333,6 @@ const principles = [
           <div class="dr-block" data-i="3">
             <div class="label dn">Bear</div>
             <p>Fair value leans on an aggressive growth input.</p>
-          </div>
-          <div class="dr-block dr-chair" data-i="4">
-            <div class="dr-chair-h">
-              <span class="label">Chair’s house view</span><span class="muted">Conviction: Med</span>
-            </div>
-            <p>
-              Constructive setup, but priced for a clean quarter. The desk watches for the payout
-              signal before adding conviction.
-            </p>
-            <p class="dr-dissent"><b>Dissent —</b> the bear’s cyclical-peak case is not resolved.</p>
           </div>
         </div>
         <p class="mock-note muted dr-illus">Illustration of a session. Real debates run per stock.</p>
@@ -885,7 +875,7 @@ const principles = [
   const card = document.querySelector('.dr-card') as HTMLElement | null;
   const body = document.getElementById('drBody');
   const blocks = Array.from(document.querySelectorAll('.dr-block')) as HTMLElement[];
-  const NAMES = ['Technical desk', 'Fundamental desk', 'Bull', 'Bear', 'Chair'];
+  const NAMES = ['Technical desk', 'Fundamental desk', 'Bull', 'Bear'];
   const BEAT = 900;                       // slow enough to actually read a line before the next
   let timers: number[] = [];
 
@@ -915,12 +905,12 @@ const principles = [
           b.classList.add('is-in', 'is-speaking');
           if (live) live.textContent = `${NAMES[i]} — ${i + 1} of ${blocks.length}`;
           if (hint) hint.textContent = i === blocks.length - 1
-            ? 'The Chair synthesises, and records the dissent.'
+            ? 'That is the debate — no verdict handed down.'
             : `${NAMES[i]} is making its case…`;
         }, i * BEAT)
       );
     });
-    // The Chair's block is the payoff, so the session holds on it before releasing the spotlight.
+    // Bear's block is the last word, so the session holds on it before releasing the spotlight.
     timers.push(window.setTimeout(endSession, blocks.length * BEAT + 1400));
   });
 </script>
