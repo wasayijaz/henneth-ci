@@ -1,0 +1,71 @@
+---
+import SolutionPage from '../../components/SolutionPage.astro';
+---
+
+<SolutionPage
+  title="PSX Company Fair Value — Four Independent Methods"
+  h1="Is it overvalued? Four methods, one page"
+  description="Every covered PSX company valued four independent ways — sector-relative P/E, earnings power, Graham formula, dividend discount — with the disagreement shown, not hidden."
+  path="/solutions/psx-company-fair-value/"
+  kicker="For value-conscious investors"
+  icon="value"
+  lead="One valuation number always looks precise and is usually wrong. The desk publishes four, and shows you where they disagree."
+  problem="You've found a PSX stock that looks cheap on the P/E and want to know if that's real or just a cheap sector. Most tools stop at that single multiple, next to a single number that reads as an answer when it's really one method's opinion. The question 'is this actually overvalued' needs more than one lens, and needs to say so when the lenses don't agree."
+  appPlan="pro"
+  features={[
+    {
+      icon: 'value',
+      title: 'Four methods, not one',
+      body: 'Sector-relative P/E (the stock’s own PSX sector median, or the market median where the sector has too few peers), earnings power, the Graham formula, and a dividend discount model, run independently and never averaged into a single false-precision figure.',
+    },
+    {
+      icon: 'method',
+      title: 'The disagreement is shown',
+      body: 'A composite estimate sits alongside the model spread and a mispricing read against the last close. Where the four methods diverge, that divergence is on the page — not smoothed away.',
+    },
+    {
+      icon: 'research',
+      title: 'Priced against the local cost of capital',
+      body: 'Discount and hurdle-rate inputs are pinned to the actual PSX/PIB backdrop — the market’s own median P/E and prevailing bond yield — not a generic assumption borrowed from a developed market.',
+    },
+  ]}
+  faqs={[
+    {
+      q: 'Is this a price target?',
+      a: 'No. It is a set of model estimates from public fundamentals — research, not a price target and not a recommendation. The desk never tells you to buy or sell; it shows you what four independent methods say a business is worth and lets the gap to the market price speak for itself.',
+    },
+    {
+      q: 'Why four methods instead of one clean number?',
+      a: 'Because one number hides the assumption it rests on. Relative P/E assumes the sector is priced right. Graham and the dividend discount model assume a growth and payout path. Earnings power assumes today’s profitability holds. Showing all four, and where they split, is more honest than averaging them into something that looks more certain than it is.',
+    },
+    {
+      q: 'What if a stock has too few sector peers for a fair P/E comparison?',
+      a: 'Thin sectors fall back to the market median P/E instead of a sector median built on two or three names, and the page states which basis was used for that stock — it is not left ambiguous.',
+    },
+    {
+      q: 'How often is it updated?',
+      a: 'On the desk’s regular data cycle, from the same fundamentals feed as the rest of the site — not hand-entered, and not stale by design.',
+    },
+  ]}
+>
+  <h2 class="mid-h">Built for one stock, not a screen</h2>
+  <p class="mid-p">
+    If the job is filtering the whole exchange down to a shortlist and then testing what you find,
+    the <a href="/solutions/psx-screener-and-strategies/">screener and strategies</a> page is the
+    right start — fair value sits inside it as one filter among several. This page is for the
+    narrower question: you already have a ticker, and you want its valuation read on its own,
+    with the four methods laid out rather than folded into a screen.
+  </p>
+  <p class="mid-p">
+    The same scored-record discipline applies here as everywhere else on the desk: you can read
+    <a href="/research/">the public record</a> before trusting any of it, and the
+    <a href="/blog/">writing</a> covers the mechanics — book closure, settlement, index
+    construction — that actually move what a fair-value model needs to assume.
+  </p>
+</SolutionPage>
+
+<style>
+  .mid-h { font-size: 16px; margin: 0 0 12px; }
+  .mid-p { font-size: 13px; line-height: 1.75; color: var(--ink-2); max-width: 68ch; margin: 0 0 14px; }
+  .mid-p a { text-decoration: underline; text-underline-offset: 2px; }
+</style>
