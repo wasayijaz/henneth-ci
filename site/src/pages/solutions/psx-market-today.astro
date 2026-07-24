@@ -1,0 +1,70 @@
+---
+import SolutionPage from '../../components/SolutionPage.astro';
+---
+
+<SolutionPage
+  title="PSX Market Today — What Moved and Why"
+  h1="What the PSX did today, and why"
+  description="A plain-English daily read of the PSX before the open — sector tilt with the macro reasoning shown, a dated watchlist, and the catalysts on deck. Not a tip sheet."
+  path="/solutions/psx-market-today/"
+  kicker="For the morning read"
+  icon="clock"
+  lead="Business-page headlines tell you the index moved. They rarely tell you why in a way you can check."
+  problem="Most PSX market wraps stop at the index number and a line about sentiment. What actually moves a sector — a T-bill yield crossing the policy rate, an oil shock hitting importers and producers differently, a current-account print — gets lost, or lives three articles away. The desk's daily read puts the move and the reasoning on the same page, dated, so it can be checked against tomorrow's tape rather than taken on faith."
+  appPlan="investor"
+  features={[
+    {
+      icon: 'clock',
+      title: 'One page, before the open',
+      body: 'A plain-English read of the prior session and what it sets up — headline, tone and a market-wide breadth read — published on the desk’s pre-market cycle, not written on request.',
+    },
+    {
+      icon: 'sectors',
+      title: 'Sector tilt, with the reasoning shown',
+      body: 'Favoured and avoid calls at the sector level, each with the specific evidence behind it — a T-bill/policy-rate spread, a commodity move, a current-account print — not a mood word standing in for an argument.',
+    },
+    {
+      icon: 'watchlist',
+      title: 'Dated catalysts, not vibes',
+      body: 'A short watchlist of names the day’s macro read actually touches, plus the calendar events that could change the picture — MPC decisions, CPI releases, book closures — each with a real date, and the risk that would break the thesis stated alongside it.',
+    },
+  ]}
+  faqs={[
+    {
+      q: 'Is this a buy or sell call on a stock?',
+      a: 'No. The desk does not publish price targets, ratings or buy/sell calls on named securities — that is a licensed research activity it deliberately stays out of. What you get is a sector-level favoured/avoid read with the reasoning attached, and a watchlist that states the angle and the risk to it. You decide what, if anything, to do with that.',
+    },
+    {
+      q: 'How often does it update?',
+      a: 'Once a day, on the desk’s pre-market cycle, ahead of the open. It is not a live intraday feed — for that, positions already being monitored get checked every 30 minutes, but the daily read itself is a once-a-day synthesis, not a stream.',
+    },
+    {
+      q: 'Does it only cover the index, or individual names too?',
+      a: 'Both. The sector tilt is market-wide; the watchlist names specific tickers the day’s macro read actually connects to, with the catalyst and the risk stated for each — not a scored valuation call, which lives on the fair-value page instead.',
+    },
+    {
+      q: 'Where does the reasoning come from?',
+      a: 'The same macro and data layer that feeds the rest of the desk — policy rate and T-bill data, global commodity and index moves, the news log — not a generic wire summary. Where a figure has not been cross-checked against a primary filing yet, the read says so rather than presenting it as confirmed.',
+    },
+  ]}
+>
+  <h2 class="mid-h">The daily read is a starting point, not the whole desk</h2>
+  <p class="mid-p">
+    Once a sector or a name catches your attention here, the next step is usually a proper look at
+    the business — the <a href="/solutions/psx-company-fair-value/">fair value</a> page runs
+    four independent valuation methods against any covered stock, and the
+    <a href="/solutions/psx-dividend-calendar-and-yields/">dividend calendar</a> tracks the book
+    closures and ex-dates behind the catalysts mentioned here.
+  </p>
+  <p class="mid-p">
+    For the market mechanics behind the moves — settlement timing, book closure, how the
+    KSE-100 is actually built — see the <a href="/blog/">writing</a>. The full scored record of
+    what the desk has called and how it held up is at <a href="/research/">the public record</a>.
+  </p>
+</SolutionPage>
+
+<style>
+  .mid-h { font-size: 16px; margin: 0 0 12px; }
+  .mid-p { font-size: 13px; line-height: 1.75; color: var(--ink-2); max-width: 68ch; margin: 0 0 14px; }
+  .mid-p a { text-decoration: underline; text-underline-offset: 2px; }
+</style>
