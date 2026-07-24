@@ -13,17 +13,18 @@
  * window.__hAnchors (ToolPage `anchors` prop). The Rule 4 sizing and the stop/target maths live in
  * src/scripts/calculators.ts, shared verbatim with the position tool and ported from
  * scripts/build_signals.py, so the three cannot disagree.
+ *
+ * Levels come from the committed site/src/data/public/strategy_levels.json extract (written by
+ * scripts/build_public_slice.py), never a direct read of strategies/library.json — the same
+ * hermetic-build pattern as context.json/anchors.ts and tickers.json/psx/index.astro. Reaching
+ * across the repo root into strategies/ at build time is exactly what broke this page in
+ * production (ENOENT — that directory isn't in the Vercel build root).
  */
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import ToolPage from '../../components/ToolPage.astro';
+import levelsData from '../../data/public/strategy_levels.json';
 
-// Read the published strategy library from the repo root. utf-8 is REQUIRED: the file carries
-// multi-byte characters, and reading it under Windows' default cp1252 mangles them. Keep only the
-// non-directive methodology fields — id/name and the stop/target percentages.
-const libPath = fileURLToPath(new URL('../../../../strategies/library.json', import.meta.url));
-const raw = JSON.parse(readFileSync(libPath, 'utf-8')) as {
-  id: string; name: string; category?: string; stop_pct: number; target_pct: number;
+const raw = levelsData.strategies as {
+  id: string; name: string; category?: string | null; stop_pct: number; target_pct: number;
 }[];
 
 // One row per strategy, sorted by category then name so the dropdown reads in sensible blocks.

@@ -1,6 +1,7 @@
 ---
 import ctx from '../data/public/context.json';
 import coverage from '../data/public/coverage.json';
+import changelogData from '../data/public/changelog.json';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../site.config.ts';
@@ -82,6 +83,15 @@ const steps = [
   ['02', 'The desk does the homework', 'Valued four ways, scored for quality and risk, tested against 19 years of history, and debated by the analyst desk.', 'deskroom'],
   ['03', 'You decide', 'The desk never places orders and never tells you to buy. You get the read; the decision stays yours.', 'longonly'],
 ];
+
+/* Latest updates — mirrors state/changelog.json via the allow-listed marketing slice (Rule 2:
+   nothing published reads state/ directly). One release exists today, so this is a single
+   spotlight card, not a forced 3-tile grid — the "older releases" strip is ready for when more
+   dated entries accumulate, rather than something built and then hidden. */
+const releases: { date: string; version: string; title: string; notes: string[] }[] =
+  (changelogData as any)?.releases ?? [];
+const latestRelease = releases[0];
+const olderReleases = releases.slice(1, 4);
 
 const principles = [
   ['Research, not advice', 'No “buy”, no “strong buy”, no promises. Every page says so, because the distinction is the product.', 'nofabricate'],
@@ -473,6 +483,55 @@ const principles = [
     </div>
   </section>
 
+  {/* ================= 07 LATEST =================
+      Real release data, not copy — see changelogData above. Single spotlight card because the
+      changelog holds one dated release today; a forced 3-up grid would invent structure the data
+      doesn't have. */}
+  <section class="section updates">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">07 · Latest</p>
+        <h2>The desk ships in the open</h2>
+        <p class="lead">Every dated release, in plain language — what changed, and why, no changelog jargon.</p>
+      </div>
+
+      {latestRelease && (
+        <div class="upd-card">
+          <div class="upd-bar">
+            <span class="upd-v">{latestRelease.version}</span>
+            <span class="muted">{latestRelease.date}</span>
+          </div>
+          <div class="upd-body">
+            <h3>{latestRelease.title}</h3>
+            <ul class="upd-notes">
+              {latestRelease.notes.slice(0, 5).map((n) => <li>{n}</li>)}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {olderReleases.length > 0 && (
+        <div class="upd-older">
+          {olderReleases.map((r) => (
+            <div class="upd-old-row">
+              <span class="upd-old-v">{r.version}</span>
+              <span class="upd-old-t">{r.title}</span>
+              <span class="muted">{r.date}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <a
+        href={site.appUrl}
+        class="seg-2 upd-link"
+        rel="noopener"
+        data-ev="home_section_link"
+        data-ev-section="updates"
+      >See what shipped, inside the desk <Icon name="arrow" size={12} /></a>
+    </div>
+  </section>
+
   <!-- ================= PRINCIPLES ================= -->
   <section class="section band-panel">
     <div class="wrap">
@@ -800,6 +859,49 @@ const principles = [
   .score-how p { font-size: 11px; margin: 8px 0 0; }
   .score-note { font-size: 10.5px; margin-top: 18px; max-width: 720px; }
 
+  /* ---- 07 Latest ---- */
+  .updates .sec-head { margin-bottom: 24px; }
+  .upd-card { border: var(--rule); background: var(--panel); max-width: 680px; }
+  .upd-bar {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    border-bottom: var(--rule); background: var(--panel-2);
+  }
+  .upd-v {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  }
+  .upd-body { padding: 18px 16px; }
+  .upd-body h3 { margin: 0 0 12px; }
+  .upd-notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .upd-notes li {
+    position: relative; padding-left: 16px; font-size: 12px; line-height: 1.6; color: var(--ink-2);
+  }
+  /* Flat square marker, not a bullet dot — every other list mark on the site (.ha-dot, sky-null)
+     is a rule-weight square, never a round glyph, per the no-round-corners rule. */
+  .upd-notes li::before {
+    content: ''; position: absolute; left: 0; top: 6px; width: 6px; height: 6px; background: var(--up);
+  }
+  .upd-older { max-width: 680px; margin-top: 2px; border-top: var(--rule); }
+  .upd-old-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 2px;
+    border-bottom: 1px dotted var(--hair); font-size: 11px;
+  }
+  .upd-old-v { font-family: var(--font-mono); font-weight: 700; flex: none; }
+  .upd-old-t { flex: 1; color: var(--ink-2); }
+  .upd-link { margin-top: 20px; }
+
+  /* .seg-2 — the site's secondary-CTA link, first established on /solutions. */
+  .seg-2 {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink-3); text-decoration: none; border-bottom: 0;
+  }
+  .seg-2 :global(.icn) { transition: transform 0.18s ease; }
+  @media (hover: hover) {
+    .seg-2:hover { color: var(--ink-1); }
+    .seg-2:hover :global(.icn) { transform: translateX(3px); }
+  }
+
   .principles { grid-template-columns: repeat(3, 1fr); }
   .principles p { font-size: 11.5px; margin: 8px 0 0; }
 
@@ -858,6 +960,9 @@ const principles = [
        they do not. */
     .mock-foot { flex-direction: column; gap: 4px; font-size: 10.5px; }
     .mock-foot-r { text-align: left; }
+    .upd-body h3 { font-size: 15px; }
+    .upd-old-row { flex-wrap: wrap; row-gap: 4px; }
+    .upd-old-t { flex-basis: 100%; order: 3; }
   }
 </style>
 

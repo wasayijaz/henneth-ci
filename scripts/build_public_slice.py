@@ -339,8 +339,58 @@ def main():
     (OUT_DIR / "context.json").write_text(
         json.dumps(ctx, indent=1, ensure_ascii=False), encoding="utf-8")
 
+    # ---- changelog.json: the marketing site's "Latest updates" section ---------------------
+    # state/changelog.json is ALREADY the public-safe output of scripts/build_changelog.py — it
+    # fails closed on any release with no `<!--public ... -->` block and tripwires on internal
+    # terms before it is ever written. So this is a straight copy, not a second filter pass. It
+    # still goes through this allow-list, explicitly, rather than the marketing build reading
+    # state/ directly — same hermetic-build rule as everything else in this file.
+    log = load_json(STATE / "changelog.json", {})
+    releases = [
+        {"date": r.get("date"), "version": r.get("version"), "title": r.get("title"),
+         "notes": [n for n in (r.get("notes") or []) if isinstance(n, str)]}
+        for r in (log.get("releases") or [])
+        if isinstance(r, dict) and r.get("date") and r.get("version") and r.get("notes")
+    ][:6]
+    changelog = {
+        "generated": date.today().isoformat(),
+        "note": "Public release notes only. Mirrors state/changelog.json — see CLAUDE.md Rule 2.",
+        "current": log.get("current"),
+        "releases": releases,
+    }
+    (OUT_DIR / "changelog.json").write_text(
+        json.dumps(changelog, indent=1, ensure_ascii=False), encoding="utf-8")
+
+    # ---- strategy_levels.json: replaces the strategies/library.json readFileSync in the Astro
+    # build (site/src/pages/tools/strategy-level-calculator.astro). Only the non-directive
+    # methodology fields — id/name/category/stop_pct/target_pct. Never win rate, expectancy or
+    # backtest results (CLAUDE.md Rule 2 allow-list). strategies/library.json also carries a
+    # cp1252 byte in some `description` fields; since description is never copied out, that byte
+    # never reaches this file or the Astro build.
+    lib = load_json(ROOT / "strategies" / "library.json", [])
+    levels = [
+        {"id": s["id"], "name": s["name"], "category": s.get("category"),
+         "stop_pct": s["stop_pct"], "target_pct": s["target_pct"]}
+        for s in (lib if isinstance(lib, list) else [])
+        if isinstance(s, dict) and isinstance(s.get("stop_pct"), (int, float))
+        and isinstance(s.get("target_pct"), (int, float))
+        and s["stop_pct"] > 0 and s["target_pct"] > 0
+    ]
+    strategy_levels = {
+        "generated": date.today().isoformat(),
+        "note": "Strategy id/name/stop_pct/target_pct only — methodology, never a call on a "
+                "named security. See scripts/build_public_slice.py allow-list.",
+        "strategies": levels,
+    }
+    (OUT_DIR / "strategy_levels.json").write_text(
+        json.dumps(strategy_levels, indent=1, ensure_ascii=False), encoding="utf-8")
+
     print(f"build_public_slice: wrote {len(out)} tickers -> {path.relative_to(ROOT)}")
+    print(f"build_public_slice: wrote strategy_levels -> "
+          f"{(OUT_DIR / 'strategy_levels.json').relative_to(ROOT)} ({len(levels)} strategies)")
     print(f"build_public_slice: wrote context   -> {(OUT_DIR / 'context.json').relative_to(ROOT)}")
+    print(f"build_public_slice: wrote changelog -> {(OUT_DIR / 'changelog.json').relative_to(ROOT)}"
+          f" ({len(releases)} release(s))")
     if skipped:
         print(f"build_public_slice: skipped {len(skipped)} "
               f"(a ticker with incomplete data is skipped, never published with gaps):")

@@ -1,0 +1,496 @@
+{
+ "generated": "2026-07-24",
+ "note": "Strategy id/name/stop_pct/target_pct only — methodology, never a call on a named security. See scripts/build_public_slice.py allow-list.",
+ "strategies": [
+  {
+   "id": "sma_golden_cross",
+   "name": "Golden cross (SMA50>SMA200)",
+   "category": "trend",
+   "stop_pct": 5,
+   "target_pct": 10
+  },
+  {
+   "id": "reclaim_sma200",
+   "name": "Reclaim 200-day",
+   "category": "trend",
+   "stop_pct": 4,
+   "target_pct": 8
+  },
+  {
+   "id": "ema9_20_bull",
+   "name": "EMA 9/20 bull cross",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "adx_trend_long",
+   "name": "ADX strong uptrend",
+   "category": "trend",
+   "stop_pct": 3.5,
+   "target_pct": 7
+  },
+  {
+   "id": "triple_ema_align",
+   "name": "Triple EMA alignment",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "macd_bull_zero",
+   "name": "MACD cross above zero",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "donchian55_break",
+   "name": "Donchian 55 breakout (turtle)",
+   "category": "breakout",
+   "stop_pct": 5,
+   "target_pct": 10
+  },
+  {
+   "id": "above_rising_sma100",
+   "name": "Rising SMA100 trend",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "pullback_trend",
+   "name": "Trend pullback to 20MA",
+   "category": "trend",
+   "stop_pct": 2.5,
+   "target_pct": 5
+  },
+  {
+   "id": "sma20_slope_pullback",
+   "name": "SMA20 slope-up dip buy",
+   "category": "trend",
+   "stop_pct": 2.5,
+   "target_pct": 5
+  },
+  {
+   "id": "roc20_momentum",
+   "name": "20d momentum continuation",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "rsi_strong_zone",
+   "name": "RSI strength band",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "high20_vol_break",
+   "name": "20d high + volume",
+   "category": "breakout",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "high50_break",
+   "name": "50d high breakout",
+   "category": "breakout",
+   "stop_pct": 4,
+   "target_pct": 8
+  },
+  {
+   "id": "macd_hist_rising",
+   "name": "MACD histogram turning up",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "three_day_thrust",
+   "name": "3-day thrust above 20MA",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "gap_up_hold",
+   "name": "Gap-up hold",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "rs_leader",
+   "name": "Relative-strength leader",
+   "category": "momentum",
+   "stop_pct": 3.5,
+   "target_pct": 6
+  },
+  {
+   "id": "rsi2_meanrev",
+   "name": "RSI(2) mean reversion",
+   "category": "mean_reversion",
+   "stop_pct": 2.5,
+   "target_pct": 4
+  },
+  {
+   "id": "oversold_bounce",
+   "name": "RSI oversold bounce",
+   "category": "mean_reversion",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "bb_lower_reclaim",
+   "name": "Bollinger lower reclaim",
+   "category": "mean_reversion",
+   "stop_pct": 2.5,
+   "target_pct": 4
+  },
+  {
+   "id": "willr_reversal",
+   "name": "Williams %R reversal",
+   "category": "mean_reversion",
+   "stop_pct": 2.5,
+   "target_pct": 4
+  },
+  {
+   "id": "cci_snapback",
+   "name": "CCI oversold snapback",
+   "category": "mean_reversion",
+   "stop_pct": 2.5,
+   "target_pct": 4
+  },
+  {
+   "id": "stoch_oversold_cross",
+   "name": "Stochastic oversold cross",
+   "category": "mean_reversion",
+   "stop_pct": 2.5,
+   "target_pct": 4
+  },
+  {
+   "id": "atr_stretch_below",
+   "name": "2-ATR stretch below 20MA",
+   "category": "mean_reversion",
+   "stop_pct": 3,
+   "target_pct": 4
+  },
+  {
+   "id": "deep_pullback_uptrend",
+   "name": "Deep pullback in uptrend",
+   "category": "mean_reversion",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "bb_lower_rsi",
+   "name": "Lower band + RSI<35",
+   "category": "mean_reversion",
+   "stop_pct": 2.5,
+   "target_pct": 4
+  },
+  {
+   "id": "squeeze_break_up",
+   "name": "Bollinger squeeze breakout",
+   "category": "volatility",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "vol_spike_break",
+   "name": "Volume-spike breakout",
+   "category": "volume",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "high52w_break",
+   "name": "52-week high breakout",
+   "category": "breakout",
+   "stop_pct": 5,
+   "target_pct": 10
+  },
+  {
+   "id": "atr_expansion_up",
+   "name": "ATR expansion up-close",
+   "category": "volatility",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "obv_accumulation",
+   "name": "OBV accumulation",
+   "category": "volume",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "lowvol_pullback",
+   "name": "Low-volatility pullback",
+   "category": "volatility",
+   "stop_pct": 2.5,
+   "target_pct": 5
+  },
+  {
+   "id": "bbpctb_momentum",
+   "name": "%b momentum ride",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "rsi_macd_combo",
+   "name": "RSI + MACD combo",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "stoch_bull_trend",
+   "name": "Stochastic cross in uptrend",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "rsi_reclaim_50",
+   "name": "RSI reclaim 50",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "macd_rsi_trend",
+   "name": "MACD cross + RSI>50",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "cci_zero_cross",
+   "name": "CCI zero-line cross",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "willr_mid_cross",
+   "name": "Williams %R mid cross",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "macd_signal_uptrend",
+   "name": "MACD signal cross (trend)",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "donch20_pullback_break",
+   "name": "Consolidation break",
+   "category": "breakout",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "pdi_cross",
+   "name": "+DI crosses -DI",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "ema20_bounce",
+   "name": "EMA20 bounce",
+   "category": "trend",
+   "stop_pct": 2.5,
+   "target_pct": 5
+  },
+  {
+   "id": "new_high_low_vol",
+   "name": "Quiet new high",
+   "category": "breakout",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "macd_hist_accel",
+   "name": "MACD histogram accel",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "stoch_reclaim_50",
+   "name": "Stochastic reclaim 50",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "trend_momo_combo",
+   "name": "Trend + momentum combo",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "vol_dryup_surge",
+   "name": "Dry-up then surge",
+   "category": "volume",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "adx_rising_trend",
+   "name": "ADX rising trend entry",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "roc_accel",
+   "name": "ROC acceleration",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "bb_walk_upper",
+   "name": "Band walk (upper)",
+   "category": "momentum",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "donch20_break_confirm",
+   "name": "Donchian 20 break, volume confirmed",
+   "category": "breakout",
+   "stop_pct": 3.5,
+   "target_pct": 7
+  },
+  {
+   "id": "squeeze_expansion_long",
+   "name": "Squeeze release, upside",
+   "category": "volatility",
+   "stop_pct": 4,
+   "target_pct": 8
+  },
+  {
+   "id": "obv_divergence_up",
+   "name": "Volume leads price",
+   "category": "volume",
+   "stop_pct": 3.5,
+   "target_pct": 6
+  },
+  {
+   "id": "golden_pullback_50",
+   "name": "Golden-cross pullback",
+   "category": "trend",
+   "stop_pct": 3.5,
+   "target_pct": 7
+  },
+  {
+   "id": "rsi2_deep_uptrend",
+   "name": "RSI(2) washout in an uptrend",
+   "category": "mean_reversion",
+   "stop_pct": 3,
+   "target_pct": 5
+  },
+  {
+   "id": "adx_pdi_expansion",
+   "name": "Trend strength turning up",
+   "category": "trend",
+   "stop_pct": 3.5,
+   "target_pct": 7
+  },
+  {
+   "id": "stoch_double_bottom",
+   "name": "Stochastic reclaim from oversold",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "roc60_leader_pullback",
+   "name": "Long-run leader, short pullback",
+   "category": "momentum",
+   "stop_pct": 4,
+   "target_pct": 8
+  },
+  {
+   "id": "bb_pctb_reclaim",
+   "name": "Band reclaim from the low",
+   "category": "mean_reversion",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "hi252_fresh_break",
+   "name": "New 52-week high, low volatility",
+   "category": "breakout",
+   "stop_pct": 4.5,
+   "target_pct": 9
+  },
+  {
+   "id": "macd_zero_reclaim",
+   "name": "MACD reclaims zero",
+   "category": "momentum",
+   "stop_pct": 3.5,
+   "target_pct": 7
+  },
+  {
+   "id": "ema50_defended",
+   "name": "50-day EMA defended",
+   "category": "trend",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "willr_uptrend_reset",
+   "name": "Williams %R reset in trend",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 5.5
+  },
+  {
+   "id": "vol_dryup_reversal",
+   "name": "Volume dry-up then surge",
+   "category": "volume",
+   "stop_pct": 3.5,
+   "target_pct": 6.5
+  },
+  {
+   "id": "cci_trend_pullback",
+   "name": "CCI pullback in uptrend",
+   "category": "oscillator",
+   "stop_pct": 3,
+   "target_pct": 6
+  },
+  {
+   "id": "donch55_trend_break",
+   "name": "Donchian 55 breakout",
+   "category": "breakout",
+   "stop_pct": 5,
+   "target_pct": 10
+  },
+  {
+   "id": "triple_screen_long",
+   "name": "Triple screen alignment",
+   "category": "trend",
+   "stop_pct": 3.5,
+   "target_pct": 7
+  },
+  {
+   "id": "atr_quiet_breakout",
+   "name": "Quiet base, upside break",
+   "category": "volatility",
+   "stop_pct": 3,
+   "target_pct": 7
+  }
+ ]
+}

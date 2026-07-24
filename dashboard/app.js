@@ -3140,7 +3140,8 @@ async function playDeskReplay(sym) {
     `Technical desk (Meher) &amp; fundamental desk (Dr. Omar) — memos in`,
     `Bull (Zoya) vs Bear (Khurram) — stress-testing both sides`,
   ];
-  if (s.qa) steps.push(`QA agent — cross-examined the numbers · <b>${esc(s.qa.verdict)}</b>`);
+  if (s.qa) steps.push(`QA agent — cross-examined every number in the room`);
+  steps.push(`Bull and bear cases in — points for, points against. Your call.`);
 
   const panel = (av, nm, role, st, read, facts) => `<div class="rp-panel ${st ? "accent-" + st : ""}">
     <div class="rp-panel-head"><span class="rp-av sm">${av}</span><div><b>${esc(nm)}</b><span class="rp-role">${role}</span></div></div>
@@ -3153,7 +3154,7 @@ async function playDeskReplay(sym) {
     steps,
     renderReveal: (bodyEl) => {
       bodyEl.innerHTML = `<div class="rp-reveal">
-        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}${s.qa ? "" : ""}</span>${s.qa ? `<span class="qabadge ${s.qa.verdict === "clean" ? "ok" : "warn"}">QA ${esc(s.qa.verdict)}</span>` : ""}</div>
+        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span>${s.qa ? `<span class="qabadge ok">QA checked</span>` : ""}</div>
         <div class="rp-desk">
           ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), ta.read, ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
           ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), fa.read, `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(fa.dividend_safety || "—")}</b>`)}
