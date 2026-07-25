@@ -1962,41 +1962,42 @@ body[data-theme=gemini] .since-body{font-size:13.5px;line-height:1.6}
    ::after on the scrolling element itself scrolls away with the content and is
    only visible when it is already useless.
 
-   Desktop keeps the full list — the cap is a small-screen affordance, and on a
-   wide screen the down-the-column scan is worth more than the saved height. */
+   This is NOT a small-screen-only affordance. A 120-cell grid runs past the fold
+   on a 1440px monitor too, and burying a card under it is the same failure at any
+   width. What the width changes is the size of the cap, and that is decided in JS
+   (tileDims) from the viewport height and written to --tilemax — so these rules
+   are unconditional and the media query that used to gate them is gone. */
 body[data-theme=gemini] .tilebox{position:relative}
 
-@media(max-width:900px){
-  body[data-theme=gemini] .tilebody{
-    max-height:var(--tilemax,340px);overflow-y:auto;overscroll-behavior:contain;
-    -webkit-overflow-scrolling:touch;padding-inline-end:8px}
-  /* The scrollbar is the other half of the signal. Mobile overlay scrollbars
-     only appear once the user has already guessed there was more, so give this
-     one a permanent track: a visible groove says "scrollable" at rest. */
-  body[data-theme=gemini] .tilebody::-webkit-scrollbar{width:6px}
-  body[data-theme=gemini] .tilebody::-webkit-scrollbar-track{background:var(--line);border:0}
-  body[data-theme=gemini] .tilebody::-webkit-scrollbar-thumb{background:var(--ink3);border:0}
-  body[data-theme=gemini] .tilebody::-webkit-scrollbar-thumb:hover{background:var(--ink2)}
+body[data-theme=gemini] .tilebody{
+  max-height:var(--tilemax,340px);overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;padding-inline-end:8px}
+/* The scrollbar is the other half of the signal. Mobile overlay scrollbars
+   only appear once the user has already guessed there was more, so give this
+   one a permanent track: a visible groove says "scrollable" at rest. */
+body[data-theme=gemini] .tilebody::-webkit-scrollbar{width:6px}
+body[data-theme=gemini] .tilebody::-webkit-scrollbar-track{background:var(--line);border:0}
+body[data-theme=gemini] .tilebody::-webkit-scrollbar-thumb{background:var(--ink3);border:0}
+body[data-theme=gemini] .tilebody::-webkit-scrollbar-thumb:hover{background:var(--ink2)}
 
-  body[data-theme=gemini] .tilebox::after{
-    content:"";position:absolute;inset-inline:0;bottom:0;height:54px;pointer-events:none;
-    background:linear-gradient(to bottom,transparent,var(--panel) 92%);
-    backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
-    -webkit-mask-image:linear-gradient(to bottom,transparent,#000 60%);
-    mask-image:linear-gradient(to bottom,transparent,#000 60%);
-    opacity:1;transition:opacity .18s ease}
-  /* A blur alone reads as a rendering artefact on a static screen. Name it. */
-  body[data-theme=gemini] .tilebox::before{
-    content:"scroll ▾";position:absolute;inset-inline-end:10px;bottom:5px;z-index:1;
-    font-family:var(--mono,ui-monospace,monospace);font-size:9px;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);
-    pointer-events:none;opacity:1;transition:opacity .18s ease}
-  body[data-theme=gemini] .tilebox.at-end::after,
-  body[data-theme=gemini] .tilebox.at-end::before{opacity:0}
-  /* Content that fits gets no decoration at all — wireTiles() measures it. */
-  body[data-theme=gemini] .tilebox.no-scroll::after,
-  body[data-theme=gemini] .tilebox.no-scroll::before{display:none}
-}
+body[data-theme=gemini] .tilebox::after{
+  content:"";position:absolute;inset-inline:0;bottom:0;height:54px;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,var(--panel) 92%);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 60%);
+  mask-image:linear-gradient(to bottom,transparent,#000 60%);
+  opacity:1;transition:opacity .18s ease}
+/* A blur alone reads as a rendering artefact on a static screen. Name it. */
+body[data-theme=gemini] .tilebox::before{
+  content:"scroll ▾";position:absolute;inset-inline-end:10px;bottom:5px;z-index:1;
+  font-family:var(--mono,ui-monospace,monospace);font-size:9px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);
+  pointer-events:none;opacity:1;transition:opacity .18s ease}
+body[data-theme=gemini] .tilebox.at-end::after,
+body[data-theme=gemini] .tilebox.at-end::before{opacity:0}
+/* Content that fits gets no decoration at all — wireTiles() measures it. */
+body[data-theme=gemini] .tilebox.no-scroll::after,
+body[data-theme=gemini] .tilebox.no-scroll::before{display:none}
 
 /* ── EXPAND/COLLAPSE ROWS INSIDE A STACKED TABLE ──────────────────────────────
    `.tscroll table[data-stack] tbody tr{display:block}` is specificity (0,3,4)

@@ -463,9 +463,10 @@ async function pageBoard() {
       <table><thead><tr><th>Ticker</th><th>Template</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
       sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.template)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
   // The universe is the longest block on the board and the least urgent — at two cells per row on
-  // a phone it buried predictability and proven strategies under ~60 rows of scrolling. Cap it.
+  // a phone it buried predictability and proven strategies under ~60 rows of scrolling, and even on
+  // a desktop grid it runs well past the fold. Cap it; wireTiles() sizes the cap to the viewport.
   const universeCard = `<div class="card"><h2>Universe</h2><div class="sub">day move · click any name</div>
-    <div class="tilebox" style="--tilemax:300px"><div class="tilebody"><div class="heat">${heat}</div></div></div></div>`;
+    <div class="tilebox"><div class="tilebody"><div class="heat">${heat}</div></div></div></div>`;
   const predCard = `<div class="card"><h2>Predictability</h2><div class="sub"></div><table><thead><tr><th>Ticker</th><th class="r">Score</th><th class="r">RSI</th><th class="r">20d</th></tr></thead><tbody>${
       pt.map(([s, v]) => `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b></td><td class="r num">${v.score}</td><td class="r num">${q[s]?.rsi14 ?? "—"}</td><td class="r num ${cls(q[s]?.ret_20d || 0)}">${q[s] ? sgn(q[s].ret_20d) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`;
   const newsCard = `<div class="card"><h2>News wire</h2><div class="sub"><a href="#/news">full wire →</a></div><div class="wire">${
@@ -5656,8 +5657,12 @@ function restackTables() {
    the user has reached the bottom, and lies from the first paint if the content already fits —
    and a permanent fade over a short list reads as a rendering bug. Measure instead of decorate. */
 function wireTiles(root = document) {
+  const { max } = tileDims();
   root.querySelectorAll(".tilebox>.tilebody").forEach(b => {
     const box = b.parentElement;
+    // Re-stamp on every pass, not just at wrap time: the cap is viewport-derived, so a resize
+    // (or a phone rotation) has to move it, and tiles authored in markup never had one at all.
+    box.style.setProperty("--tilemax", max + "px");
     const sync = () => {
       const room = b.scrollHeight - b.clientHeight;
       box.classList.toggle("no-scroll", room <= 4);
@@ -5678,38 +5683,116 @@ function wireTiles(root = document) {
    and the card below it is unreachable" — so measure that instead of enumerating class names. A
    direct child of a card, tall, and made of many sibling rows, is a list. Anything else is layout.
 
-   Deliberately NOT tiled: short blocks (nothing gained, and a fade over a list that ends is a lie),
-   and anything on a wide screen, where the down-the-column scan beats the saved height. */
-const TILE_TRIGGER = 460;   // px of card child height that makes the next card unreachable
-const TILE_MAX = 340;       // px the tile is capped to — ~2/3 of a phone screen, still scannable
+   Deliberately NOT tiled: short blocks — nothing is gained, and a fade over a list that ends is a lie.
+
+   This applies on desktop too. The original version bailed above 900px on the theory that a wide
+   screen makes the down-the-column scan worth the height, but that only holds for a list that is
+   merely long. The board's universe grid is ~120 cells at any width; on a 1440px monitor it still
+   pushed predictability and proven strategies a full screen and a half below the fold, and nobody
+   scrolls past a wall of cells to find out there were cards under it. What changes with width is
+   the BUDGET, not the rule — so the thresholds are derived from viewport height instead of frozen
+   at phone values. */
 const TILE_MIN_ROWS = 8;    // fewer sibling rows than this is a layout block, not a list
 const TILE_TALL = 700;      // ...unless it is simply this tall, whatever it is made of
 const TILE_SKIP = /\b(sumstrip|statgrid|seg|tk-head|ttabs|tilebox)\b/;
 
+/* Trigger: a block taller than ~70% of the viewport means whatever follows it starts off-screen.
+   Cap: a bit over half the viewport, so the tile reads as "a window onto a list" — tall enough to
+   scan, short enough that the next card's heading is visible without scrolling. Both are clamped:
+   the floors are the phone values that were already validated, the ceiling keeps a 4K monitor from
+   producing a "cap" so tall it caps nothing. */
+function tileDims() {
+  const vh = window.innerHeight || 800;
+  return {
+    trigger: Math.max(460, Math.round(vh * 0.7)),
+    max: Math.min(620, Math.max(340, Math.round(vh * 0.55))),
+  };
+}
+
+/* THE OTHER SHAPE: the card that IS the list.
+   The pass below looks for one tall child to wrap, which catches a wrapper like .wire or a table but
+   misses a card whose direct children ARE the rows — research renders 16 sibling .rdoc blocks with no
+   container at all. Every row is ~90px so nothing ever trips the trigger, yet the card runs 1500px and
+   buries the card under it exactly the same way. So wrap the RUN.
+
+   "Consecutive siblings sharing a class" is what separates a list from a card's assorted layout blocks:
+   a heading, a sub, and a chart are three different classes in a row and can never form a run, while
+   rows emitted by one .map() are always identical. An empty className is too ambiguous to judge and is
+   left alone.
+
+   Match on the FIRST class token, not the whole attribute. Rows from one .map() routinely carry a
+   per-row state class — the ticker page emits `lrow s-yes` / `lrow s-ask` / `lrow s-no`, and the signal
+   stack emits `sig-row` beside `sig-row locked clickable`. Comparing full classNames read those as
+   seven unrelated blocks and wrapped nothing, while the card ran 1166px. The base class is what says
+   "same kind of row"; the rest says what that row happens to contain.
+
+   The run floor is lower than TILE_MIN_ROWS because a run is much stronger evidence than a child count:
+   five siblings of the SAME kind that together fill most of the viewport is a list, whereas five
+   assorted children of a container proves nothing about what the container is.
+
+   A run must also agree on TAG, and paragraphs never count. Macro's country card runs
+   `P.sub, P.sub, DIV.sub, P.sub, P.sub` — five siblings sharing the base class `sub`, because `sub` is
+   this sheet's muted-text class and marks both a caption and a body paragraph. Matching on class alone
+   read 906px of prose as a list and put it in a scroll box, which is the one outcome this pass is meant
+   to avoid. Rows from a .map() are div soup; prose is <p>. Requiring the tag to match as well separates
+   them without needing to know what `sub` means. */
+const TILE_RUN_MIN = 5;
+const baseCls = el => (el.className || "").toString().trim().split(/\s+/)[0] || "";
+const runKey = el => el.tagName + "." + baseCls(el);
+
+function tileRuns(card, trigger) {
+  const kids = [...card.children];
+  let i = 0;
+  while (i < kids.length) {
+    const cls = baseCls(kids[i]);
+    if (!cls || kids[i].tagName === "P" || kids[i].dataset.tiled || TILE_SKIP.test(cls)) { i++; continue; }
+    const key = runKey(kids[i]);
+    let j = i, h = 0;
+    while (j < kids.length && runKey(kids[j]) === key) { h += kids[j].offsetHeight; j++; }
+    const run = kids.slice(i, j);
+    if (run.length >= TILE_RUN_MIN && h >= trigger) {
+      const box = document.createElement("div");
+      box.className = "tilebox";
+      const body = document.createElement("div");
+      body.className = "tilebody";
+      card.insertBefore(box, run[0]);          // anchor before the run so DOM order is preserved
+      box.appendChild(body);
+      run.forEach(el => { el.dataset.tiled = "1"; body.appendChild(el); });
+    }
+    i = j;
+  }
+}
+
 function tileify(root = document) {
-  if (window.innerWidth > 900) return;
-  root.querySelectorAll(".card").forEach(card => {
+  const { trigger } = tileDims();
+  // Cards are not the only thing that holds a list. The ticker page's "how to read this" disclosure
+  // puts a 770px .checklist inside a <details>, which no .card ever contains — so an open disclosure
+  // pushed everything under it off-screen while being invisible to this pass. Any block that can hold
+  // a long list is a container here.
+  root.querySelectorAll(".card, details").forEach(card => {
     [...card.children].forEach(el => {
       if (el.dataset.tiled || TILE_SKIP.test(el.className || "")) return;
       if (el.tagName !== "DIV" && el.tagName !== "TABLE") return;
-      if (el.offsetHeight < TILE_TRIGGER) return;
-      // A .tscroll wrapper holds exactly one table, so count the rows inside it, not the wrapper.
-      const inner = el.querySelector(":scope>table>tbody") || el;
-      // Row count is only a proxy for "list", and a bad one once a table stacks: six rows of
-      // label/value blocks measured 900px on the macro page. Height is the thing that actually
-      // hurts, so let sheer height qualify on its own. Prose is excluded by the DIV/TABLE gate
-      // above — chopping a paragraph into a 340px scroll is worse than a long paragraph.
-      if (inner.children.length < TILE_MIN_ROWS && el.offsetHeight < TILE_TALL) return;
+      if (el.offsetHeight < trigger) return;
+      // A table is a list by construction, so it needs no further proof — and demanding one was
+      // wrong: the dividends table stacks on a phone into 4 rows of 170px, which is neither 8 rows
+      // nor (at 679px) over the height escape, so it slipped through by 21px while being exactly
+      // the thing this pass exists to cap. A .tscroll wrapper holds exactly one table, so look
+      // through it. Everything else must still prove it is a list rather than prose or layout:
+      // many sibling rows, or sheer height. Chopping a paragraph into a scroll box is worse than
+      // a long paragraph, which is why the DIV/TABLE tag gate above excludes <p> outright.
+      const isList = el.tagName === "TABLE" || !!el.querySelector(":scope>table>tbody");
+      if (!isList && el.children.length < TILE_MIN_ROWS && el.offsetHeight < TILE_TALL) return;
       el.dataset.tiled = "1";
       const box = document.createElement("div");
       box.className = "tilebox";
-      box.style.setProperty("--tilemax", TILE_MAX + "px");
       const body = document.createElement("div");
       body.className = "tilebody";
       card.insertBefore(box, el);
       box.appendChild(body);
       body.appendChild(el);      // moving a node keeps its inline onclick and its listeners
     });
+    tileRuns(card, trigger);     // after the child pass, so anything already wrapped is out of the way
   });
   wireTiles(root);
 }
