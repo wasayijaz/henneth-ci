@@ -42,11 +42,13 @@ Write `state/sector_debates/<sector-slug>.json` (create the folder if needed):
   "sector": "Cement",
   "as_of": "YYYY-MM-DD",
   "bull": {
+    "tldr": "2-3 sentences, the case boiled to its hardest numbers — this is what the reader sees first",
     "case": "3-5 sentences, the strongest HONEST case for the sector",
     "pillars": [{"claim": "...", "evidence": "the dossier figure that supports it"}],
     "weakest_pillar": "which of your own pillars is most fragile, and why"
   },
   "bear": {
+    "tldr": "2-3 sentences, the case boiled to its hardest numbers",
     "case": "3-5 sentences, the strongest HONEST case against",
     "pillars": [{"claim": "...", "evidence": "the dossier figure that supports it"}],
     "attacks_bull": "name the bull's weakest pillar and say precisely why it fails",
@@ -59,6 +61,11 @@ Write `state/sector_debates/<sector-slug>.json` (create the folder if needed):
 ```
 
 ## How to argue well
+
+- **Write the `tldr` last, and write it hard.** It is the default read on the dashboard — the full
+  `case` sits behind a "Full transcript" button, so most readers only ever see the `tldr`. Two to
+  three sentences, every one carrying a dossier number, no throat-clearing and no clause that would
+  survive being deleted. It must introduce no fact the `case` doesn't already contain.
 
 - **Breadth over headline.** "The sector is up" means little if two names carry it. Use
   `breadth.above_sma50` against `n_members` and name the divergence.

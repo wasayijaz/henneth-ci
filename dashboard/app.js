@@ -5036,56 +5036,207 @@ async function pageAsk() {
    SECTOR DEBATES — the Desk Room, one level up. Reads sessions the weekly agent run writes to
    state/sector_debates/. Purely a renderer: no agent runs from the browser.
    ========================================================================================== */
+let _sectorPick = null, _secListOpen = false, _secSess = null, _secName = "";
+
+/* Has the reader PLAYED this sector's debate in this tab? Session-scoped on purpose: the dot is a
+   "you haven't seen this yet" marker, not a permanent trophy — a fresh visit should feel fresh. */
+function secRan(sec) { try { return !!sessionStorage.getItem("secran:" + sec); } catch (e) { return false; } }
+
+/* The crisp default. A session written by the current agents carries an explicit `tldr`; older ones
+   don't, so the first two sentences of the long case stand in. Truncating mid-sentence would read as
+   broken prose, and the full text is always one button away, so sentence boundaries are the cut. */
+function secCrisp(o, key, n = 2) {
+  const short = o && tp(o, "tldr");
+  if (short) return short;
+  const long = String((o && tp(o, key)) || "");
+  const m = long.match(/[^.!?]+[.!?]+(?:\s|$)/g);
+  return m ? m.slice(0, n).join(" ").trim() : long;
+}
+
 async function pageSectors() {
   await Promise.resolve();
-  const [dos, idx] = await Promise.all([j("sector_dossiers.json"), j("sector_debates/_index.json")]);
+  const [dos, idx, rot] = await Promise.all([
+    j("sector_dossiers.json"), j("sector_debates/_index.json"), j("sector_debates/_rotation.json")]);
   const secs = Object.entries(dos?.sectors || {}).sort((a, b) => b[1].n_members - a[1].n_members);
   const sessions = idx?.sessions || {};
+  const queue = rot?.queue || [];
   const cur = _sectorPick || secs[0]?.[0];
   const d = dos?.sectors?.[cur];
   const sess = sessions[cur];
+  _secSess = sess || null; _secName = cur || "";
+  const nRun = secs.filter(([s]) => sessions[s]).length;
   const pctl = (n, t) => t ? Math.round(n / t * 100) : 0;
   const drv = (d?.macro_drivers || []);
+
+  // ---- left rail: every sector, stacked, each carrying its own run-state dot
+  const dotOf = s => sessions[s] ? (secRan(s) ? "done" : "live") : "soon";
+  const listItem = ([s, v]) => `<button class="sec-item ${cur === s ? "on" : ""}" onclick="_sectorPick='${esc(s)}';_secListOpen=false;pageSectors()">
+    <span class="sec-dot ${dotOf(s)}"></span><span class="sec-nm">${esc(s)}</span><span class="sec-n">${v.n_members}</span></button>`;
+  const rail = `<aside class="sec-list">
+    <div class="sec-list-head"><span class="ark">sectors</span><span class="sub">${nRun} of ${secs.length} debated</span></div>
+    ${secs.map(listItem).join("")}
+    <div class="sec-legend"><span><i class="sec-dot live"></i>ready to run</span><span><i class="sec-dot done"></i>you've run it</span><span><i class="sec-dot soon"></i>in the queue</span></div>
+  </aside>`;
+  // mobile: the rail is a sheet behind one tap, so the debate — not the index — is what opens first
+  const picker = `<button class="sec-picker" onclick="_secListOpen=!_secListOpen;pageSectors()">
+    <span class="sec-dot ${dotOf(cur)}"></span><b>${esc(cur || "—")}</b>
+    <span class="sec-pick-go">${_secListOpen ? "Close" : "Change sector"} ›</span></button>`;
+
+  // ---- the tile group: house / for / against, crisp by default, full prose one tap away
+  const pillars = side => (side?.pillars || []).slice(0, 2).map(p =>
+    `<div class="sec-pt"><b>${esc(tp(p, "claim"))}</b><span>${esc(p.evidence)}</span></div>`).join("");
+  const tile = (kind, label, badge, body, which) => `<article class="card sec-tile ${kind}">
+    <div class="sec-tile-top"><span class="ark">${label}</span>${badge}</div>${body}
+    <button class="sec-more" onclick="secTranscript('${which}')">Full transcript ›</button></article>`;
+  const stanceCls = sess?.house_view?.stance === "constructive" ? "ok" : sess?.house_view?.stance === "cautious" ? "bad" : "";
+  const tiles = sess?.house_view ? `<div class="sec-tiles">
+    ${tile("t-house", "the house view", `<span class="pill ${stanceCls}">${esc(sess.house_view.stance)} · ${esc(sess.house_view.conviction)}</span>`,
+    `<p class="sec-say">${esc(secCrisp(sess.house_view, "summary"))}</p>`, "house")}
+    ${tile("t-for", "the case for", "", `<p class="sec-say">${esc(secCrisp(sess.bull, "case"))}</p>${pillars(sess.bull)}`, "for")}
+    ${tile("t-against", "the case against", "", `<p class="sec-say">${esc(secCrisp(sess.bear, "case"))}</p>${pillars(sess.bear)}`, "against")}
+  </div>` : "";
+
+  // ---- run bar / empty state. Nothing runs from the browser: this replays a debate already written.
+  const qpos = queue.indexOf(cur);
+  const runBar = sess ? `<button class="run-desk ${secRan(cur) ? "ran" : ""}" onclick="playSectorDebate('${esc(cur)}')">
+    <span class="run-ico">▶</span>
+    <span class="run-txt"><b>The desk's debate on ${esc(cur)}</b><i>A sector bull and a sector bear argue the same evidence pack — breadth, valuation spread, income, the measured global factors — then the chair weighs it. Watch it play out.</i></span>
+    <span class="run-meta">${sess.as_of ? `<span class="run-last">Debated · ${esc(String(sess.as_of).slice(0, 10))}</span>` : ""}<span class="run-go">${secRan(cur) ? "Replay ›" : "Run ›"}</span></span>
+  </button>` : `<div class="card sec-empty">
+    <div class="sec-empty-dot"><span class="sec-dot soon"></span></div>
+    <b>${esc(cur)} hasn't been to the debate desk yet.</b>
+    <p class="sub">One sector is debated each week on a fixed rotation.${qpos >= 0 ? ` <b>${esc(cur)}</b> is <b>#${qpos + 1}</b> in the queue — ${qpos === 0 ? "it's next up" : `${qpos} ${qpos === 1 ? "sector" : "sectors"} ahead of it`}.` : ""} The evidence pack below is already compiled; it is exactly what the two sides will argue from.</p>
+    <div class="sec-empty-go">${secs.filter(([s]) => sessions[s] && s !== cur).slice(0, 2).map(([s]) =>
+      `<button class="sec-more" onclick="_sectorPick='${esc(s)}';pageSectors()">Read ${esc(s)} ›</button>`).join("")}</div>
+  </div>`;
+
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Sectors</h2><div class="ln"></div><span class="pill">${secs.length} sectors</span></div>
-  <p class="sub" style="margin-bottom:12px">The evidence pack behind every PSX sector — breadth, valuation spread, income quality, and the global factors that <b>measurably</b> move it. One sector goes to the debate desk each week; the compiled numbers below are what the analysts argue from.</p>
-  <div class="ttabs">${secs.map(([s, v]) => `<button class="ttab ${cur === s ? "on" : ""}" onclick="_sectorPick='${esc(s)}';pageSectors()">${esc(s.length > 20 ? s.slice(0, 19) + "…" : s)} <span class="sub">${v.n_members}</span></button>`).join("")}</div>
-  ${!d ? `<div class="card"><div class="empty">Sector dossiers build on the next cycle.</div></div>` : `
-  <div class="card tpanel">
-    <div class="sumstrip s4">
-      <div class="sumtile"><span class="sk">Median 20-day</span><b class="${(d.returns.median_20d_pct || 0) >= 0 ? "up" : "dn"}">${sgn(d.returns.median_20d_pct)}%</b><i>${d.n_members} names</i></div>
-      <div class="sumtile"><span class="sk">Breadth</span><b>${d.breadth.above_sma50}/${d.n_members}</b><i>above their 50-day (${pctl(d.breadth.above_sma50, d.n_members)}%)</i></div>
-      <div class="sumtile"><span class="sk">Median P/E</span><b>${d.valuation.median_pe ?? "—"}</b><i>${d.valuation.n_undervalued} below fair · ${d.valuation.n_overvalued} above</i></div>
-      <div class="sumtile"><span class="sk">Median yield</span><b>${d.income.median_yield_pct ?? "—"}%</b><i>${d.income.n_payers}/${d.n_members} pay · payout ${d.income.median_payout_pct ?? "—"}%</i></div>
-    </div>
-    <div class="tnote">${drv.length
+  <div class="seg" style="margin-top:4px"><h2>Sectors</h2><div class="ln"></div><span class="pill">${nRun} of ${secs.length} debated</span></div>
+  <p class="sub" style="margin-bottom:12px">The evidence pack behind every PSX sector — breadth, valuation spread, income quality, and the global factors that <b>measurably</b> move it. One sector goes to the debate desk each week; each debate lands as three short reads, with the full transcript behind every one.</p>
+  <div class="sec-wrap ${_secListOpen ? "open" : ""}">
+    ${picker}
+    ${rail}
+    <div class="sec-main">
+    ${!d ? `<div class="card"><div class="empty">Sector dossiers build on the next cycle.</div></div>` : `
+    ${runBar}
+    ${tiles}
+    <div class="card tpanel">
+      <div class="sumstrip s4">
+        <div class="sumtile"><span class="sk">Median 20-day</span><b class="${(d.returns.median_20d_pct || 0) >= 0 ? "up" : "dn"}">${sgn(d.returns.median_20d_pct)}%</b><i>${d.n_members} names</i></div>
+        <div class="sumtile"><span class="sk">Breadth</span><b>${d.breadth.above_sma50}/${d.n_members}</b><i>above their 50-day (${pctl(d.breadth.above_sma50, d.n_members)}%)</i></div>
+        <div class="sumtile"><span class="sk">Median P/E</span><b>${d.valuation.median_pe ?? "—"}</b><i>${d.valuation.n_undervalued} below fair · ${d.valuation.n_overvalued} above</i></div>
+        <div class="sumtile"><span class="sk">Median yield</span><b>${d.income.median_yield_pct ?? "—"}%</b><i>${d.income.n_payers}/${d.n_members} pay · payout ${d.income.median_payout_pct ?? "—"}%</i></div>
+      </div>
+      <div class="tnote">${drv.length
       ? `<b>What measurably moves ${esc(cur)}:</b> ${drv.map(x => `${esc(FACTOR_PLAIN[x.factor] || x.factor)} (${x.corr > 0 ? "rises with" : "falls when it rises"}, β ${x.beta})`).join(", ")} — correction-survived over 19 years. But the whole global tape explains only <b>${d.macro_joint_r2_pct ?? "—"}%</b> of this sector's daily moves, so treat every macro story as a small part of the picture.`
       : `<b>No global factor has a demonstrated effect on ${esc(cur)}.</b> Over 19 years its days have been made locally, not on the world tape — that silence is a measured finding, not missing data.`}</div>
-  </div>
+    </div>
 
-  ${sess?.house_view ? `
-  <div class="seg"><h2>The desk's house view</h2><div class="ln"></div><span class="pill ${sess.house_view.stance === "constructive" ? "ok" : sess.house_view.stance === "cautious" ? "bad" : ""}">${esc(sess.house_view.stance)} · ${esc(sess.house_view.conviction)} conviction</span></div>
-  <div class="card room-house">
-    <p class="hv-summary">${esc(tp(sess.house_view, "summary"))}</p>
-    ${(sess.house_view.key_evidence || []).length ? `<div class="sub" style="margin-top:8px"><b>What drove it:</b> ${tpArr(sess.house_view, "key_evidence").map(esc).join(" · ")}</div>` : ""}
-    <div class="dissent"><span class="ark">the strongest argument against this view</span>${esc(tp(sess.house_view, "dissent"))}</div>
-  </div>
-  ${sess.bull && sess.bear ? `<div class="debate-cols">
-    <div class="card"><div class="ark" style="color:var(--up)">the case for</div><p>${esc(tp(sess.bull, "case"))}</p>
-      ${(sess.bull.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(tp(p, "claim"))}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
-    <div class="card"><div class="ark" style="color:var(--dn)">the case against</div><p>${esc(tp(sess.bear, "case"))}</p>
-      ${(sess.bear.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(tp(p, "claim"))}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
-  </div>` : ""}`
-      : `<div class="card"><div class="empty"><b>${esc(cur)}</b> hasn't been to the debate desk yet. One sector is debated each week on a fixed rotation, largest sectors first — the numbers above are the evidence pack it will argue from.</div></div>`}
-
-  <div class="seg"><h2>Members</h2><div class="ln"></div><span class="pill">${d.n_members}</span></div>
-  <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th class="r">Price</th><th class="r">20d</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th></tr></thead><tbody>${
+    <div class="seg"><h2>Members</h2><div class="ln"></div><span class="pill">${d.n_members}</span></div>
+    <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th class="r">Price</th><th class="r">20d</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th></tr></thead><tbody>${
       d.members.map(m => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(m.sym)}'"><td><b>${esc(m.sym)}</b> <span class="sub">${esc((m.name || "").slice(0, 20))}</span></td>
         <td class="r num">${fmt(m.close)}</td><td class="r num ${(m.ret_20d || 0) >= 0 ? "up" : "dn"}">${sgn(m.ret_20d)}%</td>
         <td class="r num">${m.pe ?? "—"}</td><td class="r num">${m.div_yield_pct ? m.div_yield_pct + "%" : "—"}</td>
-        <td class="r num ${(m.fair_gap_pct || 0) > 0 ? "up" : (m.fair_gap_pct || 0) < 0 ? "dn" : ""}">${m.fair_gap_pct != null ? sgn(m.fair_gap_pct) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`}`;
+        <td class="r num ${(m.fair_gap_pct || 0) > 0 ? "up" : (m.fair_gap_pct || 0) < 0 ? "dn" : ""}">${m.fair_gap_pct != null ? sgn(m.fair_gap_pct) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`}
+    </div>
+  </div>`;
 }
-let _sectorPick = null;
+
+/* ---------- The full transcript. The tiles carry the crisp read; this is the unshortened debate —
+   every pillar, the rebuttal, the dissent, and what the desk says would settle the argument. ---------- */
+function secTranscript(which) {
+  const s = _secSess;
+  if (!s) return;
+  const P = t => t ? `<p>${esc(t)}</p>` : "";
+  const UL = arr => (arr || []).length ? `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const pil = side => (side?.pillars || []).map(p =>
+    `<div class="sc-pt"><b>${esc(tp(p, "claim"))}</b><span>${esc(p.evidence)}</span></div>`).join("");
+  let kicker = "", html = "";
+  if (which === "house") {
+    kicker = `House view · ${_secName}`;
+    html = `<h3>The desk's house view</h3>
+      <div class="sc-lead">${esc(s.house_view?.stance || "—")} · ${esc(s.house_view?.conviction || "—")} conviction</div>
+      ${P(tp(s.house_view, "summary"))}
+      ${(s.house_view?.key_evidence || []).length ? `<h4>What drove it</h4>${UL(tpArr(s.house_view, "key_evidence"))}` : ""}
+      <h4>The strongest argument against this view</h4>${P(tp(s.house_view, "dissent"))}
+      ${(s.what_would_settle_it || []).length ? `<h4>What would settle it</h4>${UL(s.what_would_settle_it)}` : ""}
+      ${(s.dossier_gaps || []).length ? `<h4>What the evidence pack still can't answer</h4>${UL(s.dossier_gaps)}` : ""}`;
+  } else if (which === "for") {
+    kicker = `The case for · ${_secName}`;
+    html = `<h3>The case for ${esc(_secName)}</h3>${P(tp(s.bull, "case"))}
+      <h4>Pillars</h4>${pil(s.bull)}
+      ${s.bull?.weakest_pillar ? `<h4>Its own weakest pillar</h4>${P(s.bull.weakest_pillar)}` : ""}
+      ${s.bull_rebuttal ? `<h4>Rebuttal to the bear</h4>${P(s.bull_rebuttal)}` : ""}`;
+  } else {
+    kicker = `The case against · ${_secName}`;
+    html = `<h3>The case against ${esc(_secName)}</h3>${P(tp(s.bear, "case"))}
+      <h4>Pillars</h4>${pil(s.bear)}
+      ${s.bear?.attacks_bull ? `<h4>Where it attacks the bull</h4>${P(s.bear.attacks_bull)}` : ""}
+      ${s.bear?.weakest_pillar ? `<h4>Its own weakest pillar</h4>${P(s.bear.weakest_pillar)}` : ""}`;
+  }
+  secModal(kicker, `<div class="sec-script">${html}
+    <p class="sub sc-foot">Debated ${esc(String(s.as_of || "").slice(0, 10))}. General commentary on a sector, not a call on any security.</p></div>`);
+}
+
+/* A plain dismissible overlay reusing the run modal's chrome — no loader, no steps, just the text. */
+function secModal(kicker, html) {
+  const ov = document.createElement("div");
+  ov.className = "replay-overlay";
+  ov.innerHTML = `<div class="replay-box"><div class="replay-head"><span class="replay-kicker">${esc(kicker)}</span>
+    <button class="replay-x" aria-label="close" style="margin-left:auto">✕</button></div>
+    <div class="replay-body">${html}</div></div>`;
+  document.body.appendChild(ov);
+  const key = e => { if (e.key === "Escape") close(); };
+  function close() { ov.remove(); document.removeEventListener("keydown", key); }
+  ov.addEventListener("click", e => { if (e.target === ov || e.target.classList.contains("replay-x")) close(); });
+  document.addEventListener("keydown", key);
+}
+
+/* ---------- Sector debate run: same shape as the ticker Desk Room replay, one level up. The steps
+   stream the REAL compiled dossier numbers the two sides argued from, then it lands on the three
+   reads. Nothing is computed here — the weekly agent run already wrote the session. ---------- */
+async function playSectorDebate(sec) {
+  const [dos, idx] = await Promise.all([j("sector_dossiers.json"), j("sector_debates/_index.json")]);
+  const d = dos?.sectors?.[sec] || {}, s = (idx?.sessions || {})[sec];
+  if (!s) return;
+  const drv = d.macro_drivers || [];
+  const steps = [
+    `Compiling the evidence pack — <b>${esc(sec)}</b> · ${d.n_members ?? "—"} members`,
+    `Breadth · <b>${d.breadth?.above_sma50 ?? "—"}/${d.n_members ?? "—"}</b> above their 50-day`,
+    `Returns · median 20-day <b>${sgn(d.returns?.median_20d_pct)}%</b> across the sector`,
+    `Valuation · median P/E <b>${d.valuation?.median_pe ?? "—"}</b> · ${d.valuation?.n_undervalued ?? 0} below fair, ${d.valuation?.n_overvalued ?? 0} above`,
+    `Income · median yield <b>${d.income?.median_yield_pct ?? "—"}%</b> · ${d.income?.n_payers ?? 0}/${d.n_members ?? "—"} pay`,
+    drv.length
+      ? `Global factors · ${drv.map(x => esc(FACTOR_PLAIN[x.factor] || x.factor)).join(", ")} — the whole tape explains <b>${d.macro_joint_r2_pct ?? "—"}%</b> of daily moves`
+      : `Global factors · <b>none demonstrated</b> over 19 years — this sector's days are made locally`,
+    `Sector bull and sector bear — same pack, opposite readings`,
+    `Each side attacks the other's weakest pillar`,
+    `The chair weighs it — stance, conviction, and the dissent that survives`,
+  ];
+  const li = arr => (arr || []).slice(0, 3).map(p => `<li><b>${esc(tp(p, "claim"))}</b> — ${esc(p.evidence)}</li>`).join("");
+  runRevealModal({
+    kicker: `Sector debate · ${esc(sec)}`, flagKey: "secran:" + sec,
+    title: `Running the debate desk on ${esc(sec)}`,
+    sub: `Working ${esc(sec)} the way the desk does — compiling breadth, valuation, income and the global factors that measurably move it, then letting a sector bull and a sector bear argue the same pack before the chair weighs it.`,
+    steps,
+    renderReveal: bodyEl => {
+      bodyEl.innerHTML = `<div class="rp-reveal">
+        <div class="rp-reveal-head"><b>${esc(sec)}</b><span>the whole debate, at a glance — evidence pack compiled ${esc(String(s.as_of || "").slice(0, 10))}</span></div>
+        <div class="rp-desk">
+          <div class="rp-panel accent-up"><div class="rp-panel-head"><span class="rp-av sm">FOR</span><div><b>The case for</b><span class="rp-role">sector bull</span></div></div>
+            <p class="rp-panel-read">${esc(secCrisp(s.bull, "case"))}</p><ul class="rp-ul">${li(s.bull?.pillars)}</ul></div>
+          <div class="rp-panel accent-dn"><div class="rp-panel-head"><span class="rp-av sm">AGST</span><div><b>The case against</b><span class="rp-role">sector bear</span></div></div>
+            <p class="rp-panel-read">${esc(secCrisp(s.bear, "case"))}</p><ul class="rp-ul">${li(s.bear?.pillars)}</ul></div>
+        </div>
+        <div class="rp-panel rp-house"><div class="rp-panel-head"><span class="rp-av sm">HV</span><div><b>The house view</b><span class="rp-role">${esc(s.house_view?.stance || "—")} · ${esc(s.house_view?.conviction || "—")} conviction</span></div></div>
+          <p class="rp-panel-read">${esc(secCrisp(s.house_view, "summary"))}</p></div>
+        <div class="rp-reveal-foot"><span>Three reads, one evidence pack. General commentary on a sector — no call, no target, no named security.</span>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button></span></div>
+      </div>`;
+    },
+    onClose: () => { if (location.hash.startsWith("#/sectors")) pageSectors(); },
+  });
+}
 
 /* ==========================================================================================
    STRATEGY MARKETPLACE — users publish CONFIGURED VARIANTS of the desk's own rule DSL. Nothing

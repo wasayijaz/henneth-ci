@@ -30,6 +30,7 @@ Update `state/sector_debates/<sector-slug>.json`, adding a `house_view` object:
   "house_view": {
     "stance": "constructive | neutral | cautious",
     "conviction": "low | medium | high",
+    "tldr": "2-3 sentences. The house view boiled down: the stance, the numbers that forced it, and the one thing keeping conviction where it is. This is what the reader sees first.",
     "summary": "4-6 sentences. What the desk's read on this sector is, and why.",
     "key_evidence": ["the 2-4 dossier figures that actually drove the call"],
     "dissent": "The strongest surviving argument AGAINST your stance, stated fairly and at length. Never omit this. If the losing side had a real point, it belongs here in full.",
@@ -47,6 +48,11 @@ Update `state/sector_debates/<sector-slug>.json`, adding a `house_view` object:
 ```
 
 ## How to chair
+
+- **The `tldr` is the house view for most readers.** On the dashboard it is the default; `summary`,
+  `key_evidence` and `dissent` sit behind a "Full transcript" button. Two to three sentences,
+  numbers in every one, and it must name what is holding conviction down (or up) rather than
+  asserting the stance alone. It introduces no fact the longer fields don't already carry.
 
 - **Conviction must track evidence, not enthusiasm.** `low` is the correct and common answer when
   the dossier is thin, breadth is mixed, or the two cases are genuinely balanced. A desk whose

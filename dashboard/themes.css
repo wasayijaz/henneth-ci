@@ -865,6 +865,64 @@ body[data-theme=gemini] .mkt-rule select,body[data-theme=gemini] .mkt-rule input
 body[data-theme=gemini] .mkt-x{background:transparent;border:1px solid var(--line);color:var(--ink3);cursor:pointer;font:inherit}
 @media(max-width:720px){body[data-theme=gemini] .debate-cols,body[data-theme=gemini] .mkt-grid{grid-template-columns:1fr}
   body[data-theme=gemini] .mkt-rule{grid-template-columns:1fr 1fr;grid-auto-rows:auto}}
+/* sectors page — left rail of sectors, tile group on top, members below */
+body[data-theme=gemini] .sec-wrap{display:grid;grid-template-columns:236px minmax(0,1fr);gap:12px;align-items:start}
+body[data-theme=gemini] .sec-list{border:1px solid var(--line);background:var(--panel);max-height:calc(100vh - 120px);overflow:auto;position:sticky;top:12px}
+body[data-theme=gemini] .sec-list-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:9px 11px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:1}
+body[data-theme=gemini] .sec-list-head .sub{font-size:10.5px}
+body[data-theme=gemini] .sec-item{display:flex;align-items:center;gap:8px;width:100%;text-align:start;padding:8px 11px;background:transparent;border:0;border-bottom:1px solid var(--hair);color:var(--ink2);font:inherit;font-size:12.5px;cursor:pointer}
+body[data-theme=gemini] .sec-item:hover{background:var(--panel2);color:var(--ink1)}
+body[data-theme=gemini] .sec-item.on{background:var(--panel2);color:var(--ink1);font-weight:700;box-shadow:inset 3px 0 0 var(--acc,var(--ink1))}
+body[data-theme=gemini] .sec-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body[data-theme=gemini] .sec-n{flex:none;font-family:"Pixelify Sans",var(--mono,monospace);font-size:12px;color:var(--ink3)}
+body[data-theme=gemini] .sec-dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--hair);display:inline-block}
+body[data-theme=gemini] .sec-dot.live{background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent);animation:secPulse 2.2s ease-in-out infinite}
+body[data-theme=gemini] .sec-dot.done{background:transparent;border:1.5px solid var(--up)}
+body[data-theme=gemini] .sec-dot.soon{background:var(--hair)}
+@keyframes secPulse{0%,100%{box-shadow:0 0 0 2px color-mix(in srgb,var(--up) 26%,transparent)}50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--up) 8%,transparent)}}
+body[data-theme=gemini] .sec-legend{display:flex;flex-direction:column;gap:5px;padding:9px 11px;font-size:10.5px;color:var(--ink3)}
+body[data-theme=gemini] .sec-legend span{display:flex;align-items:center;gap:6px}
+body[data-theme=gemini] .sec-picker{display:none}
+body[data-theme=gemini] .sec-main{min-width:0}
+body[data-theme=gemini] .sec-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+body[data-theme=gemini] .sec-tile{display:flex;flex-direction:column;gap:8px;border-top:2px solid var(--hair)}
+body[data-theme=gemini] .sec-tile.t-for{border-top-color:var(--up)}
+body[data-theme=gemini] .sec-tile.t-against{border-top-color:var(--dn)}
+body[data-theme=gemini] .sec-tile-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+body[data-theme=gemini] .sec-say{font-size:13.5px;line-height:1.62;color:var(--ink2);margin:0}
+body[data-theme=gemini] .sec-pt{padding-top:7px;border-top:1px solid var(--hair);font-size:12px;line-height:1.5;color:var(--ink3)}
+body[data-theme=gemini] .sec-pt b{display:block;color:var(--ink1);font-size:12.5px;margin-bottom:2px}
+body[data-theme=gemini] .sec-more{margin-top:auto;align-self:flex-start;background:transparent;border:1px solid var(--line);color:var(--ink2);font:inherit;font-size:11.5px;padding:6px 10px;cursor:pointer}
+body[data-theme=gemini] .sec-more:hover{border-color:var(--ink2);color:var(--ink1)}
+body[data-theme=gemini] .sec-empty{text-align:center;padding:26px 18px}
+body[data-theme=gemini] .sec-empty-dot{margin-bottom:10px}
+body[data-theme=gemini] .sec-empty-dot .sec-dot{width:12px;height:12px}
+body[data-theme=gemini] .sec-empty b{font-size:14.5px}
+body[data-theme=gemini] .sec-empty p{max-width:56ch;margin:7px auto 0;line-height:1.6}
+body[data-theme=gemini] .sec-empty-go{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+body[data-theme=gemini] .sec-empty-go .sec-more{align-self:auto;margin-top:0}
+/* full-transcript overlay body */
+body[data-theme=gemini] .sec-script h3{font-size:16px;margin:0 0 6px}
+body[data-theme=gemini] .sec-script h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin:16px 0 6px}
+body[data-theme=gemini] .sec-script p{font-size:13.5px;line-height:1.68;color:var(--ink2);margin:0 0 8px}
+body[data-theme=gemini] .sec-script ul{margin:0;padding-inline-start:18px}
+body[data-theme=gemini] .sec-script li{font-size:13px;line-height:1.6;color:var(--ink2);margin-bottom:5px}
+body[data-theme=gemini] .sc-lead{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:10px}
+body[data-theme=gemini] .sc-pt{padding:8px 0;border-top:1px solid var(--hair);font-size:12.5px;line-height:1.55;color:var(--ink3)}
+body[data-theme=gemini] .sc-pt b{display:block;color:var(--ink1);margin-bottom:2px}
+body[data-theme=gemini] .sc-foot{margin-top:18px;padding-top:10px;border-top:1px solid var(--hair);font-size:11px}
+@media(max-width:1100px){body[data-theme=gemini] .sec-tiles{grid-template-columns:1fr}}
+@media(max-width:900px){
+  /* mobile: the debate is the page. The sector index collapses behind one tap so the reader
+     lands on the three reads, not on a 30-row list they have to scroll past. */
+  body[data-theme=gemini] .sec-wrap{grid-template-columns:1fr}
+  body[data-theme=gemini] .sec-picker{display:flex;align-items:center;gap:8px;width:100%;padding:11px 12px;background:var(--panel);border:1px solid var(--line);color:var(--ink1);font:inherit;font-size:13.5px;cursor:pointer}
+  body[data-theme=gemini] .sec-picker b{flex:1;min-width:0;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body[data-theme=gemini] .sec-pick-go{flex:none;font-size:11px;color:var(--ink3)}
+  body[data-theme=gemini] .sec-list{display:none;position:static;max-height:58vh;margin-top:-1px}
+  body[data-theme=gemini] .sec-wrap.open .sec-list{display:block}
+  body[data-theme=gemini] .sec-item{padding:11px 12px;font-size:13px}
+}
 /* evidence alignment */
 body[data-theme=gemini] .al-bar{display:flex;height:10px;margin-bottom:8px}
 body[data-theme=gemini] .al-up{background:var(--up)}
