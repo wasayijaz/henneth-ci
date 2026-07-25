@@ -5668,12 +5668,58 @@ function wireTiles(root = document) {
   });
 }
 
+/* THE GLOBAL LONG-SCROLL PASS.
+   An audit found ~40 blocks across 29 page functions that render an unbounded list: the calendar's
+   every event of every month, the strategy library's 70 entries, a portfolio's holdings twice over
+   (table then weight bars). Hand-wrapping each is 40 edits that go stale the day a page is added,
+   and the caps live 20-80 lines from the markup they bound, so the next author will miss one.
+
+   What actually matters is one measurable property — "this block is taller than the phone screen
+   and the card below it is unreachable" — so measure that instead of enumerating class names. A
+   direct child of a card, tall, and made of many sibling rows, is a list. Anything else is layout.
+
+   Deliberately NOT tiled: short blocks (nothing gained, and a fade over a list that ends is a lie),
+   and anything on a wide screen, where the down-the-column scan beats the saved height. */
+const TILE_TRIGGER = 460;   // px of card child height that makes the next card unreachable
+const TILE_MAX = 340;       // px the tile is capped to — ~2/3 of a phone screen, still scannable
+const TILE_MIN_ROWS = 8;    // fewer sibling rows than this is a layout block, not a list
+const TILE_TALL = 700;      // ...unless it is simply this tall, whatever it is made of
+const TILE_SKIP = /\b(sumstrip|statgrid|seg|tk-head|ttabs|tilebox)\b/;
+
+function tileify(root = document) {
+  if (window.innerWidth > 900) return;
+  root.querySelectorAll(".card").forEach(card => {
+    [...card.children].forEach(el => {
+      if (el.dataset.tiled || TILE_SKIP.test(el.className || "")) return;
+      if (el.tagName !== "DIV" && el.tagName !== "TABLE") return;
+      if (el.offsetHeight < TILE_TRIGGER) return;
+      // A .tscroll wrapper holds exactly one table, so count the rows inside it, not the wrapper.
+      const inner = el.querySelector(":scope>table>tbody") || el;
+      // Row count is only a proxy for "list", and a bad one once a table stacks: six rows of
+      // label/value blocks measured 900px on the macro page. Height is the thing that actually
+      // hurts, so let sheer height qualify on its own. Prose is excluded by the DIV/TABLE gate
+      // above — chopping a paragraph into a 340px scroll is worse than a long paragraph.
+      if (inner.children.length < TILE_MIN_ROWS && el.offsetHeight < TILE_TALL) return;
+      el.dataset.tiled = "1";
+      const box = document.createElement("div");
+      box.className = "tilebox";
+      box.style.setProperty("--tilemax", TILE_MAX + "px");
+      const body = document.createElement("div");
+      body.className = "tilebody";
+      card.insertBefore(box, el);
+      box.appendChild(body);
+      body.appendChild(el);      // moving a node keeps its inline onclick and its listeners
+    });
+  });
+  wireTiles(root);
+}
+
 /* Rotating the phone changes the answer. Attribute writes don't trip the childList observer, so
    this cannot loop. */
 let _restackT = null;
 window.addEventListener("resize", () => {
   clearTimeout(_restackT);
-  _restackT = setTimeout(() => { restackTables(); wireTiles(); }, 150);
+  _restackT = setTimeout(() => { restackTables(); tileify(); }, 150);
 });
 
 document.addEventListener("keydown", e => {
@@ -5687,7 +5733,7 @@ document.addEventListener("keydown", e => {
    modals appended to body), so observe the whole document rather than just the view container. */
 if (window.MutationObserver) {
   let queued = false;
-  const flush = () => { queued = false; wireClickables(document); enhanceTables(document); wireTiles(document); translateTree(document.body); };
+  const flush = () => { queued = false; wireClickables(document); enhanceTables(document); tileify(document); translateTree(document.body); };
   new MutationObserver(() => {                      // batch: renders fire hundreds of mutations
     if (queued) return;
     queued = true;
