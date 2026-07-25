@@ -31,6 +31,12 @@ once a quarter, and the rotation is deterministic rather than whatever looks int
 4. **Run the Chair** — Task tool, `subagent_type: "sector-chair"`, same sector. It adds
    `house_view` with stance, conviction, mandatory dissent, and dated market-relative claims.
 
+4b. **Translate.** Task tool, `subagent_type: "state-translator"`, on
+    `state/sector_debates/<sector-slug>.json` — field paths: `house_view.summary`,
+    `house_view.key_evidence[]`, `house_view.dissent`, `bull.case`, `bull.pillars[].claim`,
+    `bear.case`, `bear.pillars[].claim` (`.evidence` fields excluded — numeric-heavy, not
+    translated). Non-blocking: if it fails, log and continue to claims filing.
+
 5. **File the claims for public scoring.** Append each `house_view.claims` entry to
    `state/claims.json` in the same shape the desk uses elsewhere: `source_type: "desk"`,
    `source: "sector-desk"`, the sector in `tickers` as `["SECTOR:<name>"]`, `market_relative: true`,

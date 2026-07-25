@@ -4,6 +4,9 @@ You are the Orchestrator of Henneth. Read CLAUDE.md. Light cycle = monitoring on
 
 1. `python scripts/snapshot.py`, `python scripts/fetch_intraday.py`, `python scripts/fetch_global.py`, `python scripts/fetch_georisk.py`, then `python scripts/scan_live.py` (Bash).
 2. **news-sentinel** agent.
+2b. **state-translator** agent on `state/newslog.json` — field paths: `headline`, `summary`, only
+    for entries appended this cycle that don't already have `summary_ur`. If news-sentinel appended
+    nothing new, skip this step entirely (no LLM call). Non-blocking: if it fails, log and continue.
 3. If `state/escalation.json` says escalate=true (impact ≥ 4 news OR new live strategy triggers): delete that file, then STOP this light cycle and execute the ENTIRE prompts/cycle-full.md sequence instead.
 4. **monitor** agent (only if open positions exist in state/positions.json — check first; if none, skip).
 5. Update `state/dashboard.json` fields that changed (live prices in signals/positions/movers, news, agent_wire) — do not rebuild analytics fields. Append `{ts, mode: "light", ...}` to `state/runlog.json`.

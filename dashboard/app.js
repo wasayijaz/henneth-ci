@@ -462,7 +462,10 @@ async function pageBoard() {
   const provenCard = `<div class="card"><h2>Proven strategies</h2><div class="sub">cleared backtest + out-of-sample bars · click through</div>
       <table><thead><tr><th>Ticker</th><th>Template</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
       sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.template)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
-  const universeCard = `<div class="card"><h2>Universe</h2><div class="sub">day move · click any name</div><div class="heat">${heat}</div></div>`;
+  // The universe is the longest block on the board and the least urgent — at two cells per row on
+  // a phone it buried predictability and proven strategies under ~60 rows of scrolling. Cap it.
+  const universeCard = `<div class="card"><h2>Universe</h2><div class="sub">day move · click any name</div>
+    <div class="tilebox" style="--tilemax:300px"><div class="tilebody"><div class="heat">${heat}</div></div></div></div>`;
   const predCard = `<div class="card"><h2>Predictability</h2><div class="sub"></div><table><thead><tr><th>Ticker</th><th class="r">Score</th><th class="r">RSI</th><th class="r">20d</th></tr></thead><tbody>${
       pt.map(([s, v]) => `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b></td><td class="r num">${v.score}</td><td class="r num">${q[s]?.rsi14 ?? "—"}</td><td class="r num ${cls(q[s]?.ret_20d || 0)}">${q[s] ? sgn(q[s].ret_20d) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`;
   const newsCard = `<div class="card"><h2>News wire</h2><div class="sub"><a href="#/news">full wire →</a></div><div class="wire">${
@@ -509,12 +512,21 @@ async function pageValue() {
       <p class="fvnote">${r.s} trades at <b class="num">Rs ${fmt(r.price)}</b> against a composite fair of <b class="num">Rs ${fmt(r.composite_fair)}</b> — about <b>${mag}% ${dir}</b> the model's blended fair value. The composite is the <b>median</b> of the four models above (median resists any single model blowing out). Model estimate on public fundamentals — research, not a price target or recommendation. <a href="#/ticker/${r.s}">full page →</a></p>
     </div>`;
   };
-  const tbl = (list, cheap) => `<table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Fair value</th><th class="r">${cheap ? "Upside" : "Downside"}</th><th>Verdict</th></tr></thead><tbody>${
-    list.map(r => `<tr class="clickable fvrow" onclick="this.classList.toggle('exp');this.nextElementSibling.classList.toggle('open')"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
+  /* Both tables are sorted by mispricing, so the interesting names are at the top and the tail is
+     reference. Show 7 and park the rest behind one control — but RENDER the tail anyway and only
+     hide it, so "show all" is a class removal: no re-render, no lost scroll position, no refetch.
+     Two extra rows is not worth a control, hence the `> CAP + 2` guard. */
+  const CAP = 7;
+  const tbl = (list, cheap) => {
+    const cap = list.length > CAP + 2 ? CAP : list.length;
+    return `<table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Fair value</th><th class="r">${cheap ? "Upside" : "Downside"}</th><th>Verdict</th></tr></thead><tbody>${
+      list.map((r, i) => { const x = i >= cap ? " xmore" : ""; return `<tr class="clickable fvrow${x}" onclick="this.classList.toggle('exp');this.nextElementSibling.classList.toggle('open')"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
       <td class="r num">${fmt(r.price)}</td><td class="r num">${fmt(r.composite_fair)}</td>
       <td class="r num ${cls(r.mispricing_pct)}">${sgn(r.mispricing_pct)}%</td>
       <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${r.verdict === "undervalued" ? "below fair" : r.verdict === "overvalued" ? "above fair" : esc(r.verdict)}</span> <span class="fvcaret">▸</span></td></tr>
-      <tr class="fvdetail"><td colspan="5">${fvDetail(r)}</td></tr>`).join("")}</tbody></table>`;
+      <tr class="fvdetail${x}"><td colspan="5">${fvDetail(r)}</td></tr>`; }).join("")}</tbody></table>${
+      cap < list.length ? `<button class="morebar" onclick="this.closest('.card').querySelectorAll('.xmore').forEach(e=>e.classList.remove('xmore'));this.remove()">See all ${list.length} — ${list.length - cap} more</button>` : ""}`;
+  };
   // glance row: the four numbers that answer "what does the screen say" before any prose
   const sTile = (label, val, sub, k) => `<div class="sumtile"><span class="sk">${label}</span><b class="${k || ""}">${val}</b>${sub ? `<i>${sub}</i>` : ""}</div>`;
   const fair = rows.filter(r => r.verdict === "fair");
@@ -590,7 +602,7 @@ async function pageMacro() {
   const dom = m.domestic || {};
   const drivers = m.drivers || [];
   const macroCard = `<div class="card"><h2>Pakistan macro</h2>
-    <div class="sub">regime <b>${esc((m.regime || "—").toUpperCase())}</b> · ${esc(m.global_read || "")} · updated ${esc(m.updated || "—")} ${m.updated ? "" : "(run macro-agent to populate)"}</div>
+    <div class="sub">regime <b>${esc(t(m.regime || "—").toUpperCase())}</b> · ${esc(tp(m, "global_read"))} · updated ${esc(m.updated || "—")} ${m.updated ? "" : "(run macro-agent to populate)"}</div>
     ${(() => {
       const facts = [
         ["SBP policy rate", m.sbp_rate],
@@ -606,10 +618,10 @@ async function pageMacro() {
       return `<div class="facts">${have.map(([k, v]) => `<div class="fact"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div>
       ${missing.length ? `<p class="sub" style="margin-top:8px;font-size:10.5px">Pending this cycle: ${missing.join(", ")} — the macro-agent fills these from SBP/PBS primary sources on the next full run.</p>` : ""}`;
     })()}
-    ${dom.debt_note ? `<p class="sub" style="margin-top:10px"><b>Debt/borrowing:</b> ${esc(dom.debt_note)}</p>` : ""}
-    ${drivers.length ? `<div class="sub" style="margin-top:10px"><b>Drivers:</b><ul style="margin:6px 0 0 16px">${drivers.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}
-    ${(m.next_events || []).length ? `<p class="sub" style="margin-top:8px"><b>Next:</b> ${m.next_events.map(e => `${esc(e.date)} ${esc(e.event)}`).join(" · ")}</p>` : ""}
-    ${(m.sector_tilt) ? `<p class="sub" style="margin-top:8px"><b class="up">Favored:</b> ${(m.sector_tilt.favored || []).join(", ") || "—"} · <b class="dn">Avoid:</b> ${(m.sector_tilt.avoid || []).join(", ") || "—"}</p>` : ""}</div>`;
+    ${dom.debt_note ? `<p class="sub" style="margin-top:10px"><b>Debt/borrowing:</b> ${esc(tp(dom, "debt_note"))}</p>` : ""}
+    ${drivers.length ? `<div class="sub" style="margin-top:10px"><b>Drivers:</b><ul style="margin:6px 0 0 16px">${tpArr(m, "drivers").map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}
+    ${(m.next_events || []).length ? `<p class="sub" style="margin-top:8px"><b>Next:</b> ${m.next_events.map(e => `${esc(e.date)} ${esc(tp(e, "event"))}`).join(" · ")}</p>` : ""}
+    ${(m.sector_tilt) ? `<p class="sub" style="margin-top:8px"><b class="up">Favored:</b> ${(tpArr(m.sector_tilt, "favored")).join(", ") || "—"} · <b class="dn">Avoid:</b> ${(tpArr(m.sector_tilt, "avoid")).join(", ") || "—"}</p>` : ""}</div>`;
 
   // geo-risk radar (worldmonitor-style, from free signals)
   const geoCard = geo ? (() => {
@@ -636,7 +648,7 @@ async function pageMacro() {
   // the feed writes "risk-off"; don't assume a separator — strip everything but letters
   const regime = (m.regime || "").toLowerCase().replace(/[^a-z]/g, "");
   const glanceRow = `<div class="sumstrip s4">
-    ${sTile("Macro regime", (m.regime || "—").toUpperCase(), m.updated ? `desk read · ${esc(m.updated)}` : "run macro-agent to populate", regime === "riskon" ? "up" : regime === "riskoff" ? "dn" : "")}
+    ${sTile("Macro regime", t(m.regime || "—").toUpperCase(), m.updated ? `desk read · ${esc(m.updated)}` : "run macro-agent to populate", regime === "riskon" ? "up" : regime === "riskoff" ? "dn" : "")}
     ${iTile("USD/PKR", "PKR=X", "the biggest lever")}
     ${iTile("Brent crude", "BZ=F", "the import bill")}
     ${geo ? sTile("Geo risk", `${geo.score}/100`, esc(geo.band || ""), geo.band === "elevated" ? "dn" : geo.band === "calm" ? "up" : "") : iTile("Global risk", "^GSPC", "frontier flows follow")}
@@ -701,7 +713,7 @@ async function pageToday() {
   const fav = (dr.sectors || []).filter(s => s.stance === "favoured"), avoid = (dr.sectors || []).filter(s => s.stance === "avoid");
   const nextCat = (dr.catalysts || [])[0];
   const glanceRow = `<div class="sumstrip s4">
-    ${sTile("The desk's tone", (dr.tone || "—").toUpperCase(), esc(dr.date || ""), toneClass === "ok" ? "up" : toneClass === "bad" ? "dn" : "")}
+    ${sTile("The desk's tone", t(dr.tone || "—").toUpperCase(), esc(dr.date || ""), toneClass === "ok" ? "up" : toneClass === "bad" ? "dn" : "")}
     ${sTile("Favoured", fav.length ? esc(fav.map(s => s.name).slice(0, 2).join(", ")) : "none", fav.length > 2 ? `+${fav.length - 2} more sectors` : "sectors", fav.length ? "up" : "")}
     ${sTile("Avoiding", avoid.length ? esc(avoid.map(s => s.name).slice(0, 2).join(", ")) : "none", avoid.length > 2 ? `+${avoid.length - 2} more sectors` : "sectors", avoid.length ? "dn" : "")}
     ${sTile("Next catalyst", nextCat ? esc(nextCat.date) : "—", nextCat ? esc(String(nextCat.event).slice(0, 34)) : "none dated", "")}
@@ -749,25 +761,25 @@ async function pageToday() {
   ${astroTease}
   ${myWatch}
   <div class="card">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="pill ${toneClass}">${esc((dr.tone || "").toUpperCase())}</span><span class="sub">${esc(dr.date || "")}</span></div>
-    <h2 style="font-size:22px;line-height:1.3;margin-bottom:12px">${esc(dr.headline || "")}</h2>
-    <p style="font-size:14.5px;line-height:1.65;color:var(--ink2)">${esc(dr.summary || "")}</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span class="pill ${toneClass}">${esc(t(dr.tone || "").toUpperCase())}</span><span class="sub">${esc(dr.date || "")}</span></div>
+    <h2 style="font-size:22px;line-height:1.3;margin-bottom:12px">${esc(tp(dr, "headline"))}</h2>
+    <p style="font-size:14.5px;line-height:1.65;color:var(--ink2)">${esc(tp(dr, "summary"))}</p>
   </div>
   <div class="two-col">
     <div class="card"><h2>Sectors to watch</h2><div class="sub"></div>
-      <table><tbody>${(dr.sectors || []).map(s => `<tr><td><b>${esc(s.name)}</b></td><td>${stanceTag(s.stance)}</td><td class="sub" style="color:var(--ink2)">${esc(s.why)}</td></tr>`).join("") || '<tr><td class="empty">—</td></tr>'}</tbody></table></div>
+      <table><tbody>${(dr.sectors || []).map(s => `<tr><td><b>${esc(s.name)}</b></td><td>${stanceTag(s.stance)}</td><td class="sub" style="color:var(--ink2)">${esc(tp(s, "why"))}</td></tr>`).join("") || '<tr><td class="empty">—</td></tr>'}</tbody></table></div>
     <div class="card"><h2>Key risks</h2><div class="sub">what would spoil the read</div>
-      <ul style="margin:6px 0 0 16px;line-height:1.7">${(dr.risks || []).map(r => `<li>${esc(r)}</li>`).join("") || "<li class='sub'>none flagged</li>"}</ul>
-      ${(dr.catalysts || []).length ? `<div class="sub" style="margin-top:12px"><b>Catalysts:</b> ${dr.catalysts.map(c => `${esc(c.date)} ${esc(c.event)}`).join(" · ")}</div>` : ""}</div>
+      <ul style="margin:6px 0 0 16px;line-height:1.7">${tpArr(dr, "risks").map(r => `<li>${esc(r)}</li>`).join("") || "<li class='sub'>none flagged</li>"}</ul>
+      ${(dr.catalysts || []).length ? `<div class="sub" style="margin-top:12px"><b>Catalysts:</b> ${dr.catalysts.map(c => `${esc(c.date)} ${esc(tp(c, "event"))}`).join(" · ")}</div>` : ""}</div>
   </div>
   <div class="seg"><h2>Names on the desk's radar</h2><div class="ln"></div></div>
   ${radar.length ? `<div class="card" style="padding:0"><table><thead><tr><th>Ticker</th><th>The desk's angle</th><th>Key risk</th></tr></thead><tbody>${
     radar.map(w => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(w.ticker)}'">
       <td style="white-space:nowrap"><b>${esc(w.ticker)}</b>${iw(w.ticker) ? ' <span class="wbadge">★ yours</span>' : ""}</td>
-      <td class="sub" style="color:var(--ink2)">${esc(w.angle)}</td>
-      <td class="sub"><b class="dn">Risk:</b> ${esc(w.risk)}</td></tr>`).join("")}</tbody></table></div>`
+      <td class="sub" style="color:var(--ink2)">${esc(tp(w, "angle"))}</td>
+      <td class="sub"><b class="dn">Risk:</b> ${esc(tp(w, "risk"))}</td></tr>`).join("")}</tbody></table></div>`
       : '<div class="card"><div class="empty">Patient today — nothing stacks up strongly enough to flag.</div></div>'}
-  <p class="sub" style="margin-top:14px">${esc(dr.disclaimer || "Research, not advice.")}</p>`;
+  <p class="sub" style="margin-top:14px">${esc(tDisclaimer(dr))}</p>`;
 }
 
 async function pageStrategies() {
@@ -1550,41 +1562,46 @@ async function playAstroBoardRun() {
    the profile on sign-in (GUEST_KEY), so nobody ever types their birth details twice. --- */
 /* ==========================================================================================
    LANGUAGE — English / اردو. A plain client-side dictionary, so switching is instant with no
-   network call and no rebuild. Scope is deliberate and stated in the UI: the interface, the
-   Investor-desk surfaces and the disclaimers are translated. Market prose written by the desk's
-   agents (the daily read, Room debates, news summaries) stays in English — machine-translating
-   financial commentary would risk changing its meaning, which this desk will not do.
+   network call and no rebuild. Scope: the interface, the Investor-desk surfaces and the
+   disclaimers are translated via the exact-string dictionary (UR_STRINGS/translateTree, below).
+
+   Dynamic agent prose (daily read, Room debates, macro, news, sector debates) has no fixed
+   dictionary entry — it's new every cycle — so it's translated separately, near generation time,
+   by a dedicated agent (.claude/agents/state-translator.md) that is fact-blind by construction
+   (Read/Write tools only, no data-layer or market access): it only reworks English prose already
+   written by the source agent into a `<field>_ur` sibling in the same state/*.json file. tp()/
+   tpArr() below read that sibling at render time, falling back to English if absent. This is a
+   separate path from translateTree() and does not touch it.
    ========================================================================================== */
 const LANG_KEY = "psx_lang";
-const UR = {
-  // nav
-  "Learn": "سیکھیں", "Today": "آج", "Board": "بورڈ", "Watchlist": "واچ لسٹ", "Portfolio": "پورٹ فولیو",
-  "Your Chart": "آپ کا چارٹ", "Practice": "مشق", "Strategies": "حکمتِ عملی", "Value": "ویلیو",
-  "Research": "تحقیق", "Scores": "اسکور", "News": "خبریں", "Macro": "معیشت", "Dividends": "منافع",
-  "Earnings": "نتائج", "Astro": "فلکیات", "Tools": "اوزار", "Settings": "ترتیبات", "Plans": "پلانز",
-  "Sign in": "سائن اِن", "Sign out": "سائن آؤٹ", "Search a stock": "اسٹاک تلاش کریں",
-  // learn / journey
-  "Become an investor": "سرمایہ کار بنیں", "The investment journey": "سرمایہ کاری کا سفر",
-  "your progress": "آپ کی پیش رفت", "steps complete": "مراحل مکمل", "Deep dives": "تفصیلی کورس",
-  "today's lesson": "آج کا سبق", "your next lesson": "آپ کا اگلا سبق", "Learn it": "سیکھیں",
-  "Continue": "جاری رکھیں", "Start the journey": "سفر شروع کریں", "lesson": "سبق",
-  "watch out": "خبردار", "the point": "خلاصہ", "interactive": "انٹرایکٹو", "check yourself": "خود کو جانچیں",
-  "back": "واپس", "Next": "اگلا", "Complete lesson": "سبق مکمل کریں",
-  // practice + tools
-  "Practice portfolio": "مشقی پورٹ فولیو", "virtual money · real prices": "فرضی رقم · اصل قیمتیں",
-  "Holdings": "ملکیتیں", "Trade log": "ٹریڈ ریکارڈ", "Buy": "خریدیں", "Sell": "بیچیں",
-  "Portfolio value": "پورٹ فولیو کی مالیت", "Return": "منافع", "Cash": "نقد",
-  "Compound growth": "مرکب اضافہ", "Inflation": "مہنگائی", "Goal planner": "ہدف کا منصوبہ",
-  "Mortgage": "گھر کا قرض", "Zakat on shares": "حصص پر زکوٰۃ", "Dividend reinvestment": "منافع کی دوبارہ سرمایہ کاری",
-  "Calculate": "حساب کریں", "Years": "سال",
-  // compliance — these must always be visible in the reader's language
-  "Research · not advice": "تحقیق · مشورہ نہیں",
-  "Education, not investment advice": "تعلیم، سرمایہ کاری کا مشورہ نہیں",
-};
+// Corpus lives in i18n-ur.js (loaded before this file) so it can grow into full-page coverage
+// without bloating app.js. Empty object fallback keeps the app from crashing if that file 404s.
+const UR = window.UR_STRINGS || {};
 function lang() {
   try { return localStorage.getItem(LANG_KEY) === "ur" ? "ur" : "en"; } catch { return "en"; }
 }
 function t(s) { return lang() === "ur" ? (UR[s] || s) : s; }
+/* Agent-prose translation (Layer 5). Reads the `<field>_ur` sibling a source agent's cycle wrote
+   into state/*.json (via .claude/agents/state-translator.md), falling back to English if the
+   field hasn't been translated yet (or ever). Separate from t()/UR_STRINGS above — those are the
+   static-chrome exact-string dictionary; this is per-record dynamic prose. */
+function tp(obj, field) {
+  if (!obj) return "";
+  if (lang() === "ur" && obj[field + "_ur"]) return obj[field + "_ur"];
+  return obj[field] || "";
+}
+function tpArr(obj, field) {
+  if (!obj) return [];
+  if (lang() === "ur" && Array.isArray(obj[field + "_ur"])) return obj[field + "_ur"];
+  return Array.isArray(obj[field]) ? obj[field] : [];
+}
+/* Disclaimer text is legal-sensitive — NOT LLM-translated. One static, human-reviewed Urdu
+   string, swapped in directly (no _ur sibling, no state-translator involvement). */
+const DAILY_READ_DISCLAIMER_UR = "تحقیق ہے، مشورہ نہیں۔ ڈیسک اشارے تیار کرتا ہے؛ خود آرڈر نہیں دیتا۔ نقصان متوقع ہے۔";
+function tDisclaimer(dr) {
+  if (lang() === "ur") return DAILY_READ_DISCLAIMER_UR;
+  return dr.disclaimer || "Research, not advice.";
+}
 function setLang(l) {
   try { localStorage.setItem(LANG_KEY, l); } catch { /* private mode */ }
   applyLang();
@@ -1596,6 +1613,7 @@ function setLang(l) {
 function applyLang() {
   const l = lang();
   document.body.dataset.lang = l;
+  document.documentElement.setAttribute("dir", l === "ur" ? "rtl" : "ltr");
   document.querySelectorAll("[data-nav] span").forEach(s => {
     if (!s.dataset.en) s.dataset.en = s.textContent;
     s.textContent = l === "ur" ? (UR[s.dataset.en] || s.dataset.en) : s.dataset.en;
@@ -1607,6 +1625,108 @@ function applyLang() {
   const btn = document.getElementById("langBtn");
   if (btn) btn.textContent = l === "ur" ? "EN" : "اردو";
 }
+
+/* ==========================================================================================
+   FULL-PAGE TRANSLATION.
+   applyLang() above only touches the static chrome (nav labels, badges) because those never
+   get replaced by route(). Everything else is rebuilt fresh from English string templates on
+   every render, so translating it is a walk-and-replace pass over the rendered DOM rather than
+   a template change — far cheaper than threading a translated string through ~40 render
+   functions. translateTree() runs after every render (piggybacked on the render-observer
+   further down this file) and is one-directional: EN -> UR only. It never restores English,
+   because a language switch calls route(true), which rebuilds the DOM from the English
+   template strings again, so the next pass simply has fresh English to translate.
+
+   ?i18n=audit on the URL turns on a silent harvester alongside it: every candidate string that
+   has no UR[] entry gets counted in window.__i18nMisses, regardless of the current language, so
+   coverage can be checked while browsing in English (fastest) or hunted for leftovers while
+   browsing in Urdu. Click the on-page badge (or call i18nAuditReport() in the console) to dump
+   the list, sorted by how often each miss occurred. */
+const I18N_SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "SVG", "PATH", "CODE", "PRE"]);
+const I18N_ATTRS = ["placeholder", "title", "aria-label"];
+// Pure numbers/punctuation/currency and short ALL-CAPS tokens (tickers, PE/EPS/NAV-style
+// acronyms) are never translatable — leave them alone and keep them out of the audit noise.
+const I18N_SKIP_RE = /^[\s\d.,:/%+\-–—()₨$KMBkmb ]*$/;
+const I18N_TICKER_RE = /^[A-Z][A-Z0-9&.\-]{1,9}$/;
+// translateTree re-walks the whole root on every render, so a node it already turned into Urdu
+// on a prior pass comes back through here again. UR[] only maps EN -> UR, so an Urdu string
+// always misses that lookup — without this check it gets logged as a false "missing" entry in
+// audit mode every time anything else on the page re-renders.
+const I18N_URDU_RE = /[؀-ۿ]/;
+
+function i18nAuditOn() {
+  try { return new URLSearchParams(location.search).get("i18n") === "audit"; } catch { return false; }
+}
+window.__i18nMisses = window.__i18nMisses || new Map();   // text -> occurrence count, audit mode only
+
+function i18nCandidate(raw) {
+  const v = raw.trim();
+  if (v.length < 2) return false;
+  if (I18N_SKIP_RE.test(v)) return false;
+  if (I18N_TICKER_RE.test(v)) return false;
+  if (I18N_URDU_RE.test(v)) return false;
+  return true;
+}
+function i18nTranslateOne(raw) {
+  const v = raw.trim();
+  if (UR[v]) return raw.replace(v, UR[v]);
+  if (i18nAuditOn() && i18nCandidate(v)) window.__i18nMisses.set(v, (window.__i18nMisses.get(v) || 0) + 1);
+  return raw;
+}
+function translateTree(root = document.body) {
+  if (!root) return;
+  const audit = i18nAuditOn();
+  const isUr = lang() === "ur";
+  if (!isUr && !audit) return;   // nothing to do in English outside audit mode
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const p = node.parentElement;
+      if (!p || I18N_SKIP_TAGS.has(p.tagName) || p.closest("[data-no-i18n]")) return NodeFilter.FILTER_REJECT;
+      return i18nCandidate(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const nodes = [];
+  let n;
+  while ((n = walker.nextNode())) nodes.push(n);
+  nodes.forEach(node => {
+    if (isUr) node.nodeValue = i18nTranslateOne(node.nodeValue);
+    else i18nTranslateOne(node.nodeValue);   // audit-only: harvest, never mutate English DOM
+  });
+  root.querySelectorAll?.("[placeholder],[title],[aria-label]").forEach(el => {
+    if (el.closest("[data-no-i18n]")) return;
+    I18N_ATTRS.forEach(attr => {
+      const v = el.getAttribute(attr);
+      if (!v || !i18nCandidate(v)) return;
+      if (isUr) el.setAttribute(attr, i18nTranslateOne(v));
+      else i18nTranslateOne(v);
+    });
+  });
+  if (audit) i18nAuditPaint();
+}
+let _i18nAuditT = null;
+function i18nAuditPaint() {
+  clearTimeout(_i18nAuditT);
+  _i18nAuditT = setTimeout(() => {
+    let badge = document.getElementById("i18nAuditBadge");
+    if (!badge) {
+      badge = document.createElement("div");
+      badge.id = "i18nAuditBadge";
+      badge.setAttribute("data-no-i18n", "1");
+      badge.style.cssText = "position:fixed;bottom:10px;right:10px;z-index:9999;background:#c0392b;"
+        + "color:#fff;font:12px/1.4 monospace;padding:6px 10px;border-radius:4px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.4)";
+      badge.title = "Click to dump untranslated strings to console";
+      badge.addEventListener("click", () => window.i18nAuditReport());
+      document.body.appendChild(badge);
+    }
+    badge.textContent = `i18n audit: ${window.__i18nMisses.size} untranslated`;
+  }, 200);
+}
+window.i18nAuditReport = function i18nAuditReport() {
+  const rows = [...window.__i18nMisses.entries()].sort((a, b) => b[1] - a[1]).map(([text, count]) => ({ text, count }));
+  console.table(rows);
+  console.log(JSON.stringify(rows.map(r => r.text), null, 2));
+  return rows;
+};
 
 const GUEST_KEY = "psx_guest_chart";
 function guestChart() {
@@ -2217,27 +2337,27 @@ function renderTranscript(room, sym) {
       <p class="tr-intro">The session ran on <b>${esc(String(room.built || room.dossier_asof || "").slice(0, 16))}</b> against ${esc(sym)}'s dossier at Rs ${fmt(room.price_at_session)}. The two desks work <b>in isolation</b> — the chartist never sees the fundamentals, and the fundamentalist never sees the chart — so when they agree, they agree independently. Then a bull and a bear are told to argue, hard. Nothing below is edited.</p>
 
       ${turn("MC", "Meher", "The Chartist · technical desk · spoke first", ta.technical_stance,
-        P(ta.read) + facts([["structure", ta.structure], ["momentum", ta.momentum], ["support", ta.levels?.support != null ? fmt(ta.levels.support) : null], ["resistance", ta.levels?.resistance != null ? fmt(ta.levels.resistance) : null]])
-        + NOTE("On liquidity", ta.liquidity_note)
+        P(tp(ta, "read")) + facts([["structure", ta.structure], ["momentum", ta.momentum], ["support", ta.levels?.support != null ? fmt(ta.levels.support) : null], ["resistance", ta.levels?.resistance != null ? fmt(ta.levels.resistance) : null]])
+        + NOTE("On liquidity", tp(ta, "liquidity_note"))
         + ((ta.proven_now || []).length ? `<div class="tr-note"><span>Proven patterns firing on this bar</span>${ta.proven_now.map(esc).join(" · ")}</div>` : ""))}
 
       ${turn("DO", "Dr. Omar", "The Fundamentalist · fundamental desk · spoke second", fa.fundamental_stance,
-        P(fa.read) + facts([["valuation", fa.valuation_stance]])
-        + NOTE("Earnings quality", fa.earnings_quality) + NOTE("Dividend safety", fa.dividend_safety)
+        P(tp(fa, "read")) + facts([["valuation", fa.valuation_stance]])
+        + NOTE("Earnings quality", tp(fa, "earnings_quality")) + NOTE("Dividend safety", tp(fa, "dividend_safety"))
         + NOTE("Balance-sheet flags", Array.isArray(fa.balance_sheet_flags) ? fa.balance_sheet_flags.join(" · ") : fa.balance_sheet_flags)
-        + NOTE("On the brokers", fa.broker_view))}
+        + NOTE("On the brokers", tp(fa, "broker_view")))}
 
       ${turn("ZB", "Zoya", "The Bull · argued the case FOR", "constructive",
-        P(bull.thesis) + UL(bull.pillars) + NOTE("Her strongest evidence", bull.best_evidence)
-        + NOTE("What would break her case", bull.what_would_break_it))}
+        P(tp(bull, "thesis")) + UL(bull.pillars) + NOTE("Her strongest evidence", tp(bull, "best_evidence"))
+        + NOTE("What would break her case", tp(bull, "what_would_break_it")))}
 
       ${turn("KB", "Khurram", "The Bear · argued the case AGAINST", "cautious",
-        P(bear.thesis) + UL(bear.pillars) + NOTE("His attack on the bull", bear.attack_on_bull)
-        + NOTE("His strongest evidence", bear.best_evidence)
-        + NOTE("What would break his case", bear.what_would_break_it))}
+        P(tp(bear, "thesis")) + UL(bear.pillars) + NOTE("His attack on the bull", tp(bear, "attack_on_bull"))
+        + NOTE("His strongest evidence", tp(bear, "best_evidence"))
+        + NOTE("What would break his case", tp(bear, "what_would_break_it")))}
 
       ${room.qa ? turn("QA", "The Verifier", "QA · fact-checked the session against the data and live sources", "",
-        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : ""}">${esc(qaLabel(room.qa.verdict))}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(room.qa.note)) : ""}
+        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : ""}">${esc(qaLabel(room.qa.verdict))}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(tp(room.qa, "note"))) : ""}
 
       <div class="tr-close">↑ That is where the session ends — the desk publishes the debate, not a verdict. No house view, no call, no target on ${esc(sym)}.</div>
     </div>
@@ -2929,8 +3049,8 @@ async function pageNews() {
     </div>
     <div class="wire">${rows.length ? rows.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>
       ${(n.tickers || []).map(t => `<a href="#/ticker/${esc(t)}" style="color:var(--accent);font-weight:700">${esc(t)}</a>`).join(" ")}
-      <b>${esc(n.headline || "")}</b> ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}<br>
-      <span class="t">${esc(n.summary || "")} · ${esc(n.source || "")}</span></p>`).join("") : '<div class="empty">Wire silent — sentinel runs every cycle during market hours.</div>'}</div></div>`;
+      <b>${esc(tp(n, "headline"))}</b> ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}<br>
+      <span class="t">${esc(tp(n, "summary"))} · ${esc(n.source || "")}</span></p>`).join("") : '<div class="empty">Wire silent — sentinel runs every cycle during market hours.</div>'}</div></div>`;
   $("view").querySelector(".ranges").addEventListener("click", e => {
     if (e.target.dataset.imp != null) { newsFilter.imp = +e.target.dataset.imp; pageNews(); }
   });
@@ -3156,10 +3276,10 @@ async function playDeskReplay(sym) {
       bodyEl.innerHTML = `<div class="rp-reveal">
         <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span>${s.qa ? `<span class="qabadge ok">QA checked</span>` : ""}</div>
         <div class="rp-desk">
-          ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), ta.read, ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
-          ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), fa.read, `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(fa.dividend_safety || "—")}</b>`)}
-          ${panel("ZB", "Zoya", "the bull · case FOR", "up", bull.thesis, bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "")}
-          ${panel("KB", "Khurram", "the bear · case AGAINST", "dn", bear.thesis, bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "")}
+          ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), tp(ta, "read"), ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
+          ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), tp(fa, "read"), `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(tp(fa, "dividend_safety") || "—")}</b>`)}
+          ${panel("ZB", "Zoya", "the bull · case FOR", "up", tp(bull, "thesis"), bull.pillars ? `<ul class="rp-ul">${li(bull.pillars)}</ul>` : "")}
+          ${panel("KB", "Khurram", "the bear · case AGAINST", "dn", tp(bear, "thesis"), bear.pillars ? `<ul class="rp-ul">${li(bear.pillars)}</ul>` : "")}
         </div>
         <div class="rp-reveal-foot"><span>Two desks, two sides — the desk's read on ${esc(sym)}, argued both ways. No call, no target: general commentary, not advice.</span>
           <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="room-transcript">Read the full transcript ›</button></span></div>
@@ -4945,15 +5065,15 @@ async function pageSectors() {
   ${sess?.house_view ? `
   <div class="seg"><h2>The desk's house view</h2><div class="ln"></div><span class="pill ${sess.house_view.stance === "constructive" ? "ok" : sess.house_view.stance === "cautious" ? "bad" : ""}">${esc(sess.house_view.stance)} · ${esc(sess.house_view.conviction)} conviction</span></div>
   <div class="card room-house">
-    <p class="hv-summary">${esc(sess.house_view.summary)}</p>
-    ${(sess.house_view.key_evidence || []).length ? `<div class="sub" style="margin-top:8px"><b>What drove it:</b> ${sess.house_view.key_evidence.map(esc).join(" · ")}</div>` : ""}
-    <div class="dissent"><span class="ark">the strongest argument against this view</span>${esc(sess.house_view.dissent)}</div>
+    <p class="hv-summary">${esc(tp(sess.house_view, "summary"))}</p>
+    ${(sess.house_view.key_evidence || []).length ? `<div class="sub" style="margin-top:8px"><b>What drove it:</b> ${tpArr(sess.house_view, "key_evidence").map(esc).join(" · ")}</div>` : ""}
+    <div class="dissent"><span class="ark">the strongest argument against this view</span>${esc(tp(sess.house_view, "dissent"))}</div>
   </div>
   ${sess.bull && sess.bear ? `<div class="debate-cols">
-    <div class="card"><div class="ark" style="color:var(--up)">the case for</div><p>${esc(sess.bull.case)}</p>
-      ${(sess.bull.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(p.claim)}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
-    <div class="card"><div class="ark" style="color:var(--dn)">the case against</div><p>${esc(sess.bear.case)}</p>
-      ${(sess.bear.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(p.claim)}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
+    <div class="card"><div class="ark" style="color:var(--up)">the case for</div><p>${esc(tp(sess.bull, "case"))}</p>
+      ${(sess.bull.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(tp(p, "claim"))}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
+    <div class="card"><div class="ark" style="color:var(--dn)">the case against</div><p>${esc(tp(sess.bear, "case"))}</p>
+      ${(sess.bear.pillars || []).map(p => `<div class="sub deb-p"><b>${esc(tp(p, "claim"))}</b> — ${esc(p.evidence)}</div>`).join("")}</div>
   </div>` : ""}`
       : `<div class="card"><div class="empty"><b>${esc(cur)}</b> hasn't been to the debate desk yet. One sector is debated each week on a fixed rotation, largest sectors first — the numbers above are the evidence pack it will argue from.</div></div>`}
 
@@ -5375,12 +5495,8 @@ function renderGate(page) {
         <button class="bw-go" id="gateSignup">Create your account</button>
         <button class="gate-alt" id="gateLogin">I already have one — log in</button>
       </div>
-      <div class="gate-open">
-        Not ready? You can still <a href="#/cast">cast your birth chart</a> without an account —
-        it follows you in when you sign up.
-      </div>
-      <p class="gate-legal">Research &amp; analytics, never investment advice. Read the
-        <a href="#/legal/terms">terms</a> and <a href="#/legal/risk">risk disclosure</a> first.</p>
+      <div class="gate-open">Not ready? You can still <a href="#/cast">cast your birth chart</a> without an account — it follows you in when you sign up.</div>
+      <p class="gate-legal">Research &amp; analytics, never investment advice. Read the <a href="#/legal/terms">terms</a> and <a href="#/legal/risk">risk disclosure</a> first.</p>
     </div>
   </div>`;
   // openAuth's modes are "signin" | "signup" — anything else leaves both tabs unhighlighted
@@ -5536,12 +5652,28 @@ function restackTables() {
     if (room && t.scrollWidth > room + 2) t.setAttribute("data-stack", "1");
   });
 }
+/* A .tilebox's bottom fade and "scroll ▾" hint promise more content below. Both are lies once
+   the user has reached the bottom, and lies from the first paint if the content already fits —
+   and a permanent fade over a short list reads as a rendering bug. Measure instead of decorate. */
+function wireTiles(root = document) {
+  root.querySelectorAll(".tilebox>.tilebody").forEach(b => {
+    const box = b.parentElement;
+    const sync = () => {
+      const room = b.scrollHeight - b.clientHeight;
+      box.classList.toggle("no-scroll", room <= 4);
+      box.classList.toggle("at-end", b.scrollTop >= room - 4);
+    };
+    if (!b.dataset.tile) { b.dataset.tile = "1"; b.addEventListener("scroll", sync, { passive: true }); }
+    sync();
+  });
+}
+
 /* Rotating the phone changes the answer. Attribute writes don't trip the childList observer, so
    this cannot loop. */
 let _restackT = null;
 window.addEventListener("resize", () => {
   clearTimeout(_restackT);
-  _restackT = setTimeout(restackTables, 150);
+  _restackT = setTimeout(() => { restackTables(); wireTiles(); }, 150);
 });
 
 document.addEventListener("keydown", e => {
@@ -5555,7 +5687,7 @@ document.addEventListener("keydown", e => {
    modals appended to body), so observe the whole document rather than just the view container. */
 if (window.MutationObserver) {
   let queued = false;
-  const flush = () => { queued = false; wireClickables(document); enhanceTables(document); };
+  const flush = () => { queued = false; wireClickables(document); enhanceTables(document); wireTiles(document); translateTree(document.body); };
   new MutationObserver(() => {                      // batch: renders fire hundreds of mutations
     if (queued) return;
     queued = true;
@@ -5568,9 +5700,13 @@ if (window.MutationObserver) {
 }
 wireClickables(document);   // whatever is already on the page at boot
 enhanceTables(document);
-
 document.getElementById("langBtn")?.addEventListener("click", () => setLang(lang() === "ur" ? "en" : "ur"));
+/* applyLang() MUST run before translateTree(): it caches each chrome element's true English
+   text into dataset.en on first touch. If translateTree() ran first (lang="ur" from a prior
+   session), it would mutate the text to Urdu before applyLang() ever saw it, permanently
+   caching the Urdu string as "English" and making setLang('en') unable to ever restore it. */
 applyLang();   // safe at module top level: reads localStorage only, never `me`
+translateTree(document.body);
 window.addEventListener("hashchange", () => route(false));
 // NOTE: do NOT call applyDeskMode() here — this line runs before `let me` is initialized further
 // down the file, and deskMode() reads it, which throws a TDZ error and aborts the whole module.

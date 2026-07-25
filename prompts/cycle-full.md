@@ -22,6 +22,9 @@ You are the Orchestrator of Henneth. Read CLAUDE.md. Run this exact sequence; ea
    Also run **fundamentals-agent** if today is Monday OR any `state/earnings_calendar.json`
    event is within 21 days and unconfirmed — it verifies earnings/dividend dates vs primary
    sources and flips `confirmed:true`. Skip otherwise (it's weekly-cadence reference work).
+2b. **state-translator** agent on `state/macro.json` — field paths: `global_read`, `dom.debt_note`,
+    `drivers[]`, `next_events[].event`, `sector_tilt.favored[]`, `sector_tilt.avoid[]`. Non-blocking:
+    if it fails, log and continue — English content is already durably written.
 3. **strategist** agent.
 4. **risk-officer** agent (only if proposed.json has setups).
 5. **auditor** agent (only if vetted.json has approved setups). Setups that PASS audit become published signals: append them to `state/signals.json` with status "active_signal".
@@ -30,6 +33,9 @@ You are the Orchestrator of Henneth. Read CLAUDE.md. Run this exact sequence; ea
    Then for each run `python scripts/alert.py "NEW SIGNAL" "<ticker> entry <e> stop <s> target <t> risk/share <r> — <template>"`. (The alert is the owner's PRIVATE Telegram, not a published surface, so it may still cite the level; it is not subject to the 2(h) publication constraint.)
 6. **monitor** agent (if any open positions in state/positions.json).
 6b. **market-analyst** agent — writes `state/daily_read.json` (the day's plain-English read: tone, sectors, watchlist, risks). Once per day, in the pre-market full run only.
+6c. **state-translator** agent on `state/daily_read.json` — field paths: `headline`, `summary`,
+    `sectors[].why`, `risks[]`, `catalysts[].event`, `watchlist[].angle`, `watchlist[].risk`.
+    Non-blocking: if it fails, log and continue.
 7. **Report**: run `python scripts/build_dashboard.py` (Bash) — it assembles the core of
    `state/dashboard.json` deterministically (regime, geo-risk, movers, news, signals, positions).
    Then PATCH in the `agent_wire` array: one line per agent that ran this cycle
