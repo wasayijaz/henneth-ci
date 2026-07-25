@@ -28,7 +28,9 @@ Docs: [`CLAUDE.md`](CLAUDE.md) (desk rules) · [`docs/SYSTEM-REGISTRY.md`](docs/
 
 ## What it does
 
-A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite" design) over the whole PSX universe:
+A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite" design) over the whole PSX universe.
+Dense sections render as **horizontal scroll-tile lanes at every viewport width**, not just on phones — a 1,400px
+list buries what sits under it exactly as a 375px one does:
 
 - **Today** — the desk's plain-English daily read: tone, favoured/avoided sectors, a short watchlist.
 - **Board** — live universe heatmap, backtest-proven signals, predictability ranks, positions, news + agent wire.
@@ -50,6 +52,10 @@ A single-page terminal (collapsible sidebar, hard-cornered mono "Bloomberg-lite"
 - **Scores** — track records, scoped to what the desk is allowed to call: sector, macro and astro
   reads (never a named-stock verdict, since the Room no longer issues one) plus the brokers, ranked
   overall and per sector on their own public calls.
+- **Sectors** — a weekly sector debate, opened TLDR-first: the house view, the case for and the case
+  against as three tiles readable in about three minutes, with the full argument behind a
+  read-the-transcript modal. Sectors the desk has argued carry a run dot; the rest carry a real empty
+  state rather than a blank panel.
 - **Research** — broker notes and company filings (results / AGM / corporate-briefing), digested and tagged.
 - **Macro / Dividends / Earnings / News** — the global tape that moves PSX, a geo-risk radar, dividend
   timing (buy-by / ex-date), the earnings calendar, and a permanent news log.
@@ -109,6 +115,21 @@ the desk tested it and it failed.
   the natal Moon and recomputed every day, a transit ring on the orrery, and dated "worth another look"
   shifts (ingresses, dasha/antardasha turnovers) — computed client-side from data already shipped, so it
   costs nothing per user.
+- **The per-stock reading is a join, not a printout.** Placements alone are worthless, so every
+  stock's reading carries four blocks, each built only from `state/`: the **Vimshottari ladder**
+  (maha/antar with real dates and the next three turns, each labelled the way the tradition labels
+  it — stamped *the tradition's claim, untested*); the **falsification receipt for that name** (its
+  own rows out of `astro_backtest.json`: conditions tested, days in/out, effect %/day, p-value,
+  survived or not); the **Pakistan (1947) and KSE-100 (1991) comparison**; and **today's live sky
+  joined to what each active condition actually measured**. A stock with no birth chart falls back
+  to its sector's peers and then to the KSE-100 proxy, and **says which it used** — a peer's numbers
+  are never presented as the stock's. Nothing in any block is a direction, target or level.
+- **`scripts/astro_context.py`** makes that join possible: it names today's conditions in
+  `astro_backtest.py`'s exact vocabulary and **asserts its own output against the backtest's test
+  list every run**, so the two cannot silently drift apart into a lie. It also publishes the
+  Pakistan and KSE-100 charts — cast at **both** disputed birth times, publishing only the slow
+  grahas (Saturn, Jupiter, Rahu, Ketu) whose placement agrees under both; the Moon and ascendant are
+  refused outright, enforcing `astro_map.json`'s `usage_rule` in code rather than in a footnote.
 - **Visuals.** An isometric-feel natal orrery (foreshortened orbits, native SVG pixel glyphs — *not*
   `foreignObject`, which breaks in Safari), a Vimshottari dasha ribbon with an antardasha sub-period strip,
   per-stock timing windows, and 8 commodities read through their traditional rulers.

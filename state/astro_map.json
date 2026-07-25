@@ -1,172 +1,514 @@
 {
- "version": 1,
- "status": "DRAFT — owner to review before anything renders. Frozen on approval (CLAUDE.md Rule 8 discipline: to change a mapping, add v2 and re-test from scratch; never edit a live map in place or every past astro score silently changes meaning).",
- "updated": "2026-07-17",
- "what_this_is": "The INTERPRETIVE layer of the astro pillar. astro.json says where the grahas are — that is computed and not arguable. This file says what tradition CLAIMS each graha governs, so those claims can be tested. Nothing here is evidence. It is a list of hypotheses.",
- "honesty": {
-  "these_are_claims_not_facts": "Every significator below is a traditional Vedic attribution, recorded because it is testable — not because the desk believes it. A mapping earns its place on this desk only by surviving astro_backtest on real price history, exactly like any of the 52 rule-based strategies.",
-  "no_natal_charts_per_company": "PSX does not publish company listing dates (dps.psx.com.pk/listings carries none, and company pages carry none). Casting a 'birth chart' for a stock from a guessed or unverifiable date would be exactly the invented-input this desk exists to avoid. Per-ticker astro is therefore NOT a natal chart: it is the ticker's sector significators, tested on that ticker's own ~19-year history.",
-  "known_weaknesses": [
-   "Sector significators are contested between traditions; other astrologers would map some of these differently. Where a mapping is genuinely disputed it is marked confidence: low.",
-   "Rahu and Ketu have no agreed exaltation or rulership; the desk records the dispute instead of picking a side.",
-   "The KSE-100 and Pakistan reference charts have uncertain birth TIMES, which makes the Moon's exact position and the ascendant unreliable. Any read depending on those must disclose it (see reference_charts.usage_rule).",
-   "Multiple comparisons are a real danger: test enough graha-sector pairs and something will look significant by luck. astro_backtest must correct for this and report the number of hypotheses tested."
-  ]
- },
- "discipline": {
-  "research_lens_only": "Astro NEVER generates or gates a trade setup. It does not touch the Strategist, the Risk Officer, or the Auditor. It is a lens the desk reports and scores, nothing more.",
-  "every_read_is_a_dated_claim": "An astro read must be falsifiable, dated, and written into claims.json with source_type 'astro' so it resolves against real prices like a broker call.",
-  "the_track_record_is_public": "Astro hits AND misses publish on the Scores board with the reason each worked or failed. A lens with no published error rate is a horoscope.",
-  "dates_come_from_the_engine": "CLAUDE.md Rule 2 applies with force here: no agent may state a transit date from memory. Every date comes from astro.json, which computes it. (During this build the model's own recall placed Rahu in the wrong sign and the PSX sector codes in the wrong sectors; the computation was right both times.)"
- },
- "reference_charts": {
-  "usage_rule": "Positions of the slow grahas are reliable in these charts regardless of birth time. The Moon and the ascendant are NOT, wherever time_certainty is not 'exact'. Any read leaning on the Moon or the ascendant of an uncertain-time chart must say so in the read itself.",
-  "kse100": {
-   "event": "KSE-100 index launched with a base of 1,000 points",
-   "date": "1991-11-01",
-   "place": "Karachi, Pakistan",
-   "lat": 24.8607, "lon": 67.0011,
-   "time": null,
-   "time_certainty": "unknown — PSX publishes the base DATE, not a launch time",
-   "source": "https://www.psx.com.pk/psx/themes/psx/uploads/KSE_100_Index_New_Brochure.pdf (base period November 1991, base value 1,000)",
-   "verified": "2026-07-17, cross-checked against PSX's own index methodology brochure"
+  "version": 1,
+  "status": "DRAFT — owner to review before anything renders. Frozen on approval (CLAUDE.md Rule 8 discipline: to change a mapping, add v2 and re-test from scratch; never edit a live map in place or every past astro score silently changes meaning).",
+  "updated": "2026-07-17",
+  "what_this_is": "The INTERPRETIVE layer of the astro pillar. astro.json says where the grahas are — that is computed and not arguable. This file says what tradition CLAIMS each graha governs, so those claims can be tested. Nothing here is evidence. It is a list of hypotheses.",
+  "honesty": {
+    "these_are_claims_not_facts": "Every significator below is a traditional Vedic attribution, recorded because it is testable — not because the desk believes it. A mapping earns its place on this desk only by surviving astro_backtest on real price history, exactly like any of the 52 rule-based strategies.",
+    "no_natal_charts_per_company": "PSX does not publish company listing dates (dps.psx.com.pk/listings carries none, and company pages carry none). Casting a 'birth chart' for a stock from a guessed or unverifiable date would be exactly the invented-input this desk exists to avoid. Per-ticker astro is therefore NOT a natal chart: it is the ticker's sector significators, tested on that ticker's own ~19-year history.",
+    "known_weaknesses": [
+      "Sector significators are contested between traditions; other astrologers would map some of these differently. Where a mapping is genuinely disputed it is marked confidence: low.",
+      "Rahu and Ketu have no agreed exaltation or rulership; the desk records the dispute instead of picking a side.",
+      "The KSE-100 and Pakistan reference charts have uncertain birth TIMES, which makes the Moon's exact position and the ascendant unreliable. Any read depending on those must disclose it (see reference_charts.usage_rule).",
+      "Multiple comparisons are a real danger: test enough graha-sector pairs and something will look significant by luck. astro_backtest must correct for this and report the number of hypotheses tested."
+    ]
   },
-  "pakistan": {
-   "event": "Independence of Pakistan",
-   "date": "1947-08-14",
-   "place": "Karachi, Pakistan",
-   "lat": 24.8607, "lon": 67.0011,
-   "time": null,
-   "time_certainty": "disputed — astrologers use competing charts (a midnight 14/15 Aug chart and a ~09:30 oath-taking chart); the desk does not pick a winner",
-   "usage": "Slow-graha placements only. Any read that would change between the competing charts is not publishable."
-  }
- },
- "grahas": {
-  "_note": "Domains are the traditional karaka attributions. Own/exaltation/debilitation signs are standard and uncontested in Vedic astrology, and are listed so the engine can compute dignity deterministically rather than an agent asserting it.",
-  "Sun": {
-   "sanskrit": "Surya",
-   "domains": ["government and the state", "electricity and power", "authority and licensing", "health and vitality", "gold"],
-   "own_signs": ["Leo"], "exalted": {"sign": "Aries", "deg": 10}, "debilitated": {"sign": "Libra", "deg": 10}
+  "discipline": {
+    "research_lens_only": "Astro NEVER generates or gates a trade setup. It does not touch the Strategist, the Risk Officer, or the Auditor. It is a lens the desk reports and scores, nothing more.",
+    "every_read_is_a_dated_claim": "An astro read must be falsifiable, dated, and written into claims.json with source_type 'astro' so it resolves against real prices like a broker call.",
+    "the_track_record_is_public": "Astro hits AND misses publish on the Scores board with the reason each worked or failed. A lens with no published error rate is a horoscope.",
+    "dates_come_from_the_engine": "CLAUDE.md Rule 2 applies with force here: no agent may state a transit date from memory. Every date comes from astro.json, which computes it. (During this build the model's own recall placed Rahu in the wrong sign and the PSX sector codes in the wrong sectors; the computation was right both times.)"
   },
-  "Moon": {
-   "sanskrit": "Chandra",
-   "domains": ["public sentiment and the mood of the crowd", "liquidity", "water and rainfall", "crops and food", "dairy", "silver", "the masses as consumers"],
-   "own_signs": ["Cancer"], "exalted": {"sign": "Taurus", "deg": 3}, "debilitated": {"sign": "Scorpio", "deg": 3}
+  "reference_charts": {
+    "usage_rule": "Positions of the slow grahas are reliable in these charts regardless of birth time. The Moon and the ascendant are NOT, wherever time_certainty is not 'exact'. Any read leaning on the Moon or the ascendant of an uncertain-time chart must say so in the read itself.",
+    "kse100": {
+      "event": "KSE-100 index launched with a base of 1,000 points",
+      "date": "1991-11-01",
+      "place": "Karachi, Pakistan",
+      "lat": 24.8607,
+      "lon": 67.0011,
+      "time": null,
+      "time_certainty": "unknown — PSX publishes the base DATE, not a launch time",
+      "source": "https://www.psx.com.pk/psx/themes/psx/uploads/KSE_100_Index_New_Brochure.pdf (base period November 1991, base value 1,000)",
+      "verified": "2026-07-17, cross-checked against PSX's own index methodology brochure"
+    },
+    "pakistan": {
+      "event": "Independence of Pakistan",
+      "date": "1947-08-14",
+      "place": "Karachi, Pakistan",
+      "lat": 24.8607,
+      "lon": 67.0011,
+      "time": null,
+      "time_certainty": "disputed — astrologers use competing charts (a midnight 14/15 Aug chart and a ~09:30 oath-taking chart); the desk does not pick a winner",
+      "usage": "Slow-graha placements only. Any read that would change between the competing charts is not publishable."
+    }
   },
-  "Mars": {
-   "sanskrit": "Mangal",
-   "domains": ["energy and fire", "machinery, iron and steel", "engineering", "land and property", "defence", "chemicals", "surgery"],
-   "own_signs": ["Aries", "Scorpio"], "exalted": {"sign": "Capricorn", "deg": 28}, "debilitated": {"sign": "Cancer", "deg": 28}
+  "grahas": {
+    "_note": "Domains are the traditional karaka attributions. Own/exaltation/debilitation signs are standard and uncontested in Vedic astrology, and are listed so the engine can compute dignity deterministically rather than an agent asserting it.",
+    "Sun": {
+      "sanskrit": "Surya",
+      "domains": [
+        "government and the state",
+        "electricity and power",
+        "authority and licensing",
+        "health and vitality",
+        "gold"
+      ],
+      "own_signs": [
+        "Leo"
+      ],
+      "exalted": {
+        "sign": "Aries",
+        "deg": 10
+      },
+      "debilitated": {
+        "sign": "Libra",
+        "deg": 10
+      },
+      "natural_nature": "malefic",
+      "nature_note": "a mild malefic — hot, separative, but the source of vitality"
+    },
+    "Moon": {
+      "sanskrit": "Chandra",
+      "domains": [
+        "public sentiment and the mood of the crowd",
+        "liquidity",
+        "water and rainfall",
+        "crops and food",
+        "dairy",
+        "silver",
+        "the masses as consumers"
+      ],
+      "own_signs": [
+        "Cancer"
+      ],
+      "exalted": {
+        "sign": "Taurus",
+        "deg": 3
+      },
+      "debilitated": {
+        "sign": "Scorpio",
+        "deg": 3
+      },
+      "natural_nature": "benefic",
+      "nature_note": "benefic when waxing and well-placed, weak when dark"
+    },
+    "Mars": {
+      "sanskrit": "Mangal",
+      "domains": [
+        "energy and fire",
+        "machinery, iron and steel",
+        "engineering",
+        "land and property",
+        "defence",
+        "chemicals",
+        "surgery"
+      ],
+      "own_signs": [
+        "Aries",
+        "Scorpio"
+      ],
+      "exalted": {
+        "sign": "Capricorn",
+        "deg": 28
+      },
+      "debilitated": {
+        "sign": "Cancer",
+        "deg": 28
+      },
+      "natural_nature": "malefic",
+      "nature_note": "a malefic — force, cuts, accidents, energy"
+    },
+    "Mercury": {
+      "sanskrit": "Budh",
+      "domains": [
+        "commerce and trade",
+        "communication",
+        "technology and software",
+        "media and print",
+        "accounting and brokerage",
+        "transport and movement"
+      ],
+      "own_signs": [
+        "Gemini",
+        "Virgo"
+      ],
+      "exalted": {
+        "sign": "Virgo",
+        "deg": 15
+      },
+      "debilitated": {
+        "sign": "Pisces",
+        "deg": 15
+      },
+      "natural_nature": "mixed",
+      "nature_note": "neutral; it takes the nature of whatever it sits with"
+    },
+    "Jupiter": {
+      "sanskrit": "Guru",
+      "domains": [
+        "banking and the treasury",
+        "wealth and expansion",
+        "credit",
+        "law",
+        "education",
+        "advisers"
+      ],
+      "own_signs": [
+        "Sagittarius",
+        "Pisces"
+      ],
+      "exalted": {
+        "sign": "Cancer",
+        "deg": 5
+      },
+      "debilitated": {
+        "sign": "Capricorn",
+        "deg": 5
+      },
+      "natural_nature": "benefic",
+      "nature_note": "the great benefic — expansion, credit, protection"
+    },
+    "Venus": {
+      "sanskrit": "Shukra",
+      "domains": [
+        "cloth and textiles",
+        "vehicles and conveyances",
+        "luxury and comfort",
+        "sugar and sweeteners",
+        "beauty",
+        "entertainment",
+        "money as enjoyment"
+      ],
+      "own_signs": [
+        "Taurus",
+        "Libra"
+      ],
+      "exalted": {
+        "sign": "Pisces",
+        "deg": 27
+      },
+      "debilitated": {
+        "sign": "Virgo",
+        "deg": 27
+      },
+      "natural_nature": "benefic",
+      "nature_note": "a benefic — comfort, demand, luxury, liquidity"
+    },
+    "Saturn": {
+      "sanskrit": "Shani",
+      "domains": [
+        "oil, coal and what is dug from the ground",
+        "labour",
+        "construction, stone and cement",
+        "heavy industry",
+        "long-dated contracts",
+        "delay and contraction",
+        "iron"
+      ],
+      "own_signs": [
+        "Capricorn",
+        "Aquarius"
+      ],
+      "exalted": {
+        "sign": "Libra",
+        "deg": 20
+      },
+      "debilitated": {
+        "sign": "Aries",
+        "deg": 20
+      },
+      "natural_nature": "malefic",
+      "nature_note": "the great malefic — delay, contraction, endurance"
+    },
+    "Rahu": {
+      "sanskrit": "Rahu",
+      "domains": [
+        "speculation and mania",
+        "foreign flows",
+        "technology and disruption",
+        "smoke, intoxicants and tobacco",
+        "sudden expansion",
+        "the unconventional"
+      ],
+      "own_signs": [],
+      "exalted": null,
+      "debilitated": null,
+      "dispute": "No agreed rulership, exaltation or debilitation — traditions differ (Taurus/Gemini/Virgo are all claimed). The desk computes Rahu's position and motion only, and makes no dignity claim.",
+      "natural_nature": "malefic",
+      "nature_note": "a shadow malefic — appetite, leverage, mania"
+    },
+    "Ketu": {
+      "sanskrit": "Ketu",
+      "domains": [
+        "detachment and abandonment",
+        "medicine and healing",
+        "hidden things",
+        "sudden reversal",
+        "liquidation"
+      ],
+      "own_signs": [],
+      "exalted": null,
+      "debilitated": null,
+      "dispute": "Same as Rahu — no agreed dignity. Position and motion only.",
+      "natural_nature": "malefic",
+      "nature_note": "a shadow malefic — severance, loss of interest, detachment"
+    },
+    "_note_nature": "Natural benefic/malefic is the classical classification (Brihat Parashara Hora Shastra); it is the tradition's OWN label for a period lord, carried here so a dasha can be shown as the tradition would read it. It is a claim about the tradition, not a measured effect - astro_backtest.json is where measurement lives, and it found nothing."
   },
-  "Mercury": {
-   "sanskrit": "Budh",
-   "domains": ["commerce and trade", "communication", "technology and software", "media and print", "accounting and brokerage", "transport and movement"],
-   "own_signs": ["Gemini", "Virgo"], "exalted": {"sign": "Virgo", "deg": 15}, "debilitated": {"sign": "Pisces", "deg": 15}
+  "sector_significators": {
+    "_schema": "Real PSX sector names, keyed exactly as state/sectors.json emits them (parsed from PSX's own screener). primary/secondary are the traditional karakas. confidence = how settled the attribution is across traditions, NOT how well it works — that is what the backtest decides.",
+    "Commercial Banks": {
+      "primary": "Jupiter",
+      "secondary": "Mercury",
+      "why": "Jupiter is the classical karaka of treasury, credit and wealth; Mercury governs the transactional side.",
+      "confidence": "high"
+    },
+    "Inv. Banks / Inv. Cos. / Securities Cos.": {
+      "primary": "Mercury",
+      "secondary": "Jupiter",
+      "why": "Brokerage and trading are Mercury; the capital itself is Jupiter.",
+      "confidence": "high"
+    },
+    "Modarabas": {
+      "primary": "Jupiter",
+      "secondary": "Mercury",
+      "why": "Islamic finance sits under Jupiter (law and lawful wealth) with Mercury for the contracting.",
+      "confidence": "medium"
+    },
+    "Leasing Companies": {
+      "primary": "Saturn",
+      "secondary": "Jupiter",
+      "why": "Saturn governs long-dated obligations; Jupiter the finance behind them.",
+      "confidence": "medium"
+    },
+    "Close - End Mutual Fund": {
+      "primary": "Jupiter",
+      "secondary": "Mercury",
+      "why": "Pooled wealth is Jupiter; its trading is Mercury.",
+      "confidence": "medium"
+    },
+    "Insurance": {
+      "primary": "Saturn",
+      "secondary": "Jupiter",
+      "why": "Saturn rules longevity, risk and what endures; Jupiter the pooled capital.",
+      "confidence": "medium"
+    },
+    "Cement": {
+      "primary": "Saturn",
+      "secondary": "Mars",
+      "why": "Saturn is stone, construction and heavy industry; Mars is building and land.",
+      "confidence": "high"
+    },
+    "Engineering": {
+      "primary": "Mars",
+      "secondary": "Saturn",
+      "why": "Mars is machinery and iron; Saturn the heavy industrial base.",
+      "confidence": "high"
+    },
+    "Real Estate Investment Trust": {
+      "primary": "Mars",
+      "secondary": "Saturn",
+      "why": "Mars is the classical karaka of land and property; Saturn the structures on it.",
+      "confidence": "high"
+    },
+    "Property": {
+      "primary": "Mars",
+      "secondary": "Saturn",
+      "why": "Same as REITs — land is Mars.",
+      "confidence": "high"
+    },
+    "Oil & Gas Exploration Companies": {
+      "primary": "Saturn",
+      "secondary": "Mars",
+      "why": "Saturn governs oil and everything extracted from underground; Mars the drilling and the energy itself.",
+      "confidence": "high"
+    },
+    "Oil & Gas Marketing Companies": {
+      "primary": "Saturn",
+      "secondary": "Mercury",
+      "why": "The commodity is Saturn's; the distribution and retail margin are Mercury's.",
+      "confidence": "medium"
+    },
+    "Refinery": {
+      "primary": "Saturn",
+      "secondary": "Mars",
+      "why": "Saturn's crude processed by Mars's fire.",
+      "confidence": "medium"
+    },
+    "Power Generation & Distribution": {
+      "primary": "Sun",
+      "secondary": "Mars",
+      "why": "The Sun is electricity and the state's licensing of it; Mars the generation.",
+      "confidence": "high"
+    },
+    "Cable & Electrical Goods": {
+      "primary": "Sun",
+      "secondary": "Mercury",
+      "why": "Electricity is the Sun; the wiring and switching are Mercury.",
+      "confidence": "medium"
+    },
+    "Fertilizer": {
+      "primary": "Moon",
+      "secondary": "Mars",
+      "why": "Demand follows crops and rainfall, which are the Moon's; the chemical manufacture is Mars's.",
+      "confidence": "medium",
+      "note": "Genuinely arguable — some traditions read fertilizer as purely Mars (chemicals). Recorded as it stands and left to the backtest."
+    },
+    "Chemical": {
+      "primary": "Mars",
+      "secondary": "Rahu",
+      "why": "Mars for chemical processing and fire; Rahu for the synthetic and the toxic.",
+      "confidence": "medium"
+    },
+    "Food & Personal Care Products": {
+      "primary": "Moon",
+      "secondary": "Venus",
+      "why": "The Moon is nourishment and the mood of the mass consumer; Venus is comfort and the branded good.",
+      "confidence": "high"
+    },
+    "Sugar & Allied Industries": {
+      "primary": "Venus",
+      "secondary": "Moon",
+      "why": "Venus is sweetness itself; the Moon is the cane crop.",
+      "confidence": "high"
+    },
+    "Vanaspati & Allied Industries": {
+      "primary": "Venus",
+      "secondary": "Moon",
+      "why": "Edible oils and ghee are Venus; the crop behind them the Moon's.",
+      "confidence": "medium"
+    },
+    "Tobacco": {
+      "primary": "Rahu",
+      "secondary": "Saturn",
+      "why": "Rahu governs smoke and intoxicants; Saturn the addiction and the regulation.",
+      "confidence": "medium"
+    },
+    "Pharmaceuticals": {
+      "primary": "Sun",
+      "secondary": "Ketu",
+      "why": "The Sun is health and vitality; Ketu is medicine, healing and what cures by removal.",
+      "confidence": "medium",
+      "note": "Contested — Jupiter is also claimed for pharma in some traditions."
+    },
+    "Technology & Communication": {
+      "primary": "Mercury",
+      "secondary": "Rahu",
+      "why": "Mercury is communication and intellect; Rahu is disruption and the new.",
+      "confidence": "high"
+    },
+    "Paper, Board & Packaging": {
+      "primary": "Mercury",
+      "secondary": "Venus",
+      "why": "Paper, print and the written word are Mercury's.",
+      "confidence": "medium"
+    },
+    "Transport": {
+      "primary": "Mercury",
+      "secondary": "Venus",
+      "why": "Mercury is movement and messages; Venus the conveyance itself.",
+      "confidence": "high"
+    },
+    "Automobile Assembler": {
+      "primary": "Venus",
+      "secondary": "Mars",
+      "why": "Venus is the classical karaka of vehicles; Mars the iron and the engine.",
+      "confidence": "high"
+    },
+    "Automobile Parts & Accessories": {
+      "primary": "Mars",
+      "secondary": "Venus",
+      "why": "Components are Mars's metal before they are Venus's vehicle.",
+      "confidence": "medium"
+    },
+    "Textile Composite": {
+      "primary": "Venus",
+      "secondary": "Moon",
+      "why": "Venus rules cloth; the Moon the cotton crop feeding it.",
+      "confidence": "high"
+    },
+    "Textile Spinning": {
+      "primary": "Venus",
+      "secondary": "Moon",
+      "why": "As Textile Composite.",
+      "confidence": "high"
+    },
+    "Textile Weaving": {
+      "primary": "Venus",
+      "secondary": "Moon",
+      "why": "As Textile Composite.",
+      "confidence": "high"
+    },
+    "Synthetic & Rayon": {
+      "primary": "Venus",
+      "secondary": "Rahu",
+      "why": "Venus for fabric, Rahu for the artificial fibre.",
+      "confidence": "medium"
+    },
+    "Woollen": {
+      "primary": "Venus",
+      "secondary": "Saturn",
+      "why": "Venus for cloth; Saturn for wool and the animal husbandry behind it.",
+      "confidence": "low"
+    },
+    "Leather & Tanneries": {
+      "primary": "Saturn",
+      "secondary": "Venus",
+      "why": "Saturn governs hides and the tanning trade; Venus the finished goods.",
+      "confidence": "low"
+    },
+    "Glass & Ceramics": {
+      "primary": "Venus",
+      "secondary": "Mars",
+      "why": "Venus for glass and ornament; Mars for the kiln.",
+      "confidence": "low"
+    },
+    "Miscellaneous": {
+      "primary": null,
+      "secondary": null,
+      "why": "A grab-bag, not a sector. There is no honest significator for a bucket with no common business, so the desk maps none and the astro lens stays silent on these names.",
+      "confidence": "none"
+    }
   },
-  "Jupiter": {
-   "sanskrit": "Guru",
-   "domains": ["banking and the treasury", "wealth and expansion", "credit", "law", "education", "advisers"],
-   "own_signs": ["Sagittarius", "Pisces"], "exalted": {"sign": "Cancer", "deg": 5}, "debilitated": {"sign": "Capricorn", "deg": 5}
+  "testable_conditions": {
+    "_schema": "The hypotheses astro_backtest will test on real price history — market-wide, per sector, and per ticker. Each states a NULL hypothesis that the data can reject. A condition that cannot be stated this way does not belong on this desk.",
+    "_multiple_comparisons_warning": "Testing many graha-sector pairs guarantees some will look significant by chance. The backtest must report how many hypotheses were tested and adjust the bar accordingly; an unadjusted p-value here would be a lie dressed as rigour.",
+    "significator_retrograde": {
+      "claim": "While a sector's primary significator is retrograde, that sector underperforms the market.",
+      "null": "Returns during retrograde windows are drawn from the same distribution as returns outside them.",
+      "computable_from": "astro.json positions[body].retrograde over history"
+    },
+    "significator_combust": {
+      "claim": "While a sector's primary significator is combust (within 8 degrees of the Sun), that sector underperforms.",
+      "null": "No difference in return distribution inside vs outside combustion windows.",
+      "computable_from": "|lon(body) - lon(Sun)| < 8"
+    },
+    "significator_dignity": {
+      "claim": "A sector outperforms while its primary significator is exalted or in its own sign, and underperforms while debilitated.",
+      "null": "Dignity state has no relationship to sector returns.",
+      "computable_from": "grahas[body].own_signs / exalted / debilitated vs sidereal sign"
+    },
+    "mercury_retrograde": {
+      "claim": "The market as a whole underperforms while Mercury is retrograde.",
+      "null": "KSE-100 returns are the same inside and outside Mercury-retrograde windows.",
+      "note": "The single most popular astro-market claim there is, and therefore the first one the desk should try to kill."
+    },
+    "eclipse_window": {
+      "claim": "Volatility rises and returns weaken in the +/-7 sessions around a certain eclipse.",
+      "null": "Return and volatility distributions in eclipse windows match the baseline.",
+      "computable_from": "astro.json events where eclipse.certainty == 'certain'"
+    },
+    "moon_phase": {
+      "claim": "Returns around the new moon differ from returns around the full moon.",
+      "null": "No difference. (This one has published academic literature on both sides — a good honesty test for the desk.)",
+      "computable_from": "astro.json new_moon / full_moon events"
+    },
+    "saturn_transit_sector": {
+      "claim": "A sector is pressured while Saturn transits a sign that is hostile to its significator.",
+      "null": "No relationship.",
+      "note": "Lower priority: Saturn changes sign every ~2.5 years, so PSX's ~19 years of history gives very few independent windows. The desk should say plainly that this cannot be tested well, rather than testing it badly."
+    }
   },
-  "Venus": {
-   "sanskrit": "Shukra",
-   "domains": ["cloth and textiles", "vehicles and conveyances", "luxury and comfort", "sugar and sweeteners", "beauty", "entertainment", "money as enjoyment"],
-   "own_signs": ["Taurus", "Libra"], "exalted": {"sign": "Pisces", "deg": 27}, "debilitated": {"sign": "Virgo", "deg": 27}
-  },
-  "Saturn": {
-   "sanskrit": "Shani",
-   "domains": ["oil, coal and what is dug from the ground", "labour", "construction, stone and cement", "heavy industry", "long-dated contracts", "delay and contraction", "iron"],
-   "own_signs": ["Capricorn", "Aquarius"], "exalted": {"sign": "Libra", "deg": 20}, "debilitated": {"sign": "Aries", "deg": 20}
-  },
-  "Rahu": {
-   "sanskrit": "Rahu",
-   "domains": ["speculation and mania", "foreign flows", "technology and disruption", "smoke, intoxicants and tobacco", "sudden expansion", "the unconventional"],
-   "own_signs": [], "exalted": null, "debilitated": null,
-   "dispute": "No agreed rulership, exaltation or debilitation — traditions differ (Taurus/Gemini/Virgo are all claimed). The desk computes Rahu's position and motion only, and makes no dignity claim."
-  },
-  "Ketu": {
-   "sanskrit": "Ketu",
-   "domains": ["detachment and abandonment", "medicine and healing", "hidden things", "sudden reversal", "liquidation"],
-   "own_signs": [], "exalted": null, "debilitated": null,
-   "dispute": "Same as Rahu — no agreed dignity. Position and motion only."
-  }
- },
- "sector_significators": {
-  "_schema": "Real PSX sector names, keyed exactly as state/sectors.json emits them (parsed from PSX's own screener). primary/secondary are the traditional karakas. confidence = how settled the attribution is across traditions, NOT how well it works — that is what the backtest decides.",
-  "Commercial Banks": {"primary": "Jupiter", "secondary": "Mercury", "why": "Jupiter is the classical karaka of treasury, credit and wealth; Mercury governs the transactional side.", "confidence": "high"},
-  "Inv. Banks / Inv. Cos. / Securities Cos.": {"primary": "Mercury", "secondary": "Jupiter", "why": "Brokerage and trading are Mercury; the capital itself is Jupiter.", "confidence": "high"},
-  "Modarabas": {"primary": "Jupiter", "secondary": "Mercury", "why": "Islamic finance sits under Jupiter (law and lawful wealth) with Mercury for the contracting.", "confidence": "medium"},
-  "Leasing Companies": {"primary": "Saturn", "secondary": "Jupiter", "why": "Saturn governs long-dated obligations; Jupiter the finance behind them.", "confidence": "medium"},
-  "Close - End Mutual Fund": {"primary": "Jupiter", "secondary": "Mercury", "why": "Pooled wealth is Jupiter; its trading is Mercury.", "confidence": "medium"},
-  "Insurance": {"primary": "Saturn", "secondary": "Jupiter", "why": "Saturn rules longevity, risk and what endures; Jupiter the pooled capital.", "confidence": "medium"},
-  "Cement": {"primary": "Saturn", "secondary": "Mars", "why": "Saturn is stone, construction and heavy industry; Mars is building and land.", "confidence": "high"},
-  "Engineering": {"primary": "Mars", "secondary": "Saturn", "why": "Mars is machinery and iron; Saturn the heavy industrial base.", "confidence": "high"},
-  "Real Estate Investment Trust": {"primary": "Mars", "secondary": "Saturn", "why": "Mars is the classical karaka of land and property; Saturn the structures on it.", "confidence": "high"},
-  "Property": {"primary": "Mars", "secondary": "Saturn", "why": "Same as REITs — land is Mars.", "confidence": "high"},
-  "Oil & Gas Exploration Companies": {"primary": "Saturn", "secondary": "Mars", "why": "Saturn governs oil and everything extracted from underground; Mars the drilling and the energy itself.", "confidence": "high"},
-  "Oil & Gas Marketing Companies": {"primary": "Saturn", "secondary": "Mercury", "why": "The commodity is Saturn's; the distribution and retail margin are Mercury's.", "confidence": "medium"},
-  "Refinery": {"primary": "Saturn", "secondary": "Mars", "why": "Saturn's crude processed by Mars's fire.", "confidence": "medium"},
-  "Power Generation & Distribution": {"primary": "Sun", "secondary": "Mars", "why": "The Sun is electricity and the state's licensing of it; Mars the generation.", "confidence": "high"},
-  "Cable & Electrical Goods": {"primary": "Sun", "secondary": "Mercury", "why": "Electricity is the Sun; the wiring and switching are Mercury.", "confidence": "medium"},
-  "Fertilizer": {"primary": "Moon", "secondary": "Mars", "why": "Demand follows crops and rainfall, which are the Moon's; the chemical manufacture is Mars's.", "confidence": "medium", "note": "Genuinely arguable — some traditions read fertilizer as purely Mars (chemicals). Recorded as it stands and left to the backtest."},
-  "Chemical": {"primary": "Mars", "secondary": "Rahu", "why": "Mars for chemical processing and fire; Rahu for the synthetic and the toxic.", "confidence": "medium"},
-  "Food & Personal Care Products": {"primary": "Moon", "secondary": "Venus", "why": "The Moon is nourishment and the mood of the mass consumer; Venus is comfort and the branded good.", "confidence": "high"},
-  "Sugar & Allied Industries": {"primary": "Venus", "secondary": "Moon", "why": "Venus is sweetness itself; the Moon is the cane crop.", "confidence": "high"},
-  "Vanaspati & Allied Industries": {"primary": "Venus", "secondary": "Moon", "why": "Edible oils and ghee are Venus; the crop behind them the Moon's.", "confidence": "medium"},
-  "Tobacco": {"primary": "Rahu", "secondary": "Saturn", "why": "Rahu governs smoke and intoxicants; Saturn the addiction and the regulation.", "confidence": "medium"},
-  "Pharmaceuticals": {"primary": "Sun", "secondary": "Ketu", "why": "The Sun is health and vitality; Ketu is medicine, healing and what cures by removal.", "confidence": "medium", "note": "Contested — Jupiter is also claimed for pharma in some traditions."},
-  "Technology & Communication": {"primary": "Mercury", "secondary": "Rahu", "why": "Mercury is communication and intellect; Rahu is disruption and the new.", "confidence": "high"},
-  "Paper, Board & Packaging": {"primary": "Mercury", "secondary": "Venus", "why": "Paper, print and the written word are Mercury's.", "confidence": "medium"},
-  "Transport": {"primary": "Mercury", "secondary": "Venus", "why": "Mercury is movement and messages; Venus the conveyance itself.", "confidence": "high"},
-  "Automobile Assembler": {"primary": "Venus", "secondary": "Mars", "why": "Venus is the classical karaka of vehicles; Mars the iron and the engine.", "confidence": "high"},
-  "Automobile Parts & Accessories": {"primary": "Mars", "secondary": "Venus", "why": "Components are Mars's metal before they are Venus's vehicle.", "confidence": "medium"},
-  "Textile Composite": {"primary": "Venus", "secondary": "Moon", "why": "Venus rules cloth; the Moon the cotton crop feeding it.", "confidence": "high"},
-  "Textile Spinning": {"primary": "Venus", "secondary": "Moon", "why": "As Textile Composite.", "confidence": "high"},
-  "Textile Weaving": {"primary": "Venus", "secondary": "Moon", "why": "As Textile Composite.", "confidence": "high"},
-  "Synthetic & Rayon": {"primary": "Venus", "secondary": "Rahu", "why": "Venus for fabric, Rahu for the artificial fibre.", "confidence": "medium"},
-  "Woollen": {"primary": "Venus", "secondary": "Saturn", "why": "Venus for cloth; Saturn for wool and the animal husbandry behind it.", "confidence": "low"},
-  "Leather & Tanneries": {"primary": "Saturn", "secondary": "Venus", "why": "Saturn governs hides and the tanning trade; Venus the finished goods.", "confidence": "low"},
-  "Glass & Ceramics": {"primary": "Venus", "secondary": "Mars", "why": "Venus for glass and ornament; Mars for the kiln.", "confidence": "low"},
-  "Miscellaneous": {"primary": null, "secondary": null, "why": "A grab-bag, not a sector. There is no honest significator for a bucket with no common business, so the desk maps none and the astro lens stays silent on these names.", "confidence": "none"}
- },
- "testable_conditions": {
-  "_schema": "The hypotheses astro_backtest will test on real price history — market-wide, per sector, and per ticker. Each states a NULL hypothesis that the data can reject. A condition that cannot be stated this way does not belong on this desk.",
-  "_multiple_comparisons_warning": "Testing many graha-sector pairs guarantees some will look significant by chance. The backtest must report how many hypotheses were tested and adjust the bar accordingly; an unadjusted p-value here would be a lie dressed as rigour.",
-  "significator_retrograde": {
-   "claim": "While a sector's primary significator is retrograde, that sector underperforms the market.",
-   "null": "Returns during retrograde windows are drawn from the same distribution as returns outside them.",
-   "computable_from": "astro.json positions[body].retrograde over history"
-  },
-  "significator_combust": {
-   "claim": "While a sector's primary significator is combust (within 8 degrees of the Sun), that sector underperforms.",
-   "null": "No difference in return distribution inside vs outside combustion windows.",
-   "computable_from": "|lon(body) - lon(Sun)| < 8"
-  },
-  "significator_dignity": {
-   "claim": "A sector outperforms while its primary significator is exalted or in its own sign, and underperforms while debilitated.",
-   "null": "Dignity state has no relationship to sector returns.",
-   "computable_from": "grahas[body].own_signs / exalted / debilitated vs sidereal sign"
-  },
-  "mercury_retrograde": {
-   "claim": "The market as a whole underperforms while Mercury is retrograde.",
-   "null": "KSE-100 returns are the same inside and outside Mercury-retrograde windows.",
-   "note": "The single most popular astro-market claim there is, and therefore the first one the desk should try to kill."
-  },
-  "eclipse_window": {
-   "claim": "Volatility rises and returns weaken in the +/-7 sessions around a certain eclipse.",
-   "null": "Return and volatility distributions in eclipse windows match the baseline.",
-   "computable_from": "astro.json events where eclipse.certainty == 'certain'"
-  },
-  "moon_phase": {
-   "claim": "Returns around the new moon differ from returns around the full moon.",
-   "null": "No difference. (This one has published academic literature on both sides — a good honesty test for the desk.)",
-   "computable_from": "astro.json new_moon / full_moon events"
-  },
-  "saturn_transit_sector": {
-   "claim": "A sector is pressured while Saturn transits a sign that is hostile to its significator.",
-   "null": "No relationship.",
-   "note": "Lower priority: Saturn changes sign every ~2.5 years, so PSX's ~19 years of history gives very few independent windows. The desk should say plainly that this cannot be tested well, rather than testing it badly."
-  }
- },
- "next": "astro_backtest.py tests each condition above on real history (market, sector, ticker), and only what survives may be spoken by the astro agent. Nothing in this file renders to a user until then."
+  "next": "astro_backtest.py tests each condition above on real history (market, sector, ticker), and only what survives may be spoken by the astro agent. Nothing in this file renders to a user until then."
 }

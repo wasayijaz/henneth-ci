@@ -39,6 +39,96 @@ which file changed.
 
 ---
 
+## 2026-07-26 — v2026.07.26 — Tiles everywhere, the sector debate rebuilt, and an astro reading worth reading
+
+<!--public
+Long lists no longer bury what is under them. Every dense section — the universe, macro, news,
+signals, research — now sits in a horizontal tile lane you swipe through, on a phone and on a
+desktop alike, so nothing costs you a screen of scrolling to reach.
+
+Sector debates open short: the house view, the case for and the case against, as three tiles you can
+read in about three minutes. The full argument is still there behind "read the transcript". Sectors
+the desk has already argued carry a dot, and the ones it has not say so plainly instead of looking
+broken.
+
+Macro reads as tiles too — rates, currency, commodities and the global tape at a glance rather than
+as rows to scan.
+
+The astrology reading now answers four questions instead of printing a chart. Where you are in the
+Vimshottari dasha ladder, with dates and the next three turns, each labelled the way the tradition
+labels it. What nineteen years of PSX history actually measured for that same stock — the conditions
+tested, the effect per day, the p-value, and whether it survived correction. How the stock's sky
+compares to Pakistan's own 1947 chart and the KSE-100's 1991 chart, using only the slow planets that
+a disputed birth time cannot move. And what the sky is doing today, joined to what that exact
+condition was worth when tested.
+
+None of it is a call. Every claim from the tradition is stamped untested; every number the desk
+measured carries its p-value.
+-->
+
+### Astro: the four blocks, and why the old reading was worthless
+
+The complaint was exact — the reading printed placements and stopped, which is "basic info that
+nobody will care about." The fix is not more astrology; it is *joining* the astrology to the
+falsification work the desk already did and never surfaced per stock. Four blocks in
+`composeAstroReading` (`dashboard/app.js`), each built ONLY from `state/`:
+
+- `arDashaBlock` — the tradition's dated claim. Maha/antar with real dates from
+  `astro_natal.json:dasha`, coloured by `astro_map.json:grahas[b].natural_nature`.
+- `arReceiptBlock` — the falsification receipt for THAT name: its own rows out of
+  `astro_backtest.json:all_tests`, five lowest p, with survivor counts and the honesty note.
+- `arLiveBlock` — today's live conditions from `astro_context.json`, each joined to its measured
+  effect. This is the whole point of the release: "live now → tradition claims → desk measured X,
+  p=Y, did not survive correction."
+- `arCompareBlock` — Pakistan and KSE-100 slow grahas plus Saturn returns.
+
+**Fallback discipline.** ENGROH has no birth chart — the screenshot that started this was ENGROH.
+The receipt scopes `subject == sym`, then the sector (naming the peers it borrowed), then
+`KSE100 (proxy)`, and the dasha block falls back to the market's own chart. It never silently
+presents a peer's numbers as the stock's.
+
+**Non-directive by construction (SECP Reg 2(ha), S.R.O.7(I)/2026).** No block states a direction,
+target or level. Tradition claims carry the untested stamp; measurements carry the p-value and the
+correction result. Both branch caveats end "Nothing here is a buy, sell or hold, a target or a stop."
+
+### `scripts/astro_context.py` — new, and the reason the join is possible
+
+The dashboard could show what the sky is doing OR what the desk measured, but could not join them,
+because nothing in `state/` named today's conditions in the backtest's vocabulary. The new script
+mirrors `astro_backtest.py`'s masks exactly and **asserts its output against
+`astro_backtest.json:all_tests` at the end of every run** — if the two drift, the join becomes a
+lie, so it prints a warning naming the orphan condition. That guard already earned its keep: it
+caught `Rahu retrograde` / `Ketu retrograde`, which are true every day and were never tested.
+
+It also publishes the Pakistan (1947-08-14) and KSE-100 (1991-11-01) charts, which `astro_map.json`
+records as events with no positions because neither has a known time. Each is cast at BOTH argued
+times and **only placements that agree are published**; the Moon and ascendant are refused outright.
+`astro_map`'s `usage_rule` is now enforced in code rather than in a footnote.
+
+Wired into `run_cloud.py` after `astro_natal.py`.
+
+### `astro_natal.py` — the ladder the reading needed
+
+`antar_ladder()` (9 sub-periods under the running maha) and `upcoming_changes(n=3)` added, so the
+dasha block has dated turns instead of one current period. `astro_map.json` gained per-graha
+`natural_nature` + `nature_note`, with `_note_nature` stating explicitly that the label is the
+tradition's own and not a measured effect.
+
+### Tiles at every width, and the sector page
+
+The scroll-tile lane was phone-only; it now applies at every viewport (`5472da0`), because a 1,400px
+desktop list buries what is under it exactly as a 375px one does. The sector page was rebuilt
+(`3c52e87`): TLDR-first house/for/against tiles, a left rail of sectors, full-transcript modals, run
+dots for argued sectors and a real empty state for the rest. Macro instrument rows became tiles in
+this release.
+
+### One-line CSS bug found during verification
+
+`.topbar>*{flex:none}` froze the timestamp span at its 190px max-width, so at ~1280px the header
+overflowed and the whole page gained a horizontal scrollbar. `flex:0 1 auto;min-width:0` — it
+ellipsises instead. Verified: `document.body.scrollWidth === clientWidth` at 375 and at 1280, zero
+console errors, 3 cards × 4 blocks rendering real data for ENGROH (sector fallback), ABL and AGP.
+
 ## 2026-07-22 — v2026.07.22 — The publication restructure, global coverage, mobile tables
 
 <!--public

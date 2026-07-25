@@ -33,6 +33,11 @@ STEPS = [
     "astro_history.py",  # extends the cached daily sky (bounded per run; ~70ms/day once caught up)
     "astro_charts.py",   # verified birth dates only (Exchange workbooks first, then careful Yahoo)
     "astro_natal.py",    # natal + Vimshottari + transits-to-natal, bracketed for the unknown time
+    # Joins today's sky to the backtest's own condition vocabulary, and publishes the Pakistan /
+    # KSE-100 slow-graha placements. Must run AFTER astro_engine (current sky) and is checked
+    # against astro_backtest.json — a live condition the backtest never tested prints a warning
+    # rather than silently becoming an unmeasured claim on the astro page.
+    "astro_context.py",
     "astro_claims.py",   # files the astro readings as dated, market-relative, scoreable claims
     "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (incremental)
     "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence

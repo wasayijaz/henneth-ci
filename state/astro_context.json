@@ -1,0 +1,208 @@
+{
+  "updated": "2026-07-26 01:05",
+  "updated_utc": "2026-07-25 20:05",
+  "status": "ok",
+  "what_this_is": "Two joins the astro reading could not make before: today's sky expressed in the backtest's own condition vocabulary, and the slow-graha placements of the Pakistan and KSE-100 charts. Nothing here is a forecast.",
+  "discipline": "Conditions are named exactly as astro_backtest.json names them so a reader can look up what each was measured to be worth. The reference charts publish only Saturn, Jupiter, Rahu and Ketu, and only where the placement is the same under every competing birth time; the Moon and the ascendant are refused.",
+  "today": {
+    "date": "2026-07-26",
+    "n_active": 4,
+    "conditions": [
+      {
+        "condition": "Moon debilitated",
+        "detail": "Moon is in Scorpio - its sign of debilitation."
+      },
+      {
+        "condition": "Mercury strong (own/exalted sign)",
+        "detail": "Mercury is in Gemini - its own sign."
+      },
+      {
+        "condition": "Jupiter combust",
+        "detail": "Jupiter sits 2.7 degrees from the Sun in Cancer - combust."
+      },
+      {
+        "condition": "Jupiter strong (own/exalted sign)",
+        "detail": "Jupiter is in Cancer - exalted."
+      }
+    ],
+    "sky_slow": {
+      "Saturn": {
+        "lon": 350.537,
+        "sign": "Pisces",
+        "deg_in_sign": 20.54,
+        "nakshatra": "Revati",
+        "pada": 2
+      },
+      "Jupiter": {
+        "lon": 101.385,
+        "sign": "Cancer",
+        "deg_in_sign": 11.38,
+        "nakshatra": "Pushya",
+        "pada": 3
+      },
+      "Rahu": {
+        "lon": 307.057,
+        "sign": "Aquarius",
+        "deg_in_sign": 7.06,
+        "nakshatra": "Shatabhisha",
+        "pada": 1
+      },
+      "Ketu": {
+        "lon": 127.057,
+        "sign": "Leo",
+        "deg_in_sign": 7.06,
+        "nakshatra": "Magha",
+        "pada": 3
+      }
+    }
+  },
+  "reference": {
+    "pakistan": {
+      "label": "Pakistan",
+      "event": "Independence of Pakistan",
+      "date": "1947-08-14",
+      "times_tested": [
+        "00:00",
+        "09:30"
+      ],
+      "time_note": "disputed - astrologers argue a midnight 14/15 August chart and a ~09:30 oath-taking chart. Both are computed; only placements that agree are shown.",
+      "grahas": {
+        "Saturn": {
+          "lon": 110.359,
+          "sign": "Cancer",
+          "deg_in_sign": 20.36,
+          "nakshatra": "Ashlesha",
+          "pada": 2,
+          "nakshatra_stable": true
+        },
+        "Jupiter": {
+          "lon": 205.807,
+          "sign": "Libra",
+          "deg_in_sign": 25.81,
+          "nakshatra": "Vishakha",
+          "pada": 2,
+          "nakshatra_stable": true
+        },
+        "Rahu": {
+          "lon": 35.137,
+          "sign": "Taurus",
+          "deg_in_sign": 5.14,
+          "nakshatra": "Krittika",
+          "pada": 3,
+          "nakshatra_stable": true
+        },
+        "Ketu": {
+          "lon": 215.137,
+          "sign": "Scorpio",
+          "deg_in_sign": 5.14,
+          "nakshatra": "Anuradha",
+          "pada": 1,
+          "nakshatra_stable": true
+        }
+      },
+      "dropped": [],
+      "saturn_return": {
+        "completed": 2,
+        "dates": [
+          "1976-09-29",
+          "2006-08-02"
+        ],
+        "next": "2035-09-17"
+      },
+      "refused": [
+        "Moon",
+        "Ascendant"
+      ]
+    },
+    "kse100": {
+      "label": "KSE-100",
+      "event": "KSE-100 index launched with a base of 1,000 points",
+      "date": "1991-11-01",
+      "times_tested": [
+        "09:30",
+        "15:30"
+      ],
+      "time_note": "PSX publishes the base DATE, not a launch time. The chart is computed at both the open and the close of that day; only placements that agree are shown.",
+      "grahas": {
+        "Saturn": {
+          "lon": 277.074,
+          "sign": "Capricorn",
+          "deg_in_sign": 7.07,
+          "nakshatra": "Uttara Ashadha",
+          "pada": 4,
+          "nakshatra_stable": true
+        },
+        "Jupiter": {
+          "lon": 135.757,
+          "sign": "Leo",
+          "deg_in_sign": 15.76,
+          "nakshatra": "Purva Phalguni",
+          "pada": 1,
+          "nakshatra_stable": true
+        },
+        "Rahu": {
+          "lon": 259.295,
+          "sign": "Sagittarius",
+          "deg_in_sign": 19.29,
+          "nakshatra": "Purva Ashadha",
+          "pada": 2,
+          "nakshatra_stable": true
+        },
+        "Ketu": {
+          "lon": 79.295,
+          "sign": "Gemini",
+          "deg_in_sign": 19.29,
+          "nakshatra": "Ardra",
+          "pada": 4,
+          "nakshatra_stable": true
+        }
+      },
+      "dropped": [],
+      "saturn_return": {
+        "completed": 1,
+        "dates": [
+          "2020-12-28"
+        ],
+        "next": "2050-02-03"
+      },
+      "refused": [
+        "Moon",
+        "Ascendant"
+      ]
+    }
+  },
+  "shared": [
+    {
+      "graha": "Saturn",
+      "pakistan_sign": "Cancer",
+      "kse100_sign": "Capricorn",
+      "same_sign": false,
+      "same_nakshatra": false,
+      "separation_deg": 166.7
+    },
+    {
+      "graha": "Jupiter",
+      "pakistan_sign": "Libra",
+      "kse100_sign": "Leo",
+      "same_sign": false,
+      "same_nakshatra": false,
+      "separation_deg": 70.0
+    },
+    {
+      "graha": "Rahu",
+      "pakistan_sign": "Taurus",
+      "kse100_sign": "Sagittarius",
+      "same_sign": false,
+      "same_nakshatra": false,
+      "separation_deg": 135.8
+    },
+    {
+      "graha": "Ketu",
+      "pakistan_sign": "Scorpio",
+      "kse100_sign": "Gemini",
+      "same_sign": false,
+      "same_nakshatra": false,
+      "separation_deg": 135.8
+    }
+  ]
+}

@@ -113,6 +113,40 @@ def current_dasha(seq, today: dt.date):
     return None
 
 
+def antar_ladder(maha: str, maha_from: str) -> list:
+    """Every antardasha inside one mahadasha, with dates. current_dasha() finds only the period
+    running today; a reader wants to see when it ends and what follows, which needs the ladder."""
+    s = dt.date.fromisoformat(maha_from)
+    si = DASHA_ORDER.index(maha)
+    out = []
+    for k in range(9):
+        g = DASHA_ORDER[(si + k) % 9]
+        e = s + dt.timedelta(days=DASHA_YEARS[maha] * DASHA_YEARS[g] / TOTAL_YEARS * YEAR_DAYS)
+        out.append({"lord": g, "from": s.isoformat(), "to": e.isoformat()})
+        s = e
+    return out
+
+
+def upcoming_changes(seq, today: dt.date, n: int = 3) -> list:
+    """The next n dated period changes — antardasha handovers first, then the next mahadasha.
+    Dates, not vibes: this is what makes the tradition's claim falsifiable in advance."""
+    out = []
+    for i, d in enumerate(seq):
+        if d["to"] <= today.isoformat():
+            continue
+        for a in antar_ladder(d["lord"], d["from"]):
+            if a["from"] > today.isoformat() and a["from"] < d["to"]:
+                out.append({"kind": "antar", "on": a["from"], "lord": a["lord"],
+                            "under": d["lord"],
+                            "text": f"{a['lord']} antardasha begins inside the {d['lord']} mahadasha"})
+        if i + 1 < len(seq):
+            out.append({"kind": "maha", "on": d["to"], "lord": seq[i + 1]["lord"], "under": None,
+                        "text": f"the {d['lord']} mahadasha ends and the {seq[i + 1]['lord']} "
+                                f"mahadasha begins"})
+    out.sort(key=lambda x: x["on"])
+    return out[:n]
+
+
 def transits_to_natal(natal: dict, now_pos: dict) -> list:
     """What the sky is doing TO this chart right now. Conjunction within 3 degrees only — the
     tighter the orb the harder it is to claim a hit after the fact."""
@@ -211,6 +245,8 @@ def build_one(chart: dict, now_e: Epoch, now_pos: dict, today: dt.date) -> dict:
         },
         "dasha": {"current": cur_o, "convention_robust": dasha_stable,
                   "sequence": seq_o[:6],
+                  "antar_ladder": (antar_ladder(cur_o["maha"], cur_o["maha_from"]) if cur_o else []),
+                  "upcoming": upcoming_changes(seq_o, today, 3),
                   "note": (f"Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange "
                            f"open per the first-trade convention. Every boundary inherits the Moon's "
                            f"exact degree, so if the true first trade came later in the session the "

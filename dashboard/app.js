@@ -589,14 +589,26 @@ async function pageMacro() {
     crypto: "Crypto — global liquidity / retail risk barometer",
     fx: "Currency — the biggest macro lever for PSX",
   };
+  // the world tape as tiles, not tables: a price is read at a glance, a table row is read line by
+  // line. Each tile is one instrument — level, both changes, and why a PSX reader should care.
+  const GROUP_WHY = {
+    fx: "the biggest macro lever",
+    energy: "the import bill, PKR and inflation",
+    risk: "frontier flows follow",
+    crypto: "global liquidity / retail risk",
+    safe_haven: "the hedge bid",
+  };
+  const gTile = ([, v]) => `<div class="gtile">
+    <span class="gt-k">${esc(v.label)}${v.stale ? ' <span class="tag">stale</span>' : ""}</span>
+    <b class="gt-p">${fmt(v.price)}</b>
+    <span class="gt-ch"><em class="${cls(v.chg_1d_pct)}">${sgn(v.chg_1d_pct)}%<i>1d</i></em><em class="${cls(v.chg_1mo_pct)}">${sgn(v.chg_1mo_pct)}%<i>1mo</i></em></span>
+    <span class="gt-why" title="${esc(v.psx_read)}">${esc(v.psx_read)}</span></div>`;
   const card = (gk, title) => {
     const rows = Object.entries(inst).filter(([, v]) => v.group === gk);
     if (!rows.length) return "";
-    return `<div class="card"><h2>${esc(title)}</h2><table><thead><tr><th>Instrument</th><th class="r">Price</th><th class="r">1d</th><th class="r">1mo</th><th>PSX read-through</th></tr></thead><tbody>${
-      rows.map(([s, v]) => `<tr><td><b>${esc(v.label)}</b></td><td class="r num">${fmt(v.price)}</td>
-        <td class="r num ${cls(v.chg_1d_pct)}">${sgn(v.chg_1d_pct)}%</td>
-        <td class="r num ${cls(v.chg_1mo_pct)}">${sgn(v.chg_1mo_pct)}%</td>
-        <td class="sub" style="max-width:340px">${esc(v.psx_read)}${v.stale ? ' <span class="tag">stale</span>' : ""}</td></tr>`).join("")}</tbody></table></div>`;
+    return `<div class="gband">
+      <div class="gband-h"><b>${esc(String(title).split(" — ")[0])}</b><i>${esc(GROUP_WHY[gk] || String(title).split(" — ")[1] || "")}</i></div>
+      <div class="gtiles">${rows.map(gTile).join("")}</div></div>`;
   };
 
   const m = macro || {};
@@ -678,15 +690,17 @@ async function pageMacro() {
   $("view").innerHTML = `
     <div class="seg" style="margin-top:4px"><h2>What moves PSX</h2><div class="ln"></div></div>
     ${glanceRow}
-    <p class="sub" style="margin-bottom:14px">Global markets refresh every cycle (Yahoo Finance); Pakistan numbers are verified from primary sources. Hover a read-through for why it matters.</p>
+    <p class="sub" style="margin-bottom:14px">Global markets refresh every cycle (Yahoo Finance); Pakistan numbers are verified from primary sources. Each tile says why that price matters to Karachi.</p>
+    <div class="gwrap">
+      ${card("fx", groups.fx)}
+      ${card("energy", groups.energy)}
+      ${card("risk", groups.risk)}
+      ${card("crypto", groups.crypto)}
+      ${card("safe_haven", groups.safe_haven)}
+    </div>
     ${smCard}
     ${geoCard}
-    ${macroCard}
-    ${card("fx", groups.fx)}
-    ${card("energy", groups.energy)}
-    ${card("risk", groups.risk)}
-    ${card("crypto", groups.crypto)}
-    ${card("safe_haven", groups.safe_haven)}`;
+    ${macroCard}`;
 }
 
 async function pageToday() {
@@ -1452,8 +1466,150 @@ async function removeAstroTicker(sym) {
 /* ---------- the reading: what the tradition says about this chart, composed strictly from the
    computed layers (astro_natal / astro / astro_map). Template prose over real data — no agent, no
    invention, and NEVER a call. The desk's tested-vs-untested status is stated inside the reading. */
+/* The four blocks that turn a chart printout into something worth reading. Each answers a different
+   question, and each is built ONLY from state/: the tradition's dated claim (dashas), what the desk
+   measured on THIS name (astro_backtest), how the name's weather compares to the country's and the
+   market's own charts (astro_context), and what the sky is doing right now expressed in the exact
+   vocabulary the backtest used. Nothing here is a call — every block that states a tradition claim
+   carries the untested stamp, and every block that states a measurement carries the p-value. */
+const NATURE_WORD = { benefic: "supportive", malefic: "difficult", mixed: "mixed" };
+
+// (a) the dasha ladder with DATES — the tradition's one genuinely falsifiable-in-advance structure
+function arDashaBlock(dasha, amap, who) {
+  const cur = dasha?.current;
+  if (!cur?.maha) return "";
+  const nat = b => (amap?.grahas?.[b] || {}).natural_nature || "mixed";
+  const why = b => (amap?.grahas?.[b] || {}).nature_note || "";
+  const dom = b => ((amap?.grahas?.[b] || {}).domains || []).slice(0, 3).join(", ");
+  const lane = (kind, lord, from, to, on) => {
+    const n = nat(lord);
+    return `<div class="ar-drow ${n}">
+      <span class="ar-dl">${pixelGlyph(lord, 13)} ${esc(lord)}</span>
+      <span class="ar-dk">${esc(kind)}</span>
+      <span class="ar-dd">${esc(on || `${String(from || "").slice(0, 7)} → ${String(to || "").slice(0, 7)}`)}</span>
+      <span class="ar-dn ${n}">${esc(NATURE_WORD[n])}</span></div>`;
+  };
+  const up = (dasha.upcoming || []).slice(0, 3);
+  return `<div class="ar-block">
+    <div class="ar-bh"><b>The period, and when it turns</b><span class="tag">tradition's claim · untested</span></div>
+    <p class="ar-bp">Vimshottari divides a chart's life into dated planetary periods. ${esc(who)} is running a
+      <b>${esc(cur.maha)}</b> mahadasha${cur.antar ? ` with a <b>${esc(cur.antar)}</b> sub-period` : ""}. Tradition ties
+      ${esc(cur.maha)} to ${esc(dom(cur.maha))}, and classes it a natural ${esc(nat(cur.maha))} — ${esc(why(cur.maha))}.
+      The dates below are fixed by the birth moment, so they were set long before any price was.</p>
+    <div class="ar-dl-wrap">
+      ${lane("mahadasha", cur.maha, cur.maha_from, cur.maha_to)}
+      ${cur.antar ? lane("running now", cur.antar, cur.antar_from, cur.antar_to) : ""}
+      ${up.map(u => lane(u.kind === "maha" ? "next mahadasha" : "next sub-period", u.lord, null, null, u.on)).join("")}
+    </div>
+    <p class="ar-bn">"Supportive" and "difficult" are the tradition's own labels for the period lord (natural
+      benefic vs malefic), shown so you can see what it claims — not what the desk found. The desk's tests on
+      these names produced no surviving edge, which is the next block.</p>
+  </div>`;
+}
+
+// (b) the falsification receipt — what the desk actually measured, on THIS name where it has it
+function arReceiptBlock(sym, sect, bt) {
+  const all = bt?.all_tests || [];
+  if (!all.length) return "";
+  let rows = all.filter(t => t.subject === sym), scope = `${sym}`, note = `Tested on ${sym}'s own price history.`;
+  if (!rows.length && sect) {
+    rows = all.filter(t => t.sector === sect);
+    const peers = [...new Set(rows.map(t => t.subject))];
+    scope = `${sect}`;
+    note = `${sym} is not one of the ${bt?.headline?.subjects_tested || "tested"} names with enough history, so this
+      is its sector — ${peers.length} peer${peers.length === 1 ? "" : "s"} (${peers.slice(0, 6).join(", ")}${peers.length > 6 ? "…" : ""}).`;
+  }
+  if (!rows.length) {
+    rows = all.filter(t => t.subject === "KSE100 (proxy)");
+    scope = "KSE-100";
+    note = `Neither ${sym} nor its sector carries enough history, so this is the market proxy.`;
+  }
+  if (!rows.length) return "";
+  const surv = rows.filter(t => t.survives_fdr || t.survives_bonferroni).length;
+  const raw = rows.filter(t => t.p_value < 0.05).length;
+  const top = [...rows].sort((a, b) => a.p_value - b.p_value).slice(0, 5);
+  return `<div class="ar-block">
+    <div class="ar-bh"><b>What the desk measured</b><span class="pill ${surv ? "" : "ok"}">${surv} survived</span></div>
+    <p class="ar-bp">Every condition below was run against ${esc(String(bt?.window?.trading_days || ""))} trading days
+      (${esc(bt?.window?.from)} → ${esc(bt?.window?.to)}), returns beta-adjusted, significance from a permutation test.
+      ${esc(note)} <b>${raw}</b> of ${rows.length} looked significant before correcting for how many were tried;
+      <b>${surv}</b> survived that correction.</p>
+    <div class="ar-tt"><table><thead><tr><th>Condition · ${esc(scope)}</th><th class="r">days</th>
+      <th class="r">effect %/day</th><th class="r">p</th><th class="r">survives</th></tr></thead><tbody>
+      ${top.map(t => `<tr><td>${esc(t.condition)}${t.subject !== sym ? ` <span class="sub">${esc(t.subject)}</span>` : ""}</td>
+        <td class="r num sub">${t.days_in}</td>
+        <td class="r num ${t.effect_pct_per_day > 0 ? "up" : "dn"}">${t.effect_pct_per_day > 0 ? "+" : ""}${t.effect_pct_per_day}</td>
+        <td class="r num">${t.p_value}</td>
+        <td class="r">${t.survives_fdr || t.survives_bonferroni ? '<span class="pill ok">yes</span>' : '<span class="tag">no</span>'}</td></tr>`).join("")}
+    </tbody></table></div>
+    <p class="ar-bn">${esc(bt?.honesty || "")} Across the whole study ${esc(String(bt?.headline?.hypotheses_tested || ""))} hypotheses
+      were tried and ${esc(String(bt?.headline?.survivors_after_fdr ?? "0"))} survived — about what pure chance produces.</p>
+  </div>`;
+}
+
+// (c) the country's and the market's own charts — slow grahas only, because the birth times are disputed
+function arCompareBlock(ctx) {
+  const pk = ctx?.reference?.pakistan, ks = ctx?.reference?.kse100;
+  if (!pk || !ks) return "";
+  const shared = ctx.shared || [];
+  const same = shared.filter(r => r.same_sign);
+  const cell = (r) => `<div class="ar-cmp">
+    <span class="ark">${esc(r.label)} · ${esc(r.date)}</span>
+    <b>${Object.entries(r.grahas).map(([b, p]) => `${esc(b)} ${esc(p.sign)}`).join(" · ")}</b>
+    <i>Saturn has come back to its birth degree ${r.saturn_return?.completed ?? 0}× ${r.saturn_return?.next
+      ? `— the next return falls ${esc(r.saturn_return.next)}` : ""}.</i></div>`;
+  return `<div class="ar-block">
+    <div class="ar-bh"><b>The weather above it — Pakistan and the KSE-100</b><span class="tag">slow grahas only</span></div>
+    <p class="ar-bp">Every PSX name trades inside two older charts. Neither has a known birth TIME, so only Saturn,
+      Jupiter, Rahu and Ketu are published — they move too slowly for a day of uncertainty to move their sign.
+      The Moon and the ascendant are refused outright.</p>
+    <div class="ar-cmpg">${cell({ ...pk, label: "Pakistan" })}${cell({ ...ks, label: "KSE-100" })}</div>
+    <p class="ar-bn">${same.length
+      ? `The two charts share ${same.map(r => `<b>${esc(r.graha)}</b> in ${esc(r.pakistan_sign)}`).join(" and ")} — the
+         classical marker of a linked chart.`
+      : "The two charts share no slow-graha sign, so the tradition would read the market's fortunes as running on their own clock rather than the country's."}
+      ${esc(pk.time_note)} Comparison shown because the tradition makes it; the desk has measured no market effect from it.</p>
+  </div>`;
+}
+
+// (d) today's sky, in the exact words the backtest used — the join that makes the null result concrete
+function arLiveBlock(sym, sect, ctx, bt) {
+  const conds = ctx?.today?.conditions || [];
+  if (!conds.length) return `<div class="ar-block"><div class="ar-bh"><b>The sky today</b></div>
+    <p class="ar-bp">No tested condition is active today — the sky is, by the desk's own vocabulary, quiet.</p></div>`;
+  const all = bt?.all_tests || [];
+  const scoped = c => {
+    const mine = all.filter(t => t.condition === c && t.subject === sym);
+    if (mine.length) return { rows: mine, who: sym };
+    const sec = sect ? all.filter(t => t.condition === c && t.sector === sect) : [];
+    if (sec.length) return { rows: sec, who: sect };
+    return { rows: all.filter(t => t.condition === c && t.subject === "KSE100 (proxy)"), who: "the KSE-100" };
+  };
+  return `<div class="ar-block">
+    <div class="ar-bh"><b>The sky today, and what it was worth</b><span class="tag">${conds.length} condition${conds.length > 1 ? "s" : ""} live</span></div>
+    <p class="ar-bp">These are live right now, named exactly as the desk's study named them — so the claim and the
+      measurement sit on the same line instead of on different pages.</p>
+    <div class="ar-live">
+      ${conds.map(c => { const { rows, who } = scoped(c.condition);
+        const eff = rows.length ? (rows.reduce((s, t) => s + t.effect_pct_per_day, 0) / rows.length) : null;
+        const best = rows.length ? Math.min(...rows.map(t => t.p_value)) : null;
+        const survived = rows.some(t => t.survives_fdr || t.survives_bonferroni);
+        return `<div class="ar-lrow">
+          <span class="ar-lc">${esc(c.condition)}</span>
+          <span class="ar-ld">${esc(c.detail)}</span>
+          <span class="ar-lm">${eff === null ? '<i class="sub">not tested</i>'
+            : `<em class="${eff > 0 ? "up" : "dn"}">${eff > 0 ? "+" : ""}${eff.toFixed(3)}%/day</em>
+               <i>on ${esc(who)} · best p ${best} · ${survived ? "survived" : "did not survive"} correction</i>`}</span>
+        </div>`; }).join("")}
+    </div>
+    <p class="ar-bn">Measured effects this small, at these p-values, are what a fair coin looks like when you flip it
+      ${esc(String(bt?.headline?.hypotheses_tested || "thousands of"))} times. Shown so the tradition's claim can be
+      checked against the record rather than taken on trust.</p>
+  </div>`;
+}
+
 function composeAstroReading(sym, data) {
-  const { natal, sky, amap, sectors, uni } = data;
+  const { natal, sky, amap, sectors, uni, bt, ctx } = data;
   const subj = natal?.subjects?.[sym];
   const name = uni?.symbols?.[sym]?.name || "";
   const sect = (sectors?.tickers?.[sym] || {}).sector;
@@ -1487,8 +1643,13 @@ function composeAstroReading(sym, data) {
         <p><b>The days ahead:</b> ${events14.length ? `the sky's next marks are ${events14.map(e => `${esc(e.text)} (${esc(e.date)})`).join("; ")}.` : "no high-rank sky events in the next two weeks."} ${hits.length ? `Tradition would watch the ${esc(hits[0].transiting)}–natal-${esc(hits[0].over_natal)} contact most closely.` : ""}</p>
         <p><b>The months:</b> ${das.antar ? `the running sub-period is ${esc(das.antar)} (to ~${esc(String(das.antar_to || "").slice(0, 7))}) — tradition colours these months with ${esc(domains(das.antar))}.` : ""}</p>
         <p><b>The years:</b> ${das.maha ? `the ${esc(das.maha)} maha-dasha frames the longer arc.` : "—"}</p>
-        <p class="ar-caveat">The tradition's reading of ${esc(sym)}'s chart — for exploration, not advice.</p>
-      </div>`;
+      </div>
+      ${arDashaBlock(subj.dasha, amap, `${sym}'s chart`)}
+      ${arReceiptBlock(sym, sect, bt)}
+      ${arLiveBlock(sym, sect, ctx, bt)}
+      ${arCompareBlock(ctx)}
+      <p class="ar-caveat">The tradition's reading of ${esc(sym)}'s chart, set beside what the desk measured — for
+        exploration, not advice. Nothing here is a buy, sell or hold, a target or a stop.</p>`;
   }
   // read through the sector's ruling planet — a mundane-astrology technique in its own right
   const sig = sect ? (amap?.sector_significators?.[sect] || {}) : {};
@@ -1507,18 +1668,23 @@ function composeAstroReading(sym, data) {
       <div class="ar-cell"><span class="ark">The market's chart</span><b>KSE-100 · ${esc(mdas.maha || "—")}${mdas.antar ? "/" + esc(mdas.antar) : ""} period</b>
         <i>The index's chart, born 1991, is the weather every PSX name trades inside${mkt?.sade_sati?.active ? " — and it is running Sade Sati" : ""}.</i></div>
     </div>
-    <div class="ar-read">
-      <p class="ar-caveat">A sector-level astrological reading of ${esc(sym)} — for exploration, not advice.</p>
-    </div>`;
+    ${arDashaBlock(mkt?.dasha, amap, "the KSE-100's own chart, which every PSX name trades inside,")}
+    ${arReceiptBlock(sym, sect, bt)}
+    ${arLiveBlock(sym, sect, ctx, bt)}
+    ${arCompareBlock(ctx)}
+    <p class="ar-caveat">${esc(sym)} has no birth chart on the desk — no first-trade date the ephemeris can be cast
+      for — so this is read through its sector's ruling planet and the market's own chart. For exploration, not
+      advice. Nothing here is a buy, sell or hold, a target or a stop.</p>`;
 }
 
 /* ---------- the run: 10–20s of real computation narrated, then the readings reveal ---------- */
 async function playAstroBoardRun() {
   const board = astroBoard();
   if (!board.length) return;
-  const [natal, sky, amap, sectors, uni] = await Promise.all([
-    j("astro_natal.json"), j("astro.json"), j("astro_map.json"), j("sectors.json"), j("universe.json")]);
-  const data = { natal, sky, amap, sectors, uni };
+  const [natal, sky, amap, sectors, uni, bt, ctx] = await Promise.all([
+    j("astro_natal.json"), j("astro.json"), j("astro_map.json"), j("sectors.json"), j("universe.json"),
+    j("astro_backtest.json"), j("astro_context.json")]);
+  const data = { natal, sky, amap, sectors, uni, bt, ctx };
   const verified = board.filter(s => natal?.subjects?.[s]);
   const ayan = sky?.system?.ayanamsa_deg;
 
@@ -2143,9 +2309,9 @@ async function pageMyChart() {
    The null result LEADS. The calendar is the secondary thing, offered as calendar, not signal.
    This page exists because we tested it, not because we believe it. ---------- */
 async function pageAstro() {
-  const [a, natal, amap, sectors, uni] = await Promise.all([
+  const [a, natal, amap, sectors, uni, bt, ctx] = await Promise.all([
     j("astro.json"), j("astro_natal.json"), j("astro_map.json"),
-    j("sectors.json"), j("universe.json")]);
+    j("sectors.json"), j("universe.json"), j("astro_backtest.json"), j("astro_context.json")]);
   if (!a || a.status !== "ok") {
     $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Astro</h2><div class="ln"></div></div>
       <div class="card"><div class="empty">The sky is unavailable this cycle${a?.error ? ` (${esc(a.error)})` : ""}. Check back shortly.</div></div>`;
@@ -2175,7 +2341,7 @@ async function pageAstro() {
     <span class="run-txt"><b>${pendingA.length ? `Cast the charts for your ${board.length} stock${board.length > 1 ? "s" : ""}` : `Cast your ${board.length} chart${board.length > 1 ? "s" : ""} again`}</b><i>Real ephemeris math against today's sky — birth charts, Vimshottari periods, Saturn's passage, transits to natal points. The tradition's reading of each name.</i></span>
     <span class="run-meta"><span class="run-last">Sky as of · ${esc((a.updated || "").slice(0, 10))}</span><span class="run-go">${pendingA.length ? "Cast ›" : "Cast again ›"}</span></span>
   </button>` : "";
-  const dataPack = { natal, sky: a, amap, sectors, uni };
+  const dataPack = { natal, sky: a, amap, sectors, uni, bt, ctx };
   const readings = board.filter(astroRunOn).map(s =>
     `<div class="card ar-card">${composeAstroReading(s, dataPack)}</div>`).join("");
   const boardStub = board.length && pendingA.length === board.length
@@ -3937,7 +4103,7 @@ async function pageLearn() {
       <div class="lh-side">${streak ? `<span class="streak-chip" title="Days in a row with at least one lesson completed">◆ ${streak}-day streak</span>` : ""}
       <div class="lh-pct"><b>${Math.round(doneSteps / journey.length * 100)}%</b></div></div>
     </div>
-    <div class="lh-bar"><span style="width:${Math.round(doneSteps / journey.length * 100)}%"></span></div>
+    <div class="lh-bar"><span style="transform:scaleX(${(doneSteps / journey.length).toFixed(4)})"></span></div>
     ${nextLesson ? `<div class="today-card"><div class="ark">today's lesson · ${nextLesson.l.mins} min</div>
       <b>${esc(nextLesson.l.title)}</b><span class="sub">${esc(nextLesson.l.why)}</span>
       <button class="bw-go" style="max-width:240px;margin-top:10px" onclick="openLesson('${esc(nextLesson.lv)}','${esc(nextLesson.ll)}')">${Object.keys(learnProgress()).length ? "Continue" : "Start the journey"} →</button></div>`

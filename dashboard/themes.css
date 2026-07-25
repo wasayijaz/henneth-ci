@@ -280,7 +280,10 @@ body[data-theme=gemini] .shell.collapsed .side-toggle:hover svg,
 body[data-theme=gemini] .shell.collapsed .side-toggle:focus-visible svg{display:block}
 body[data-theme=gemini] .shell.collapsed .side-toggle:hover{border-color:var(--line)}
 body[data-theme=gemini] .topbar>*{flex:none}
-body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+/* the timestamp is the one topbar item that may lose characters rather than push the page wide:
+   `.topbar>*{flex:none}` froze it at its full 190px, so at ~1280 the row overflowed the viewport by
+   the tail of "live HH:MM" and the whole page gained a horizontal scrollbar. It ellipsises instead. */
+body[data-theme=gemini] .topbar .meta{font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;flex:0 1 auto;min-width:0}
 body[data-theme=gemini] .research-badge{margin-inline-start:auto;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--hair);padding:2px 7px;white-space:nowrap}
 body[data-theme=gemini] .topbar .meta{margin-inline-start:10px}
 @media(max-width:900px){body[data-theme=gemini] .research-badge{display:none}}
@@ -876,7 +879,7 @@ body[data-theme=gemini] .sec-item.on{background:var(--panel2);color:var(--ink1);
 body[data-theme=gemini] .sec-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body[data-theme=gemini] .sec-n{flex:none;font-family:"Pixelify Sans",var(--mono,monospace);font-size:12px;color:var(--ink3)}
 body[data-theme=gemini] .sec-dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--hair);display:inline-block}
-body[data-theme=gemini] .sec-dot.live{background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent);animation:secPulse 2.2s ease-in-out infinite}
+body[data-theme=gemini] .sec-dot.live{background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent);animation:secPulse 2.2s linear infinite}
 body[data-theme=gemini] .sec-dot.done{background:transparent;border:1.5px solid var(--up)}
 body[data-theme=gemini] .sec-dot.soon{background:var(--hair)}
 @keyframes secPulse{0%,100%{box-shadow:0 0 0 2px color-mix(in srgb,var(--up) 26%,transparent)}50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--up) 8%,transparent)}}
@@ -922,6 +925,30 @@ body[data-theme=gemini] .sc-foot{margin-top:18px;padding-top:10px;border-top:1px
   body[data-theme=gemini] .sec-list{display:none;position:static;max-height:58vh;margin-top:-1px}
   body[data-theme=gemini] .sec-wrap.open .sec-list{display:block}
   body[data-theme=gemini] .sec-item{padding:11px 12px;font-size:13px}
+}
+/* ---- the global tape, as tiles. A price is read at a glance; a table row is read line by line,
+   and there were five tables of them below the fold. Each tile carries the level, both changes and
+   the reason a Karachi reader should care, so the whole world tape fits in one screen. */
+body[data-theme=gemini] .gwrap{display:flex;flex-direction:column;gap:16px;margin-bottom:20px}
+body[data-theme=gemini] .gband-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+body[data-theme=gemini] .gband-h b{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--ink)}
+body[data-theme=gemini] .gband-h i{font-size:10px;font-style:normal;color:var(--ink3)}
+/* auto-FILL, not auto-fit: a two-instrument band must not stretch its tiles to half the page.
+   Tracks stay a fixed width, so every tile on the page is the same size whatever its group holds. */
+body[data-theme=gemini] .gtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(214px,1fr));gap:10px}
+body[data-theme=gemini] .gtile{background:var(--panel);border:1.5px solid var(--line);padding:11px 13px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+body[data-theme=gemini] .gt-k{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3)}
+body[data-theme=gemini] .gt-p{font-size:20px;font-weight:700;line-height:1.1;letter-spacing:-.01em}
+body[data-theme=gemini] .gt-ch{display:flex;gap:12px;align-items:baseline;margin-top:1px}
+body[data-theme=gemini] .gt-ch em{font-style:normal;font-size:12px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:baseline;gap:4px}
+body[data-theme=gemini] .gt-ch em.up{color:var(--up)}
+body[data-theme=gemini] .gt-ch em.dn{color:var(--dn)}
+body[data-theme=gemini] .gt-ch em i{font-style:normal;font-size:8.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+body[data-theme=gemini] .gt-why{margin-top:5px;font-size:10.5px;line-height:1.45;color:var(--ink3);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:640px){
+  body[data-theme=gemini] .gtiles{grid-template-columns:1fr 1fr}
+  body[data-theme=gemini] .gt-p{font-size:17px}
+  body[data-theme=gemini] .gt-why{-webkit-line-clamp:2;font-size:10px}
 }
 /* evidence alignment */
 body[data-theme=gemini] .al-bar{display:flex;height:10px;margin-bottom:8px}
@@ -1070,8 +1097,8 @@ body[data-theme=gemini][data-desk=learn] .side-nav a[data-nav=board]{display:non
 body[data-theme=gemini] .learn-hero{border-inline-start:3px solid var(--accent)}
 body[data-theme=gemini] .lh-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
 body[data-theme=gemini] .lh-pct b{font-family:"Pixelify Sans",var(--mono,monospace);font-size:30px}
-body[data-theme=gemini] .lh-bar{height:8px;background:var(--hair);margin-top:10px}
-body[data-theme=gemini] .lh-bar span{display:block;height:100%;background:var(--ink1);transition:width .4s}
+body[data-theme=gemini] .lh-bar{height:8px;background:var(--hair);margin-top:10px;overflow:hidden}
+body[data-theme=gemini] .lh-bar span{display:block;width:100%;height:100%;background:var(--ink1);transform-origin:left;transform:scaleX(0);transition:transform .2s ease-out}
 /* the journey — a vertical path with rail + nodes, Duolingo-shaped in the desk's own aesthetic */
 body[data-theme=gemini] .jy{margin-bottom:18px}
 body[data-theme=gemini] .jy-step{display:flex;gap:14px}
@@ -1368,6 +1395,60 @@ body[data-theme=gemini] .ar-cell>i{font-style:normal;font-size:11.5px;color:var(
 body[data-theme=gemini] .ar-read p{font-size:13px;line-height:1.65;color:var(--ink2);margin:0 0 8px}
 body[data-theme=gemini] .ar-caveat{font-size:12px;color:var(--ink3);border-top:1px solid var(--hair);padding-top:9px}
 body[data-theme=gemini] .ar-caveat a{color:var(--accent)}
+/* the four value blocks: the dated dasha ladder, the falsification receipt, today's sky joined to
+   what it measured, and the two reference charts. Each is a bordered slab so the eye can take one
+   at a time — the complaint they answer was "basic info nobody will care about". */
+body[data-theme=gemini] .ar-block{border:1.5px solid var(--line);background:var(--panel);padding:12px 14px 13px;margin:0 0 10px}
+body[data-theme=gemini] .ar-bh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+body[data-theme=gemini] .ar-bh>b{font-size:13.5px}
+body[data-theme=gemini] .ar-bh .pill,body[data-theme=gemini] .ar-bh .tag{margin-inline-start:auto}
+body[data-theme=gemini] .ar-bp{font-size:12.5px;line-height:1.6;color:var(--ink2);margin:0 0 9px}
+body[data-theme=gemini] .ar-bn{font-size:11.5px;line-height:1.55;color:var(--ink3);margin:9px 0 0;border-top:1px solid var(--hair);padding-top:8px}
+/* dasha ladder — one dated lane per period, tinted by the tradition's own benefic/malefic label */
+body[data-theme=gemini] .ar-dl-wrap{display:flex;flex-direction:column;gap:1px;background:var(--hair);border:1px solid var(--line)}
+body[data-theme=gemini] .ar-drow{display:grid;grid-template-columns:minmax(96px,1fr) minmax(84px,auto) minmax(112px,auto) minmax(72px,auto);gap:8px;align-items:center;background:var(--panel);padding:8px 10px;font-size:12px;border-inline-start:3px solid var(--line)}
+body[data-theme=gemini] .ar-drow.benefic{border-inline-start-color:var(--up)}
+body[data-theme=gemini] .ar-drow.malefic{border-inline-start-color:var(--dn)}
+body[data-theme=gemini] .ar-dl{display:flex;align-items:center;gap:6px;font-weight:600}
+body[data-theme=gemini] .ar-dk{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+body[data-theme=gemini] .ar-dd{font-variant-numeric:tabular-nums;color:var(--ink2)}
+body[data-theme=gemini] .ar-dn{font-size:10.5px;text-align:end;color:var(--ink3)}
+body[data-theme=gemini] .ar-dn.benefic{color:var(--up)}
+body[data-theme=gemini] .ar-dn.malefic{color:var(--dn)}
+/* receipt table — scrolls in its own box rather than pushing the page sideways */
+body[data-theme=gemini] .ar-tt{overflow-x:auto}
+body[data-theme=gemini] .ar-tt table{width:100%;border-collapse:collapse;font-size:11.5px;min-width:420px}
+body[data-theme=gemini] .ar-tt th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);text-align:start;padding:5px 8px;border-bottom:1.5px solid var(--line)}
+body[data-theme=gemini] .ar-tt td{padding:6px 8px;border-bottom:1px solid var(--hair);vertical-align:top}
+body[data-theme=gemini] .ar-tt th.r,body[data-theme=gemini] .ar-tt td.r{text-align:end}
+body[data-theme=gemini] .ar-tt td.num{font-variant-numeric:tabular-nums}
+body[data-theme=gemini] .ar-tt .sub{font-size:10.5px;color:var(--ink3)}
+/* today's sky → the measurement, one row each */
+body[data-theme=gemini] .ar-live{display:flex;flex-direction:column;gap:1px;background:var(--hair);border:1px solid var(--line)}
+body[data-theme=gemini] .ar-lrow{display:grid;grid-template-columns:minmax(150px,1fr) minmax(180px,1.4fr) minmax(180px,auto);gap:10px;background:var(--panel);padding:9px 10px;font-size:12px;align-items:start}
+body[data-theme=gemini] .ar-lc{font-weight:600}
+body[data-theme=gemini] .ar-ld{color:var(--ink3);font-size:11.5px;line-height:1.5}
+body[data-theme=gemini] .ar-lm{text-align:end;display:flex;flex-direction:column;gap:2px}
+body[data-theme=gemini] .ar-lm em{font-style:normal;font-weight:600;font-variant-numeric:tabular-nums}
+body[data-theme=gemini] .ar-lm i{font-style:normal;font-size:10.5px;color:var(--ink3)}
+/* the two reference charts side by side */
+body[data-theme=gemini] .ar-cmpg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--hair);border:1px solid var(--line)}
+body[data-theme=gemini] .ar-cmp{background:var(--panel);padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+body[data-theme=gemini] .ar-cmp>b{font-size:12.5px;line-height:1.5}
+body[data-theme=gemini] .ar-cmp>i{font-style:normal;font-size:11px;color:var(--ink3);line-height:1.5}
+@media (max-width:640px){
+  body[data-theme=gemini] .ar-drow{grid-template-columns:1fr auto;row-gap:3px}
+  body[data-theme=gemini] .ar-drow .ar-dd{grid-column:1;text-align:start}
+  body[data-theme=gemini] .ar-drow .ar-dn{grid-column:2}
+  body[data-theme=gemini] .ar-lrow{grid-template-columns:1fr;row-gap:4px}
+  body[data-theme=gemini] .ar-lm{text-align:start;align-items:flex-start}
+  /* the card clips its overflow, so a min-width table would lose its last column rather than
+     scroll. On a phone the receipt drops the raw day count — effect, p and survives are what the
+     row is for — and the table shrinks to fit instead. */
+  body[data-theme=gemini] .ar-tt table{min-width:0}
+  body[data-theme=gemini] .ar-tt th:nth-child(2),body[data-theme=gemini] .ar-tt td:nth-child(2){display:none}
+  body[data-theme=gemini] .ar-tt th,body[data-theme=gemini] .ar-tt td{padding:5px 4px}
+}
 /* Strategies page — your board (tiles + add) */
 body[data-theme=gemini] .sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 body[data-theme=gemini] .sb-tile{position:relative;display:flex;flex-direction:column;gap:5px;border:1.5px solid var(--line);background:var(--panel2,var(--panel));padding:13px 15px;min-height:104px;font:inherit;color:var(--ink1);text-align:start}
@@ -1559,7 +1640,7 @@ body[data-lang="ur"] .langbtn{font-family:"Noto Nastaliq Urdu","Jameel Noori Nas
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 /* page + card entrance: main children stagger in on each route render */
-#view.enter>*{animation:fadeUp .34s cubic-bezier(.22,.61,.36,1) both}
+#view.enter>*{animation:fadeUp .22s cubic-bezier(.23,1,.32,1) both}
 #view.enter>*:nth-child(1){animation-delay:.02s}
 #view.enter>*:nth-child(2){animation-delay:.06s}
 #view.enter>*:nth-child(3){animation-delay:.10s}
