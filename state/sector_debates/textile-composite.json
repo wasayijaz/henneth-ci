@@ -1,0 +1,89 @@
+{
+  "sector": "Textile Composite",
+  "as_of": "2026-07-25",
+  "bull": {
+    "case": "Textile Composite shows majority trend participation with 19 of its 32 members above their 50-day moving average even as the sector fell a median -1.25% on the day and -2.14% over 20 sessions, indicating some structural strength beneath a weak headline tape. Median P/E sits at 8.55 with a median fair-value gap of only -2.95%, and among the ten names the dossier has valued, three (NML +58.8% gap, KTML +23.9%, MEHT +44.1%) are flagged undervalued against five overvalued -- a spread that does not read as broadly overvalued. The sector also carries a statistically significant, correction-survived link to global risk sentiment: sp500 beta 0.1099 (p=2e-05) and em_equity beta 0.0528 (p=0.00024), a genuine if modest tailwind on days global equities rally. Return dispersion is wide, with ANTM up 58.74% over 20 sessions, showing pockets of the sector are attracting real buying interest even inside the desk's current risk-off macro regime.",
+    "pillars": [
+      {
+        "claim": "Majority of the sector holds trend structure despite a down tape",
+        "evidence": "breadth.above_sma50 = 19 of n_members = 32"
+      },
+      {
+        "claim": "The sector is cheap on median multiple with a valuation spread that is not lopsidedly bearish",
+        "evidence": "valuation.median_pe = 8.55, median_fair_gap_pct = -2.95, n_undervalued = 3 vs n_overvalued = 5 (of n_valued = 10)"
+      },
+      {
+        "claim": "A statistically significant positive beta to global risk sentiment exists",
+        "evidence": "macro_drivers: sp500 beta 0.1099 (p=2e-05), em_equity beta 0.0528 (p=0.00024)"
+      },
+      {
+        "claim": "Individual names show strong 20-day momentum",
+        "evidence": "returns.best_20d: ANTM +58.74%"
+      }
+    ],
+    "weakest_pillar": "The momentum-pocket pillar (ANTM's +58.74%) is the most fragile of the four: it rests on a single top performer cited without its liquidity context, and 'best_20d' is definitionally an outlier statistic, not a description of sector-wide behavior."
+  },
+  "bear": {
+    "case": "The sector's real story is a split between a handful of illiquid micro-cap gainers and a liquid, large-cap core that is falling: NML (liquidity Rs418.3m/day, -9.13% 20d), KTML (Rs48.7m, -19.73% 20d), NCL (Rs41.8m, -10.39% 20d) and MEHT (Rs9.9m, -20.02% 20d, the sector's worst 20-day performer) are all down double digits, while the dossier's best 20-day performers -- ANTM (+58.74%), KHYT (+43.28%), STML (+38.83%) -- trade on liquidity of Rs1.3m, Rs0.5m and Rs0.3m respectively, thin enough that a handful of trades can move the print. Valuation coverage is also thin and, where it exists, tilted bearish: only 10 of 32 members carry a fair-value estimate, and of those five are overvalued against three undervalued. Income is negligible even by PSX standards -- median yield 1.86%, median payout just 6.53%, and only 5 of 32 members pay a dividend at all. The fundamental backdrop is the weakest part of the case: dossier recent_news confirms Pakistan's FY26 textile exports stagnated at $17.9bn with June exports down 16.71% YoY (impact 3, 2026-07-16), and the desk's own macro regime file places 'textiles/exporters' explicitly on its avoid list, citing June's swing to a current-account deficit and live Red Sea/Bab-el-Mandeb freight-route risk from the Houthi tanker attacks.",
+    "pillars": [
+      {
+        "claim": "The sector's headline gainers are illiquid micro-caps, not evidence of broad buying interest",
+        "evidence": "ANTM liquidity_rs_m 1.3 (+58.74% 20d), KHYT 0.5 (+43.28%), STML 0.3 (+38.83%), vs liquid large caps NML 418.3 (-9.13%), KTML 48.7 (-19.73%)"
+      },
+      {
+        "claim": "Where valuation is actually measured, the sector skews overvalued",
+        "evidence": "valuation.n_overvalued = 5 vs n_undervalued = 3, out of only n_valued = 10 of 32 members"
+      },
+      {
+        "claim": "Income is negligible and payout culture is thin",
+        "evidence": "income.median_yield_pct = 1.86, median_payout_pct = 6.53, n_payers = 5 of 32"
+      },
+      {
+        "claim": "The demand backdrop for the sector's export channel is deteriorating",
+        "evidence": "recent_news 2026-07-16 (impact 3): 'Textile exports stagnate at $17.9bn in FY26; June exports drop 16.71% YoY'; macro.json sector_tilt.avoid lists 'textiles/exporters' citing the June current-account deficit swing and live Red Sea/Bab-el-Mandeb freight risk"
+      }
+    ],
+    "attacks_bull": "The bull's momentum-pocket pillar, resting on ANTM's +58.74% 20-day return, fails on liquidity: ANTM trades Rs1.3m/day, and the sector's next best 20-day performers -- KHYT (+43.28%, Rs0.5m liquidity), STML (+38.83%, Rs0.3m), ZAHID (+32.2%, Rs12.3m), HAFL (+24.23%, Rs0.1m) -- are similarly thin. These are prints a handful of trades can move; they are not evidence of institutional buying interest in the sector. Meanwhile every widely-traded name in the dossier's members table -- NML (Rs418.3m), KTML (Rs48.7m), GATM (Rs79.9m), NCL (Rs41.8m) -- posted negative 20-day returns, the opposite direction from the bull's cited outlier.",
+    "weakest_pillar": "The export-stagnation argument leans on a single sector-wide headline ($17.9bn FY26, June -16.71% YoY) that the dossier does not break out by company, so it cannot show which of the 32 members are actually export-exposed versus domestic/value-added; and the macro.json 'avoid' tilt is a qualitative desk call rather than a measured, correction-survived beta like the dossier's own macro_drivers table."
+  },
+  "bull_rebuttal": "The liquidity point is largely conceded on the momentum-pocket pillar -- ANTM, KHYT and STML are not tradable-scale evidence of sector demand, and the bull retracts them as a demonstration of broad interest. But the bear's valuation attack cuts both ways: the same thin 10-of-32 coverage that makes the bull's -2.95% median fair-value gap fragile also makes the bear's '5 overvalued vs 3 undervalued' count fragile on an equally small sample, and two of the three flagged-undervalued names -- NML and KTML -- are exactly the liquid, widely-traded large caps the bear cites as the sector's biggest fallers, meaning the sector's most tradable value case and its most tradable losers currently sit in the same two stocks. The breadth figure (19 of 32 above the 50-day SMA) survives the bear's liquidity critique untouched, since it is a member count, not a liquidity-weighted return.",
+  "what_would_settle_it": [
+    "KTML's 2026-08-07 results print, given its liquid Rs48.7m/day volume, PE 5.38 and dossier-flagged +23.9% fair-value gap set against its current -19.73% 20-day return",
+    "The next monthly PBS/PBS-sourced textile export release following the FY26 $17.9bn / June -16.71% YoY print carried in the dossier, to show whether export stagnation continues or reverses",
+    "Whether breadth (currently 19 of 32 above the 50-day SMA) holds or erodes over the next several sessions under the desk's current risk-off regime call",
+    "The 2026-07-27 SBP MPC decision (macro.json), which would test the sector's measured sp500/em_equity betas against a domestic rate outcome not carried in the dossier's own macro_drivers table"
+  ],
+  "dossier_gaps": [
+    "No cotton or raw-material input-cost series, so neither side can quantify margin pressure from the current oil/freight shock referenced in macro.json",
+    "No breakdown of which of the 32 members are export-oriented versus domestic/value-added, so the FY26 export-stagnation headline cannot be mapped to specific tickers",
+    "Only 10 of 32 members carry pe/fair_gap/payout data at all -- valuation and income conclusions cover under a third of the sector",
+    "No Red Sea/Bab-el-Mandeb freight-cost or order-book data specific to textile exporters, despite macro.json's sector_tilt flagging that risk by name"
+  ],
+  "house_view": {
+    "stance": "cautious",
+    "conviction": "low",
+    "summary": "The desk's read leans cautious on Textile Composite, but without conviction to spare: the tape's liquid core is genuinely weak (NML -9.13%, KTML -19.73%, NCL -10.39%, MEHT -20.02% over 20 sessions, all on real turnover), the sector's only hard fundamental data point is deteriorating (FY26 exports flat at $17.9bn with June down 16.71% YoY), and the desk's own risk-off macro regime places 'textiles/exporters' on its avoid list specifically for the current-account deficit swing and live Red Sea/Bab-el-Mandeb freight risk that this sector, more than most, is directly exposed to. Against that, the breadth read (19 of 32 above the 50-day SMA) is a real, unretracted data point the bear's liquidity attack does not actually touch, and two of the sector's most liquid, most-traded names -- NML and KTML -- are also the dossier's two largest flagged undervaluations, meaning the bear's own preferred liquid names carry the bull's best value case. The sector's measured link to global risk sentiment (sp500 beta 0.1099, p=2e-05; em_equity beta 0.0528, p=0.00024) is statistically real but economically thin -- a joint macro R² of 0.77% means global sentiment explains well under 1% of this sector's daily variance, so neither side should lean on it as a primary driver either way. The desk's read is that the export and macro-tilt evidence is more decisive than the beta or valuation arguments, which is enough to lean cautious, but the valuation overlap on the two most liquid names and the surviving breadth figure keep this from being a high-conviction call.",
+    "key_evidence": [
+      "Liquid large-cap core down double digits over 20 sessions: NML -9.13% (Rs418.3m/day), KTML -19.73% (Rs48.7m/day), NCL -10.39% (Rs41.8m/day), MEHT -20.02% (Rs9.9m/day) -- vs illiquid gainers ANTM +58.74% on only Rs1.3m/day liquidity",
+      "recent_news 2026-07-16 (impact 3): FY26 textile exports stagnant at $17.9bn, June exports -16.71% YoY",
+      "macro.json sector_tilt.avoid explicitly names 'textiles/exporters', citing the June current-account deficit swing and live Red Sea/Bab-el-Mandeb freight-route risk",
+      "breadth.above_sma50 = 19 of 32, unretracted by the bear's liquidity critique; macro_joint_r2_pct = 0.77% showing global sentiment is a marginal, not primary, driver"
+    ],
+    "dissent": "The strongest case against this cautious stance is the bull's surviving argument, not the parts it retracted. Breadth (19 of 32 members above the 50-day SMA) is a plain member count untouched by the liquidity critique that sank the momentum-pocket pillar -- it says most of the sector, by name count, has not broken trend structure, which is inconsistent with a sector in a clean, broad-based decline. More importantly, the two names the bear itself cites as the sector's biggest liquid losers -- NML (-9.13% 20d, Rs418.3m/day) and KTML (-19.73% 20d, Rs48.7m/day) -- are also the dossier's two largest flagged fair-value gaps among valued members (+58.8% and +23.9% respectively), meaning the sector's most tradable, most liquid names are simultaneously its cheapest on the dossier's own numbers. If KTML's 2026-08-07 results print confirms rather than erodes that gap, the bear's 'liquid core is falling' argument and the bull's 'liquid core is cheap' argument describe the same two stocks from opposite ends of a single re-rating trade, and a cautious desk stance would be wrong-footed exactly where it is most confident. The export headline is also a single sector-wide print (FY26 $17.9bn, June -16.71% YoY) that the dossier cannot map to which of the 32 members are actually export-exposed versus domestic/value-added -- so the macro case for caution may not apply uniformly across names the desk is treating as one sector.",
+    "what_changed": "First session -- no prior house_view exists for Textile Composite in state/sector_debates/textile-composite.json.",
+    "claims": [
+      {
+        "text": "Textile Composite's sector-median 20-day return, currently -2.14%, underperforms the KSE100 over the 30 sessions following 2026-07-25, consistent with the macro regime's explicit avoid tilt on textiles/exporters and the FY26 export-stagnation print.",
+        "horizon_days": 30,
+        "market_relative": true,
+        "resolves_on": "2026-08-24"
+      },
+      {
+        "text": "Sector breadth (members above the 50-day SMA, currently 19 of 32) falls to 15 of 32 or fewer within 30 sessions of 2026-07-25 if the current risk-off regime and June export weakness persist without a reversing data print.",
+        "horizon_days": 30,
+        "market_relative": false,
+        "resolves_on": "2026-08-24"
+      }
+    ]
+  }
+}
