@@ -623,6 +623,21 @@ week, skewing every cheap/fair/expensive verdict in the same direction.
 
 ---
 
+## 9f. Fixed — root `vercel.json` build command reverted to an allow-list (2026-07-26)
+
+Went from an explicit `cp` list to `cp -r dashboard/. public/ && rm -f public/app.html` at some point —
+a deny-list. Harmless while `dashboard/` held only public assets, but the day anything gets dropped in
+there for local testing, it ships. `build_public_slice.py` states the opposite principle for `state/`
+data: "if it is not explicitly allowed out, it does not go out." Same principle applies to code.
+
+Reverted to an explicit `cp` of each of the 18 tracked files in `dashboard/`, **except `app.html`** —
+that file is a stale pre-rebrand duplicate of `index.html`, still tracked in git, deliberately never
+shipped. Adding a new file to `dashboard/` that should reach the live site now requires adding it to
+the `cp` list in `vercel.json` by name — that's the intended friction, not an oversight if the deploy
+doesn't pick it up.
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
