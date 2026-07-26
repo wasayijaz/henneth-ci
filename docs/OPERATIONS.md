@@ -598,6 +598,31 @@ already solves the same problem, copy the sibling.**
 
 ---
 
+## 9e. Fixed bug class — a UTC date compared against a PKT trading date (2026-07-26)
+
+`new Date().toISOString().slice(0,10)` returns the **UTC** calendar date. Every date in `state/` is a
+**PKT** trading date (CLAUDE.md, "all timestamps are PKT"), and PKT is UTC+5 — so between 00:00 and
+04:59 PKT that expression names *yesterday*. For a display stamp that is cosmetic. For a
+**comparison** it is a real off-by-one for five hours every day: the new `date >= today` filter on the
+earnings / ex-dividend rails kept a results date that had already passed listed as "next", with a
+negative countdown beside it.
+
+`dashboard/app.js` now exports a `todayPKT()` helper (defined next to `fmt`); **any date comparison
+against `state/` data must use it.** Detection: `grep -n "toISOString().slice(0, *10)" dashboard/app.js`
+and ask of each hit — is this value *compared* to a state date, or only *printed*? Compared → must be
+`todayPKT()`. Printed → leave it. As of 2026-07-26 the two comparison sites are fixed and ~14 display
+sites are intentionally untouched, so the grep is noisy by design; the question, not the count, is the
+test. One deliberate exception: `paperCreditDividends` — under UTC lag it *delays* a dividend credit,
+and crediting late is safer than crediting early.
+
+Same review, adjacent shape worth naming: `scripts/score_fundamentals.py` ranked a **live-priced** P/E
+against a peer array built from the vendor's **weekly scrape-time** ratio. Both numbers were correct;
+they were just not the same vintage. **When a value is re-derived from fresh data, re-derive the
+comparison set the same way** — otherwise the two agree the day after a refresh and drift apart all
+week, skewing every cheap/fair/expensive verdict in the same direction.
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
