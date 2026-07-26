@@ -36,6 +36,31 @@ def pctile(v, arr):
 
 def main():
     fund = load_json(STATE / "fundamentals.json", {"tickers": {}})["tickers"]
+    live = load_json(STATE / "live.json", {"tickers": {}})["tickers"]
+
+    def live_pe(v, sym):
+        """P/E off TODAY's live price, not stockanalysis.com's own scrape-time price (that
+        scrape is weekly — the ratio it publishes can be a stale-price/current-EPS mismatch).
+        Falls back to the scraped ratio only when we lack a live price or EPS to derive it."""
+        px = (live.get(sym) or {}).get("current")
+        eps = num(v.get("eps"))
+        if px and eps and eps > 0:
+            return round(px / eps, 2)
+        return num(v.get("pe"))
+
+    def derived_payout(v):
+        """Payout ratio from the desk's OWN yield + EPS + live price, not the vendor's scraped
+        figure — the scraped payout_ratio can disagree with the desk's own yield/earnings math
+        because it's computed off a different price snapshot and sometimes a different EPS basis
+        (TTM vs FY). Falls back to the scraped value only when yield/EPS/price aren't all present."""
+        px = (live.get(sym) or {}).get("current")
+        yld = num(v.get("div_yield"))
+        eps = num(v.get("eps"))
+        if px and yld and eps and eps > 0:
+            dps = yld / 100 * px
+            return round(dps / eps * 100, 1)
+        return num(v.get("payout_ratio"))
+
     # universe distributions for relative ratings
     pes = [num(v.get("pe")) for v in fund.values()]
     ylds = [num(v.get("div_yield")) for v in fund.values()]
@@ -46,10 +71,10 @@ def main():
 
     out = {}
     for sym, v in fund.items():
-        pe = num(v.get("pe"))
+        pe = live_pe(v, sym)
         fpe = num(v.get("forward_pe"))
         yld = num(v.get("div_yield"))
-        payout = num(v.get("payout_ratio"))
+        payout = derived_payout(v)
         rev, ni = num(v.get("revenue")), num(v.get("net_income"))
         margin = ni / rev * 100 if rev and ni else None
         mcap = num(v.get("market_cap"))

@@ -103,7 +103,15 @@ def main():
                 "hold_sessions": p["hold"],
                 "backtest": {"hit_rate": p["hit_rate"], "net_expectancy_pct": p["net_expectancy_pct"],
                              "n": p["n"], "oos_hit": p.get("oos_hit")},
-                "confidence": "high" if score > 1.5 else "medium" if score > 0.7 else "low",
+                # Confidence label is capped by sample size, not just score — min_trades (8) is the
+                # bare eligibility floor, not enough to call anything "high confidence". A strategy
+                # proven on 8-15 trades can't outrank one proven on 50+ just because its expectancy
+                # score happens to be higher.
+                "confidence": (
+                    "high" if score > 1.5 and p["n"] >= 30
+                    else "medium" if score > 0.7 and p["n"] >= 15
+                    else "low"
+                ),
                 "basis": "backtest-proven, unaudited",
                 "thesis": f"{p['name']} is triggering now; on {sym}'s own history it won "
                           f"{round((p['hit_rate'] or 0)*100)}% over {p['n']} trades ({p['net_expectancy_pct']:+.1f}% net/trade), "

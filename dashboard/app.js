@@ -521,8 +521,11 @@ async function pageValue() {
   const tbl = (list, cheap) => {
     const cap = list.length > CAP + 2 ? CAP : list.length;
     return `<table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Fair value</th><th class="r">${cheap ? "Upside" : "Downside"}</th><th>Verdict</th></tr></thead><tbody>${
-      list.map((r, i) => { const x = i >= cap ? " xmore" : ""; return `<tr class="clickable fvrow${x}" onclick="this.classList.toggle('exp');this.nextElementSibling.classList.toggle('open')"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
-      <td class="r num">${fmt(r.price)}</td><td class="r num">${fmt(r.composite_fair)}</td>
+      list.map((r, i) => { const x = i >= cap ? " xmore" : "";
+        const mvals = Object.values(r.methods || {}).filter(v => v != null);
+        const spread = mvals.length > 1 ? `<br><span class="sub" style="font-size:10px">models split ${fmt(Math.min(...mvals))}–${fmt(Math.max(...mvals))}</span>` : "";
+        return `<tr class="clickable fvrow${x}" onclick="this.classList.toggle('exp');this.nextElementSibling.classList.toggle('open')"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 22))}</span></td>
+      <td class="r num">${fmt(r.price)}</td><td class="r num">${fmt(r.composite_fair)}${spread}</td>
       <td class="r num ${cls(r.mispricing_pct)}">${sgn(r.mispricing_pct)}%</td>
       <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${r.verdict === "undervalued" ? "below fair" : r.verdict === "overvalued" ? "above fair" : esc(r.verdict)}</span> <span class="fvcaret">▸</span></td></tr>
       <tr class="fvdetail${x}"><td colspan="5">${fvDetail(r)}</td></tr>`; }).join("")}</tbody></table>${
@@ -2595,7 +2598,11 @@ async function pageTicker(sym, _retry = 0) {
   const series = (deep && deep.length > (hist?.length || 0)) ? deep : hist;
   const yearsSpan = series ? ((new Date(series[series.length - 1].date) - new Date(series[0].date)) / 3.156e10) : 0;
   const f = fund?.tickers?.[sym] || {};
+  // P/E and payout ratio here are the DESK's own live-price/EPS/yield derivation
+  // (score_fundamentals.py), not the vendor's scrape-time snapshot — see live_pe/derived_payout.
+  const fs = fscore?.tickers?.[sym]?.metrics || {};
   const nextEarn = (cal?.events || []).find(e => e.ticker === sym && e.type === "results");
+  const nextXdiv = (cal?.events || []).find(e => e.ticker === sym && e.type === "ex_dividend");
   const daysTo = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
   /* THE ALL-OR-NOTHING GUARD — narrowed, deliberately.
 
@@ -3011,9 +3018,12 @@ async function pageTicker(sym, _retry = 0) {
     const vcol = fv.verdict === "undervalued" ? "var(--up)" : fv.verdict === "overvalued" ? "var(--dn)" : "var(--ink2)";
     const vlabel = { undervalued: "below model fair value", overvalued: "above model fair value", fair: "near model fair value" }[fv.verdict] || fv.verdict;
     const mlabel = { relative_pe: "Peer P/E (priced like sector)", earnings_power: "Earnings power (vs bond yield)", graham: "Graham value (earnings + growth)", ddm: "Dividend discount model" };
+    const mvals2 = Object.values(fv.methods || {}).filter(v => v != null);
+    const spreadWide = mvals2.length > 1 && (Math.max(...mvals2) - Math.min(...mvals2)) / fv.composite_fair > 0.3;
     return `<div class="seg"><h2>Fair value model</h2><div class="ln"></div>
-      <span class="pill" style="background:color-mix(in srgb,${vcol} 15%,transparent);color:${vcol}">${vlabel} · ${sgn(fv.mispricing_pct)}%</span></div>
-    <div class="card"><div class="sub" style="margin-bottom:14px">The desk values ${sym} four ways, then takes the middle (median) estimate. Today it trades at <b>${fmt(fv.price)}</b>; the blended model fair value is <b style="color:${vcol}">${fmt(fv.composite_fair)}</b> — ${fv.mispricing_pct >= 0 ? "the price sits <b>below</b> the model's blended fair value" : "the price sits <b>above</b> the model's blended fair value"} by ${Math.abs(fv.mispricing_pct)}%. This is a model estimate on public fundamentals — <b>not a price target or a recommendation</b>, and a low share price never means a company is cheap.</div>
+      <span class="pill" style="background:color-mix(in srgb,${vcol} 15%,transparent);color:${vcol}">${vlabel} · ${sgn(fv.mispricing_pct)}%</span>
+      ${mvals2.length > 1 ? `<span class="pill" style="margin-left:6px">models split ${fmt(Math.min(...mvals2))}–${fmt(Math.max(...mvals2))}</span>` : ""}</div>
+    <div class="card"><div class="sub" style="margin-bottom:14px">The desk values ${sym} four ways, then takes the middle (median) estimate. Today it trades at <b>${fmt(fv.price)}</b>; the blended model fair value is <b style="color:${vcol}">${fmt(fv.composite_fair)}</b> — ${fv.mispricing_pct >= 0 ? "the price sits <b>below</b> the model's blended fair value" : "the price sits <b>above</b> the model's blended fair value"} by ${Math.abs(fv.mispricing_pct)}%. This is a model estimate on public fundamentals — <b>not a price target or a recommendation</b>, and a low share price never means a company is cheap.${spreadWide ? ` <b style="color:var(--dn)">The four methods disagree sharply here</b> (Rs ${fmt(Math.min(...mvals2))}–${fmt(Math.max(...mvals2))}) — treat the composite as a rough screen, not a precise number.` : ""}</div>
       <table><thead><tr><th>Method</th><th class="r">Fair value</th><th class="r">vs price</th></tr></thead><tbody>${
       Object.entries(fv.methods).map(([k, val]) => { const up = (val / fv.price - 1) * 100; return `<tr><td>${esc(mlabel[k] || k)}</td><td class="r num">${fmt(val)}</td><td class="r num ${cls(up)}">${sgn(up.toFixed(0))}%</td></tr>`; }).join("")}
         <tr style="border-top:2px solid var(--line)"><td><b>Composite (median)</b></td><td class="r num"><b>${fmt(fv.composite_fair)}</b></td><td class="r num ${cls(fv.mispricing_pct)}"><b>${sgn(fv.mispricing_pct)}%</b></td></tr>
@@ -3065,17 +3075,17 @@ async function pageTicker(sym, _retry = 0) {
   <div class="card"><h2>Key facts</h2><div class="sub">fundamentals · stockanalysis.com${f.fetched ? " · " + f.fetched : ""}</div>
     <div class="facts">
       <div class="fact"><span>Market cap</span><b>${esc(f.market_cap || "—")}</b></div>
-      <div class="fact"><span>P/E (TTM)</span><b>${lossmaking ? '<span class="sub" style="font-size:11px">n/a · earnings negative</span>' : esc(f.pe || "—")}</b></div>
+      <div class="fact"><span>P/E (TTM)</span><b>${lossmaking ? '<span class="sub" style="font-size:11px">n/a · earnings negative</span>' : esc(fs.pe != null ? fs.pe : (f.pe || "—"))}</b></div>
       <div class="fact"><span>Forward P/E</span><b>${esc(f.forward_pe || "—")}</b></div>
       <div class="fact"><span>EPS (TTM)</span><b>${esc(f.eps || "—")}</b></div>
       <div class="fact"><span>Div yield</span><b>${esc(f.div_yield || "—")}</b></div>
-      <div class="fact"><span>Payout ratio</span><b>${esc(f.payout_ratio || "—")}</b></div>
+      <div class="fact"><span>Payout ratio</span><b>${esc(fs.payout_ratio != null ? fs.payout_ratio + "%" : (f.payout_ratio || "—"))}</b></div>
       <div class="fact"><span>Beta</span><b>${esc(f.beta || "—")}</b></div>
       <div class="fact"><span>Revenue</span><b>${esc(f.revenue || "—")}</b></div>
       <div class="fact"><span>Net income</span><b>${esc(f.net_income || "—")}</b></div>
       <div class="fact"><span>Shares out</span><b>${esc(f.shares_out || "—")}</b></div>
-      <div class="fact"><span>Next results</span><b>${nextEarn ? esc(nextEarn.date) + ` <span class="cd ${daysTo(nextEarn.date) <= 7 ? "soon" : ""}">${daysTo(nextEarn.date)}d</span>` : esc(f.next_earnings || "—")}</b></div>
-      <div class="fact"><span>Ex-dividend</span><b>${esc(f.ex_div_date || "—")}</b></div>
+      <div class="fact"><span>Next results</span><b>${nextEarn ? esc(nextEarn.date) + ` <span class="cd ${daysTo(nextEarn.date) <= 7 ? "soon" : ""}">${daysTo(nextEarn.date)}d</span>` : "—"}</b></div>
+      <div class="fact"><span>Ex-dividend</span><b>${nextXdiv ? esc(nextXdiv.date) : "—"}</b></div>
     </div></div>
   <div class="card"><h2>Quant snapshot</h2><div class="sub">as of ${q.date} close</div>
     <div class="statgrid num">
@@ -5577,6 +5587,20 @@ const GLOSSARY = [
   ["core / listed tier", "coverage", "'core' names get the full pipeline — deep history, backtests, fundamentals, debates. 'listed' names get prices, quant measures, sector and dividends, but not the expensive per-ticker analysis. Every listed company is visible and searchable; the ticker page says which tier it is rather than letting an empty section imply the desk looked and found nothing."],
   ["regime (risk-on / neutral / risk-off)", "macro", "The desk's read on Pakistan's macro backdrop — policy rate, PKR, inflation, external account, oil. It is context for sizing and patience, not a trade signal in itself."],
 ];
+async function pageShipped() {
+  const cl = await j("changelog.json");
+  const rels = cl?.releases || [];
+  $("view").innerHTML = `
+  <div class="seg" style="margin-top:4px"><h2>Recently shipped</h2><div class="ln"></div>${cl?.current ? `<span class="pill">v${esc(cl.current)}</span>` : ""}</div>
+  <p class="sub" style="margin-bottom:12px">What actually changed on the desk, most recent first. Same list as the version badge's "What's new" popup — just always here, not just on the day it lands.</p>
+  ${rels.length ? rels.map((r, i) => `
+    <div class="card" style="margin-bottom:10px${i === 0 ? ";border-color:var(--accent)" : ""}">
+      <div class="seg" style="margin:0 0 6px"><b>v${esc(r.version)}</b>${r.title ? `<span class="sub" style="margin-left:8px">${esc(r.title)}</span>` : ""}<span class="sub" style="margin-left:auto">${esc(r.date)}</span></div>
+      <ul style="margin:0;padding-left:18px">${(r.notes || []).map(n => `<li>${esc(n)}</li>`).join("")}</ul>
+    </div>`).join("") : `<div class="card"><div class="empty">No public release notes yet.</div></div>`}
+  <p class="sub" style="margin-top:10px">The full engineering record stays in the repo — this is the reader-facing subset.</p>`;
+}
+
 async function pageGlossary() {
   await Promise.resolve();
   const groups = [...new Set(GLOSSARY.map(g => g[1]))];
@@ -5660,7 +5684,7 @@ async function pageCompare() {
     <span class="sub" style="margin-left:10px">Fair value is a <b>model estimate</b> on public fundamentals, not a price target — and the four methods behind it often disagree. "Strategies proven here" counts rules that cleared the bar on each stock's <b>own</b> history, so the counts are not directly comparable across names with different amounts of history. Terms explained in the <a href="#/glossary" style="color:var(--accent)">glossary</a>.</span></div>`}`;
 }
 
-const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare };
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare, shipped: pageShipped };
 let lastPage = null;
 
 function animateIn() {
@@ -5696,7 +5720,7 @@ function animateIn() {
    create afterwards. Gating them would close the top of the funnel to protect the bottom.
    Legal pages stay open because a visitor must be able to read terms before signing anything.
    ========================================================================================== */
-const OPEN_ROUTES = ["cast", "mychart", "legal", "plans", "glossary"];
+const OPEN_ROUTES = ["cast", "mychart", "legal", "plans", "glossary", "shipped"];
 
 /* `me` is declared with `let` further down this file (the accounts section), and route() runs
    before that line is reached at boot. Touching a `let` binding in its temporal dead zone throws
