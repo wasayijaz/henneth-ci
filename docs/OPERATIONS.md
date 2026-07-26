@@ -429,6 +429,9 @@ same pattern already used for `.searchbox[hidden]`.
 **Rule going forward: any element toggled via the `hidden` DOM property MUST have a matching
 `.class[hidden]{display:none!important}` CSS rule**, or the toggle silently does nothing. Checked
 2026-07-14: only two such elements exist (`#searchbox`, `#acctMenu`), both now correctly overridden.
+Re-checked 2026-07-26: a third had appeared — `#sideVer` (the sidebar version badge), added with
+`display:flex` and no `[hidden]` rule, so the "no changelog yet" early-return left an empty bordered
+bar pinned to the sidebar. Now overridden too. The class recurs; re-check whenever new UI lands.
 
 ---
 
@@ -565,6 +568,33 @@ the Supabase **user id — never the email**, and calls `posthog.reset()` on sig
 `signup_pending_confirmation` and `signup_completed` are deliberately separate. With email
 confirmation on, a successful `signUp()` returns no session: the account exists but the person is
 not in yet. Merging the two would report a conversion rate the desk does not have.
+
+---
+
+## 9d. Fixed bug class — the orphaned marker field (2026-07-26)
+
+The Chair stage was removed from the Desk Room for regulatory reasons (SECP Reg 2(ha) — see the
+`room-chair` agent header). Nothing writes `house_view` any more. But `room_gate.py` still keyed its
+"has this ticker ever been covered?" test off `house_view`, so every Room session written *after* the
+removal would be re-planned as `full` — "never covered" — on every subsequent cycle, forever. The
+REAFFIRM (0 tokens) / DELTA (~5k) / FULL (~25k) tiering the module exists to provide would have
+quietly stopped tiering, at ~25k tokens per name per cycle. It did not show up in testing because all
+42 sessions already in `state/rooms.json` were written *before* the removal and still carry the field:
+the bug is invisible until the first new session lands. `room_apply.py` had already been switched to
+`ta_memo` for exactly this reason; the gate was simply missed.
+
+**Rule: when a pipeline stage is removed, grep for every field it was the sole writer of, and fix
+every consumer in the same commit.** `grep -rn "<field>" scripts/` — a field with readers and no
+writer is a live bug, not dead code. As of 2026-07-26 `house_view` still has three remaining readers
+(`build_explainer.py`, `provenance_lint.py`, `room_verify.py`); those degrade gracefully today
+(absent field → section omitted) but they are the same trap and should go when convenient.
+
+Related, same week and same shape: `.side-ver` was added with a `hidden` attribute and a
+`display:flex` class rule, re-introducing §9's bug class in a third element — so §9's "only two such
+elements exist" line is now stale. Rotation-based fetchers are a third instance of "correct sibling,
+wrong copy": `fetch_dividends_deep.py` merges prior output before writing, `fetch_dividends.py` did
+not and was deleting every symbol outside the current batch. **When a module has a sibling that
+already solves the same problem, copy the sibling.**
 
 ---
 
