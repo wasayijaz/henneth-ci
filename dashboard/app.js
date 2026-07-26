@@ -2601,8 +2601,12 @@ async function pageTicker(sym, _retry = 0) {
   // P/E and payout ratio here are the DESK's own live-price/EPS/yield derivation
   // (score_fundamentals.py), not the vendor's scrape-time snapshot — see live_pe/derived_payout.
   const fs = fscore?.tickers?.[sym]?.metrics || {};
-  const nextEarn = (cal?.events || []).find(e => e.ticker === sym && e.type === "results");
-  const nextXdiv = (cal?.events || []).find(e => e.ticker === sym && e.type === "ex_dividend");
+  const today0 = new Date().toISOString().slice(0, 10);
+  const nextOfType = t => (cal?.events || [])
+    .filter(e => e.ticker === sym && e.type === t && e.date >= today0)
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  const nextEarn = nextOfType("results");
+  const nextXdiv = nextOfType("ex_dividend");
   const daysTo = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
   /* THE ALL-OR-NOTHING GUARD — narrowed, deliberately.
 
