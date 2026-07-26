@@ -1369,13 +1369,20 @@ function synastry(user, stock, sector, amap, astroNow) {
       reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `You are in a ${uDasha} period; the stock's Moon-lord ${sLord} is ${dfr === "same" ? "the very same" : "traditionally its " + dfr}.`, w: dw });
     }
   } else {
-    // no stock chart (listed pre-2000) — read against the sector's significator graha, same
-    // technique the commodities lens uses, so a chartless name gets the same resonance dimensions
-    // (including the antardasha check) rather than a hand-rolled duplicate missing one.
+    // no stock chart (listed pre-2000) — read against the sector's significator graha
     const sig = sector ? (amap?.sector_significators?.[sector] || {}) : {};
     const prim = sig.primary;
     if (!prim) return { score: null, verdict: "no reading", reasons: [] };
-    return resonanceWithGraha(user, prim, sector);
+    const fr = friendship(uLordUser, prim);
+    const fw = fr === "friend" || fr === "same" ? 1 : fr === "enemy" ? -1 : 0;
+    score += fw * 14;
+    reasons.push({ k: `You & ${prim}`, v: fr, why: `${sector} answers to ${prim}. Your Moon-lord ${uLordUser} is ${fr === "same" ? "that same planet" : "traditionally its " + fr}.`, w: fw });
+    // running the significator's own dasha is the strongest resonance a chartless name can offer
+    if (uDasha === prim) { score += 18; reasons.push({ k: "You're in its period", v: `${prim} dasha`, why: `You are running a ${prim} period — and ${prim} is exactly what tradition ties ${sector} to.`, w: 1 }); }
+    else if (uDasha) { const dfr = friendship(uDasha, prim); const dw = dfr === "friend" ? 1 : dfr === "enemy" ? -1 : 0; score += dw * 8; reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `Your ${uDasha} period is ${dfr} to ${sector}'s ${prim}.`, w: dw }); }
+    // is the significator well-placed in YOUR chart?
+    const ug = user.grahas[prim];
+    if (ug) { const own = SIGN_LORD[ug.sign_i] === prim; if (own) { score += 8; reasons.push({ k: `Your ${prim}`, v: "strong", why: `${prim} sits in its own sign ${ug.sign} in your chart — a dignified placement.`, w: 1 }); } }
   }
   score = Math.max(2, Math.min(98, Math.round(score)));
   const verdict = score >= 68 ? "harmonious" : score >= 55 ? "favourable" : score >= 45 ? "neutral" : score >= 32 ? "testing" : "discordant";
@@ -2092,10 +2099,8 @@ async function renderBirthCast(ov) {
   const d = _bw.data;
   // compute the chart UP FRONT (it's fast, <100ms) so the success reveal has real values to show
   // and myProfile is set the instant the loader lands — the loader is theatre over ready data.
-  const [cast, uniQuick] = await Promise.all([computeNatal(d), j("universe.json")]);
+  const cast = await computeNatal(d);
   const castErr = cast.error || null;
-  // live count, not a hardcoded figure that silently goes stale as the universe grows
-  const psxCount = Object.values(uniQuick?.symbols || {}).filter(m => ((m || {}).market ?? "PSX") === "PSX").length;
   if (!castErr) {
     const rec = { birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } };
     if (me) { myProfile = { ...(myProfile || {}), ...rec }; saveProfile(rec); }  // persist in background
