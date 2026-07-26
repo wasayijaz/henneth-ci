@@ -43,7 +43,12 @@ def build():
             continue
         prior = rooms.get(sym)
         cur_hash = d.get("material_hash")
-        if not prior or not prior.get("house_view"):
+        # ta_memo, NOT house_view, is the "this name has been covered" marker. The Chair stage
+        # was removed (SECP Reg 2(ha)), so nothing writes house_view any more — keying off it
+        # means every session written from now on re-plans as "never covered" forever, and the
+        # REAFFIRM/DELTA tiering this whole module exists for never fires. room_apply.py:66
+        # already switched to ta_memo for exactly this reason; the gate must match it.
+        if not prior or not prior.get("ta_memo"):
             plan["full"].append({"symbol": sym, "why": "never covered"})
             continue
         if prior.get("material_hash") != cur_hash:

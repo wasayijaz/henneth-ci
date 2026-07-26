@@ -1811,6 +1811,11 @@ body[data-theme=gemini] .side-ver{display:flex;align-items:center;justify-conten
   width:100%;background:none;border:none;border-top:1px solid var(--hair);color:var(--ink3);
   font:inherit;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:9px 8px;
   cursor:pointer;transition:color .12s ease}
+/* display:flex above outranks the UA's [hidden]{display:none}, so the markup's `hidden` attribute
+   does NOT hide this button — renderVersion() bails early when there is no changelog yet and
+   leaves an empty bordered bar pinned to the sidebar. Same idiom as .acct-menu[hidden] and
+   .searchbox[hidden] elsewhere in this file. */
+body[data-theme=gemini] .side-ver[hidden]{display:none}
 body[data-theme=gemini] .side-ver.fresh{color:var(--accent)}
 body[data-theme=gemini] .ver-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;
   display:inline-block;flex:none}

@@ -87,6 +87,13 @@ def main():
         print(f"publish: --code — also staging {len(other)} hand-authored file(s): {', '.join(other[:8])}"
               + (f" (+{len(other)-8} more)" if len(other) > 8 else ""))
     elif other:
+        # UNSTAGE them, don't just decline to add them. `git status --porcelain` reports files
+        # that are already IN THE INDEX as well as merely modified ones, so a session that ran
+        # `git add dashboard/app.js` mid-edit leaves it staged for whoever commits next — and
+        # the commit below commits the whole index, not only what this run added. Without this
+        # reset the warning prints "NOT committing ..." while committing exactly those files,
+        # which is the 2026-07-19 incident this whole block exists to prevent.
+        _run(["git", "reset", "--quiet", "--", *other])
         print(f"publish: NOT committing {len(other)} hand-authored file(s) — data-only publish.")
         for f in other[:12]:
             print(f"    · {f}")

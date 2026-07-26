@@ -84,10 +84,13 @@ def main():
     _seen = {d.get("symbol") for d in (prior.get("history") or [])} if isinstance(prior, dict) else set()
     _fresh = [s for s in _listed if s not in _seen]          # never fetched -> first in line
     _rest = [s for s in _listed if s in _seen]
+    refreshed = set()
     for sym in _core + (_fresh + _rest)[:LISTED_DIV_PER_RUN]:
         try:
             r = sess.post("https://dps.psx.com.pk/payouts", data={"symbol": sym}, timeout=20)
             rows = parse_rows(r.text, sym) if r.status_code == 200 else []
+            if r.status_code == 200:
+                refreshed.add(sym)
             close = (quant.get(sym) or {}).get("close")
             for row in rows:
                 if row.get("dividend_rs") and close:
@@ -96,6 +99,22 @@ def main():
         except requests.RequestException as e:
             failed.append({"symbol": sym, "err": str(e)[:80]})
         time.sleep(0.35)
+
+    # MERGE, don't replace. history is written wholesale below, so without carrying the prior
+    # rows forward every symbol outside this run's 60-name batch is DELETED — the opposite of
+    # the rotation described above, which promises "full coverage still arrives within a few
+    # cycles". Coverage would flicker rather than accumulate, and _seen (read back out of this
+    # same file) could never grow past one batch. Keep prior rows for any symbol we did not
+    # successfully re-fetch; a symbol that answered 200 is authoritative and overwrites.
+    _today = date.today().isoformat()
+    for row in (prior.get("history") or []) if isinstance(prior, dict) else []:
+        if row.get("symbol") in refreshed:
+            continue
+        # `upcoming` was frozen at parse time (see parse_rows), so a retained row would keep
+        # advertising a book closure that has since passed. Re-derive it from bc_start.
+        bcs = row.get("bc_start")
+        row["upcoming"] = bool(bcs) and bcs >= _today
+        all_rows.append(row)
 
     upcoming = sorted([r for r in all_rows if r.get("upcoming")], key=lambda r: r["bc_start"])
     save_json(STATE / "dividends.json", {
