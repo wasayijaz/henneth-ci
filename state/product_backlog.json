@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-19",
+ "updated": "2026-07-26",
  "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
  "categories": "accuracy | clarity | feature",
  "items": [
@@ -34,6 +34,17 @@
    "status": "proposed"
   },
   {
+   "id": "claim-price-stale-in-room-prose",
+   "category": "accuracy",
+   "title": "Room personas cite a call's price level that's already stale vs the session print",
+   "why": "state/verify.json's claim.price flags fire 36 times across ~12 tickers this cycle (e.g. OGDC: all three personas' turns cite 331.59 vs a 311.95 session price, a ~6% gap), but renderTranscript/renderRoom (dashboard/app.js:2488, 2535) render the persona prose with no inline flag. Distinct from the existing ratio-stale-price-basis item, which is about PE/market-cap calc timing, not a persona's own written price citation.",
+   "existing_check": "grepped renderTranscript/renderRoom (app.js:2488-2650) and the room.qa rendering paths (app.js:2526-2544, 3430, 3444, 5575) — no consumer of verify.json's per-issue claim.price data exists anywhere in app.js",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
    "id": "payout-ratio-basis-mismatch",
    "category": "accuracy",
    "title": "payout_ratio field recurringly disagrees with the desk's own div_yield/EPS pair",
@@ -48,6 +59,17 @@
    "category": "clarity",
    "title": "Fair-value card headlines one blended number while methods disagree 3-4x",
    "why": "FFC's value card reads '+77.2% undervalued' (state/fairvalue.json) but the 4 underlying methods span Rs381-1,542, driven by an unverified 30% growth_est_pct feeding Graham/DDM — room-verifier caveats this exact dispersion for FFC, DGKC and ATRL this week, but the caveat lives only in fa_memo prose, never on the compact card a skimming user reads first.",
+   "impact": "high",
+   "effort": "med",
+   "score": 1.5,
+   "status": "proposed"
+  },
+  {
+   "id": "verify-json-unsurfaced-qa",
+   "category": "feature",
+   "title": "The desk's deterministic per-ticker QA layer (state/verify.json) is computed every cycle and shown nowhere",
+   "why": "scripts/room_verify.py builds state/verify.json every cycle — 390 of 391 tickers carry at least one flag (quant.date staleness, fairvalue.spread disagreement, claim.price mismatch, price_series glitches), including a high_severity list of 4 tickers (LSEVL, MDTL, CLCPS, USVIX) with 'a wrong number may be on screen' price-series glitches, plus an escalate_to_agent list. Only room.qa (the separate LLM Verifier's per-Room-session verdict, which covers just the Room-debated core tickers) is rendered; the full-universe deterministic layer is invisible even for the 4 flagged high-severity names.",
+   "existing_check": "pageTicker (app.js:2553-2650) Promise.all-fetches 24 state files and verify.json is not among them; grepped all of dashboard/app.js and scripts/*.py for 'verify.json' — only scripts/room_verify.py's own doc comment and save_json call reference it, zero consumers",
    "impact": "high",
    "effort": "med",
    "score": 1.5,
