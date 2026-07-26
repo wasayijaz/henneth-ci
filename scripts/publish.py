@@ -14,9 +14,14 @@ share one checkout, so a blanket stage publishes whoever else's half-finished ed
 lying around. Data refreshes stay automatic; shipping code stays deliberate.
 
 Usage:
-  python scripts/publish.py "Hourly desk refresh 11:20 PKT"      # state/ only
-  python scripts/publish.py "Fix sizing bug" --code              # + code/docs changes
-  python scripts/publish.py                                      # timestamped default msg
+  python scripts/publish.py "Hourly desk refresh 11:20 PKT"          # state/ only
+  git add dashboard/app.js docs/OPERATIONS.md                       # stage YOUR files by name
+  python scripts/publish.py "Fix sizing bug" --code                  # ships only what you staged
+  python scripts/publish.py                                          # timestamped default msg
+
+--code ships ONLY hand-authored files already in the index when it runs — it never discovers
+or `git add -A`s them itself. Stage your own files by name first (`git status --porcelain` to
+confirm nothing else is dirty), then run with --code.
 """
 import subprocess
 import sys
@@ -55,9 +60,15 @@ def main():
     # gives no clue it happened.
     #
     # So: state/ (regenerated deterministic data — always safe to publish) stages by default.
-    # Hand-authored files require --code, which makes a code release a deliberate act rather
-    # than a side effect of whoever happens to run the next data refresh.
+    # Hand-authored files require --code — AND must already be staged by the caller (git add
+    # <file> before running this). --code never calls `git add -A` itself: on 2026-07-26 it
+    # still did, and a careful "stage only mine, confirm via git status --porcelain" run swept
+    # up a concurrent session's unstaged, in-progress dashboard/app.js anyway. Pre-staging is
+    # what makes the caller's own scoping the actual gate, not just a courtesy.
     code_mode = "--code" in sys.argv
+    if code_mode:
+        print("publish: --code — only files YOU already staged (git add <file>) ship as code. "
+              "Dirty-but-unstaged hand-authored files are left alone (they may be someone else's).")
     _run(["git", "add", "-A", "--", "state/"])
 
     # GENERATED ARTEFACTS THAT LIVE OUTSIDE state/.
@@ -77,16 +88,34 @@ def main():
         p = path.replace("\\", "/")
         return p.startswith("state/") or any(p.startswith(g) for g in GENERATED)
 
-    # what else is dirty? report it rather than silently including or silently dropping it
-    other = [ln[3:].strip().strip('"') for ln in
-             _run(["git", "status", "--porcelain"]).stdout.splitlines()
-             if ln[3:].strip().strip('"') and not _is_auto(ln[3:].strip().strip('"'))]
+    # what else is dirty? split into files the CALLER already staged themselves (index status
+    # is non-blank/non-'?') vs files that are merely dirty in the working tree. Only the former
+    # are ever eligible to ship — see the 2026-07-26 incident note below.
+    staged_hand, unstaged_hand = [], []
+    for ln in _run(["git", "status", "--porcelain"]).stdout.splitlines():
+        path = ln[3:].strip().strip('"')
+        if not path or _is_auto(path):
+            continue
+        (staged_hand if ln[0] not in (" ", "?") else unstaged_hand).append(path)
+    other = staged_hand + unstaged_hand
 
-    if code_mode and other:
-        _run(["git", "add", "-A"])
-        print(f"publish: --code — also staging {len(other)} hand-authored file(s): {', '.join(other[:8])}"
-              + (f" (+{len(other)-8} more)" if len(other) > 8 else ""))
-    elif other:
+    if code_mode and unstaged_hand:
+        print(f"publish: --code — leaving {len(unstaged_hand)} unstaged hand-authored file(s) OUT "
+              f"(not staged by you, may belong to another session): {', '.join(unstaged_hand[:8])}"
+              + (f" (+{len(unstaged_hand)-8} more)" if len(unstaged_hand) > 8 else ""))
+        print("  If any of these are actually yours and ready, stage them yourself "
+              "(git add <file>) and re-run.")
+
+    if code_mode and staged_hand:
+        # 2026-07-19 AND 2026-07-26: a blanket `git add -A` here re-discovered and staged
+        # every dirty hand-authored file regardless of who owned it — including another
+        # session's in-progress dashboard/app.js edit that its author had deliberately left
+        # unstaged. `--code` now ships ONLY what the caller already staged themselves; it never
+        # discovers files on its own. This is what lets "stage mine by name, run --code" actually
+        # be a safety boundary instead of a false sense of one.
+        print(f"publish: --code — committing {len(staged_hand)} pre-staged hand-authored file(s): "
+              f"{', '.join(staged_hand[:8])}" + (f" (+{len(staged_hand)-8} more)" if len(staged_hand) > 8 else ""))
+    elif not code_mode and other:
         # UNSTAGE them, don't just decline to add them. `git status --porcelain` reports files
         # that are already IN THE INDEX as well as merely modified ones, so a session that ran
         # `git add dashboard/app.js` mid-edit leaves it staged for whoever commits next — and
