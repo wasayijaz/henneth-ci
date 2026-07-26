@@ -3,5 +3,9 @@
   "framework": "astro",
   "installCommand": "npm install",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/pricing", "destination": "/plans", "permanent": true },
+    { "source": "/legal/risk", "destination": "/legal/disclosures", "permanent": true }
+  ]
 }

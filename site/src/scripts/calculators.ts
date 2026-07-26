@@ -123,7 +123,10 @@ const goal: CalcFn = (v) => {
   const n = Math.round(years * 12);
   const grownHave = have * Math.pow(1 + mr, n);
   const need = Math.max(0, targetReal - grownHave);
-  const monthly = mr === 0 ? need / n : (need * mr) / (Math.pow(1 + mr, n) - 1);
+  // n === 0 (the user typed 0 years) divides by zero in BOTH branches: need/0 is Infinity, and
+  // (1+mr)^0 - 1 is 0. The tile renders the literal string "Rs ∞" — or "Rs NaN" when need is also
+  // 0. The inputs are type="number" min="0", so 0 is reachable, not a hypothetical.
+  const monthly = n <= 0 ? need : mr === 0 ? need / n : (need * mr) / (Math.pow(1 + mr, n) - 1);
   return {
     tiles: [
       { k: "Goal in today's money", v: rs(target), sub: `${years} years away` },
@@ -141,7 +144,10 @@ const mortgage: CalcFn = (v, a) => {
   const principal = Math.max(0, price - down);
   const mr = rate / 12;
   const n = Math.round(years * 12);
-  const pay = mr === 0 ? principal / n : (principal * mr) / (1 - Math.pow(1 + mr, -n));
+  // n === 0 (0-year term) is Infinity in both branches — principal/0, and 1 - (1+mr)^0 = 0.
+  // "Monthly instalment Rs ∞" with "Total interest Rs NaN" underneath. Reachable: the term input
+  // is type="number" min="0". A zero-year loan repays in full immediately, so pay = principal.
+  const pay = n <= 0 ? principal : mr === 0 ? principal / n : (principal * mr) / (1 - Math.pow(1 + mr, -n));
   const total = pay * n;
   const interest = total - principal;
   return {
@@ -210,7 +216,11 @@ export type Sizing = {
     and in scripts/build_signals.py in the same commit. */
 export function sizePosition(capital: number, riskPct: number, entry: number, stop: number): Sizing {
   const riskPerShare = entry - stop;
-  if (!(riskPerShare > 0) || !(entry > 0)) {
+  // capital must be positive too. Without this guard a negative capital sails through: shares
+  // goes negative, and the position tool clamps only the SHARES tile to 0 while rendering
+  // `value` and `atRisk` unconditionally — so the page shows "Shares 0" beside "Position value
+  // Rs -166,700", which reads as a bug in the desk rather than bad input.
+  if (!(riskPerShare > 0) || !(entry > 0) || !(capital > 0)) {
     return { riskPerShare, shares: 0, value: 0, atRisk: 0, capped: false, invalid: true };
   }
   const riskBudget = capital * (riskPct / 100);

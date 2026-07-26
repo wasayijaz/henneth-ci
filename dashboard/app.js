@@ -7,6 +7,12 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": 
 const sgn = v => (v > 0 ? "+" : "") + v;
 const cls = v => v > 0.05 ? "up" : v < -0.05 ? "dn" : "";
 const fmt = (v, d = 2) => v == null ? "—" : Number(v).toLocaleString("en", { maximumFractionDigits: d });
+// Today's PKT calendar date. `new Date().toISOString().slice(0,10)` is the UTC date, and PKT is
+// UTC+5 — so between 00:00 and 04:59 PKT it names YESTERDAY. Every date in state/ is a PKT
+// trading date (CLAUDE.md), so comparing them to a UTC date is an off-by-one for five hours a
+// day: a results date that has already passed still reads as "next", with a negative countdown.
+// Use this for any date COMPARISON against state/ data; a display-only stamp can stay as-is.
+const todayPKT = () => new Date(Date.now() + 5 * 3600000).toISOString().slice(0, 10);
 
 // Data source: local dev reads ../state/ ; the deployed dashboard (GitHub Pages)
 // reads state/ published alongside it by the GitHub Actions pipeline every 30 min.
@@ -2601,7 +2607,7 @@ async function pageTicker(sym, _retry = 0) {
   // P/E and payout ratio here are the DESK's own live-price/EPS/yield derivation
   // (score_fundamentals.py), not the vendor's scrape-time snapshot — see live_pe/derived_payout.
   const fs = fscore?.tickers?.[sym]?.metrics || {};
-  const today0 = new Date().toISOString().slice(0, 10);
+  const today0 = todayPKT();
   const nextOfType = t => (cal?.events || [])
     .filter(e => e.ticker === sym && e.type === t && e.date >= today0)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
@@ -5127,7 +5133,7 @@ async function askRun(qtext) {
       `<p class="ans-news"><span class="tag">${n.impact ?? "?"}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || n.summary || "")}</p>`).join("")}
       <p class="sub">The desk logs news but does not assert causation between a headline and a day's move — that link is usually assumed, rarely proven.</p></div>`);
     else line("On the wire", `Nothing tagged to ${s} in the desk's recent news log. A move without news is common, and "no reason found" is a more honest answer than an invented one.`);
-    const upcoming = (cal?.events || []).filter(e => e.ticker === s && e.date >= new Date().toISOString().slice(0, 10)).slice(0, 2);
+    const upcoming = (cal?.events || []).filter(e => e.ticker === s && e.date >= todayPKT()).slice(0, 2);
     if (upcoming.length) line("Ahead", upcoming.map(e => `${esc(e.type.replace(/_/g, " "))} on <b>${esc(e.date)}</b>`).join(", ") + ". Results dates gap prices — a stop does not protect you across a gap.");
   }
   // ---- intent: valuation ----

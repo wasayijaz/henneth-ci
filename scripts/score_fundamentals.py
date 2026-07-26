@@ -62,7 +62,12 @@ def main():
         return num(v.get("payout_ratio"))
 
     # universe distributions for relative ratings
-    pes = [num(v.get("pe")) for v in fund.values()]
+    # live_pe, NOT the scraped v["pe"] — the per-ticker value ranked against this array is
+    # live-derived (see live_pe below), so building the peer set from the vendor's weekly
+    # scrape-time ratio ranks a today-priced number against a stale-priced comparison set.
+    # They agree right after a fundamentals refresh and drift apart all week, so a market-wide
+    # move would skew every name's cheap/fair/expensive verdict in the same direction.
+    pes = [live_pe(v, s) for s, v in fund.items()]
     ylds = [num(v.get("div_yield")) for v in fund.values()]
     margins = []
     for v in fund.values():
