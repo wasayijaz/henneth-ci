@@ -39,6 +39,66 @@ which file changed.
 
 ---
 
+## 2026-07-26 — v2026.07.26.2 — Stale calendar dates, a misleading confidence label, and the fair-value spread
+
+<!--public
+Six fixes from the backlog:
+
+A ticker's "next earnings" date could show one that had already passed, if the calendar had a
+stale entry ahead of the real one. It now only ever shows the nearest date that hasn't happened yet.
+
+The P/E ratio and dividend payout percentage are now derived from today's live price, not whatever
+price was on the page the last time the underlying data was scraped — the two can disagree, and
+the live-price version is the one that's actually current.
+
+A signal's "confidence" label now requires enough closed trades behind it, not just a good score.
+Ten trades can't earn "high confidence" regardless of how good they looked.
+
+The fair-value card no longer hides disagreement between its four valuation methods behind one
+composite number — it now shows the full spread, so "undervalued by 20%" and "the four methods
+range from Rs 381 to Rs 1,542" are both visible at once.
+
+A new "Shipped" page lists every completed item from this backlog, so it's visible on the site
+and not just in this file.
+-->
+
+### Earnings/ex-div date filter (item 3)
+
+`dashboard/app.js` `pageTicker()` — `nextEarn`/`nextXdiv` used a bare `.find()` over
+`earnings_calendar.json` events with no date check and no sort: the first matching event in the
+array won even if it was in the past, or a later one existed earlier in the array. Replaced with a
+`nextOfType(t)` helper that filters to `date >= today` and sorts ascending, taking the earliest.
+Two commits: the first (`72824af`) shipped everything else in this entry but the actual filter was
+missed; caught in review and fixed in `6fc72c2`.
+
+### Live-price P/E and derived payout ratio (items 6, 8)
+
+`scripts/score_fundamentals.py` — added `live_pe(v, sym)` and `derived_payout(v)`. Both prefer
+`state/live.json`'s current price combined with EPS/yield from `fundamentals.json`, falling back to
+the vendor's own scraped ratio only when a live price or EPS/yield isn't available. Output
+(`state/fundamental_scores.json`) is read by the ticker page in preference to the raw scrape.
+
+### Sample-gated confidence (item 4)
+
+`scripts/build_signals.py` — `confidence` now requires `p["n"] >= 30` for "high" and `p["n"] >= 15`
+for "medium", on top of the existing score thresholds. `min_trades` (8) stays the bare eligibility
+floor for a strategy to be considered at all; it was never meant to double as the bar for calling
+something highly confident.
+
+### Fair-value method spread (item 7)
+
+`dashboard/app.js` value screener + ticker fair-value card — now render the four methods' individual
+values (peer P/E, earnings-power, Graham, DDM) alongside the median, so a wide split between them
+(one stock ranged Rs 381–Rs 1,542) is visible instead of collapsed into a single "undervalued by X%"
+number.
+
+### Recently shipped page (item 5)
+
+`dashboard/app.js` — new `pageShipped()`, reusing `state/changelog.json` (same source as the
+"What's new" modal, but rendering every cached release as a card instead of capping at 5).
+Registered in `PAGES` and added to `OPEN_ROUTES` (signed-out visible, same as `glossary`/`legal`).
+`dashboard/index.html` — "Shipped" link added to the `.side-legal` sidebar block.
+
 ## 2026-07-26 — v2026.07.26 — Tiles everywhere, the sector debate rebuilt, and an astro reading worth reading
 
 <!--public

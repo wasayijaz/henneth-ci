@@ -1,8 +1,21 @@
 {
- "updated": "2026-07-26 01:05",
- "current": "2026.07.26",
+ "updated": "2026-07-26 12:46",
+ "current": "2026.07.26.2",
  "note": "Public release notes only. The engineering record is CHANGELOG.md and is not published.",
  "releases": [
+  {
+   "date": "2026-07-26",
+   "version": "2026.07.26.2",
+   "title": "Stale calendar dates, a misleading confidence label, and the fair-value spread",
+   "notes": [
+    "Six fixes from the backlog:",
+    "A ticker's \"next earnings\" date could show one that had already passed, if the calendar had a stale entry ahead of the real one. It now only ever shows the nearest date that hasn't happened yet.",
+    "The P/E ratio and dividend payout percentage are now derived from today's live price, not whatever price was on the page the last time the underlying data was scraped — the two can disagree, and the live-price version is the one that's actually current.",
+    "A signal's \"confidence\" label now requires enough closed trades behind it, not just a good score. Ten trades can't earn \"high confidence\" regardless of how good they looked.",
+    "The fair-value card no longer hides disagreement between its four valuation methods behind one composite number — it now shows the full spread, so \"undervalued by 20%\" and \"the four methods range from Rs 381 to Rs 1,542\" are both visible at once.",
+    "A new \"Shipped\" page lists every completed item from this backlog, so it's visible on the site and not just in this file."
+   ]
+  },
   {
    "date": "2026-07-26",
    "version": "2026.07.26",

@@ -72,7 +72,9 @@ semver because releases here are date-driven, and because the version should ans
 reader actually has (*how current is my desk?*), which `v1.14.2` does not.
 
 The terminal shows the current version at the foot of the sidebar, with a dot when it has moved
-since that browser last acknowledged one. Clicking it opens **What's new**.
+since that browser last acknowledged one. Clicking it opens **What's new**. The same release history
+also lives at all times on **`#/shipped`** (linked from the sidebar, open to signed-out visitors) —
+so a completed backlog item is visible on the site itself, not only in this repo.
 
 Those notes come from `<!--public ... -->` blocks inside [`CHANGELOG.md`](CHANGELOG.md), extracted by
 `scripts/build_changelog.py` into `state/changelog.json`. **CHANGELOG.md itself is the engineering
