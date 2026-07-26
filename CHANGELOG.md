@@ -99,7 +99,43 @@ number.
 Registered in `PAGES` and added to `OPEN_ROUTES` (signed-out visible, same as `glossary`/`legal`).
 `dashboard/index.html` — "Shipped" link added to the `.side-legal` sidebar block.
 
-## 2026-07-26 — v2026.07.26 — Tiles everywhere, the sector debate rebuilt, and an astro reading worth reading
+## 2026-07-26 — v2026.07.26.3 — Astro calc audit: dignity scoring, a consistent conjunction orb
+
+<!--public
+Your Chart's resonance scores (the stock and commodity matches) now read exaltation and
+debilitation, not just whether a planet sits in its own sign. A planet in its strongest placement
+lifts a match; in its weakest, it pulls the score down.
+
+The "crossing your natal X today" flag now uses the same 2.5-degree closeness on both stock charts
+and personal charts — one consistent standard for what counts as a conjunction, everywhere it's
+shown.
+-->
+
+### Dignity scoring in `resonanceWithGraha` (audit item)
+
+`dashboard/app.js` — was own-sign only. Added exaltation (+12, overrides the own-sign +8) and
+debilitation (-10) against `state/astro_map.json`'s `grahas.<name>.exalted`/`debilitated`. Rahu and
+Ketu have both fields null there (the data itself flags their dignity as disputed) — the code skips
+the claim for them rather than guessing. Threaded `amap` through as a 4th param, matching the
+existing pattern (`gocharaRead`, `dashaTimeline`, `synastry`, `stockTiming` all take it explicitly,
+never a module global); updated both call sites (`synastry`'s chartless-stock fallback, the
+commodities grid on `/mychart`). Verified live: a synthetic exalted-Sun chart scored 48 with an
+"exalted" reason, debilitated-Sun scored 26 with "debilitated", Rahu scored 50 with no dignity
+claim attached.
+
+### Conjunction-orb standardized (audit item)
+
+Three separate orb checks exist in the codebase asking two different questions. `astro_engine.py`'s
+`find_events()` (1.0°) detects the single day two transiting bodies pass closest to each other —
+a genuinely different question, left as-is and commented so it isn't "fixed" into alignment later.
+`astro_natal.py`'s `transits_to_natal()` (was 3.0°) and `app.js`'s `gocharaRead()` (already 2.5°)
+both ask "is anything conjunct this natal point today" and had drifted apart. Tightened the Python
+side to 2.5° to match — tighter orb, harder to claim a false hit, and it matches what was already
+live on the JS side. `transits_to_natal` feeds the "transiting X conjunct natal Y" line on the stock
+chart page (`app.js:1633`), so this is a real, live scoring change, not internal-only.
+`state/astro_natal.json` regenerated.
+
+
 
 <!--public
 Long lists no longer bury what is under them. Every dense section — the universe, macro, news,

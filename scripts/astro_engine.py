@@ -245,7 +245,10 @@ def find_events(start: Epoch, days: int) -> list:
                         "text": f"{b} stations {direction} in {SIGNS[sign_of(sidereal(b, Epoch(jc)))]}",
                     })
 
-    # --- conjunctions: closest approach within 1 degree (Sun-Moon is covered by the phases below)
+    # --- conjunctions: closest approach within 1 degree (Sun-Moon is covered by the phases below).
+    # Tighter than, and answering a different question from, transits_to_natal()'s 2.5 deg (that one
+    # asks "near a natal point today"; this one logs the single exact-minimum day two transiting
+    # bodies pass each other) — deliberately not the same orb, do not "align" them.
     pairs = [(a, b) for i, a in enumerate(BODIES) for b in BODIES[i + 1:]
              if not (a == "Sun" and b == "Moon") and not (a == "Rahu" and b == "Ketu")]
     for a, b in pairs:

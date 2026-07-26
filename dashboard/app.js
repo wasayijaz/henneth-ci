@@ -1146,6 +1146,9 @@ function gocharaRead(nc, sky, amap) {
     // everything else non-favourable is simply neutral — gochara is weather, not doom.
     const tag = fav ? "favourable" : (g === "Saturn" && [12, 1, 2, 8].includes(house)) ? "testing" : "neutral";
     let conj = null;
+    // 2.5deg orb matches scripts/astro_natal.py's transits_to_natal() on purpose — same question
+    // ("is anything conjunct this natal point today"), same answer, whether the chart is a person's
+    // or a company's.
     for (const ng of NEPH_BODIES) {
       const d = Math.abs(((t.lon - nc.grahas[ng].lon + 540) % 360) - 180);
       if (d <= 2.5) { conj = ng; break; }
@@ -1300,7 +1303,7 @@ const COMMODITIES = [
 ];
 /* Resonance of the user's chart with a single ruling graha — the shared core behind both the
    chartless-stock and commodity readings. Returns a 0-100 score + explained reasons. */
-function resonanceWithGraha(user, target, label) {
+function resonanceWithGraha(user, target, label, amap) {
   if (!target) return { score: null, reasons: [] };
   const uMoon = user.grahas.Moon, uLord = SIGN_LORD[Math.floor((uMoon.lon % 360) / 30) % 12];
   const uDasha = user.dasha?.current?.lord, uAntar = user.dasha?.current?.antar;
@@ -1314,6 +1317,12 @@ function resonanceWithGraha(user, target, label) {
   if (uAntar === target) { score += 10; reasons.push({ k: "And your sub-period", v: `${uAntar} antardasha`, why: `Your running sub-period is ${uAntar}'s too — a sharper, nearer window.`, w: 1 }); }
   const ug = user.grahas[target];
   if (ug && SIGN_LORD[Math.floor((ug.lon % 360) / 30) % 12] === target) { score += 8; reasons.push({ k: `Your ${target}`, v: "strong", why: `${target} sits in its own sign ${ug.sign} in your chart — a dignified placement.`, w: 1 }); }
+  else if (ug && amap) {
+    // Rahu/Ketu carry no agreed exaltation/debilitation in astro_map.json (dispute noted there) — both fields null, so no claim is made for them here.
+    const gd = amap.grahas?.[target] || {};
+    if (gd.exalted?.sign && ug.sign === gd.exalted.sign) { score += 12; reasons.push({ k: `Your ${target}`, v: "exalted", why: `${target} sits in ${ug.sign} in your chart — its sign of exaltation, the strongest placement it can take.`, w: 1 }); }
+    else if (gd.debilitated?.sign && ug.sign === gd.debilitated.sign) { score -= 10; reasons.push({ k: `Your ${target}`, v: "debilitated", why: `${target} sits in ${ug.sign} in your chart — its sign of debilitation, a weak placement.`, w: -1 }); }
+  }
   score = Math.max(2, Math.min(98, Math.round(score)));
   const verdict = score >= 68 ? "harmonious" : score >= 55 ? "favourable" : score >= 45 ? "neutral" : score >= 32 ? "testing" : "discordant";
   return { score, verdict, reasons };
@@ -1369,20 +1378,13 @@ function synastry(user, stock, sector, amap, astroNow) {
       reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `You are in a ${uDasha} period; the stock's Moon-lord ${sLord} is ${dfr === "same" ? "the very same" : "traditionally its " + dfr}.`, w: dw });
     }
   } else {
-    // no stock chart (listed pre-2000) — read against the sector's significator graha
+    // no stock chart (listed pre-2000) — read against the sector's significator graha, same
+    // technique the commodities lens uses, so a chartless name gets the same resonance dimensions
+    // (including the antardasha check) rather than a hand-rolled duplicate missing one.
     const sig = sector ? (amap?.sector_significators?.[sector] || {}) : {};
     const prim = sig.primary;
     if (!prim) return { score: null, verdict: "no reading", reasons: [] };
-    const fr = friendship(uLordUser, prim);
-    const fw = fr === "friend" || fr === "same" ? 1 : fr === "enemy" ? -1 : 0;
-    score += fw * 14;
-    reasons.push({ k: `You & ${prim}`, v: fr, why: `${sector} answers to ${prim}. Your Moon-lord ${uLordUser} is ${fr === "same" ? "that same planet" : "traditionally its " + fr}.`, w: fw });
-    // running the significator's own dasha is the strongest resonance a chartless name can offer
-    if (uDasha === prim) { score += 18; reasons.push({ k: "You're in its period", v: `${prim} dasha`, why: `You are running a ${prim} period — and ${prim} is exactly what tradition ties ${sector} to.`, w: 1 }); }
-    else if (uDasha) { const dfr = friendship(uDasha, prim); const dw = dfr === "friend" ? 1 : dfr === "enemy" ? -1 : 0; score += dw * 8; reasons.push({ k: "Your current period", v: `${uDasha} dasha`, why: `Your ${uDasha} period is ${dfr} to ${sector}'s ${prim}.`, w: dw }); }
-    // is the significator well-placed in YOUR chart?
-    const ug = user.grahas[prim];
-    if (ug) { const own = SIGN_LORD[ug.sign_i] === prim; if (own) { score += 8; reasons.push({ k: `Your ${prim}`, v: "strong", why: `${prim} sits in its own sign ${ug.sign} in your chart — a dignified placement.`, w: 1 }); } }
+    return resonanceWithGraha(user, prim, sector, amap);
   }
   score = Math.max(2, Math.min(98, Math.round(score)));
   const verdict = score >= 68 ? "harmonious" : score >= 55 ? "favourable" : score >= 45 ? "neutral" : score >= 32 ? "testing" : "discordant";
@@ -2099,8 +2101,10 @@ async function renderBirthCast(ov) {
   const d = _bw.data;
   // compute the chart UP FRONT (it's fast, <100ms) so the success reveal has real values to show
   // and myProfile is set the instant the loader lands — the loader is theatre over ready data.
-  const cast = await computeNatal(d);
+  const [cast, uniQuick] = await Promise.all([computeNatal(d), j("universe.json")]);
   const castErr = cast.error || null;
+  // live count, not a hardcoded figure that silently goes stale as the universe grows
+  const psxCount = Object.values(uniQuick?.symbols || {}).filter(m => ((m || {}).market ?? "PSX") === "PSX").length;
   if (!castErr) {
     const rec = { birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } };
     if (me) { myProfile = { ...(myProfile || {}), ...rec }; saveProfile(rec); }  // persist in background
@@ -2110,7 +2114,7 @@ async function renderBirthCast(ov) {
     `Placing the nine grahas — sidereal, Lahiri ayanamsa`,
     d.time_known === false ? `Reading your Moon and its nakshatra` : `Rising sign from ${esc(d.place)} at ${esc(d.time)}`,
     `Balancing your Vimshottari dasha from the Moon's nakshatra`,
-    `Reading all ${103} PSX charts against yours — Tara, friendship, dasha`,
+    `Reading all ${psxCount} PSX charts against yours — Tara, friendship, dasha`,
     `Ranking the market by resonance with your chart`,
   ];
   runRevealModal({
@@ -2130,11 +2134,11 @@ async function renderBirthCast(ov) {
       bodyEl.innerHTML = `<div class="rp-reveal cast-done">
         <div class="cast-tick">✓</div>
         <h2 class="cast-h">Your chart is cast, and the market is matched.</h2>
-        <p class="cast-p">The desk placed your nine grahas${moon ? `, found your Moon in <b>${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>` : ""}${cur ? `, balanced your <b>${esc(cur.lord)}</b> period` : ""}, and read all 104 PSX names against your stars.</p>
+        <p class="cast-p">The desk placed your nine grahas${moon ? `, found your Moon in <b>${esc(moon.sign)} · ${esc(moon.nakshatra)}</b>` : ""}${cur ? `, balanced your <b>${esc(cur.lord)}</b> period` : ""}, and read all ${psxCount} PSX names against your stars.</p>
         <div class="cast-stats">
           <div><span>${moon ? esc(moon.sign) : "—"}</span><i>your Moon sign</i></div>
           <div><span>${cur ? esc(cur.lord) : "—"}</span><i>your current period</i></div>
-          <div><span>104</span><i>names matched</i></div>
+          <div><span>${psxCount}</span><i>names matched</i></div>
         </div>
         <button class="bw-go cast-go" onclick="this.closest('.replay-overlay').querySelector('.replay-x').click()">See my reading →</button>
         <p class="cast-note">Astrological exploration, not advice. ${me
@@ -2186,7 +2190,7 @@ async function pageMyChart() {
   const moon = nc.grahas.Moon, asc = nc.ascendant;
   const gl = goalLens();
   // commodities, scored against the chart the same way chartless stocks are
-  const comm = COMMODITIES.map(c => ({ ...c, ...resonanceWithGraha(nc, c.sig, c.name) }))
+  const comm = COMMODITIES.map(c => ({ ...c, ...resonanceWithGraha(nc, c.sig, c.name, amap) }))
     .filter(c => c.score != null).sort((a, b) => b.score - a.score);
 
   // The wall lands where desire peaks: a guest reads their real chart and their strongest few

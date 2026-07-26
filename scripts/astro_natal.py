@@ -148,13 +148,19 @@ def upcoming_changes(seq, today: dt.date, n: int = 3) -> list:
 
 
 def transits_to_natal(natal: dict, now_pos: dict) -> list:
-    """What the sky is doing TO this chart right now. Conjunction within 3 degrees only — the
-    tighter the orb the harder it is to claim a hit after the fact."""
+    """What the sky is doing TO this chart right now. Conjunction within 2.5 degrees only — the
+    tighter the orb the harder it is to claim a hit after the fact. Same orb as dashboard/app.js's
+    gocharaRead() (the personal-chart equivalent of this check) — kept equal on purpose so a
+    company chart and a person's chart don't disagree on what counts as "conjunct" for no reason.
+    Not the same question as astro_engine.py's find_events() conjunctions (1.0 deg): that one logs
+    the single exact-minimum day two transiting bodies pass each other, this one asks "is anything
+    near this natal point right now" on any given day — different questions, deliberately different
+    orbs."""
     out = []
     for t, tp in now_pos.items():
         for n, np_ in natal.items():
             sep = abs((tp["lon"] - np_["lon"] + 180) % 360 - 180)
-            if sep <= 3.0:
+            if sep <= 2.5:
                 out.append({"transiting": t, "over_natal": n, "orb_deg": round(sep, 2),
                             "sign": tp["sign"],
                             "text": f"transiting {t} is conjunct natal {n} ({round(sep, 2)}° orb)"})
