@@ -1,7 +1,7 @@
 {
   "note": "Token budget + cadence guardrails for the Desk Room loop. The daily/hourly tasks and room_queue.py read this. Raising limits raises cost linearly.",
-  "deep_dives_per_day": 14,
-  "_deep_dives_note": "Raised 6 -> 14 for the COVERAGE CATCH-UP sprint (2026-07-19), not as a new run rate. ~90 signal-eligible names had never been through the Room; at 6/day that was 15 days. Note the old value was ALREADY incoherent: 6/day x 22k x 30 = 3.96M against a 3M ceiling, i.e. the breaker would have tripped mid-month. Both numbers are now set together. Once catch-up completes this should drop back to ~5 — after first coverage the gate mostly REAFFIRMS (free) and only material change triggers a full debate, so steady-state spend is far below the cap.",
+  "deep_dives_per_day": 3,
+  "_deep_dives_note": "Cut 14 -> 3 on 2026-07-27 (token burn too high). Catch-up sprint (started 2026-07-19) is partial — 44/97 signal-eligible names covered, 53 remain; at 3/day that's ~18 more days. Owner can raise again for a catch-up push if wanted. Steady-state (post full coverage) should sit well under this since the gate mostly REAFFIRMS free.",
   "max_escalations_per_day": 2,
   "reaffirm_if_dossier_unchanged": true,
   "models": {
@@ -14,8 +14,8 @@
   },
   "est_tokens_per_deep_dive": 22000,
   "circuit_breaker": {
-    "monthly_token_ceiling": 6000000,
-    "_ceiling_note": "Raised 3M -> 6M to cover the one-off catch-up (90 names x ~22k = ~2M) plus normal agent traffic, WITHOUT the breaker tripping mid-sprint. Raising deep_dives_per_day alone would just have hit the wall sooner — the two numbers only mean something together. Revisit down toward 3M once coverage is complete and most days are reaffirms.",
+    "monthly_token_ceiling": 3000000,
+    "_ceiling_note": "Cut 6M -> 3M alongside the deep_dives_per_day cut to 3 (2026-07-27) — 3 x 22k x 30 = ~2M worst-case run rate, well under 3M. Revisit once the remaining 53 uncovered names clear and most days are reaffirms.",
     "on_breach": "pause_queue_monitoring_continues"
   },
   "spend_ledger": {

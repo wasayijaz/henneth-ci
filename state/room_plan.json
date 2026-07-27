@@ -1,11 +1,8 @@
 {
  "reaffirm": [
   "FFC",
-  "UBL",
-  "HUBC",
   "OGDC",
   "MARI",
-  "PPL",
   "EFERT",
   "POL",
   "BAFL",
@@ -13,24 +10,55 @@
   "FABL",
   "MTL",
   "PTC",
+  "SAZEW",
   "ATRL",
-  "SNGP",
   "PAEL",
   "KEL",
-  "AIRLINK",
-  "CNERGY",
-  "PIOC",
-  "FFL",
   "SSGC",
-  "HCAR",
-  "PRL",
   "NRL",
   "JSML"
  ],
- "delta": [],
+ "delta": [
+  {
+   "symbol": "UBL",
+   "why": "price moved 5.7% since last Room"
+  },
+  {
+   "symbol": "PPL",
+   "why": "price moved 5.6% since last Room"
+  },
+  {
+   "symbol": "SNGP",
+   "why": "price moved 5.3% since last Room"
+  },
+  {
+   "symbol": "AIRLINK",
+   "why": "price moved 4.9% since last Room"
+  },
+  {
+   "symbol": "CNERGY",
+   "why": "price moved 6.5% since last Room"
+  },
+  {
+   "symbol": "PIOC",
+   "why": "price moved 4.6% since last Room"
+  },
+  {
+   "symbol": "HCAR",
+   "why": "price moved 5.8% since last Room"
+  },
+  {
+   "symbol": "PRL",
+   "why": "price moved 5.7% since last Room"
+  }
+ ],
  "full": [
   {
    "symbol": "MLCF",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "FFL",
    "why": "material change since last Room"
   },
   {
@@ -50,8 +78,8 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "FCL",
-   "why": "never covered"
+   "symbol": "ENGROH",
+   "why": "material change since last Room"
   },
   {
    "symbol": "HBL",
@@ -62,19 +90,11 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "ENGROH",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "MEBL",
    "why": "material change since last Room"
   },
   {
    "symbol": "LUCK",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "SAZEW",
    "why": "material change since last Room"
   },
   {
@@ -194,6 +214,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "FCL",
+   "why": "never covered"
+  },
+  {
    "symbol": "NETSOL",
    "why": "never covered"
   },
@@ -308,28 +332,31 @@
   {
    "symbol": "GAL",
    "why": "material change since last Room"
+  },
+  {
+   "symbol": "HUBC",
+   "why": "material change since last Room"
   }
  ],
  "_meta": {
-  "built": "2026-07-27 11:03",
-  "full_budget": 14,
+  "built": "2026-07-27 17:39",
+  "full_budget": 3,
   "run_full_now": [
    "MLCF",
-   "AKBL",
+   "FFL",
+   "AKBL"
+  ],
+  "deferred_full": [
    "EPCL",
    "CSAP",
    "TBL",
-   "FCL",
+   "ENGROH",
    "HBL",
    "SYS",
-   "ENGROH",
    "MEBL",
    "LUCK",
-   "SAZEW",
    "FATIMA",
-   "FCCL"
-  ],
-  "deferred_full": [
+   "FCCL",
    "SRVI",
    "BOP",
    "CHCC",
@@ -357,6 +384,7 @@
    "SGF",
    "GCIL",
    "NCPL",
+   "FCL",
    "NETSOL",
    "UNITY",
    "ZAL",
@@ -385,15 +413,16 @@
    "PSX",
    "BAHL",
    "GHNI",
-   "GAL"
+   "GAL",
+   "HUBC"
   ],
   "counts": {
-   "full_due": 70,
-   "full_now": 14,
-   "delta": 0,
-   "reaffirm": 26
+   "full_due": 71,
+   "full_now": 3,
+   "delta": 8,
+   "reaffirm": 17
   },
-  "est_tokens_today": 308000,
+  "est_tokens_today": 106000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
