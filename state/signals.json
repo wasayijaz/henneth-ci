@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-27 13:02",
+ "updated": "2026-07-27 11:04",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -39,24 +39,6 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260727-LUCK-ema50_defended",
-   "ticker": "LUCK",
-   "strategy": "ema50_defended",
-   "template": "50-day EMA defended",
-   "category": "trend",
-   "sector": "Cement",
-   "hold_sessions": 15,
-   "backtest": {
-    "hit_rate": 0.625,
-    "net_expectancy_pct": 1.46,
-    "n": 64,
-    "oos_hit": 0.526
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "50-day EMA defended is triggering now; on LUCK's own history it won 62% over 64 trades (+1.5% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260727-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -73,7 +55,25 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260727-FCL-obv_divergence_up",
+   "ticker": "FCL",
+   "strategy": "obv_divergence_up",
+   "template": "Volume leads price",
+   "category": "volume",
+   "sector": "Cable & Electrical Goods",
+   "hold_sessions": 15,
+   "backtest": {
+    "hit_rate": 0.556,
+    "net_expectancy_pct": 0.68,
+    "n": 27,
+    "oos_hit": 0.625
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 8
+ "n_candidates": 6
 }
