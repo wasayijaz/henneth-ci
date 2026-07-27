@@ -1,13 +1,13 @@
 {
- "updated": "2026-07-25 12:03",
+ "updated": "2026-07-27 06:55",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 61,
-  "band": "moderate"
+  "score": 65,
+  "band": "elevated"
  },
  "signals": [
   {
-   "id": "20260725-BML-obv_divergence_up",
+   "id": "20260727-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260725-TPLT-donchian55_break",
+   "id": "20260727-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -38,12 +38,12 @@
     "n": 13,
     "oos_hit": 0.75
    },
-   "confidence": "high",
+   "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260725-LUCK-ema50_defended",
+   "id": "20260727-LUCK-ema50_defended",
    "ticker": "LUCK",
    "strategy": "ema50_defended",
    "template": "50-day EMA defended",
@@ -61,7 +61,7 @@
    "thesis": "50-day EMA defended is triggering now; on LUCK's own history it won 62% over 64 trades (+1.5% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260725-NICL-roc60_leader_pullback",
+   "id": "20260727-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -91,7 +91,7 @@
   },
   {
    "ticker": "FFC",
-   "score": 66.5
+   "score": 66.3
   },
   {
    "ticker": "INDU",
@@ -124,6 +124,11 @@
  ],
  "movers_up": [
   {
+   "ticker": "USVIX",
+   "ret_1d": 12.38,
+   "close": 18.7
+  },
+  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -142,11 +147,6 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
-  },
-  {
-   "ticker": "ASIC",
-   "ret_1d": 9.99,
-   "close": 34.45
   }
  ],
  "movers_down": [
@@ -177,17 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-07-22",
-   "source": "Mettis Global",
-   "headline": "PKR closes firmer against USD",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 1,
-   "summary": "Rupee closed at Rs277.91/USD Wednesday, appreciating 0.71 paisa from Tuesday's Rs277.92 close; intraday range Rs277.95 (high) to Rs277.90 (low), extending its stability in the interbank market.",
-   "url": "https://mettisglobal.news/PKR-closes-firmer-against-USD-62053"
-  },
   {
    "ts": "2026-07-23",
    "source": "Bloomberg / TradingEconomics / CNBC / Prokerala",
@@ -369,6 +358,30 @@
    "impact": 3,
    "summary": "HBL's DPS company announcements page shows a board-meeting notice dated Jul 23, 2026 titled 'Announcement of Financial Results for the Half Year ended June 30, 2026'; no profit, EPS or dividend figures disclosed on the source page reviewed, and no confirmed H1 2026 results narrative was located in follow-up news searches this cycle (Q1 2026, for reference, had shown consolidated PAT of Rs16.15bn / EPS Rs11.00 with a Rs6/share interim dividend, per prior reporting outside this newslog's window). Logged as impact 3 (notable, results-date notice) per desk scale for a core-tier bank at ~3.52% index weight; actual H1 figures and any new dividend rate to be confirmed in a follow-up cycle.",
    "url": "https://dps.psx.com.pk/company/HBL"
+  },
+  {
+   "ts": "2026-07-25",
+   "source": "Business Recorder / Express Tribune",
+   "headline": "Volatility at PSX, KSE-100 closes week lower",
+   "tickers": [
+    "MACRO",
+    "UBL",
+    "NBP",
+    "SYS",
+    "HBL",
+    "FFC",
+    "AICL",
+    "TRG",
+    "MEBL",
+    "CNERGY"
+   ],
+   "impact": 3,
+   "summary": "Weekend wrap-up adding new detail to Friday's confirmed close already logged this cycle (KSE-100 171,021.20, -718.24/-718.25 pts, -0.42%): Business Recorder reports the session swung from an intraday low of 169,512.88 to a high of 172,718.66 before late profit-taking eroded the rally; index-heavy losers UBL, NBP, Systems Limited (SYS), HBL and FFC cumulatively cut about 436 points from the index. On a weekly basis the KSE-100 declined 2.7% (Business Recorder) / 2.72% (Express Tribune) WoW, attributed to 'continued escalation in tensions between the US and Iran' pushing crude oil prices higher and dampening investor sentiment. Express Tribune's read of the same Friday session adds breadth not previously logged (186 advancing, 270 declining, 36 unchanged) and stock-level detail: top gainers Adamjee Insurance (AICL) +6.38%, TRG Pakistan (TRG) +3.66%, Meezan Bank (MEBL) +0.3%; top losers NBP -2.18%, Systems Limited (SYS) -1.66%, UBL -1.2%; volume leader Cnergyico Pk (CNERGY) at 59.33m shares. Arif Habib Limited (AHL) quoted: the index 'has now fallen 10% from its July peak and is once again testing its 200-day moving average' - a bearish technical read not previously captured. Brent crude cited around $100/bbl on the same US-Iran/Red Sea escalation already logged this cycle; both outlets note markets are now looking ahead to the SBP's Monetary Policy Committee decision due July 27, 2026, widely expected (per the Topline Securities poll already logged) to hold the policy rate at 11.5% given the geopolitical and oil-price backdrop. No new price level beyond the already-logged 171,021.20 confirmed close; logged as impact 3 for the weekly-decline framing and the new AHL technical caution (200-day moving average test), which had not been captured in the prior daily-close entry.",
+   "url": "https://www.brecorder.com/news/40431593/volatility-at-psx-kse-100-closes-week-lower",
+   "headline_ur": "PSX میں اتار چڑھاؤ، KSE-100 ہفتہ نچلی سطح پر بند ہوا",
+   "headline_ur_hash": "36a59399cfac",
+   "summary_ur": "جمعہ کے پہلے سے درج تصدیق شدہ کلوز (KSE-100 171,021.20، -718.24/-718.25 پوائنٹس، -0.42%) میں نئی تفصیل شامل کرنے والا ویک اینڈ خلاصہ: بزنس ریکارڈر کے مطابق سیشن انٹرا ڈے کم ترین سطح 169,512.88 سے بلند ترین سطح 172,718.66 تک گیا، مگر آخر میں منافع کی وصولی نے ریلی کو کمزور کر دیا؛ انڈیکس کے بڑے حصص میں نقصان اٹھانے والے UBL، NBP، Systems Limited (SYS)، HBL اور FFC نے مجموعی طور پر انڈیکس سے تقریباً 436 پوائنٹس کم کیے۔ ہفتہ وار بنیاد پر KSE-100 میں 2.7% (بزنس ریکارڈر) / 2.72% (ایکسپریس ٹریبیون) کی کمی ہوئی، جس کی وجہ 'امریکہ اور ایران کے درمیان کشیدگی میں مسلسل اضافہ' بتائی گئی جس نے خام تیل کی قیمتیں بڑھائیں اور سرمایہ کاروں کے جذبات کو متاثر کیا۔ ایکسپریس ٹریبیون کی اسی جمعہ سیشن کی رپورٹ نے پہلے درج نہ کی گئی بریڈتھ شامل کی (186 بڑھنے والے، 270 گرنے والے، 36 غیر تبدیل شدہ) اور اسٹاک کی سطح کی تفصیل: سب سے زیادہ فائدہ اٹھانے والے Adamjee Insurance (AICL) +6.38%، TRG Pakistan (TRG) +3.66%، Meezan Bank (MEBL) +0.3%؛ سب سے زیادہ نقصان اٹھانے والے NBP -2.18%، Systems Limited (SYS) -1.66%، UBL -1.2%؛ حجم میں سب سے آگے Cnergyico Pk (CNERGY) 59.33m شیئرز کے ساتھ۔ Arif Habib Limited (AHL) کا حوالہ: انڈیکس 'اپنی جولائی کی چوٹی سے اب تک 10% گر چکا ہے اور ایک بار پھر اپنی 200-دن کی موونگ ایوریج کو ٹیسٹ کر رہا ہے' — ایک مندی کا تکنیکی نکتہ جو پہلے درج نہیں کیا گیا تھا۔ برینٹ کروڈ کا حوالہ اسی امریکہ-ایران/بحیرہ احمر کی کشیدگی کے تناظر میں تقریباً $100/bbl دیا گیا جو اس سائیکل میں پہلے ہی درج ہو چکا ہے؛ دونوں ادارے نوٹ کرتے ہیں کہ مارکیٹس اب SBP کی مانیٹری پالیسی کمیٹی کے 27 جولائی 2026 کو متوقع فیصلے کی جانب دیکھ رہی ہیں، جس کے بارے میں (پہلے سے درج Topline Securities سروے کے مطابق) وسیع پیمانے پر توقع ہے کہ جغرافیائی و سیاسی اور تیل کی قیمتوں کے پس منظر میں پالیسی ریٹ 11.5% پر برقرار رکھا جائے گا۔ پہلے سے درج 171,021.20 کے تصدیق شدہ کلوز کے علاوہ کوئی نئی قیمت کی سطح نہیں؛ ہفتہ وار کمی کے فریم ورک اور نئے AHL تکنیکی احتیاطی نکتے (200-دن موونگ ایوریج ٹیسٹ) کے لیے امپیکٹ 3 کے طور پر درج کیا گیا، جو پچھلی روزانہ کلوز کی انٹری میں شامل نہیں تھا۔",
+   "summary_ur_hash": "e8f0d523eb47"
   }
  ],
  "agent_wire": [],
