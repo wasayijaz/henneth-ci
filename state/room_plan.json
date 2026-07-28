@@ -3,15 +3,12 @@
   "FFC",
   "UBL",
   "ENGROH",
-  "OGDC",
   "PPL",
   "EFERT",
   "POL",
   "BAFL",
   "PSO",
   "MTL",
-  "ATRL",
-  "PTC",
   "SNGP",
   "PAEL",
   "KEL",
@@ -20,18 +17,32 @@
   "PIOC",
   "SSGC",
   "HCAR",
-  "PRL",
-  "NRL",
   "JSML"
  ],
  "delta": [],
  "full": [
+  {
+   "symbol": "PTC",
+   "why": "material change since last Room"
+  },
   {
    "symbol": "MEBL",
    "why": "material change since last Room"
   },
   {
    "symbol": "LUCK",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "ATRL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "PRL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "NRL",
    "why": "material change since last Room"
   },
   {
@@ -59,6 +70,14 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "GAL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "ITANZ",
+   "why": "never covered"
+  },
+  {
    "symbol": "SYS",
    "why": "material change since last Room"
   },
@@ -68,6 +87,10 @@
   },
   {
    "symbol": "SAZEW",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "OGDC",
    "why": "material change since last Room"
   },
   {
@@ -223,10 +246,6 @@
    "why": "never covered"
   },
   {
-   "symbol": "ITANZ",
-   "why": "never covered"
-  },
-  {
    "symbol": "LOADS",
    "why": "never covered"
   },
@@ -307,10 +326,6 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "GAL",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "HUBC",
    "why": "material change since last Room"
   },
@@ -320,22 +335,29 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-28 11:38",
+  "built": "2026-07-28 17:47",
   "full_budget": 3,
   "run_full_now": [
+   "PTC",
    "MEBL",
-   "LUCK",
-   "MLCF"
+   "LUCK"
   ],
   "deferred_full": [
+   "ATRL",
+   "PRL",
+   "NRL",
+   "MLCF",
    "HBL",
    "AKBL",
    "EPCL",
    "CSAP",
    "TBL",
+   "GAL",
+   "ITANZ",
    "SYS",
    "FFL",
    "SAZEW",
+   "OGDC",
    "FATIMA",
    "SRVI",
    "FCCL",
@@ -374,7 +396,6 @@
    "TPLP",
    "AGHA",
    "DCL",
-   "ITANZ",
    "LOADS",
    "TPL",
    "WTL",
@@ -395,15 +416,14 @@
    "BAHL",
    "GHNI",
    "FABL",
-   "GAL",
    "HUBC",
    "MARI"
   ],
   "counts": {
-   "full_due": 73,
+   "full_due": 78,
    "full_now": 3,
    "delta": 0,
-   "reaffirm": 23
+   "reaffirm": 18
   },
   "est_tokens_today": 66000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."

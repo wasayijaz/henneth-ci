@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-28 11:39",
+ "updated": "2026-07-28 17:54",
  "regime": "neutral",
  "geo_risk": {
   "score": 63,
@@ -43,24 +43,6 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260728-ENGROH-rsi_reclaim_50",
-   "ticker": "ENGROH",
-   "strategy": "rsi_reclaim_50",
-   "template": "RSI reclaim 50",
-   "category": "oscillator",
-   "sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
-   "hold_sessions": 10,
-   "backtest": {
-    "hit_rate": 0.684,
-    "net_expectancy_pct": 1.82,
-    "n": 19,
-    "oos_hit": 0.625
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "RSI reclaim 50 is triggering now; on ENGROH's own history it won 68% over 19 trades (+1.8% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260728-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -77,6 +59,24 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260728-GAL-trend_momo_combo",
+   "ticker": "GAL",
+   "strategy": "trend_momo_combo",
+   "template": "Trend + momentum combo",
+   "category": "momentum",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 12,
+   "backtest": {
+    "hit_rate": 0.553,
+    "net_expectancy_pct": 1.16,
+    "n": 38,
+    "oos_hit": 0.6
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 55% over 38 trades (+1.2% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -124,9 +124,9 @@
  ],
  "movers_up": [
   {
-   "ticker": "HCAR",
+   "ticker": "AICL",
    "ret_1d": 10.0,
-   "close": 249.35
+   "close": 90.56
   },
   {
    "ticker": "BAFS",
@@ -177,92 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-07-23",
-   "source": "Express Tribune",
-   "headline": "PSX ends lower for third straight session - KSE-100 confirmed Thursday close down 2,690.48 points",
-   "tickers": [
-    "MACRO",
-    "UBL",
-    "ENGROH",
-    "FFC",
-    "LUCK",
-    "HUBC",
-    "AIRLINK",
-    "CNERGY",
-    "ATRL"
-   ],
-   "impact": 4,
-   "summary": "Confirmed close, from Wednesday's confirmed close of 174,429.92: KSE-100 'closed at 171,739.45, down 2,690.48 points, or 1.54%'; volume 525.12m shares, value traded Rs23.43bn. Express Tribune's article body states 91 stocks gained, 372 declined and 30 were unchanged; top gainers named Attock Refinery (ATRL) +1.73%, Air Link Communication (AIRLINK) +2.1%, Cnergyico Pk (CNERGY) +2.23%; top losers named United Bank (UBL) -2.73%, Fauji Fertiliser (FFC) -1.61%, Engro Holdings (ENGROH) -2.3%, plus Lucky Cement and Hubco cited elsewhere in wire coverage of the same session as among the day's biggest negative point-contributors (collectively with UBL, FFC and ENGROH subtracting about 1,101 points from the index per a companion WebSearch snippet on the same story, which separately cited a narrower '9 advancers vs 91 decliners' breadth figure for the KSE-100's own 100 constituents versus the 91/372/30 all-share breadth quoted in the full article - both breadth readings are reported here as found, unreconciled, pending a primary DPS check). Topline Securities quoted: 'bears remained firmly in control of the local bourse as intensifying geopolitical tensions continued to dampen investor sentiment.' Driver: Iran-backed Houthi militants' claimed attacks on Saudi oil tankers in the Red Sea (see the Brent-crude item already logged this cycle) and WTI crude surging to approximately $90/bbl. Third consecutive losing session; logged at impact 4 for the magnitude of the move (-1.54%) continuing the Middle East oil-driven risk-off pattern already flagged this cycle.",
-   "url": "https://tribune.com.pk/story/2619926/psx-ends-lower-for-third-straight-session"
-  },
-  {
-   "ts": "2026-07-24",
-   "source": "Express Tribune / Business Recorder / Bloomberg / NPR",
-   "headline": "Brent crude tops $100/bbl for first time since May, still up ~12-14.6% for the week amid Red Sea blockade fears",
-   "tickers": [
-    "MACRO",
-    "PSO",
-    "ATRL",
-    "NRL",
-    "PRL",
-    "MARI",
-    "OGDC",
-    "PPL",
-    "HUBC",
-    "SNGP",
-    "SSGC"
-   ],
-   "impact": 4,
-   "summary": "Brent settled above $100/bbl in Thursday's (Jul 23) session for the first time since May per Express Tribune; on Friday (Jul 24) Brent eased to $98.87/bbl, down $1.82 (-1.81%) on the day but still up 12% for the week, WTI at $90.59/bbl, down $1.60 (-1.74%) but up 9.7% for the week (Express Tribune, published Jul 24, 2026). A separate wire read cited by Business Recorder's headline ('Brent hovers above $100/bbl, set for weekly rise on Middle East escalation') and corroborated by Bloomberg had Brent advancing 37 cents (+0.37%) to $101.06/bbl, on course for a 14.6% weekly advance. Driver: Iran-aligned Houthi militants' claimed strikes on two Saudi oil tankers in the Red Sea, closure threats to the Bab el-Mandeb strait and a Houthi naval blockade threat against Saudi Arabia, plus Kazakhstan suspending crude exports via the Caspian Pipeline Consortium terminal after drone attacks. PVM Oil Associates analyst John Evans quoted (Express Tribune): 'Major hubs of oil production or supply routes are surrounded by war. The short-term outlook is bullish.' JPMorgan analysts projected 'each additional month of disruption to oil supply would add around $7 to $8 a barrel to Brent,' potentially reaching $114/barrel if disruptions extend three months. Fourth consecutive session of sharp oil-price escalation (following $90.19 on Jul20, $92.71 on Jul22, $96.65 on Jul23, now >$100 Jul23-24) on Houthi-claimed Saudi tanker strikes in the Red Sea, Bab el-Mandeb closure threats, and Kazakhstan CPC export suspension. JPMorgan flagged potential $114/bbl if disruption extends 3 months. Sharp commodity move per desk news-impact criteria (Rule 10), direct read-through for PSO, ATRL, NRL, PRL, MARI, OGDC, PPL, HUBC, SNGP, SSGC plus renewed inflation/import-bill/current-account pressure economy-wide; escalation flagged.",
-   "url": "https://tribune.com.pk/story/2619952/brent-hovers-above-100bbl-set-for-weekly-rise-on-middle-east-escalation"
-  },
-  {
-   "ts": "2026-07-24",
-   "source": "PSX Official Market Summary (psx.com.pk) / Business Recorder",
-   "headline": "KSE-100 confirmed Friday close: index ends down 718.24 points as second (post-Jummah) session pares the pre-break loss",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Confirmed final close per PSX's own market-summary page (psx.com.pk/market-summary/, page captured 2026-07-24 17:30:01 PKT, market status 'Closed'): KSE-100 settled at 171,021.20, down 718.24 points (-0.42%) from Thursday's confirmed close of 171,739.44/171,739.45; volume 579,944,661 shares across 355,315 trades, value traded Rs23,896,066,570. This is a fourth straight losing session but a smaller decline than the prior three (Jul 22 -1,703.64pts/-0.98%, Jul 23 -2,690.48pts/-1.54%). Business Recorder reported the pre-Jummah first session down 1,264.14 points (-0.74%) to 170,475.30 as of 12:05pm (intraday high 171,208.55, low 169,512.88, volume 114.23m shares, value Rs7.83bn), with selling in automobile assemblers, cement, commercial banks, oil & gas exploration companies, OMCs and power generation amid the same Brent-crude-above-$100 driver logged separately this cycle; the second (post-Jummah) session pared roughly half of that loss into the confirmed close. No closing-bell narrative article with second-session sector/stock-level breakdown was located in sources reviewed as of this checkpoint (17:00 PKT).",
-   "url": "https://www.psx.com.pk/market-summary/"
-  },
-  {
-   "ts": "2026-07-23",
-   "source": "PSX Data Portal (DPS)",
-   "headline": "Habib Bank (HBL) board meeting: Announcement of Financial Results for the Half Year ended June 30, 2026",
-   "tickers": [
-    "HBL"
-   ],
-   "impact": 3,
-   "summary": "HBL's DPS company announcements page shows a board-meeting notice dated Jul 23, 2026 titled 'Announcement of Financial Results for the Half Year ended June 30, 2026'; no profit, EPS or dividend figures disclosed on the source page reviewed, and no confirmed H1 2026 results narrative was located in follow-up news searches this cycle (Q1 2026, for reference, had shown consolidated PAT of Rs16.15bn / EPS Rs11.00 with a Rs6/share interim dividend, per prior reporting outside this newslog's window). Logged as impact 3 (notable, results-date notice) per desk scale for a core-tier bank at ~3.52% index weight; actual H1 figures and any new dividend rate to be confirmed in a follow-up cycle.",
-   "url": "https://dps.psx.com.pk/company/HBL"
-  },
-  {
-   "ts": "2026-07-25",
-   "source": "Business Recorder / Express Tribune",
-   "headline": "Volatility at PSX, KSE-100 closes week lower",
-   "tickers": [
-    "MACRO",
-    "UBL",
-    "NBP",
-    "SYS",
-    "HBL",
-    "FFC",
-    "AICL",
-    "TRG",
-    "MEBL",
-    "CNERGY"
-   ],
-   "impact": 3,
-   "summary": "Weekend wrap-up adding new detail to Friday's confirmed close already logged this cycle (KSE-100 171,021.20, -718.24/-718.25 pts, -0.42%): Business Recorder reports the session swung from an intraday low of 169,512.88 to a high of 172,718.66 before late profit-taking eroded the rally; index-heavy losers UBL, NBP, Systems Limited (SYS), HBL and FFC cumulatively cut about 436 points from the index. On a weekly basis the KSE-100 declined 2.7% (Business Recorder) / 2.72% (Express Tribune) WoW, attributed to 'continued escalation in tensions between the US and Iran' pushing crude oil prices higher and dampening investor sentiment. Express Tribune's read of the same Friday session adds breadth not previously logged (186 advancing, 270 declining, 36 unchanged) and stock-level detail: top gainers Adamjee Insurance (AICL) +6.38%, TRG Pakistan (TRG) +3.66%, Meezan Bank (MEBL) +0.3%; top losers NBP -2.18%, Systems Limited (SYS) -1.66%, UBL -1.2%; volume leader Cnergyico Pk (CNERGY) at 59.33m shares. Arif Habib Limited (AHL) quoted: the index 'has now fallen 10% from its July peak and is once again testing its 200-day moving average' - a bearish technical read not previously captured. Brent crude cited around $100/bbl on the same US-Iran/Red Sea escalation already logged this cycle; both outlets note markets are now looking ahead to the SBP's Monetary Policy Committee decision due July 27, 2026, widely expected (per the Topline Securities poll already logged) to hold the policy rate at 11.5% given the geopolitical and oil-price backdrop. No new price level beyond the already-logged 171,021.20 confirmed close; logged as impact 3 for the weekly-decline framing and the new AHL technical caution (200-day moving average test), which had not been captured in the prior daily-close entry.",
-   "url": "https://www.brecorder.com/news/40431593/volatility-at-psx-kse-100-closes-week-lower",
-   "headline_ur": "PSX میں اتار چڑھاؤ، KSE-100 ہفتہ نچلی سطح پر بند ہوا",
-   "headline_ur_hash": "36a59399cfac",
-   "summary_ur": "جمعہ کے پہلے سے درج تصدیق شدہ کلوز (KSE-100 171,021.20، -718.24/-718.25 پوائنٹس، -0.42%) میں نئی تفصیل شامل کرنے والا ویک اینڈ خلاصہ: بزنس ریکارڈر کے مطابق سیشن انٹرا ڈے کم ترین سطح 169,512.88 سے بلند ترین سطح 172,718.66 تک گیا، مگر آخر میں منافع کی وصولی نے ریلی کو کمزور کر دیا؛ انڈیکس کے بڑے حصص میں نقصان اٹھانے والے UBL، NBP، Systems Limited (SYS)، HBL اور FFC نے مجموعی طور پر انڈیکس سے تقریباً 436 پوائنٹس کم کیے۔ ہفتہ وار بنیاد پر KSE-100 میں 2.7% (بزنس ریکارڈر) / 2.72% (ایکسپریس ٹریبیون) کی کمی ہوئی، جس کی وجہ 'امریکہ اور ایران کے درمیان کشیدگی میں مسلسل اضافہ' بتائی گئی جس نے خام تیل کی قیمتیں بڑھائیں اور سرمایہ کاروں کے جذبات کو متاثر کیا۔ ایکسپریس ٹریبیون کی اسی جمعہ سیشن کی رپورٹ نے پہلے درج نہ کی گئی بریڈتھ شامل کی (186 بڑھنے والے، 270 گرنے والے، 36 غیر تبدیل شدہ) اور اسٹاک کی سطح کی تفصیل: سب سے زیادہ فائدہ اٹھانے والے Adamjee Insurance (AICL) +6.38%، TRG Pakistan (TRG) +3.66%، Meezan Bank (MEBL) +0.3%؛ سب سے زیادہ نقصان اٹھانے والے NBP -2.18%، Systems Limited (SYS) -1.66%، UBL -1.2%؛ حجم میں سب سے آگے Cnergyico Pk (CNERGY) 59.33m شیئرز کے ساتھ۔ Arif Habib Limited (AHL) کا حوالہ: انڈیکس 'اپنی جولائی کی چوٹی سے اب تک 10% گر چکا ہے اور ایک بار پھر اپنی 200-دن کی موونگ ایوریج کو ٹیسٹ کر رہا ہے' — ایک مندی کا تکنیکی نکتہ جو پہلے درج نہیں کیا گیا تھا۔ برینٹ کروڈ کا حوالہ اسی امریکہ-ایران/بحیرہ احمر کی کشیدگی کے تناظر میں تقریباً $100/bbl دیا گیا جو اس سائیکل میں پہلے ہی درج ہو چکا ہے؛ دونوں ادارے نوٹ کرتے ہیں کہ مارکیٹس اب SBP کی مانیٹری پالیسی کمیٹی کے 27 جولائی 2026 کو متوقع فیصلے کی جانب دیکھ رہی ہیں، جس کے بارے میں (پہلے سے درج Topline Securities سروے کے مطابق) وسیع پیمانے پر توقع ہے کہ جغرافیائی و سیاسی اور تیل کی قیمتوں کے پس منظر میں پالیسی ریٹ 11.5% پر برقرار رکھا جائے گا۔ پہلے سے درج 171,021.20 کے تصدیق شدہ کلوز کے علاوہ کوئی نئی قیمت کی سطح نہیں؛ ہفتہ وار کمی کے فریم ورک اور نئے AHL تکنیکی احتیاطی نکتے (200-دن موونگ ایوریج ٹیسٹ) کے لیے امپیکٹ 3 کے طور پر درج کیا گیا، جو پچھلی روزانہ کلوز کی انٹری میں شامل نہیں تھا۔",
-   "summary_ur_hash": "e8f0d523eb47"
-  },
   {
    "ts": "2026-07-27",
    "source": "Pakistan Observer / PakTribune / PSX Official Market Summary (psx.com.pk)",
@@ -387,6 +301,64 @@
    "impact": 3,
    "summary": "Published Jul 28, 2026: South Korea's Kospi index plunged more than 8% intraday (some reports cite up to 10%), triggering a market-wide circuit breaker for the 8th time this year; Samsung Electronics and SK Hynix each fell roughly 7-12% in various snapshots cited across sources, given their outsized index weight. Driver cited across sources: a contagion effect from the US semiconductor sector (Nvidia weakness/concerns over its financial model) plus the listing of CXMT, China's largest memory-chipmaker, on fears that IPO proceeds would let it accelerate competition with Samsung and SK Hynix in DRAM/HBM memory chips; region-wide selloff also hit Tokyo. No PSX-listed semiconductor constituent exists in the universe and no direct PSX-ticker read-through is confirmed in sources reviewed; logged as a MACRO/global-markets spillover-risk item (foreign-market circuit breaker/tech-sector shock) for context on global risk appetite at this checkpoint, not a PSX-specific event.",
    "url": "https://en.sedaily.com/finance/2026/07/28/breaking-news-kospi-triggers-circuit-breaker-8th-this-year"
+  },
+  {
+   "ts": "2026-07-28",
+   "source": "ProPakistani",
+   "headline": "PTCL Group achieves strong financial results with 62% topline growth YoY - 1HCY26 net profit Rs4.7bn vs H1CY25 net loss Rs9.90bn",
+   "tickers": [
+    "PTC"
+   ],
+   "impact": 4,
+   "summary": "Published Jul 28, 2026 3:41pm PKT: PTCL Group (PSX: PTC) reported consolidated net profit of Rs4.7 billion for the half year ended June 30, 2026, versus a consolidated net loss of Rs9.90 billion in H1CY25 (per Mettis Global's earlier report 'PTCL loss nears Rs10bn in H1 2025' - the six months ended June 30, 2025 - an 11.06% wider loss than H1CY24's Rs8.91bn) - an earnings-surprise turnaround. Consolidated revenue grew 62% YoY; consolidated operating profit grew 226% YoY, driven by the successful amalgamation of Ufone and Telenor Pakistan under Pak Telecom Mobile Limited (PTML) completed in Q2 2026, plus growth in fixed broadband, enterprise and wholesale segments. No EPS figure disclosed in the source reviewed. Logged as impact 4 (material earnings surprise, loss-to-profit turnaround) per desk news-impact criteria (Rule 10); escalation flagged.",
+   "url": "https://propakistani.pk/2026/07/28/ptcl-group-achieves-strong-financial-results-with-62-topline-growth-yoy/"
+  },
+  {
+   "ts": "2026-07-28",
+   "source": "Dawn",
+   "headline": "PM orders increase in country's strategic petroleum reserves; Cabinet Committee on Energy approves changes to Oil Refining Policy 2023",
+   "tickers": [
+    "ATRL",
+    "NRL",
+    "PRL",
+    "MACRO"
+   ],
+   "impact": 4,
+   "summary": "Published/updated Jul 28, 2026 1:36pm PKT: Prime Minister Shehbaz Sharif, chairing a meeting of the Cabinet Committee on Energy at the PM's House, approved amendments to the 'Pakistan Oil Refining Policy for Upgradation of Existing Brownfield Refineries 2023' - requiring production of environment-friendly Euro-V-standard fuel, reduction of furnace oil and low-quality petroleum products output, and compliance with international environmental commitments. The amendments aim to unlock nearly $6 billion in investment across Pakistan's five existing refineries (combined capacity approx. 449,400 bpd, currently operating at less than half that level) - a follow-through on the Petroleum Division's amendments to the same Brownfield Refining Policy first reported 2026-07-13 (already logged this newslog at impact 4). PM Shehbaz directed authorities to promote the revised policy among Gulf investors via roadshows in Qatar, Saudi Arabia and other Gulf states to attract investment in brownfield refinery upgrade projects, and ordered reforms to the Oil and Gas Regulatory Authority (Ogra). No individual refinery (ATRL, NRL, PRL, PARCO, Cnergyico) named specifically in this article; tagged to the universe's core-tier refiners (ATRL, NRL, PRL) as the direct beneficiaries of a sector-wide brownfield-refining policy. Logged as impact 4 (regulatory action) per desk news-impact criteria (Rule 10); escalation flagged.",
+   "url": "https://www.dawn.com/news/2018968/pm-orders-increase-in-countrys-strategic-petroleum-reserves-changes-to-oil-refining-policy-approved"
+  },
+  {
+   "ts": "2026-07-28",
+   "source": "Mettis Global",
+   "headline": "PSX Closing Bell: A Slight Step Back",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Published Jul 28, 2026 4:08pm PKT, corroborated by PSX's own market-summary page and DPS index page (both captured this checkpoint, market status 'Closed'): KSE-100 settled at 177,623.88, down 638.45 points (-0.36%) from Friday's confirmed close of 178,262.33. Modest single-session pullback (profit-taking) following the prior session's confirmed +4.23% surge (already logged 2026-07-27 at impact 4). No individual sector/stock-level breakdown independently verified this cycle beyond the index-level print.",
+   "url": "https://mettisglobal.news/PSX-Closing-Bell-A-Slight-Step-Back-62208"
+  },
+  {
+   "ts": "2026-07-28",
+   "source": "Mettis Global",
+   "headline": "ITANZ Technologies FY26 net profit jumps 69% to Rs583.43m",
+   "tickers": [
+    "ITANZ"
+   ],
+   "impact": 3,
+   "summary": "Published Jul 28, 2026 2:41pm PKT: ITANZ Technologies Limited reported FY26 net profit of Rs583.43 million, up 69% YoY from Rs344.84 million in FY25; revenue Rs767.18 million, up 73.8% YoY from Rs441.52 million; gross profit Rs613.42 million (+105.4% YoY); operating profit Rs599.39 million (+113.1% YoY); profit before taxes Rs565.58 million (+110.9% YoY). Article attributes the performance to 'net revenue from contracts with customers' surging 74% YoY while direct costs grew only 8%, expanding margins. No EPS or dividend figure disclosed in the source reviewed. Logged as impact 3 (notable results) for this small-weight, listed-tier universe constituent.",
+   "url": "https://mettisglobal.news/ITANZ-FY26-profit-jumps-69-62202"
+  },
+  {
+   "ts": "2026-07-28",
+   "source": "Mettis Global",
+   "headline": "Tariq Corporation sees 85.45% subscription in right shares issue",
+   "tickers": [
+    "TCORP"
+   ],
+   "impact": 2,
+   "summary": "Published Jul 28, 2026 4:37pm PKT: Tariq Corporation Limited's rights-shares issue (total issue size Rs315,875,000) received subscriptions of Rs269,919,921, representing 85.45% of the total issue size; the unsubscribed portion of Rs45,955,079 (14.55%) is to be allocated by the Board of Directors in accordance with company law provisions before engaging the underwriter. Routine capital-markets/administrative item for this small-weight, listed-tier universe constituent (distinct from TGL/Tariq Glass Industries, a separate core-tier constituent). Logged as impact 2 (minor company item).",
+   "url": "https://mettisglobal.news/Tariq-Corporation-sees-85-subscription-in-right-shares-issue-62210"
   }
  ],
  "agent_wire": [],

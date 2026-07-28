@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-28 11:39",
+ "updated": "2026-07-28 17:54",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -39,24 +39,6 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260728-ENGROH-rsi_reclaim_50",
-   "ticker": "ENGROH",
-   "strategy": "rsi_reclaim_50",
-   "template": "RSI reclaim 50",
-   "category": "oscillator",
-   "sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
-   "hold_sessions": 10,
-   "backtest": {
-    "hit_rate": 0.684,
-    "net_expectancy_pct": 1.82,
-    "n": 19,
-    "oos_hit": 0.625
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "RSI reclaim 50 is triggering now; on ENGROH's own history it won 68% over 19 trades (+1.8% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260728-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -73,6 +55,24 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260728-GAL-trend_momo_combo",
+   "ticker": "GAL",
+   "strategy": "trend_momo_combo",
+   "template": "Trend + momentum combo",
+   "category": "momentum",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 12,
+   "backtest": {
+    "hit_rate": 0.553,
+    "net_expectancy_pct": 1.16,
+    "n": 38,
+    "oos_hit": 0.6
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 55% over 38 trades (+1.2% net/trade), still profitable out-of-sample."
   }
  ],
  "n_candidates": 8
