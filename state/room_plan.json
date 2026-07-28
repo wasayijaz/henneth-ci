@@ -1,7 +1,11 @@
 {
  "reaffirm": [
+  "FFC",
+  "UBL",
+  "ENGROH",
   "OGDC",
   "MARI",
+  "PPL",
   "EFERT",
   "POL",
   "BAFL",
@@ -9,55 +13,20 @@
   "MTL",
   "ATRL",
   "PTC",
+  "SNGP",
   "PAEL",
   "KEL",
+  "AIRLINK",
+  "CNERGY",
+  "PIOC",
   "SSGC",
+  "HCAR",
+  "PRL",
   "NRL",
   "JSML"
  ],
- "delta": [
-  {
-   "symbol": "PPL",
-   "why": "price moved 5.6% since last Room"
-  },
-  {
-   "symbol": "SNGP",
-   "why": "price moved 5.3% since last Room"
-  },
-  {
-   "symbol": "AIRLINK",
-   "why": "price moved 4.9% since last Room"
-  },
-  {
-   "symbol": "CNERGY",
-   "why": "price moved 6.5% since last Room"
-  },
-  {
-   "symbol": "PIOC",
-   "why": "price moved 4.6% since last Room"
-  },
-  {
-   "symbol": "HCAR",
-   "why": "price moved 5.8% since last Room"
-  },
-  {
-   "symbol": "PRL",
-   "why": "price moved 5.7% since last Room"
-  }
- ],
+ "delta": [],
  "full": [
-  {
-   "symbol": "FFC",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "UBL",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "ENGROH",
-   "why": "material change since last Room"
-  },
   {
    "symbol": "MEBL",
    "why": "material change since last Room"
@@ -107,11 +76,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "SRVI",
+   "symbol": "FCCL",
    "why": "never covered"
   },
   {
-   "symbol": "FCCL",
+   "symbol": "SRVI",
    "why": "never covered"
   },
   {
@@ -348,17 +317,14 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-28 11:17",
+  "built": "2026-07-28 11:34",
   "full_budget": 3,
   "run_full_now": [
-   "FFC",
-   "UBL",
-   "ENGROH"
-  ],
-  "deferred_full": [
    "MEBL",
    "LUCK",
-   "MLCF",
+   "MLCF"
+  ],
+  "deferred_full": [
    "HBL",
    "AKBL",
    "EPCL",
@@ -368,8 +334,8 @@
    "FFL",
    "SAZEW",
    "FATIMA",
-   "SRVI",
    "FCCL",
+   "SRVI",
    "BOP",
    "CHCC",
    "ILP",
@@ -430,12 +396,12 @@
    "HUBC"
   ],
   "counts": {
-   "full_due": 75,
+   "full_due": 72,
    "full_now": 3,
-   "delta": 7,
-   "reaffirm": 14
+   "delta": 0,
+   "reaffirm": 24
   },
-  "est_tokens_today": 101000,
+  "est_tokens_today": 66000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
