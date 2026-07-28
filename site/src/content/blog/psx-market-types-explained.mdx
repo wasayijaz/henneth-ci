@@ -1,0 +1,137 @@
+---
+title: PSX market types explained — Ready, futures, and "spot"
+description: PSX trades in four ways — Ready Market (T+1), two futures contracts and the disclosed NDM (T+0 to T+60). "Spot market" is not one of them.
+pubDate: 2026-07-28
+cluster: Market structure
+draft: false
+---
+
+import Snapshot from '../../components/explain/Snapshot.astro';
+import Ledger from '../../components/explain/Ledger.astro';
+import Matrix from '../../components/explain/Matrix.astro';
+
+PSX has exactly four ways to trade a listed security: the Ready Market, which settles
+[T+1](/blog/psx-t1-settlement-explained/) and carries almost everything; two futures contracts,
+Deliverable Futures Contracts (DFC) and Cash Settled Futures (CSF); and the Negotiated Deal Market
+(NDM), a disclosed, privately-negotiated market that settles anywhere from T+0 to T+60. "Spot
+market" is not one of them. The phrase appears exactly twice in the PSX Regulations, and neither
+use defines a trading venue — which is also why searching for a plain-English explanation of "PSX
+spot market" turns up almost nothing. There's nothing to explain.
+
+<Snapshot
+  title="PSX's markets, in short"
+  items={[
+    { k: 'Ready Market', v: 'T+1', note: 'Book-entry and physical securities alike' },
+    { k: '"Spot market"', v: 'Not defined', note: 'The word appears twice, neither a market definition' },
+    { k: 'Futures (DFC/CSF)', v: 'Expiry + 1', note: 'Physical delivery (DFC) or cash (CSF)' },
+    { k: 'NDM', v: 'T+0 to T+60', note: 'Disclosed, trade-for-trade, no netting' },
+  ]}
+/>
+
+## The four markets, side by side
+
+<Matrix
+  cols={['Market', 'What trades', 'Settles', "Who it's for"]}
+  rows={[
+    ['Ready Market', 'Ordinary buy/sell of listed shares', 'T+1', 'Nearly all retail and institutional trading'],
+    ['DFC', 'Standardised 90-day futures, physical delivery', 'Expiry + 1', 'Leveraged exposure that ends in shares'],
+    ['CSF', 'Standardised futures, cash-settled', 'Expiry + 1, cash', 'Leveraged exposure without taking delivery'],
+    ['NDM', 'Privately negotiated block trades', 'T+0 to T+60, disclosed', 'Large trades negotiated outside the order book'],
+  ]}
+  caption="PSX Regulations, 9 February 2026 — Ready Market (2.4(lxxvii), 10.5.1), futures (Chapters 13–14), NDM (Chapter 8.15) and NCCPL's Clearing & Settlement Services page."
+/>
+
+## "Spot market" — a phrase without a market
+
+A full-text search of the current rulebook and its 2023 predecessor turns up "spot" exactly twice
+in each, and neither is a market definition. The first is a label on a broker's contract note:
+
+> **Chapter 7** — "Nature of trade (SPOT, Ready, Future…)"
+
+The second is punitive, not something a trader opts into:
+
+> **5.11** — non-compliant companies are traded "only on **T+0 (SPOT)** for the next 7 days" before
+> suspension.
+
+<Ledger
+  left={{
+    kicker: 'What the rulebook actually says',
+    title: 'Two mentions of "spot"',
+    points: [
+      'A field name on a contract note, alongside Ready and Future.',
+      'A punitive same-day (T+0) settlement mode forced on non-compliant issuers for seven days before suspension.',
+    ],
+  }}
+  right={{
+    kicker: 'What it does not say',
+    title: 'No spot market exists',
+    points: [
+      'There is no clause defining a "Spot Market" as a venue.',
+      'There is no spot settlement cycle a trader can choose.',
+      'There is no link between "spot" and book closure or entitlements.',
+    ],
+  }}
+  caption='PSX Regulations, 9 February 2026, and PSX Rule Book, 15 February 2023 — both searched in full. Book closure runs inside the Ready Market itself, by flipping trading to an ex-entitlement basis; see the desk&rsquo;s piece on the &lsquo;book-closure ex-date&rsquo; below.'
+/>
+
+The 2023 rulebook defined the Ready Market as settling "either on T+1 or T+2" and folded in a
+separate Odd Lots Market; the February 2026 text drops both and simply says T+1. Whatever informal
+"spot" trading habit that gap once described, the current rulebook doesn't carry a definition for
+it — book closure is now handled inside the Ready Market by flipping the affected security to an
+ex-entitlement basis, a mechanism covered in the desk's piece on the
+[book-closure ex-date](/blog/psx-book-closure-ex-date/).
+
+## Futures: two contracts, one expiry, different endings
+
+Both futures products are standardised, exchange-traded contracts — not the negotiated,
+over-the-counter kind — but they end differently:
+
+> **13.1, 13.2.6** — DFC is a standardised 90-day contract issued monthly, in lots of 500 shares,
+> expiring the last Friday of the contract month. Contract Specifications set **physical delivery,
+> expiry + 1**.
+
+> **14.3.3, 14.1(e)** — CSF's final settlement is **T+1, in cash**, priced off the Ready Market
+> closing price on expiry day, with daily mark-to-market in between (14.3.2).
+
+A DFC position held to expiry becomes shares in your account one settlement day later; a CSF
+position held to expiry becomes a cash difference, with no shares changing hands at any point. One
+other wrinkle: if an entitlement (dividend, bonus, rights) falls inside a pending futures
+settlement, 13.6.2 has the Exchange **predate** the last trading day and settlement date to keep
+the futures position in line with the underlying's book closure — the same corporate-action
+mechanics reaching into a market well outside the Ready Market it originates in.
+
+## The Negotiated Deal Market isn't T+0
+
+NDM is where two counterparties who already know each other's identity — not the anonymous order
+book — agree a trade and report it. Its settlement window is wide, and NCCPL states it directly:
+
+> "Settlement Cycle of NDM trades is ranging from **T+0 to T+60**."
+> — NCCPL, *Clearing & Settlement Services*, item 02.
+
+T+0 is one available cycle inside that range, not the market's defining feature — a distinction
+worth making explicitly, since NDM's same-day option is easy to conflate with the "spot" language
+covered above. NDM trades are disclosed, settle trade-for-trade, and NCCPL is explicit that "no
+netting is permissible" between an NDM trade and any position in another market. PSX's own Chapter
+8.15 governs NDM conduct but sets no settlement cycle of its own — that detail lives entirely with
+NCCPL.
+
+## Where the desk actually trades
+
+Henneth is long-only, and the desk's research and [position sizing](/tools/position-size-calculator/)
+apply to the Ready Market alone — no futures, no leverage, no NDM block trades. Knowing what DFC,
+CSF and NDM are is still useful context: news about futures open interest or a large NDM print is
+routinely reported alongside Ready Market price action, and a term like "spot" showing up in
+commentary about a stock usually just means Ready Market, since PSX's own rulebook doesn't give it
+anywhere else to mean.
+
+## Checking this yourself
+
+- [PSX Regulations, 9 February 2026](https://www.psx.com.pk/psx/themes/psx/uploads/PSX-Regulations-February-09-2026.pdf) — 2.4(lxxvii) and 10.5.1 (Ready Market), Chapter 7 and 5.11 ("spot"), Chapters 13–14 (DFC, CSF), Chapter 8.15 (NDM conduct)
+- [PSX Rule Book, 15 February 2023](https://www.psx.com.pk/psx/themes/psx/uploads/PSX_Rulebook_(updated_on_Febrary_15,_2023).pdf) — the superseded "T+1 or T+2" Ready Market definition and the former Odd Lots Market, for comparison
+- [NCCPL Clearing & Settlement Services](https://www.nccpl.com.pk/en/products-services/clearing-settlement-services) — the T+0-to-T+60 NDM settlement range and the no-netting rule
+
+---
+
+*Research, not advice. This explains what PSX's own rulebook defines as a market and what it
+doesn't; it is not a recommendation to trade any of them. Rules are dated — check the current PSX
+Regulations before acting on anything time-sensitive.*
