@@ -1,8 +1,8 @@
 {
- "updated": "2026-07-29 09:07",
+ "updated": "2026-07-29 13:31",
  "regime": "neutral",
  "geo_risk": {
-  "score": 66,
+  "score": 67,
   "band": "elevated"
  },
  "signals": [
@@ -61,22 +61,22 @@
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260729-GAL-trend_momo_combo",
-   "ticker": "GAL",
-   "strategy": "trend_momo_combo",
-   "template": "Trend + momentum combo",
-   "category": "momentum",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 12,
+   "id": "20260729-FCL-obv_divergence_up",
+   "ticker": "FCL",
+   "strategy": "obv_divergence_up",
+   "template": "Volume leads price",
+   "category": "volume",
+   "sector": "Cable & Electrical Goods",
+   "hold_sessions": 15,
    "backtest": {
-    "hit_rate": 0.553,
-    "net_expectancy_pct": 1.16,
-    "n": 38,
-    "oos_hit": 0.6
+    "hit_rate": 0.556,
+    "net_expectancy_pct": 0.68,
+    "n": 27,
+    "oos_hit": 0.625
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 55% over 38 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -107,7 +107,7 @@
   },
   {
    "ticker": "XLV",
-   "score": 64.3
+   "score": 63.3
   },
   {
    "ticker": "THCCL",
@@ -123,11 +123,6 @@
   }
  ],
  "movers_up": [
-  {
-   "ticker": "AICL",
-   "ret_1d": 10.0,
-   "close": 90.56
-  },
   {
    "ticker": "BAFS",
    "ret_1d": 10.0,
@@ -147,6 +142,11 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
+  },
+  {
+   "ticker": "ASIC",
+   "ret_1d": 9.99,
+   "close": 34.45
   }
  ],
  "movers_down": [

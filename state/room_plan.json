@@ -17,12 +17,16 @@
   "KEL",
   "AIRLINK",
   "CNERGY",
-  "PIOC",
   "SSGC",
   "HCAR",
   "JSML"
  ],
- "delta": [],
+ "delta": [
+  {
+   "symbol": "PIOC",
+   "why": "price moved 6.6% since last Room"
+  }
+ ],
  "full": [
   {
    "symbol": "ATRL",
@@ -65,8 +69,8 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "GAL",
-   "why": "material change since last Room"
+   "symbol": "FCL",
+   "why": "never covered"
   },
   {
    "symbol": "ITANZ",
@@ -129,11 +133,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "KOHC",
+   "symbol": "NATF",
    "why": "never covered"
   },
   {
-   "symbol": "NATF",
+   "symbol": "KOHC",
    "why": "never covered"
   },
   {
@@ -145,11 +149,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "TPLRF1",
+   "symbol": "PIBTL",
    "why": "never covered"
   },
   {
-   "symbol": "PIBTL",
+   "symbol": "TPLRF1",
    "why": "never covered"
   },
   {
@@ -201,15 +205,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "FCL",
+   "symbol": "NETSOL",
    "why": "never covered"
   },
   {
    "symbol": "UNITY",
-   "why": "never covered"
-  },
-  {
-   "symbol": "NETSOL",
    "why": "never covered"
   },
   {
@@ -317,6 +317,10 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "GAL",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "HUBC",
    "why": "material change since last Room"
   },
@@ -326,7 +330,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-29 09:07",
+  "built": "2026-07-29 13:31",
   "full_budget": 3,
   "run_full_now": [
    "ATRL",
@@ -341,7 +345,7 @@
    "EPCL",
    "CSAP",
    "TBL",
-   "GAL",
+   "FCL",
    "ITANZ",
    "SYS",
    "FFL",
@@ -357,12 +361,12 @@
    "SEARL",
    "NML",
    "GLAXO",
-   "KOHC",
    "NATF",
+   "KOHC",
    "TRG",
    "AGP",
-   "TPLRF1",
    "PIBTL",
+   "TPLRF1",
    "NPL",
    "AHCL",
    "POWER",
@@ -375,9 +379,8 @@
    "SGF",
    "GCIL",
    "NCPL",
-   "FCL",
-   "UNITY",
    "NETSOL",
+   "UNITY",
    "ZAL",
    "PREMA",
    "TOMCL",
@@ -404,16 +407,17 @@
    "BAHL",
    "GHNI",
    "FABL",
+   "GAL",
    "HUBC",
    "MARI"
   ],
   "counts": {
    "full_due": 75,
    "full_now": 3,
-   "delta": 0,
-   "reaffirm": 21
+   "delta": 1,
+   "reaffirm": 20
   },
-  "est_tokens_today": 66000,
+  "est_tokens_today": 71000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
