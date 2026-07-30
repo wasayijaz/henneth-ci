@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-30 06:03",
+ "updated": "2026-07-30 08:57",
  "note": "Deterministic evidence pack per PSX sector. Every figure is computed from the desk's own state files - agents debating a sector must cite THIS, never memory. macro_drivers lists only correction-survived relationships; an empty list means no global factor has a demonstrated effect on the sector, which is a finding.",
  "min_members": 3,
  "n_sectors": 31,
@@ -131,14 +131,14 @@
    },
    "valuation": {
     "median_pe": 7.29,
-    "median_fair_gap_pct": -9.3,
-    "n_undervalued": 2,
+    "median_fair_gap_pct": -13.55,
+    "n_undervalued": 1,
     "n_overvalued": 4,
     "n_valued": 8
    },
    "income": {
     "median_yield_pct": 3.68,
-    "median_payout_pct": 19.17,
+    "median_payout_pct": 17.8,
     "n_payers": 7
    },
    "macro_drivers": [
@@ -221,7 +221,7 @@
      "pe": 7.45,
      "div_yield_pct": 0.82,
      "payout_pct": 5.61,
-     "fair_gap_pct": 0.2,
+     "fair_gap_pct": -8.3,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 10.0
     },
@@ -237,7 +237,7 @@
      "pe": 5.05,
      "div_yield_pct": 1.67,
      "payout_pct": 8.08,
-     "fair_gap_pct": 48.0,
+     "fair_gap_pct": 35.5,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": null
     },
@@ -253,7 +253,7 @@
      "pe": 7.14,
      "div_yield_pct": 3.68,
      "payout_pct": 15.29,
-     "fair_gap_pct": 9.8,
+     "fair_gap_pct": -4.4,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 9.0
     },
@@ -269,7 +269,7 @@
      "pe": 15.91,
      "div_yield_pct": 10.07,
      "payout_pct": 94.9,
-     "fair_gap_pct": -51.2,
+     "fair_gap_pct": -55.2,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 17.5
     },
@@ -331,10 +331,10 @@
      "above_sma50": false,
      "liquidity_rs_m": 353.4,
      "pe": 6.37,
-     "div_yield_pct": 2.66,
-     "payout_pct": 23.05,
-     "fair_gap_pct": 17.3,
-     "fair_verdict": "undervalued",
+     "div_yield_pct": 2.69,
+     "payout_pct": 20.31,
+     "fair_gap_pct": 7.3,
+     "fair_verdict": "fair",
      "ttm_dividend_rs": 70.0
     },
     {
@@ -356,14 +356,14 @@
    ]
   },
   "Automobile Parts & Accessories": {
-   "n_members": 7,
+   "n_members": 8,
    "breadth": {
     "above_sma50": 3,
     "advancing_1d": 0
    },
    "returns": {
-    "median_1d_pct": -1.86,
-    "median_20d_pct": -5.11,
+    "median_1d_pct": -1.69,
+    "median_20d_pct": -6.15,
     "best_20d": {
      "sym": "BWHL",
      "pct": 6.15
@@ -374,16 +374,16 @@
     }
    },
    "valuation": {
-    "median_pe": 11.31,
-    "median_fair_gap_pct": -39.7,
-    "n_undervalued": 0,
+    "median_pe": 8.17,
+    "median_fair_gap_pct": -3.5,
+    "n_undervalued": 1,
     "n_overvalued": 1,
-    "n_valued": 1
+    "n_valued": 2
    },
    "income": {
-    "median_yield_pct": null,
-    "median_payout_pct": null,
-    "n_payers": 0
+    "median_yield_pct": 3.62,
+    "median_payout_pct": 26.39,
+    "n_payers": 1
    },
    "macro_drivers": [],
    "macro_joint_r2_pct": null,
@@ -397,6 +397,11 @@
     {
      "ticker": "GTYR",
      "date": "2026-09-03",
+     "type": "results"
+    },
+    {
+     "ticker": "THALL",
+     "date": "2026-09-10",
      "type": "results"
     },
     {
@@ -471,6 +476,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "THALL",
+     "name": "Thal Limited",
+     "close": 580.1,
+     "ret_1d": -1.51,
+     "ret_20d": -7.19,
+     "rsi14": 34.0,
+     "above_sma50": false,
+     "liquidity_rs_m": 8.6,
+     "pe": 5.03,
+     "div_yield_pct": 3.62,
+     "payout_pct": 26.39,
+     "fair_gap_pct": 32.7,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 21.0
+    },
+    {
      "sym": "AGIL",
      "name": "Agriauto Industries Limited",
      "close": 155.6,
@@ -521,14 +542,14 @@
    ]
   },
   "Cable & Electrical Goods": {
-   "n_members": 6,
+   "n_members": 7,
    "breadth": {
-    "above_sma50": 5,
+    "above_sma50": 6,
     "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -0.81,
-    "median_20d_pct": -4.68,
+    "median_1d_pct": -0.47,
+    "median_20d_pct": -3.42,
     "best_20d": {
      "sym": "EMCO",
      "pct": 4.72
@@ -546,7 +567,7 @@
     "n_valued": 4
    },
    "income": {
-    "median_yield_pct": 2.03,
+    "median_yield_pct": 2.05,
     "median_payout_pct": 22.46,
     "n_payers": 1
    },
@@ -626,6 +647,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "SIEM",
+     "name": "Siemens (Pakistan) Engineering",
+     "close": 1533.99,
+     "ret_1d": 0.0,
+     "ret_20d": 0.78,
+     "rsi14": 51.1,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "FCL",
      "name": "Fast Cables Limited",
      "close": 23.97,
@@ -635,7 +672,7 @@
      "above_sma50": true,
      "liquidity_rs_m": 46.7,
      "pe": 10.97,
-     "div_yield_pct": 2.03,
+     "div_yield_pct": 2.05,
      "payout_pct": 22.46,
      "fair_gap_pct": -39.6,
      "fair_verdict": "overvalued",
@@ -685,7 +722,7 @@
      "pe": 9.47,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": 9.6,
+     "fair_gap_pct": 7.9,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
     }
@@ -718,7 +755,7 @@
    },
    "income": {
     "median_yield_pct": 1.89,
-    "median_payout_pct": 14.26,
+    "median_payout_pct": 14.51,
     "n_payers": 9
    },
    "macro_drivers": [
@@ -898,7 +935,7 @@
      "pe": 9.51,
      "div_yield_pct": 3.48,
      "payout_pct": 17.16,
-     "fair_gap_pct": 6.1,
+     "fair_gap_pct": 13.2,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 5.0
     },
@@ -930,7 +967,7 @@
      "pe": 11.14,
      "div_yield_pct": 0.43,
      "payout_pct": 38.09,
-     "fair_gap_pct": -28.7,
+     "fair_gap_pct": -29.2,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 8.5
     },
@@ -944,9 +981,9 @@
      "above_sma50": false,
      "liquidity_rs_m": 966.2,
      "pe": 7.84,
-     "div_yield_pct": 0.88,
-     "payout_pct": 7.03,
-     "fair_gap_pct": -1.8,
+     "div_yield_pct": 0.9,
+     "payout_pct": 7.02,
+     "fair_gap_pct": -2.5,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 4.0
     },
@@ -976,7 +1013,7 @@
      "above_sma50": false,
      "liquidity_rs_m": 27.6,
      "pe": 7.27,
-     "div_yield_pct": 2.01,
+     "div_yield_pct": 2.04,
      "payout_pct": 19.93,
      "fair_gap_pct": -9.4,
      "fair_verdict": "fair",
@@ -1057,7 +1094,7 @@
      "liquidity_rs_m": 82.3,
      "pe": 8.18,
      "div_yield_pct": 1.74,
-     "payout_pct": 14.26,
+     "payout_pct": 14.51,
      "fair_gap_pct": -7.7,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 5.5
@@ -1074,7 +1111,7 @@
      "pe": 8.91,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": 1.3,
+     "fair_gap_pct": 0.0,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
     },
@@ -1090,7 +1127,7 @@
      "pe": 8.98,
      "div_yield_pct": null,
      "payout_pct": 0.02,
-     "fair_gap_pct": 0.5,
+     "fair_gap_pct": -0.7,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
     },
@@ -1129,14 +1166,14 @@
    ]
   },
   "Chemical": {
-   "n_members": 21,
+   "n_members": 22,
    "breadth": {
-    "above_sma50": 10,
+    "above_sma50": 11,
     "advancing_1d": 1
    },
    "returns": {
-    "median_1d_pct": -1.64,
-    "median_20d_pct": -2.79,
+    "median_1d_pct": -1.65,
+    "median_20d_pct": -2.52,
     "best_20d": {
      "sym": "SARC",
      "pct": 48.33
@@ -1148,19 +1185,28 @@
    },
    "valuation": {
     "median_pe": 11.49,
-    "median_fair_gap_pct": -28.15,
+    "median_fair_gap_pct": -28.35,
     "n_undervalued": 1,
     "n_overvalued": 5,
     "n_valued": 6
    },
    "income": {
     "median_yield_pct": 3.89,
-    "median_payout_pct": 44.81,
+    "median_payout_pct": 45.34,
     "n_payers": 5
    },
    "macro_drivers": [],
    "macro_joint_r2_pct": null,
-   "recent_news": [],
+   "recent_news": [
+    {
+     "ts": "2026-07-21",
+     "impact": 1,
+     "tickers": [
+      "PAKOXY"
+     ],
+     "headline": "Pakistan Oxygen Limited (PAKOXY) board meeting - other than financial results and closed period"
+    }
+   ],
    "upcoming_events": [
     {
      "ticker": "EPCL",
@@ -1285,6 +1331,22 @@
      "ttm_dividend_rs": 16.25
     },
     {
+     "sym": "PAKOXY",
+     "name": "Pakistan Oxygen Limited",
+     "close": 287.11,
+     "ret_1d": -3.61,
+     "ret_20d": 2.51,
+     "rsi14": 47.9,
+     "above_sma50": true,
+     "liquidity_rs_m": 7.4,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "GGL",
      "name": "Ghani Global Holdings Limited",
      "close": 23.57,
@@ -1358,8 +1420,8 @@
      "above_sma50": true,
      "liquidity_rs_m": 52.9,
      "pe": 12.47,
-     "div_yield_pct": 1.99,
-     "payout_pct": 32.86,
+     "div_yield_pct": 1.98,
+     "payout_pct": 33.9,
      "fair_gap_pct": -44.8,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 6.0
@@ -1374,9 +1436,9 @@
      "above_sma50": false,
      "liquidity_rs_m": 6.8,
      "pe": 11.59,
-     "div_yield_pct": 13.32,
+     "div_yield_pct": 13.5,
      "payout_pct": 156.47,
-     "fair_gap_pct": -22.6,
+     "fair_gap_pct": -23.0,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 4.0
     },
@@ -1562,14 +1624,14 @@
    },
    "valuation": {
     "median_pe": 6.61,
-    "median_fair_gap_pct": -5.4,
+    "median_fair_gap_pct": -5.8,
     "n_undervalued": 3,
     "n_overvalued": 3,
     "n_valued": 18
    },
    "income": {
-    "median_yield_pct": 8.84,
-    "median_payout_pct": 49.14,
+    "median_yield_pct": 8.85,
+    "median_payout_pct": 50.25,
     "n_payers": 15
    },
    "macro_drivers": [
@@ -1724,7 +1786,7 @@
      "pe": 21.42,
      "div_yield_pct": null,
      "payout_pct": 0.01,
-     "fair_gap_pct": -62.7,
+     "fair_gap_pct": -63.0,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -1740,7 +1802,7 @@
      "pe": 5.48,
      "div_yield_pct": 6.25,
      "payout_pct": 35.13,
-     "fair_gap_pct": 17.5,
+     "fair_gap_pct": 17.0,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 1.5
     },
@@ -1756,7 +1818,7 @@
      "pe": 6.51,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": 5.3,
+     "fair_gap_pct": 4.4,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
     },
@@ -1771,8 +1833,8 @@
      "liquidity_rs_m": 782.5,
      "pe": 11.07,
      "div_yield_pct": 5.4,
-     "payout_pct": 59.76,
-     "fair_gap_pct": -10.5,
+     "payout_pct": 67.75,
+     "fair_gap_pct": -10.9,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 28.5
     },
@@ -1788,7 +1850,7 @@
      "pe": 6.47,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": 0.7,
+     "fair_gap_pct": -0.2,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
     },
@@ -1820,7 +1882,7 @@
      "pe": 6.8,
      "div_yield_pct": 6.44,
      "payout_pct": 44.07,
-     "fair_gap_pct": -4.1,
+     "fair_gap_pct": -4.5,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 6.5
     },
@@ -1834,7 +1896,7 @@
      "above_sma50": true,
      "liquidity_rs_m": 997.7,
      "pe": 5.44,
-     "div_yield_pct": 16.87,
+     "div_yield_pct": 17.28,
      "payout_pct": 22.17,
      "fair_gap_pct": 6.8,
      "fair_verdict": "fair",
@@ -1852,7 +1914,7 @@
      "pe": 6.99,
      "div_yield_pct": 10.01,
      "payout_pct": 70.61,
-     "fair_gap_pct": -6.7,
+     "fair_gap_pct": -7.1,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 2.75
     },
@@ -1866,9 +1928,9 @@
      "above_sma50": true,
      "liquidity_rs_m": 717.9,
      "pe": 6.71,
-     "div_yield_pct": 7.82,
-     "payout_pct": 47.61,
-     "fair_gap_pct": -2.9,
+     "div_yield_pct": 7.91,
+     "payout_pct": 40.17,
+     "fair_gap_pct": -3.3,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 21.5
     },
@@ -1884,7 +1946,7 @@
      "pe": 7.77,
      "div_yield_pct": 6.76,
      "payout_pct": 50.96,
-     "fair_gap_pct": -13.9,
+     "fair_gap_pct": -14.3,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 24.0
     },
@@ -1900,7 +1962,7 @@
      "pe": 9.35,
      "div_yield_pct": 10.23,
      "payout_pct": 135.92,
-     "fair_gap_pct": -27.1,
+     "fair_gap_pct": -27.4,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 6.5
     },
@@ -1915,7 +1977,7 @@
      "liquidity_rs_m": 12.4,
      "pe": 5.6,
      "div_yield_pct": 9.04,
-     "payout_pct": 50.67,
+     "payout_pct": 50.56,
      "fair_gap_pct": -14.6,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 16.0
@@ -1931,8 +1993,8 @@
      "liquidity_rs_m": 49.1,
      "pe": 5.54,
      "div_yield_pct": 10.54,
-     "payout_pct": 59.52,
-     "fair_gap_pct": -12.6,
+     "payout_pct": 58.49,
+     "fair_gap_pct": -12.4,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 12.0
     },
@@ -1948,7 +2010,7 @@
      "pe": 8.48,
      "div_yield_pct": 8.85,
      "payout_pct": 75.01,
-     "fair_gap_pct": -30.1,
+     "fair_gap_pct": -29.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 36.0
     },
@@ -1964,7 +2026,7 @@
      "pe": 6.5,
      "div_yield_pct": 8.8,
      "payout_pct": 56.65,
-     "fair_gap_pct": 14.9,
+     "fair_gap_pct": 13.6,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 15.0
     },
@@ -1996,7 +2058,7 @@
      "pe": 6.76,
      "div_yield_pct": 4.68,
      "payout_pct": 32.7,
-     "fair_gap_pct": 38.2,
+     "fair_gap_pct": 38.1,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 7.0
     },
@@ -2010,9 +2072,9 @@
      "above_sma50": false,
      "liquidity_rs_m": 881.9,
      "pe": 5.95,
-     "div_yield_pct": 8.84,
-     "payout_pct": 44.58,
-     "fair_gap_pct": 124.7,
+     "div_yield_pct": 9.0,
+     "payout_pct": 49.93,
+     "fair_gap_pct": 124.3,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 2.5
     }
@@ -2044,7 +2106,7 @@
     "n_valued": 7
    },
    "income": {
-    "median_yield_pct": 3.49,
+    "median_yield_pct": 3.51,
     "median_payout_pct": 53.29,
     "n_payers": 4
    },
@@ -2183,7 +2245,7 @@
      "pe": 12.58,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": 65.5,
+     "fair_gap_pct": 63.7,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": null
     },
@@ -2215,7 +2277,7 @@
      "pe": 12.6,
      "div_yield_pct": 4.57,
      "payout_pct": 64.99,
-     "fair_gap_pct": 69.7,
+     "fair_gap_pct": 70.1,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 4.5
     },
@@ -2229,7 +2291,7 @@
      "above_sma50": false,
      "liquidity_rs_m": 37.0,
      "pe": 11.41,
-     "div_yield_pct": 2.4,
+     "div_yield_pct": 2.45,
      "payout_pct": 41.59,
      "fair_gap_pct": -41.6,
      "fair_verdict": "overvalued",
@@ -2368,15 +2430,15 @@
     }
    },
    "valuation": {
-    "median_pe": 9.07,
-    "median_fair_gap_pct": 27.1,
+    "median_pe": 8.95,
+    "median_fair_gap_pct": 43.95,
     "n_undervalued": 4,
-    "n_overvalued": 1,
-    "n_valued": 5
+    "n_overvalued": 0,
+    "n_valued": 4
    },
    "income": {
-    "median_yield_pct": 6.67,
-    "median_payout_pct": 49.48,
+    "median_yield_pct": 6.6,
+    "median_payout_pct": 48.91,
     "n_payers": 4
    },
    "macro_drivers": [
@@ -2439,8 +2501,8 @@
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": -51.3,
-     "fair_verdict": "overvalued",
+     "fair_gap_pct": null,
+     "fair_verdict": null,
      "ttm_dividend_rs": null
     },
     {
@@ -2452,10 +2514,10 @@
      "rsi14": 54.7,
      "above_sma50": true,
      "liquidity_rs_m": 859.8,
-     "pe": 9.34,
-     "div_yield_pct": 6.76,
-     "payout_pct": 64.36,
-     "fair_gap_pct": 78.0,
+     "pe": 9.1,
+     "div_yield_pct": 6.62,
+     "payout_pct": 63.21,
+     "fair_gap_pct": 77.6,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 38.5
     },
@@ -2471,7 +2533,7 @@
      "pe": 8.8,
      "div_yield_pct": 3.82,
      "payout_pct": 34.13,
-     "fair_gap_pct": 25.0,
+     "fair_gap_pct": 24.5,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 6.0
     },
@@ -2485,9 +2547,9 @@
      "above_sma50": false,
      "liquidity_rs_m": 195.5,
      "pe": 10.84,
-     "div_yield_pct": 7.91,
-     "payout_pct": 85.41,
-     "fair_gap_pct": 61.2,
+     "div_yield_pct": 8.01,
+     "payout_pct": 89.64,
+     "fair_gap_pct": 60.8,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 14.75
     },
@@ -2510,14 +2572,14 @@
    ]
   },
   "Food & Personal Care Products": {
-   "n_members": 21,
+   "n_members": 23,
    "breadth": {
-    "above_sma50": 7,
-    "advancing_1d": 4
+    "above_sma50": 8,
+    "advancing_1d": 6
    },
    "returns": {
-    "median_1d_pct": -1.2,
-    "median_20d_pct": -5.02,
+    "median_1d_pct": -0.96,
+    "median_20d_pct": -4.4,
     "best_20d": {
      "sym": "MFFL",
      "pct": 3.85
@@ -2528,16 +2590,16 @@
     }
    },
    "valuation": {
-    "median_pe": 12.84,
-    "median_fair_gap_pct": -41.5,
+    "median_pe": 12.9,
+    "median_fair_gap_pct": -43.6,
     "n_undervalued": 1,
-    "n_overvalued": 11,
-    "n_valued": 14
+    "n_overvalued": 12,
+    "n_valued": 15
    },
    "income": {
-    "median_yield_pct": 5.7,
-    "median_payout_pct": 32.91,
-    "n_payers": 6
+    "median_yield_pct": 6.48,
+    "median_payout_pct": 46.47,
+    "n_payers": 7
    },
    "macro_drivers": [
     {
@@ -2607,6 +2669,11 @@
      "type": "results"
     },
     {
+     "ticker": "UPFL",
+     "date": "2026-08-27",
+     "type": "results"
+    },
+    {
      "ticker": "MFL",
      "date": "2026-09-04",
      "type": "results"
@@ -2614,11 +2681,6 @@
     {
      "ticker": "NATF",
      "date": "2026-09-04",
-     "type": "results"
-    },
-    {
-     "ticker": "MUREB",
-     "date": "2026-09-23",
      "type": "results"
     }
    ],
@@ -2688,6 +2750,38 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ISIL",
+     "name": "Ismail Industries Limited",
+     "close": 1936.95,
+     "ret_1d": 0.16,
+     "ret_20d": -0.41,
+     "rsi14": 49.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 1.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 5.0
+    },
+    {
+     "sym": "UPFL",
+     "name": "Unilever Pakistan Foods Limited",
+     "close": 25480.0,
+     "ret_1d": 0.7,
+     "ret_20d": -0.85,
+     "rsi14": 50.0,
+     "above_sma50": false,
+     "liquidity_rs_m": 1.4,
+     "pe": 25.43,
+     "div_yield_pct": 6.48,
+     "payout_pct": 203.23,
+     "fair_gap_pct": -68.5,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 1457.0
+    },
+    {
      "sym": "ZIL",
      "name": "ZIL Limited",
      "close": 346.22,
@@ -2713,8 +2807,8 @@
      "above_sma50": true,
      "liquidity_rs_m": 6.6,
      "pe": 16.81,
-     "div_yield_pct": 4.92,
-     "payout_pct": 79.9,
+     "div_yield_pct": 5.0,
+     "payout_pct": 79.7,
      "fair_gap_pct": -58.6,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 58.5
@@ -2729,8 +2823,8 @@
      "above_sma50": false,
      "liquidity_rs_m": 0.9,
      "pe": 12.9,
-     "div_yield_pct": 6.47,
-     "payout_pct": 66.21,
+     "div_yield_pct": 6.5,
+     "payout_pct": 60.03,
      "fair_gap_pct": -45.8,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 474.0
@@ -2763,7 +2857,7 @@
      "pe": 12.19,
      "div_yield_pct": 6.5,
      "payout_pct": 27.03,
-     "fair_gap_pct": 211.9,
+     "fair_gap_pct": 210.2,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 30.0
     },
@@ -2872,10 +2966,10 @@
      "rsi14": 35.4,
      "above_sma50": false,
      "liquidity_rs_m": 65.8,
-     "pe": 36.15,
+     "pe": 41.44,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": -81.0,
+     "fair_gap_pct": -83.1,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -2891,7 +2985,7 @@
      "pe": 20.67,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": -37.1,
+     "fair_gap_pct": -37.6,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -3178,14 +3272,14 @@
    ]
   },
   "Insurance": {
-   "n_members": 24,
+   "n_members": 26,
    "breadth": {
-    "above_sma50": 18,
-    "advancing_1d": 10
+    "above_sma50": 19,
+    "advancing_1d": 11
    },
    "returns": {
     "median_1d_pct": 0.0,
-    "median_20d_pct": 0.67,
+    "median_20d_pct": -0.33,
     "best_20d": {
      "sym": "TPLI",
      "pct": 132.26
@@ -3480,6 +3574,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "EFUG",
+     "name": "EFU General Insurance Limited",
+     "close": 124.98,
+     "ret_1d": 0.79,
+     "ret_20d": -0.81,
+     "rsi14": 51.5,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.9,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 10.0
+    },
+    {
      "sym": "JLICL",
      "name": "Jubilee Life Insurance Company Limited",
      "close": 175.29,
@@ -3576,6 +3686,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "EWIC",
+     "name": "East West Insurance Company Limited",
+     "close": 48.54,
+     "ret_1d": 0.0,
+     "ret_20d": -7.19,
+     "rsi14": 25.7,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "ASIC",
      "name": "Asia Insurance Company Limited",
      "close": 34.45,
@@ -3642,14 +3768,14 @@
    ]
   },
   "Inv. Banks / Inv. Cos. / Securities Cos.": {
-   "n_members": 24,
+   "n_members": 26,
    "breadth": {
-    "above_sma50": 15,
-    "advancing_1d": 3
+    "above_sma50": 17,
+    "advancing_1d": 4
    },
    "returns": {
-    "median_1d_pct": -1.71,
-    "median_20d_pct": -0.21,
+    "median_1d_pct": -1.64,
+    "median_20d_pct": 0.84,
     "best_20d": {
      "sym": "ICIBL",
      "pct": 354.0
@@ -3661,13 +3787,13 @@
    },
    "valuation": {
     "median_pe": 6.33,
-    "median_fair_gap_pct": -0.5,
+    "median_fair_gap_pct": -1.2,
     "n_undervalued": 2,
     "n_overvalued": 3,
     "n_valued": 7
    },
    "income": {
-    "median_yield_pct": 3.12,
+    "median_yield_pct": 3.13,
     "median_payout_pct": 50.66,
     "n_payers": 4
    },
@@ -3767,6 +3893,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ARMG",
+     "name": "ARM Green Industries Limited",
+     "close": 70.7,
+     "ret_1d": 0.16,
+     "ret_20d": 40.44,
+     "rsi14": 77.5,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.6,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "NEXT",
      "name": "Next Capital Limited",
      "close": 15.39,
@@ -3792,9 +3934,9 @@
      "above_sma50": true,
      "liquidity_rs_m": 48.4,
      "pe": 74.19,
-     "div_yield_pct": 0.75,
+     "div_yield_pct": 0.77,
      "payout_pct": 103.06,
-     "fair_gap_pct": -90.5,
+     "fair_gap_pct": -90.6,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -3943,6 +4085,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "OLPL",
+     "name": "OLP Financial Services Pakistan Limited",
+     "close": 49.28,
+     "ret_1d": -0.63,
+     "ret_20d": -0.24,
+     "rsi14": 48.4,
+     "above_sma50": true,
+     "liquidity_rs_m": 2.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 5.5
+    },
+    {
      "sym": "FDPL",
      "name": "First Dawood Properties Limited",
      "close": 4.97,
@@ -3984,9 +4142,9 @@
      "above_sma50": true,
      "liquidity_rs_m": 348.2,
      "pe": 19.76,
-     "div_yield_pct": 3.4,
+     "div_yield_pct": 3.44,
      "payout_pct": 67.31,
-     "fair_gap_pct": -69.0,
+     "fair_gap_pct": -69.3,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 1.7
     },
@@ -4002,7 +4160,7 @@
      "pe": 5.22,
      "div_yield_pct": null,
      "payout_pct": 32.57,
-     "fair_gap_pct": 12.4,
+     "fair_gap_pct": 10.6,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
     },
@@ -4130,7 +4288,7 @@
      "pe": 6.33,
      "div_yield_pct": 2.83,
      "payout_pct": 17.51,
-     "fair_gap_pct": -0.5,
+     "fair_gap_pct": -1.2,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 1.0
     }
@@ -4156,13 +4314,13 @@
    },
    "valuation": {
     "median_pe": 10.07,
-    "median_fair_gap_pct": -25.35,
+    "median_fair_gap_pct": -25.95,
     "n_undervalued": 0,
     "n_overvalued": 2,
     "n_valued": 2
    },
    "income": {
-    "median_yield_pct": 1.27,
+    "median_yield_pct": 1.28,
     "median_payout_pct": 29.34,
     "n_payers": 2
    },
@@ -4233,9 +4391,9 @@
      "above_sma50": false,
      "liquidity_rs_m": 56.2,
      "pe": 10.48,
-     "div_yield_pct": 1.71,
+     "div_yield_pct": 1.72,
      "payout_pct": 35.95,
-     "fair_gap_pct": -23.0,
+     "fair_gap_pct": -24.2,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 2.0
     },
@@ -4274,14 +4432,14 @@
    ]
   },
   "Miscellaneous": {
-   "n_members": 16,
+   "n_members": 17,
    "breadth": {
     "above_sma50": 8,
     "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -0.72,
-    "median_20d_pct": -4.12,
+    "median_1d_pct": -0.39,
+    "median_20d_pct": -3.97,
     "best_20d": {
      "sym": "OML",
      "pct": 226.0
@@ -4429,6 +4587,22 @@
      "fair_gap_pct": -47.9,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 5.0
+    },
+    {
+     "sym": "AKDHL",
+     "name": "AKD Hospitality Limited",
+     "close": 161.0,
+     "ret_1d": 0.0,
+     "ret_20d": 0.44,
+     "rsi14": 48.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     },
     {
      "sym": "UDLI",
@@ -4593,14 +4767,14 @@
    ]
   },
   "Modarabas": {
-   "n_members": 17,
+   "n_members": 20,
    "breadth": {
-    "above_sma50": 14,
-    "advancing_1d": 4
+    "above_sma50": 15,
+    "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -1.64,
-    "median_20d_pct": 0.75,
+    "median_1d_pct": -1.45,
+    "median_20d_pct": 0.33,
     "best_20d": {
      "sym": "FPJM",
      "pct": 37.14
@@ -4715,6 +4889,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "PIM",
+     "name": "Popular Islamic Modaraba",
+     "close": 24.5,
+     "ret_1d": 6.71,
+     "ret_20d": 5.29,
+     "rsi14": 56.4,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.0
     },
     {
      "sym": "FIBLM",
@@ -4893,6 +5083,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "FIMM",
+     "name": "First Imrooz Modaraba",
+     "close": 200.0,
+     "ret_1d": 0.0,
+     "ret_20d": -6.82,
+     "rsi14": 36.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 15.0
+    },
+    {
      "sym": "FTMM",
      "name": "First Treet Manufacturing Modaraba",
      "close": 16.28,
@@ -4907,6 +5113,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 1.5
+    },
+    {
+     "sym": "FPRM",
+     "name": "First Paramount Modaraba",
+     "close": 12.94,
+     "ret_1d": -6.23,
+     "ret_20d": -10.2,
+     "rsi14": 43.9,
+     "above_sma50": false,
+     "liquidity_rs_m": 1.4,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     },
     {
      "sym": "FFLM",
@@ -4946,14 +5168,14 @@
    },
    "valuation": {
     "median_pe": 8.14,
-    "median_fair_gap_pct": 1.9,
+    "median_fair_gap_pct": 1.4,
     "n_undervalued": 2,
     "n_overvalued": 2,
     "n_valued": 4
    },
    "income": {
-    "median_yield_pct": 4.03,
-    "median_payout_pct": 48.12,
+    "median_yield_pct": 4.07,
+    "median_payout_pct": 47.83,
     "n_payers": 4
    },
    "macro_drivers": [
@@ -5099,9 +5321,9 @@
      "above_sma50": true,
      "liquidity_rs_m": 94.9,
      "pe": 7.17,
-     "div_yield_pct": 10.96,
+     "div_yield_pct": 10.94,
      "payout_pct": 80.26,
-     "fair_gap_pct": -21.3,
+     "fair_gap_pct": -21.0,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 77.5
     },
@@ -5116,8 +5338,8 @@
      "liquidity_rs_m": 787.5,
      "pe": 11.39,
      "div_yield_pct": 2.55,
-     "payout_pct": 52.53,
-     "fair_gap_pct": -15.2,
+     "payout_pct": 51.96,
+     "fair_gap_pct": -15.6,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 30.0
     },
@@ -5133,7 +5355,7 @@
      "pe": 8.77,
      "div_yield_pct": 4.69,
      "payout_pct": 43.7,
-     "fair_gap_pct": 36.4,
+     "fair_gap_pct": 36.0,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 16.0
     },
@@ -5147,9 +5369,9 @@
      "above_sma50": false,
      "liquidity_rs_m": 998.5,
      "pe": 7.52,
-     "div_yield_pct": 3.37,
-     "payout_pct": 29.32,
-     "fair_gap_pct": 19.0,
+     "div_yield_pct": 3.44,
+     "payout_pct": 25.84,
+     "fair_gap_pct": 18.4,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 8.5
     }
@@ -5175,7 +5397,7 @@
    },
    "valuation": {
     "median_pe": 5.54,
-    "median_fair_gap_pct": 5.6,
+    "median_fair_gap_pct": 6.35,
     "n_undervalued": 2,
     "n_overvalued": 2,
     "n_valued": 6
@@ -5344,7 +5566,7 @@
      "pe": 3.83,
      "div_yield_pct": 4.71,
      "payout_pct": 23.46,
-     "fair_gap_pct": 12.5,
+     "fair_gap_pct": 14.0,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 33.0
     },
@@ -5360,7 +5582,7 @@
      "pe": 3.67,
      "div_yield_pct": 2.9,
      "payout_pct": 10.6,
-     "fair_gap_pct": 60.7,
+     "fair_gap_pct": 62.4,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 10.0
     },
@@ -5376,7 +5598,7 @@
      "pe": 7.83,
      "div_yield_pct": 4.48,
      "payout_pct": 36.27,
-     "fair_gap_pct": -27.7,
+     "fair_gap_pct": -26.9,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -5440,7 +5662,7 @@
      "pe": 4.4,
      "div_yield_pct": 2.97,
      "payout_pct": 45.47,
-     "fair_gap_pct": 33.9,
+     "fair_gap_pct": 35.3,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 3.0
     },
@@ -5489,7 +5711,7 @@
    },
    "income": {
     "median_yield_pct": 1.92,
-    "median_payout_pct": 16.62,
+    "median_payout_pct": 18.88,
     "n_payers": 3
    },
    "macro_drivers": [],
@@ -5592,7 +5814,7 @@
      "above_sma50": true,
      "liquidity_rs_m": 8.9,
      "pe": null,
-     "div_yield_pct": 1.99,
+     "div_yield_pct": 2.0,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
@@ -5673,7 +5895,7 @@
      "liquidity_rs_m": 109.6,
      "pe": 7.21,
      "div_yield_pct": 1.92,
-     "payout_pct": 13.88,
+     "payout_pct": 18.41,
      "fair_gap_pct": -11.4,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 0.9
@@ -5700,7 +5922,7 @@
    },
    "valuation": {
     "median_pe": 14.38,
-    "median_fair_gap_pct": -50.6,
+    "median_fair_gap_pct": -50.5,
     "n_undervalued": 1,
     "n_overvalued": 6,
     "n_valued": 9
@@ -5835,7 +6057,7 @@
      "pe": 12.4,
      "div_yield_pct": 5.02,
      "payout_pct": 47.96,
-     "fair_gap_pct": -50.6,
+     "fair_gap_pct": -50.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 50.0
     },
@@ -5899,7 +6121,7 @@
      "pe": 13.47,
      "div_yield_pct": 3.95,
      "payout_pct": 49.99,
-     "fair_gap_pct": 14.2,
+     "fair_gap_pct": 14.0,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 30.0
     },
@@ -5931,7 +6153,7 @@
      "pe": 10.89,
      "div_yield_pct": 4.28,
      "payout_pct": 11.67,
-     "fair_gap_pct": 48.0,
+     "fair_gap_pct": 47.7,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 40.0
     },
@@ -5963,7 +6185,7 @@
      "pe": 14.38,
      "div_yield_pct": 4.13,
      "payout_pct": 47.72,
-     "fair_gap_pct": 6.3,
+     "fair_gap_pct": 6.1,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 8.0
     },
@@ -6002,14 +6224,14 @@
    ]
   },
   "Power Generation & Distribution": {
-   "n_members": 14,
+   "n_members": 15,
    "breadth": {
-    "above_sma50": 3,
+    "above_sma50": 4,
     "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -1.46,
-    "median_20d_pct": -3.26,
+    "median_1d_pct": -1.56,
+    "median_20d_pct": -2.68,
     "best_20d": {
      "sym": "SGPL",
      "pct": 94.17
@@ -6021,7 +6243,7 @@
    },
    "valuation": {
     "median_pe": 13.91,
-    "median_fair_gap_pct": 2.7,
+    "median_fair_gap_pct": 2.45,
     "n_undervalued": 3,
     "n_overvalued": 3,
     "n_valued": 6
@@ -6167,6 +6389,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "TSPL",
+     "name": "Tri-Star Power Limited",
+     "close": 15.62,
+     "ret_1d": -2.38,
+     "ret_20d": 11.25,
+     "rsi14": 51.0,
+     "above_sma50": true,
+     "liquidity_rs_m": 11.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "LPL",
      "name": "Lalpir Power Limited",
      "close": 22.27,
@@ -6258,7 +6496,7 @@
      "pe": 14.76,
      "div_yield_pct": 25.36,
      "payout_pct": 213.35,
-     "fair_gap_pct": 35.0,
+     "fair_gap_pct": 34.5,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 4.0
     },
@@ -6338,7 +6576,7 @@
      "pe": 7.75,
      "div_yield_pct": 4.46,
      "payout_pct": 23.51,
-     "fair_gap_pct": -35.8,
+     "fair_gap_pct": -35.1,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 7.5
     },
@@ -6370,21 +6608,21 @@
      "pe": 13.92,
      "div_yield_pct": 5.27,
      "payout_pct": 49.38,
-     "fair_gap_pct": 38.2,
+     "fair_gap_pct": 37.7,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 1.5
     }
    ]
   },
   "Property": {
-   "n_members": 4,
+   "n_members": 5,
    "breadth": {
-    "above_sma50": 3,
+    "above_sma50": 4,
     "advancing_1d": 1
    },
    "returns": {
-    "median_1d_pct": -3.37,
-    "median_20d_pct": 1.48,
+    "median_1d_pct": -3.25,
+    "median_20d_pct": 6.05,
     "best_20d": {
      "sym": "HUSI",
      "pct": 39.47
@@ -6452,6 +6690,22 @@
      "rsi14": 56.1,
      "above_sma50": true,
      "liquidity_rs_m": 372.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "BRRG",
+     "name": "B.R.R Guardian Limited",
+     "close": 48.0,
+     "ret_1d": 0.0,
+     "ret_20d": 6.05,
+     "rsi14": 54.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.5,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -6811,7 +7065,7 @@
      "pe": 4.78,
      "div_yield_pct": 0.51,
      "payout_pct": 3.73,
-     "fair_gap_pct": 8.4,
+     "fair_gap_pct": 7.8,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 7.5
     }
@@ -6837,7 +7091,7 @@
    },
    "valuation": {
     "median_pe": 10.28,
-    "median_fair_gap_pct": -8.4,
+    "median_fair_gap_pct": -19.45,
     "n_undervalued": 1,
     "n_overvalued": 1,
     "n_valued": 2
@@ -7257,7 +7511,7 @@
      "pe": 14.9,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": -34.6,
+     "fair_gap_pct": -56.7,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -7280,14 +7534,14 @@
    ]
   },
   "Synthetic & Rayon": {
-   "n_members": 4,
+   "n_members": 5,
    "breadth": {
-    "above_sma50": 3,
-    "advancing_1d": 1
+    "above_sma50": 4,
+    "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -0.36,
-    "median_20d_pct": 20.82,
+    "median_1d_pct": 0.0,
+    "median_20d_pct": 14.81,
     "best_20d": {
      "sym": "IBFL",
      "pct": 29.47
@@ -7369,6 +7623,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "PSYL",
+     "name": "Pakistan Synthetics Limited",
+     "close": 154.78,
+     "ret_1d": 1.7,
+     "ret_20d": 7.93,
+     "rsi14": 67.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.8,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "GATI",
      "name": "Gatron (Industries) Limited",
      "close": 84.8,
@@ -7406,14 +7676,14 @@
    },
    "valuation": {
     "median_pe": 17.19,
-    "median_fair_gap_pct": -46.45,
+    "median_fair_gap_pct": -46.9,
     "n_undervalued": 4,
     "n_overvalued": 6,
     "n_valued": 10
    },
    "income": {
-    "median_yield_pct": 3.08,
-    "median_payout_pct": 16.91,
+    "median_yield_pct": 3.11,
+    "median_payout_pct": 5.09,
     "n_payers": 5
    },
    "macro_drivers": [
@@ -7607,8 +7877,8 @@
      "above_sma50": true,
      "liquidity_rs_m": 51.8,
      "pe": 19.04,
-     "div_yield_pct": 0.4,
-     "payout_pct": 7.89,
+     "div_yield_pct": 0.41,
+     "payout_pct": 7.22,
      "fair_gap_pct": -62.4,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
@@ -7655,8 +7925,8 @@
      "above_sma50": false,
      "liquidity_rs_m": 55.0,
      "pe": 30.98,
-     "div_yield_pct": 3.08,
-     "payout_pct": 96.47,
+     "div_yield_pct": 3.11,
+     "payout_pct": 2.97,
      "fair_gap_pct": -76.1,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 1.0
@@ -7753,7 +8023,7 @@
      "pe": 106.38,
      "div_yield_pct": 4.77,
      "payout_pct": null,
-     "fair_gap_pct": -90.3,
+     "fair_gap_pct": -90.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 0.5
     },
@@ -7801,7 +8071,7 @@
      "pe": 17.19,
      "div_yield_pct": 1.48,
      "payout_pct": 25.94,
-     "fair_gap_pct": -32.6,
+     "fair_gap_pct": -33.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 2.0
     },
@@ -7833,7 +8103,7 @@
      "pe": 9.77,
      "div_yield_pct": 6.46,
      "payout_pct": 45.23,
-     "fair_gap_pct": 60.2,
+     "fair_gap_pct": 58.4,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 6.5
     },
@@ -7872,14 +8142,14 @@
    ]
   },
   "Textile Composite": {
-   "n_members": 31,
+   "n_members": 32,
    "breadth": {
     "above_sma50": 19,
     "advancing_1d": 6
    },
    "returns": {
-    "median_1d_pct": -1.27,
-    "median_20d_pct": -2.22,
+    "median_1d_pct": -1.47,
+    "median_20d_pct": -2.26,
     "best_20d": {
      "sym": "ANTM",
      "pct": 58.74
@@ -7891,14 +8161,14 @@
    },
    "valuation": {
     "median_pe": 8.7,
-    "median_fair_gap_pct": -5.75,
+    "median_fair_gap_pct": -6.15,
     "n_undervalued": 3,
     "n_overvalued": 5,
     "n_valued": 10
    },
    "income": {
     "median_yield_pct": 1.82,
-    "median_payout_pct": 8.95,
+    "median_payout_pct": 6.53,
     "n_payers": 5
    },
    "macro_drivers": [
@@ -8212,7 +8482,7 @@
      "liquidity_rs_m": 79.9,
      "pe": 9.85,
      "div_yield_pct": null,
-     "payout_pct": null,
+     "payout_pct": 0.01,
      "fair_gap_pct": -29.9,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
@@ -8261,7 +8531,7 @@
      "pe": 12.75,
      "div_yield_pct": 3.84,
      "payout_pct": 37.17,
-     "fair_gap_pct": 3.7,
+     "fair_gap_pct": 2.9,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 3.0
     },
@@ -8312,6 +8582,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 1.5
+    },
+    {
+     "sym": "FZCM",
+     "name": "Fazal Cloth Mills Limited",
+     "close": 250.14,
+     "ret_1d": -1.96,
+     "ret_20d": -4.89,
+     "rsi14": 45.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.7,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     },
     {
      "sym": "BHAT",
@@ -8371,7 +8657,7 @@
      "above_sma50": false,
      "liquidity_rs_m": 397.9,
      "pe": 4.38,
-     "div_yield_pct": 1.33,
+     "div_yield_pct": 1.37,
      "payout_pct": 8.95,
      "fair_gap_pct": 52.1,
      "fair_verdict": "undervalued",
@@ -8451,7 +8737,7 @@
      "above_sma50": false,
      "liquidity_rs_m": 30.1,
      "pe": 5.58,
-     "div_yield_pct": 0.86,
+     "div_yield_pct": 0.9,
      "payout_pct": 4.11,
      "fair_gap_pct": 19.6,
      "fair_verdict": "undervalued",
@@ -8476,21 +8762,21 @@
    ]
   },
   "Textile Spinning": {
-   "n_members": 30,
+   "n_members": 32,
    "breadth": {
-    "above_sma50": 20,
+    "above_sma50": 21,
     "advancing_1d": 10
    },
    "returns": {
-    "median_1d_pct": -0.82,
-    "median_20d_pct": 1.92,
+    "median_1d_pct": -1.1,
+    "median_20d_pct": 1.35,
     "best_20d": {
      "sym": "MQTM",
      "pct": 61.48
     },
     "worst_20d": {
-     "sym": "IDRT",
-     "pct": -21.2
+     "sym": "IDEAL",
+     "pct": -23.03
     }
    },
    "valuation": {
@@ -8501,7 +8787,7 @@
     "n_valued": 4
    },
    "income": {
-    "median_yield_pct": 1.88,
+    "median_yield_pct": 1.9,
     "median_payout_pct": 4.11,
     "n_payers": 2
    },
@@ -8821,7 +9107,7 @@
      "above_sma50": true,
      "liquidity_rs_m": 16.6,
      "pe": 3.48,
-     "div_yield_pct": 2.2,
+     "div_yield_pct": 2.26,
      "payout_pct": 7.86,
      "fair_gap_pct": 85.7,
      "fair_verdict": "undervalued",
@@ -8884,6 +9170,22 @@
      "rsi14": 49.1,
      "above_sma50": true,
      "liquidity_rs_m": 7.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "DINT",
+     "name": "Din Textile Mills Limited",
+     "close": 67.93,
+     "ret_1d": -3.03,
+     "ret_20d": -4.95,
+     "rsi14": 42.7,
+     "above_sma50": true,
+     "liquidity_rs_m": 1.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -9028,6 +9330,22 @@
      "rsi14": 32.8,
      "above_sma50": false,
      "liquidity_rs_m": 2.6,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "IDEAL",
+     "name": "Ideal Dynamics Limited",
+     "close": 54.75,
+     "ret_1d": -9.83,
+     "ret_20d": -23.03,
+     "rsi14": 43.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 1.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -9216,7 +9534,7 @@
     "n_valued": 3
    },
    "income": {
-    "median_yield_pct": 5.99,
+    "median_yield_pct": 5.98,
     "median_payout_pct": 50.92,
     "n_payers": 1
    },
@@ -9329,7 +9647,7 @@
      "above_sma50": true,
      "liquidity_rs_m": 18.4,
      "pe": 8.73,
-     "div_yield_pct": 5.99,
+     "div_yield_pct": 5.98,
      "payout_pct": 50.92,
      "fair_gap_pct": -25.4,
      "fair_verdict": "overvalued",
