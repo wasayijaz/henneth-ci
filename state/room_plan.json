@@ -4,30 +4,27 @@
   "MEBL",
   "ENGROH",
   "LUCK",
+  "MARI",
+  "EFERT",
   "POL",
-  "MTL",
   "SAZEW",
-  "SNGP",
   "PAEL",
   "KEL",
   "AIRLINK",
-  "CNERGY",
   "SSGC",
+  "HCAR",
   "JSML"
  ],
- "delta": [],
+ "delta": [
+  {
+   "symbol": "MTL",
+   "why": "price moved 4.2% since last Room"
+  }
+ ],
  "full": [
   {
-   "symbol": "MARI",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "EFERT",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "HCAR",
-   "why": "material change since last Room"
+   "symbol": "AKBL",
+   "why": "never covered"
   },
   {
    "symbol": "OGDC",
@@ -51,10 +48,6 @@
   },
   {
    "symbol": "FCCL",
-   "why": "never covered"
-  },
-  {
-   "symbol": "AKBL",
    "why": "never covered"
   },
   {
@@ -326,6 +319,14 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "SNGP",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "CNERGY",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "ATRL",
    "why": "material change since last Room"
   },
@@ -339,21 +340,18 @@
   }
  ],
  "_meta": {
-  "built": "2026-07-31 17:47",
+  "built": "2026-07-31 18:22",
   "full_budget": 3,
   "run_full_now": [
-   "MARI",
-   "EFERT",
-   "HCAR"
+   "AKBL",
+   "OGDC",
+   "PPL"
   ],
   "deferred_full": [
-   "OGDC",
-   "PPL",
    "PTC",
    "HUBC",
    "HBL",
    "FCCL",
-   "AKBL",
    "FCEPL",
    "EPCL",
    "CSAP",
@@ -421,17 +419,19 @@
    "GAL",
    "PIOC",
    "PSO",
+   "SNGP",
+   "CNERGY",
    "ATRL",
    "PRL",
    "NRL"
   ],
   "counts": {
-   "full_due": 80,
+   "full_due": 79,
    "full_now": 3,
-   "delta": 0,
+   "delta": 1,
    "reaffirm": 14
   },
-  "est_tokens_today": 66000,
+  "est_tokens_today": 71000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
