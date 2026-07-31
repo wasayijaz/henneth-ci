@@ -1,18 +1,13 @@
 {
  "reaffirm": [
   "FFC",
-  "UBL",
   "MEBL",
   "ENGROH",
   "LUCK",
-  "PPL",
   "EFERT",
   "POL",
-  "BAFL",
   "PSO",
   "MTL",
-  "PTC",
-  "ATRL",
   "SAZEW",
   "SNGP",
   "PAEL",
@@ -20,14 +15,28 @@
   "AIRLINK",
   "CNERGY",
   "SSGC",
-  "PRL",
-  "NRL",
   "JSML"
  ],
  "delta": [],
  "full": [
   {
-   "symbol": "MLCF",
+   "symbol": "MARI",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "HCAR",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "OGDC",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "PPL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "HUBC",
    "why": "material change since last Room"
   },
   {
@@ -75,7 +84,15 @@
    "why": "never covered"
   },
   {
+   "symbol": "MLCF",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "SYS",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "BAFL",
    "why": "material change since last Room"
   },
   {
@@ -83,7 +100,7 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "OGDC",
+   "symbol": "PTC",
    "why": "material change since last Room"
   },
   {
@@ -223,6 +240,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "LOADS",
+   "why": "never covered"
+  },
+  {
    "symbol": "TPL",
    "why": "never covered"
   },
@@ -232,10 +253,6 @@
   },
   {
    "symbol": "KOSM",
-   "why": "never covered"
-  },
-  {
-   "symbol": "LOADS",
    "why": "never covered"
   },
   {
@@ -259,6 +276,10 @@
    "why": "never covered"
   },
   {
+   "symbol": "OBOY",
+   "why": "never covered"
+  },
+  {
    "symbol": "SGPL",
    "why": "never covered"
   },
@@ -268,10 +289,6 @@
   },
   {
    "symbol": "ZUMA",
-   "why": "never covered"
-  },
-  {
-   "symbol": "OBOY",
    "why": "never covered"
   },
   {
@@ -303,27 +320,31 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "HCAR",
+   "symbol": "ATRL",
    "why": "material change since last Room"
   },
   {
-   "symbol": "HUBC",
+   "symbol": "PRL",
    "why": "material change since last Room"
   },
   {
-   "symbol": "MARI",
+   "symbol": "NRL",
    "why": "material change since last Room"
   }
  ],
  "_meta": {
-  "built": "2026-07-30 23:23",
+  "built": "2026-07-31 10:47",
   "full_budget": 3,
   "run_full_now": [
-   "MLCF",
-   "HBL",
-   "FCCL"
+   "MARI",
+   "HCAR",
+   "OGDC"
   ],
   "deferred_full": [
+   "PPL",
+   "HUBC",
+   "HBL",
+   "FCCL",
    "AKBL",
    "FCEPL",
    "EPCL",
@@ -333,9 +354,11 @@
    "FABL",
    "FCL",
    "ITANZ",
+   "MLCF",
    "SYS",
+   "BAFL",
    "FFL",
-   "OGDC",
+   "PTC",
    "FATIMA",
    "SRVI",
    "BOP",
@@ -370,19 +393,19 @@
    "TPLP",
    "AGHA",
    "DCL",
+   "LOADS",
    "TPL",
    "WTL",
    "KOSM",
-   "LOADS",
    "MACFL",
    "PACE",
    "QUICE",
    "DFSM",
    "KOHTM",
+   "OBOY",
    "SGPL",
    "TELE",
    "ZUMA",
-   "OBOY",
    "NBP",
    "DGKC",
    "PSX",
@@ -390,15 +413,15 @@
    "GHNI",
    "GAL",
    "PIOC",
-   "HCAR",
-   "HUBC",
-   "MARI"
+   "ATRL",
+   "PRL",
+   "NRL"
   ],
   "counts": {
-   "full_due": 72,
+   "full_due": 78,
    "full_now": 3,
    "delta": 0,
-   "reaffirm": 23
+   "reaffirm": 16
   },
   "est_tokens_today": 66000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."

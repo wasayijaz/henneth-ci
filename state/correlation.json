@@ -1,12 +1,12 @@
 {
- "updated": "2026-07-30 23:11",
+ "updated": "2026-07-31 11:14",
  "status": "ok",
  "lookback_sessions": 750,
  "min_overlap_bars": 250,
  "top_n": 8,
  "high_corr_threshold": 0.6,
- "symbols_covered": 229,
- "pairs_reported": 1832,
+ "symbols_covered": 228,
+ "pairs_reported": 1824,
  "note": "how closely two stocks have actually moved together, day by day, over the last three years of closes. 1.0 means they rose and fell as one, 0 means no relationship, below 0 means they tended to move opposite. each stock lists only its eight closest companions — a pair is left out entirely unless the two names traded on at least a year of the same days, because a number off a handful of shared sessions is noise. this measures overlap of BEHAVIOUR, not of business: two stocks in different sectors can still be one bet. research, not a rule — the desk's hard limit stays one position per sector.",
  "method": {
   "returns": "daily log returns, ln(close_t / close_t-1), from state/history closes",
@@ -196,7 +196,7 @@
     },
     {
      "symbol": "XLI",
-     "r": 0.828,
+     "r": 0.829,
      "bars": 724
     },
     {
@@ -629,14 +629,14 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.453,
-     "bars": 715
-    },
-    {
      "symbol": "ABL",
      "r": 0.447,
      "bars": 705
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.432,
+     "bars": 715
     }
    ],
    "max_r": 0.551,
@@ -1095,11 +1095,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.529,
-     "bars": 715
-    },
-    {
      "symbol": "AKBL",
      "r": 0.505,
      "bars": 715
@@ -1112,6 +1107,11 @@
     {
      "symbol": "NBP",
      "r": 0.5,
+     "bars": 715
+    },
+    {
+     "symbol": "FABL",
+     "r": 0.495,
      "bars": 715
     }
    ],
@@ -1160,8 +1160,8 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.443,
+     "symbol": "NBP",
+     "r": 0.415,
      "bars": 715
     }
    ],
@@ -2288,27 +2288,27 @@
     },
     {
      "symbol": "XLK",
-     "r": 0.707,
+     "r": 0.708,
      "bars": 724
     },
     {
      "symbol": "US500",
-     "r": 0.685,
+     "r": 0.686,
      "bars": 724
     },
     {
      "symbol": "USRUT",
-     "r": 0.625,
+     "r": 0.626,
      "bars": 724
     },
     {
      "symbol": "XLI",
-     "r": 0.603,
+     "r": 0.605,
      "bars": 724
     },
     {
      "symbol": "USDJI",
-     "r": 0.576,
+     "r": 0.577,
      "bars": 724
     }
    ],
@@ -2338,7 +2338,7 @@
     },
     {
      "symbol": "US500",
-     "r": 0.748,
+     "r": 0.749,
      "bars": 724
     },
     {
@@ -2348,7 +2348,7 @@
     },
     {
      "symbol": "XLI",
-     "r": 0.713,
+     "r": 0.715,
      "bars": 724
     },
     {
@@ -2358,7 +2358,7 @@
     },
     {
      "symbol": "USRUT",
-     "r": 0.706,
+     "r": 0.707,
      "bars": 724
     },
     {
@@ -2591,11 +2591,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.453,
-     "bars": 715
-    },
-    {
      "symbol": "HMB",
      "r": 0.436,
      "bars": 715
@@ -2608,6 +2603,11 @@
     {
      "symbol": "NBP",
      "r": 0.425,
+     "bars": 715
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.423,
      "bars": 715
     }
    ],
@@ -3713,7 +3713,7 @@
     },
     {
      "symbol": "USNDX",
-     "r": 0.18,
+     "r": 0.181,
      "bars": 724
     }
    ],
@@ -3929,11 +3929,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.554,
-     "bars": 715
-    },
-    {
      "symbol": "AKBL",
      "r": 0.551,
      "bars": 715
@@ -3951,6 +3946,11 @@
     {
      "symbol": "BOP",
      "r": 0.506,
+     "bars": 715
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.501,
      "bars": 715
     }
    ],
@@ -4248,7 +4248,7 @@
    "peers": [
     {
      "symbol": "ACWI",
-     "r": 0.744,
+     "r": 0.745,
      "bars": 724
     },
     {
@@ -4263,7 +4263,7 @@
     },
     {
      "symbol": "USDJI",
-     "r": 0.687,
+     "r": 0.688,
      "bars": 724
     },
     {
@@ -4287,7 +4287,7 @@
      "bars": 724
     }
    ],
-   "max_r": 0.744,
+   "max_r": 0.745,
    "high_corr_peers": [
     "ACWI",
     "USRUT",
@@ -5014,11 +5014,6 @@
    "bars": 694,
    "peers": [
     {
-     "symbol": "UBL",
-     "r": 0.335,
-     "bars": 694
-    },
-    {
      "symbol": "NCL",
      "r": 0.327,
      "bars": 685
@@ -5052,9 +5047,14 @@
      "symbol": "ISL",
      "r": 0.31,
      "bars": 694
+    },
+    {
+     "symbol": "MUGHAL",
+     "r": 0.309,
+     "bars": 685
     }
    ],
-   "max_r": 0.335,
+   "max_r": 0.327,
    "high_corr_peers": []
   },
   "KAPCO": {
@@ -5838,11 +5838,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.587,
-     "bars": 715
-    },
-    {
      "symbol": "BAHL",
      "r": 0.567,
      "bars": 715
@@ -5865,6 +5860,11 @@
     {
      "symbol": "FABL",
      "r": 0.433,
+     "bars": 715
+    },
+    {
+     "symbol": "AKBL",
+     "r": 0.432,
      "bars": 715
     }
    ],
@@ -5936,11 +5936,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.54,
-     "bars": 715
-    },
-    {
      "symbol": "MCB",
      "r": 0.536,
      "bars": 715
@@ -5964,6 +5959,11 @@
      "symbol": "LUCK",
      "r": 0.473,
      "bars": 710
+    },
+    {
+     "symbol": "FCCL",
+     "r": 0.437,
+     "bars": 715
     }
    ],
    "max_r": 0.574,
@@ -6330,11 +6330,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.476,
-     "bars": 715
-    },
-    {
      "symbol": "MCB",
      "r": 0.453,
      "bars": 715
@@ -6352,6 +6347,11 @@
     {
      "symbol": "MLCF",
      "r": 0.432,
+     "bars": 715
+    },
+    {
+     "symbol": "HMB",
+     "r": 0.43,
      "bars": 715
     }
    ],
@@ -8158,11 +8158,6 @@
      "bars": 715
     },
     {
-     "symbol": "UBL",
-     "r": 0.307,
-     "bars": 715
-    },
-    {
      "symbol": "HMB",
      "r": 0.303,
      "bars": 715
@@ -8170,6 +8165,11 @@
     {
      "symbol": "NBP",
      "r": 0.299,
+     "bars": 715
+    },
+    {
+     "symbol": "BAHL",
+     "r": 0.296,
      "bars": 715
     }
    ],
@@ -8479,11 +8479,6 @@
      "bars": 706
     },
     {
-     "symbol": "UBL",
-     "r": 0.353,
-     "bars": 706
-    },
-    {
      "symbol": "JSBL",
      "r": 0.34,
      "bars": 706
@@ -8501,6 +8496,11 @@
     {
      "symbol": "BIPL",
      "r": 0.332,
+     "bars": 706
+    },
+    {
+     "symbol": "MCB",
+     "r": 0.321,
      "bars": 706
     }
    ],
@@ -9740,53 +9740,6 @@
    "max_r": 0.213,
    "high_corr_peers": []
   },
-  "UBL": {
-   "bars": 715,
-   "peers": [
-    {
-     "symbol": "MCB",
-     "r": 0.587,
-     "bars": 715
-    },
-    {
-     "symbol": "HBL",
-     "r": 0.554,
-     "bars": 715
-    },
-    {
-     "symbol": "MEBL",
-     "r": 0.54,
-     "bars": 715
-    },
-    {
-     "symbol": "BAFL",
-     "r": 0.529,
-     "bars": 715
-    },
-    {
-     "symbol": "NBP",
-     "r": 0.476,
-     "bars": 715
-    },
-    {
-     "symbol": "LUCK",
-     "r": 0.472,
-     "bars": 710
-    },
-    {
-     "symbol": "AKBL",
-     "r": 0.453,
-     "bars": 715
-    },
-    {
-     "symbol": "FABL",
-     "r": 0.453,
-     "bars": 715
-    }
-   ],
-   "max_r": 0.587,
-   "high_corr_peers": []
-  },
   "UNITY": {
    "bars": 706,
    "peers": [
@@ -9891,7 +9844,7 @@
     },
     {
      "symbol": "USNDX",
-     "r": 0.95,
+     "r": 0.951,
      "bars": 724
     },
     {
@@ -9911,7 +9864,7 @@
     },
     {
      "symbol": "XLI",
-     "r": 0.819,
+     "r": 0.82,
      "bars": 724
     },
     {
@@ -9921,7 +9874,7 @@
     },
     {
      "symbol": "XLC",
-     "r": 0.783,
+     "r": 0.784,
      "bars": 724
     }
    ],
@@ -10003,7 +9956,7 @@
     },
     {
      "symbol": "US500",
-     "r": 0.95,
+     "r": 0.951,
      "bars": 724
     },
     {
@@ -10023,12 +9976,12 @@
     },
     {
      "symbol": "USRUT",
-     "r": 0.725,
+     "r": 0.726,
      "bars": 724
     },
     {
      "symbol": "XLC",
-     "r": 0.718,
+     "r": 0.72,
      "bars": 724
     },
     {
@@ -10059,12 +10012,12 @@
     },
     {
      "symbol": "USVIX",
-     "r": 0.053,
+     "r": 0.054,
      "bars": 724
     },
     {
      "symbol": "GLD",
-     "r": 0.052,
+     "r": 0.051,
      "bars": 724
     },
     {
@@ -10084,7 +10037,7 @@
     },
     {
      "symbol": "XLK",
-     "r": 0.013,
+     "r": 0.012,
      "bars": 724
     },
     {
@@ -10138,7 +10091,7 @@
     },
     {
      "symbol": "USNDX",
-     "r": 0.725,
+     "r": 0.726,
      "bars": 724
     }
    ],
@@ -10174,7 +10127,7 @@
     },
     {
      "symbol": "USO",
-     "r": 0.053,
+     "r": 0.054,
      "bars": 724
     },
     {
@@ -10450,12 +10403,12 @@
    "peers": [
     {
      "symbol": "US500",
-     "r": 0.783,
+     "r": 0.784,
      "bars": 724
     },
     {
      "symbol": "XLY",
-     "r": 0.738,
+     "r": 0.739,
      "bars": 724
     },
     {
@@ -10465,7 +10418,7 @@
     },
     {
      "symbol": "USNDX",
-     "r": 0.718,
+     "r": 0.72,
      "bars": 724
     },
     {
@@ -10480,7 +10433,7 @@
     },
     {
      "symbol": "USRUT",
-     "r": 0.605,
+     "r": 0.604,
      "bars": 724
     },
     {
@@ -10489,7 +10442,7 @@
      "bars": 724
     }
    ],
-   "max_r": 0.783,
+   "max_r": 0.784,
    "high_corr_peers": [
     "US500",
     "XLY",
@@ -10525,22 +10478,22 @@
     },
     {
      "symbol": "USDJI",
-     "r": 0.36,
+     "r": 0.361,
      "bars": 724
     },
     {
      "symbol": "XLI",
-     "r": 0.353,
+     "r": 0.354,
      "bars": 724
     },
     {
      "symbol": "US500",
-     "r": 0.33,
+     "r": 0.331,
      "bars": 724
     },
     {
      "symbol": "ACWI",
-     "r": 0.318,
+     "r": 0.319,
      "bars": 724
     }
    ],
@@ -10615,7 +10568,7 @@
     },
     {
      "symbol": "ACWI",
-     "r": 0.828,
+     "r": 0.829,
      "bars": 724
     },
     {
@@ -10625,7 +10578,7 @@
     },
     {
      "symbol": "US500",
-     "r": 0.819,
+     "r": 0.82,
      "bars": 724
     },
     {
@@ -10640,12 +10593,12 @@
     },
     {
      "symbol": "EFA",
-     "r": 0.713,
+     "r": 0.715,
      "bars": 724
     },
     {
      "symbol": "USNDX",
-     "r": 0.707,
+     "r": 0.709,
      "bars": 724
     }
    ],
@@ -10681,7 +10634,7 @@
     },
     {
      "symbol": "EEM",
-     "r": 0.707,
+     "r": 0.708,
      "bars": 724
     },
     {
@@ -10691,17 +10644,17 @@
     },
     {
      "symbol": "USRUT",
-     "r": 0.677,
+     "r": 0.678,
      "bars": 724
     },
     {
      "symbol": "USDJI",
-     "r": 0.671,
+     "r": 0.672,
      "bars": 724
     },
     {
      "symbol": "XLI",
-     "r": 0.661,
+     "r": 0.663,
      "bars": 724
     }
    ],
@@ -10722,7 +10675,7 @@
    "peers": [
     {
      "symbol": "XLRE",
-     "r": 0.562,
+     "r": 0.561,
      "bars": 724
     },
     {
@@ -10742,12 +10695,12 @@
     },
     {
      "symbol": "USDJI",
-     "r": 0.399,
+     "r": 0.398,
      "bars": 724
     },
     {
      "symbol": "XLF",
-     "r": 0.369,
+     "r": 0.368,
      "bars": 724
     },
     {
@@ -10757,11 +10710,11 @@
     },
     {
      "symbol": "HYG",
-     "r": 0.307,
+     "r": 0.306,
      "bars": 724
     }
    ],
-   "max_r": 0.562,
+   "max_r": 0.561,
    "high_corr_peers": []
   },
   "XLRE": {
@@ -10784,12 +10737,12 @@
     },
     {
      "symbol": "USRUT",
-     "r": 0.578,
+     "r": 0.577,
      "bars": 724
     },
     {
      "symbol": "XLV",
-     "r": 0.572,
+     "r": 0.571,
      "bars": 724
     },
     {
@@ -10799,12 +10752,12 @@
     },
     {
      "symbol": "XLP",
-     "r": 0.562,
+     "r": 0.561,
      "bars": 724
     },
     {
      "symbol": "XLF",
-     "r": 0.553,
+     "r": 0.552,
      "bars": 724
     }
    ],
@@ -10835,17 +10788,17 @@
     },
     {
      "symbol": "HYG",
-     "r": 0.441,
+     "r": 0.44,
      "bars": 724
     },
     {
      "symbol": "XLI",
-     "r": 0.418,
+     "r": 0.417,
      "bars": 724
     },
     {
      "symbol": "USDJI",
-     "r": 0.39,
+     "r": 0.389,
      "bars": 724
     },
     {
@@ -10869,12 +10822,12 @@
    "peers": [
     {
      "symbol": "USDJI",
-     "r": 0.627,
+     "r": 0.626,
      "bars": 724
     },
     {
      "symbol": "XLRE",
-     "r": 0.572,
+     "r": 0.571,
      "bars": 724
     },
     {
@@ -10894,21 +10847,21 @@
     },
     {
      "symbol": "XLI",
-     "r": 0.502,
+     "r": 0.5,
      "bars": 724
     },
     {
      "symbol": "EFA",
-     "r": 0.486,
+     "r": 0.485,
      "bars": 724
     },
     {
      "symbol": "ACWI",
-     "r": 0.481,
+     "r": 0.48,
      "bars": 724
     }
    ],
-   "max_r": 0.627,
+   "max_r": 0.626,
    "high_corr_peers": [
     "USDJI"
    ]
@@ -10943,7 +10896,7 @@
     },
     {
      "symbol": "XLC",
-     "r": 0.738,
+     "r": 0.739,
      "bars": 724
     },
     {
