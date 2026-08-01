@@ -3385,9 +3385,17 @@ async function pageUnsubscribe() {
   if (!token) { card(`<div class="empty">This link is missing its token — open the unsubscribe link from an actual desk email.</div>`); return; }
   card(`<div class="sub">Stop desk emails to this address?</div>
     <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn" onclick="doUnsub('${esc(token)}','digest')">Just the weekly digest</button>
-      <button class="btn" onclick="doUnsub('${esc(token)}','all')">All desk emails</button>
+      <button class="btn" data-unsub-scope="digest">Just the weekly digest</button>
+      <button class="btn" data-unsub-scope="all">All desk emails</button>
     </div>`);
+  // token is raw attacker-controlled input (URL query, unauthenticated route). Bind via
+  // addEventListener with the token as a real JS value, not string-interpolated into an
+  // onclick="" attribute — esc() only HTML-entity-escapes, and the browser HTML-decodes an
+  // attribute value before handing it to the JS parser, so an interpolated token can still
+  // break out of the string literal and execute arbitrary JS in this origin.
+  $("view").querySelectorAll("[data-unsub-scope]").forEach(btn => {
+    btn.addEventListener("click", () => doUnsub(token, btn.dataset.unsubScope));
+  });
 }
 async function doUnsub(token, scope) {
   const { data, error } = await sb.rpc("email_unsubscribe", { p_token: token, p_scope: scope });
