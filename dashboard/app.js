@@ -2633,27 +2633,15 @@ async function pageTicker(sym, _retry = 0) {
   const nextOfType = t => (cal?.events || [])
     .filter(e => e.ticker === sym && e.type === t && e.date >= today0)
     .sort((a, b) => a.date.localeCompare(b.date))[0];
+  // earnings_calendar.json is the ONLY source these rows should read. Do not add a "fallback" to
+  // fundamentals.json's next_earnings / ex_div_date: build_calendar.py already builds this file
+  // from exactly those two fields, and it parses them better than JS can. Its parse_loose() rolls
+  // a year-less "Aug 28" forward to the next occurrence, where new Date("Aug 28") yields 2001;
+  // it also drops anything already past, which matters because 91 of the 94 scraped ex_div_date
+  // values are stale — a fallback would print a months-old date under a label meaning "next".
+  // A "—" here means the desk has no forward event for this ticker, which is the honest answer.
   const nextEarn = nextOfType("results");
   const nextXdiv = nextOfType("ex_dividend");
-  // The events calendar is the preferred source — it is typed and already forward-filtered. But it
-  // is not the only place the desk holds these dates: fundamentals.json carries next_earnings and
-  // ex_div_date too, and calendar.json currently ships holidays with NO events array at all, so
-  // relying on it alone prints "—" on every ticker while the data layer knows 179 forward earnings
-  // dates. CLAUDE.md Rule 2 cuts both ways — don't invent a date, but don't answer "unknown" when
-  // the layer has it.
-  //
-  // Fall back ONLY to a date still in the future. The scraped values go stale and are not
-  // re-fetched on a schedule tied to the event: 91 of 94 ex_div_date values are already in the
-  // past. Printing one under "Ex-dividend" would assert that the single date deciding whether you
-  // get paid is still ahead of you — worse than "—". A past date means the desk does not know the
-  // NEXT one, which is exactly what "—" says.
-  const isoOf = s => {
-    const d = s ? new Date(s) : null;                       // "Aug 21, 2026" -> local midnight
-    return d && !isNaN(d) ? new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10) : null;
-  };
-  const fwdDate = s => { const d = isoOf(s); return d && d >= today0 ? d : null; };
-  const nextEarnDate = nextEarn?.date || fwdDate(f.next_earnings);
-  const nextXdivDate = nextXdiv?.date || fwdDate(f.ex_div_date);
   const daysTo = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
   /* THE ALL-OR-NOTHING GUARD — narrowed, deliberately.
 
@@ -2852,10 +2840,7 @@ async function pageTicker(sym, _retry = 0) {
   let rg = "Moderate", rgk = "md";
   if (vr != null) { if (vr < 20) { rg = "Lower"; rgk = "lo"; } else if (vr >= 50) { rg = "Higher"; rgk = "hi"; } }
   if (liq === "low" || mddRecentAbs >= 55) { rg = "Higher"; rgk = "hi"; }
-  // nextEarnDate, not nextEarn — the calendar's events array is the preferred source but is not
-  // the only one, and today it does not exist at all (see the fallback note above). Reading the
-  // raw event here made this tile say "none scheduled" on every ticker in the universe.
-  const daysToEarn = nextEarnDate ? daysTo(nextEarnDate) : null;
+  const daysToEarn = nextEarn ? daysTo(nextEarn.date) : null;
   // The Room ends at the bull/bear debate now (no Chair house view) — bull_case marks a covered
   // session, and that presence, not a verdict, is what the reveal bar and Signal Stack key off.
   const hasRoom = !!(room && room.bull_case);
@@ -2866,7 +2851,7 @@ async function pageTicker(sym, _retry = 0) {
     ${sTile("Fair value vs price", fv ? `Rs ${fmt(fv.composite_fair)}` : "—", fv ? `price Rs ${fmt(fv.price)} · ${sgn(fv.mispricing_pct)}%` : "model n/a", fv ? (fv.verdict === "undervalued" ? "up" : fv.verdict === "overvalued" ? "dn" : "") : "")}
     ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed", mixed: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
     ${sTile("Risk grade", rg, vr != null ? `volatility ${vr.toFixed(0)}/100` : "liquidity " + liq, rgk === "hi" ? "dn" : rgk === "lo" ? "up" : "")}
-    ${sTile("Next event", nextEarnDate ? "Results" : "—", nextEarnDate ? `${nextEarnDate}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
+    ${sTile("Next event", nextEarn ? "Results" : "—", nextEarn ? `${nextEarn.date}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
   </div>`;
 
   // ---- private per-ticker note (only you can see it) ----
@@ -3138,8 +3123,8 @@ async function pageTicker(sym, _retry = 0) {
       <div class="fact"><span>Revenue</span><b>${esc(f.revenue || "—")}</b></div>
       <div class="fact"><span>Net income</span><b>${esc(f.net_income || "—")}</b></div>
       <div class="fact"><span>Shares out</span><b>${esc(f.shares_out || "—")}</b></div>
-      <div class="fact"><span>Next results</span><b>${nextEarnDate ? esc(nextEarnDate) + ` <span class="cd ${daysTo(nextEarnDate) <= 7 ? "soon" : ""}">${daysTo(nextEarnDate)}d</span>` : "—"}</b></div>
-      <div class="fact"><span>Ex-dividend</span><b>${nextXdivDate ? esc(nextXdivDate) : "—"}</b></div>
+      <div class="fact"><span>Next results</span><b>${nextEarn ? esc(nextEarn.date) + ` <span class="cd ${daysTo(nextEarn.date) <= 7 ? "soon" : ""}">${daysTo(nextEarn.date)}d</span>` : "—"}</b></div>
+      <div class="fact"><span>Ex-dividend</span><b>${nextXdiv ? esc(nextXdiv.date) : "—"}</b></div>
     </div></div>
   <div class="card"><h2>Quant snapshot</h2><div class="sub">as of ${q.date} close</div>
     <div class="statgrid num">
