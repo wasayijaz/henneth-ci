@@ -2852,7 +2852,10 @@ async function pageTicker(sym, _retry = 0) {
   let rg = "Moderate", rgk = "md";
   if (vr != null) { if (vr < 20) { rg = "Lower"; rgk = "lo"; } else if (vr >= 50) { rg = "Higher"; rgk = "hi"; } }
   if (liq === "low" || mddRecentAbs >= 55) { rg = "Higher"; rgk = "hi"; }
-  const daysToEarn = nextEarn ? daysTo(nextEarn.date) : null;
+  // nextEarnDate, not nextEarn — the calendar's events array is the preferred source but is not
+  // the only one, and today it does not exist at all (see the fallback note above). Reading the
+  // raw event here made this tile say "none scheduled" on every ticker in the universe.
+  const daysToEarn = nextEarnDate ? daysTo(nextEarnDate) : null;
   // The Room ends at the bull/bear debate now (no Chair house view) — bull_case marks a covered
   // session, and that presence, not a verdict, is what the reveal bar and Signal Stack key off.
   const hasRoom = !!(room && room.bull_case);
@@ -2863,7 +2866,7 @@ async function pageTicker(sym, _retry = 0) {
     ${sTile("Fair value vs price", fv ? `Rs ${fmt(fv.composite_fair)}` : "—", fv ? `price Rs ${fmt(fv.price)} · ${sgn(fv.mispricing_pct)}%` : "model n/a", fv ? (fv.verdict === "undervalued" ? "up" : fv.verdict === "overvalued" ? "dn" : "") : "")}
     ${sTile("Scorecard", fsc ? ({ attractive: "Stronger", caution: "Weaker", neutral: "Mixed", mixed: "Mixed" }[fsc.rating] || fsc.rating) : "—", fsc ? "business quality" : "not scored", fsc ? (fsc.rating === "attractive" ? "up" : fsc.rating === "caution" ? "dn" : "") : "")}
     ${sTile("Risk grade", rg, vr != null ? `volatility ${vr.toFixed(0)}/100` : "liquidity " + liq, rgk === "hi" ? "dn" : rgk === "lo" ? "up" : "")}
-    ${sTile("Next event", nextEarn ? "Results" : "—", nextEarn ? `${nextEarn.date}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
+    ${sTile("Next event", nextEarnDate ? "Results" : "—", nextEarnDate ? `${nextEarnDate}${daysToEarn != null ? ` · ${daysToEarn}d` : ""}` : "none scheduled", "")}
   </div>`;
 
   // ---- private per-ticker note (only you can see it) ----
