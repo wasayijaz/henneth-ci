@@ -703,6 +703,41 @@ doesn't pick it up.
 
 ---
 
+## 9g. Fixed bug class — a compliance gate keyed on MUTABLE state, not on the frozen record (2026-08-01)
+
+`room_score.py` keeps the desk's own per-named-stock calls off the published leaderboard — a hard SECP
+Reg 2(ha) requirement (§4 of `docs/PUBLICATION_RESTRUCTURE_V2.md`). It implemented that as
+`if styp == "persona" and c.get("ticker") in uni_syms` — i.e. "is this ticker in `universe.json`
+*right now*". But a claim's `ticker` is **frozen when the claim is written**; the universe is not. PSX
+renames and delists constantly (this quarter: `UBL`→`UBLXD`, `DCR`→`DCRXD`, `LOTCHEM`→`LOTCHEMXD`, and
+106 newly-added tickers in one preflight warning). So **24 pending named-stock persona claims had
+already aged out of the universe** and were queued to resolve straight onto the public leaderboard with
+no human gate — two of them dated to resolve the very day this was found. Nothing failed loudly; the
+filter *looked* correct and the leaderboard was empty only because nothing had resolved yet.
+
+**Rule: a gate must test the compliance-relevant FACT recorded on the record, not a lookup into
+state that can drift out from under it.** Here the fact is "does this claim name a security" —
+`c.get("ticker")` — which cannot change after the claim is written. Ask of any filter guarding a
+publishing or safety boundary: *if the reference data changes tomorrow, does this quietly start
+letting things through?* If yes, it is keyed on the wrong thing. Detection: grep for membership tests
+against `universe.json` / `sectors.json` / any regenerated map inside a gate —
+`grep -rn "in uni_syms\|in .*_syms\|universe.json" scripts/` — and check each is a *lookup* (fine) not
+a *gate* (suspect).
+
+Adjacent shape from the same review, and it inverts §9e's lesson: `score_fundamentals.py` had started
+"deriving" the payout ratio as `div_yield × LIVE price / EPS`, on the stated reasoning that the
+vendor's scraped figure was computed off a stale price snapshot. But payout is **DPS/EPS — both terms
+are rupees per share and neither depends on price at all**. Since `div_yield` was scraped against the
+vendor's *own* price, the reconstruction returned `DPS × (live price / scrape price)` and scaled payout
+by pure price drift: a name that doubles with no change to its dividend or earnings reads as paying out
+twice as much of its profit, flipping the `≤75%` "generous & covered" test and tripping the `>90%`
+"stretched" warning on nothing but a rally. §9e correctly says *re-derive the comparison set the same
+way you re-derived the value*; the prior question is **does this quantity depend on price at all?**
+`live_pe` genuinely does (P/E is price ÷ earnings) and is correct. Payout does not. Before "freshening"
+a ratio with a live price, write out its algebra and check the price term is actually there.
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
