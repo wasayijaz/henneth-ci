@@ -116,14 +116,21 @@ def current_dasha(seq, today: dt.date):
 def antar_ladder(maha: str, maha_from: str) -> list:
     """Every antardasha inside one mahadasha, with dates. current_dasha() finds only the period
     running today; a reader wants to see when it ends and what follows, which needs the ladder."""
-    s = dt.date.fromisoformat(maha_from)
+    start = dt.date.fromisoformat(maha_from)
     si = DASHA_ORDER.index(maha)
     out = []
+    # Accumulate EXACT float days from the mahadasha start and add once per boundary, the way
+    # vimshottari() does. Adding a fractional timedelta to a date truncates to whole days
+    # (date.__add__ reads only timedelta.days), so chaining nine of them compounds the loss —
+    # the Rahu ladder from 2009-03-12 ended 2027-03-07 against a true maha_to of 2027-03-12,
+    # putting the final antar handover 5 days off the mahadasha change it must coincide with.
+    elapsed = 0.0
     for k in range(9):
         g = DASHA_ORDER[(si + k) % 9]
-        e = s + dt.timedelta(days=DASHA_YEARS[maha] * DASHA_YEARS[g] / TOTAL_YEARS * YEAR_DAYS)
-        out.append({"lord": g, "from": s.isoformat(), "to": e.isoformat()})
-        s = e
+        frm = start + dt.timedelta(days=elapsed)
+        elapsed += DASHA_YEARS[maha] * DASHA_YEARS[g] / TOTAL_YEARS * YEAR_DAYS
+        out.append({"lord": g, "from": frm.isoformat(),
+                    "to": (start + dt.timedelta(days=elapsed)).isoformat()})
     return out
 
 

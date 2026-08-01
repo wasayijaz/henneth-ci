@@ -48,17 +48,19 @@ def main():
             return round(px / eps, 2)
         return num(v.get("pe"))
 
-    def derived_payout(v):
-        """Payout ratio from the desk's OWN yield + EPS + live price, not the vendor's scraped
-        figure — the scraped payout_ratio can disagree with the desk's own yield/earnings math
-        because it's computed off a different price snapshot and sometimes a different EPS basis
-        (TTM vs FY). Falls back to the scraped value only when yield/EPS/price aren't all present."""
-        px = (live.get(sym) or {}).get("current")
-        yld = num(v.get("div_yield"))
-        eps = num(v.get("eps"))
-        if px and yld and eps and eps > 0:
-            dps = yld / 100 * px
-            return round(dps / eps * 100, 1)
+    def payout_of(v):
+        """The vendor's scraped payout_ratio, used as-is.
+
+        Do NOT "derive" this off the live price the way live_pe does. Payout is DPS/EPS — both
+        terms are rupees per share and NEITHER depends on price, so there is no stale-price
+        mismatch to correct. An earlier version reconstructed DPS as div_yield x live price, but
+        div_yield was scraped against the vendor's OWN price, so that reconstruction returns
+        DPS x (live_price / scrape_price) and scales payout by pure price drift: a name that
+        rallies 2x with no change to its dividend or earnings reads as paying out twice as much
+        of its profit, which flips the <=75% "generous & covered" test and trips the >90%
+        "stretched" warning on nothing but a price move. fundamentals.json stores no scrape-time
+        price, so the ratio cannot be re-derived correctly here — the vendor's figure is the
+        only sound source."""
         return num(v.get("payout_ratio"))
 
     # universe distributions for relative ratings
@@ -79,7 +81,7 @@ def main():
         pe = live_pe(v, sym)
         fpe = num(v.get("forward_pe"))
         yld = num(v.get("div_yield"))
-        payout = derived_payout(v)
+        payout = payout_of(v)
         rev, ni = num(v.get("revenue")), num(v.get("net_income"))
         margin = ni / rev * 100 if rev and ni else None
         mcap = num(v.get("market_cap"))

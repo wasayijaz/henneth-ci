@@ -89,7 +89,12 @@ def main():
         try:
             r = sess.post("https://dps.psx.com.pk/payouts", data={"symbol": sym}, timeout=20)
             rows = parse_rows(r.text, sym) if r.status_code == 200 else []
-            if r.status_code == 200:
+            # Gate on ROWS, not on HTTP 200. `refreshed` tells the merge below to drop every prior
+            # row for this symbol and keep only what we just parsed, so marking a symbol refreshed
+            # on a 200 that yielded nothing (endpoint hiccup, markup change, parse miss) silently
+            # deletes its entire payout history — and appends nothing to `failed`, so the run still
+            # reports clean. A symbol with genuinely zero payouts has no prior rows to lose.
+            if rows:
                 refreshed.add(sym)
             close = (quant.get(sym) or {}).get("close")
             for row in rows:

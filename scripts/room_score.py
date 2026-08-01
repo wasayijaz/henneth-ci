@@ -75,8 +75,6 @@ def run():
     quant = load_json(STATE / "quant.json", {}).get("tickers", {})
     live = load_json(STATE / "live.json", {}).get("tickers", {})
     indices = load_json(STATE / "indices.json", {})   # for market-relative claims (fetch_indices.py)
-    # Real PSX securities — used to keep the desk's OWN per-named-stock calls off its leaderboard.
-    uni_syms = set((load_json(STATE / "universe.json", {}).get("symbols") or {}).keys())
     today = datetime.now(timezone.utc).date()
 
     # 1) resolve anything past its horizon
@@ -125,7 +123,12 @@ def run():
         # leaderboard. Non-security-specific desk claims (sector debate, macro) still roll up here.
         # Broker (third-party) and astro scoring are unchanged — a publication may score others'
         # public calls, and the astro lens is out of scope this pass.
-        if styp == "persona" and c.get("ticker") in uni_syms:
+        # The test is "does this claim NAME a security", not "is that name still in universe.json".
+        # A claim's ticker is frozen when it is written; the universe is not. PSX renames and
+        # delists (UBL -> UBLXD), so a membership test lets an old named-stock claim age out of the
+        # universe and then resolve straight onto the published leaderboard, with no human gate.
+        # Presence of a ticker is the compliance-relevant fact and it cannot drift.
+        if styp == "persona" and c.get("ticker"):
             continue
         bucket = persona if styp == "persona" else broker
         b = bucket.setdefault(src, blank())

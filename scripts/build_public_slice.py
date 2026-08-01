@@ -19,7 +19,8 @@ WHAT IS DELIBERATELY WITHHELD (Layer 3 — the paid product)
     · every fair-value METHOD VALUE, its inputs and its workings
     · `verdict` and `mispricing_pct` — see THE DISAGREEMENT SHAPE below
     · predictability score and rank
-    · any backtest result, win rate, expectancy or strategy name
+    · any backtest result, win rate or expectancy (the strategy NAME is published — see the
+      inline note at strategy_levels.json below; its performance record is not)
     · Desk Room debate, Chair view, dissent, dated calls
     · claims / scores / broker per-call data
     · every liquidity ESTIMATOR (amihud, corwin-schultz, fht, roll, days-to-liquidate)
