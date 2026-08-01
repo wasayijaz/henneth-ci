@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Desk Room — merge state-translator Urdu output into state/rooms.json.
+"""LEGACY (2026-08-01): superseded by translate_extract.py + translate_merge.py,
+which handle any state file, hash-skip already-translated fields, and stamp
+_ur_hash. Kept only in case an old room_tmp_*_fields_ur.json needs merging.
+
+Desk Room — merge state-translator Urdu output into state/rooms.json.
 
 The state-translator agent has Read/Write only (no Edit/Bash) so it cannot safely
 rewrite the large shared rooms.json itself. It writes state/room_tmp_<SYM>_fields.json

@@ -39,6 +39,70 @@ which file changed.
 
 ---
 
+## 2026-08-01 — v2026.08.01 — Urdu translation cost cut ~90%
+
+<!--public
+Urdu translations now cost a fraction of what they used to, so the language stays in the product
+instead of getting dropped for cost.
+-->
+
+### The problem
+
+The Urdu translator agent was reading and rewriting whole state files (`rooms.json` alone is
+~380KB) every call — English content paid for twice (in and out), and Urdu script tokenizes
+~2-3x per word vs Latin script, so re-emitting existing Urdu on every call multiplied the cost
+further. The Desk Room loop made this worst: one translator call per persona per ticker.
+
+### Three changes, stacked
+
+1. **Model swap.** `state-translator` agent: `sonnet` → `haiku` (~70% cheaper per token).
+2. **Deterministic extract/merge, so the LLM never sees a whole state file.**
+   `scripts/translate_extract.py` walks a state file against dotted field-path patterns
+   (`[]` = every array element, `*` = every dict key), hash-skips anything already translated
+   (first 12 hex chars of sha256 over the exact English string, `h12()`), and writes only the
+   untranslated strings to `state/translate_batch.json`. The translator agent (Read/Write only,
+   fact-blind by design) reads that tiny batch and writes Urdu-only to
+   `state/translate_batch_ur.json` — it never opens the source file. `scripts/translate_merge.py`
+   folds `_ur` + `_ur_hash` siblings back into the source file and deletes both temp files. If
+   extract reports 0 fields, the translator is never spawned — zero tokens, zero LLM call.
+   Wired into all four call sites: `prompts/cycle-light.md` (newslog.json), `prompts/cycle-full.md`
+   (macro.json, daily_read.json), `prompts/sector-week.md` (sector_debates/<slug>.json), and the
+   `psx-desk-room-loop` scheduled task (rooms.json).
+3. **Room loop batches per session, not per persona.** The scheduled task's translate step now
+   issues one extract command covering every ticker in the batch (13 field patterns × N tickers,
+   concrete `<SYM>.field` paths — deliberately not the `*` wildcard, so it never backfills the
+   entire rooms.json history in one run) and spawns the translator agent once for the whole batch.
+
+### Bug found and fixed during build: partial-array hash
+
+If only some elements of a plain string array were translated (e.g. `risks[0]`/`risks[1]` but not
+`risks[2]`), `translate_merge.py` was unconditionally stamping `risks_ur_hash` over the FULL joined
+English array. The next extract's hash-skip check then wrongly treated the whole array — including
+the untranslated element — as done, permanently hiding it from future translation passes.
+
+Fixed in both scripts: `translate_merge.py` only writes `_ur_hash` when every element with
+non-empty English also has a non-empty Urdu counterpart in `_ur` (otherwise it removes any stale
+hash key); `translate_extract.py`'s array-skip condition also requires every element of the
+existing `_ur` array to be a non-empty string, as a second guard. Verified with a 2-of-3
+translated test array: post-merge, no `_ur_hash` is written, and a re-extract on that array
+correctly returns all 3 elements rather than skipping the whole thing.
+
+### Legacy data migration
+
+`state/rooms.json` had 96 pre-existing `_ur` translations (written before this hash-check system
+existed) with no `_ur_hash` sibling — without backfilling, the new hash-skip extract would have
+treated them as untranslated and burned tokens re-translating already-good Urdu. One-off script
+stamped `_ur_hash = h12(current_english)` for every such field, assuming the existing translation
+matches the current English (it was written from it). Ran once against rooms.json, newslog.json,
+macro.json, daily_read.json and every sector_debates/*.json — only rooms.json needed it (+96
+hashes).
+
+### Also
+
+`scripts/merge_translations.py` (the old per-ticker dotted-key merge script, no hash support)
+marked LEGACY in its docstring — superseded by the generic extract/merge pair, kept only in case
+an old `room_tmp_*_fields_ur.json` still needs merging by hand.
+
 ## 2026-07-26 — v2026.07.26.2 — Stale calendar dates, a misleading confidence label, and the fair-value spread
 
 <!--public

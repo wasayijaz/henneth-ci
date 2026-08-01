@@ -246,7 +246,13 @@ Coverage reaches the whole KSE All Share (554 symbols), which made ~350 thin nam
 | **signal** | ≥ Rs 30M ADTV | what can ever produce a published setup | 100 |
 
 A name can be fully researched and still never produce a setup — the ticker page says so out loud
-rather than showing an empty signal section. Liquidity is measured with the published estimators, not
+rather than showing an empty signal section.
+
+**Translation is deterministic-first too.** Urdu output uses the same free-layer-does-the-heavy-lifting
+shape as everything else: `scripts/translate_extract.py` hash-skips anything already translated and
+hands the translator agent (Haiku, Read/Write only) a tiny batch of only the untranslated English
+strings — it never opens a full state file, and if nothing changed the agent is never even spawned.
+`scripts/translate_merge.py` folds the Urdu back in. Cut translation cost roughly 90%. Liquidity is measured with the published estimators, not
 a turnover rule of thumb: **Amihud (2002)** price impact, **Corwin-Schultz (2012)** high-low spread
 (with the overnight adjustment and per-observation zero floor), **Fong-Holden-Trzcinka (2017)** for
 cost magnitude where no quote data exists, **Roll (1984)**, and **SEC Rule 22e-4** days-to-liquidate
