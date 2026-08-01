@@ -2625,8 +2625,9 @@ async function pageTicker(sym, _retry = 0) {
   const series = (deep && deep.length > (hist?.length || 0)) ? deep : hist;
   const yearsSpan = series ? ((new Date(series[series.length - 1].date) - new Date(series[0].date)) / 3.156e10) : 0;
   const f = fund?.tickers?.[sym] || {};
-  // P/E and payout ratio here are the DESK's own live-price/EPS/yield derivation
-  // (score_fundamentals.py), not the vendor's scrape-time snapshot — see live_pe/derived_payout.
+  // P/E here is the DESK's own live-price/EPS derivation (score_fundamentals.py live_pe), not the
+  // vendor's scrape-time snapshot. Payout ratio is the vendor's figure as-is — payout is DPS/EPS
+  // and has no price term, so there is nothing to re-derive off a live price (see 2026-08-01 fix).
   const fs = fscore?.tickers?.[sym]?.metrics || {};
   const today0 = todayPKT();
   const nextOfType = t => (cal?.events || [])
@@ -2634,6 +2635,25 @@ async function pageTicker(sym, _retry = 0) {
     .sort((a, b) => a.date.localeCompare(b.date))[0];
   const nextEarn = nextOfType("results");
   const nextXdiv = nextOfType("ex_dividend");
+  // The events calendar is the preferred source — it is typed and already forward-filtered. But it
+  // is not the only place the desk holds these dates: fundamentals.json carries next_earnings and
+  // ex_div_date too, and calendar.json currently ships holidays with NO events array at all, so
+  // relying on it alone prints "—" on every ticker while the data layer knows 179 forward earnings
+  // dates. CLAUDE.md Rule 2 cuts both ways — don't invent a date, but don't answer "unknown" when
+  // the layer has it.
+  //
+  // Fall back ONLY to a date still in the future. The scraped values go stale and are not
+  // re-fetched on a schedule tied to the event: 91 of 94 ex_div_date values are already in the
+  // past. Printing one under "Ex-dividend" would assert that the single date deciding whether you
+  // get paid is still ahead of you — worse than "—". A past date means the desk does not know the
+  // NEXT one, which is exactly what "—" says.
+  const isoOf = s => {
+    const d = s ? new Date(s) : null;                       // "Aug 21, 2026" -> local midnight
+    return d && !isNaN(d) ? new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10) : null;
+  };
+  const fwdDate = s => { const d = isoOf(s); return d && d >= today0 ? d : null; };
+  const nextEarnDate = nextEarn?.date || fwdDate(f.next_earnings);
+  const nextXdivDate = nextXdiv?.date || fwdDate(f.ex_div_date);
   const daysTo = d => d ? Math.ceil((new Date(d) - new Date()) / 86400000) : null;
   /* THE ALL-OR-NOTHING GUARD — narrowed, deliberately.
 
@@ -3115,8 +3135,8 @@ async function pageTicker(sym, _retry = 0) {
       <div class="fact"><span>Revenue</span><b>${esc(f.revenue || "—")}</b></div>
       <div class="fact"><span>Net income</span><b>${esc(f.net_income || "—")}</b></div>
       <div class="fact"><span>Shares out</span><b>${esc(f.shares_out || "—")}</b></div>
-      <div class="fact"><span>Next results</span><b>${nextEarn ? esc(nextEarn.date) + ` <span class="cd ${daysTo(nextEarn.date) <= 7 ? "soon" : ""}">${daysTo(nextEarn.date)}d</span>` : "—"}</b></div>
-      <div class="fact"><span>Ex-dividend</span><b>${nextXdiv ? esc(nextXdiv.date) : "—"}</b></div>
+      <div class="fact"><span>Next results</span><b>${nextEarnDate ? esc(nextEarnDate) + ` <span class="cd ${daysTo(nextEarnDate) <= 7 ? "soon" : ""}">${daysTo(nextEarnDate)}d</span>` : "—"}</b></div>
+      <div class="fact"><span>Ex-dividend</span><b>${nextXdivDate ? esc(nextXdivDate) : "—"}</b></div>
     </div></div>
   <div class="card"><h2>Quant snapshot</h2><div class="sub">as of ${q.date} close</div>
     <div class="statgrid num">
