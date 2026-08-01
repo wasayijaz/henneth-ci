@@ -777,9 +777,24 @@ async function pageToday() {
   </div>`;
 
   const sinceBanner = await sinceLastVisit(q, lv);
+
+  // ---- pick-a-ticker: the one real first action, shown until activated_at is set ----
+  const onboardPrompt = (me && myProfile && !myProfile.activated_at) ? `
+  <div class="card onboard-prompt">
+    <button class="onboard-x" onclick="dismissOnboardPrompt()" aria-label="Dismiss">×</button>
+    <b>Add a stock to your watchlist to get started</b>
+    <div class="ph-row" style="margin-top:8px">
+      <input id="ob-tkr" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" autofocus onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addOnboardTicker()">
+      <button class="btn" onclick="addOnboardTicker()">Add</button>
+    </div>
+    <span id="ob-msg" class="sub"></span>
+  </div>` : "";
+  if (onboardPrompt && !_onboardShownTracked) { _onboardShownTracked = true; track("onboard_prompt_shown"); }
+
   $("view").innerHTML = `
   ${globalStrip(gl)}
   ${sinceBanner}
+  ${onboardPrompt}
   ${glanceRow}
   ${dailyCard}
   ${astroTease}
@@ -2003,7 +2018,7 @@ async function migrateGuestChart() {
   if (myProfile && myProfile.birth_data) { setGuestChart(null); return false; }  // profile wins
   const patch = { birth_data: g.birth_data, natal_chart: g.natal_chart, astro_prefs: g.astro_prefs || {} };
   const err = await saveProfile(patch);
-  if (!err) { setGuestChart(null); return true; }
+  if (!err) { setGuestChart(null); markActivated("cast_migrated"); return true; }  // guest cast never called markActivated — mark retroactively at sign-in
   return false;
 }
 
@@ -2109,6 +2124,8 @@ async function renderBirthCast(ov) {
     const rec = { birth_data: d, natal_chart: cast, astro_prefs: { goal: d.goal } };
     if (me) { myProfile = { ...(myProfile || {}), ...rec }; saveProfile(rec); }  // persist in background
     else setGuestChart(rec);                                                     // guest: this device only
+    track("cast_completed", { guest: !me });
+    if (me) markActivated("cast");
   }
   const steps = [
     `Placing the nine grahas — sidereal, Lahiri ayanamsa`,
@@ -3352,6 +3369,27 @@ async function pageLegal() {
   </div>`;
 }
 
+/* ---------- unsubscribe (ungated — #/unsubscribe?t=<uuid>, reached only from an email link) ---------- */
+async function pageUnsubscribe() {
+  const q = (location.hash.split("?")[1] || "");
+  const token = new URLSearchParams(q).get("t") || "";
+  const card = (body) => { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Email preferences</h2><div class="ln"></div></div><div class="card">${body}</div>`; };
+  if (!token) { card(`<div class="empty">This link is missing its token — open the unsubscribe link from an actual desk email.</div>`); return; }
+  card(`<div class="sub">Stop desk emails to this address?</div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="doUnsub('${esc(token)}','digest')">Just the weekly digest</button>
+      <button class="btn" onclick="doUnsub('${esc(token)}','all')">All desk emails</button>
+    </div>`);
+}
+async function doUnsub(token, scope) {
+  const { data, error } = await sb.rpc("email_unsubscribe", { p_token: token, p_scope: scope });
+  const ok = !error && data === true;
+  track("email_unsub", { scope, ok });
+  $("view").querySelector(".card").innerHTML = ok
+    ? `<div class="sub">Done — ${scope === "all" ? "all desk emails" : "the weekly digest"} turned off for this address.</div>`
+    : `<div class="empty">Couldn't process that — the link may be expired or already used.</div>`;
+}
+
 /* ---------- Shared "run" modal: a ~10–20s loader that streams REAL precomputed steps, then a
    reveal. Zero agents run per view — it animates already-computed data. Used by both the Desk
    Room run and the strategy-library run so the loader/orchestration lives in ONE place. ---------- */
@@ -3435,6 +3473,8 @@ async function playDeskReplay(sym) {
     j("rooms.json"), j("universe.json"), j("quant.json"), j("fundamentals.json"), j("fairvalue.json")]);
   const s = rooms && rooms[sym];
   if (!s || !s.bull_case) return;
+  track("deskroom_played", { sym });
+  markActivated("deskroom");   // fire-and-forget — a lookup is the activation moment, don't block the replay
   const name = uni?.symbols?.[sym]?.name || "";
   const q = quant?.tickers?.[sym] || {}, f = fund?.tickers?.[sym] || {}, fv = fvAll?.tickers?.[sym] || {};
   const ta = s.ta_memo || {}, fa = s.fa_memo || {}, bull = s.bull_case || {}, bear = s.bear_case || {};
@@ -4459,6 +4499,8 @@ function deskSizeRun() {
   if (entry <= stop) { out.innerHTML = `<b class="dn">Invalid setup.</b> The stop must sit BELOW the entry — the desk is long-only, so a stop at or above entry has no risk-per-share to size against and the setup is rejected outright.`; return; }
   const r = deskSize(cap, entry, stop);
   if (!r) { out.innerHTML = `<b class="dn">Size works out to zero shares.</b> The stop is too far from the entry for this capital — at these levels a single share would risk more than the ${DESK_RULES.risk_per_trade_pct}% budget allows. The desk treats that as an invalid setup, not a reason to round up.`; return; }
+  track("sizer_computed", {});   // no financial values in the event — Rule 5, no advice language, applies to analytics too
+  markActivated("sizer");
   const riskBudget = cap * DESK_RULES.risk_per_trade_pct / 100;
   out.innerHTML = `<div class="statgrid num" style="margin-bottom:8px">
       <div class="stat"><span>shares</span><b>${fmt(r.shares, 0)}</b></div>
@@ -5698,7 +5740,7 @@ async function pageCompare() {
     <span class="sub" style="margin-left:10px">Fair value is a <b>model estimate</b> on public fundamentals, not a price target — and the four methods behind it often disagree. "Strategies proven here" counts rules that cleared the bar on each stock's <b>own</b> history, so the counts are not directly comparable across names with different amounts of history. Terms explained in the <a href="#/glossary" style="color:var(--accent)">glossary</a>.</span></div>`}`;
 }
 
-const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare, shipped: pageShipped };
+const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare, shipped: pageShipped, unsubscribe: pageUnsubscribe };
 let lastPage = null;
 
 function animateIn() {
@@ -5734,7 +5776,7 @@ function animateIn() {
    create afterwards. Gating them would close the top of the funnel to protect the bottom.
    Legal pages stay open because a visitor must be able to read terms before signing anything.
    ========================================================================================== */
-const OPEN_ROUTES = ["cast", "mychart", "legal", "plans", "glossary", "shipped"];
+const OPEN_ROUTES = ["cast", "mychart", "legal", "plans", "glossary", "shipped", "unsubscribe"];
 
 /* `me` is declared with `let` further down this file (the accounts section), and route() runs
    before that line is reached at boot. Touching a `let` binding in its temporal dead zone throws
@@ -5898,7 +5940,11 @@ async function route(isPoll) {
   // initAuth() (or the 3s backstop) calls route() again the moment the session is known.
   if (!authReady) return;
   const h = location.hash || "#/today";
-  const [, page, arg] = h.split("/");
+  const [, rawPage, arg] = h.split("/");
+  // Query-string routes (#/unsubscribe?t=<uuid>) carry "?..." glued onto the page segment —
+  // strip it here so PAGES/gateAllows match on the bare page name; pageUnsubscribe() re-parses
+  // location.hash directly to read the token.
+  const page = (rawPage || "").split("?")[0];
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
   renderHeader();
   const key = page + (arg || "");
@@ -6496,6 +6542,7 @@ async function captchaToken() {
 
 let me = null;        // auth user
 let myProfile = null; // profiles row
+let _onboardShownTracked = false;
 
 /* ---------- tiny helpers ---------- */
 const el = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; };
@@ -6518,7 +6565,7 @@ function renderAccountButton() {
         <button id="acctPlans"><span>Plans</span><span class="acct-chip ${planOf() === "free" ? "" : "on"}">${esc(plan.label)}</span></button>
         <button id="acctSettings">Settings</button>
         <button id="acctMode">${deskMode() === "learn" ? "Switch to the Pro desk" : "Switch to the Learner desk"}</button>
-        <button id="acctTour">Replay the tour</button>
+        <button id="acctTour">Show me around</button>
         <div class="acct-sep"></div>
         <button id="acctOut">Sign out</button>
       </div>`;
@@ -6528,7 +6575,7 @@ function renderAccountButton() {
     document.getElementById("acctSettings").onclick = () => { menu.hidden = true; location.hash = "#/settings"; };
     document.getElementById("acctPlans").onclick = () => { menu.hidden = true; location.hash = "#/plans"; };
     document.getElementById("acctMode").onclick = () => { menu.hidden = true; setDeskMode(deskMode() === "learn" ? "pro" : "learn"); };
-    document.getElementById("acctTour").onclick = () => { menu.hidden = true; startWizard(true); };
+    document.getElementById("acctTour").onclick = () => { menu.hidden = true; startTour(); };
   } else {
     holder.innerHTML = `<button class="acct-signin" id="acctIn">Sign in</button>`;
     document.getElementById("acctIn").onclick = () => openAuth("signin");
@@ -6830,6 +6877,21 @@ async function saveProfile(patch) {
   return error;
 }
 
+// Activation event — the desk's one real-action-in-30-seconds metric. Server-authoritative:
+// `saveProfile` can no longer write activated_at/activation_type (revoked from `authenticated`
+// in docs/lifecycle_email.sql), so this goes through the write-once mark_activated(p_type) RPC.
+// `coalesce` server-side means only the FIRST call across all four sites ever sticks; safe to
+// call unconditionally on every qualifying action without checking myProfile first.
+async function markActivated(kind) {
+  if (!me) return;
+  if (myProfile && myProfile.activated_at) return;   // local shortcut, RPC is the real guard
+  const { error } = await sb.rpc("mark_activated", { p_type: kind });
+  if (!error) {
+    myProfile = { ...(myProfile || {}), activated_at: myProfile?.activated_at || new Date().toISOString(), activation_type: myProfile?.activation_type || kind };
+    track("activated", { type: kind });
+  }
+}
+
 /* ---------- watchlist (per-user, persisted to profiles.watchlist) ---------- */
 function watchlist() { return (myProfile && myProfile.watchlist) || []; }
 function isWatched(sym) { return watchlist().includes(sym); }
@@ -6849,12 +6911,31 @@ async function saveTickerNote(sym) {
 async function toggleWatch(sym, btn) {
   if (!me) { openAuth("signup"); return; }               // must be signed in to save
   const cur = new Set(watchlist());
+  const adding = !cur.has(sym);
   cur.has(sym) ? cur.delete(sym) : cur.add(sym);
   const next = [...cur];
   if (btn) { btn.classList.toggle("on", cur.has(sym)); btn.disabled = true; }
   await saveProfile({ watchlist: next });
   if (btn) btn.disabled = false;
+  track(adding ? "watchlist_add" : "watchlist_remove", { sym });
+  if (adding) await markActivated("watchlist");           // add only — removing isn't the activation moment
   if (location.hash === "#/watchlist") pageWatchlist();   // live-refresh the list view
+}
+async function addOnboardTicker() {
+  const inp = document.getElementById("ob-tkr"), msg = document.getElementById("ob-msg");
+  const say = t => { if (msg) msg.textContent = t; };
+  const sym = (inp?.value || "").toUpperCase().trim();
+  if (!sym) return;
+  track("onboard_prompt_search", { sym });
+  const uni = await j("universe.json");
+  if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
+  if (watchlist().includes(sym)) return say(`${sym} is already on your watchlist.`);
+  await toggleWatch(sym);
+  pageToday();
+}
+function dismissOnboardPrompt() {
+  track("onboard_prompt_dismissed");
+  document.querySelector(".onboard-prompt")?.remove();
 }
 // star button markup (used on ticker pages). onclick wired via delegation below.
 function starBtn(sym) {
@@ -7112,7 +7193,6 @@ async function pageWatchlist() {
     : `<div class="card"><div class="empty">No stocks yet. Open any stock and tap the ★ to add it — try <a href="#/board">the Board</a> or search (top right).</div></div>`}`;
 }
 
-/* ---------- onboarding wizard: quiz + product tour ---------- */
 /* ---------- plan intent, carried in from the marketing site ----------------------------
    plans.astro links to `${appUrl}/?plan=investor|pro`. Persist it immediately: the visitor is
    about to leave for an email confirmation and come back on a fresh page load, and the query
@@ -7147,135 +7227,54 @@ capturePlanIntent();
   setTimeout(() => { if (!me && typeof openAuth === "function") openAuth(want); }, 600);
 })();
 
-/* ---------- onboarding: two audiences, two flows --------------------------------------
-   One generic wizard served both a first-time investor and a chartist who already reads P/E,
-   which meant it over-explained for one and under-explained for the other. Split by the plan
-   the visitor chose on the way in:
-
-   INVESTOR — people new to markets entirely. More questions (they are engaging, and the answers
-     personalise the desk), and every tour stop explains WHY the page exists before what it does.
-   PRO — already fluent in TA/FA. No definitions, no hand-holding: two quick questions to
-     personalise, then a fast tour of the things that are actually unusual here (the Room
-     debate, the scored track record, the strategy library).
-
-   Both end at the same place; only the pacing and the vocabulary differ. */
-const WIZ_PRO = [
-  { kind: "welcome", title: "You know the terms. Here's what's different.", body: "Henneth Desk isn't another screener. Every stock gets a debate — a technical desk and a fundamental desk argue it out, then a bull and a bear stress-test each other, each naming the strongest point against their own side. It ends on the argument in the open, not a verdict handed down. The brokerage houses' own public calls are scored against what price actually did. Ninety seconds and you'll know where everything lives." },
-  { kind: "quiz", key: "style", title: "How do you mostly decide?", opts: [["technical", "Charts and structure"], ["fundamental", "Financials and valuation"], ["both", "Both, depending on the name"]] },
-  { kind: "quiz", key: "sectors", multi: true, title: "Which sectors do you actually trade?", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
-  { kind: "tour", route: "#/board", title: "Board — the whole tape", body: "Live moves, signals that fired from backtested rules, predictability ranks. Everything is clickable through to the name." },
-  { kind: "tour", route: "#/strategies", title: "Strategies — 70 rules, tested per name", body: "Each strategy is backtested on every stock's own ~19-year history: win rate, expectancy AFTER costs, and out-of-sample. Names below the liquidity floor are charged their real estimated spread, not a flat fee — so a thin stock can't fake an edge." },
-  { kind: "tour", route: "#/ticker/FFC", title: "The Desk Room — where it argues with itself", body: "Open any ticker and read the desk's debate. The TA and FA lanes are kept deliberately separate so they can disagree, and the bull and the bear each have to name the strongest point against their own case. It ends on the argument, not a call — no verdict, no target." },
-  { kind: "tour", route: "#/leaderboard", title: "Scores — everyone on the record", body: "Every call is timestamped and graded against what price actually did. Ours and the brokerage houses'. Misses included — that's the point." },
-  { kind: "done", title: "That's the tour.", body: "Search is `/` from anywhere. The desk never places orders and never tells you to buy — it shows its working and you decide." },
+/* ---------- onboarding: one activation prompt + a dismissible coach strip -------------
+   Replaces the old 8-11 step quiz+tour wizard. The wizard measured "tour completed", a metric
+   nobody cared about; this measures a real action (watchlist add / Room lookup / sizer run /
+   birth-chart cast) via markActivated(), gated on activated_at is null, not the frozen legacy
+   onboarded column. */
+const COACH_STEPS = [
+  { route: "#/today", title: "Today", body: "The desk's daily plain-English read — mood, favoured sectors, a short watchlist." },
+  { route: "#/board", title: "Board", body: "The whole tape: live moves, signals that fired from backtested rules." },
+  { route: "#/ticker/FFC", title: "Desk Room", body: "Open any ticker and read the desk's debate — TA and FA argue it out, no verdict." },
+  { route: "#/leaderboard", title: "Scores", body: "Every call, ours and the brokerage houses', graded against what price did." },
 ];
+let coachIdx = 0;
 
-const WIZ_INVESTOR = [
-  { kind: "welcome", title: "Welcome — let's start from the beginning.", body: "Most investing tools assume you already know the words. This one doesn't. You'll get plain-English answers to the only questions that matter early on: is this company healthy, is the price sensible, and what just changed. A few quick questions first so the desk fits you — there are no wrong answers, and nothing here is advice." },
-  { kind: "quiz", key: "experience", title: "Where are you starting from?", opts: [["never", "I've never bought a stock"], ["account", "I have a broker account, haven't really used it"], ["some", "I've bought a few things"]] },
-  { kind: "quiz", key: "goal", title: "What would make this worth it for you?", opts: [["income", "Regular income from dividends"], ["growth", "Growing savings over years"], ["understand", "Just understanding what's going on"], ["confidence", "Confidence to make my first buy"]] },
-  { kind: "quiz", key: "horizon", title: "When would you want this money back?", opts: [["short", "Within a year"], ["medium", "A few years"], ["long", "Not for a long time"]] },
-  { kind: "quiz", key: "risk", title: "A stock you own falls 20% in a month. Honestly — you…", opts: [["conservative", "Can't sleep. I'd rather it stayed steady"], ["moderate", "Don't love it, but I'd hold if nothing broke"], ["aggressive", "See it as cheaper than last month"]] },
-  { kind: "quiz", key: "sectors", multi: true, title: "Anything you're already curious about?", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
-  { kind: "tour", route: "#/learn", title: "Start here — the guided path", body: "Short lessons, one card at a time, in order. It begins with what a share actually is and ends with reading a real Pakistani annual report. You can stop anywhere and pick it back up — your progress is saved." },
-  { kind: "tour", route: "#/today", title: "Today — your two-minute read", body: "Every trading day the desk writes one plain note: the mood, which sectors look favoured, and a few names worth a look with the reason attached. If you only open one page, open this one." },
-  { kind: "tour", route: "#/ticker/FFC", title: "A company page — questions, not jargon", body: "Every stock opens with the same simple checks, shown as traffic lights: is it profitable, is debt sensible, does it pay a dividend, is the price reasonable. Green, amber, red. The numbers are underneath if you ever want them." },
-  { kind: "tour", route: "#/practice", title: "Practice — Rs 500,000 that isn't real", body: "Buy and sell at real PSX prices with pretend money. Sit through a red week, collect a dividend, see what a stop-loss feels like. Every mechanic of investing, none of the damage." },
-  { kind: "done", title: "You're set.", body: "Take the guided path at your own pace, and use Practice before real money. The desk shows its working and never tells you what to buy — that decision stays yours." },
-];
-
-const WIZ_GENERIC = [
-  { kind: "welcome", title: "Welcome to the desk", body: "Henneth Desk is a research terminal that makes Pakistani stocks understandable — plain-English company reads, tested strategies, fair-value models, and AI analysts who debate every name in the open. Two minutes, and you'll know your way around. Nothing here is investment advice — you always decide." },
-  { kind: "quiz", key: "experience", title: "How much investing experience do you have?", opts: [["new", "I'm new to this"], ["some", "I've bought a few stocks"], ["experienced", "I trade regularly"]] },
-  { kind: "quiz", key: "goal", title: "What are you mostly here for?", opts: [["income", "Dividend income"], ["growth", "Long-term growth"], ["swing", "Active swing ideas"], ["learning", "Learning the market"]] },
-  { kind: "quiz", key: "risk", title: "A stock you hold drops 20% in a month. You…", opts: [["conservative", "Lose sleep — I prefer stability"], ["moderate", "Feel it, but hold if the story's intact"], ["aggressive", "See it as a chance to buy more"]] },
-  { kind: "quiz", key: "sectors", multi: true, title: "Which sectors interest you? (pick any)", opts: [["banks", "Banks"], ["fertilizer", "Fertilizer"], ["e_and_p", "Oil & Gas"], ["cement", "Cement"], ["power", "Power"], ["tech", "Technology"], ["autos", "Autos"]] },
-  { kind: "tour", route: "#/today", title: "Today — your morning read", body: "Every trading day the desk writes a plain-English note: the mood, which sectors look favoured, and a short watchlist with reasons. Start your day here." },
-  { kind: "tour", route: "#/board", title: "Board — the whole market at a glance", body: "The live pulse: every stock's day move, signals that fired from tested strategies, and the news wire. Green is up, red is down — click any name to go deep." },
-  { kind: "tour", route: "#/ticker/FFC", title: "Stock pages — 'At a glance' first", body: "Every stock opens with the questions that matter: is the company healthy, is the price reasonable, which way is it moving, does it pay income — then the AI analysts' debate, risk profile, and what the brokers say. All sourced, never advice." },
-  { kind: "tour", route: "#/value", title: "Value — is the price fair?", body: "Every stock valued four independent ways. Click a row to see the full working — no black boxes. Remember: below model fair value is a screen, not a recommendation." },
-  { kind: "tour", route: "#/leaderboard", title: "Scores — everyone's on the record", body: "Every dated call — the desk's own AI analysts AND the brokerage houses — is timestamped and graded against what actually happened. Losses included. Nobody else grades PSX brokers." },
-  { kind: "done", title: "You're set", body: "Explore freely — the search (top right, or press /) jumps to any stock. Everything updates automatically through the trading day. Research, not advice: the decisions are always yours." },
-];
-
-/* Which flow this visitor gets. Chosen from the plan they clicked on the marketing site, then
-   from the plan actually on their account, then the generic flow. Deliberately re-evaluated at
-   START time, not at module load: on a fresh sign-up the profile arrives after this file parses,
-   so a constant would always pick the fallback. */
-let WIZ = WIZ_GENERIC;
-function pickWiz() {
-  const want = planIntent() || (typeof realPlan === "function" ? realPlan() : null);
-  if (want === "pro" || want === "broker") return WIZ_PRO;
-  if (want === "investor") return WIZ_INVESTOR;
-  // No stated intent: infer from the one thing we know. Someone who says they've never bought a
-  // stock should not get the Pro tour just because nobody set a query param.
-  const exp = (myProfile && myProfile.quiz && myProfile.quiz.experience) || null;
-  if (exp === "experienced") return WIZ_PRO;
-  if (exp === "new" || exp === "never") return WIZ_INVESTOR;
-  return WIZ_GENERIC;
+function maybeCoach() {
+  if (!myProfile || myProfile.activated_at) return;
+  if (localStorage.getItem("psx_coach_dismissed")) return;
+  renderCoach();
 }
-
-let wizIdx = 0, wizAnswers = {};
-function startWizard(replayOnly) {
-  WIZ = pickWiz();
-  wizIdx = replayOnly ? WIZ.findIndex(s => s.kind === "tour") : 0;
-  if (wizIdx < 0) wizIdx = 0;              // a flow with no tour steps must not start at -1
-  wizAnswers = (myProfile && myProfile.quiz) || {};
-  renderWizard(!!replayOnly);
+function startTour() {
+  localStorage.removeItem("psx_coach_dismissed");
+  coachIdx = 0;
+  renderCoach();
 }
-function renderWizard(replayOnly) {
-  document.getElementById("wizbox")?.remove();
-  const s = WIZ[wizIdx];
-  if (!s) return finishWizard(replayOnly);
-  if (s.kind === "tour" && s.route) location.hash = s.route;
-
-  const qSteps = WIZ.filter(x => x.kind === "quiz").length;
-  const prog = Math.round(((wizIdx + 1) / WIZ.length) * 100);
-  let inner = "";
-  if (s.kind === "quiz") {
-    const cur = wizAnswers[s.key];
-    inner = `<div class="wiz-opts">${s.opts.map(([v, label]) => {
-      const on = s.multi ? (cur || []).includes(v) : cur === v;
-      return `<button class="wiz-opt ${on ? "on" : ""}" data-v="${v}">${label}</button>`;
-    }).join("")}</div>`;
-  }
-  const isTour = s.kind === "tour" || s.kind === "done" || s.kind === "welcome";
-  const box = el(`<div class="wizbox ${s.kind === "quiz" || s.kind === "welcome" ? "center" : "corner"}" id="wizbox">
-    <div class="wizcard">
-      <div class="wiz-prog"><span style="width:${prog}%"></span></div>
-      <b class="wiz-title">${s.title}</b>
-      ${s.body ? `<p class="wiz-body">${s.body}</p>` : ""}
-      ${inner}
-      <div class="wiz-nav">
-        ${wizIdx > 0 ? '<button class="wiz-back" id="wizBack">Back</button>' : ""}
-        <button class="wiz-skip" id="wizSkip">Skip tour</button>
-        <button class="wiz-next" id="wizNext">${s.kind === "done" ? "Start exploring" : "Next"}</button>
-      </div>
-    </div></div>`);
-  document.body.appendChild(box);
-
-  box.querySelectorAll(".wiz-opt").forEach(b => b.onclick = () => {
-    const v = b.dataset.v;
-    if (s.multi) {
-      const cur = new Set(wizAnswers[s.key] || []);
-      cur.has(v) ? cur.delete(v) : cur.add(v);
-      wizAnswers[s.key] = [...cur];
-      b.classList.toggle("on");
-    } else {
-      wizAnswers[s.key] = v;
-      box.querySelectorAll(".wiz-opt").forEach(x => x.classList.toggle("on", x === b));
-      setTimeout(() => { wizIdx++; renderWizard(replayOnly); }, 180); // auto-advance feels snappy
-    }
-  });
-  const back = document.getElementById("wizBack");
-  if (back) back.onclick = () => { wizIdx--; renderWizard(replayOnly); };
-  document.getElementById("wizNext").onclick = () => { wizIdx++; renderWizard(replayOnly); };
-  document.getElementById("wizSkip").onclick = () => finishWizard(replayOnly);
+function dismissCoach() {
+  document.getElementById("coachStrip")?.remove();
+  localStorage.setItem("psx_coach_dismissed", "1");
+  track && track("coach_card_dismissed", { step: coachIdx });
 }
-async function finishWizard(replayOnly) {
-  document.getElementById("wizbox")?.remove();
-  if (!replayOnly && me) await saveProfile({ onboarded: true, quiz: wizAnswers });
-  location.hash = "#/today";
+function renderCoach() {
+  document.getElementById("coachStrip")?.remove();
+  const s = COACH_STEPS[coachIdx];
+  if (!s) { track && track("tour_completed", {}); return; }
+  if (coachIdx === 0) track && track("tour_started", {});
+  location.hash = s.route;
+  const strip = el(`<div class="coach-strip" id="coachStrip">
+    <div class="coach-body">
+      <b class="coach-title">${s.title}</b>
+      <p class="coach-text">${s.body}</p>
+    </div>
+    <div class="coach-nav">
+      <button class="coach-next" id="coachNext">${coachIdx === COACH_STEPS.length - 1 ? "Done" : "Next"}</button>
+      <button class="coach-skip" id="coachSkip">Dismiss</button>
+    </div>
+  </div>`);
+  document.body.appendChild(strip);
+  track && track("coach_card_shown", { step: coachIdx });
+  document.getElementById("coachNext").onclick = () => { coachIdx++; renderCoach(); };
+  document.getElementById("coachSkip").onclick = () => dismissCoach();
 }
 
 /* Ties the anonymous session that arrived from an ad to the account it became, so the whole
@@ -7329,7 +7328,7 @@ async function initAuth() {
     try { consumeAuthErrorHash(); } catch (e) { console.error("auth error-hash handling failed:", e); }
     route(false);              // <- the first paint of the session, with auth actually known
   }
-  if (me && myProfile && !myProfile.onboarded) startWizard(false);
+  if (me && myProfile) maybeCoach();
   if (!sb) return;
   sb.auth.onAuthStateChange(async (event, sess) => {
     me = sess?.user || null;
@@ -7342,7 +7341,7 @@ async function initAuth() {
       applyDeskMode();
       identifyUser();              // after loadProfile, so the plan property is the real one
       if (typeof route === "function") route(true);   // re-render the page you're on with your account
-      if (myProfile && !myProfile.onboarded) startWizard(false);
+      if (myProfile) maybeCoach();
     }
     if (event === "SIGNED_OUT") { myProfile = null; applyDeskMode(); identifyUser(); if (typeof route === "function") route(true); }
   });

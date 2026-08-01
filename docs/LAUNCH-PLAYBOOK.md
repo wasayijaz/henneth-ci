@@ -98,7 +98,7 @@ A secondary, lower-probability legal angle: PECA criminalizes "unauthorized acce
 | **No ToS / Privacy / Risk Disclosure pages** | No footer links found on any page checked. Confirmed against `docs/PRODUCT-ROADMAP.md`'s own "Build order" list — still open. | High — legal, not cosmetic (see §2.4) |
 | **AI analyst layer still laptop-dependent** | Per `README.md`'s own loop table, the Daily read and Desk Room debates run "locally (while the Claude app is open)." Only the deterministic price data is cloud-independent (see above). If your laptop is off, "Today"'s narrative and new debates go stale even though prices stay fresh. Paying users will notice a stale "Today" read faster than a stale price. | Medium-high — the pasted chat's #2 "three things that decide this" item, still partially open |
 | **No billing/plan-gating layer** | Nothing in the codebase (`README.md`, `PRODUCT-ROADMAP.md`) indicates Stripe/Paddle/Safepay integration exists yet. This is 100% of what's needed to actually run a subscription. | High — the literal blocker for "I want to run a subscription" |
-| **No email digest infrastructure** | Flagged as unbuilt in `PRODUCT-ROADMAP.md` item 3. Without it, you have no retention mechanic and no legally-required "collect an email on the free tier" funnel. | Medium — retention, not a legal blocker |
+| **Email digest infrastructure** | **Update (2026-07-31): built, not yet live** — `scripts/lifecycle_email.py` (Python cron script) + `scripts/email_templates.py`/`email_copy.py`, `docs/lifecycle_email.sql` schema. SQL not yet applied (owner, Supabase SQL editor); cron secrets not yet wired (owner, GitHub web UI) — see `docs/PRODUCT-ROADMAP.md` §1a. | Medium — retention, mechanically done, owner steps pending |
 | **Company description / financial trend charts missing** | Flagged honestly in `CHANGELOG.md` as "not built (no data — deliberately not faked)." This is good practice (no fabrication) but is a real gap versus Sarmaaya/Investify, who show revenue/earnings trend lines. | Medium — competitive gap, not urgent |
 | **Universe heatmap grid renders low-contrast until interacted with** | On the Board page the ticker grid initially renders in pale, low-contrast text (screenshot-verified) — readable but noticeably weaker than the surrounding UI's otherwise sharp mono-terminal contrast. Given `CHANGELOG.md` already fixed one contrast bug (`.sub{opacity}` issue on 2026-07-12), this may be an intentional "unhovered" state, but it's worth a deliberate design pass rather than leaving it ambiguous. | Low |
 
@@ -122,7 +122,7 @@ A secondary, lower-probability legal angle: PECA criminalizes "unauthorized acce
 6. Fix the `#/scores` route so it either redirects to `#/leaderboard` or renders the same view (§3).
 7. Decide, deliberately, whether the AI analyst layer (Today's read, Desk Room debates) stays laptop-dependent or moves to a cloud runner (`DEPLOY.md` already scopes this: add `ANTHROPIC_API_KEY` as a GitHub secret + a `claude -p` runner — a few $/month). If you're about to charge for freshness, this stops being optional.
 8. Build the billing/plan-gating layer against whichever processor you picked in step 4.
-9. Build email-digest infrastructure (Supabase edge function + Resend/Postmark free tier, per `PRODUCT-ROADMAP.md`'s own plan).
+9. Email-digest infrastructure — **done, not live.** Python cron script (`scripts/lifecycle_email.py`), Resend-only (domain `send.henneth.app` verified). Owner steps left: apply `docs/lifecycle_email.sql` in Supabase SQL editor, add 3 repo secrets + one workflow step in `.github/workflows/desk-data.yml` (web UI — no `workflow` OAuth scope from here). See `PRODUCT-ROADMAP.md` §1a.
 
 **Phase 2 — Prove the leaderboard before charging**
 10. Let the Scores/leaderboard run publicly, unpaywalled, for **8–12 weeks minimum** until a meaningful number of calls have resolved. Post it weekly on your own account as a pre-launch marketing asset (see Appendix — this is literally free distribution and it's already partly live).
@@ -163,7 +163,7 @@ Reconciling the internal `PRODUCT-ROADMAP.md`, the pasted strategy chat, and wha
 - A visible status/fallback page for DPS outages
 
 ### Months 2–6 (post-launch, retention & completeness)
-- Email digest ("what changed on your watchlist this week") — the actual retention spine per both the roadmap doc and the pasted chat
+- Email digest ("what changed on your watchlist this week") — the actual retention spine per both the roadmap doc and the pasted chat. **Update (2026-07-31): infra built** (`scripts/lifecycle_email.py` + welcome/nudge/activated/digest sequence), just not live yet — owner SQL-apply + secrets pending, see §3 audit table above.
 - Company description + multi-year financial trend charts (needs a new fundamentals-history scraper — flagged honestly as a real data gap in `CHANGELOG.md`, not fabricated in the meantime, which is the right call)
 - PWA-ify the SPA before considering a native app — cheap, and matches how your actual users will access this (mobile-first, per the pasted chat's market read)
 - Screener with saved filters

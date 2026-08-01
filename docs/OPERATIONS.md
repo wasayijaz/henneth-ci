@@ -313,6 +313,12 @@ push refreshed data).
 - **Supabase** = auth + per-user data ONLY (never serves research data). Per-user, row-level-secured on
   the `profiles` table: `watchlist`, `notes`, `portfolio`, `followed_brokers`, `digest_prefs` (all jsonb).
   The client uses the publishable key (safe); the legacy service_role/anon keys are disabled.
+  Lifecycle-email columns (added by `docs/lifecycle_email.sql`, not yet applied — see §8/§10):
+  `activated_at`, `activation_type`, `signup_at`, `email_optout`, `unsub_token`. The first three are
+  write-once/service-role-only (`activated_at`/`activation_type` via the `mark_activated` RPC,
+  never a direct client upsert — `saveProfile()` cannot touch them). New table
+  `lifecycle_email_log` (service-role only, RLS on with zero policies) tracks per-user/per-key sends
+  and is the idempotency guard for the cron.
 - **Repo is private.** State data (incl. `history/`, `history_deep/`, `intraday/`) is committed so Vercel
   is self-contained.
 
@@ -406,8 +412,12 @@ worst case the backfill just continues on the next scheduled run.
 
 - **Sector concentration** in the portfolio tracker is by POSITION, not sector — the feed only has numeric
   sector codes (e.g. `0809`), no names. Building a code→name map would enable true sector grouping.
-- **Digest email SENDING** is not wired (prefs are captured in `digest_prefs`). Needs an email provider
-  (e.g. Resend) + a scheduled loop. On hold per owner.
+- **Lifecycle email (welcome/nudges/activated/digest)** is built — `scripts/lifecycle_email.py` +
+  `scripts/email_templates.py` + `scripts/email_copy.py`, schema in `docs/lifecycle_email.sql` — but
+  NOT yet live: the SQL hasn't been applied in Supabase, and the cron step can't be pushed from this
+  environment (§5 — no `workflow` OAuth scope). Owner must: (1) apply `lifecycle_email.sql` by hand
+  in the Supabase SQL editor, (2) add the three secrets (`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`,
+  `RESEND_API_KEY`) + the workflow step via the GitHub web UI. See §10 for the runbook once live.
 - **Legal pages** (`state/legal.json`, `#/legal/*`) are DRAFTS — a Pakistani lawyer must review before
   charging (flagged in the file's `review_status`). Discoverable from: page footer, the sidebar bottom
   (`.side-legal`), the sign-in/sign-up modal (`.auth-legal`), and the Settings page.
@@ -468,6 +478,61 @@ Verify the desk by fetching something only the new build would contain, not by l
   per-request cache-buster in `app.js` and bypass this entirely, so they are never served stale.
 - **Images/manifest get 1 day + SWR.** Not `immutable`: the filenames are unhashed, so a real logo
   change must still be able to propagate.
+
+---
+
+## 10. Lifecycle email runbook (`scripts/lifecycle_email.py`)
+
+Not live yet — see §8. Once the owner applies `docs/lifecycle_email.sql` in Supabase and adds the
+three secrets + workflow step, this is how to run and check it.
+
+**CLI:**
+- `python scripts/lifecycle_email.py` — dry run (default). Prints who's due for what, sends nothing.
+- `python scripts/lifecycle_email.py --send` — dry run + actually calls Resend.
+- `python scripts/lifecycle_email.py --test <user_id>` — force one user through the due-window
+  logic regardless of timing, for template/rendering checks. Combine with `--send` to actually
+  deliver it.
+- `python scripts/lifecycle_email.py --only <key>` — restrict to one email key (`welcome`,
+  `nudge_24h`, `activated`, `digest_<ISOyear>-W<week>`, `nudge_7d`).
+- `python scripts/lifecycle_email.py --requeue-stale` — re-check `lifecycle_email_log` rows stuck
+  in a non-terminal status (e.g. Resend call failed after the log-insert step).
+
+**Due windows** (a user qualifies for exactly one key per run, first match wins):
+
+| key | condition |
+|---|---|
+| `welcome` | immediate on first run after signup |
+| `nudge_24h` | ≥24h, ≤72h since signup, not activated |
+| `activated` | fires once on `activated_at` |
+| `digest_<ISOyear>-W<week>` | activated, digest pref on, ≥7d since signup, user's sharded weekday |
+| `nudge_7d` | ≥7d, ≤14d since signup, not activated |
+
+**Caps:** `DAILY_CAP = 90`, `MONTHLY_CAP = 2800` (Resend free tier is 100/day, 3,000/month — capped
+below the ceiling on purpose). `time.sleep(0.6)` between sends. Digest sends are sharded by
+`hash(user_id) % 5` across weekdays so the whole activated base doesn't queue on one day.
+
+**Idempotency:** every send inserts into `lifecycle_email_log(user_id, email_key)` (unique
+constraint) *before* calling Resend. A retry that hits the same `(user_id, email_key)` gets a 409
+on the insert and is skipped — this is what makes double-running the cron safe, not app-level
+dedup logic.
+
+**Checks before flipping `--send` on for real:**
+1. Dry run must show **zero** existing users due on first run — if it doesn't, `LIFECYCLE_EPOCH`
+   in the script is wrong (would blast the whole existing user base with "welcome"). Stop and fix
+   before sending anything.
+2. `--test <own user_id> --send` → open the result in Gmail and Outlook. Confirm square corners,
+   monospace fallback, the "Research · not advice" footer, and a working unsubscribe link.
+3. Run the CLI twice in a row with `--send` — second run must skip every email it just sent (the
+   409-on-insert path above), not re-send.
+4. Set `DAILY_CAP = 2` temporarily and confirm the script actually stops after 2 sends in a run.
+
+**Unsubscribe:** `#/unsubscribe?t=<uuid>` (dashboard route, ungated) calls the anonymous
+`email_unsubscribe(p_token, p_scope)` RPC, which flips `email_optout` and returns a boolean. Test
+it from a signed-out browser — the whole point is it must not require a session.
+
+**Rollback:** delete the workflow step in `.github/workflows/desk-data.yml`. Nothing else in the
+desk depends on this script running — it only reads `profiles`/`state/*.json` and writes to
+`lifecycle_email_log`.
 
 ---
 
