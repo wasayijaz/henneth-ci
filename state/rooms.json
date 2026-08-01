@@ -80,7 +80,7 @@
    "broker_challenge_ur_hash": "5987d913093b",
    "worst_case_ur_hash": "8e0bc1291283"
   },
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "flags",
    "timestamp": "2026-07-28",
@@ -91,8 +91,8 @@
   "built": "2026-07-17 18:00",
   "sessions": 21,
   "note": "Desk Room sessions per ticker; rendered on the ticker page.",
-  "updated": "2026-07-31 17:49",
-  "covered": 43
+  "updated": "2026-08-01 12:03",
+  "covered": 44
  },
  "UBL": {
   "built": "2026-07-28 11:25",
@@ -272,7 +272,7 @@
    "broker_challenge_ur_hash": "a40b15708c91",
    "worst_case_ur_hash": "784cf0de9f6a"
   },
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "flags-low-medium",
    "checked": "2026-07-28",
@@ -314,40 +314,67 @@
   "reaffirmed": false
  },
  "OGDC": {
-  "built": "2026-07-26 13:43",
-  "dossier_asof": "2026-07-23",
-  "price_at_session": 311.95,
-  "material_hash": "6803df2aa00e",
+  "built": "2026-08-01 12:03",
+  "dossier_asof": "2026-07-31",
+  "price_at_session": 314.04,
+  "material_hash": "9cd4cde89e83",
   "ta_memo": {
-   "read": "OGDC sits below both its 20-day (330.02) and 50-day (326.62) averages, with price at 311.95 after a -7.75% 20-day move and a -1.37% latest session. RSI14 at 34.8 is soft but not yet in oversold extremes. Price is roughly 11.8% off its 20-day high, and volume surge at 0.52 shows the recent decline came on lighter-than-average participation.",
-   "structure": "downtrend",
-   "momentum": "down",
-   "liquidity_note": "Avg daily traded value of ~PKR 1,453.5m is high for the exchange, supporting clean entry/exit without material market impact.",
+   "read": "OGDC at 314.04 sits below both its SMA20 (323.54) and SMA50 (325.54), consistent with a -9.09% 20-day decline, though the tape shows a modest +1.18% 5-day bounce and a flat 1-day print. RSI14 at 41.1 is neutral-to-soft, no oversold extreme. Price is 11.04% off its 20-day high, while volume surge (0.29) and volatility rank (11.4) are both low, marking this as a quiet, low-participation pullback rather than a sharp breakdown.",
+   "structure": "transition",
+   "momentum": "flat",
+   "liquidity_note": "avg_daily_traded_value_m of 1180.1 indicates deep liquidity; clean entry/exit sizing is unlikely to be a constraint.",
    "proven_now": [
     "Low-volatility pullback"
    ],
    "levels": {
     "support": null,
-    "resistance": 330.02
+    "resistance": 323.54
    },
    "technical_stance": "cautious"
   },
   "fa_memo": {
-   "read": "OGDC screens as a highly profitable, low-beta E&P with net margins near 40% and a trailing P/E of 8.62 (7.16 forward) that sits mid-pack for PSX. The model's composite fair value of 431.16 implies a sizeable gap to the 311.95 price, but the four component methods span a very wide range (230.53 to 670.93), so the 'undervalued' verdict should be read as directional rather than precise. Dividend history is consistent across the last four closures with a moderate payout ratio, suggesting the distribution is currently well covered by earnings. Forward P/E below trailing hints at expected earnings growth, though the feed gives no balance-sheet detail to confirm the underlying quality of that growth.",
+   "read": "OGDC is a large, highly profitable exploration name (net margin ~40% on 390.40B revenue) trading at a trailing P/E of 8.68 and forward P/E of 7.20, both undemanding for the sector. The composite model puts fair value well above the current price (37% mispricing, 'undervalued' verdict), though the four underlying methods disagree sharply (230.53 to 675.41), so treat the single composite number with caution rather than precision. Dividend flow looks steady across four recent payouts with a 44% payout ratio, leaving room before it strains earnings. Nothing in the feed points to a loss or margin deterioration.",
    "valuation_stance": "cheap_vs_fair",
-   "earnings_quality": "Net margin ~40% (155.56B net income on 390.40B revenue) with no loss/negative-EPS flag; forward P/E below trailing implies expected earnings growth per the data.",
-   "dividend_safety": "Payout ratio 43.70% against a 4.82% yield, with four dividend closures in the last twelve months — payout level does not indicate strain, though sustainability depends on realized-price/commodity assumptions not in this feed.",
+   "earnings_quality": "Strong profitability (~40% net margin on EPS 36.17); forward P/E (7.20) below trailing (8.68) implies expected earnings growth; no loss/negative-EPS flag in the data.",
+   "dividend_safety": "Payout ratio 44.24% against four recent quarterly-style dividends (totaling ~Rs16.00/share in the feed) suggests room to sustain the 4.75% yield, but coverage trend beyond payout ratio is not in the data.",
    "balance_sheet_flags": [
-    "debt/leverage not in feed",
-    "no current ratio or cash-flow data in feed",
-    "valuation methods disperse widely (230.53-670.93), composite fair value carries real model uncertainty"
+    "Debt/leverage figures not in the data",
+    "Cash flow statement not in the data",
+    "Valuation methods span a wide range (230.53-675.41), so the single composite fair value masks real disagreement"
    ],
-   "broker_view": "Topline's July 14 note names OGDC a FY26 top pick, but the cited target (203k) is an index-level call, not a company-specific price or fair-value figure, and no track-record annotation is attached for this desk — treat the 'top pick' framing as a claim to weigh lightly rather than corroboration of the valuation model.",
+   "broker_view": "Topline names OGDC a FY26 top pick tied to a KSE-100 index target for Dec 2026; this is a single dated claim with no track-record annotation in the feed to weight its reliability, and it is an index-level call rather than a stock-specific earnings thesis, so it is noted but not treated as corroboration.",
    "fundamental_stance": "constructive"
   },
-  "bull_case": "Zoya, The Bull: OGDC screens cheap against its own model and sits in a sector just handed a macro tailwind, with dividend income covered along the way. Trailing P/E is 8.62 (forward 7.16), and the composite fair-value model puts fair value at 431.16 versus the 311.95 price -- a 38.2% 'undervalued' gap. Profitability is real, not paper: net margin ~40% (155.56B net income on 390.40B revenue). The dividend is moderate and covered -- 4.82% yield, 43.70% payout, four consecutive dividend closures in the past year. Brent crude topped $100/bbl on 2026-07-24 (impact-4 news), a direct E&P revenue tailwind. Liquidity is ample (avg daily traded value ~PKR 1,453.5m) and beta is low (0.46), so size can move without distorting the tape. Topline's July 14 note names OGDC a FY26 top pick. Best evidence: the 38.2% model gap paired with the Brent spike is a fundamental-plus-macro double support. What breaks it: if the oil spike is a risk-driven blip that fades, or the confirmed downtrend (below SMA20/SMA50, RSI 34.8, -7.75% 20-day) continues regardless of the commodity move.",
-  "bear_case": "Khurram, The Bear: the tape disagrees with the model right now, the model itself is loose, and the 'tailwind' oil story is a risk spike, not a demand story. OGDC sits below both its 20-day (330.02) and 50-day (326.62) averages, down 7.75% over 20 days, RSI14 at 34.8, with no support level identified in the TA memo. The composite fair value of 431.16 is an average of methods ranging from 230.53 to 670.93 -- a spread wide enough that the FA memo itself flags 'real model uncertainty,' undercutting the precision of the 38.2% undervaluation claim. No debt, current-ratio, or cash-flow data is in the feed, so dividend safety rests on payout ratio alone. Brent's move above $100 is driven by Houthi attacks and Red Sea blockade fears (impact-4 news) -- the same oil shock already drove a 1,703-point KSE-100 selloff on 2026-07-22, showing the market reads this spike as macro risk-off first, sector windfall second. Attack on the Bull: the Topline 'FY26 top pick' citation is an index-level target (203k by Dec 2026), not an OGDC price target, dated July 14 -- before this week's Brent spike -- with no track record attached; the FA memo already cautions to weigh it lightly, so pairing it with the later oil move overstates confirmation that isn't really there. Broker challenge: treat the Topline call as a directional sector opinion, not corroboration of the valuation model, given its age, its index-level scope, and the undisclosed track record. Worst case: the oil spike proves transient (as Red Sea-driven spikes have before) while the confirmed downtrend persists with no defined support, compounding with broader index downside if risk-off resumes as it did on 2026-07-22 (-1,703 points in one close).",
-  "reaffirmed": "2026-07-28 11:17"
+  "bull_case": {
+   "thesis": "OGDC screens as a large, highly profitable E&P name trading at an undemanding multiple with a fair-value gap the FA memo flags as material. The pullback looks orderly rather than broken, with liquidity deep enough that sizing is not a constraint.",
+   "pillars": [
+    "Forward P/E of 7.20 sits below trailing P/E of 8.68, which the FA memo reads as the market pricing in earnings growth.",
+    "Composite fair value of 430.25 vs. price 314.04 implies 37% mispricing, verdict 'undervalued' in the dossier.",
+    "Net margin runs near 40% on revenue of 390.40B (net income 155.56B) - the FA memo calls this 'strong' profitability with no loss/margin-deterioration flag.",
+    "Dividend yield 4.75% on a 44.24% payout ratio, backed by four recent payouts totaling roughly Rs16.00/share in the feed.",
+    "RSI14 at 41.1 is neutral, not oversold-broken, and avg daily traded value of 1180.1M keeps liquidity deep per the TA memo."
+   ],
+   "best_evidence": "Two independent signals point the same direction: forward P/E (7.20) below trailing (8.68) plus a composite fair-value gap of 37% - both sourced from the FA memo, not a single model.",
+   "what_would_break_it": "Price remains below both SMA20 (323.54) and SMA50 (325.54) with a -9.09% 20-day decline; if that downtrend extends on volume rather than resolving, the 'undervalued' read does not by itself confirm a technical turn."
+  },
+  "bear_case": {
+   "thesis": "The technical picture is a confirmed downtrend, not yet a base, and the valuation case rests on a composite that hides sharp internal disagreement. Sector exposure to oil-driven volatility adds a swing factor the fundamentals alone don't capture.",
+   "pillars": [
+    "Price (314.04) sits below both SMA20 (323.54) and SMA50 (325.54); TA memo labels structure 'transition' and stance 'cautious', with no support level identified (support: null).",
+    "The four valuation methods span 230.53 to 675.41 - a spread of nearly 3x - so the single 430.25 composite figure masks real model disagreement, per the FA memo itself.",
+    "Debt/leverage and cash-flow data are explicitly absent from the feed (FA memo balance_sheet_flags), so dividend/earnings durability can't be fully checked.",
+    "Recent news shows Brent crude swinging past $100/bbl on Red Sea and Iraq strike headlines (impact-4 items, 2026-07-23/24/29), with KSE-100 itself swinging -1703pts, then +6600pts, then -1580pts inside ten days - high macro noise for an E&P name."
+   ],
+   "attack_on_bull": "The bull's strongest pillar - the 37% 'undervalued' composite - is also its weakest under scrutiny: the FA memo discloses the four underlying methods range from 230.53 to 675.41, meaning the composite is an average across a nearly 3x spread rather than a converged estimate. Treating 430.25 as 'fair value' overstates precision the memo itself says isn't there.",
+   "broker_challenge": "Topline's OGDC 'FY26 top pick' (2026-07-14) is tied to a KSE-100 index target (203k by Dec 2026), not a stock-specific earnings model, and the FA memo notes no track-record annotation exists in the feed to weight it. The call also predates the subsequent oil-driven risk-off and index whipsaw in the news feed (2026-07-22 to 07-29) - a single dated, index-level claim from one desk shouldn't be read as corroboration of the current price level.",
+   "worst_case": "Price has already fallen 9.09% over 20 days on low volume conviction (vol surge 0.29) and sits below both moving averages with no identified support; a continuation of oil-driven index risk-off (as seen in the -1703pt and -1580pt sessions in the news feed) could extend the 'transition' phase without the reversal the low-volatility-pullback pattern (68% historical hit rate, n=34) would need to play out, while the 44.24% payout ratio is untested in the feed against a sustained oil-price pullback."
+  },
+  "reaffirmed": false,
+  "qa": {
+   "verdict": "clean",
+   "checked": "2026-08-01",
+   "note": "Fixed dividend-sum error (Rs16.75->Rs16.00/share) in fa_memo + bull_case; composite fair value, PE/EPS/margin, and broker-view characterization all check out; no advice-language drift."
+  }
  },
  "MCB": {
   "built": "2026-07-14 00:23",
@@ -496,7 +523,7 @@
    "thesis_ur_hash": "182a50d2b00f",
    "attack_on_bull_ur_hash": "67c9b0f2c286"
   },
-  "reaffirmed": false,
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "clean",
    "checked": "2026-07-31",
@@ -588,7 +615,7 @@
    "broker_challenge_ur_hash": "07eefdceb850",
    "worst_case_ur_hash": "b4659a700f12"
   },
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "clean",
    "timestamp": "2026-07-28",
@@ -654,7 +681,7 @@
    "broker_challenge": "Topline's FY26 top-pick note cites a 203k KSE-100 index target, not a stock-specific fair value for LUCK — an index call is being read across as a company endorsement. The fa_memo flags no track-record annotation for this source, so the claim carries an unweighted, incentive-laden prior (brokers are paid to publish bullish top-pick lists) rather than a tested call for this name specifically.",
    "worst_case": "A repeat of early/mid-July conditions — single-day index losses in the thousands of points (6,400+ pts on 2026-07-14) — could push LUCK's price toward the lower end of its own valuation-method range (DDM 152.83) well below the current composite fair value of 442.06, with the 7.39% gap to its 20-day high widening further."
   },
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "flags-low",
    "checked": "2026-07-28",
@@ -969,7 +996,7 @@
   },
   "bull_case": "Zoya, The Bull: SSGC's selloff is stretched into an oversold zone where the dossier's own backtested strategy has historically worked, and its low beta cushions single-name risk within a volatile tape. Pillars: (1) RSI14 at 31.1 sits in oversold territory, and the dossier's 'Lower band + RSI<35' strategy shows a 78% hit rate with average net gain of 1.45% across n=9 signals. (2) Avg daily traded value of PKR 330.9M gives ample liquidity for clean entry/exit per the TA memo. (3) Beta of 0.22 means SSGC historically moves far less than the broader market, a defensive trait as the KSE-100 fell 1,703.64 points on Jul 22. (4) The company still declared a dividend (Rs 0.5, 1.99% yield) despite a reported loss, showing continued cash distribution. (5) Predictability score of 58.0 signals above-baseline signal reliability. Best evidence: the 78%-hit-rate oversold strategy. What would break it: Brent crude's spike past $100/bbl and repeated impact-4 macro news keep sector risk-off alive, price fails to reclaim SMA20 (30.08)/SMA50 (28.65), and the lossmaking base (EPS -2.87) offers no valuation floor to arrest a deeper slide.",
   "bear_case": "Khurram, The Bear: The chart confirms a strong, unbroken downtrend inside a lossmaking company with no valuation anchor, worsened by a genuine macro shock in oil markets. Pillars: (1) Momentum is 'strong_down' -- SSGC is down 6.97% on the day, 14.36% over 5 days, 23.8% over 20 days, trading below both SMA20 (30.08) and SMA50 (28.65). (2) The company is lossmaking: EPS -2.87, net income -2.52B against 381.58B revenue, and payout_ratio is null -- the 1.99% dividend is not demonstrably covered by earnings. (3) Valuation is unanswerable: P/E and forward P/E are both n/a and the dossier's valuation block is entirely null, matching the FA memo's own 'unclear' stance. (4) Three separate impact-4 news items in three days show Brent crude spiking from $92 to over $100/bbl on Red Sea blockade fears, coinciding with the KSE-100 shedding 1,703.64 points -- a genuine sector-wide risk-off, not noise. (5) Market cap is only 22.11B -- small-cap, 'moves fast, thinner liquidity, higher risk' per the FA scorecard, despite the 330.9M ADV bulls cite. Attack on Zoya's weakest pillar: her best evidence, the 78% 'Lower band + RSI<35' hit rate, rests on just n=9 historical signals -- too thin a sample to call reliable -- and its average edge (net 1.45%) is razor-thin against a stock that just fell 23.8% in 20 days into fresh lossmaking territory; oversold can stay oversold. Broker challenge: not applicable -- the FA memo carries no broker view (broker_view: null) in this dossier, so there is no broker claim here to audit. Worst case: the downtrend extends past the already-booked -23.8%/20d move as oil-driven risk-off persists (Brent >$100, KSE-100 -1,703 points in a single session), SMA50 (28.65) stays out of reach, and the null payout_ratio against negative earnings forces a dividend cut.",
-  "reaffirmed": "2026-07-31 17:47"
+  "reaffirmed": "2026-08-01 12:01"
  },
  "DCR": {
   "built": "2026-07-17 17:52",
@@ -1670,7 +1697,7 @@
    "broker_stance": "n/a — no broker digest was supplied in this session's inputs",
    "watch_next": "Whether price reclaims SMA20 (8.10) on rising volume within 20 sessions (by 2026-08-08) — a reclaim with volume confirmation would favor the bull's mean-reversion read; failure to reclaim favors the bear's structural downtrend/overvaluation read. Sep 11, 2026 earnings will also test the margin thesis."
   },
-  "reaffirmed": "2026-07-31 17:47"
+  "reaffirmed": "2026-08-01 12:01"
  },
  "NRL": {
   "built": "2026-07-30 23:20",
@@ -1959,7 +1986,7 @@
    "thesis_ur_hash": "e561c1e9dd73",
    "attack_on_bull_ur_hash": "88cc27ce335d"
   },
-  "reaffirmed": false,
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "flags",
    "checked": "2026-07-31",
@@ -2121,7 +2148,7 @@
    "broker_stance": "partially_agree — Topline's FY26 top-pick directionally echoes the desk's cheap-valuation read, but the cited 203k KSE100 index target by Dec 2026 is not a SAZEW price target and carries no track-record annotation, so it adds sentiment weight only, not verifiable stock-level evidence.",
    "watch_next": "The Sep 2, 2026 earnings print (net margin at/above ~12% and EPS growth confirming fwd P/E 6.13) versus any close back above SMA20 (Rs2,031.53) — either would resolve the current TA/FA conflict; a margin miss below 10% or continued closes under SMA20/SMA50 would confirm the bear case instead."
   },
-  "reaffirmed": "2026-07-31 17:47"
+  "reaffirmed": "2026-08-01 12:01"
  },
  "PAEL": {
   "built": "2026-07-19 14:04",
@@ -2198,7 +2225,7 @@
    "broker_stance": "reject — Topline's 'FY26 top pick' cites a KSE-100 index target (203k by Dec 2026), not a PAEL-specific thesis or price target, and carries no track record in this dossier; it reads as promotional, not evidence of company-specific upside.",
    "watch_next": "A daily close decisively below or above the 41.67-44.15 range in the next 20 sessions, and the Aug 28, 2026 earnings print — a net margin move away from ~6% resolves which valuation anchor (28.49 vs 45.66) is the right one."
   },
-  "reaffirmed": "2026-07-31 17:47"
+  "reaffirmed": "2026-08-01 12:01"
  },
  "BAHL": {
   "built": "2026-07-19 14:04",
@@ -2436,7 +2463,7 @@
    "broker_stance": "n/a — no broker digest was referenced in this session's dossier, memos, or debate for JSML.",
    "watch_next": "Jul 29, 2026 results - specifically whether net margin holds or improves from ~2%, and whether price reclaims SMA20 (68.04) on volume; a volume-backed close above 68.04 would flip the technical read."
   },
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "ticker": "JSML",
    "verdict": "flags",
@@ -2712,7 +2739,7 @@
    "attack_on_bull_ur": "بُل کیس کا ویلیویشن ستون (277.34 فیئر ویلیو، 45.9% انڈر ویلیوڈ) سب سے کمزور ہے: یہ چار طریقوں کا مجموعہ ہے جو آپس میں 5.6x کے فرق سے متضاد ہیں (101.59 سے 572.58 تک)، اور اس کے ارننگز ان پٹس (EPS 15.94، growth_est 30%) یا تو پرانے ہیں یا شاید ابھی تک رپورٹ ہونے والی 32% سالانہ سہ ماہی منافع میں کمی کی عکاسی نہیں کرتے۔ شدید متضاد ماڈلز کا کمپوزٹ اوسط ایک درست فلور نہیں ہے — یہ ایک ایسا عدد ہے جو ان پٹ ارننگز فگر کے دوبارہ بیان ہونے پر کافی حد تک بدل جاتا ہے۔",
    "attack_on_bull_ur_hash": "5f7091b2d4f6"
   },
-  "reaffirmed": false,
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "clean",
    "checked": "2026-07-31",
@@ -2796,7 +2823,7 @@
    "broker_stance": "n/a -- no broker digest present in this session's fundamentals feed (broker_view: null), so the desk has nothing external to agree, partially agree, or reject",
    "watch_next": "Whether POL closes above 693.75 (20-day high, TA's proven-now breakout level) or first tests SMA50 support at 677.01 -- and the Aug 11, 2026 earnings print, which will show whether the 80.26% payout ratio is sustainable"
   },
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "qa": {
    "verdict": "clean",
    "checked": "2026-07-21",
@@ -2966,28 +2993,23 @@
  "MTL": {
   "built": "2026-07-21 21:30",
   "dossier_asof": "2026-07-21",
-  "price_at_session": 287.58,
+  "price_at_session": 299.66,
   "material_hash": "4128a8c09007",
   "ta_memo": {
-   "read": "MTL trades at 287.58, below both its SMA20 (298.63) and SMA50 (289.76), after a -5.29% 20-day return despite a modest +0.86% today. RSI14 at 43.5 is neutral, not oversold, and volume surge is only 0.28x — no conviction behind the recent bounce. Price sits 8.62% below its 20-day high, consistent with a stalled pullback rather than a fresh breakdown.",
-   "structure": "transition",
-   "momentum": "flat",
-   "liquidity_note": "avg_daily_traded_value_m 107.1 supports clean entry/exit for typical desk position sizes.",
+   "read": "MTL trades at 299.66, above both SMA20 (293.15) and SMA50 (291.37), with the two averages closely aligned. RSI14 at 58.3 sits in neutral-to-firm territory, not overbought. The 5-day return of +5.47% contrasts with a flat-to-soft 20-day return of -0.95%, and price sits only 1.21% below its 20-day high. Volume surge is modest at 1.02x, so the recent move has not been accompanied by a notable pickup in participation.",
+   "structure": "uptrend",
+   "momentum": "up",
+   "liquidity_note": "Average daily traded value of PKR 69.6m suggests reasonably clean entry/exit capacity for typical desk position sizes.",
    "proven_now": [
-    "CCI pullback in uptrend",
-    "Triple screen alignment"
+    "Triple screen alignment",
+    "Triple EMA alignment",
+    "CCI pullback in uptrend"
    ],
    "levels": {
-    "support": null,
-    "resistance": 298.63
+    "support": 293.15,
+    "resistance": 303.35
    },
-   "technical_stance": "cautious",
-   "claim": {
-    "kind": "direction",
-    "direction": null,
-    "horizon_days": 20,
-    "text": null
-   }
+   "technical_stance": "constructive"
   },
   "fa_memo": {
    "read": "Millat Tractors is a profitable, low-beta business (13% net margin, beta 0.21) but the composite fair-value model puts fair value at Rs143.6 against a Rs287.58 price — a -50.1% mispricing flagged 'overvalued'. The four valuation methods disagree sharply: relative-PE (157.41), earnings-power (118.8) and Graham (129.79) all sit far below price, while only DDM (254.13, driven by the high current yield) comes close — a red flag that the stock's yield is doing the valuation work. PE of 15.29 is called 'priciest third' by the scorecard. Dividend yield of 10.52% is attractive on paper but payout ratio is 94.9%, leaving almost no earnings cushion, and recent dividends are lumpy/special (200%, 150%, 450%), not a stable run-rate.",
@@ -3043,7 +3065,8 @@
    "verdict": "flags",
    "checked": "2026-07-21",
    "note": "Composite fair value, mispricing, price/PE/EPS/yield all externally corroborated. Medium-sev: fa_memo stable-earnings framing omits real profit volatility (FY25 -38%, 1HFY26 -20% tax-driven) bearing on payout-cushion risk -- non-blocking (no high finding), noted for awareness."
-  }
+  },
+  "delta_updated": "2026-08-01 12:02"
  },
  "PIOC": {
   "built": "2026-07-22 17:56",
@@ -3179,7 +3202,70 @@
   },
   "bull_case": "Thesis: Airlink's composite fair value of PKR 217.3 against a current price of 135.43 flags 60.5% mispricing to the downside, and a forward P/E discount (7.97 vs trailing 9.53) implies the data expects meaningful earnings growth (19.6% est.) even after a sharp pullback. Pillars: (1) Valuation gap - price 135.43 vs composite fair 217.3, a 60.5% \"undervalued\" verdict. (2) Forward view improving - forward P/E 7.97 below trailing 9.53. (3) Dividend well covered - 6.65% yield on a 45.23% payout ratio, three payouts recorded over the past year. (4) Technical oversold bounce - RSI14 at 32 (near-oversold) with today's +2.11% print after a -14.43% 20-day slide, on a 2.79x volume surge suggesting repositioning. (5) Liquidity/defensiveness - PKR 198.9m average daily traded value for clean entry/exit, beta 0.50. Best evidence: the 60.5% price-to-composite-fair-value gap paired with the forward-P/E discount is the clearest quantified support. What would break it: the composite averages four methods spanning 89.36 to 343.73 (a ~4x range) - if true value sits near the low end, or the confirmed downtrend (below both SMA20/SMA50) persists, the \"undervalued\" framing fails.",
   "bear_case": "Thesis: Airlink is in a confirmed technical downtrend - below both its 20-day (148.34) and 50-day (151.07) moving averages, down 14.43% over 20 sessions, with no identified support level - while its own fundamental data undercuts the \"undervalued\" bull framing. Pillars: (1) Structure/momentum - TA memo reads \"downtrend\"/momentum \"down\", technical_stance \"cautious\", RSI14 at 32 (weak, not a confirmed reversal). (2) No support - dossier lists support as null, only resistance at 148.34 is identified. (3) Thin margins - net margin ~6% (5.54B net income on 87.20B revenue) leaves little cushion if costs rise. (4) Broader tape - PSX closed lower a third straight session, KSE-100 down 2,690.48 points, tagged impact-4 news the same day. (5) Valuation spread - the four fair-value methods range from 89.36 to 343.73, so the \"217.3 composite\" is not a settled number. Attack on bull: the bull's strongest pillar, the 60.5% \"undervalued\" gap, rests on averaging four divergent methods; the earnings-power method (89.36), tied directly to current profits, sits BELOW today's 135.43 price, implying overvaluation not undervaluation - the composite is pulled up mainly by the DDM output (343.73), which is assumption-sensitive and unsupported by the confirmed downtrend. Broker challenge: none - fa_memo broker_view is null, no broker claim is in play. Worst case: a reversion toward the earnings-power estimate (89.36) would be roughly a 34% decline from 135.43, compounding the existing -14.43% 20-day slide, with thin 6% margins offering no cushion and no confirmed support to arrest it.",
-  "reaffirmed": "2026-07-31 17:47",
+  "reaffirmed": "2026-08-01 12:01",
   "delta_updated": "2026-07-30 23:18"
+ },
+ "AKBL": {
+  "built": "2026-08-01 12:03",
+  "dossier_asof": "2026-07-31",
+  "price_at_session": 105.24,
+  "material_hash": "cafe966900a7",
+  "ta_memo": {
+   "read": "AKBL sits at 105.24, below its SMA20 (107.13) but still above its SMA50 (103.64), after a sharp 1-day (+2.11%) and 5-day (+5.29%) bounce that partly offsets a -10.3% 20-day decline. RSI14 at 49.4 is neutral, and price is 11.48% off its 20-day high, with a volume surge (2.36x) accompanying the recent recovery.",
+   "structure": "transition",
+   "momentum": "up",
+   "liquidity_note": "Avg daily traded value of Rs458.0m indicates ample liquidity for clean entry/exit sizing.",
+   "proven_now": [
+    "Reclaim 200-day"
+   ],
+   "levels": {
+    "support": 103.64,
+    "resistance": 107.13
+   },
+   "technical_stance": "neutral"
+  },
+  "fa_memo": {
+   "read": "Askari Bank screens as a profitable commercial bank keeping roughly 21% of revenue as net income, trading on a trailing P/E of 6.70 (forward 5.83) — in the cheaper third of PSX names — while the composite fair-value model puts it well above the current price (147.47 vs 105.24, a 40% gap). The four valuation methods disagree sharply (relative-PE/earnings-power near 98-100 vs Graham/DDM near 195-222), so the fair-value composite carries real model uncertainty rather than being a tight consensus. The dividend looks reasonably covered on a 45.5% payout ratio against a 4.85% yield, with a steady run of recent payouts. No bank-specific balance-sheet metrics (capital adequacy, NPLs, provisioning, leverage) are present in this feed, which matters more for a bank than for most sectors.",
+   "valuation_stance": "cheap_vs_fair",
+   "earnings_quality": "About 21% net margin on revenue 106.73B/net income 22.30B, EPS 15.38, no loss or negative-EPS flag in the data.",
+   "dividend_safety": "Payout ratio 45.50% against a 4.85% yield, with consistent recent quarterly/interim payouts — looks covered on the numbers given.",
+   "balance_sheet_flags": [
+    "capital adequacy ratio not in data",
+    "NPL/asset-quality metrics not in data",
+    "leverage/debt detail not in data — notable gap for a bank"
+   ],
+   "broker_view": "The one document present is a results filing digest, not a broker opinion — it reports H1 2026 profit up 25% to Rs13.35bn with a Rs2/share dividend declared; as company-sourced disclosure it should be read as a claim pending independent confirmation, not weighed as an outside analyst call.",
+   "fundamental_stance": "constructive"
+  },
+  "bull_case": {
+   "thesis": "Askari Bank screens statistically cheap against a composite fair-value model while H1 2026 results show accelerating profit and a maintained dividend, and price has just reclaimed its SMA50 on a volume-backed bounce. The combination of a valuation gap and confirmed earnings growth gives the name a fact-based case for continued attention.",
+   "pillars": [
+    "Trailing P/E 6.70, forward P/E 5.83 (falling), placing it in the cheapest third of PSX names (fa_memo/dossier valuation)",
+    "Composite fair value 147.47 vs price 105.24, a 40.1% mispricing flagged 'undervalued' (dossier valuation)",
+    "H1 2026 profit up 25% to Rs13.35bn with a Rs2/share dividend declared, news impact 4, 2026-07-31 (dossier recent_news)",
+    "Price back above SMA50 (103.64) with momentum 'up', +5.29% 5-day return and 2.36x volume surge (ta_memo)",
+    "Dividend yield 4.85% on a 45.5% payout ratio, read as covered, with a 'Reclaim 200-day' pattern showing 56% hit rate over 25 occurrences (fa_memo/ta dossier)"
+   ],
+   "best_evidence": "The 40% gap between price (105.24) and composite fair value (147.47) lands alongside a company-reported 25% H1 profit jump, giving the cheap valuation a concurrent earnings catalyst rather than standing alone.",
+   "what_would_break_it": "Price remains below SMA20 (107.13) with structure still labeled 'transition' inside a -10.3% 20-day decline; if the bounce fails to clear SMA20, and bank-specific risk (capital adequacy, NPL, leverage) stays undisclosed in this feed, the valuation case has no balance-sheet backstop."
+  },
+  "bear_case": {
+   "thesis": "The 'cheap' and 'undervalued' read rests on a composite fair-value figure built from methods that disagree by more than double, and on a company self-reported earnings print, while the chart itself has not confirmed a reversal and core bank risk data is simply absent from the feed. Against that, the technical bounce looks like relief inside a downtrend, not a resolved base.",
+   "pillars": [
+    "The four valuation methods diverge sharply: relative-PE/earnings-power ~98-100 vs Graham/DDM ~195-222 (fa_memo), so the 147.47 composite is an average of disagreement, not a consensus",
+    "No capital adequacy ratio, NPL/asset-quality, or leverage data is present in the feed (fa_memo balance_sheet_flags) — a material gap specifically for a bank",
+    "Price is still below SMA20 (107.13), 11.48% off the 20-day high, inside a -10.3% 20-day decline, with structure 'transition' and technical_stance 'neutral' (ta_memo/dossier)",
+    "The only quoted proven pattern, 'Reclaim 200-day', shows a modest 56% hit rate and thin 1.46% net edge over just 25 occurrences (dossier proven_strategies) — a weak statistical edge to lean on"
+   ],
+   "attack_on_bull": "The bull's valuation pillar is the weakest: citing '40% undervalued' averages methods that span 98 to 222 — a spread the fa_memo itself calls 'real model uncertainty rather than being a tight consensus'. Presenting the composite as a clean gap, without the dispersion, overstates conviction the underlying methods don't share.",
+   "broker_challenge": "The single supporting document is a results filing digest — company-sourced disclosure of its own 25% profit jump — not an independent broker call (fa_memo broker_view explicitly flags this as 'a claim pending independent confirmation'). It carries an obvious incentive (self-reported by the issuer around a dividend announcement) and cannot be cross-checked against capital-adequacy or asset-quality data this feed doesn't have; treating it as confirmed strength skips that verification step.",
+   "worst_case": "A resumed 20-day-style decline (-10.3% already logged) that fails to hold SMA20 (107.13) tests SMA50 support (103.64); a break below that level would retrace the recent bounce and the H1-print reaction entirely, while the undisclosed bank-specific risk factors remain unresolved throughout."
+  },
+  "reaffirmed": false,
+  "qa": {
+   "verdict": "clean",
+   "checked": "2026-08-01",
+   "note": "Two non-blocking dossier-layer findings (div_yield/payout_ratio basis mismatch, stale next_earnings) neither leaks into memo text; composite fair value, TA figures, H1 profit figure all verified; no advice-language drift. Flagged for data pipeline, not fixed here."
+  }
  }
 }
