@@ -422,6 +422,15 @@ body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
 body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px}
 body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px}
 body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+body[data-theme=gemini] .auth-head .ha-logo{margin-right:8px}
+body[data-theme=gemini] .authbox.ha-v2{align-items:center;display:flex;gap:0}
+body[data-theme=gemini] .ha-v2 .authpanel{max-width:420px;padding:22px}
+body[data-theme=gemini] .ha-v2 .ha-scene~.authpanel,body[data-theme=gemini] .ha-v2 .authpanel{border-left:none}
+body[data-theme=gemini] .ha-scene{position:relative;width:420px;max-width:40vw;align-self:stretch;background:var(--panel2,var(--panel));border:1.5px solid var(--line);border-right:none}
+body[data-theme=gemini] .ha-scene canvas{position:absolute;inset:0;width:100%;height:100%}
+@media (max-width:760px){
+  body[data-theme=gemini] .ha-scene{display:none}
+}
 body[data-theme=gemini] .auth-head b{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
 body[data-theme=gemini] .auth-head em{font-style:normal;color:var(--ink3)}
 body[data-theme=gemini] .auth-x{background:transparent;border:1px solid var(--line);width:24px;height:24px;font-size:11px}
@@ -817,6 +826,12 @@ body[data-theme=gemini] .bw-go{background:var(--ink1);color:#f4f4f0;border:1.5px
 body[data-theme=gemini] .bw-go:hover{background:#000}
 body[data-theme=gemini] .bw-back{background:none;border:none;color:var(--ink3);font:inherit;font-size:12.5px;cursor:pointer}
 body[data-theme=gemini] .bw-nav{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+body[data-theme=gemini] .bw-digitrow{display:flex;gap:10px;margin-bottom:6px}
+body[data-theme=gemini] .bw-digitfield{display:flex;flex-direction:column;gap:5px}
+body[data-theme=gemini] .bw-digitfield label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+body[data-theme=gemini] .bw-digit{width:52px;background:var(--panel2,var(--panel));border:1.5px solid var(--line);color:var(--ink1);font:inherit;font-size:19px;text-align:center;padding:10px 0;font-variant-numeric:tabular-nums}
+body[data-theme=gemini] .bw-digit:focus{outline:none;border-color:var(--ink2)}
+body[data-theme=gemini] .bw-digit-y{width:76px}
 body[data-theme=gemini] .mychart-cta{text-align:center;padding:34px 26px}
 body[data-theme=gemini] .mc-hero{display:flex;justify-content:center;gap:14px;color:var(--ink1);margin-bottom:16px}
 body[data-theme=gemini] .mychart-cta h2{font-size:22px;margin:0 0 10px}

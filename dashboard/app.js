@@ -2041,6 +2041,38 @@ async function clearBirthData() {
 function bwNext() { if (_bw.step < BW_STEPS.length - 1) { _bw.step++; renderBirthWizard(); } }
 function bwBack() { if (_bw.step > 0) { _bw.step--; renderBirthWizard(); } }
 function bwSet(k, v) { _bw.data[k] = v; }
+function bwCommitDate() {
+  const dd = +document.getElementById("bw-dd").value, mm = +document.getElementById("bw-mm").value, yyyy = +document.getElementById("bw-yyyy").value;
+  if (!dd || !mm || !yyyy || String(yyyy).length !== 4) return;
+  if (mm < 1 || mm > 12 || dd < 1 || dd > 31) return;
+  bwSet("date", `${yyyy}-${bwPad2(mm)}-${bwPad2(dd)}`);
+  bwNext();
+}
+function bwCommitTime() {
+  const known = _bw.data.time_known !== false;
+  if (!known) { bwSet("time", "12:00"); bwNext(); return; }
+  const hh = document.getElementById("bw-hh").value, mi = document.getElementById("bw-mi").value;
+  if (hh === "" || mi === "") return;
+  if (+hh < 0 || +hh > 23 || +mi < 0 || +mi > 59) return;
+  bwSet("time", `${bwPad2(+hh)}:${bwPad2(+mi)}`);
+  bwNext();
+}
+function bwPad2(n) { return String(n).padStart(2, "0"); }
+// Fixed-length numeric box (DD/MM/YYYY/HH/MI). A single native "input" event can carry more than
+// one keystroke (fast typing, IME, mobile coalescing) — slicing to maxLen and stopping there drops
+// the overflow digits. Fix: split on overflow, keep this box's own digits, forward the remainder
+// into `next` and re-dispatch "input" on it so excess cascades through instead of being lost.
+function bindDigitBox(box, maxLen, next) {
+  box.addEventListener("input", () => {
+    let digits = box.value.replace(/\D/g, ""), overflow = "";
+    if (digits.length > maxLen) { overflow = digits.slice(maxLen); digits = digits.slice(0, maxLen); }
+    box.value = digits;
+    try { box.setSelectionRange(box.value.length, box.value.length); } catch {}
+    if (digits.length !== maxLen || !next) return;
+    if (overflow) { next.value = overflow + next.value; next.focus(); next.dispatchEvent(new Event("input", { bubbles: true })); }
+    else next.focus();
+  });
+}
 
 function renderBirthWizard() {
   let ov = document.querySelector(".bw-overlay");
@@ -2057,20 +2089,27 @@ function renderBirthWizard() {
       ? "Your birth details stay private to your account."
       : "No account needed — your chart is cast in your browser and your birth details stay on this device until you choose to save them."}</p>
     <button class="bw-go" onclick="bwNext()">Begin →</button>`;
-  else if (s === "date") body = `
+  else if (s === "date") { const [dY, dM, dD] = (d.date || "").split("-"); body = `
     <div class="bw-kick">Step 1 of 4 · ${dots}</div>
     <h2 class="bw-h">When were you born?</h2>
     <p class="bw-p">The date sets your planets. Everything else refines it.</p>
-    <input type="date" class="bw-in" id="bw-date" min="1950-01-01" max="2035-12-31" value="${esc(d.date || "")}" onchange="bwSet('date',this.value)">
-    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="if(document.getElementById('bw-date').value){bwSet('date',document.getElementById('bw-date').value);bwNext()}">Next →</button></div>`;
-  else if (s === "time") body = `
+    <div class="bw-digitrow">
+      <div class="bw-digitfield"><label for="bw-dd">Day</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-dd" placeholder="DD" value="${esc(dD || "")}"></div>
+      <div class="bw-digitfield"><label for="bw-mm">Month</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-mm" placeholder="MM" value="${esc(dM || "")}"></div>
+      <div class="bw-digitfield"><label for="bw-yyyy">Year</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" class="bw-digit bw-digit-y" id="bw-yyyy" placeholder="YYYY" value="${esc(dY || "")}"></div>
+    </div>
+    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwCommitDate()">Next →</button></div>`; }
+  else if (s === "time") { const [tH, tM] = (d.time || "").split(":"); body = `
     <div class="bw-kick">Step 2 of 4 · ${dots}</div>
     <h2 class="bw-h">What time?</h2>
     <p class="bw-p">Your birth time sets the fast-moving Moon and your rising sign (ascendant). The more exact, the sharper the reading.</p>
-    <input type="time" class="bw-in" id="bw-time" value="${esc(d.time || "")}" ${d.time_known === false ? "disabled" : ""} onchange="bwSet('time',this.value);bwSet('time_known',true)">
-    <label class="bw-check"><input type="checkbox" ${d.time_known === false ? "checked" : ""} onchange="bwSet('time_known',!this.checked);const t=document.getElementById('bw-time');t.disabled=this.checked;if(this.checked){bwSet('time','12:00')}"> I don't know my birth time</label>
+    <div class="bw-digitrow">
+      <div class="bw-digitfield"><label for="bw-hh">Hour</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-hh" placeholder="HH" value="${esc(tH || "")}" ${d.time_known === false ? "disabled" : ""}></div>
+      <div class="bw-digitfield"><label for="bw-mi">Minute</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-mi" placeholder="MM" value="${esc(tM || "")}" ${d.time_known === false ? "disabled" : ""}></div>
+    </div>
+    <label class="bw-check"><input type="checkbox" ${d.time_known === false ? "checked" : ""} onchange="bwSet('time_known',!this.checked);const hh=document.getElementById('bw-hh'),mi=document.getElementById('bw-mi');hh.disabled=mi.disabled=this.checked;if(this.checked){bwSet('time','12:00')}"> I don't know my birth time</label>
     <p class="bw-note">${d.time_known === false ? "No problem — your Moon sign anchors the reading, the way Vedic astrology reads a chart from the Moon (Chandra lagna)." : "Even an approximate time sharpens your rising sign. If you don't know it, tick the box above."}</p>
-    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwNext()">Next →</button></div>`;
+    <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwCommitTime()">Next →</button></div>`; }
   else if (s === "place") body = `
     <div class="bw-kick">Step 3 of 4 · ${dots}</div>
     <h2 class="bw-h">Where?</h2>
@@ -2089,7 +2128,8 @@ function renderBirthWizard() {
   else if (s === "cast") { renderBirthCast(ov); return; }
   ov.innerHTML = `<div class="bw-box"><button class="bw-x" aria-label="Close" title="Close" onclick="bwClose()">✕</button>${body}</div>`;
   if (s === "place") wireCityCombo();
-  if (s === "date") setTimeout(() => document.getElementById("bw-date")?.focus(), 40);
+  if (s === "date") setTimeout(() => { document.getElementById("bw-dd")?.focus(); bindDigitBox(document.getElementById("bw-dd"), 2, document.getElementById("bw-mm")); bindDigitBox(document.getElementById("bw-mm"), 2, document.getElementById("bw-yyyy")); bindDigitBox(document.getElementById("bw-yyyy"), 4, null); }, 40);
+  if (s === "time") setTimeout(() => { bindDigitBox(document.getElementById("bw-hh"), 2, document.getElementById("bw-mi")); bindDigitBox(document.getElementById("bw-mi"), 2, null); }, 40);
 }
 
 async function wireCityCombo() {
@@ -6614,9 +6654,10 @@ if (!window.__acctMenuGuard) {
 /* ---------- auth modal (sign in / create account / reset) ---------- */
 function openAuth(mode) {
   closeAuth();
-  const box = el(`<div class="authbox" id="authbox">
+  const box = el(`<div class="authbox ha-v2" id="authbox">
+    <div class="ha-scene" id="haScene"><canvas id="haCanvas"></canvas></div>
     <div class="authpanel">
-      <div class="auth-head"><b>Henneth <em>Desk</em></b><button class="auth-x" id="authX">✕</button></div>
+      <div class="auth-head"><img class="ha-logo" src="logo-mark.svg" width="22" height="22" alt="" decoding="async"><b>Henneth <em>Desk</em></b><button class="auth-x" id="authX">✕</button></div>
       <div class="auth-tabs">
         <button data-m="signin" class="${mode === "signin" ? "on" : ""}">Sign in</button>
         <button data-m="signup" class="${mode === "signup" ? "on" : ""}">Create account</button>
@@ -6665,6 +6706,7 @@ function openAuth(mode) {
   // No-op while CAPTCHA_SITE_KEY is blank. Fired here rather than on submit so the challenge has
   // the whole time the user spends typing to solve itself — by submit there is nothing to wait for.
   mountCaptcha();
+  initHaScene();
 
   const forgot = document.getElementById("authForgot");
   if (forgot) forgot.onclick = async () => {
@@ -6859,7 +6901,57 @@ function friendlyAuthError(err) {
   if (s.includes("provider is not enabled")) return "Google sign-in isn't switched on for this site yet.";
   return m || "Something went wrong. Try again.";
 }
-function closeAuth() { document.getElementById("authbox")?.remove(); }
+function closeAuth() { if (_haSceneRaf) cancelAnimationFrame(_haSceneRaf); _haSceneRaf = null; document.getElementById("authbox")?.remove(); }
+
+let _haSceneRaf = null;
+// Decorative node scene for the login panel — no fabricated data (no ticker counts, no
+// universe stats). Hand-rolled Canvas 2D, not three.js: CSP blocks external script loads.
+function initHaScene() {
+  const cv = document.getElementById("haCanvas");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let w = 0, h = 0;
+  const resize = () => {
+    const r = cv.parentElement.getBoundingClientRect();
+    w = r.width; h = r.height;
+    cv.width = w * DPR; cv.height = h * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  };
+  resize();
+  const N = 34;
+  const nodes = Array.from({ length: N }, () => ({
+    x: Math.random() * w, y: Math.random() * h,
+    vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
+    r: 1 + Math.random() * 1.6,
+  }));
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  function frame() {
+    if (!document.getElementById("haCanvas")) return;
+    ctx.clearRect(0, 0, w, h);
+    for (const n of nodes) {
+      if (!reduceMotion) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+    }
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
+      if (d < 130) {
+        ctx.strokeStyle = `rgba(160,170,190,${0.14 * (1 - d / 130)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+    }
+    for (const n of nodes) {
+      ctx.fillStyle = "rgba(190,198,214,0.55)";
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+    }
+    _haSceneRaf = reduceMotion ? null : requestAnimationFrame(frame);
+  }
+  frame();
+}
 
 /* ---------- password recovery (arrives via email link) ---------- */
 function openRecovery() {
