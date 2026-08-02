@@ -67,6 +67,20 @@ const cols = [
         who debate every name in the open — published on a schedule.
       </p>
       <a href="/plans" class="btn ft-cta">Get started</a>
+      <div class="ft-social">
+        <a href="https://x.com/hennethapp" class="ft-social-link" target="_blank" rel="noopener noreferrer" aria-label="Henneth on X">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M18.9 2.1h3.2l-7 8.1L23.4 22h-6.5l-5.1-6.7L5.9 22H2.7l7.5-8.6L1.6 2.1h6.6l4.6 6.1zm-1.1 18h1.8L6.3 4h-1.9z"/>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/henneth.app/" class="ft-social-link" target="_blank" rel="noopener noreferrer" aria-label="Henneth on Instagram">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="5"/>
+            <circle cx="12" cy="12" r="4.6"/>
+            <circle cx="17.6" cy="6.4" r="1.2" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
     </div>
 
     {cols.map((c) => (
@@ -106,6 +120,20 @@ const cols = [
   .wm-1 { font-weight: 800; font-size: 15px; letter-spacing: 0.14em; }
   .ft-blurb { margin: 14px 0 18px; font-size: 11.5px; line-height: 1.7; color: #a8a8a0; max-width: 320px; }
   .ft-cta { padding: 10px 16px; }
+  .ft-social { display: flex; gap: 10px; margin-top: 18px; }
+  .ft-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #3a3a35;
+    color: #cfcfc8;
+    text-decoration: none;
+  }
+  @media (hover: hover) {
+    .ft-social-link:hover { color: var(--bg); border-color: #5a5a52; }
+  }
 
   .ft-h {
     font-size: 9.5px;
