@@ -1,8 +1,8 @@
 {
- "updated": "2026-08-03 10:39",
- "regime": "risk-off",
+ "updated": "2026-08-03 18:00",
+ "regime": "neutral",
  "geo_risk": {
-  "score": 56,
+  "score": 55,
   "band": "moderate"
  },
  "signals": [
@@ -43,6 +43,24 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
+   "id": "20260803-ENGROH-rsi_reclaim_50",
+   "ticker": "ENGROH",
+   "strategy": "rsi_reclaim_50",
+   "template": "RSI reclaim 50",
+   "category": "oscillator",
+   "sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
+   "hold_sessions": 10,
+   "backtest": {
+    "hit_rate": 0.65,
+    "net_expectancy_pct": 1.55,
+    "n": 20,
+    "oos_hit": 0.556
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "RSI reclaim 50 is triggering now; on ENGROH's own history it won 65% over 20 trades (+1.6% net/trade), still profitable out-of-sample."
+  },
+  {
    "id": "20260803-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -59,24 +77,6 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260803-XLP-triple_screen_long",
-   "ticker": "XLP",
-   "strategy": "triple_screen_long",
-   "template": "Triple screen alignment",
-   "category": "trend",
-   "sector": "",
-   "hold_sessions": 18,
-   "backtest": {
-    "hit_rate": 0.684,
-    "net_expectancy_pct": 0.81,
-    "n": 19,
-    "oos_hit": 1.0
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Triple screen alignment is triggering now; on XLP's own history it won 68% over 19 trades (+0.8% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -124,6 +124,11 @@
  ],
  "movers_up": [
   {
+   "ticker": "GADT",
+   "ret_1d": 10.0,
+   "close": 302.79
+  },
+  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -142,11 +147,6 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
-  },
-  {
-   "ticker": "ASIC",
-   "ret_1d": 9.99,
-   "close": 34.45
   }
  ],
  "movers_down": [
