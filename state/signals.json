@@ -1,9 +1,9 @@
 {
- "updated": "2026-08-02 16:15",
+ "updated": "2026-08-03 06:46",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
-   "id": "20260802-BML-obv_divergence_up",
+   "id": "20260803-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -21,7 +21,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260802-TPLT-donchian55_break",
+   "id": "20260803-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -39,7 +39,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260802-NICL-roc60_leader_pullback",
+   "id": "20260803-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -57,23 +57,23 @@
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260802-FCL-obv_divergence_up",
-   "ticker": "FCL",
-   "strategy": "obv_divergence_up",
-   "template": "Volume leads price",
-   "category": "volume",
-   "sector": "Cable & Electrical Goods",
-   "hold_sessions": 15,
+   "id": "20260803-XLP-triple_screen_long",
+   "ticker": "XLP",
+   "strategy": "triple_screen_long",
+   "template": "Triple screen alignment",
+   "category": "trend",
+   "sector": "",
+   "hold_sessions": 18,
    "backtest": {
-    "hit_rate": 0.556,
-    "net_expectancy_pct": 0.68,
-    "n": 27,
-    "oos_hit": 0.625
+    "hit_rate": 0.684,
+    "net_expectancy_pct": 0.81,
+    "n": 19,
+    "oos_hit": 1.0
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
+   "thesis": "Triple screen alignment is triggering now; on XLP's own history it won 68% over 19 trades (+0.8% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 6
+ "n_candidates": 7
 }
