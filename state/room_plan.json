@@ -1,24 +1,26 @@
 {
  "reaffirm": [
-  "MEBL",
   "LUCK",
+  "HBL",
+  "MCB",
+  "EFERT",
   "MTL",
+  "PTC",
   "SAZEW",
   "PAEL",
   "KEL",
   "AIRLINK",
-  "SSGC"
+  "SSGC",
+  "HCAR",
+  "JSML"
  ],
- "delta": [],
+ "delta": [
+  {
+   "symbol": "FFC",
+   "why": "price moved 4.5% since last Room"
+  }
+ ],
  "full": [
-  {
-   "symbol": "HBL",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "MCB",
-   "why": "material change since last Room"
-  },
   {
    "symbol": "POL",
    "why": "material change since last Room"
@@ -32,11 +34,7 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "FFC",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "EFERT",
+   "symbol": "MEBL",
    "why": "material change since last Room"
   },
   {
@@ -84,10 +82,6 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "HCAR",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "OGDC",
    "why": "material change since last Room"
   },
@@ -97,10 +91,6 @@
   },
   {
    "symbol": "PPL",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "PTC",
    "why": "material change since last Room"
   },
   {
@@ -332,10 +322,6 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "JSML",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "SNGP",
    "why": "material change since last Room"
   },
@@ -357,18 +343,15 @@
   }
  ],
  "_meta": {
-  "built": "2026-08-03 17:48",
+  "built": "2026-08-03 13:39",
   "full_budget": 2,
   "run_full_now": [
-   "HBL",
-   "MCB"
+   "POL",
+   "HUBC"
   ],
   "deferred_full": [
-   "POL",
-   "HUBC",
    "PSO",
-   "FFC",
-   "EFERT",
+   "MEBL",
    "FCEPL",
    "WTL",
    "TBL",
@@ -380,11 +363,9 @@
    "SYS",
    "BAFL",
    "FFL",
-   "HCAR",
    "OGDC",
    "AKBL",
    "PPL",
-   "PTC",
    "FATIMA",
    "SRVI",
    "FCCL",
@@ -442,7 +423,6 @@
    "GHNI",
    "GAL",
    "PIOC",
-   "JSML",
    "SNGP",
    "CNERGY",
    "ATRL",
@@ -450,12 +430,12 @@
    "NRL"
   ],
   "counts": {
-   "full_due": 86,
+   "full_due": 80,
    "full_now": 2,
-   "delta": 0,
-   "reaffirm": 8
+   "delta": 1,
+   "reaffirm": 13
   },
-  "est_tokens_today": 44000,
+  "est_tokens_today": 49000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
