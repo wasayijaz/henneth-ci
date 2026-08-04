@@ -1,8 +1,8 @@
 {
- "updated": "2026-08-04 09:05",
+ "updated": "2026-08-04 11:45",
  "regime": "neutral",
  "geo_risk": {
-  "score": 59,
+  "score": 60,
   "band": "moderate"
  },
  "signals": [
@@ -23,6 +23,24 @@
    "confidence": "high",
    "basis": "backtest-proven, unaudited",
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260804-ATLH-triple_screen_long",
+   "ticker": "ATLH",
+   "strategy": "triple_screen_long",
+   "template": "Triple screen alignment",
+   "category": "trend",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 18,
+   "backtest": {
+    "hit_rate": 0.75,
+    "net_expectancy_pct": 3.07,
+    "n": 20,
+    "oos_hit": 1.0
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Triple screen alignment is triggering now; on ATLH's own history it won 75% over 20 trades (+3.1% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260804-TPLT-donchian55_break",
@@ -59,24 +77,6 @@
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
    "thesis": "RSI reclaim 50 is triggering now; on ENGROH's own history it won 65% over 20 trades (+1.6% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260804-NICL-roc60_leader_pullback",
-   "ticker": "NICL",
-   "strategy": "roc60_leader_pullback",
-   "template": "Long-run leader, short pullback",
-   "category": "momentum",
-   "sector": "Chemical",
-   "hold_sessions": 18,
-   "backtest": {
-    "hit_rate": 0.615,
-    "net_expectancy_pct": 1.12,
-    "n": 13,
-    "oos_hit": 0.667
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -124,11 +124,6 @@
  ],
  "movers_up": [
   {
-   "ticker": "GADT",
-   "ret_1d": 10.0,
-   "close": 302.79
-  },
-  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -147,13 +142,18 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
+  },
+  {
+   "ticker": "ASIC",
+   "ret_1d": 9.99,
+   "close": 34.45
   }
  ],
  "movers_down": [
   {
-   "ticker": "MUGHALC",
-   "ret_1d": -9.97,
-   "close": 63.0
+   "ticker": "MEHT",
+   "ret_1d": -10.0,
+   "close": 169.98
   },
   {
    "ticker": "KPUS",
