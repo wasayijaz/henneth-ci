@@ -1,0 +1,158 @@
+---
+title: How the KSE-100 is actually built
+description: KSE-100 is a total-return index based to 1,000 in November 1991, picking 36 sector leaders plus the next 64 by free float. No published weight cap exists.
+pubDate: 2026-08-04
+cluster: Market structure
+draft: false
+---
+
+import Snapshot from '../../components/explain/Snapshot.astro';
+import Timeline from '../../components/explain/Timeline.astro';
+import Ledger from '../../components/explain/Ledger.astro';
+import Matrix from '../../components/explain/Matrix.astro';
+
+The KSE-100 is a **total-return** index, based to 1,000 points in November 1991 — dividends,
+bonus and rights are adjusted back into the number, not paid out and forgotten. Its 100
+constituents are picked by taking the largest free-float stock in each of 36 sectors, then filling
+the remaining 64 slots with the next-largest free-float names regardless of sector. Neither of
+those two facts is the "35 sectors + 65 by market cap" version that circulates informally, and
+PSX's own published methodology does not specify a cap on any single constituent's weight.
+
+<Snapshot
+  title="KSE-100, in short"
+  items={[
+    { k: 'Index type', v: 'Total return', note: 'Dividends, bonus and rights adjusted in' },
+    { k: 'Base', v: '1,000', note: 'November 1991' },
+    { k: 'Selection', v: '36 + 64', note: '36 sector leaders, then 64 more by free float' },
+    { k: 'Weight cap', v: 'Not specified', note: 'The brochure has no capping section' },
+  ]}
+/>
+
+## Total return, not price return — and a second index most people don't know exists
+
+PSX runs two versions of the same 100-stock basket. The one quoted everywhere as "the KSE-100" is
+the total-return series, based to **1,000 points in November 1991**, with cash dividends, bonus
+and rights issues adjusted back into the index level as they occur. A separate variant,
+**KSE100PR**, strips that out and tracks price only, based to **6,931 points on 1 April 2009**.
+
+<Matrix
+  cols={['Series', 'What it tracks', 'Base date', 'Base value']}
+  rows={[
+    ['KSE-100', 'Total return — dividends, bonus, rights adjusted in', 'November 1991', '1,000'],
+    ['KSE100PR', 'Price return only', '1 April 2009', '6,931'],
+  ]}
+  caption="KSE100 Index (Total Return & Price Return) — Index Brochure, PSX, updated June 2025."
+/>
+
+The distinction matters for anyone comparing the index's long-run return to a dividend-paying
+stock's total return, or to another market's price-only benchmark — the KSE-100 headline number
+already has payouts baked in, most price indices elsewhere don't.
+
+## How a constituent gets in: 36 sector leaders, then 64 more
+
+The 100 slots are not filled by ranking every listed company on market cap and taking the top 100.
+The methodology splits the selection in two:
+
+<Ledger
+  left={{
+    kicker: 'The commonly repeated version',
+    title: '"35 sectors + top 65 by market cap"',
+    points: [
+      'Both numbers are out of date — the current split is 36 and 64.',
+      'Selection is by free-float market cap, not total market cap.',
+    ],
+  }}
+  right={{
+    kicker: 'What the methodology actually specifies',
+    title: '36 sector leaders, then 64 more',
+    points: [
+      'The largest free-float stock in each of 36 sectors (of 38 listed; ETFs and open-end mutual funds excluded).',
+      'The remaining 64 places filled by free-float market cap, descending, regardless of sector.',
+      'A new listing qualifies after one re-composition period if its free float is at least 2% of total free-float market cap.',
+    ],
+  }}
+  caption="KSE100 Index Brochure, PSX, updated June 2025."
+/>
+
+Free float itself excludes government holdings, director/sponsor/senior-management and associate
+holdings, shares still in physical form, cross-holdings, non-sellable ESOS shares and treasury
+shares — and can never exceed a scrip's book-entry shares actually sitting in the CDS. The
+free-float weighting was recommended by the Index Expert Committee in early 2012, approved by the
+PSX Board that April, run in parallel from June 2012, and went fully live on **15 October 2012**,
+replacing the prior total-market-cap weighting.
+
+## A constituent doesn't get bumped the moment it's overtaken
+
+Out-ranking an incumbent isn't enough on its own — the brochure builds in buffers against
+reshuffling the index every time two stocks' market caps cross:
+
+- **Sector rule** — a challenger must hold the largest-in-sector position for **two consecutive**
+  semi-annual re-composition periods, *or* exceed the incumbent by **10% or more** of free-float
+  value, whichever comes first.
+- **Capitalisation rule** — for the 64 non-sector slots, a challenger must exceed the lowest
+  cap-selected member for two consecutive periods, at which point it "automatically pushes out the
+  lowest cap selected stock."
+- **Special re-composition** — an off-cycle override for delisting, mergers or a scheme of
+  arrangement, independent of the regular schedule.
+
+The regular schedule itself runs twice a year, each leg on the same three-step cadence:
+
+<Timeline
+  rows={[
+    {
+      name: 'Spring re-composition',
+      steps: [
+        { d: 'Last WD Feb', label: 'Data basis' },
+        { d: '15 Mar', label: 'Notice published' },
+        { d: '1st WD Apr', label: 'Implemented' },
+      ],
+    },
+    {
+      name: 'Autumn re-composition',
+      steps: [
+        { d: 'Last WD Aug', label: 'Data basis' },
+        { d: '15 Sep', label: 'Notice published' },
+        { d: '1st WD Oct', label: 'Implemented' },
+      ],
+    },
+  ]}
+  caption="WD = working day. KSE100 Index Brochure, PSX, updated June 2025."
+/>
+
+Stocks in the Defaulters' Counter, suspended, or declared Non-Tradable in the preceding six months
+are excluded from selection outright, on either leg.
+
+## No published weight cap — stated carefully, on purpose
+
+Some other indices — MSCI-style methodologies, or PSX's own KMI-30 — cap how much of the index a
+single constituent can weigh. The KSE-100 brochure has no equivalent section. The only percentage
+figures in the entire document are the 2% free-float threshold for a new listing and the 10%
+sector-rule margin above — neither is a cap on constituent weight.
+
+That is a statement about the published document, not a claim about what actually happens in
+practice: **PSX's published methodology does not specify a cap on any single constituent's
+weight.** Whether that produces meaningful concentration in practice is a separate, checkable
+question the brochure itself doesn't answer — it just isn't there to answer it.
+
+## Where this connects
+
+The index's total-return adjustment for dividends, bonus and rights runs on the same
+ex-entitlement mechanics the desk has already covered for individual stocks — see
+[book closure and the ex-date](/blog/psx-book-closure-ex-date/) for how PSX times that cutoff
+post-T+1. None of the desk's own signals target the index itself; research and
+[position sizing](/tools/position-size-calculator/) run stock by stock, long only, across whatever
+subset of the 100 (or the wider board) a setup names.
+
+## Checking this yourself
+
+- [KSE100 Index (Total Return & Price Return) — Index Brochure](https://www.psx.com.pk/psx/themes/psx/uploads/KSE-100-and-KSE100-PR-Brochure-Jun-2025-Updated.pdf) — PSX, updated June 2025. Source for every figure above: base values, free-float definition, the 36+64 selection split, the sector and capitalisation re-composition rules, and the absence of a weight-cap section.
+
+⚠️ This brochure's *ex-price timing* language is stale post-T+1 (it still quotes the superseded
+two-settlement-day rule) — see [book closure and the ex-date](/blog/psx-book-closure-ex-date/) for
+the current rule. Its index-construction mechanics above are unaffected by that change.
+
+---
+
+*Research, not advice. This explains how PSX constructs and rebalances the KSE-100; it is not a
+recommendation to trade the index or any constituent. Methodology is dated — check PSX's current
+published brochure before relying on a detail here for anything time-sensitive.*
