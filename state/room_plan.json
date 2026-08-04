@@ -4,21 +4,13 @@
   "LUCK",
   "HBL",
   "MCB",
-  "EFERT",
   "MTL",
-  "PTC",
   "SAZEW",
   "PAEL",
   "KEL",
-  "AIRLINK",
-  "HCAR",
-  "JSML"
+  "AIRLINK"
  ],
  "delta": [
-  {
-   "symbol": "FFC",
-   "why": "price moved 4.5% since last Room"
-  },
   {
    "symbol": "SSGC",
    "why": "price moved 6.5% since last Room"
@@ -38,7 +30,15 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "FFC",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "MEBL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "EFERT",
    "why": "material change since last Room"
   },
   {
@@ -52,6 +52,10 @@
   {
    "symbol": "WTL",
    "why": "never covered"
+  },
+  {
+   "symbol": "TBL",
+   "why": "material change since last Room"
   },
   {
    "symbol": "FABL",
@@ -90,6 +94,10 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "HCAR",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "OGDC",
    "why": "material change since last Room"
   },
@@ -99,6 +107,10 @@
   },
   {
    "symbol": "PPL",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "PTC",
    "why": "material change since last Room"
   },
   {
@@ -318,15 +330,15 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "TBL",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "GAL",
    "why": "material change since last Room"
   },
   {
    "symbol": "PIOC",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "JSML",
    "why": "material change since last Room"
   },
   {
@@ -343,7 +355,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-08-04 11:44",
+  "built": "2026-08-04 17:48",
   "full_budget": 2,
   "run_full_now": [
    "POL",
@@ -351,10 +363,13 @@
   ],
   "deferred_full": [
    "PSO",
+   "FFC",
    "MEBL",
+   "EFERT",
    "FCCL",
    "FCEPL",
    "WTL",
+   "TBL",
    "FABL",
    "ATRL",
    "NRL",
@@ -364,9 +379,11 @@
    "SYS",
    "BAFL",
    "FFL",
+   "HCAR",
    "OGDC",
    "AKBL",
    "PPL",
+   "PTC",
    "FATIMA",
    "SRVI",
    "BOP",
@@ -421,20 +438,20 @@
    "PSX",
    "BAHL",
    "GHNI",
-   "TBL",
    "GAL",
    "PIOC",
+   "JSML",
    "SNGP",
    "CNERGY",
    "PRL"
   ],
   "counts": {
-   "full_due": 79,
+   "full_due": 84,
    "full_now": 2,
-   "delta": 2,
-   "reaffirm": 13
+   "delta": 1,
+   "reaffirm": 9
   },
-  "est_tokens_today": 54000,
+  "est_tokens_today": 49000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."
  }
 }
