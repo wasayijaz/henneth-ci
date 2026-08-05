@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-05 11:40",
+ "updated": "2026-08-05 17:59",
  "regime": "neutral",
  "geo_risk": {
   "score": 61,
@@ -61,22 +61,22 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260805-NICL-roc60_leader_pullback",
-   "ticker": "NICL",
-   "strategy": "roc60_leader_pullback",
-   "template": "Long-run leader, short pullback",
-   "category": "momentum",
-   "sector": "Chemical",
-   "hold_sessions": 18,
+   "id": "20260805-ENGROH-stoch_reclaim_50",
+   "ticker": "ENGROH",
+   "strategy": "stoch_reclaim_50",
+   "template": "Stochastic reclaim 50",
+   "category": "oscillator",
+   "sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
+   "hold_sessions": 9,
    "backtest": {
-    "hit_rate": 0.615,
-    "net_expectancy_pct": 1.12,
+    "hit_rate": 0.769,
+    "net_expectancy_pct": 2.48,
     "n": 13,
-    "oos_hit": 0.667
+    "oos_hit": 0.6
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+   "thesis": "Stochastic reclaim 50 is triggering now; on ENGROH's own history it won 77% over 13 trades (+2.5% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -91,7 +91,7 @@
   },
   {
    "ticker": "FFC",
-   "score": 66.3
+   "score": 66.6
   },
   {
    "ticker": "USRUT",
@@ -124,6 +124,11 @@
  ],
  "movers_up": [
   {
+   "ticker": "GADT",
+   "ret_1d": 10.0,
+   "close": 340.0
+  },
+  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -142,19 +147,9 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
-  },
-  {
-   "ticker": "ASIC",
-   "ret_1d": 9.99,
-   "close": 34.45
   }
  ],
  "movers_down": [
-  {
-   "ticker": "MEHT",
-   "ret_1d": -10.0,
-   "close": 169.98
-  },
   {
    "ticker": "KPUS",
    "ret_1d": -10.0,
@@ -171,27 +166,17 @@
    "close": 62.27
   },
   {
+   "ticker": "MEHT",
+   "ret_1d": -10.01,
+   "close": 152.97
+  },
+  {
    "ticker": "FPJM",
    "ret_1d": -10.02,
    "close": 11.04
   }
  ],
  "news": [
-  {
-   "ts": "2026-07-30",
-   "source": "Mettis Global",
-   "headline": "Govt hikes petrol by Re1.09, HSD by Rs2.42 per litre",
-   "tickers": [
-    "MACRO",
-    "PSO",
-    "ATRL",
-    "NRL",
-    "PRL"
-   ],
-   "impact": 2,
-   "summary": "Published Jul 30, 2026 11:47pm PKT: government raised ex-depot fuel prices - petrol +Re1.09 to Rs336.15/litre (from Rs335.06), HSD +Rs2.42 to Rs393.04/litre (from Rs390.62). Mettis's article states an 'Effective Date: July 31, 2026'; a separate ARY News report on the same hike described it as effective August 1, 2026 - the two sources disagree on the effective date and both are quoted here as found, unreconciled. Magnitude is far smaller than the Jul 11, 2026 hike (petrol +Rs13.18, HSD +Rs13.80, logged at impact 4); logged as impact 2 (minor, routine ex-depot price revision) per desk scale, with read-through for OMC (PSO) and refiners (ATRL, NRL, PRL).",
-   "url": "https://mettisglobal.news/Govt-hikes-petrol-by-Re109-HSD-by-Rs242-per-Litre-62281"
-  },
   {
    "ts": "2026-07-30",
    "source": "Mettis Global",
@@ -370,6 +355,17 @@
    "impact": 3,
    "summary": "Tuesday session, from Monday's confirmed close of 178,200.02 (already logged this cycle): KSE-100 settled at 177,083.22, down 1,116.80 points (-0.63%), per Express Tribune's 'Institutional selling wipes out PSX gains', corroborated by Business Recorder. The index climbed to an intraday high of 178,768.83 before steadily losing ground as selling intensified across commercial banks, oil and gas exploration companies, cement, investment companies and fertiliser stocks amid institutional profit-taking and cautious global investor sentiment; gainers named: MEBL, PSO, KAPCO, POWER, MTL; decliners named: UBL, ENGROH, OGDC, LUCK, PPL. Sub-1% single-session move but a full reversal of Monday's gain; logged as impact 3 (notable) consistent with prior similar-magnitude index-close entries in this newslog. Tagged to the union of Monday's MACRO-only tickers and today's named gainers/decliners per the desk's confirmed-close supersession rule.",
    "url": "https://tribune.com.pk/story/2622135/institutional-selling-wipes-out-psx-gains"
+  },
+  {
+   "ts": "2026-08-05",
+   "source": "Business Recorder",
+   "headline": "PSX: Buying rally continues as KSE-100 settles above 180,000 level",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Wednesday session, from Tuesday's confirmed close of 177,083.22 (already logged this cycle): KSE-100 settled at 180,014.93, up 2,931.71 points (+1.66%), per Business Recorder's 'PSX: Buying rally continues as KSE-100 settles above 180,000 level'. Per the same source: after opening higher the index came under brief selling pressure in early trade, slipping to an intraday low of 178,512.09, before investor sentiment quickly improved and sustained buying recovered all losses by late morning and carried the index above the 180,000 level. Driver: comments by Qatari and US officials that raised hopes for a diplomatic resolution to the Iran war. Sub-2% single-session move; logged as impact 3 (notable) consistent with prior similar-magnitude index-close entries in this newslog. No individual sector/stock-level gainer/decliner breakdown was located in the source reviewed this cycle; tagged MACRO only (no same-day intraday checkpoint was logged this cycle for this session to supersede).",
+   "url": "https://www.brecorder.com/news/40433395/psx-buying-rally-continues-as-kse-100-settles-above-180000-level"
   }
  ],
  "agent_wire": [],
