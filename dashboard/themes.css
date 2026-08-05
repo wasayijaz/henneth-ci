@@ -1824,8 +1824,12 @@ body[data-theme=gemini] .side-ver{display:flex;align-items:center;justify-conten
    .searchbox[hidden] elsewhere in this file. */
 body[data-theme=gemini] .side-ver[hidden]{display:none}
 body[data-theme=gemini] .side-ver.fresh{color:var(--accent)}
-body[data-theme=gemini] .ver-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;
-  display:inline-block;flex:none}
+body[data-theme=gemini] .ver-bell{flex:none}
+/* count badge: was a bare 5px dot; now carries the unseen-release count so the bell reads as a
+   notification (how many), not just a fresh/stale flag */
+body[data-theme=gemini] .ver-dot{min-width:14px;height:14px;padding:0 3px;background:var(--accent);
+  color:#fff;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;
+  flex:none;font-size:9px;font-weight:700;font-style:normal;line-height:1}
 @media(hover:hover){body[data-theme=gemini] .side-ver:hover{color:var(--ink1)}}
 /* collapsed sidebar: the number is the whole point, so drop the "v" prefix room, not the badge */
 body[data-theme=gemini] .sidebar.collapsed .side-ver span{display:none}

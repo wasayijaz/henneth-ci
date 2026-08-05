@@ -14,9 +14,11 @@ import re
 import sys
 import threading
 import time
+from datetime import date
 
 import requests
 
+from build_calendar import parse_loose
 from psx_data import STATE, load_json, market_symbols, research_symbols, save_json
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
@@ -42,6 +44,12 @@ def scrape(symbol: str, sess: requests.Session) -> dict | None:
         if m and m.group(1) not in ("true", "false"):
             out[name] = m.group(1).strip()
     # numeric revenue/netincome may appear unquoted first; prefer the human "69.33B" form already captured
+    # the site's own "next earnings" field lags after a company files — it can keep showing the
+    # date that was just reported for days before rolling to the new quarter. A past date is not
+    # "next" (desk hard-rule #2: unknown beats a stale guess), so drop it rather than persist it.
+    ed = parse_loose(out.get("next_earnings", ""), date.today())
+    if ed and ed < date.today().isoformat():
+        out.pop("next_earnings", None)
     return out if len(out) > 3 else None
 
 
@@ -96,7 +104,10 @@ def main():
                 continue
             # keep last known values rather than dropping the ticker entirely
             if sym in prior.get("tickers", {}):
-                out[sym] = prior["tickers"][sym]
+                out[sym] = dict(prior["tickers"][sym])
+                ed = parse_loose(out[sym].get("next_earnings", ""), date.today())
+                if ed and ed < date.today().isoformat():
+                    out[sym].pop("next_earnings", None)
             failed.append(f"{sym}:{err}" if err else sym)
 
     save_json(STATE / "fundamentals.json", {

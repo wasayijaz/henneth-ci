@@ -203,14 +203,24 @@ async function renderVersion() {
   let seen = null;
   try { seen = localStorage.getItem(VER_SEEN_KEY); } catch {}
   const fresh = seen !== cur;
+  // count releases newer than the last one this browser saw, so the bell shows HOW MANY
+  // updates piled up (e.g. tickers added across several cycles), not just "something changed"
+  const rels = cl?.releases || [];
+  const seenIdx = seen === null ? -1 : rels.findIndex(r => r.version === seen);
+  const unseen = seen === null ? 0 : (seenIdx === -1 ? rels.length : seenIdx);
   el.hidden = false;
   el.className = "side-ver" + (fresh ? " fresh" : "");
-  el.innerHTML = `<span>v${esc(cur)}</span>${fresh ? '<i class="ver-dot"></i>' : ""}`;
-  el.title = fresh ? "New in this release — click to read" : "What's new";
+  const badge = fresh && unseen > 0 ? `<i class="ver-dot">${unseen > 9 ? "9+" : unseen}</i>` : "";
+  el.innerHTML = `${bellSvg()}<span>v${esc(cur)}</span>${badge}`;
+  el.title = fresh ? `${unseen} update${unseen === 1 ? "" : "s"} since you last looked — click to read` : "What's new";
   el.onclick = () => openWhatsNew(cl);
   // First run on a browser that has never stored a version: record it WITHOUT showing the panel.
   // Otherwise every new visitor is greeted by a changelog for a product they have not used yet.
-  if (seen === null) { try { localStorage.setItem(VER_SEEN_KEY, cur); } catch {} el.className = "side-ver"; el.innerHTML = `<span>v${esc(cur)}</span>`; }
+  if (seen === null) { try { localStorage.setItem(VER_SEEN_KEY, cur); } catch {} el.className = "side-ver"; el.innerHTML = `${bellSvg()}<span>v${esc(cur)}</span>`; }
+}
+
+function bellSvg() {
+  return '<svg class="ver-bell" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4 1.5 5.5 2 6.5H4c.5-1 2-2.5 2-6.5"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>';
 }
 
 function openWhatsNew(cl) {
@@ -2622,11 +2632,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll, liqAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll, liqAll, insiderAll, offmktAll] = await Promise.all([
     j("quant.json"), j("backtests_meta.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json"), j("insider_activity.json"), j("offmarket_activity.json")]);
   /* qRaw vs q: `qRaw` answers "did the quant snapshot arrive?", `q` is what the rest of the page
      reads from. Keeping them separate is what lets the page render without quant instead of
      throwing on the first `q.avg_daily_traded_value` — the fields simply come back undefined and
@@ -2744,6 +2754,20 @@ async function pageTicker(sym, _retry = 0) {
   const tickerNews = (news || []).filter(n => (n.tickers || []).includes(sym)).slice(-10).reverse();
   const dHist = (divs?.history || []).filter(d => d.symbol === sym);
   const dUp = (divs?.upcoming || []).filter(d => d.symbol === sym);
+  const insiderRows = insiderAll?.symbols?.[sym] || [];
+  // offmktAll is {days: {iso_date: {symbol: {shares, value, trades}}}} -- retained history, not
+  // a single trailing-week snapshot. Aggregate this symbol's rows across every retained day.
+  const offRetentionDays = offmktAll?.retention_days ?? 90;
+  const offmkt = (() => {
+    const days = offmktAll?.days || {};
+    let shares = 0, value = 0, trades = 0, dayCount = 0;
+    for (const d in days) {
+      const row = days[d][sym];
+      if (!row) continue;
+      shares += row.shares; value += row.value; trades += row.trades; dayCount++;
+    }
+    return dayCount ? { shares, value, trades, dayCount } : null;
+  })();
   /* backtests.json is ~4.8 MB — 62% of everything this page fetches — and its per-ticker results
      are only shown AFTER the "Run to reveal" click. `bt` above is now the small meta file (two
      numbers). Pull the real thing only when this ticker's run has actually been revealed, so a
@@ -2784,8 +2808,16 @@ async function pageTicker(sym, _retry = 0) {
   if (mddRecentAbs >= 45) cons.push(`Has fallen ${mddRecentAbs.toFixed(0)}% peak-to-trough within the last decade`);
   if (betaN != null && betaN > 1.3) cons.push(`Amplifies market swings (beta ${f.beta})`);
   if (lossmaking) cons.push(`Currently lossmaking (EPS ${f.eps})`);
+  // Insider/off-market: metadata only, no direction inferred (desk hard-rule) -- these land as
+  // neutral "info" flags, never pro/con, since a filing or an off-market print says nothing about
+  // intent on its own.
+  const infos = [];
+  const cutoff30 = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const recentInsider = insiderRows.filter(r => r.date && r.date >= cutoff30);
+  if (recentInsider.length) infos.push(`${recentInsider.length} insider/substantial-shareholder filing${recentInsider.length > 1 ? "s" : ""} in the last 30 days`);
+  if (offmkt) infos.push(`Off-market: ${offmkt.shares.toLocaleString()} shares · Rs ${offmkt.value.toLocaleString()} across ${offmkt.dayCount} day${offmkt.dayCount === 1 ? "" : "s"} (trailing ${offRetentionDays}d)`);
   const flagList = (arr, kind) => arr.length
-    ? arr.map(t => `<div class="flag ${kind}"><span>${kind === "pro" ? "▲" : "▼"}</span>${esc(t)}</div>`).join("")
+    ? arr.map(t => `<div class="flag ${kind}"><span>${kind === "pro" ? "▲" : kind === "con" ? "▼" : "●"}</span>${esc(t)}</div>`).join("")
     : `<div class="sub" style="padding:6px 0">No notable data flags on this measure.</div>`;
 
   // Questions before buying — data-answered, informational
@@ -2980,14 +3012,24 @@ async function pageTicker(sym, _retry = 0) {
     : { ...leanChip(brokUp - brokDn), conv: brokerClaims.length >= 3 ? "medium" : "low",
       note: `${brokUp} positive · ${brokDn} negative of ${brokerClaims.length} on record — latest: ${esc(brokerClaims[brokerClaims.length - 1].source)}${brokerClaims[brokerClaims.length - 1].claim?.target_price ? ", target Rs " + fmt(brokerClaims[brokerClaims.length - 1].claim.target_price) : ""}` };
 
-  // 6. Astro — a pointer to the immersive astrological reading, not a tested signal. Kept out of the
+  // 6. Insider & off-market — metadata only (desk hard-rule: no direction inferred from a filing
+  // or an off-market print alone). Kept out of the confluence for the same reason Astro is: it
+  // makes no edge claim, just states what's on file.
+  const insiderLens = (!recentInsider.length && !offmkt) ? { k: "", v: "Nothing on file", conv: "",
+    note: `No insider/substantial-shareholder filings in the last 30 days, no off-market trades in the trailing ${offRetentionDays}d.` }
+    : { k: "", v: "On file", conv: "",
+      note: [recentInsider.length ? `${recentInsider.length} filing${recentInsider.length > 1 ? "s" : ""} in last 30d` : null,
+        offmkt ? `${offmkt.shares.toLocaleString()} shares off-market (Rs ${offmkt.value.toLocaleString()}) over ${offmkt.dayCount}d, trailing ${offRetentionDays}d` : null]
+        .filter(Boolean).join(" · ") + " — metadata only, no direction inferred" };
+
+  // 7. Astro — a pointer to the immersive astrological reading, not a tested signal. Kept out of the
   // confluence (it makes no edge claim); framed as an exploration lens, never desk analytics.
   const astroLens = { k: "", v: "reading", conv: "",
     note: `The tradition's read of ${esc(sym)}'s chart — explore it on the <a href="#/astro" style="color:var(--accent)">Astro</a> board, or against your own in <a href="#/mychart" style="color:var(--accent)">Your Chart</a>.` };
 
   const LENSES = [
     ["Charts · TA", taLens], ["Value · FA", faLens], ["The Desk Room", roomLens],
-    ["Strategies", stratLens], ["Brokers", brokLens], ["Astro", astroLens],
+    ["Strategies", stratLens], ["Brokers", brokLens], ["Insider & off-market", insiderLens], ["Astro", astroLens],
   ];
   // confluence counts only lenses that are BOTH revealed and directional — an honest denominator
   const revealed = LENSES.filter(([, o]) => !o.locked && (o.k === "up" || o.k === "dn"));
@@ -3129,7 +3171,9 @@ async function pageTicker(sym, _retry = 0) {
     <div class="two-col" style="gap:14px">
       <div><div class="flaghdr up">What could go right</div>${flagList(pros, "pro")}</div>
       <div><div class="flaghdr dn">What could go wrong</div>${flagList(cons, "con")}</div>
-    </div></div>
+    </div>
+    ${infos.length ? `<div style="margin-top:10px"><div class="flaghdr">Insider &amp; off-market activity — metadata only, no direction inferred</div>${flagList(infos, "info")}</div>` : ""}
+    </div>
 
   ${lightsCard}
 
@@ -3196,7 +3240,20 @@ async function pageTicker(sym, _retry = 0) {
         <td class="r num">${d.dividend_rs ?? "—"}</td><td class="r num">${d.yield_pct_at_close ? d.yield_pct_at_close + "%" : "—"}</td><td class="r num">${d.bc_start || "—"}</td></tr>`).join("") : '<tr><td colspan="5" class="empty">no payout records</td></tr>'}</tbody></table></div>
   </div>
   <div class="card"><h2>News & developments</h2><div class="sub">sentinel-tagged for ${sym}</div><div class="wire">${
-    tickerNews.length ? tickerNews.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>${esc(n.headline || "")} ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}<br><span class="t">${esc(n.summary || "")}</span></p>`).join("") : '<div class="empty">Nothing tagged yet — sentinel populates this each cycle.</div>'}</div></div>`;
+    tickerNews.length ? tickerNews.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>${esc(n.headline || "")} ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}<br><span class="t">${esc(n.summary || "")}</span></p>`).join("") : '<div class="empty">Nothing tagged yet — sentinel populates this each cycle.</div>'}</div></div>
+  <div class="card"><h2>Insider & off-market activity</h2><div class="sub">DPS filing metadata + off-market trades, retained history · metadata only, no direction inferred</div>
+    ${insiderRows.length ? `<table><thead><tr><th>Date</th><th>Insider</th><th>Role</th><th>Type</th><th class="r">Shares</th><th class="r">Price</th><th></th></tr></thead><tbody>${
+      [...insiderRows].sort((a, b) => (b.date || "").localeCompare(a.date || "")).map(r => {
+        const txns = r.transactions && r.transactions.length ? r.transactions : [null];
+        return txns.map(t => `<tr><td>${esc(r.date)}</td><td>${esc(t?.insider_name || "—")}</td><td>${esc(t?.insider_role || "—")}</td>
+          <td>${esc(t?.transaction_type || r.title || "filing")}</td>
+          <td class="r num">${t?.shares_traded != null ? Number(t.shares_traded).toLocaleString() : "—"}</td>
+          <td class="r num">${t?.price_per_share != null ? t.price_per_share : "—"}</td>
+          <td class="r">${r.pdf_url ? `<a href="${esc(r.pdf_url)}" target="_blank" style="color:var(--accent)">view ↗</a>` : "—"}</td></tr>`).join("");
+      }).join("")
+    }</tbody></table>` : '<div class="empty">No insider/substantial-shareholder filings tagged for this name.</div>'}
+    ${offmkt ? `<p style="margin-top:10px"><b>Off-market:</b> ${offmkt.shares.toLocaleString()} shares · Rs ${offmkt.value.toLocaleString()} value · ${offmkt.trades} trade${offmkt.trades === 1 ? "" : "s"} across ${offmkt.dayCount} day${offmkt.dayCount === 1 ? "" : "s"} (trailing ${offRetentionDays}d)</p>` : `<div class="empty" style="margin-top:10px">No off-market trades in the trailing ${offRetentionDays}d.</div>`}
+  </div>`;
 
   // The partial-load banner's button, when the page rendered without one of its inputs.
   const gapBtn = document.getElementById("tkretry");
@@ -4910,7 +4967,7 @@ function scannerHtml(cats) {
     ${c.rows.map(r => `<div class="scan-row clickable" onclick="location.hash='#/ticker/${esc(r.s)}'">
       <b>${esc(r.s)}</b><span class="num scan-m">${esc(r.m)}</span><span class="sub">${esc(r.why)}</span></div>`).join("")}
   </div>`).join("")}</div>
-  <p class="sub" style="margin-top:8px">Ranked from the desk's own data each cycle — screens, not recommendations. A list a stock qualifies for is a place to start reading, never a reason to buy. (Insider-dealing and Shariah-status screens await a verified data source — the desk won't fake either.)</p>`;
+  <p class="sub" style="margin-top:8px">Ranked from the desk's own data each cycle — screens, not recommendations. A list a stock qualifies for is a place to start reading, never a reason to buy. (Shariah-status screens await a verified data source — the desk won't fake it.)</p>`;
 }
 
 /* ---- Scenario Simulator: measured sector×macro betas, scaled to the user's what-if. ---- */
@@ -4985,6 +5042,7 @@ async function pageScenarios() {
 
 /* ---- Smart Screener: plain English in, transparent parsed filters out. ---- */
 let _scr = { text: "dividend > 6% and below fair value", saved: null };
+let _insiderSymbols = new Set();  // populated by pageScreener from insider_activity.json
 function parseScreen(text, sectorNames) {
   const f = [], warn = [], t = " " + text.toLowerCase() + " ";
   const num = re => { const m = t.match(re); return m ? parseFloat(m[1]) : null; };
@@ -5014,15 +5072,16 @@ function parseScreen(text, sectorNames) {
   if (best) f.push({ label: `sector: ${best.sec}`, fn: r => r.sector === best.sec });
   if (/low debt|debt/.test(t)) warn.push("debt — balance-sheet debt isn't in the desk's feed yet, so it can't be filtered. Check the balance sheet directly.");
   if (/shariah|halal|islamic/.test(t)) warn.push("Shariah status — needs the verified KMI-30 constituent list, which the desk doesn't hold yet. It won't guess on a religious screen.");
-  if (/insider/.test(t)) warn.push("insider dealing — no verified PSX insider-trade feed exists in the desk's data layer.");
+  if (/insider/.test(t)) f.push({ label: "insider/substantial-shareholder filing in the last 7 days", fn: r => _insiderSymbols.has(r.s) });
   return { f, warn };
 }
 async function pageScreener() {
   await Promise.resolve();
   const locked = !hasFeature("screener");
-  const [q, fv, fnd, pred, fs, sec, uni] = await Promise.all([
+  const [q, fv, fnd, pred, fs, sec, uni, insider] = await Promise.all([
     j("quant.json"), j("fairvalue.json"), j("fundamentals.json"), j("predictability.json"),
-    j("fundamental_scores.json"), j("sectors.json"), j("universe.json")]);
+    j("fundamental_scores.json"), j("sectors.json"), j("universe.json"), j("insider_activity.json")]);
+  _insiderSymbols = new Set(Object.keys(insider?.symbols || {}));
   const sectorNames = [...new Set(Object.values(sec?.tickers || {}).map(x => x.sector).filter(Boolean))];
   const rows = Object.keys(q?.tickers || {}).map(s => {
     const v = q.tickers[s], t = fv?.tickers?.[s] || {}, f = fnd?.tickers?.[s] || {}, m = fs?.tickers?.[s]?.metrics || {};

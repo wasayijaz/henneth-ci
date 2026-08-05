@@ -36,6 +36,8 @@ def build():
     divs = load_json(STATE / "dividends.json", {}).get("history", [])
     news = load_json(STATE / "newslog.json", [])
     rooms = load_json(STATE / "rooms.json", {})
+    insider = load_json(STATE / "insider_activity.json", {}).get("symbols", {})
+    offmkt = load_json(STATE / "offmarket_activity.json", {}).get("days", {})
 
     # dividends per fiscal year, per ticker (reliable multi-year trend)
     import re
@@ -51,6 +53,18 @@ def build():
     for n in news:
         for t in (n.get("tickers") or []):
             news_by[t].append(n)
+
+    # insider/off-market: metadata only, no direction inferred (desk hard-rule) -- last 30d
+    # filing count + trailing-window off-market aggregate, per symbol
+    import datetime
+    cutoff30 = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+    offmkt_by_sym = defaultdict(lambda: {"shares": 0, "value": 0, "days": 0})
+    for day_data in offmkt.values():
+        for sym, agg in day_data.items():
+            o = offmkt_by_sym[sym]
+            o["shares"] += agg.get("shares", 0)
+            o["value"] += agg.get("value", 0)
+            o["days"] += 1
 
     out = {}
     for sym, q in quant.items():
@@ -100,6 +114,15 @@ def build():
 
         # WHAT CHANGED THIS WEEK
         changed = []
+        recent_filings = [r for r in insider.get(sym, []) if (r.get("date") or "") >= cutoff30]
+        if recent_filings:
+            changed.append(f"{len(recent_filings)} insider/substantial-shareholder filing"
+                            f"{'s' if len(recent_filings) > 1 else ''} in the last 30 days "
+                            "(metadata only, no direction inferred).")
+        om = offmkt_by_sym.get(sym)
+        if om:
+            changed.append(f"Off-market: {om['shares']:,.0f} shares, Rs {om['value']:,.0f} "
+                            f"across {om['days']} day{'s' if om['days'] != 1 else ''} on record.")
         for n in sorted(news_by.get(sym, []), key=lambda x: x.get("ts") or "")[-3:][::-1]:
             if (n.get("impact") or 0) >= 3:
                 changed.append(f"{(n.get('ts') or '')[:10]}: {n.get('headline')}")

@@ -24,6 +24,9 @@ STEPS = [
     "fetch_dividends.py",
     "fetch_dividends_deep.py",  # 18y payout history (Yahoo events) — DPS only gives ~18 months
     "fetch_fundamentals.py", "score_fundamentals.py",
+    # Insider/off-market activity — same family as fetch_fundamentals.py (no cadence gate here
+    # either; the script itself is cheap/idempotent and degrades to the prior file on failure).
+    "fetch_insider_offmarket.py",
     "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
     "snapshot.py",
     "fetch_indices.py",  # append-only KSE100/KMI30 levels — the index history nobody else has
@@ -53,6 +56,11 @@ STEPS = [
     # sky) and after build_natal_ephemeris (it slices the Moon column out of that table). Writes
     # only into site/, never state/, so it cannot affect the desk's own data layer.
     "build_astro_lite.py",
+    # Diffs universe.json against the last-seen ticker set and auto-appends a templated
+    # CHANGELOG.md entry when the universe grew (symbols only — nothing to leak). Must run
+    # AFTER update_universe.py and BEFORE build_changelog.py so the new entry gets picked up
+    # the same cycle it's written.
+    "changelog_tickers.py",
     # Public release notes for the terminal's version badge. Extracts ONLY the `public` blocks
     # from CHANGELOG.md and refuses to build if one contains an internal term — so a bad note
     # fails the step rather than shipping. Cheap, no network.

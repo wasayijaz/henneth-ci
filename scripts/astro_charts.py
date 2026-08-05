@@ -16,6 +16,15 @@ So a chart is built ONLY where the date is genuinely sourced. Everywhere else th
 WHY there is none, and the product says so rather than inventing a birth moment. A fabricated chart
 would poison every reading built on it, invisibly and forever.
 
+INCORPORATION DATE — investigated and rejected as a fallback (2026-08). DPS company profiles
+(dps.psx.com.pk/company/<TICKER>, BUSINESS DESCRIPTION paragraph) carry a real incorporation date
+for most of the `unavailable` tickers (191/409 full date — see state/incorporation_audit.json).
+Not used: incorporation date is a legal-formation event, not a market birth, and can sit decades
+from actual listing (Attock Cement: incorporated 1981, listed 2002). astro_natal.py's own docstring
+already documents that Meridian built and abandoned incorporation charts for exactly this reason.
+Don't re-run this audit expecting a different answer — the gap is PSX not publishing listing dates,
+not a data-source we haven't tried yet.
+
 TIME
 PSX does not publish a first-trade time either. We use the market open on the listing date as a
 stated CONVENTION, and mark the chart accordingly: the ascendant depends entirely on it and is
