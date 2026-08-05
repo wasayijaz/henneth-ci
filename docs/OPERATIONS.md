@@ -390,6 +390,17 @@ reverts to flat friction — no error, just quietly worse numbers.
 `fetch_fundamentals` is threaded (6 workers): it is latency-bound, and serial it took ~10 min
 at this universe size, which alone would blow the Actions budget. 208 names now take ~29s.
 
+**Insider/off-market (`fetch_insider_offmarket.py`, weekly, same family as `fetch_fundamentals`).**
+Writes `state/insider_activity.json` (filings, never pruned) and `state/offmarket_activity.json`
+(off-market days, pruned to a 90-day trailing window) — both ACCUMULATE across runs rather than
+being fully overwritten, so ≥3 months of history is retained even though PSX's own pages only show
+a trailing window. Off-market pulls a plain static CSV (`dps.psx.com.pk/download/omts`, no
+rendering needed); insider filings need the Firecrawl CLI (JS-hydrated announcements page) and
+degrade to `stale: true` (keep prior file, exit 0) if Firecrawl isn't available that run. As of
+2026-08-05 both files feed three ticker-page surfaces — Data flags, Signal Stack (`insiderLens`,
+non-directional, excluded from confluence), and `build_explainer.py`'s "at a glance" — all
+metadata-only per Rule 2, no direction ever inferred from a filing or an off-market print alone.
+
 If a ticker a user searches for still doesn't appear, check `state/universe.json.symbols` first (is
 it there?), then `config/desk.json.universe` (`cover_all_listed` still true? `kse100_top_n` capped?)
 — don't assume it's a search bug.

@@ -39,6 +39,38 @@ which file changed.
 
 ---
 
+## 2026-08-05 — v2026.08.05 — Insider & off-market data wired into the ticker page
+
+<!--public
+Insider/substantial-shareholder filings and off-market trade prints now show up on every ticker
+page — Data flags, Signal Stack, and the plain-English "at a glance" summary. Metadata only: what's
+on file, never a buy/sell read.
+-->
+
+### What changed
+
+`state/insider_activity.json` and `state/offmarket_activity.json` (retained ≥3 months, refreshed
+weekly by `scripts/fetch_insider_offmarket.py`) now feed three surfaces per desk hard-rule #2 —
+facts only, no direction ever inferred from a filing or an off-market print alone:
+
+- **Data flags** (`dashboard/app.js`) — a neutral info-flag row: recent filing count + off-market
+  aggregate for the trailing retention window, no pro/con framing.
+- **Signal Stack** — new `insiderLens`, permanently non-directional (`k: ""`), excluded from the
+  confluence tally the same way `astroLens` is (it makes no edge claim, just states what's on file).
+- **At a glance** (`scripts/build_explainer.py`, deterministic Python) — folds filing/off-market
+  facts into `what_changed`, computed once per cycle, zero LLM tokens.
+
+### Backend (prior session, retained/accumulating history)
+
+`fetch_insider_offmarket.py` replaces the old fully-overwritten trailing-7-day snapshot: off-market
+days ACCUMULATE and prune to a 90-day trailing window; insider filings ACCUMULATE and are never
+pruned. One-time backfill/seed scripts (`backfill_offmarket_90d.py`, `seed_insider_history.py`,
+`build_insider_batches.py`, `consolidate_insider_batches.py`, `fetch_insider_pdfs.py`,
+`render_insider_pdf_images.py`, `filter_insider_backfill.py`) got the desk from a 7-day snapshot to
+≥3 months of retained history in one pass; the weekly fetch takes over from there.
+
+---
+
 ## 2026-08-01 — v2026.08.01 — Urdu translation cost cut ~90%
 
 <!--public

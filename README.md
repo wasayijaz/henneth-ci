@@ -34,6 +34,11 @@ list buries what sits under it exactly as a 375px one does:
 
 - **Today** — the desk's plain-English daily read: tone, favoured/avoided sectors, a short watchlist.
 - **Board** — live universe heatmap, backtest-proven signals, predictability ranks, positions, news + agent wire.
+- **Insider & off-market** — every ticker page's Data flags, Signal Stack, and "at a glance" explainer now
+  surface insider/substantial-shareholder filings and off-market trade prints (`state/insider_activity.json`,
+  `state/offmarket_activity.json`), retained ≥3 months and refreshed weekly. Metadata only — filing counts and
+  off-market share/value totals, never a buy/sell read; kept out of the Signal Stack confluence tally for the
+  same reason as Astro.
 - **Value** — every stock valued four ways (peer P/E, earnings-power vs bond yield, Graham, DDM); the
   median is the model fair value, with the full working expandable per row.
 - **Strategies** — 52 transparent, rule-based strategies, each backtested on every stock's ~19-year history
