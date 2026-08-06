@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-06 09:04",
+ "updated": "2026-08-06 11:43",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -19,24 +19,6 @@
    "confidence": "high",
    "basis": "backtest-proven, unaudited",
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260806-ATLH-triple_screen_long",
-   "ticker": "ATLH",
-   "strategy": "triple_screen_long",
-   "template": "Triple screen alignment",
-   "category": "trend",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 18,
-   "backtest": {
-    "hit_rate": 0.75,
-    "net_expectancy_pct": 3.07,
-    "n": 20,
-    "oos_hit": 1.0
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Triple screen alignment is triggering now; on ATLH's own history it won 75% over 20 trades (+3.1% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260806-TPLT-donchian55_break",
@@ -73,7 +55,25 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Stochastic reclaim 50 is triggering now; on ENGROH's own history it won 77% over 13 trades (+2.5% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260806-GAL-atr_quiet_breakout",
+   "ticker": "GAL",
+   "strategy": "atr_quiet_breakout",
+   "template": "Quiet base, upside break",
+   "category": "volatility",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 16,
+   "backtest": {
+    "hit_rate": 0.667,
+    "net_expectancy_pct": 2.57,
+    "n": 9,
+    "oos_hit": 0.75
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 67% over 9 trades (+2.6% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 17
+ "n_candidates": 16
 }
