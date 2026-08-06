@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-06 11:43",
+ "updated": "2026-08-06 17:58",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -39,41 +39,41 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260806-ENGROH-stoch_reclaim_50",
-   "ticker": "ENGROH",
-   "strategy": "stoch_reclaim_50",
-   "template": "Stochastic reclaim 50",
-   "category": "oscillator",
-   "sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
-   "hold_sessions": 9,
+   "id": "20260806-LUCK-golden_pullback_50",
+   "ticker": "LUCK",
+   "strategy": "golden_pullback_50",
+   "template": "Golden-cross pullback",
+   "category": "trend",
+   "sector": "Cement",
+   "hold_sessions": 20,
    "backtest": {
-    "hit_rate": 0.769,
-    "net_expectancy_pct": 2.48,
-    "n": 13,
-    "oos_hit": 0.6
+    "hit_rate": 0.595,
+    "net_expectancy_pct": 1.32,
+    "n": 79,
+    "oos_hit": 0.565
    },
-   "confidence": "low",
+   "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Stochastic reclaim 50 is triggering now; on ENGROH's own history it won 77% over 13 trades (+2.5% net/trade), still profitable out-of-sample."
+   "thesis": "Golden-cross pullback is triggering now; on LUCK's own history it won 60% over 79 trades (+1.3% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260806-GAL-atr_quiet_breakout",
-   "ticker": "GAL",
-   "strategy": "atr_quiet_breakout",
-   "template": "Quiet base, upside break",
-   "category": "volatility",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 16,
+   "id": "20260806-PKGS-adx_rising_trend",
+   "ticker": "PKGS",
+   "strategy": "adx_rising_trend",
+   "template": "ADX rising trend entry",
+   "category": "trend",
+   "sector": "Paper, Board & Packaging",
+   "hold_sessions": 12,
    "backtest": {
-    "hit_rate": 0.667,
-    "net_expectancy_pct": 2.57,
-    "n": 9,
-    "oos_hit": 0.75
+    "hit_rate": 0.625,
+    "net_expectancy_pct": 1.12,
+    "n": 16,
+    "oos_hit": 0.556
    },
-   "confidence": "low",
+   "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 67% over 9 trades (+2.6% net/trade), still profitable out-of-sample."
+   "thesis": "ADX rising trend entry is triggering now; on PKGS's own history it won 62% over 16 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 16
+ "n_candidates": 14
 }
