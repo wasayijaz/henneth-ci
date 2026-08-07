@@ -1,12 +1,19 @@
 """Fetch fundamentals + earnings calendar for every universe symbol.
 
 Source: stockanalysis.com (server-rendered quote pages carry the full block:
-market cap, EPS, P/E, forward P/E, beta, dividend yield, payout ratio, revenue,
+market cap, EPS, P/E, forward P/E, beta, dividend yield, payout ratio, DPS, revenue,
 net income, next EARNINGS DATE, ex-dividend date). These are NOT in the PSX DPS
 price feed — that is why the ticker pages showed blank fundamentals.
 
 This is slow-moving reference data: run WEEKLY (and the fundamentals agent verifies
 earnings dates around results season). Writes state/fundamentals.json.
+
+payout_ratio is NOT taken from the vendor's own `payoutRatio` field — spot-checked
+against the vendor's own `dps` + `eps` on the same page, it disagrees (AKBL: dps 5.00 /
+eps 17.59 = 28.4%, but the vendor's payoutRatio field says 39.37% — a different, undisclosed
+basis). `dividendYield`, by contrast, checks out exactly against dps/price every time. So
+payout_ratio here is computed as dps/eps — the same DPS basis the trusted div_yield already
+uses — instead of trusting a vendor field that contradicts the vendor's own other numbers.
 
 Idempotent, degrades gracefully (network fail -> keep prior file, exit 0)."""
 import concurrent.futures as cf
@@ -25,10 +32,20 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 FIELDS = {
     "marketCap": "market_cap", "sharesOut": "shares_out", "eps": "eps",
     "peRatio": "pe", "forwardPE": "forward_pe", "beta": "beta",
-    "dividendYield": "div_yield", "payoutRatio": "payout_ratio",
+    "dividendYield": "div_yield", "payoutRatio": "payout_ratio", "dps": "dps",
     "revenue": "revenue", "netIncome": "net_income",
     "earningsDate": "next_earnings", "exDivDate": "ex_div_date",
 }
+
+
+def _num(s):
+    """'17.59' / '4.63%' -> float. None if unparseable."""
+    if s is None:
+        return None
+    try:
+        return float(str(s).rstrip("%").replace(",", ""))
+    except ValueError:
+        return None
 
 
 def scrape(symbol: str, sess: requests.Session) -> dict | None:
@@ -50,6 +67,14 @@ def scrape(symbol: str, sess: requests.Session) -> dict | None:
     ed = parse_loose(out.get("next_earnings", ""), date.today())
     if ed and ed < date.today().isoformat():
         out.pop("next_earnings", None)
+    # payout_ratio: recompute from dps/eps (see module docstring) rather than trust the
+    # vendor's own payoutRatio field, which disagrees with the vendor's own dps+eps on the
+    # same page. Leave it out entirely (not a stale guess) if either input is missing/zero.
+    dps, eps = _num(out.get("dps")), _num(out.get("eps"))
+    if dps is not None and eps:
+        out["payout_ratio"] = f"{dps / eps * 100:.2f}%"
+    else:
+        out.pop("payout_ratio", None)
     return out if len(out) > 3 else None
 
 

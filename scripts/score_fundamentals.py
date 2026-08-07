@@ -49,18 +49,18 @@ def main():
         return num(v.get("pe"))
 
     def payout_of(v):
-        """The vendor's scraped payout_ratio, used as-is.
+        """payout_ratio, used as-is.
 
-        Do NOT "derive" this off the live price the way live_pe does. Payout is DPS/EPS — both
-        terms are rupees per share and NEITHER depends on price, so there is no stale-price
-        mismatch to correct. An earlier version reconstructed DPS as div_yield x live price, but
-        div_yield was scraped against the vendor's OWN price, so that reconstruction returns
-        DPS x (live_price / scrape_price) and scales payout by pure price drift: a name that
-        rallies 2x with no change to its dividend or earnings reads as paying out twice as much
-        of its profit, which flips the <=75% "generous & covered" test and trips the >90%
-        "stretched" warning on nothing but a price move. fundamentals.json stores no scrape-time
-        price, so the ratio cannot be re-derived correctly here — the vendor's figure is the
-        only sound source."""
+        fetch_fundamentals.py computes this as dps/eps at scrape time — NOT the vendor's own
+        payoutRatio field, which was found to disagree with the vendor's own dps+eps on the
+        same page (undisclosed basis). Do NOT re-derive it here off the live price: payout is
+        DPS/EPS, both rupees per share, neither depends on price, so there is no stale-price
+        mismatch to correct — and reconstructing DPS as div_yield x live price would scale
+        payout by pure price drift (a name that rallies 2x with no change to its dividend or
+        earnings would read as paying out twice as much of its profit, flipping the <=75%
+        "generous & covered" test and tripping the >90% "stretched" warning on nothing but a
+        price move). fundamentals.json stores no scrape-time price, so any price-based
+        reconstruction here would be wrong — payout_ratio is already correct as stored."""
         return num(v.get("payout_ratio"))
 
     # universe distributions for relative ratings
