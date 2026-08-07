@@ -22,15 +22,10 @@ No eval(), no code execution — pure data. Safe to run on any spec.
 """
 import numpy as np
 
+from indicators import rolling_max as _roll_max, rsi as _rsi, sma as _sma
+
 
 # ---------- indicator primitives ----------
-def _sma(x, n):
-    out = np.full(len(x), np.nan)
-    if len(x) >= n:
-        out[n - 1:] = np.convolve(x, np.ones(n) / n, "valid")
-    return out
-
-
 def _ema(x, n):
     out = np.full(len(x), np.nan)
     if len(x) < n:

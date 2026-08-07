@@ -15,7 +15,6 @@ Usage:
   python scripts/room_batch.py 20         # prep the top 20 due, ignoring the daily cap
   python scripts/room_batch.py KEL PSO    # prep specific tickers
 """
-import json
 import shutil
 import sys
 
@@ -55,7 +54,7 @@ def main():
     save_json(STAGE / "_batch.json", {"tickers": syms, "n": len(syms)})
     print(f"staged {len(syms)} dossier(s) -> {STAGE}")
     print(" ".join(syms))
-    print("\nAgents write to state/room_staging/<SYM>.<role>.json  (role: ta | fa | debate | chair)")
+    print("\nAgents write to state/room_staging/<SYM>.<role>.json  (role: ta | fa | debate)")
 
 
 if __name__ == "__main__":

@@ -30,8 +30,7 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import psx_data  # noqa: E402
+from psx_data import _get, save_json
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "state"
@@ -70,7 +69,7 @@ def _clean(name: str) -> str:
 
 
 def fetch_map() -> dict:
-    html = psx_data._get("/screener").text
+    html = _get("/screener").text
     pairs = re.findall(r'<option[^>]*value="(08\d{2})"[^>]*>([^<]{3,80})</option>', html)
     return {code: _clean(name) for code, name in pairs}
 
@@ -140,7 +139,7 @@ def main():
         "tickers": by_ticker,
         "universe_counts": dict(sorted(counts.items(), key=lambda x: -x[1])),
     }
-    OUT.write_text(json.dumps(out, indent=1), encoding="utf-8")
+    save_json(OUT, out)
     print(f"sectors: {len(code_name)} PSX sectors | {len(by_ticker)} universe tickers mapped | "
           f"{checked} anchors verified")
     for s, n in list(sorted(counts.items(), key=lambda x: -x[1]))[:10]:

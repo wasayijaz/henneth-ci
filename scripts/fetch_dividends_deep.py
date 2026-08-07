@@ -19,12 +19,13 @@ OUTPUT  state/dividends_deep.json
 Idempotent and safe to re-run: symbols already fetched are refreshed only when stale, and any
 network failure leaves the previous good file in place and exits 0 (never crashes a cycle).
 """
-import json
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
+
+from psx_data import load_json, save_json
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE = ROOT / "state"
@@ -35,13 +36,6 @@ RANGE = "20y"
 REFRESH_DAYS = 14          # a ticker already on file is re-pulled only this often
 MAX_FETCH = 130            # bound per run; the cycle must stay fast
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; PSXTradeDesk/1.0)"}
-
-
-def load(p, default):
-    try:
-        return json.loads(p.read_text(encoding="utf-8"))
-    except Exception:
-        return default
 
 
 def fetch_symbol(sess, sym):
@@ -70,7 +64,7 @@ def fetch_symbol(sess, sym):
 
 
 def main():
-    uni = load(UNIVERSE, {})
+    uni = load_json(UNIVERSE, {})
     # PSX ONLY. The URL below hardcodes the `.KA` suffix, so a US symbol would be requested as
     # `US500.KA` and 404 — harmless in isolation, except MAX_FETCH is a bounded per-run budget and
     # those wasted slots come straight out of the real PSX names waiting their turn in the
@@ -81,7 +75,7 @@ def main():
         print("dividends_deep: no universe yet, nothing to do")
         return
 
-    prev = load(OUT, {})
+    prev = load_json(OUT, {})
     tickers = dict(prev.get("tickers") or {})
     seen_at = dict(prev.get("_fetched_at") or {})
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -130,7 +124,7 @@ def main():
         "_fetched_at": seen_at,
         "tickers": tickers,
     }
-    OUT.write_text(json.dumps(payload, indent=1), encoding="utf-8")
+    save_json(OUT, payload)
     span = f"{payload['coverage_from']} -> {today}" if all_dates else "none"
     print(f"dividends_deep: {ok} fetched, {fail} failed | {len(tickers)} tickers, "
           f"{len(all_dates)} payouts, {span} -> {OUT.name}")

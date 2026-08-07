@@ -118,7 +118,7 @@ def build():
                     for d in dh
                 ],
             },
-            # --- valuation (both desks + Chair) ---
+            # --- valuation (both desks read this) ---
             "valuation": ({
                 "price": _r(fv.get("price")), "composite_fair": _r(fv.get("composite_fair")),
                 "mispricing_pct": _r(fv.get("mispricing_pct")), "verdict": fv.get("verdict"),

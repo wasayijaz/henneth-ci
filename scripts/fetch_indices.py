@@ -21,8 +21,7 @@ import pathlib
 import sys
 import time
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-import psx_data  # noqa: E402
+from psx_data import _get, _parse_table_rows, save_json
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATE = ROOT / "state"
@@ -49,8 +48,8 @@ def main():
             pass
 
     try:
-        html = psx_data._get("/indices").text
-        rows = psx_data._parse_table_rows(html)
+        html = _get("/indices").text
+        rows = _parse_table_rows(html)
     except Exception as e:
         print(f"indices: fetch failed ({type(e).__name__}) — keeping {len(data['history'])} stored days")
         sys.exit(0)
@@ -84,7 +83,7 @@ def main():
                     "anywhere the desk can reach — Yahoo's ^KSE is monthly and dead since 2021. "
                     "Everything before the earliest date here is unavailable, and the backtests say "
                     "so by labelling their constituent-rebuilt indices as proxies.")
-    OUT.write_text(json.dumps(data, indent=1), encoding="utf-8")
+    save_json(OUT, data)
     hist = sorted(data["history"])
     print(f"indices: {' · '.join(f'{k} {v:,.0f}' for k, v in live.items())}")
     print(f"  history: {len(hist)} day(s) kept ({hist[0]} -> {hist[-1]})")
