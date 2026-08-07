@@ -28,6 +28,8 @@ import time
 
 import numpy as np
 
+from psx_data import save_json
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 STATE = ROOT / "state"
 HIST = STATE / "history_deep"
@@ -235,7 +237,7 @@ def main():
         "note": "Descriptive attribution, not a trading signal and not advice. A demonstrated beta "
                 "says what HAS tended to move a sector, not what will.",
     }
-    (STATE / "sector_macro.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    save_json(STATE / "sector_macro.json", out)
 
     print(f"sector_macro: {m} sector x factor tests over {len(psx_days)} PSX days in {time.time()-t0:.0f}s")
     print(f"  survivors: {len(surv)} bonferroni | {len(fdr)} fdr (bar {bonf:.1e}, fdr cut {bh_cut:.1e})")

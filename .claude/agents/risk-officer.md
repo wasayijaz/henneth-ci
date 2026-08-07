@@ -17,8 +17,12 @@ For each proposed setup, check IN ORDER and reject on first failure (record the 
 3. Sector: no other open/approved position in the same sector.
 4. Liquidity: ticker `avg_daily_traded_value` >= config min. Position size must also be
    < 5% of avg daily traded value.
-5. Size: risk-based sizing — shares = floor((capital * max_pct_per_trade/100 * 0.25) / (entry - stop));
-   position value capped at capital * max_pct_per_trade/100. Total exposure after this trade
+5. Size — CLAUDE.md Rule 4's ONE formula, no deviation (a mismatch with the Strategist's numbers here
+   is a data/error bug, not a disagreement):
+   `risk_budget = capital * risk_per_trade_pct/100`
+   `risk_per_share = entry - stop`
+   `shares = floor(min(risk_budget / risk_per_share, (capital * max_pct_per_trade/100) / entry))`
+   Reject if `entry <= stop` or the resulting `shares == 0`. Total exposure after this trade
    <= max_total_exposure_pct.
 6. Sanity: stop < entry < target, and (target-entry)/(entry-stop) >= 1.5.
 

@@ -24,6 +24,8 @@ import statistics as st
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+from psx_data import save_json
+
 ROOT = Path(__file__).resolve().parent.parent
 STATE = ROOT / "state"
 OUT = STATE / "sector_dossiers.json"
@@ -161,7 +163,7 @@ def main():
         "n_sectors": len(out),
         "sectors": out,
     }
-    OUT.write_text(json.dumps(payload, indent=1), encoding="utf-8")
+    save_json(OUT, payload)
     print(f"sector_dossier: {len(out)} sectors "
           f"({sum(v['n_members'] for v in out.values())} members) -> {OUT.name}")
 

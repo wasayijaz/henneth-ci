@@ -13,8 +13,9 @@ Factors (Yahoo symbols, all with deep daily history):
   us10y      ^TNX     US 10-year yield (global cost of money; drives EM debt pressure)
   dollar     DX-Y.NYB dollar index (EM headwind when strong)
 
-Incremental: keeps what it has, appends missing days. Network failure -> keep old file, exit 0.
-Writes state/macro_history.json.
+Full refetch every run (each factor pulls START..today fresh) — not incremental. `prev` (the
+cached file) is a per-factor failure fallback only: if a factor's fetch raises, that factor keeps
+its old cached series and the run continues. Writes state/macro_history.json.
 """
 import datetime as dt
 import json

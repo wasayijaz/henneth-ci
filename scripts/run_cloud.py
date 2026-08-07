@@ -42,7 +42,7 @@ STEPS = [
     # rather than silently becoming an unmeasured claim on the astro page.
     "astro_context.py",
     "astro_claims.py",   # files the astro readings as dated, market-relative, scoreable claims
-    "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (incremental)
+    "fetch_macro_history.py",  # oil/gold/PKR/S&P/EM/10y/dollar daily history (full refetch each run)
     "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence
     "sector_dossier.py", # deterministic evidence pack the weekly sector debate argues from
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
@@ -53,8 +53,7 @@ STEPS = [
     "room_verify.py",   # deterministic QA: flags glitch-derived / inconsistent numbers before publish
     "design_lint.py",   # deterministic UI QA: flags rounded corners / padding-contract / raw-hex drift
     # The marketing site's public astro slice. Must run AFTER astro_engine (it reads the current
-    # sky) and after build_natal_ephemeris (it slices the Moon column out of that table). Writes
-    # only into site/, never state/, so it cannot affect the desk's own data layer.
+    # sky). Writes only into site/, never state/, so it cannot affect the desk's own data layer.
     "build_astro_lite.py",
     # Diffs universe.json against the last-seen ticker set and auto-appends a templated
     # CHANGELOG.md entry when the universe grew (symbols only — nothing to leak). Must run
