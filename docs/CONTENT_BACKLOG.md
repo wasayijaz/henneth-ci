@@ -8,6 +8,7 @@ status column drifts the moment one run fails halfway. Check
 `site/src/content/blog/<slug>.mdx` and `site/src/pages/solutions/<slug>.astro`.
 
 Process: [CONTENT_ROUTINE.md](CONTENT_ROUTINE.md) · Strategy: [BLOG_PLAN.md](BLOG_PLAN.md)
+· Comparison pages: [COMPARISON_PAGES_PLAN.md](COMPARISON_PAGES_PLAN.md)
 
 ---
 
@@ -63,6 +64,26 @@ cannibalisation is the failure mode these are most likely to hit.
 
 ⚠️ #4 needs care: the astro lens is scored and falsifiable per the desk's rules. The page must
 present it as a *tested, scored* lens with published results, never as prediction.
+
+---
+
+## Comparison queue
+
+Highest-value gap on the site: comparison articles are the largest single category of AI-answer
+citations and there are currently none. **Full spec, competitor set and extra gates:
+[COMPARISON_PAGES_PLAN.md](COMPARISON_PAGES_PLAN.md) — read it before drafting any of these.**
+Build in order; #1 is the hub the other two hang off.
+
+| # | Slug | Targets | Notes |
+|---|---|---|---|
+| 1 | `compare/psx-research-tools` | "best PSX stock screener", "PSX research tools" | Hub. Needs the `/compare/` index + footer link shipped with it. |
+| 2 | `compare/sarmaaya-alternatives` | "Sarmaaya alternatives" | Must open with the honest case for staying on Sarmaaya. |
+| 3 | `compare/free-vs-paid-psx-research` | "is PSX research worth paying for" | Links `/pricing.md` and `/plans/`. |
+
+⚠️ These name real competitors, which makes them the highest-liability pages on the site. Every
+feature or price claim needs a same-run observation of that competitor's own site, recorded with a
+date — never memory, never a third-party listicle. No disparagement, and concede honestly where a
+competitor is better; a comparison that wins on every row is read as marketing and cited by nobody.
 
 ---
 
