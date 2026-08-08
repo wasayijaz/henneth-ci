@@ -747,6 +747,48 @@ way you re-derived the value*; the prior question is **does this quantity depend
 `live_pe` genuinely does (P/E is price ÷ earnings) and is correct. Payout does not. Before "freshening"
 a ratio with a live price, write out its algebra and check the price term is actually there.
 
+**Follow-on, found 2026-08-08 in the fix itself.** `abbb1627` replaced the above with the correct
+`DPS / EPS`, but guarded it on `if dps is not None and eps:` — truthiness, which only rejects zero.
+For a lossmaking company the division runs anyway and yields a *negative* payout ratio: live state had
+`PKGS -169.67%` and `SSGC -17.42%`. Downstream, `score_fundamentals.py` tests `payout <= 75` for
+"sustainable" — which a negative number passes — so the site was ready to tell a subscriber that a
+loss-making company pays "-170% of profit — sustainable." **When a ratio is only meaningful over a
+positive denominator, guard on the sign, not on truthiness.** `if x:` and `if x > 0:` differ on exactly
+the inputs that make the ratio nonsense.
+
+---
+
+## 9h. Fixed bug class — a shared-helper refactor silently defeated by a local shadow (2026-08-08)
+
+`f0eab9f6` ("Dedupe indicator math + JSON I/O across scripts") added
+`from indicators import rolling_max as _roll_max, rsi as _rsi, sma as _sma` to the top of
+`strategy_engine.py` — and the file's own `def _rsi(...)` and `def _roll_max(...)` further down
+**re-bound both names at import time**, so every call site kept using the local copies. The
+consolidation was real in the diff and inert in the runtime; two of the three "deduped" helpers had
+simply been re-shadowed by the code they were meant to replace. Nothing errored, nothing warned, and
+the duplicate bodies stayed live and free to drift apart from the shared ones.
+
+**Rule: after moving a helper into a shared module, delete the local definition in the same commit —
+an import alone does not win.** In Python the last binding at module scope wins regardless of order of
+appearance, so an import at line 25 loses to a `def` at line 40 every time. Detection, run over any
+"dedupe"/"consolidate"/"extract helper" commit:
+
+```bash
+python - <<'PY'
+import ast, pathlib
+for p in pathlib.Path("scripts").glob("*.py"):
+    t = ast.parse(p.read_text(encoding="utf-8"))
+    imported = {a.asname or a.name for n in ast.walk(t) if isinstance(n, ast.ImportFrom) for a in n.names}
+    for n in t.body:
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n.name in imported:
+            print(f"{p}:{n.lineno}: local def {n.name}() shadows the import of the same name")
+PY
+```
+
+Before deleting a shadow, prove the two are equivalent rather than assuming it — here both were checked
+numerically against the shared versions over a 300-bar random series (`np.array_equal(..., equal_nan=True)`
+→ identical for `rsi` and `rolling_max`) so the removal was a provable no-op, not a hopeful one.
+
 ---
 
 ## 10. If the live site looks wrong — triage order

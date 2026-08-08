@@ -37,21 +37,6 @@ def _ema(x, n):
     return out
 
 
-def _rsi(x, n=14):
-    d = np.diff(x, prepend=x[0])
-    g = np.where(d > 0, d, 0.0)
-    l = np.where(d < 0, -d, 0.0)
-    out = np.full(len(x), np.nan)
-    if len(x) <= n:
-        return out
-    ag, al = g[1:n + 1].mean(), l[1:n + 1].mean()
-    for i in range(n + 1, len(x)):
-        ag = (ag * (n - 1) + g[i]) / n
-        al = (al * (n - 1) + l[i]) / n
-        out[i] = 100.0 if al == 0 else 100 - 100 / (1 + ag / al)
-    return out
-
-
 def _true_range(h, l, c):
     pc = np.concatenate([[c[0]], c[:-1]])
     return np.maximum.reduce([h - l, np.abs(h - pc), np.abs(l - pc)])
@@ -125,13 +110,6 @@ def _cci(h, l, c, n=20):
         w = tp[i - n + 1:i + 1]
         md = np.abs(w - w.mean()).mean()
         out[i] = (tp[i] - w.mean()) / (0.015 * md) if md else 0
-    return out
-
-
-def _roll_max(x, n):
-    out = np.full(len(x), np.nan)
-    for i in range(n, len(x)):
-        out[i] = x[i - n:i].max()
     return out
 
 

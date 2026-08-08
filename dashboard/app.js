@@ -2055,6 +2055,10 @@ function bwCommitDate() {
   const dd = +document.getElementById("bw-dd").value, mm = +document.getElementById("bw-mm").value, yyyy = +document.getElementById("bw-yyyy").value;
   if (!dd || !mm || !yyyy || String(yyyy).length !== 4) return;
   if (mm < 1 || mm > 12 || dd < 1 || dd > 31) return;
+  // calendar-aware: 31 Feb passes the range check above, then Date.UTC() silently rolls it to
+  // 3 March and the natal chart is computed for a day the user never entered. Reject instead.
+  const probe = new Date(Date.UTC(yyyy, mm - 1, dd));
+  if (probe.getUTCMonth() !== mm - 1 || probe.getUTCDate() !== dd) return;
   bwSet("date", `${yyyy}-${bwPad2(mm)}-${bwPad2(dd)}`);
   bwNext();
 }
@@ -5072,7 +5076,7 @@ function parseScreen(text, sectorNames) {
   if (best) f.push({ label: `sector: ${best.sec}`, fn: r => r.sector === best.sec });
   if (/low debt|debt/.test(t)) warn.push("debt — balance-sheet debt isn't in the desk's feed yet, so it can't be filtered. Check the balance sheet directly.");
   if (/shariah|halal|islamic/.test(t)) warn.push("Shariah status — needs the verified KMI-30 constituent list, which the desk doesn't hold yet. It won't guess on a religious screen.");
-  if (/insider/.test(t)) f.push({ label: "insider/substantial-shareholder filing in the last 7 days", fn: r => _insiderSymbols.has(r.s) });
+  if (/insider/.test(t)) f.push({ label: "insider/substantial-shareholder filing in the last 30 days", fn: r => _insiderSymbols.has(r.s) });
   return { f, warn };
 }
 async function pageScreener() {
@@ -5081,7 +5085,11 @@ async function pageScreener() {
   const [q, fv, fnd, pred, fs, sec, uni, insider] = await Promise.all([
     j("quant.json"), j("fairvalue.json"), j("fundamentals.json"), j("predictability.json"),
     j("fundamental_scores.json"), j("sectors.json"), j("universe.json"), j("insider_activity.json")]);
-  _insiderSymbols = new Set(Object.keys(insider?.symbols || {}));
+  // date-bounded to match the filter's own label and the 30d window used on the ticker page --
+  // the whole file goes back months, so an unbounded key list would return "has ever filed".
+  const insCutoff = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  _insiderSymbols = new Set(Object.entries(insider?.symbols || {})
+    .filter(([, rows]) => (rows || []).some(r => r.date && r.date >= insCutoff)).map(([s]) => s));
   const sectorNames = [...new Set(Object.values(sec?.tickers || {}).map(x => x.sector).filter(Boolean))];
   const rows = Object.keys(q?.tickers || {}).map(s => {
     const v = q.tickers[s], t = fv?.tickers?.[s] || {}, f = fnd?.tickers?.[s] || {}, m = fs?.tickers?.[s]?.metrics || {};

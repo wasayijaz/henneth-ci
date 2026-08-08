@@ -44,6 +44,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -67,6 +68,10 @@ MONTHLY_CAP = 2800
 SEND_DELAY_SEC = 0.6
 
 DIGEST_WATCHLIST_CAP = 15
+
+# PSX ticker shape. Every one of the 575 symbols in state/universe.json matches this. Used to
+# validate user-supplied watchlist entries before they touch the filesystem or an email body.
+SYMBOL_RE = re.compile(r"[A-Z0-9]{1,12}")
 
 
 def env_config():
@@ -214,6 +219,11 @@ def due_emails(row, now):
 def weekly_chg_pct(sym):
     """Weekly delta per plan: last close vs close ~5 trading sessions back, from
     state/history/<SYM>.json — never a daily ret_1d. Returns (last, chg_pct) or (None, None)."""
+    # sym comes from a user-writable watchlist row. It is interpolated into a filesystem path,
+    # and pathlib lets an absolute or ../-bearing value escape STATE entirely — so it is
+    # validated against the PSX symbol shape here, at the boundary, not trusted from the DB.
+    if not SYMBOL_RE.fullmatch(sym or ""):
+        return None, None
     hist = load_json(STATE / "history" / (sym + ".json"), [])
     if len(hist) < 2:
         return None, None
@@ -381,25 +391,34 @@ def main(argv):
                 skipped += 1
                 continue
 
-        rendered = render_email(key, row, now)
-        if not rendered:
+        # One bad row must not take the batch down with it: the log row for this recipient is
+        # already reserved, so an escaping exception would both abort every remaining send AND
+        # strand this key as permanently "queued". Mark it failed and move to the next recipient.
+        try:
+            rendered = render_email(key, row, now)
+            if not rendered:
+                if log_row_id:
+                    update_log_row(cfg, log_row_id, "failed")
+                failed += 1
+                continue
+            subject, html = rendered
+
+            ok, resend_id, bounce = send_via_resend(cfg, row["email"], subject, html)
+            if ok:
+                sent += 1
+                if log_row_id:
+                    update_log_row(cfg, log_row_id, "sent", resend_id)
+            else:
+                failed += 1
+                if log_row_id:
+                    update_log_row(cfg, log_row_id, "bounced" if bounce else "failed")
+                if bounce:
+                    set_optout(cfg, row["user_id"])
+        except Exception as e:
+            failed += 1
+            print("lifecycle_email: %s for %s failed (%s) - continuing" % (key, row.get("user_id"), e))
             if log_row_id:
                 update_log_row(cfg, log_row_id, "failed")
-            failed += 1
-            continue
-        subject, html = rendered
-
-        ok, resend_id, bounce = send_via_resend(cfg, row["email"], subject, html)
-        if ok:
-            sent += 1
-            if log_row_id:
-                update_log_row(cfg, log_row_id, "sent", resend_id)
-        else:
-            failed += 1
-            if log_row_id:
-                update_log_row(cfg, log_row_id, "bounced" if bounce else "failed")
-            if bounce:
-                set_optout(cfg, row["user_id"])
         time.sleep(SEND_DELAY_SEC)
 
     print("lifecycle_email: %d sent, %d failed, %d skipped (already sent/capped) at %s"

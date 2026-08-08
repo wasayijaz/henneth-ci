@@ -74,7 +74,8 @@ def main():
     tickers = sorted(charts.get("unavailable", {}).keys())
 
     results = {}
-    counts = {"full_date": 0, "year_only": 0, "no_date": 0, "no_mention": 0, "fetch_error": 0}
+    counts = {"full_date": 0, "year_only": 0, "no_date": 0, "no_mention": 0,
+              "fetch_error": 0, "no_profile_page": 0}
 
     for i, tk in enumerate(tickers):
         try:
@@ -86,8 +87,10 @@ def main():
             continue
 
         if desc is None:
+            # a missing profile page is a structural fact about the listing, not a network
+            # failure -- conflating the two made the audit's fetch_error tally unreadable.
             results[tk] = {"status": "no_profile_page"}
-            counts["fetch_error"] += 1
+            counts["no_profile_page"] += 1
             time.sleep(DELAY_SECONDS)
             continue
 

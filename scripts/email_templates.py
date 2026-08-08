@@ -15,7 +15,13 @@ updating this comment). Square corners are the brand's defining trait
 (site/src/styles/global.css:67, "nothing is ever rounded") — email clients ignore
 `border-radius: 0`'s intent by default (rectangles already have no radius), so the rule below is
 belt-and-braces against any client that applies its own rounding to buttons/tables.
+
+Every caller-supplied string is HTML-escaped at the point of interpolation. These templates are
+built with str.format, which does no escaping of its own, and the ticker/CTA/note values reach
+here from user-writable rows (watchlists, profile fields) — unescaped they are an HTML-injection
+hole into somebody else's inbox. Escape at interpolation, never at the call site.
 """
+from html import escape as _esc
 
 BG = "#f5f3ef"
 INK_1 = "#0a0a0a"
@@ -41,7 +47,8 @@ def footer(unsub_url):
       <p style="margin:0;font-family:{font};font-size:11px;color:{ink2};">
         <a href="{unsub}" style="color:{ink2};">Manage email preferences / unsubscribe</a>
       </p>
-    </td></tr>""".format(line=LINE, font=FONT, ink2=INK_2, disclaimer=DISCLAIMER, unsub=unsub_url)
+    </td></tr>""".format(line=LINE, font=FONT, ink2=INK_2, disclaimer=DISCLAIMER,
+                          unsub=_esc(unsub_url))
 
 
 def base(subject, preheader, body_rows, unsub_url):
@@ -54,7 +61,9 @@ def base(subject, preheader, body_rows, unsub_url):
     """
     foot = footer(unsub_url)
     assert DISCLAIMER in foot, "disclaimer missing from footer - refusing to build email"
-    assert unsub_url in foot, "unsubscribe url missing from footer - refusing to build email"
+    # compare against the escaped form — footer() escapes before interpolating, so a raw-string
+    # check here would fail on any unsubscribe URL carrying a query string.
+    assert _esc(unsub_url) in foot, "unsubscribe url missing from footer - refusing to build email"
 
     return """<!doctype html>
 <html>
@@ -86,8 +95,8 @@ def base(subject, preheader, body_rows, unsub_url):
     </td></tr>
   </table>
 </body>
-</html>""".format(subject=subject, preheader=preheader, bg=BG, ink1=INK_1, font=FONT,
-                   rows=body_rows, footer=foot)
+</html>""".format(subject=_esc(subject), preheader=_esc(preheader), bg=BG, ink1=INK_1,
+                   font=FONT, rows=body_rows, footer=foot)
 
 
 def block_ticker_row(sym, name, last, chg_pct):
@@ -106,7 +115,8 @@ def block_ticker_row(sym, name, last, chg_pct):
         </td>
       </tr></table>
     </td></tr>""".format(line=LINE, font=FONT, ink1=INK_1, ink2=INK_2, color=color,
-                          sym=sym, name=name, last=last, sign=sign, chg=chg_pct)
+                          sym=_esc(str(sym)), name=_esc(str(name)), last=_esc(str(last)),
+                          sign=sign, chg=chg_pct)
 
 
 def block_cta(label, url):
@@ -115,7 +125,7 @@ def block_cta(label, url):
       <a href="{url}" style="display:inline-block;padding:12px 28px;background:{ink1};color:#fff;
          font-family:{font};font-size:13px;font-weight:700;text-decoration:none;border-radius:0;
          letter-spacing:0.5px;">{label}</a>
-    </td></tr>""".format(url=url, ink1=INK_1, font=FONT, label=label)
+    </td></tr>""".format(url=_esc(url), ink1=INK_1, font=FONT, label=_esc(label))
 
 
 def block_note(text):
@@ -124,4 +134,4 @@ def block_note(text):
       <p style="margin:0;font-family:{font};font-size:13px;color:{ink2};line-height:1.6;">
         {text}
       </p>
-    </td></tr>""".format(font=FONT, ink2=INK_2, text=text)
+    </td></tr>""".format(font=FONT, ink2=INK_2, text=_esc(text))

@@ -70,8 +70,10 @@ def scrape(symbol: str, sess: requests.Session) -> dict | None:
     # payout_ratio: recompute from dps/eps (see module docstring) rather than trust the
     # vendor's own payoutRatio field, which disagrees with the vendor's own dps+eps on the
     # same page. Leave it out entirely (not a stale guess) if either input is missing/zero.
+    # eps must be POSITIVE: a lossmaking company has no payout ratio at all — dividing by a
+    # negative eps yields a negative percentage that downstream copy reads as "sustainable".
     dps, eps = _num(out.get("dps")), _num(out.get("eps"))
-    if dps is not None and eps:
+    if dps is not None and eps is not None and eps > 0:
         out["payout_ratio"] = f"{dps / eps * 100:.2f}%"
     else:
         out.pop("payout_ratio", None)
