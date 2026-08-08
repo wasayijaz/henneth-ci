@@ -71,20 +71,39 @@ def main():
     existing = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
     existing_symbols = existing.get("symbols", {})
 
-    # merge: backfill filings win on (date, pdf_url) dedupe against whatever's already there
+    # merge on (date, pdf_url). A colliding key is NOT simply skipped: the weekly accumulator
+    # (fetch_insider_offmarket.py) records a filing as soon as it appears on the announcements
+    # page, before anything has parsed its PDF, so the row already in state is routinely a
+    # placeholder with transactions: []. Skipping on collision let those placeholders beat the
+    # backfill's fully parsed rows -- 12 filings / 20 transactions were being dropped that way.
+    # Enrich instead: fill only fields the existing row is missing. Never overwrite real data,
+    # so this stays additive and safe to re-run.
     for sym, new_filings in by_symbol.items():
         cur = existing_symbols.setdefault(sym, [])
-        seen = {(f.get("date"), f.get("pdf_url")) for f in cur}
+        seen = {(f.get("date"), f.get("pdf_url")): f for f in cur}
         for f in new_filings:
-            if (f["date"], f["pdf_url"]) not in seen:
+            key = (f["date"], f["pdf_url"])
+            prior = seen.get(key)
+            if prior is None:
                 cur.append(f)
-                seen.add((f["date"], f["pdf_url"]))
+                seen[key] = f
+                continue
+            if not prior.get("transactions") and f["transactions"]:
+                prior["transactions"] = f["transactions"]
+            for field in ("title", "source"):
+                if not prior.get(field) and f.get(field):
+                    prior[field] = f[field]
         cur.sort(key=lambda f: f["date"] or "")
 
+    # Carry the existing header through untouched. This script only ADDS history; it knows
+    # nothing about the freshness of the weekly scrape, so hardcoding stale=False here would
+    # silently clear a real degraded-data flag that data_health.py and the site both read.
     out_path.write_text(json.dumps({
         "updated": existing.get("updated", "backfill"),
-        "source": "dps.psx.com.pk/announcements/companies (backfill: Firecrawl paginated + PDF parse)",
-        "stale": False,
+        "source": existing.get(
+            "source",
+            "dps.psx.com.pk/announcements/companies (backfill: Firecrawl paginated + PDF parse)"),
+        "stale": existing.get("stale", False),
         "symbols": existing_symbols,
     }, indent=2), encoding="utf-8")
 

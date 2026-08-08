@@ -38,7 +38,8 @@ Usage:
     python scripts/lifecycle_email.py --send                 # actually send what's due
     python scripts/lifecycle_email.py --send --test <user_id> --only welcome   # one test email
     python scripts/lifecycle_email.py --send --only nudge_24h                 # restrict to one key
-    python scripts/lifecycle_email.py --send --requeue-stale                  # ignore log, resend
+    python scripts/lifecycle_email.py --send --requeue-stale   # force-retry stuck/failed rows
+                                                               # (never resends a 'sent' one)
 """
 import datetime as dt
 import hashlib
@@ -68,6 +69,9 @@ MONTHLY_CAP = 2800
 SEND_DELAY_SEC = 0.6
 
 DIGEST_WATCHLIST_CAP = 15
+
+# How stale a 'queued' log row must be before it is treated as orphaned rather than in-flight.
+RETRY_AFTER = dt.timedelta(hours=6)
 
 # PSX ticker shape. Every one of the 575 symbols in state/universe.json matches this. Used to
 # validate user-supplied watchlist entries before they touch the filesystem or an email body.
@@ -125,14 +129,47 @@ def fetch_queue(cfg, user_id=None):
     return _rest(cfg, "GET", "lifecycle_queue", params=params)
 
 
-def fetch_sent_keys(cfg, user_ids):
-    """Which (user_id, email_key) already logged — the idempotency read before we compute due."""
+def fetch_log_rows(cfg, user_ids):
+    """Existing log rows keyed by (user_id, email_key) — the idempotency read before computing due.
+
+    Returns the whole row, not just the key, because "a row exists" is NOT the same as "already
+    sent": a transient Resend 5xx leaves status='failed', and a process killed mid-send leaves
+    status='queued' forever. Keying suppression on mere existence meant either of those silently
+    cost the user that email for good."""
     if not user_ids:
-        return set()
-    params = {"select": "user_id,email_key",
+        return {}
+    params = {"select": "id,user_id,email_key,status,created_at",
               "user_id": "in.(" + ",".join(user_ids) + ")"}
     rows = _rest(cfg, "GET", "lifecycle_email_log", params=params)
-    return {(r["user_id"], r["email_key"]) for r in rows}
+    return {(r["user_id"], r["email_key"]): r for r in rows}
+
+
+def retryable(log_row, now, force=False):
+    """May this existing log row be re-claimed and sent again?
+
+    'sent' and 'bounced' are final by definition, and stay final even under force — no operator
+    flag may resend an email the user already received. 'failed_final' is how a retry that failed
+    AGAIN is marked: that second terminal status bounds automatic retries at exactly one per key
+    without needing an attempts column (i.e. without a migration against the live table), so a
+    permanently broken row burns one extra send, once, and never again.
+
+    A 'queued' row is only re-claimed after RETRY_AFTER: the sender finishes a row in seconds, so
+    a queued row hours old is definitively orphaned, whereas one seconds old may be a concurrent
+    run mid-send and re-claiming it would double-send. Unknown status → never retry.
+
+    force (--requeue-stale) is the manual override for a stuck backlog: it drops the age gate and
+    re-opens 'failed_final'. It does NOT widen what counts as unsent."""
+    status = (log_row.get("status") or "").lower()
+    if status == "failed":
+        return True
+    if status == "failed_final":
+        return force
+    if status == "queued":
+        if force:
+            return True
+        created = _parse_ts(log_row.get("created_at"))
+        return created is not None and (now - created) >= RETRY_AFTER
+    return False
 
 
 def reserve_log_row(cfg, user_id, email_key):
@@ -147,6 +184,18 @@ def reserve_log_row(cfg, user_id, email_key):
         if e.code == 409:
             return None
         raise
+
+
+def claim_log_row(cfg, row_id):
+    """Re-claim an existing log row for a retry by flipping it back to 'queued'. Returns False if
+    the PATCH failed — the caller must then skip, because sending without a claimed row is exactly
+    how a concurrent run double-sends."""
+    try:
+        _rest(cfg, "PATCH", "lifecycle_email_log", params={"id": "eq." + row_id},
+              body={"status": "queued"})
+        return True
+    except (urllib.error.URLError, ValueError):
+        return False
 
 
 def update_log_row(cfg, row_id, status, resend_id=None):
@@ -334,6 +383,12 @@ def main(argv):
         email = row.get("email")
         if not uid or not email:
             continue
+        # Backstop, not the primary gate: lifecycle_queue's own WHERE clause already excludes
+        # opted-out users. It is repeated here so that suppression does not live in exactly one
+        # place — an edit to that view is a silent way to start mailing people who unsubscribed.
+        # Deliberately applies to --test too: opted out means opted out, including for a test.
+        if row.get("email_optout"):
+            continue
         keys = ["welcome"] if test_user else due_emails(row, now)
         if only:
             keys = [k for k in keys if k == only or (only == "digest" and k.startswith("digest_"))]
@@ -344,21 +399,37 @@ def main(argv):
         print("lifecycle_email: configured, nothing due at %s." % now.isoformat())
         return 0
 
-    if not requeue_stale and not test_user:
+    # Each plan entry carries the id of an existing log row to RE-CLAIM, or None to insert fresh.
+    if test_user:
+        plan = [(row, k, None) for row, k in plan]
+    else:
         try:
-            sent_keys = fetch_sent_keys(cfg, [row["user_id"] for row, _ in plan])
+            log_rows = fetch_log_rows(cfg, [row["user_id"] for row, _ in plan])
         except (urllib.error.URLError, ValueError) as e:
             print("lifecycle_email: could not read lifecycle_email_log (%s) - exiting cleanly." % str(e)[:150])
             return 0
-        plan = [(row, k) for row, k in plan if (row["user_id"], k) not in sent_keys]
+        resolved, retries = [], 0
+        for row, k in plan:
+            prior = log_rows.get((row["user_id"], k))
+            if prior is None:
+                resolved.append((row, k, None))
+            elif retryable(prior, now, force=requeue_stale):
+                # Re-claim the row rather than inserting: the unique constraint on
+                # (user_id, email_key) means a fresh insert would just 409 and skip, which is
+                # why --requeue-stale never actually resent anything before.
+                resolved.append((row, k, prior["id"]))
+                retries += 1
+        plan = resolved
+        if retries:
+            print("lifecycle_email: %d previously failed/orphaned email(s) queued for one retry." % retries)
 
     if not plan:
-        print("lifecycle_email: configured, %d due but all already sent." % 0)
+        print("lifecycle_email: configured, nothing left after the already-sent check.")
         return 0
 
     if not send:
         print("lifecycle_email: DRY RUN - %d email(s) due (%s). Re-run with --send." %
-              (len(plan), ", ".join(sorted({k for _, k in plan}))))
+              (len(plan), ", ".join(sorted({k for _, k, _rid in plan}))))
         return 0
 
     monthly_sent = 0
@@ -374,7 +445,7 @@ def main(argv):
             return 0
 
     sent = failed = skipped = 0
-    for row, key in plan:
+    for row, key, retry_id in plan:
         if sent >= DAILY_CAP:
             skipped += len(plan) - sent - failed - skipped
             print("lifecycle_email: hit DAILY_CAP=%d - stopping this run, remainder stays due." % DAILY_CAP)
@@ -386,10 +457,23 @@ def main(argv):
 
         log_row_id = None
         if not test_user:
-            log_row_id = reserve_log_row(cfg, row["user_id"], key)
-            if log_row_id is None:
-                skipped += 1
-                continue
+            if retry_id:
+                # Re-claiming an existing row: PATCH it back to 'queued' rather than inserting,
+                # which the unique constraint would reject. If the PATCH itself fails, skip —
+                # sending without a claimed row is how a double-send happens.
+                if not claim_log_row(cfg, retry_id):
+                    skipped += 1
+                    continue
+                log_row_id = retry_id
+            else:
+                log_row_id = reserve_log_row(cfg, row["user_id"], key)
+                if log_row_id is None:
+                    skipped += 1
+                    continue
+        # A retry that fails again is marked 'failed_final' — a second terminal status is what
+        # bounds retries at exactly one per key without adding an attempts column to the live
+        # table. So a permanently broken recipient costs one extra send, once, and never again.
+        fail_status = "failed_final" if retry_id else "failed"
 
         # One bad row must not take the batch down with it: the log row for this recipient is
         # already reserved, so an escaping exception would both abort every remaining send AND
@@ -398,7 +482,7 @@ def main(argv):
             rendered = render_email(key, row, now)
             if not rendered:
                 if log_row_id:
-                    update_log_row(cfg, log_row_id, "failed")
+                    update_log_row(cfg, log_row_id, fail_status)
                 failed += 1
                 continue
             subject, html = rendered
@@ -411,14 +495,14 @@ def main(argv):
             else:
                 failed += 1
                 if log_row_id:
-                    update_log_row(cfg, log_row_id, "bounced" if bounce else "failed")
+                    update_log_row(cfg, log_row_id, "bounced" if bounce else fail_status)
                 if bounce:
                     set_optout(cfg, row["user_id"])
         except Exception as e:
             failed += 1
             print("lifecycle_email: %s for %s failed (%s) - continuing" % (key, row.get("user_id"), e))
             if log_row_id:
-                update_log_row(cfg, log_row_id, "failed")
+                update_log_row(cfg, log_row_id, fail_status)
         time.sleep(SEND_DELAY_SEC)
 
     print("lifecycle_email: %d sent, %d failed, %d skipped (already sent/capped) at %s"
