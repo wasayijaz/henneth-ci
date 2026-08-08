@@ -74,7 +74,10 @@ const articleLd = {
   datePublished: published.toISOString(),
   dateModified: updated.toISOString(),
   image: new URL('/og.jpg', site.url).href,
-  author: { '@type': 'Organization', name: site.name, url: site.url },
+  // Person, not Organization. A named author with a linked profile is the authorship signal both
+  // Google's E-E-A-T guidance and AI-answer citation actually weigh; the brand still carries the
+  // `publisher` slot below, which is what it was really doing here.
+  author: { '@type': 'Person', name: site.author.name, url: site.author.url },
   publisher: {
     '@type': 'Organization',
     name: site.name,
@@ -111,7 +114,12 @@ const articleLd = {
       <p class="kicker"><Icon name={iconFor(post.data.cluster)} size={14} /> {post.data.cluster || 'Method'}</p>
       <h1 class="post-h1">{post.data.title}</h1>
       <p class="lead post-lead">{post.data.description}</p>
+      {/* Visible byline, not only the JSON-LD one. Structured data a reader cannot see is a claim
+          the page does not back up — and the rel="author" link is what ties the article to a real
+          profile for anything that follows it. */}
       <p class="post-meta muted">
+        <span class="byline">By <a href={site.author.url} rel="author noopener" target="_blank">{site.author.name}</a>{site.author.credentials && `, ${site.author.credentials}`}</span>
+        <span> · </span>
         <time datetime={published.toISOString()}>{fmt(published)}</time>
         {post.data.updatedDate && <span> · Updated {fmt(post.data.updatedDate)}</span>}
         <span> · {mins} min read</span>
@@ -191,6 +199,11 @@ const articleLd = {
   .post-h1 { max-width: 20ch; }
   .post-lead { max-width: 60ch; }
   .post-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 16px; }
+  /* The byline is the only part of this line that is a link, so it takes the ink colour; the rest
+     of the row stays muted. Underline on hover only — a permanently underlined 10px mono word in
+     an uppercase meta row reads as a rendering artefact. */
+  .byline a { color: var(--ink-1); text-decoration: none; }
+  .byline a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
   /* The MDX body. Scoped styles do not reach <Content />'s markup, so this uses :global()
      inside .prose — narrow enough not to leak into the rest of the page. */

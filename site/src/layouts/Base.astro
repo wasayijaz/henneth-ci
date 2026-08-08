@@ -73,6 +73,20 @@ const orgLd = {
   image: ogImage,
   email: site.contactEmail,
   sameAs: [site.social.x],
+  // Ties the brand entity to the person behind it, which is the same link the article bylines
+  // make. Without it the two are unrelated nodes and neither reinforces the other.
+  founder: { '@type': 'Person', name: site.author.name, url: site.author.url },
+  // What this entity is actually about. Cheap, true, and it is the field that disambiguates a
+  // five-letter invented brand name from every other thing called Henneth.
+  knowsAbout: [
+    'Pakistan Stock Exchange',
+    'KSE-100 Index',
+    'Equity research',
+    'Dividend investing',
+    'Fundamental analysis',
+    'Technical analysis',
+    'Backtesting',
+  ],
 };
 const siteLd = {
   '@context': 'https://schema.org',
