@@ -39,6 +39,55 @@ which file changed.
 
 ---
 
+## 2026-08-09 — v2026.08.09 — SEO: orphaned /psx/ hub fixed, blog posts linked into it, canonicalization
+
+<!--public
+Company pages under /psx/ are easier for Google to find now, and the blog links through to the
+company/ticker data it's talking about instead of dead-ending.
+-->
+
+### What changed
+
+Three commits, one root cause: the marketing site (`site/`) had pages with no inbound links
+pointing at them, which starves Google of crawl authority regardless of content quality.
+
+- **`c5c0d55e`** — `/psx/` hub had zero site-wide inbound links (nav stays capped at 7 items by
+  design; nothing else pointed down to it). The 19 `/psx/[ticker]` pages hang off it via
+  breadcrumb, but a hub with no inbound links passes nothing to its children — this is exactly why
+  GSC Page Indexing showed all 19 as "Discovered - currently not indexed." Fixed by adding `/psx/`
+  to `Footer.astro`'s Product column, same pattern already used for `/global-markets`.
+- **`c3602d13`** — the 4 existing blog posts had zero internal links into the `/psx/` layer (same
+  orphaned-island pattern, one level down). Added one contextual link per post: a named company to
+  its own ticker page where one exists (Bank Alfalah → `/psx/bafl/`), generic mentions to the
+  `/psx/` hub otherwise. `docs/CONTENT_ROUTINE.md` now bakes this in as a hard minimum for every
+  future post, alongside the existing `/tools/` link requirement, plus a step to request indexing
+  in GSC right after push instead of waiting on Google's own crawl schedule.
+- **`2bd6d4bb`** — `trailingSlash: true` in `site/vercel.json` forces a 301 from the non-slash form
+  to the slash form, matching the sitemap/canonical already in use (both `/features` and
+  `/features/` were serving 200, duplicate-URL crawl-budget waste). `Header.astro`/`Footer.astro`
+  nav hrefs now carry the trailing slash directly so site-wide nav stops generating an avoidable
+  redirect hop on every internal click. Also tightened 3 title/description tags (`solutions.astro`
+  meta description 158→151 chars; `psx-market-types-explained.mdx` title shortened to cut mobile
+  SERP truncation risk; `/psx/` hub title rewritten from generic "PSX companies" to keyword-rich
+  "PSX companies by sector, dividends and fair value").
+
+All three verified deployed (`READY`) on the `henneth-site` Vercel project. No GA4 traffic pull
+this round — no GA4 MCP tool connected this session; numbers TBD next check.
+
+### Not done this batch (tracked, not forgotten)
+
+- Unique OG images per blog post and per `/psx/{ticker}/` page — bigger lift (image generation),
+  deferred.
+- 8 remaining GSC "Request Indexing" manual submissions (bafl, dgkc, engroh, indu, luck, mlcf,
+  pakt, trg).
+- Cluster-2 blog posts in `docs/CONTENT_BACKLOG.md` (`how-to-start-investing-psx`,
+  `cdc-sub-account-vs-investor-account`).
+- 5 backlink/outreach messages drafted (KSEStocks links page, Profit editor, Mettis Global,
+  Sarmaaya.pk FB community, Stockiest91 Telegram) — draft only, none sent; sending any is
+  outward-facing and needs separate go-ahead per contact.
+
+---
+
 ## 2026-08-05 — v2026.08.05 — Insider & off-market data wired into the ticker page
 
 <!--public

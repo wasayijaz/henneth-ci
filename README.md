@@ -424,6 +424,7 @@ degrades if session times go 60 days unverified, halting new signals). The **Aud
 - [`docs/DESK-ROOM-PLAN.md`](docs/DESK-ROOM-PLAN.md) — the multi-agent analyst design.
 - [`docs/AUTOMATION-PLAN.md`](docs/AUTOMATION-PLAN.md) — the whole-product loop map.
 - [`docs/PRODUCT-ROADMAP.md`](docs/PRODUCT-ROADMAP.md) — single-tenant → subscription product (auth, delivery, billing, compliance).
+- [`docs/SEO_PLAN.md`](docs/SEO_PLAN.md) — the only user-acquisition channel (zero paid spend, by decision): verified SERP constraints, content routine, and the backlink/outreach plan.
 - [`CHANGELOG.md`](CHANGELOG.md) — what changed and why.
 
 ---
