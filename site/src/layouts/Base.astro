@@ -73,9 +73,9 @@ const orgLd = {
   image: ogImage,
   email: site.contactEmail,
   sameAs: [site.social.x],
-  // Ties the brand entity to the person behind it, which is the same link the article bylines
-  // make. Without it the two are unrelated nodes and neither reinforces the other.
-  founder: { '@type': 'Person', name: site.author.name, url: site.author.url },
+  // NO `founder`. The obvious addition here is a named Person tying the brand to whoever runs it,
+  // which is a real signal — the owner has declined to publish his name for now (2026-08-09), so
+  // the field stays off rather than carrying a placeholder. Ask before adding it back.
   // What this entity is actually about. Cheap, true, and it is the field that disambiguates a
   // five-letter invented brand name from every other thing called Henneth.
   knowsAbout: [

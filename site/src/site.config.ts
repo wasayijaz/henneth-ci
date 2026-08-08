@@ -36,18 +36,12 @@ export const site = {
   social: {
     x: 'https://x.com/MWasayI',
   },
-  /* THE BYLINE. Articles were attributed to the Organization, which is the weakest possible
-     authorship signal — Google's E-E-A-T guidance and every study of AI-answer citation rank a
-     named human with a verifiable profile well above a faceless brand, and the desk was giving up
-     that credit for free. The site's voice stays "we" (it is a desk, not a personal blog); this
-     only says who is behind it, which the linked X account already said anyway.
-     `credentials` is the one line the owner should set himself — it is a claim about a real
-     person, so it stays empty rather than invented, and renders nothing while empty. */
-  author: {
-    name: 'Wasay Ijaz',
-    url: 'https://x.com/MWasayI',
-    credentials: '',
-  },
+  /* NO NAMED AUTHOR, DELIBERATELY (owner, 2026-08-09).
+     A named human with a verifiable profile is the strongest authorship signal there is — Google's
+     E-E-A-T guidance and every study of AI-answer citation rank it well above a faceless brand.
+     The owner is not ready to attach his name to the desk publicly, so articles are authored by
+     the Organization and the Organization carries no `founder`. This is a known cost, accepted on
+     purpose; it is not an oversight to be tidied up. Revisit only if he says so. */
   analytics: {
     // Google Analytics 4 measurement ID. Loaded in production builds only, so
     // local dev traffic never lands in the property.
