@@ -8,6 +8,12 @@ const cols = [
     links: [
       { href: '/features', label: 'Features' },
       { href: '/solutions', label: 'Solutions' },
+      /* The ONLY site-wide inbound link to /psx/ — the hub every one of the 19 ticker pages
+         hangs off (their breadcrumb points back up to it, but nothing pointed down). Without a
+         link from outside its own children a hub carries no crawl authority to pass on, which is
+         exactly why GSC was showing all 19 ticker pages as "Discovered - currently not indexed".
+         Same fix already applied to /global-markets below; this closes the matching gap. */
+      { href: '/psx/', label: 'PSX companies' },
       /* Sits under Product, not Resources: global coverage is part of what the subscription is,
          not a reading-room extra. It is also the only site-wide link to /global-markets/ — the nav
          deliberately stays at seven items, so the footer carries the crawl path. */
