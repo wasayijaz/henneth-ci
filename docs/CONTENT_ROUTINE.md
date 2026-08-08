@@ -66,10 +66,22 @@ import Matrix   from '../../components/explain/Matrix.astro';
 6. **Link out and across.** At least one link to a relevant `/tools/` page, one to `/blog/`, and
    every primary source cited. Outbound links to regulators are the strongest E-E-A-T signal a
    YMYL page has — the T+1 pillar shipped without them and was weaker for it.
+   ⚠️ **Also link down, into `/psx/`.** The first four posts in this cluster shipped with zero
+   links into the ticker layer — an island next to another island (the `/psx/` hub itself had the
+   same problem until its footer link was added). Every post names a company or the board
+   generically at some point; don't skip the link:
+   - **Names a specific company** ("Bank Alfalah", "OGDC") → link it to `/psx/<symbol lowercase>/`
+     if that symbol exists in `tickers.json`. If it doesn't (not yet covered), don't force it.
+   - **Names PSX companies generically** ("every listed company", "the wider board", "the desk
+     covers") → link that phrase to `/psx/`, the hub.
+   - One of the two is a hard minimum per post, same tier as the `/tools/` link above.
 7. `npm run build`, then **render it** — flip `draft: false` locally, serve `dist/`, and look.
    The build passes on layouts that are visibly broken; two real defects in the first post were
    invisible to it.
 8. Flip `draft: false`, commit, push. Vercel deploys in ~60s.
+9. **Request indexing.** Don't wait for Google to find it on its own crawl schedule. GSC → URL
+   Inspection → paste the live `/blog/<slug>/` URL → Request Indexing. Costs one minute, and is the
+   single highest-leverage step for getting a new page indexed in days instead of weeks.
 
 ---
 
@@ -145,11 +157,13 @@ date — that stamp is what keeps a stale build from implying a live feed.
 - [ ] Every figure traces to a verified doc or a primary source you read
 - [ ] No advice language (Rule 5) — pages explain, they never say what to buy
 - [ ] Internal links: at least one tool, one related page
+- [ ] Internal link into `/psx/` — a named company to its ticker page, or generic coverage to the hub
 - [ ] Primary sources linked where cited
 - [ ] `npm run build` clean
 - [ ] **Rendered and looked at**, at 1280px and 375px
 - [ ] No horizontal overflow at 375px
 - [ ] Linked from the hub and the footer (landing pages only)
+- [ ] Requested indexing in GSC after push (blog posts and landing pages alike)
 
 ---
 
