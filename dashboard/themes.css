@@ -3,6 +3,12 @@
    UI RULE (do not break): every corner is HARD — border-radius is always 0.
    Never add a rounded corner to any new element. Boxes are 1.5px solid var(--line). */
 :root, *, *::before, *::after { border-radius: 0 !important; }
+:root{
+  --dur-fast:120ms; --dur-base:200ms; --dur-slow:320ms;
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+}
+html{scrollbar-gutter:stable}
 
 *{box-sizing:border-box;margin:0;padding:0}
 /* Themed scrollbars — square, hard-edged, monochrome, matching the terminal. Applies everywhere
@@ -76,7 +82,7 @@ body[data-theme=gemini] main{max-width:1440px;margin:0 auto;padding:10px 10px 60
 
 /* ============ LEFT SIDEBAR SHELL ============ */
 body[data-theme=gemini] .shell{display:flex;min-height:100vh;align-items:stretch}
-body[data-theme=gemini] .sidebar{width:var(--side-w,212px);flex:0 0 var(--side-w,212px);border-inline-end:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width .15s ease,flex-basis .15s ease;min-width:0}
+body[data-theme=gemini] .sidebar{width:var(--side-w,212px);flex:0 0 var(--side-w,212px);border-inline-end:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width var(--dur-fast) ease,flex-basis var(--dur-fast) ease;min-width:0}
 body[data-theme=gemini] .shell.collapsed .sidebar{width:56px;flex:0 0 56px}
 body[data-theme=gemini] .shell.resizing .sidebar{transition:none;user-select:none}
 body[data-theme=gemini] .side-legal{margin-top:auto;padding:12px 14px;border-top:1px solid var(--hair);display:flex;gap:10px;flex-wrap:wrap}
@@ -89,10 +95,10 @@ body[data-theme=gemini] .shell.collapsed .side-resize{display:none}
 body[data-theme=gemini] .side-top{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:12px 12px;border-bottom:1.5px solid var(--line);min-height:49px}
 body[data-theme=gemini] .side-top .brand{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;line-height:1.2;white-space:nowrap;overflow:hidden}
 body[data-theme=gemini] .side-toggle{background:transparent;border:1px solid var(--line);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink1)}
-body[data-theme=gemini] .side-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .15s}
+body[data-theme=gemini] .side-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform var(--dur-fast)}
 body[data-theme=gemini] .shell.collapsed .side-toggle svg{transform:rotate(180deg)}
 body[data-theme=gemini] .side-nav{display:flex;flex-direction:column;padding:8px 0;gap:1px}
-body[data-theme=gemini] .side-nav a{display:flex;align-items:center;gap:11px;padding:8px 14px;color:var(--ink2);font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border-inline-start:3px solid transparent;transition:.1s}
+body[data-theme=gemini] .side-nav a{display:flex;align-items:center;gap:11px;padding:8px 14px;color:var(--ink2);font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border-inline-start:3px solid transparent;transition:background var(--dur-fast) ease,color var(--dur-fast) ease}
 body[data-theme=gemini] .side-nav a svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 body[data-theme=gemini] .side-nav a:hover{background:var(--panel2);color:var(--ink1)}
 body[data-theme=gemini] .side-nav a.on{color:var(--ink1);border-left-color:var(--ink1);background:var(--panel2)}
@@ -190,7 +196,7 @@ body[data-theme=gemini] .brand-txt{overflow:hidden;text-overflow:ellipsis;white-
   position:fixed;inset:0;z-index:1500;background:var(--ink1);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
   opacity:0;pointer-events:none;
-  animation:bootIn .28s ease .26s forwards;
+  animation:bootIn var(--dur-slow) ease .26s forwards;
 }
 /* Only the pending state shows it. The moment initAuth clears data-auth the element is gone from
    the layout entirely — no stray overlay can survive and swallow clicks. */
@@ -253,11 +259,6 @@ body:not([data-auth="pending"]) .boot{display:none}
   .boot-ring-in{width:121px;height:121px}
   .boot-pct{font-size:20px}
 }
-@media(prefers-reduced-motion:reduce){
-  .boot{animation:none;opacity:1}
-  .boot-rot,.boot-ctr{animation:none}
-}
-
 /* THE COLLAPSED TOGGLE = THE DESK MARK, chevron on hover.
    Expanded, this is an ordinary bordered chevron sitting beside the wordmark. Collapsed, the
    wordmark is gone and a lone chevron above a column of icons reads as a stray control, so the
@@ -293,7 +294,7 @@ body[data-theme=gemini] .deskfoot{border-top:1.5px solid var(--line);background:
 body[data-theme=gemini] .deskfoot b{color:var(--ink1)}
 body[data-theme=gemini] .side-backdrop{display:none}
 @media(max-width:900px){
-  body[data-theme=gemini] .sidebar{position:fixed;inset-inline-start:0;top:0;z-index:50;width:236px !important;transform:translateX(-100%);transition:transform .18s ease}
+  body[data-theme=gemini] .sidebar{position:fixed;inset-inline-start:0;top:0;z-index:50;width:236px !important;transform:translateX(-100%);transition:transform var(--dur-base) ease}
   body[data-theme=gemini] .shell.drawer .sidebar{transform:translateX(0)}
   body[data-theme=gemini] .shell.drawer .side-nav a span,body[data-theme=gemini] .shell.drawer .side-head{display:inline}
   /* The brand is inline-FLEX, not inline: it now holds the desk mark next to the wordmark, and
@@ -321,10 +322,10 @@ body[data-theme=gemini] header.app{background:var(--panel);padding:8px 12px;bord
 body[data-theme=gemini] .brand{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 body[data-theme=gemini] .brand em{font-style:normal;color:var(--ink3);font-weight:500}
 body[data-theme=gemini] nav.tabs{gap:0;border-inline-start:1px solid var(--hair);padding-inline-start:10px}
-body[data-theme=gemini] nav.tabs a{padding:5px 10px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);transition:.1s}
+body[data-theme=gemini] nav.tabs a{padding:5px 10px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);transition:color var(--dur-fast) ease}
 body[data-theme=gemini] nav.tabs a:hover{color:var(--ink1)}
 body[data-theme=gemini] nav.tabs a.on{color:var(--ink1);background:var(--ink1);color:#f4f4f0}
-body[data-theme=gemini] .card{background:var(--panel);border:1.5px solid var(--line);border-radius:0;padding:0;transition:.12s;overflow:hidden}
+body[data-theme=gemini] .card{background:var(--panel);border:1.5px solid var(--line);border-radius:0;padding:0;transition:background var(--dur-fast) ease;overflow:hidden}
 body[data-theme=gemini] .card>h2,body[data-theme=gemini] .card>.sub{padding-inline-start:12px;padding-inline-end:12px}
 body[data-theme=gemini] .card>h2{padding-top:7px;padding-bottom:7px;border-bottom:1px solid var(--line);margin:0}
 body[data-theme=gemini] .card>.sub{padding-top:8px}
@@ -345,7 +346,7 @@ body[data-theme=gemini] .cards>*{margin-bottom:var(--gap)}
 body[data-theme=gemini] .card.clickable:hover{background:var(--panel2)}
 body[data-theme=gemini] h2{font-size:13px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
 body[data-theme=gemini] .sub{font-size:11.5px;color:var(--ink2);opacity:1;line-height:1.45}
-body[data-theme=gemini] .cell{border:1px solid var(--hair);border-radius:0;padding:8px 9px;background:var(--panel2);transition:.1s}
+body[data-theme=gemini] .cell{border:1px solid var(--hair);border-radius:0;padding:8px 9px;background:var(--panel2);transition:border-color var(--dur-fast) ease,background var(--dur-fast) ease}
 body[data-theme=gemini] .cell:hover{border-color:var(--line);background:var(--panel)}
 body[data-theme=gemini] .cell b{font-size:12px;font-weight:700}
 body[data-theme=gemini] th{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600;padding:5px 7px;border-bottom:1.5px solid var(--line)}
@@ -356,7 +357,7 @@ body[data-theme=gemini] .pill.ok{background:var(--up);color:#fff;border-color:va
 body[data-theme=gemini] .pill.bad{background:var(--dn);color:#fff;border-color:var(--dn)}
 body[data-theme=gemini] .pill.wait{background:var(--ink1);color:#f4f4f0;border-color:var(--ink1)}
 body[data-theme=gemini] .tag{background:transparent;color:var(--ink2);border:1px solid var(--hair);border-radius:0;padding:1px 7px;font-weight:600;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase}
-body[data-theme=gemini] .ranges button{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:4px 11px;color:var(--ink1);font-weight:600;font-size:11.5px;transition:.1s;font-family:var(--font-body)}
+body[data-theme=gemini] .ranges button{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:4px 11px;color:var(--ink1);font-weight:600;font-size:11.5px;font-family:var(--font-body)}
 body[data-theme=gemini] .ranges button:hover{background:var(--panel2)}
 body[data-theme=gemini] .ranges button.on{background:var(--ink1);color:#f4f4f0}
 body[data-theme=gemini] .tooltip{background:var(--ink1);color:#f4f4f0;border-radius:0;box-shadow:none;font-family:var(--font-body)}
@@ -376,12 +377,12 @@ body[data-theme=gemini] .fact{padding:9px 11px;border:none;background:var(--pane
 body[data-theme=gemini] .fact span{display:block;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
 body[data-theme=gemini] .fact b{font-size:14px;font-weight:700}
 /* value screen — expandable four-model working */
-body[data-theme=gemini] .fvrow .fvcaret{display:inline-block;color:var(--ink3);font-size:10.5px;transition:transform .15s ease;margin-inline-start:2px}
+body[data-theme=gemini] .fvrow .fvcaret{display:inline-block;color:var(--ink3);font-size:10.5px;transition:transform var(--dur-fast) ease;margin-inline-start:2px}
 body[data-theme=gemini] .fvrow.exp .fvcaret{transform:rotate(90deg);color:var(--ink1)}
 body[data-theme=gemini] .fvdetail{display:none}
 body[data-theme=gemini] .fvdetail.open{display:table-row}
 body[data-theme=gemini] .fvdetail>td{padding:0;border-bottom:1.5px solid var(--line)}
-body[data-theme=gemini] .fvwork{padding:12px 14px;background:var(--panel2);animation:fadeIn .2s both}
+body[data-theme=gemini] .fvwork{padding:12px 14px;background:var(--panel2);animation:fadeIn var(--dur-base) both}
 body[data-theme=gemini] .fvhdr{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:10px}
 body[data-theme=gemini] .fvmethods{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);margin-bottom:10px}
 body[data-theme=gemini] .fvm{background:var(--panel);padding:9px 11px;display:flex;flex-direction:column;gap:2px}
@@ -403,7 +404,7 @@ body[data-theme=gemini] .acct-slot{display:flex;align-items:center}
 body[data-theme=gemini] .acct-signin{background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);padding:4px 12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-body)}
 body[data-theme=gemini] .acct-btn{width:28px;height:28px;background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);font-weight:800;font-size:12px;font-family:var(--font-body)}
 body[data-theme=gemini] .acct-slot{position:relative}
-body[data-theme=gemini] .acct-menu{position:absolute;top:34px;inset-inline-end:0;background:var(--panel);border:1.5px solid var(--line);min-width:200px;z-index:80;display:flex;flex-direction:column}
+body[data-theme=gemini] .acct-menu{position:absolute;top:34px;inset-inline-end:0;background:var(--panel);border:1.5px solid var(--line);min-width:200px;z-index:80;display:flex;flex-direction:column;animation:fadeIn var(--dur-fast) both}
 body[data-theme=gemini] .acct-menu[hidden]{display:none!important}
 body[data-theme=gemini] .acct-menu{min-width:250px}
 body[data-theme=gemini] .acct-id{display:flex;gap:10px;align-items:center;padding:12px}
@@ -419,8 +420,8 @@ body[data-theme=gemini] .plan-badge{font-size:10px;text-transform:uppercase;lett
 body[data-theme=gemini] .acct-menu button{background:transparent;border:none;text-align:start;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body)}
 body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
 /* auth modal */
-body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px}
-body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px}
+body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px;animation:fadeIn var(--dur-fast) both}
+body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px;animation:fadeUp var(--dur-base) var(--ease-out) both}
 body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 body[data-theme=gemini] .auth-head .ha-logo{margin-right:8px}
 body[data-theme=gemini] .authbox.ha-v2{align-items:center;display:flex;gap:0}
@@ -581,7 +582,7 @@ body[data-theme=gemini] .run-last{font-size:10px;text-transform:uppercase;letter
 body[data-theme=gemini] .run-go{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#f4f4f0;border:1.5px solid rgba(244,244,240,.6);padding:5px 12px}
 body[data-theme=gemini] .run-desk:hover .run-go{border-color:#f4f4f0;background:rgba(244,244,240,.1)}
 @media(max-width:560px){body[data-theme=gemini] .run-txt i{display:none}body[data-theme=gemini] .run-meta{align-items:flex-end}}
-body[data-theme=gemini] .replay-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:20px;animation:rpFade .18s ease}
+body[data-theme=gemini] .replay-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:20px;animation:rpFade var(--dur-base) ease}
 body[data-theme=gemini] .replay-box{width:100%;max-width:720px;max-height:90vh;background:var(--panel);border:1.5px solid var(--line);display:flex;flex-direction:column;box-shadow:0 18px 60px rgba(0,0,0,.4)}
 body[data-theme=gemini] .replay-head{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1.5px solid var(--line)}
 body[data-theme=gemini] .replay-kicker{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);white-space:nowrap}
@@ -627,14 +628,14 @@ body[data-theme=gemini] .rp-prog-fill{height:100%;width:0;background:var(--ink1)
 body[data-theme=gemini] .rp-pct{font-family:"Pixelify Sans",var(--mono,monospace);font-size:34px;font-weight:700;line-height:1;margin:12px 0 20px}
 body[data-theme=gemini] .rp-pct span{font-size:18px;color:var(--ink3);margin-inline-start:2px}
 body[data-theme=gemini] .rp-steps{display:flex;flex-direction:column;gap:8px;min-height:170px}
-body[data-theme=gemini] .rp-step-line{display:flex;align-items:baseline;gap:9px;font-size:12.5px;color:var(--ink1);animation:rpUp .32s ease}
+body[data-theme=gemini] .rp-step-line{display:flex;align-items:baseline;gap:9px;font-size:12.5px;color:var(--ink1);animation:rpUp var(--dur-slow) ease}
 body[data-theme=gemini] .rp-step-mk{color:var(--accent,#b8860b);font-weight:700;flex:none}
 body[data-theme=gemini] .rp-step-tx{line-height:1.45}
 body[data-theme=gemini] .rp-step-line.did .rp-step-mk{color:var(--up)}
 body[data-theme=gemini] .rp-step-line.did .rp-step-mk::before{content:"✓ ";}
 body[data-theme=gemini] .rp-step-line.did .rp-step-tx{color:var(--ink3)}
 /* phase 2 — the split-desk reveal */
-body[data-theme=gemini] .rp-reveal{animation:rpFade .25s ease}
+body[data-theme=gemini] .rp-reveal{animation:rpFade var(--dur-base) ease}
 body[data-theme=gemini] .rp-reveal-head{margin-bottom:12px}
 body[data-theme=gemini] .rp-reveal-head b{font-size:16px;display:block}
 body[data-theme=gemini] .rp-reveal-head span{font-size:11px;color:var(--ink3)}
@@ -1245,8 +1246,8 @@ body[data-theme=gemini] .lsn-t{flex:1;min-width:0}
 body[data-theme=gemini] .lsn-t b{display:block;font-size:13.5px;margin-bottom:2px}
 body[data-theme=gemini] .lsn-m{flex:none;font-size:11px;color:var(--ink3)}
 /* ---- the lesson player: one idea per screen ---- */
-body[data-theme=gemini] .pl-overlay{position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:120;display:flex;align-items:center;justify-content:center;padding:20px}
-body[data-theme=gemini] .pl-box{background:var(--panel);border:1.5px solid var(--ink1);width:min(760px,100%);max-height:92vh;display:flex;flex-direction:column}
+body[data-theme=gemini] .pl-overlay{position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:120;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn var(--dur-fast) both}
+body[data-theme=gemini] .pl-box{background:var(--panel);border:1.5px solid var(--ink1);width:min(760px,100%);max-height:92vh;display:flex;flex-direction:column;animation:fadeUp var(--dur-base) var(--ease-out) both}
 body[data-theme=gemini] .pl-top{display:flex;align-items:flex-start;gap:12px;padding:15px 18px 10px}
 body[data-theme=gemini] .pl-title{flex:1;min-width:0}
 body[data-theme=gemini] .pl-title b{display:block;font-size:16px;margin-top:2px}
@@ -1611,7 +1612,7 @@ body .up{color:var(--up)} body .dn{color:var(--dn)}
 /* ---------- ticker search ---------- */
 /* The search is a primary action, so it reads as a field rather than an icon button. Behaviour is
    unchanged (it still opens the palette) — only the target and the affordance grew. */
-.searchbtn{display:flex;align-items:center;gap:9px;justify-content:flex-start;min-width:230px;height:34px;padding:0 10px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:.12s}
+.searchbtn{display:flex;align-items:center;gap:9px;justify-content:flex-start;min-width:230px;height:34px;padding:0 10px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:background var(--dur-fast) ease,color var(--dur-fast) ease,border-color var(--dur-fast) ease}
 .searchbtn .sb-label{font:inherit;font-size:12px;color:var(--ink3);white-space:nowrap}
 .searchbtn .sb-key{margin-inline-start:auto;font-size:10.5px;color:var(--ink3);border:1px solid var(--hair);padding:1px 6px;line-height:1.5}
 .searchbtn:hover{background:var(--line2);color:var(--ink1);border-color:var(--ink3)}
@@ -1619,16 +1620,16 @@ body .up{color:var(--up)} body .dn{color:var(--dn)}
 @media(max-width:1100px){.searchbtn{min-width:0;width:34px;justify-content:center;padding:0}
   .searchbtn .sb-label,.searchbtn .sb-key{display:none}}
 .searchbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.langbtn{display:flex;align-items:center;justify-content:center;height:34px;padding:0 12px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:.12s;font:inherit;font-size:12px;white-space:nowrap}
+.langbtn{display:flex;align-items:center;justify-content:center;height:34px;padding:0 12px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;transition:background var(--dur-fast) ease,color var(--dur-fast) ease,border-color var(--dur-fast) ease;font:inherit;font-size:12px;white-space:nowrap}
 .langbtn:hover{background:var(--line2);color:var(--ink1);border-color:var(--ink3)}
 body[data-lang="ur"] .langbtn{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq",serif}
-.searchbox{position:fixed;inset:0;z-index:200;background:rgba(19,23,34,.28);backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;animation:fadeIn .15s both}
+.searchbox{position:fixed;inset:0;z-index:200;background:rgba(19,23,34,.28);backdrop-filter:blur(3px);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;animation:fadeIn var(--dur-fast) both}
 .searchbox[hidden]{display:none!important}
-.searchpanel{width:min(560px,92vw);background:#fff;border:1px solid var(--line);border-radius:0;box-shadow:0 20px 60px rgba(19,23,34,.25);overflow:hidden;animation:fadeUp .18s both}
+.searchpanel{width:min(560px,92vw);background:#fff;border:1px solid var(--line);border-radius:0;box-shadow:0 20px 60px rgba(19,23,34,.25);overflow:hidden;animation:fadeUp var(--dur-base) both}
 .searchhead{display:flex;align-items:center;gap:10px;padding:0 14px 0 18px;border-bottom:1px solid var(--line)}
 .searchhead .searchico{width:18px;height:18px;flex:none;fill:none;stroke:var(--ink3);stroke-width:2;stroke-linecap:round}
 .searchpanel input{flex:1;border:none;outline:none;padding:18px 6px;font:600 17px var(--font-body,sans-serif);color:var(--ink1);background:transparent}
-.searchclose{flex:none;width:32px;height:32px;border:none;background:var(--line2);color:var(--ink2);border-radius:0;font-size:15px;cursor:pointer;transition:.12s}
+.searchclose{flex:none;width:32px;height:32px;border:none;background:var(--line2);color:var(--ink2);border-radius:0;font-size:15px;cursor:pointer;transition:background var(--dur-fast) ease,color var(--dur-fast) ease}
 .searchclose:hover{background:var(--line);color:var(--ink1)}
 .searchresults{max-height:52vh;overflow-y:auto}
 .searchitem{display:flex;align-items:baseline;gap:10px;padding:11px 20px;cursor:pointer;border-bottom:1px solid var(--line2)}
@@ -1647,14 +1648,14 @@ body[data-lang="ur"] .langbtn{font-family:"Noto Nastaliq Urdu","Jameel Noori Nas
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 /* page + card entrance: main children stagger in on each route render */
-#view.enter>*{animation:fadeUp .22s cubic-bezier(.23,1,.32,1) both}
+#view.enter>*{animation:fadeUp var(--dur-base) var(--ease-out) both}
 #view.enter>*:nth-child(1){animation-delay:.02s}
 #view.enter>*:nth-child(2){animation-delay:.06s}
 #view.enter>*:nth-child(3){animation-delay:.10s}
 #view.enter>*:nth-child(4){animation-delay:.14s}
 #view.enter>*:nth-child(5){animation-delay:.18s}
 #view.enter>*:nth-child(n+6){animation-delay:.20s}
-body[data-theme=gemini] .cell{animation:fadeIn .3s both}
+body[data-theme=gemini] #view.enter .cell{animation:fadeIn var(--dur-slow) both}
 /* ============ INTERACTION POLISH — consistent hover (web) + tap feedback (web+mobile) ============ */
 /* kill the default blue mobile tap flash everywhere; we provide our own feedback */
 body[data-theme=gemini] a,body[data-theme=gemini] button,body[data-theme=gemini] .clickable,
@@ -1667,7 +1668,7 @@ body[data-theme=gemini] .follow-chip,body[data-theme=gemini] .seg-opt,body[data-
 body[data-theme=gemini] .rp-btn2,body[data-theme=gemini] .rp-dot,body[data-theme=gemini] .starbtn,
 body[data-theme=gemini] .crumb,body[data-theme=gemini] .rp-skip,body[data-theme=gemini] .note-save,
 body[data-theme=gemini] .acct-btn,body[data-theme=gemini] .acct-signin,body[data-theme=gemini] nav.tabs a,
-body[data-theme=gemini] .ranges button{transition:transform .09s ease,background .13s ease,border-color .13s ease,opacity .13s ease,color .13s ease}
+body[data-theme=gemini] .ranges button{transition:transform var(--dur-fast) ease,background var(--dur-fast) ease,border-color var(--dur-fast) ease,opacity var(--dur-fast) ease,color var(--dur-fast) ease}
 /* HOVER (web) — a subtle lift/tint so things feel alive under the cursor */
 @media(hover:hover){
   body[data-theme=gemini] tr.clickable:hover>td{background:var(--panel2)}
@@ -1684,14 +1685,10 @@ body[data-theme=gemini] .side-nav a:active,body[data-theme=gemini] nav.tabs a:ac
 body[data-theme=gemini] .ranges button:active,body[data-theme=gemini] .acct-signin:active,body[data-theme=gemini] .rp-skip:active{transform:scale(.97);opacity:.9}
 /* rows shouldn't scale (transform on tr is janky) — just deepen the tint on press */
 body[data-theme=gemini] tr.clickable:active>td{background:var(--hair)}
-body[data-theme=gemini] .card.clickable,body[data-theme=gemini] .cell,body[data-theme=gemini] tr.clickable{transition:transform .12s ease,box-shadow .15s ease,border-color .15s ease,background .1s ease}
-body[data-theme=gemini] .pill{transition:background .2s ease,color .2s ease}
+body[data-theme=gemini] .card.clickable,body[data-theme=gemini] .cell,body[data-theme=gemini] tr.clickable{transition:transform var(--dur-fast) ease,box-shadow var(--dur-fast) ease,border-color var(--dur-fast) ease,background var(--dur-fast) ease}
+body[data-theme=gemini] .pill{transition:background var(--dur-base) ease,color var(--dur-base) ease}
 /* chart fades in when (re)drawn */
-.chartwrap canvas{animation:fadeIn .3s both}
-@media (prefers-reduced-motion:reduce){
-  #view.enter>*,body[data-theme=gemini] .cell,.chartwrap canvas{animation:none!important}
-  *{transition:none!important}
-}
+.chartwrap canvas{animation:fadeIn var(--dur-slow) both}
 
 /* ============ BOTTOM NAV (mobile app bar) ============ */
 .bottomnav{display:none}
@@ -1990,11 +1987,6 @@ body[data-theme=gemini] .clickable,
 body[data-theme=gemini] .idx-cell,
 body[data-theme=gemini] tr.clickable{cursor:pointer}
 
-/* respect reduced motion for every transition added above */
-@media(prefers-reduced-motion:reduce){
-  body[data-theme=gemini] *{transition:none!important;animation:none!important}
-}
-
 /* touch targets: on a phone nothing interactive should be under ~34px tall */
 @media(max-width:720px){
   body[data-theme=gemini] .note-save,
@@ -2141,13 +2133,13 @@ body[data-theme=gemini] .tilebox::after{
   backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
   -webkit-mask-image:linear-gradient(to bottom,transparent,#000 60%);
   mask-image:linear-gradient(to bottom,transparent,#000 60%);
-  opacity:1;transition:opacity .18s ease}
+  opacity:1;transition:opacity var(--dur-base) ease}
 /* A blur alone reads as a rendering artefact on a static screen. Name it. */
 body[data-theme=gemini] .tilebox::before{
   content:"scroll ▾";position:absolute;inset-inline-end:10px;bottom:5px;z-index:1;
   font-family:var(--mono,ui-monospace,monospace);font-size:9px;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);
-  pointer-events:none;opacity:1;transition:opacity .18s ease}
+  pointer-events:none;opacity:1;transition:opacity var(--dur-base) ease}
 body[data-theme=gemini] .tilebox.at-end::after,
 body[data-theme=gemini] .tilebox.at-end::before{opacity:0}
 /* Content that fits gets no decoration at all — wireTiles() measures it. */
@@ -2184,3 +2176,71 @@ body[data-theme=gemini] .morebar{
   font-family:var(--mono,ui-monospace,monospace);font-size:10.5px;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase}
 body[data-theme=gemini] .morebar:hover{color:var(--ink1);background:var(--panel)}
+
+/* ===========================================================================
+   WAVE 2 POLISH — skeletons, fvrow collapse, modal close, value flash,
+   quiz feedback, star press. All durations via motion tokens so the
+   reduced-motion block below neutralizes them automatically; the infinite
+   skeleton shimmer gets an explicit kill there. ============================ */
+
+/* skeleton loading placeholders */
+body[data-theme=gemini] .skelwrap{display:flex;flex-direction:column;gap:8px;padding:10px 0}
+body[data-theme=gemini] .skel-line{height:12px;width:100%;background:linear-gradient(90deg,var(--panel2) 25%,var(--hair) 50%,var(--panel2) 75%);background-size:200% 100%;animation:skelShimmer 1.2s linear infinite}
+body[data-theme=gemini] .skel-line.short{width:60%}
+
+/* fvrow expandable body — animated grid-rows collapse */
+body[data-theme=gemini] .fvrow-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows 220ms var(--ease-out)}
+body[data-theme=gemini] .fvrow-body>*{overflow:hidden}
+body[data-theme=gemini] .fvrow.open .fvrow-body{grid-template-rows:1fr}
+
+/* modal close — reverse of the open animation (fadeIn / fadeUp) */
+body[data-theme=gemini] .pl-overlay.modal-closing,
+body[data-theme=gemini] .authbox.modal-closing,
+body[data-theme=gemini] .modal-closing.modal-overlay{animation:fadeOut var(--dur-fast) var(--ease-out) both}
+body[data-theme=gemini] .pl-overlay.modal-closing .pl-box,
+body[data-theme=gemini] .pl-box.modal-closing,
+body[data-theme=gemini] .modal-closing .modal-box{animation:fadeDownOut var(--dur-fast) var(--ease-out) both}
+
+/* live value flash — faint up/down tint decaying to transparent */
+body[data-theme=gemini] .flash-up{animation:flashUp 400ms var(--ease-out) forwards}
+body[data-theme=gemini] .flash-dn{animation:flashDn 400ms var(--ease-out) forwards}
+
+/* quiz answer feedback */
+body[data-theme=gemini] .quiz-right{animation:quizRight 300ms var(--ease-out)}
+body[data-theme=gemini] .quiz-wrong{animation:quizWrong 300ms var(--ease-out)}
+
+/* watchlist star press */
+body[data-theme=gemini] .star-press{animation:starPress 180ms var(--ease-out)}
+
+@keyframes skelShimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes fadeDownOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(10px)}}
+@keyframes flashUp{from{background-color:color-mix(in srgb,var(--up) 18%,transparent)}to{background-color:transparent}}
+@keyframes flashDn{from{background-color:color-mix(in srgb,var(--dn) 18%,transparent)}to{background-color:transparent}}
+@keyframes quizRight{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--up) 0%,transparent);background-color:transparent}40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 30%,transparent);background-color:color-mix(in srgb,var(--up) 12%,transparent)}}
+@keyframes quizWrong{0%,100%{transform:none}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes starPress{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+/* ===========================================================================
+   REDUCED MOTION — the one canonical block. Previously fragmented across three
+   separate @media rules (boot screen, chart/cell entrances, and a blanket
+   catch-all); consolidated here so there is exactly one place to audit.
+   Durations shrink instead of vanishing outright: motion stays legible as a
+   state change, it just no longer performs. Infinite decorative loops (the
+   boot orbit, the gemini strip marquee, the live sec-dot pulse, orrery
+   planets) are switched off entirely — they have no informational value once
+   motion is unwanted. =========================================================================== */
+@media(prefers-reduced-motion:reduce){
+  :root{--dur-fast:1ms; --dur-base:1ms; --dur-slow:1ms}
+  #view.enter>*,
+  body[data-theme=gemini] .cell,
+  body[data-theme=gemini] .fvwork,
+  .chartwrap canvas,
+  .boot{animation:none!important;opacity:1}
+  .boot-rot,.boot-ctr{animation:none}
+  body[data-theme=gemini] .sec-dot.live{animation:none}
+  body[data-theme=gemini] .gstrip .gtrack{animation:none;width:auto}
+  body[data-theme=gemini] .orr-planet{animation:none}
+  body[data-theme=gemini] .skel-line{animation:none;background:var(--panel2)}
+  body[data-theme=gemini] *{transition:none!important;animation:none!important}
+}

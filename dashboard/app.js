@@ -194,6 +194,34 @@ function marketStatus() {
    ever moves forward. */
 const VER_SEEN_KEY = "henneth:ver-seen";
 
+/* WRITE ONLY WHAT CHANGED. The header re-renders on every route AND on a 60s timer, and it used to
+   re-assign every string unconditionally. An assignment to textContent/innerHTML replaces the node
+   even when the text is identical — which reflows the topbar and fires the MutationObserver below,
+   whose flush() then walks the whole document. Comparing first makes the common case (nothing
+   moved) cost nothing at all. */
+function setText(el, v) { if (el && el.textContent !== v) el.textContent = v; }
+function setClass(el, v) { if (el && el.className !== v) el.className = v; }
+function setHtml(el, v) { if (el && el.innerHTML !== v) el.innerHTML = v; }
+function setDisp(el, v) { if (el && el.style.display !== v) el.style.display = v; }
+
+/* A number that moved on a poll should say so for a moment. Only a REAL change flashes — same
+   value, unparseable value, or first render (no old value) stay silent, so a quiet tape looks
+   quiet. The class is stripped again on animationend, with a timer as the belt-and-braces path
+   in case the element is off-screen and the animation never fires. */
+function flashDelta(el, oldV, newV) {
+  if (!el) return;
+  const num = v => { const f = parseFloat(String(v == null ? "" : v).replace(/[^0-9.\-]/g, "")); return isNaN(f) ? null : f; };
+  const a = num(oldV), b = num(newV);
+  if (a === null || b === null || a === b) return;
+  el.classList.remove("flash-up", "flash-dn");
+  void el.offsetWidth;                       // restart the animation if one is still running
+  const k = b > a ? "flash-up" : "flash-dn";
+  el.classList.add(k);
+  const off = () => { el.classList.remove(k); el.removeEventListener("animationend", off); clearTimeout(t); };
+  const t = setTimeout(off, 500);
+  el.addEventListener("animationend", off);
+}
+
 async function renderVersion() {
   const el = $("sideVer");
   if (!el) return;
@@ -208,15 +236,15 @@ async function renderVersion() {
   const rels = cl?.releases || [];
   const seenIdx = seen === null ? -1 : rels.findIndex(r => r.version === seen);
   const unseen = seen === null ? 0 : (seenIdx === -1 ? rels.length : seenIdx);
-  el.hidden = false;
-  el.className = "side-ver" + (fresh ? " fresh" : "");
+  if (el.hidden) el.hidden = false;
+  setClass(el, "side-ver" + (fresh ? " fresh" : ""));
   const badge = fresh && unseen > 0 ? `<i class="ver-dot">${unseen > 9 ? "9+" : unseen}</i>` : "";
-  el.innerHTML = `${bellSvg()}<span>v${esc(cur)}</span>${badge}`;
+  setHtml(el, `${bellSvg()}<span>v${esc(cur)}</span>${badge}`);
   el.title = fresh ? `${unseen} update${unseen === 1 ? "" : "s"} since you last looked — click to read` : "What's new";
   el.onclick = () => openWhatsNew(cl);
   // First run on a browser that has never stored a version: record it WITHOUT showing the panel.
   // Otherwise every new visitor is greeted by a changelog for a product they have not used yet.
-  if (seen === null) { try { localStorage.setItem(VER_SEEN_KEY, cur); } catch {} el.className = "side-ver"; el.innerHTML = `${bellSvg()}<span>v${esc(cur)}</span>`; }
+  if (seen === null) { try { localStorage.setItem(VER_SEEN_KEY, cur); } catch {} setClass(el, "side-ver"); setHtml(el, `${bellSvg()}<span>v${esc(cur)}</span>`); }
 }
 
 function bellSvg() {
@@ -257,36 +285,67 @@ async function renderHeader() {
   renderVersion();          // fire and forget — the badge must never delay the header
   const [health, quant, live, macro, dash] = await Promise.all([j("health.json"), j("quant.json"), j("live.json"), j("macro.json"), j("dashboard.json")]);
   const [mt, mo] = marketStatus();
-  $("mkt").textContent = "PSX " + mt; $("mkt").className = "pill " + (mo ? "ok" : "");
-  if (health) { $("health").textContent = "HEALTH " + health.status.toUpperCase(); $("health").className = "pill " + (health.status === "ok" ? "ok" : "bad"); $("health").title = (health.problems || []).join("; "); }
+  setText($("mkt"), "PSX " + mt); setClass($("mkt"), "pill " + (mo ? "ok" : ""));
+  if (health) { setText($("health"), "HEALTH " + health.status.toUpperCase()); setClass($("health"), "pill " + (health.status === "ok" ? "ok" : "bad")); $("health").title = (health.problems || []).join("; "); }
   const reg = macro?.regime || "—";
-  $("regime").textContent = "REGIME: " + reg.toUpperCase(); $("regime").className = "pill clickable " + (reg === "risk-off" ? "bad" : reg === "risk-on" ? "ok" : "");
+  setText($("regime"), "REGIME: " + reg.toUpperCase()); setClass($("regime"), "pill clickable " + (reg === "risk-off" ? "bad" : reg === "risk-on" ? "ok" : ""));
   $("regime").onclick = () => location.hash = "#/macro";
   const geo = dash?.geo_risk;
   const gc = $("georisk");
   if (gc && geo?.score != null) {
-    gc.style.display = "";
-    gc.textContent = "RISK " + geo.score;
-    gc.className = "pill clickable " + (geo.band === "elevated" ? "bad" : geo.band === "calm" ? "ok" : "");
+    setDisp(gc, "");
+    setText(gc, "RISK " + geo.score);
+    setClass(gc, "pill clickable " + (geo.band === "elevated" ? "bad" : geo.band === "calm" ? "ok" : ""));
     gc.title = `Geopolitical & market-stress radar: ${geo.score}/100 (${geo.band}). Click for the factors.`;
     gc.onclick = () => location.hash = "#/macro";
-  } else if (gc) { gc.style.display = "none"; }
+  } else if (gc) { setDisp(gc, "none"); }
   $("regime").title = reg === "—" ? "Macro regime — not published yet this cycle" :
     `Macro regime = the desk's risk posture (${reg}). ${reg === "risk-on" ? "Full setups allowed." : reg === "risk-off" ? "Max 2 setups, defensive only." : "Neutral — normal caution."} Click for the drivers.`;
-  $("updated").textContent = "quant " + (quant?.updated || "—") + " · live " + (live?.updated || "—");
+  setText($("updated"), "quant " + (quant?.updated || "—") + " · live " + (live?.updated || "—"));
 }
 
 /* ---------- canvas chart ---------- */
+/* THEME COLOURS ARE READ ONCE, NOT PER DRAW. getComputedStyle() forces a style flush, and the
+   chart redraws on every range button, every resize and every ticker navigation. The palette is
+   stamped on <body data-theme> at boot and nothing in the app rewrites it, so one read is honest.
+   invalidateChartColors() exists so a future theme switcher has a hook to call. */
+let _chartCss = null;
+function chartColors() {
+  if (_chartCss) return _chartCss;
+  const css = getComputedStyle(document.body);
+  _chartCss = {
+    up: css.getPropertyValue("--up").trim(),
+    dn: css.getPropertyValue("--dn").trim(),
+    accent: css.getPropertyValue("--accent").trim(),
+    ink: css.color,
+  };
+  return _chartCss;
+}
+function invalidateChartColors() { _chartCss = null; }
+
+/* One rAF per frame, no matter how many mousemove events land in it. Raw mousemove fires far
+   faster than the screen repaints, and each handler wrote innerHTML + two style properties —
+   layout work thrown away before it was ever seen. */
+function rafTooltip(canvas, handler) {
+  let latest = null, pending = false;
+  canvas.onmousemove = e => {
+    latest = { clientX: e.clientX, clientY: e.clientY };
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => { pending = false; if (latest) handler(latest); });
+  };
+}
+
 function drawChart(canvas, tooltip, hist, days) {
   const rows = hist.slice(-days);
   const W = canvas.clientWidth, H = canvas.clientHeight || 320;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = W * dpr; canvas.height = H * dpr;
   const ctx = canvas.getContext("2d"); ctx.scale(dpr, dpr);
-  const css = getComputedStyle(document.body);
-  const up = css.getPropertyValue("--up").trim(), dn = css.getPropertyValue("--dn").trim();
-  const accent = css.getPropertyValue("--accent").trim();
-  const ink = css.color;
+  const _c = chartColors();
+  const up = _c.up, dn = _c.dn;
+  const accent = _c.accent;
+  const ink = _c.ink;
   const padL = 8, padR = 56, padT = 10, volH = 46, plotH = H - volH - 26;
 
   const closes = rows.map(r => r.close), vols = rows.map(r => r.volume);
@@ -328,7 +387,7 @@ function drawChart(canvas, tooltip, hist, days) {
   });
   ctx.globalAlpha = 1;
 
-  canvas.onmousemove = e => {
+  rafTooltip(canvas, e => {
     const rect = canvas.getBoundingClientRect();
     const i = Math.round((e.clientX - rect.left - padL) / (W - padL - padR) * (rows.length - 1));
     if (i < 0 || i >= rows.length) { tooltip.style.display = "none"; return; }
@@ -338,7 +397,7 @@ function drawChart(canvas, tooltip, hist, days) {
     tooltip.style.top = "8px";
     const chg = i ? ((r.close / rows[i - 1].close - 1) * 100) : 0;
     tooltip.innerHTML = `<b>${r.date}</b><br>close ${fmt(r.close)} <span class="${cls(chg)}">${sgn(chg.toFixed(2))}%</span><br>vol ${fmt(r.volume, 0)}`;
-  };
+  });
   canvas.onmouseleave = () => tooltip.style.display = "none";
 }
 
@@ -346,8 +405,8 @@ function drawIntraday(canvas, tooltip, points, prevClose) {
   const W = canvas.clientWidth, H = canvas.clientHeight || 320, dpr = window.devicePixelRatio || 1;
   canvas.width = W * dpr; canvas.height = H * dpr;
   const ctx = canvas.getContext("2d"); ctx.scale(dpr, dpr);
-  const css = getComputedStyle(document.body);
-  const up = css.getPropertyValue("--up").trim(), dn = css.getPropertyValue("--dn").trim(), ink = css.color;
+  const _c = chartColors();
+  const up = _c.up, dn = _c.dn, ink = _c.ink;
   const padL = 8, padR = 56, padT = 12, plotH = H - 40;
   const prices = points.map(p => p.p);
   const lo = Math.min(prevClose, ...prices), hi = Math.max(prevClose, ...prices), span = (hi - lo) || 1;
@@ -366,28 +425,63 @@ function drawIntraday(canvas, tooltip, points, prevClose) {
   ctx.fillStyle = ink; ctx.globalAlpha = .55;
   [0, Math.floor(points.length / 2), points.length - 1].forEach(i => ctx.fillText(tlabel(points[i].t), Math.min(X(i), W - padR - 40), H - 6));
   ctx.globalAlpha = 1;
-  canvas.onmousemove = e => {
+  rafTooltip(canvas, e => {
     const rect = canvas.getBoundingClientRect();
     const i = Math.round((e.clientX - rect.left - padL) / (W - padL - padR) * (points.length - 1));
     if (i < 0 || i >= points.length) { tooltip.style.display = "none"; return; }
     const p = points[i], chg = (p.p / prevClose - 1) * 100;
     tooltip.style.display = "block"; tooltip.style.left = Math.min(e.clientX - rect.left + 12, W - 140) + "px"; tooltip.style.top = "8px";
     tooltip.innerHTML = `<b>${tlabel(p.t)}</b><br>${fmt(p.p)} <span class="${cls(chg)}">${sgn(chg.toFixed(2))}%</span>`;
-  };
+  });
   canvas.onmouseleave = () => tooltip.style.display = "none";
 }
 
 /* ---------- pages ---------- */
-function globalStrip(gl) {
+/* The global tape lives OUTSIDE #view, in a fixed host, and is never re-created. Rendering it as
+   part of a page's innerHTML meant every route render and every 60s poll built a fresh .gtrack —
+   and a fresh element restarts the CSS marquee, so the scroll snapped back to zero. Now the node
+   is built once and only its numbers are patched in place. Pages that want it call
+   showGlobalStrip(gl); route() calls hideGlobalStrip() before dispatch so pages that don't want
+   it simply never turn it back on. */
+const GSTRIP_ORDER = ["BZ=F", "^GSPC", "^DJI", "^VIX", "GC=F", "BTC-USD", "ETH-USD", "PKR=X", "DX-Y.NYB"];
+
+function globalStripData(gl) {
   const inst = gl?.instruments || {};
-  const order = ["BZ=F", "^GSPC", "^DJI", "^VIX", "GC=F", "BTC-USD", "ETH-USD", "PKR=X", "DX-Y.NYB"];
-  const items = order.filter(s => inst[s]).map(s => {
+  return GSTRIP_ORDER.filter(s => inst[s]).map(s => {
     const v = inst[s];
-    return `<div class="gitem" title="${esc(v.psx_read)}"><span>${esc(v.label)}</span>
-      <b class="num">${fmt(v.price)}</b><i class="num ${cls(v.chg_1d_pct)}">${sgn(v.chg_1d_pct)}%</i></div>`;
-  }).join("");
-  // duplicate the item run so the marquee loops seamlessly (translateX -50% wraps clean)
-  return items ? `<div class="gstrip clickable" onclick="location.hash='#/macro'"><div class="gtrack">${items}${items}</div></div>` : "";
+    return { k: s, label: v.label, read: v.psx_read, price: fmt(v.price), chg: sgn(v.chg_1d_pct) + "%", chgCls: cls(v.chg_1d_pct) };
+  });
+}
+
+function hideGlobalStrip() { const h = $("gstripHost"); if (h) setDisp(h, "none"); }
+
+function showGlobalStrip(gl) {
+  const host = $("gstripHost");
+  if (!host) return;
+  const data = globalStripData(gl);
+  if (!data.length) { setDisp(host, "none"); return; }
+
+  // rebuild only when the instrument set itself changed (each run is duplicated for a seamless loop)
+  let track = host.querySelector(".gtrack");
+  const want = data.map(d => d.k).join(",");
+  if (!track || host.dataset.keys !== want) {
+    const items = data.map(d =>
+      `<div class="gitem" data-gk="${esc(d.k)}" title="${esc(d.read)}"><span>${esc(d.label)}</span>
+      <b class="num"></b><i class="num"></i></div>`).join("");
+    host.innerHTML = `<div class="gstrip clickable" onclick="location.hash='#/macro'"><div class="gtrack">${items}${items}</div></div>`;
+    host.dataset.keys = want;
+    track = host.querySelector(".gtrack");
+  }
+  setDisp(host, "");
+
+  data.forEach(d => {
+    host.querySelectorAll(`.gitem[data-gk="${d.k}"]`).forEach(el => {
+      const b = el.querySelector("b"), i = el.querySelector("i");
+      if (b) { flashDelta(b, b.textContent, d.price); setText(b, d.price); }
+      if (i) { setText(i, d.chg); setClass(i, "num " + d.chgCls); }
+      if (el.title !== (d.read || "")) el.title = d.read || "";
+    });
+  });
 }
 
 /* PSX's own index board. ALLSHR / KMIALLSHR matter because the desk's universe runs well past the
@@ -492,8 +586,7 @@ async function pageBoard() {
 
   // the daily opportunity scanner — six ranked lists from the scored data, rebuilt every cycle
   const scanCats = scannerLists(q, fvAll?.tickers || {}, fndAll?.tickers || {}, pred?.tickers || {}, fsAll?.tickers || {});
-  $("view").innerHTML = `${globalStrip(gl)}
-  ${indexBoard(idxAll)}
+  $("view").innerHTML = `${indexBoard(idxAll)}
   <div class="grid-board">
     <div class="cards">${sigHtml}${trigHtml}${posCard}</div>
     <div class="cards">${universeCard}${predCard}${provenCard}</div>
@@ -501,6 +594,7 @@ async function pageBoard() {
   </div>
   <div class="seg"><h2>Today's scanner</h2><div class="ln"></div><span class="pill">rebuilt every cycle</span></div>
   ${scannerHtml(scanCats)}`;
+  showGlobalStrip(gl);
 }
 
 async function pageValue() {
@@ -544,7 +638,7 @@ async function pageValue() {
       <td class="r num">${fmt(r.price)}</td><td class="r num">${fmt(r.composite_fair)}${spread}</td>
       <td class="r num ${cls(r.mispricing_pct)}">${sgn(r.mispricing_pct)}%</td>
       <td><span class="pill ${r.verdict === "undervalued" ? "ok" : "bad"}">${r.verdict === "undervalued" ? "below fair" : r.verdict === "overvalued" ? "above fair" : esc(r.verdict)}</span> <span class="fvcaret">▸</span></td></tr>
-      <tr class="fvdetail${x}"><td colspan="5">${fvDetail(r)}</td></tr>`; }).join("")}</tbody></table>${
+      <tr class="fvdetail${x}"><td colspan="5"><div class="fvrow-body">${fvDetail(r)}</div></td></tr>`; }).join("")}</tbody></table>${
       cap < list.length ? `<button class="morebar" onclick="this.closest('.card').querySelectorAll('.xmore').forEach(e=>e.classList.remove('xmore'));this.remove()">See all ${list.length} — ${list.length - cap} more</button>` : ""}`;
   };
   // glance row: the four numbers that answer "what does the screen say" before any prose
@@ -802,7 +896,6 @@ async function pageToday() {
   if (onboardPrompt && !_onboardShownTracked) { _onboardShownTracked = true; track("onboard_prompt_shown"); }
 
   $("view").innerHTML = `
-  ${globalStrip(gl)}
   ${sinceBanner}
   ${onboardPrompt}
   ${glanceRow}
@@ -829,6 +922,7 @@ async function pageToday() {
       <td class="sub"><b class="dn">Risk:</b> ${esc(tp(w, "risk"))}</td></tr>`).join("")}</tbody></table></div>`
       : '<div class="card"><div class="empty">Patient today — nothing stacks up strongly enough to flag.</div></div>'}
   <p class="sub" style="margin-top:14px">${esc(tDisclaimer(dr))}</p>`;
+  showGlobalStrip(gl);
 }
 
 async function pageStrategies() {
@@ -2743,13 +2837,28 @@ async function pageTicker(sym, _retry = 0) {
   const _gaps = [];
   if (!qRaw) _gaps.push("the quant snapshot");
   if (!lv) _gaps.push("the live tape");
-  if (_gaps.length && _retry < 3) {
-    setTimeout(() => { if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, _retry + 1); }, 1500);
+  /* ONE background retry, and only for the files that are actually missing. The old code re-ran
+     the whole 26-file pageTicker up to three times, which tore down a page the reader was already
+     looking at — repeatedly — for the sake of one absent file. Now the rendered page stays put; if
+     the targeted re-fetch fills the gap the page refreshes once, and if it doesn't, the banner
+     simply stays honest. */
+  if (_gaps.length && _retry < 1) {
+    const missing = [];
+    if (!qRaw) missing.push("quant.json");
+    if (!lv) missing.push("live.json");
+    setTimeout(async () => {
+      if (!location.hash.toUpperCase().includes(sym)) return;
+      const got = await Promise.all(missing.map(f => j(f, 0).catch(() => null)));
+      const filled = got.some(d => !!d?.tickers?.[sym]);
+      if (!filled) return;                       // still absent — leave the honest banner alone
+      if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, 1);
+    }, 1500);
   }
   const gapBanner = _gaps.length
-    ? `<div class="card" style="border-color:var(--dn)"><div class="sub" style="padding:10px 12px">
+    ? `<div class="card" id="tkgap" style="border-color:var(--dn)"><div class="sub" style="padding:10px 12px">
         Showing a partial page for ${esc(sym)}: ${_gaps.join(", ")} didn't load this time.
-        The desk is retrying in the background — nothing below is estimated to fill the gap.
+        ${_retry < 1 ? "The desk is retrying in the background — nothing below is estimated to fill the gap."
+                     : "The retry didn't fill it either — nothing below is estimated to fill the gap."}
         <button class="acct-signin" id="tkretry" style="margin-left:8px">Retry now</button></div></div>`
     : "";
 
@@ -3469,7 +3578,7 @@ async function pageLegal() {
   const tabs = [["terms", "Terms of Service"], ["privacy", "Privacy Policy"], ["risk", "Risk Disclosure"]];
   const tabBar = `<div class="legal-tabs">${tabs.map(([k, t]) => `<a href="#/legal/${k}" class="${k === which ? "on" : ""}">${t}</a>`).join("")}</div>`;
   const L = doc && doc[which];
-  if (!L) { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Legal</h2><div class="ln"></div></div>${tabBar}<div class="card"><div class="empty">Loading…</div></div>`; return; }
+  if (!L) { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Legal</h2><div class="ln"></div></div>${tabBar}<div class="card"><div class="skelwrap"><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line short"></div></div></div>`; return; }
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>${esc(L.title)}</h2><div class="ln"></div><span class="pill">updated ${esc(L.updated)}</span></div>
   ${tabBar}
@@ -3523,10 +3632,18 @@ function runRevealModal(opts) {
   </div>`;
   document.body.appendChild(ov);
   const body = ov.querySelector("#rpBody");
-  let raf = null, done = false;
+  let raf = null, done = false, closing = false;
 
   function close() {
-    cancelAnimationFrame(raf); ov.remove(); document.removeEventListener("keydown", key);
+    if (closing) return;                     // Esc + backdrop click can both land; close once
+    closing = true;
+    cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
+    // let the exit animation play, then drop the node (timer covers reduced-motion / no animation)
+    ov.classList.add("modal-closing");
+    let gone = false;
+    const drop = () => { if (gone) return; gone = true; ov.remove(); };
+    ov.addEventListener("animationend", e => { if (e.target === ov || e.target === ov.firstElementChild) drop(); });
+    setTimeout(drop, 250);
     // reveal the results inline on the page (reveal() sets the session flag once the run finishes)
     if (opts.onClose) opts.onClose();
     else if (opts.sym && typeof pageTicker === "function" && location.hash.toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
@@ -3956,8 +4073,12 @@ async function setDeskMode(m) {
   myProfile = { ...(myProfile || {}), ui_mode: m };
   await saveProfile({ ui_mode: m });
   applyDeskMode();
-  location.hash = m === "learn" ? "#/learn" : "#/today";
-  route(true);
+  // Setting the hash fires hashchange, which routes. Calling route() here as well rendered the
+  // destination page twice. Only route directly when the hash is ALREADY the target, because then
+  // the assignment is a no-op and no hashchange is coming.
+  const target = m === "learn" ? "#/learn" : "#/today";
+  if (location.hash === target) route(true);
+  else location.hash = target;
 }
 /* The nav is declared once in HTML; the shell just flips which group is visible, so there is one
    source of truth for routes and no second menu to keep in sync. */
@@ -4065,8 +4186,14 @@ function plAnswer(btn, correct) {
   const wrap = btn.closest(".pl-quiz");
   const picked = +btn.dataset.i;
   wrap.querySelectorAll(".ls-opt").forEach(b => b.disabled = true);
-  btn.classList.add(picked === correct ? "right" : "wrong");
-  if (picked !== correct) wrap.querySelector(`.ls-opt[data-i="${correct}"]`)?.classList.add("right");
+  const ok = picked === correct;
+  btn.classList.add(ok ? "right" : "wrong");
+  // one-shot pulse on the button the learner actually pressed
+  btn.classList.add(ok ? "quiz-right" : "quiz-wrong");
+  const clearPulse = () => { btn.classList.remove("quiz-right", "quiz-wrong"); btn.removeEventListener("animationend", clearPulse); };
+  btn.addEventListener("animationend", clearPulse);
+  setTimeout(clearPulse, 600);
+  if (!ok) wrap.querySelector(`.ls-opt[data-i="${correct}"]`)?.classList.add("right");
   wrap.querySelector(".ls-explain").hidden = false;
   _pl.answered = true;
   const f = document.querySelector(".pl-foot-next");
@@ -6071,7 +6198,7 @@ async function route(isPoll) {
   // location.hash directly to read the token.
   const page = (rawPage || "").split("?")[0];
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
-  renderHeader();
+  await renderHeader();   // awaited: un-awaited, the pills landed a beat AFTER the body and the topbar visibly jumped
   const key = page + (arg || "");
   // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
@@ -6080,6 +6207,8 @@ async function route(isPoll) {
   // sign-in, because the open routes (#/cast, legal, glossary) are reachable while signed out and
   // would otherwise inherit the stripped-down chrome from a previous gated view.
   try { document.body.removeAttribute("data-gated"); } catch {}
+  // the tape is opt-in per page: hide it, and the two pages that want it turn it back on
+  hideGlobalStrip();
   try {
     if (page === "ticker" && arg) { await pageTicker(arg); }
     else { await (PAGES[page] || pageBoard)(); }
@@ -6172,12 +6301,19 @@ function enhanceTables(root = document) {
    triple its height and destroy the down-the-column scan that is the point of a table. */
 function restackTables() {
   const narrow = window.innerWidth <= 560;
-  document.querySelectorAll(".tscroll>table[data-cols]").forEach(t => {
-    t.removeAttribute("data-stack");                 // always measure in the unstacked state
-    if (!narrow) return;
+  const tables = [...document.querySelectorAll(".tscroll>table[data-cols]")];
+  // Write → read → write PER TABLE forced a synchronous layout for every table on the page, and
+  // each unstack-then-restack was visible on a phone as the rows flickering out of and back into
+  // their stacked form. Do it in three passes instead: unstack everything, THEN measure everything
+  // (one layout for the lot), THEN stack what needs it. All three run in one synchronous turn, so
+  // the intermediate unstacked state is never painted.
+  tables.forEach(t => t.removeAttribute("data-stack"));   // always measure in the unstacked state
+  if (!narrow) return;
+  const need = tables.map(t => {
     const room = t.parentElement.clientWidth;
-    if (room && t.scrollWidth > room + 2) t.setAttribute("data-stack", "1");
+    return !!room && t.scrollWidth > room + 2;
   });
+  tables.forEach((t, i) => { if (need[i]) t.setAttribute("data-stack", "1"); });
 }
 /* A .tilebox's bottom fade and "scroll ▾" hint promise more content below. Both are lies once
    the user has reached the bottom, and lies from the first paint if the content already fits —
@@ -6342,8 +6478,19 @@ document.addEventListener("keydown", e => {
    modals appended to body), so observe the whole document rather than just the view container. */
 if (window.MutationObserver) {
   let queued = false;
-  const flush = () => { queued = false; wireClickables(document); enhanceTables(document); tileify(document); translateTree(document.body); };
-  new MutationObserver(() => {                      // batch: renders fire hundreds of mutations
+  /* flush() itself mutates the DOM (wrapping tables in .tscroll, tileifying, swapping translated
+     text), so it re-armed the observer it was answering: every render cost a second full pass over
+     the whole document, and on a phone that pass is what the eye sees as the layout settling twice.
+     Every step of flush() is synchronous, so nothing else can mutate the DOM while it runs — which
+     means every record sitting in the queue when it returns was raised BY it. Drop exactly those.
+     A real mutation arriving afterwards re-arms the observer normally, and flush() re-walks the
+     entire document rather than a delta, so nothing that landed before it can be missed. */
+  const flush = () => {
+    queued = false;
+    wireClickables(document); enhanceTables(document); tileify(document); translateTree(document.body);
+    mo.takeRecords();
+  };
+  const mo = new MutationObserver(() => {           // batch: renders fire hundreds of mutations
     if (queued) return;
     queued = true;
     requestAnimationFrame(flush);
@@ -6351,7 +6498,8 @@ if (window.MutationObserver) {
        rendered while the tab was in the background used to come back with none of this applied
        until something else forced a repaint. Timers still fire when hidden — catch up with one. */
     setTimeout(() => { if (queued) flush(); }, 300);
-  }).observe(document.body, { childList: true, subtree: true });
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
 }
 wireClickables(document);   // whatever is already on the page at boot
 enhanceTables(document);
@@ -6375,7 +6523,11 @@ route(false);
 // paused while a modal is open. The body updates on navigation or a manual reload.
 setInterval(() => {
   if (document.querySelector(".replay-overlay, #authbox, .wizbox:not([hidden])")) return;
-  Object.keys(cache).forEach(k => delete cache[k]);   // let the header refetch fresh pills
+  // Drop ONLY the files the header actually reads intraday. Wiping the whole cache also threw
+  // away dossiers.json (~840 KB) and rooms.json, so the next navigation re-downloaded a megabyte
+  // every minute — the heavy files keep their 10-minute TTL and are re-fetched on their own clock.
+  LIVE_FILES.forEach(k => { delete cache[k]; });
+  delete cache["quant.json"]; delete cache["macro.json"]; delete cache["dashboard.json"];  // the other pills
   if (typeof renderHeader === "function") renderHeader();
 }, 60000);
 
@@ -6453,7 +6605,9 @@ document.addEventListener("keydown", e => {
     e.preventDefault(); _comboPick(opts[_comboIdx].dataset.sym);
   } else if (e.key === "Escape") { _comboClose(); }
 });
-window.addEventListener("scroll", _comboPosition, true);
+// passive: _comboPosition only reads a rect and writes styles on the popup — it never
+// preventDefault()s, so telling the browser that up front keeps scrolling off the main thread.
+window.addEventListener("scroll", _comboPosition, { capture: true, passive: true });
 window.addEventListener("resize", _comboPosition);
 function openSearch() {
   const box = $("searchbox"); box.hidden = false;
@@ -7122,7 +7276,14 @@ function starBtn(sym) {
 // one delegated handler for every star on the page
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-watch]");
-  if (b) { e.preventDefault(); e.stopPropagation(); toggleWatch(b.dataset.watch, b); }
+  if (b) {
+    e.preventDefault(); e.stopPropagation();
+    b.classList.add("star-press");
+    const unpress = () => { b.classList.remove("star-press"); b.removeEventListener("animationend", unpress); };
+    b.addEventListener("animationend", unpress);
+    setTimeout(unpress, 200);
+    toggleWatch(b.dataset.watch, b);
+  }
   const bk = e.target.closest("[data-broker]");
   if (bk) { e.preventDefault(); e.stopPropagation(); toggleBroker(bk.dataset.broker); }
   const sd = e.target.closest("[data-sbdel]");
