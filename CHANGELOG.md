@@ -39,6 +39,50 @@ which file changed.
 
 ---
 
+## 2026-08-10 — v2026.08.10 — Premium polish round 5: tape stability, modal/scroll-lock cleanup, sidebar restore
+
+<!--public
+The price tape no longer jitters as numbers update, and closing a lesson or note popup now always
+restores normal scrolling — no more stuck screens. The sidebar remembers its width without a flash
+on load.
+-->
+
+### What changed
+
+Fifth polish round on `dashboard/`, closing out the loop from rounds 1-4 (see prior entries). Fixed
+12 findings from a 3-agent parallel audit, applied as one batch, verified in-browser, then confirmed
+clean by an independent final audit re-deriving each fix from the shipped files.
+
+- **Tape number jitter** — `globalStripData` now formats price with a fixed 2-decimal formatter
+  (`toLocaleString`, `minimumFractionDigits/maximumFractionDigits: 2`) instead of the variable-width
+  general formatter; `.gstrip .gitem b/i` got wider `min-width` floors (9ch/7ch) so the marquee track
+  width stops drifting as digit counts change.
+- **Modal/overlay teardown on navigation** — route changes now close any `.pl-overlay` /
+  `.replay-overlay` via each modal's own `_close()` (added to the lesson player, security modal, and
+  "what's new" modal) instead of a blind `.remove()`, and always reset `body.style.overflow`. Previously
+  a modal open during a route change could leave the page scroll-locked or leak its keydown listener.
+- **Layout-thrash cleanup** — `tileRuns`, `tileify`, and `wireTiles` were read/write-interleaved
+  (measure, mutate, measure, mutate...), forcing a reflow per element. Rewritten as two-pass:
+  collect all measurements first, then apply all DOM writes.
+- **Sidebar restore flash** — restoring the saved sidebar width on load now happens before its
+  transition is armed (`.shell:not(.side-ready) .sidebar{transition:none}`, class added via `rAF` +
+  a 300ms timer fallback since `rAF` doesn't reliably fire in a backgrounded tab). Toggling the
+  sidebar afterward still animates normally.
+- **Font metric shift** — added a `local("Consolas")` `@font-face` fallback with `size-adjust`/
+  `ascent-override`/`descent-override` tuned to JetBrains Mono's metrics, so body text doesn't
+  reflow when the real font finishes loading.
+- **Reduced-motion tape** — under `prefers-reduced-motion: reduce`, the tape now also hides items
+  past the 9th, shortening the (now static) list instead of just freezing a long scrolling one.
+- **Small leaks** — removed a duplicate `#searchbtn` click binding, guarded the ticker-note
+  save-confirmation timeout with `isConnected` (was writing to a possibly-removed node), and
+  dropped a `transition` from `.rp-prog-fill` that fought its `transform`-based animation.
+- One finding from the audit (`--topbar-h` variable) was hallucinated — grep-confirmed it doesn't
+  exist anywhere in `dashboard/` — and skipped.
+
+Commit: `aa150983`.
+
+---
+
 ## 2026-08-09 — v2026.08.09 — SEO: orphaned /psx/ hub fixed, blog posts linked into it, canonicalization
 
 <!--public
