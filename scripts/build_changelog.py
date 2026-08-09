@@ -53,7 +53,14 @@ PUBLIC = re.compile(r"<!--\s*public\s*(.*?)-->", re.S)
 # that whoever wrote it was moving fast. Anything matching blocks the build rather than publishing.
 FORBIDDEN = re.compile(
     r"\b(service_role|anon key|api[_ ]key|secret|token|password|supabase|migration|RLS|"
-    r"BILLING_LIVE|capital_pkr|\.env|vulnerab|exploit|CVE)\b", re.I)
+    r"BILLING_LIVE|capital_pkr|\.env|vulnerab|exploit|CVE|"
+    # cost/infra/script leaks — the Urdu-cost entry (2026.08.01) shipped a first draft naming
+    # sonnet/haiku, a cost cut %, and script filenames before this list existed
+    r"sonnet|haiku|opus|claude|gpt|llm\b|"
+    r"\d+%\s*(cheap|cost|reduc|cut|saving|faster|fewer)|(cheap|cost|reduc|cut|saving)\w*\s*\d+%|"
+    r"\.py\b|\.json\b|\.md\b|\.ts\b|\.js\b|"
+    r"script|pipeline|repo\b|codebase|backend|database|infra(structure)?\b|"
+    r"cron|workflow|github action|deploy(ed|ment)?\b)\b", re.I)
 
 
 def parse(md: str):
