@@ -2608,7 +2608,9 @@ function renderTranscript(room, sym) {
         + NOTE("What would break his case", tp(bear, "what_would_break_it")))}
 
       ${room.qa ? turn("QA", "The Verifier", "QA · fact-checked the session against the data and live sources", "",
-        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : ""}">${esc(qaLabel(room.qa.verdict))}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(tp(room.qa, "note"))) : ""}
+        `<div class="tr-note"><span>Verdict</span><b class="${room.qa.verdict === "clean" ? "up" : ""}">${esc(qaLabel(room.qa.verdict))}</b>${room.qa.checked ? ` · checked ${esc(room.qa.checked)}` : ""}</div>` + P(tp(room.qa, "note")))
+        : turn("QA", "The Verifier", "QA · not yet run on this session", "",
+        `<div class="tr-note"><span>Verdict</span><b>Not yet verified</b></div><p class="tr-p">This session hasn't been through the Verifier — nothing above has been cross-checked against the data or live sources yet. Read the bull/bear case with that in mind.</p>`)}
 
       <div class="tr-close">↑ That is where the session ends — the desk publishes the debate, not a verdict. No house view, no call, no target on ${esc(sym)}.</div>
     </div>
@@ -3622,7 +3624,7 @@ async function playDeskReplay(sym) {
     steps,
     renderReveal: (bodyEl) => {
       bodyEl.innerHTML = `<div class="rp-reveal">
-        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span>${s.qa ? `<span class="qabadge ok">QA checked</span>` : ""}</div>
+        <div class="rp-reveal-head"><b>${esc(sym)}${name ? " · " + esc(name) : ""}</b><span>the whole desk, at a glance — computed ${esc(s.dossier_asof || "")} at Rs ${nz(s.price_at_session)}</span>${s.qa ? `<span class="qabadge ok">QA checked</span>` : `<span class="qabadge warn">Not yet verified</span>`}</div>
         <div class="rp-desk">
           ${panel("MC", "Meher", "the chartist · TA", stance(ta.technical_stance), tp(ta, "read"), ta.levels ? `support <b>${nz(ta.levels.support)}</b> · resistance <b>${nz(ta.levels.resistance)}</b> · momentum <b>${esc(ta.momentum || "—")}</b>` : "")}
           ${panel("DO", "Dr. Omar", "the fundamentalist · FA", stance(fa.fundamental_stance), tp(fa, "read"), `valuation <b>${esc((fa.valuation_stance || "—").replace(/_/g, " "))}</b> · dividend <b>${esc(tp(fa, "dividend_safety") || "—")}</b>`)}
