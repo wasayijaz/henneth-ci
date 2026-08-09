@@ -120,11 +120,11 @@ pruned. One-time backfill/seed scripts (`backfill_offmarket_90d.py`, `seed_insid
 
 ---
 
-## 2026-08-01 — v2026.08.01 — Urdu translation cost cut ~90%
+## 2026-08-01 — v2026.08.01 — Urdu translations, made sustainable
 
 <!--public
-Urdu translations now cost a fraction of what they used to, so the language stays in the product
-instead of getting dropped for cost.
+Urdu translations run leaner now, so the language stays in the product for good instead of
+risking getting dropped later.
 -->
 
 ### The problem
