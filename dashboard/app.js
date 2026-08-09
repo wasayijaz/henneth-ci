@@ -296,6 +296,7 @@ function openWhatsNew(cl) {
   const close = () => { document.removeEventListener("keydown", esc2); closeAnimated(ov, ".wn-panel"); renderVersion(); };
   ov.onclick = e => { if (e.target === ov || e.target.classList.contains("pl-x")) close(); };
   document.addEventListener("keydown", esc2);
+  ov._close = () => { document.removeEventListener("keydown", esc2); ov.remove(); };  // route() teardown: node + listener, skip renderVersion
   document.body.appendChild(ov);
 }
 
@@ -468,9 +469,13 @@ const GSTRIP_ORDER = ["BZ=F", "^GSPC", "^DJI", "^VIX", "GC=F", "BTC-USD", "ETH-U
 
 function globalStripData(gl) {
   const inst = gl?.instruments || {};
+  // Fixed TWO decimals, always. fmt() has no minimum, so 53,885.1 -> 53,885 shrinks the cell and
+  // a digit-count change resizes .gtrack mid-marquee (it translates -50% of track width). A
+  // constant decimal count plus the CSS min-width floor makes the track width immutable.
+  const p2 = n => Number(n).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return GSTRIP_ORDER.filter(s => inst[s]).map(s => {
     const v = inst[s];
-    return { k: s, label: v.label, read: v.psx_read, price: fmt(v.price), chg: sgn(v.chg_1d_pct) + "%", chgCls: cls(v.chg_1d_pct) };
+    return { k: s, label: v.label, read: v.psx_read, price: p2(v.price), chg: sgn(v.chg_1d_pct) + "%", chgCls: cls(v.chg_1d_pct) };
   });
 }
 
@@ -3683,6 +3688,9 @@ function runRevealModal(opts) {
     }, 300); }
   });
   document.addEventListener("keydown", key);
+  // Teardown hook for route(): drop the node AND the document listener without the close()
+  // side effects (onClose/pageTicker would re-render a page we are navigating away from).
+  ov._close = () => { closing = true; done = true; cancelAnimationFrame(raf); document.removeEventListener("keydown", key); ov.remove(); };
 
   function runLoader() {
     done = false;
@@ -5706,6 +5714,7 @@ function secModal(kicker, html) {
   function close() { closeAnimated(ov, ".replay-box"); document.removeEventListener("keydown", key); }
   ov.addEventListener("click", e => { if (e.target === ov || e.target.classList.contains("replay-x")) close(); });
   document.addEventListener("keydown", key);
+  ov._close = () => { document.removeEventListener("keydown", key); ov.remove(); };  // route() teardown: node + listener, no exit animation
 }
 
 /* ---------- Sector debate run: same shape as the ticker Desk Room replay, one level up. The steps
@@ -6247,7 +6256,18 @@ async function route(isPoll) {
   // A real navigation closes any open modal — otherwise its node, keydown listener and (for the
   // run modal) its rAF loop outlive the page they belonged to. The auth box survives: a sign-in
   // in progress must not be torn down by a hash change it may itself have caused.
-  if (!isPoll) document.querySelectorAll(".pl-overlay,.replay-overlay").forEach(o => { if (!o.querySelector("#authbox")) o.remove(); });
+  if (!isPoll) {
+    document.querySelectorAll(".pl-overlay,.replay-overlay").forEach(o => {
+      if (o.querySelector("#authbox")) return;
+      // Modals register their close() on the node so teardown also removes their document-level
+      // keydown listener (and, for the lesson player, restores body scroll). Bare remove() leaked
+      // one listener per abandoned modal for the life of the tab.
+      if (typeof o._close === "function") o._close(); else o.remove();
+    });
+    // The lesson player locks body scroll on open and only closePlayer() unlocks it — a hash
+    // change away from an open lesson left the whole page permanently unscrollable.
+    document.body.style.overflow = "";
+  }
   // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
   if (!gateAllows(page)) { hideGlobalStrip(); lastPage = key; return renderGate(page); }
@@ -6407,15 +6427,21 @@ function wireTiles(root = document) {
       box.style.setProperty("--tilemax", _tileMax + "px");
     }
   });
-  boxes.forEach(b => {
+  // Initial pass split read/write: interleaving each box's scrollHeight read with the previous
+  // box's class toggle forced one synchronous layout PER TILE. Measure everything, then toggle.
+  const meas = boxes.map(b => ({ b, room: b.scrollHeight - b.clientHeight, top: b.scrollTop }));
+  meas.forEach(({ b, room, top }) => {
     const box = b.parentElement;
-    const sync = () => {
-      const room = b.scrollHeight - b.clientHeight;
-      box.classList.toggle("no-scroll", room <= 4);
-      box.classList.toggle("at-end", b.scrollTop >= room - 4);
-    };
-    if (!b.dataset.tile) { b.dataset.tile = "1"; b.addEventListener("scroll", sync, { passive: true }); }
-    sync();
+    box.classList.toggle("no-scroll", room <= 4);
+    box.classList.toggle("at-end", top >= room - 4);
+    if (!b.dataset.tile) {
+      b.dataset.tile = "1";
+      b.addEventListener("scroll", () => {
+        const r = b.scrollHeight - b.clientHeight;
+        box.classList.toggle("no-scroll", r <= 4);
+        box.classList.toggle("at-end", b.scrollTop >= r - 4);
+      }, { passive: true });
+    }
   });
 }
 
@@ -6488,6 +6514,9 @@ const runKey = el => el.tagName + "." + baseCls(el);
 
 function tileRuns(card, trigger) {
   const kids = [...card.children];
+  // Pass 1 — reads only. Wrapping run A used to invalidate layout before run B's offsetHeight
+  // reads, forcing a reflow per run. Collect every qualifying run first, then do all the writes.
+  const wraps = [];
   let i = 0;
   while (i < kids.length) {
     const cls = baseCls(kids[i]);
@@ -6496,17 +6525,19 @@ function tileRuns(card, trigger) {
     let j = i, h = 0;
     while (j < kids.length && runKey(kids[j]) === key) { h += kids[j].offsetHeight; j++; }
     const run = kids.slice(i, j);
-    if (run.length >= TILE_RUN_MIN && h >= trigger) {
-      const box = document.createElement("div");
-      box.className = "tilebox";
-      const body = document.createElement("div");
-      body.className = "tilebody";
-      card.insertBefore(box, run[0]);          // anchor before the run so DOM order is preserved
-      box.appendChild(body);
-      run.forEach(el => { el.dataset.tiled = "1"; body.appendChild(el); });
-    }
+    if (run.length >= TILE_RUN_MIN && h >= trigger) wraps.push(run);
     i = j;
   }
+  // Pass 2 — writes only.
+  wraps.forEach(run => {
+    const box = document.createElement("div");
+    box.className = "tilebox";
+    const body = document.createElement("div");
+    body.className = "tilebody";
+    card.insertBefore(box, run[0]);          // anchor before the run so DOM order is preserved
+    box.appendChild(body);
+    run.forEach(el => { el.dataset.tiled = "1"; body.appendChild(el); });
+  });
 }
 
 function tileify(root = document) {
@@ -6515,7 +6546,11 @@ function tileify(root = document) {
   // puts a 770px .checklist inside a <details>, which no .card ever contains — so an open disclosure
   // pushed everything under it off-screen while being invisible to this pass. Any block that can hold
   // a long list is a container here.
-  root.querySelectorAll(".card, details").forEach(card => {
+  const cards = [...root.querySelectorAll(".card, details")];
+  // Pass 1 — reads only, across ALL cards. The single-loop version wrapped card A's child (a
+  // write) and then read card B's offsetHeight, forcing a synchronous reflow per wrapped block.
+  const jobs = [];
+  cards.forEach(card => {
     [...card.children].forEach(el => {
       if (el.dataset.tiled || TILE_SKIP.test(el.className || "")) return;
       if (el.tagName !== "DIV" && el.tagName !== "TABLE") return;
@@ -6529,17 +6564,21 @@ function tileify(root = document) {
       // a long paragraph, which is why the DIV/TABLE tag gate above excludes <p> outright.
       const isList = el.tagName === "TABLE" || !!el.querySelector(":scope>table>tbody");
       if (!isList && el.children.length < TILE_MIN_ROWS && el.offsetHeight < TILE_TALL) return;
-      el.dataset.tiled = "1";
-      const box = document.createElement("div");
-      box.className = "tilebox";
-      const body = document.createElement("div");
-      body.className = "tilebody";
-      card.insertBefore(box, el);
-      box.appendChild(body);
-      body.appendChild(el);      // moving a node keeps its inline onclick and its listeners
+      jobs.push({ card, el });
     });
-    tileRuns(card, trigger);     // after the child pass, so anything already wrapped is out of the way
   });
+  // Pass 2 — writes only.
+  jobs.forEach(({ card, el }) => {
+    el.dataset.tiled = "1";
+    const box = document.createElement("div");
+    box.className = "tilebox";
+    const body = document.createElement("div");
+    body.className = "tilebody";
+    card.insertBefore(box, el);
+    box.appendChild(body);
+    body.appendChild(el);      // moving a node keeps its inline onclick and its listeners
+  });
+  cards.forEach(card => tileRuns(card, trigger));  // after the child pass, so anything already wrapped is out of the way
   wireTiles(root);
 }
 
@@ -6737,11 +6776,7 @@ async function runSearch(q) {
     ? hits.map(h => `<div class="searchitem" data-sym="${h.s}"><b>${h.s}</b><span>${esc(h.name)}</span></div>`).join("")
     : `<div class="searchitem" style="opacity:.6">No match for "${esc(q)}"</div>`;
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = $("searchbtn");
-  if (btn) btn.addEventListener("click", openSearch);
-});
-// header exists at load (script is at end of body), so wire immediately too:
+// header exists at load (script is at end of body), so wire immediately:
 $("searchbtn")?.addEventListener("click", openSearch);
 $("searchinput")?.addEventListener("input", e => runSearch(e.target.value));
 $("searchinput")?.addEventListener("keydown", e => {
@@ -6793,6 +6828,14 @@ const SIDE_MIN = 168, SIDE_MAX = 380;
 if (shell) {
   const savedW = parseInt(localStorage.getItem("sideW"), 10);
   if (savedW >= SIDE_MIN && savedW <= SIDE_MAX) shell.style.setProperty("--side-w", savedW + "px");
+  // Transitions stay off until one frame after the collapsed/width restore above — otherwise a
+  // returning visitor watches the sidebar animate from the stylesheet default to their saved
+  // state on every load. CSS: .shell:not(.side-ready) .sidebar{transition:none}.
+  // rAF is throttled to zero in hidden tabs, so back it with a timer — either way the class
+  // lands after the restore and before any user interaction.
+  const sideReady = () => shell.classList.add("side-ready");
+  requestAnimationFrame(sideReady);
+  setTimeout(sideReady, 300);
 }
 $("sideResize")?.addEventListener("mousedown", e => {
   if (shell.classList.contains("collapsed")) return;
@@ -7279,13 +7322,13 @@ function initHaScene() {
     for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
       const a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
       if (d < 130) {
-        ctx.strokeStyle = `rgba(160,170,190,${0.14 * (1 - d / 130)})`;
+        ctx.strokeStyle = `rgba(17,17,17,${0.22 * (1 - d / 130)})`;
         ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }
     }
     for (const n of nodes) {
-      ctx.fillStyle = "rgba(190,198,214,0.55)";
+      ctx.fillStyle = "rgba(10,10,10,0.7)";
       ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
     }
     _haSceneRaf = reduceMotion ? null : requestAnimationFrame(frame);
@@ -7354,7 +7397,7 @@ async function saveTickerNote(sym) {
   const v = ta.value.trim(); if (v) notes[sym] = v; else delete notes[sym];
   if (st) st.textContent = "Saving…";
   const err = await saveProfile({ notes });
-  if (st) { st.textContent = err ? "Save failed — try again" : "Saved ✓"; setTimeout(() => { if (st) st.textContent = ""; }, 2500); }
+  if (st) { st.textContent = err ? "Save failed — try again" : "Saved ✓"; setTimeout(() => { if (st.isConnected) st.textContent = ""; }, 2500); }
 }
 async function toggleWatch(sym, btn) {
   if (!me) { openAuth("signup"); return; }               // must be signed in to save

@@ -62,6 +62,13 @@ h2{margin-bottom:2px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
 @media(max-width:900px){.two-col{grid-template-columns:1fr}}
 
+/* Metric-matched local fallback for JetBrains Mono: until the webfont arrives, text renders in
+   Consolas adjusted to (near) the same advance width, so the swap doesn't reflow the page. */
+@font-face{
+  font-family:"JBM Fallback";
+  src:local("Consolas");
+  size-adjust:97%;ascent-override:102%;descent-override:26%;line-gap-override:0%;
+}
 /* ---------- GEMINI · refined editorial, stockanalysis/TradingView-grade ---------- */
 body[data-theme=gemini]{
   --gap:10px;
@@ -71,8 +78,8 @@ body[data-theme=gemini]{
   /* amber: the "partly / needs attention" state between --up and --dn (traffic-light checklist,
      X-ray rule flags). A third semantic colour the palette previously lacked. */
   --warn:#c9922b;
-  --font-body:"JetBrains Mono",ui-monospace,"Cascadia Mono",monospace;
-  --font-head:"JetBrains Mono",monospace;
+  --font-body:"JetBrains Mono","JBM Fallback",ui-monospace,"Cascadia Mono",monospace;
+  --font-head:"JetBrains Mono","JBM Fallback",monospace;
   --font-pixel:"Pixelify Sans","JetBrains Mono",monospace;
   background:var(--bg);color:var(--ink1);letter-spacing:0;
   font-family:var(--font-body);font-size:12px;
@@ -85,6 +92,9 @@ body[data-theme=gemini] .shell{display:flex;min-height:100vh;align-items:stretch
 body[data-theme=gemini] .sidebar{width:var(--side-w,212px);flex:0 0 var(--side-w,212px);border-inline-end:1.5px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;transition:width var(--dur-fast) var(--ease-out),flex-basis var(--dur-fast) var(--ease-out);min-width:0}
 body[data-theme=gemini] .shell.collapsed .sidebar{width:56px;flex:0 0 56px}
 body[data-theme=gemini] .shell.resizing .sidebar{transition:none;user-select:none}
+/* no transition until app.js restores the saved collapsed/width state and stamps side-ready one
+   frame later — otherwise every load animates the sidebar from the default to the saved state */
+body[data-theme=gemini] .shell:not(.side-ready) .sidebar{transition:none}
 body[data-theme=gemini] .side-legal{margin-top:auto;padding:12px 14px;border-top:1px solid var(--hair);display:flex;gap:10px;flex-wrap:wrap}
 body[data-theme=gemini] .side-legal a{font-size:10px;color:var(--ink3);text-decoration:none}
 body[data-theme=gemini] .side-legal a:hover{color:var(--ink2);text-decoration:underline}
@@ -423,16 +433,16 @@ body[data-theme=gemini] .plan-badge{font-size:10px;text-transform:uppercase;lett
 body[data-theme=gemini] .acct-menu button{background:transparent;border:none;text-align:start;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body)}
 body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
 /* auth modal */
-body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px;animation:fadeIn var(--dur-fast) both}
+body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px;overflow-y:auto;animation:fadeIn var(--dur-fast) both}
 body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px;animation:fadeUp var(--dur-base) var(--ease-out) both}
 body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 body[data-theme=gemini] .auth-head .ha-logo{margin-right:8px}
-body[data-theme=gemini] .authbox.ha-v2{align-items:center;display:flex;gap:0}
-body[data-theme=gemini] .ha-v2 .authpanel{max-width:420px;padding:22px}
-body[data-theme=gemini] .ha-v2 .ha-scene~.authpanel,body[data-theme=gemini] .ha-v2 .authpanel{border-left:none}
-body[data-theme=gemini] .ha-scene{position:relative;width:420px;max-width:40vw;align-self:stretch;background:var(--panel2,var(--panel));border:1.5px solid var(--line);border-right:none}
+body[data-theme=gemini] .authbox.ha-v2{align-items:center;display:flex;flex-direction:row-reverse;gap:0;max-height:none}
+body[data-theme=gemini] .ha-v2 .authpanel{flex:1 1 380px;min-width:0;max-width:420px;padding:22px}
+body[data-theme=gemini] .ha-v2 .authpanel{border-right:none}
+body[data-theme=gemini] .ha-scene{position:relative;flex:1 1 320px;min-width:0;max-width:420px;align-self:stretch;background:var(--panel2,var(--panel));border:1.5px solid var(--line);border-left:none}
 body[data-theme=gemini] .ha-scene canvas{position:absolute;inset:0;width:100%;height:100%}
-@media (max-width:760px){
+@media (max-width:900px){
   body[data-theme=gemini] .ha-scene{display:none}
 }
 body[data-theme=gemini] .auth-head b{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
@@ -627,7 +637,7 @@ body[data-theme=gemini] .rp-load{padding:14px 4px}
 body[data-theme=gemini] .rp-load-title{font-size:17px;font-weight:700}
 body[data-theme=gemini] .rp-load-sub{font-size:12px;color:var(--ink3);margin:4px 0 20px;line-height:1.5}
 body[data-theme=gemini] .rp-prog{height:10px;background:var(--hair);border:1.5px solid var(--line);overflow:hidden}
-body[data-theme=gemini] .rp-prog-fill{height:100%;width:0;background:var(--ink1);transition:width var(--dur-fast) linear}
+body[data-theme=gemini] .rp-prog-fill{height:100%;width:0;background:var(--ink1)}
 body[data-theme=gemini] .rp-pct{font-family:"Pixelify Sans",var(--mono,monospace);font-size:34px;font-weight:700;line-height:1;margin:12px 0 20px}
 body[data-theme=gemini] .rp-pct span{font-size:18px;color:var(--ink3);margin-inline-start:2px}
 body[data-theme=gemini] .rp-steps{display:flex;flex-direction:column;gap:8px;min-height:170px}
@@ -1601,8 +1611,8 @@ body[data-theme=gemini] .gstrip .gitem span{font-size:10.5px;letter-spacing:.05e
 /* fixed-width number cells: the 60s patch rewrites these in place, and a digit-count change
    (999.8 -> 1,000.2) would otherwise widen .gtrack and snap the marquee (it translates -50% of
    track width). Pinning b/i means text swaps can never resize the track. */
-body[data-theme=gemini] .gstrip .gitem b{font-size:11.5px;font-weight:700;color:#f4f4f0;display:inline-block;min-width:7ch;text-align:right}
-body[data-theme=gemini] .gstrip .gitem i{font-size:10.5px;font-style:normal;font-weight:600;display:inline-block;min-width:6ch;text-align:right}
+body[data-theme=gemini] .gstrip .gitem b{font-size:11.5px;font-weight:700;color:#f4f4f0;display:inline-block;min-width:9ch;text-align:right}
+body[data-theme=gemini] .gstrip .gitem i{font-size:10.5px;font-style:normal;font-weight:600;display:inline-block;min-width:7ch;text-align:right}
 /* strip toggle: visibility (not display) so the marquee animation never resets on re-show.
    When ON, the host reserves its box (min-height) so route() can expand it BEFORE the page's
    fetches resolve — no ~31px drop when the tape content arrives. */
@@ -2272,6 +2282,9 @@ body[data-theme=gemini] .star-press{animation:starPress 180ms var(--ease-out)}
   /* functional fallbacks the blanket kill would otherwise strand */
   body[data-theme=gemini] .gstrip{overflow-x:auto}
   body[data-theme=gemini] .gstrip .gtrack{width:auto}
+  /* the track is duplicated for the marquee; with the marquee off the second copy is just the
+     same nine instruments repeated — hide it */
+  body[data-theme=gemini] .gstrip .gtrack>.gitem:nth-child(n+10){display:none}
   body[data-theme=gemini] .skel-line{background:var(--panel2)}
   body[data-theme=gemini] .rp-block{opacity:1}
   /* the blanket kill — covers every gemini-scoped animation and transition */
