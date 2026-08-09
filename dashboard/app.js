@@ -204,6 +204,24 @@ function setClass(el, v) { if (el && el.className !== v) el.className = v; }
 function setHtml(el, v) { if (el && el.innerHTML !== v) el.innerHTML = v; }
 function setDisp(el, v) { if (el && el.style.display !== v) el.style.display = v; }
 
+/* ONE closing path for every overlay in this file. Each modal used to remove its node outright,
+   so the exit animation the stylesheet defines never played on most of them — and the two that
+   did animate had hand-rolled, subtly different fallbacks. The overlay (and its box, when the
+   animation lives there) gets `modal-closing`; the node drops on animationend, with a 250ms
+   timer for reduced-motion or an element that never animates. Double-close guarded: Esc and a
+   backdrop click can both land in the same frame. */
+function closeAnimated(ov, boxSel) {
+  if (!ov || ov.dataset.closing) return;
+  ov.dataset.closing = "1";
+  ov.classList.add("modal-closing");
+  const box = boxSel ? ov.querySelector(boxSel) : null;
+  if (box) box.classList.add("modal-closing");
+  let gone = false;
+  const drop = () => { if (gone) return; gone = true; ov.remove(); };
+  ov.addEventListener("animationend", e => { if (e.target === ov || e.target === box) drop(); });
+  setTimeout(drop, 250);
+}
+
 /* A number that moved on a poll should say so for a moment. Only a REAL change flashes — same
    value, unparseable value, or first render (no old value) stay silent, so a quiet tape looks
    quiet. The class is stripped again on animationend, with a timer as the belt-and-braces path
@@ -273,7 +291,7 @@ function openWhatsNew(cl) {
     <p class="sub wn-sub">Changes a reader would notice. The full engineering record stays in the repo.</p>
     <div class="wn-body">${body}</div>
   </div>`;
-  const close = () => { ov.remove(); renderVersion(); };
+  const close = () => { closeAnimated(ov, ".wn-panel"); renderVersion(); };
   ov.onclick = e => { if (e.target === ov || e.target.classList.contains("pl-x")) close(); };
   document.addEventListener("keydown", function esc2(e) {
     if (e.key === "Escape") { close(); document.removeEventListener("keydown", esc2); }
@@ -294,6 +312,9 @@ async function renderHeader() {
   const gc = $("georisk");
   if (gc && geo?.score != null) {
     setDisp(gc, "");
+    // the one numeric pill in the topbar: say so when the 60s poll moves it. (The others are
+    // words — market/health/regime — and #updated is a timestamp, which flashes on every poll.)
+    flashDelta(gc, gc.textContent, "RISK " + geo.score);
     setText(gc, "RISK " + geo.score);
     setClass(gc, "pill clickable " + (geo.band === "elevated" ? "bad" : geo.band === "calm" ? "ok" : ""));
     gc.title = `Geopolitical & market-stress radar: ${geo.score}/100 (${geo.band}). Click for the factors.`;
@@ -453,13 +474,17 @@ function globalStripData(gl) {
   });
 }
 
-function hideGlobalStrip() { const h = $("gstripHost"); if (h) setDisp(h, "none"); }
+/* Hiding the host with display:none took it out of the layout, which restarts the CSS marquee —
+   the same defect the rebuild guard below exists to avoid, just triggered by navigation instead.
+   A body-level flag drives `visibility:hidden` in CSS: the node keeps its box and its animation
+   keeps running, so returning to a page that wants the tape resumes mid-scroll. */
+function hideGlobalStrip() { document.body.dataset.strip = "off"; }
 
 function showGlobalStrip(gl) {
   const host = $("gstripHost");
   if (!host) return;
   const data = globalStripData(gl);
-  if (!data.length) { setDisp(host, "none"); return; }
+  if (!data.length) { document.body.dataset.strip = "off"; return; }
 
   // rebuild only when the instrument set itself changed (each run is duplicated for a seamless loop)
   let track = host.querySelector(".gtrack");
@@ -472,7 +497,7 @@ function showGlobalStrip(gl) {
     host.dataset.keys = want;
     track = host.querySelector(".gtrack");
   }
-  setDisp(host, "");
+  delete document.body.dataset.strip;
 
   data.forEach(d => {
     host.querySelectorAll(`.gitem[data-gk="${d.k}"]`).forEach(el => {
@@ -3638,12 +3663,7 @@ function runRevealModal(opts) {
     if (closing) return;                     // Esc + backdrop click can both land; close once
     closing = true;
     cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
-    // let the exit animation play, then drop the node (timer covers reduced-motion / no animation)
-    ov.classList.add("modal-closing");
-    let gone = false;
-    const drop = () => { if (gone) return; gone = true; ov.remove(); };
-    ov.addEventListener("animationend", e => { if (e.target === ov || e.target === ov.firstElementChild) drop(); });
-    setTimeout(drop, 250);
+    closeAnimated(ov, ".replay-box");   // let the exit animation play, then drop the node
     // reveal the results inline on the page (reveal() sets the session flag once the run finishes)
     if (opts.onClose) opts.onClose();
     else if (opts.sym && typeof pageTicker === "function" && location.hash.toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
@@ -3666,22 +3686,28 @@ function runRevealModal(opts) {
     body.innerHTML = `<div class="rp-load">
       <div class="rp-load-title">${esc(opts.title)}</div>
       <div class="rp-load-sub">${opts.sub}</div>
-      <div class="rp-prog"><div class="rp-prog-fill" id="rpFill"></div></div>
-      <div class="rp-pct" id="rpPct">0<span>%</span></div>
+      <div data-no-enhance="1">
+        <div class="rp-prog"><div class="rp-prog-fill" id="rpFill" style="width:100%;transform:scaleX(0);transform-origin:left;transition:none"></div></div>
+        <div class="rp-pct" id="rpPct"><b id="rpPctN">0</b><span>%</span></div>
+      </div>
       <div class="rp-steps" id="rpSteps"></div></div>`;
-    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPct"), stepsEl = ov.querySelector("#rpSteps"), subEl = ov.querySelector(".rp-load-sub");
+    const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPctN"), stepsEl = ov.querySelector("#rpSteps"), subEl = ov.querySelector(".rp-load-sub");
     const total = 10000 + Math.floor(Math.random() * 10000), longRun = total > 15500, t0 = performance.now();  // 10–20s, varied for anticipation
-    let shown = 0;
+    let shown = 0, lastPct = -1;
     function tick(now) {
       const p = Math.min(100, (now - t0) / total * 100);
-      fill.style.width = p + "%";
-      pctEl.innerHTML = Math.floor(p) + "<span>%</span>";
+      // A width write relayouts the bar every frame, and rewriting the counter's innerHTML tore
+      // down and rebuilt the "%" node ~60×/s — both showed up as a MutationObserver flush over
+      // the whole document. Composited transform + a text write only when the integer moves.
+      fill.style.transform = "scaleX(" + (p / 100) + ")";
+      const ip = Math.floor(p);
+      if (ip !== lastPct) { lastPct = ip; pctEl.textContent = String(ip); }
       if (longRun && p > 52 && !subEl.dataset.longed) { subEl.dataset.longed = "1"; subEl.textContent = "Taking a little longer than usual on this one — the desk is being thorough."; }
       const want = Math.round(p / 100 * opts.steps.length);
       while (shown < want && shown < opts.steps.length) {
         if (shown > 0) { const prev = stepsEl.children[shown - 1]; if (prev) prev.classList.add("did"); }
         stepsEl.insertAdjacentHTML("beforeend", `<div class="rp-step-line"><span class="rp-step-mk">▸</span><span class="rp-step-tx">${opts.steps[shown]}</span></div>`);
-        stepsEl.lastChild.scrollIntoView({ block: "nearest" });
+        stepsEl.scrollTop = stepsEl.scrollHeight;   // scrollIntoView() also scrolls the PAGE behind the modal
         shown++;
       }
       if (p < 100 && !done) { raf = requestAnimationFrame(tick); }
@@ -5671,7 +5697,7 @@ function secModal(kicker, html) {
     <div class="replay-body">${html}</div></div>`;
   document.body.appendChild(ov);
   const key = e => { if (e.key === "Escape") close(); };
-  function close() { ov.remove(); document.removeEventListener("keydown", key); }
+  function close() { closeAnimated(ov, ".replay-box"); document.removeEventListener("keydown", key); }
   ov.addEventListener("click", e => { if (e.target === ov || e.target.classList.contains("replay-x")) close(); });
   document.addEventListener("keydown", key);
 }
@@ -6198,8 +6224,13 @@ async function route(isPoll) {
   // location.hash directly to read the token.
   const page = (rawPage || "").split("?")[0];
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
-  await renderHeader();   // awaited: un-awaited, the pills landed a beat AFTER the body and the topbar visibly jumped
+  // Fire and forget. Awaiting it blocked EVERY navigation on five header fetches, so a click on a
+  // nav item did nothing at all until they resolved. The pills no longer jump when they land late
+  // because they reserve their own width in CSS (min-width + tabular figures), which is where that
+  // problem belongs — the fix was never worth stalling the whole route on.
+  renderHeader();
   const key = page + (arg || "");
+  const scrollWas = window.scrollY || 0;
   // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
   if (!gateAllows(page)) return renderGate(page);
@@ -6209,6 +6240,13 @@ async function route(isPoll) {
   try { document.body.removeAttribute("data-gated"); } catch {}
   // the tape is opt-in per page: hide it, and the two pages that want it turn it back on
   hideGlobalStrip();
+  // A page render is async (often several fetches). Until it resolves the old page just sat there,
+  // so a nav click read as "nothing happened". Paint a skeleton the instant we know we're moving —
+  // the page's own innerHTML write replaces it. Not on a poll: that would flash the current page out.
+  if (!isPoll && key !== lastPage) {
+    const v = $("view");
+    if (v) v.innerHTML = '<div class="skelwrap"><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line short"></div></div>';
+  }
   try {
     if (page === "ticker" && arg) { await pageTicker(arg); }
     else { await (PAGES[page] || pageBoard)(); }
@@ -6225,6 +6263,11 @@ async function route(isPoll) {
   }
   // animate only on a real navigation (not the 30s silent refresh of the same page)
   if (!isPoll && key !== lastPage) { animateIn(); if (window.scrollTo) window.scrollTo(0, 0); }
+  // A silent refresh of the SAME page rebuilds #view from scratch, which collapses the document
+  // height for a frame and dumps the reader back at the top mid-read. Put them back where they were.
+  else if (isPoll && key === lastPage && scrollWas && window.scrollTo) {
+    requestAnimationFrame(() => window.scrollTo(0, scrollWas));
+  }
   lastPage = key;
 }
 /* Keyboard access for click-only elements. Large parts of the UI use `onclick` on <div>, <span>
@@ -6287,7 +6330,9 @@ function enhanceTables(root = document) {
     p.insertBefore(wrap, t);
     wrap.appendChild(t);
   });
-  restackTables();
+  // restackTables() is NOT called here. It measures every table against its container, and tileify()
+  // runs after this and moves tables into .tilebox wrappers — so measuring here measured the layout
+  // that was about to change, then measured it all again. flush() calls it once, after tileify().
 }
 
 /* WHICH TABLES STACK IS MEASURED, NOT GUESSED.
@@ -6318,13 +6363,23 @@ function restackTables() {
 /* A .tilebox's bottom fade and "scroll ▾" hint promise more content below. Both are lies once
    the user has reached the bottom, and lies from the first paint if the content already fits —
    and a permanent fade over a short list reads as a rendering bug. Measure instead of decorate. */
+/* The cap is viewport-derived, so it only moves on a resize — but this ran tileDims() (which reads
+   window.innerHeight) and then wrote --tilemax on every box on every flush, and each sync() read
+   scrollHeight straight after its own write, forcing a synchronous layout per tile. Cache the cap,
+   write it only when it actually changed, and do all the writes before any of the reads. */
+let _tileMax = null;
 function wireTiles(root = document) {
-  const { max } = tileDims();
-  root.querySelectorAll(".tilebox>.tilebody").forEach(b => {
+  if (_tileMax === null) _tileMax = tileDims().max;
+  const boxes = [...root.querySelectorAll(".tilebox>.tilebody")];
+  boxes.forEach(b => {
     const box = b.parentElement;
-    // Re-stamp on every pass, not just at wrap time: the cap is viewport-derived, so a resize
-    // (or a phone rotation) has to move it, and tiles authored in markup never had one at all.
-    box.style.setProperty("--tilemax", max + "px");
+    if (box.dataset.tilemax !== String(_tileMax)) {
+      box.dataset.tilemax = String(_tileMax);
+      box.style.setProperty("--tilemax", _tileMax + "px");
+    }
+  });
+  boxes.forEach(b => {
+    const box = b.parentElement;
     const sync = () => {
       const room = b.scrollHeight - b.clientHeight;
       box.classList.toggle("no-scroll", room <= 4);
@@ -6464,7 +6519,7 @@ function tileify(root = document) {
 let _restackT = null;
 window.addEventListener("resize", () => {
   clearTimeout(_restackT);
-  _restackT = setTimeout(() => { restackTables(); tileify(); }, 150);
+  _restackT = setTimeout(() => { _tileMax = tileDims().max; tileify(); restackTables(); }, 150);
 });
 
 document.addEventListener("keydown", e => {
@@ -6485,15 +6540,28 @@ if (window.MutationObserver) {
      means every record sitting in the queue when it returns was raised BY it. Drop exactly those.
      A real mutation arriving afterwards re-arms the observer normally, and flush() re-walks the
      entire document rather than a delta, so nothing that landed before it can be missed. */
+  /* Some regions mutate every frame BY DESIGN — the run modal's progress counter, the boot
+     percentage. Each of those writes woke a full-document pass (wrap ~40 tables, measure every
+     tile, walk the tree for translation) that could not possibly change anything, which is what
+     made the loader animation stutter. Marking a region [data-no-enhance] says "nothing in here
+     needs enhancing"; a batch made up entirely of such records is dropped. A batch that also
+     touches anything else still flushes normally. */
+  const inert = recs => recs.length > 0 && recs.every(r => {
+    const t = r.target;
+    return t && (t.nodeType === 1 ? t : t.parentElement)?.closest?.("[data-no-enhance]");
+  });
   const flush = () => {
     queued = false;
-    wireClickables(document); enhanceTables(document); tileify(document); translateTree(document.body);
+    wireClickables(document); enhanceTables(document); tileify(document);
+    restackTables();          // after tileify(): tables must be measured in their FINAL container
+    translateTree(document.body);
     mo.takeRecords();
   };
-  const mo = new MutationObserver(() => {           // batch: renders fire hundreds of mutations
+  const mo = new MutationObserver(recs => {         // batch: renders fire hundreds of mutations
     if (queued) return;
+    if (inert(recs)) { mo.takeRecords(); return; }
     queued = true;
-    requestAnimationFrame(flush);
+    requestAnimationFrame(() => flush());
     /* rAF does not run in a hidden tab. The desk re-renders every 30s on a poll, so a page
        rendered while the tab was in the background used to come back with none of this applied
        until something else forced a repaint. Timers still fire when hidden — catch up with one. */
@@ -6503,6 +6571,7 @@ if (window.MutationObserver) {
 }
 wireClickables(document);   // whatever is already on the page at boot
 enhanceTables(document);
+restackTables();            // enhanceTables() no longer calls it — see flush()
 document.getElementById("langBtn")?.addEventListener("click", () => setLang(lang() === "ur" ? "en" : "ur"));
 /* applyLang() MUST run before translateTree(): it caches each chrome element's true English
    text into dataset.en on first touch. If translateTree() ran first (lang="ur" from a prior
@@ -6529,6 +6598,14 @@ setInterval(() => {
   LIVE_FILES.forEach(k => { delete cache[k]; });
   delete cache["quant.json"]; delete cache["macro.json"]; delete cache["dashboard.json"];  // the other pills
   if (typeof renderHeader === "function") renderHeader();
+  // The global tape is chrome too, and it lives outside #view — so on the pages that show it, its
+  // numbers froze at whatever the last full page render fetched. Patch it on the same cadence as
+  // the pills (showGlobalStrip patches in place and flashes what moved; it never rebuilds).
+  const gh = $("gstripHost");
+  if (document.body.dataset.strip !== "off" && gh && gh.dataset.keys) {
+    delete cache["global.json"];
+    j("global.json").then(gl => { if (gl) showGlobalStrip(gl); }).catch(() => {});
+  }
 }, 60000);
 
 /* ---------- ticker search ---------- */
@@ -7124,7 +7201,15 @@ function friendlyAuthError(err) {
   if (s.includes("provider is not enabled")) return "Google sign-in isn't switched on for this site yet.";
   return m || "Something went wrong. Try again.";
 }
-function closeAuth() { if (_haSceneRaf) cancelAnimationFrame(_haSceneRaf); _haSceneRaf = null; document.getElementById("authbox")?.remove(); }
+function closeAuth() {
+  if (_haSceneRaf) cancelAnimationFrame(_haSceneRaf);
+  _haSceneRaf = null;
+  const ov = document.getElementById("authbox");
+  // Drop the id BEFORE animating out: the node now lives on for ~250ms, and openAuth() calls
+  // closeAuth() then immediately appends a fresh #authbox — two nodes sharing an id would make
+  // every getElementById("authbox") resolve to the dying one.
+  if (ov) { ov.removeAttribute("id"); closeAnimated(ov, ".authpanel"); }
+}
 
 let _haSceneRaf = null;
 // Decorative node scene for the login panel — no fabricated data (no ticker counts, no

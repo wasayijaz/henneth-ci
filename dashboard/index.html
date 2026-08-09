@@ -114,7 +114,19 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
 (function () {
   try {
     var raw = localStorage.getItem("sb-qteoncckohuoatbjjykb-auth-token");
-    document.documentElement.setAttribute("data-boot-auth", raw ? "in" : "out");
+    // An EXPIRED token is not a session. Guessing "in" on one paints the full shell, then the
+    // real getSession comes back signed-out and collapses it — the exact jump this block exists
+    // to remove, aimed at the returning visitor who has been away longest. expires_at is epoch
+    // SECONDS. Any parse trouble falls through to the old presence-only guess.
+    var inn = !!raw;
+    if (raw) {
+      try {
+        var tok = JSON.parse(raw);
+        var exp = tok && (tok.expires_at != null ? tok.expires_at : (tok.currentSession || {}).expires_at);
+        if (typeof exp === "number" && exp * 1000 < Date.now()) inn = false;
+      } catch (e2) { /* not JSON we understand — keep the presence-only guess */ }
+    }
+    document.documentElement.setAttribute("data-boot-auth", inn ? "in" : "out");
   } catch (e) {
     document.documentElement.setAttribute("data-boot-auth", "out");
   }
@@ -152,7 +164,9 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
     <div class="boot-rot boot-c3"><div class="boot-ctr"><i class="wick"></i><i class="body"></i></div></div>
     <div class="boot-core"></div>
   </div>
-  <div class="boot-pct" id="bootPct">0%</div>
+  <!-- data-no-enhance: this counter rewrites itself every 55ms, and each write used to wake the
+       global MutationObserver into a full-document enhancement pass during boot. -->
+  <div class="boot-pct" id="bootPct" data-no-enhance="1">0%</div>
   <div class="boot-fine">Research &middot; Not Advice</div>
 </div>
 
