@@ -232,9 +232,10 @@ function flashDelta(el, oldV, newV) {
   const a = num(oldV), b = num(newV);
   if (a === null || b === null || a === b) return;
   el.classList.remove("flash-up", "flash-dn");
-  void el.offsetWidth;                       // restart the animation if one is still running
   const k = b > a ? "flash-up" : "flash-dn";
-  el.classList.add(k);
+  // re-adding on the next frame restarts a still-running animation without a forced reflow —
+  // the tape patches up to 18 of these per poll, and a sync offsetWidth read per cell added up
+  requestAnimationFrame(() => el.classList.add(k));
   const off = () => { el.classList.remove(k); el.removeEventListener("animationend", off); clearTimeout(t); };
   const t = setTimeout(off, 500);
   el.addEventListener("animationend", off);
@@ -485,10 +486,13 @@ function showGlobalStrip(gl) {
   const data = globalStripData(gl);
   if (!data.length) { document.body.dataset.strip = "off"; return; }
 
-  // rebuild only when the instrument set itself changed (each run is duplicated for a seamless loop)
+  // Rebuild only when an instrument appears that the track doesn't have (each run is duplicated
+  // for a seamless loop). An instrument merely MISSING this cycle must not rebuild — that restarts
+  // the marquee; its cells just keep last cycle's numbers until it returns.
   let track = host.querySelector(".gtrack");
   const want = data.map(d => d.k).join(",");
-  if (!track || host.dataset.keys !== want) {
+  const have = (host.dataset.keys || "").split(",");
+  if (!track || data.some(d => !have.includes(d.k))) {
     const items = data.map(d =>
       `<div class="gitem" data-gk="${esc(d.k)}" title="${esc(d.read)}"><span>${esc(d.label)}</span>
       <b class="num"></b><i class="num"></i></div>`).join("");
@@ -6023,6 +6027,9 @@ let lastPage = null;
 function animateIn() {
   const v = $("view");
   v.classList.remove("enter"); void v.offsetWidth; v.classList.add("enter");
+  // drop the class once the entrance finishes — anything inserted later (e.g. enhanceTables
+  // wrapping a top-level table in .tscroll) must not replay the fade a frame late
+  v.addEventListener("animationend", () => v.classList.remove("enter"), { once: true });
 }
 
 /* ==========================================================================================
@@ -6230,6 +6237,10 @@ async function route(isPoll) {
   renderHeader();
   const key = page + (arg || "");
   const scrollWas = window.scrollY || 0;
+  // A real navigation closes any open modal — otherwise its node, keydown listener and (for the
+  // run modal) its rAF loop outlive the page they belonged to. The auth box survives: a sign-in
+  // in progress must not be torn down by a hash change it may itself have caused.
+  if (!isPoll) document.querySelectorAll(".pl-overlay,.replay-overlay").forEach(o => { if (!o.querySelector("#authbox")) o.remove(); });
   // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
   if (!gateAllows(page)) { hideGlobalStrip(); lastPage = key; return renderGate(page); }
@@ -6237,8 +6248,10 @@ async function route(isPoll) {
   // sign-in, because the open routes (#/cast, legal, glossary) are reachable while signed out and
   // would otherwise inherit the stripped-down chrome from a previous gated view.
   try { document.body.removeAttribute("data-gated"); } catch {}
-  // the tape is opt-in per page: hide it, and the two pages that want it turn it back on
-  hideGlobalStrip();
+  // The tape is opt-in per page. Pages that show it (board/today) keep it up through the render —
+  // collapsing it during their fetch window and re-expanding after pushed the page down ~31px on
+  // every navigation in. Everything else hides it here and never turns it back on.
+  if (page !== "board" && (page || "today") !== "today") hideGlobalStrip();
   // A page render is async (often several fetches). Until it resolves the old page just sat there,
   // so a nav click read as "nothing happened". Paint a skeleton the instant we know we're moving —
   // the page's own innerHTML write replaces it. Not on a poll: that would flash the current page out.
@@ -6565,7 +6578,9 @@ if (window.MutationObserver) {
     if (queued) return;
     if (inert(recs)) return;
     queued = true;
-    requestAnimationFrame(() => flush());
+    // guard: in a background tab rAF callbacks pile up while the catch-up timer does the real
+    // flushing — on refocus they'd all run in one frame, each a full document pass
+    requestAnimationFrame(() => { if (queued) flush(); });
     /* rAF does not run in a hidden tab. The desk re-renders every 30s on a poll, so a page
        rendered while the tab was in the background used to come back with none of this applied
        until something else forced a repaint. Timers still fire when hidden — catch up with one. */
