@@ -3698,6 +3698,9 @@ function runRevealModal(opts) {
     const total = 10000 + Math.floor(Math.random() * 10000), longRun = total > 15500, t0 = performance.now();  // 10–20s, varied for anticipation
     let shown = 0, lastPct = -1;
     function tick(now) {
+      // route() removes the overlay node on a real navigation; without this bail the loop keeps
+      // running against a detached tree for the remaining run and fires reveal() on a dead page
+      if (!ov.isConnected) { done = true; return; }
       const p = Math.min(100, (now - t0) / total * 100);
       // A width write relayouts the bar every frame, and rewriting the counter's innerHTML tore
       // down and rebuilt the "%" node ~60×/s — both showed up as a MutationObserver flush over
@@ -6024,12 +6027,16 @@ async function pageCompare() {
 const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare, shipped: pageShipped, unsubscribe: pageUnsubscribe };
 let lastPage = null;
 
+let _enterT = 0;
 function animateIn() {
   const v = $("view");
   v.classList.remove("enter"); void v.offsetWidth; v.classList.add("enter");
-  // drop the class once the entrance finishes — anything inserted later (e.g. enhanceTables
-  // wrapping a top-level table in .tscroll) must not replay the fade a frame late
-  v.addEventListener("animationend", () => v.classList.remove("enter"), { once: true });
+  // Drop the class only after the FULL stagger. An animationend listener fires on the first
+  // bubbled child event, which cancels the still-delayed animations on later children mid-flight;
+  // the timer covers max child delay + --dur-base with headroom, so anything the enhancement
+  // pipeline inserts after that cannot replay the fade.
+  clearTimeout(_enterT);
+  _enterT = setTimeout(() => v.classList.remove("enter"), 480);
 }
 
 /* ==========================================================================================
@@ -6252,6 +6259,11 @@ async function route(isPoll) {
   // collapsing it during their fetch window and re-expanding after pushed the page down ~31px on
   // every navigation in. Everything else hides it here and never turns it back on.
   if (page !== "board" && (page || "today") !== "today") hideGlobalStrip();
+  // ...and pages that DO show it reserve its box now, before the async render — otherwise the
+  // strip stays collapsed until showGlobalStrip() runs after the page's fetches resolve, and the
+  // whole readable page drops ~31px hundreds of ms later. CSS gives #gstripHost a min-height so
+  // the reservation holds even before the track exists on first load.
+  else delete document.body.dataset.strip;
   // A page render is async (often several fetches). Until it resolves the old page just sat there,
   // so a nav click read as "nothing happened". Paint a skeleton the instant we know we're moving —
   // the page's own innerHTML write replaces it. Not on a poll: that would flash the current page out.
