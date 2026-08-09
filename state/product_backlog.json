@@ -1,33 +1,24 @@
 {
- "updated": "2026-08-02",
+ "updated": "2026-08-09",
  "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
  "categories": "accuracy | clarity | feature",
  "items": [
+  {
+   "id": "room-qa-verified-badge-missing",
+   "category": "accuracy",
+   "title": "11 of 44 built Desk Room sessions have never been through the Verifier — and nothing on screen says so",
+   "why": "state/rooms.json: PPL, SNGP, SSGC, CNERGY, GHNI, KEL, SAZEW, PAEL, BAHL, PTC, AIRLINK all carry qa=null (some built as far back as 2026-07-19, 3 weeks unchecked). renderRoom (app.js:2610) only renders the QA transcript turn `room.qa ? ... : \"\"`, and the reveal-card badge (app.js:3625) only renders `s.qa ? qabadge \"QA checked\" : \"\"` — a never-verified room and a Verifier-passed room look IDENTICAL except for one row that's easy to miss. A reader has no way to tell 'this bull/bear case was fact-checked' from 'this bull/bear case was never checked at all'.",
+   "existing_check": "read renderRoom app.js:2600-2630 and the rp-reveal-head badge app.js:3625 — both branch only on truthy/falsy qa, neither has an explicit 'not yet verified' state; confirmed 11 qa=null entries directly in state/rooms.json",
+   "impact": "high",
+   "effort": "low",
+   "score": 3.0,
+   "status": "proposed"
+  },
   {
    "id": "dossier-stale-next-earnings",
    "category": "accuracy",
    "title": "Dossier shows next_earnings dates already in the past",
    "why": "room-verifier flagged PSO's dossier next_earnings (Jun 18 2026) as stale/already-past vs the 2026-07-16 asof. scripts/build_calendar.py:55-56 already guards `ed >= today` before adding an event to the calendar, but room_dossier.py surfaces the raw fundamentals.next_earnings field with no such guard, so a stale scrape leaks straight to the ticker page.",
-   "impact": "med",
-   "effort": "low",
-   "score": 2.0,
-   "status": "proposed"
-  },
-  {
-   "id": "confidence-pill-hide-n",
-   "category": "clarity",
-   "title": "Signal card 'confidence' pill hides the trade count behind it",
-   "why": "dashboard/app.js:261 renders a green 'high' confidence pill on the board's signal cards; the backtest sample size only appears buried in the thesis prose sentence. This week's HCAR signal is labeled 'high' confidence off a 10-trade backtest — a skimming reader sees the pill, not the n.",
-   "impact": "med",
-   "effort": "low",
-   "score": 2.0,
-   "status": "proposed"
-  },
-  {
-   "id": "shipped-improvements-panel",
-   "category": "feature",
-   "title": "Surface a 'recently shipped' list from the product backlog itself",
-   "why": "docs/OPERATIONS.md §3c documents the propose-only self-improvement loop but it's currently internal-only (state/product_backlog.json isn't rendered anywhere). A deterministic panel reading items with status 'done' turns an already-existing, zero-cost data source into a visible trust signal — no agent calls, no new pipeline.",
    "impact": "med",
    "effort": "low",
    "score": 2.0,
@@ -52,7 +43,8 @@
    "impact": "high",
    "effort": "med",
    "score": 1.5,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-07 — scripts/fetch_fundamentals.py now recomputes payout_ratio as dps/eps instead of trusting the vendor's own payoutRatio field (see module docstring + line ~77). Confirmed live in AKBL's 2026-08-07 room.qa note."
   },
   {
    "id": "fairvalue-card-hide-method-spread",
@@ -95,6 +87,28 @@
    "effort": "med",
    "score": 1.0,
    "status": "proposed"
+  },
+  {
+   "id": "confidence-pill-hide-n",
+   "category": "clarity",
+   "title": "Signal card 'confidence' pill hides the trade count behind it",
+   "why": "dashboard/app.js:261 renders a green 'high' confidence pill on the board's signal cards; the backtest sample size only appears buried in the thesis prose sentence.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "done",
+   "resolved_note": "Current signal card (app.js:437-451) shows a 'sample n<N>' stat directly in the statgrid, one row below the confidence pill, same card — the trade count is no longer buried in prose. Glossary (app.js:5757) now states this explicitly as a design rule."
+  },
+  {
+   "id": "shipped-improvements-panel",
+   "category": "feature",
+   "title": "Surface a 'recently shipped' list from the product backlog itself",
+   "why": "docs/OPERATIONS.md §3c documents the propose-only self-improvement loop but it was internal-only.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "done",
+   "resolved_note": "Superseded, not literally built as specified: pageShipped (app.js:5769) now ships a 'Recently shipped' page reading state/changelog.json, covering the same trust-signal need this item asked for. Different source file (changelog vs backlog) but same user-facing gap closed — no further action needed."
   }
  ]
 }
