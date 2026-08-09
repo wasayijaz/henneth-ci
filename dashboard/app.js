@@ -291,11 +291,10 @@ function openWhatsNew(cl) {
     <p class="sub wn-sub">Changes a reader would notice. The full engineering record stays in the repo.</p>
     <div class="wn-body">${body}</div>
   </div>`;
-  const close = () => { closeAnimated(ov, ".wn-panel"); renderVersion(); };
+  function esc2(e) { if (e.key === "Escape") close(); }
+  const close = () => { document.removeEventListener("keydown", esc2); closeAnimated(ov, ".wn-panel"); renderVersion(); };
   ov.onclick = e => { if (e.target === ov || e.target.classList.contains("pl-x")) close(); };
-  document.addEventListener("keydown", function esc2(e) {
-    if (e.key === "Escape") { close(); document.removeEventListener("keydown", esc2); }
-  });
+  document.addEventListener("keydown", esc2);
   document.body.appendChild(ov);
 }
 
@@ -3690,7 +3689,7 @@ function runRevealModal(opts) {
         <div class="rp-prog"><div class="rp-prog-fill" id="rpFill" style="width:100%;transform:scaleX(0);transform-origin:left;transition:none"></div></div>
         <div class="rp-pct" id="rpPct"><b id="rpPctN">0</b><span>%</span></div>
       </div>
-      <div class="rp-steps" id="rpSteps"></div></div>`;
+      <div class="rp-steps" id="rpSteps" data-no-enhance="1"></div></div>`;
     const fill = ov.querySelector("#rpFill"), pctEl = ov.querySelector("#rpPctN"), stepsEl = ov.querySelector("#rpSteps"), subEl = ov.querySelector(".rp-load-sub");
     const total = 10000 + Math.floor(Math.random() * 10000), longRun = total > 15500, t0 = performance.now();  // 10–20s, varied for anticipation
     let shown = 0, lastPct = -1;
@@ -6233,7 +6232,7 @@ async function route(isPoll) {
   const scrollWas = window.scrollY || 0;
   // Members-only gate. Runs AFTER renderHeader so the shell/nav still paints (a bare white
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
-  if (!gateAllows(page)) return renderGate(page);
+  if (!gateAllows(page)) { hideGlobalStrip(); lastPage = key; return renderGate(page); }
   // reached a permitted page: restore the full shell. Must be cleared here rather than only on
   // sign-in, because the open routes (#/cast, legal, glossary) are reachable while signed out and
   // would otherwise inherit the stripped-down chrome from a previous gated view.
@@ -6246,6 +6245,11 @@ async function route(isPoll) {
   if (!isPoll && key !== lastPage) {
     const v = $("view");
     if (v) v.innerHTML = '<div class="skelwrap"><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line short"></div></div>';
+  } else {
+    // silent re-render (poll, language switch, auth event): a lingering `enter` class would
+    // replay the whole page-in animation on the freshly inserted children
+    const v = $("view");
+    if (v) v.classList.remove("enter");
   }
   try {
     if (page === "ticker" && arg) { await pageTicker(arg); }
@@ -6532,7 +6536,7 @@ document.addEventListener("keydown", e => {
 /* Pages re-render constantly, and .clickable elements also live OUTSIDE #view (the global strip,
    modals appended to body), so observe the whole document rather than just the view container. */
 if (window.MutationObserver) {
-  let queued = false;
+  let queued = false, catchTimer = 0;
   /* flush() itself mutates the DOM (wrapping tables in .tscroll, tileifying, swapping translated
      text), so it re-armed the observer it was answering: every render cost a second full pass over
      the whole document, and on a phone that pass is what the eye sees as the layout settling twice.
@@ -6559,13 +6563,14 @@ if (window.MutationObserver) {
   };
   const mo = new MutationObserver(recs => {         // batch: renders fire hundreds of mutations
     if (queued) return;
-    if (inert(recs)) { mo.takeRecords(); return; }
+    if (inert(recs)) return;
     queued = true;
     requestAnimationFrame(() => flush());
     /* rAF does not run in a hidden tab. The desk re-renders every 30s on a poll, so a page
        rendered while the tab was in the background used to come back with none of this applied
        until something else forced a repaint. Timers still fire when hidden — catch up with one. */
-    setTimeout(() => { if (queued) flush(); }, 300);
+    clearTimeout(catchTimer);
+    catchTimer = setTimeout(() => { if (queued) flush(); }, 300);
   });
   mo.observe(document.body, { childList: true, subtree: true });
 }

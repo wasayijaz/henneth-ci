@@ -95,7 +95,7 @@ body[data-theme=gemini] .shell.collapsed .side-resize{display:none}
 body[data-theme=gemini] .side-top{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:12px 12px;border-bottom:1.5px solid var(--line);min-height:49px}
 body[data-theme=gemini] .side-top .brand{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;line-height:1.2;white-space:nowrap;overflow:hidden}
 body[data-theme=gemini] .side-toggle{background:transparent;border:1px solid var(--line);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink1)}
-body[data-theme=gemini] .side-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform var(--dur-fast)}
+body[data-theme=gemini] .side-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform var(--dur-fast) var(--ease-out)}
 body[data-theme=gemini] .shell.collapsed .side-toggle svg{transform:rotate(180deg)}
 body[data-theme=gemini] .side-nav{display:flex;flex-direction:column;padding:8px 0;gap:1px}
 body[data-theme=gemini] .side-nav a{display:flex;align-items:center;gap:11px;padding:8px 14px;color:var(--ink2);font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border-inline-start:3px solid transparent;transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
@@ -1601,7 +1601,7 @@ body[data-theme=gemini] .gstrip .gitem span{font-size:10.5px;letter-spacing:.05e
 body[data-theme=gemini] .gstrip .gitem b{font-size:11.5px;font-weight:700;color:#f4f4f0}
 body[data-theme=gemini] .gstrip .gitem i{font-size:10.5px;font-style:normal;font-weight:600}
 /* strip toggle: visibility (not display) so the marquee animation never resets on re-show */
-body[data-strip=off] #gstripHost{visibility:hidden}
+body[data-strip=off] #gstripHost{visibility:hidden;height:0;overflow:hidden}
 /* terminal components: hero, funnel, matrix, status footer */
 body[data-theme=gemini] .thero{font-family:var(--font-pixel);font-size:46px;font-weight:700;line-height:1;letter-spacing:.02em}
 body[data-theme=gemini] .funnel{display:flex;flex-direction:column;gap:6px}
@@ -1703,7 +1703,9 @@ body[data-theme=gemini] .side-nav a:active,body[data-theme=gemini] nav.tabs a:ac
 body[data-theme=gemini] .ranges button:active,body[data-theme=gemini] .acct-signin:active,body[data-theme=gemini] .rp-skip:active{transform:scale(.97);opacity:.9}
 /* rows shouldn't scale (transform on tr is janky) — just deepen the tint on press */
 body[data-theme=gemini] tr.clickable:active>td{background:var(--hair)}
-body[data-theme=gemini] .card.clickable,body[data-theme=gemini] .cell,body[data-theme=gemini] tr.clickable{transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out)}
+body[data-theme=gemini] .card.clickable,body[data-theme=gemini] .cell{transition:transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out)}
+body[data-theme=gemini] tr.clickable{transition:border-color var(--dur-fast) var(--ease-out),background var(--dur-fast) var(--ease-out)}
+body[data-theme=gemini] td{transition:background var(--dur-fast) var(--ease-out)}
 body[data-theme=gemini] .pill{transition:background var(--dur-base) var(--ease-out),color var(--dur-base) var(--ease-out)}
 /* chart fades in when (re)drawn */
 .chartwrap canvas{animation:fadeIn var(--dur-slow) both}
@@ -2263,6 +2265,7 @@ body[data-theme=gemini] .star-press{animation:starPress 180ms var(--ease-out)}
   body[data-theme=gemini] .gstrip{overflow-x:auto}
   body[data-theme=gemini] .gstrip .gtrack{width:auto}
   body[data-theme=gemini] .skel-line{background:var(--panel2)}
+  body[data-theme=gemini] .rp-block{opacity:1}
   /* the blanket kill — covers every gemini-scoped animation and transition */
   body[data-theme=gemini] *{transition:none!important;animation:none!important}
 }
