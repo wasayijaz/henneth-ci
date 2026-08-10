@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-10 11:30",
+ "updated": "2026-08-10 12:41",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -39,6 +39,24 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
+   "id": "20260810-GAL-atr_quiet_breakout",
+   "ticker": "GAL",
+   "strategy": "atr_quiet_breakout",
+   "template": "Quiet base, upside break",
+   "category": "volatility",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 16,
+   "backtest": {
+    "hit_rate": 0.7,
+    "net_expectancy_pct": 2.34,
+    "n": 10,
+    "oos_hit": 0.8
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 70% over 10 trades (+2.3% net/trade), still profitable out-of-sample."
+  },
+  {
    "id": "20260810-LUCK-golden_pullback_50",
    "ticker": "LUCK",
    "strategy": "golden_pullback_50",
@@ -55,25 +73,7 @@
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
    "thesis": "Golden-cross pullback is triggering now; on LUCK's own history it won 60% over 79 trades (+1.3% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260810-PKGS-adx_rising_trend",
-   "ticker": "PKGS",
-   "strategy": "adx_rising_trend",
-   "template": "ADX rising trend entry",
-   "category": "trend",
-   "sector": "Paper, Board & Packaging",
-   "hold_sessions": 12,
-   "backtest": {
-    "hit_rate": 0.625,
-    "net_expectancy_pct": 1.12,
-    "n": 16,
-    "oos_hit": 0.556
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "ADX rising trend entry is triggering now; on PKGS's own history it won 62% over 16 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 13
+ "n_candidates": 14
 }
