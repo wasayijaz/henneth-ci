@@ -40,5 +40,11 @@
   "mode": "full",
   "ended": "2026-08-10T22:10:00+05:00",
   "outcome": "Daily EOD refresh: data layer OK (run_cloud.py all-ok, health ok, latest_eod 2026-08-10). macro-agent completed (regime neutral, geo-risk 57) but its state/macro.json write was clobbered by a concurrent second local session also operating this repo (file now shows stale 2026-08-05 content despite fresh mtime -- real race, not documented cloud/local race). news-sentinel and market-analyst both hit account session-limit stalls twice (fresh + retry), killed at 5min cap each, no writes -- state/newslog.json and state/daily_read.json remain at 2026-08-05, NOT refreshed this cycle. No new commentary published by this run (nothing safe to push; avoided compounding the concurrent-session race). Live site watchdog: OK (app shell, public files, gates intact) -- but daily commentary on site is 5 sessions stale. Flagged to owner: two local sessions ran against D:\\PSX Trader X Claude simultaneously today, causing a real write race outside the documented cloud/local model."
+ },
+ {
+  "started": "2026-08-10T17:28:00+05:00",
+  "mode": "light",
+  "ended": "2026-08-10T22:19:41+05:00",
+  "outcome": "PM checkpoint (17:00 PKT slot, delayed by session-limit interrupt). health=ok. news-sentinel resumed after interrupt, appended items through 2026-08-05 (gap 08-06..08-10 unfilled this cycle, agent stalled, killed at 20min cap); max impact seen=3, no escalation. No open positions, monitor skipped. Published data-only (4 hand-authored files held back, another session mid-edit). Watchdog OK, live site healthy."
  }
 ]
