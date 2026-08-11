@@ -176,18 +176,18 @@
    "msg": "methods disagree 3.1x — treat composite as a rough screen"
   }
  ],
- "LCI": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 4.0x — treat composite as a rough screen"
-  }
- ],
  "KEL": [
   {
    "sev": "low",
    "field": "price_series",
    "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
+  }
+ ],
+ "LCI": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 4.0x — treat composite as a rough screen"
   }
  ],
  "ABOT": [
@@ -250,7 +250,7 @@
   {
    "sev": "low",
    "field": "fairvalue.spread",
-   "msg": "methods disagree 7.2x — treat composite as a rough screen"
+   "msg": "methods disagree 7.3x — treat composite as a rough screen"
   }
  ],
  "SHFA": [
@@ -621,6 +621,13 @@
    "msg": "quant is 25 days stale (2026-07-17)"
   }
  ],
+ "AGTL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 25 days stale (2026-07-17)"
+  }
+ ],
  "AKDSL": [
   {
    "sev": "medium",
@@ -660,13 +667,6 @@
   }
  ],
  "TICL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 25 days stale (2026-07-17)"
-  }
- ],
- "AGTL": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -772,6 +772,13 @@
    "msg": "quant is 25 days stale (2026-07-17)"
   }
  ],
+ "PKGP": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 25 days stale (2026-07-17)"
+  }
+ ],
  "SBL": [
   {
    "sev": "medium",
@@ -817,13 +824,6 @@
    "sev": "low",
    "field": "fairvalue.spread",
    "msg": "methods disagree 4.4x — treat composite as a rough screen"
-  }
- ],
- "PKGP": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 25 days stale (2026-07-17)"
   }
  ],
  "UNITY": [
@@ -2900,7 +2900,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-08-11 10:42",
+  "built": "2026-08-11 11:38",
   "tickers_with_issues": 393,
   "high_severity": 4,
   "escalate_to_agent": [
