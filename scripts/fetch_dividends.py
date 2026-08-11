@@ -2,11 +2,26 @@
 Source: POST https://dps.psx.com.pk/payouts (symbol=SYM) -> HTML table
 Columns: Symbol, Company, Sector, Dividend Announcement, Announced, Book Closure.
 
-Dividend format: "50%(iii) (D)" = 50% of face value (PSX face value is Rs 10 for
-nearly all mains, so 50% = Rs 5.00/share). (D)=cash dividend, (B)=bonus shares,
-(R)=right. Only (D) rows get cash math. Book closure "06/05/2026 - 08/05/2026"
-is dd/mm/yyyy; you must own the share BEFORE the ex-date (~2 sessions before
-closure start), so buy_by is closure start minus 3 calendar days (conservative).
+Dividend format: "50%(iii) (D)" = 50% of face value. PSX face value defaults to
+Rs 10, but a stock split changes it (e.g. a 5-for-1 split takes Rs10 -> Rs2) and
+PSX's own %-of-face text does NOT reflect that - it keeps quoting against the
+OLD face value. Converting blindly at a hardcoded Rs10 silently overstates
+dividend_rs (and yield_pct_at_close) by the split ratio for any name that has
+split. (D)=cash dividend, (B)=bonus shares, (R)=right. Only (D) rows get cash
+math. Book closure "06/05/2026 - 08/05/2026" is dd/mm/yyyy; you must own the
+share BEFORE the ex-date (~2 sessions before closure start), so buy_by is
+closure start minus 3 calendar days (conservative).
+
+FACE VALUE: state/dividends_deep.json (Yahoo dividend events on the .KA
+symbols) is already split-adjusted - it reports the true Rs/share paid, no
+face-value math involved. calibrate_face_values() matches each PSX payout
+(by book-closure date, within a window) to its Yahoo counterpart and, on a
+match, uses the Yahoo Rs value directly. For a payout with no Yahoo match yet
+(typically the newest/pending one - not ex'd, so absent from Yahoo) it falls
+back to the most recent calibrated face value for that symbol, snapped to the
+nearest canonical PSX denomination. A symbol with no deep coverage or no split
+falls back to the Rs10 default, unchanged from before. This self-calibrates
+per symbol every run - no hand-maintained split registry to go stale.
 
 Writes state/dividends.json. Run daily pre-market (cheap: 1 POST per symbol)."""
 import re
@@ -18,6 +33,8 @@ import requests
 from psx_data import HEADERS, STATE, load_json, save_json
 
 FACE_VALUE = 10.0
+CANONICAL_FACE_VALUES = [10.0, 5.0, 2.0, 1.0]      # PSX main-board denominations
+DEEP_MATCH_WINDOW_DAYS = 45                         # book-closure <-> Yahoo ex-date tolerance
 ROW_RE = re.compile(r"<tr><td>.*?</td></tr>", re.S)
 CELL_RE = re.compile(r"<td[^>]*>(.*?)</td>", re.S)
 TAG_RE = re.compile(r"<[^>]+>")
@@ -61,6 +78,64 @@ def parse_rows(html: str, symbol: str) -> list[dict]:
     return out
 
 
+def _nearest_deep_event(deep: list[dict], bc_start: str):
+    """Closest Yahoo dividend event to a PSX book-closure start, or None if none within window."""
+    if not deep or not bc_start:
+        return None
+    target = date.fromisoformat(bc_start)
+    best, best_gap = None, None
+    for ev in deep:
+        try:
+            gap = abs((date.fromisoformat(ev["ex"]) - target).days)
+        except ValueError:
+            continue
+        if best_gap is None or gap < best_gap:
+            best, best_gap = ev, gap
+    if best is not None and best_gap <= DEEP_MATCH_WINDOW_DAYS:
+        return best
+    return None
+
+
+def apply_correct_face_value(rows: list[dict], deep_tickers: dict):
+    """Recompute dividend_rs for every cash-dividend row using dividends_deep.json as ground
+    truth wherever a matching (already-ex'd) Yahoo event exists, falling back to the symbol's
+    most recently calibrated face value for rows Yahoo hasn't seen yet (new/pending payouts).
+    Mutates rows in place; returns {symbol: calibrated_face_value} for symbols where a split
+    was detected, for logging."""
+    by_symbol: dict[str, list[dict]] = {}
+    for row in rows:
+        if row.get("kind") == "D" and row.get("pct_of_face"):
+            by_symbol.setdefault(row["symbol"], []).append(row)
+
+    calibrated = {}
+    for sym, sym_rows in by_symbol.items():
+        deep = deep_tickers.get(sym) or []
+        if not deep:
+            continue
+        # Direct matches first: exact Yahoo-reported Rs value, no face-value math needed.
+        matches = []  # (bc_start, implied_face_value) for rows we could match
+        for row in sym_rows:
+            ev = _nearest_deep_event(deep, row.get("bc_start"))
+            if ev is None:
+                continue
+            row["dividend_rs"] = ev["rs"]
+            implied = ev["rs"] / (row["pct_of_face"] / 100)
+            matches.append((row["bc_start"], implied))
+        if not matches:
+            continue
+        # Fallback face value for unmatched (pending) rows: most recent calibration, snapped to
+        # the nearest canonical denomination so float drift in the Yahoo amount doesn't leak in.
+        matches.sort(key=lambda m: m[0])
+        implied_latest = matches[-1][1]
+        face = min(CANONICAL_FACE_VALUES, key=lambda c: abs(c - implied_latest))
+        if face != FACE_VALUE:
+            calibrated[sym] = face
+        for row in sym_rows:
+            if _nearest_deep_event(deep, row.get("bc_start")) is None:
+                row["dividend_rs"] = round(row["pct_of_face"] / 100 * face, 2)
+    return calibrated
+
+
 LISTED_DIV_PER_RUN = 60      # long-tail payout refresh budget per run (~35s at 0.35s each)
 
 
@@ -96,10 +171,6 @@ def main():
             # reports clean. A symbol with genuinely zero payouts has no prior rows to lose.
             if rows:
                 refreshed.add(sym)
-            close = (quant.get(sym) or {}).get("close")
-            for row in rows:
-                if row.get("dividend_rs") and close:
-                    row["yield_pct_at_close"] = round(row["dividend_rs"] / close * 100, 2)
             all_rows.extend(rows)
         except requests.RequestException as e:
             failed.append({"symbol": sym, "err": str(e)[:80]})
@@ -121,15 +192,29 @@ def main():
         row["upcoming"] = bool(bcs) and bcs >= _today
         all_rows.append(row)
 
+    # Correct dividend_rs for every row (fresh AND retained) against dividends_deep.json before
+    # deriving yield — a retained row from before a split was detected would otherwise keep
+    # publishing its old wrong Rs amount forever, since it's never re-parsed from PSX text.
+    deep = load_json(STATE / "dividends_deep.json", {"tickers": {}}).get("tickers", {})
+    calibrated = apply_correct_face_value(all_rows, deep)
+
+    for row in all_rows:
+        close = (quant.get(row["symbol"]) or {}).get("close")
+        if row.get("dividend_rs") and close:
+            row["yield_pct_at_close"] = round(row["dividend_rs"] / close * 100, 2)
+
     upcoming = sorted([r for r in all_rows if r.get("upcoming")], key=lambda r: r["bc_start"])
     save_json(STATE / "dividends.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "face_value_assumed": FACE_VALUE,
+        "face_value_calibrated": calibrated,   # {symbol: current par value} for split names only
         "upcoming": upcoming,
         "history": all_rows,
         "failed": failed,
     })
     print(f"dividends: {len(all_rows)} payout records, {len(upcoming)} upcoming closures, {len(failed)} failed")
+    if calibrated:
+        print(f"  face-value split fix applied: {calibrated}")
     for u in upcoming[:8]:
         print(f"  {u['symbol']}: {u['announcement']} closure {u['bc_start']} buy-by {u['buy_by']}")
 

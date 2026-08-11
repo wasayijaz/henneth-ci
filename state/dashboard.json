@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-11 18:06",
+ "updated": "2026-08-11 18:20",
  "regime": "neutral",
  "geo_risk": {
   "score": 37,
@@ -372,12 +372,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-10T11:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-10T20:52:00+05:00",
-   "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later â€” already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
-  },
-  {
    "started": "2026-08-10T17:21:00+05:00",
    "mode": "full",
    "ended": "2026-08-10T22:10:00+05:00",
@@ -400,6 +394,12 @@
    "mode": "light",
    "ended": "2026-08-11T17:45:00+05:00",
    "outcome": "PM checkpoint (weekday close): health ok (spot-check HUBC 0.0% dev). news-sentinel appended 3 items -- KSE-100 close -1,463.60pts/-0.81% impact 3, FCCL FY26 results filed impact 3 (DPS figures unreliable, not quoted), ACPL FY26 results filed impact 3 (DPS figures unreliable + conflicting price sources, not quoted); max impact 3, no escalation. INCIDENT: news-sentinel subagent's Write truncated state/newslog.json from 1912 lines/143 entries to 299 invalid-JSON lines mid-write; self-detected and stopped (no fabrication). Recovered via `git checkout HEAD -- state/newslog.json` (git restore was blocked by the auto-mode classifier in this non-interactive context; checkout HEAD was not) -- verified 1912 lines/143 entries restored, then manually appended the 3 legitimate items (146 entries, valid JSON). No open positions, monitor skipped. Publish hit a real rebase conflict against a concurrent cloud commit (50bec3d4, 12:39Z) across 49 state/+generated files -- all auto-resolved to our fresher 17:38 build per _is_auto() (deterministic/regeneratable only, newslog.json untouched by the conflict), rebased and pushed clean (e14deb18); pre-existing unrelated hand-authored dirty files (.claude/launch.json, dashboard/app.js, dashboard/themes.css) stashed around the rebase and restored byte-identical after. Watchdog OK (app shell, public files, account gate intact). NOTE for owner: publish.py's rebase-conflict branch (scripts/publish.py:174) mislabels a plain 'dirty tree blocks rebase from starting' failure as 'rebase conflict on hand-authored file(s) []' when the conflicted-file list is empty for that reason rather than because every conflict resolved clean -- cosmetic/diagnostic bug only, did not affect this run's correctness, worth a follow-up fix."
+  },
+  {
+   "started": "2026-08-11T08:45:00+05:00",
+   "mode": "room",
+   "ended": "2026-08-11T13:10:09+05:00",
+   "outcome": "2 full (FCCL, LUCK), 0 delta, 7 reaffirm; 0 newly-resolved calls; QA flagged+fixed LUCK dividend-yield stale-split bug (high) and FCCL dividend-type mislabel (medium); published and pushed."
   }
  ]
 }
