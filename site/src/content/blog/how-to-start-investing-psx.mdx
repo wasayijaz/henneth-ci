@@ -1,0 +1,125 @@
+---
+title: How to start investing in the PSX
+description: The account-opening sequence PSX itself publishes — broker, CDC account, UIN — plus what a trade actually costs, sourced to the regulator, not a guide.
+pubDate: 2026-08-11
+cluster: Method
+draft: false
+---
+
+import Snapshot from '../../components/explain/Snapshot.astro';
+import Matrix from '../../components/explain/Matrix.astro';
+
+To start investing on the [Pakistan Stock Exchange](/psx/), you open three things in sequence: a
+brokerage account with a licensed broker, a CDC account that holds the shares in your own name, and
+a Unique Identity Number (UIN) that every trade you make gets recorded against. PSX publishes this
+sequence itself, on its own investor-resources pages, and the steps below follow it directly — with
+the costs sourced to the regulator's own fee schedules, not to a guide's estimate.
+
+<Snapshot
+  title="In short"
+  items={[
+    { k: 'First step', v: 'Pick a broker', note: 'Must hold an active TRE Certificate — a licensed exchange member' },
+    { k: 'Shares held in', v: 'A CDC account', note: 'Investor Account or Sub Account — PSX calls Investor "more preferable"' },
+    { k: 'Trade ID', v: 'A UIN', note: 'Issued by NCCPL; every brokerage account and trade is recorded against it' },
+    { k: 'Minimum deposit', v: 'Not specified', note: "PSX's own checklist names no floor — set broker by broker" },
+  ]}
+/>
+
+## The sequence, as PSX publishes it
+
+This is condensed from two of PSX's own investor pages — "Open an Account & Invest" and the
+"Account Opening Checklist" — read in full for this piece.
+
+1. **Decide what you're investing for.** Short-term, medium-term or long-term, and whether you're
+   after dividends or capital gains — PSX's own framing, before it gets to brokers at all.
+2. **Shortlist and select a broker.** PSX's stated criteria: how easily they communicate, whether
+   they publish research, whether online trading is available, how they confirm trades, what they
+   charge, and where they're located. A broker must hold an active TRE (Trading Right Entitlement)
+   Certificate — that's what "licensed to trade on PSX" means in practice.
+3. **Open a brokerage account in your own name.** PSX is explicit on this point: "you must ensure
+   that the said Account is opened in your name." You're issued a Client ID / Account Number.
+4. **Open a CDC account to hold the shares.** Every account holding PSX shares sits at the Central
+   Depository Company. PSX describes two forms: a **Sub Account**, opened and maintained through
+   your broker, and an **Investor Account**, opened directly with CDC. PSX's own guidance is not
+   neutral between the two — the Investor Account, it says, is "more secure than a CDC Sub Account;
+   hence more preferable," because "you stay in control of your securities: they can only move once
+   you give a transaction order." A Sub Account is the default most brokers set up; the Investor
+   Account is the one PSX itself recommends.
+5. **Get assigned a UIN.** The Unique Identity Number, issued by [NCCPL](https://www.nccpl.com.pk/),
+   is "the number against which all your brokerage accounts and transactions will be recorded." PSX
+   tells investors to instruct their broker in writing to always enter the Client ID and UIN when
+   executing a trade.
+6. **Fund the account — but not with cash.** PSX's instruction is direct: "make sure that it is not
+   a cash deposit." Initial funds go in by cheque or bank transfer. No minimum amount is specified
+   on PSX's own checklist; it's set broker by broker.
+7. **Get the fee schedule in writing before you trade.** The checklist requires the broker to
+   disclose "a list of Transaction fee, Commission to be charged by the Broker and other CDC
+   charges to be levied" — ask for this if it isn't offered.
+8. **Select a company, place the order, and get a written confirmation.** Through the broker or
+   their trading app; PSX's checklist says you "should get a Trade Confirmation against your
+   executed order."
+9. **Settlement runs through NCCPL and CDC.** Under the cycle PSX moved to in
+   [February 2026](/blog/psx-t1-settlement-explained/), a Ready Market trade settles the next
+   trading day (T+1) — the shares are yours, and recorded at CDC, one session after the trade.
+
+Required documents, per PSX's checklist: attested copies of your CNIC (attested passport copies for
+non-residents), an authorization letter if someone else will trade the account on your behalf, and
+for a corporate account, a board resolution, the Memorandum and Articles of Association, and lists
+of authorised signatories and nominees.
+
+None of this is company-specific — the same account opens whether the first company on the
+watchlist is a bank like [HBL](/psx/hbl/) or an exploration name like [OGDC](/psx/ogdc/). What
+differs afterward is research, not paperwork.
+
+## What it actually costs, beyond the share price
+
+This is the part most guides skip or get wrong — usually by applying a percentage to the whole
+trade value when it only applies to the broker's commission. The rates below are the regulator's
+own published schedules, not a calculator's estimate.
+
+<Matrix
+  cols={['Cost', 'Rate', 'Applies to']}
+  rows={[
+    ['Broker commission', 'max(PKR 0.03/share, 0.15% of value)', 'Every trade, buy and sell — a regulated floor, not a free price'],
+    ['Sales tax on that commission', { v: '15%', tone: 'dn' }, "The commission amount — not the trade's value"],
+    ['PSX trading fee + SECP levy', '0.0035% + 0.00065%', 'Trade value, both sides, per settlement day'],
+    ['NCCPL UIN maintenance', 'Rs 300/year (individual)', 'Waived any year you don’t trade'],
+    ['Capital gains tax', { v: '15% flat', tone: 'dn' }, 'Shares acquired on or after 1 Jul 2024, filer rate — collected monthly by NCCPL, not by you'],
+    ['Dividend withholding', { v: '15%', tone: 'dn' }, 'Ordinary cash dividends, filer rate'],
+  ]}
+  caption="Commission ceiling is 2.5% of trade value. Non-filer rates run higher on tax lines but are not fully settled in the current law — see the sources below rather than a round number. Broker-side and CDC per-trade fees are levied on the broker, not billed to you directly, though the cost is customarily passed through."
+/>
+
+The commission floor exists so a broker quoting below it isn't being cheap, they're being
+non-compliant. The 15% sales tax is the number most published calculators get wrong: it taxes the
+commission, not the trade — a Rs 100,000 trade with a Rs 150 commission owes Rs 22.50 in sales tax,
+not Rs 15,000.
+
+One more line worth knowing before the first trade: NCCPL now collects capital gains tax monthly,
+automatically, through your broker — there's no annual opt-out and nothing to file separately for
+it. What isn't settled yet is the non-filer rate on both capital gains and dividends; the law
+changed the mechanism in the July 2026 budget without FBR publishing the resulting number, so this
+piece states the filer rates only and leaves the non-filer figure open rather than guess at it.
+
+## Before the first order
+
+Deciding how much to put into a first position is arithmetic once you've picked an amount and a
+company — the desk's own [position size calculator](/tools/position-size-calculator/) runs that
+math against a stop distance rather than a gut feel. For ongoing research once the account is open,
+[Henneth's guided path for new investors](/solutions/psx-research-for-new-investors/) covers reading
+a company's numbers before committing to it.
+
+## Checking any of this yourself
+
+- [PSX — Open an Account & Invest](https://www.psx.com.pk/psx/resources-and-tools/investors/open-an-account-invest) — the account-opening sequence, in PSX's own words
+- [PSX — Account Opening Checklist](https://www.psx.com.pk/psx/resources-and-tools/investors/account-opening-checklist) — UIN, CDC account types, required documents, fee disclosure
+- [PSX Regulations, 9 February 2026](https://www.psx.com.pk/psx/themes/psx/uploads/PSX-Regulations-February-09-2026.pdf) — Annexure-III (commission scale), Chapter 10 (T+1 settlement)
+- [PSX Schedule of Charges](https://www.psx.com.pk/psx/themes/psx/uploads/Schedule-of-Charges-Updated-as-on-December-18-2024.pdf) — trading fee and SECP levy
+- [SRB Working Tariff](https://www.srb.gos.pk/srb/wp-content/uploads/2024/07/Final-Working-tariff.pdf) — the 15% Sindh sales tax on brokerage (Part B, p.13)
+- [NCCPL](https://www.nccpl.com.pk/) — issues the UIN and collects capital gains tax monthly on behalf of investors
+
+---
+
+*Research, not advice. This explains how to open an account and what it costs; it is not a
+recommendation to open one, or to buy anything once it exists. Rates and rules are dated — check
+the current PSX pages and Regulations before acting on anything time-sensitive.*
