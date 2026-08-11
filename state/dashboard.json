@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-11 11:38",
+ "updated": "2026-08-11 12:39",
  "regime": "neutral",
  "geo_risk": {
   "score": 37,
@@ -43,22 +43,22 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260811-GAL-atr_quiet_breakout",
+   "id": "20260811-GAL-high50_break",
    "ticker": "GAL",
-   "strategy": "atr_quiet_breakout",
-   "template": "Quiet base, upside break",
-   "category": "volatility",
+   "strategy": "high50_break",
+   "template": "50d high breakout",
+   "category": "breakout",
    "sector": "Automobile Assembler",
-   "hold_sessions": 16,
+   "hold_sessions": 15,
    "backtest": {
-    "hit_rate": 0.7,
-    "net_expectancy_pct": 2.34,
-    "n": 10,
-    "oos_hit": 0.8
+    "hit_rate": 0.577,
+    "net_expectancy_pct": 1.58,
+    "n": 26,
+    "oos_hit": 0.6
    },
-   "confidence": "low",
+   "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 70% over 10 trades (+2.3% net/trade), still profitable out-of-sample."
+   "thesis": "50d high breakout is triggering now; on GAL's own history it won 58% over 26 trades (+1.6% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260811-NICL-roc60_leader_pullback",
@@ -124,6 +124,11 @@
  ],
  "movers_up": [
   {
+   "ticker": "IBFL",
+   "ret_1d": 10.0,
+   "close": 288.56
+  },
+  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -142,11 +147,6 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
-  },
-  {
-   "ticker": "ASIC",
-   "ret_1d": 9.99,
-   "close": 34.45
   }
  ],
  "movers_down": [
