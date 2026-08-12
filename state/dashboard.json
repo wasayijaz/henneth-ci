@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-11 19:40",
+ "updated": "2026-08-12 05:10",
  "regime": "neutral",
  "geo_risk": {
   "score": 37,
@@ -7,7 +7,7 @@
  },
  "signals": [
   {
-   "id": "20260811-BML-obv_divergence_up",
+   "id": "20260812-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260811-TPLT-donchian55_break",
+   "id": "20260812-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260811-GAL-high50_break",
+   "id": "20260812-GAL-high50_break",
    "ticker": "GAL",
    "strategy": "high50_break",
    "template": "50d high breakout",
@@ -61,7 +61,7 @@
    "thesis": "50d high breakout is triggering now; on GAL's own history it won 58% over 26 trades (+1.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260811-NICL-roc60_leader_pullback",
+   "id": "20260812-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -87,7 +87,7 @@
   },
   {
    "ticker": "XLI",
-   "score": 73.0
+   "score": 72.7
   },
   {
    "ticker": "GLD",
@@ -106,12 +106,12 @@
    "score": 65.6
   },
   {
-   "ticker": "USDJI",
-   "score": 65.2
-  },
-  {
    "ticker": "FHAM",
    "score": 64.8
+  },
+  {
+   "ticker": "USDJI",
+   "score": 64.7
   },
   {
    "ticker": "EFA",
@@ -372,12 +372,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-10T17:21:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-10T22:10:00+05:00",
-   "outcome": "Daily EOD refresh: data layer OK (run_cloud.py all-ok, health ok, latest_eod 2026-08-10). macro-agent completed (regime neutral, geo-risk 57) but its state/macro.json write was clobbered by a concurrent second local session also operating this repo (file now shows stale 2026-08-05 content despite fresh mtime -- real race, not documented cloud/local race). news-sentinel and market-analyst both hit account session-limit stalls twice (fresh + retry), killed at 5min cap each, no writes -- state/newslog.json and state/daily_read.json remain at 2026-08-05, NOT refreshed this cycle. No new commentary published by this run (nothing safe to push; avoided compounding the concurrent-session race). Live site watchdog: OK (app shell, public files, gates intact) -- but daily commentary on site is 5 sessions stale. Flagged to owner: two local sessions ran against D:\\PSX Trader X Claude simultaneously today, causing a real write race outside the documented cloud/local model."
-  },
-  {
    "started": "2026-08-10T17:28:00+05:00",
    "mode": "light",
    "ended": "2026-08-10T22:19:41+05:00",
@@ -400,6 +394,12 @@
    "mode": "room",
    "ended": "2026-08-11T13:10:09+05:00",
    "outcome": "2 full (FCCL, LUCK), 0 delta, 7 reaffirm; 0 newly-resolved calls; QA flagged+fixed LUCK dividend-yield stale-split bug (high) and FCCL dividend-type mislabel (medium); published and pushed."
+  },
+  {
+   "started": "2026-08-11T17:30:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-11T18:55:00+05:00",
+   "outcome": "EOD refresh: data layer OK (health ok, latest_eod 2026-08-11; 4 minor room-pipeline scripts failed: fetch_research/build_explainer/room_dossier/room_queue, out of scope for this cycle). news-sentinel appended 3 items (2026-08-11), max impact 3, no escalation. macro-agent: regime neutral, geo-risk 37 calm (SBP reserves 7.04bn +13mn, CPI 9.2%, rate held 11.5%). market-analyst daily read: tone cautious, KSE-100 -0.81% to 179,846.68 on fading US-Iran deal hopes; watchlist BML/GAL/BAFL/AKBL. Published (4 hand-authored code files held back, another session mid-edit), watchdog OK."
   }
  ]
 }

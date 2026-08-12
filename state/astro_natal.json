@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-11 17:38",
+  "updated": "2026-08-12 10:08",
   "note": "Natal charts, Vimshottari dashas and transits-to-natal for the subjects whose first-trade date is genuinely sourced. Cast at the exchange open on that date \u2014 the orthodox first-trade convention (Meridian), not a guess of ours. No ascendant and no houses: those turn on the minute, and PSX's open has itself shifted over the decades. Each conclusion carries how much it depends on the convention.",
   "convention": {
     "birth_moment": "first trade date, cast at the exchange open",
@@ -8,7 +8,7 @@
     "meridian_got_his_dates_from": "the Exchange itself, from the 1970s. That is the unlock for the other 88 PSX names: PSX holds the listing dates even though it does not publish them."
   },
   "discipline": "This is what the tradition SAYS about these charts. It is not a forecast and not advice. The transit-only claims the desk could test showed no edge on PSX (see astro_backtest.json); the natal methods here are not yet tested, and are labelled untested rather than sold as insight.",
-  "n_charts": 145,
+  "n_charts": 143,
   "subjects": {
     "KSE100": {
       "subject": "KSE100",
@@ -514,32 +514,25 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Jupiter",
-          "over_natal": "Mercury",
-          "orb_deg": 0.18,
-          "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Mercury (0.18\u00b0 orb)"
-        },
-        {
           "transiting": "Mercury",
           "over_natal": "Saturn",
-          "orb_deg": 1.33,
+          "orb_deg": 0.15,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Saturn (1.33\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Saturn (0.15\u00b0 orb)"
         },
         {
-          "transiting": "Moon",
-          "over_natal": "Saturn",
-          "orb_deg": 1.9,
+          "transiting": "Jupiter",
+          "over_natal": "Mercury",
+          "orb_deg": 0.33,
           "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Saturn (1.9\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Mercury (0.33\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Rahu",
-          "orb_deg": 1.99,
+          "orb_deg": 2.01,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Rahu (1.99\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Rahu (2.01\u00b0 orb)"
         }
       ]
     },
@@ -793,7 +786,15 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Moon",
+          "over_natal": "Rahu",
+          "orb_deg": 1.18,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Rahu (1.18\u00b0 orb)"
+        }
+      ]
     },
     "AHCL": {
       "subject": "AHCL",
@@ -1301,16 +1302,16 @@
         {
           "transiting": "Venus",
           "over_natal": "Mars",
-          "orb_deg": 0.01,
+          "orb_deg": 0.67,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Mars (0.01\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Mars (0.67\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Moon",
-          "orb_deg": 1.09,
+          "orb_deg": 1.07,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Moon (1.09\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Moon (1.07\u00b0 orb)"
         }
       ]
     },
@@ -1566,280 +1567,6 @@
       },
       "transits_to_natal": []
     },
-    "BAFL": {
-      "subject": "BAFL",
-      "kind": "stock",
-      "birth": {
-        "date": "2004-07-05",
-        "time_convention": "09:30",
-        "place": "Karachi, Pakistan",
-        "certainty": "date_exchange_verified_time_convention",
-        "source": "PSX's own floatation workbook, column 'Date of Formal Listing' (psx.com.pk > Listings > Listings History) \u2014 the Exchange's record"
-      },
-      "natal": {
-        "Sun": {
-          "lon": 79.585,
-          "sign": "Gemini",
-          "deg_in_sign": 19.59,
-          "nakshatra": "Ardra",
-          "pada": 4
-        },
-        "Moon": {
-          "lon": 297.744,
-          "sign": "Capricorn",
-          "deg_in_sign": 27.74,
-          "nakshatra": "Dhanishta",
-          "pada": 2
-        },
-        "Mercury": {
-          "lon": 97.112,
-          "sign": "Cancer",
-          "deg_in_sign": 7.11,
-          "nakshatra": "Pushya",
-          "pada": 2
-        },
-        "Venus": {
-          "lon": 46.232,
-          "sign": "Taurus",
-          "deg_in_sign": 16.23,
-          "nakshatra": "Rohini",
-          "pada": 2
-        },
-        "Mars": {
-          "lon": 103.224,
-          "sign": "Cancer",
-          "deg_in_sign": 13.22,
-          "nakshatra": "Pushya",
-          "pada": 3
-        },
-        "Jupiter": {
-          "lon": 140.069,
-          "sign": "Leo",
-          "deg_in_sign": 20.07,
-          "nakshatra": "Purva Phalguni",
-          "pada": 3
-        },
-        "Saturn": {
-          "lon": 82.472,
-          "sign": "Gemini",
-          "deg_in_sign": 22.47,
-          "nakshatra": "Punarvasu",
-          "pada": 1
-        },
-        "Rahu": {
-          "lon": 13.942,
-          "sign": "Aries",
-          "deg_in_sign": 13.94,
-          "nakshatra": "Bharani",
-          "pada": 1
-        },
-        "Ketu": {
-          "lon": 193.942,
-          "sign": "Libra",
-          "deg_in_sign": 13.94,
-          "nakshatra": "Swati",
-          "pada": 3
-        }
-      },
-      "ascendant": null,
-      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_sensitivity": {
-        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
-        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
-        "per_graha": {
-          "Sun": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Moon": {
-            "sign": false,
-            "nakshatra": true
-          },
-          "Mercury": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Venus": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Mars": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Jupiter": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Saturn": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Rahu": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Ketu": {
-            "sign": true,
-            "nakshatra": true
-          }
-        },
-        "moon_sign_stable": false,
-        "moon_nakshatra_stable": true,
-        "maha_lord_stable": false,
-        "antar_lord_stable": false,
-        "dasha_stable": false,
-        "dasha_timeline_slip_days": 692,
-        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~692 days (1.9 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
-      },
-      "dasha": {
-        "current": {
-          "maha": "Rahu",
-          "maha_from": "2009-03-12",
-          "maha_to": "2027-03-12",
-          "antar": "Mars",
-          "antar_from": "2026-02-17",
-          "antar_to": "2027-03-07"
-        },
-        "convention_robust": false,
-        "sequence": [
-          {
-            "lord": "Mars",
-            "from": "2002-03-13",
-            "to": "2009-03-12",
-            "years": 7
-          },
-          {
-            "lord": "Rahu",
-            "from": "2009-03-12",
-            "to": "2027-03-12",
-            "years": 18
-          },
-          {
-            "lord": "Jupiter",
-            "from": "2027-03-12",
-            "to": "2043-03-11",
-            "years": 16
-          },
-          {
-            "lord": "Saturn",
-            "from": "2043-03-11",
-            "to": "2062-03-10",
-            "years": 19
-          },
-          {
-            "lord": "Mercury",
-            "from": "2062-03-10",
-            "to": "2079-03-10",
-            "years": 17
-          },
-          {
-            "lord": "Ketu",
-            "from": "2079-03-10",
-            "to": "2086-03-09",
-            "years": 7
-          }
-        ],
-        "antar_ladder": [
-          {
-            "lord": "Rahu",
-            "from": "2009-03-12",
-            "to": "2011-11-23"
-          },
-          {
-            "lord": "Jupiter",
-            "from": "2011-11-23",
-            "to": "2014-04-17"
-          },
-          {
-            "lord": "Saturn",
-            "from": "2014-04-17",
-            "to": "2017-02-21"
-          },
-          {
-            "lord": "Mercury",
-            "from": "2017-02-21",
-            "to": "2019-09-11"
-          },
-          {
-            "lord": "Ketu",
-            "from": "2019-09-11",
-            "to": "2020-09-28"
-          },
-          {
-            "lord": "Venus",
-            "from": "2020-09-28",
-            "to": "2023-09-29"
-          },
-          {
-            "lord": "Sun",
-            "from": "2023-09-29",
-            "to": "2024-08-22"
-          },
-          {
-            "lord": "Moon",
-            "from": "2024-08-22",
-            "to": "2026-02-21"
-          },
-          {
-            "lord": "Mars",
-            "from": "2026-02-21",
-            "to": "2027-03-12"
-          }
-        ],
-        "upcoming": [
-          {
-            "kind": "maha",
-            "on": "2027-03-12",
-            "lord": "Jupiter",
-            "under": null,
-            "text": "the Rahu mahadasha ends and the Jupiter mahadasha begins"
-          },
-          {
-            "kind": "antar",
-            "on": "2027-03-12",
-            "lord": "Jupiter",
-            "under": "Jupiter",
-            "text": "Jupiter antardasha begins inside the Jupiter mahadasha"
-          },
-          {
-            "kind": "antar",
-            "on": "2029-04-29",
-            "lord": "Saturn",
-            "under": "Jupiter",
-            "text": "Saturn antardasha begins inside the Jupiter mahadasha"
-          }
-        ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~692 days (1.9 years). Published as the convention's answer, with that dependence stated."
-      },
-      "sade_sati": {
-        "active": null,
-        "phase": "cannot be determined \u2014 the natal Moon's sign is not stable across the unknown first-trade time"
-      },
-      "transits_to_natal": [
-        {
-          "transiting": "Moon",
-          "over_natal": "Mercury",
-          "orb_deg": 1.11,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mercury (1.11\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Mercury",
-          "orb_deg": 1.69,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mercury (1.69\u00b0 orb)"
-        },
-        {
-          "transiting": "Jupiter",
-          "over_natal": "Mars",
-          "orb_deg": 1.85,
-          "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Mars (1.85\u00b0 orb)"
-        }
-      ]
-    },
     "BWCL": {
       "subject": "BWCL",
       "kind": "stock",
@@ -2094,16 +1821,23 @@
         {
           "transiting": "Venus",
           "over_natal": "Mercury",
-          "orb_deg": 0.21,
+          "orb_deg": 0.46,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Mercury (0.21\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Mercury (0.46\u00b0 orb)"
         },
         {
           "transiting": "Jupiter",
           "over_natal": "Venus",
-          "orb_deg": 0.62,
+          "orb_deg": 0.47,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Venus (0.62\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Venus (0.47\u00b0 orb)"
+        },
+        {
+          "transiting": "Mars",
+          "over_natal": "Rahu",
+          "orb_deg": 2.43,
+          "sign": "Gemini",
+          "text": "transiting Mars is conjunct natal Rahu (2.43\u00b0 orb)"
         }
       ]
     },
@@ -2361,16 +2095,23 @@
         {
           "transiting": "Rahu",
           "over_natal": "Jupiter",
-          "orb_deg": 1.32,
+          "orb_deg": 1.36,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Jupiter (1.32\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Jupiter (1.36\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Venus",
+          "orb_deg": 2.11,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Venus (2.11\u00b0 orb)"
         },
         {
           "transiting": "Sun",
           "over_natal": "Mars",
-          "orb_deg": 1.71,
+          "orb_deg": 2.37,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Mars (1.71\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Mars (2.37\u00b0 orb)"
         }
       ]
     },
@@ -2626,32 +2367,32 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Sun",
-          "over_natal": "Venus",
-          "orb_deg": 0.77,
-          "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Venus (0.77\u00b0 orb)"
-        },
-        {
           "transiting": "Venus",
           "over_natal": "Rahu",
-          "orb_deg": 1.05,
+          "orb_deg": 0.38,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Rahu (1.05\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Rahu (0.38\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 1.14,
+          "orb_deg": 0.68,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (1.14\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (0.68\u00b0 orb)"
         },
         {
           "transiting": "Sun",
           "over_natal": "Jupiter",
-          "orb_deg": 1.97,
+          "orb_deg": 1.31,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (1.97\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Jupiter (1.31\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Venus",
+          "orb_deg": 1.43,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Venus (1.43\u00b0 orb)"
         }
       ]
     },
@@ -2905,29 +2646,7 @@
         "active": null,
         "phase": "cannot be determined \u2014 the natal Moon's sign is not stable across the unknown first-trade time"
       },
-      "transits_to_natal": [
-        {
-          "transiting": "Moon",
-          "over_natal": "Mars",
-          "orb_deg": 1.87,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mars (1.87\u00b0 orb)"
-        },
-        {
-          "transiting": "Venus",
-          "over_natal": "Saturn",
-          "orb_deg": 2.12,
-          "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Saturn (2.12\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Mars",
-          "orb_deg": 2.45,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (2.45\u00b0 orb)"
-        }
-      ]
+      "transits_to_natal": []
     },
     "GLAXO": {
       "subject": "GLAXO",
@@ -3183,23 +2902,23 @@
         {
           "transiting": "Saturn",
           "over_natal": "Mercury",
-          "orb_deg": 1.56,
+          "orb_deg": 1.58,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Mercury (1.56\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Mercury (1.58\u00b0 orb)"
         },
         {
           "transiting": "Rahu",
           "over_natal": "Ketu",
-          "orb_deg": 1.73,
+          "orb_deg": 1.76,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Ketu (1.73\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Ketu (1.76\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Rahu",
-          "orb_deg": 1.73,
+          "orb_deg": 1.76,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Rahu (1.73\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Rahu (1.76\u00b0 orb)"
         }
       ]
     },
@@ -3455,18 +3174,11 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.11,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.11\u00b0 orb)"
-        },
-        {
           "transiting": "Sun",
           "over_natal": "Venus",
-          "orb_deg": 2.17,
+          "orb_deg": 1.51,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Venus (2.17\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Venus (1.51\u00b0 orb)"
         }
       ]
     },
@@ -3724,16 +3436,16 @@
         {
           "transiting": "Saturn",
           "over_natal": "Sun",
-          "orb_deg": 0.67,
+          "orb_deg": 0.69,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Sun (0.67\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Sun (0.69\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Moon",
-          "orb_deg": 1.4,
+          "orb_deg": 1.38,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Moon (1.4\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Moon (1.38\u00b0 orb)"
         }
       ]
     },
@@ -4495,9 +4207,9 @@
         {
           "transiting": "Rahu",
           "over_natal": "Sun",
-          "orb_deg": 0.71,
+          "orb_deg": 0.67,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Sun (0.71\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Sun (0.67\u00b0 orb)"
         }
       ]
     },
@@ -5259,9 +4971,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Jupiter",
-          "orb_deg": 0.84,
+          "orb_deg": 0.88,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Jupiter (0.84\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Jupiter (0.88\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Mars",
+          "orb_deg": 1.99,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Mars (1.99\u00b0 orb)"
         }
       ]
     },
@@ -5515,7 +5234,15 @@
         "active": false,
         "phase": "Dhaiya (Saturn in the 8th from natal Moon)"
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Venus",
+          "over_natal": "Mars",
+          "orb_deg": 2.38,
+          "sign": "Virgo",
+          "text": "transiting Venus is conjunct natal Mars (2.38\u00b0 orb)"
+        }
+      ]
     },
     "PPL": {
       "subject": "PPL",
@@ -5771,9 +5498,16 @@
         {
           "transiting": "Jupiter",
           "over_natal": "Venus",
-          "orb_deg": 1.12,
+          "orb_deg": 0.97,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Venus (1.12\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Venus (0.97\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Venus",
+          "orb_deg": 2.09,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Venus (2.09\u00b0 orb)"
         }
       ]
     },
@@ -6283,9 +6017,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Saturn",
-          "orb_deg": 0.41,
+          "orb_deg": 1.07,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Saturn (0.41\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Saturn (1.07\u00b0 orb)"
         }
       ]
     },
@@ -6541,18 +6275,25 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Sun",
-          "over_natal": "Jupiter",
-          "orb_deg": 0.6,
-          "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (0.6\u00b0 orb)"
-        },
-        {
           "transiting": "Saturn",
           "over_natal": "Ketu",
-          "orb_deg": 1.2,
+          "orb_deg": 1.18,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Ketu (1.2\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Ketu (1.18\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Jupiter",
+          "orb_deg": 1.26,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Jupiter (1.26\u00b0 orb)"
+        },
+        {
+          "transiting": "Mercury",
+          "over_natal": "Moon",
+          "orb_deg": 1.41,
+          "sign": "Cancer",
+          "text": "transiting Mercury is conjunct natal Moon (1.41\u00b0 orb)"
         }
       ]
     },
@@ -6810,16 +6551,16 @@
         {
           "transiting": "Saturn",
           "over_natal": "Mars",
-          "orb_deg": 0.45,
+          "orb_deg": 0.47,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Mars (0.45\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Mars (0.47\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Rahu",
-          "orb_deg": 1.06,
+          "orb_deg": 1.04,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Rahu (1.06\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Rahu (1.04\u00b0 orb)"
         }
       ]
     },
@@ -7075,25 +6816,11 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mercury",
-          "orb_deg": 0.76,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mercury (0.76\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Mercury",
-          "orb_deg": 1.33,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mercury (1.33\u00b0 orb)"
-        },
-        {
           "transiting": "Sun",
           "over_natal": "Jupiter",
-          "orb_deg": 2.0,
+          "orb_deg": 1.34,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (2.0\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Jupiter (1.34\u00b0 orb)"
         }
       ]
     },
@@ -7349,46 +7076,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Sun",
-          "orb_deg": 0.19,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Sun (0.19\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Sun",
-          "orb_deg": 0.38,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Sun (0.38\u00b0 orb)"
-        },
-        {
-          "transiting": "Moon",
-          "over_natal": "Saturn",
-          "orb_deg": 1.03,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Saturn (1.03\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Saturn",
-          "orb_deg": 1.6,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Saturn (1.6\u00b0 orb)"
-        },
-        {
           "transiting": "Sun",
           "over_natal": "Mercury",
-          "orb_deg": 1.71,
+          "orb_deg": 1.05,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Mercury (1.71\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Mercury (1.05\u00b0 orb)"
         },
         {
-          "transiting": "Ketu",
-          "over_natal": "Venus",
-          "orb_deg": 2.49,
-          "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Venus (2.49\u00b0 orb)"
+          "transiting": "Mercury",
+          "over_natal": "Sun",
+          "orb_deg": 1.56,
+          "sign": "Cancer",
+          "text": "transiting Mercury is conjunct natal Sun (1.56\u00b0 orb)"
         }
       ]
     },
@@ -7646,16 +7345,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.27,
+          "orb_deg": 0.24,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.27\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.24\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.27,
+          "orb_deg": 0.24,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.27\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.24\u00b0 orb)"
         }
       ]
     },
@@ -7913,16 +7612,16 @@
         {
           "transiting": "Venus",
           "over_natal": "Venus",
-          "orb_deg": 1.58,
+          "orb_deg": 0.91,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Venus (1.58\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Venus (0.91\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Mars",
-          "orb_deg": 1.71,
+          "orb_deg": 1.73,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Mars (1.71\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Mars (1.73\u00b0 orb)"
         }
       ]
     },
@@ -8178,25 +7877,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Saturn",
-          "over_natal": "Venus",
-          "orb_deg": 0.42,
-          "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Venus (0.42\u00b0 orb)"
-        },
-        {
           "transiting": "Mercury",
           "over_natal": "Ketu",
-          "orb_deg": 0.87,
+          "orb_deg": 0.31,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Ketu (0.87\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Ketu (0.31\u00b0 orb)"
         },
         {
-          "transiting": "Moon",
-          "over_natal": "Ketu",
-          "orb_deg": 1.44,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Ketu (1.44\u00b0 orb)"
+          "transiting": "Saturn",
+          "over_natal": "Venus",
+          "orb_deg": 0.4,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Venus (0.4\u00b0 orb)"
         }
       ]
     },
@@ -8453,24 +8145,24 @@
       "transits_to_natal": [
         {
           "transiting": "Moon",
-          "over_natal": "Sun",
-          "orb_deg": 0.08,
+          "over_natal": "Mercury",
+          "orb_deg": 1.16,
           "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Sun (0.08\u00b0 orb)"
+          "text": "transiting Moon is conjunct natal Mercury (1.16\u00b0 orb)"
         },
         {
           "transiting": "Mercury",
           "over_natal": "Sun",
-          "orb_deg": 0.49,
+          "orb_deg": 1.67,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Sun (0.49\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Sun (1.67\u00b0 orb)"
         },
         {
           "transiting": "Jupiter",
           "over_natal": "Moon",
-          "orb_deg": 1.81,
+          "orb_deg": 1.97,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Moon (1.81\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Moon (1.97\u00b0 orb)"
         }
       ]
     },
@@ -8728,16 +8420,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.89,
+          "orb_deg": 0.93,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.89\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.89,
+          "orb_deg": 0.93,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.89\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.93\u00b0 orb)"
         }
       ]
     },
@@ -8995,9 +8687,9 @@
         {
           "transiting": "Jupiter",
           "over_natal": "Sun",
-          "orb_deg": 0.66,
+          "orb_deg": 0.51,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Sun (0.66\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Sun (0.51\u00b0 orb)"
         }
       ]
     },
@@ -9255,16 +8947,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.59,
+          "orb_deg": 0.55,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.59\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.55\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.59,
+          "orb_deg": 0.55,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.59\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.55\u00b0 orb)"
         }
       ]
     },
@@ -9774,16 +9466,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.22,
+          "orb_deg": 0.18,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.22\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.18\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.22,
+          "orb_deg": 0.18,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.22\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.18\u00b0 orb)"
         }
       ]
     },
@@ -10039,39 +9731,32 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Mercury",
-          "over_natal": "Moon",
-          "orb_deg": 0.05,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Moon (0.05\u00b0 orb)"
-        },
-        {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.52\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.56\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.52\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.56\u00b0 orb)"
         },
         {
-          "transiting": "Moon",
+          "transiting": "Mercury",
           "over_natal": "Moon",
-          "orb_deg": 0.53,
+          "orb_deg": 1.23,
           "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Moon (0.53\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Moon (1.23\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 2.23,
+          "orb_deg": 1.77,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.23\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (1.77\u00b0 orb)"
         }
       ]
     },
@@ -10329,23 +10014,23 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.54,
+          "orb_deg": 0.5,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.54\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.5\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.54,
+          "orb_deg": 0.5,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.54\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.5\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Moon",
-          "orb_deg": 1.86,
+          "orb_deg": 1.87,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Moon (1.86\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Moon (1.87\u00b0 orb)"
         }
       ]
     },
@@ -10603,9 +10288,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Jupiter",
-          "orb_deg": 1.52,
+          "orb_deg": 2.18,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (1.52\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Jupiter (2.18\u00b0 orb)"
         }
       ]
     },
@@ -10861,25 +10546,25 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mercury",
-          "orb_deg": 0.59,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mercury (0.59\u00b0 orb)"
-        },
-        {
           "transiting": "Mars",
           "over_natal": "Venus",
-          "orb_deg": 1.14,
+          "orb_deg": 1.6,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Venus (1.14\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Venus (1.6\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Sun",
+          "orb_deg": 1.82,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Sun (1.82\u00b0 orb)"
         },
         {
           "transiting": "Mercury",
           "over_natal": "Mercury",
-          "orb_deg": 1.16,
+          "orb_deg": 2.35,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mercury (1.16\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mercury (2.35\u00b0 orb)"
         }
       ]
     },
@@ -11137,30 +10822,23 @@
         {
           "transiting": "Mercury",
           "over_natal": "Venus",
-          "orb_deg": 0.52,
+          "orb_deg": 0.67,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Venus (0.52\u00b0 orb)"
-        },
-        {
-          "transiting": "Sun",
-          "over_natal": "Jupiter",
-          "orb_deg": 0.89,
-          "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (0.89\u00b0 orb)"
-        },
-        {
-          "transiting": "Moon",
-          "over_natal": "Venus",
-          "orb_deg": 1.09,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Venus (1.09\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Venus (0.67\u00b0 orb)"
         },
         {
           "transiting": "Venus",
           "over_natal": "Rahu",
-          "orb_deg": 1.95,
+          "orb_deg": 1.28,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Rahu (1.95\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Rahu (1.28\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Jupiter",
+          "orb_deg": 1.55,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Jupiter (1.55\u00b0 orb)"
         }
       ]
     },
@@ -11416,25 +11094,25 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mercury",
-          "orb_deg": 0.59,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mercury (0.59\u00b0 orb)"
-        },
-        {
           "transiting": "Mars",
           "over_natal": "Venus",
-          "orb_deg": 1.14,
+          "orb_deg": 1.6,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Venus (1.14\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Venus (1.6\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Sun",
+          "orb_deg": 1.82,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Sun (1.82\u00b0 orb)"
         },
         {
           "transiting": "Mercury",
           "over_natal": "Mercury",
-          "orb_deg": 1.16,
+          "orb_deg": 2.35,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mercury (1.16\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mercury (2.35\u00b0 orb)"
         }
       ]
     },
@@ -11688,7 +11366,15 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Moon",
+          "over_natal": "Moon",
+          "orb_deg": 2.4,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Moon (2.4\u00b0 orb)"
+        }
+      ]
     },
     "AVN": {
       "subject": "AVN",
@@ -11944,9 +11630,9 @@
         {
           "transiting": "Rahu",
           "over_natal": "Mercury",
-          "orb_deg": 1.49,
+          "orb_deg": 1.53,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Mercury (1.49\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Mercury (1.53\u00b0 orb)"
         }
       ]
     },
@@ -12204,9 +11890,16 @@
         {
           "transiting": "Ketu",
           "over_natal": "Venus",
-          "orb_deg": 1.31,
+          "orb_deg": 1.28,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Venus (1.31\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Venus (1.28\u00b0 orb)"
+        },
+        {
+          "transiting": "Mars",
+          "over_natal": "Mercury",
+          "orb_deg": 2.36,
+          "sign": "Gemini",
+          "text": "transiting Mars is conjunct natal Mercury (2.36\u00b0 orb)"
         }
       ]
     },
@@ -12462,39 +12155,32 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Mercury",
-          "over_natal": "Moon",
-          "orb_deg": 0.05,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Moon (0.05\u00b0 orb)"
-        },
-        {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.52\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.56\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.52\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.56\u00b0 orb)"
         },
         {
-          "transiting": "Moon",
+          "transiting": "Mercury",
           "over_natal": "Moon",
-          "orb_deg": 0.53,
+          "orb_deg": 1.23,
           "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Moon (0.53\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Moon (1.23\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 2.23,
+          "orb_deg": 1.77,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.23\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (1.77\u00b0 orb)"
         }
       ]
     },
@@ -12752,23 +12438,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.11,
+          "orb_deg": 0.08,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.11\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.08\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.11,
+          "orb_deg": 0.08,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.11\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.06,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.06\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.08\u00b0 orb)"
         }
       ]
     },
@@ -13026,290 +12705,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 2.11,
+          "orb_deg": 2.15,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (2.11\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (2.15\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 2.11,
+          "orb_deg": 2.15,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (2.11\u00b0 orb)"
-        }
-      ]
-    },
-    "BNL": {
-      "subject": "BNL",
-      "kind": "stock",
-      "birth": {
-        "date": "2008-01-07",
-        "time_convention": "09:30",
-        "place": "Karachi, Pakistan",
-        "certainty": "date_verified_time_convention",
-        "source": "Yahoo Finance firstTradeDate for BNL.KA \u2014 trusted here only because it falls outside the data-start cluster, i.e. the history genuinely begins at this company's listing"
-      },
-      "natal": {
-        "Sun": {
-          "lon": 262.282,
-          "sign": "Sagittarius",
-          "deg_in_sign": 22.28,
-          "nakshatra": "Purva Ashadha",
-          "pada": 3
-        },
-        "Moon": {
-          "lon": 247.467,
-          "sign": "Sagittarius",
-          "deg_in_sign": 7.47,
-          "nakshatra": "Mula",
-          "pada": 3
-        },
-        "Mercury": {
-          "lon": 274.403,
-          "sign": "Capricorn",
-          "deg_in_sign": 4.4,
-          "nakshatra": "Uttara Ashadha",
-          "pada": 3
-        },
-        "Venus": {
-          "lon": 225.071,
-          "sign": "Scorpio",
-          "deg_in_sign": 15.07,
-          "nakshatra": "Anuradha",
-          "pada": 4
-        },
-        "Mars": {
-          "lon": 63.841,
-          "sign": "Gemini",
-          "deg_in_sign": 3.84,
-          "nakshatra": "Mrigashira",
-          "pada": 4
-        },
-        "Jupiter": {
-          "lon": 250.474,
-          "sign": "Sagittarius",
-          "deg_in_sign": 10.47,
-          "nakshatra": "Mula",
-          "pada": 4
-        },
-        "Saturn": {
-          "lon": 134.299,
-          "sign": "Leo",
-          "deg_in_sign": 14.3,
-          "nakshatra": "Purva Phalguni",
-          "pada": 1
-        },
-        "Rahu": {
-          "lon": 306.059,
-          "sign": "Aquarius",
-          "deg_in_sign": 6.06,
-          "nakshatra": "Dhanishta",
-          "pada": 4
-        },
-        "Ketu": {
-          "lon": 126.059,
-          "sign": "Leo",
-          "deg_in_sign": 6.06,
-          "nakshatra": "Magha",
-          "pada": 2
-        }
-      },
-      "ascendant": null,
-      "ascendant_note": "Deliberately not computed. PSX publishes no first-trade time; the ascendant moves 360\u00b0 a day, so houses from a guessed time would be fiction. This chart is read from the Moon sign (Chandra lagna), which is standard Vedic practice and survives the unknown time.",
-      "time_sensitivity": {
-        "published_at": "09:30 \u2014 the exchange open on the first-trade date, which is the orthodox first-trade convention (Meridian). This is the chart.",
-        "method": "the chart is ALSO computed at the 15:30 close, purely to measure how much each conclusion depends on the convention being right",
-        "per_graha": {
-          "Sun": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Moon": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Mercury": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Venus": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Mars": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Jupiter": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Saturn": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Rahu": {
-            "sign": true,
-            "nakshatra": true
-          },
-          "Ketu": {
-            "sign": true,
-            "nakshatra": true
-          }
-        },
-        "moon_sign_stable": true,
-        "moon_nakshatra_stable": true,
-        "maha_lord_stable": true,
-        "antar_lord_stable": false,
-        "dasha_stable": false,
-        "dasha_timeline_slip_days": 592,
-        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~592 days (1.6 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
-      },
-      "dasha": {
-        "current": {
-          "maha": "Venus",
-          "maha_from": "2011-02-05",
-          "maha_to": "2031-02-04",
-          "antar": "Saturn",
-          "antar_from": "2023-12-03",
-          "antar_to": "2027-02-01"
-        },
-        "convention_robust": false,
-        "sequence": [
-          {
-            "lord": "Ketu",
-            "from": "2004-02-06",
-            "to": "2011-02-05",
-            "years": 7
-          },
-          {
-            "lord": "Venus",
-            "from": "2011-02-05",
-            "to": "2031-02-04",
-            "years": 20
-          },
-          {
-            "lord": "Sun",
-            "from": "2031-02-04",
-            "to": "2037-02-03",
-            "years": 6
-          },
-          {
-            "lord": "Moon",
-            "from": "2037-02-03",
-            "to": "2047-02-03",
-            "years": 10
-          },
-          {
-            "lord": "Mars",
-            "from": "2047-02-03",
-            "to": "2054-02-02",
-            "years": 7
-          },
-          {
-            "lord": "Rahu",
-            "from": "2054-02-02",
-            "to": "2072-02-02",
-            "years": 18
-          }
-        ],
-        "antar_ladder": [
-          {
-            "lord": "Venus",
-            "from": "2011-02-05",
-            "to": "2014-06-06"
-          },
-          {
-            "lord": "Sun",
-            "from": "2014-06-06",
-            "to": "2015-06-06"
-          },
-          {
-            "lord": "Moon",
-            "from": "2015-06-06",
-            "to": "2017-02-04"
-          },
-          {
-            "lord": "Mars",
-            "from": "2017-02-04",
-            "to": "2018-04-06"
-          },
-          {
-            "lord": "Rahu",
-            "from": "2018-04-06",
-            "to": "2021-04-06"
-          },
-          {
-            "lord": "Jupiter",
-            "from": "2021-04-06",
-            "to": "2023-12-06"
-          },
-          {
-            "lord": "Saturn",
-            "from": "2023-12-06",
-            "to": "2027-02-04"
-          },
-          {
-            "lord": "Mercury",
-            "from": "2027-02-04",
-            "to": "2029-12-05"
-          },
-          {
-            "lord": "Ketu",
-            "from": "2029-12-05",
-            "to": "2031-02-04"
-          }
-        ],
-        "upcoming": [
-          {
-            "kind": "antar",
-            "on": "2027-02-04",
-            "lord": "Mercury",
-            "under": "Venus",
-            "text": "Mercury antardasha begins inside the Venus mahadasha"
-          },
-          {
-            "kind": "antar",
-            "on": "2029-12-05",
-            "lord": "Ketu",
-            "under": "Venus",
-            "text": "Ketu antardasha begins inside the Venus mahadasha"
-          },
-          {
-            "kind": "maha",
-            "on": "2031-02-04",
-            "lord": "Sun",
-            "under": null,
-            "text": "the Venus mahadasha ends and the Sun mahadasha begins"
-          }
-        ],
-        "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~592 days (1.6 years). Published as the convention's answer, with that dependence stated."
-      },
-      "sade_sati": {
-        "active": false,
-        "phase": "Dhaiya (Saturn in the 4th from natal Moon)"
-      },
-      "transits_to_natal": [
-        {
-          "transiting": "Rahu",
-          "over_natal": "Rahu",
-          "orb_deg": 0.11,
-          "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.11\u00b0 orb)"
-        },
-        {
-          "transiting": "Ketu",
-          "over_natal": "Ketu",
-          "orb_deg": 0.11,
-          "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.11\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.06,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.06\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (2.15\u00b0 orb)"
         }
       ]
     },
@@ -13815,29 +13220,7 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": [
-        {
-          "transiting": "Moon",
-          "over_natal": "Jupiter",
-          "orb_deg": 0.77,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Jupiter (0.77\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Jupiter",
-          "orb_deg": 1.35,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Jupiter (1.35\u00b0 orb)"
-        },
-        {
-          "transiting": "Moon",
-          "over_natal": "Sun",
-          "orb_deg": 2.0,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Sun (2.0\u00b0 orb)"
-        }
-      ]
+      "transits_to_natal": []
     },
     "DAAG": {
       "subject": "DAAG",
@@ -14089,7 +13472,15 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Moon",
+          "over_natal": "Rahu",
+          "orb_deg": 0.97,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Rahu (0.97\u00b0 orb)"
+        }
+      ]
     },
     "DADX": {
       "subject": "DADX",
@@ -14345,23 +13736,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.17,
+          "orb_deg": 0.13,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.17\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.13\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.17,
+          "orb_deg": 0.13,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.17\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.36,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.36\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.13\u00b0 orb)"
         }
       ]
     },
@@ -15123,23 +14507,30 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.96,
+          "orb_deg": 0.93,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.96\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.96,
+          "orb_deg": 0.93,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.96\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Jupiter",
           "over_natal": "Moon",
-          "orb_deg": 1.54,
+          "orb_deg": 1.39,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Moon (1.54\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Moon (1.39\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Moon",
+          "orb_deg": 1.67,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Moon (1.67\u00b0 orb)"
         }
       ]
     },
@@ -15397,16 +14788,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.63,
+          "orb_deg": 0.66,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.63\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.66\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.63,
+          "orb_deg": 0.66,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.63\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.66\u00b0 orb)"
         }
       ]
     },
@@ -15664,16 +15055,16 @@
         {
           "transiting": "Ketu",
           "over_natal": "Mercury",
-          "orb_deg": 1.11,
+          "orb_deg": 1.08,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Mercury (1.11\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Mercury (1.08\u00b0 orb)"
         },
         {
           "transiting": "Sun",
           "over_natal": "Sun",
-          "orb_deg": 1.43,
+          "orb_deg": 2.09,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Sun (1.43\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Sun (2.09\u00b0 orb)"
         }
       ]
     },
@@ -15931,16 +15322,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 1.32,
+          "orb_deg": 1.35,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (1.32\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (1.35\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 1.32,
+          "orb_deg": 1.35,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (1.32\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (1.35\u00b0 orb)"
         }
       ]
     },
@@ -16702,9 +16093,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Moon",
-          "orb_deg": 0.85,
+          "orb_deg": 0.19,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Moon (0.85\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Moon (0.19\u00b0 orb)"
         }
       ]
     },
@@ -16962,9 +16353,9 @@
         {
           "transiting": "Rahu",
           "over_natal": "Moon",
-          "orb_deg": 0.35,
+          "orb_deg": 0.31,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Moon (0.35\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Moon (0.31\u00b0 orb)"
         }
       ]
     },
@@ -17218,7 +16609,15 @@
         "active": null,
         "phase": "cannot be determined \u2014 the natal Moon's sign is not stable across the unknown first-trade time"
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Venus",
+          "over_natal": "Rahu",
+          "orb_deg": 1.97,
+          "sign": "Virgo",
+          "text": "transiting Venus is conjunct natal Rahu (1.97\u00b0 orb)"
+        }
+      ]
     },
     "GGL": {
       "subject": "GGL",
@@ -17472,25 +16871,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mars",
-          "orb_deg": 0.16,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mars (0.16\u00b0 orb)"
+          "transiting": "Venus",
+          "over_natal": "Saturn",
+          "orb_deg": 1.83,
+          "sign": "Virgo",
+          "text": "transiting Venus is conjunct natal Saturn (1.83\u00b0 orb)"
         },
         {
           "transiting": "Mercury",
           "over_natal": "Mars",
-          "orb_deg": 0.74,
+          "orb_deg": 1.92,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (0.74\u00b0 orb)"
-        },
-        {
-          "transiting": "Venus",
-          "over_natal": "Saturn",
-          "orb_deg": 1.15,
-          "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Saturn (1.15\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mars (1.92\u00b0 orb)"
         }
       ]
     },
@@ -17748,9 +17140,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Ketu",
-          "orb_deg": 1.7,
+          "orb_deg": 1.04,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Ketu (1.7\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Ketu (1.04\u00b0 orb)"
         }
       ]
     },
@@ -18258,32 +17650,25 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Jupiter",
-          "over_natal": "Mercury",
-          "orb_deg": 0.03,
-          "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Mercury (0.03\u00b0 orb)"
-        },
-        {
           "transiting": "Ketu",
           "over_natal": "Venus",
-          "orb_deg": 0.18,
+          "orb_deg": 0.15,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Venus (0.18\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Venus (0.15\u00b0 orb)"
+        },
+        {
+          "transiting": "Jupiter",
+          "over_natal": "Mercury",
+          "orb_deg": 0.18,
+          "sign": "Cancer",
+          "text": "transiting Jupiter is conjunct natal Mercury (0.18\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Moon",
-          "orb_deg": 0.49,
+          "orb_deg": 0.95,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Moon (0.49\u00b0 orb)"
-        },
-        {
-          "transiting": "Sun",
-          "over_natal": "Sun",
-          "orb_deg": 2.37,
-          "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Sun (2.37\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Moon (0.95\u00b0 orb)"
         }
       ]
     },
@@ -18541,16 +17926,16 @@
         {
           "transiting": "Saturn",
           "over_natal": "Venus",
-          "orb_deg": 1.15,
+          "orb_deg": 1.17,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Venus (1.15\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Venus (1.17\u00b0 orb)"
         },
         {
           "transiting": "Jupiter",
           "over_natal": "Ketu",
-          "orb_deg": 1.48,
+          "orb_deg": 1.63,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Ketu (1.48\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Ketu (1.63\u00b0 orb)"
         }
       ]
     },
@@ -18808,9 +18193,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Venus",
-          "orb_deg": 0.29,
+          "orb_deg": 0.95,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Venus (0.29\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Venus (0.95\u00b0 orb)"
         }
       ]
     },
@@ -19068,30 +18453,30 @@
         {
           "transiting": "Rahu",
           "over_natal": "Ketu",
-          "orb_deg": 0.93,
+          "orb_deg": 0.97,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Ketu (0.93\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Ketu (0.97\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Rahu",
-          "orb_deg": 0.93,
+          "orb_deg": 0.97,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Rahu (0.93\u00b0 orb)"
-        },
-        {
-          "transiting": "Sun",
-          "over_natal": "Moon",
-          "orb_deg": 1.81,
-          "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Moon (1.81\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Rahu (0.97\u00b0 orb)"
         },
         {
           "transiting": "Saturn",
           "over_natal": "Sun",
-          "orb_deg": 2.16,
+          "orb_deg": 2.17,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Sun (2.16\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Sun (2.17\u00b0 orb)"
+        },
+        {
+          "transiting": "Sun",
+          "over_natal": "Moon",
+          "orb_deg": 2.47,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Moon (2.47\u00b0 orb)"
         }
       ]
     },
@@ -19851,25 +19236,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mars",
-          "orb_deg": 0.16,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mars (0.16\u00b0 orb)"
+          "transiting": "Venus",
+          "over_natal": "Saturn",
+          "orb_deg": 1.83,
+          "sign": "Virgo",
+          "text": "transiting Venus is conjunct natal Saturn (1.83\u00b0 orb)"
         },
         {
           "transiting": "Mercury",
           "over_natal": "Mars",
-          "orb_deg": 0.74,
+          "orb_deg": 1.92,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (0.74\u00b0 orb)"
-        },
-        {
-          "transiting": "Venus",
-          "over_natal": "Saturn",
-          "orb_deg": 1.15,
-          "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Saturn (1.15\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mars (1.92\u00b0 orb)"
         }
       ]
     },
@@ -20127,16 +19505,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 1.01,
+          "orb_deg": 0.98,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (1.01\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.98\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 1.01,
+          "orb_deg": 0.98,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (1.01\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.98\u00b0 orb)"
         }
       ]
     },
@@ -20646,23 +20024,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.17,
+          "orb_deg": 0.13,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.17\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.13\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.17,
+          "orb_deg": 0.13,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.17\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.36,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.36\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.13\u00b0 orb)"
         }
       ]
     },
@@ -21168,7 +20539,15 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Sun",
+          "over_natal": "Saturn",
+          "orb_deg": 1.94,
+          "sign": "Cancer",
+          "text": "transiting Sun is conjunct natal Saturn (1.94\u00b0 orb)"
+        }
+      ]
     },
     "JSML": {
       "subject": "JSML",
@@ -21424,23 +20803,23 @@
         {
           "transiting": "Jupiter",
           "over_natal": "Moon",
-          "orb_deg": 0.45,
+          "orb_deg": 0.6,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Moon (0.45\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Moon (0.6\u00b0 orb)"
         },
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 1.95,
+          "orb_deg": 1.99,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (1.95\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (1.99\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 1.95,
+          "orb_deg": 1.99,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (1.95\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (1.99\u00b0 orb)"
         }
       ]
     },
@@ -21950,16 +21329,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 1.26,
+          "orb_deg": 1.3,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (1.26\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (1.3\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 1.26,
+          "orb_deg": 1.3,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (1.26\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (1.3\u00b0 orb)"
         }
       ]
     },
@@ -22217,16 +21596,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.89,
+          "orb_deg": 0.93,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.89\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.89,
+          "orb_deg": 0.93,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.89\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.93\u00b0 orb)"
         }
       ]
     },
@@ -22484,9 +21863,9 @@
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 0.24,
+          "orb_deg": 0.7,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (0.24\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (0.7\u00b0 orb)"
         }
       ]
     },
@@ -22742,39 +22121,32 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Mercury",
-          "over_natal": "Moon",
-          "orb_deg": 0.05,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Moon (0.05\u00b0 orb)"
-        },
-        {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.52\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.56\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.52\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.56\u00b0 orb)"
         },
         {
-          "transiting": "Moon",
+          "transiting": "Mercury",
           "over_natal": "Moon",
-          "orb_deg": 0.53,
+          "orb_deg": 1.23,
           "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Moon (0.53\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Moon (1.23\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 2.23,
+          "orb_deg": 1.77,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.23\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (1.77\u00b0 orb)"
         }
       ]
     },
@@ -23536,9 +22908,9 @@
         {
           "transiting": "Venus",
           "over_natal": "Venus",
-          "orb_deg": 0.35,
+          "orb_deg": 1.02,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Venus (0.35\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Venus (1.02\u00b0 orb)"
         }
       ]
     },
@@ -23796,9 +23168,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Rahu",
-          "orb_deg": 1.43,
+          "orb_deg": 1.41,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Rahu (1.43\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Rahu (1.41\u00b0 orb)"
         }
       ]
     },
@@ -24056,9 +23428,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Rahu",
-          "orb_deg": 1.8,
+          "orb_deg": 1.78,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Rahu (1.8\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Rahu (1.78\u00b0 orb)"
         }
       ]
     },
@@ -24316,16 +23688,16 @@
         {
           "transiting": "Sun",
           "over_natal": "Rahu",
-          "orb_deg": 1.63,
+          "orb_deg": 0.97,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Rahu (1.63\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Rahu (0.97\u00b0 orb)"
         },
         {
           "transiting": "Venus",
           "over_natal": "Mars",
-          "orb_deg": 1.8,
+          "orb_deg": 2.47,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Mars (1.8\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Mars (2.47\u00b0 orb)"
         }
       ]
     },
@@ -24579,15 +23951,7 @@
         "active": true,
         "phase": "setting (Saturn in the 2nd from natal Moon)"
       },
-      "transits_to_natal": [
-        {
-          "transiting": "Jupiter",
-          "over_natal": "Ketu",
-          "orb_deg": 2.49,
-          "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Ketu (2.49\u00b0 orb)"
-        }
-      ]
+      "transits_to_natal": []
     },
     "MFL": {
       "subject": "MFL",
@@ -24839,7 +24203,15 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Moon",
+          "over_natal": "Rahu",
+          "orb_deg": 2.24,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Rahu (2.24\u00b0 orb)"
+        }
+      ]
     },
     "MIRKS": {
       "subject": "MIRKS",
@@ -25093,39 +24465,32 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Mercury",
-          "over_natal": "Moon",
-          "orb_deg": 0.05,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Moon (0.05\u00b0 orb)"
-        },
-        {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.52\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.56\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.52,
+          "orb_deg": 0.56,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.52\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.56\u00b0 orb)"
         },
         {
-          "transiting": "Moon",
+          "transiting": "Mercury",
           "over_natal": "Moon",
-          "orb_deg": 0.53,
+          "orb_deg": 1.23,
           "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Moon (0.53\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Moon (1.23\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 2.23,
+          "orb_deg": 1.77,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.23\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (1.77\u00b0 orb)"
         }
       ]
     },
@@ -25383,16 +24748,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 2.38,
+          "orb_deg": 2.41,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (2.38\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (2.41\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 2.38,
+          "orb_deg": 2.41,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (2.38\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (2.41\u00b0 orb)"
         }
       ]
     },
@@ -25646,7 +25011,15 @@
         "active": true,
         "phase": "setting (Saturn in the 2nd from natal Moon)"
       },
-      "transits_to_natal": []
+      "transits_to_natal": [
+        {
+          "transiting": "Moon",
+          "over_natal": "Jupiter",
+          "orb_deg": 0.34,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Jupiter (0.34\u00b0 orb)"
+        }
+      ]
     },
     "NAGC": {
       "subject": "NAGC",
@@ -25902,23 +25275,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.11,
+          "orb_deg": 0.08,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.11\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.08\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.11,
+          "orb_deg": 0.08,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.11\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.06,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.06\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.08\u00b0 orb)"
         }
       ]
     },
@@ -26174,25 +25540,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mars",
-          "orb_deg": 0.16,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mars (0.16\u00b0 orb)"
+          "transiting": "Venus",
+          "over_natal": "Saturn",
+          "orb_deg": 1.83,
+          "sign": "Virgo",
+          "text": "transiting Venus is conjunct natal Saturn (1.83\u00b0 orb)"
         },
         {
           "transiting": "Mercury",
           "over_natal": "Mars",
-          "orb_deg": 0.74,
+          "orb_deg": 1.92,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (0.74\u00b0 orb)"
-        },
-        {
-          "transiting": "Venus",
-          "over_natal": "Saturn",
-          "orb_deg": 1.15,
-          "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Saturn (1.15\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mars (1.92\u00b0 orb)"
         }
       ]
     },
@@ -27204,11 +26563,18 @@
       },
       "transits_to_natal": [
         {
+          "transiting": "Moon",
+          "over_natal": "Rahu",
+          "orb_deg": 0.65,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Rahu (0.65\u00b0 orb)"
+        },
+        {
           "transiting": "Saturn",
           "over_natal": "Mercury",
-          "orb_deg": 1.61,
+          "orb_deg": 1.59,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Mercury (1.61\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Mercury (1.59\u00b0 orb)"
         }
       ]
     },
@@ -27466,16 +26832,16 @@
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 1.16,
+          "orb_deg": 1.61,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (1.16\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (1.61\u00b0 orb)"
         },
         {
           "transiting": "Venus",
           "over_natal": "Sun",
-          "orb_deg": 1.73,
+          "orb_deg": 2.4,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Sun (1.73\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Sun (2.4\u00b0 orb)"
         }
       ]
     },
@@ -27733,9 +27099,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Rahu",
-          "orb_deg": 1.43,
+          "orb_deg": 1.41,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Rahu (1.43\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Rahu (1.41\u00b0 orb)"
         }
       ]
     },
@@ -27993,9 +27359,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Rahu",
-          "orb_deg": 1.43,
+          "orb_deg": 1.41,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Rahu (1.43\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Rahu (1.41\u00b0 orb)"
         }
       ]
     },
@@ -28253,16 +27619,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Mars",
-          "orb_deg": 0.39,
+          "orb_deg": 0.43,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Mars (0.39\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Mars (0.43\u00b0 orb)"
         },
         {
           "transiting": "Mars",
           "over_natal": "Rahu",
-          "orb_deg": 1.11,
+          "orb_deg": 0.66,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Rahu (1.11\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Rahu (0.66\u00b0 orb)"
         }
       ]
     },
@@ -28772,16 +28138,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.64,
+          "orb_deg": 0.61,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.64\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.61\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.64,
+          "orb_deg": 0.61,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.64\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.61\u00b0 orb)"
         }
       ]
     },
@@ -29039,9 +28405,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Venus",
-          "orb_deg": 0.04,
+          "orb_deg": 0.62,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Venus (0.04\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Venus (0.62\u00b0 orb)"
         }
       ]
     },
@@ -29299,23 +28665,30 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.96,
+          "orb_deg": 0.93,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.96\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.96,
+          "orb_deg": 0.93,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.96\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Jupiter",
           "over_natal": "Moon",
-          "orb_deg": 1.54,
+          "orb_deg": 1.39,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Moon (1.54\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Moon (1.39\u00b0 orb)"
+        },
+        {
+          "transiting": "Moon",
+          "over_natal": "Moon",
+          "orb_deg": 1.67,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Moon (1.67\u00b0 orb)"
         }
       ]
     },
@@ -29571,18 +28944,25 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Jupiter",
-          "over_natal": "Sun",
-          "orb_deg": 2.19,
+          "transiting": "Mercury",
+          "over_natal": "Rahu",
+          "orb_deg": 1.69,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Sun (2.19\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Rahu (1.69\u00b0 orb)"
         },
         {
           "transiting": "Rahu",
           "over_natal": "Moon",
-          "orb_deg": 2.23,
+          "orb_deg": 2.26,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Moon (2.23\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Moon (2.26\u00b0 orb)"
+        },
+        {
+          "transiting": "Jupiter",
+          "over_natal": "Sun",
+          "orb_deg": 2.34,
+          "sign": "Cancer",
+          "text": "transiting Jupiter is conjunct natal Sun (2.34\u00b0 orb)"
         }
       ]
     },
@@ -29707,10 +29087,10 @@
         "moon_sign_stable": true,
         "moon_nakshatra_stable": true,
         "maha_lord_stable": true,
-        "antar_lord_stable": true,
-        "dasha_stable": true,
+        "antar_lord_stable": false,
+        "dasha_stable": false,
         "dasha_timeline_slip_days": 988,
-        "verdict": "Robust: this chart reads the same whether the first trade happened at the open or the close, so the convention is not doing the work."
+        "verdict": "Convention-dependent. The Moon covers ~3.3\u00b0 in a session and a nakshatra is 13.3\u00b0, so had the first trade come at the close instead of the open the whole Vimshottari timeline would sit ~988 days (2.7 years) away. The published dates follow the convention; treat them as convention-dependent, not measured. The period LORD is the sturdier claim \u2014 see maha_lord_stable."
       },
       "dasha": {
         "current": {
@@ -29721,7 +29101,7 @@
           "antar_from": "2026-06-21",
           "antar_to": "2029-04-26"
         },
-        "convention_robust": true,
+        "convention_robust": false,
         "sequence": [
           {
             "lord": "Moon",
@@ -29840,9 +29220,9 @@
         {
           "transiting": "Mars",
           "over_natal": "Mars",
-          "orb_deg": 1.14,
+          "orb_deg": 0.68,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (1.14\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Mars (0.68\u00b0 orb)"
         }
       ]
     },
@@ -30100,16 +29480,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.91,
+          "orb_deg": 0.87,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.91\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.87\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.91,
+          "orb_deg": 0.87,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.91\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.87\u00b0 orb)"
         }
       ]
     },
@@ -30619,9 +29999,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Venus",
-          "orb_deg": 1.61,
+          "orb_deg": 1.59,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Venus (1.61\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Venus (1.59\u00b0 orb)"
         }
       ]
     },
@@ -30879,9 +30259,9 @@
         {
           "transiting": "Mars",
           "over_natal": "Moon",
-          "orb_deg": 2.33,
+          "orb_deg": 1.88,
           "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Moon (2.33\u00b0 orb)"
+          "text": "transiting Mars is conjunct natal Moon (1.88\u00b0 orb)"
         }
       ]
     },
@@ -31139,16 +30519,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.33,
+          "orb_deg": 0.29,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.33\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.29\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.33,
+          "orb_deg": 0.29,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.33\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.29\u00b0 orb)"
         }
       ]
     },
@@ -31406,16 +30786,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.89,
+          "orb_deg": 0.93,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.89\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.93\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.89,
+          "orb_deg": 0.93,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.89\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.93\u00b0 orb)"
         }
       ]
     },
@@ -31673,23 +31053,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.11,
+          "orb_deg": 0.08,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.11\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.08\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.11,
+          "orb_deg": 0.08,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.11\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.06,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.06\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.08\u00b0 orb)"
         }
       ]
     },
@@ -31947,9 +31320,9 @@
         {
           "transiting": "Rahu",
           "over_natal": "Jupiter",
-          "orb_deg": 2.22,
+          "orb_deg": 2.18,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Jupiter (2.22\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Jupiter (2.18\u00b0 orb)"
         }
       ]
     },
@@ -32207,9 +31580,9 @@
         {
           "transiting": "Sun",
           "over_natal": "Venus",
-          "orb_deg": 0.29,
+          "orb_deg": 0.95,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Venus (0.29\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Venus (0.95\u00b0 orb)"
         }
       ]
     },
@@ -32465,18 +31838,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Saturn",
-          "over_natal": "Ketu",
-          "orb_deg": 0.62,
-          "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Ketu (0.62\u00b0 orb)"
-        },
-        {
           "transiting": "Sun",
           "over_natal": "Jupiter",
-          "orb_deg": 0.81,
+          "orb_deg": 0.15,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (0.81\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Jupiter (0.15\u00b0 orb)"
+        },
+        {
+          "transiting": "Saturn",
+          "over_natal": "Ketu",
+          "orb_deg": 0.6,
+          "sign": "Pisces",
+          "text": "transiting Saturn is conjunct natal Ketu (0.6\u00b0 orb)"
         }
       ]
     },
@@ -32734,23 +32107,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Venus",
-          "orb_deg": 1.06,
+          "orb_deg": 1.04,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Venus (1.06\u00b0 orb)"
-        },
-        {
-          "transiting": "Moon",
-          "over_natal": "Mars",
-          "orb_deg": 1.58,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mars (1.58\u00b0 orb)"
-        },
-        {
-          "transiting": "Mercury",
-          "over_natal": "Mars",
-          "orb_deg": 2.16,
-          "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (2.16\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Venus (1.04\u00b0 orb)"
         }
       ]
     },
@@ -33008,16 +32367,16 @@
         {
           "transiting": "Saturn",
           "over_natal": "Ketu",
-          "orb_deg": 1.68,
+          "orb_deg": 1.66,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Ketu (1.68\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Ketu (1.66\u00b0 orb)"
         },
         {
           "transiting": "Sun",
           "over_natal": "Jupiter",
-          "orb_deg": 1.8,
+          "orb_deg": 2.46,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Jupiter (1.8\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Jupiter (2.46\u00b0 orb)"
         }
       ]
     },
@@ -33275,9 +32634,9 @@
         {
           "transiting": "Saturn",
           "over_natal": "Ketu",
-          "orb_deg": 1.45,
+          "orb_deg": 1.47,
           "sign": "Pisces",
-          "text": "transiting Saturn is conjunct natal Ketu (1.45\u00b0 orb)"
+          "text": "transiting Saturn is conjunct natal Ketu (1.47\u00b0 orb)"
         }
       ]
     },
@@ -33785,11 +33144,18 @@
       },
       "transits_to_natal": [
         {
+          "transiting": "Moon",
+          "over_natal": "Venus",
+          "orb_deg": 0.09,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Venus (0.09\u00b0 orb)"
+        },
+        {
           "transiting": "Venus",
           "over_natal": "Mars",
-          "orb_deg": 1.69,
+          "orb_deg": 2.37,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Mars (1.69\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Mars (2.37\u00b0 orb)"
         }
       ]
     },
@@ -34299,16 +33665,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.22,
+          "orb_deg": 0.18,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.22\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.18\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.22,
+          "orb_deg": 0.18,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.22\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.18\u00b0 orb)"
         }
       ]
     },
@@ -34566,9 +33932,9 @@
         {
           "transiting": "Ketu",
           "over_natal": "Saturn",
-          "orb_deg": 2.09,
+          "orb_deg": 2.12,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Saturn (2.09\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Saturn (2.12\u00b0 orb)"
         }
       ]
     },
@@ -34824,18 +34190,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 0.22,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (0.22\u00b0 orb)"
-        },
-        {
           "transiting": "Venus",
           "over_natal": "Sun",
-          "orb_deg": 0.23,
+          "orb_deg": 0.44,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Sun (0.23\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Sun (0.44\u00b0 orb)"
+        },
+        {
+          "transiting": "Mars",
+          "over_natal": "Mars",
+          "orb_deg": 0.68,
+          "sign": "Gemini",
+          "text": "transiting Mars is conjunct natal Mars (0.68\u00b0 orb)"
         }
       ]
     },
@@ -35091,11 +34457,18 @@
       },
       "transits_to_natal": [
         {
+          "transiting": "Moon",
+          "over_natal": "Sun",
+          "orb_deg": 1.1,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Sun (1.1\u00b0 orb)"
+        },
+        {
           "transiting": "Jupiter",
           "over_natal": "Sun",
-          "orb_deg": 2.1,
+          "orb_deg": 1.95,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Sun (2.1\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Sun (1.95\u00b0 orb)"
         }
       ]
     },
@@ -35351,11 +34724,18 @@
       },
       "transits_to_natal": [
         {
+          "transiting": "Moon",
+          "over_natal": "Mercury",
+          "orb_deg": 0.2,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Mercury (0.2\u00b0 orb)"
+        },
+        {
           "transiting": "Venus",
           "over_natal": "Mars",
-          "orb_deg": 2.36,
+          "orb_deg": 1.69,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Mars (2.36\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Mars (1.69\u00b0 orb)"
         }
       ]
     },
@@ -35611,18 +34991,11 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Moon",
-          "over_natal": "Mars",
-          "orb_deg": 0.33,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Mars (0.33\u00b0 orb)"
-        },
-        {
           "transiting": "Mercury",
           "over_natal": "Mars",
-          "orb_deg": 0.91,
+          "orb_deg": 2.09,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (0.91\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mars (2.09\u00b0 orb)"
         }
       ]
     },
@@ -36130,11 +35503,18 @@
       },
       "transits_to_natal": [
         {
+          "transiting": "Moon",
+          "over_natal": "Mercury",
+          "orb_deg": 0.4,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Mercury (0.4\u00b0 orb)"
+        },
+        {
           "transiting": "Sun",
           "over_natal": "Sun",
-          "orb_deg": 0.18,
+          "orb_deg": 0.48,
           "sign": "Cancer",
-          "text": "transiting Sun is conjunct natal Sun (0.18\u00b0 orb)"
+          "text": "transiting Sun is conjunct natal Sun (0.48\u00b0 orb)"
         }
       ]
     },
@@ -36392,23 +35772,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.17,
+          "orb_deg": 0.13,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.17\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.13\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.17,
+          "orb_deg": 0.13,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.17\u00b0 orb)"
-        },
-        {
-          "transiting": "Mars",
-          "over_natal": "Mars",
-          "orb_deg": 2.36,
-          "sign": "Gemini",
-          "text": "transiting Mars is conjunct natal Mars (2.36\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.13\u00b0 orb)"
         }
       ]
     },
@@ -36666,9 +36039,9 @@
         {
           "transiting": "Jupiter",
           "over_natal": "Mars",
-          "orb_deg": 1.25,
+          "orb_deg": 1.41,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Mars (1.25\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Mars (1.41\u00b0 orb)"
         }
       ]
     },
@@ -36803,9 +36176,9 @@
           "maha": "Mercury",
           "maha_from": "2023-03-20",
           "maha_to": "2040-03-19",
-          "antar": "Ketu",
-          "antar_from": "2025-08-15",
-          "antar_to": "2026-08-12"
+          "antar": "Venus",
+          "antar_from": "2026-08-12",
+          "antar_to": "2029-06-11"
         },
         "convention_robust": false,
         "sequence": [
@@ -36896,13 +36269,6 @@
         "upcoming": [
           {
             "kind": "antar",
-            "on": "2026-08-12",
-            "lord": "Venus",
-            "under": "Mercury",
-            "text": "Venus antardasha begins inside the Mercury mahadasha"
-          },
-          {
-            "kind": "antar",
             "on": "2029-06-12",
             "lord": "Sun",
             "under": "Mercury",
@@ -36914,6 +36280,13 @@
             "lord": "Moon",
             "under": "Mercury",
             "text": "Moon antardasha begins inside the Mercury mahadasha"
+          },
+          {
+            "kind": "antar",
+            "on": "2031-09-18",
+            "lord": "Mars",
+            "under": "Mercury",
+            "text": "Mars antardasha begins inside the Mercury mahadasha"
           }
         ],
         "note": "Vimshottari, keyed to the natal Moon's nakshatra, cast at the exchange open per the first-trade convention. Every boundary inherits the Moon's exact degree, so if the true first trade came later in the session the timeline moves ~1729 days (4.7 years). Published as the convention's answer, with that dependence stated."
@@ -36922,15 +36295,7 @@
         "active": false,
         "phase": null
       },
-      "transits_to_natal": [
-        {
-          "transiting": "Moon",
-          "over_natal": "Moon",
-          "orb_deg": 2.35,
-          "sign": "Cancer",
-          "text": "transiting Moon is conjunct natal Moon (2.35\u00b0 orb)"
-        }
-      ]
+      "transits_to_natal": []
     },
     "UCAPM": {
       "subject": "UCAPM",
@@ -37184,11 +36549,25 @@
       },
       "transits_to_natal": [
         {
+          "transiting": "Moon",
+          "over_natal": "Mercury",
+          "orb_deg": 0.7,
+          "sign": "Cancer",
+          "text": "transiting Moon is conjunct natal Mercury (0.7\u00b0 orb)"
+        },
+        {
           "transiting": "Venus",
           "over_natal": "Mars",
-          "orb_deg": 0.95,
+          "orb_deg": 1.62,
           "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Mars (0.95\u00b0 orb)"
+          "text": "transiting Venus is conjunct natal Mars (1.62\u00b0 orb)"
+        },
+        {
+          "transiting": "Jupiter",
+          "over_natal": "Mercury",
+          "orb_deg": 2.36,
+          "sign": "Cancer",
+          "text": "transiting Jupiter is conjunct natal Mercury (2.36\u00b0 orb)"
         }
       ]
     },
@@ -37444,18 +36823,18 @@
       },
       "transits_to_natal": [
         {
-          "transiting": "Venus",
-          "over_natal": "Ketu",
-          "orb_deg": 1.29,
-          "sign": "Virgo",
-          "text": "transiting Venus is conjunct natal Ketu (1.29\u00b0 orb)"
-        },
-        {
           "transiting": "Mercury",
           "over_natal": "Mars",
-          "orb_deg": 2.43,
+          "orb_deg": 1.25,
           "sign": "Cancer",
-          "text": "transiting Mercury is conjunct natal Mars (2.43\u00b0 orb)"
+          "text": "transiting Mercury is conjunct natal Mars (1.25\u00b0 orb)"
+        },
+        {
+          "transiting": "Venus",
+          "over_natal": "Ketu",
+          "orb_deg": 1.97,
+          "sign": "Virgo",
+          "text": "transiting Venus is conjunct natal Ketu (1.97\u00b0 orb)"
         }
       ]
     },
@@ -37965,23 +37344,23 @@
         {
           "transiting": "Jupiter",
           "over_natal": "Moon",
-          "orb_deg": 0.45,
+          "orb_deg": 0.6,
           "sign": "Cancer",
-          "text": "transiting Jupiter is conjunct natal Moon (0.45\u00b0 orb)"
+          "text": "transiting Jupiter is conjunct natal Moon (0.6\u00b0 orb)"
         },
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 1.95,
+          "orb_deg": 1.99,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (1.95\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (1.99\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 1.95,
+          "orb_deg": 1.99,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (1.95\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (1.99\u00b0 orb)"
         }
       ]
     },
@@ -38239,16 +37618,16 @@
         {
           "transiting": "Rahu",
           "over_natal": "Rahu",
-          "orb_deg": 0.48,
+          "orb_deg": 0.45,
           "sign": "Aquarius",
-          "text": "transiting Rahu is conjunct natal Rahu (0.48\u00b0 orb)"
+          "text": "transiting Rahu is conjunct natal Rahu (0.45\u00b0 orb)"
         },
         {
           "transiting": "Ketu",
           "over_natal": "Ketu",
-          "orb_deg": 0.48,
+          "orb_deg": 0.45,
           "sign": "Leo",
-          "text": "transiting Ketu is conjunct natal Ketu (0.48\u00b0 orb)"
+          "text": "transiting Ketu is conjunct natal Ketu (0.45\u00b0 orb)"
         }
       ]
     }
