@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-13 18:02",
+ "updated": "2026-08-13 18:04",
  "regime": "neutral",
  "geo_risk": {
   "score": 46,
@@ -364,12 +364,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-12T17:55:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-12T18:23:00+05:00",
-   "outcome": "2 full (SYS, MEBL), 0 delta, 7 reaffirm (LUCK, MTL, SAZEW, PAEL, KEL, AICL, AIRLINK). QA verdict on both: flags only (medium/low), no fixes applied per gating rule; verifier agents lack Edit tool so orchestrator inserted .qa verdicts manually. room_score.py: 543 claims, 114 resolved, 0 personas/brokers (no house-view claims filed, per SECP Reg 2(ha)). Preflight OK (non-gating WARN: 105 backfilling tickers). Published data-only (5 hand-authored files held back: launch.json, api/ask.js, app.js, themes.css, henneth-intro-video/ -- another session mid-edit). Watchdog OK, live site healthy, gates intact."
-  },
-  {
    "started": "2026-08-12T17:06:00+05:00",
    "mode": "light",
    "ended": "2026-08-12T18:26:00+05:00",
@@ -392,6 +386,12 @@
    "mode": "light-escalated",
    "ended": "2026-08-13T18:05:00+05:00",
    "outcome": "PM checkpoint: health ok, 2 news items (impact 4: MSCI AIRLINK/Biafo FM Small Cap reconstitution eff. Aug31; impact 3: KSE-100 close 180104.61 -0.11%), no open positions so monitor skipped, escalation fired -> macro (neutral, unchanged) + market-analyst (daily_read refreshed, 5-name watchlist) re-run, published and watchdog OK, pushed."
+  },
+  {
+   "started": "2026-08-13T17:15:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-13T18:05:00+05:00",
+   "outcome": "regime=neutral, geo-risk=46/moderate, daily-read=red session tied to HMB earnings miss + Al Shaheer (ASCNC) SECP-suspended acquisition, banks favoured on carry; news-sentinel flagged 3 impact>=4 items (escalation=true) but full pipeline not run per routine scope; watchdog=OK, pushed to desk.henneth.app"
   }
  ]
 }
