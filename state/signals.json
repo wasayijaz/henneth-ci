@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-13 10:54",
+ "updated": "2026-08-13 12:08",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -39,24 +39,6 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260813-GAL-high50_break",
-   "ticker": "GAL",
-   "strategy": "high50_break",
-   "template": "50d high breakout",
-   "category": "breakout",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 15,
-   "backtest": {
-    "hit_rate": 0.593,
-    "net_expectancy_pct": 1.57,
-    "n": 27,
-    "oos_hit": 0.8
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "50d high breakout is triggering now; on GAL's own history it won 59% over 27 trades (+1.6% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260813-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -73,7 +55,25 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260813-GAL-roc_accel",
+   "ticker": "GAL",
+   "strategy": "roc_accel",
+   "template": "ROC acceleration",
+   "category": "momentum",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 8,
+   "backtest": {
+    "hit_rate": 0.593,
+    "net_expectancy_pct": 0.72,
+    "n": 54,
+    "oos_hit": 0.643
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "ROC acceleration is triggering now; on GAL's own history it won 59% over 54 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 9
+ "n_candidates": 8
 }
