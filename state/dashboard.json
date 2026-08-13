@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-12 18:53",
+ "updated": "2026-08-13 05:13",
  "regime": "neutral",
  "geo_risk": {
-  "score": 38,
-  "band": "calm"
+  "score": 42,
+  "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260812-BML-obv_divergence_up",
+   "id": "20260813-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260812-TPLT-donchian55_break",
+   "id": "20260813-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260812-GAL-high50_break",
+   "id": "20260813-GAL-high50_break",
    "ticker": "GAL",
    "strategy": "high50_break",
    "template": "50d high breakout",
@@ -61,7 +61,7 @@
    "thesis": "50d high breakout is triggering now; on GAL's own history it won 59% over 27 trades (+1.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260812-NICL-roc60_leader_pullback",
+   "id": "20260813-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -87,7 +87,7 @@
   },
   {
    "ticker": "XLI",
-   "score": 72.0
+   "score": 72.7
   },
   {
    "ticker": "GLD",
@@ -381,12 +381,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-11T08:45:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-11T13:10:09+05:00",
-   "outcome": "2 full (FCCL, LUCK), 0 delta, 7 reaffirm; 0 newly-resolved calls; QA flagged+fixed LUCK dividend-yield stale-split bug (high) and FCCL dividend-type mislabel (medium); published and pushed."
-  },
-  {
    "started": "2026-08-11T17:30:00+05:00",
    "mode": "full",
    "ended": "2026-08-11T18:55:00+05:00",
@@ -409,6 +403,12 @@
    "mode": "light",
    "ended": "2026-08-12T18:26:00+05:00",
    "outcome": "PM checkpoint. run_cloud.py: first pass failed (backtest.py, snapshot.py transient race vs cloud cron), re-ran clean, ALL OK, health ok. news-sentinel FAILED (agent context-thrashing on ~1953-line newslog.json, terminated by API error) -- verified newslog.json untouched/valid (146 items, unchanged since Aug 11 17:43), no fabricated data added, no retry attempted to avoid repeat stall. No open positions, monitor skipped. No escalation (no news data this cycle). build_dashboard.py + preflight OK. Published (data-only, 5 hand-authored files left uncommitted -- not mine). Watchdog OK, live site healthy."
+  },
+  {
+   "started": "2026-08-12T17:35:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-12T18:45:00+05:00",
+   "outcome": "regime=neutral geo-risk=38/calm; daily read: KSE-100 claws back over 460 points on fresh US-Iran de-escalation hopes, while Fauji Cement posts its best-ever year; watchdog=OK; pushed"
   }
  ]
 }
