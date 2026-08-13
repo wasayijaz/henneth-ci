@@ -1,116 +1,122 @@
 [
- {
-  "started": "2026-07-14T11:20:00+05:00",
-  "mode": "light-escalated",
-  "ended": "2026-07-14T11:35:00+05:00",
-  "outcome": "ok \u00e2\u20ac\u201d impact-5 Hormuz blockade news triggered full escalation (macro+market-analyst), no open positions, pushed"
- },
- {
-  "started": "2026-07-14T12:05:00+05:00",
-  "mode": "light",
-  "ended": "2026-07-14T12:14:00+05:00",
-  "outcome": "ok \u00e2\u20ac\u201d health degraded (tv_crosscheck fail, up to 2.48% deviation), no new news items (impact-5 Hormuz item already logged prior cycle), no open positions, pushed"
- },
- {
-  "started": "2026-07-14T13:24:00+05:00",
-  "mode": "light",
-  "ended": "2026-07-14T13:30:00+05:00",
-  "outcome": "ok \u00e2\u20ac\u201d health degraded (tv_crosscheck fail), news-sentinel found 0 new items (Hormuz story continuing, no new impact>=4), no open positions, pushed"
- },
- {
-  "started": "2026-07-17T17:00:00+05:00",
-  "mode": "light-escalated",
-  "ended": "2026-07-17T17:27:00+05:00",
-  "outcome": "ok - PM checkpoint (Friday close), health ok, news-sentinel logged 2 items (KSE-100 close -1.32% impact 4, SBP reserves -6.7% WoW impact 3), escalated to macro-agent+market-analyst (regime risk-off, held), no open positions, published, watchdog OK"
- },
- {
-  "started": "2026-08-10T17:51:00+05:00",
-  "mode": "room",
-  "ended": "2026-08-10T18:15:00+05:00",
-  "outcome": "Full debates: AICL, HBL (2/2 budget). QA flagged both (AICL medium stale-price PE/yield fixed; HBL high dossier staleness caveated). 7 reaffirm, 0 delta. Published, watchdog OK."
- },
- {
-  "started": "2026-08-10T11:00:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-10T20:52:00+05:00",
-  "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later \u00e2\u20ac\u201d already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
- },
- {
-  "started": "2026-08-10T17:21:00+05:00",
-  "mode": "full",
-  "ended": "2026-08-10T22:10:00+05:00",
-  "outcome": "Daily EOD refresh: data layer OK (run_cloud.py all-ok, health ok, latest_eod 2026-08-10). macro-agent completed (regime neutral, geo-risk 57) but its state/macro.json write was clobbered by a concurrent second local session also operating this repo (file now shows stale 2026-08-05 content despite fresh mtime -- real race, not documented cloud/local race). news-sentinel and market-analyst both hit account session-limit stalls twice (fresh + retry), killed at 5min cap each, no writes -- state/newslog.json and state/daily_read.json remain at 2026-08-05, NOT refreshed this cycle. No new commentary published by this run (nothing safe to push; avoided compounding the concurrent-session race). Live site watchdog: OK (app shell, public files, gates intact) -- but daily commentary on site is 5 sessions stale. Flagged to owner: two local sessions ran against D:\\PSX Trader X Claude simultaneously today, causing a real write race outside the documented cloud/local model."
- },
- {
-  "started": "2026-08-10T17:28:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-10T22:19:41+05:00",
-  "outcome": "PM checkpoint (17:00 PKT slot, delayed by session-limit interrupt). health=ok. news-sentinel resumed after interrupt, appended items through 2026-08-05 (gap 08-06..08-10 unfilled this cycle, agent stalled, killed at 20min cap); max impact seen=3, no escalation. No open positions, monitor skipped. Published data-only (4 hand-authored files held back, another session mid-edit). Watchdog OK, live site healthy."
- },
- {
-  "started": "2026-08-11T11:00:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-11T11:15:00+05:00",
-  "outcome": "AM checkpoint: health ok, news-sentinel appended 3 items (2026-08-06/07/10 index closes, all impact 3, none >=4, no escalation), no open positions so monitor skipped, git divergence from concurrent cloud push resolved via reset-to-origin + reapply, pushed clean, watchdog OK (live, gated files intact)"
- },
- {
-  "started": "2026-08-11T17:00:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-11T17:45:00+05:00",
-  "outcome": "PM checkpoint (weekday close): health ok (spot-check HUBC 0.0% dev). news-sentinel appended 3 items -- KSE-100 close -1,463.60pts/-0.81% impact 3, FCCL FY26 results filed impact 3 (DPS figures unreliable, not quoted), ACPL FY26 results filed impact 3 (DPS figures unreliable + conflicting price sources, not quoted); max impact 3, no escalation. INCIDENT: news-sentinel subagent's Write truncated state/newslog.json from 1912 lines/143 entries to 299 invalid-JSON lines mid-write; self-detected and stopped (no fabrication). Recovered via `git checkout HEAD -- state/newslog.json` (git restore was blocked by the auto-mode classifier in this non-interactive context; checkout HEAD was not) -- verified 1912 lines/143 entries restored, then manually appended the 3 legitimate items (146 entries, valid JSON). No open positions, monitor skipped. Publish hit a real rebase conflict against a concurrent cloud commit (50bec3d4, 12:39Z) across 49 state/+generated files -- all auto-resolved to our fresher 17:38 build per _is_auto() (deterministic/regeneratable only, newslog.json untouched by the conflict), rebased and pushed clean (e14deb18); pre-existing unrelated hand-authored dirty files (.claude/launch.json, dashboard/app.js, dashboard/themes.css) stashed around the rebase and restored byte-identical after. Watchdog OK (app shell, public files, account gate intact). NOTE for owner: publish.py's rebase-conflict branch (scripts/publish.py:174) mislabels a plain 'dirty tree blocks rebase from starting' failure as 'rebase conflict on hand-authored file(s) []' when the conflicted-file list is empty for that reason rather than because every conflict resolved clean -- cosmetic/diagnostic bug only, did not affect this run's correctness, worth a follow-up fix."
- },
- {
-  "started": "2026-08-11T08:45:00+05:00",
-  "mode": "room",
-  "ended": "2026-08-11T13:10:09+05:00",
-  "outcome": "2 full (FCCL, LUCK), 0 delta, 7 reaffirm; 0 newly-resolved calls; QA flagged+fixed LUCK dividend-yield stale-split bug (high) and FCCL dividend-type mislabel (medium); published and pushed."
- },
- {
-  "started": "2026-08-11T17:30:00+05:00",
-  "mode": "full",
-  "ended": "2026-08-11T18:55:00+05:00",
-  "outcome": "EOD refresh: data layer OK (health ok, latest_eod 2026-08-11; 4 minor room-pipeline scripts failed: fetch_research/build_explainer/room_dossier/room_queue, out of scope for this cycle). news-sentinel appended 3 items (2026-08-11), max impact 3, no escalation. macro-agent: regime neutral, geo-risk 37 calm (SBP reserves 7.04bn +13mn, CPI 9.2%, rate held 11.5%). market-analyst daily read: tone cautious, KSE-100 -0.81% to 179,846.68 on fading US-Iran deal hopes; watchlist BML/GAL/BAFL/AKBL. Published (4 hand-authored code files held back, another session mid-edit), watchdog OK."
- },
- {
-  "started": "2026-08-12T11:00:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-12T14:18:00+05:00",
-  "outcome": "AM checkpoint: health ok, run_cloud.py+preflight OK (long-running, ~9min). news-sentinel: first attempt died to context-thrash before writing; lean retry found 0 new items since Tue 2026-08-11 log (today's session ~90min old at scan time, no confirmed Wed close yet), no impact>=4, no escalation. No open positions, monitor skipped. State unchanged vs cloud's 30-min cron (already fresh) so publish.py had nothing to push (5 hand-authored files held back, another session mid-edit). Watchdog: live site OK, all gates intact."
- },
- {
-  "started": "2026-08-12T17:55:00+05:00",
-  "mode": "room",
-  "ended": "2026-08-12T18:23:00+05:00",
-  "outcome": "2 full (SYS, MEBL), 0 delta, 7 reaffirm (LUCK, MTL, SAZEW, PAEL, KEL, AICL, AIRLINK). QA verdict on both: flags only (medium/low), no fixes applied per gating rule; verifier agents lack Edit tool so orchestrator inserted .qa verdicts manually. room_score.py: 543 claims, 114 resolved, 0 personas/brokers (no house-view claims filed, per SECP Reg 2(ha)). Preflight OK (non-gating WARN: 105 backfilling tickers). Published data-only (5 hand-authored files held back: launch.json, api/ask.js, app.js, themes.css, henneth-intro-video/ -- another session mid-edit). Watchdog OK, live site healthy, gates intact."
- },
- {
-  "started": "2026-08-12T17:06:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-12T18:26:00+05:00",
-  "outcome": "PM checkpoint. run_cloud.py: first pass failed (backtest.py, snapshot.py transient race vs cloud cron), re-ran clean, ALL OK, health ok. news-sentinel FAILED (agent context-thrashing on ~1953-line newslog.json, terminated by API error) -- verified newslog.json untouched/valid (146 items, unchanged since Aug 11 17:43), no fabricated data added, no retry attempted to avoid repeat stall. No open positions, monitor skipped. No escalation (no news data this cycle). build_dashboard.py + preflight OK. Published (data-only, 5 hand-authored files left uncommitted -- not mine). Watchdog OK, live site healthy."
- },
- {
-  "started": "2026-08-12T17:35:00+05:00",
-  "mode": "full",
-  "ended": "2026-08-12T18:45:00+05:00",
-  "outcome": "regime=neutral geo-risk=38/calm; daily read: KSE-100 claws back over 460 points on fresh US-Iran de-escalation hopes, while Fauji Cement posts its best-ever year; watchdog=OK; pushed"
- },
- {
-  "started": "2026-08-13T11:00:00+05:00",
-  "mode": "light",
-  "ended": "2026-08-13T11:10:00+05:00",
-  "outcome": "AM checkpoint. health=ok. news-sentinel: 3 new items, max impact 3, no escalation. no open positions, monitor skipped. published+pushed to Vercel. watchdog=OK (gated files correctly account-gated)."
- },
- {
-  "started": "2026-08-13T16:59:00+05:00",
-  "mode": "light-escalated",
-  "ended": "2026-08-13T18:05:00+05:00",
-  "outcome": "PM checkpoint: health ok, 2 news items (impact 4: MSCI AIRLINK/Biafo FM Small Cap reconstitution eff. Aug31; impact 3: KSE-100 close 180104.61 -0.11%), no open positions so monitor skipped, escalation fired -> macro (neutral, unchanged) + market-analyst (daily_read refreshed, 5-name watchlist) re-run, published and watchdog OK, pushed."
- },
- {
-  "started": "2026-08-13T17:15:00+05:00",
-  "mode": "full",
-  "ended": "2026-08-13T18:05:00+05:00",
-  "outcome": "regime=neutral, geo-risk=46/moderate, daily-read=red session tied to HMB earnings miss + Al Shaheer (ASCNC) SECP-suspended acquisition, banks favoured on carry; news-sentinel flagged 3 impact>=4 items (escalation=true) but full pipeline not run per routine scope; watchdog=OK, pushed to desk.henneth.app"
- }
+  {
+    "started": "2026-07-14T11:20:00+05:00",
+    "mode": "light-escalated",
+    "ended": "2026-07-14T11:35:00+05:00",
+    "outcome": "ok â€” impact-5 Hormuz blockade news triggered full escalation (macro+market-analyst), no open positions, pushed"
+  },
+  {
+    "started": "2026-07-14T12:05:00+05:00",
+    "mode": "light",
+    "ended": "2026-07-14T12:14:00+05:00",
+    "outcome": "ok â€” health degraded (tv_crosscheck fail, up to 2.48% deviation), no new news items (impact-5 Hormuz item already logged prior cycle), no open positions, pushed"
+  },
+  {
+    "started": "2026-07-14T13:24:00+05:00",
+    "mode": "light",
+    "ended": "2026-07-14T13:30:00+05:00",
+    "outcome": "ok â€” health degraded (tv_crosscheck fail), news-sentinel found 0 new items (Hormuz story continuing, no new impact>=4), no open positions, pushed"
+  },
+  {
+    "started": "2026-07-17T17:00:00+05:00",
+    "mode": "light-escalated",
+    "ended": "2026-07-17T17:27:00+05:00",
+    "outcome": "ok - PM checkpoint (Friday close), health ok, news-sentinel logged 2 items (KSE-100 close -1.32% impact 4, SBP reserves -6.7% WoW impact 3), escalated to macro-agent+market-analyst (regime risk-off, held), no open positions, published, watchdog OK"
+  },
+  {
+    "started": "2026-08-10T17:51:00+05:00",
+    "mode": "room",
+    "ended": "2026-08-10T18:15:00+05:00",
+    "outcome": "Full debates: AICL, HBL (2/2 budget). QA flagged both (AICL medium stale-price PE/yield fixed; HBL high dossier staleness caveated). 7 reaffirm, 0 delta. Published, watchdog OK."
+  },
+  {
+    "started": "2026-08-10T11:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-10T20:52:00+05:00",
+    "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later â€” already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
+  },
+  {
+    "started": "2026-08-10T17:21:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-10T22:10:00+05:00",
+    "outcome": "Daily EOD refresh: data layer OK (run_cloud.py all-ok, health ok, latest_eod 2026-08-10). macro-agent completed (regime neutral, geo-risk 57) but its state/macro.json write was clobbered by a concurrent second local session also operating this repo (file now shows stale 2026-08-05 content despite fresh mtime -- real race, not documented cloud/local race). news-sentinel and market-analyst both hit account session-limit stalls twice (fresh + retry), killed at 5min cap each, no writes -- state/newslog.json and state/daily_read.json remain at 2026-08-05, NOT refreshed this cycle. No new commentary published by this run (nothing safe to push; avoided compounding the concurrent-session race). Live site watchdog: OK (app shell, public files, gates intact) -- but daily commentary on site is 5 sessions stale. Flagged to owner: two local sessions ran against D:\\PSX Trader X Claude simultaneously today, causing a real write race outside the documented cloud/local model."
+  },
+  {
+    "started": "2026-08-10T17:28:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-10T22:19:41+05:00",
+    "outcome": "PM checkpoint (17:00 PKT slot, delayed by session-limit interrupt). health=ok. news-sentinel resumed after interrupt, appended items through 2026-08-05 (gap 08-06..08-10 unfilled this cycle, agent stalled, killed at 20min cap); max impact seen=3, no escalation. No open positions, monitor skipped. Published data-only (4 hand-authored files held back, another session mid-edit). Watchdog OK, live site healthy."
+  },
+  {
+    "started": "2026-08-11T11:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-11T11:15:00+05:00",
+    "outcome": "AM checkpoint: health ok, news-sentinel appended 3 items (2026-08-06/07/10 index closes, all impact 3, none >=4, no escalation), no open positions so monitor skipped, git divergence from concurrent cloud push resolved via reset-to-origin + reapply, pushed clean, watchdog OK (live, gated files intact)"
+  },
+  {
+    "started": "2026-08-11T17:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-11T17:45:00+05:00",
+    "outcome": "PM checkpoint (weekday close): health ok (spot-check HUBC 0.0% dev). news-sentinel appended 3 items -- KSE-100 close -1,463.60pts/-0.81% impact 3, FCCL FY26 results filed impact 3 (DPS figures unreliable, not quoted), ACPL FY26 results filed impact 3 (DPS figures unreliable + conflicting price sources, not quoted); max impact 3, no escalation. INCIDENT: news-sentinel subagent's Write truncated state/newslog.json from 1912 lines/143 entries to 299 invalid-JSON lines mid-write; self-detected and stopped (no fabrication). Recovered via `git checkout HEAD -- state/newslog.json` (git restore was blocked by the auto-mode classifier in this non-interactive context; checkout HEAD was not) -- verified 1912 lines/143 entries restored, then manually appended the 3 legitimate items (146 entries, valid JSON). No open positions, monitor skipped. Publish hit a real rebase conflict against a concurrent cloud commit (50bec3d4, 12:39Z) across 49 state/+generated files -- all auto-resolved to our fresher 17:38 build per _is_auto() (deterministic/regeneratable only, newslog.json untouched by the conflict), rebased and pushed clean (e14deb18); pre-existing unrelated hand-authored dirty files (.claude/launch.json, dashboard/app.js, dashboard/themes.css) stashed around the rebase and restored byte-identical after. Watchdog OK (app shell, public files, account gate intact). NOTE for owner: publish.py's rebase-conflict branch (scripts/publish.py:174) mislabels a plain 'dirty tree blocks rebase from starting' failure as 'rebase conflict on hand-authored file(s) []' when the conflicted-file list is empty for that reason rather than because every conflict resolved clean -- cosmetic/diagnostic bug only, did not affect this run's correctness, worth a follow-up fix."
+  },
+  {
+    "started": "2026-08-11T08:45:00+05:00",
+    "mode": "room",
+    "ended": "2026-08-11T13:10:09+05:00",
+    "outcome": "2 full (FCCL, LUCK), 0 delta, 7 reaffirm; 0 newly-resolved calls; QA flagged+fixed LUCK dividend-yield stale-split bug (high) and FCCL dividend-type mislabel (medium); published and pushed."
+  },
+  {
+    "started": "2026-08-11T17:30:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-11T18:55:00+05:00",
+    "outcome": "EOD refresh: data layer OK (health ok, latest_eod 2026-08-11; 4 minor room-pipeline scripts failed: fetch_research/build_explainer/room_dossier/room_queue, out of scope for this cycle). news-sentinel appended 3 items (2026-08-11), max impact 3, no escalation. macro-agent: regime neutral, geo-risk 37 calm (SBP reserves 7.04bn +13mn, CPI 9.2%, rate held 11.5%). market-analyst daily read: tone cautious, KSE-100 -0.81% to 179,846.68 on fading US-Iran deal hopes; watchlist BML/GAL/BAFL/AKBL. Published (4 hand-authored code files held back, another session mid-edit), watchdog OK."
+  },
+  {
+    "started": "2026-08-12T11:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-12T14:18:00+05:00",
+    "outcome": "AM checkpoint: health ok, run_cloud.py+preflight OK (long-running, ~9min). news-sentinel: first attempt died to context-thrash before writing; lean retry found 0 new items since Tue 2026-08-11 log (today's session ~90min old at scan time, no confirmed Wed close yet), no impact>=4, no escalation. No open positions, monitor skipped. State unchanged vs cloud's 30-min cron (already fresh) so publish.py had nothing to push (5 hand-authored files held back, another session mid-edit). Watchdog: live site OK, all gates intact."
+  },
+  {
+    "started": "2026-08-12T17:55:00+05:00",
+    "mode": "room",
+    "ended": "2026-08-12T18:23:00+05:00",
+    "outcome": "2 full (SYS, MEBL), 0 delta, 7 reaffirm (LUCK, MTL, SAZEW, PAEL, KEL, AICL, AIRLINK). QA verdict on both: flags only (medium/low), no fixes applied per gating rule; verifier agents lack Edit tool so orchestrator inserted .qa verdicts manually. room_score.py: 543 claims, 114 resolved, 0 personas/brokers (no house-view claims filed, per SECP Reg 2(ha)). Preflight OK (non-gating WARN: 105 backfilling tickers). Published data-only (5 hand-authored files held back: launch.json, api/ask.js, app.js, themes.css, henneth-intro-video/ -- another session mid-edit). Watchdog OK, live site healthy, gates intact."
+  },
+  {
+    "started": "2026-08-12T17:06:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-12T18:26:00+05:00",
+    "outcome": "PM checkpoint. run_cloud.py: first pass failed (backtest.py, snapshot.py transient race vs cloud cron), re-ran clean, ALL OK, health ok. news-sentinel FAILED (agent context-thrashing on ~1953-line newslog.json, terminated by API error) -- verified newslog.json untouched/valid (146 items, unchanged since Aug 11 17:43), no fabricated data added, no retry attempted to avoid repeat stall. No open positions, monitor skipped. No escalation (no news data this cycle). build_dashboard.py + preflight OK. Published (data-only, 5 hand-authored files left uncommitted -- not mine). Watchdog OK, live site healthy."
+  },
+  {
+    "started": "2026-08-12T17:35:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-12T18:45:00+05:00",
+    "outcome": "regime=neutral geo-risk=38/calm; daily read: KSE-100 claws back over 460 points on fresh US-Iran de-escalation hopes, while Fauji Cement posts its best-ever year; watchdog=OK; pushed"
+  },
+  {
+    "started": "2026-08-13T11:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-13T11:10:00+05:00",
+    "outcome": "AM checkpoint. health=ok. news-sentinel: 3 new items, max impact 3, no escalation. no open positions, monitor skipped. published+pushed to Vercel. watchdog=OK (gated files correctly account-gated)."
+  },
+  {
+    "started": "2026-08-13T16:59:00+05:00",
+    "mode": "light-escalated",
+    "ended": "2026-08-13T18:05:00+05:00",
+    "outcome": "PM checkpoint: health ok, 2 news items (impact 4: MSCI AIRLINK/Biafo FM Small Cap reconstitution eff. Aug31; impact 3: KSE-100 close 180104.61 -0.11%), no open positions so monitor skipped, escalation fired -> macro (neutral, unchanged) + market-analyst (daily_read refreshed, 5-name watchlist) re-run, published and watchdog OK, pushed."
+  },
+  {
+    "started": "2026-08-13T17:15:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-13T18:05:00+05:00",
+    "outcome": "regime=neutral, geo-risk=46/moderate, daily-read=red session tied to HMB earnings miss + Al Shaheer (ASCNC) SECP-suspended acquisition, banks favoured on carry; news-sentinel flagged 3 impact>=4 items (escalation=true) but full pipeline not run per routine scope; watchdog=OK, pushed to desk.henneth.app"
+  },
+  {
+    "started": "2026-08-13 17:40",
+    "mode": "room",
+    "ended": "2026-08-13 18:07",
+    "outcome": "2 full (HMB, AIRLINK) / 0 delta / 6 reaffirm (LUCK, SYS, MTL, SAZEW, PAEL, KEL); QA flags-not-blocked both full tickers (medium/low findings, no fix required); 0 resolved persona/broker calls this run; pushed, watchdog OK"
+  }
 ]
