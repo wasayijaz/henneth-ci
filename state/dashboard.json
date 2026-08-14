@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-13 18:04",
+ "updated": "2026-08-14 05:09",
  "regime": "neutral",
  "geo_risk": {
-  "score": 46,
+  "score": 53,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260813-BML-obv_divergence_up",
+   "id": "20260814-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260813-TPLT-donchian55_break",
+   "id": "20260814-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260813-NICL-roc60_leader_pullback",
+   "id": "20260814-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -61,7 +61,7 @@
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260813-GAL-roc_accel",
+   "id": "20260814-GAL-roc_accel",
    "ticker": "GAL",
    "strategy": "roc_accel",
    "template": "ROC acceleration",
@@ -87,7 +87,7 @@
   },
   {
    "ticker": "XLI",
-   "score": 72.7
+   "score": 72.0
   },
   {
    "ticker": "GLD",
@@ -95,7 +95,7 @@
   },
   {
    "ticker": "USRUT",
-   "score": 65.9
+   "score": 66.3
   },
   {
    "ticker": "INDU",
@@ -106,16 +106,16 @@
    "score": 65.6
   },
   {
-   "ticker": "USDJI",
-   "score": 65.2
-  },
-  {
    "ticker": "FHAM",
    "score": 64.8
   },
   {
+   "ticker": "USDJI",
+   "score": 64.7
+  },
+  {
    "ticker": "EFA",
-   "score": 64.3
+   "score": 63.3
   },
   {
    "ticker": "THCCL",
@@ -364,12 +364,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-12T17:06:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-12T18:26:00+05:00",
-   "outcome": "PM checkpoint. run_cloud.py: first pass failed (backtest.py, snapshot.py transient race vs cloud cron), re-ran clean, ALL OK, health ok. news-sentinel FAILED (agent context-thrashing on ~1953-line newslog.json, terminated by API error) -- verified newslog.json untouched/valid (146 items, unchanged since Aug 11 17:43), no fabricated data added, no retry attempted to avoid repeat stall. No open positions, monitor skipped. No escalation (no news data this cycle). build_dashboard.py + preflight OK. Published (data-only, 5 hand-authored files left uncommitted -- not mine). Watchdog OK, live site healthy."
-  },
-  {
    "started": "2026-08-12T17:35:00+05:00",
    "mode": "full",
    "ended": "2026-08-12T18:45:00+05:00",
@@ -392,6 +386,12 @@
    "mode": "full",
    "ended": "2026-08-13T18:05:00+05:00",
    "outcome": "regime=neutral, geo-risk=46/moderate, daily-read=red session tied to HMB earnings miss + Al Shaheer (ASCNC) SECP-suspended acquisition, banks favoured on carry; news-sentinel flagged 3 impact>=4 items (escalation=true) but full pipeline not run per routine scope; watchdog=OK, pushed to desk.henneth.app"
+  },
+  {
+   "started": "2026-08-13 17:40",
+   "mode": "room",
+   "ended": "2026-08-13 18:07",
+   "outcome": "2 full (HMB, AIRLINK) / 0 delta / 6 reaffirm (LUCK, SYS, MTL, SAZEW, PAEL, KEL); QA flags-not-blocked both full tickers (medium/low findings, no fix required); 0 resolved persona/broker calls this run; pushed, watchdog OK"
   }
  ]
 }
