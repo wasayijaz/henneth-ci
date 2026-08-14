@@ -432,62 +432,25 @@ body[data-theme=gemini] .plan-badge{font-size:10px;text-transform:uppercase;lett
 @media(max-width:900px){body[data-theme=gemini] .plan-badge{display:none}}
 body[data-theme=gemini] .acct-menu button{background:transparent;border:none;text-align:start;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body)}
 body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
-/* auth screen — dedicated screen, not a popup: covers the viewport like a route, no backdrop
-   dim (there is nothing behind it to dim through). Form left, desk-pipeline scene right. */
-body[data-theme=gemini] .authbox{position:fixed;inset:0;background:var(--bg);z-index:100;overflow-y:auto;animation:fadeIn var(--dur-fast) both}
-body[data-theme=gemini] .authpanel{background:var(--panel);width:100%;max-width:400px;padding:18px;animation:fadeUp var(--dur-base) var(--ease-out) both}
-body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+/* auth modal */
+body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px;overflow-y:auto;animation:fadeIn var(--dur-fast) both}
+body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px;animation:fadeUp var(--dur-base) var(--ease-out) both}
+body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 body[data-theme=gemini] .auth-head .ha-logo{margin-right:8px}
-body[data-theme=gemini] .authbox.ha-v2{min-height:100%;display:grid;grid-template-columns:43fr 57fr}
-body[data-theme=gemini] .ha-v2 .authpanel{order:1;max-width:420px;width:100%;margin:0 auto;padding:56px 48px;display:flex;flex-direction:column;justify-content:center;border:none}
-body[data-theme=gemini] .ha-headline{font-size:34px;font-weight:700;letter-spacing:-.015em;line-height:1.16;margin:0 0 10px}
-body[data-theme=gemini] .ha-headline em{font-style:italic;font-weight:700;color:#7a6ff0}
-body[data-theme=gemini] .auth-sub{font-size:12.5px;color:var(--ink3);margin:0 0 20px;line-height:1.5}
-/* .ha-scene and its children are the one deliberate exception to the site-wide hard-corner reset
-   (:root,*{border-radius:0 !important} above) — the Kairo-style glass panel needs rounded pill
-   badge and floating cards to read as glass, so the override is !important, scoped tight to this
-   subtree only. Nothing else on the desk gets rounded. */
-body[data-theme=gemini] .ha-scene{order:2;position:relative;overflow:hidden;background:#111018;
-  margin:14px;border-radius:24px!important;padding:28px;display:flex;flex-direction:column;gap:16px;
-  font-family:"Pixelify Sans",var(--mono,monospace)}
-body[data-theme=gemini] .ha-badge{position:relative;z-index:2;display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#fff;
-  font-size:10.5px;font-weight:600;letter-spacing:.08em;padding:6px 12px;border-radius:99px!important;
-  align-self:flex-start}
-body[data-theme=gemini] .ha-board{border:1px solid rgba(255,255,255,.14)}
-body[data-theme=gemini] .ha-board-head{display:flex;align-items:center;gap:6px;padding:8px 10px;
-  font-size:9.5px;letter-spacing:.1em;color:rgba(255,255,255,.55);border-bottom:1px solid rgba(255,255,255,.14)}
-body[data-theme=gemini] .ha-live-dot{width:6px;height:6px;border-radius:99px!important;background:var(--up,#3ddc97);
-  animation:haLivePulse 1.8s ease-in-out infinite}
-@keyframes haLivePulse{0%,100%{opacity:1}50%{opacity:.35}}
-body[data-theme=gemini] .ha-grid5{display:grid;grid-template-columns:repeat(5,1fr)}
-body[data-theme=gemini] .ha-cell{padding:10px 6px;text-align:center;font-size:10.5px;font-weight:600;
-  letter-spacing:.03em;color:rgba(255,255,255,.8);border-right:1px solid rgba(255,255,255,.08);
-  border-bottom:1px solid rgba(255,255,255,.08)}
-body[data-theme=gemini] .ha-cell:nth-child(5n){border-right:none}
-body[data-theme=gemini] .ha-log{flex:1;min-height:0;overflow:hidden;border:1px solid rgba(255,255,255,.14);
-  padding:12px;display:flex;flex-direction:column;gap:9px}
-body[data-theme=gemini] .ha-log-line{display:flex;justify-content:space-between;gap:12px;font-size:10.5px;line-height:1.4}
-body[data-theme=gemini] .ha-log-line b{color:#8f7bff;font-weight:700;letter-spacing:.05em;white-space:nowrap}
-body[data-theme=gemini] .ha-log-line span{color:rgba(255,255,255,.65);text-align:right}
-body[data-theme=gemini] .ha-dock{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-body[data-theme=gemini] .ha-mod{border:1px solid rgba(255,255,255,.14);padding:10px 12px;transition:background 150ms ease-out}
-body[data-theme=gemini] .ha-mod:hover{background:rgba(255,255,255,.05)}
-body[data-theme=gemini] .ha-mod b{display:block;font-size:9.5px;letter-spacing:.08em;color:#fff;margin-bottom:5px}
-body[data-theme=gemini] .ha-mod span{display:block;font-size:10px;color:rgba(255,255,255,.55);line-height:1.4}
-@media (prefers-reduced-motion:reduce){
-  body[data-theme=gemini] .ha-live-dot{animation:none}
-}
+body[data-theme=gemini] .authbox.ha-v2{align-items:center;display:flex;flex-direction:row-reverse;gap:0;max-height:none}
+body[data-theme=gemini] .ha-v2 .authpanel{flex:1 1 380px;min-width:0;max-width:420px;padding:22px}
+body[data-theme=gemini] .ha-v2 .authpanel{border-right:none}
+body[data-theme=gemini] .ha-scene{position:relative;flex:1 1 320px;min-width:0;max-width:420px;align-self:stretch;background:var(--panel2,var(--panel));border:1.5px solid var(--line);border-left:none}
+body[data-theme=gemini] .ha-scene canvas{position:absolute;inset:0;width:100%;height:100%}
 @media (max-width:900px){
-  body[data-theme=gemini] .authbox.ha-v2{display:block}
   body[data-theme=gemini] .ha-scene{display:none}
-  body[data-theme=gemini] .ha-v2 .authpanel{min-height:100vh;padding:24px}
 }
 body[data-theme=gemini] .auth-head b{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
 body[data-theme=gemini] .auth-head em{font-style:normal;color:var(--ink3)}
 body[data-theme=gemini] .auth-x{background:transparent;border:1px solid var(--line);width:24px;height:24px;font-size:11px}
-body[data-theme=gemini] .ha-switch{margin-top:16px;text-align:center;font-size:12.5px;color:var(--ink3)}
-body[data-theme=gemini] .ha-switch a{margin-inline-start:4px;color:var(--ink1);font-weight:700;text-decoration:underline;cursor:pointer}
+body[data-theme=gemini] .auth-tabs{display:flex;margin-bottom:14px;border:1px solid var(--line)}
+body[data-theme=gemini] .auth-tabs button{flex:1;background:transparent;border:none;padding:8px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-family:var(--font-body)}
+body[data-theme=gemini] .auth-tabs button.on{background:var(--ink1);color:#f4f4f0}
 body[data-theme=gemini] .authpanel label{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:10px}
 body[data-theme=gemini] .authpanel input{display:block;width:100%;margin-top:4px;padding:9px 10px;border:1.5px solid var(--line);background:var(--panel);font:inherit;font-size:13px;color:var(--ink1)}
 body[data-theme=gemini] .authpanel input:focus{border-color:var(--ink1);outline:none}
