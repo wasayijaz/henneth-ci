@@ -39,6 +39,83 @@ which file changed.
 
 ---
 
+## 2026-08-14 — v2026.08.14 — Sign-in goes straight to the terminal; desk mark in the header
+
+<!--public
+Signing in is one step shorter: you land on the sign in / create account screen directly instead of
+a page that just asks which one you want. On a phone the form is now at the top of that screen, with
+the animated terminal below it. The desk mark now sits in the header on every page.
+-->
+
+### What changed
+
+**1. The members-only interstitial is gone.** `renderGate()` in `dashboard/app.js` used to paint a card
+reading *"The terminal is members-only."* with **Create your account** / **I already have one** buttons,
+and only then open the auth surface. It now clears `#view`, sets `data-gated="1"`, and calls
+`openAuth(planIntent() ? "signup" : "signin")` — nothing else. The card's `.gate-*` rules and its Urdu
+strings were deleted with it rather than left orphaned.
+
+Why: the card carried no information the login screen doesn't carry by being the only thing on screen,
+and it spent a click at the most expensive step of the funnel. The `gate_viewed` event is unchanged, so
+the funnel comparison across the change stays valid.
+
+`renderGate()` returns early when `_authTerm` is already set. Moving between two gated routes re-runs
+`route()`, and remounting would replay the terminal's four-second boot sequence each time.
+
+**2. Mobile order on the auth terminal: form first, scene second.** `dashboard/auth-terminal.css` carried
+two competing `@media (max-width: 880px)` blocks. The first (a faithful port of the wake6-v4 source) set
+`.right { order: -1 }`, putting the animated terminal above the form. The second — the one that sets
+`.left{order:1}` / `.right{order:2}` and shrinks the board, dock and seal for a phone — was **dead code**:
+a stray `.hn-auth` token sat between the preceding rule and its `@media`, so the browser parsed
+`.hn-auth @media (max-width: 880px)` as one invalid selector prelude and discarded the entire block. Every
+declaration inside it was also unscoped (`body`, `.page`, `.split`, `.left`, `.right`, …) and would have
+leaked into the desk had it ever parsed.
+
+Fixed by deleting the stray token, scoping all 24 selectors with `.hn-auth`, and dropping `order:-1` from
+the first block so the two no longer contradict each other. `body{overflow-x:hidden}` was dropped rather
+than scoped — measured `documentElement.scrollWidth === clientWidth === 375` at the mobile preset, so it
+was suppressing an overflow that does not exist.
+
+This **departs from the reference HTML on purpose.** wake6-v4 itself stacks the scene above the form on
+mobile; the desk stacks the form above the scene. The animation is context, not the task.
+
+Note on the class of bug: `.hn-auth /* comment */ .foo{}` is valid CSS (a comment is whitespace, so it
+reads as a descendant combinator) and that pattern appears seven more times in this file, all legitimate.
+The same pattern in front of an at-rule is silently fatal. The remaining seven were checked individually.
+
+**3. Desk mark in the top bar.** `dashboard/index.html` swaps the header's text-only brand for
+`logo-terminal.svg` (already in `dashboard/`, byte-identical to the branding master) plus the wordmark:
+
+```html
+<a class="brand brand-top" href="#/today" aria-label="Henneth Desk"><img class="brand-top-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async"><span class="brand-mobile">Henneth <em>Desk</em></span></a>
+```
+
+`aria-label` on the link with `alt=""` on the image, so the brand is announced once — on mobile the
+wordmark span is visible too, and an `alt` of "Henneth Desk" would make a screen reader say it twice.
+The span keeps `.brand-mobile`, so the existing desktop-hide / mobile-show / gated-show rules apply
+unchanged: on desktop the sidebar already spells the name out and only the mark rides in the header;
+on a phone the sidebar is a drawer, so the words come back beside it.
+
+Sized at 30px in `themes.css` — the tallest the mark stands in a 48px bar with the bar's 7px padding
+intact. **Watch this one:** `logo-mark.svg` exists precisely because the "HENNETH DESK" label plate, its
+LED and the button housing occupy a 39px band of a 472px artboard and stop reading below ~40px. At 30px
+that band renders about 2.5px. If it reads as mush on a real screen, the fix is a one-word swap of the
+`src` to `logo-mark.svg`.
+
+### Verified
+
+Fresh load past the cache at `localhost:8878`: `.brand-top` present, mark 30px, auth terminal mounted,
+no "members-only" text in the document, console clean. At the 375×812 mobile preset: `.left` order 1 at
+y=107, `.right` order 2 at y=647, `.split` `display:flex` / `column`, no horizontal overflow.
+
+### Still open
+
+- `#/cast` — "cast your birth chart without an account" was a line on the deleted card. The route works
+  and the funnel still depends on it, but it no longer has an entry point for a signed-out visitor who
+  hasn't been given the link. Needs a home or an explicit decision to drop it.
+- Onboarding answers persist to `localStorage` only. Cross-device requires a `desk_profile` jsonb column
+  on Supabase `profiles`. Proposed, not applied.
+
 ## 2026-08-10 — v2026.08.10 — Premium polish round 5: tape stability, modal/scroll-lock cleanup, sidebar restore
 
 <!--public

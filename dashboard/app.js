@@ -915,17 +915,8 @@ async function pageToday() {
 
   const sinceBanner = await sinceLastVisit(q, lv);
 
-  // ---- pick-a-ticker: the one real first action, shown until activated_at is set ----
-  const onboardPrompt = (me && myProfile && !myProfile.activated_at) ? `
-  <div class="card onboard-prompt">
-    <button class="onboard-x" onclick="dismissOnboardPrompt()" aria-label="Dismiss">×</button>
-    <b>Add a stock to your watchlist to get started</b>
-    <div class="ph-row" style="margin-top:8px">
-      <input id="ob-tkr" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" autofocus onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addOnboardTicker()">
-      <button class="btn" onclick="addOnboardTicker()">Add</button>
-    </div>
-    <span id="ob-msg" class="sub"></span>
-  </div>` : "";
+  // ---- desk setup: the same four-question onboarding the terminal runs, offered until activation ----
+  const onboardPrompt = (me && myProfile && !myProfile.activated_at) ? onboardCardHtml() : "";
   if (onboardPrompt && !_onboardShownTracked) { _onboardShownTracked = true; track("onboard_prompt_shown"); }
 
   $("view").innerHTML = `
@@ -5392,168 +5383,94 @@ function alignmentCard(a) {
 }
 
 /* ==========================================================================================
-   ASK THE DESK — a responsive answer engine with NO runtime model. Intent is classified from the
-   question, facts are retrieved from the desk's own state files, and prose is composed from
-   templates around real numbers. The upside over a live LLM is not cost: it is that this
-   CANNOT invent a price, a date or a dividend (CLAUDE.md Rule 2). Agent-written prose that already
-   exists (explainer.json, written nightly) is quoted rather than regenerated.
+   ASK THE DESK — free-form chat, answered by a live model (Groq, via /api/ask), grounded against
+   the desk's own state files SERVER-SIDE. The model never gets open-ended state/ access — only a
+   small JSON slice for whatever symbol or sector the question names — and its system prompt is
+   instructed to say "unknown" rather than invent a figure (CLAUDE.md Rule 2) and to never use
+   advice language (Rule 5). That is an instruction the model follows, not an architectural
+   guarantee a template gave for free — see api/ask.js's header for the trade made to get real
+   conversation instead of the old fixed-template engine, and why the UI below says "grounded in",
+   not "cannot invent".
    ========================================================================================== */
-let _ask = { q: "", history: [] };
+let _ask = { history: [], busy: false }; // history: [{role:"user"|"assistant", content, error?}]
 const ASK_SAMPLES = ["Why is MEBL moving?", "Is FFC cheap?", "Tell me about LUCK", "FFC vs MCB",
   "Best dividend stocks", "What's happening in cement?", "What changed today?"];
 
-function askFindSyms(text, universe) {
-  const up = text.toUpperCase();
-  const hits = Object.keys(universe).filter(s => new RegExp(`\\b${s}\\b`).test(up));
-  return [...new Set(hits)].slice(0, 2);
+function askThreadHtml() {
+  const turns = _ask.history.map(m => m.role === "user"
+    ? `<div class="ans-q">${esc(m.content)}</div>`
+    : `<div class="ans-block"${m.error ? ' style="border-inline-start:3px solid var(--dn)"' : ""}><p style="white-space:pre-wrap">${esc(m.content)}</p></div>`
+  ).join("");
+  const busy = _ask.busy ? `<div class="ans-block"><p class="sub">Reading the desk's data and thinking…</p></div>` : "";
+  const foot = _ask.history.length ? `<div class="ans-foot">Answered by a model grounded in the desk's own data — it's instructed to say "unknown" rather than invent a figure, but it is a live model, not a fixed template. Verify anything important on the ticker page. Research and education, never advice.</div>` : "";
+  return turns + busy + foot;
 }
-function askFindSector(text, sectorNames) {
-  const t = text.toLowerCase(); let best = null;
-  for (const sec of sectorNames) for (const w of sec.toLowerCase().split(/[^a-z]+/))
-    if (w.length >= 4 && t.includes(w) && (!best || w.length > best.w.length)) best = { sec, w };
-  return best?.sec || null;
+function renderAsk() {
+  const out = $("ask-out");
+  if (!out) return;
+  out.innerHTML = askThreadHtml();
+  out.scrollTop = out.scrollHeight;
 }
-async function askRun(qtext) {
-  const text = (qtext ?? document.getElementById("ask-in")?.value ?? "").trim();
-  if (!text) return;
-  _ask.q = text;
-  const out = document.getElementById("ask-out");
-  if (out) out.innerHTML = `<div class="sub" style="padding:12px 0">Reading the desk's data…</div>`;
-  const [uni, q, fvA, fndA, fsA, predA, news, sec, sm, expl, cal, claims, divs] = await Promise.all([
-    j("universe.json"), j("quant.json"), j("fairvalue.json"), j("fundamentals.json"),
-    j("fundamental_scores.json"), j("predictability.json"), j("newslog.json"), j("sectors.json"),
-    j("sector_macro.json"), j("explainer.json"), j("earnings_calendar.json"), j("claims.json"), j("dividends.json")]);
-  const U = uni?.symbols || {}, Q = q?.tickers || {}, FV = fvA?.tickers || {}, FN = fndA?.tickers || {},
-    FS = fsA?.tickers || {}, PR = predA?.tickers || {}, SEC = sec?.tickers || {};
-  const sectorNames = [...new Set(Object.values(SEC).map(x => x.sector).filter(Boolean))];
-  const syms = askFindSyms(text, U);
-  const sectorHit = askFindSector(text, sectorNames);
-  const t = text.toLowerCase();
-  const A = []; // answer blocks
-  const line = (h, b) => A.push(`<div class="ans-block"><b>${h}</b><p>${b}</p></div>`);
-  const linkTo = s => `<a href="#/ticker/${s}" style="color:var(--accent);font-weight:700">${s}</a>`;
 
-  const ctx = s => ({ q: Q[s] || {}, fv: FV[s] || {}, fs: FS[s] || {}, pred: PR[s]?.score,
-    claims, news, sm, sector: SEC[s]?.sector, f: FN[s] || {}, e: expl?.[s] || {}, name: U[s]?.name || "" });
+async function askSend(qtext) {
+  const inputEl = $("ask-in");
+  const text = (qtext ?? inputEl?.value ?? "").trim().slice(0, 500);
+  if (!text || _ask.busy) return;
+  if (inputEl) inputEl.value = "";
 
-  // ---- intent: compare two names ----
-  if (syms.length === 2 && /\bvs\b|versus|compare|or\b/.test(t)) {
-    const [a, b] = syms, ca = ctx(a), cb = ctx(b);
-    const row = (label, va, vb) => `<tr><td class="sub">${label}</td><td class="r num">${va}</td><td class="r num">${vb}</td></tr>`;
-    A.push(`<div class="ans-block"><b>${a} vs ${b}</b>
-      <table class="ans-table"><thead><tr><th></th><th class="r">${a}</th><th class="r">${b}</th></tr></thead><tbody>
-      ${row("Price", fmt(ca.q.close), fmt(cb.q.close))}
-      ${row("P/E", ca.fs.metrics?.pe ?? "—", cb.fs.metrics?.pe ?? "—")}
-      ${row("Dividend yield", ca.f.div_yield || "—", cb.f.div_yield || "—")}
-      ${row("vs model fair", ca.fv.mispricing_pct != null ? sgn(ca.fv.mispricing_pct) + "%" : "—", cb.fv.mispricing_pct != null ? sgn(cb.fv.mispricing_pct) + "%" : "—")}
-      ${row("20-day move", sgn(ca.q.ret_20d) + "%", sgn(cb.q.ret_20d) + "%")}
-      ${row("Predictability", ca.pred ?? "—", cb.pred ?? "—")}
-      ${row("Sector", esc(ca.sector || "—"), esc(cb.sector || "—"))}
-      </tbody></table>
-      <p class="sub">Same fields, side by side — the desk won't pick between them for you. Open ${linkTo(a)} or ${linkTo(b)} for the full read, including each one's checklist.</p></div>`);
-  }
-  // ---- intent: why is X moving ----
-  else if (syms.length && /why|moving|falling|dropping|rising|down|up\b|crash/.test(t)) {
-    const s = syms[0], c = ctx(s);
-    const d1 = c.q.ret_1d, d20 = c.q.ret_20d;
-    const dir = d1 > 0 ? "up" : "down";
-    const secPeers = Object.keys(SEC).filter(x => SEC[x].sector === c.sector && Q[x]);
-    const secAvg = secPeers.length ? secPeers.reduce((a, x) => a + (Q[x].ret_1d || 0), 0) / secPeers.length : null;
-    const recentNews = (news || []).filter(n => (n.tickers || []).includes(s)).slice(-3).reverse();
-    let body = `${linkTo(s)} is <b class="${d1 >= 0 ? "up" : "dn"}">${sgn(d1)}%</b> today at Rs ${fmt(c.q.close)}, and ${sgn(d20)}% over 20 sessions. `;
-    if (secAvg != null) body += Math.abs(d1 - secAvg) < 0.7
-      ? `Its sector (${esc(c.sector)}) moved ${sgn(+secAvg.toFixed(2))}% on average — so this looks like <b>the sector moving together</b>, not a company-specific story. `
-      : `Its sector (${esc(c.sector)}) averaged ${sgn(+secAvg.toFixed(2))}%, so ${s} is moving <b>differently from its peers</b> — that difference is where a company-specific reason usually hides. `;
-    if (c.q.vol_surge && Math.abs(d1) >= 2) body += `Volume ran well above normal behind the move. `;
-    body += c.e.momentum?.one_line ? `The desk's read: ${esc(c.e.momentum.one_line)} ` : "";
-    line("What the data shows", body);
-    if (recentNews.length) A.push(`<div class="ans-block"><b>On the wire</b>${recentNews.map(n =>
-      `<p class="ans-news"><span class="tag">${n.impact ?? "?"}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || n.summary || "")}</p>`).join("")}
-      <p class="sub">The desk logs news but does not assert causation between a headline and a day's move — that link is usually assumed, rarely proven.</p></div>`);
-    else line("On the wire", `Nothing tagged to ${s} in the desk's recent news log. A move without news is common, and "no reason found" is a more honest answer than an invented one.`);
-    const upcoming = (cal?.events || []).filter(e => e.ticker === s && e.date >= todayPKT()).slice(0, 2);
-    if (upcoming.length) line("Ahead", upcoming.map(e => `${esc(e.type.replace(/_/g, " "))} on <b>${esc(e.date)}</b>`).join(", ") + ". Results dates gap prices — a stop does not protect you across a gap.");
-  }
-  // ---- intent: valuation ----
-  else if (syms.length && /cheap|expensive|worth|valuation|overvalued|undervalued|fair value|price target/.test(t)) {
-    const s = syms[0], c = ctx(s);
-    if (c.fv.composite_fair) {
-      const meth = Object.entries(c.fv.methods || {}).filter(([, v]) => v != null);
-      line(`Is ${s} cheap?`, `${linkTo(s)} trades at <b>Rs ${fmt(c.fv.price)}</b> against a blended model fair value of <b>Rs ${fmt(c.fv.composite_fair)}</b> — ${sgn(c.fv.mispricing_pct)}%, which the model reads as <b>${esc(c.fv.verdict)}</b>. That blend is the <b>median</b> of ${meth.length} independent methods${meth.length ? ` (${meth.map(([k]) => esc(METHOD_LABEL[k] || k)).join(", ")})` : ""}, because any single method can be badly wrong on any one company. ${c.e.value?.one_line ? esc(c.e.value.one_line) : ""}`);
-      line("The honest caveat", `A model fair value is an estimate built on reported fundamentals, <b>not a price target and not advice</b>. A stock can sit below model fair value for years, and "cheap" often means the market expects earnings to fall. Check the ${linkTo(s)} page's checklist before treating this as a discount.`);
-    } else line(`Is ${s} cheap?`, `The desk could not build a fair-value model for ${s} — usually missing or negative earnings. No number is better than a made-up one.`);
-  }
-  // ---- intent: dividends / income ranking ----
-  else if (/dividend|yield|income|payout/.test(t) && !syms.length) {
-    const rows = Object.keys(Q).map(s => ({ s, dy: parseFloat(FN[s]?.div_yield) || 0, po: parseFloat(FN[s]?.payout_ratio), liq: Q[s].avg_daily_traded_value }))
-      .filter(r => r.dy > 0 && r.po != null && r.po < 90 && (r.liq || 0) > 5e6)
-      .sort((a, b) => b.dy - a.dy).slice(0, 8);
-    line("Highest covered yields", `Ranked by dividend yield, keeping only names paying out <b>under 90% of earnings</b> (so the dividend is covered) and trading with real liquidity. A very high yield is as often a warning as an opportunity — yield rises when price falls.`);
-    A.push(`<div class="ans-block"><table class="ans-table"><thead><tr><th>Stock</th><th class="r">Yield</th><th class="r">Payout</th></tr></thead><tbody>${
-      rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((U[r.s]?.name || "").slice(0, 22))}</span></td>
-        <td class="r num up">${r.dy}%</td><td class="r num">${r.po}%</td></tr>`).join("")}</tbody></table>
-      <p class="sub">A screen, not a recommendation. Check each one's payout history and cash flow — see the <a href="#/dividends" style="color:var(--accent)">Dividends</a> page for buy-by dates.</p></div>`);
-  }
-  // ---- intent: sector ----
-  else if (sectorHit && !syms.length) {
-    const peers = Object.keys(SEC).filter(x => SEC[x].sector === sectorHit && Q[x]);
-    const avg1 = peers.reduce((a, x) => a + (Q[x].ret_1d || 0), 0) / (peers.length || 1);
-    const avg20 = peers.reduce((a, x) => a + (Q[x].ret_20d || 0), 0) / (peers.length || 1);
-    const best = peers.slice().sort((a, b) => Q[b].ret_20d - Q[a].ret_20d)[0];
-    const worst = peers.slice().sort((a, b) => Q[a].ret_20d - Q[b].ret_20d)[0];
-    const rec = sm?.by_sector?.[sectorHit];
-    const demo = (rec?.drivers || []).filter(d => d.demonstrated);
-    line(`${sectorHit} right now`, `${peers.length} names in the desk's universe. Average move <b class="${avg1 >= 0 ? "up" : "dn"}">${sgn(+avg1.toFixed(2))}%</b> today and ${sgn(+avg20.toFixed(1))}% over 20 sessions. Strongest lately: ${linkTo(best)} (${sgn(Q[best].ret_20d)}%); weakest: ${linkTo(worst)} (${sgn(Q[worst].ret_20d)}%).`);
-    line("What actually moves it", demo.length
-      ? `Measured over 19 years, ${sectorHit} ${demo[0].corr > 0 ? "rises with" : "falls when"} <b>${esc(FACTOR_PLAIN[demo[0].factor] || demo[0].factor)}</b>${demo[0].corr > 0 ? "" : " rises"}${demo.length > 1 ? `, and also tracks ${demo.slice(1, 3).map(x => esc(FACTOR_PLAIN[x.factor] || x.factor)).join(" and ")}` : ""} — correction-survived. Even so, the whole global tape explains only <b>${rec.joint_r2_pct}%</b> of its daily moves. Try it in the <a href="#/scenarios" style="color:var(--accent)">scenario simulator</a>.`
-      : `No global factor shows a demonstrated effect on ${sectorHit} — over 19 years its days have been made locally, not on the world tape. That silence is a measured finding, not a gap.`);
-  }
-  // ---- intent: what changed / market today ----
-  else if (/what changed|today|market|happening|news/.test(t) && !syms.length) {
-    const movers = Object.entries(Q).sort((a, b) => b[1].ret_1d - a[1].ret_1d);
-    const up3 = movers.slice(0, 3), dn3 = movers.slice(-3).reverse();
-    const big = (news || []).filter(n => (n.impact || 0) >= 4).slice(-3).reverse();
-    line("The day", `Biggest gains: ${up3.map(([s, v]) => `${linkTo(s)} ${sgn(v.ret_1d)}%`).join(", ")}. Biggest falls: ${dn3.map(([s, v]) => `${linkTo(s)} ${sgn(v.ret_1d)}%`).join(", ")}.`);
-    if (big.length) A.push(`<div class="ans-block"><b>High-impact news</b>${big.map(n => `<p class="ans-news"><span class="tag">${n.impact}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || "")}</p>`).join("")}</div>`);
-    else line("High-impact news", "Nothing rated 4 or 5 on the desk's impact scale recently — a quiet wire.");
-  }
-  // ---- intent: general read on a name ----
-  else if (syms.length) {
-    const s = syms[0], c = ctx(s);
-    const a = alignmentOf(s, c);
-    line(`${s}${c.name ? ` — ${esc(c.name)}` : ""}`, `${esc(c.sector || "")}${c.q.close ? `, trading at Rs ${fmt(c.q.close)} (${sgn(c.q.ret_1d)}% today, ${sgn(c.q.ret_20d)}% over 20 sessions)` : ""}. ${c.e.health?.one_line ? esc(c.e.health.one_line) : ""}`);
-    ["value", "momentum", "income"].forEach(k => { if (c.e[k]?.verdict) line(esc(c.e[k].verdict), esc(c.e[k].one_line || "")); });
-    if (a.lenses.length) line("Where the lenses land", `${a.up} constructive, ${a.neutral} neutral, ${a.dn} cautious — <b>${esc(a.label)}</b>. Full breakdown on the ${linkTo(s)} page, along with the beginner's checklist.`);
-    if ((c.e.what_changed || []).length) A.push(`<div class="ans-block"><b>What changed</b>${c.e.what_changed.slice(0, 3).map(x => `<p class="ans-news">${esc(x)}</p>`).join("")}</div>`);
-  }
-  // ---- fallback ----
-  else {
-    line("I can't answer that one from the data", `The desk answers from its own state files — so it can tell you what moved, what the models say, what the wire logged, and what history measured. It won't guess at anything it hasn't computed. Try naming a stock or a sector.`);
-    A.push(`<div class="ans-block"><b>Things it answers well</b><div class="ask-chips">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div></div>`);
+  if (LOCAL) { // /api/ask is a Vercel Edge Function — it only exists once deployed
+    _ask.history.push({ role: "user", content: text },
+      { role: "assistant", content: "Ask the desk needs the deployed site — this endpoint doesn't run under the local static server. Try it on the published desk.", error: true });
+    renderAsk();
+    return;
   }
 
-  _ask.history = [{ q: text, at: new Date().toISOString() }, ..._ask.history].slice(0, 6);
-  if (out) out.innerHTML = `<div class="ans-q">${esc(text)}</div>${A.join("")}
-    <div class="ans-foot">Answered from the desk's own data — <b>no numbers are generated</b>, every figure above is read from a state file the desk computed. Research and education, never advice.</div>`;
+  const priorHistory = _ask.history.slice(-4).map(m => ({ role: m.role, content: m.content }));
+  _ask.history.push({ role: "user", content: text });
+  _ask.busy = true;
+  renderAsk();
+
+  let tok = await authToken(), body = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "content-type": "application/json", Authorization: "Bearer " + (tok || "") },
+        body: JSON.stringify({ question: text, history: priorHistory }),
+      });
+      if (res.status === 401 && attempt === 0) {
+        const fresh = await refreshSession();
+        if (fresh) { tok = fresh; continue; }
+      }
+      body = await res.json().catch(() => null);
+      break;
+    } catch { body = null; break; }
+  }
+
+  _ask.busy = false;
+  _ask.history.push(body?.ok
+    ? { role: "assistant", content: body.answer }
+    : { role: "assistant", content: body?.error || "Couldn't reach the desk's assistant. Try again in a moment.", error: true });
+  _ask.history = _ask.history.slice(-12); // keep the thread and its resend payload bounded
+  renderAsk();
 }
-const METHOD_LABEL = { relative_pe: "peer P/E", earnings_power: "earnings power", graham: "Graham", ddm: "dividend discount" };
 
 async function pageAsk() {
   await Promise.resolve();
   const locked = !hasFeature("ask");
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Ask the desk</h2><div class="ln"></div><span class="pill">answers from data, not guesses</span></div>
-  <p class="sub" style="margin-bottom:12px">Plain English in, the desk's own computed files out. Instant, and it <b>cannot invent</b> a price, date or dividend. When it doesn't know, it says so.</p>
+  <div class="seg" style="margin-top:4px"><h2>Ask the desk</h2><div class="ln"></div><span class="pill">grounded in the desk's data</span></div>
+  <p class="sub" style="margin-bottom:12px">Plain English in, an answer grounded in the desk's own computed files out. It's instructed to say "unknown" rather than guess — verify anything important on the ticker page.</p>
   ${locked ? planWall("Ask the desk",
     "\"Why is MEBL moving?\" · \"Is FFC cheap?\" · \"What's happening in cement?\" — answered from the desk's own scored data, with sector context, the wire, and what the models say.") : `
   <div class="card">
-    <div class="scr-row"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?" value="${esc(_ask.q)}"
-      onkeydown="if(event.key==='Enter')askRun()">
-      <button class="note-save" onclick="askRun()">Ask</button></div>
-    <div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div>
-  </div>
-  <div id="ask-out"></div>`}`;
-  if (!locked && _ask.q) askRun(_ask.q);
+    <div id="ask-out" style="max-height:60vh;overflow-y:auto"></div>
+    <div class="scr-row" style="${_ask.history.length ? "margin-top:12px" : ""}"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?"
+      onkeydown="if(event.key==='Enter')askSend()">
+      <button class="note-save" onclick="askSend()">Ask</button></div>
+    ${!_ask.history.length ? `<div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askSend('${esc(x)}')">${esc(x)}</button>`).join("")}</div>` : ""}
+  </div>`}`;
+  renderAsk();
 }
 
 /* ==========================================================================================
@@ -6179,27 +6096,15 @@ function renderGate(page) {
   capturePlanIntent();          // route() reaches here before the module-level call below runs
   // strips the sidebar + in-app header controls (see themes.css [data-gated]); cleared in route()
   try { document.body.setAttribute("data-gated", "1"); } catch {}
-  const intent = planIntent();
-  const p = intent && PLANS[intent];
-  $("view").innerHTML = `
-  <div class="gate">
-    <div class="gate-card">
-      <span class="gate-kicker">Henneth Desk</span>
-      <h1 class="gate-h">The terminal is members-only.</h1>
-      <p class="gate-sub">${p
-        ? `You picked <b>${esc(p.label)}</b>. Create your account to open the desk — it takes about a minute, and the walkthrough is built for exactly where you're starting from.`
-        : `Create a free account to open the desk. Free covers casting your chart, the daily read and the public track record — no card, no trial clock.`}</p>
-      <div class="gate-cta">
-        <button class="bw-go" id="gateSignup">Create your account</button>
-        <button class="gate-alt" id="gateLogin">I already have one — log in</button>
-      </div>
-      <div class="gate-open">Not ready? You can still <a href="#/cast">cast your birth chart</a> without an account — it follows you in when you sign up.</div>
-      <p class="gate-legal">Research &amp; analytics, never investment advice. Read the <a href="#/legal/terms">terms</a> and <a href="#/legal/risk">risk disclosure</a> first.</p>
-    </div>
-  </div>`;
-  // openAuth's modes are "signin" | "signup" — anything else leaves both tabs unhighlighted
-  document.getElementById("gateSignup").onclick = () => openAuth("signup");
-  document.getElementById("gateLogin").onclick = () => openAuth("signin");
+  /* The gate IS the sign-in screen now. There is no interstitial card explaining that the desk is
+     members-only and offering two buttons — the research terminal says the same thing by being the
+     only thing on screen, and it costs a click less. */
+  $("view").innerHTML = "";
+  /* Moving between two gated pages re-runs route(), and remounting would replay the terminal's
+     four-second boot sequence every time. The surface already up is the correct one. */
+  if (_authTerm) return;
+  // Somebody who picked a plan came here to create an account; everyone else is more likely returning.
+  openAuth(planIntent() ? "signup" : "signin");
 }
 
 // Supabase email links (confirm / recovery) can bounce back an ERROR in the URL hash when the link
@@ -6275,6 +6180,9 @@ async function route(isPoll) {
   // sign-in, because the open routes (#/cast, legal, glossary) are reachable while signed out and
   // would otherwise inherit the stripped-down chrome from a previous gated view.
   try { document.body.removeAttribute("data-gated"); } catch {}
+  // ...and drop the sign-in terminal with it: the open routes (#/cast, legal, glossary) are
+  // reachable while signed out, and the gate's terminal would otherwise stay over them.
+  closeAuth();
   // The tape is opt-in per page. Pages that show it (board/today) keep it up through the render —
   // collapsing it during their fetch window and re-expanding after pushed the page down ~31px on
   // every navigation in. Everything else hides it here and never turns it back on.
@@ -6974,10 +6882,22 @@ async function captchaToken() {
 let me = null;        // auth user
 let myProfile = null; // profiles row
 let _onboardShownTracked = false;
+/* The mounted research terminal (auth-terminal.js), or null when no auth surface is up.
+   _authHold keeps it mounted through onboarding: a successful signup fires SIGNED_IN, whose
+   handler calls closeAuth(), and without the hold that tears the onboarding shell down the
+   instant it appears. */
+let _authTerm = null;
+let _authHold = false;
 
 /* ---------- tiny helpers ---------- */
 const el = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; };
-const authMsg = (t, bad) => { const m = document.getElementById("authmsg"); if (m) { m.textContent = t || ""; m.className = "authmsg" + (bad ? " bad" : ""); } };
+/* Two auth surfaces exist: the research terminal, and the plain panel openRecovery() builds.
+   Messages go to whichever is actually on screen. */
+const authMsg = (t, bad) => {
+  if (_authTerm) { _authTerm.setMsg(t, bad); return; }
+  const m = document.getElementById("authmsg");
+  if (m) { m.textContent = t || ""; m.className = "authmsg" + (bad ? " bad" : ""); }
+};
 
 /* ---------- account button in the topbar ---------- */
 function renderAccountButton() {
@@ -7026,68 +6946,27 @@ if (!window.__acctMenuGuard) {
   window.addEventListener("hashchange", closeAcct);
 }
 
-/* ---------- auth modal (sign in / create account / reset) ---------- */
+/* ---------- auth surface (sign in / create account) ----------
+   The screen itself is auth-terminal.js: markup, boot sequence, tab switching, the four-question
+   onboarding and the personalized Today panel. This file owns Supabase, the validation copy, the
+   tracking and the persistence, and reaches the terminal only through the handles mount() returns.
+   One design and one onboarding — the desk carried two of each, and they disagreed. */
 function openAuth(mode) {
   closeAuth();
-  const box = el(`<div class="authbox ha-v2" id="authbox">
-    <div class="ha-scene" id="haScene"><canvas id="haCanvas"></canvas></div>
-    <div class="authpanel">
-      <div class="auth-head"><img class="ha-logo" src="logo-mark.svg" width="22" height="22" alt="" decoding="async"><b>Henneth <em>Desk</em></b><button class="auth-x" id="authX">✕</button></div>
-      <div class="auth-tabs">
-        <button data-m="signin" class="${mode === "signin" ? "on" : ""}">Sign in</button>
-        <button data-m="signup" class="${mode === "signup" ? "on" : ""}">Create account</button>
-      </div>
-      <!-- GOOGLE SIGN-IN REMOVED (owner, 2026-07-21) — email + password only for now.
-           To restore: put back a <button id="authGoogle"> here plus the "or" divider, and
-           re-add the signInWithOAuth handler below (kept in git history at this commit).
-           Worth knowing if it comes back: Supabase's captcha does NOT apply to the OAuth
-           redirect flow, so a Google button is an unprotected path to account creation. -->
-      <form id="authform" autocomplete="on" novalidate>
-        <label>Email
-          <input type="email" id="authEmail" required autocomplete="email" placeholder="you@example.com" aria-describedby="errEmail">
-          <span class="auth-err" id="errEmail" role="alert"></span>
-        </label>
-        <label id="pwRow">Password
-          <span class="auth-pwwrap">
-            <!-- minlength is applied on SIGNUP ONLY. On sign-in it would lock out anyone whose
-                 password predates the 10-character floor — they must still be able to type the
-                 password they actually have. -->
-            <input type="password" id="authPw" ${mode === "signup" ? 'minlength="10"' : ""} required autocomplete="${mode === "signup" ? "new-password" : "current-password"}" placeholder="${mode === "signup" ? "at least 10 characters" : "your password"}" aria-describedby="errPw${mode === "signup" ? " pwHint" : ""}">
-            <button type="button" class="auth-peek" id="authPeek" aria-label="Show password" aria-pressed="false">Show</button>
-          </span>
-          <span class="auth-err" id="errPw" role="alert"></span>
-        </label>
-        ${mode === "signup" ? `
-        <div class="pwmeter" id="pwMeter" hidden>
-          <div class="pwbars"><i></i><i></i><i></i><i></i></div>
-          <span class="pwlabel" id="pwLabel"></span>
-        </div>
-        <div class="pwhint" id="pwHint">Longer beats complicated. Three unrelated words are stronger than <b>P@ssw0rd!</b> and easier to remember.</div>` : ""}
-        <!-- Turnstile mounts here. Stays an empty div while CAPTCHA_SITE_KEY is blank, so it
-             costs nothing and shifts no layout until the feature is switched on. -->
-        <div class="capbox" id="capBox"></div>
-        <button type="submit" class="auth-go" id="authGo">${mode === "signup" ? "Create account" : "Sign in"}</button>
-      </form>
-      <div class="authmsg" id="authmsg"></div>
-      <div class="auth-foot">
-        ${mode === "signin" ? '<a id="authForgot">Forgot password?</a>' : '<span class="sub">Free account — saves your watchlist and preferences.</span>'}
-      </div>
-      <div class="auth-legal">Research &amp; analytics tool, not an investment adviser. By continuing you agree to the <a href="#/legal/terms" onclick="closeAuth()">Terms</a>, <a href="#/legal/privacy" onclick="closeAuth()">Privacy Policy</a> and <a href="#/legal/risk" onclick="closeAuth()">Risk Disclosure</a> — nothing here is personalized advice.</div>
-    </div></div>`);
-  document.body.appendChild(box);
-  box.addEventListener("click", (e) => { if (e.target.id === "authbox") closeAuth(); });
-  document.getElementById("authX").onclick = closeAuth;
-  box.querySelectorAll(".auth-tabs button").forEach(b => b.onclick = () => openAuth(b.dataset.m));
+  /* The starting tab is passed INTO mount(); switching after mount would collide with the boot
+     timeline, which is animating the same nodes for its first four seconds. */
+  const t = window.HennethAuthTerminal.mount(mode === "signup" ? "create" : "signin");
+  _authTerm = t;
+  _authHold = false;
   // No-op while CAPTCHA_SITE_KEY is blank. Fired here rather than on submit so the challenge has
   // the whole time the user spends typing to solve itself — by submit there is nothing to wait for.
   mountCaptcha();
-  initHaScene();
 
-  const forgot = document.getElementById("authForgot");
-  if (forgot) forgot.onclick = async () => {
-    const email = document.getElementById("authEmail").value.trim();
-    if (!email) return authMsg("Enter your email above first, then click reset.", true);
-    authMsg("Sending reset link…");
+  t.hooks.onTabChange = () => { t.clearErrors(); t.setMsg(""); };
+
+  t.hooks.onForgot = async (email) => {
+    if (!email) return t.setErr("email", "Enter your email first, then press reset.");
+    t.setMsg("Sending reset link…");
     // Password reset is captcha-protected server-side too — it sends mail, so it is the same
     // spam vector as signup and Supabase enforces the token on it as well.
     const tok = await captchaToken();
@@ -7096,140 +6975,77 @@ function openAuth(mode) {
       ...(tok ? { captchaToken: tok } : {}),
     });
     if (error) resetCaptcha();
-    authMsg(error ? friendlyAuthError(error) : "Reset link sent — check your email.", !!error);
+    t.setMsg(error ? friendlyAuthError(error) : "Reset link sent — check your email.", !!error);
   };
 
-  /* ---- show / hide password. A peek toggle measurably cuts sign-in failures on mobile, and is
-     safer than the alternative users actually resort to: typing the password into the email
-     field to read it. aria-pressed so a screen reader announces the state. ---- */
-  const pwEl = document.getElementById("authPw");
-  document.getElementById("authPeek").onclick = (ev) => {
-    /* preventDefault is the actual fix for the "laggy" toggle, and it is not obvious why.
-       This button sits INSIDE the <label> that wraps the password field, so a click on it is
-       also forwarded by the browser as an implicit activation of the labelled control — the
-       input gets a second synthetic click and refocus on every press. Two focus events plus a
-       type swap per tap is what produced the stutter; the handler itself measures ~0.1ms.
-       Stopping the label forwarding leaves exactly one state change per click. */
-    ev.preventDefault();
-    const b = ev.currentTarget, show = pwEl.type === "password";
-    /* Swapping `type` resets the caret to the end in most browsers, so a peek mid-edit throws
-       the cursor away. Capture and restore it. Guarded: setSelectionRange is not supported on
-       every input type and throws rather than no-ops where it is not. */
-    let s = null, e2 = null;
-    try { s = pwEl.selectionStart; e2 = pwEl.selectionEnd; } catch {}
-    pwEl.type = show ? "text" : "password";
-    b.textContent = show ? "Hide" : "Show";
-    b.setAttribute("aria-pressed", String(show));
-    b.setAttribute("aria-label", show ? "Hide password" : "Show password");
-    // preventScroll matters on phones: without it the refocus scrolls the modal and re-triggers
-    // the on-screen keyboard, which reads as a lurch every time you tap Show.
-    try { pwEl.focus({ preventScroll: true }); } catch { pwEl.focus(); }
-    if (s !== null) { try { pwEl.setSelectionRange(s, e2); } catch {} }
-  };
-
-  /* ---- strength meter (signup only). Scored on LENGTH first, because length is what actually
-     resists cracking — a 16-character passphrase beats an 8-character one with a symbol in it.
-     Advisory only: it never blocks submission, since a meter that refuses a good passphrase
-     because it lacks a digit trains people into worse passwords. ---- */
-  function pwScore(v) {
-    if (!v) return 0;
-    let s = 0;
-    if (v.length >= 8) s++;
-    if (v.length >= 12) s++;
-    if (v.length >= 16) s++;
-    if (/[^A-Za-z0-9]/.test(v) || (/[A-Za-z]/.test(v) && /\d/.test(v))) s++;
-    if (/^(.)\1+$/.test(v) || /^(12345678|password|qwerty)/i.test(v)) s = 1;  // obvious ones stay weak
-    return Math.min(s, 4);
-  }
-  const meter = document.getElementById("pwMeter");
-  if (meter) {
-    const label = document.getElementById("pwLabel");
-    pwEl.addEventListener("input", () => {
-      const v = pwEl.value, s = pwScore(v);
-      meter.hidden = !v;
-      meter.dataset.s = String(s);
-      label.textContent = !v ? "" : ["", "too easy to guess", "weak", "decent", "strong"][s];
-    });
-  }
-
-  /* ---- inline validation. Errors sit next to the field that caused them, not only in the
-     shared banner, and clear as soon as the user starts fixing them. ---- */
-  const setErr = (id, msg) => {
-    const n = document.getElementById(id);
-    if (!n) return;
-    n.textContent = msg || "";
-    const field = n.closest("label")?.querySelector("input");
-    if (field) field.classList.toggle("bad", !!msg);
-  };
-  ["authEmail", "authPw"].forEach(id => {
-    const n = document.getElementById(id);
-    n?.addEventListener("input", () => setErr(id === "authEmail" ? "errEmail" : "errPw", ""));
-  });
-
-  /* The Google handler lived here and was removed with its button. It is deleted rather than
-     left behind guarded, because `document.getElementById("authGoogle").onclick = ...` throws on
-     a null element and would take the entire auth form down with it — the submit handler below
-     never gets attached, so the form silently does nothing when clicked. */
-
-  document.getElementById("authform").onsubmit = async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("authEmail").value.trim();
-    const pw = pwEl.value;
-    const go = document.getElementById("authGo");
+  /* `tab` is the terminal's LIVE tab, not openAuth's captured `mode` — the user can switch tabs
+     inside the terminal without this function running again. */
+  t.hooks.onSubmit = async (tab) => {
+    const signup = tab === "create";
+    const name = signup ? t.els.nameInput.value.trim() : "";
+    const email = t.els.emailInput.value.trim();
+    const pw = t.els.pwInput.value;
 
     // validate before spending a network round trip, and point at the offending field
-    let bad = false;
-    setErr("errEmail", ""); setErr("errPw", "");
-    if (!email) { setErr("errEmail", "Enter your email."); bad = true; }
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr("errEmail", "That doesn't look like an email address."); bad = true; }
-    if (!pw) { setErr("errPw", "Enter your password."); bad = true; }
+    let bad = "";
+    t.clearErrors();
+    if (signup && !name) { t.setErr("name", "Enter your name."); bad = bad || "name"; }
+    if (!email) { t.setErr("email", "Enter your email."); bad = bad || "email"; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { t.setErr("email", "That doesn't look like an email address."); bad = bad || "email"; }
+    if (!pw) { t.setErr("pw", "Enter your password."); bad = bad || "password"; }
     /* 10, matching the server floor set in Supabase (Auth → Sign In / Providers → Email →
        Minimum password length). Keep the two in step: this check is only a courtesy that saves a
        round trip and points at the right field — the server is the actual gate, because anyone
        can POST to the Supabase auth API directly and never load this form.
        Length rather than composition rules is deliberate, per NIST SP 800-63B: forcing a symbol
        and a digit reliably produces "P@ssw0rd1", while length is what actually resists cracking. */
-    else if (mode === "signup" && pw.length < 10) { setErr("errPw", "Passwords need at least 10 characters. A short phrase works well."); bad = true; }
+    else if (signup && pw.length < 10) { t.setErr("pw", "Passwords need at least 10 characters. A short phrase works well."); bad = bad || "password"; }
     /* Client-side validation rejections are tracked, because they are friction the desk CHOSE.
        The 10-character floor and the captcha are both deliberate, both correct, and both cost
        some proportion of signups — a proportion nobody could previously measure. `field` says
        which rule bit, never what was typed. */
     if (bad) {
-      authMsg("", false);
-      track("auth_validation_failed", {
-        mode,
-        field: document.getElementById("errEmail")?.textContent ? "email" : "password",
-      });
+      t.setMsg("");
+      track("auth_validation_failed", { mode: signup ? "signup" : "signin", field: bad });
       return;
     }
 
-    go.disabled = true; go.classList.add("busy");
-    authMsg(mode === "signup" ? "Creating your account…" : "Signing in…");
-    track(mode === "signup" ? "signup_started" : "signin_started", { plan_intent: planIntent() || "none" });
+    t.setBusy(true);
+    t.setMsg(signup ? "Creating your account…" : "Signing in…");
+    track(signup ? "signup_started" : "signin_started", { plan_intent: planIntent() || "none" });
     try {
       /* `undefined` when captcha is off, which makes `options` collapse to the exact call this
          was before bot protection existed — no behaviour change while the key is blank. */
       const captchaTok = await captchaToken();
       const opts = captchaTok ? { captchaToken: captchaTok } : undefined;
-      if (mode === "signup") {
-        const { data, error } = await sb.auth.signUp({ email, password: pw, options: opts });
+      if (signup) {
+        /* Held BEFORE the await: a successful signUp fires SIGNED_IN, whose handler calls
+           closeAuth(), and without the hold that tears down the terminal at the exact moment
+           onboarding is supposed to start inside it. */
+        _authHold = true;
+        const { data, error } = await sb.auth.signUp({ email, password: pw, options: { ...(opts || {}), data: { full_name: name } } });
         if (error) throw error;
         /* Two DIFFERENT successes, and conflating them would flatter the numbers badly. With
            email confirmation on, no session comes back — the account exists but the person is
            not in yet, and whether they return from that email is the real question. Counting
            this as a completed signup would report a conversion rate the desk does not have. */
         if (!data.session) {
+          _authHold = false;
           track("signup_pending_confirmation");
-          authMsg("Almost there — we sent a confirmation link to " + email + ". Click it to activate your account."); return;
+          t.setMsg("Almost there — we sent a confirmation link to " + email + ". Click it to activate your account.");
+          return;
         }
         track("signup_completed", { plan_intent: planIntent() || "none" });
-      } else {
-        const { error } = await sb.auth.signInWithPassword({ email, password: pw, options: opts });
-        if (error) throw error;
-        track("signin_completed");
+        t.setMsg("");
+        t.startOnboarding();   // straight into the four questions, in the same screen
+        return;
       }
+      const { error } = await sb.auth.signInWithPassword({ email, password: pw, options: opts });
+      if (error) throw error;
+      track("signin_completed");
       closeAuth();
     } catch (err) {
+      _authHold = false;
       // A Turnstile token is spent on use; without this reset the retry sends a used token and
       // fails with "captcha verification failed" no matter what the user types.
       resetCaptcha();
@@ -7238,12 +7054,83 @@ function openAuth(mode) {
          sign-in tab and cannot find it. Those need opposite fixes, and without the reason they
          look identical in the funnel. Supabase's own message is used rather than the friendly
          rewrite, since the rewrite is tuned for humans and would blur the categories. */
-      track(mode === "signup" ? "signup_failed" : "signin_failed", {
-        reason: String((err && err.message) || err).slice(0, 80),
-      });
-      authMsg(friendlyAuthError(err), true);
-    } finally { go.disabled = false; go.classList.remove("busy"); }
+      track(signup ? "signup_failed" : "signin_failed", { reason: String((err && err.message) || err).slice(0, 80) });
+      t.setMsg(friendlyAuthError(err), true);
+    } finally { t.setBusy(false); }
   };
+
+  t.hooks.onOnboardingDone = (answers, how) => applyOnboarding(answers, how);
+  t.hooks.onEnterDesk = () => { _authHold = false; closeAuth(); route(true); };
+  return t;
+}
+
+/* Where the four answers live. Presentation only — Today's ordering and language read this — so
+   localStorage is the honest home for it: `profiles` has no column for these, and inventing one
+   client-side would silently drop them on the next device. */
+const DESK_PROFILE_KEY = "henneth-desk-profile";
+function deskProfile() {
+  try { return JSON.parse(localStorage.getItem(DESK_PROFILE_KEY) || "null"); } catch (e) { return null; }
+}
+
+/* The single exit from onboarding, whichever way it ended.
+   `how`: 'confirmed' (the preview was accepted) · 'saved' (finish later) · 'blank' (start clean) ·
+   'skipped'. Only 'confirmed' applies anything — "save and continue later" has not been confirmed
+   yet, and applying it would configure a desk the user never agreed to. */
+async function applyOnboarding(answers, how) {
+  const a = answers || {};
+  const radar = a.radar || {};
+  track("onboard_done", { how, goal: a.goal || "", lens: a.lens || "", horizon: a.horizon || "", radar_source: radar.source || "" });
+  if (how === "blank") { localStorage.removeItem(DESK_PROFILE_KEY); return; }
+  if (how !== "confirmed") return;
+
+  localStorage.setItem(DESK_PROFILE_KEY, JSON.stringify({
+    goal: a.goal || "", lens: a.lens || "", horizon: a.horizon || "",
+    radar_source: radar.source || "", saved_at: new Date().toISOString(),
+  }));
+
+  if (!me || !_authTerm) return;
+  /* The sector → symbol map lives in the terminal, so the resolved list comes from there rather
+     than being duplicated here and drifting. */
+  const picks = _authTerm.radarSymbols();
+  if (!picks.length) return;
+  /* The ticker box takes free text, so the universe is the gate — an unknown symbol would sit on
+     the watchlist forever rendering as a dead row. */
+  const uni = await j("universe.json");
+  const cur = watchlist();
+  const add = picks.filter(s => uni?.symbols?.[s] && !cur.includes(s));
+  if (!add.length) return;
+  /* APPENDED, never assigned, and in one write rather than one per symbol: a returning user who
+     redoes setup must not lose the watchlist they already had. */
+  if (await saveProfile({ watchlist: [...cur, ...add] })) return;
+  track("onboard_radar_saved", { count: add.length });
+  await markActivated("watchlist");
+}
+
+/* Today's way into the SAME onboarding, for anyone who skipped it at signup or is mid-draft. */
+function onboardCardHtml() {
+  const resuming = !!localStorage.getItem("henneth-onboarding-draft");
+  return `<div class="card onboard-prompt">
+    <div class="onboard-kicker">Desk setup</div>
+    <b class="onboard-title">${resuming ? "Pick up where you left off." : "Let's prepare your desk around how you actually invest."}</b>
+    <span class="onboard-copy">Four quick choices tune your daily brief, radar, screeners and lessons. You can change anything later.</span>
+    <div class="onboard-actions">
+      <button class="btn" onclick="openOnboarding()">${resuming ? "Resume setup" : "Prepare my desk"}</button>
+      <button class="btn-ghost" onclick="dismissOnboardPrompt()">Not now</button>
+    </div>
+  </div>`;
+}
+function openOnboarding() {
+  track("onboard_prompt_opened");
+  // An explicit "prepare my desk" overrides an earlier skip, which would otherwise send the
+  // terminal straight past the questions to its Today panel.
+  localStorage.removeItem("henneth-onboarding-skipped");
+  const t = openAuth("signin");
+  _authHold = true;                 // nothing may close this surface until the user leaves it
+  t.startOnboarding();
+}
+function dismissOnboardPrompt() {
+  track("onboard_prompt_dismissed");
+  document.querySelector(".onboard-prompt")?.remove();
 }
 
 /* Supabase's raw errors are accurate and unhelpful ("Invalid login credentials" tells a user
@@ -7277,64 +7164,23 @@ function friendlyAuthError(err) {
   return m || "Something went wrong. Try again.";
 }
 function closeAuth() {
-  if (_haSceneRaf) cancelAnimationFrame(_haSceneRaf);
-  _haSceneRaf = null;
+  /* The research terminal, when one is up. `_authHold` is what keeps it alive through onboarding:
+     signup fires SIGNED_IN, whose handler calls closeAuth(), and the onboarding shell lives inside
+     this same surface. */
+  if (_authTerm) {
+    if (_authHold) return;
+    window.HennethAuthTerminal.unmount();
+    _authTerm = null;
+    return;
+  }
+  // The plain panel openRecovery() builds is a different surface and still closes the old way.
   const ov = document.getElementById("authbox");
-  // Drop the id BEFORE animating out: the node now lives on for ~250ms, and openAuth() calls
+  // Drop the id BEFORE animating out: the node now lives on for ~250ms, and openRecovery() calls
   // closeAuth() then immediately appends a fresh #authbox — two nodes sharing an id would make
   // every getElementById("authbox") resolve to the dying one.
   if (ov) { ov.removeAttribute("id"); closeAnimated(ov, ".authpanel"); }
 }
 
-let _haSceneRaf = null;
-// Decorative node scene for the login panel — no fabricated data (no ticker counts, no
-// universe stats). Hand-rolled Canvas 2D, not three.js: CSP blocks external script loads.
-function initHaScene() {
-  const cv = document.getElementById("haCanvas");
-  if (!cv) return;
-  const ctx = cv.getContext("2d");
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  let w = 0, h = 0;
-  const resize = () => {
-    const r = cv.parentElement.getBoundingClientRect();
-    w = r.width; h = r.height;
-    cv.width = w * DPR; cv.height = h * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  };
-  resize();
-  const N = 34;
-  const nodes = Array.from({ length: N }, () => ({
-    x: Math.random() * w, y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
-    r: 1 + Math.random() * 1.6,
-  }));
-  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  function frame() {
-    if (!document.getElementById("haCanvas")) return;
-    ctx.clearRect(0, 0, w, h);
-    for (const n of nodes) {
-      if (!reduceMotion) {
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-      }
-    }
-    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
-      const a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
-      if (d < 130) {
-        ctx.strokeStyle = `rgba(17,17,17,${0.22 * (1 - d / 130)})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-      }
-    }
-    for (const n of nodes) {
-      ctx.fillStyle = "rgba(10,10,10,0.7)";
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
-    }
-    _haSceneRaf = reduceMotion ? null : requestAnimationFrame(frame);
-  }
-  frame();
-}
 
 /* ---------- password recovery (arrives via email link) ---------- */
 function openRecovery() {
@@ -7411,22 +7257,6 @@ async function toggleWatch(sym, btn) {
   track(adding ? "watchlist_add" : "watchlist_remove", { sym });
   if (adding) await markActivated("watchlist");           // add only — removing isn't the activation moment
   if (location.hash === "#/watchlist") pageWatchlist();   // live-refresh the list view
-}
-async function addOnboardTicker() {
-  const inp = document.getElementById("ob-tkr"), msg = document.getElementById("ob-msg");
-  const say = t => { if (msg) msg.textContent = t; };
-  const sym = (inp?.value || "").toUpperCase().trim();
-  if (!sym) return;
-  track("onboard_prompt_search", { sym });
-  const uni = await j("universe.json");
-  if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
-  if (watchlist().includes(sym)) return say(`${sym} is already on your watchlist.`);
-  await toggleWatch(sym);
-  pageToday();
-}
-function dismissOnboardPrompt() {
-  track("onboard_prompt_dismissed");
-  document.querySelector(".onboard-prompt")?.remove();
 }
 // star button markup (used on ticker pages). onclick wired via delegation below.
 function starBtn(sym) {

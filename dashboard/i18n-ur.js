@@ -46,16 +46,6 @@ window.UR_STRINGS = {
   "Search ticker": "ٹکر تلاش کریں", "Search a stock": "اسٹاک تلاش کریں",
   "Search a stock — symbol or name…": "اسٹاک تلاش کریں — علامت یا نام…",
   "Close search": "تلاش بند کریں",
-  // sign-in gate
-  "The terminal is members-only.": "ٹرمینل صرف اراکین کے لیے ہے۔",
-  "Create a free account to open the desk. Free covers casting your chart, the daily read and the public track record — no card, no trial clock.":
-    "ڈیسک کھولنے کے لیے مفت اکاؤنٹ بنائیں۔ مفت میں آپ کا چارٹ بنانا، روزانہ کا تجزیہ اور عوامی ٹریک ریکارڈ شامل ہے — نہ کارڈ، نہ ٹرائل کی گھڑی۔",
-  "Create your account": "اپنا اکاؤنٹ بنائیں",
-  "I already have one — log in": "میرے پاس پہلے سے ہے — لاگ ان کریں",
-  "Not ready? You can still": "ابھی تیار نہیں؟ آپ پھر بھی",
-  "cast your birth chart": "اپنا برتھ چارٹ بنا",
-  "without an account — it follows you in when you sign up.": "بغیر اکاؤنٹ کے — سائن اپ کرنے پر یہ آپ کے ساتھ آ جائے گا۔",
-  "Research & analytics, never investment advice. Read the": "تحقیق اور تجزیہ، کبھی سرمایہ کاری کا مشورہ نہیں۔ پڑھیں",
   "terms": "شرائط", "and": "اور", "risk disclosure": "خطرے کا اعلامیہ", "first.": "پہلے۔",
 
   // today page — chrome around the (untranslated) agent-written daily read

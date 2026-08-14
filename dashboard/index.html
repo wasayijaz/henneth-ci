@@ -51,6 +51,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes.css">
+<!-- The login / onboarding terminal. Every selector sits under `.hn-auth`, so it can only
+     paint while HennethAuthTerminal is mounted and never leaks into the desk itself. -->
+<link rel="stylesheet" href="auth-terminal.css">
 
 <!-- Google tag (gtag.js) — the SAME measurement ID as henneth.app, deliberately.
      henneth.app and desk.henneth.app share a root domain, so GA4's default `auto` cookie domain
@@ -237,7 +240,13 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
   <div class="main-col">
     <header class="topbar">
       <button class="side-open" id="sideOpen" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-      <a class="brand brand-mobile" href="#/today">Henneth <em>Desk</em></a>
+      <!-- The desk mark in the header. aria-label on the LINK (and alt="" on the image) so the
+           brand is announced exactly once — on mobile the wordmark span is visible too, and an
+           alt of "Henneth Desk" would make a screen reader say it twice. The span keeps its
+           .brand-mobile class: on desktop the sidebar already spells the name out, so only the
+           mark rides in the header there; on a phone the sidebar is a drawer and the words come
+           back beside it. -->
+      <a class="brand brand-top" href="#/today" aria-label="Henneth Desk"><img class="brand-top-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async"><span class="brand-mobile">Henneth <em>Desk</em></span></a>
       <span id="mkt" class="pill">—</span>
       <span id="health" class="pill">HEALTH —</span>
       <span id="regime" class="pill">REGIME —</span>
@@ -279,7 +288,12 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- GSAP: drives the research terminal's boot sequence and onboarding transitions (auth-terminal.js).
+     Every animation checks `hasGSAP` first and falls back to an instant, static end-state if this
+     CDN load fails or is blocked — nothing here is load-bearing for functionality. -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="i18n-ur.js?v=2"></script>
+<script src="auth-terminal.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

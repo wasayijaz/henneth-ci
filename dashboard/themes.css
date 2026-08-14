@@ -188,6 +188,12 @@ body[data-theme=gemini] .brand-txt{overflow:hidden;text-overflow:ellipsis;white-
 /* Collapsed rail: the mark moves INTO the toggle button (see .toggle-mark below), so the brand
    link itself stays hidden by the generic collapse rule — two marks in a 56px rail is one too many. */
 
+/* ...and the same mark in the header, where it is the desk's identity on every page including the
+   signed-out and auth-pending shells that hide the sidebar entirely. 30px is the tallest the mark
+   can stand in a 48px bar with the bar's 7px padding intact; the header does not grow for it. */
+body[data-theme=gemini] .topbar .brand-top{display:inline-flex;align-items:center;gap:8px;min-width:0;flex:none}
+body[data-theme=gemini] .brand-top-mark{height:30px;width:auto;flex:none;display:block}
+
 /* ==========================================================================================
    COMET TRANSIT — boot screen (design handoff "Loading Screen 8a")
 
@@ -432,25 +438,12 @@ body[data-theme=gemini] .plan-badge{font-size:10px;text-transform:uppercase;lett
 @media(max-width:900px){body[data-theme=gemini] .plan-badge{display:none}}
 body[data-theme=gemini] .acct-menu button{background:transparent;border:none;text-align:start;padding:9px 12px;font-size:11.5px;font-weight:600;color:var(--ink1);font-family:var(--font-body)}
 body[data-theme=gemini] .acct-menu button:hover{background:var(--panel2)}
-/* auth modal */
-body[data-theme=gemini] .authbox{position:fixed;inset:0;background:rgba(10,10,10,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:9vh 16px 16px;overflow-y:auto;animation:fadeIn var(--dur-fast) both}
-body[data-theme=gemini] .authpanel{background:var(--panel);border:1.5px solid var(--line);width:100%;max-width:400px;padding:18px;animation:fadeUp var(--dur-base) var(--ease-out) both}
-body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-body[data-theme=gemini] .auth-head .ha-logo{margin-right:8px}
-body[data-theme=gemini] .authbox.ha-v2{align-items:center;display:flex;flex-direction:row-reverse;gap:0;max-height:none}
-body[data-theme=gemini] .ha-v2 .authpanel{flex:1 1 380px;min-width:0;max-width:420px;padding:22px}
-body[data-theme=gemini] .ha-v2 .authpanel{border-right:none}
-body[data-theme=gemini] .ha-scene{position:relative;flex:1 1 320px;min-width:0;max-width:420px;align-self:stretch;background:var(--panel2,var(--panel));border:1.5px solid var(--line);border-left:none}
-body[data-theme=gemini] .ha-scene canvas{position:absolute;inset:0;width:100%;height:100%}
-@media (max-width:900px){
-  body[data-theme=gemini] .ha-scene{display:none}
-}
+/* auth screen — dedicated screen, not a popup: covers the viewport like a route, no backdrop
+   dim (there is nothing behind it to dim through). Form left, desk-pipeline scene right. */
+body[data-theme=gemini] .authbox{position:fixed;inset:0;background:var(--bg);z-index:100;overflow-y:auto;animation:fadeIn var(--dur-fast) both}
+body[data-theme=gemini] .authpanel{background:var(--panel);width:100%;max-width:400px;padding:18px;animation:fadeUp var(--dur-base) var(--ease-out) both}
+body[data-theme=gemini] .auth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
 body[data-theme=gemini] .auth-head b{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
-body[data-theme=gemini] .auth-head em{font-style:normal;color:var(--ink3)}
-body[data-theme=gemini] .auth-x{background:transparent;border:1px solid var(--line);width:24px;height:24px;font-size:11px}
-body[data-theme=gemini] .auth-tabs{display:flex;margin-bottom:14px;border:1px solid var(--line)}
-body[data-theme=gemini] .auth-tabs button{flex:1;background:transparent;border:none;padding:8px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-family:var(--font-body)}
-body[data-theme=gemini] .auth-tabs button.on{background:var(--ink1);color:#f4f4f0}
 body[data-theme=gemini] .authpanel label{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:10px}
 body[data-theme=gemini] .authpanel input{display:block;width:100%;margin-top:4px;padding:9px 10px;border:1.5px solid var(--line);background:var(--panel);font:inherit;font-size:13px;color:var(--ink1)}
 body[data-theme=gemini] .authpanel input:focus{border-color:var(--ink1);outline:none}
@@ -458,10 +451,6 @@ body[data-theme=gemini] .auth-go{width:100%;background:var(--ink1);color:#f4f4f0
 body[data-theme=gemini] .auth-go:disabled{opacity:.55}
 body[data-theme=gemini] .authmsg{font-size:11.5px;color:var(--up);margin-top:10px;line-height:1.5;min-height:1em}
 body[data-theme=gemini] .authmsg.bad{color:var(--dn)}
-body[data-theme=gemini] .auth-foot{margin-top:10px;font-size:11px}
-body[data-theme=gemini] .auth-foot a{text-decoration:underline;cursor:pointer;color:var(--ink2)}
-body[data-theme=gemini] .auth-legal{margin-top:12px;padding-top:10px;border-top:1px solid var(--hair);font-size:9.5px;color:var(--ink3);line-height:1.5}
-body[data-theme=gemini] .auth-legal a{color:var(--ink2);text-decoration:underline}
 /* onboarding coach strip */
 body[data-theme=gemini] .coach-strip{position:fixed;z-index:110;inset-inline-end:18px;bottom:18px;max-width:400px;background:var(--panel);border:1.5px solid var(--line);padding:18px;box-shadow:6px 6px 0 rgba(10,10,10,.15)}
 body[data-theme=gemini] .coach-title{display:block;font-size:15px;font-weight:800;margin-bottom:8px;line-height:1.35}
@@ -471,6 +460,19 @@ body[data-theme=gemini] .coach-next{margin-inline-start:auto;background:var(--in
 body[data-theme=gemini] .coach-skip{background:transparent;border:1px solid var(--hair);padding:8px 12px;font-size:10.5px;color:var(--ink3);font-family:var(--font-body)}
 @media(max-width:720px){body[data-theme=gemini] .coach-strip{inset-inline-start:12px;inset-inline-end:12px;bottom:12px;max-width:none}}
 .coach-strip[hidden]{display:none!important}
+
+/* desk-setup card on Today */
+body[data-theme=gemini] .onboard-prompt{position:relative;padding:20px}
+body[data-theme=gemini] .btn-ghost{background:transparent;border:1.5px solid var(--line);padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);font-family:var(--font-body);cursor:pointer}
+body[data-theme=gemini] .btn-ghost:hover{border-color:var(--ink1);color:var(--ink1)}
+
+/* desk-setup card on Today — the one way into the terminal's onboarding */
+body[data-theme=gemini] .onboard-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:6px}
+body[data-theme=gemini] .onboard-title{display:block;font-size:16px;font-weight:800;line-height:1.35;margin-bottom:6px}
+body[data-theme=gemini] .onboard-copy{display:block;font-size:12px;line-height:1.55;color:var(--ink2);margin-bottom:16px}
+body[data-theme=gemini] .onboard-actions{display:flex;gap:8px;flex-wrap:wrap}
+body[data-theme=gemini] .onboard-actions .btn{background:var(--ink1);color:#f4f4f0;border:1.5px solid var(--ink1);padding:9px 16px;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;font-family:var(--font-body);cursor:pointer}
+@media(max-width:520px){body[data-theme=gemini] .onboard-title{font-size:14.5px}}
 
 /* "At a glance" explainability tiles */
 body[data-theme=gemini] .glance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair)}
@@ -1201,19 +1203,6 @@ body[data-theme=gemini] .capbox:empty{display:none}
 body[data-theme=gemini] .auth-go.busy{opacity:.65;cursor:progress}
 body[data-theme=gemini] .pc-soon{color:var(--ink3);font-style:normal;line-height:1.6}
 @media (min-width:900px){body[data-theme=gemini] .plan-grid-3{grid-template-columns:repeat(3,1fr)}}
-/* members-only gate — the signed-out terminal */
-body[data-theme=gemini] .gate{display:flex;align-items:center;justify-content:center;min-height:min(72vh,640px);padding:24px 16px}
-body[data-theme=gemini] .gate-card{width:100%;max-width:560px;border:1px solid var(--line);background:var(--panel);padding:32px 30px}
-body[data-theme=gemini] .gate-kicker{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
-body[data-theme=gemini] .gate-h{font-size:26px;line-height:1.22;margin:10px 0 12px;font-weight:600}
-body[data-theme=gemini] .gate-sub{font-size:14px;line-height:1.68;color:var(--ink2);margin:0 0 22px}
-body[data-theme=gemini] .gate-cta{display:flex;flex-direction:column;gap:9px}
-body[data-theme=gemini] .gate-cta .bw-go{width:100%}
-body[data-theme=gemini] .gate-alt{width:100%;padding:12px 14px;background:transparent;border:1px solid var(--line);color:var(--ink1);font:inherit;font-size:13px;cursor:pointer}
-body[data-theme=gemini] .gate-alt:hover{border-color:var(--ink1);background:var(--panel2)}
-body[data-theme=gemini] .gate-open{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.6;color:var(--ink2)}
-body[data-theme=gemini] .gate-legal{margin:14px 0 0;font-size:11.5px;line-height:1.6;color:var(--ink3)}
-@media (max-width:420px){body[data-theme=gemini] .gate-card{padding:24px 18px}body[data-theme=gemini] .gate-h{font-size:22px}}
 /* tradeability block on the ticker page — turnover, spread, exit time */
 body[data-theme=gemini] .liq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:12px;background:var(--line)}
 body[data-theme=gemini] .liq-cell{background:var(--panel2);padding:11px 13px;display:flex;flex-direction:column;gap:5px;min-width:0}
@@ -1704,7 +1693,7 @@ body[data-theme=gemini] .wx-card,body[data-theme=gemini] .plan-card,body[data-th
 body[data-theme=gemini] .daily-lesson,body[data-theme=gemini] .mc-tease,body[data-theme=gemini] .combo-opt,
 body[data-theme=gemini] .bw-city,body[data-theme=gemini] .dict>summary,body[data-theme=gemini] .how>summary,
 body[data-theme=gemini] .testlog>summary,body[data-theme=gemini] .side-legal a,body[data-theme=gemini] .side-resize,
-body[data-theme=gemini] .gate-alt,body[data-theme=gemini] .auth-google{transition:background var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+body[data-theme=gemini] .auth-google{transition:background var(--dur-fast) var(--ease-out),border-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
 /* HOVER (web) — a subtle lift/tint so things feel alive under the cursor */
 @media(hover:hover){
   body[data-theme=gemini] tr.clickable:hover>td{background:var(--panel2)}

@@ -94,6 +94,12 @@ valuation, dividend reliability), a **"questions before buying"** checklist, and
 - **Accounts** — sign-up / sign-in (Supabase Auth), a short onboarding quiz + guided wizard, and a personal
   **watchlist** that overlays the shared research. Per-user data is row-level-secured; the research layer is
   shared and read-only to users.
+  Signed out, a gated route lands you **straight on the sign-in / create-account research terminal**
+  (`dashboard/auth-terminal.js` + `.css`) — a full-screen animated terminal, not an interstitial card
+  asking you to pick a door first. Onboarding runs inside that same surface once the account exists, so
+  the visitor never changes screens between "create account" and "answer four questions". On a phone the
+  form sits at the **top** and the terminal scene below it, because the first thing on screen has to be
+  the thing you came to do.
 
 ### The personal astrology pillar (`#/astro`, `#/mychart`, `#/cast`)
 
