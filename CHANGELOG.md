@@ -102,7 +102,38 @@ LED and the button housing occupy a 39px band of a 472px artboard and stop readi
 that band renders about 2.5px. If it reads as mush on a real screen, the fix is a one-word swap of the
 `src` to `logo-mark.svg`.
 
+**4. The Vercel build shipped an allow-list, and it broke the site. `scripts/vercel_build.sh` copied
+eighteen files out of `dashboard/` by name. `auth-terminal.js` and `auth-terminal.css` are new in this
+release and were not on that list, so production served the new `app.js` — which now opens the terminal
+as the gate — with no terminal module to open. Both files 404'd and every signed-out visitor got a blank
+page. `index.html`, `app.js`, `themes.css` and `logo-terminal.svg` all deployed correctly; only the two
+files the release was actually about were missing.
+
+An allow-list of filenames fails silently and fails **closed**, and it fails hardest on exactly the file
+a release is about — an existing file is never the one you forget. Replaced with copy-everything then
+deny:
+
+```sh
+cp -r dashboard/. public/
+rm -f public/app.html
+```
+
+`app.html` is a stale duplicate shell predating the sign-in gate and is deliberately not served. A
+deny-list fails **open** and fails loudly: the worst outcome is a stray file being reachable, which is
+visible, rather than a required file being absent, which is not. Vercel builds from the git checkout, so
+untracked scratch files in `dashboard/` never reach the build. This also matches what `README.md` already
+claimed the build did.
+
+Diagnostic note worth keeping: `vercel.json` sets `cleanUrls: true`, so `GET /index.html` returns a
+15-byte `Redirecting...` stub, not the page. Grepping that stub for a marker returns 0 for **any**
+marker and reads as "the deploy didn't land". Verify against `/`, or curl with `-L`. That cost a false
+alarm on the header logo, which had shipped fine.
+
 ### Verified
+
+On live (`https://desk.henneth.app/`, not localhost): `brand-top-mark` present in the served HTML,
+`logo-terminal.svg` 200. Before the build fix, `auth-terminal.js` and `auth-terminal.css` returned 404
+while `app.js` and `themes.css` returned 200 — the exact asymmetry the allow-list predicts.
 
 Fresh load past the cache at `localhost:8878`: `.brand-top` present, mark 30px, auth terminal mounted,
 no "members-only" text in the document, console clean. At the 375×812 mobile preset: `.left` order 1 at
