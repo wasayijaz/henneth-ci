@@ -124,6 +124,22 @@ visible, rather than a required file being absent, which is not. Vercel builds f
 untracked scratch files in `dashboard/` never reach the build. This also matches what `README.md` already
 claimed the build did.
 
+**5. The build fix could not deploy itself.** Shipping §4 changed nothing live. The Vercel project
+carried an Ignored Build Step — `git diff --quiet HEAD^ HEAD -- dashboard/ state/ vercel.json` — set to
+skip rebuilds on data-free commits. A commit touching only `scripts/vercel_build.sh` matches none of
+those paths, so Vercel skipped the deploy and the broken build stayed in production. The list also
+omitted `api/` and `middleware.js`, meaning a change to the edge auth gate or the Ask endpoint would
+have shipped nothing, silently.
+
+The condition is now declared in `vercel.json` as `ignoreCommand`, where it lives beside the
+`buildCommand` it guards and is reviewable in the diff, rather than in dashboard settings no one reads:
+
+```
+git diff --quiet HEAD^ HEAD -- dashboard/ state/ api/ middleware.js scripts/vercel_build.sh vercel.json
+```
+
+Adding anything the deploy depends on to this list is now part of adding it to the build.
+
 Diagnostic note worth keeping: `vercel.json` sets `cleanUrls: true`, so `GET /index.html` returns a
 15-byte `Redirecting...` stub, not the page. Grepping that stub for a marker returns 0 for **any**
 marker and reads as "the deploy didn't land". Verify against `/`, or curl with `-L`. That cost a false

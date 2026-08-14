@@ -3,6 +3,7 @@
   "framework": null,
   "installCommand": "echo no-deps",
   "buildCommand": "sh scripts/vercel_build.sh",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- dashboard/ state/ api/ middleware.js scripts/vercel_build.sh vercel.json",
   "outputDirectory": "public",
   "cleanUrls": true,
   "trailingSlash": false,
