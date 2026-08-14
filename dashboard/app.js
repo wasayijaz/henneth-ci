@@ -5392,168 +5392,94 @@ function alignmentCard(a) {
 }
 
 /* ==========================================================================================
-   ASK THE DESK — a responsive answer engine with NO runtime model. Intent is classified from the
-   question, facts are retrieved from the desk's own state files, and prose is composed from
-   templates around real numbers. The upside over a live LLM is not cost: it is that this
-   CANNOT invent a price, a date or a dividend (CLAUDE.md Rule 2). Agent-written prose that already
-   exists (explainer.json, written nightly) is quoted rather than regenerated.
+   ASK THE DESK — free-form chat, answered by a live model (Groq, via /api/ask), grounded against
+   the desk's own state files SERVER-SIDE. The model never gets open-ended state/ access — only a
+   small JSON slice for whatever symbol or sector the question names — and its system prompt is
+   instructed to say "unknown" rather than invent a figure (CLAUDE.md Rule 2) and to never use
+   advice language (Rule 5). That is an instruction the model follows, not an architectural
+   guarantee a template gave for free — see api/ask.js's header for the trade made to get real
+   conversation instead of the old fixed-template engine, and why the UI below says "grounded in",
+   not "cannot invent".
    ========================================================================================== */
-let _ask = { q: "", history: [] };
+let _ask = { history: [], busy: false }; // history: [{role:"user"|"assistant", content, error?}]
 const ASK_SAMPLES = ["Why is MEBL moving?", "Is FFC cheap?", "Tell me about LUCK", "FFC vs MCB",
   "Best dividend stocks", "What's happening in cement?", "What changed today?"];
 
-function askFindSyms(text, universe) {
-  const up = text.toUpperCase();
-  const hits = Object.keys(universe).filter(s => new RegExp(`\\b${s}\\b`).test(up));
-  return [...new Set(hits)].slice(0, 2);
+function askThreadHtml() {
+  const turns = _ask.history.map(m => m.role === "user"
+    ? `<div class="ans-q">${esc(m.content)}</div>`
+    : `<div class="ans-block"${m.error ? ' style="border-inline-start:3px solid var(--dn)"' : ""}><p style="white-space:pre-wrap">${esc(m.content)}</p></div>`
+  ).join("");
+  const busy = _ask.busy ? `<div class="ans-block"><p class="sub">Reading the desk's data and thinking…</p></div>` : "";
+  const foot = _ask.history.length ? `<div class="ans-foot">Answered by a model grounded in the desk's own data — it's instructed to say "unknown" rather than invent a figure, but it is a live model, not a fixed template. Verify anything important on the ticker page. Research and education, never advice.</div>` : "";
+  return turns + busy + foot;
 }
-function askFindSector(text, sectorNames) {
-  const t = text.toLowerCase(); let best = null;
-  for (const sec of sectorNames) for (const w of sec.toLowerCase().split(/[^a-z]+/))
-    if (w.length >= 4 && t.includes(w) && (!best || w.length > best.w.length)) best = { sec, w };
-  return best?.sec || null;
+function renderAsk() {
+  const out = $("ask-out");
+  if (!out) return;
+  out.innerHTML = askThreadHtml();
+  out.scrollTop = out.scrollHeight;
 }
-async function askRun(qtext) {
-  const text = (qtext ?? document.getElementById("ask-in")?.value ?? "").trim();
-  if (!text) return;
-  _ask.q = text;
-  const out = document.getElementById("ask-out");
-  if (out) out.innerHTML = `<div class="sub" style="padding:12px 0">Reading the desk's data…</div>`;
-  const [uni, q, fvA, fndA, fsA, predA, news, sec, sm, expl, cal, claims, divs] = await Promise.all([
-    j("universe.json"), j("quant.json"), j("fairvalue.json"), j("fundamentals.json"),
-    j("fundamental_scores.json"), j("predictability.json"), j("newslog.json"), j("sectors.json"),
-    j("sector_macro.json"), j("explainer.json"), j("earnings_calendar.json"), j("claims.json"), j("dividends.json")]);
-  const U = uni?.symbols || {}, Q = q?.tickers || {}, FV = fvA?.tickers || {}, FN = fndA?.tickers || {},
-    FS = fsA?.tickers || {}, PR = predA?.tickers || {}, SEC = sec?.tickers || {};
-  const sectorNames = [...new Set(Object.values(SEC).map(x => x.sector).filter(Boolean))];
-  const syms = askFindSyms(text, U);
-  const sectorHit = askFindSector(text, sectorNames);
-  const t = text.toLowerCase();
-  const A = []; // answer blocks
-  const line = (h, b) => A.push(`<div class="ans-block"><b>${h}</b><p>${b}</p></div>`);
-  const linkTo = s => `<a href="#/ticker/${s}" style="color:var(--accent);font-weight:700">${s}</a>`;
 
-  const ctx = s => ({ q: Q[s] || {}, fv: FV[s] || {}, fs: FS[s] || {}, pred: PR[s]?.score,
-    claims, news, sm, sector: SEC[s]?.sector, f: FN[s] || {}, e: expl?.[s] || {}, name: U[s]?.name || "" });
+async function askSend(qtext) {
+  const inputEl = $("ask-in");
+  const text = (qtext ?? inputEl?.value ?? "").trim().slice(0, 500);
+  if (!text || _ask.busy) return;
+  if (inputEl) inputEl.value = "";
 
-  // ---- intent: compare two names ----
-  if (syms.length === 2 && /\bvs\b|versus|compare|or\b/.test(t)) {
-    const [a, b] = syms, ca = ctx(a), cb = ctx(b);
-    const row = (label, va, vb) => `<tr><td class="sub">${label}</td><td class="r num">${va}</td><td class="r num">${vb}</td></tr>`;
-    A.push(`<div class="ans-block"><b>${a} vs ${b}</b>
-      <table class="ans-table"><thead><tr><th></th><th class="r">${a}</th><th class="r">${b}</th></tr></thead><tbody>
-      ${row("Price", fmt(ca.q.close), fmt(cb.q.close))}
-      ${row("P/E", ca.fs.metrics?.pe ?? "—", cb.fs.metrics?.pe ?? "—")}
-      ${row("Dividend yield", ca.f.div_yield || "—", cb.f.div_yield || "—")}
-      ${row("vs model fair", ca.fv.mispricing_pct != null ? sgn(ca.fv.mispricing_pct) + "%" : "—", cb.fv.mispricing_pct != null ? sgn(cb.fv.mispricing_pct) + "%" : "—")}
-      ${row("20-day move", sgn(ca.q.ret_20d) + "%", sgn(cb.q.ret_20d) + "%")}
-      ${row("Predictability", ca.pred ?? "—", cb.pred ?? "—")}
-      ${row("Sector", esc(ca.sector || "—"), esc(cb.sector || "—"))}
-      </tbody></table>
-      <p class="sub">Same fields, side by side — the desk won't pick between them for you. Open ${linkTo(a)} or ${linkTo(b)} for the full read, including each one's checklist.</p></div>`);
-  }
-  // ---- intent: why is X moving ----
-  else if (syms.length && /why|moving|falling|dropping|rising|down|up\b|crash/.test(t)) {
-    const s = syms[0], c = ctx(s);
-    const d1 = c.q.ret_1d, d20 = c.q.ret_20d;
-    const dir = d1 > 0 ? "up" : "down";
-    const secPeers = Object.keys(SEC).filter(x => SEC[x].sector === c.sector && Q[x]);
-    const secAvg = secPeers.length ? secPeers.reduce((a, x) => a + (Q[x].ret_1d || 0), 0) / secPeers.length : null;
-    const recentNews = (news || []).filter(n => (n.tickers || []).includes(s)).slice(-3).reverse();
-    let body = `${linkTo(s)} is <b class="${d1 >= 0 ? "up" : "dn"}">${sgn(d1)}%</b> today at Rs ${fmt(c.q.close)}, and ${sgn(d20)}% over 20 sessions. `;
-    if (secAvg != null) body += Math.abs(d1 - secAvg) < 0.7
-      ? `Its sector (${esc(c.sector)}) moved ${sgn(+secAvg.toFixed(2))}% on average — so this looks like <b>the sector moving together</b>, not a company-specific story. `
-      : `Its sector (${esc(c.sector)}) averaged ${sgn(+secAvg.toFixed(2))}%, so ${s} is moving <b>differently from its peers</b> — that difference is where a company-specific reason usually hides. `;
-    if (c.q.vol_surge && Math.abs(d1) >= 2) body += `Volume ran well above normal behind the move. `;
-    body += c.e.momentum?.one_line ? `The desk's read: ${esc(c.e.momentum.one_line)} ` : "";
-    line("What the data shows", body);
-    if (recentNews.length) A.push(`<div class="ans-block"><b>On the wire</b>${recentNews.map(n =>
-      `<p class="ans-news"><span class="tag">${n.impact ?? "?"}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || n.summary || "")}</p>`).join("")}
-      <p class="sub">The desk logs news but does not assert causation between a headline and a day's move — that link is usually assumed, rarely proven.</p></div>`);
-    else line("On the wire", `Nothing tagged to ${s} in the desk's recent news log. A move without news is common, and "no reason found" is a more honest answer than an invented one.`);
-    const upcoming = (cal?.events || []).filter(e => e.ticker === s && e.date >= todayPKT()).slice(0, 2);
-    if (upcoming.length) line("Ahead", upcoming.map(e => `${esc(e.type.replace(/_/g, " "))} on <b>${esc(e.date)}</b>`).join(", ") + ". Results dates gap prices — a stop does not protect you across a gap.");
-  }
-  // ---- intent: valuation ----
-  else if (syms.length && /cheap|expensive|worth|valuation|overvalued|undervalued|fair value|price target/.test(t)) {
-    const s = syms[0], c = ctx(s);
-    if (c.fv.composite_fair) {
-      const meth = Object.entries(c.fv.methods || {}).filter(([, v]) => v != null);
-      line(`Is ${s} cheap?`, `${linkTo(s)} trades at <b>Rs ${fmt(c.fv.price)}</b> against a blended model fair value of <b>Rs ${fmt(c.fv.composite_fair)}</b> — ${sgn(c.fv.mispricing_pct)}%, which the model reads as <b>${esc(c.fv.verdict)}</b>. That blend is the <b>median</b> of ${meth.length} independent methods${meth.length ? ` (${meth.map(([k]) => esc(METHOD_LABEL[k] || k)).join(", ")})` : ""}, because any single method can be badly wrong on any one company. ${c.e.value?.one_line ? esc(c.e.value.one_line) : ""}`);
-      line("The honest caveat", `A model fair value is an estimate built on reported fundamentals, <b>not a price target and not advice</b>. A stock can sit below model fair value for years, and "cheap" often means the market expects earnings to fall. Check the ${linkTo(s)} page's checklist before treating this as a discount.`);
-    } else line(`Is ${s} cheap?`, `The desk could not build a fair-value model for ${s} — usually missing or negative earnings. No number is better than a made-up one.`);
-  }
-  // ---- intent: dividends / income ranking ----
-  else if (/dividend|yield|income|payout/.test(t) && !syms.length) {
-    const rows = Object.keys(Q).map(s => ({ s, dy: parseFloat(FN[s]?.div_yield) || 0, po: parseFloat(FN[s]?.payout_ratio), liq: Q[s].avg_daily_traded_value }))
-      .filter(r => r.dy > 0 && r.po != null && r.po < 90 && (r.liq || 0) > 5e6)
-      .sort((a, b) => b.dy - a.dy).slice(0, 8);
-    line("Highest covered yields", `Ranked by dividend yield, keeping only names paying out <b>under 90% of earnings</b> (so the dividend is covered) and trading with real liquidity. A very high yield is as often a warning as an opportunity — yield rises when price falls.`);
-    A.push(`<div class="ans-block"><table class="ans-table"><thead><tr><th>Stock</th><th class="r">Yield</th><th class="r">Payout</th></tr></thead><tbody>${
-      rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((U[r.s]?.name || "").slice(0, 22))}</span></td>
-        <td class="r num up">${r.dy}%</td><td class="r num">${r.po}%</td></tr>`).join("")}</tbody></table>
-      <p class="sub">A screen, not a recommendation. Check each one's payout history and cash flow — see the <a href="#/dividends" style="color:var(--accent)">Dividends</a> page for buy-by dates.</p></div>`);
-  }
-  // ---- intent: sector ----
-  else if (sectorHit && !syms.length) {
-    const peers = Object.keys(SEC).filter(x => SEC[x].sector === sectorHit && Q[x]);
-    const avg1 = peers.reduce((a, x) => a + (Q[x].ret_1d || 0), 0) / (peers.length || 1);
-    const avg20 = peers.reduce((a, x) => a + (Q[x].ret_20d || 0), 0) / (peers.length || 1);
-    const best = peers.slice().sort((a, b) => Q[b].ret_20d - Q[a].ret_20d)[0];
-    const worst = peers.slice().sort((a, b) => Q[a].ret_20d - Q[b].ret_20d)[0];
-    const rec = sm?.by_sector?.[sectorHit];
-    const demo = (rec?.drivers || []).filter(d => d.demonstrated);
-    line(`${sectorHit} right now`, `${peers.length} names in the desk's universe. Average move <b class="${avg1 >= 0 ? "up" : "dn"}">${sgn(+avg1.toFixed(2))}%</b> today and ${sgn(+avg20.toFixed(1))}% over 20 sessions. Strongest lately: ${linkTo(best)} (${sgn(Q[best].ret_20d)}%); weakest: ${linkTo(worst)} (${sgn(Q[worst].ret_20d)}%).`);
-    line("What actually moves it", demo.length
-      ? `Measured over 19 years, ${sectorHit} ${demo[0].corr > 0 ? "rises with" : "falls when"} <b>${esc(FACTOR_PLAIN[demo[0].factor] || demo[0].factor)}</b>${demo[0].corr > 0 ? "" : " rises"}${demo.length > 1 ? `, and also tracks ${demo.slice(1, 3).map(x => esc(FACTOR_PLAIN[x.factor] || x.factor)).join(" and ")}` : ""} — correction-survived. Even so, the whole global tape explains only <b>${rec.joint_r2_pct}%</b> of its daily moves. Try it in the <a href="#/scenarios" style="color:var(--accent)">scenario simulator</a>.`
-      : `No global factor shows a demonstrated effect on ${sectorHit} — over 19 years its days have been made locally, not on the world tape. That silence is a measured finding, not a gap.`);
-  }
-  // ---- intent: what changed / market today ----
-  else if (/what changed|today|market|happening|news/.test(t) && !syms.length) {
-    const movers = Object.entries(Q).sort((a, b) => b[1].ret_1d - a[1].ret_1d);
-    const up3 = movers.slice(0, 3), dn3 = movers.slice(-3).reverse();
-    const big = (news || []).filter(n => (n.impact || 0) >= 4).slice(-3).reverse();
-    line("The day", `Biggest gains: ${up3.map(([s, v]) => `${linkTo(s)} ${sgn(v.ret_1d)}%`).join(", ")}. Biggest falls: ${dn3.map(([s, v]) => `${linkTo(s)} ${sgn(v.ret_1d)}%`).join(", ")}.`);
-    if (big.length) A.push(`<div class="ans-block"><b>High-impact news</b>${big.map(n => `<p class="ans-news"><span class="tag">${n.impact}</span> <span class="sub">${esc((n.ts || "").slice(0, 10))}</span> ${esc(n.headline || "")}</p>`).join("")}</div>`);
-    else line("High-impact news", "Nothing rated 4 or 5 on the desk's impact scale recently — a quiet wire.");
-  }
-  // ---- intent: general read on a name ----
-  else if (syms.length) {
-    const s = syms[0], c = ctx(s);
-    const a = alignmentOf(s, c);
-    line(`${s}${c.name ? ` — ${esc(c.name)}` : ""}`, `${esc(c.sector || "")}${c.q.close ? `, trading at Rs ${fmt(c.q.close)} (${sgn(c.q.ret_1d)}% today, ${sgn(c.q.ret_20d)}% over 20 sessions)` : ""}. ${c.e.health?.one_line ? esc(c.e.health.one_line) : ""}`);
-    ["value", "momentum", "income"].forEach(k => { if (c.e[k]?.verdict) line(esc(c.e[k].verdict), esc(c.e[k].one_line || "")); });
-    if (a.lenses.length) line("Where the lenses land", `${a.up} constructive, ${a.neutral} neutral, ${a.dn} cautious — <b>${esc(a.label)}</b>. Full breakdown on the ${linkTo(s)} page, along with the beginner's checklist.`);
-    if ((c.e.what_changed || []).length) A.push(`<div class="ans-block"><b>What changed</b>${c.e.what_changed.slice(0, 3).map(x => `<p class="ans-news">${esc(x)}</p>`).join("")}</div>`);
-  }
-  // ---- fallback ----
-  else {
-    line("I can't answer that one from the data", `The desk answers from its own state files — so it can tell you what moved, what the models say, what the wire logged, and what history measured. It won't guess at anything it hasn't computed. Try naming a stock or a sector.`);
-    A.push(`<div class="ans-block"><b>Things it answers well</b><div class="ask-chips">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div></div>`);
+  if (LOCAL) { // /api/ask is a Vercel Edge Function — it only exists once deployed
+    _ask.history.push({ role: "user", content: text },
+      { role: "assistant", content: "Ask the desk needs the deployed site — this endpoint doesn't run under the local static server. Try it on the published desk.", error: true });
+    renderAsk();
+    return;
   }
 
-  _ask.history = [{ q: text, at: new Date().toISOString() }, ..._ask.history].slice(0, 6);
-  if (out) out.innerHTML = `<div class="ans-q">${esc(text)}</div>${A.join("")}
-    <div class="ans-foot">Answered from the desk's own data — <b>no numbers are generated</b>, every figure above is read from a state file the desk computed. Research and education, never advice.</div>`;
+  const priorHistory = _ask.history.slice(-4).map(m => ({ role: m.role, content: m.content }));
+  _ask.history.push({ role: "user", content: text });
+  _ask.busy = true;
+  renderAsk();
+
+  let tok = await authToken(), body = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "content-type": "application/json", Authorization: "Bearer " + (tok || "") },
+        body: JSON.stringify({ question: text, history: priorHistory }),
+      });
+      if (res.status === 401 && attempt === 0) {
+        const fresh = await refreshSession();
+        if (fresh) { tok = fresh; continue; }
+      }
+      body = await res.json().catch(() => null);
+      break;
+    } catch { body = null; break; }
+  }
+
+  _ask.busy = false;
+  _ask.history.push(body?.ok
+    ? { role: "assistant", content: body.answer }
+    : { role: "assistant", content: body?.error || "Couldn't reach the desk's assistant. Try again in a moment.", error: true });
+  _ask.history = _ask.history.slice(-12); // keep the thread and its resend payload bounded
+  renderAsk();
 }
-const METHOD_LABEL = { relative_pe: "peer P/E", earnings_power: "earnings power", graham: "Graham", ddm: "dividend discount" };
 
 async function pageAsk() {
   await Promise.resolve();
   const locked = !hasFeature("ask");
   $("view").innerHTML = `
-  <div class="seg" style="margin-top:4px"><h2>Ask the desk</h2><div class="ln"></div><span class="pill">answers from data, not guesses</span></div>
-  <p class="sub" style="margin-bottom:12px">Plain English in, the desk's own computed files out. Instant, and it <b>cannot invent</b> a price, date or dividend. When it doesn't know, it says so.</p>
+  <div class="seg" style="margin-top:4px"><h2>Ask the desk</h2><div class="ln"></div><span class="pill">grounded in the desk's data</span></div>
+  <p class="sub" style="margin-bottom:12px">Plain English in, an answer grounded in the desk's own computed files out. It's instructed to say "unknown" rather than guess — verify anything important on the ticker page.</p>
   ${locked ? planWall("Ask the desk",
     "\"Why is MEBL moving?\" · \"Is FFC cheap?\" · \"What's happening in cement?\" — answered from the desk's own scored data, with sector context, the wire, and what the models say.") : `
   <div class="card">
-    <div class="scr-row"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?" value="${esc(_ask.q)}"
-      onkeydown="if(event.key==='Enter')askRun()">
-      <button class="note-save" onclick="askRun()">Ask</button></div>
-    <div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askRun('${esc(x)}')">${esc(x)}</button>`).join("")}</div>
-  </div>
-  <div id="ask-out"></div>`}`;
-  if (!locked && _ask.q) askRun(_ask.q);
+    <div id="ask-out" style="max-height:60vh;overflow-y:auto"></div>
+    <div class="scr-row" style="${_ask.history.length ? "margin-top:12px" : ""}"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?"
+      onkeydown="if(event.key==='Enter')askSend()">
+      <button class="note-save" onclick="askSend()">Ask</button></div>
+    ${!_ask.history.length ? `<div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askSend('${esc(x)}')">${esc(x)}</button>`).join("")}</div>` : ""}
+  </div>`}`;
+  renderAsk();
 }
 
 /* ==========================================================================================
@@ -7030,19 +6956,21 @@ if (!window.__acctMenuGuard) {
 function openAuth(mode) {
   closeAuth();
   const box = el(`<div class="authbox ha-v2" id="authbox">
-    <div class="ha-scene" id="haScene"><canvas id="haCanvas"></canvas></div>
     <div class="authpanel">
-      <div class="auth-head"><img class="ha-logo" src="logo-mark.svg" width="22" height="22" alt="" decoding="async"><b>Henneth <em>Desk</em></b><button class="auth-x" id="authX">✕</button></div>
-      <div class="auth-tabs">
-        <button data-m="signin" class="${mode === "signin" ? "on" : ""}">Sign in</button>
-        <button data-m="signup" class="${mode === "signup" ? "on" : ""}">Create account</button>
-      </div>
+      <div class="auth-head"><img class="ha-logo" src="logo-mark.svg" width="22" height="22" alt="" decoding="async"><b>Henneth <em>Desk</em></b><button class="auth-x" id="authX" aria-label="Close">✕</button></div>
+      <div class="ha-headline">${mode === "signup" ? 'Research sharper. <em>Never guess.</em>' : 'Welcome back to <em>the desk.</em>'}</div>
+      <p class="auth-sub">${mode === "signup" ? "Free — saves your watchlist, board and preferences." : "The tape's been moving. Pick up where you left off."}</p>
       <!-- GOOGLE SIGN-IN REMOVED (owner, 2026-07-21) — email + password only for now.
            To restore: put back a <button id="authGoogle"> here plus the "or" divider, and
            re-add the signInWithOAuth handler below (kept in git history at this commit).
            Worth knowing if it comes back: Supabase's captcha does NOT apply to the OAuth
            redirect flow, so a Google button is an unprotected path to account creation. -->
       <form id="authform" autocomplete="on" novalidate>
+        ${mode === "signup" ? `
+        <label>Full name
+          <input type="text" id="authName" required autocomplete="name" placeholder="Your name" aria-describedby="errName">
+          <span class="auth-err" id="errName" role="alert"></span>
+        </label>` : ""}
         <label>Email
           <input type="email" id="authEmail" required autocomplete="email" placeholder="you@example.com" aria-describedby="errEmail">
           <span class="auth-err" id="errEmail" role="alert"></span>
@@ -7066,22 +6994,35 @@ function openAuth(mode) {
         <!-- Turnstile mounts here. Stays an empty div while CAPTCHA_SITE_KEY is blank, so it
              costs nothing and shifts no layout until the feature is switched on. -->
         <div class="capbox" id="capBox"></div>
-        <button type="submit" class="auth-go" id="authGo">${mode === "signup" ? "Create account" : "Sign in"}</button>
+        <button type="submit" class="auth-go" id="authGo">${mode === "signup" ? "Create free account ↗" : "Sign in ↗"}</button>
       </form>
       <div class="authmsg" id="authmsg"></div>
-      <div class="auth-foot">
-        ${mode === "signin" ? '<a id="authForgot">Forgot password?</a>' : '<span class="sub">Free account — saves your watchlist and preferences.</span>'}
-      </div>
+      ${mode === "signin" ? '<div class="auth-foot"><a id="authForgot">Forgot password?</a></div>' : ""}
+      <div class="ha-switch">${mode === "signup" ? 'Already have an account? <a data-m="signin">Log in</a>' : 'Don\'t have an account? <a data-m="signup">Sign up</a>'}</div>
       <div class="auth-legal">Research &amp; analytics tool, not an investment adviser. By continuing you agree to the <a href="#/legal/terms" onclick="closeAuth()">Terms</a>, <a href="#/legal/privacy" onclick="closeAuth()">Privacy Policy</a> and <a href="#/legal/risk" onclick="closeAuth()">Risk Disclosure</a> — nothing here is personalized advice.</div>
-    </div></div>`);
+    </div>
+    <div class="ha-scene" id="haScene">
+      <div class="ha-badge">✦ HENNETH INTELLIGENCE</div>
+      <div class="ha-board">
+        <div class="ha-board-head"><span class="ha-live-dot" aria-hidden="true"></span>PSX UNIVERSE</div>
+        <div class="ha-grid5">${HA_TICKERS.map(t => `<div class="ha-cell">${t}</div>`).join("")}</div>
+      </div>
+      <div class="ha-log" aria-hidden="true">${haCardCol()}</div>
+      <div class="ha-dock">
+        <div class="ha-mod"><b>VALUE</b><span>Fair-value bands across the universe, re-derived every cycle.</span></div>
+        <div class="ha-mod"><b>DESK ROOM</b><span>TA + FA memos debate a name before it reaches the desk.</span></div>
+        <div class="ha-mod"><b>GLOBAL TAPE</b><span>Macro regime and global context behind every setup.</span></div>
+        <div class="ha-mod"><b>SCORECARD</b><span>Every call logged and graded — wins and losses both.</span></div>
+      </div>
+    </div>
+  </div>`);
   document.body.appendChild(box);
   box.addEventListener("click", (e) => { if (e.target.id === "authbox") closeAuth(); });
   document.getElementById("authX").onclick = closeAuth;
-  box.querySelectorAll(".auth-tabs button").forEach(b => b.onclick = () => openAuth(b.dataset.m));
+  box.querySelectorAll(".ha-switch a").forEach(b => b.onclick = () => openAuth(b.dataset.m));
   // No-op while CAPTCHA_SITE_KEY is blank. Fired here rather than on submit so the challenge has
   // the whole time the user spends typing to solve itself — by submit there is nothing to wait for.
   mountCaptcha();
-  initHaScene();
 
   const forgot = document.getElementById("authForgot");
   if (forgot) forgot.onclick = async () => {
@@ -7161,9 +7102,9 @@ function openAuth(mode) {
     const field = n.closest("label")?.querySelector("input");
     if (field) field.classList.toggle("bad", !!msg);
   };
-  ["authEmail", "authPw"].forEach(id => {
+  ["authName", "authEmail", "authPw"].forEach(id => {
     const n = document.getElementById(id);
-    n?.addEventListener("input", () => setErr(id === "authEmail" ? "errEmail" : "errPw", ""));
+    n?.addEventListener("input", () => setErr(id === "authName" ? "errName" : id === "authEmail" ? "errEmail" : "errPw", ""));
   });
 
   /* The Google handler lived here and was removed with its button. It is deleted rather than
@@ -7173,13 +7114,15 @@ function openAuth(mode) {
 
   document.getElementById("authform").onsubmit = async (e) => {
     e.preventDefault();
+    const name = mode === "signup" ? document.getElementById("authName").value.trim() : "";
     const email = document.getElementById("authEmail").value.trim();
     const pw = pwEl.value;
     const go = document.getElementById("authGo");
 
     // validate before spending a network round trip, and point at the offending field
     let bad = false;
-    setErr("errEmail", ""); setErr("errPw", "");
+    setErr("errName", ""); setErr("errEmail", ""); setErr("errPw", "");
+    if (mode === "signup" && !name) { setErr("errName", "Enter your name."); bad = true; }
     if (!email) { setErr("errEmail", "Enter your email."); bad = true; }
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr("errEmail", "That doesn't look like an email address."); bad = true; }
     if (!pw) { setErr("errPw", "Enter your password."); bad = true; }
@@ -7198,7 +7141,8 @@ function openAuth(mode) {
       authMsg("", false);
       track("auth_validation_failed", {
         mode,
-        field: document.getElementById("errEmail")?.textContent ? "email" : "password",
+        field: document.getElementById("errName")?.textContent ? "name"
+          : document.getElementById("errEmail")?.textContent ? "email" : "password",
       });
       return;
     }
@@ -7212,7 +7156,8 @@ function openAuth(mode) {
       const captchaTok = await captchaToken();
       const opts = captchaTok ? { captchaToken: captchaTok } : undefined;
       if (mode === "signup") {
-        const { data, error } = await sb.auth.signUp({ email, password: pw, options: opts });
+        const signupOpts = { ...(opts || {}), data: { full_name: name } };
+        const { data, error } = await sb.auth.signUp({ email, password: pw, options: signupOpts });
         if (error) throw error;
         /* Two DIFFERENT successes, and conflating them would flatter the numbers badly. With
            email confirmation on, no session comes back — the account exists but the person is
@@ -7277,8 +7222,6 @@ function friendlyAuthError(err) {
   return m || "Something went wrong. Try again.";
 }
 function closeAuth() {
-  if (_haSceneRaf) cancelAnimationFrame(_haSceneRaf);
-  _haSceneRaf = null;
   const ov = document.getElementById("authbox");
   // Drop the id BEFORE animating out: the node now lives on for ~250ms, and openAuth() calls
   // closeAuth() then immediately appends a fresh #authbox — two nodes sharing an id would make
@@ -7286,54 +7229,21 @@ function closeAuth() {
   if (ov) { ov.removeAttribute("id"); closeAnimated(ov, ".authpanel"); }
 }
 
-let _haSceneRaf = null;
-// Decorative node scene for the login panel — no fabricated data (no ticker counts, no
-// universe stats). Hand-rolled Canvas 2D, not three.js: CSP blocks external script loads.
-function initHaScene() {
-  const cv = document.getElementById("haCanvas");
-  if (!cv) return;
-  const ctx = cv.getContext("2d");
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  let w = 0, h = 0;
-  const resize = () => {
-    const r = cv.parentElement.getBoundingClientRect();
-    w = r.width; h = r.height;
-    cv.width = w * DPR; cv.height = h * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  };
-  resize();
-  const N = 34;
-  const nodes = Array.from({ length: N }, () => ({
-    x: Math.random() * w, y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
-    r: 1 + Math.random() * 1.6,
-  }));
-  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  function frame() {
-    if (!document.getElementById("haCanvas")) return;
-    ctx.clearRect(0, 0, w, h);
-    for (const n of nodes) {
-      if (!reduceMotion) {
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-      }
-    }
-    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
-      const a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
-      if (d < 130) {
-        ctx.strokeStyle = `rgba(17,17,17,${0.22 * (1 - d / 130)})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-      }
-    }
-    for (const n of nodes) {
-      ctx.fillStyle = "rgba(10,10,10,0.7)";
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
-    }
-    _haSceneRaf = reduceMotion ? null : requestAnimationFrame(frame);
-  }
-  frame();
+/* Login-screen right panel: a dark terminal panel — ticker board, a scrolling log of desk
+   rules, and a static module dock. Content is desk facts pulled straight from CLAUDE.md's
+   hard rules — no fabricated metrics, no live %, no testimonials, nothing that reads as a
+   performance claim. Pure CSS/HTML, no canvas/JS animation loop, no GSAP. */
+const HA_TICKERS = ["FATIMA","UBL","ENGROH","MEBL","HUBC","OGDC","LUCK","PSO","MCB","MARI","PPL","BAHL","SYS","ABL","NBP"];
+const HA_CARDS = [
+  { k: "DESK DISCIPLINE", v: "Long only · No leverage · No derivatives" },
+  { k: "RISK LIMITS", v: "Max 4 positions · Max 20% total exposure" },
+  { k: "POSITION SIZING", v: "risk_budget = capital × 1% · value capped at 8%" },
+  { k: "CIRCUIT BREAKER", v: "2 stop-outs in 5 sessions → signal-only mode" },
+  { k: "DATA DISCIPLINE", v: "Every price from the data layer. Never memory." },
+  { k: "AUDITOR VETO", v: "Independent re-derivation. Any mismatch kills the setup." },
+];
+function haCardCol() {
+  return HA_CARDS.map(c => `<div class="ha-log-line"><b>${c.k}</b><span>${c.v}</span></div>`).join("");
 }
 
 /* ---------- password recovery (arrives via email link) ---------- */
