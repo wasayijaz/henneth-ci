@@ -39,6 +39,52 @@ which file changed.
 
 ---
 
+## 2026-08-15 — v2026.08.15 — Auth terminal: no scrolling on short screens, form-only on mobile
+
+<!--public
+The sign in / create account screen now fits on a laptop screen without scrolling, and on a phone it
+shows just the form — centred, no animation — instead of the desktop layout squeezed sideways.
+-->
+
+### What changed
+
+**1. Short-viewport rhythm, without touching the signed-off desktop proportions.** On a ~700px-tall
+laptop the Create Account state (name + email + password + strength meter + legal) overflowed `.left`
+by 22px and scrolled. The fix is a dedicated `@media (min-width: 881px) and (max-height: 820px)` block
+in `dashboard/auth-terminal.css` that trims padding, headline size and the field/tab/legal margins.
+The base desktop rules are unchanged: at 2000×963 the SIGN IN button and legal block sit within 2px of
+the endorsed reference render.
+
+Why a media query rather than smaller base margins: the tall-desktop proportions were signed off
+visually. Trimming them globally to solve a short-screen overflow silently changes the layout everyone
+else sees. The block is guarded with `min-width: 881px` so it never collides with the mobile rules.
+Measured after the change: 1440×694 → both tab states 617/617, zero overflow.
+
+**2. Mobile is the transaction only.** Under `max-width: 880px` the animated terminal scene (`.right`)
+and every nav item except the brand (`.nav-right`) are `display:none`. `.left` takes `flex:1` inside
+the flex-column `.split` — without it `.left` only grew to content height (516px in an 812px viewport)
+and `.form-wrap{margin:auto}` had no free space to centre into. The form is now vertically centred and
+neither state scrolls at 375×812.
+
+This reverses the previous release's form-above-scene ordering: on a phone the scene is decoration that
+pushes the actual task off-screen, and the nav chips wrapped onto a second row. The comment explaining
+the old ordering was rewritten, not left stale.
+
+**3. Dead scene CSS deleted.** With `.right` gone from mobile, three blocks of scene-tuning rules
+(`.modules-dock`, `.board`, `.path-status`, `.grid5`, `.calibration-orbit` at `max-width:880px` and
+`561–880px`) had no element to style — including a `561–880px` block that was duplicated verbatim.
+Removed rather than left in place; a comment in the surviving mobile block says not to re-add them
+without re-adding the scene.
+
+### Note
+
+`dashboard/auth-terminal.css` still carries a header saying *"Do not hand-edit — regenerate from the
+design file instead."* That has not been true for several releases; the generator
+(`scratchpad/gen_auth_css.py`) no longer reflects the file. The header should be dropped or the
+generator retired — flagged here so it is not treated as live guidance.
+
+---
+
 ## 2026-08-14 — v2026.08.14 — Sign-in goes straight to the terminal; desk mark in the header
 
 <!--public

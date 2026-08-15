@@ -39,6 +39,9 @@
     font-weight:700; font-size:15px; letter-spacing:.06em; white-space:nowrap;
   }
   .hn-auth .nav-brand small{ font-weight:500; color:var(--muted); letter-spacing:.06em; }
+  /* The mark is baseline-aligned by the parent flex box like the wordmark text would be, so
+     align-self pulls it back to optical centre against the two-size HENNETH DESK lockup. */
+  .hn-auth .nav-brand-mark{ height:28px; width:auto; flex:none; display:block; align-self:center; }
   .hn-auth .nav-right{ display:flex; align-items:center; gap:10px; flex-wrap: wrap; }
   .hn-auth .nav-chip{
     border: 1.5px solid var(--border); padding: 7px 11px; font-size: 9.5px;
@@ -61,23 +64,21 @@
   .hn-auth .nav-back:hover{ color: var(--teal); border-color: var(--teal); }
 
   .hn-auth .split{ flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
-  @media (max-width: 880px){
-    .hn-auth .page{ overflow:auto; height:auto; min-height:100vh; }
-    .hn-auth{ overflow:auto; }
-    .hn-auth .split{ grid-template-columns: 1fr; }
-    .hn-auth .right{ min-height: 560px; }
-  }
 
-  .hn-auth .left{ display:flex; align-items:center; justify-content:center; padding: 56px; overflow-y: auto; }
+  /* Vertical rhythm here is a budget, not a taste call: the tallest state (Create Account — name +
+     email + password + strength meter + legal) has to clear a 700px-tall laptop viewport without
+     .left scrolling. Every margin below is sized against that state. Loosen one and the form
+     starts scrolling again on short screens. */
+  .hn-auth .left{ display:flex; align-items:center; justify-content:center; padding: 36px 48px; overflow-y: auto; }
   .hn-auth .form-wrap{ width:100%; max-width: 440px; opacity: 0; transform: translateY(8px); }
   .hn-auth .eyebrow{ font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
   .hn-auth h1.headline{
     font-size: 27px; font-weight: 700; letter-spacing: .06em; margin: 0 0 8px;
     line-height: 1.15; text-transform: uppercase; min-height: 34px;
   }
-  .hn-auth .sub{ font-size: 13px; color: #4a4a44; margin: 0 0 26px; line-height: 1.55; }
+  .hn-auth .sub{ font-size: 13px; color: #4a4a44; margin: 0 0 23px; line-height: 1.55; }
 
-  .hn-auth .tabs{ display:grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--border); margin-bottom: 24px; }
+  .hn-auth .tabs{ display:grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--border); margin-bottom: 18px; }
   .hn-auth .tab{
     appearance:none; background:#fff; border:none; font-family: var(--mono); text-align:center;
     padding: 13px 0; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -88,7 +89,7 @@
   .hn-auth .tab[aria-selected="true"]{ background: var(--ink); color: var(--bg-panel); }
   .hn-auth .tab:not([aria-selected="true"]):hover{ background: #ece9e2; }
 
-  .hn-auth .field{ margin-bottom: 16px; }
+  .hn-auth .field{ margin-bottom: 13px; }
   .hn-auth .field-label{ font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
   .hn-auth .field input{
     width: 100%; border: 1.5px solid var(--border); background: #fff; padding: 13px 14px;
@@ -391,21 +392,6 @@
   }
   .hn-auth .module:hover .m-explain, .hn-auth .module:focus-visible .m-explain{ max-height: 60px; opacity: 1; margin-top: 6px; }
 
-  @media (max-width: 880px){
-    .hn-auth .modules-dock{ display:none; }
-    .hn-auth .board{ max-width: 78vw; left: 50%; transform: translate(-50%,10px) scale(.97); bottom: 4%; }
-    .hn-auth .board.settled{ transform: translate(-50%,0) scale(1); }
-    .hn-auth .path-status, .hn-auth .path-track{ left: 20px; right: 20px; }
-    .hn-auth .grid5{ grid-template-columns: repeat(3,1fr); }
-  }
-  @media (min-width: 561px) and (max-width: 880px){
-    .hn-auth .modules-dock{ display:flex; right:16px; top:92px; bottom:auto; width:220px; max-width:35%; gap:5px; }
-    .hn-auth .modules-dock .module:nth-child(n+3){ display:none; }
-    .hn-auth .module{ padding:7px 9px; }
-    .hn-auth .module .m-row, .hn-auth .module .m-explain{ display:none; }
-    .hn-auth .calibration-orbit{ width:230px; height:230px; left:34%; }
-  }
-
   @media (prefers-reduced-motion: reduce){
     .hn-auth .hn-edge, .hn-auth .hn-node, .hn-auth .hn-label, .hn-auth .hn-pulse, .hn-auth .seal-ring{ animation: none !important; }
     .hn-auth .hn-edge{ stroke-dashoffset: 0 !important; opacity: .28 !important; }
@@ -418,56 +404,48 @@
     .hn-auth .right.descent-breach .descent-aperture{ transform:translate(-50%,-50%) scale(1) !important; }
     .hn-auth .right.descent-breach .board{ transform:none !important; opacity:.3; }
   }
-  /* Mobile: the form leads, the terminal scene follows as a short visual footer rather than taking
-     over the first viewport. This is why .right does NOT carry order:-1 in the block above — on a
-     phone the first thing on screen has to be the thing you came to do. Flex + explicit order,
-     because the desktop layout is a 2-col grid and column order there is source order. */
+  /* Mobile: only the sign-in / sign-up transaction survives. The animated terminal scene (.right)
+     and every nav item except the brand are removed outright — not reordered, not shrunk — because
+     on a phone the scene is decoration that pushes the actual task off-screen and the nav chips
+     wrap onto a second row. The form is then vertically centred in the remaining viewport via
+     auto margins on .form-wrap, which still lets it scroll when the tallest state (Create Account)
+     is taller than the screen. All the scene-tuning mobile rules that used to live here are gone
+     with the scene; do not re-add them without re-adding .right. */
   @media (max-width: 880px){
-    .hn-auth .page{ height:auto; min-height:100vh; overflow:visible; }
+    .hn-auth .page{ height:100vh; min-height:0; overflow:hidden; }
     .hn-auth .split{ display:flex; flex-direction:column; min-height:0; }
-    .hn-auth .left{ order:1; width:100%; min-height:0; padding:30px 18px 34px; align-items:flex-start; }
-    .hn-auth .right{ order:2; width:100%; height:430px; min-height:430px; }
-    .hn-auth .form-wrap{ max-width:420px; margin:0 auto; }
-    .hn-auth .sub{ margin-bottom:20px; }
-    .hn-auth .tabs{ margin-bottom:18px; }
+    .hn-auth .right{ display:none; }
+    .hn-auth .nav-right{ display:none; }
+    .hn-auth .left{ flex:1; width:100%; min-height:0; padding:24px 18px; align-items:stretch; overflow-y:auto; }
+    .hn-auth .form-wrap{ max-width:420px; margin:auto; width:100%; }
+    .hn-auth .sub{ margin-bottom:16px; }
+    .hn-auth .tabs{ margin-bottom:16px; }
     .hn-auth .field{ margin-bottom:12px; }
     .hn-auth .meter-copy{ display:none; }
     .hn-auth .odo-btn{ margin-top:16px; }
     .hn-auth .legal{ margin-top:20px; padding-top:14px; }
     .hn-auth .legal p{ font-size:9px; line-height:1.55; }
-    .hn-auth .evidence-layer, .hn-auth .modules-dock{ display:none; }
-    .hn-auth .path-status{ top:16px; left:16px; right:16px; align-items:flex-start; }
-    .hn-auth .path-status .status-line{ font-size:11px; max-width:220px; line-height:1.35; }
-    .hn-auth .path-status .status-pct{ font-size:10px; }
-    .hn-auth .path-track{ top:54px; left:16px; right:16px; }
-    .hn-auth .seal{ top:76px; right:16px; width:74px; height:74px; }
-    .hn-auth .board{ left:16px; right:16px; bottom:14px; width:auto; max-width:none; transform:translateY(10px) scale(.97); }
-    .hn-auth .board.settled{ transform:translateY(0) scale(1); }
-    .hn-auth .board-head{ padding:8px 10px; }
-    .hn-auth .board-head .t1{ font-size:8px; }
-    .hn-auth .board-head .t2{ font-size:7px; }
-    .hn-auth .grid5{ grid-template-columns:repeat(5,minmax(0,1fr)); gap:3px; padding:6px; }
-    .hn-auth .cell{ min-height:34px; padding:5px 4px; }
-    .hn-auth .cell .sym{ font-size:7px; letter-spacing:0; }
-    .hn-auth .cell .chg{ font-size:7px; margin-top:2px; }
-  }
-  @media (min-width: 561px) and (max-width: 880px){
-    .hn-auth .modules-dock{ display:flex; right:16px; top:92px; bottom:auto; width:220px; max-width:35%; gap:5px; }
-    .hn-auth .modules-dock .module:nth-child(n+3){ display:none; }
-    .hn-auth .module{ padding:7px 9px; }
-    .hn-auth .module .m-row, .hn-auth .module .m-explain{ display:none; }
-    .hn-auth .calibration-orbit{ width:230px; height:230px; left:34%; }
   }
   @media (max-width: 560px){
     .hn-auth .nav{ padding:12px 14px; }
-    .hn-auth .nav-right{ width:100%; justify-content:flex-start; gap:6px; }
-    .hn-auth .nav-chip{ padding:5px 7px; font-size:7px; }
-    .hn-auth .nav-back{ font-size:7px; }
-    .hn-auth .left{ padding:28px 16px 30px; }
+    .hn-auth .left{ padding:20px 16px; }
     .hn-auth h1.headline{ font-size:21px; letter-spacing:.045em; }
     .hn-auth .legal{ display:none; }
-    .hn-auth .right{ height:390px; min-height:390px; }
-    .hn-auth .board{ left:14px; right:14px; bottom:12px; }
+  }
+  /* Short laptop screens only. The base desktop rhythm above is the signed-off proportion and must
+     not move; this block exists solely so the tallest state (Create Account: name + email +
+     password + strength meter + legal) still fits without .left scrolling on a ~700px-tall
+     viewport. min-width guards it against the mobile layout, which has its own rules. */
+  @media (min-width: 881px) and (max-height: 820px){
+    .hn-auth .left{ padding: 14px 48px; }
+    .hn-auth h1.headline{ font-size:24px; margin:0 0 6px; min-height:28px; }
+    .hn-auth .sub{ margin: 0 0 10px; }
+    .hn-auth .tabs{ margin-bottom: 12px; }
+    .hn-auth .field{ margin-bottom: 6px; }
+    .hn-auth .forgot-line{ margin: -4px 0 8px; }
+    .hn-auth .odo-btn{ margin-top: 10px; height: 45px; }
+    .hn-auth .switch-line{ margin: 8px 0 0; }
+    .hn-auth .legal{ margin-top: 8px; padding-top: 10px; }
   }
 
   .hn-auth /* ---------- post-login onboarding ---------- */

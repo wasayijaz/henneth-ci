@@ -14,7 +14,7 @@
   var HN_MARKUP = `<div class="page">
 
   <nav class="nav">
-    <a href="#" class="nav-brand">HENNETH<small>&nbsp;DESK</small></a>
+    <a href="#" class="nav-brand"><img class="nav-brand-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>&nbsp;DESK</small></a>
     <div class="nav-right">
       <div class="nav-chip">Research · Not Advice</div>
       <button type="button" class="nav-chip lang">EN / اردو</button>
