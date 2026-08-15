@@ -1,139 +1,73 @@
 {
   "sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
-  "date": "2026-07-25",
-  "jumped_queue": true,
-  "jump_reason": "impact-4 news item dated 2026-07-23 ('PSX ends lower for third straight session') within the last 7 days per prompts/sector-week.md rule",
+  "as_of": "2026-08-15",
   "bull": {
-    "case": "The sector shows broader technical resilience than its headline daily move suggests: 17 of 27 members (63%) sit above their 50-day SMA even as the median 1-day return is -1.65% amid a market-wide risk-off week. Over the last 20 sessions the sector's median return is actually positive at +0.36%, holding up while the broader KSE-100 logged four straight losing sessions per the macro regime file. On valuation, the covered names trade cheap in aggregate (median P/E 6.04) and close to fair value (median fair-value gap -3.2%), with names like JSCL showing a genuinely inexpensive, undervalued profile (P/E 3.91, fair gap +47.7%). A handful of names -- ICIBL, ARMG, NEXT -- have re-rated sharply over 20 sessions, evidence that capital is actively rotating into parts of this sector even during a difficult macro week.",
-    "case_ur": "سیکٹر اپنی سرخی بننے والی روزانہ حرکت کے مقابلے میں کہیں زیادہ وسیع تکنیکی مضبوطی دکھاتا ہے: 27 میں سے 17 ارکان (63%) اپنی 50-روزہ SMA سے اوپر ہیں، حالانکہ مارکیٹ گیر رسک آف ہفتے کے دوران میڈین 1-دن ریٹرن -1.65% ہے۔ گزشتہ 20 سیشنز میں سیکٹر کا میڈین ریٹرن دراصل مثبت +0.36% ہے، اور یہ اس وقت برقرار رہا جب میکرو ریجیم فائل کے مطابق وسیع تر KSE-100 نے مسلسل چار خسارے والے سیشن ریکارڈ کیے۔ ویلیوایشن کے لحاظ سے، زیرِ احاطہ نام مجموعی طور پر سستے (میڈین P/E 6.04) اور فیئر ویلیو کے قریب (میڈین فیئر ویلیو گیپ -3.2%) ٹریڈ کرتے ہیں، جبکہ JSCL جیسے نام حقیقتاً سستی اور کم قیمت پروفائل دکھاتے ہیں (P/E 3.91، فیئر گیپ +47.7%)۔ چند نام -- ICIBL، ARMG، NEXT -- 20 سیشنز میں شدت سے ری ریٹ ہوئے ہیں، جو اس بات کا ثبوت ہے کہ سرمایہ ایک مشکل میکرو ہفتے کے دوران بھی سیکٹر کے کچھ حصوں میں فعال طور پر منتقل ہو رہا ہے۔",
-    "case_ur_hash": "164db4b67441",
+    "tldr": "17 of 28 members (60.7%) trade above their 50-day SMA and the median fair-value gap sits at just -2.2%, with 2 of 7 scored names undervalued against 3 overvalued -- a near-fair sector by the desk's own model. Median 20-day return is flat-positive at +0.06% despite a sharp -1.43% median 1-day session, and the case leans on that breadth and valuation floor, not on the sector's illiquid headline movers.",
+    "case": "The sector's medium-term structure is intact: 60.7% of the 28 constituents sit above their 50-day moving average, a broader base than the single-day rout suggests. On valuation, the median P/E of 6.64 and median fair-value gap of only -2.2% describe a sector trading close to the desk's fair-value model, with JSCL (fair_gap +42.2%, liquidity Rs29.5m/day) and FCSC (fair_gap +317.6%) still flagged undervalued against just three names flagged overvalued (IMS, PSX, FNEL). More liquid, scored names back this up: LSECL is up 21.13% over 20 sessions on Rs98.6m/day liquidity, and PIAHCLA and ENGROH each carry liquidity above Rs290m/day, giving the sector real tradeable depth beneath the micro-cap noise. PSX Limited itself, the exchange operator and a sector member, reports FY results on 2026-08-17, a direct near-term catalyst for the group's read-through on market volumes.",
     "pillars": [
-      {
-        "claim": "Breadth is majority-positive on the technical trend despite a weak single day",
-        "claim_ur": "کمزور واحد دن کے باوجود تکنیکی ٹرینڈ پر بریڈتھ اکثریتی طور پر مثبت ہے",
-        "claim_ur_hash": "7d5589882c9e",
-        "evidence": "breadth.above_sma50 = 17 of n_members = 27 (63%), even though returns.median_1d_pct = -1.65"
-      },
-      {
-        "claim": "The sector's medium-term trend (20 sessions) is positive, not negative, unlike the broader tape",
-        "claim_ur": "سیکٹر کا درمیانی مدت کا ٹرینڈ (20 سیشنز) وسیع تر مارکیٹ کے برعکس مثبت ہے، منفی نہیں",
-        "claim_ur_hash": "f1b6ebda666d",
-        "evidence": "returns.median_20d_pct = 0.36 (positive) against a macro.json backdrop of four consecutive KSE-100 losing sessions and a 2.72% weekly index decline"
-      },
-      {
-        "claim": "Valuation on covered names is cheap and close to fair value in aggregate",
-        "claim_ur": "زیرِ احاطہ ناموں کی ویلیوایشن مجموعی طور پر سستی اور فیئر ویلیو کے قریب ہے",
-        "claim_ur_hash": "dca398e25079",
-        "evidence": "valuation.median_pe = 6.04, valuation.median_fair_gap_pct = -3.2, with n_undervalued = 2 vs n_overvalued = 3 of n_valued = 7"
-      },
-      {
-        "claim": "At least one liquid, cheap, undervalued name anchors the bull case beyond the thin-float outliers",
-        "claim_ur": "کم از کم ایک لیکویڈ، سستا اور کم قیمت والا نام کمزور فلوٹ آؤٹ لائرز سے ہٹ کر بُل کیس کو مضبوط بنیاد فراہم کرتا ہے",
-        "claim_ur_hash": "ea1cf9f3cabf",
-        "evidence": "JSCL: pe = 3.91, fair_gap_pct = 47.7, fair_verdict = 'undervalued', payout_pct = 50.66, liquidity_rs_m = 29.5"
-      },
-      {
-        "claim": "Sharp re-ratings in select names show capital is finding entry points in the sector",
-        "claim_ur": "چند مخصوص ناموں میں شدید ری ریٹنگ ظاہر کرتی ہے کہ سرمایہ سیکٹر میں انٹری پوائنٹس تلاش کر رہا ہے",
-        "claim_ur_hash": "08e162cdf52d",
-        "evidence": "returns.best_20d: ICIBL +354.0%; members ARMG ret_20d = 40.44, NEXT ret_20d = 39.66"
-      }
+      {"claim": "Breadth is broad despite today's weak session", "evidence": "breadth.above_sma50 = 17 of n_members = 28 (60.7%)"},
+      {"claim": "The sector trades close to fair value on a median basis, tilted toward cheap", "evidence": "valuation.median_fair_gap_pct = -2.2%, n_undervalued = 2, n_overvalued = 3 (of n_valued = 7)"},
+      {"claim": "Liquid, scored names show genuine strength, not just illiquid outliers", "evidence": "LSECL ret_20d +21.13% on liquidity_rs_m 98.6; JSCL fair_gap_pct +42.2% (undervalued) on liquidity_rs_m 29.5"},
+      {"claim": "A direct sector catalyst is imminent", "evidence": "upcoming_events: PSX results dated 2026-08-17"}
     ],
-    "weakest_pillar": "The momentum/re-rating pillar (ICIBL, ARMG, NEXT) is built almost entirely on the sector's least liquid names -- ICIBL liquidity_rs_m = 8.0, ARMG = 0.6, NEXT = 1.3 -- against a sector where only 7 of 27 members (26%) even carry PE/fair-value data. Strip these three thinly-traded outliers out and the 'sector strength' narrative rests on a much thinner base than the headline breadth number implies."
+    "weakest_pillar": "The breadth claim (17/28 above SMA50) is undercut by breadth.advancing_1d = 5 of 28 (17.9%) on the same day -- the medium-term base is real but is eroding fast in the most recent session, and the dossier gives no read on whether that erosion continues."
   },
   "bear": {
-    "case": "Coverage and quality both undercut the sector's apparent cheapness: only 7 of 27 members (26%) carry any PE/fair-value data at all, and among that small covered set overvalued names (3) still edge out undervalued ones (2) -- including the sector's most liquid, most-followed name, PSX itself, flagged overvalued at a -69.2% fair-value gap on a PE of 20.01. Income quality is also weak: just 4 of 27 members (15%) pay a dividend, and even among payers the median payout ratio is already 50.66% of earnings, with individual cases like IMS paying out 103.06% of earnings against a PE of 60.62 and a -90.8% fair-value gap. The apparent momentum strength is really extreme dispersion -- a +354% best performer (ICIBL) against a -19.03% worst performer (AKDSL) over the same 20 sessions -- with only 5 of 27 names (18.5%) actually advancing on the latest session, against a median 1-day return of -1.65% that is weaker than same-day reads in Commercial Banks (-1.12%) or Insurance (0.0%). Finally, the dossier's own macro_drivers list is empty with macro_joint_r2_pct null, meaning no correction-survived global factor -- not oil, not S&P 500, not em_equity -- has a demonstrated effect on this sector's daily variance, even though its own recent_news carries an impact-5 Hormuz-shock headline and two impact-4 items inside the last ten days.",
-    "case_ur": "کوریج اور معیار دونوں سیکٹر کی بظاہر سستی کو کمزور کرتے ہیں: 27 میں سے صرف 7 ارکان (26%) کے پاس کسی بھی قسم کا PE/فیئر ویلیو ڈیٹا موجود ہے، اور اس چھوٹے سے زیرِ احاطہ گروپ میں بھی زیادہ قیمت والے نام (3) کم قیمت والوں (2) سے آگے ہیں -- بشمول سیکٹر کے سب سے زیادہ لیکویڈ اور سب سے زیادہ زیرِ نگاہ نام، خود PSX کے، جسے PE 20.01 پر -69.2% فیئر ویلیو گیپ کے ساتھ اوورویلیوڈ قرار دیا گیا ہے۔ آمدنی کا معیار بھی کمزور ہے: 27 میں سے صرف 4 ارکان (15%) ڈیویڈنڈ دیتے ہیں، اور ڈیویڈنڈ دینے والوں میں بھی میڈین پے آؤٹ ریشو پہلے ہی آمدنی کا 50.66% ہے، جبکہ IMS جیسے انفرادی کیسز میں 60.62 کے PE اور -90.8% فیئر ویلیو گیپ کے مقابلے میں 103.06% آمدنی پے آؤٹ کی جا رہی ہے۔ بظاہر نظر آنے والی مومینٹم مضبوطی دراصل انتہائی بکھراؤ ہے -- اسی 20 سیشنز میں +354% بہترین کارکردگی (ICIBL) کے مقابلے میں -19.03% بدترین کارکردگی (AKDSL) -- جبکہ تازہ ترین سیشن میں 27 میں سے صرف 5 نام (18.5%) حقیقتاً تیزی میں رہے، اور میڈین 1-دن ریٹرن -1.65% رہا جو کمرشل بینکس (-1.12%) یا انشورنس (0.0%) کے اسی دن کے اعداد و شمار سے کمزور ہے۔ آخر میں، ڈوزیئر کی اپنی macro_drivers فہرست خالی ہے اور macro_joint_r2_pct null ہے، جس کا مطلب ہے کہ کوئی بھی عالمی عنصر -- نہ آئل، نہ S&P 500، نہ em_equity -- جو کریکشن کے بعد بھی برقرار رہا ہو، اس سیکٹر کے روزانہ تغیر پر ثابت شدہ اثر نہیں رکھتا، حالانکہ اس کی اپنی recent_news میں ایک impact-5 ہرمز شاک کی سرخی اور گزشتہ دس دنوں میں دو impact-4 آئٹمز موجود ہیں۔",
-    "case_ur_hash": "16f623859937",
+    "tldr": "The sector's median 1-day return was -1.43% with only 5 of 28 names advancing, and its own best 20-day performer, ICIBL at +354.0%, trades on just Rs8.0m/day liquidity and reversed -8.06% the same day it was measured. macro_drivers is empty and macro_joint_r2_pct is null -- no global factor explains this sector's days at all -- while only 4 of 28 members pay a dividend and only 7 of 28 carry any fair-value estimate, so the sector-level medians describe a thin, largely unscored, and locally-driven group.",
+    "case": "Today's session was a broad decline, not a stock-specific one: median_1d_pct is -1.43% with just 5 of 28 members advancing, a starker one-day breadth failure than the sector's above-SMA50 count would suggest. The sector's headline momentum is a liquidity mirage -- ICIBL's 354.0% 20-day return runs on Rs8.0m/day of turnover and ARMG's 40.44% run on Rs0.6m/day, numbers a handful of trades can produce and that no meaningful capital could actually realize; ICIBL itself dropped -8.06% in the same session its 354% gain was recorded, direct evidence of that fragility. The dossier's macro_drivers list is empty and macro_joint_r2_pct is null, meaning no correction-survived global factor has a demonstrated effect on this sector at all -- unlike Cement (0.75% joint R2) or Commercial Banks (0.52%), this group's days are entirely locally made and unmodeled. Coverage is thin everywhere it matters: only 4 of 28 members pay any dividend, and only 7 of 28 carry a fair-value verdict, so both the income and valuation stories describe a quarter of the sector at most.",
     "pillars": [
-      {
-        "claim": "Valuation coverage is thin and the covered tail leans overvalued, including the sector's flagship name",
-        "claim_ur": "ویلیوایشن کوریج کمزور ہے اور زیرِ احاطہ حصہ اوورویلیوڈ کی جانب مائل ہے، بشمول سیکٹر کے فلیگ شپ نام کے",
-        "claim_ur_hash": "553d986695ac",
-        "evidence": "valuation.n_valued = 7 of 27; n_overvalued = 3 > n_undervalued = 2; PSX: pe = 20.01, fair_gap_pct = -69.2, fair_verdict = 'overvalued', liquidity_rs_m = 399.7 (most liquid member)"
-      },
-      {
-        "claim": "Income quality is weak -- few payers, and payout ratios already stretched",
-        "claim_ur": "آمدنی کا معیار کمزور ہے -- ڈیویڈنڈ دینے والے کم ہیں، اور پے آؤٹ ریشوز پہلے ہی کھنچے ہوئے ہیں",
-        "claim_ur_hash": "9c1cfe5c35f5",
-        "evidence": "income.n_payers = 4 of 27, income.median_payout_pct = 50.66; IMS payout_pct = 103.06, pe = 60.62, fair_gap_pct = -90.8 (overvalued)"
-      },
-      {
-        "claim": "Momentum is extreme dispersion, not broad strength, and daily breadth is weak",
-        "claim_ur": "مومینٹم وسیع مضبوطی نہیں بلکہ انتہائی بکھراؤ ہے، اور روزانہ بریڈتھ کمزور ہے",
-        "claim_ur_hash": "65ae4a7a02aa",
-        "evidence": "returns.best_20d ICIBL +354.0% vs worst_20d AKDSL -19.03%; breadth.advancing_1d = 5 of 27; returns.median_1d_pct = -1.65 vs Commercial Banks median_1d_pct = -1.12 and Insurance median_1d_pct = 0.0"
-      },
-      {
-        "claim": "No correction-survived global macro factor has a demonstrated effect on this sector",
-        "claim_ur": "کوئی بھی کریکشن کے بعد برقرار رہنے والا عالمی میکرو عنصر اس سیکٹر پر ثابت شدہ اثر نہیں رکھتا",
-        "claim_ur_hash": "21d5ad92890e",
-        "evidence": "macro_drivers = [] (empty list) and macro_joint_r2_pct = null, versus Commercial Banks (macro_joint_r2_pct = 0.62) and Cement (macro_joint_r2_pct = 0.71) in the same dossier"
-      },
-      {
-        "claim": "The sector's own news flow carries severe and material tags inside the current risk-off regime",
-        "claim_ur": "موجودہ رسک آف ریجیم کے دوران سیکٹر کا اپنا نیوز فلو شدید اور اہم درجہ بندی کے ٹیگز رکھتا ہے",
-        "claim_ur_hash": "9ce34a9ef78d",
-        "evidence": "recent_news: 2026-07-14 impact 5 ('Hormuz tensions wipe out over 6,400 points at PSX', tagged ENGROH); 2026-07-17 impact 4 ('PSX Closing Bell: The Show Is Over', tagged PSX); 2026-07-23 impact 4 ('PSX ends lower for third straight session', tagged ENGROH)"
-      }
+      {"claim": "The most recent session was a broad-based decline, not noise around a few names", "evidence": "returns.median_1d_pct = -1.43%, breadth.advancing_1d = 5 of 28"},
+      {"claim": "The sector's best-performing name is a liquidity artifact and already reversing", "evidence": "ICIBL ret_20d +354.0% on liquidity_rs_m 8.0, with ret_1d -8.06% the same day"},
+      {"claim": "No global factor demonstrably drives this sector", "evidence": "macro_drivers = [], macro_joint_r2_pct = null"},
+      {"claim": "Income and valuation coverage are both too thin to generalize from", "evidence": "income.n_payers = 4 of 28; valuation.n_valued = 7 of 28"}
     ],
-    "attacks_bull": "The bull's momentum pillar (ICIBL +354%, ARMG +40.44%, NEXT +39.66%) leans on exactly the three least liquid names in the sector -- liquidity_rs_m of 8.0, 0.6, and 1.3 respectively -- while the single most liquid, most-followed member, PSX (liquidity_rs_m = 399.7), is down -2.12% on the day and -0.45% over 20 sessions and is flagged overvalued at a -69.2% fair-value gap. A handful of thinly-traded names re-rating 40-354% is not sector breadth; it is precisely the kind of divergence between headline strength and underlying participation the desk is required to name rather than paper over.",
-    "weakest_pillar": "The 'no demonstrated macro driver' argument is factually accurate (macro_drivers is empty, macro_joint_r2_pct is null) but cuts both ways: it also means the dossier cannot show that the sector's own impact-5 Hormuz headline or the broader oil/risk-off shock is actually moving this sector's prices in a measurable, correction-survived way. Citing the Hormuz headline as an exposure risk sits in some tension with the sector's own finding that no global factor -- including oil -- has a demonstrated effect on it."
+    "attacks_bull": "The bull's breadth pillar (17/28 above SMA50) is the weakest link: it is a lagging, medium-term measure sitting on top of a session where only 5 of those same 28 names advanced (breadth.advancing_1d = 5) and the median return was -1.43%. A 50-day average takes weeks to roll over, so '60.7% above SMA50' can still be true on the day the uptrend actually breaks -- the dossier's own advancing_1d figure is the more current signal, and it points the other way.",
+    "weakest_pillar": "The 'no macro driver' pillar, while a true finding, is not itself bearish -- an empty macro_drivers list means the sector is unpredictable from the global tape, not that it is going down; treating measurement absence as a negative conflates 'unmodeled' with 'unfavorable.'"
   },
-  "bull_rebuttal": "The bull concedes that a large share of the sector's headline re-rating (ICIBL, ARMG, NEXT) is concentrated in thin-liquidity names and should not be read as broad participation. But the breadth read (17 of 27 above the 50-day SMA) and the near-fair median valuation gap (-3.2%) do not depend on those three outliers, and JSCL stands as a liquid (liquidity_rs_m = 29.5), cheap (PE 3.91), undervalued (fair_gap_pct = 47.7) counter-example that survives the bear's liquidity critique. The bull does not contest that PSX itself (the exchange operator) screens overvalued, or that dividend coverage across the sector is thin -- those are conceded points, not rebutted ones.",
+  "bull_rebuttal": "The bear is right that advancing_1d = 5 of 28 is the sharper, more current signal than the lagging SMA50 count, and the bull concedes that breadth is deteriorating in the immediate session -- that is a real weakness in the bull case, not a rebuttable one. But the bear's own generalization from ICIBL/ARMG illiquidity to the whole sector proves too much: the same critique does not touch LSECL (Rs98.6m/day, +21.13% 20d), PIAHCLA (Rs292.2m/day) or ENGROH (Rs392.3m/day, fair_gap +14.4%, verdict fair) -- three of the sector's most liquid names, none of which are the illiquid movers the bear singles out. The recent_news items the bear could point to are themselves broad-market headlines (institutional selling, fading US-Iran deal hopes) rather than sector-specific deterioration, which supports the bull's read that today's -1.43% is a market-wide air pocket rather than a brokerage-and-investment-bank-specific breakdown -- something PSX Limited's own 2026-08-17 results should help clarify.",
   "what_would_settle_it": [
-    "Whether valuation.n_valued (currently 7 of 27) rises as more of the sector's 20 unpriced members report results by their upcoming_events dates (e.g. ENGROH and JSCL both due 2026-08-27), clarifying whether the median PE/fair-gap read is representative of the full sector",
-    "Whether breadth.above_sma50 (currently 17 of 27) holds above half the sector through the 2026-07-27 SBP MPC decision flagged in macro.json",
-    "Whether liquidity_rs_m for ICIBL, ARMG, and NEXT (currently 8.0, 0.6, 1.3) rises meaningfully in coming sessions, distinguishing genuine capital inflow from a thin-float spike",
-    "Whether PSX's (ticker) fair_gap_pct (-69.2 as of this dossier) narrows or widens after its 2026-09-15 results, given it is the sector's most liquid member"
+    "PSX Limited's FY results on 2026-08-17: whether reported trading volumes/revenue support a broker-complex recovery or confirm the -1.43% median 1-day move as the start of a deeper pullback",
+    "Whether ICIBL's 20-day +354.0% gain holds or continues reversing over the next 5-10 sessions at a liquidity level above Rs10m/day, distinguishing a real re-rating from a thin-float pump",
+    "Whether breadth.above_sma50 (currently 17 of 28) erodes toward the advancing_1d reading (5 of 28) over the next two weeks, resolving which of the two breadth measures was the leading signal",
+    "JSCL results due 2026-08-24 and FCSC results due 2026-10-05: whether the undervaluation gaps (+42.2% and +317.6% respectively) close via price re-rating or reflect fundamentals the model has not captured"
   ],
   "dossier_gaps": [
-    "No sector-level ROE, net-margin, or brokerage turnover/commission-revenue data to test whether the momentum leaders (ICIBL, ARMG, NEXT) reflect real earnings improvement or pure re-rating",
-    "n_valued is only 7 of 27 members -- 20 names carry no PE or fair-value verdict, which limits how confidently the sector's valuation stance (cheap median PE, near-fair median gap) can be generalized",
-    "No historical trend for macro_joint_r2_pct is available in this dossier -- a single null snapshot, so it is not possible to tell whether the empty macro_drivers list is a stable structural finding or an artifact of the current data window",
-    "No turnover/volume data specific to PSX (the exchange operator and a sector member) that would let the desk test whether the sector's own brokerage-income thesis is supported by actual trading activity"
+    "macro_joint_r2_pct is null for this sector (unlike Cement at 0.75% or Commercial Banks at 0.52%), so there is no quantified baseline for how much of daily variance any factor set explains here -- only the qualitative finding that macro_drivers is empty",
+    "recent_news carries only two items, both broad PSX-wide selloff headlines tagged to ENGROH -- no sector-specific news on brokerage volumes, CDC/NCCPL activity, or IPO pipeline that would typically move this complex",
+    "valuation.n_valued = 7 of 28 members -- the dossier does not carry a fair-value estimate for three-quarters of the sector, so the -2.2% median fair-gap describes a minority sample",
+    "No liquidity floor or filter is applied before computing returns.best_20d/worst_20d -- the dossier mixes near-zero-liquidity names (e.g., SIBL at Rs0.0m/day) with liquid ones in the same return rankings without flagging the difference"
   ],
   "house_view": {
-    "stance": "cautious",
+    "stance": "neutral",
     "conviction": "low",
-    "summary": "The evidence splits real signal from real noise: a majority of members (17 of 27, 63%) sit above their 50-day trend and the 20-session median return is a positive +0.36% even as the broader KSE-100 logged four straight losing sessions, but the sector's own valuation and income data are thin and skew negative once examined -- only 7 of 27 members carry a PE/fair-value read and among those, overvalued names (3) outnumber undervalued (2), including the sector's single most liquid, most-followed constituent, PSX (the exchange operator itself), flagged -69.2% overvalued on a PE of 20.01. Income quality reinforces the caution: just 4 of 27 members (15%) pay a dividend at all, the median payout among payers is already 50.66% of earnings, and IMS carries a 103.06% payout on a PE of 60.62 that is itself flagged -90.8% overvalued. The sector's headline momentum leaders (ICIBL +354%, ARMG +40.44%, NEXT +39.66% over 20 sessions) sit almost entirely in the three least-liquid names in the dossier (liquidity_rs_m 8.0, 0.6, and 1.3) and cannot be read as broad participation, particularly with today's session showing only 5 of 27 members advancing and a median 1-day return of -1.65%, weaker than same-day reads in Commercial Banks (-1.12%) and Insurance (0.0%). The desk finds no correction-survived macro driver for this sector specifically (macro_drivers is empty, macro_joint_r2_pct is null), so the prevailing risk-off regime is not statistically demonstrated pressure on this sector in the data, but it is the backdrop the sector's weak same-day breadth and overvalued-leaning covered valuation sit inside three days before the 2026-07-27 SBP MPC decision. On balance the desk reads this as cautious rather than constructive: the 63% breadth figure is real but is not corroborated by valuation quality, income quality, or same-day participation, and JSCL -- the one genuinely liquid, cheap, undervalued name in the dossier -- is a single data point, not a sector-wide thesis.",
-    "summary_ur": "شواہد حقیقی سگنل کو حقیقی شور سے الگ کرتے ہیں: ارکان کی اکثریت (27 میں سے 17، 63%) اپنی 50-روزہ ٹرینڈ سے اوپر ہے اور 20-سیشن میڈین ریٹرن مثبت +0.36% ہے، جبکہ وسیع تر KSE-100 نے مسلسل چار خسارے والے سیشن ریکارڈ کیے، لیکن سیکٹر کا اپنا ویلیوایشن اور آمدنی کا ڈیٹا کمزور ہے اور جانچنے پر منفی رجحان ظاہر کرتا ہے -- صرف 27 میں سے 7 ارکان کے پاس PE/فیئر ویلیو ریڈنگ موجود ہے اور ان میں سے بھی زیادہ قیمت والے ناموں (3) کی تعداد کم قیمت والوں (2) سے زیادہ ہے، بشمول سیکٹر کے سب سے زیادہ لیکویڈ اور سب سے زیادہ زیرِ نگاہ رکن PSX (خود ایکسچینج آپریٹر) کے، جسے PE 20.01 پر -69.2% اوورویلیوڈ قرار دیا گیا ہے۔ آمدنی کا معیار بھی احتیاط کی تصدیق کرتا ہے: صرف 27 میں سے 4 ارکان (15%) ہی ڈیویڈنڈ دیتے ہیں، ڈیویڈنڈ دینے والوں میں میڈین پے آؤٹ پہلے ہی آمدنی کا 50.66% ہے، اور IMS کا پے آؤٹ 60.62 کے PE پر 103.06% ہے جسے خود -90.8% اوورویلیوڈ قرار دیا گیا ہے۔ سیکٹر کے نمایاں مومینٹم لیڈرز (ICIBL +354%، ARMG +40.44%، NEXT +39.66%، 20 سیشنز میں) تقریباً مکمل طور پر ڈوزیئر کے تین کم ترین لیکویڈیٹی والے ناموں (liquidity_rs_m 8.0، 0.6، اور 1.3) میں مرکوز ہیں اور انہیں وسیع تر شرکت نہیں سمجھا جا سکتا، خاص طور پر جب آج کے سیشن میں 27 میں سے صرف 5 ارکان میں تیزی رہی اور میڈین 1-دن ریٹرن -1.65% رہا، جو کمرشل بینکس (-1.12%) اور انشورنس (0.0%) کے اسی دن کے اعداد و شمار سے کمزور ہے۔ ڈیسک کو اس سیکٹر کے لیے مخصوص طور پر کوئی ایسا میکرو ڈرائیور نہیں ملتا جو کریکشن کے بعد بھی برقرار رہا ہو (macro_drivers خالی ہے، macro_joint_r2_pct null ہے)، اس لیے موجودہ رسک آف ریجیم کا اس سیکٹر پر شماریاتی طور پر ثابت شدہ دباؤ ڈیٹا میں موجود نہیں، لیکن یہی وہ پس منظر ہے جس میں سیکٹر کی کمزور اسی دن کی بریڈتھ اور اوورویلیوڈ کی جانب مائل ویلیوایشن 2026-07-27 کے SBP MPC فیصلے سے تین دن پہلے موجود ہے۔ مجموعی طور پر ڈیسک اسے تعمیری کے بجائے محتاط قرار دیتا ہے: 63% بریڈتھ کا عدد حقیقی ہے مگر اسے ویلیوایشن کوالٹی، آمدنی کوالٹی، یا اسی دن کی شرکت کی تائید حاصل نہیں، اور JSCL -- ڈوزیئر کا واحد حقیقی معنوں میں لیکویڈ، سستا اور کم قیمت والا نام -- ایک واحد ڈیٹا پوائنٹ ہے، پورے سیکٹر کا مقدمہ نہیں۔",
-    "summary_ur_hash": "5061f5879df6",
+    "tldr": "The desk reads this sector as directionless on the evidence: a -1.43% median 1-day move with only 5 of 28 names advancing sits directly against a 60.7% above-SMA50 base and a near-fair -2.2% median valuation gap, and the dossier carries no macro driver (macro_joint_r2_pct null) to break the tie. Conviction stays low because valuation and income coverage span only a quarter of the 28-member sector and the sector's biggest headline mover, ICIBL (+354.0% 20d), trades on Rs8.0m/day and reversed -8.06% the same day it was measured.",
+    "summary": "The bull and bear cases are both built on real dossier figures that point in opposite directions on different time horizons, and the desk does not see a basis in the data to pick a side with any force. The medium-term breadth base (17/28 above SMA50) and the near-fair median valuation gap (-2.2%, n_valued 7) are genuine, but they sit on top of a same-day breadth collapse (5/28 advancing) and a -1.43% median 1-day return that the dossier cannot yet distinguish from a market-wide air pocket versus a sector-specific rollover. The sector's best-performing scored names are split cleanly between liquid, credible movers (LSECL +21.13% 20d on Rs98.6m/day; ENGROH fair_gap +14.4% on Rs392.3m/day) and illiquid artifacts (ICIBL +354.0% on Rs8.0m/day, already reversing; ARMG +40.44% on Rs0.6m/day) -- a sector-level return statistic here is not reliable without separating the two. No macro factor set has a demonstrated relationship with this sector's returns (macro_drivers empty, macro_joint_r2_pct null), which rules out leaning on the macro regime's neutral-to-mildly-constructive read (state/macro.json) to tip the call either way. PSX Limited's FY results on 2026-08-17 are the nearest scheduled event that could sharpen this picture, but they have not yet reported.",
     "key_evidence": [
-      "valuation.n_valued = 7 of 27; n_overvalued = 3 > n_undervalued = 2; PSX pe = 20.01, fair_gap_pct = -69.2, liquidity_rs_m = 399.7 (the sector's most liquid member)",
-      "income.n_payers = 4 of 27, median_payout_pct = 50.66; IMS payout_pct = 103.06, pe = 60.62, fair_gap_pct = -90.8",
-      "breadth.advancing_1d = 5 of 27 and returns.median_1d_pct = -1.65 (weaker than Commercial Banks median_1d_pct = -1.12 and Insurance median_1d_pct = 0.0 the same day)",
-      "macro_drivers = [] and macro_joint_r2_pct = null -- no correction-survived global driver demonstrated for this sector"
+      "breadth.above_sma50 = 17 of 28 (60.7%) vs breadth.advancing_1d = 5 of 28 (17.9%) on the same day -- the two breadth measures disagree",
+      "returns.median_1d_pct = -1.43%, returns.median_20d_pct = +0.06% -- a sharp one-day move against a flat medium-term trend",
+      "valuation.median_fair_gap_pct = -2.2% (n_valued = 7 of 28); income.n_payers = 4 of 28 -- both the valuation and income reads cover roughly a quarter of the sector",
+      "macro_drivers = [], macro_joint_r2_pct = null -- no correction-survived global factor explains this sector's daily variance, versus Cement at 0.75% and Commercial Banks at 0.52%"
     ],
-    "key_evidence_ur": [
-      "valuation.n_valued = 27 میں سے 7؛ n_overvalued = 3 > n_undervalued = 2؛ PSX pe = 20.01، fair_gap_pct = -69.2، liquidity_rs_m = 399.7 (سیکٹر کا سب سے زیادہ لیکویڈ رکن)",
-      "income.n_payers = 27 میں سے 4، median_payout_pct = 50.66؛ IMS payout_pct = 103.06، pe = 60.62، fair_gap_pct = -90.8",
-      "breadth.advancing_1d = 27 میں سے 5 اور returns.median_1d_pct = -1.65 (اسی دن کمرشل بینکس کے median_1d_pct = -1.12 اور انشورنس کے median_1d_pct = 0.0 سے کمزور)",
-      "macro_drivers = [] اور macro_joint_r2_pct = null -- اس سیکٹر کے لیے کوئی ایسا عالمی ڈرائیور ثابت نہیں ہوا جو کریکشن کے بعد بھی برقرار رہا ہو"
-    ],
-    "key_evidence_ur_hash": "d6b3aac5e976",
-    "dissent": "The strongest surviving argument against this cautious read is the bull's breadth and trend case, which the bear never actually rebuts on its own terms. 17 of 27 members (63%) trade above their 50-day SMA, and the sector's 20-session median return is positive (+0.36%) even as the broader KSE-100 fell 2.72% over the same week and logged four consecutive losing sessions -- that is a genuine divergence in the sector's favor, and it is not an artifact of the three thin-liquidity outliers, because the breadth and median-return calculations are not dominated by ICIBL/ARMG/NEXT the way the 'best_20d' headline figure is. JSCL further survives the bear's liquidity critique intact: it is reasonably liquid (liquidity_rs_m 29.5, above several names the bear itself cites without objection), cheap (PE 3.91), flagged undervalued (fair_gap_pct +47.7%), and carries a covered payout ratio (50.66%) that is not obviously unsustainable. Most importantly, the bear's own 'no macro driver' pillar is a double-edged sword against this house view: macro_joint_r2_pct being null for this sector means there is no dossier evidence that the current risk-off regime, the oil shock, or the four-session KSE-100 slide is actually pressuring this sector's prices in any measurable, correction-survived way. If that holds, then leaning cautious partly because of the macro backdrop -- even used only as context here, not as a stated driver -- is not something this dossier can support with a demonstrated statistical relationship, and the sector's positive 20-day trend against a falling index could just as easily be read as the market telling the desk that this sector is not, in fact, exposed to the risk-off regime the way other sectors are. If breadth stays above half the sector through the 2026-07-27 MPC and n_valued expands with more names reporting results without deteriorating the fair-value read, that would be real evidence the cautious stance under-weighted a sector that was quietly holding up while the broader tape fell.",
-    "dissent_ur": "اس محتاط ریڈنگ کے خلاف سب سے مضبوط باقی رہ جانے والی دلیل بُل کا بریڈتھ اور ٹرینڈ کیس ہے، جسے بیئر اپنی شرائط پر کبھی حقیقتاً رد نہیں کرتا۔ 27 میں سے 17 ارکان (63%) اپنی 50-روزہ SMA سے اوپر ٹریڈ کرتے ہیں، اور سیکٹر کا 20-سیشن میڈین ریٹرن مثبت (+0.36%) ہے جبکہ وسیع تر KSE-100 اسی ہفتے 2.72% گرا اور مسلسل چار خسارے والے سیشن ریکارڈ کیے -- یہ سیکٹر کے حق میں ایک حقیقی انحراف ہے، اور یہ تین کم لیکویڈیٹی والے آؤٹ لائرز کا اثر نہیں، کیونکہ بریڈتھ اور میڈین ریٹرن کے حسابات ICIBL/ARMG/NEXT کے زیرِ اثر نہیں ہیں جس طرح 'best_20d' کا نمایاں عدد ہے۔ JSCL بیئر کی لیکویڈیٹی تنقید کو بھی برقرار رہتے ہوئے جھیل جاتا ہے: یہ معقول حد تک لیکویڈ ہے (liquidity_rs_m 29.5، کئی ایسے ناموں سے زیادہ جنہیں بیئر خود بلا اعتراض حوالہ دیتا ہے)، سستا ہے (PE 3.91)، کم قیمت قرار دیا گیا ہے (fair_gap_pct +47.7%)، اور اس کا پے آؤٹ ریشو (50.66%) واضح طور پر غیر پائیدار نہیں لگتا۔ سب سے اہم بات یہ ہے کہ بیئر کا اپنا 'کوئی میکرو ڈرائیور نہیں' والا ستون اس ہاؤس ویو کے خلاف بھی دو دھاری تلوار ہے: اس سیکٹر کے لیے macro_joint_r2_pct کا null ہونا اس بات کا ثبوت ہے کہ ڈوزیئر میں کوئی ایسا شواہد موجود نہیں کہ موجودہ رسک آف ریجیم، آئل شاک، یا KSE-100 کی چار سیشنز کی گراوٹ حقیقتاً اس سیکٹر کی قیمتوں پر کسی قابلِ پیمائش اور کریکشن کے بعد بھی برقرار رہنے والے انداز میں دباؤ ڈال رہی ہے۔ اگر یہ درست ہے، تو میکرو پس منظر کی بنا پر جزوی طور پر محتاط رخ اپنانا -- چاہے یہاں صرف تناظر کے طور پر استعمال ہو، بیان کردہ ڈرائیور کے طور پر نہیں -- ایسی چیز نہیں جس کی تائید یہ ڈوزیئر کسی ثابت شدہ شماریاتی تعلق سے کر سکے، اور گرتے ہوئے انڈیکس کے مقابلے میں سیکٹر کا مثبت 20-روزہ ٹرینڈ اتنی ہی آسانی سے یہ بھی ظاہر کر سکتا ہے کہ مارکیٹ ڈیسک کو بتا رہی ہے کہ یہ سیکٹر، حقیقت میں، دیگر سیکٹرز کی طرح رسک آف ریجیم کے سامنے بے نقاب نہیں۔ اگر بریڈتھ 2026-07-27 کے MPC تک سیکٹر کے نصف سے اوپر رہتی ہے اور n_valued مزید ناموں کے نتائج آنے سے فیئر ویلیو ریڈنگ کو بگاڑے بغیر بڑھتا ہے، تو یہ حقیقی شواہد ہوں گے کہ محتاط موقف نے ایسے سیکٹر کو کم اہمیت دی جو وسیع تر مارکیٹ کے گرنے کے دوران خاموشی سے سنبھلا ہوا تھا۔",
-    "dissent_ur_hash": "5eaa7ecdb4cd",
-    "what_changed": "First session for this sector on record in state/sector_debates/ -- no prior house_view exists in this file to compare against.",
+    "dissent": "The strongest case against a neutral stance is the bear's: advancing_1d (5 of 28, 17.9%) is definitionally the more current read than above_sma50 (17 of 28, a lagging 50-day average that can stay elevated for weeks after a trend actually breaks), and the median_1d_pct of -1.43% is a genuinely broad decline, not a one-name distortion. On that reading the honest stance is cautious, not neutral -- the sector's newest information says down, and waiting for confirmation risks anchoring on a stale breadth measure precisely because it looks reassuring. The counter -- that the bull's liquid names (LSECL, PIAHCLA, ENGROH) are unaffected by the bear's illiquidity critique -- does not fully answer this, because all three of those liquid names ALSO fell that day (LSECL -3.42%, PIAHCLA +1.81% is the lone exception, ENGROH -0.94%), so the bear's breadth argument is not just about illiquid outliers; it describes the liquid core of the sector too. If the desk is wrong this week, it is because it treated a fresh, broad-based, liquid-name-inclusive decline as noise around a lagging trend measure, when the more current dossier figure was the one that mattered.",
+    "what_changed": "first session",
     "claims": [
       {
-        "text": "Inv. Banks / Inv. Cos. / Securities Cos. underperforms the KSE-100 over the 30 calendar days from 2026-07-25 to 2026-08-24, consistent with its overvalued flagship member (PSX, fair_gap_pct -69.2%), thin dividend coverage (income.n_payers = 4 of 27), and weaker same-day breadth (breadth.advancing_1d = 5 of 27) than peer financial sectors on 2026-07-24.",
-        "horizon_days": 30,
-        "market_relative": true,
-        "resolves_on": "2026-08-24"
-      },
-      {
-        "text": "PSX (the exchange-operator constituent), the sector's most liquid member (liquidity_rs_m = 399.7) and currently its most overvalued covered name (fair_gap_pct = -69.2, pe = 20.01), underperforms the KSE-100 between 2026-07-25 and its next scheduled results release.",
-        "horizon_days": 52,
-        "market_relative": true,
-        "resolves_on": "2026-09-15"
-      },
-      {
-        "text": "Sector breadth (breadth.above_sma50, currently 17 of 27 = 63%) falls to 50% or below within 10 sessions of the 2026-07-27 SBP MPC decision; if instead it holds above 60% through that window, that would falsify this cautious stance and vindicate the bull's resilience case per the dissent above.",
-        "horizon_days": 14,
+        "text": "The sector's median 1-day return of -1.43% recorded on 2026-08-15 does not extend into a two-session-confirmed decline (a second consecutive negative median 1-day print) over the next 5 trading sessions, distinguishing a one-day air pocket from the start of a breadth rollover implied by advancing_1d = 5 of 28",
+        "horizon_days": 5,
         "market_relative": false,
-        "resolves_on": "2026-08-10"
+        "resolves_on": "2026-08-22"
+      },
+      {
+        "text": "Over the 30 sessions following 2026-08-15, the sector's breadth.above_sma50 reading (currently 17 of 28, 60.7%) does not converge toward its advancing_1d reading (currently 5 of 28, 17.9%) by more than half the gap, i.e. it does not fall to 11 or fewer of 28 members above the 50-day SMA",
+        "horizon_days": 30,
+        "market_relative": false,
+        "resolves_on": "2026-09-29"
+      },
+      {
+        "text": "PSX Limited (ticker PSX), the sector's most liquid scored member at Rs313.5m/day, does not outperform the KSE-100 index over the 10 sessions following its FY results release on 2026-08-17",
+        "horizon_days": 10,
+        "market_relative": true,
+        "resolves_on": "2026-08-31"
       }
     ]
   }
