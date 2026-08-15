@@ -3661,6 +3661,10 @@ function runRevealModal(opts) {
   function close() {
     if (closing) return;                     // Esc + backdrop click can both land; close once
     closing = true;
+    // done blocks the pending setTimeout(reveal, 550) that the loader queues once the bar hits
+    // 100%. Without it, closing inside that window still fires reveal(): it sets the "already
+    // seen" session flag and runs onReveal into a body that closeAnimated has already detached.
+    done = true;
     cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
     closeAnimated(ov, ".replay-box");   // let the exit animation play, then drop the node
     // reveal the results inline on the page (reveal() sets the session flag once the run finishes)
