@@ -6937,8 +6937,17 @@ function applyDeskScheme(choice) {
     if (choice === "dark" || choice === "light") localStorage.setItem("deskScheme", choice);
     else localStorage.removeItem("deskScheme");
   } catch (e) {}
-  if (choice === "dark" || choice === "light") document.documentElement.setAttribute("data-scheme", choice);
-  else document.documentElement.removeAttribute("data-scheme");
+  // Kill transitions for exactly one frame (see palette.css) so the whole palette lands in a
+  // single paint instead of ~40 frames of crossfade through two backdrop-filtered panes.
+  const root = document.documentElement;
+  root.setAttribute("data-scheme-switching", "");
+  if (choice === "dark" || choice === "light") root.setAttribute("data-scheme", choice);
+  else root.removeAttribute("data-scheme");
+  const clear = () => root.removeAttribute("data-scheme-switching");
+  // rAF gets us the frame after the repaint; the timeout is the guard, because rAF never fires in
+  // a background tab and stranding the attribute would leave the desk permanently transition-less.
+  requestAnimationFrame(() => requestAnimationFrame(clear));
+  setTimeout(clear, 150);
 }
 /* The topbar control. One button that cycles System → Light → Dark, sitting next to the
    search button so the scheme is never buried inside a menu (and is reachable signed-out). */

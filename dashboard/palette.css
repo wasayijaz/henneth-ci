@@ -61,6 +61,17 @@ body[data-theme=gemini] {
   }
 }
 
+/* Theme flip must snap, not crossfade. ~116 elements carry background/colour transitions for
+   hover polish; a scheme change re-targets all of them at once, and because both side panes run
+   backdrop-filter, every frame of that crossfade re-blurs two full-height panes. The result reads
+   as a laggy button. app.js stamps this attribute for one frame around the flip, so the new
+   palette lands in a single paint and hover transitions are back immediately after. */
+html[data-scheme-switching] *,
+html[data-scheme-switching] *::before,
+html[data-scheme-switching] *::after {
+  transition: none !important;
+}
+
 html[data-scheme="dark"] body[data-theme=gemini] {
   --paper:#171512; --paper-2:#1f1d19; --paper-3:#24221d;
   --rpanel:#1d1b17; --rpanel-2:#26241f;
