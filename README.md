@@ -424,7 +424,9 @@ can veto on, a fixed **news impact 1–5 scale**, and a **calendar-freshness gua
 degrades if session times go 60 days unverified, halting new signals). The **Auditor keeps veto**.
 
 ## Docs
+- [`AGENTS.md`](AGENTS.md) — **entry point for any agent or harness** (Codex, Claude Code, anything else). Harness-neutral brief: what the desk is, what to read in which order, the non-negotiables restated for tools that do not auto-load `CLAUDE.md`.
 - [`CLAUDE.md`](CLAUDE.md) — the desk rules every agent obeys.
+- [`docs/GOTCHAS.md`](docs/GOTCHAS.md) — the sharp edges: traps that have already cost debugging time (the `/state/*` auth gate that makes curl verification impossible, the CSS at-rule comment trap, cp1252 encoding, frozen dashboard breakpoints).
 - [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — **operations runbook**: the hybrid cloud/app model, the one publish path, safety gates, and how to run every flow without breaking live. Read this first when operating the desk.
 - [`docs/SYSTEM-REGISTRY.md`](docs/SYSTEM-REGISTRY.md) — index of every agent, loop, script, and state file.
 - [`docs/DESK-ROOM-PLAN.md`](docs/DESK-ROOM-PLAN.md) — the multi-agent analyst design.
