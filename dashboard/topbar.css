@@ -1,0 +1,273 @@
+/* ============================================================
+   Topbar open-tabs strip + "+" quick-open menu
+   + Board-tile collapse chevron.
+   Additive only. Loaded after rail.css. The "+" launcher
+   carries the .searchbox scrim idiom (themes.css 1640-1642), not
+   the .acct-menu popover; hard corners already covered by the
+   global border-radius:0 rule.
+   Production stylesheet, linked from dashboard/index.html after
+   themes.css; wins on source order — equal selector specificity,
+   no !important needed.
+   ============================================================ */
+
+/* ---- tab strip ---- */
+/* reference `nav.tabs` — the strip and the "+" are ONE full-height group, so
+   the button sits on the tabs' baseline instead of floating mid-topbar. The two
+   are siblings rather than the "+" living inside #tabStrip, because
+   renderTabs() owns that element's innerHTML (topbar.js:63). */
+body[data-theme=gemini] .tabs-wrap {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  gap: 3px;
+  min-width: 0;
+}
+
+body[data-theme=gemini] .tab-strip {
+  /* the reference gives the free space to `.top-spacer`, not the tabs, so the
+     strip hugs the brand and the right cluster pins to the edge */
+  flex: 0 1 auto;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  height: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+body[data-theme=gemini] .tab-strip::-webkit-scrollbar { display: none; }
+
+/* reference "connected folder tab": bottom border dropped into the topbar's
+   own bottom rule so the active tab reads as continuous with the page below */
+body[data-theme=gemini] .tstrip-tab {
+  flex: none;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 94px;
+  max-width: 168px;
+  padding: 0 13px;
+  border: 1px solid transparent;
+  border-top: 0;
+  background: transparent;
+  color: var(--ink3);
+}
+body[data-theme=gemini] .tstrip-tab.on {
+  color: var(--ink1);
+  background: var(--paper-2);
+  border-color: var(--line);
+  border-top-color: transparent;
+  border-bottom-color: var(--paper);
+  font-weight: 700;
+}
+/* reference `.tab:hover { color:var(--ink); background:var(--panel); }` — hover
+   paints a ground, not just a text colour, so an inactive tab previews the
+   active tab's shape before it is clicked. --surf is the palette's alias for
+   that panel tone (palette.css:24). The active tab already owns its
+   ground, so it opts out to avoid a hover flicker between two near tones. */
+body[data-theme=gemini] .tstrip-tab:hover {
+  color: var(--ink1);
+  background: var(--surf);
+}
+body[data-theme=gemini] .tstrip-tab.on:hover { background: var(--paper-2); }
+body[data-theme=gemini] .tstrip-tab a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+  font: 700 11px/1 "JetBrains Mono", monospace;
+  letter-spacing: .02em;
+}
+/* revealed on hover, same as .rail-note-acts. opacity, never display:none — the
+   box has to keep occupying its 14px so the label does not reflow and jitter
+   under the cursor, and a display:none button is unreachable by keyboard. */
+body[data-theme=gemini] .tstrip-close {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--ink3);
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+/* the active tab keeps its ✕ visible: it is the one tab a reader is most likely
+   to want to close, and it is the only one whose ground already differs. */
+body[data-theme=gemini] .tstrip-tab:hover .tstrip-close,
+body[data-theme=gemini] .tstrip-tab.on .tstrip-close,
+body[data-theme=gemini] .tstrip-close:focus-visible { opacity: 1; }
+body[data-theme=gemini] .tstrip-close:hover { color: var(--ink1); }
+
+@media (max-width: 900px) {
+  body[data-theme=gemini] .tab-strip { display: none; }
+}
+
+/* ---- "+" quick-open button + popup ---- */
+/* the slot must itself be a flex container: .tabadd-btn's `align-self: stretch`
+   below is inert in a block formatting context, which collapsed the button to
+   its content height and floated it above the tab row. */
+body[data-theme=gemini] .tabadd-slot {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+}
+/* reference `.tab-add`: borderless, 34px wide, full strip height, a 20px muted
+   glyph. A boxed button here read as a fifth tab; the reference deliberately
+   leaves it unboxed so the strip ends on the tabs, not on a control. */
+body[data-theme=gemini] .tabadd-btn {
+  flex: none;
+  align-self: stretch;
+  width: 34px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--rmuted);
+  font: 400 20px/1 "JetBrains Mono", monospace;
+  cursor: pointer;
+}
+body[data-theme=gemini] .tabadd-btn:hover { color: var(--rink); background: var(--surf); }
+body[data-theme=gemini] .tabadd-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+
+/* The "+" opens a launcher, not a second nav: a blurred-scrim popup carrying the
+   .searchbox idiom (themes.css:1640-1642) so the two entry points into the desk
+   read as one family. Three rows, icon + label, keybinding pill only where a
+   shortcut is actually wired. */
+body[data-theme=gemini] .tabadd-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--backdrop);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12vh;
+  animation: fadeIn var(--dur-fast) both;
+}
+body[data-theme=gemini] .tabadd-scrim[hidden] { display: none !important; }
+
+body[data-theme=gemini] .tabadd-panel {
+  width: min(420px, 92vw);
+  height: max-content;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 4px 4px 0 var(--shadow-hard);
+  overflow: hidden;
+  animation: fadeUp var(--dur-base) var(--ease-out) both;
+}
+body[data-theme=gemini] .tabadd-panel a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  font: 600 13px "JetBrains Mono", monospace;
+  color: var(--ink1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hair);
+  cursor: pointer;
+}
+body[data-theme=gemini] .tabadd-panel a:last-child { border-bottom: 0; }
+body[data-theme=gemini] .tabadd-panel a:hover,
+body[data-theme=gemini] .tabadd-panel a:focus-visible { background: var(--panel2); outline: none; }
+body[data-theme=gemini] .tabadd-ico {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: var(--ink3);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+body[data-theme=gemini] .tabadd-panel a:hover .tabadd-ico { stroke: var(--ink1); }
+body[data-theme=gemini] .tabadd-label { flex: 1 1 auto; min-width: 0; }
+body[data-theme=gemini] .tabadd-key {
+  flex: none;
+  min-width: 20px;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  font: 600 11px "JetBrains Mono", monospace;
+  color: var(--ink3);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme=gemini] .tabadd-scrim,
+  body[data-theme=gemini] .tabadd-panel { animation: none !important; }
+}
+
+@media (max-width: 900px) {
+  body[data-theme=gemini] .tabadd-slot { display: none; }
+}
+
+/* ---- Board-tile collapse chevron ---- */
+/* .tile-head is already flex/space-between in board.css, which owns it;
+   only the chevron's own box and the collapsed state belong here. */
+body[data-theme=gemini] .tile.tile-has-collapse { position: relative; }
+body[data-theme=gemini] .tile-collapse {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink3);
+  cursor: pointer;
+  margin-inline-start: auto;
+}
+body[data-theme=gemini] .tile-collapse:hover { color: var(--ink1); background: var(--panel2); }
+body[data-theme=gemini] .tile-collapse svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+body[data-theme=gemini] .tile.tile-collapsed .tile-collapse svg { transform: rotate(-90deg); }
+body[data-theme=gemini] .tile.tile-collapsed > *:not(.tile-head) { display: none; }
+body[data-theme=gemini] .tile.tile-collapsed .tile-head { border-bottom: 0; }
+
+/* ---- statusbar CONTENT. The strip's geometry (grid row 3, full width, dark
+   ground) is laid out by shell.css, which owns the .shell grid. ---- */
+body[data-theme=gemini] .status-left,
+body[data-theme=gemini] .status-right { display: flex; align-items: center; gap: 13px; min-width: 0; }
+body[data-theme=gemini] .status-left span,
+body[data-theme=gemini] .status-right span { overflow: hidden; text-overflow: ellipsis; }
+body[data-theme=gemini] .status-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: color-mix(in srgb, var(--up) 80%, white 20%);
+}
+/* Both polarities derive from the desk's real polarity tokens (--up / --dn,
+   themes.css:77) instead of invented hexes, and at the SAME two mix ratios: the dot
+   at 80/20, the text at 65/35. The statusbar is a fixed dark strip (#1e201e, not a
+   var(--panel) surface) so the raw tokens are too low-contrast there — color-mix
+   lightens them toward white for this one dark strip only. Asymmetry here was the
+   real bug: a retuned --up would have moved the negative and left the positive. */
+body[data-theme=gemini] .status-dot.bad { background: color-mix(in srgb, var(--dn) 80%, white 20%); }
+body[data-theme=gemini] .status-positive { color: color-mix(in srgb, var(--up) 65%, white 35%); }
+body[data-theme=gemini] .status-negative { color: color-mix(in srgb, var(--dn) 65%, white 35%); }
+body[data-theme=gemini] .status-muted { color: var(--statusbar-muted); }
+
+@media (max-width: 900px) {
+  body[data-theme=gemini] .status-right { display: none; }
+}
+@media (max-width: 600px) {
+  body[data-theme=gemini] .status-left { gap: 7px; }
+  body[data-theme=gemini] .status-left > span:first-child { display: none; } /* "MARKET" label */
+}

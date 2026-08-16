@@ -1,0 +1,99 @@
+/* auth-bridge.css — hand-written companion to the GENERATED auth-terminal.css.
+
+   auth-terminal.js builds and styles its own form chrome (field-err, auth-msg, forgot-line,
+   switch-link) via the generated sheet. This file only covers the two states the design mock
+   never had — an empty captcha mount and a submit-in-flight CTA — plus the circle restore below.
+
+   Every selector is scoped under .hn-auth, matching the generated sheet, so none of this can
+   leak into the desk itself. */
+
+/* Turnstile mount. Stays a zero-height empty box while CAPTCHA_SITE_KEY is blank, so the form
+   does not carry a gap for a widget that never renders. Non-empty spacing comes from the
+   generated sheet's .capbox:not(:empty) rule. */
+.hn-auth .capbox:empty { display: none; }
+
+/* The busy state on the design's odometer CTA. The design has no submit-in-flight look.
+   auth-terminal.js toggles .busy on the CTA while a Supabase call is pending. */
+.hn-auth .odo-btn.busy { opacity: .62; pointer-events: none; }
+.hn-auth .odo-btn[disabled] { opacity: .62; cursor: default; }
+
+/* Circle restore. themes.css line 5 is a global reset — `:root, *, *::before, *::after {
+   border-radius: 0 !important; }` — that flattens every circular element the design draws
+   (aperture rings, calibration orbit, seal dot, live dots, module dots). Matching it with
+   `border-radius: 50% !important` here would win today on specificity, but it fights themes.css
+   on its OWN property and contradicts the project's documented rule (index.html, boot-screen
+   comment: "every circle is clip-path, never border-radius") — a rule that exists precisely so
+   nobody re-opens this specificity war later. clip-path is a different property; themes.css
+   never touches it, so there is nothing to out-rank. This sheet loads after auth-terminal.css,
+   so a plain clip-path here, no !important needed, is enough.
+
+   Not every selector below gets clip-path, and that is deliberate, not an oversight.
+   clip-path: circle(50%) crops a square box down to its INSCRIBED circle — tangent to the box's
+   four edge-midpoints only. For a box painted by `background`, that inscribed disc IS the shape,
+   so the crop looks correct (only a hairline accent border, where present, loses its corners).
+   But for a box that draws its ring with `border` alone and no `background` fill, the border
+   sits exactly on the square's edge, which the inscribed circle touches at just those four
+   points — the rest of the ring is outside the clip and vanishes, leaving four disconnected
+   dashes floating in empty space. That is the exact "four broken dashes" failure this codebase
+   already documents (index.html, same boot-screen comment) for a plain bordered box clipped to a
+   circle — and it reads as MORE broken than the flat square themes.css already produces, not
+   less. (The boot ring sidesteps this by compositing two FILLED discs instead of clipping a
+   border — a different visual recipe, not applicable here without new markup.) So: elements with
+   a real `background` fill get clip-path. Border-only rings are left alone below, listed with
+   why, rather than "fixed" into a worse glitch. Selectors are copied verbatim from
+   auth-terminal.css (the generated sheet) — no new selectors, no `.hn-auth *` blanket. */
+.hn-auth .descent-aperture { clip-path: circle(50%); }
+.hn-auth .descent-aperture::after { clip-path: circle(50%); }
+.hn-auth .calibration-orbit::after { clip-path: circle(50%); }
+.hn-auth .calibration-orbit span { clip-path: circle(50%); }
+.hn-auth .seal-center .dot { clip-path: circle(50%); }
+.hn-auth .board-head .live-dot { clip-path: circle(50%); }
+.hn-auth .module .m-head .m-dot { clip-path: circle(50%); }
+
+/* Left square, deliberately — each of these draws its ring with `border` only
+   (background:none, or no background declared at all), so clip-path would shatter it into four
+   dashes per the note above instead of restoring a circle:
+   - .descent-aperture::before   (auth-terminal.css ~178 — inset:22px ring, no fill)
+   - .descent-aperture span      (auth-terminal.css ~180 — inset:49% amber ring, no fill; also
+                                   scales to 3.4x on the aperturePulse keyframe, so a four-dash
+                                   break would be MORE visible mid-pulse, not less)
+   - .calibration-orbit          (auth-terminal.css ~232 — dashed ring, no fill)
+   - .calibration-orbit::before  (auth-terminal.css ~233 — inset:28px ring, no fill)
+   - .right.descent-lens-dividends .descent-mid i (auth-terminal.css ~199 — background:none ring)
+   A real fix needs the boot ring's two-filled-discs recipe, not a clip on the border — out of
+   scope for a CSS-only override. */
+
+/* Password-strength meter (create-account only). auth-terminal.js already carries the meter's
+   markup (#meter/#m0-m3/#meterCopy) and scoring JS verbatim from the design source — ported in
+   a prior session — but auth-terminal.css (the generated sheet) never defined `.meter`/
+   `.meter-copy` at all, so the meter rendered with no box, no bar fill, no reveal transition.
+   These rules are copied verbatim from the design source (henneth-login-terminal-wake6-v4.html,
+   ~lines 120-133 + the ~880px media query at ~line 428), just scoped under .hn-auth. Every meter
+   element is a rectangular bar — none are circular, so the circle-restore block above does not
+   apply here. */
+.hn-auth .meter{
+  display:grid; grid-template-columns: repeat(4,1fr); gap: 4px; margin: 8px 0 10px;
+  height: 0; overflow: hidden;
+  transition: height .28s cubic-bezier(.4,0,.2,1), margin .28s cubic-bezier(.4,0,.2,1);
+}
+.hn-auth .meter.on{ height: 4px; }
+.hn-auth .meter i{ display:block; height:4px; background:var(--rhair); transition: background-color .2s ease; }
+.hn-auth .meter-copy{
+  font-size: 11.5px; color: var(--rmuted); line-height: 1.6; margin: 0;
+  max-height: 0; opacity: 0; overflow:hidden;
+  transition: max-height .28s cubic-bezier(.4,0,.2,1), opacity .2s ease, margin .28s ease;
+}
+.hn-auth .meter-copy.on{ max-height: 60px; opacity: 1; margin: 0 0 18px; }
+.hn-auth .meter-copy strong{ color: var(--rink); }
+
+@media (max-width: 880px){
+  .hn-auth .meter-copy{ display:none; }
+}
+
+/* ---- the HENNETH DESK lockup ----
+   .nav-brand is a flex row (img · "HENNETH" · <small>DESK</small>), so the word
+   break between the two halves is the flex `gap`, NOT a text space — the markup
+   used to carry an &nbsp; on top of the gap, which double-spaced it. One value
+   owns it now. 0.5em against the .06em tracking reads as a word break without
+   splitting the lockup into two words. */
+.hn-auth .nav-brand{ gap: .5em; }

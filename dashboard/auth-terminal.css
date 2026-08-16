@@ -66,78 +66,78 @@
      .left scrolling. Every margin below is sized against that state. Loosen one and the form
      starts scrolling again on short screens. */
   .hn-auth .left{ display:flex; align-items:center; justify-content:center; padding: 36px 48px; overflow-y: auto; }
-  .hn-auth .form-wrap{ width:100%; max-width: 440px; opacity: 0; transform: translateY(8px); }
-  .hn-auth .eyebrow{ font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+  .hn-auth .form-wrap{ width:100%; max-width: 374px; opacity: 0; transform: translateY(8px); }
+  .hn-auth .eyebrow{ font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
   .hn-auth h1.headline{
-    font-size: 27px; font-weight: 700; letter-spacing: .06em; margin: 0 0 8px;
-    line-height: 1.15; text-transform: uppercase; min-height: 34px;
+    font-size: 23px; font-weight: 700; letter-spacing: .06em; margin: 0 0 7px;
+    line-height: 1.15; text-transform: uppercase; min-height: 29px;
   }
-  .hn-auth .sub{ font-size: 13px; color: #4a4a44; margin: 0 0 23px; line-height: 1.55; }
+  .hn-auth .sub{ font-size: 11px; color: #4a4a44; margin: 0 0 19px; line-height: 1.55; }
 
-  .hn-auth .tabs{ display:grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--border); margin-bottom: 18px; }
+  .hn-auth .tabs{ display:grid; grid-template-columns: 1fr 1fr; border: 1.5px solid var(--border); margin-bottom: 15px; }
   .hn-auth .tab{
     appearance:none; background:#fff; border:none; font-family: var(--mono); text-align:center;
-    padding: 13px 0; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--ink); cursor: pointer; min-height:44px;
+    padding: 11px 0; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink); cursor: pointer; min-height:37px;
     transition: background-color .16s cubic-bezier(.4,0,.2,1), color .16s cubic-bezier(.4,0,.2,1);
   }
   .hn-auth .tab:first-child{ border-right: 1.5px solid var(--border); }
   .hn-auth .tab[aria-selected="true"]{ background: var(--ink); color: var(--bg-panel); }
   .hn-auth .tab:not([aria-selected="true"]):hover{ background: #ece9e2; }
 
-  .hn-auth .field{ margin-bottom: 13px; }
-  .hn-auth .field-label{ font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .hn-auth .field{ margin-bottom: 11px; }
+  .hn-auth .field-label{ font-size: 8px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
   .hn-auth .field input{
-    width: 100%; border: 1.5px solid var(--border); background: #fff; padding: 13px 14px;
-    font-family: var(--mono); font-size: 13px; color: var(--ink); outline: none;
+    width: 100%; border: 1.5px solid var(--border); background: #fff; padding: 11px 12px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink); outline: none;
     transition: border-color .14s ease, box-shadow .14s ease;
   }
   .hn-auth .field input:focus{ border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal); }
   .hn-auth .field input::placeholder{ color: #a6a59d; }
   .hn-auth .pw-wrap{ position: relative; }
-  .hn-auth .pw-wrap input{ padding-right: 66px; }
+  .hn-auth .pw-wrap input{ padding-right: 56px; }
   .hn-auth .pw-toggle{
     position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
-    color: #4a4a44; background:none; border:none; font-family: var(--mono); padding: 4px 2px; min-width:44px; min-height:44px;
+    font-size: 8px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+    color: #4a4a44; background:none; border:none; font-family: var(--mono); padding: 3px 2px; min-width:37px; min-height:37px;
     transition: color .14s ease;
   }
   .hn-auth .pw-toggle:hover{ color: var(--ink); }
   .hn-auth .field-err{
-    margin: 6px 0 0; font-size: 11px; line-height: 1.45; color: #b3261e;
+    margin: 5px 0 0; font-size: 9px; line-height: 1.45; color: #b3261e;
     max-height: 0; opacity: 0; overflow: hidden;
     transition: max-height .2s cubic-bezier(.4,0,.2,1), opacity .16s ease, margin .2s ease;
   }
-  .hn-auth .field-err.on{ max-height: 48px; opacity: 1; }
+  .hn-auth .field-err.on{ max-height: 41px; opacity: 1; }
   .hn-auth .field:has(.field-err.on) input{ border-color: #b3261e; }
-  .hn-auth .forgot-line{ margin: -4px 0 16px; text-align: right; }
-  .hn-auth .capbox:not(:empty){ margin-top: 16px; }
+  .hn-auth .forgot-line{ margin: -3px 0 14px; text-align: right; }
+  .hn-auth .capbox:not(:empty){ margin-top: 14px; }
   .hn-auth .auth-msg{
-    margin: 12px 0 0; font-size: 11.5px; line-height: 1.5; color: #4a4a44;
-    border-left: 2px solid var(--teal); padding-left: 10px;
+    margin: 10px 0 0; font-size: 10px; line-height: 1.5; color: #4a4a44;
+    border-left: 2px solid var(--teal); padding-left: 8px;
   }
   .hn-auth .auth-msg.bad{ color: #b3261e; border-left-color: #b3261e; }
 
   .hn-auth .meter{
-    display:grid; grid-template-columns: repeat(4,1fr); gap: 4px; margin: 8px 0 10px;
+    display:grid; grid-template-columns: repeat(4,1fr); gap: 3px; margin: 7px 0 8px;
     height: 0; overflow: hidden;
     transition: height .28s cubic-bezier(.4,0,.2,1), margin .28s cubic-bezier(.4,0,.2,1);
   }
-  .hn-auth .meter.on{ height: 4px; }
-  .hn-auth .meter i{ display:block; height:4px; background:#d9d9d2; transition: background-color .2s ease; }
+  .hn-auth .meter.on{ height: 3px; }
+  .hn-auth .meter i{ display:block; height:3px; background:#d9d9d2; transition: background-color .2s ease; }
   .hn-auth .meter-copy{
-    font-size: 11.5px; color: #4a4a44; line-height: 1.6; margin: 0;
+    font-size: 10px; color: #4a4a44; line-height: 1.6; margin: 0;
     max-height: 0; opacity: 0; overflow:hidden;
     transition: max-height .28s cubic-bezier(.4,0,.2,1), opacity .2s ease, margin .28s ease;
   }
-  .hn-auth .meter-copy.on{ max-height: 60px; opacity: 1; margin: 0 0 18px; }
+  .hn-auth .meter-copy.on{ max-height: 51px; opacity: 1; margin: 0 0 15px; }
   .hn-auth .meter-copy strong{ color: var(--ink); }
 
   .hn-auth .odo-btn{
     position: relative; display:block; width: 100%; border: 1.5px solid var(--border);
-    background: var(--ink); color: var(--bg-panel); padding: 15px; font-family: var(--mono);
-    font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-    cursor: pointer; margin-top: 20px; overflow: hidden; height: 49px;
+    background: var(--ink); color: var(--bg-panel); padding: 13px; font-family: var(--mono);
+    font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    cursor: pointer; margin-top: 17px; overflow: hidden; height: 42px;
     transition: margin-top .28s cubic-bezier(.4,0,.2,1), transform .12s cubic-bezier(.4,0,.2,1), background-color .14s ease, box-shadow .3s ease;
   }
   .hn-auth .odo-btn .odo-face{
@@ -152,15 +152,15 @@
   .hn-auth .odo-btn.ready-pulse{ box-shadow: 0 0 0 3px rgba(0,168,132,.18); }
   .hn-auth .odo-btn.busy, .hn-auth .odo-btn:disabled{ opacity: .55; cursor: progress; }
 
-  .hn-auth .switch-line{ font-size: 12px; color: #4a4a44; margin: 18px 0 0; }
+  .hn-auth .switch-line{ font-size: 10px; color: #4a4a44; margin: 15px 0 0; }
   .hn-auth .switch-link{
     text-decoration: underline; font-weight: 600; color: var(--ink); background:none; border:none;
-    font-family: var(--mono); font-size: 12px; cursor:pointer; padding:10px 4px; margin:-10px -4px; min-height:44px; display:inline-flex; align-items:center; transition: color .14s ease;
+    font-family: var(--mono); font-size: 10px; cursor:pointer; padding:8px 3px; margin:-8px -3px; min-height:37px; display:inline-flex; align-items:center; transition: color .14s ease;
   }
   .hn-auth .switch-link:hover{ color: var(--teal); }
 
-  .hn-auth .legal{ border-top: 1px solid #d9d9d2; margin-top: 30px; padding-top: 18px; }
-  .hn-auth .legal p{ font-size: 11px; color: var(--muted); line-height: 1.7; margin: 0; }
+  .hn-auth .legal{ border-top: 1px solid #d9d9d2; margin-top: 25px; padding-top: 15px; }
+  .hn-auth .legal p{ font-size: 9px; color: var(--muted); line-height: 1.7; margin: 0; }
   .hn-auth .legal a{ color: var(--muted); text-decoration: underline; transition: color .14s ease; }
   .hn-auth .legal a:hover{ color: var(--ink); }
 
@@ -413,19 +413,19 @@
     .hn-auth .right{ display:none; }
     .hn-auth .nav-right{ display:none; }
     .hn-auth .left{ flex:1; width:100%; min-height:0; padding:24px 18px; align-items:stretch; overflow-y:auto; }
-    .hn-auth .form-wrap{ max-width:420px; margin:auto; width:100%; }
-    .hn-auth .sub{ margin-bottom:16px; }
-    .hn-auth .tabs{ margin-bottom:16px; }
-    .hn-auth .field{ margin-bottom:12px; }
+    .hn-auth .form-wrap{ max-width:357px; margin:auto; width:100%; }
+    .hn-auth .sub{ margin-bottom:14px; }
+    .hn-auth .tabs{ margin-bottom:14px; }
+    .hn-auth .field{ margin-bottom:10px; }
     .hn-auth .meter-copy{ display:none; }
-    .hn-auth .odo-btn{ margin-top:16px; }
-    .hn-auth .legal{ margin-top:20px; padding-top:14px; }
-    .hn-auth .legal p{ font-size:9px; line-height:1.55; }
+    .hn-auth .odo-btn{ margin-top:14px; }
+    .hn-auth .legal{ margin-top:17px; padding-top:12px; }
+    .hn-auth .legal p{ font-size:8px; line-height:1.55; }
   }
   @media (max-width: 560px){
     .hn-auth .nav{ padding:12px 14px; }
     .hn-auth .left{ padding:20px 16px; }
-    .hn-auth h1.headline{ font-size:21px; letter-spacing:.045em; }
+    .hn-auth h1.headline{ font-size:18px; letter-spacing:.045em; }
     .hn-auth .legal{ display:none; }
   }
   /* Short laptop screens only. The base desktop rhythm above is the signed-off proportion and must
@@ -434,14 +434,14 @@
      viewport. min-width guards it against the mobile layout, which has its own rules. */
   @media (min-width: 881px) and (max-height: 820px){
     .hn-auth .left{ padding: 14px 48px; }
-    .hn-auth h1.headline{ font-size:24px; margin:0 0 6px; min-height:28px; }
-    .hn-auth .sub{ margin: 0 0 10px; }
-    .hn-auth .tabs{ margin-bottom: 12px; }
-    .hn-auth .field{ margin-bottom: 6px; }
-    .hn-auth .forgot-line{ margin: -4px 0 8px; }
-    .hn-auth .odo-btn{ margin-top: 10px; height: 45px; }
-    .hn-auth .switch-line{ margin: 8px 0 0; }
-    .hn-auth .legal{ margin-top: 8px; padding-top: 10px; }
+    .hn-auth h1.headline{ font-size:20px; margin:0 0 5px; min-height:24px; }
+    .hn-auth .sub{ margin: 0 0 8px; }
+    .hn-auth .tabs{ margin-bottom: 10px; }
+    .hn-auth .field{ margin-bottom: 5px; }
+    .hn-auth .forgot-line{ margin: -3px 0 7px; }
+    .hn-auth .odo-btn{ margin-top: 8px; height: 38px; }
+    .hn-auth .switch-line{ margin: 7px 0 0; }
+    .hn-auth .legal{ margin-top: 7px; padding-top: 8px; }
   }
 
   .hn-auth /* ---------- post-login onboarding ---------- */

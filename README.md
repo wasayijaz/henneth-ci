@@ -231,6 +231,41 @@ a watchdog silently checking the wrong surface is worse than no watchdog.
 **Henneth** everywhere public — the brand, the domain, this README. It is **Henneth Desk** only
 *inside* the app, where the distinction between the company and the tool actually matters.
 
+### Inside the terminal — a shell, not a page
+
+`dashboard/` is vanilla: no framework, no bundler, classic `<script>` tags, and it **reads
+`state/` and writes nothing**. It is still split along real seams rather than living in one file:
+
+| layer | files | what it owns |
+|---|---|---|
+| shell | `shell.css`, `shell.js` | left nav, layout, routing chrome |
+| top bar | `topbar.css`, `topbar.js` | search, colour scheme, plan badge, account |
+| context rail | `rail.css`, `rail.js` | Ask · Notes · Watchlist · Alerts · Outline |
+| board | `board.css`, `board.js` | the landing board |
+| pages | `pages.css` + `pages-markets/research/tools/workspace.css` | per-section styling |
+| primitives | `palette.css`, `motion.css`, `icons.css`, `icons.js`, `themes.css` | tokens, motion, glyphs |
+| auth override | `auth-bridge.css` | overrides for the **generated** `auth-terminal.css` |
+
+Two rules that are easy to break by accident:
+
+- **`auth-terminal.css` is generated — never hand-edit it.** Overrides go in `auth-bridge.css`.
+- **`body[data-theme=gemini]` is the theme root.** There is no bare `:root` palette selector.
+  Dark mode layers `html[data-scheme]` *combined with* that root, in this order: light palette →
+  `@media (prefers-color-scheme: dark)` scoped to `html:not([data-scheme="light"])` →
+  `html[data-scheme="dark"]`. That order is what lets an explicit choice win in both directions.
+
+The colour scheme lives in the top bar next to search (`#schemeBtn`), cycling System → Light →
+Dark, so it is reachable **signed-out** too. `localStorage["deskScheme"]` is `"light"`, `"dark"`,
+or absent (= follow the OS); the attribute is written on `<html>`, never on `document.body` —
+`app.js` runs an enhancement `MutationObserver` on the body, and writing there would re-enter it.
+For the same reason every rail pane compares before it writes.
+
+The context rail persists across navigation, so asking a question or taking a note does not cost
+you the page you were reading. Data health folded into the page-info strip instead of taking a tab.
+
+No `vercel.json` change is needed when files are added here — the root config copies the whole
+directory (see above).
+
 ## Architecture — free layer does the heavy lifting; agents only judge
 
 ```

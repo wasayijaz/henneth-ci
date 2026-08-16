@@ -1,0 +1,71 @@
+/* ============================================================
+   PRODUCTION STYLESHEET — palette adoption (paper/olive, from
+   dashboard/psx-board-preview.html). Additive only, loaded right
+   after themes.css. Redefines the gemini theme's own custom
+   properties in place (same selector, later source order = wins)
+   so every existing rule that already reads var(--panel)/var(--line)/
+   etc repaints automatically — no per-component rewrite needed.
+   New reference-only tokens (the --paper, --positive, --negative,
+   --focus and --shadow families) are added alongside for the new components (notch tabs,
+   statusbar, inspector rail) that style directly off them.
+   This is a production stylesheet, not a prototype — dashboard/
+   index.html links it right after themes.css for exactly this reason.
+   ============================================================ */
+
+body[data-theme=gemini] {
+  /* ---- reference tokens, verbatim from psx-board-preview.html ---- */
+  /* LIGHT SCHEME — the complete set of every token that varies by
+     scheme. Every one of these is overridden again, token-for-token,
+     in the two dark blocks directly below. Nothing here may be left
+     undefined in dark — an undefined var() referenced inside a
+     shorthand (e.g. border:1px solid var(--x)) silently voids the
+     whole declaration. */
+  --paper:#f7f6f1; --paper-2:#fbfaf6; --paper-3:#fffefb;
+  --rpanel:#efeee8; --rpanel-2:#e8e7e0;
+  --rink:#20221f; --rmuted:#6f726b; --rhair:#d5d5cc; --rline:#b9bbb2;
+  --positive:#28724b; --positive-soft:#e3efe4; --negative:#b44640; --negative-soft:#f3e5e2;
+  --focus:#2d6847; --shadow:0 10px 28px rgba(38,39,33,.07);
+  --shadow-hard:rgba(0,0,0,.12); --backdrop:rgba(24,25,22,.28);
+  /* ---- --paper-3: NOT from psx-board-preview.html — the one token in this
+     file with no reference-file source. Continues the paper→paper-2 lightening
+     step (each +~4-5 per channel) one notch further, so the main working
+     column can read whiter than paper-2 (topbar) and rpanel (side panes)
+     both. Consumed only by shell.css .main-col. ---- */
+
+  /* ---- remap the existing gemini tokens onto them ---- */
+  --bg:var(--paper); --panel:var(--paper-2); --panel2:var(--rpanel);
+  --ink1:var(--rink); --ink2:#43463f; --ink3:var(--rmuted);
+  --line:var(--rline); --line2:var(--rhair); --surf:var(--rpanel); --hair:var(--rhair);
+  --up:var(--positive); --dn:var(--negative); --accent:var(--focus);
+}
+
+/* ============================================================
+   DARK SCHEME — RULE FOR FUTURE EDITORS:
+   every scheme-varying colour is a token, defined once above on
+   body[data-theme=gemini] (the light value) and overridden in
+   EXACTLY these two blocks (the OS-preference block, then the
+   explicit-choice block that must win over it in both directions).
+   Never hardcode a colour in a component sheet, and never define a
+   colour only inside a media query — the light block above must
+   always carry every token's light value explicitly.
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-scheme="light"]) body[data-theme=gemini] {
+    --paper:#171512; --paper-2:#1f1d19; --paper-3:#24221d;
+    --rpanel:#1d1b17; --rpanel-2:#26241f;
+    --rink:#ece8de; --rmuted:#a6a29a; --rhair:#6e685a; --rline:#85806e;
+    --positive:#5fa97d; --positive-soft:#1e2c23; --negative:#d97b72; --negative-soft:#2e1f1c;
+    --focus:#4fb37e; --shadow:0 10px 28px rgba(0,0,0,.45);
+    --shadow-hard:rgba(0,0,0,.6); --backdrop:rgba(8,8,6,.6);
+  }
+}
+
+html[data-scheme="dark"] body[data-theme=gemini] {
+  --paper:#171512; --paper-2:#1f1d19; --paper-3:#24221d;
+  --rpanel:#1d1b17; --rpanel-2:#26241f;
+  --rink:#ece8de; --rmuted:#a6a29a; --rhair:#6e685a; --rline:#85806e;
+  --positive:#5fa97d; --positive-soft:#1e2c23; --negative:#d97b72; --negative-soft:#2e1f1c;
+  --focus:#4fb37e; --shadow:0 10px 28px rgba(0,0,0,.45);
+  --shadow-hard:rgba(0,0,0,.6); --backdrop:rgba(8,8,6,.6);
+}

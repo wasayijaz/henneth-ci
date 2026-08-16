@@ -1,0 +1,249 @@
+/* ============================================================
+   PRODUCTION STYLESHEET — "too many tiles" pass for the Tools group:
+   tools, ask, learn, glossary, shipped, settings, legal/terms,
+   legal/privacy, legal/risk (legal/* all share pageLegal()).
+
+   The container OUTLINE retune (--rhair on --paper-2) and the
+   14px tile inset are already done desk-wide in pages.css
+   — this sheet does not touch border-color, background, or
+   padding on .card/.tile-head/.tile-body/.onboard-prompt. It only
+   goes after the OTHER half of the owner's complaint: pages with
+   too many separately-boxed containers, boxes nested inside boxes,
+   and headings that compete with each other instead of forming a
+   clear hierarchy.
+
+   Loaded after pages.css. Selectors match themes.css's own
+   `body[data-theme=gemini] .foo` specificity plus an `#view`
+   prefix, so they win on specificity alone — no !important needed,
+   and every rule here is scoped under #view (sidebar/rail excluded)
+   and keyed to a class or id unique to ONE page, never a bare
+   shared class like .tpanel or .seg, so nothing here can leak onto
+   a page this file doesn't own.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Tools (#/tools)
+   ------------------------------------------------------------
+   Only one real container on this page (.card.tpanel), so the
+   clutter isn't "too many cards" — it's that the dividend-
+   reinvestment tab prints a full calculator card and THEN, inside
+   the SAME card, two more report tables each wrapped in their own
+   .card ("Same question, different horizons" / "Every payout in
+   the window"). That's a box nested inside a box nested inside the
+   page's outer card. #t-out is unique to this page's output slot,
+   so scoping there can't touch the two other pages that also use
+   .tpanel. ------------------------------------------------------------ */
+body[data-theme=gemini] #view #t-out .card {
+  border: none;
+  background: transparent;
+}
+/* the results strip (.sumstrip) draws its own outer frame too — same
+   nested-box problem one level up, right after the calculator inputs.
+   Its 1px internal gaps (background:var(--hair) showing through the
+   grid gutters) already separate the four tiles, so dropping only the
+   OUTER frame keeps that internal division and removes the doubled box. */
+body[data-theme=gemini] #view #t-out .sumstrip {
+  border: none;
+}
+
+/* ------------------------------------------------------------
+   Ask (#/ask)
+   ------------------------------------------------------------
+   One .card holds the whole thread. Each turn's .ans-block is its
+   own bordered bubble — that's the right call for a chat log, kept
+   as-is. Only the border weight was off: .ans-block still carries
+   themes.css's older var(--line), one shade heavier than the
+   var(--rhair) frame the surrounding .card was just retuned to, so
+   every reply read as more prominent than the panel holding it. */
+body[data-theme=gemini] #view .ans-block {
+  border-color: var(--rhair);
+}
+
+/* ------------------------------------------------------------
+   Learn (#/learn)
+   ------------------------------------------------------------
+   1) .today-card sits INSIDE .card.learn-hero and draws its own
+      full border plus its own accent stripe — the same accent
+      stripe .learn-hero already draws on itself. Two boxes, two
+      accent bars, one idea. Stripped to a plain block separated by
+      a hairline rule, so the hero reads as one panel with a
+      streak/progress half and a "today" half, not two stacked cards. */
+body[data-theme=gemini] #view .learn-hero .today-card {
+  border: none;
+  border-top: 1px solid var(--rhair);
+  padding-inline: 0;
+}
+/* 2) Inside each journey step, .jy-lsn boxes every lesson button with
+      its own full border — while the near-identical lesson list
+      further down the page (.lsn, in the "Deep dives" .lvl cards)
+      already uses the calmer pattern: hairline row dividers, no per-
+      row frame. Matching .jy-lsn to that existing pattern removes one
+      whole layer of nested boxes (a bordered button list inside an
+      already-bordered .jy-body) without inventing a new visual style. */
+body[data-theme=gemini] #view .jy-lessons {
+  gap: 0;
+}
+body[data-theme=gemini] #view .jy-lsn {
+  border: none;
+  border-bottom: 1px solid var(--rhair);
+  padding-inline: 11px;
+}
+body[data-theme=gemini] #view .jy-lsn:last-child {
+  border-bottom: none;
+}
+/* 3) The two rules above only lightened the innermost rows. Every box
+      those rows sit inside or beside is still on themes.css's older,
+      heavier var(--line): .jy-body (1134) wraps the lesson list, .lvl
+      (1231) is the "Deep dives" card, and a lesson page itself prints
+      .anatomy (1280), .dm-item (1302) and .dm-detail (1306). Left
+      alone, Learn read as faint rows inside a loud frame inside a
+      loud .lvl inside a --rhair card — hierarchy running backwards.
+      All of them drop to the same --rhair the desk-wide container
+      retune uses, so weight now decreases inward instead of
+      increasing. themes.css draws each of these at 1px already, so
+      only the colour moves. (.ll-live is the lesson-player's own live-
+      price panel, scoped separately below since .pl-box mounts outside
+      #view; .ls-check, defined at themes.css:1324, prints no markup
+      anywhere in app.js and is left out of both lists as dead weight.) */
+body[data-theme=gemini] #view .jy-body,
+body[data-theme=gemini] #view .lvl,
+body[data-theme=gemini] #view .anatomy,
+body[data-theme=gemini] #view .dm-item,
+body[data-theme=gemini] #view .dm-detail,
+body[data-theme=gemini] #view .an-detail,
+body[data-theme=gemini] #view .ll-live {
+  border-color: var(--rhair);
+}
+/* The blanket above is (1,2,1) and outranks themes.css's own (0,2,1)
+   state rules, so the three borders that carry MEANING have to be said
+   again here or they silently flatten into hairlines: the "you are
+   here" step marker (themes.css:1135), the completed-level rail
+   (1233), and the selected document-map tile (1304). Each is re-stated
+   with the same token themes.css used — this is a re-assertion, not a
+   restyle. .dm-item's hover feedback (1303) is re-asserted for the
+   same specificity reason, on --focus so it matches Board's tile
+   hover instead of reintroducing the old --ink1 weight. */
+body[data-theme=gemini] #view .dm-item:hover {
+  border-color: var(--focus);
+}
+body[data-theme=gemini] #view .jy-step.cur .jy-body {
+  border-color: var(--rink);
+  border-left-width: 3px;
+}
+body[data-theme=gemini] #view .lvl.full {
+  border-inline-start-color: var(--up);
+}
+body[data-theme=gemini] #view .dm-item.on {
+  border-color: var(--accent);
+}
+/* No padding here on purpose. .lvl and .anatomy are band containers,
+   not tiles: .lvl-head (themes.css:1234) and .lvl-lessons (1239) — and
+   .an-top / .an-row inside .anatomy — supply their own inset and rely
+   on their dividers running edge to edge. Padding the wrapper would
+   inset every one of those rules and break the band, which is the same
+   reason pages.css:114-119 keeps the 14px inset off .card and
+   puts it on the parts instead. */
+/* No background rule either: themes.css draws these on var(--panel),
+   and palette.css:22 already remaps --panel onto --paper-2, so
+   every one of them is on Board's tile ground as it stands. */
+/* .jy-body is the one Learn container that pads ITSELF (themes.css:1134,
+   12px 14px), so the desk's 14px tile inset lands on it directly rather
+   than on its children — .lvl and .anatomy stay unpadded for the band
+   reason argued just above. */
+body[data-theme=gemini] #view .jy-body {
+  padding: var(--tile-pad);
+}
+/* The current step keeps its 3px rail — that IS the "you are here"
+   marker — but only on the one side it means something: the
+   re-assertion above tints all four edges --rink, which draws a heavy
+   box around the very step the rail already calls out. The other three
+   edges go back to the ambient hairline. */
+body[data-theme=gemini] #view .jy-step.cur .jy-body {
+  border-block-color: var(--rhair);
+  border-inline-end-color: var(--rhair);
+}
+/* The lesson player mounts its overlay on <body>, not inside #view
+   (app.js:4301), so every #view-scoped rule above misses the panels a
+   lesson actually prints. Those are scoped on .pl-box instead — the
+   player's own box, just as tight a leash. .dm-item is deliberately not
+   here: it is a <button> (app.js:4272), a control rather than a
+   container, and controls keep their own outline. */
+body[data-theme=gemini] .pl-box .anatomy,
+body[data-theme=gemini] .pl-box .dm-detail,
+body[data-theme=gemini] .pl-box .ll-live {
+  border-color: var(--rhair);
+}
+body[data-theme=gemini] .pl-box .ll-live {
+  padding: var(--tile-pad);
+}
+
+/* ------------------------------------------------------------
+   Glossary (#/glossary)
+   ------------------------------------------------------------
+   One .card.gloss-list PER letter/category, each led by its own
+   .seg > h2 at full page-title size (13px/700/.13em, themes.css:363)
+   — so a glossary with several categories shows several
+   page-title-weight headings stacked down the page, competing with
+   the real "Glossary" title above them and with each other. Turning
+   each group label down to Board's tile-head scale (11px/800/
+   uppercase) demotes them to what they are — labels ON a list, not
+   separate headings — and the extra top margin keeps each group from
+   crowding the one above. .gloss-list is unique to this page, so
+   :has() anchors the fix to exactly these headings. */
+body[data-theme=gemini] #view .seg:has(+ .card.gloss-list) h2 {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .05em;
+}
+body[data-theme=gemini] #view .seg:has(+ .card.gloss-list) {
+  margin-top: 26px;
+}
+
+/* ------------------------------------------------------------
+   Shipped (#/shipped)
+   ------------------------------------------------------------
+   One .card per release, stacked. This is a changelog — readers
+   expect releases as discrete, dated entries, and each card already
+   inherits the desk-wide 14px inset and --rhair frame, so the "many
+   boxes" here are the actual content unit, not accidental clutter.
+   No rule needed. */
+
+/* ------------------------------------------------------------
+   Settings (#/settings)
+   ------------------------------------------------------------
+   Five stacked .seg + .card sections ("Your plan" / "Your birth
+   details" / "Your digest" / "Followed broker desks" / "Legal"),
+   every header at the same page-title size as "Settings" itself
+   above them — five loud headings reading as five separate mini-
+   pages instead of one settings list with five labelled parts.
+   Demoted to Board's tile-head scale, anchored on content unique to
+   each section (.bd-grid, .seg-opts, .follow-grid — none used
+   elsewhere in this file's page group) so the fix can't drift onto
+   a page it doesn't belong to. The very first section ("Your plan")
+   sits directly under the page title with no unique anchor available
+   and is left at title size — it reads as a continuation of the
+   page header rather than a competing section, which is the one
+   case where that's fine. */
+body[data-theme=gemini] #view .seg:has(+ .card .bd-grid) h2,
+body[data-theme=gemini] #view .seg:has(+ .card .seg-opts) h2,
+body[data-theme=gemini] #view .seg:has(+ .card .follow-grid) h2 {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .05em;
+}
+body[data-theme=gemini] #view .seg:has(+ .card .bd-grid),
+body[data-theme=gemini] #view .seg:has(+ .card .seg-opts),
+body[data-theme=gemini] #view .seg:has(+ .card .follow-grid) {
+  margin-top: 24px;
+}
+
+/* ------------------------------------------------------------
+   Legal — terms, privacy, risk (#/legal/*, all pageLegal())
+   ------------------------------------------------------------
+   Already the calmest page in this group: one .card.legal-doc,
+   already capped at max-width:820px for a comfortable reading
+   measure (themes.css:555), plain h3/p prose with no inner boxes,
+   and .legal-tabs already picked up the desk-wide secondary-
+   container retune. Nothing left to fix — the prose-measure problem
+   this page was flagged for is already solved upstream. No rule
+   needed. */

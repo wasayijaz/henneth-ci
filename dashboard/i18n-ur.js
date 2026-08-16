@@ -18,6 +18,8 @@ window.UR_STRINGS = {
   "Analysis": "تجزیہ", "Markets": "منڈیاں",
   "Earnings": "نتائج", "Astro": "فلکیات", "Tools": "اوزار", "Settings": "ترتیبات", "Plans": "پلانز",
   "Sign in": "سائن اِن", "Sign out": "سائن آؤٹ", "Search a stock": "اسٹاک تلاش کریں",
+  // context rail tabs
+  "Ask": "پوچھیں", "Notes": "نوٹس", "Watch": "واچ", "Alerts": "الرٹس",
   // learn / journey
   "Become an investor": "سرمایہ کار بنیں", "The investment journey": "سرمایہ کاری کا سفر",
   "your progress": "آپ کی پیش رفت", "steps complete": "مراحل مکمل", "Deep dives": "تفصیلی کورس",
@@ -128,10 +130,16 @@ window.UR_STRINGS = {
   "Template": "ٹیمپلیٹ", "Hit": "کامیابی", "Net": "خالص",
   "Triggering now, proven on this stock's own history. Backtest-proven, not auditor-verified. Research, not advice.":
     "ابھی متحرک، اس اسٹاک کی اپنی تاریخ پر ثابت شدہ۔ بیک ٹیسٹ سے ثابت، آڈیٹر سے تصدیق شدہ نہیں۔ تحقیق، مشورہ نہیں۔",
+  "Strategy Research": "حکمتِ عملی کی تحقیق",
+  "Idea": "آئیڈیا", "Thesis": "تھیسس", "Strategy": "حکمتِ عملی", "Last updated": "آخری تازہ کاری",
 
   // Board page — news / agent wire
   "News wire": "نیوز وائر", "full wire →": "مکمل وائر →", "Agent wire": "ایجنٹ وائر",
   "this cycle": "اس سائیکل میں", "No cycle run yet.": "ابھی تک کوئی سائیکل نہیں چلا۔",
+
+  // Board page — market data table
+  "Market Data": "مارکیٹ ڈیٹا", "Indices": "اشاریے", "Index": "اشاریہ",
+  "Symbol": "علامت", "1 D %": "1 دن ٪", "20 D %": "20 دن ٪", "Value (PKR)": "مالیت (PKR)",
 
   // Board page — today's scanner
   "Today's scanner": "آج کا اسکینر", "rebuilt every cycle": "ہر سائیکل میں دوبارہ تیار",

@@ -39,6 +39,164 @@ which file changed.
 
 ---
 
+## 2026-08-16 — v2026.08.16 — Desk UI overhaul: app shell, context rail, dark theme
+
+<!--public
+The desk got a proper rebuild. There's a permanent app shell now — a left nav that remembers where
+you were, a top bar with search, and a page-info strip that always tells you which page you're on
+and how fresh the data is.
+
+A new panel on the right stays with you across pages: ask a question, keep notes, watch tickers,
+see your alerts, and read the day's news — without losing the page you were reading. The news pane
+lists today's PSX headlines from Profit, Dawn and the rest, each linking out to the full article,
+stamped with when it was last refreshed.
+
+Dark mode. The light/dark control sits next to the search box in the top bar, one click, and it
+follows your system setting until you tell it otherwise. Your choice is remembered on this device.
+
+The live index ticker now runs edge to edge across the whole desk, passing behind the two side
+panels and blurring softly as it goes.
+-->
+
+### What changed
+
+**1. The dashboard was one file. Now it is a shell plus modules.** `dashboard/index.html` +
+`app.js` carried the whole desk. Eighteen new files split it along real seams:
+
+| Area | Files |
+| --- | --- |
+| App shell (nav, layout, routing chrome) | `shell.css`, `shell.js` |
+| Top bar (search, scheme, plan, account) | `topbar.css`, `topbar.js` |
+| Right context rail | `rail.css`, `rail.js` |
+| Board page | `board.css`, `board.js` |
+| Page styles per section | `pages.css`, `pages-markets.css`, `pages-research.css`, `pages-tools.css`, `pages-workspace.css` |
+| Design primitives | `palette.css`, `motion.css`, `icons.css`, `icons.js` |
+| Auth surface override | `auth-bridge.css` |
+
+`auth-bridge.css` exists because `auth-terminal.css` is generated and must never be hand-edited —
+all auth-surface overrides land in the bridge file instead.
+
+**No deploy-config change was needed.** Root `vercel.json` copies the whole `dashboard/` directory
+into `public/`, so new files ship automatically. The one deliberate exclusion (`dashboard/app.html`,
+a stale duplicate shell, deleted after the copy) is unchanged.
+
+**2. Right context rail — five tabs, persistent across navigation.** `rail.js` renders Ask, Notes,
+Watchlist, Alerts and News. Data Health folded into the persistent page-info strip rather than
+occupying a tab of its own; the old "Related" pane was deleted outright — Watchlist replaces it
+(per the repo rule against keeping a superseded path alive alongside its replacement).
+
+The fifth tab started as an Outline pane (a table of contents for the current page) and was replaced
+by News before release — an outline of a page you are already looking at carries almost no
+information, whereas the news the desk already scrapes had no persistent home. It reads the existing
+news state, lists the day's articles with outbound links, and carries a last-refreshed stamp. The
+Outline path was removed rather than left behind a flag.
+
+Every pane writes through a compare-before-write guard (`setWatchHTML`, `setAlertsHTML`,
+`setOutlineHTML`, `lastNotesHTML`). This is not an optimisation. `app.js` runs an enhancement
+`MutationObserver` on `document.body`; an unconditional `innerHTML =` re-entered that observer on
+every 30-second refresh and made the rail flicker. Writing only on change breaks the loop at the
+source.
+
+**3. Colour scheme moved out of the account menu and into the top bar.** It previously lived inside
+`renderAccountButton()`'s signed-in branch — two clicks deep behind the avatar, and completely
+absent for signed-out visitors, who see the auth terminal and had no way to change it at all. It is
+now `#schemeBtn` in `index.html`, sitting between the search button and the language chip, cycling
+System → Light → Dark and stating both current and next state in its `title`/`aria-label`.
+
+The account-menu control was **removed**, not kept as a second path to the same setting.
+
+Scheme contract: `localStorage["deskScheme"]` is `"light"`, `"dark"`, or **absent** (= follow OS).
+`applyDeskScheme()` writes `data-scheme` on `<html>`, never on `document.body` — writing it on the
+body would trip the enhancement observer above. A guard script at `index.html:21` applies the stored
+value before first paint so there is no light flash on a dark-mode load.
+
+**4. Two-scheme cascade.** `body[data-theme=gemini]` is the theme root; there is no bare `:root`
+palette selector in this codebase. Order is: complete light palette on the theme root → then
+`@media (prefers-color-scheme: dark) { html:not([data-scheme="light"]) body[data-theme=gemini] {…} }`
+→ then `html[data-scheme="dark"] body[data-theme=gemini] {…}`. That order is what makes an explicit
+user choice win in *both* directions; reversing the last two blocks would leave a user who picks
+Light on a dark-mode OS stuck in dark.
+
+Alias tokens (`--bg`, `--panel`, `--ink1/2/3`, `--line`, `--surf`, `--hair`, `--up`, `--dn`,
+`--accent`) are `var()` indirections defined once in the light block, so they follow the scheme with
+no per-scheme duplication. Boot-screen tokens are deliberately scheme-*invariant* — the boot screen
+paints before any scheme decision is knowable.
+
+`icons.css` uses `mask-image` + `background-color: currentColor`, so glyphs inherit text colour and
+are scheme-correct for free.
+
+**5. Two IACVT bugs found and fixed.** `color: var(--undefined-token)` does not fall back — it
+computes to `unset` and the whole declaration silently vanishes (CSS "invalid at computed-value
+time"). Two such references existed and produced text that was invisible in one scheme only, which
+is exactly the failure mode that survives a light-mode-only review. Both fixed; the verification
+pass confirms zero undefined `var()` references remain.
+
+**6. Hard-corner law preserved.** `themes.css:5` sets a global `border-radius: 0 !important`. None
+of the new files reintroduce a radius.
+
+**7. The workspace is one continuous canvas; the side panels float on it.** `.shell` previously
+painted `--paper` behind everything, which read as an outline colour framing the two side panels.
+It now paints `--paper-3` — the same value the centre column uses — so the canvas runs unbroken from
+edge to edge and the panels sit *on* it rather than being cut out of it.
+
+**8. The global index tape is full-bleed and runs behind the panels.** `#gstripHost` used to live
+inside `.main-col`, which is `overflow: auto` and clipped to grid column 2 — so no negative-margin
+trick could ever widen it past the centre column. The fix is structural, not cosmetic: the host is
+now a direct child of `.shell` (still outside `#view`, so a page render never re-creates it and the
+marquee never snaps back to the start), taken out of grid flow with `position: absolute` under a new
+`--tape: 31px` token, with `.main-col` reserving that height as top padding so the first card cannot
+slide under it.
+
+Both panels became glass — `color-mix(in srgb, var(--rpanel) 86%, transparent)` plus
+`backdrop-filter: blur(12px) saturate(1.4)` — because an opaque panel would simply chop the tape off
+at the column edge. The tape stays visible as it travels behind each panel and reads out of focus,
+which is what makes the band feel continuous across the whole workspace. `--rpanel` still supplies
+the tint, so light and dark need no separate values.
+
+Stacking order is deliberate and minimal: tape at `z-index: 1`, panels at `z-index: 2`, and
+`.main-col` given **no** `position`/`z-index` at all. Giving the column a stacking context would
+have trapped every sticky or modal descendant underneath the panels; `z-index: 1` on the tape
+already beats the column's `z-index: auto` content in the root stacking context. `pointer-events` is
+off on the host and back on for `.gstrip` itself, so the hover-pause and the click through to
+`#/macro` still work while the transparent gutter beside the strip does not eat clicks meant for the
+column underneath.
+
+**9. The `HENNETH DESK` lockup.** `.nav-brand` is a flex row (`img` · `HENNETH` · `<small>DESK</small>`),
+so the gap between the two words is the flex `gap`, **not** a text space — and the markup was
+carrying an `&nbsp;` *on top of* the 8px gap, double-spacing it. The `&nbsp;` is gone and one value
+owns the spacing: `.hn-auth .nav-brand { gap: .5em }` in `auth-bridge.css` (never in the generated
+`auth-terminal.css`). Against the `.06em` tracking that reads as a word break without splitting the
+lockup into two separate words.
+
+**10. Urdu coverage extended to the new surfaces.** `translateTree()` swaps text nodes by exact
+dictionary hit, so a brand-new file is translated only if its strings are already in
+`dashboard/i18n-ur.js` — a miss is silent and simply leaves English on screen. The new rail tabs and
+Board tile headers were exactly that kind of silent miss, and `board.js` emitted `"News Wire"`
+against a `"News wire"` key (matching is case-sensitive). Keys added, casing reconciled at the
+emitter, and the Nastaliq selector list at `themes.css:1089` extended to the new prose-bearing
+classes — Urdu was otherwise falling back to JetBrains Mono, a Latin monospace that does not shape
+the script. Numeric cells are deliberately excluded from Nastaliq and added instead to the existing
+`direction: ltr; unicode-bidi: isolate` rule, so digits do not reorder under RTL.
+
+### Verification
+
+The scheme control was exercised by scripted clicks rather than asserted: three clicks walked
+System → Light → Dark → System, with `data-scheme` on `<html>`, the `localStorage` value, and the
+computed `body` background agreeing at each step — including the key being *removed* (not set to
+`"system"`) on the third click. Console clean, zero errors.
+
+The full-bleed tape was measured, not eyeballed: `#gstripHost` spans `0 → 1269.6px` against a shell
+width of `1269.6px` at `top: 58px` (the topbar height), height `31.6px`; it overlaps the sidebar,
+which sits above it at `z-index: 2` with `blur(12px) saturate(1.4)` computed on both panels;
+`.main-col` reserves `43px` of top padding; the marquee animation is still running
+(`marquee 60s`); and `window.__shellFail` is `null`. The brand gap measures `7.5px` — the single
+`.5em` value, with no residual `&nbsp;`.
+
+An earlier probe read as a total failure (zero-height host, null strip, no padding) purely because
+the page was signed out: the auth terminal was mounted and `body[data-strip=off]` had legitimately
+collapsed the band. Worth recording, because the same false alarm will recur for anyone verifying
+this signed out.
+
 ## 2026-08-15 — v2026.08.15.3 — Auth nav: dead language chip removed, Back to site points at the marketing site
 
 <!--public

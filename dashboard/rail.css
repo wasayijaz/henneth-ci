@@ -1,0 +1,597 @@
+/* ============================================================
+   Production stylesheet — context rail (right panel)
+   Additive only. Linked from dashboard/index.html after themes.css,
+   and wins over it on source order (both use body[data-theme=gemini]
+   selectors of equal specificity). Mirrors the left .sidebar block
+   (themes.css ~90-190, mobile ~296-328) token-for-token: same
+   --panel/--line/--ink*/--hair tokens, hard corners (global
+   `border-radius:0 !important` already covers this rail — no rule
+   here overrides it), border-inline-start instead of -end.
+   ============================================================ */
+
+/* The pane itself (grid placement, borders, background) is laid out by
+   shell.css, which owns the whole .shell grid. This file styles
+   only what lives INSIDE the rail. */
+body[data-theme=gemini] .shell.rail-resizing .context-rail { user-select: none; }
+
+body[data-theme=gemini] .rail-resize {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 60;
+}
+body[data-theme=gemini] .rail-resize:hover { background: var(--hair); }
+body[data-theme=gemini] .shell.rail-collapsed .rail-resize { display: none; }
+
+/* ---- top: tabs + collapse toggle — reference `.inspector-head` ---- */
+body[data-theme=gemini] .rail-top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-height: 44px;
+  padding: 0;
+  border-block-end: 1px solid var(--line);
+  background: var(--rpanel);
+  flex: none;
+}
+body[data-theme=gemini] .rail-tabs {
+  display: flex;
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0;
+}
+body[data-theme=gemini] .shell.rail-collapsed .rail-tabs { display: none; }
+body[data-theme=gemini] .rail-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 0 2px;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ink3);
+  font: 700 9px/1 "JetBrains Mono", monospace;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body[data-theme=gemini] .rail-tab:hover { color: var(--ink1); }
+body[data-theme=gemini] .rail-tab.on {
+  color: var(--ink1);
+  font-weight: 800;
+  border-bottom-color: var(--ink1);
+  box-shadow: none;
+}
+body[data-theme=gemini] .rail-toggle {
+  flex: none;
+  align-self: center;
+  width: 24px;
+  height: 24px;
+  margin-inline-end: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--hair);
+  color: var(--ink1);
+  cursor: pointer;
+}
+/* the collapse button was the one rail control with nothing under the
+   cursor — no ground, no border change. its sibling .side-toggle gets
+   both, so matching them here keeps the two panel toggles one idiom.
+   the ground/border pair mirrors .rail-note-act and the reference's
+   quiet controls; the transition, the press settle and the focus ring
+   are not restated here — motion.css owns the first two and
+   themes.css already rings every button. */
+body[data-theme=gemini] .rail-toggle:hover {
+  border-color: var(--line);
+  background: var(--surf);
+}
+body[data-theme=gemini] .rail-toggle svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+body[data-theme=gemini] .shell.rail-collapsed .rail-toggle svg { transform: rotate(180deg); }
+
+/* ---- body: pane switcher ---- */
+body[data-theme=gemini] .rail-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+/* Page Info strip — persistent document header above the pane switcher.
+   Just the page name (nav-group lookup). Timestamp and Type/Source rows
+   were removed as redundant; kept minimal on purpose. */
+body[data-theme=gemini] .rail-pageinfo {
+  padding: 0 0 10px;
+  margin: 0 0 10px;
+  border-block-end: 1px solid var(--line2);
+}
+body[data-theme=gemini] .rail-pageinfo-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+body[data-theme=gemini] .rail-pageinfo-name {
+  font: 700 12px/1.2 "JetBrains Mono", monospace;
+  letter-spacing: .02em;
+  color: var(--ink1);
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body[data-theme=gemini] .rail-pageinfo-ts {
+  flex: none;
+  font: 500 10px/1.2 "JetBrains Mono", monospace;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+body[data-theme=gemini] .rail-pageinfo-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-block-start: 6px;
+  font: 600 10px/1.3 "JetBrains Mono", monospace;
+}
+body[data-theme=gemini] .rail-pageinfo-row > span:first-child {
+  color: var(--ink3);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+body[data-theme=gemini] .rail-pageinfo-row > span:last-child {
+  color: var(--ink2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* collapsed, the body is hidden but stays in the box so it can fade first —
+   `display:none` cannot render a frame of the opacity transition that
+   motion.css puts on .rail-body. visibility:hidden takes it out of
+   the accessibility tree and out of hit-testing just the same. */
+body[data-theme=gemini] .shell.rail-collapsed .rail-body { visibility: hidden; }
+body[data-theme=gemini] .rail-pane { display: none; }
+/* the tab button eases (motion.css:189) while the pane it
+   controls used to hard-cut — two halves of one interaction running at
+   different speeds. a display swap can never transition, so the arriving
+   pane carries a keyframe instead: it runs the frame `.on` lands. held
+   at --mo-hover because a longer fade on an in-panel tab switch reads as
+   lag, not polish. `both` is deliberately omitted — a filled backwards
+   phase would blank the pane before the first frame. */
+body[data-theme=gemini] .rail-pane.on {
+  display: block;
+  animation: railPaneIn var(--mo-hover) var(--mo-ease);
+}
+@keyframes railPaneIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+body[data-theme=gemini] .rail-pane .empty {
+  color: var(--ink3);
+  font: 500 12px/1.5 "JetBrains Mono", monospace;
+  padding: 14px 2px;
+}
+
+/* News tab — a long scroll of press items from the desk's news log. Two lines
+   per item: the headline wraps in full (a truncated headline is useless for
+   deciding whether to open it), the meta line stays one line and clips. Day
+   dividers stick to the top so the reader always knows which session they are
+   scrolling through. */
+body[data-theme=gemini] .rail-news-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rhair);
+  font: 800 11px/1.2 "JetBrains Mono", monospace;
+  color: var(--ink1);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+body[data-theme=gemini] .rail-news-stamp {
+  color: var(--rmuted);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+body[data-theme=gemini] .rail-news-day {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 12px 0 2px;
+  padding: 5px 0 4px;
+  background: var(--paper-2, var(--surf));
+  border-bottom: 1px solid var(--rhair);
+  color: var(--rmuted);
+  font: 700 9px/1.2 "JetBrains Mono", monospace;
+  letter-spacing: .1em;
+}
+body[data-theme=gemini] .rail-news-item {
+  display: block;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--rhair);
+  color: var(--ink2);
+  text-decoration: none;
+}
+body[data-theme=gemini] .rail-news-item:hover { background: var(--surf); }
+body[data-theme=gemini] .rail-news-item.nolink { cursor: default; }
+body[data-theme=gemini] .rail-news-item:hover .rail-news-title { color: var(--ink1); }
+body[data-theme=gemini] .rail-news-title {
+  display: block;
+  font: 600 11px/1.45 "JetBrains Mono", monospace;
+  color: var(--ink2);
+}
+body[data-theme=gemini] .rail-news-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  font: 600 9px/1.2 "JetBrains Mono", monospace;
+  color: var(--rmuted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+body[data-theme=gemini] .rail-news-src {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Impact >= 4 is the desk's own re-trigger threshold (CLAUDE.md rule 10) —
+   the only band worth marking in a list this long. */
+body[data-theme=gemini] .rail-news-flag {
+  flex: none;
+  padding: 1px 5px;
+  border: 1px solid var(--rhair);
+  color: var(--ink1);
+  font-weight: 700;
+}
+body[data-theme=gemini] .rail-news-tk {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--rmuted);
+  font-weight: 500;
+}
+
+
+/* Notes tab — standalone multi-note store (railNotes), always available,
+   not gated on a ticker. Row = a title bar with the pin/delete icons
+   revealed at its inline-end on hover; opening a row reveals separate
+   title + body fields. The New-note button wears `.quiet-btn`, styled by
+   board.css — see the note above that rule. */
+body[data-theme=gemini] .rail-notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+body[data-theme=gemini] .rail-notes-head > span {
+  font: 800 11px/1.2 "JetBrains Mono", monospace;
+  color: var(--ink1);
+}
+/* `.quiet-btn` is owned by board.css:51-60, which loads after this
+   sheet — a full copy here at the same (0,2,1) specificity was silently
+   losing its box and winning half its hover, a state neither sheet drew.
+   Board's definition is now the single source of truth for the chip. The
+   one declaration board does not restate is `flex:none`, and without it the
+   button shrinks inside the flex row above, so that alone survives — scoped
+   to the head so it cannot reach board's own chips. */
+body[data-theme=gemini] .rail-notes-head .quiet-btn { flex: none; }
+
+body[data-theme=gemini] .rail-note { border-block-end: 1px solid var(--rhair); }
+body[data-theme=gemini] .rail-note-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 0;
+  background: transparent;
+  border: none;
+  text-align: start;
+  color: var(--ink1);
+  font: 700 11px/1.3 "JetBrains Mono", monospace;
+}
+body[data-theme=gemini] .rail-note-bar:hover { background: var(--surf); }
+/* The actual open control. It takes all the free width so the click target is
+   the whole row minus the action cluster, which is a real button of its own. */
+body[data-theme=gemini] .rail-note-open {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+body[data-theme=gemini] .rail-note-open:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+body[data-theme=gemini] .rail-note-pin {
+  flex: none;
+  width: 10px;
+  color: var(--accent);
+  font-size: 9px;
+}
+body[data-theme=gemini] .rail-note-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body[data-theme=gemini] .rail-note-ts {
+  flex: none;
+  color: var(--rmuted);
+  font: 500 10px/1 "JetBrains Mono", monospace;
+  white-space: nowrap;
+}
+/* the action cluster sits at the row's inline-end and only appears on hover.
+   visibility (not display) so the row's width never shifts when it reveals. */
+body[data-theme=gemini] .rail-note-acts {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+body[data-theme=gemini] .rail-note:hover .rail-note-acts,
+body[data-theme=gemini] .rail-note-acts:focus-within { opacity: 1; }
+body[data-theme=gemini] .rail-note-act {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--rmuted);
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+}
+body[data-theme=gemini] .rail-note-act:hover { color: var(--ink1); background: var(--surf); }
+body[data-theme=gemini] .rail-note-act.on { color: var(--accent); }
+
+body[data-theme=gemini] .rail-note-prev {
+  padding: 0 0 8px;
+  color: var(--rmuted);
+  font: 500 10px/1.45 "JetBrains Mono", monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body[data-theme=gemini] .rail-note-edit { padding: 0 0 10px; }
+body[data-theme=gemini] .rail-note-title-in,
+body[data-theme=gemini] .rail-note-body-in {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--rhair);
+  background: var(--paper);
+  color: var(--ink1);
+  padding: 6px 7px;
+  font: 600 11px/1.45 "JetBrains Mono", monospace;
+}
+body[data-theme=gemini] .rail-note-title-in:focus,
+body[data-theme=gemini] .rail-note-body-in:focus { outline: none; border-color: var(--focus); }
+body[data-theme=gemini] .rail-note-body-in {
+  margin-top: 6px;
+  min-height: 88px;
+  resize: vertical;
+  font-weight: 500;
+}
+
+/* Ask tab — thread reuses global .ans-q/.ans-block/.ans-foot (pages.css);
+   only the rail-local shell (scroll box, input bar, sample chips) lives here. */
+body[data-theme=gemini] .rail-ask-out {
+  max-height: 46vh;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+/* Screen-reader-only announcer. display:none or visibility:hidden would take
+   it out of the a11y tree and the live region would never fire, so it stays
+   rendered and is clipped to a 1px box instead. */
+body[data-theme=gemini] .rail-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+body[data-theme=gemini] .rail-ask-samples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+body[data-theme=gemini] .rail-ask-chip {
+  width: 100%;
+  text-align: start;
+  padding: 7px 8px;
+  border: 1px solid var(--rhair);
+  background: var(--paper);
+  color: var(--ink2);
+  font: 600 10px/1.4 "JetBrains Mono", monospace;
+  cursor: pointer;
+}
+body[data-theme=gemini] .rail-ask-chip:hover { color: var(--ink1); background: var(--surf); }
+body[data-theme=gemini] .rail-ask-bar {
+  display: flex;
+  gap: 6px;
+}
+body[data-theme=gemini] .rail-ask-in {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid var(--rhair);
+  background: var(--paper);
+  color: var(--ink1);
+  padding: 7px 8px;
+  font: 600 11px/1.3 "JetBrains Mono", monospace;
+}
+body[data-theme=gemini] .rail-ask-in:focus { outline: none; border-color: var(--focus); }
+body[data-theme=gemini] .rail-ask-bar .quiet-btn { flex: none; }
+body[data-theme=gemini] .rail-ask-foot {
+  margin-top: 8px;
+  text-align: end;
+}
+body[data-theme=gemini] .rail-ask-foot a {
+  color: var(--rmuted);
+  font: 600 10px/1.3 "JetBrains Mono", monospace;
+  text-decoration: none;
+}
+body[data-theme=gemini] .rail-ask-foot a:hover { color: var(--ink1); }
+
+/* ---- gating: rail follows the same auth/health gates as the sidebar ---- */
+body[data-theme=gemini][data-gated="1"] .context-rail,
+body[data-theme=gemini][data-gated="1"] .rail-resize { display: none; }
+body[data-theme=gemini][data-auth="pending"] .context-rail,
+body[data-theme=gemini][data-auth="pending"] .rail-resize { visibility: hidden; }
+html[data-boot-auth="out"] body[data-theme=gemini][data-auth="pending"] .context-rail,
+html[data-boot-auth="out"] body[data-theme=gemini][data-auth="pending"] .rail-resize { display: none; }
+
+/* ---- mobile: the drawer geometry (fixed panes between topbar and statusbar,
+   backdrops, .rail-open reveal) lives in shell.css with the rest of the
+   grid breakpoints. Only the icon sizing is rail-local. ---- */
+body[data-theme=gemini] .rail-open { display: none; }
+body[data-theme=gemini] .rail-backdrop { display: none; }
+body[data-theme=gemini] .rail-open svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+@media (max-width: 900px) {
+  body[data-theme=gemini] .rail-resize { display: none; }
+}
+
+/* ---- Watch tab — watchlist rows, scrolls inside its own pane ---- */
+body[data-theme=gemini] [data-rail-pane="watch"] {
+  max-height: 100%;
+  overflow-y: auto;
+}
+body[data-theme=gemini] .rail-watch-list {
+  display: flex;
+  flex-direction: column;
+}
+body[data-theme=gemini] .rail-watch-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--rhair);
+  text-decoration: none;
+  color: var(--ink1);
+  font: 600 11px/1.3 "JetBrains Mono", monospace;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+body[data-theme=gemini] .rail-watch-item:last-child { border-bottom: none; }
+body[data-theme=gemini] .rail-watch-item:hover { color: var(--accent); }
+
+/* ---- Alerts tab — trigger rows, scrolls inside its own pane ---- */
+body[data-theme=gemini] [data-rail-pane="alerts"] {
+  max-height: 100%;
+  overflow-y: auto;
+}
+body[data-theme=gemini] .rail-alert-list {
+  display: flex;
+  flex-direction: column;
+}
+body[data-theme=gemini] .rail-alert-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--rhair);
+  font: 600 11px/1.3 "JetBrains Mono", monospace;
+  color: var(--ink1);
+}
+body[data-theme=gemini] .rail-alert-item:last-child { border-bottom: none; }
+body[data-theme=gemini] .rail-alert-what {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+body[data-theme=gemini] .rail-alert-sym { color: var(--rmuted); }
+/* Strategy category, between the strategy name and the ticker. Without a width
+   rule of its own it steals the ellipsis budget from .rail-alert-what. */
+body[data-theme=gemini] .rail-alert-cat {
+  flex: none;
+  color: var(--rmuted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+body[data-theme=gemini] .rail-alert-when {
+  color: var(--rmuted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+/* Age of the alerts file, shown under the empty state so "nothing fired" reads
+   as a checked result rather than a pane that failed to load. */
+body[data-theme=gemini] .rail-alert-stamp {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--rmuted);
+  font: 500 10px/1.3 "JetBrains Mono", monospace;
+  letter-spacing: .04em;
+}
+
+/* ---- Data-health chip, in the page-info head strip ---- */
+body[data-theme=gemini] .rail-health-chip {
+  flex: 0 0 auto;
+  font: 700 9px/1.2 "JetBrains Mono", monospace;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid var(--rline);
+  color: var(--rmuted);
+}
+body[data-theme=gemini] .rail-health-chip.ok { color: var(--up); border-color: var(--up); }
+body[data-theme=gemini] .rail-health-chip.bad { color: var(--dn); border-color: var(--dn); }
+body[data-theme=gemini] .rail-watch-sym {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+body[data-theme=gemini] .rail-watch-here {
+  color: var(--accent);
+  font-size: 8px;
+}
+body[data-theme=gemini] .rail-watch-price {
+  color: var(--ink2);
+  text-align: right;
+}
+body[data-theme=gemini] .rail-watch-chg {
+  min-width: 56px;
+  text-align: right;
+  color: var(--ink3);
+}
+body[data-theme=gemini] .rail-watch-chg.up { color: var(--up); }
+body[data-theme=gemini] .rail-watch-chg.dn { color: var(--dn); }

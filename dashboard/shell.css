@@ -1,0 +1,734 @@
+/* Statusbar owns its own token pair (not in the palette.css contract list):
+   it is the desk's one deliberate inversion — a dark band on a light page —
+   so it must stay a distinct band in dark scheme too, not collapse into
+   --paper. Light value unchanged (pixel-identical); dark value redefined in
+   the same two blocks/order palette.css uses for every scheme-varying token. */
+body[data-theme=gemini] { --statusbar-bg: #1e201e; --statusbar-fg: #e8e8e1; --statusbar-muted: #aeb1a7; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-scheme="light"]) body[data-theme=gemini] {
+    --statusbar-bg: #0e0f0d; --statusbar-fg: #d8d7cd; --statusbar-muted: #8f9289;
+  }
+}
+html[data-scheme="dark"] body[data-theme=gemini] {
+  --statusbar-bg: #0e0f0d; --statusbar-fg: #d8d7cd; --statusbar-muted: #8f9289;
+}
+
+/* ============================================================
+   The app shell — the 3-column x 3-row CSS grid dashboard/index.html
+   runs in production.
+
+   Source of truth: dashboard/psx-board-preview.html. That file's
+   `.app` grid, `.topbar`, `.pane` panes and `.statusbar` are
+   reproduced here mapped onto the desk's real class names:
+
+       reference          desk
+       ---------          ----
+       .app               .shell
+       .left-pane         .sidebar
+       .center-pane       .main-col
+       .right-pane        .context-rail
+       .topbar            .topbar   (grid-column 1/-1, row 1)
+       .statusbar         .statusbar (grid-column 1/-1, row 3)
+
+   themes.css lays the shell out as a FLEX row with the topbar and
+   footer nested inside .main-col; every rule there is written as
+   `body[data-theme=gemini] .x`, so the identical selector form here
+   wins on source order alone — no !important needed. Linked from
+   dashboard/index.html after themes.css, and loaded last among the
+   shell sheets: after palette.css, rail.css and topbar.css.
+   ============================================================ */
+
+/* ---- reference metrics. --left/--right stay wired to the real
+   --side-w/--rail-w that app.js and rail.js write on #shell,
+   so drag-to-resize keeps working; the reference widths are the
+   fallbacks. ---- */
+body[data-theme=gemini] {
+  --topbar: 58px;
+  --statusbar: 26px;
+  --left: var(--side-w, 224px);
+  --right: var(--rail-w, 306px);
+  /* the inset the side panes float on. One token so the two panes, the
+     collapsed track widths and the drawer band can never drift apart. */
+  --pane-gap: 10px;
+  /* the two-layer lift the floating panes ride on. One token so .sidebar, the
+     collapsed .side-peek glyph and .context-rail can never end up sitting at
+     three different heights when the elevation is retuned. */
+  --pane-lift: 0 1px 2px rgba(31, 34, 30, .05), 0 10px 26px rgba(31, 34, 30, .10);
+  /* height of the full-bleed global tape band. Declared once because two things
+     depend on it and must agree: the absolutely-positioned #gstripHost, and the
+     top padding .main-col reserves so page content starts below the band. */
+  --tape: 31px;
+
+  font-size: 12px;
+  letter-spacing: -.01em;
+  overflow: hidden;
+}
+
+/* ============================================================
+   1. The grid
+   ============================================================ */
+body[data-theme=gemini] .shell {
+  display: grid;
+  grid-template-columns: var(--left) minmax(0, 1fr) var(--right);
+  grid-template-rows: var(--topbar) minmax(0, 1fr) var(--statusbar);
+  width: 100%;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  /* --paper-3, the SAME token .main-col paints (line 385). The grid ground is
+     what shows through the --pane-gap inset around .sidebar/.context-rail, so
+     any other value draws a band of a second colour down each side and the two
+     panes read as inset wells rather than surfaces lying on the workspace. One
+     continuous canvas edge-to-edge; only the panes' own --rpanel + hairline +
+     --pane-lift lift them off it. */
+  background: var(--paper-3);
+  /* containing block for the full-bleed tape band below. */
+  position: relative;
+  /* the column transition is NOT declared here on purpose — motion.css
+     owns the pane-slide timing, loads last and matches this selector's
+     specificity exactly, so a copy here would be dead weight that only misleads
+     whoever tunes the slide next. The guards below still belong to the grid. */
+}
+/* the two resize drags and first paint must not animate the columns */
+body[data-theme=gemini] .shell.resizing,
+body[data-theme=gemini] .shell.rail-resizing,
+body[data-theme=gemini] .shell:not(.side-ready) { transition: none; }
+
+/* collapse is now a column-width change on the grid, not a width on
+   the pane — .sidebar/.context-rail are sized entirely by their track */
+/* Collapsed, neither pane shrinks to an icon rail — it is gone. The track goes
+   to zero and the pane is removed from paint entirely, so the centre column
+   runs to the window edge exactly as it does in the ChatGPT desktop app; the
+   only thing left is the floating .side-peek / .rail-peek glyph. */
+body[data-theme=gemini] .shell.collapsed { --left: 0px; }
+/* Right rail now mirrors the left pane exactly — gone, not an icon rail (see
+   .rail-peek below). It held a case for staying an icon strip once (live
+   context worth glancing at collapsed); the owner wants it to disappear the
+   same way the sidebar does, button included, so the track goes to zero too. */
+body[data-theme=gemini] .shell.rail-collapsed { --right: 0px; }
+
+/* gated / logged-out: the panes are display:none (themes.css 134,
+   rail.css), so their tracks must collapse too or the grid
+   leaves two empty columns */
+body[data-theme=gemini][data-gated="1"] .shell { --left: 0px; --right: 0px; }
+html[data-boot-auth="out"] body[data-theme=gemini][data-auth="pending"] .shell { --left: 0px; --right: 0px; }
+
+/* ============================================================
+   2. Panes — reference `.pane`
+   ============================================================ */
+/* Scrollbars are invisible until the pointer is over that pane. The gutter is
+   still RESERVED at rest (scrollbar-width stays `thin`, the webkit track keeps
+   its 8px) and only the THUMB's colour flips — collapsing the width on hover
+   instead would reflow the pane's content sideways every time the mouse
+   entered it. The rail scrolls on .rail-body, one level in from the pane that
+   the pointer is actually over, so it gets a .context-rail:hover clause too.
+   The revealed thumb rides --rline rather than a hex of its own: the Firefox
+   (scrollbar-color) and WebKit (::-webkit-scrollbar-thumb) paths must never
+   drift apart, and this chrome is not worth a token of its own. */
+body[data-theme=gemini] .sidebar,
+body[data-theme=gemini] .main-col,
+body[data-theme=gemini] .context-rail,
+body[data-theme=gemini] .rail-body {
+  min-width: 0;
+  min-height: 0;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+}
+body[data-theme=gemini] .sidebar:hover,
+body[data-theme=gemini] .main-col:hover,
+body[data-theme=gemini] .rail-body:hover,
+body[data-theme=gemini] .context-rail:hover .rail-body { scrollbar-color: var(--rline) transparent; }
+
+body[data-theme=gemini] .sidebar::-webkit-scrollbar,
+body[data-theme=gemini] .main-col::-webkit-scrollbar,
+body[data-theme=gemini] .rail-body::-webkit-scrollbar { width: 8px; height: 8px; }
+body[data-theme=gemini] .sidebar::-webkit-scrollbar-thumb,
+body[data-theme=gemini] .main-col::-webkit-scrollbar-thumb,
+body[data-theme=gemini] .rail-body::-webkit-scrollbar-thumb { background: transparent; }
+body[data-theme=gemini] .sidebar:hover::-webkit-scrollbar-thumb,
+body[data-theme=gemini] .main-col:hover::-webkit-scrollbar-thumb,
+body[data-theme=gemini] .rail-body:hover::-webkit-scrollbar-thumb,
+body[data-theme=gemini] .context-rail:hover .rail-body::-webkit-scrollbar-thumb { background: var(--rline); }
+body[data-theme=gemini] .sidebar::-webkit-scrollbar-track,
+body[data-theme=gemini] .main-col::-webkit-scrollbar-track,
+body[data-theme=gemini] .rail-body::-webkit-scrollbar-track { background: transparent; }
+
+/* ---- left pane ---- */
+body[data-theme=gemini] .sidebar {
+  grid-column: 1;
+  grid-row: 2;
+  width: auto;
+  flex: none;
+  position: relative;
+  top: auto;
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  /* floating pane: inset off the shell edge on all four sides, boxed on all
+     four sides, and lifted off the paper with a shadow instead of the single
+     hairline a flush pane used. Corners stay square — themes.css:5 pins
+     border-radius:0 !important globally and the brand is hard-corner. */
+  margin: var(--pane-gap);
+  border: 1px solid var(--line);
+  box-shadow: var(--pane-lift);
+  /* Glass, not paint. The global tape runs edge-to-edge UNDER both panes
+     (#gstripHost, z-index 1), so an opaque --rpanel would simply chop it off at
+     the column edge. Translucent + backdrop blur instead: the tape stays visible
+     as it travels behind the pane and reads out of focus, which is what makes
+     the band feel continuous across the whole workspace. --rpanel still supplies
+     the tint, so light and dark need no separate values. */
+  background: color-mix(in srgb, var(--rpanel) 86%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  z-index: 2;
+  transition: none;
+}
+body[data-theme=gemini] .shell.collapsed .sidebar { width: auto; flex: none; }
+
+/* ---- left pane internals — reference `.pane-inner` / `.left-heading` /
+   `.nav-group` / `.nav-item` / `.nav-foot`. The desk's icons are kept
+   (inline SVG at 14px in --rmuted) instead of the reference's glyph
+   characters; same rhythm, better artwork. ---- */
+body[data-theme=gemini] .sidebar { padding: 15px 15px 0; }
+
+/* the sidebar is a flex column; without this the nav's real 23 routes
+   overflow the pane and flex-shrink squashes the header/footer rows
+   instead of scrolling */
+body[data-theme=gemini] .side-top,
+body[data-theme=gemini] .side-nav,
+body[data-theme=gemini] .side-foot { flex: none; }
+
+body[data-theme=gemini] .side-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 15px;
+  border: 0;
+  border-bottom: 1px solid var(--rhair);
+  background: none;
+}
+body[data-theme=gemini] .side-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+body[data-theme=gemini] .side-heading small {
+  color: var(--rmuted);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .06em;
+}
+/* The Workspace panel's own mark — a panel glyph in the nav-icon idiom, NOT the
+   Henneth desk mark. The desk mark identifies the product and lives once, in the
+   topbar brand; repeating it here made the pane header read as a second logo
+   rather than as a section label. .side-heading lays its children out on the
+   baseline so "Workspace" and the "PSX" sub-label sit on one line; an icon has no
+   baseline of its own, so it is centred against the cap height explicitly. */
+body[data-theme=gemini] .side-mark {
+  flex: none;
+  align-self: center;
+  width: 15px;
+  height: 15px;
+  margin-inline-end: 5px;
+  fill: none;
+  stroke: var(--rmuted);
+  stroke-width: 1.6;
+  stroke-linecap: square;
+}
+
+body[data-theme=gemini] .side-toggle {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: none;
+}
+body[data-theme=gemini] .side-toggle:hover { border-color: var(--rhair); background: var(--paper-2); }
+
+body[data-theme=gemini] .side-nav { padding: 0; gap: 0; }
+body[data-theme=gemini] .side-group { margin-top: 17px; padding: 0; border: 0; }
+body[data-theme=gemini] .side-head {
+  margin: 0 0 7px;
+  padding: 0;
+  color: var(--rmuted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+body[data-theme=gemini] .side-nav a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-inline-start-width: 1px;
+  background: none;
+  /* the desk's secondary ink, not a near-miss hex of it: the nav has to track
+     the palette when --ink2 is retuned instead of drifting on its own */
+  color: var(--ink2);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  /* themes.css uppercases nav labels; the reference sets them in sentence case */
+  text-transform: none;
+  text-align: start;
+}
+body[data-theme=gemini] .side-nav a:hover {
+  border-color: var(--rhair);
+  background: rgba(255, 255, 255, .38);
+  color: var(--ink1);
+}
+body[data-theme=gemini] .side-nav a.on {
+  border-color: var(--rhair);
+  background: var(--paper-2);
+  color: var(--ink1);
+  font-weight: 700;
+}
+body[data-theme=gemini] .side-nav a svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--rmuted);
+  stroke-width: 1.6;
+}
+body[data-theme=gemini] .side-nav a.on svg { color: var(--ink1); }
+
+body[data-theme=gemini] .side-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+  padding: 18px 0 15px;
+  border-top: 1px solid var(--rhair);
+  color: var(--rmuted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+body[data-theme=gemini] .side-foot strong {
+  display: block;
+  color: var(--ink1);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+body[data-theme=gemini] .side-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 9px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+body[data-theme=gemini] .side-legal a { color: var(--rmuted); font-size: 10px; }
+body[data-theme=gemini] .side-legal a:hover { color: var(--ink1); }
+
+/* ---- collapsed: the pane vanishes, one floating glyph remains ---- */
+/* The peek button is fixed, not a grid child: with --left at 0 there is no track
+   left to sit in, and position:fixed keeps it pinned while the centre column
+   scrolls under it. It is hidden whenever the pane is open, so the two controls
+   are never both on screen — .side-toggle closes, .side-peek opens. */
+body[data-theme=gemini] .side-peek {
+  position: fixed;
+  z-index: 60;
+  top: calc(var(--topbar) + var(--pane-gap));
+  inset-inline-start: var(--pane-gap);
+  display: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--rhair);
+  background: var(--rpanel);
+  color: var(--rmuted);
+  box-shadow: var(--pane-lift);
+}
+body[data-theme=gemini] .side-peek svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: square;
+}
+body[data-theme=gemini] .side-peek:hover { border-color: var(--focus); background: var(--paper-2); color: var(--ink1); }
+
+@media (min-width: 901px) {
+  /* display:none, not visibility/width tricks: the pane must stop consuming the
+     grid AND stop catching the pointer, or an invisible 224px column would keep
+     swallowing clicks meant for the page underneath. */
+  body[data-theme=gemini] .shell.collapsed .sidebar { display: none; }
+  body[data-theme=gemini] .shell.collapsed .side-peek { display: grid; }
+  /* the centre column now starts at x=0, so its first line of content would run
+     under the floating glyph. Buy back exactly the glyph's footprint. */
+  body[data-theme=gemini] .shell.collapsed .main-col > main { padding-inline-start: 52px; }
+
+  /* same treatment, right side: the rail vanishes rather than shrinking to an
+     icon strip, and .rail-peek (mirrors .side-peek below) is the only thing
+     left to reopen it. */
+  body[data-theme=gemini] .shell.rail-collapsed .context-rail { display: none; }
+  body[data-theme=gemini] .shell.rail-collapsed .rail-peek { display: grid; }
+  body[data-theme=gemini] .shell.rail-collapsed .main-col > main { padding-inline-end: 52px; }
+}
+
+/* ---- center pane ---- */
+body[data-theme=gemini] .main-col {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  /* --paper-3 (palette.css), not --paper-2: the working column is meant to read
+     whiter than both the topbar (--paper via color-mix, line 463) and the
+     side panes (--rpanel, .sidebar/.context-rail above) — sharing --paper-2
+     with the Board tiles (board.css .tile) would leave them with nothing but
+     their hairline to sit on. .shell paints this same token (line 74), so the
+     column has no edge of its own: the canvas runs unbroken under both panes. */
+  background: var(--paper-3);
+  padding-bottom: 0;
+  /* the tape band is absolutely positioned over this column's top edge, so the
+     column reserves its height (+ the 12px the tape used to carry as its own
+     margin-bottom) instead of letting the first card slide under it. */
+  padding-block-start: calc(var(--tape) + 12px);
+}
+/* tape off ⇒ nothing to clear. */
+body[data-theme=gemini][data-strip=off] .main-col { padding-block-start: 0; }
+
+/* ---- the full-bleed global tape ----
+   Out of grid flow entirely, spanning all three columns from the topbar down.
+   z-index 1 puts it above .main-col's content (which is z-auto) so scrolled
+   cards never paint over it, and below the two floating panes (z-index 2) so
+   the tape runs BEHIND them and reads blurred through their glass. */
+body[data-theme=gemini] #gstripHost {
+  position: absolute;
+  top: var(--topbar);
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+/* only the strip itself takes the pointer, so the hover-pause and the click
+   through to #/macro still work while the transparent gutter beside it does
+   not eat clicks meant for the column underneath. */
+body[data-theme=gemini] #gstripHost .gstrip {
+  pointer-events: auto;
+  margin-bottom: 0;
+}
+body[data-theme=gemini] .main-col > main {
+  max-width: none;
+  width: 100%;
+  min-width: 680px;
+  margin: 0;
+  padding: 18px 18px 24px;
+}
+body[data-theme=gemini] .deskfoot {
+  max-width: none;
+  width: 100%;
+  min-width: 680px;
+  margin: 0;
+  padding: 12px 18px;
+  border-top: 1px solid var(--line);
+  background: var(--rpanel);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* ---- right pane ---- */
+body[data-theme=gemini] .context-rail {
+  grid-column: 3;
+  grid-row: 2;
+  width: auto;
+  flex: none;
+  position: relative;
+  top: auto;
+  height: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* mirror of .sidebar above — same inset, same box, same two-layer lift, so the
+     two panes read as one pair of floating surfaces rather than one floating and
+     one welded to the edge. */
+  margin: var(--pane-gap);
+  border: 1px solid var(--line);
+  box-shadow: var(--pane-lift);
+  /* same glass as .sidebar above — see the note there. Both panes must blur the
+     tape identically or the band changes character halfway across. */
+  background: color-mix(in srgb, var(--rpanel) 86%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  z-index: 2;
+  transition: none;
+}
+/* ---- collapsed: the pane vanishes, one floating glyph remains ---- */
+/* Mirror of .side-peek above, right-anchored. Delegates to #railToggle the same
+   way .side-peek delegates to #sideToggle — see rail.js. */
+body[data-theme=gemini] .rail-peek {
+  position: fixed;
+  z-index: 60;
+  top: calc(var(--topbar) + var(--pane-gap));
+  inset-inline-end: var(--pane-gap);
+  display: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--rhair);
+  background: var(--rpanel);
+  color: var(--rmuted);
+  box-shadow: var(--pane-lift);
+}
+body[data-theme=gemini] .rail-peek svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: square;
+}
+body[data-theme=gemini] .rail-peek:hover { border-color: var(--focus); background: var(--paper-2); color: var(--ink1); }
+
+/* ============================================================
+   3. Topbar — reference `.topbar`: brand | tabs | spacer | search |
+   icons. The market/health/regime pills the desk kept up here have
+   no reference analogue; that information lives in the statusbar,
+   which topbar.js already mirrors them into. They stay in
+   the DOM (app.js writes them, refreshStatusbar() reads them) and
+   are simply not painted.
+   ============================================================ */
+body[data-theme=gemini] .topbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: relative;
+  top: auto;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--topbar);
+  min-height: 0;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  /* the topbar sits over content that scrolls beneath it, so it keeps a hair of
+     translucency — but the hue comes from --paper rather than a copy of its hex,
+     or a retuned paper tone would leave the bar a different colour to the panes. */
+  background: color-mix(in srgb, var(--paper) 97%, transparent);
+  flex-wrap: nowrap;
+}
+body[data-theme=gemini] .topbar #mkt,
+body[data-theme=gemini] .topbar #health,
+body[data-theme=gemini] .topbar #regime,
+body[data-theme=gemini] .topbar #georisk,
+body[data-theme=gemini] .topbar .meta { display: none; }
+
+body[data-theme=gemini] .topbar .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 164px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* the live header image carries .brand-top-mark (themes.css:195 sizes it 30px);
+   this is the same element, retuned to the reference's 26px cap height */
+body[data-theme=gemini] .topbar .brand-top-mark { height: 26px; width: auto; }
+body[data-theme=gemini] .topbar .brand em { font-style: normal; font-weight: 500; color: var(--ink3); }
+
+/* logo + "Henneth Desk" wordmark show together at every width — mobile below
+   used to swap to text-only, desktop to logo-only; the desk now wants both. */
+body[data-theme=gemini] .topbar .brand-mobile { display: inline-flex; }
+
+/* reference `.top-spacer` — pushes the right cluster to the edge so the tab
+   strip sits flush against the brand instead of stretching */
+body[data-theme=gemini] .topbar .top-spacer { flex: 1 1 auto; min-width: 8px; }
+
+/* reference `.search` is a real text input in a bordered well: glyph, then the
+   placeholder filling the middle, then nothing. The desk's search is a BUTTON
+   that opens a modal — it cannot be an input without rewiring app.js — so it is
+   dressed as that well instead: same metrics, same placeholder tone, the label
+   left-aligned and stretched the way typed text would be, and the one thing the
+   reference lacks that the desk has (a real `/` shortcut) parked at the end. */
+body[data-theme=gemini] .searchbtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(210px, 22vw);
+  min-width: 132px;
+  height: 30px;
+  padding: 0 8px 0 9px;
+  border: 1px solid var(--hair);
+  background: var(--paper-2);
+  color: var(--rmuted);
+  font-size: 11px;
+  text-align: start;
+}
+body[data-theme=gemini] .searchbtn svg { flex: none; width: 14px; height: 14px; }
+body[data-theme=gemini] .searchbtn .sb-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+body[data-theme=gemini] .searchbtn .sb-key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border: 1px solid var(--rhair);
+  background: var(--rpanel);
+  color: var(--rmuted);
+  font-size: 10px;
+  line-height: 1;
+}
+body[data-theme=gemini] .searchbtn:hover {
+  border-color: var(--rline);
+  background: var(--rpanel);
+  color: var(--rink);
+}
+body[data-theme=gemini] .searchbtn:hover .sb-key { background: var(--paper-2); }
+body[data-theme=gemini] .searchbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+body[data-theme=gemini] .lang-btn,
+body[data-theme=gemini] .scheme-btn,
+body[data-theme=gemini] .rail-open,
+body[data-theme=gemini] .side-open {
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--hair);
+  background: transparent;
+  font-size: 10px;
+}
+body[data-theme=gemini] .lang-btn,
+body[data-theme=gemini] .scheme-btn { display: grid; }
+/* the drawer openers are mobile-only affordances: at desktop both panes are
+   visible and carry their own in-pane collapse controls, so a hamburger and a
+   panel toggle in the topbar are two dead controls. Revealed again under the
+   900px band below, where the panes become drawers. */
+body[data-theme=gemini] .rail-open,
+body[data-theme=gemini] .side-open { display: none; }
+body[data-theme=gemini] .lang-btn:hover,
+body[data-theme=gemini] .scheme-btn:hover,
+body[data-theme=gemini] .rail-open:hover,
+body[data-theme=gemini] .side-open:hover { background: var(--rpanel-2); }
+
+/* ============================================================
+   4. Statusbar — reference `.statusbar`, now a real grid row
+   spanning the full width instead of a fixed overlay.
+   ============================================================ */
+body[data-theme=gemini] .statusbar {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 14px;
+  background: var(--statusbar-bg);
+  color: var(--statusbar-fg);
+  font: 600 10px/1 "JetBrains Mono", monospace;
+  letter-spacing: .03em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ============================================================
+   5. Breakpoints — reference 1120 / 860 / 500.
+
+   The 860 band is run at 900 instead: themes.css's own sidebar
+   drawer block fires at max-width:900px (themes.css:306-327), and
+   shell.css leaves that file untouched, so the grid has to collapse
+   on the same line or the layout tears between 860 and 900.
+   ============================================================ */
+@media (max-width: 1120px) {
+  body[data-theme=gemini] { --left: var(--side-w, 198px); --right: var(--rail-w, 280px); }
+  body[data-theme=gemini] .topbar .brand { min-width: 140px; }
+  body[data-theme=gemini] .main-col > main,
+  body[data-theme=gemini] .deskfoot { min-width: 610px; }
+}
+
+@media (max-width: 900px) {
+  body[data-theme=gemini] {
+    --topbar: 54px;
+    --statusbar: 24px;
+  }
+  body[data-theme=gemini] .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--topbar) minmax(0, 1fr) var(--statusbar);
+  }
+  body[data-theme=gemini] .main-col { grid-column: 1; grid-row: 2; }
+  body[data-theme=gemini] .main-col > main,
+  body[data-theme=gemini] .deskfoot { min-width: 0; padding: 14px 12px 20px; }
+  body[data-theme=gemini] .deskfoot { padding: 12px; }
+
+  /* both side panes become fixed drawers between the topbar and the
+     statusbar, per the reference */
+  body[data-theme=gemini] .sidebar,
+  body[data-theme=gemini] .context-rail {
+    position: fixed;
+    top: var(--topbar);
+    bottom: var(--statusbar);
+    height: auto;
+    z-index: 20;
+    width: min(86vw, 272px) !important;
+    /* a drawer slides in flush off the screen edge — the desktop --pane-gap
+       inset would leave a stripe of paper down the outside of it */
+    margin: 0;
+    box-shadow: 0 18px 40px var(--shadow-hard);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  body[data-theme=gemini] .sidebar { inset-inline-start: 0; transform: translateX(-102%); }
+  body[data-theme=gemini] .context-rail { inset-inline-end: 0; transform: translateX(102%); }
+  body[data-theme=gemini] .shell.drawer .sidebar,
+  body[data-theme=gemini] .shell.rail-drawer .context-rail { transform: translateX(0); }
+  body[data-theme=gemini] .shell.drawer .side-backdrop,
+  body[data-theme=gemini] .shell.rail-drawer .rail-backdrop {
+    display: block;
+    position: fixed;
+    inset: var(--topbar) 0 var(--statusbar);
+    z-index: 10;
+    background: var(--backdrop);
+  }
+  body[data-theme=gemini] .topbar { gap: 6px; padding: 0 10px; }
+  /* mobile keeps logo + "Henneth Desk" text together, just smaller — matches
+     desktop lockup instead of swapping to text-only. */
+  body[data-theme=gemini] .topbar .brand { min-width: 0; }
+  body[data-theme=gemini] .topbar .brand-top-mark { height: 20px; }
+  body[data-theme=gemini] .topbar .brand-mobile { display: inline-flex; min-width: 0; margin-inline-end: auto; }
+  body[data-theme=gemini] .searchbtn .sb-label,
+  body[data-theme=gemini] .searchbtn .sb-key { display: none; }
+  body[data-theme=gemini] .searchbtn { width: 30px; min-width: 30px; justify-content: center; padding: 0; }
+  body[data-theme=gemini] .side-open,
+  body[data-theme=gemini] .rail-open { display: grid; }
+}
+
+@media (max-width: 500px) {
+  body[data-theme=gemini] { font-size: 11px; }
+  body[data-theme=gemini] .statusbar { padding: 0 10px; font-size: 9px; }
+}

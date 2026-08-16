@@ -124,7 +124,7 @@ function rehydrateBacktests(v) {
    handful of files that genuinely move inside a cycle keep a short window AND the buster. */
 const TTL_LIVE = 30_000;          // moves intraday — must not be held
 const TTL_DEFAULT = 10 * 60_000;  // rewritten at most once per 30-minute cycle
-const LIVE_FILES = new Set(["live.json", "health.json", "runlog.json", "news.json", "newslog.json"]);
+const LIVE_FILES = new Set(["live.json", "health.json", "runlog.json", "news.json", "newslog.json", "live_triggers.json"]);
 
 async function j(p, ttl) {
   if (ttl == null) ttl = LIVE_FILES.has(p) ? TTL_LIVE : TTL_DEFAULT;
@@ -581,8 +581,8 @@ async function pageBoard() {
 
   const tg = trig?.triggers || [];
   const trigHtml = tg.length ? `<div class="card"><h2>Live triggers</h2><div class="sub">proven patterns firing now · unvetted</div>
-    <table><thead><tr><th>Ticker</th><th>Template</th><th class="r">Price</th><th class="r">Hist</th><th class="r">When</th></tr></thead><tbody>${
-      tg.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(t.ticker)}'"><td><b>${esc(t.ticker)}</b></td><td>${esc(t.template)}</td>
+    <table><thead><tr><th>Ticker</th><th>Strategy</th><th class="r">Price</th><th class="r">Hist</th><th class="r">When</th></tr></thead><tbody>${
+      tg.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(t.ticker)}'"><td><b>${esc(t.ticker)}</b></td><td>${esc(t.name)}</td>
       <td class="r num">${t.price}</td><td class="r num">${Math.round(t.backtest.hit_rate * 100)}%·n${t.backtest.n}</td><td class="r num">${t.ts}</td></tr>`).join("")}</tbody></table></div>` : "";
 
   const heat = Object.entries(q).sort((a, b) => b[1].ret_1d - a[1].ret_1d).map(([s, v]) => {
@@ -603,8 +603,8 @@ async function pageBoard() {
   const posCard = `<div class="card"><h2>Positions</h2><div class="sub"></div>${op.length ? `<table><thead><tr><th>Ticker</th><th class="r">Entry</th><th class="r">Last</th><th class="r">P/L</th><th>Status</th></tr></thead><tbody>${
       op.map(p => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(p.ticker)}'"><td><b>${esc(p.ticker)}</b></td><td class="r num">${p.entry}</td><td class="r num">${p.last_price ?? "—"}</td><td class="r num ${cls(p.unrealized_pct || 0)}">${p.unrealized_pct != null ? sgn(p.unrealized_pct) + "%" : "—"}</td><td>${esc(p.status || "HOLD")}</td></tr>`).join("")}</tbody></table>` : '<div class="empty">Flat — no open positions.</div>'}</div>`;
   const provenCard = `<div class="card"><h2>Proven strategies</h2><div class="sub">cleared backtest + out-of-sample bars · click through</div>
-      <table><thead><tr><th>Ticker</th><th>Template</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
-      sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.template)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
+      <table><thead><tr><th>Ticker</th><th>Strategy</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
+      sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.name)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
   // The universe is the longest block on the board and the least urgent — at two cells per row on
   // a phone it buried predictability and proven strategies under ~60 rows of scrolling, and even on
   // a desktop grid it runs well past the fold. Cap it; wireTiles() sizes the cap to the viewport.
@@ -935,7 +935,7 @@ async function pageToday() {
     <div class="card"><h2>Sectors to watch</h2><div class="sub"></div>
       <table><tbody>${(dr.sectors || []).map(s => `<tr><td><b>${esc(s.name)}</b></td><td>${stanceTag(s.stance)}</td><td class="sub" style="color:var(--ink2)">${esc(tp(s, "why"))}</td></tr>`).join("") || '<tr><td class="empty">—</td></tr>'}</tbody></table></div>
     <div class="card"><h2>Key risks</h2><div class="sub">what would spoil the read</div>
-      <ul style="margin:6px 0 0 16px;line-height:1.7">${tpArr(dr, "risks").map(r => `<li>${esc(r)}</li>`).join("") || "<li class='sub'>none flagged</li>"}</ul>
+      <ul style="margin-top:6px;padding-left:18px;line-height:1.7">${tpArr(dr, "risks").map(r => `<li>${esc(r)}</li>`).join("") || "<li class='sub'>none flagged</li>"}</ul>
       ${(dr.catalysts || []).length ? `<div class="sub" style="margin-top:12px"><b>Catalysts:</b> ${dr.catalysts.map(c => `${esc(c.date)} ${esc(tp(c, "event"))}`).join(" · ")}</div>` : ""}</div>
   </div>
   <div class="seg"><h2>Names on the desk's radar</h2><div class="ln"></div></div>
@@ -1938,6 +1938,16 @@ function applyLang() {
   document.querySelectorAll("[data-nav] span").forEach(s => {
     if (!s.dataset.en) s.dataset.en = s.textContent;
     s.textContent = l === "ur" ? (UR[s.dataset.en] || s.dataset.en) : s.dataset.en;
+  });
+  /* The rail tabs are static markup outside #view, so translateTree — which runs on a page
+     render — never reaches them, and they sat in English while the nav beside them switched.
+     Same snapshot-and-restore shape as the nav above: the English original is stashed once in
+     data-en, which is what makes switching BACK to English work. translateTree only mutates
+     in the Urdu direction, so anything it touched outside a re-rendered subtree would be
+     stuck in Urdu. */
+  document.querySelectorAll("[data-rail-tab]").forEach(b => {
+    if (!b.dataset.en) b.dataset.en = b.textContent;
+    b.textContent = l === "ur" ? (UR[b.dataset.en] || b.dataset.en) : b.dataset.en;
   });
   const badge = document.querySelector(".research-badge");
   if (badge) { if (!badge.dataset.en) badge.dataset.en = badge.textContent; badge.textContent = t(badge.dataset.en); }
@@ -3476,7 +3486,7 @@ async function pageCalendar() {
   <p class="sub" style="margin-bottom:16px">${earnings.length} upcoming results dates · <span class="pill ok">verified</span> = confirmed against a board-meeting notice · <span class="tag">estimate</span> = scraped, pending. The desk won't hold a swing through an unconfirmed results date — earnings gaps blow through stops.</p>
   ${(isSubscribed() ? Object.keys(byMonth).sort() : Object.keys(byMonth).sort().slice(0, 1)).map(m => {
     const label = new Date(m + "-01").toLocaleDateString("en", { month: "long", year: "numeric" });
-    return `<div class="card"><h2 style="font-size:13px">${label}</h2>
+    return `<div class="card cal-month"><h2 style="font-size:13px">${label}</h2>
       <table><thead><tr><th>Date</th><th class="r">In</th><th>Ticker</th><th>Event</th><th class="r">Status</th></tr></thead><tbody>${
       byMonth[m].map(e => `<tr class="clickable" onclick="location.hash='#/ticker/${e.ticker}'">
         <td class="num">${e.date}</td><td class="r">${cdBadge(e.date)}</td><td><b>${e.ticker}</b></td>
@@ -5411,16 +5421,21 @@ function askThreadHtml() {
 }
 function renderAsk() {
   const out = $("ask-out");
-  if (!out) return;
-  out.innerHTML = askThreadHtml();
-  out.scrollTop = out.scrollHeight;
+  if (out) {
+    out.innerHTML = askThreadHtml();
+    out.scrollTop = out.scrollHeight;
+  }
+  window.renderRailAsk?.();
 }
 
 async function askSend(qtext) {
   const inputEl = $("ask-in");
   const text = (qtext ?? inputEl?.value ?? "").trim().slice(0, 500);
   if (!text || _ask.busy) return;
-  if (inputEl) inputEl.value = "";
+  // Only clear the page's own box when the question CAME from it. A rail send
+  // or a sample chip passes qtext, and wiping #ask-in then erased a draft the
+  // user was writing on the Ask page.
+  if (qtext == null && inputEl) inputEl.value = "";
 
   if (LOCAL) { // /api/ask is a Vercel Edge Function — it only exists once deployed
     _ask.history.push({ role: "user", content: text },
@@ -6313,7 +6328,10 @@ function restackTables() {
   // their stacked form. Do it in three passes instead: unstack everything, THEN measure everything
   // (one layout for the lot), THEN stack what needs it. All three run in one synchronous turn, so
   // the intermediate unstacked state is never painted.
-  tables.forEach(t => t.removeAttribute("data-stack"));   // always measure in the unstacked state
+  // Only touch the tables that actually carry the attribute. flush() runs on any body mutation, so
+  // an unconditional strip/reapply churned the DOM on every pass; on a desktop width where nothing
+  // is stacked this now does no writes at all.
+  tables.filter(t => t.hasAttribute("data-stack")).forEach(t => t.removeAttribute("data-stack"));
   if (!narrow) return;
   const need = tables.map(t => {
     const room = t.parentElement.clientWidth;
@@ -6534,6 +6552,9 @@ if (window.MutationObserver) {
     queued = false;
     wireClickables(document); enhanceTables(document); tileify(document);
     restackTables();          // after tileify(): tables must be measured in their FINAL container
+    // icons are attribute-only (no text node) — tag before translateTree rewrites heading text,
+    // or the icon hook is gone by the time translation runs
+    iconify(document);
     translateTree(document.body);
     mo.takeRecords();
   };
@@ -6903,6 +6924,47 @@ const authMsg = (t, bad) => {
   if (m) { m.textContent = t || ""; m.className = "authmsg" + (bad ? " bad" : ""); }
 };
 
+/* ---------- colour scheme control (system / light / dark) ----------
+   Contract: localStorage "deskScheme" is "light", "dark", or ABSENT (= follow OS).
+   A single attribute write on <html>, never on document.body, so it never trips the
+   enhancement MutationObserver (BLINK LAW — that observer watches document.body only). */
+function deskScheme() {
+  try { const v = localStorage.getItem("deskScheme"); return (v === "dark" || v === "light") ? v : "system"; }
+  catch (e) { return "system"; }
+}
+function applyDeskScheme(choice) {
+  try {
+    if (choice === "dark" || choice === "light") localStorage.setItem("deskScheme", choice);
+    else localStorage.removeItem("deskScheme");
+  } catch (e) {}
+  if (choice === "dark" || choice === "light") document.documentElement.setAttribute("data-scheme", choice);
+  else document.documentElement.removeAttribute("data-scheme");
+}
+/* The topbar control. One button that cycles System → Light → Dark, sitting next to the
+   search button so the scheme is never buried inside a menu (and is reachable signed-out). */
+const SCHEME_CYCLE = { system: "light", light: "dark", dark: "system" };
+const SCHEME_ICON = {
+  system: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16z" fill="currentColor" stroke="none"/>',
+  light: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/>',
+  dark: '<path d="M20 14.2A8.2 8.2 0 019.8 4 8.4 8.4 0 1020 14.2z"/>',
+};
+const SCHEME_LABEL = { system: "System", light: "Light", dark: "Dark" };
+function renderSchemeBtn() {
+  const btn = document.getElementById("schemeBtn");
+  if (!btn) return;
+  const cur = deskScheme();
+  const next = SCHEME_CYCLE[cur];
+  btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${SCHEME_ICON[cur]}</svg>`;
+  btn.title = `Theme: ${SCHEME_LABEL[cur]} — click for ${SCHEME_LABEL[next]}`;
+  btn.setAttribute("aria-label", btn.title);
+  btn.setAttribute("data-scheme-state", cur);
+}
+document.getElementById("schemeBtn")?.addEventListener("click", () => {
+  applyDeskScheme(SCHEME_CYCLE[deskScheme()]);
+  renderSchemeBtn();
+});
+renderSchemeBtn();
+
 /* ---------- account button in the topbar ---------- */
 function renderAccountButton() {
   const holder = document.getElementById("acctSlot");
@@ -7261,6 +7323,9 @@ async function toggleWatch(sym, btn) {
   track(adding ? "watchlist_add" : "watchlist_remove", { sym });
   if (adding) await markActivated("watchlist");           // add only — removing isn't the activation moment
   if (location.hash === "#/watchlist") pageWatchlist();   // live-refresh the list view
+  // The rail's Watchlist tab reads the same profile, so it goes stale the
+  // moment a star is toggled from anywhere else on the desk.
+  if (typeof window.refreshRail === "function") window.refreshRail();
 }
 // star button markup (used on ticker pages). onclick wired via delegation below.
 function starBtn(sym) {

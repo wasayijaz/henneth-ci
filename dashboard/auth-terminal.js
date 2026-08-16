@@ -14,7 +14,7 @@
   var HN_MARKUP = `<div class="page">
 
   <nav class="nav">
-    <a href="#" class="nav-brand"><img class="nav-brand-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>&nbsp;DESK</small></a>
+    <a href="#" class="nav-brand"><img class="nav-brand-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>DESK</small></a>
     <div class="nav-right">
       <div class="nav-chip">Research · Not Advice</div>
       <a href="https://henneth.app/" class="nav-back">← Back to site</a>
@@ -1041,7 +1041,7 @@ function hnAuthRun(root, initialTab){
     els.onboardingCopy.textContent = 'Here’s the shape we’ll use for Today. You can edit this setup whenever you want.';
     els.onboardingStep.innerHTML = '<div class="preview-card" data-od-id="onboarding-preview"><div class="preview-head"><strong>' + (onboardingLabels.lens[state.onboardingAnswers.lens] || 'Balanced') + ', ' + (onboardingLabels.horizon[state.onboardingAnswers.horizon] || 'PSX researcher') + '</strong><span>Preview</span></div><div class="preview-body"><div><p><strong>Today:</strong> Macro context first, then quality names and catalysts.</p><p><strong>Radar:</strong> ' + (state.onboardingAnswers.radar.sectors.concat(state.onboardingAnswers.radar.tickers).join(', ') || 'The desk’s current market read') + '</p></div><div><p><strong>Next lesson:</strong> ' + lessonFor(state.onboardingAnswers)[0] + '.</p><p><strong>Starting action:</strong> Review today’s brief and save one name.</p></div></div></div>';
     els.onboardingActions.innerHTML = '<div class="onboarding-links"><button type="button" class="onboarding-link" id="editSetup">Edit my setup</button><button type="button" class="onboarding-link" id="blankDesk">Start with a blank desk</button></div><button type="button" class="onboarding-action primary" id="looksRight">Looks right</button>';
-    els.onboardingActions.querySelector('#looksRight').addEventListener('click', function(){ state.onboarded=true; localStorage.removeItem('henneth-onboarding-draft'); finishOnboarding('confirmed'); returnToSurface(showToday); });
+    els.onboardingActions.querySelector('#looksRight').addEventListener('click', function(){ state.onboarded=true; try{ localStorage.removeItem('henneth-onboarding-draft'); }catch(err){} finishOnboarding('confirmed'); returnToSurface(showToday); });
     els.onboardingActions.querySelector('#editSetup').addEventListener('click', function(){ els.onboardingActions.innerHTML = '<div class="onboarding-links"><button type="button" class="onboarding-link" id="onboardingSkip" data-od-id="onboarding-skip">Skip for now</button><button type="button" class="onboarding-link" id="onboardingSave" data-od-id="onboarding-save">Save and continue later</button><button type="button" class="onboarding-link" id="onboardingKnow" data-od-id="onboarding-know">I already know what I want</button></div><button type="button" class="onboarding-action ghost" id="onboardingBack" data-od-id="onboarding-back" hidden>Back</button><button type="button" class="onboarding-action primary" id="onboardingNext" data-od-id="onboarding-next">Open path</button>'; wireOnboardingActions(); state.onboardingStep=0; renderOnboardingStep(); });
     els.onboardingActions.querySelector('#blankDesk').addEventListener('click', function(){ state.onboardingAnswers = { goal:'everything', lens:'balanced', horizon:'figuring', radar:{sectors:[],tickers:[],source:'market-read'} }; state.onboarded=true; finishOnboarding('blank'); returnToSurface(showToday); });
     setTerminalStatus('Desk preview ready', 75);
@@ -1084,10 +1084,10 @@ function hnAuthRun(root, initialTab){
     els.onboardingSave = document.getElementById('onboardingSave');
     els.onboardingNext.addEventListener('click', function(){ if(els.onboardingNext.disabled) return; if(state.onboardingStep < 3){ state.onboardingStep += 1; renderOnboardingStep(); } else { prepareDesk(); } });
     if (els.onboardingBack) els.onboardingBack.addEventListener('click', function(){ if(state.onboardingStep === 0) return; state.onboardingStep -= 1; renderOnboardingStep(); var key=onboardingQuestions[state.onboardingStep].key; if(state.onboardingAnswers[key]) applyOnboardingSignal(key,state.onboardingAnswers[key]); persistOnboarding(); });
-    els.onboardingSkip.addEventListener('click', function(){ state.onboarded=true; state.onboardingAnswers={goal:'everything',lens:'balanced',horizon:'figuring',radar:{sectors:[],tickers:[],source:'market-read'}}; localStorage.setItem('henneth-onboarding-skipped','1'); finishOnboarding('skipped'); returnToSurface(showToday); });
+    els.onboardingSkip.addEventListener('click', function(){ state.onboarded=true; state.onboardingAnswers={goal:'everything',lens:'balanced',horizon:'figuring',radar:{sectors:[],tickers:[],source:'market-read'}}; try{ localStorage.setItem('henneth-onboarding-skipped','1'); }catch(err){} finishOnboarding('skipped'); returnToSurface(showToday); });
     els.onboardingSave.addEventListener('click', function(){ persistOnboarding(); state.onboarded=true; finishOnboarding('saved'); returnToSurface(showToday); });
     var know = document.getElementById('onboardingKnow');
-    if(know) know.addEventListener('click', function(){ state.onboarded=true; state.onboardingAnswers={goal:'everything',lens:'balanced',horizon:'figuring',radar:{sectors:[],tickers:[],source:'market-read'}}; localStorage.removeItem('henneth-onboarding-draft'); finishOnboarding('skipped'); returnToSurface(showToday); });
+    if(know) know.addEventListener('click', function(){ state.onboarded=true; state.onboardingAnswers={goal:'everything',lens:'balanced',horizon:'figuring',radar:{sectors:[],tickers:[],source:'market-read'}}; try{ localStorage.removeItem('henneth-onboarding-draft'); }catch(err){} finishOnboarding('skipped'); returnToSurface(showToday); });
   }
   wireOnboardingActions();
 

@@ -1,0 +1,454 @@
+/* ============================================================
+   PRODUCTION STYLESHEET — the motion layer.
+
+   Everything the desk already animates, it animates at
+   --dur-fast (120ms) with --ease-out. That reads as "fast", not as
+   "smooth": 120ms is short enough that the eye registers a state
+   FLIP rather than a movement, and the panes/menus that carry the
+   most weight (a 224px column, a popover) need longer than a hover
+   colour change to feel like they moved rather than teleported.
+
+   Claude/Codex-desktop motion is three things, and this sheet is
+   those three things applied desk-wide:
+
+     1. Duration scaled to travel. A colour swap stays quick; a pane
+        that crosses 224px takes ~220ms; an overlay takes ~260ms.
+     2. One easing family, decelerating. Everything lands softly
+        instead of stopping dead — that is the whole "premium" feel.
+     3. Press feedback. Every clickable surface acknowledges the
+        pointer going DOWN, not only the hover and the result.
+
+   Linked from dashboard/index.html last among the stylesheets, so
+   it wins on source order against themes.css and the other sheets
+   loaded before it — no !important anywhere, with exactly one
+   sanctioned exception: the prefers-reduced-motion block in section 0.
+   That block has to outrank every rule in this sheet AND in themes.css
+   by design, and a media query adds no specificity, so it is the one
+   place where source order cannot do the job.
+
+   Scope note: motion only. This sheet sets no colour, no size, no
+   spacing, no border and no radius, so it cannot move the layout
+   that the other sheets settled. This is a production stylesheet,
+   not a prototype.
+   ============================================================ */
+
+body[data-theme=gemini] {
+  /* the travel-scaled ladder. --dur-fast stays as themes.css set it
+     so existing hover transitions keep their snap. */
+  --mo-hover: 140ms;   /* colour / border on a control under the cursor */
+  --mo-move:  220ms;   /* a pane, a track, a drawer — real distance */
+  --mo-lift:  260ms;   /* an overlay or popover entering over content */
+  --mo-press: 90ms;    /* the pointer-down acknowledgement, deliberately
+                          faster than the release so it feels crisp */
+
+  /* one decelerating family. --ease-out (.23,1,.32,1) is already the
+     desk's curve; --mo-soft is its gentler sibling for long travel,
+     where .23,1 overshoots into a visible snap at the end. */
+  --mo-ease: var(--ease-out);
+  --mo-soft: cubic-bezier(.32, .72, 0, 1);
+}
+
+/* ------------------------------------------------------------
+   0. The one rule that outranks every rule below.
+
+   Motion this pervasive is exactly what a vestibular-disorder user
+   turns off at the OS. Durations go to ~0 rather than `none` so a
+   transitionend listener still fires and nothing that waits on one
+   can hang.
+
+   !important is required here and only here. The selector is
+   `body[data-theme=gemini] *` = (0,1,1) — the universal selector adds
+   nothing — while every rule it has to neutralise is heavier and later:
+   `.shell` and `.side-peek` below are (0,2,1), `#view .card` / `#view
+   .tile` are (1,2,1), and all of themes.css is (0,2,1). Without the
+   flag this block changes nothing on the page and the opt-out is a
+   comment rather than a behaviour.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme=gemini] *,
+  body[data-theme=gemini] *::before,
+  body[data-theme=gemini] *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   1. The shell — panes, tracks, drawer
+   ============================================================ */
+
+/* the column track is the single longest travel in the app (224px).
+   shell.css:57 already transitions it; this is the same
+   property retuned from 120ms/--ease-out to the travel-scaled pair.
+   The .resizing / :not(.side-ready) guards at shell.css:60-62
+   still kill it during a drag and on first paint — they set
+   `transition:none` on the same element, and they load earlier but
+   are more specific in intent, so they are re-stated here to be sure
+   a longer duration cannot make a drag feel laggy.
+
+   :not(.rail-ready) belongs in that list too. rail.js:74 stamps
+   .rail-ready once it has restored the saved rail width/collapse state,
+   exactly as app.js:6748 stamps .side-ready for the left pane. Without
+   the second guard the restored --rail-w lands one frame after paint and
+   the right column visibly slides to its saved width on every load. */
+body[data-theme=gemini] .shell {
+  transition: grid-template-columns var(--mo-move) var(--mo-soft);
+}
+body[data-theme=gemini] .shell.resizing,
+body[data-theme=gemini] .shell.rail-resizing,
+body[data-theme=gemini] .shell:not(.side-ready),
+body[data-theme=gemini] .shell:not(.rail-ready) {
+  transition: none;
+}
+
+/* The rail collapses to a 68px icon track rather than vanishing, so its
+   body can fade out behind the closing column — the text recedes and the
+   column follows, instead of the words being visibly squeezed.
+
+   The SIDEBAR deliberately gets no equivalent rule: shell.css
+   turns it `display:none` when collapsed (that is the ChatGPT-style
+   vanish the peek glyph exists for), and an opacity transition on a
+   display:none element never renders a frame. Its motion is the track
+   closing plus moPeekIn on the glyph.
+
+   The rail body used to hit that same trap: rail.css collapsed it
+   with `display:none`, so this fade could never paint a frame. That sheet
+   now hides it with visibility:hidden instead — out of the accessibility
+   tree and out of hit-testing just the same, but able to fade first. The
+   hiding stays there because it is layout state; all this sheet owns is
+   the timing. `visibility` is discrete, and a transition on a discrete
+   property flips at the END of its duration, so the delay that holds the
+   body visible through the fade-out belongs on the collapsed rule, and
+   the undelayed flip back belongs on the base rule. */
+body[data-theme=gemini] .rail-body {
+  transition: opacity var(--mo-move) var(--mo-soft),
+              visibility 0s linear,
+              scrollbar-color var(--mo-move) var(--mo-ease);
+}
+body[data-theme=gemini] .shell.rail-collapsed .rail-body {
+  opacity: 0;
+  transition: opacity var(--mo-move) var(--mo-soft),
+              visibility 0s linear var(--mo-move);
+}
+
+/* the floating peek glyph is the only thing left when the pane is
+   gone, so it should arrive rather than appear. It enters from the
+   edge the pane left through. */
+body[data-theme=gemini] .side-peek {
+  transition: border-color var(--mo-hover) var(--mo-ease),
+              background var(--mo-hover) var(--mo-ease),
+              color var(--mo-hover) var(--mo-ease),
+              box-shadow var(--mo-hover) var(--mo-ease),
+              transform var(--mo-press) var(--mo-ease),
+              opacity var(--mo-press) var(--mo-ease);
+}
+/* fill is `backwards`, not `both`. A filled FORWARDS value outranks a
+   normal-priority declaration for as long as it is held, and moPeekIn
+   ends on `transform: none` — with `both` the glyph would hold that for
+   the entire time the sidebar is collapsed, which is the only time the
+   glyph exists, so the :active press below would never render. Dropping
+   the fill entirely is not the answer either: without the backwards
+   half the glyph paints one frame at full opacity before the animation
+   starts. `backwards` keeps the from-state and releases the element the
+   moment it lands. */
+body[data-theme=gemini] .shell.collapsed .side-peek {
+  animation: moPeekIn var(--mo-move) var(--mo-soft) backwards;
+}
+/* same press values as every other control (see section 2) — the glyph is
+   not a special case just because it floats. */
+body[data-theme=gemini] .side-peek:active { transform: scale(.97); opacity: .9; }
+
+@keyframes moPeekIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* the mobile drawer already slides (themes.css:313) but at
+   --dur-base with --ease-out; a full-height panel crossing 236px is
+   the same travel class as the desktop track.
+
+   Both drawers, not just the left one. shell.css:574-587 gives
+   .sidebar and .context-rail identical fixed-drawer treatment off the
+   same transition; retuning only one leaves two panes of the same width
+   moving on two different curves in the same app, and --ease-out is the
+   one that overshoots into a visible snap at this distance.
+
+   Both backdrops come with them. shell.css toggles each one from
+   `display:none` to `display:block`, which no TRANSITION can render — but
+   an ANIMATION on a newly-displayed element runs from its first frame, so
+   the scrim fades in properly without either sheet having to restructure
+   the toggle. A drawer that slides over an instantly-black scrim looks
+   like two unrelated events; moScrimIn (section 5) ties them together.
+
+   The `.shell` in the selector is load-bearing, not decoration. Section
+   7 below sets a `transition` SHORTHAND on `.sidebar` at (0,2,1) and it
+   comes later in this file, so a plain `.sidebar` here would be wiped
+   out at ≤900px and the drawer would jump. `.shell .sidebar` is (0,3,1)
+   and survives. */
+@media (max-width: 900px) {
+  body[data-theme=gemini] .shell .sidebar,
+  body[data-theme=gemini] .shell .context-rail {
+    transition: transform var(--mo-move) var(--mo-soft),
+                opacity var(--mo-move) var(--mo-soft);
+  }
+  body[data-theme=gemini] .shell.drawer .side-backdrop,
+  body[data-theme=gemini] .shell.rail-drawer .rail-backdrop {
+    animation: moScrimIn var(--mo-move) var(--mo-soft) backwards;
+  }
+}
+
+/* ============================================================
+   2. Controls — the press acknowledgement
+
+   The desk's buttons currently change colour on hover and nothing
+   at all on pointer-down. Adding a 1px settle on :active is the
+   single cheapest thing that makes a click feel physical.
+   ============================================================ */
+body[data-theme=gemini] .btn,
+body[data-theme=gemini] .btn-ghost,
+body[data-theme=gemini] .searchbtn,
+body[data-theme=gemini] .lang-btn,
+body[data-theme=gemini] .mini-select,
+body[data-theme=gemini] .side-toggle,
+body[data-theme=gemini] .tabadd-btn,
+body[data-theme=gemini] .tstrip-close,
+body[data-theme=gemini] .tile-collapse,
+body[data-theme=gemini] .quiet-btn,
+body[data-theme=gemini] .rail-toggle {
+  transition: background var(--mo-hover) var(--mo-ease),
+              color var(--mo-hover) var(--mo-ease),
+              border-color var(--mo-hover) var(--mo-ease),
+              box-shadow var(--mo-hover) var(--mo-ease),
+              transform var(--mo-press) var(--mo-ease),
+              opacity var(--mo-press) var(--mo-ease);
+}
+/* ONE press idiom desk-wide, and it is themes.css's, not a second one.
+   themes.css:1706-1710 already presses a broad list — including bare
+   `button:active` — with `scale(.97); opacity:.9`, and that file is live
+   and uneditable. A competing translateY(1px) here would not replace it,
+   it would only win on the handful of selectors listed below and leave
+   every other control pressing the other way; two metaphors for one
+   gesture is worse than either alone. So this block restates the SAME
+   values and exists only to extend the idiom to the Stage-A controls
+   themes.css never listed (and to non-button elements like an <a class=
+   "btn">, which its `button:active` clause does not reach). The
+   transition above is what this sheet actually contributes: themes.css
+   snaps the press, this eases it at --mo-press. */
+body[data-theme=gemini] .btn:active,
+body[data-theme=gemini] .btn-ghost:active,
+body[data-theme=gemini] .searchbtn:active,
+body[data-theme=gemini] .lang-btn:active,
+body[data-theme=gemini] .side-toggle:active,
+body[data-theme=gemini] .tabadd-btn:active,
+body[data-theme=gemini] .tstrip-close:active,
+body[data-theme=gemini] .tile-collapse:active,
+body[data-theme=gemini] .quiet-btn:active,
+body[data-theme=gemini] .rail-toggle:active,
+body[data-theme=gemini] .research-tab:active,
+body[data-theme=gemini] .tstrip-tab:active {
+  transform: scale(.97);
+  opacity: .9;
+}
+
+/* focus is a state change too — it should ease in with everything
+   else rather than being the one thing that snaps. */
+body[data-theme=gemini] :focus-visible {
+  transition: outline-color var(--mo-hover) var(--mo-ease),
+              box-shadow var(--mo-hover) var(--mo-ease);
+}
+
+/* ============================================================
+   3. Navigation — nav rows, tab strip, page tabs
+   ============================================================ */
+
+/* themes.css:111 transitions background and colour only, so the 3px
+   active accent bar pops in with no travel. Adding border-colour to
+   the list makes the accent grow into place with the row tint.
+
+   `padding-inline-start` is deliberately NOT in the list. It is a layout
+   property: every frame of it re-runs layout for the row and everything
+   after it, and this is the highest-traffic control in the app — 23 nav
+   rows the pointer crosses constantly. transform and opacity are the two
+   properties the compositor can animate without touching layout or
+   paint, and themes.css:1709 already presses these rows with
+   `scale(.97); opacity:.9`, so putting both on the ladder eases the
+   press that is already there instead of inventing a second effect. */
+body[data-theme=gemini] .side-nav a {
+  transition: background var(--mo-hover) var(--mo-ease),
+              color var(--mo-hover) var(--mo-ease),
+              border-color var(--mo-hover) var(--mo-ease),
+              transform var(--mo-press) var(--mo-ease),
+              opacity var(--mo-press) var(--mo-ease);
+}
+
+body[data-theme=gemini] .tstrip-tab,
+body[data-theme=gemini] .tstrip-tab a,
+body[data-theme=gemini] .rail-tab,
+body[data-theme=gemini] .research-tab,
+body[data-theme=gemini] .ttabs button {
+  transition: background var(--mo-hover) var(--mo-ease),
+              color var(--mo-hover) var(--mo-ease),
+              border-color var(--mo-hover) var(--mo-ease),
+              box-shadow var(--mo-hover) var(--mo-ease),
+              transform var(--mo-press) var(--mo-ease);
+}
+
+/* a tab arriving in the strip should slide in from where it was
+   opened rather than push its neighbours instantly.
+
+   Fill is `backwards` for the same reason as moPeekIn: a held forwards
+   `transform: none` would outrank the :active press above. Only a
+   genuinely NEW tab animates: topbar.js renderTabs() reconciles
+   the strip node-by-node (keyed on data-href) instead of reassigning
+   innerHTML, so a tab that merely stayed open across a navigation keeps
+   its element and never restarts this animation. */
+body[data-theme=gemini] .tstrip-tab {
+  animation: moTabIn var(--mo-hover) var(--mo-ease) backwards;
+}
+@keyframes moTabIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   4. Surfaces — cards, tiles, rows
+
+   The retuned card/tile hover (pages.css:37, board.css:101)
+   changes border-colour and shadow. Without a transition
+   on box-shadow the lift is instant while the border eases — two
+   halves of one effect running at different speeds, which is the
+   most visible cheapness in the current build.
+   ------------------------------------------------------------ */
+body[data-theme=gemini] #view .card,
+body[data-theme=gemini] #view .tile,
+body[data-theme=gemini] #view .cell,
+body[data-theme=gemini] #view .gtile,
+body[data-theme=gemini] #view .comm-card,
+body[data-theme=gemini] #view .sc-tile,
+body[data-theme=gemini] .rail-hist-item,
+body[data-theme=gemini] .rail-related-item,
+body[data-theme=gemini] .rail-note {
+  transition: background var(--mo-hover) var(--mo-ease),
+              border-color var(--mo-hover) var(--mo-ease),
+              box-shadow var(--mo-hover) var(--mo-ease);
+}
+
+/* the note pin/delete reveal is NOT retuned here. The class this sheet
+   used to target — .rail-note-actions — exists nowhere; the JS emits
+   .rail-note-acts, and rail.css:316 already eases that opacity
+   reveal. Restating it here would be a second transition declaration
+   for the same property on the same element; if the duration wants
+   moving onto this ladder, it moves in rail.css:316. */
+
+/* a page's content should settle in rather than replace itself. This
+   is on #view's children, not #view, so a re-render of one section
+   does not re-animate the whole page. */
+body[data-theme=gemini] #view > * {
+  animation: moViewIn var(--mo-lift) var(--mo-soft) both;
+}
+@keyframes moViewIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   5. Overlays and popovers
+
+   themes.css enters these with `fadeIn var(--dur-fast)` — opacity
+   only, 120ms. A popover that only fades has no direction; adding a
+   short rise gives it an origin, which is what makes the .acct-menu
+   feel anchored to the control that opened it.
+
+   The "+" launcher is NOT in this list. It is a scrim + dialog, not an
+   anchored popover — .tabadd-scrim / .tabadd-panel are covered by the
+   scrim/dialog pair further down, and topbar.css:144-166 already
+   enters them on the .searchbox idiom. The old .tabadd-menu class the
+   line above used to name no longer exists in any layer.
+   ============================================================ */
+body[data-theme=gemini] .acct-menu,
+body[data-theme=gemini] .combo-pop {
+  animation: moMenuIn var(--mo-hover) var(--mo-ease) both;
+  transform-origin: top center;
+}
+@keyframes moMenuIn {
+  from { opacity: 0; transform: translateY(-5px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+body[data-theme=gemini] .searchbox,
+body[data-theme=gemini] .pl-overlay,
+body[data-theme=gemini] .replay-overlay,
+body[data-theme=gemini] .authbox {
+  animation: moScrimIn var(--mo-lift) var(--mo-soft) both;
+}
+@keyframes moScrimIn { from { opacity: 0; } to { opacity: 1; } }
+
+body[data-theme=gemini] .searchbox .searchpanel,
+body[data-theme=gemini] .pl-box,
+body[data-theme=gemini] .authpanel {
+  animation: moDialogIn var(--mo-lift) var(--mo-soft) both;
+}
+@keyframes moDialogIn {
+  from { opacity: 0; transform: translateY(10px) scale(.99); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   6. Disclosure — carets, chevrons, expanding rows
+   ============================================================ */
+body[data-theme=gemini] .fvrow .fvcaret,
+body[data-theme=gemini] .dict-arrow,
+body[data-theme=gemini] .side-toggle svg,
+body[data-theme=gemini] .tile-collapse svg {
+  transition: transform var(--mo-hover) var(--mo-soft);
+}
+
+/* a section that opens should unfold, not appear. max-height is the
+   only animatable stand-in for auto height without measuring in JS;
+   the ceiling is generous so it never clips a long section, at the
+   cost of the open easing slightly fast on short ones. */
+body[data-theme=gemini] #view .fvwork,
+body[data-theme=gemini] .sec-wrap.open .sec-list {
+  animation: moUnfold var(--mo-move) var(--mo-soft) both;
+}
+@keyframes moUnfold {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   7. Scrollbars — the hover-reveal already in the shell sheet gets
+   a fade so the bar does not flash in under the cursor.
+
+   The targets are the elements that actually scroll, per
+   shell.css:98-109: .sidebar, .main-col and .rail-body.
+   .main-col > main (#view) is not a scroll container — .main-col is —
+   and .context-rail is overflow:hidden, so it has no bar to fade;
+   its scrollbar lives one level in, on .rail-body. Each compound needs
+   its own theme prefix; a bare `.context-rail` in the list matched
+   outside the theme as well as inside it. .rail-body is not repeated
+   here — it already carries a transition shorthand in section 1, and a
+   second shorthand on the same element would replace the first rather
+   than add to it, so scrollbar-color joined that list instead.
+
+   Nothing but scrollbar-color belongs in this list. An `opacity` entry
+   here changed nothing (neither pane's opacity ever moves) but it did
+   overwrite the deliberate `transition: none` that shell.css
+   puts on .sidebar and .context-rail — those are floating panes inside
+   an animating grid track, and the track is what moves, not the pane.
+   Overwriting the whole shorthand deletes that guard, so it is
+   re-stated below for the drag and first-paint states. */
+body[data-theme=gemini] .sidebar,
+body[data-theme=gemini] .main-col {
+  transition: scrollbar-color var(--mo-move) var(--mo-ease);
+}
+body[data-theme=gemini] .shell.resizing .sidebar,
+body[data-theme=gemini] .shell.rail-resizing .sidebar,
+body[data-theme=gemini] .shell:not(.side-ready) .sidebar,
+body[data-theme=gemini] .shell.resizing .main-col,
+body[data-theme=gemini] .shell.rail-resizing .main-col,
+body[data-theme=gemini] .shell:not(.side-ready) .main-col {
+  transition: none;
+}

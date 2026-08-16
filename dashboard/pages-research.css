@@ -1,0 +1,158 @@
+/* ============================================================
+   RESEARCH GROUP — per-page density pass.
+   Pages: strategies, value, screener, compare, scenarios,
+   research, sectors, leaderboard.
+
+   Container outline/inset are already retuned desk-wide by
+   pages.css (Board's 1px --rhair box + 14px inset). This
+   sheet goes after the second half of the owner's complaint: pages
+   that have too many separate boxed tiles for the eye to sort, or a
+   bordered thing nested inside another bordered thing. It touches
+   outline weight only where a sub-block INSIDE a card is still
+   drawn at the old 1.5px --line weight that pages.css never
+   reaches, because that heavier inner box is itself the clutter.
+
+   Selectors: body[data-theme=gemini] #view <selector>, no
+   !important, tokens only, hard corners untouched, no font-family.
+   Loaded after pages.css so it wins on source order.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Strategies — lighten the heavy sub-blocks inside the cards
+   ------------------------------------------------------------
+   Per-stock result cards are each their own `.card` with a
+   `.sb-res-head` band and a single table — that's the same
+   one-tile-per-subject shape Board itself uses, not clutter, so the
+   page-level layout stays as is. What does need a rule is the
+   sub-blocks: `.dict` (themes.css:1475), `.how` (1498),
+   `.room-transcript` (1506) and `.testlog` (1538) are all drawn at
+   1.5px solid --line — the old heavy tone — so each one lands as a
+   darker, thicker box sitting inside a card whose own outline is now
+   1px --rhair. The dictionary at least hides behind a <details>
+   until asked for, but `.how` and `.testlog` are never collapsed and
+   are on screen the whole time. Sectors' `.sec-list` (themes.css:895)
+   is the same construction, so it rides along here rather than
+   getting a near-identical rule of its own further down. Matching
+   the ambient hairline is enough: these are inner sections, not
+   competing tiles, and the card around them already carries the box. */
+body[data-theme=gemini] #view .dict,
+body[data-theme=gemini] #view .how,
+body[data-theme=gemini] #view .testlog,
+body[data-theme=gemini] #view .room-transcript,
+body[data-theme=gemini] #view .sec-list {
+  border-width: 1px;
+  border-color: var(--rhair);
+}
+
+/* ------------------------------------------------------------
+   Value — de-nest the four-model working
+   ------------------------------------------------------------
+   Opening a row's working (`.fvwork`) already sets it apart with
+   its own `--panel2` background and a `.fvhdr` label. Inside that,
+   `.fvmethods` used to draw ANOTHER box — its own 1px border plus a
+   `--hair` background standing in for cell dividers — around the
+   four `.fvm` method tiles. That's a bordered grid inside an
+   already-set-apart panel inside an expanded table row inside a
+   bordered card: four layers of "this is a box" for what is really
+   one small stat row. Dropping the inner border/background and
+   letting the wider gap and each tile's own uppercase label do the
+   separating turns it into one flat row of numbers, which is all
+   it ever needed to be. */
+body[data-theme=gemini] #view .fvmethods {
+  border: 0;
+  background: transparent;
+  gap: var(--tile-pad);
+}
+body[data-theme=gemini] #view .fvm {
+  background: transparent;
+  padding: 0;
+}
+/* The row divider under an expanded working (`.fvdetail>td`) was
+   drawn a half-step heavier (1.5px solid --line) than every other
+   hairline in the same table body (1px dotted --hair, themes.css
+   td rule) — the one row that visually "changed weight" as you
+   opened it. Matching the ambient hairline keeps the open/closed
+   states reading as the same table, not two different ones. */
+body[data-theme=gemini] #view .fvdetail > td {
+  border-bottom: 1px solid var(--rhair);
+}
+
+/* ------------------------------------------------------------
+   Screener — no rule needed.
+   ------------------------------------------------------------
+   One query card (input, parsed chips, samples) followed by one
+   results table. There's no nested box and no nowhere-to-land tile
+   sprawl here already — the plain-English framing means the whole
+   page is deliberately down to two tiles. */
+
+/* ------------------------------------------------------------
+   Compare — no rule needed.
+   ------------------------------------------------------------
+   One card to add names, one table to read them side by side.
+   Already the leanest page in the group. */
+
+/* ------------------------------------------------------------
+   Scenarios — turn a stack of boxed tiles into one divided list
+   ------------------------------------------------------------
+   Each sector result under a scenario used to be its own fully
+   bordered `.sc-tile`, stacked with a small top margin — a column
+   of N separate little boxes competing for the eye instead of one
+   list to scan down. The up/down read was already carried by the
+   3px coloured `border-inline-start` accent (untouched below), so
+   the surrounding box was pure duplication. Replacing the box with
+   a single bottom hairline turns the column into one continuous,
+   easy-to-scan list, the same way `.rdoc` rows read on Research. */
+body[data-theme=gemini] #view .sc-tile {
+  border-block-start: 0;
+  border-inline-end: 0;
+  border-block-end: 1px solid var(--rhair);
+  margin-top: 0;
+  padding-block: 9px;
+}
+body[data-theme=gemini] #view .sc-tile:last-child {
+  border-block-end: 0;
+}
+
+/* ------------------------------------------------------------
+   Research — no rule needed.
+   ------------------------------------------------------------
+   `.rdoc` rows already separate on a dotted hairline with no
+   background or border box around any one document — the pattern
+   the Scenarios fix above is copying. Nothing to change. */
+
+/* ------------------------------------------------------------
+   Sectors — no rule needed.
+   ------------------------------------------------------------
+   `.sec-list` is lightened in the shared sub-block rule at the top
+   of this sheet; nothing else on the page needs a density fix. The
+   house/for/against tiles are each a `.card`, so they already get
+   Board's single-outline treatment, and the members table is one
+   table, not several.
+
+   The outline-precedence bug this section used to defer — each tile's
+   2px top accent (themes.css:913) being flattened to 1px by the
+   blanket `#view .card` border shorthand, which cost the house tile
+   its band and the for/against tiles their colour — is now fixed at
+   pages.css:67-69, next to the rule that caused it. Nothing
+   is left for this sheet: the house tile needs only the width back,
+   since --hair already resolves to --rhair (palette.css:24). */
+
+/* ------------------------------------------------------------
+   Leaderboard — quiet the repeated broker table headers
+   ------------------------------------------------------------
+   "Brokers — ranked" stacks one full <table> per broker directly
+   inside a single card, each with its own <thead> drawn at the
+   page's full table-header weight (1.5px solid --line, themes.css's
+   global th rule) — a heavy divider repeating every few rows,
+   which is what makes a ranked list of a handful of brokers read
+   like a pile of separate widgets. `table + table` only matches
+   here — this group has no other page that stacks bare tables
+   directly inside one card — so lightening every header after the
+   first to the ambient hairline lets the tables read as one
+   continuous ranking with named sections, not N separate tables. */
+body[data-theme=gemini] #view .card table + table {
+  margin-top: 4px;
+}
+body[data-theme=gemini] #view .card table + table thead th {
+  border-bottom: 1px solid var(--rhair);
+}

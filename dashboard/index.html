@@ -18,6 +18,7 @@
      Marketing SEO belongs to henneth.app. Flip this only if the desk ever serves real public
      content at real crawlable URLs. -->
 <meta name="robots" content="noindex, follow">
+<script>try{var s=localStorage.getItem("deskScheme");if(s==="dark"||s==="light")document.documentElement.setAttribute("data-scheme",s);}catch(e){}</script>
 <link rel="canonical" href="https://desk.henneth.app/">
 
 <!-- Social cards. The desk gets shared in DMs and groups far more than it gets crawled, so the
@@ -54,6 +55,28 @@
 <!-- The login / onboarding terminal. Every selector sits under `.hn-auth`, so it can only
      paint while HennethAuthTerminal is mounted and never leaks into the desk itself. -->
 <link rel="stylesheet" href="auth-terminal.css">
+<!-- auth-terminal.css is GENERATED from the design source — never hand-edit it. auth-bridge.css
+     holds the hand-written rules for the nodes app.js grafts on (name field, inline errors,
+     captcha mount, status banner) that the design file has no equivalent for. -->
+<link rel="stylesheet" href="auth-bridge.css">
+
+<!-- The desk shell. These load AFTER themes.css on purpose: every rule below is written at the
+     same `body[data-theme=gemini] .x` specificity themes.css uses, so source order is what wins
+     and nothing needs !important. Order matters within the group too — palette defines the
+     tokens the rest read, shell lays the grid the panels sit in, and motion is last so it can
+     time transitions on rules the earlier sheets declare. -->
+<link rel="stylesheet" href="palette.css">
+<link rel="stylesheet" href="rail.css">
+<link rel="stylesheet" href="topbar.css">
+<link rel="stylesheet" href="shell.css">
+<link rel="stylesheet" href="board.css">
+<link rel="stylesheet" href="pages.css">
+<link rel="stylesheet" href="pages-workspace.css">
+<link rel="stylesheet" href="pages-research.css">
+<link rel="stylesheet" href="pages-markets.css">
+<link rel="stylesheet" href="pages-tools.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="motion.css">
 
 <!-- Google tag (gtag.js) — the SAME measurement ID as henneth.app, deliberately.
      henneth.app and desk.henneth.app share a root domain, so GA4's default `auto` cookie domain
@@ -176,28 +199,27 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
 <div class="shell" id="shell">
   <aside class="sidebar" id="sidebar">
     <div class="side-top">
-      <!-- alt="" on purpose: the wordmark beside it already names the product, so a described
-           image would make a screen reader announce "Henneth Desk" twice. The text is wrapped in
-           its own span so the collapsed sidebar can drop the words and keep the mark as the icon. -->
-      <a class="brand" href="#/today"><img class="brand-mark" src="logo-mark.svg" alt="" width="535" height="472" decoding="async"><span class="brand-txt">Henneth <em>Desk</em></span></a>
-      <!-- Collapsed, this button IS the desk mark: the rail has no room for a wordmark, and an
-           orphan chevron over a column of icons reads like a stray control rather than a header.
-           The chevron returns on hover/focus, so the affordance is still there the moment you
-           reach for it. Both children live in the DOM and swap in CSS — no JS, so the swap cannot
-           desync from the collapsed state. -->
+      <!-- Not a link and not the product wordmark: the brand already lives in the topbar, and
+           repeating it here made a screen reader announce "Henneth Desk" twice on every page. This
+           labels the COLUMN — which workspace the nav below belongs to — the way a document pane
+           header does. The <small> carries the market so the heading stays one short line. -->
+      <span class="side-heading"><svg class="side-mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><path d="M9 4v16"/></svg>Workspace<small>PSX</small></span>
+      <!-- Chevron only. The desk mark used to double as this button's collapsed face, but with the
+           heading above carrying its own icon, a second mark stacked over it read as two logos. -->
       <button class="side-toggle" id="sideToggle" aria-label="Collapse menu" title="Collapse menu">
-        <img class="toggle-mark" src="logo-mark.svg" alt="" width="535" height="472" decoding="async">
         <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
       </button>
     </div>
     <nav class="side-nav">
-      <a class="nav-learn" href="#/learn" data-nav="learn" title="Learn"><svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3-9 3zM3 6v8M7 9v6l5 2 5-2V9"/></svg><span>Learn</span></a>
-      <a href="#/ask" data-nav="ask" title="Ask the desk"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M9 9h6M9 13h4"/></svg><span>Ask</span></a>
-      <a href="#/today" data-nav="today" title="Today"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Today</span></a>
-      <a href="#/board" data-nav="board" title="Board"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Board</span></a>
-
+      <!-- Four groups, no loose links above them. The old shape had Learn/Ask/Today/Board floating
+           free at the top, which read as "these four are special" when they are not — Today and
+           Board are just where you start, and Learn and Ask are tools. Every link is now inside the
+           group that answers "what am I doing here": my own desk, the work of forming a view, the
+           market itself, and the things you reach for on the side. -->
       <div class="side-group">
-        <div class="side-head">You</div>
+        <div class="side-head">Workspace</div>
+        <a href="#/today" data-nav="today" title="Today"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Today</span></a>
+        <a href="#/board" data-nav="board" title="Board"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Board</span></a>
         <a href="#/watchlist" data-nav="watchlist" title="Watchlist"><svg viewBox="0 0 24 24"><path d="M12 3l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18l-5.9 3 1.2-6.5L2.5 9.9 9.1 9z"/></svg><span>Watchlist</span></a>
         <a href="#/portfolio" data-nav="portfolio" title="Portfolio"><svg viewBox="0 0 24 24"><path d="M3 13h4l3 7 4-14 3 7h4"/></svg><span>Portfolio</span></a>
         <a href="#/mychart" data-nav="mychart" title="Your Chart"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>Your Chart</span></a>
@@ -205,7 +227,7 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
       </div>
 
       <div class="side-group">
-        <div class="side-head">Edge</div>
+        <div class="side-head">Research</div>
         <a href="#/strategies" data-nav="strategies" title="Strategies"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6"/></svg><span>Strategies</span></a>
         <a href="#/value" data-nav="value" title="Value"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 006 0zM17 7l-3 6a3 3 0 006 0z"/></svg><span>Value</span></a>
         <a href="#/screener" data-nav="screener" title="Screener"><svg viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></svg><span>Screener</span></a>
@@ -213,22 +235,37 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
         <a href="#/scenarios" data-nav="scenarios" title="Scenarios"><svg viewBox="0 0 24 24"><path d="M3 19h18M5 19V9l4 3 4-7 4 5 2-2v11"/></svg><span>Scenarios</span></a>
         <a href="#/research" data-nav="research" title="Research"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg><span>Research</span></a>
         <a href="#/sectors" data-nav="sectors" title="Sectors"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg><span>Sectors</span></a>
-        <a href="#/market" data-nav="market" title="Marketplace"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 11H4.5zM3 9l2-5h14l2 5M9 13v3M15 13v3"/></svg><span>Marketplace</span></a>
         <a href="#/leaderboard" data-nav="leaderboard" title="Scores"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/></svg><span>Scores</span></a>
       </div>
 
       <div class="side-group">
-        <div class="side-head">Market</div>
+        <div class="side-head">Markets</div>
         <a href="#/news" data-nav="news" title="News"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h8M8 17h5"/></svg><span>News</span></a>
         <a href="#/macro" data-nav="macro" title="Macro"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>Macro</span></a>
         <a href="#/dividends" data-nav="dividends" title="Dividends"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2 3-2s3 .6 3 2-1.3 2-3 2-3 .6-3 2 1.3 2 3 2 3-.6 3-2"/></svg><span>Dividends</span></a>
         <a href="#/calendar" data-nav="calendar" title="Earnings"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><span>Earnings</span></a>
         <a href="#/astro" data-nav="astro" title="Astro"><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 .5-4.5 4 1.4 6-4.9-3.2L7.1 19.5l1.4-6L4 9.5 10 9z"/><circle cx="19" cy="5" r="1.6"/></svg><span>Astro</span></a>
+      </div>
+
+      <div class="side-group">
+        <div class="side-head">Tools</div>
+        <a href="#/market" data-nav="market" title="Marketplace"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 11H4.5zM3 9l2-5h14l2 5M9 13v3M15 13v3"/></svg><span>Marketplace</span></a>
         <a href="#/tools" data-nav="tools" title="Tools"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18"/><path d="M8 7h8M8 11h3M13 11h3M8 15h3M13 15h3"/></svg><span>Tools</span></a>
+        <a href="#/ask" data-nav="ask" title="Ask the desk"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M9 9h6M9 13h4"/></svg><span>Ask</span></a>
+        <a class="nav-learn" href="#/learn" data-nav="learn" title="Learn"><svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3-9 3zM3 6v8M7 9v6l5 2 5-2V9"/></svg><span>Learn</span></a>
       </div>
     </nav>
-    <div class="side-legal">
-      <a href="#/glossary">Glossary</a><a href="#/shipped" data-nav="shipped">Shipped</a><a href="#/legal/terms">Terms</a><a href="#/legal/privacy">Privacy</a><a href="#/legal/risk">Risk</a>
+    <!-- The legal links used to sit on their own with a hairline above them, which read as a
+         stray row rather than the end of the column. Wrapping them with the desk's name and the
+         delay note turns the bottom of the sidebar into a colophon: who publishes this, the small
+         print, and the one caveat that applies to every price on every page. The note carries no
+         class — .side-foot already sets the 10px muted type it needs. -->
+    <div class="side-foot">
+      <strong>Henneth Research</strong>
+      <div class="side-legal">
+        <a href="#/glossary">Glossary</a><a href="#/shipped" data-nav="shipped">Shipped</a><a href="#/legal/terms">Terms</a><a href="#/legal/privacy">Privacy</a><a href="#/legal/risk">Risk</a>
+      </div>
+      <span>Market data &middot; delayed 15 min</span>
     </div>
     <!-- Version + what's new. Filled by renderVersion() from state/changelog.json; stays empty
          (and therefore invisible) if that file is missing, so a failed changelog build degrades to
@@ -237,34 +274,91 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
     <div class="side-resize" id="sideResize" title="Drag to resize"></div>
   </aside>
 
+  <!-- The reopen control for a collapsed sidebar. It cannot reuse #sideOpen — app.js binds that
+       one to the mobile drawer — and it sits outside <aside> on purpose: at desktop the collapsed
+       pane is display:none, and a button inside it would vanish with it. shell.css pins this one
+       with position:fixed and reveals it only while .shell is .collapsed. -->
+  <button class="side-peek" id="sidePeek" aria-label="Open menu" title="Open menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><path d="M9 4v16M13 9l3 3-3 3"/></svg>
+  </button>
+
+  <!-- Same idea, right side: the reopen control for a collapsed context rail. Sits outside
+       <aside class="context-rail"> for the same reason #sidePeek sits outside <aside class="sidebar">
+       — the collapsed pane is display:none, and a button inside it would vanish with it. -->
+  <button class="rail-peek" id="railPeek" aria-label="Open context panel" title="Open context panel" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><path d="M15 4v16M11 9l-3 3 3 3"/></svg>
+  </button>
+
+  <!-- The topbar is a direct .shell child, not a .main-col child: shell.css gives it
+       grid-column:1/-1 and grid-row:1 so it spans all three columns. Nested inside .main-col it
+       would only span the centre one, and both side panes would start at the top of the viewport.
+       The market/health/regime pills and #updated stay in the DOM even though shell.css does not
+       paint them — app.js writes them and topbar.js's refreshStatusbar() reads them to fill the
+       statusbar. Deleting them would silently empty the status row. -->
+  <header class="topbar">
+    <button class="side-open" id="sideOpen" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <!-- The desk mark in the header. aria-label on the LINK (and alt="" on the image) so the
+         brand is announced exactly once — on mobile the wordmark span is visible too, and an
+         alt of "Henneth Desk" would make a screen reader say it twice. The span keeps its
+         .brand-mobile class: on desktop the sidebar already spells the name out, so only the
+         mark rides in the header there; on a phone the sidebar is a drawer and the words come
+         back beside it. -->
+    <a class="brand brand-top" href="#/today" aria-label="Henneth Desk"><img class="brand-top-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async"><span class="brand-mobile">Henneth <em>Desk</em></span></a>
+    <span id="mkt" class="pill">—</span>
+    <span id="health" class="pill">HEALTH —</span>
+    <span id="regime" class="pill">REGIME —</span>
+    <span id="georisk" class="pill" style="display:none">RISK —</span>
+    <!-- Open documents. topbar.js owns the contents; the markup here is only the two mount
+         points, so a page render never has to rebuild the strip. -->
+    <nav class="tabs-wrap" aria-label="Open research documents">
+      <div class="tab-strip" id="tabStrip"></div>
+      <div class="tabadd-slot"><button class="tabadd-btn" id="tabAddBtn" aria-haspopup="dialog" aria-expanded="false" aria-label="Open new tab" title="Open">+</button></div>
+    </nav>
+    <!-- The "+" launcher. A full-viewport blurred scrim rather than a dropdown, so it reads like
+         the search overlay the desk already has. Exactly three entries — the one real wired
+         shortcut plus the two pages people actually open cold. -->
+    <div class="tabadd-scrim" id="tabAddMenu" role="dialog" aria-modal="true" aria-label="Open" hidden>
+      <div class="tabadd-panel" role="menu">
+        <a href="#" id="tabAddSearch" role="menuitem">
+          <svg class="tabadd-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <span class="tabadd-label">Search a stock</span>
+          <span class="tabadd-key">/</span>
+        </a>
+        <a href="#/screener" role="menuitem">
+          <svg class="tabadd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          <span class="tabadd-label">Screener</span>
+        </a>
+        <a href="#/ask" role="menuitem">
+          <svg class="tabadd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/></svg>
+          <span class="tabadd-label">Ask the desk</span>
+        </a>
+      </div>
+    </div>
+    <div class="top-spacer"></div>
+    <button id="searchbtn" class="searchbtn" aria-label="Search ticker" title="Search a stock">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span class="sb-label">Search a stock</span>
+      <span class="sb-key">/</span>
+    </button>
+    <!-- Colour scheme. One button, cycles System → Light → Dark. app.js paints the glyph and the
+         label; the flash-guard script at the top of this file reads the same "deskScheme" key. -->
+    <button class="scheme-btn" id="schemeBtn" type="button"></button>
+    <button class="lang-btn" id="langBtn" title="English / اردو" aria-label="Switch language">اردو</button>
+    <span class="plan-badge" id="planBadge" hidden></span>
+    <span class="acct-slot" id="acctSlot"></span>
+    <span class="meta" id="updated"></span>
+    <button class="rail-open" id="railOpen" aria-label="Open context panel" title="Context panel"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16"/><path d="M15 4v16"/></svg></button>
+  </header>
+
+  <!-- The global tape is a direct child of .shell, NOT of .main-col: it is a
+       full-bleed band that runs the whole width of the workspace and passes
+       behind both floating panes. Inside .main-col it could never be wider
+       than the centre column. Still outside #view, so a page render never
+       re-creates it and the marquee never snaps back to the start. app.js
+       patches its numbers in place. -->
+  <div id="gstripHost"></div>
+
   <div class="main-col">
-    <header class="topbar">
-      <button class="side-open" id="sideOpen" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-      <!-- The desk mark in the header. aria-label on the LINK (and alt="" on the image) so the
-           brand is announced exactly once — on mobile the wordmark span is visible too, and an
-           alt of "Henneth Desk" would make a screen reader say it twice. The span keeps its
-           .brand-mobile class: on desktop the sidebar already spells the name out, so only the
-           mark rides in the header there; on a phone the sidebar is a drawer and the words come
-           back beside it. -->
-      <a class="brand brand-top" href="#/today" aria-label="Henneth Desk"><img class="brand-top-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async"><span class="brand-mobile">Henneth <em>Desk</em></span></a>
-      <span id="mkt" class="pill">—</span>
-      <span id="health" class="pill">HEALTH —</span>
-      <span id="regime" class="pill">REGIME —</span>
-      <span id="georisk" class="pill" style="display:none">RISK —</span>
-      <button id="searchbtn" class="searchbtn" aria-label="Search ticker" title="Search a stock">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <span class="sb-label">Search a stock</span>
-        <span class="sb-key">/</span>
-      </button>
-      <span class="research-badge" title="This is a research & analytics tool, not an investment adviser.">Research · not advice</span>
-      <button class="lang-btn" id="langBtn" title="English / اردو" aria-label="Switch language">اردو</button>
-      <span class="plan-badge" id="planBadge" hidden></span>
-      <span class="acct-slot" id="acctSlot"></span>
-      <span class="meta" id="updated"></span>
-    </header>
-    <!-- The global tape lives here, outside #view, so a page render never re-creates it and the
-         marquee never snaps back to the start. app.js patches its numbers in place. -->
-    <div id="gstripHost"></div>
     <main id="view"></main>
     <footer class="deskfoot">
       <b>Henneth Desk is a research &amp; analytics tool — not an investment adviser.</b>
@@ -274,7 +368,68 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
       <span class="foot-links"><a href="#/legal/terms">Terms</a> · <a href="#/legal/privacy">Privacy</a> · <a href="#/legal/risk">Risk Disclosure</a></span>
     </footer>
   </div>
+
+  <!-- Context rail. Like the topbar it is a direct .shell child (shell.css puts it in
+       grid-column:3), so its DOM position relative to .main-col does not matter. rail.js owns
+       everything inside .rail-body: the four panes are filled at runtime, so the .empty spans
+       here are only what shows before the first render. The page-info block is just the page
+       name — timestamp/Type/Source rows were removed as redundant.
+       Signed-out visitors never see this: rail.css hides it behind the auth gate. -->
+  <aside class="context-rail" id="contextRail">
+    <div class="rail-top">
+      <div class="rail-tabs" role="tablist" aria-label="Context panel">
+        <button type="button" class="rail-tab on" id="railTabAsk" role="tab" data-rail-tab="ask" aria-selected="true" aria-controls="railPaneAsk">Ask</button>
+        <button type="button" class="rail-tab" id="railTabNotes" role="tab" data-rail-tab="notes" aria-selected="false" aria-controls="railPaneNotes" tabindex="-1">Notes</button>
+        <button type="button" class="rail-tab" id="railTabWatch" role="tab" data-rail-tab="watch" aria-selected="false" aria-controls="railPaneWatch" tabindex="-1">Watch</button>
+        <button type="button" class="rail-tab" id="railTabAlerts" role="tab" data-rail-tab="alerts" aria-selected="false" aria-controls="railPaneAlerts" tabindex="-1">Alerts</button>
+        <button type="button" class="rail-tab" id="railTabNews" role="tab" data-rail-tab="news" aria-selected="false" aria-controls="railPaneNews" tabindex="-1">News</button>
+      </div>
+      <button type="button" class="rail-toggle" id="railToggle" aria-label="Collapse context panel" title="Collapse panel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="rail-body">
+      <div class="rail-pageinfo">
+        <div class="rail-pageinfo-head">
+          <span class="rail-pageinfo-name" id="railPageInfoName">—</span>
+        </div>
+      </div>
+      <div class="rail-pane on" id="railPaneAsk" role="tabpanel" aria-labelledby="railTabAsk" data-rail-pane="ask"><div class="empty">Loading…</div></div>
+      <div class="rail-pane" id="railPaneNotes" role="tabpanel" aria-labelledby="railTabNotes" data-rail-pane="notes"><div class="empty">Loading…</div></div>
+      <div class="rail-pane" id="railPaneWatch" role="tabpanel" aria-labelledby="railTabWatch" data-rail-pane="watch"><div class="empty">Loading…</div></div>
+      <div class="rail-pane" id="railPaneAlerts" role="tabpanel" aria-labelledby="railTabAlerts" data-rail-pane="alerts"><div class="empty">Loading…</div></div>
+      <div class="rail-pane" id="railPaneNews" role="tabpanel" aria-labelledby="railTabNews" data-rail-pane="news"><div class="empty">Loading…</div></div>
+    </div>
+    <div class="rail-resize" id="railResize" title="Drag to resize"></div>
+  </aside>
+
+  <!-- Status row: grid-row 3, spanning all three columns. topbar.js's refreshStatusbar() polls the
+       topbar pills app.js writes and copies them in here — this markup holds only the placeholders. -->
+  <!-- data-no-enhance: this footer rewrites itself every 1.5s from the topbar pills. app.js's
+       enhancement MutationObserver watches document.body, so an unguarded write here woke a
+       full-document flush() every tick — which is what read as the desk "blinking". Nothing in
+       here needs enhancing: the text is copied verbatim from pills already processed upstream. -->
+  <footer class="statusbar" id="statusbar" data-no-enhance="1">
+    <div class="status-left">
+      <span>MARKET STATE</span>
+      <span class="status-muted" id="sbMkt">—</span>
+      <span class="status-muted">|</span>
+      <span id="sbAsof">AS OF —</span>
+      <span class="status-muted">|</span>
+      <span>RESEARCH, NOT ADVICE</span>
+    </div>
+    <div class="status-right">
+      <span class="status-dot" id="sbDot"></span>
+      <span id="sbHealth">DATA —</span>
+      <span class="status-muted">|</span>
+      <span>PRICES 15 MIN DELAY</span>
+      <span class="status-muted">|</span>
+      <span>HENNETH RESEARCH EDITION</span>
+    </div>
+  </footer>
+
   <div class="side-backdrop" id="sideBackdrop"></div>
+  <div class="rail-backdrop" id="railBackdrop"></div>
 </div>
 
 <div id="searchbox" class="searchbox" role="dialog" aria-modal="true" aria-label="Search stocks" hidden>
@@ -295,5 +450,56 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
 <script src="i18n-ur.js?v=2"></script>
 <script src="auth-terminal.js"></script>
 <script src="app.js"></script>
+<script src="icons.js"></script>
+<!-- First-failure capture, armed before the shell scripts below. A panel that fails
+     leaves its placeholder on screen and the reason only in the console, which is no
+     help to anyone not reading one. This records the first failure — a script that
+     never downloaded (404, blocked, offline) or one that threw while parsing — and the
+     check after the scripts prints it into the panel itself. -->
+<script>
+window.__shellFail = null;
+window.addEventListener("error", function (e) {
+  if (window.__shellFail) return;
+  if (e.target && e.target.tagName === "SCRIPT") {
+    window.__shellFail = String(e.target.src).split("/").pop() + " did not download";
+  } else if (e.message) {
+    window.__shellFail = e.message + " — " + String(e.filename || "").split("/").pop() + " line " + e.lineno;
+  }
+}, true);
+</script>
+<!-- Shell behaviour. All four run after app.js because each one reads state app.js owns (the
+     route, the #updated stamp, the rendered #view) and re-renders off `hashchange`. None of them
+     writes to app.js's own DOM — they only add the panels around it. -->
+<script src="rail.js"></script>
+<script src="topbar.js"></script>
+<script src="board.js"></script>
+<script src="shell.js"></script>
+<script>
+// Panel check. Every rail pane ships with a "Loading…" placeholder that its renderer
+// overwrites on first paint; a pane still showing it a second later means rail.js never
+// ran or its renderer threw. Say so where the user is already looking, and name the
+// cause. Panes that painted are left alone.
+(function () {
+  setTimeout(function () {
+    var stuck = [];
+    var panes = document.querySelectorAll("[data-rail-pane]");
+    for (var i = 0; i < panes.length; i++) {
+      if (panes[i].textContent.indexOf("Loading") !== -1) stuck.push(panes[i]);
+    }
+    if (!stuck.length) return;
+    var why = window.__shellFail
+      || (typeof window.refreshRail !== "function"
+            ? "rail.js never ran — no error reported"
+            : "rail.js ran but painted nothing");
+    console.error("[shell] rail panes stuck:", why);
+    for (var j = 0; j < stuck.length; j++) {
+      stuck[j].innerHTML = '<div class="empty">Panel failed to start.<br>'
+        + why.replace(/[<>&]/g, " ") + "</div>";
+    }
+    var nameEl = document.getElementById("railPageInfoName");
+    if (nameEl) nameEl.textContent = "panel error";
+  }, 1500);
+})();
+</script>
 </body>
 </html>

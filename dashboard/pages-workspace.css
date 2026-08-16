@@ -1,0 +1,158 @@
+/* ============================================================
+   WORKSPACE GROUP — today, board, watchlist, portfolio, mychart,
+   practice.
+
+   pages.css already retunes the container outline
+   (--rhair/--paper-2) and the 14px tile inset desk-wide. This
+   sheet is the second half of the owner's complaint: "other pages
+   have too many tiles and its confusing". Presentational-only —
+   no markup changes possible, so fixes are border/background/
+   type-scale swaps that de-nest or de-emphasize boxes so a page
+   scans as fast as Board.
+
+   Loaded after pages.css, so it wins on source order
+   against themes.css's identically-specific rules — no !important.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   TODAY
+   ------------------------------------------------------------
+   themes.css draws sinceLastVisit(), the daily lesson and the
+   MyChart teaser as full .card boxes (app.js:4675, plus their own
+   .daily-lesson/.mc-tease classes), so they stack on top of the
+   real content as three more bordered tiles of equal visual
+   weight — nudges competing with signal. They read as content,
+   not as banners. Dropping the box and drawing a left accent
+   instead (the same idiom the desk already uses for .tnote and
+   .next-look) keeps them legible while making it obvious at a
+   glance which tiles are the actual desk output.
+   ------------------------------------------------------------ */
+body[data-theme=gemini] #view .since-card,
+body[data-theme=gemini] #view .card.daily-lesson,
+body[data-theme=gemini] #view .card.mc-tease {
+  border: none;
+  border-inline-start: 3px solid var(--rhair);
+  background: var(--surf);
+}
+/* .daily-lesson is a flex ROW (themes.css:1069), not the stacked column
+   pages.css's #view .card > *:first-child / *:last-child rule assumes —
+   so of its two children only .dl-left ever matches :first-child and
+   only .dl-go ever matches :last-child, each banking ONE side of the
+   14px band instead of both. The row's height then collapses to
+   whichever child is naturally taller (.dl-left's three text lines),
+   and CONTINUE gets centred into that borrowed sliver instead of a
+   real inset — reads as a bar filling the whole tile. Give the row
+   its own top+bottom padding and zero the children's one-sided
+   margins so both children sit inside a real, symmetric 14px band.
+   Doubled class matches pages.css:248's trick — buys the extra
+   specificity needed to beat #view .card > *:first-child/:last-child
+   (1,3,2)/(1,3,1) without !important. */
+body[data-theme=gemini] #view .card.daily-lesson.daily-lesson {
+  padding-block: var(--tile-pad);
+}
+body[data-theme=gemini] #view .card.daily-lesson.daily-lesson > .dl-left,
+body[data-theme=gemini] #view .card.daily-lesson.daily-lesson > .dl-go {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------
+   BOARD
+   ------------------------------------------------------------
+   1) themes.css:375-377 sizes .tk-head .sym/.px at 36px/30px — a
+      ticker-detail hero size, unscoped, that also lands on
+      Board's signal cards (app.js:570, .card.clickable .tk-head).
+      At Board's tile width that oversized symbol/price fights the
+      11px head band and the tag pills for attention. Scoped to
+      Board's clickable cards only, so the ticker-detail page
+      (out of scope, off other groups' pages) keeps the hero size.
+   2) .statgrid (themes.css:389) is a 1px-gap grid of .stat cells
+      drawn in --line/--panel — the older, heavier outline
+      language — inside a card already retuned to --rhair/--paper-2
+      by pages.css. That is a heavier box nested in a
+      lighter one, which is exactly the "boxed thing inside a
+      boxed thing" clutter the owner flagged. Retuned to the same
+      1px-gap-grid pattern pages.css already used for
+      .sumstrip/.trackclock so the nested grid reads as part of
+      the card, not a second container. .statgrid also appears on
+      Practice, so this one rule serves both pages.
+   ------------------------------------------------------------ */
+body[data-theme=gemini] #view .card.clickable .tk-head .sym {
+  font-size: 15px;
+}
+body[data-theme=gemini] #view .card.clickable .tk-head .px {
+  font-size: 14px;
+}
+
+body[data-theme=gemini] #view .statgrid {
+  background: var(--rhair);
+  border-color: var(--rhair);
+}
+body[data-theme=gemini] #view .stat {
+  background: var(--paper-2);
+}
+
+/* ------------------------------------------------------------
+   WATCHLIST — no rule written.
+   ------------------------------------------------------------
+   pageWatchlist() (app.js:7480) renders at most a .card table and
+   an optional .card.wl-intel list. Both already get the global
+   retune from pages.css; .wi-row (themes.css:1046) is a
+   single --hair divider between rows, not a nested box. The page
+   is already as lean as Board — nothing to thin out.
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   PORTFOLIO — no rule written.
+   ------------------------------------------------------------
+   pagePortfolio() (app.js:7310) stacks .seg-headed .card sections
+   (holdings, concentration, sector concentration, x-ray) the same
+   way Board itself sections its tiles — each .seg header marks a
+   clear break, so the stack reads as chapters, not clutter. The
+   only internal dividers (.xr-row, .ph-bar-track) are hairlines/
+   controls, already exempted by pages.css's own
+   controls-vs-containers note. No nested boxes, no competing type
+   scales — nothing here needs thinning.
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   MYCHART
+   ------------------------------------------------------------
+   .goch-tile (themes.css:1361, today's transits) and .wx-card
+   (themes.css:1009, planetary weather) are the two tile families
+   pages.css's retune list missed — both still draw
+   --line/--panel, the older heavier language, right next to
+   .comm-card and .syn-card on the same page which already read in
+   --rhair/--paper-2. That mismatch is what makes the page look
+   patched together. Only the neutral border/background move;
+   each tile's colour-coded accent (goch-tile's up/dn left edge,
+   wx-card's top accent bar) carries real meaning and is
+   preserved by re-asserting it after the neutral swap.
+
+   Both pad THEMSELVES (themes.css 10/12 and 12/14) and neither
+   carries .card, so pages.css's child-inset mechanism
+   never reaches them — they have to take --tile-pad directly or
+   MyChart keeps three different tile edges on one page.
+   ------------------------------------------------------------ */
+body[data-theme=gemini] #view .goch-tile {
+  border-color: var(--rhair);
+  background: var(--paper-2);
+  padding: var(--tile-pad);
+}
+body[data-theme=gemini] #view .goch-tile.up { border-inline-start-color: var(--up); }
+body[data-theme=gemini] #view .goch-tile.dn { border-inline-start-color: var(--dn); }
+
+body[data-theme=gemini] #view .wx-card {
+  border-color: var(--rhair);
+  background: var(--paper-2);
+  padding: var(--tile-pad);
+}
+body[data-theme=gemini] #view .wx-card { border-top-color: var(--accent); }
+
+/* ------------------------------------------------------------
+   PRACTICE — no page-specific rule.
+   ------------------------------------------------------------
+   Practice's only container-level issue is .statgrid, shared with
+   Board and fixed once above. Its remaining chrome (.dr-row,
+   .pp-form) is dividers/controls, already exempt.
+   ------------------------------------------------------------ */
