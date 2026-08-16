@@ -595,19 +595,22 @@ body[data-theme=gemini] .follow-chip{display:inline-block;text-decoration:none;b
 body[data-theme=gemini] .follow-chip.on{background:var(--ink1);color:var(--panel);border-color:var(--ink1)}
 body[data-theme=gemini] .follow-chip:hover{border-color:var(--ink2)}
 /* "Watch the desk analyse" tile + cinematic replay overlay */
-/* prominent BLACK "run the desk" bar — the hero CTA that gates the analysis */
-body[data-theme=gemini] .run-desk{display:flex;align-items:center;gap:15px;width:100%;text-align:start;background:var(--ink1);border:1.5px solid var(--ink1);padding:15px 17px;margin:10px 0 14px;cursor:pointer;font:inherit;color:var(--paper)}
+/* prominent BLACK "run the desk" bar — the hero CTA that gates the analysis. It is a permanently
+   INVERTED surface, so it runs on the fixed --run-* tokens (palette.css), never on --ink1/--paper:
+   those flip with the scheme, which turned the ground cream in dark while the near-white literals
+   here stayed put — near-white ink on a cream ground, unreadable. */
+body[data-theme=gemini] .run-desk{display:flex;align-items:center;gap:15px;width:100%;text-align:start;background:var(--run-bg);border:1.5px solid var(--run-bg);padding:15px 17px;margin:10px 0 14px;cursor:pointer;font:inherit;color:var(--run-ink)}
 body[data-theme=gemini] .run-desk:hover{background:#000}
 body[data-theme=gemini] .run-desk:active{transform:scale(.995)}
-body[data-theme=gemini] .run-ico{flex:none;width:38px;height:38px;border:1.5px solid rgba(244,244,240,.6);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--paper)}
-body[data-theme=gemini] .run-desk:hover .run-ico{border-color:var(--paper)}
+body[data-theme=gemini] .run-ico{flex:none;width:38px;height:38px;border:1.5px solid var(--run-hair);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--run-ink)}
+body[data-theme=gemini] .run-desk:hover .run-ico{border-color:var(--run-ink)}
 body[data-theme=gemini] .run-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 body[data-theme=gemini] .run-txt b{font-size:15px;font-weight:700;letter-spacing:.01em}
-body[data-theme=gemini] .run-txt i{font-style:normal;font-size:11.5px;color:rgba(244,244,240,.7);line-height:1.45}
+body[data-theme=gemini] .run-txt i{font-style:normal;font-size:11.5px;color:var(--run-muted);line-height:1.45}
 body[data-theme=gemini] .run-meta{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px;text-align:end}
-body[data-theme=gemini] .run-last{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:rgba(244,244,240,.55)}
-body[data-theme=gemini] .run-go{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--paper);border:1.5px solid rgba(244,244,240,.6);padding:5px 12px}
-body[data-theme=gemini] .run-desk:hover .run-go{border-color:var(--paper);background:rgba(244,244,240,.1)}
+body[data-theme=gemini] .run-last{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--run-faint)}
+body[data-theme=gemini] .run-go{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--run-ink);border:1.5px solid var(--run-hair);padding:5px 12px}
+body[data-theme=gemini] .run-desk:hover .run-go{border-color:var(--run-ink);background:rgba(244,244,240,.1)}
 @media(max-width:560px){body[data-theme=gemini] .run-txt i{display:none}body[data-theme=gemini] .run-meta{align-items:flex-end}}
 body[data-theme=gemini] .replay-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:20px;animation:rpFade var(--dur-base) var(--ease-out)}
 body[data-theme=gemini] .replay-box{width:100%;max-width:720px;max-height:90vh;background:var(--panel);border:1.5px solid var(--line);display:flex;flex-direction:column;box-shadow:0 18px 60px rgba(0,0,0,.4)}
@@ -1608,17 +1611,21 @@ body[data-theme=gemini] main>.seg:first-child{margin-top:2px}
 body[data-theme=gemini] .seg h2{white-space:nowrap}
 body[data-theme=gemini] .seg .ln{flex:1;height:1.5px;background:var(--line)}
 /* global markets ticker tape (terminal) */
-body[data-theme=gemini] .gstrip{display:flex;gap:0;overflow:hidden;border:1.5px solid var(--line);border-radius:0;margin-bottom:12px;background:var(--ink1)}
+body[data-theme=gemini] .gstrip{display:flex;gap:0;overflow:hidden;border:1.5px solid var(--tape-line);border-radius:0;margin-bottom:12px;background:var(--tape-bg)}
 body[data-theme=gemini] .gstrip .gtrack{display:flex;gap:0;flex:none;width:max-content;animation:marquee 60s linear infinite;will-change:transform}
 body[data-theme=gemini] .gstrip:hover .gtrack{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-body[data-theme=gemini] .gstrip .gitem{flex-direction:row;align-items:baseline;gap:6px;padding:6px 14px;border-inline-end:1px solid #333;white-space:nowrap;min-width:auto}
-body[data-theme=gemini] .gstrip .gitem span{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#c9c9c2;order:0}
+body[data-theme=gemini] .gstrip .gitem{flex-direction:row;align-items:baseline;gap:6px;padding:6px 14px;border-inline-end:1px solid var(--tape-line);white-space:nowrap;min-width:auto}
+body[data-theme=gemini] .gstrip .gitem span{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--tape-muted);order:0}
 /* fixed-width number cells: the 60s patch rewrites these in place, and a digit-count change
    (999.8 -> 1,000.2) would otherwise widen .gtrack and snap the marquee (it translates -50% of
    track width). Pinning b/i means text swaps can never resize the track. */
-body[data-theme=gemini] .gstrip .gitem b{font-size:11.5px;font-weight:700;color:var(--paper);display:inline-block;min-width:9ch;text-align:right}
-body[data-theme=gemini] .gstrip .gitem i{font-size:10.5px;font-style:normal;font-weight:600;display:inline-block;min-width:7ch;text-align:right}
+body[data-theme=gemini] .gstrip .gitem b{font-size:11.5px;font-weight:700;color:var(--tape-ink);display:inline-block;min-width:9ch;text-align:right}
+body[data-theme=gemini] .gstrip .gitem i{font-size:10.5px;font-style:normal;font-weight:600;display:inline-block;min-width:7ch;text-align:right;color:var(--tape-muted)}
+/* the change cell carries .up/.dn from cls(), whose global colours are tuned for paper — on the
+   tape's dark ground --dn (#b44640) all but vanished. Same meaning, tape-specific values. */
+body[data-theme=gemini] .gstrip .gitem i.up{color:var(--tape-up)}
+body[data-theme=gemini] .gstrip .gitem i.dn{color:var(--tape-dn)}
 /* strip toggle: visibility (not display) so the marquee animation never resets on re-show.
    When ON, the host reserves its box (min-height) so route() can expand it BEFORE the page's
    fetches resolve — no ~31px drop when the tape content arrives. */

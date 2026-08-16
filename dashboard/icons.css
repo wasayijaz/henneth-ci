@@ -43,8 +43,12 @@
   height: 11px;
   margin-inline-end: 7px;
   vertical-align: -1px;
-  background-color: currentColor;
-  opacity: .45;
+  /* was `background-color: currentColor; opacity: .45;` — a flat opacity
+     dims the same 45% in both schemes, which is exactly the scheme-blind
+     dimming the desk bans. Mixing currentColor toward transparent instead
+     still derives from the heading's own (theme-aware) colour, so the glyph
+     tracks whatever ink the heading carries in either scheme. */
+  background-color: color-mix(in srgb, currentColor 45%, transparent);
   -webkit-mask: var(--gi) center / contain no-repeat;
   mask: var(--gi) center / contain no-repeat;
 }

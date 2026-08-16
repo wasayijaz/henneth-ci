@@ -26,6 +26,24 @@ body[data-theme=gemini] {
   --positive:#28724b; --positive-soft:#e3efe4; --negative:#b44640; --negative-soft:#f3e5e2;
   --focus:#2d6847; --shadow:0 10px 28px rgba(38,39,33,.07);
   --shadow-hard:rgba(0,0,0,.12); --backdrop:rgba(24,25,22,.28);
+  /* ---- the global tape (.gstrip) is an INVERTED surface: dark ground in BOTH schemes, because
+     a scrolling ticker reads as an instrument panel, not as page paper. It therefore cannot reuse
+     --rink/--paper/--up/--dn: those flip with the scheme, so in dark the ground went near-white
+     while the numbers stayed near-white too, and in light the ink1 ground carried --dn (#b44640,
+     tuned for paper) which is unreadable on a dark bar. Its own six tokens, tuned once against
+     the dark ground, and only the ground itself deepens a notch in dark so the tape doesn't
+     glow brighter than the page around it. ---- */
+  --tape-bg:#1c1e1b; --tape-ink:#f4f2ea; --tape-muted:#b2b0a6; --tape-line:#3b3d38;
+  --tape-up:#63c191; --tape-dn:#f2857c;
+  /* ---- the run-desk promo bar is the same kind of surface as the tape: a permanently INVERTED
+     black band in both schemes. It used to be built out of --ink1/--paper, which flip, so in dark
+     the ground went cream while its subtitle/meta/border kept their hardcoded near-white literals
+     — near-white ink on a cream ground, i.e. invisible. Fixed tokens, same in both schemes. ---- */
+  --run-bg:#141613; --run-ink:#f4f4f0; --run-muted:rgba(244,244,240,.72);
+  --run-faint:rgba(244,244,240,.55); --run-hair:rgba(244,244,240,.42);
+  /* --ink2 is the secondary ink between --rink and --rmuted. It is a REAL value, not an alias, so
+     it must be redeclared in both dark blocks like every other scheme-varying token. */
+  --ink2:#43463f;
   /* ---- --paper-3: NOT from psx-board-preview.html — the one token in this
      file with no reference-file source. Continues the paper→paper-2 lightening
      step (each +~4-5 per channel) one notch further, so the main working
@@ -34,7 +52,7 @@ body[data-theme=gemini] {
 
   /* ---- remap the existing gemini tokens onto them ---- */
   --bg:var(--paper); --panel:var(--paper-2); --panel2:var(--rpanel);
-  --ink1:var(--rink); --ink2:#43463f; --ink3:var(--rmuted);
+  --ink1:var(--rink); --ink3:var(--rmuted);
   --line:var(--rline); --line2:var(--rhair); --surf:var(--rpanel); --hair:var(--rhair);
   --up:var(--positive); --dn:var(--negative); --accent:var(--focus);
 }
@@ -58,6 +76,9 @@ body[data-theme=gemini] {
     --positive:#5fa97d; --positive-soft:#1e2c23; --negative:#d97b72; --negative-soft:#2e1f1c;
     --focus:#4fb37e; --shadow:0 10px 28px rgba(0,0,0,.45);
     --shadow-hard:rgba(0,0,0,.6); --backdrop:rgba(8,8,6,.6);
+    --tape-bg:#100f0d; --tape-ink:#f4f2ea; --tape-muted:#b2b0a6; --tape-line:#33322c;
+    --tape-up:#63c191; --tape-dn:#f2857c;
+    --ink2:#cfcbc1;
   }
 }
 
@@ -79,4 +100,7 @@ html[data-scheme="dark"] body[data-theme=gemini] {
   --positive:#5fa97d; --positive-soft:#1e2c23; --negative:#d97b72; --negative-soft:#2e1f1c;
   --focus:#4fb37e; --shadow:0 10px 28px rgba(0,0,0,.45);
   --shadow-hard:rgba(0,0,0,.6); --backdrop:rgba(8,8,6,.6);
+  --tape-bg:#100f0d; --tape-ink:#f4f2ea; --tape-muted:#b2b0a6; --tape-line:#33322c;
+  --tape-up:#63c191; --tape-dn:#f2857c;
+  --ink2:#cfcbc1;
 }

@@ -37,7 +37,14 @@ body[data-theme=gemini] .rail-top {
   min-height: 44px;
   padding: 0;
   border-block-end: 1px solid var(--line);
-  background: var(--rpanel);
+  /* the pane itself is glass (shell.css: --rpanel at 86% + a 12px backdrop blur), but this sticky
+     header sat on top of it in FLAT --rpanel and made the whole right pane read as solid paint next
+     to the frosted left one. It cannot simply go `background:none` like .side-top — it is sticky,
+     so rail content scrolls under it and needs something to sit behind. Its own, lighter glass:
+     enough tint to separate the tabs from the list, the same blur so the two panes match. */
+  background: color-mix(in srgb, var(--rpanel) 55%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
   flex: none;
 }
 body[data-theme=gemini] .rail-tabs {

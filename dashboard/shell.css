@@ -264,7 +264,10 @@ body[data-theme=gemini] .side-group { margin-top: 17px; padding: 0; border: 0; }
 body[data-theme=gemini] .side-head {
   margin: 0 0 7px;
   padding: 0;
-  color: var(--rmuted);
+  /* --rmuted alone reads too thin at 10px/uppercase/tracked; mix the real ink
+     token toward transparent instead so the header stays scheme-safe (both
+     light and dark ride the token) while sitting visibly above --rmuted. */
+  color: color-mix(in srgb, var(--rink) 48%, transparent);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -281,9 +284,12 @@ body[data-theme=gemini] .side-nav a {
   border: 1px solid transparent;
   border-inline-start-width: 1px;
   background: none;
-  /* the desk's secondary ink, not a near-miss hex of it: the nav has to track
-     the palette when --ink2 is retuned instead of drifting on its own */
-  color: var(--ink2);
+  /* --ink2 (palette.css) is hardcoded to a literal hex and never redeclared in
+     either dark block, so it stayed near-black in dark mode and the inactive
+     nav read as almost invisible. Mixing --rink (properly tri-defined) toward
+     transparent tracks the palette in both schemes and still reads clearly
+     weaker than the active row's full var(--ink1). */
+  color: color-mix(in srgb, var(--rink) 60%, transparent);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: -.01em;
@@ -293,7 +299,10 @@ body[data-theme=gemini] .side-nav a {
 }
 body[data-theme=gemini] .side-nav a:hover {
   border-color: var(--rhair);
-  background: rgba(255, 255, 255, .38);
+  /* was a hardcoded white wash (rgba(255,255,255,.38)) — scheme-blind, so it
+     bleached the dark pane on hover instead of lifting it. --paper-2 mixed
+     toward transparent gives the same "lift" read in both schemes. */
+  background: color-mix(in srgb, var(--paper-2) 55%, transparent);
   color: var(--ink1);
 }
 body[data-theme=gemini] .side-nav a.on {
@@ -306,7 +315,10 @@ body[data-theme=gemini] .side-nav a svg {
   flex: none;
   width: 14px;
   height: 14px;
-  color: var(--rmuted);
+  /* matched to the label fix above so icon and text read as one weight,
+     instead of --rmuted's icon sitting at a different contrast than the
+     label beside it. */
+  color: color-mix(in srgb, var(--rink) 60%, transparent);
   stroke-width: 1.6;
 }
 body[data-theme=gemini] .side-nav a.on svg { color: var(--ink1); }

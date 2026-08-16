@@ -517,6 +517,13 @@ function showGlobalStrip(gl) {
   });
 }
 
+/* The tape is desk chrome, shown on every page, so it cannot depend on a page renderer fetching
+   global.json. route() calls this on every dispatch; the cached read is free after the first one,
+   and the 60s poll keeps the numbers fresh from there. */
+function primeGlobalStrip() {
+  j("global.json").then(gl => { if (gl) showGlobalStrip(gl); }).catch(() => {});
+}
+
 /* PSX's own index board. ALLSHR / KMIALLSHR matter because the desk's universe runs well past the
    KSE100 — benchmarking a mid-cap against an index it isn't in is a quiet way to be wrong. */
 const IDX_LABEL = {
@@ -547,9 +554,9 @@ function indexBoard(idx) {
 }
 
 async function pageBoard() {
-  const [quant, pred, dash, news, pos, smap, trig, live, gl, fvAll, fndAll, fsAll, idxAll] = await Promise.all([
+  const [quant, pred, dash, news, pos, smap, trig, live, fvAll, fndAll, fsAll, idxAll] = await Promise.all([
     j("quant.json"), j("predictability.json"), j("dashboard.json"), j("newslog.json"),
-    j("positions.json"), j("strategy_map.json"), j("live_triggers.json"), j("live.json"), j("global.json"),
+    j("positions.json"), j("strategy_map.json"), j("live_triggers.json"), j("live.json"),
     j("fairvalue.json"), j("fundamentals.json"), j("fundamental_scores.json"), j("indices.json")]);
   const q = quant?.tickers || {};
   const lv = live?.tickers || {};
@@ -627,7 +634,6 @@ async function pageBoard() {
   </div>
   <div class="seg"><h2>Today's scanner</h2><div class="ln"></div><span class="pill">rebuilt every cycle</span></div>
   ${scannerHtml(scanCats)}`;
-  showGlobalStrip(gl);
 }
 
 async function pageValue() {
@@ -850,7 +856,7 @@ async function pageMacro() {
 }
 
 async function pageToday() {
-  const [dr, gl, quant, live, uni] = await Promise.all([j("daily_read.json"), j("global.json"), j("quant.json"), j("live.json"), j("universe.json")]);
+  const [dr, quant, live, uni] = await Promise.all([j("daily_read.json"), j("quant.json"), j("live.json"), j("universe.json")]);
   if (!dr) { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Daily read</h2><div class="ln"></div></div><div class="card"><div class="empty">The daily read is written by the market-analyst agent in the pre-market cycle. Run a full cycle to generate today's note.</div></div>`; return; }
   const toneClass = { constructive: "ok", defensive: "bad", cautious: "bad" }[dr.tone] || "";
   const stanceTag = s => `<span class="pill ${s === "favoured" ? "ok" : s === "avoid" ? "bad" : ""}">${esc(s)}</span>`;
@@ -6202,15 +6208,12 @@ async function route(isPoll) {
   // ...and drop the sign-in terminal with it: the open routes (#/cast, legal, glossary) are
   // reachable while signed out, and the gate's terminal would otherwise stay over them.
   closeAuth();
-  // The tape is opt-in per page. Pages that show it (board/today) keep it up through the render —
-  // collapsing it during their fetch window and re-expanding after pushed the page down ~31px on
-  // every navigation in. Everything else hides it here and never turns it back on.
-  if (page !== "board" && (page || "today") !== "today") hideGlobalStrip();
-  // ...and pages that DO show it reserve its box now, before the async render — otherwise the
-  // strip stays collapsed until showGlobalStrip() runs after the page's fetches resolve, and the
-  // whole readable page drops ~31px hundreds of ms later. CSS gives #gstripHost a min-height so
-  // the reservation holds even before the track exists on first load.
-  else delete document.body.dataset.strip;
+  // The tape is desk chrome, not page content: it shows on every permitted page. Its box is
+  // reserved here, before the async render — CSS gives #gstripHost a min-height so the
+  // reservation holds even on first load, before the track exists. The only place it is ever
+  // hidden is the members-only gate above.
+  delete document.body.dataset.strip;
+  primeGlobalStrip();
   // A page render is async (often several fetches). Until it resolves the old page just sat there,
   // so a nav click read as "nothing happened". Paint a skeleton the instant we know we're moving —
   // the page's own innerHTML write replaces it. Not on a poll: that would flash the current page out.
@@ -7737,10 +7740,16 @@ async function initAuth() {
   if (me && myProfile) maybeCoach();
   if (!sb) return;
   sb.auth.onAuthStateChange(async (event, sess) => {
+    const prevId = me?.id || null;
     me = sess?.user || null;
     renderAccountButton();
     if (event === "PASSWORD_RECOVERY") return openRecovery();
     if (event === "SIGNED_IN") {
+      // supabase-js re-validates the stored session whenever the tab regains focus and re-fires
+      // SIGNED_IN for a session that was already active. That is not a sign-in, but it used to run
+      // the whole block below — including route(true), which rewrites #view.innerHTML from scratch.
+      // That full destroy-and-rebuild is the desk "blinking" every time you come back to the tab.
+      if (me?.id && me.id === prevId) return;
       closeAuth();
       await loadProfile();
       await migrateGuestChart();   // the whole point of the funnel: never ask for birth details twice
