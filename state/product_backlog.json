@@ -1,8 +1,19 @@
 {
- "updated": "2026-08-09",
+ "updated": "2026-08-16",
  "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
  "categories": "accuracy | clarity | feature",
  "items": [
+  {
+   "id": "room-price-staleness-unsurfaced",
+   "category": "accuracy",
+   "title": "Room sessions never flag when the debated price has drifted from today's live price",
+   "why": "provenance_lint.py's own check computes this drift server-side (GHNI: session price Rs 1132.31 vs today's close Rs 1305.17, 15% stale) but only prints a console WARN — nothing persists it to a state file the dashboard reads. Meanwhile renderTranscript (app.js:~2706) and the reveal-card badge (app.js:~3779) both display price_at_session as plain fact, with no comparison to the current price anywhere in the render path. A reader can be looking at a fully 'QA checked' bull/bear case built on a price that's since moved double digits, with no on-screen signal. GHNI itself compounds this: qa is null (never verified) AND the session is 15% stale — both facts already sit in state/rooms.json but neither surfaces.",
+   "existing_check": "read renderTranscript app.js:~2706 ('...against SYM's dossier at Rs ${fmt(room.price_at_session)}...') and the reveal-card badge app.js:~3779 ('computed asof at Rs price_at_session') — both display price_at_session, neither diffs it against the live/quant close; ran `python scripts/provenance_lint.py` directly, confirms the check exists but is console-only. Distinct from the open claim-price-stale-in-room-prose item (a persona's own written price citation vs verify.json) and ratio-stale-price-basis (PE/market-cap calc timing) — this is the session's anchor price vs today's price, not covered by either.",
+   "impact": "high",
+   "effort": "low",
+   "score": 3.0,
+   "status": "proposed"
+  },
   {
    "id": "room-qa-verified-badge-missing",
    "category": "accuracy",
@@ -37,15 +48,26 @@
    "status": "proposed"
   },
   {
-   "id": "payout-ratio-basis-mismatch",
-   "category": "accuracy",
-   "title": "payout_ratio field recurringly disagrees with the desk's own div_yield/EPS pair",
-   "why": "scripts/fetch_fundamentals.py:26 maps the scraped payoutRatio field straight through with no cross-check. room-verifier had to hand-correct or flag this exact mismatch in 8 of ~22 QA'd tickers this week alone (UBL corrected, NBP corrected, MEBL blocked, HUBC blocked, DCR/LOTCHEM/PSX/DGKC flagged) — a systemic period-basis bug, not one-off scrape noise.",
-   "impact": "high",
-   "effort": "med",
-   "score": 1.5,
+   "id": "confidence-pill-hide-n",
+   "category": "clarity",
+   "title": "Signal card 'confidence' pill hides the trade count behind it",
+   "why": "dashboard/app.js:261 renders a green 'high' confidence pill on the board's signal cards; the backtest sample size only appears buried in the thesis prose sentence.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
    "status": "done",
-   "resolved_note": "Fixed 2026-08-07 — scripts/fetch_fundamentals.py now recomputes payout_ratio as dps/eps instead of trusting the vendor's own payoutRatio field (see module docstring + line ~77). Confirmed live in AKBL's 2026-08-07 room.qa note."
+   "resolved_note": "Current signal card (app.js:437-451) shows a 'sample n<N>' stat directly in the statgrid, one row below the confidence pill, same card — the trade count is no longer buried in prose. Glossary (app.js:5757) now states this explicitly as a design rule."
+  },
+  {
+   "id": "shipped-improvements-panel",
+   "category": "feature",
+   "title": "Surface a 'recently shipped' list from the product backlog itself",
+   "why": "docs/OPERATIONS.md §3c documents the propose-only self-improvement loop but it was internal-only.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "done",
+   "resolved_note": "Superseded, not literally built as specified: pageShipped (app.js:5769) now ships a 'Recently shipped' page reading state/changelog.json, covering the same trust-signal need this item asked for. Different source file (changelog vs backlog) but same user-facing gap closed — no further action needed."
   },
   {
    "id": "fairvalue-card-hide-method-spread",
@@ -80,6 +102,28 @@
    "status": "proposed"
   },
   {
+   "id": "payout-ratio-basis-mismatch",
+   "category": "accuracy",
+   "title": "payout_ratio field recurringly disagrees with the desk's own div_yield/EPS pair",
+   "why": "scripts/fetch_fundamentals.py:26 maps the scraped payoutRatio field straight through with no cross-check. room-verifier had to hand-correct or flag this exact mismatch in 8 of ~22 QA'd tickers this week alone (UBL corrected, NBP corrected, MEBL blocked, HUBC blocked, DCR/LOTCHEM/PSX/DGKC flagged) — a systemic period-basis bug, not one-off scrape noise.",
+   "impact": "high",
+   "effort": "med",
+   "score": 1.5,
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-07 — scripts/fetch_fundamentals.py now recomputes payout_ratio as dps/eps instead of trusting the vendor's own payoutRatio field (see module docstring + line ~77). Confirmed live in AKBL's 2026-08-07 room.qa note."
+  },
+  {
+   "id": "dossier-recent-announcements-window-gap",
+   "category": "accuracy",
+   "title": "Dossier's recent_dividends/recent_news window can miss the newest announcement entirely",
+   "why": "HBL's room-verifier note this cycle: the dossier's recent_dividends/recent_news dated 2026-08-10 did not include the 2026-08-04 interim dividend/H1'26 results announcement — a data-feed staleness gap in the upstream scrape window, not a fabricated number. Distinct from the open dossier-stale-next-earnings item, which only guards the single next_earnings field against showing a past date; this is the recent_dividends/recent_news arrays missing a real, already-public announcement inside their own display window.",
+   "existing_check": "grepped room_dossier.py and fetch_fundamentals.py — no window/recency check on recent_dividends or recent_news arrays comparable to build_calendar.py's `ed >= today` guard; confirmed via HBL's verbatim qa note in state/rooms.json this cycle",
+   "impact": "med",
+   "effort": "med",
+   "score": 1.0,
+   "status": "proposed"
+  },
+  {
    "id": "ratio-stale-price-basis",
    "category": "accuracy",
    "title": "PE/market-cap sometimes computed off the prior session's close, not today's print",
@@ -88,28 +132,6 @@
    "effort": "med",
    "score": 1.0,
    "status": "proposed"
-  },
-  {
-   "id": "confidence-pill-hide-n",
-   "category": "clarity",
-   "title": "Signal card 'confidence' pill hides the trade count behind it",
-   "why": "dashboard/app.js:261 renders a green 'high' confidence pill on the board's signal cards; the backtest sample size only appears buried in the thesis prose sentence.",
-   "impact": "med",
-   "effort": "low",
-   "score": 2.0,
-   "status": "done",
-   "resolved_note": "Current signal card (app.js:437-451) shows a 'sample n<N>' stat directly in the statgrid, one row below the confidence pill, same card — the trade count is no longer buried in prose. Glossary (app.js:5757) now states this explicitly as a design rule."
-  },
-  {
-   "id": "shipped-improvements-panel",
-   "category": "feature",
-   "title": "Surface a 'recently shipped' list from the product backlog itself",
-   "why": "docs/OPERATIONS.md §3c documents the propose-only self-improvement loop but it was internal-only.",
-   "impact": "med",
-   "effort": "low",
-   "score": 2.0,
-   "status": "done",
-   "resolved_note": "Superseded, not literally built as specified: pageShipped (app.js:5769) now ships a 'Recently shipped' page reading state/changelog.json, covering the same trust-signal need this item asked for. Different source file (changelog vs backlog) but same user-facing gap closed — no further action needed."
   }
  ]
 }
