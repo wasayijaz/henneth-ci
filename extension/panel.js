@@ -194,33 +194,26 @@
   }
 
   function askMarkdown(raw) {
-    let html = "";
-    let list = [];
-    const closeList = () => {
-      if (!list.length) return;
-      html += '<ul class="ask-md-list">' + list.map((item) =>
-        '<li><span class="ask-answer-mount" data-answer="' + esc(stripAskInline(item)) + '"></span></li>'
-      ).join("") + "</ul>";
-      list = [];
-    };
+    const lines = [];
     for (const line of String(raw || "").split(/\r?\n/)) {
       const t = line.trim();
-      if (!t) { closeList(); continue; }
+      if (!t) {
+        if (lines.length && lines[lines.length - 1] !== "") lines.push("");
+        continue;
+      }
       const heading = t.match(/^\*\*(.+?)\*\*:?$/);
       const bullet = t.match(/^[-*]\s+(.+)$/);
       if (heading) {
-        closeList();
-        html += '<h4 class="ask-md-heading">' + esc(heading[1]) + "</h4>";
+        if (lines.length && lines[lines.length - 1] !== "") lines.push("");
+        lines.push(heading[1].trim().toUpperCase());
       } else if (bullet) {
-        list.push(bullet[1]);
+        lines.push("•  " + stripAskInline(bullet[1]));
       } else {
-        closeList();
-        html += '<p><span class="ask-answer-mount" data-answer="' +
-          esc(stripAskInline(t)) + '"></span></p>';
+        lines.push(stripAskInline(t));
       }
     }
-    closeList();
-    return html || '<p><span class="ask-answer-mount" data-answer="' + esc(stripAskInline(raw)) + '"></span></p>';
+    const answer = lines.join("\n").trim() || stripAskInline(raw);
+    return '<div class="ask-answer-mount" data-answer="' + esc(answer) + '"></div>';
   }
 
   function renderAsk() {
