@@ -1,18 +1,57 @@
 {
- "generated": "2026-07-24",
+ "generated": "2026-08-17",
  "note": "Public release notes only. Mirrors state/changelog.json — see CLAUDE.md Rule 2.",
- "current": "2026.07.22",
+ "current": "2026.08.16",
  "releases": [
   {
-   "date": "2026-07-22",
-   "version": "2026.07.22",
-   "title": "The publication restructure, global coverage, mobile tables",
+   "date": "2026-08-16",
+   "version": "2026.08.16",
+   "title": "Desk UI overhaul: app shell, context rail, dark theme",
    "notes": [
-    "Tables fit your phone screen now. The widest one needed 4,393px before — twelve screen-widths of sideways dragging to finish one sentence. Wide tables restack as readable cards instead.",
-    "The Desk Room shows when a debate was published, and says \"Read\" rather than \"Run\". Nothing was ever run on request: the analysts work to the desk's own rotation, and the wording now says so.",
-    "Signals show risk per share instead of a share count. The desk does not know your capital, so sizing is yours — there is a free position-size calculator on the website using the desk's own rule.",
-    "The desk now covers 23 global symbols: the S&P 500, Nasdaq, Dow, Russell, VIX, all eleven US sector ETFs, EM and developed baskets, rates, gold and oil. Index and sector level, for the context they give PSX — no US stock picks, and no signals on them.",
-    "A free financial-astrology lens is on the website — your Moon sign, its element, and the sectors and commodities tradition attaches to it, plus what nineteen years of testing actually found."
+    "The desk got a proper rebuild. There's a permanent app shell now — a left nav that remembers where you were, a top bar with search, and a page-info strip that always tells you which page you're on and how fresh the data is.",
+    "A new panel on the right stays with you across pages: ask a question, keep notes, watch tickers, see your alerts, and read the day's news — without losing the page you were reading. The news pane lists today's PSX headlines from Profit, Dawn and the rest, each linking out to the full article, stamped with when it was last refreshed.",
+    "Dark mode. The light/dark control sits next to the search box in the top bar, one click, and it follows your system setting until you tell it otherwise. Your choice is remembered on this device.",
+    "The live index ticker now runs edge to edge across the whole desk, passing behind the two side panels and blurring softly as it goes."
+   ]
+  },
+  {
+   "date": "2026-08-15",
+   "version": "2026.08.15.3",
+   "title": "Auth nav: dead language chip removed, Back to site points at the marketing site",
+   "notes": [
+    "The \"EN / اردو\" button on the sign in screen is gone — it never did anything — and \"← Back to site\" now actually takes you back to henneth.app."
+   ]
+  },
+  {
+   "date": "2026-08-15",
+   "version": "2026.08.15",
+   "title": "Auth terminal: no scrolling on short screens, form-only on mobile",
+   "notes": [
+    "The sign in / create account screen now fits on a laptop screen without scrolling, and on a phone it shows just the form — centred, no animation — instead of the desktop layout squeezed sideways."
+   ]
+  },
+  {
+   "date": "2026-08-14",
+   "version": "2026.08.14",
+   "title": "Sign-in goes straight to the terminal; desk mark in the header",
+   "notes": [
+    "Signing in is one step shorter: you land on the sign in / create account screen directly instead of a page that just asks which one you want. On a phone the form is now at the top of that screen, with the animated terminal below it. The desk mark now sits in the header on every page."
+   ]
+  },
+  {
+   "date": "2026-08-10",
+   "version": "2026.08.10",
+   "title": "Premium polish round 5: tape stability, modal/scroll-lock cleanup, sidebar restore",
+   "notes": [
+    "The price tape no longer jitters as numbers update, and closing a lesson or note popup now always restores normal scrolling — no more stuck screens. The sidebar remembers its width without a flash on load."
+   ]
+  },
+  {
+   "date": "2026-08-09",
+   "version": "2026.08.09",
+   "title": "SEO: orphaned /psx/ hub fixed, blog posts linked into it, canonicalization",
+   "notes": [
+    "Company pages under /psx/ are easier for Google to find now, and the blog links through to the company/ticker data it's talking about instead of dead-ending."
    ]
   }
  ]

@@ -16,8 +16,12 @@
     // changing the URL or document title, so read the legend DOM directly.
     const legend = fromTradingViewLegend(universe);
     if (legend) return legend;
+    // TradingView often leaves ?symbol= on the original chart while its visible
+    // title updates. Prefer a leading ticker in that title before trusting URL.
+    let m = document.title.match(/^\s*([A-Z]{2,6}(?:\.[A-Z]{1,2})?)\b/);
+    if (m) return m[1];
     const url = location.href;
-    let m = url.match(/[?&]symbol=(?:PSX%3A|PSX:)([A-Za-z0-9]+)/i);
+    m = url.match(/[?&]symbol=(?:PSX%3A|PSX:)([A-Za-z0-9]+)/i);
     if (m) return m[1];
     m = url.match(/\/symbols\/psx-([a-z0-9]+)\/?/i);
     if (m) return m[1];
@@ -26,9 +30,6 @@
     m = document.title.match(/\b([A-Z]{2,6}(?:\.[A-Z]{1,2})?)\b\s*Chart\b/);
     if (m) return m[1];
     m = document.title.match(/\b([A-Z]{2,6})\b[^—–-]*PSX/);
-    if (m) return m[1];
-    // Some layouts begin with the ticker but never include the word PSX.
-    m = document.title.match(/^\s*([A-Z]{2,6}(?:\.[A-Z]{1,2})?)\b/);
     if (m) return m[1];
     return null;
   }
