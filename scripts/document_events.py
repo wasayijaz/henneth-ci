@@ -51,7 +51,7 @@ _EVENT_RULES = (
 # Labelled values only; this avoids mistaking page numbers for financial facts.
 _FACT_RULES = (
     ("eps", r"\beps\s*(?:of|:|=)?\s*(?:rs\.?\s*)?(-?\d+(?:\.\d+)?)", "PKR/share"),
-    ("dividend", r"\b(?:cash\s+)?dividend\s*(?:of|:|=)?\s*(?:rs\.?\s*)?(\d+(?:\.\d+)?)", "PKR/share"),
+    ("dividend", r"(?<!unclaimed\s)\b(?:cash\s+)?dividend\s*(?:of|:|=)?\s*(?:rs\.?\s*)?(\d+(?:\.\d+)?)", "PKR/share"),
     ("revenue", r"\b(?:revenue|sales|turnover)\s*(?:of|:|=)?\s*(?:rs\.?\s*)?([\d,.]+(?:\s*(?:m|mn|bn|billion|million))?)", "reported"),
     ("profit", r"\b(?:profit|net income|profit after tax|pat)\s*(?:of|:|=)?\s*(?:rs\.?\s*)?([\d,.]+(?:\s*(?:m|mn|bn|billion|million))?)", "reported"),
     ("target_price", r"\btarget\s+price\s*(?:of|:|=)?\s*(?:rs\.?\s*)?(\d+(?:\.\d+)?)", "PKR/share"),

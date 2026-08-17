@@ -27,9 +27,17 @@ STEPS = [
     # Must immediately consume the ignored current-run PDF handoff before any later producer
     # can replace it. Writes bounded, source-linked page evidence for Company Intelligence.
     "document_intelligence.py",
+    # Period-aware, evidence-linked financial fact series from the retained document evidence.
+    # Pure local transform; no network, no model, no paid provider.
+    "build_financial_series.py",
     # Official issuer roots discovered only from DPS profiles; weekly requests-only hash monitor
     # for bounded investor/report/governance/news index pages. No browser or paid provider.
     "fetch_issuer_sources.py",
+    # Compact issuer-source health index and relationship graph for the private CI surface.
+    "build_source_qa.py",
+    # Compact CI knowledge graph over official documents, events, facts and issuer sources.
+    # Pure local transform; the browser reads the generated CI slice, not this raw state file.
+    "build_company_graph.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
     # other dependency and nothing downstream blocks on it. Pure local math, no network.

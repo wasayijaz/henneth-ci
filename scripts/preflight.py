@@ -176,6 +176,51 @@ def check_document_intelligence():
         fail(f"check_document_intelligence.py did not run — {e}")
 
 
+def check_company_brief_review():
+    """Offline fixtures for the training-mode CI brief approval gate."""
+    path = os.path.join(ROOT, "scripts", "company_brief_review.py")
+    if not os.path.exists(path):
+        fail("company_brief_review.py missing — CI synthesis approval cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path, "self-check"], capture_output=True, text=True, timeout=15)
+        if result.returncode != 0:
+            detail = (result.stdout or result.stderr or "")[-500:].strip()
+            fail("company brief review check failed — " + detail)
+    except Exception as e:  # noqa: BLE001
+        fail(f"company_brief_review.py did not run — {e}")
+
+
+def check_financial_graph():
+    """Offline fixtures for CI financial normalization and graph provenance."""
+    path = os.path.join(ROOT, "scripts", "check_financial_graph.py")
+    if not os.path.exists(path):
+        fail("check_financial_graph.py missing — CI financial/graph contracts cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=20)
+        if result.returncode != 0:
+            detail = (result.stdout or result.stderr or "")[-500:].strip()
+            fail("financial graph check failed — " + detail)
+    except Exception as e:  # noqa: BLE001
+        fail(f"check_financial_graph.py did not run — {e}")
+
+
+def check_synthesis_batch():
+    """Offline fixture for token-bounded, receipt-aware CI synthesis batching."""
+    path = os.path.join(ROOT, "scripts", "prepare_synthesis_batch.py")
+    if not os.path.exists(path):
+        fail("prepare_synthesis_batch.py missing — CI synthesis batching cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path, "--self-check"], capture_output=True, text=True, timeout=15)
+        if result.returncode != 0:
+            detail = (result.stdout or result.stderr or "")[-500:].strip()
+            fail("synthesis batch check failed — " + detail)
+    except Exception as e:  # noqa: BLE001
+        fail(f"prepare_synthesis_batch.py did not run — {e}")
+
+
 def check_company_profiles():
     data, err = load("company_profiles.json")
     if data is None:
@@ -234,6 +279,19 @@ def check_ci_slice():
         for key in ("filings", "timeline", "changes"):
             if not isinstance(row.get(key), list):
                 fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} {key} is not a list")
+        if not isinstance(row.get("financial_series"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing financial series")
+        else:
+            for fact in (row.get("financial_series") or {}).get("facts") or []:
+                if not fact.get("document_id") or not fact.get("source_url") or not fact.get("evidence"):
+                    fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial fact missing provenance")
+                if fact.get("quality_flags") is None or not isinstance(fact.get("quality_flags"), list):
+                    fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial fact flags invalid")
+        graph = row.get("graph")
+        if not isinstance(graph, dict) or not isinstance(graph.get("nodes"), list) or not isinstance(graph.get("edges"), list):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing graph")
+        if not isinstance(row.get("brief"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing brief status")
         if not isinstance(row.get("sources"), dict) or not isinstance(row.get("intelligence"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing intelligence/source maps")
         if (row.get("sources") or {}).get("status") not in ("ok", "degraded"):
@@ -268,6 +326,9 @@ def main():
     # --- Tier-1 maths QA: Rule 4 + payout sign guard ---
     check_rule4()
     check_document_intelligence()
+    check_company_brief_review()
+    check_financial_graph()
+    check_synthesis_batch()
     # --- Company intelligence shape: every populated row, not a sample ---
     check_company_profiles()
     check_ci_slice()

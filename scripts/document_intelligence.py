@@ -18,6 +18,8 @@ from document_events import extract_events
 from document_extract import extract_entry, stable_doc_id
 from document_ledger import OUT as LEDGER_OUT, append_events
 from document_queue import OUT as QUEUE_OUT, build_queue
+from financial_series import normalize_fact
+from build_financial_series import OUT as SERIES_OUT, merge_rows
 from psx_data import ROOT, STATE, load_json, save_json
 
 OUT = STATE / "company_documents.json"
@@ -98,7 +100,7 @@ def _fact_delta(previous: list[dict[str, Any]], current: list[dict[str, Any]]) -
 
 def run(index_path: Path = STATE / "research_index.json", output_path: Path = OUT,
         extraction_queue_path: Path | None = None, ledger_path: Path = LEDGER_OUT,
-        queue_path: Path = QUEUE_OUT) -> int:
+        queue_path: Path = QUEUE_OUT, series_path: Path = SERIES_OUT) -> int:
     registry = load_json(index_path, {})
     rows = _doc_rows(registry)
     # Terra's raw bytes are intentionally transient and ignored by git.  Join
@@ -111,6 +113,7 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
     prior = _load_registry(output_path)
     documents = dict(prior.get("documents") or {})
     processed = failed = staged = 0
+    transient_series: list[dict[str, Any]] = []
 
     for key, entry in sorted(rows.items(), key=lambda item: str(item[0])):
         source_id = entry.get("official_document_id") or entry.get("id") or key
@@ -173,6 +176,13 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
                 "facts": facts[:MAX_EVIDENCE], "versions": versions,
                 "ledger_changes": ledger_changes,
             }
+            # Normalize while the verified full pages are still transient.  Only
+            # bounded values/evidence are retained by the series writer; raw PDF
+            # bytes and full page text never enter durable state.
+            for fact in facts:
+                series_row = normalize_fact(record, fact, pages=extracted["pages"])
+                if series_row:
+                    transient_series.append(series_row)
             if record != old:
                 if old.get("content_sha256") and old.get("content_sha256") != content_sha:
                     change = {"change_id": "chg_" + doc_id + "_" + content_sha[:16],
@@ -216,6 +226,8 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
     replay_changes = [change for doc in documents.values() for change in (doc.get("ledger_changes") or [])]
     append_events(replay_events, path=ledger_path, changes=replay_changes)
     build_queue(documents, path=queue_path)
+    if transient_series or not series_path.exists():
+        merge_rows(transient_series, output_path=series_path)
     print(f"document_intelligence: processed={processed} staged={staged} failed={failed} events={len(replay_events)}")
     return 0
 
@@ -226,8 +238,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=OUT)
     parser.add_argument("--extraction-queue", type=Path,
                         default=ROOT / ".cache" / "company_intel" / "extraction_queue.json")
+    parser.add_argument("--series", type=Path, default=SERIES_OUT)
     args = parser.parse_args(argv)
-    return run(args.input, args.output, args.extraction_queue)
+    return run(args.input, args.output, args.extraction_queue, series_path=args.series)
 
 
 if __name__ == "__main__":

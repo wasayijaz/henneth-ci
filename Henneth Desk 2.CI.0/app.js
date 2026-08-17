@@ -8,6 +8,10 @@ const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
 }[c]));
 const fmt = (value, digits = 2) => value == null ? "unknown" : Number(value).toLocaleString("en", { maximumFractionDigits: digits });
 const pct = value => value == null ? "unknown" : `${value > 0 ? "+" : ""}${fmt(value, 1)}%`;
+const short = (value, limit = 80) => {
+  const text = String(value ?? "");
+  return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
+};
 
 let state = { session: null, data: null, selected: null, filter: "", view: "overview" };
 
@@ -258,20 +262,31 @@ function detail(r) {
     </div>
     <div class="grid4">
       ${metric("Official filings", intel.document_count ?? 0, `${intel.event_count ?? 0} classified events`)}
-      ${metric("Document changes", intel.change_count ?? 0, intel.last_event_at ? `latest event ${String(intel.last_event_at).slice(0, 10)}` : "no event extracted yet")}
+      ${metric("Financial facts", intel.financial_fact_count ?? 0, `${r.financial_series?.coverage?.period_count ?? 0} explicit periods`)}
+      ${metric("Graph links", intel.graph_edge_count ?? 0, `${intel.graph_node_count ?? 0} nodes mapped`)}
       ${metric("Synthesis queue", intel.pending_synthesis ?? 0, "approval required · training mode")}
-      ${metric("Issuer monitor", intel.source_status || "unknown", "official website layer")}
     </div>
     ${renderViewNav(r)}
-    ${state.view === "timeline" ? renderTimeline(r) : state.view === "filings" ? renderFilings(r) : state.view === "sources" ? renderSources(r) : renderOverview(r, { f, v, p, liq, source, inc })}`;
+    ${state.view === "timeline" ? renderTimeline(r)
+      : state.view === "trends" ? renderFinancials(r)
+      : state.view === "graph" ? renderGraph(r)
+      : state.view === "coverage" ? renderCoverage(r)
+      : state.view === "filings" ? renderFilings(r)
+      : state.view === "sources" ? renderSources(r)
+      : state.view === "brief" ? renderBrief(r)
+      : renderOverview(r, { f, v, p, liq, source, inc })}`;
 }
 
 function renderViewNav(r) {
   const tabs = [
     ["overview", "Overview"],
     ["timeline", `Timeline ${r.timeline?.length || 0}`],
+    ["trends", `Trends ${r.financial_series?.facts?.length || 0}`],
+    ["graph", `Graph ${r.graph?.edges?.length || 0}`],
+    ["coverage", "Coverage"],
     ["filings", `Filings ${r.filings?.length || 0}`],
     ["sources", `Sources ${(r.sources?.sources?.length || 0) + (r.sources?.documents?.length || 0)}`],
+    ["brief", r.brief?.current ? "Brief" : "Brief queue"],
   ];
   return `<nav class="viewnav" aria-label="Company intelligence views" role="tablist">${tabs.map(([key, label]) => `
     <button type="button" role="tab" aria-selected="${state.view === key}" class="${state.view === key ? "active" : ""}" data-view="${key}">${esc(label)}</button>`).join("")}</nav>`;
@@ -316,6 +331,11 @@ function renderOverview(r, ctx) {
       ${r.offmarket ? `<p>Rs ${esc(fmt(r.offmarket.value_pkr, 0))} across ${esc(fmt(r.offmarket.shares, 0))} shares and ${esc(r.offmarket.days)} day${r.offmarket.days === 1 ? "" : "s"} in the retained ${esc(r.offmarket.retention_days || "unknown")}-day window.</p>` : `<p>No off-market rows in the retained window.</p>`}
       <span class="pill ${liq.research_eligible ? "good" : ""}">research ${liq.research_eligible ? "eligible" : "not eligible"}</span>
       <span class="pill ${liq.signal_eligible ? "good" : "bad"}">signal ${liq.signal_eligible ? "eligible" : "not eligible"}</span>
+    </div>
+    <div class="panel span9">
+      <span class="kicker">Intelligence map</span>
+      <h2>What the official file currently proves</h2>
+      ${renderGraphSummary(r)}
     </div>`;
 }
 
@@ -361,6 +381,134 @@ function renderFactDelta(delta) {
   return parts.length ? `<ul class="delta">${parts.map(([label, value]) => `<li>${esc(label)}: ${esc(value.length)}</li>`).join("")}</ul>` : "";
 }
 
+function renderFinancials(r) {
+  const series = r.financial_series || {};
+  const facts = series.facts || [];
+  const coverage = series.coverage || {};
+  const conflicts = series.conflicts || [];
+  const trends = buildTrends(facts);
+  return `<section class="panel span9">
+    <span class="kicker">Period-aware extraction</span><h2>Financial facts from official PDFs</h2>
+    <p class="section-note">Only labelled values with document/page evidence are shown. Unknown period, unit, basis or currency stays flagged instead of being guessed.</p>
+    <div class="series-health">
+      ${metric("Facts", coverage.fact_count ?? facts.length, `${coverage.source_documents ?? 0} source documents`)}
+      ${metric("Periods", coverage.period_count ?? 0, `${coverage.missing_period_count ?? 0} missing explicit period`)}
+      ${metric("Conflicts", coverage.conflict_count ?? conflicts.length, "same metric/period/basis")}
+    </div>
+    ${conflicts.length ? `<div class="extract-error">Conflicts need review: ${esc(conflicts.map(c => `${c.metric || "metric"} ${c.period_end || "period unknown"}`).join(", "))}</div>` : ""}
+    ${trends.length ? `<div class="trend-grid">${trends.map(renderTrend).join("")}</div>` : `<div class="empty">At least two comparable, explicitly dated facts are required before a trend is drawn.</div>`}
+    <div class="fact-table" role="table" aria-label="Extracted financial facts">
+      <div role="row" class="fact-table-head"><span>Metric</span><span>Period</span><span>Value</span><span>Basis</span><span>Evidence</span><span>Flags</span></div>
+      ${facts.length ? facts.map(fact => {
+        const cite = (fact.evidence || [])[0] || {};
+        const page = Number(cite.page) > 0 ? `p.${Number(cite.page)}` : "page?";
+        const evidence = fact.source_url ? `<a href="${esc(fact.source_url)}" target="_blank" rel="noopener">${esc(page)}</a>` : esc(page);
+        const flags = (fact.quality_flags || []).length ? fact.quality_flags.join(", ") : "clean";
+        return `<div role="row" class="fact-table-row">
+          <span>${esc(fact.metric || "other")}</span>
+          <span>${esc(fact.period_end || "unknown")}<small>${esc(fact.period_type || "period type unknown")}</small></span>
+          <span><b>${esc(fact.raw_value ?? "unknown")}</b><small>${esc(fact.currency || "currency unknown")} · x${esc(fact.unit_multiplier ?? "?")}</small></span>
+          <span>${esc(fact.consolidation || "basis unknown")}</span>
+          <span>${evidence}</span>
+          <span>${esc(flags)}</span>
+        </div>`;
+      }).join("") : `<div class="empty">No source-linked financial fact has been normalized for this company yet.</div>`}
+    </div>
+  </section>`;
+}
+
+function buildTrends(facts) {
+  const groups = new Map();
+  facts.forEach(fact => {
+    const value = Number(fact.normalized_value);
+    if (!fact.period_end || !Number.isFinite(value) || (fact.quality_flags || []).includes("conflict")) return;
+    const key = [fact.metric, fact.consolidation, fact.currency, fact.unit_multiplier].join("|");
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(fact);
+  });
+  return [...groups.values()].map(points => points.sort((a, b) => String(a.period_end).localeCompare(String(b.period_end))))
+    .filter(points => points.length >= 2).sort((a, b) => b.length - a.length).slice(0, 6);
+}
+
+function renderTrend(points) {
+  const values = points.map(point => Number(point.normalized_value));
+  const low = Math.min(...values), high = Math.max(...values), spread = high - low || 1;
+  const coords = values.map((value, index) => {
+    const x = points.length === 1 ? 120 : 8 + index * (224 / (points.length - 1));
+    const y = 56 - ((value - low) / spread) * 48;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const latest = points.at(-1);
+  return `<article class="trend-card">
+    <header><div><span>${esc(latest.metric || "metric")}</span><b>${esc(latest.raw_value ?? "unknown")}</b></div><em>${esc(latest.consolidation || "basis unknown")}</em></header>
+    <svg viewBox="0 0 240 64" role="img" aria-label="${esc(latest.metric || "metric")} across ${esc(points.length)} explicitly dated periods"><polyline points="${coords}"></polyline>${coords.split(" ").map(pair => { const [cx, cy] = pair.split(","); return `<circle cx="${cx}" cy="${cy}" r="2.4"></circle>`; }).join("")}</svg>
+    <footer><span>${esc(points[0].period_end)}</span><span>${esc(latest.period_end)}</span></footer>
+  </article>`;
+}
+
+function renderGraphSummary(r) {
+  const graph = r.graph || {};
+  const summary = graph.summary || {};
+  return `<div class="graph-summary">
+    <div><b>${esc(summary.document ?? 0)}</b><span>official documents</span></div>
+    <div><b>${esc(summary.fact ?? 0)}</b><span>financial fact nodes</span></div>
+    <div><b>${esc(summary.period ?? 0)}</b><span>explicit periods</span></div>
+    <div><b>${esc(summary.event ?? 0)}</b><span>document events</span></div>
+    <div><b>${esc(summary.source ?? 0)}</b><span>issuer/source links</span></div>
+  </div>`;
+}
+
+function renderGraph(r) {
+  const graph = r.graph || {};
+  const nodes = graph.nodes || [];
+  const edges = graph.edges || [];
+  const byId = Object.fromEntries(nodes.map(node => [node.id, node]));
+  const layout = layoutGraph(nodes);
+  const visibleIds = new Set(layout.map(item => item.node.id));
+  const visibleEdges = edges.filter(edge => visibleIds.has(edge.from) && visibleIds.has(edge.to));
+  const positions = Object.fromEntries(layout.map(item => [item.node.id, item]));
+  const rows = visibleEdges.slice(0, 40);
+  return `<section class="panel span9">
+    <span class="kicker">Knowledge graph</span><h2>Issuer relationships</h2>
+    <p class="section-note">This is a deterministic relationship map over official documents, extracted events, financial facts, periods and monitored issuer sources.</p>
+    ${renderGraphSummary(r)}
+    ${layout.length ? `<div class="graph-canvas" role="img" aria-label="Evidence-backed company relationship graph">
+      <svg viewBox="0 0 1000 540" aria-hidden="true">${visibleEdges.map(edge => {
+        const from = positions[edge.from], to = positions[edge.to];
+        return `<line x1="${from.x * 10}" y1="${from.y * 5.4}" x2="${to.x * 10}" y2="${to.y * 5.4}"></line>`;
+      }).join("")}</svg>
+      ${layout.map(({node, x, y}) => renderGraphNode(node, x, y)).join("")}
+    </div>` : `<div class="empty">No graph nodes have been built for this company yet.</div>`}
+    <div class="edge-list">${rows.length ? rows.map(edge => {
+      const left = byId[edge.from]?.label || edge.from;
+      const right = byId[edge.to]?.label || edge.to;
+      const evidence = edge.evidence || {};
+      const provenance = evidence.source_url
+        ? `<a href="${esc(evidence.source_url)}" target="_blank" rel="noopener">${evidence.page ? `p.${esc(evidence.page)}` : "source"}</a>`
+        : "source unavailable";
+      return `<div class="edge-row"><span>${esc(short(left, 30))}</span><b>${esc(edge.type || "linked")}</b><span>${esc(short(right, 30))}</span><em>${provenance}</em></div>`;
+    }).join("") : `<div class="empty">No graph edges have been built for this company yet.</div>`}</div>
+  </section>`;
+}
+
+function layoutGraph(nodes) {
+  const layerFor = { company: 0, document: 1, source: 1, event: 2, fact: 2, change: 2, period: 3 };
+  const layers = [[], [], [], []];
+  nodes.forEach(node => layers[layerFor[node.type] ?? 2].push(node));
+  const x = [8, 34, 64, 90];
+  return layers.flatMap((layer, layerIndex) => layer.slice(0, layerIndex === 0 ? 1 : 9).map((node, index) => ({
+    node, x: x[layerIndex], y: layer.length === 1 ? 50 : 8 + index * (84 / Math.max(1, Math.min(layer.length, 9) - 1)),
+  })));
+}
+
+function renderGraphNode(node, x, y) {
+  const body = `<b>${esc(short(node.label || node.id, 32))}</b><span>${esc(node.type || "node")}</span>`;
+  const style = `left:${x}%;top:${y}%`;
+  return node.source_url || node.url
+    ? `<a class="graph-node kind-${esc(node.type || "other")}" style="${style}" href="${esc(node.source_url || node.url)}" target="_blank" rel="noopener">${body}</a>`
+    : `<div class="graph-node kind-${esc(node.type || "other")}" style="${style}">${body}</div>`;
+}
+
 function renderFilings(r) {
   const filings = r.filings || [];
   return `<section class="panel span9"><span class="kicker">Official PSX / PUCARS record</span><h2>Filings and announcements</h2>
@@ -398,6 +546,59 @@ function renderSources(r) {
     <section class="panel span4"><span class="kicker">Issuer document index</span><h2>Reports and presentations</h2>
       ${docs.length ? docs.map(doc => `<div class="source-row"><div><b>${esc(doc.title || doc.type || "Issuer document")}</b><span>${esc(doc.type || "document")}${doc.first_seen ? ` · first seen ${esc(String(doc.first_seen).slice(0, 10))}` : ""}</span></div><a href="${esc(doc.url)}" target="_blank" rel="noopener">open</a></div>`).join("") : `<div class="empty">No same-domain report link has been indexed yet.</div>`}
     </section>`;
+}
+
+function renderCoverage(r) {
+  const quality = r.source_quality || {};
+  const financial = r.financial_series?.coverage || {};
+  const intel = r.intelligence || {};
+  const flags = quality.quality_flags || [];
+  return `
+    <section class="panel span5"><span class="kicker">Evidence coverage</span><h2>What is currently usable</h2>
+      <div class="coverage-grid">
+        ${metric("Extracted filings", intel.document_count ?? 0, `${intel.event_count ?? 0} events classified`)}
+        ${metric("Financial facts", financial.fact_count ?? 0, `${financial.period_count ?? 0} explicit periods`)}
+        ${metric("Issuer documents", quality.document_link_count ?? 0, `${quality.monitored_page_count ?? 0} monitored pages`)}
+        ${metric("Pending synthesis", intel.pending_synthesis ?? 0, "owner approval required")}
+      </div>
+    </section>
+    <section class="panel span4"><span class="kicker">Source QA</span><h2>Known limitations</h2>
+      <p>Status: <b>${esc(quality.status || "unknown")}</b>. Missing required source: <b>${quality.missing_required_source ? "yes" : "no"}</b>.</p>
+      ${flags.length ? `<ul class="quality-flags">${flags.map(flag => `<li>${esc(flag.replaceAll("_", " "))}</li>`).join("")}</ul>` : `<p>No source-registry flag is active for this company.</p>`}
+      ${financial.missing_period_count ? `<p>${esc(financial.missing_period_count)} extracted fact${financial.missing_period_count === 1 ? "" : "s"} remain audit-only because the reporting period was not explicit.</p>` : ""}
+      ${financial.conflict_count ? `<p>${esc(financial.conflict_count)} comparable period/basis conflict${financial.conflict_count === 1 ? "" : "s"} require review.</p>` : ""}
+    </section>`;
+}
+
+function renderBrief(r) {
+  const current = r.brief?.current;
+  if (!current) {
+    return `<section class="panel span9"><span class="kicker">Training mode</span><h2>No owner-approved brief yet</h2>
+      <p class="section-note">Model synthesis is intentionally paused here. Candidates are written to ignored local cache, independently verified, then approved by the owner before anything becomes durable state.</p>
+      <div class="queue-panel">
+        <div><b>${esc(r.intelligence?.pending_synthesis ?? 0)}</b><span>pending queue items</span></div>
+        <div><b>${esc(r.intelligence?.brief_status || "training_only")}</b><span>publication state</span></div>
+        <div><b>${esc(r.brief?.history_count ?? 0)}</b><span>approved history rows</span></div>
+      </div>
+    </section>`;
+  }
+  const sections = current.sections || {};
+  return `<section class="panel span9"><span class="kicker">Owner-approved synthesis</span><h2>${esc(current.headline || "Company brief")}</h2>
+    <p class="section-note">This brief passed deterministic citation validation and independent verifier review before owner approval.</p>
+    ${["what_changed", "financial_read", "management_and_capital", "open_questions"].map(key => `<section class="brief-section">
+      <h3>${esc(key.replaceAll("_", " "))}</h3>
+      ${(sections[key] || []).length ? sections[key].map(item => `<p>${esc(item.text || "")} ${renderBriefEvidence(item.evidence)}</p>`).join("") : `<p class="muted">No approved statements in this section.</p>`}
+    </section>`).join("")}
+    ${(current.limitations || []).length ? `<div class="limitations"><b>Limitations</b><ul>${current.limitations.map(item => `<li>${esc(item)}</li>`).join("")}</ul></div>` : ""}
+  </section>`;
+}
+
+function renderBriefEvidence(refs) {
+  if (!Array.isArray(refs) || !refs.length) return "";
+  return `<small class="brief-cites">${refs.map(ref => {
+    const label = `${esc(ref.doc_id || "doc")} p.${esc(ref.page || "?")}`;
+    return ref.source_url ? `<a href="${esc(ref.source_url)}" target="_blank" rel="noopener">${label}</a>` : label;
+  }).join(" · ")}</small>`;
 }
 
 function bindLogin() {

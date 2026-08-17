@@ -381,11 +381,15 @@ def _failure_record(prior: dict | None, candidate: dict, exc: Exception) -> dict
     return {**prior, **candidate, "status": "degraded", "error": error}
 
 
-def _pilot_symbols(limit: int | None) -> list[str]:
+def _pilot_symbols(limit: int | None, requested: str | None = None) -> list[str]:
     profiles = load_json(STATE / "company_profiles.json", {})
     symbols = list((profiles.get("pilot") or {}).get("symbols") or [])
     if not symbols:
         symbols = list((profiles.get("tickers") or {}).keys())
+    if requested:
+        requested_symbols = [s.strip().upper() for s in requested.split(",") if s.strip()]
+        known = {str(symbol).upper() for symbol in symbols}
+        symbols = [symbol for symbol in requested_symbols if symbol in known]
     cap = min(limit, PILOT_COUNT) if limit is not None else PILOT_COUNT
     return [str(symbol).upper() for symbol in symbols[:cap]]
 
@@ -450,6 +454,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--symbols", help="comma-separated pilot symbols for a bounded manual batch")
     parser.add_argument("--self-check", action="store_true")
     args = parser.parse_args(argv)
     if args.self_check:
@@ -463,7 +468,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"issuer_sources: inside {LOCAL_CADENCE_DAYS}d local cadence")
         return 0
 
-    symbols = _pilot_symbols(args.limit)
+    symbols = _pilot_symbols(args.limit, args.symbols)
     if not symbols:
         print("issuer_sources: no CI pilot symbols; leaving last-good state untouched")
         return 0

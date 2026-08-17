@@ -252,11 +252,15 @@ def _fetch_symbol(session: requests.Session, symbol: str, date_from: str) -> lis
     return sorted(found.values(), key=lambda row: row["published_at"], reverse=True)
 
 
-def _pilot_symbols(limit: int | None) -> list[str]:
+def _pilot_symbols(limit: int | None, requested: str | None = None) -> list[str]:
     profiles = load_json(STATE / "company_profiles.json", {})
     symbols = list((profiles.get("pilot") or {}).get("symbols") or [])
     if not symbols:
         symbols = list((profiles.get("tickers") or {}).keys())
+    if requested:
+        requested_symbols = [s.strip().upper() for s in requested.split(",") if s.strip()]
+        known = {str(symbol).upper() for symbol in symbols}
+        symbols = [symbol for symbol in requested_symbols if symbol in known]
     cap = min(limit, PILOT_COUNT) if limit is not None else PILOT_COUNT
     return [str(symbol).upper() for symbol in symbols[:cap]]
 
@@ -455,6 +459,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true", help="run outside cadence/schedule gate")
     parser.add_argument("--limit", type=int, help="restrict pilot symbols for a manual run")
+    parser.add_argument("--symbols", help="comma-separated pilot symbols for a bounded manual batch")
     parser.add_argument("--metadata-only", action="store_true", help="do not stage PDF bytes")
     parser.add_argument("--self-check", action="store_true", help="run parser/security fixtures")
     args = parser.parse_args(argv)
@@ -469,7 +474,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"company_documents: inside {LOCAL_CADENCE_HOURS}h local cadence")
         return 0
 
-    symbols = _pilot_symbols(args.limit)
+    symbols = _pilot_symbols(args.limit, args.symbols)
     if not symbols:
         print("company_documents: no CI pilot symbols; leaving last-good state untouched")
         return 0

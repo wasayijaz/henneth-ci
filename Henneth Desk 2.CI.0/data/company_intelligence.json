@@ -1,10 +1,25 @@
 {
  "meta": {
-  "built": "2026-08-18 02:07",
+  "built": "2026-08-18 03:07",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-17 23:41",
   "count": 20,
+  "financial_series": {
+   "updated": "2026-08-18 03:06",
+   "source": "state/company_documents.json + current verified extraction",
+   "source_documents": 47,
+   "rejected_facts": 0,
+   "append_only_values": true,
+   "note": "Unknown period, unit, currency and consolidation remain explicit; facts retain source/page evidence."
+  },
+  "graph": {
+   "updated": "2026-08-18 03:06",
+   "node_count": 322,
+   "edge_count": 368,
+   "source_documents": 47,
+   "note": "Every factual edge carries source URL and cited page when available."
+  },
   "note": "Private company-intelligence slice. Research, not advice. No execution or order path."
  },
  "tickers": [
@@ -995,6 +1010,560 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {
+     "source_documents": 3,
+     "fact_count": 22,
+     "period_count": 3,
+     "missing_required_source": false,
+     "missing_period_count": 0,
+     "conflict_count": 0
+    },
+    "conflicts": [],
+    "facts": [
+     {
+      "series_id": "series_cc776de43239548e76d1be71",
+      "metric": "revenue",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1000000,
+      "raw_value": "56,964 m",
+      "normalized_value": 56964000000,
+      "document_id": "psx:275425",
+      "fact_id": "fact_3a4c6ed494964b8951bc",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 4,
+        "text": "6, ended 31st March 2026. During the review period, the Company recorded net consolidated turnover of Rs. 56,964 million, compared to Rs. 51,379 million in the previous period. The Company’s top line increased by 10.87% as a result of 21.8…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_4db1214856fbfaf11311757c",
+      "metric": "revenue",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "51,373,142",
+      "normalized_value": 51373142,
+      "document_id": "psx:275425",
+      "fact_id": "fact_6599dd268414e6807864",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 20,
+        "text": "(1,971,412) (853,113) Commission (342,229) (202,939) (28,400,599) (24,608,175) Net local sales 51,373,142 49,183,937 Export sales 977,295 2,195,177 52,350,437 51,379,114 14. COST OF SALES Raw materials consumed 7,137,192 6,400,459 Packing…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_34d1a8d7fd4bbe65ae12a614",
+      "metric": "revenue",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "reported",
+      "unit_multiplier": 1000,
+      "raw_value": "79,773,741",
+      "normalized_value": 79773741000,
+      "document_id": "psx:275425",
+      "fact_id": "fact_3501b21a1bc7b0ed56e0",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 20,
+        "text": "026 2025 13. REVENUE FROM CONTRACTS WITH (Rupees in thousand) CUSTOMERS - NET Gross local sales 79,773,741 73,792,112 Less: Federal excise duty (12,441,865) (11,149,242) Sales tax (13,645,093) (12,402,881) Discount and others (1,971,412) (…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "series_id": "series_2e80f2e0cd2820f3af074fe3",
+      "metric": "revenue",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "14",
+      "normalized_value": 14,
+      "document_id": "psx:275425",
+      "fact_id": "fact_d6ba46100b2c8574b65b",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 9,
+        "text": "rom contracts with customers - net 13 52,350,437 51,379,114 16,931,582 16,631,126 Cost of sales 14 (36,351,671) (34,363,317) (11,947,571) (11,432,736) Gross profit 15,998,766 17,015,797 4,984,011 5,198,390 Selling and distribution expenses…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_29c73e985d3c06f21ce090f3",
+      "metric": "revenue",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "977,295",
+      "normalized_value": 977295,
+      "document_id": "psx:275425",
+      "fact_id": "fact_a389d2abc2f9c4a4f2d9",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 20,
+        "text": "342,229) (202,939) (28,400,599) (24,608,175) Net local sales 51,373,142 49,183,937 Export sales 977,295 2,195,177 52,350,437 51,379,114 14. COST OF SALES Raw materials consumed 7,137,192 6,400,459 Packing materials consumed 2,539,893 2,467…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_057ceab2114a4280e8aefe9e",
+      "metric": "revenue",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "36,351,671",
+      "normalized_value": 36351671,
+      "document_id": "psx:275425",
+      "fact_id": "fact_d7aa7d46938e5a9ed7e5",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 20,
+        "text": "riod 784,126 508,686 At end of the period (905,849) (778,191) (121,723) (269,505) Cost of sales 36,351,671 34,363,317"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_c277a99f7dcc6637a600b692",
+      "metric": "dividend",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "26",
+      "normalized_value": 26,
+      "document_id": "psx:275425",
+      "fact_id": "fact_ae6465dbcc404798306f",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 7,
+        "text": "e and other payables 7 24,027,506 17,926,267 Provision for income tax - 158,794 Unclaimed dividend 26,549 26,877 Mark-up accrued on borrowings 1,125,592 320,434 Short term borrowings from financial institutions - secured 2,515,310 822,285…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "series_id": "series_b9643f7f1bef364e2aa1c873",
+      "metric": "dividend",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "123",
+      "normalized_value": 123,
+      "document_id": "psx:275425",
+      "fact_id": "fact_6192369124fd56e7d1cb",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "evidence": [
+       {
+        "page": 27,
+        "text": "e and other payables 7 31,768,513 17,698,228 Provision for income tax - 449,875 Unclaimed dividend 123,385 26,877 Mark-up accrued on borrowings 1,252,645 320,434 Short term borrowings from financial institutions - secured 4,014,213 822,285…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "series_id": "series_f1548a0088145aa77e1d4477",
+      "metric": "revenue",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "34,457,678",
+      "normalized_value": 34457678,
+      "document_id": "psx:271712",
+      "fact_id": "fact_3523e8a786c9bf8d2d80",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 22,
+        "text": "1,342,976) (553,376) - Commission (189,829) (132,154) (19,295,900) (16,161,060) Net local sales 34,457,678 32,901,301 Export sales 961,177 1,846,687 35,418,855 34,747,988 15. COST OF SALES Raw materials consumed 4,734,185 4,528,365 Packing…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_dceefdab2070eedca7f55c00",
+      "metric": "revenue",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "24,404,100",
+      "normalized_value": 24404100,
+      "document_id": "psx:271712",
+      "fact_id": "fact_38a46605764ec6efc20e",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 22,
+        "text": "riod 784,126 508,686 At end of the period (884,846) (834,637) (100,720) (325,951) Cost of sales 24,404,100 22,930,581"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_c68f1770dc5c9bb01b4ada53",
+      "metric": "revenue",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "961,177",
+      "normalized_value": 961177,
+      "document_id": "psx:271712",
+      "fact_id": "fact_4dd64c658c40f1b8719d",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 22,
+        "text": "189,829) (132,154) (19,295,900) (16,161,060) Net local sales 34,457,678 32,901,301 Export sales 961,177 1,846,687 35,418,855 34,747,988 15. COST OF SALES Raw materials consumed 4,734,185 4,528,365 Packing materials consumed 1,782,690 1,680…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_87d40de585e89aabdc5f5aa8",
+      "metric": "revenue",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1000000,
+      "raw_value": "35,419 m",
+      "normalized_value": 35419000000,
+      "document_id": "psx:271712",
+      "fact_id": "fact_8de804bbbf2f1d2cee98",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 4,
+        "text": "ended 31st December 2025. During the review period, the Company recorded net consolidated turnover of Rs. 35,419 million, compared to Rs. 34,748 million in the previous period. The Company’s top line increased by 1.93% as a result of 17.10…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_5b097d07e66ceccd1e10e766",
+      "metric": "revenue",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "15",
+      "normalized_value": 15,
+      "document_id": "psx:271712",
+      "fact_id": "fact_91e1d11ac7c6bbd323f7",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 10,
+        "text": "rom contracts with customers - net 14 35,418,855 34,747,988 18,935,494 19,028,150 Cost of sales 15 (24,404,100) (22,930,581) (12,902,559) (11,889,682) Gross profit 11,014,755 11,817,407 6,032,935 7,138,468 Selling and distribution expenses…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_2567680893fa3b7eb3d95587",
+      "metric": "revenue",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "reported",
+      "unit_multiplier": 1000,
+      "raw_value": "53,753,578",
+      "normalized_value": 53753578000,
+      "document_id": "psx:271712",
+      "fact_id": "fact_1c38563e404903942e1f",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 22,
+        "text": "025 2024 14. REVENUE FROM CONTRACTS WITH (Rupees in thousand) CUSTOMERS - NET Gross local sales 53,753,578 49,062,361 Less: - Federal excise duty (8,518,922) (7,231,677) - Sales tax (9,244,173) (8,243,853) - Discounts and others (1,342,976…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "series_id": "series_5bc1a9e97f1f14e42e29b9b8",
+      "metric": "dividend",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "26",
+      "normalized_value": 26,
+      "document_id": "psx:271712",
+      "fact_id": "fact_689b327993d45cc9b763",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+      "evidence": [
+       {
+        "page": 8,
+        "text": "ease liabilities 19,818 14,323 Trade and other payables 7 20,415,764 17,926,267 Unclaimed dividend 26,707 26,877 Provision for income tax 569,839 158,794 Mark-up accrued on borrowings 258,384 320,434 Short term borrowings from financial in…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "series_id": "series_ec05ab330d75c3a95555aea1",
+      "metric": "revenue",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1000000,
+      "raw_value": "16,483 m",
+      "normalized_value": 16483000000,
+      "document_id": "psx:263397",
+      "fact_id": "fact_3293ef87093a3215ccfd",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 4,
+        "text": "0th September 2025. During the period under review, the Company recorded net consolidated turnover of Rs. 16,483 million, compared to Rs. 15,720 million in the previous period. The Company’s top line increased by 4.86% as a result of 20.89…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_e40132ef4755be19b4c7473b",
+      "metric": "revenue",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "14",
+      "normalized_value": 14,
+      "document_id": "psx:263397",
+      "fact_id": "fact_0c6122a197a0cf5a507e",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 9,
+        "text": "in thousand) Revenue from contracts with customers - net 13 16,483,361 15,719,838 Cost of sales 14 (11,501,541) (11,040,899) Gross profit 4,981,820 4,678,939 Selling and distribution expenses (774,268) (1,347,200) Administrative expenses (…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_8e9618e447b1a6a859197540",
+      "metric": "revenue",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "reported",
+      "unit_multiplier": 1000,
+      "raw_value": "24,733,380",
+      "normalized_value": 24733380000,
+      "document_id": "psx:263397",
+      "fact_id": "fact_7c0484fdc0489cd1cae2",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "2025 2024 13 REVENUE FROM CONTRACTS WITH (Rupees in thousand) CUSTOMERS - NET Gross local sales 24,733,380 22,028,205 Less: Federal excise duty (3,905,520) (3,232,865) Sales tax (4,234,764) (3,709,959) Discount and others (684,596) (240,66…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "series_id": "series_842d747108396871d26eb763",
+      "metric": "revenue",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "684,453",
+      "normalized_value": 684453,
+      "document_id": "psx:263397",
+      "fact_id": "fact_18746ff0dc7adf34f1c4",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "n (109,592) (68,091) (8,934,472) (7,251,577) Net local sales 15,798,908 14,776,628 Export sales 684,453 943,210 16,483,361 15,719,838"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_53d5c22fbd27709df145c0bc",
+      "metric": "revenue",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "15,798,908",
+      "normalized_value": 15798908,
+      "document_id": "psx:263397",
+      "fact_id": "fact_a11594111a4cc2247320",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "thers (684,596) (240,662) Commission (109,592) (68,091) (8,934,472) (7,251,577) Net local sales 15,798,908 14,776,628 Export sales 684,453 943,210 16,483,361 15,719,838"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_17bda1fcaea9a465881ba964",
+      "metric": "revenue",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "11,501,541",
+      "normalized_value": 11501541,
+      "document_id": "psx:263397",
+      "fact_id": "fact_146885515de3e34994a4",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 20,
+        "text": "riod 784,126 508,686 At end of the period (885,288) (658,176) (101,162) (149,490) Cost of sales 11,501,541 11,040,899 15. FINANCE COST Profit / interest / mark up on: - Long term loans and finances 355,144 548,774 - Long term loans from Su…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "series_id": "series_b481b72365401cec09460806",
+      "metric": "dividend",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "26",
+      "normalized_value": 26,
+      "document_id": "psx:263397",
+      "fact_id": "fact_8fc9d795027db8ca5931",
+      "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+      "evidence": [
+       {
+        "page": 7,
+        "text": "ease liabilities 15,792 14,323 Trade and other payables 7 18,402,289 17,926,267 Unclaimed dividend 26,721 26,877 Provision for income tax 491,354 158,794 Mark-up accrued on borrowings 288,834 320,434 Short term borrowings from financial in…"
+       }
+      ],
+      "quality_flags": []
+     }
+    ]
+   },
    "timeline": [
     {
      "event_id": "evt_f0b0e14b4204a3b8e67f",
@@ -1334,9 +1903,1386 @@
     }
    ],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 24,
+     "period": 4,
+     "fact": 22,
+     "event": 24,
+     "change": 0,
+     "source": 14
+    },
+    "nodes": [
+     {
+      "id": "company:MLCF",
+      "type": "company",
+      "label": "MLCF",
+      "ticker": "MLCF"
+     },
+     {
+      "id": "document:psx:270683",
+      "type": "document",
+      "label": "Disclosure of Material Information",
+      "document_id": "psx:270683",
+      "doc_type": "other",
+      "published_at": "2026-02-20T08:57:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270683.pdf"
+     },
+     {
+      "id": "document:psx:270820",
+      "type": "document",
+      "label": "MLCF-Disclosure of Material Information 23.02.2026",
+      "document_id": "psx:270820",
+      "doc_type": "other",
+      "published_at": "2026-02-23T08:55:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270820.pdf"
+     },
+     {
+      "id": "document:psx:270983",
+      "type": "document",
+      "label": "MLCF-Financial Results as on 31.12.2025",
+      "document_id": "psx:270983",
+      "doc_type": "results",
+      "published_at": "2026-02-25T08:41:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270983.pdf"
+     },
+     {
+      "id": "document:psx:271712",
+      "type": "document",
+      "label": "MLCF-Transmission of Quarterly Financial Statements for the Period Ended 31.12.2025",
+      "document_id": "psx:271712",
+      "doc_type": "results",
+      "published_at": "2026-03-02T08:46:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/271712.pdf"
+     },
+     {
+      "id": "document:psx:274750",
+      "type": "document",
+      "label": "MLCF - Financial Results 31.03.2026",
+      "document_id": "psx:274750",
+      "doc_type": "results",
+      "published_at": "2026-04-22T08:53:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/274750.pdf"
+     },
+     {
+      "id": "document:psx:275425",
+      "type": "document",
+      "label": "Transmission of Quarterly Financial Statements for the Period Ended 31.03.2026",
+      "document_id": "psx:275425",
+      "doc_type": "results",
+      "published_at": "2026-04-28T10:25:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf"
+     },
+     {
+      "id": "document:psx:280589",
+      "type": "document",
+      "label": "MLCF-Financial Results for the year ended June 30, 2026",
+      "document_id": "psx:280589",
+      "doc_type": "results",
+      "published_at": "2026-07-31T08:51:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/280589.pdf"
+     },
+     {
+      "id": "document:psx:247754",
+      "type": "document",
+      "label": "MLCF-Financial Results for the Quarter Ended 31.12.2024",
+      "document_id": "psx:247754",
+      "doc_type": "results",
+      "published_at": "2025-02-20T09:02:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/247754.pdf"
+     },
+     {
+      "id": "document:psx:251879",
+      "type": "document",
+      "label": "MLCF-Financial Results 31.03.2025",
+      "document_id": "psx:251879",
+      "doc_type": "results",
+      "published_at": "2025-04-23T08:54:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/251879.pdf"
+     },
+     {
+      "id": "document:psx:253628",
+      "type": "document",
+      "label": "MLCF-Disclosure of Material Information",
+      "document_id": "psx:253628",
+      "doc_type": "other",
+      "published_at": "2025-05-09T10:13:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/253628.pdf"
+     },
+     {
+      "id": "document:psx:257465",
+      "type": "document",
+      "label": "MLCF-Financial Results for the Year Ended 30.06.2025",
+      "document_id": "psx:257465",
+      "doc_type": "results",
+      "published_at": "2025-08-07T08:53:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/257465.pdf"
+     },
+     {
+      "id": "document:psx:262526",
+      "type": "document",
+      "label": "MLCF-Financial Results for the Quarter Ended 30.09.2025",
+      "document_id": "psx:262526",
+      "doc_type": "results",
+      "published_at": "2025-10-17T16:17:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/262526.pdf"
+     },
+     {
+      "id": "event:evt_027647780f54834193c8",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_027647780f54834193c8",
+      "event_type": "board_meeting",
+      "event_date": "2025-10-27T10:09:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_0b31307ae4c397ef8415",
+      "type": "event",
+      "label": "dividend",
+      "event_id": "evt_0b31307ae4c397ef8415",
+      "event_type": "dividend",
+      "event_date": "2025-10-27T10:09:00+05:00",
+      "priority_weight": 2
+     },
+     {
+      "id": "event:evt_12ba5f592b3fc0c5a7f1",
+      "type": "event",
+      "label": "management_change",
+      "event_id": "evt_12ba5f592b3fc0c5a7f1",
+      "event_type": "management_change",
+      "event_date": "2026-03-02T08:46:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_157253e7cd63c0252e7b",
+      "type": "event",
+      "label": "dividend",
+      "event_id": "evt_157253e7cd63c0252e7b",
+      "event_type": "dividend",
+      "event_date": "2026-03-02T08:46:00+05:00",
+      "priority_weight": 2
+     },
+     {
+      "id": "event:evt_254fb8c8db07c94de279",
+      "type": "event",
+      "label": "dividend",
+      "event_id": "evt_254fb8c8db07c94de279",
+      "event_type": "dividend",
+      "event_date": "2025-12-18T12:52:00+05:00",
+      "priority_weight": 2
+     },
+     {
+      "id": "event:evt_25bfb52e721191c7b644",
+      "type": "event",
+      "label": "acquisition",
+      "event_id": "evt_25bfb52e721191c7b644",
+      "event_type": "acquisition",
+      "event_date": "2026-04-28T10:25:00+05:00",
+      "priority_weight": 4
+     },
+     {
+      "id": "event:evt_2e4c23aea1832e581072",
+      "type": "event",
+      "label": "contract",
+      "event_id": "evt_2e4c23aea1832e581072",
+      "event_type": "contract",
+      "event_date": "2026-03-02T08:46:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_3b99352e80097e6a4c60",
+      "type": "event",
+      "label": "contract",
+      "event_id": "evt_3b99352e80097e6a4c60",
+      "event_type": "contract",
+      "event_date": "2025-10-27T10:09:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_550fd79cdb35e9433fd2",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_550fd79cdb35e9433fd2",
+      "event_type": "earnings",
+      "event_date": "2026-04-28T10:25:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_71c2e2ebe51f7f12068f",
+      "type": "event",
+      "label": "acquisition",
+      "event_id": "evt_71c2e2ebe51f7f12068f",
+      "event_type": "acquisition",
+      "event_date": "2025-10-27T10:09:00+05:00",
+      "priority_weight": 4
+     },
+     {
+      "id": "event:evt_7250078d48a8891c4a01",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_7250078d48a8891c4a01",
+      "event_type": "board_meeting",
+      "event_date": "2026-04-28T10:25:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_73a4afbcf35199711033",
+      "type": "event",
+      "label": "acquisition",
+      "event_id": "evt_73a4afbcf35199711033",
+      "event_type": "acquisition",
+      "event_date": "2026-03-02T08:46:00+05:00",
+      "priority_weight": 4
+     },
+     {
+      "id": "fact:psx:263397:fact_0c6122a197a0cf5a507e",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:263397",
+      "metric": "revenue",
+      "raw_value": "14",
+      "normalized_value": 14,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:263397:fact_146885515de3e34994a4",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:263397",
+      "metric": "revenue",
+      "raw_value": "11,501,541",
+      "normalized_value": 11501541,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:263397:fact_18746ff0dc7adf34f1c4",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:263397",
+      "metric": "revenue",
+      "raw_value": "684,453",
+      "normalized_value": 684453,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:263397:fact_3293ef87093a3215ccfd",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:263397",
+      "metric": "revenue",
+      "raw_value": "16,483 m",
+      "normalized_value": 16483000000,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:263397:fact_7c0484fdc0489cd1cae2",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:263397",
+      "metric": "revenue",
+      "raw_value": "24,733,380",
+      "normalized_value": 24733380000,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:263397:fact_8fc9d795027db8ca5931",
+      "type": "fact",
+      "label": "dividend",
+      "document_id": "psx:263397",
+      "metric": "dividend",
+      "raw_value": "26",
+      "normalized_value": 26,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "quality_flags": []
+     },
+     {
+      "id": "fact:psx:263397:fact_a11594111a4cc2247320",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:263397",
+      "metric": "revenue",
+      "raw_value": "15,798,908",
+      "normalized_value": 15798908,
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_1c38563e404903942e1f",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:271712",
+      "metric": "revenue",
+      "raw_value": "53,753,578",
+      "normalized_value": 53753578000,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_3523e8a786c9bf8d2d80",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:271712",
+      "metric": "revenue",
+      "raw_value": "34,457,678",
+      "normalized_value": 34457678,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_38a46605764ec6efc20e",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:271712",
+      "metric": "revenue",
+      "raw_value": "24,404,100",
+      "normalized_value": 24404100,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_4dd64c658c40f1b8719d",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:271712",
+      "metric": "revenue",
+      "raw_value": "961,177",
+      "normalized_value": 961177,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_689b327993d45cc9b763",
+      "type": "fact",
+      "label": "dividend",
+      "document_id": "psx:271712",
+      "metric": "dividend",
+      "raw_value": "26",
+      "normalized_value": 26,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_8de804bbbf2f1d2cee98",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:271712",
+      "metric": "revenue",
+      "raw_value": "35,419 m",
+      "normalized_value": 35419000000,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:271712:fact_91e1d11ac7c6bbd323f7",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:271712",
+      "metric": "revenue",
+      "raw_value": "15",
+      "normalized_value": 15,
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "fact:psx:275425:fact_3501b21a1bc7b0ed56e0",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:275425",
+      "metric": "revenue",
+      "raw_value": "79,773,741",
+      "normalized_value": 79773741000,
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:275425:fact_3a4c6ed494964b8951bc",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "psx:275425",
+      "metric": "revenue",
+      "raw_value": "56,964 m",
+      "normalized_value": 56964000000,
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "period_0d9cd168008111d69adea11b",
+      "type": "period",
+      "label": "2025-12-31",
+      "ticker": "MLCF",
+      "period_end": "2025-12-31",
+      "period_type": "quarter",
+      "consolidation": "unknown"
+     },
+     {
+      "id": "period_16b4309e9dba43cab4692d8e",
+      "type": "period",
+      "label": "2025-09-30",
+      "ticker": "MLCF",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "unknown"
+     },
+     {
+      "id": "period_8d7a770f021ae28af2a2c64a",
+      "type": "period",
+      "label": "2026-03-31",
+      "ticker": "MLCF",
+      "period_end": "2026-03-31",
+      "period_type": "quarter",
+      "consolidation": "unknown"
+     },
+     {
+      "id": "period_ca62e530f591dca8c92c1a69",
+      "type": "period",
+      "label": "2025-09-30",
+      "ticker": "MLCF",
+      "period_end": "2025-09-30",
+      "period_type": "quarter",
+      "consolidation": "consolidated"
+     },
+     {
+      "id": "source:src_0041077dadc52bdcd3baaa54",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "source_id": "src_0041077dadc52bdcd3baaa54",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_10b4904053a8b1d6f905d534",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/11/MLCF-Notice-of-CBS-07.11.2025-on-Website-1.pdf",
+      "source_id": "src_10b4904053a8b1d6f905d534",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/11/MLCF-Notice-of-CBS-07.11.2025-on-Website-1.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_299ac905021d79ce7467a773",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Request-for-Hard-Copy-of-Annual-Report.pdf",
+      "source_id": "src_299ac905021d79ce7467a773",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Request-for-Hard-Copy-of-Annual-Report.pdf",
+      "kind": "annual_report",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_29fb3c2b20d0b47ba6ae596a",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/10/MLCF-Results-of-Poll-for-Special-Resolutions-in-AGM-16.10.2025-Website-1.pdf",
+      "source_id": "src_29fb3c2b20d0b47ba6ae596a",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/10/MLCF-Results-of-Poll-for-Special-Resolutions-in-AGM-16.10.2025-Website-1.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_439ab6798ad58c456c359732",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Proxy-Form-for-AGM-16.10.2025-English.pdf",
+      "source_id": "src_439ab6798ad58c456c359732",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Proxy-Form-for-AGM-16.10.2025-English.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_6d5543e25ed6b24f2e9f84e6",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Ballot-Paper-for-AGM-16.10.2025-English.pdf",
+      "source_id": "src_6d5543e25ed6b24f2e9f84e6",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Ballot-Paper-for-AGM-16.10.2025-English.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_9681511317696ae668ebd618",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Proxy-Forms-for-EOGM-31.12.2025-Web.pdf",
+      "source_id": "src_9681511317696ae668ebd618",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Proxy-Forms-for-EOGM-31.12.2025-Web.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_a1443a4f74306be8a6969cf3",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2022/12/7-MLCF-E-Dividend-Mandate-Form.pdf",
+      "source_id": "src_a1443a4f74306be8a6969cf3",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2022/12/7-MLCF-E-Dividend-Mandate-Form.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_a8f1eabc2c63d1a541e2f1ee",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Notice-of-AGM-16.10.2025-Final.pdf",
+      "source_id": "src_a8f1eabc2c63d1a541e2f1ee",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Notice-of-AGM-16.10.2025-Final.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_b4fb29e495cac611c329a46d",
+      "type": "source",
+      "label": "https://www.kmlg.com/",
+      "source_id": "src_b4fb29e495cac611c329a46d",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_cb59d8ee72fc2d0f6b4fa708",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Notice-of-EOGM-31.12.2025-English-to-Website.pdf",
+      "source_id": "src_cb59d8ee72fc2d0f6b4fa708",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Notice-of-EOGM-31.12.2025-English-to-Website.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "source:src_ccd93d030270c419272b0f10",
+      "type": "source",
+      "label": "https://www.kmlg.com/mlcfl/investor-relation/",
+      "source_id": "src_ccd93d030270c419272b0f10",
+      "ticker": "MLCF",
+      "url": "https://www.kmlg.com/mlcfl/investor-relation/",
+      "kind": "investor_relations",
+      "status": "ok",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_01cb3282dbee059568025e12",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_3523e8a786c9bf8d2d80",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 22
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_02b97598d9a7664431b844a5",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_439ab6798ad58c456c359732",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Proxy-Form-for-AGM-16.10.2025-English.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_0318b9d01bb311d2ad41be52",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_a8f1eabc2c63d1a541e2f1ee",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Notice-of-AGM-16.10.2025-Final.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_09cf2734502e5bbee5516a76",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_550fd79cdb35e9433fd2",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 2
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_0a53af96f484ee29ac0c6d81",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:271712",
+      "to": "period_0d9cd168008111d69adea11b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 22
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_0c775217d3a66bccc9aaf7f3",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_ccd93d030270c419272b0f10",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/investor-relation/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_183287c4f873fde65fa00c6f",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:271712",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf"
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_1d2a48258209ed6f725490bd",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_10b4904053a8b1d6f905d534",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/11/MLCF-Notice-of-CBS-07.11.2025-on-Website-1.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_1f476eb043ce69ac3543112f",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_157253e7cd63c0252e7b",
+      "to": "document:psx:271712",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 8
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_2034372cc6a72d31ad63269e",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_73a4afbcf35199711033",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 5
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_227293b1b4aab52eaf13bc4e",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_29fb3c2b20d0b47ba6ae596a",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/10/MLCF-Results-of-Poll-for-Special-Resolutions-in-AGM-16.10.2025-Website-1.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_258f867a3ee787d095d184a4",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_550fd79cdb35e9433fd2",
+      "to": "document:psx:275425",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 2
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_2b569306ed02a8442476b700",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_73a4afbcf35199711033",
+      "to": "document:psx:271712",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 5
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_464a4e82fd21557f3a686d94",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275425",
+      "to": "period_8d7a770f021ae28af2a2c64a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 4
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_4ecb062342b43905d31bbf71",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_157253e7cd63c0252e7b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 8
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_524fc675042c2a1719ba2e1a",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_a1443a4f74306be8a6969cf3",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2022/12/7-MLCF-E-Dividend-Mandate-Form.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_54b7f5bf70963534a346f479",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_2e4c23aea1832e581072",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 17
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_58cf1983b08cc93421abe760",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_cb59d8ee72fc2d0f6b4fa708",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Notice-of-EOGM-31.12.2025-English-to-Website.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_63a9147864c11e6af9f67a36",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:274750",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/274750.pdf"
+      },
+      "document_id": "psx:274750"
+     },
+     {
+      "id": "edge_6dbae9f57f042071825e47f0",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_91e1d11ac7c6bbd323f7",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 10
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_77dd1a2da35b8750cd55d8a2",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275425",
+      "to": "period_8d7a770f021ae28af2a2c64a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 7
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_780259228fcabc99f194851f",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_689b327993d45cc9b763",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 8
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_7a79885482420a76d51db76b",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:275425",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf"
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_7cd19989d5436e285386d428",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_9681511317696ae668ebd618",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Proxy-Forms-for-EOGM-31.12.2025-Web.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_814a540f5a9e9fc53e8cb984",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_254fb8c8db07c94de279",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/267429.pdf",
+       "page": 6
+      },
+      "document_id": "psx:267429"
+     },
+     {
+      "id": "edge_819bf6c4155f68f2ddaa88d4",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:270683",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270683.pdf"
+      },
+      "document_id": "psx:270683"
+     },
+     {
+      "id": "edge_8500dee5afe4f9503d056bc3",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_12ba5f592b3fc0c5a7f1",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 3
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_85dcc2bb77e079a60871be0a",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_0b31307ae4c397ef8415",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+       "page": 7
+      },
+      "document_id": "psx:263397"
+     },
+     {
+      "id": "edge_886671495842f6c4ddfd5239",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_12ba5f592b3fc0c5a7f1",
+      "to": "document:psx:271712",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 3
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_8b26a64bfa8bff67daa8bf96",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:270983",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270983.pdf"
+      },
+      "document_id": "psx:270983"
+     },
+     {
+      "id": "edge_8c101f0459d10636549b3792",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_71c2e2ebe51f7f12068f",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+       "page": 5
+      },
+      "document_id": "psx:263397"
+     },
+     {
+      "id": "edge_8c1d8dd257e830aecfcc2bf9",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275425",
+      "to": "period_8d7a770f021ae28af2a2c64a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 27
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_8cec076fda6280e2edd5b7c4",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275425",
+      "to": "period_8d7a770f021ae28af2a2c64a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 9
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_9b016d72c713278105858884",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_7250078d48a8891c4a01",
+      "to": "document:psx:275425",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 3
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_9d6564a512d5cd1f1c9d6bcc",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:270820",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270820.pdf"
+      },
+      "document_id": "psx:270820"
+     },
+     {
+      "id": "edge_a107cfac4aad034475d873a9",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275425",
+      "to": "period_8d7a770f021ae28af2a2c64a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 20
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_a8b89577b28313787b59b6e4",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_3b99352e80097e6a4c60",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+       "page": 14
+      },
+      "document_id": "psx:263397"
+     },
+     {
+      "id": "edge_a9cfebc0ed487ce060bea3df",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_299ac905021d79ce7467a773",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/12/MLCF-Request-for-Hard-Copy-of-Annual-Report.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_aabf047bd0c486bc53cc7c42",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_4dd64c658c40f1b8719d",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 22
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_ad3eac0546b3510535415e52",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_b4fb29e495cac611c329a46d",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_adcb5387f18c5f86d7612103",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_25bfb52e721191c7b644",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 4
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_af9608f2c7dec6b2741dab83",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:247754",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/247754.pdf"
+      },
+      "document_id": "psx:247754"
+     },
+     {
+      "id": "edge_b987a111457ae19a6d13f2e4",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_8de804bbbf2f1d2cee98",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 4
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_ba15d87f6de47475a82d9324",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:262526",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/262526.pdf"
+      },
+      "document_id": "psx:262526"
+     },
+     {
+      "id": "edge_bfc6d8011b1310dfaa972d77",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:280589",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280589.pdf"
+      },
+      "document_id": "psx:280589"
+     },
+     {
+      "id": "edge_c03103303a8893159ed3bf36",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:257465",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/257465.pdf"
+      },
+      "document_id": "psx:257465"
+     },
+     {
+      "id": "edge_c2d0f74a607d20d6233f534b",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_7250078d48a8891c4a01",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 3
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_c5ccbfc541bfbebeb9e6fd33",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275425",
+      "to": "fact:psx:275425:fact_3501b21a1bc7b0ed56e0",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 20
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_ca577aa005ea7d62b391ccbc",
+      "type": "HAS_EVENT",
+      "from": "company:MLCF",
+      "to": "event:evt_027647780f54834193c8",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/263397.pdf",
+       "page": 3
+      },
+      "document_id": "psx:263397"
+     },
+     {
+      "id": "edge_d3e3717ef59ca8cada8a895b",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:271712",
+      "to": "period_0d9cd168008111d69adea11b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 4
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_d67fafb3609efd2c201db324",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275425",
+      "to": "fact:psx:275425:fact_3a4c6ed494964b8951bc",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 4
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_dcd7396cc91d16b5c9795154",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:271712",
+      "to": "period_0d9cd168008111d69adea11b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 10
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_e20e5cccd12615ea126df421",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:271712",
+      "to": "period_0d9cd168008111d69adea11b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 8
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_e7ee32e98a6170c758bf0210",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:251879",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/251879.pdf"
+      },
+      "document_id": "psx:251879"
+     },
+     {
+      "id": "edge_e9157bb2be9c368e2037768d",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_38a46605764ec6efc20e",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 22
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_e972dc72d133a8543d751756",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:271712",
+      "to": "fact:psx:271712:fact_1c38563e404903942e1f",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 22
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_ebaaf13bee5cb0a6abc62f91",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_2e4c23aea1832e581072",
+      "to": "document:psx:271712",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
+       "page": 17
+      },
+      "document_id": "psx:271712"
+     },
+     {
+      "id": "edge_f0644e366f8d6690fdf48c53",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_0041077dadc52bdcd3baaa54",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     },
+     {
+      "id": "edge_f32e9146436c237c7fed28e8",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_25bfb52e721191c7b644",
+      "to": "document:psx:275425",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+       "page": 4
+      },
+      "document_id": "psx:275425"
+     },
+     {
+      "id": "edge_f3a0712b9ab20e2177600e87",
+      "type": "FILED",
+      "from": "company:MLCF",
+      "to": "document:psx:253628",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/253628.pdf"
+      },
+      "document_id": "psx:253628"
+     },
+     {
+      "id": "edge_fdf91c9d7de97faade8912ee",
+      "type": "HAS_SOURCE",
+      "from": "company:MLCF",
+      "to": "source:src_6d5543e25ed6b24f2e9f84e6",
+      "evidence": {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Ballot-Paper-for-AGM-16.10.2025-English.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": [
+       "registry_degraded"
+      ]
+     }
+    ]
+   },
    "sources": {
-    "status": "ok",
-    "error": null,
+    "status": "degraded",
+    "error": "ConnectionError:HTTPSConnectionPool(host='www.kmlg.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTP",
     "issuer_url": "https://www.kmlg.com/",
     "sources": [
      {
@@ -1344,7 +3290,7 @@
       "url": "https://www.kmlg.com/",
       "title": "Issuer website",
       "changed": true,
-      "last_changed": "2026-08-18T02:06:43+05:00",
+      "last_changed": "2026-08-18T02:07:49+05:00",
       "first_seen": "2026-08-18T02:02:36+05:00",
       "status": "ok"
      },
@@ -1445,13 +3391,31 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "degraded",
+    "monitored_page_count": 2,
+    "document_link_count": 12,
+    "quality_flags": [
+     "registry_degraded"
+    ],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 24,
     "event_count": 24,
     "change_count": 0,
+    "financial_fact_count": 22,
+    "graph_node_count": 57,
+    "graph_edge_count": 61,
+    "brief_status": "training_only",
     "pending_synthesis": 24,
     "last_event_at": "2026-04-28T10:25:00+05:00",
-    "source_status": "ok"
+    "source_status": "degraded",
+    "source_quality_flags": 1
    },
    "news": [
     {
@@ -1584,22 +3548,88 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 0
+    },
+    "nodes": [
+     {
+      "id": "company:OGDC",
+      "type": "company",
+      "label": "OGDC",
+      "ticker": "OGDC"
+     },
+     {
+      "id": "document:psx:273347",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:273347",
+      "doc_type": "other",
+      "published_at": "2026-04-01T11:57:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/273347.pdf"
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_acdafa5c7b088e5366d316ca",
+      "type": "FILED",
+      "from": "company:OGDC",
+      "to": "document:psx:273347",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273347.pdf"
+      },
+      "document_id": "psx:273347"
+     }
+    ]
+   },
    "sources": {
     "status": "degraded",
-    "error": "HTTPError:403 Client Error: Forbidden for url: https://www.ogdcl.com/",
+    "error": "ConnectionError:HTTPSConnectionPool(host='dps.psx.com.pk', port=443): Max retries exceeded with url: /company/OGDC (Caused by NewConnect",
     "issuer_url": null,
     "sources": [],
     "documents": []
+   },
+   "source_quality": {
+    "status": "degraded",
+    "monitored_page_count": 0,
+    "document_link_count": 0,
+    "quality_flags": [
+     "missing_issuer_url",
+     "missing_monitored_page",
+     "no_document_links",
+     "registry_degraded"
+    ],
+    "missing_required_source": true
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
    },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 2,
+    "graph_edge_count": 1,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "degraded"
+    "source_status": "degraded",
+    "source_quality_flags": 4
    },
    "news": [
     {
@@ -1750,8 +3780,337 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 2,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 12
+    },
+    "nodes": [
+     {
+      "id": "company:DGKC",
+      "type": "company",
+      "label": "DGKC",
+      "ticker": "DGKC"
+     },
+     {
+      "id": "document:psx:279317",
+      "type": "document",
+      "label": "MATERIAL INFORMATION - DISCLOSURE OF INTEREST",
+      "document_id": "psx:279317",
+      "doc_type": "other",
+      "published_at": "2026-06-30T14:47:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/279317.pdf"
+     },
+     {
+      "id": "document:psx:268016",
+      "type": "document",
+      "label": "Disclosure of Material Information",
+      "document_id": "psx:268016",
+      "doc_type": "other",
+      "published_at": "2025-12-31T12:30:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/268016.pdf"
+     },
+     {
+      "id": "source:src_22dbb625dcd89f66c6bace2f",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/DGKC-PSXLetter-CorporateBriefing22.pdf",
+      "source_id": "src_22dbb625dcd89f66c6bace2f",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/DGKC-PSXLetter-CorporateBriefing22.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_49e9f73df3b53db82d7eeb56",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/CorporateBriefingSession2018-2019.pdf",
+      "source_id": "src_49e9f73df3b53db82d7eeb56",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/CorporateBriefingSession2018-2019.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_643aacd8ed6bc0d18deef78f",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/CBS Presentation 12112024.pdf",
+      "source_id": "src_643aacd8ed6bc0d18deef78f",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/CBS Presentation 12112024.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_649c26b5f634c25efa12d21b",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/DGKC-Notice For CBS.pdf",
+      "source_id": "src_649c26b5f634c25efa12d21b",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/DGKC-Notice For CBS.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_a4afb29be02971c3c9675c4b",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf",
+      "source_id": "src_a4afb29be02971c3c9675c4b",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_b213b78d3cb14e3089d025e6",
+      "type": "source",
+      "label": "https://www.dgcement.com/",
+      "source_id": "src_b213b78d3cb14e3089d025e6",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_bdd12208b3af905c0658a716",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/CBS.pdf",
+      "source_id": "src_bdd12208b3af905c0658a716",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/CBS.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_c7230a44854c74a77777465a",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/DGKC CBS Presentation 21112025.pdf",
+      "source_id": "src_c7230a44854c74a77777465a",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/DGKC CBS Presentation 21112025.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_d0c88b86436776e32cbe64e3",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2020-21.pdf",
+      "source_id": "src_d0c88b86436776e32cbe64e3",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2020-21.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_ded90b52a315b344f37ddd59",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019-20.pdf",
+      "source_id": "src_ded90b52a315b344f37ddd59",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019-20.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_e64b4cc290751b1fbe1e1c76",
+      "type": "source",
+      "label": "https://www.dgcement.com/CorporateBriefingSession.html",
+      "source_id": "src_e64b4cc290751b1fbe1e1c76",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/CorporateBriefingSession.html",
+      "kind": "presentations",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_f4a7021625875b85071b426f",
+      "type": "source",
+      "label": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019.pdf",
+      "source_id": "src_f4a7021625875b85071b426f",
+      "ticker": "DGKC",
+      "url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_0ad1fe17a0b43b4ffc32cf04",
+      "type": "FILED",
+      "from": "company:DGKC",
+      "to": "document:psx:268016",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268016.pdf"
+      },
+      "document_id": "psx:268016"
+     },
+     {
+      "id": "edge_18ca2d170f19c18b75558f6a",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_f4a7021625875b85071b426f",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_3239acb0a6d82723765a924e",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_e64b4cc290751b1fbe1e1c76",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/CorporateBriefingSession.html"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_74922226792fd25c19a625d8",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_643aacd8ed6bc0d18deef78f",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/CBS Presentation 12112024.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_8aa80ec2ae3f83ed58851e0b",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_22dbb625dcd89f66c6bace2f",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/DGKC-PSXLetter-CorporateBriefing22.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_91a04750042b96f60bbb29e0",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_649c26b5f634c25efa12d21b",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/DGKC-Notice For CBS.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_93c3cd7b02e8d92af8a8f4a8",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_b213b78d3cb14e3089d025e6",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_9c89c23125543051fabfb2cf",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_d0c88b86436776e32cbe64e3",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2020-21.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_a2d3943d60d357fded92e056",
+      "type": "FILED",
+      "from": "company:DGKC",
+      "to": "document:psx:279317",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/279317.pdf"
+      },
+      "document_id": "psx:279317"
+     },
+     {
+      "id": "edge_bca0a597270ede21630c4546",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_c7230a44854c74a77777465a",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/DGKC CBS Presentation 21112025.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_dd6827e72079f78600f2c754",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_a4afb29be02971c3c9675c4b",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_e454d6057208c9ebdda35be1",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_49e9f73df3b53db82d7eeb56",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/CorporateBriefingSession2018-2019.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_eea1652c243e5e81bf22ab1a",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_ded90b52a315b344f37ddd59",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019-20.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_f4a122b9f4cb1462c33aa51d",
+      "type": "HAS_SOURCE",
+      "from": "company:DGKC",
+      "to": "source:src_bdd12208b3af905c0658a716",
+      "evidence": {
+       "source_url": "https://www.dgcement.com/Briefing/CBS.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -1849,13 +4208,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 10,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 2,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 15,
+    "graph_edge_count": 14,
+    "brief_status": "training_only",
     "pending_synthesis": 2,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -2006,6 +4381,11 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [
     {
      "event_id": "evt_482346a241e1df75bbd6",
@@ -2037,6 +4417,108 @@
     }
    ],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 2,
+     "change": 0,
+     "source": 0
+    },
+    "nodes": [
+     {
+      "id": "company:PPL",
+      "type": "company",
+      "label": "PPL",
+      "ticker": "PPL"
+     },
+     {
+      "id": "document:psx:268509",
+      "type": "document",
+      "label": "Material Information - Appointment of a Director Mr Mirza Nasiruddin Mashhood Ahmad",
+      "document_id": "psx:268509",
+      "doc_type": "regulatory",
+      "published_at": "2026-01-09T10:41:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/268509.pdf"
+     },
+     {
+      "id": "event:evt_1635d2fab070c3296c1a",
+      "type": "event",
+      "label": "regulatory_action",
+      "event_id": "evt_1635d2fab070c3296c1a",
+      "event_type": "regulatory_action",
+      "event_date": "2026-01-09T10:41:00+05:00",
+      "priority_weight": 4
+     },
+     {
+      "id": "event:evt_482346a241e1df75bbd6",
+      "type": "event",
+      "label": "management_change",
+      "event_id": "evt_482346a241e1df75bbd6",
+      "event_type": "management_change",
+      "event_date": "2026-01-09T10:41:00+05:00",
+      "priority_weight": 3
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_e33b8dd8249fdefa299bd257",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_1635d2fab070c3296c1a",
+      "to": "document:psx:268509",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+       "page": 1
+      },
+      "document_id": "psx:268509"
+     },
+     {
+      "id": "edge_ea4374f396305ff6b5404010",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_482346a241e1df75bbd6",
+      "to": "document:psx:268509",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+       "page": 1
+      },
+      "document_id": "psx:268509"
+     },
+     {
+      "id": "edge_ed164dc2384b7cdb9e448765",
+      "type": "HAS_EVENT",
+      "from": "company:PPL",
+      "to": "event:evt_1635d2fab070c3296c1a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+       "page": 1
+      },
+      "document_id": "psx:268509"
+     },
+     {
+      "id": "edge_f9280593acadaaaf3c5693dc",
+      "type": "FILED",
+      "from": "company:PPL",
+      "to": "document:psx:268509",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268509.pdf"
+      },
+      "document_id": "psx:268509"
+     },
+     {
+      "id": "edge_feeab9edce0c3c62671235c8",
+      "type": "HAS_EVENT",
+      "from": "company:PPL",
+      "to": "event:evt_482346a241e1df75bbd6",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+       "page": 1
+      },
+      "document_id": "psx:268509"
+     }
+    ]
+   },
    "sources": {
     "status": "degraded",
     "error": "HTTPError:403 Client Error: Forbidden for url: http://www.ppl.com.pk/",
@@ -2044,13 +4526,34 @@
     "sources": [],
     "documents": []
    },
+   "source_quality": {
+    "status": "degraded",
+    "monitored_page_count": 0,
+    "document_link_count": 0,
+    "quality_flags": [
+     "missing_issuer_url",
+     "missing_monitored_page",
+     "no_document_links",
+     "registry_degraded"
+    ],
+    "missing_required_source": true
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 2,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 4,
+    "graph_edge_count": 5,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": "2026-01-09T10:41:00+05:00",
-    "source_status": "degraded"
+    "source_status": "degraded",
+    "source_quality_flags": 4
    },
    "news": [
     {
@@ -2238,6 +4741,44 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {
+     "source_documents": 1,
+     "fact_count": 1,
+     "period_count": 1,
+     "missing_required_source": false,
+     "missing_period_count": 0,
+     "conflict_count": 0
+    },
+    "conflicts": [],
+    "facts": [
+     {
+      "series_id": "series_40f62f086e1d91e013d87fc9",
+      "metric": "profit",
+      "period_end": "2026-06-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "222,917,619",
+      "normalized_value": 222917619,
+      "document_id": "psx:280213",
+      "fact_id": "fact_c93db6337fb42b2f1d88",
+      "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+      "evidence": [
+       {
+        "page": 8,
+        "text": "us on revaluation of assets u nited Bank Limite 24 145,219,190 173,003,893 Unappropriated profit 222,917,619 181,178,532 Tolal equity attributable to the equity holders of Ihe Bank 527,226,788 505,221,362 Non-controlling interest 80,630 70…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     }
+    ]
+   },
    "timeline": [
     {
      "event_id": "evt_d88ef22d06de4cf7eddc",
@@ -2311,6 +4852,300 @@
     }
    ],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 1,
+     "fact": 1,
+     "event": 5,
+     "change": 0,
+     "source": 2
+    },
+    "nodes": [
+     {
+      "id": "company:UBL",
+      "type": "company",
+      "label": "UBL",
+      "ticker": "UBL"
+     },
+     {
+      "id": "document:psx:280213",
+      "type": "document",
+      "label": "Financial Results for the Quarter ended 30 June 2026",
+      "document_id": "psx:280213",
+      "doc_type": "results",
+      "published_at": "2026-07-22T11:38:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/280213.pdf"
+     },
+     {
+      "id": "event:evt_07a4b80151a6adba89a8",
+      "type": "event",
+      "label": "dividend",
+      "event_id": "evt_07a4b80151a6adba89a8",
+      "event_type": "dividend",
+      "event_date": "2026-07-22T11:38:00+05:00",
+      "priority_weight": 2
+     },
+     {
+      "id": "event:evt_5670c5dbb2279ad3adb2",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_5670c5dbb2279ad3adb2",
+      "event_type": "board_meeting",
+      "event_date": "2026-07-22T11:38:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_784194f3f92d39808b79",
+      "type": "event",
+      "label": "management_change",
+      "event_id": "evt_784194f3f92d39808b79",
+      "event_type": "management_change",
+      "event_date": "2026-07-22T11:38:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_addcb2af4368e1b8d17b",
+      "type": "event",
+      "label": "acquisition",
+      "event_id": "evt_addcb2af4368e1b8d17b",
+      "event_type": "acquisition",
+      "event_date": "2026-07-22T11:38:00+05:00",
+      "priority_weight": 4
+     },
+     {
+      "id": "event:evt_d88ef22d06de4cf7eddc",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_d88ef22d06de4cf7eddc",
+      "event_type": "earnings",
+      "event_date": "2026-07-22T11:38:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "fact:psx:280213:fact_c93db6337fb42b2f1d88",
+      "type": "fact",
+      "label": "profit",
+      "document_id": "psx:280213",
+      "metric": "profit",
+      "raw_value": "222,917,619",
+      "normalized_value": 222917619,
+      "period_end": "2026-06-30",
+      "period_type": "quarter",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency"
+      ]
+     },
+     {
+      "id": "period_ca863bb25af5f16b444397f8",
+      "type": "period",
+      "label": "2026-06-30",
+      "ticker": "UBL",
+      "period_end": "2026-06-30",
+      "period_type": "quarter",
+      "consolidation": "unknown"
+     },
+     {
+      "id": "source:src_0e4c1d23189b987b03d59256",
+      "type": "source",
+      "label": "https://corporate.ubldigital.com/",
+      "source_id": "src_0e4c1d23189b987b03d59256",
+      "ticker": "UBL",
+      "url": "https://corporate.ubldigital.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "source:src_a1c71c27092df68f76a505db",
+      "type": "source",
+      "label": "https://www.ubldigital.com/",
+      "source_id": "src_a1c71c27092df68f76a505db",
+      "ticker": "UBL",
+      "url": "https://www.ubldigital.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_1e65b38998598e7bbf702767",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:280213",
+      "to": "fact:psx:280213:fact_c93db6337fb42b2f1d88",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 8
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_280fcc7d788a1dbc0106eec7",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_07a4b80151a6adba89a8",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_5430200c2521f8db3080b623",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:280213",
+      "to": "period_ca863bb25af5f16b444397f8",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 8
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_70649ea1765071e5257bc06a",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_d88ef22d06de4cf7eddc",
+      "to": "document:psx:280213",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_8c9d57eecfd8a898a114cb99",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_5670c5dbb2279ad3adb2",
+      "to": "document:psx:280213",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_8d5ffec1babdefed73b528e9",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_784194f3f92d39808b79",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 2
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_b159d50efcf41b2c35805b58",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_addcb2af4368e1b8d17b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 2
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_ba08e29f1991f454c37386bb",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_5670c5dbb2279ad3adb2",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_c2f5ebd00ebc0fa57b8bb990",
+      "type": "FILED",
+      "from": "company:UBL",
+      "to": "document:psx:280213",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf"
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_dd6b786b91adcd8a0e4162f0",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_addcb2af4368e1b8d17b",
+      "to": "document:psx:280213",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 2
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_ddd8624b986e0711a0275f0d",
+      "type": "HAS_SOURCE",
+      "from": "company:UBL",
+      "to": "source:src_a1c71c27092df68f76a505db",
+      "evidence": {
+       "source_url": "https://www.ubldigital.com/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "edge_df156efd5980f7ecbf5e6b10",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_d88ef22d06de4cf7eddc",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_df4878d3246462770950122f",
+      "type": "HAS_SOURCE",
+      "from": "company:UBL",
+      "to": "source:src_0e4c1d23189b987b03d59256",
+      "evidence": {
+       "source_url": "https://corporate.ubldigital.com/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "edge_e3a0f45a36d6a942d30ab56c",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_07a4b80151a6adba89a8",
+      "to": "document:psx:280213",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_e5f4b1ec04eef1e3c377d140",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_784194f3f92d39808b79",
+      "to": "document:psx:280213",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 2
+      },
+      "document_id": "psx:280213"
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -2337,13 +5172,31 @@
     ],
     "documents": []
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 0,
+    "quality_flags": [
+     "no_document_links"
+    ],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 5,
     "change_count": 0,
+    "financial_fact_count": 1,
+    "graph_node_count": 11,
+    "graph_edge_count": 15,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": "2026-07-22T11:38:00+05:00",
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 1
    },
    "news": [
     {
@@ -2476,8 +5329,207 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 7
+    },
+    "nodes": [
+     {
+      "id": "company:PSO",
+      "type": "company",
+      "label": "PSO",
+      "ticker": "PSO"
+     },
+     {
+      "id": "document:psx:260149",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:260149",
+      "doc_type": "other",
+      "published_at": "2025-09-26T14:22:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/260149.pdf"
+     },
+     {
+      "id": "source:src_3800f6e7294336d5319e9336",
+      "type": "source",
+      "label": "https://psopk.com/source/fuelcards/corporate-cards/04.pdf",
+      "source_id": "src_3800f6e7294336d5319e9336",
+      "ticker": "PSO",
+      "url": "https://psopk.com/source/fuelcards/corporate-cards/04.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_423b34a452700fa74db6f529",
+      "type": "source",
+      "label": "https://www.psopk.com/",
+      "source_id": "src_423b34a452700fa74db6f529",
+      "ticker": "PSO",
+      "url": "https://www.psopk.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_61d85f4626413576b676aed8",
+      "type": "source",
+      "label": "https://psopk.com/source/fuelcards/list_of_enabled_outlets.pdf",
+      "source_id": "src_61d85f4626413576b676aed8",
+      "ticker": "PSO",
+      "url": "https://psopk.com/source/fuelcards/list_of_enabled_outlets.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_bed83f3756e28ddc1a880ca9",
+      "type": "source",
+      "label": "https://psopk.com/source/fuelcards/corporate-cards/01.pdf",
+      "source_id": "src_bed83f3756e28ddc1a880ca9",
+      "ticker": "PSO",
+      "url": "https://psopk.com/source/fuelcards/corporate-cards/01.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_ca78a4beec7f30b38e790a5e",
+      "type": "source",
+      "label": "https://psopk.com/source/fuelcards/corporate-cards/02.pdf",
+      "source_id": "src_ca78a4beec7f30b38e790a5e",
+      "ticker": "PSO",
+      "url": "https://psopk.com/source/fuelcards/corporate-cards/02.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_cbe4419e5053660b66196642",
+      "type": "source",
+      "label": "https://psopk.com/source/fuelcards/corporate-cards/03.pdf",
+      "source_id": "src_cbe4419e5053660b66196642",
+      "ticker": "PSO",
+      "url": "https://psopk.com/source/fuelcards/corporate-cards/03.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_dedc47f8d71ae47d2e37956e",
+      "type": "source",
+      "label": "https://psopk.com/en/cards/corporate-cards",
+      "source_id": "src_dedc47f8d71ae47d2e37956e",
+      "ticker": "PSO",
+      "url": "https://psopk.com/en/cards/corporate-cards",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_27ae33452c7b750bb6295535",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_cbe4419e5053660b66196642",
+      "evidence": {
+       "source_url": "https://psopk.com/source/fuelcards/corporate-cards/03.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_4be1348c98da10a5d8843313",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_3800f6e7294336d5319e9336",
+      "evidence": {
+       "source_url": "https://psopk.com/source/fuelcards/corporate-cards/04.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_57f5ad68d595f55da3f51aa8",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_423b34a452700fa74db6f529",
+      "evidence": {
+       "source_url": "https://www.psopk.com/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_882f315cc93d8f547fb20df2",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_ca78a4beec7f30b38e790a5e",
+      "evidence": {
+       "source_url": "https://psopk.com/source/fuelcards/corporate-cards/02.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_95017f4d877bc60140cc7c2f",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_bed83f3756e28ddc1a880ca9",
+      "evidence": {
+       "source_url": "https://psopk.com/source/fuelcards/corporate-cards/01.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_9bae4c527f2a15c4b7ac6cdf",
+      "type": "FILED",
+      "from": "company:PSO",
+      "to": "document:psx:260149",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/260149.pdf"
+      },
+      "document_id": "psx:260149"
+     },
+     {
+      "id": "edge_f180410c8e1051f501110159",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_61d85f4626413576b676aed8",
+      "evidence": {
+       "source_url": "https://psopk.com/source/fuelcards/list_of_enabled_outlets.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_fe03a2d99c6e98a2d5bec7fa",
+      "type": "HAS_SOURCE",
+      "from": "company:PSO",
+      "to": "source:src_dedc47f8d71ae47d2e37956e",
+      "evidence": {
+       "source_url": "https://psopk.com/en/cards/corporate-cards"
+      },
+      "status": "ok",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -2540,13 +5592,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 5,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 9,
+    "graph_edge_count": 8,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -2677,8 +5745,317 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 18
+    },
+    "nodes": [
+     {
+      "id": "company:NBP",
+      "type": "company",
+      "label": "NBP",
+      "ticker": "NBP"
+     },
+     {
+      "id": "document:psx:269545",
+      "type": "document",
+      "label": "MATERIAL INFORMATION - ISSUANCE OF RESTRUCTURING OFFER LETTER TO HASCOL PETROLEUM LIMITED BY NATIONAL BANK OF PAKISTAN",
+      "document_id": "psx:269545",
+      "doc_type": "other",
+      "published_at": "2026-02-02T11:39:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/269545.pdf"
+     },
+     {
+      "id": "source:src_34198cba409b8207d8f8f2be",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Eng).pdf",
+      "source_id": "src_34198cba409b8207d8f8f2be",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Eng).pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_5e8445a3164de48e4425fd75",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/List_of_Branches_open_on_Saturday.xlsx",
+      "source_id": "src_5e8445a3164de48e4425fd75",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/List_of_Branches_open_on_Saturday.xlsx",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_5fbd73811c7e011931eb77af",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/Common-Glossary-for-Consumer-Financing-Urdu.pdf",
+      "source_id": "src_5fbd73811c7e011931eb77af",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/Common-Glossary-for-Consumer-Financing-Urdu.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_6779fbf01c5602d3ac24d114",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/Notices/Consent-for-circulation-Audited-Financial-Statement-through-email.pdf",
+      "source_id": "src_6779fbf01c5602d3ac24d114",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/Notices/Consent-for-circulation-Audited-Financial-Statement-through-email.pdf",
+      "kind": "financial_report",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_6850f26a741e2ea47e51e32c",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/",
+      "source_id": "src_6850f26a741e2ea47e51e32c",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_7938d3f84264393592e87036",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/IslamicBracnhesOpeningSaturdays-ExtendedBusinessHours.pdf",
+      "source_id": "src_7938d3f84264393592e87036",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/IslamicBracnhesOpeningSaturdays-ExtendedBusinessHours.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_7cc4d0afd120d315be20d857",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/InvestorRelations/71st-AGM-Proxy-Form.pdf",
+      "source_id": "src_7cc4d0afd120d315be20d857",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/InvestorRelations/71st-AGM-Proxy-Form.pdf",
+      "kind": "annual_report",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_8c7c43442330a960d0b0086c",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Urdu).pdf",
+      "source_id": "src_8c7c43442330a960d0b0086c",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Urdu).pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_9ced3ddfda12d8b3e6a0e884",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/CorporateBanking/index.aspx",
+      "source_id": "src_9ced3ddfda12d8b3e6a0e884",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/CorporateBanking/index.aspx",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_a32bb6a1fe7498364c9d58a2",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/RegionalCoordinators .xlsx",
+      "source_id": "src_a32bb6a1fe7498364c9d58a2",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/RegionalCoordinators .xlsx",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_a68d4c4ded1f38289a7e1aea",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/PIA_Sukuk/Term sheet - PIA Sukuk.pdf",
+      "source_id": "src_a68d4c4ded1f38289a7e1aea",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/PIA_Sukuk/Term sheet - PIA Sukuk.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_b1957f3117ac3989376a0d3e",
+      "type": "source",
+      "label": "https://www.nbp.com.pk/News/Collection-of-Passport-and-Visa-Fee-at-Authorized-Branches.pdf",
+      "source_id": "src_b1957f3117ac3989376a0d3e",
+      "ticker": "NBP",
+      "url": "https://www.nbp.com.pk/News/Collection-of-Passport-and-Visa-Fee-at-Authorized-Branches.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_2cf5c68ef9fa49117dac0c22",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_8c7c43442330a960d0b0086c",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Urdu).pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_33f5549d2f02d01b59ea89b3",
+      "type": "FILED",
+      "from": "company:NBP",
+      "to": "document:psx:269545",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269545.pdf"
+      },
+      "document_id": "psx:269545"
+     },
+     {
+      "id": "edge_35ab4cb23d5727dfc02b9eb9",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_6779fbf01c5602d3ac24d114",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/Notices/Consent-for-circulation-Audited-Financial-Statement-through-email.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_385c4232a36cb5b7958491e0",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_6850f26a741e2ea47e51e32c",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_46c6b6000a0129885b7a9c64",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_a32bb6a1fe7498364c9d58a2",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/RegionalCoordinators .xlsx"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_86a1a802e4042b157ad8c0ff",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_7cc4d0afd120d315be20d857",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/InvestorRelations/71st-AGM-Proxy-Form.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_af3923cbfc82f9ca33a0b316",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_9ced3ddfda12d8b3e6a0e884",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/CorporateBanking/index.aspx"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_dc747a4e15140e00b5a568bc",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_b1957f3117ac3989376a0d3e",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/Collection-of-Passport-and-Visa-Fee-at-Authorized-Branches.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_def9bb9462d069e5d02bc1e5",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_34198cba409b8207d8f8f2be",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Eng).pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_e530bc9905c93b217ed93dc6",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_5e8445a3164de48e4425fd75",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/List_of_Branches_open_on_Saturday.xlsx"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_e59ab1b21635f39e84a898f2",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_a68d4c4ded1f38289a7e1aea",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/PIA_Sukuk/Term sheet - PIA Sukuk.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_fad9f87446bcf00b26be4d01",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_5fbd73811c7e011931eb77af",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/Common-Glossary-for-Consumer-Financing-Urdu.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_fb03bb136de5e7f0f84c99b1",
+      "type": "HAS_SOURCE",
+      "from": "company:NBP",
+      "to": "source:src_7938d3f84264393592e87036",
+      "evidence": {
+       "source_url": "https://www.nbp.com.pk/News/IslamicBracnhesOpeningSaturdays-ExtendedBusinessHours.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -2818,13 +6195,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 16,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 14,
+    "graph_edge_count": 13,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -2957,8 +6350,105 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 2
+    },
+    "nodes": [
+     {
+      "id": "company:LUCK",
+      "type": "company",
+      "label": "LUCK",
+      "ticker": "LUCK"
+     },
+     {
+      "id": "document:psx:279395",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:279395",
+      "doc_type": "other",
+      "published_at": "2026-07-01T15:14:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/279395.pdf"
+     },
+     {
+      "id": "source:src_31408981ae3b5349e9e4c901",
+      "type": "source",
+      "label": "https://lucky-cement.com/en/about-us",
+      "source_id": "src_31408981ae3b5349e9e4c901",
+      "ticker": "LUCK",
+      "url": "https://lucky-cement.com/en/about-us",
+      "kind": "governance",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "source:src_8ae507f34c750051ad7ce280",
+      "type": "source",
+      "label": "https://www.lucky-cement.com/",
+      "source_id": "src_8ae507f34c750051ad7ce280",
+      "ticker": "LUCK",
+      "url": "https://www.lucky-cement.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_4e06d91f6b67f6494f69f10a",
+      "type": "HAS_SOURCE",
+      "from": "company:LUCK",
+      "to": "source:src_8ae507f34c750051ad7ce280",
+      "evidence": {
+       "source_url": "https://www.lucky-cement.com/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "edge_5f089cd91c1cc5ef0670e4d0",
+      "type": "FILED",
+      "from": "company:LUCK",
+      "to": "document:psx:279395",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/279395.pdf"
+      },
+      "document_id": "psx:279395"
+     },
+     {
+      "id": "edge_93735f333297cb195dc64ca1",
+      "type": "HAS_SOURCE",
+      "from": "company:LUCK",
+      "to": "source:src_31408981ae3b5349e9e4c901",
+      "evidence": {
+       "source_url": "https://lucky-cement.com/en/about-us"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -2985,13 +6475,31 @@
     ],
     "documents": []
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 0,
+    "quality_flags": [
+     "no_document_links"
+    ],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 4,
+    "graph_edge_count": 3,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 1
    },
    "news": [
     {
@@ -3124,8 +6632,53 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 0
+    },
+    "nodes": [
+     {
+      "id": "company:FFC",
+      "type": "company",
+      "label": "FFC",
+      "ticker": "FFC"
+     },
+     {
+      "id": "document:psx:272896",
+      "type": "document",
+      "label": "Material Information - Execution of Key Project Agreements for Pressure Enhancement Facilities (PEF) Project",
+      "document_id": "psx:272896",
+      "doc_type": "other",
+      "published_at": "2026-03-24T13:56:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/272896.pdf"
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_8b0e613095a1a1a1109f2749",
+      "type": "FILED",
+      "from": "company:FFC",
+      "to": "document:psx:272896",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272896.pdf"
+      },
+      "document_id": "psx:272896"
+     }
+    ]
+   },
    "sources": {
     "status": "degraded",
     "error": "HTTPError:403 Client Error: Forbidden for url: https://www.ffc.com.pk/",
@@ -3133,13 +6686,34 @@
     "sources": [],
     "documents": []
    },
+   "source_quality": {
+    "status": "degraded",
+    "monitored_page_count": 0,
+    "document_link_count": 0,
+    "quality_flags": [
+     "missing_issuer_url",
+     "missing_monitored_page",
+     "no_document_links",
+     "registry_degraded"
+    ],
+    "missing_required_source": true
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 2,
+    "graph_edge_count": 1,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "degraded"
+    "source_status": "degraded",
+    "source_quality_flags": 4
    },
    "news": [
     {
@@ -3289,6 +6863,11 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [
     {
      "event_id": "evt_9a6cb37aa210fe7aeede",
@@ -3306,6 +6885,123 @@
     }
    ],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 2,
+     "period": 0,
+     "fact": 0,
+     "event": 1,
+     "change": 0,
+     "source": 1
+    },
+    "nodes": [
+     {
+      "id": "company:BOP",
+      "type": "company",
+      "label": "BOP",
+      "ticker": "BOP"
+     },
+     {
+      "id": "document:psx:280931",
+      "type": "document",
+      "label": "Material Information REVOKED",
+      "document_id": "psx:280931",
+      "doc_type": "board_meeting",
+      "published_at": "2026-08-10T08:11:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/280931.pdf"
+     },
+     {
+      "id": "document:psx:280933",
+      "type": "document",
+      "label": "DISCLOSURE OF MATERIAL INFORMATION",
+      "document_id": "psx:280933",
+      "doc_type": "other",
+      "published_at": "2026-08-10T09:24:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/280933.pdf"
+     },
+     {
+      "id": "event:evt_9a6cb37aa210fe7aeede",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_9a6cb37aa210fe7aeede",
+      "event_type": "board_meeting",
+      "event_date": "2026-08-10T08:11:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "source:src_28cbfbd97bf7f0a7396d5315",
+      "type": "source",
+      "label": "https://www.bop.com.pk/",
+      "source_id": "src_28cbfbd97bf7f0a7396d5315",
+      "ticker": "BOP",
+      "url": "https://www.bop.com.pk/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_423618f68dccb07427ee1e8a",
+      "type": "HAS_SOURCE",
+      "from": "company:BOP",
+      "to": "source:src_28cbfbd97bf7f0a7396d5315",
+      "evidence": {
+       "source_url": "https://www.bop.com.pk/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "edge_85e022bca95fdc7e701d662b",
+      "type": "HAS_EVENT",
+      "from": "company:BOP",
+      "to": "event:evt_9a6cb37aa210fe7aeede",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280931.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280931"
+     },
+     {
+      "id": "edge_9fbb7de978a91d991da36c2f",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_9a6cb37aa210fe7aeede",
+      "to": "document:psx:280931",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280931.pdf",
+       "page": 1
+      },
+      "document_id": "psx:280931"
+     },
+     {
+      "id": "edge_a154d77ffb974defa528b894",
+      "type": "FILED",
+      "from": "company:BOP",
+      "to": "document:psx:280931",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280931.pdf"
+      },
+      "document_id": "psx:280931"
+     },
+     {
+      "id": "edge_bc4d6bff2db50bdc41ab4923",
+      "type": "FILED",
+      "from": "company:BOP",
+      "to": "document:psx:280933",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280933.pdf"
+      },
+      "document_id": "psx:280933"
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -3323,13 +7019,31 @@
     ],
     "documents": []
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 1,
+    "document_link_count": 0,
+    "quality_flags": [
+     "no_document_links"
+    ],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 2,
     "event_count": 1,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 5,
+    "graph_edge_count": 5,
+    "brief_status": "training_only",
     "pending_synthesis": 2,
     "last_event_at": "2026-08-10T08:11:00+05:00",
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 1
    },
    "news": [],
    "insider_filings": [],
@@ -3443,8 +7157,317 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 13
+    },
+    "nodes": [
+     {
+      "id": "company:HUBC",
+      "type": "company",
+      "label": "HUBC",
+      "ticker": "HUBC"
+     },
+     {
+      "id": "document:psx:265678",
+      "type": "document",
+      "label": "Disclosure of Material Information",
+      "document_id": "psx:265678",
+      "doc_type": "other",
+      "published_at": "2025-11-14T11:41:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/265678.pdf"
+     },
+     {
+      "id": "source:src_1b5e17ebde661e894f05f467",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2023/02/HUBCO-ThalNova-COD.pdf",
+      "source_id": "src_1b5e17ebde661e894f05f467",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2023/02/HUBCO-ThalNova-COD.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_32be866e6371da85889ec2c4",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/08/Synchronization_TharEnergyLimited_with_National_Grid.pdf",
+      "source_id": "src_32be866e6371da85889ec2c4",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/08/Synchronization_TharEnergyLimited_with_National_Grid.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_482e06c9f24788cd7e7761fe",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/10/TEL_330MW_COD.pdf",
+      "source_id": "src_482e06c9f24788cd7e7761fe",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/10/TEL_330MW_COD.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_4957470d35d6936222e2182c",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/08/Analyst-Briefing.pdf",
+      "source_id": "src_4957470d35d6936222e2182c",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/08/Analyst-Briefing.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_7536183c7fad55ecbf1dd9fe",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2024/11/HPHL-x-PSO-Press-Release.pdf",
+      "source_id": "src_7536183c7fad55ecbf1dd9fe",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2024/11/HPHL-x-PSO-Press-Release.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_925a106f4e3c74c0250ad132",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/12/Successful-Synchronization-of-330MW-Thar-Coal-Power-Plant-ThalNova-with-the-National-Grid.pdf",
+      "source_id": "src_925a106f4e3c74c0250ad132",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/12/Successful-Synchronization-of-330MW-Thar-Coal-Power-Plant-ThalNova-with-the-National-Grid.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_a397cbbea481fb7a8003c1b1",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/08/Press-release.pdf",
+      "source_id": "src_a397cbbea481fb7a8003c1b1",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/08/Press-release.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_b27381616d3fc347ac7362ec",
+      "type": "source",
+      "label": "https://hubpower.com/media/",
+      "source_id": "src_b27381616d3fc347ac7362ec",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/media/",
+      "kind": "announcements",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_b2cbd939300d54eee04e7429",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2024/01/HUBCO-PR-Final.pdf",
+      "source_id": "src_b2cbd939300d54eee04e7429",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2024/01/HUBCO-PR-Final.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_c06fbfaeb745df36432b8767",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-declares-COD-for-its-Chinese-Joint-Venture-CPHGC.pdf",
+      "source_id": "src_c06fbfaeb745df36432b8767",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-declares-COD-for-its-Chinese-Joint-Venture-CPHGC.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_e0217814bfbbb8ec8dfd5685",
+      "type": "source",
+      "label": "https://www.hubpower.com/",
+      "source_id": "src_e0217814bfbbb8ec8dfd5685",
+      "ticker": "HUBC",
+      "url": "https://www.hubpower.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_ea08fea837265650978bfa22",
+      "type": "source",
+      "label": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-Increase-Shareholding-in-CPHGC-Plant.pdf",
+      "source_id": "src_ea08fea837265650978bfa22",
+      "ticker": "HUBC",
+      "url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-Increase-Shareholding-in-CPHGC-Plant.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_0e2561d153330a8f9c7d4f24",
+      "type": "FILED",
+      "from": "company:HUBC",
+      "to": "document:psx:265678",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/265678.pdf"
+      },
+      "document_id": "psx:265678"
+     },
+     {
+      "id": "edge_187b6491e7d95cccd07187b8",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_c06fbfaeb745df36432b8767",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-declares-COD-for-its-Chinese-Joint-Venture-CPHGC.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_19648ce98bb1cba36be1a6b4",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_32be866e6371da85889ec2c4",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Synchronization_TharEnergyLimited_with_National_Grid.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_2118e04000eeac7a2b563c97",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_b27381616d3fc347ac7362ec",
+      "evidence": {
+       "source_url": "https://hubpower.com/media/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_2b704c1df828e2b7152c6866",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_e0217814bfbbb8ec8dfd5685",
+      "evidence": {
+       "source_url": "https://www.hubpower.com/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_41ad20f713de114d3b656e19",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_1b5e17ebde661e894f05f467",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2023/02/HUBCO-ThalNova-COD.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_4b5842b3b2fbf0b2f965dafd",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_4957470d35d6936222e2182c",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Analyst-Briefing.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_5a96e6d54f085a6998c339cb",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_ea08fea837265650978bfa22",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-Increase-Shareholding-in-CPHGC-Plant.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_5d8d0c762673ec222a222e2c",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_925a106f4e3c74c0250ad132",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/12/Successful-Synchronization-of-330MW-Thar-Coal-Power-Plant-ThalNova-with-the-National-Grid.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_6a2d26371d8e3355eb57eeeb",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_a397cbbea481fb7a8003c1b1",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Press-release.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_6c3825e03ea6edfead07ba28",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_482e06c9f24788cd7e7761fe",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2022/10/TEL_330MW_COD.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_8225aa948175605d2afa948a",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_7536183c7fad55ecbf1dd9fe",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2024/11/HPHL-x-PSO-Press-Release.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_b66da934ce655ddb1b513466",
+      "type": "HAS_SOURCE",
+      "from": "company:HUBC",
+      "to": "source:src_b2cbd939300d54eee04e7429",
+      "evidence": {
+       "source_url": "https://hubpower.com/wp-content/uploads/2024/01/HUBCO-PR-Final.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -3549,13 +7572,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 11,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 14,
+    "graph_edge_count": 13,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -3688,8 +7727,317 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 75
+    },
+    "nodes": [
+     {
+      "id": "company:MEBL",
+      "type": "company",
+      "label": "MEBL",
+      "ticker": "MEBL"
+     },
+     {
+      "id": "document:psx:269903",
+      "type": "document",
+      "label": "Disclosure of Material Information of Meezan Bank",
+      "document_id": "psx:269903",
+      "doc_type": "other",
+      "published_at": "2026-02-09T15:25:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/269903.pdf"
+     },
+     {
+      "id": "source:src_03c34a54a0b8df7da0098535",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/SOC-ENG-Jul-Dec-2022.pdf",
+      "source_id": "src_03c34a54a0b8df7da0098535",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/SOC-ENG-Jul-Dec-2022.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_0ad2b38541d1f99f6ae4713f",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/Gender-Pay-Gap-2024.pdf",
+      "source_id": "src_0ad2b38541d1f99f6ae4713f",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/Gender-Pay-Gap-2024.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_0fce474db3a58007a45e81a4",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-BLB.pdf",
+      "source_id": "src_0fce474db3a58007a45e81a4",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-BLB.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_0ff879243d091bd25594316e",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FAQ-debit-cards.pdf",
+      "source_id": "src_0ff879243d091bd25594316e",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FAQ-debit-cards.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_10e02fd10dbf5bf6b9a9b08e",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/75-Rupees-Independence-Awareness-Urdu.pdf",
+      "source_id": "src_10e02fd10dbf5bf6b9a9b08e",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/75-Rupees-Independence-Awareness-Urdu.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_159805f50840a887469500e3",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/NIFT-Clearing-Timings.pdf",
+      "source_id": "src_159805f50840a887469500e3",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/NIFT-Clearing-Timings.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_1a7562d07b4299bf05000c68",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-TDR-UR.pdf",
+      "source_id": "src_1a7562d07b4299bf05000c68",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-TDR-UR.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_1ab540a485f0f3fd695091f3",
+      "type": "source",
+      "label": "https://www.meezanbank.com/",
+      "source_id": "src_1ab540a485f0f3fd695091f3",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_1bdb63035bc4184f685b67de",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/NOSTRO.pdf",
+      "source_id": "src_1bdb63035bc4184f685b67de",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/NOSTRO.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_1cb9bd92fa305e4abe90f051",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FAQsWB.pdf",
+      "source_id": "src_1cb9bd92fa305e4abe90f051",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FAQsWB.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_1df200627618eb691f3fa3d5",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FIO-Awareness-Eng.pdf",
+      "source_id": "src_1df200627618eb691f3fa3d5",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FIO-Awareness-Eng.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_1f22bb3f916491ed64d45caa",
+      "type": "source",
+      "label": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-MARA-EN.pdf",
+      "source_id": "src_1f22bb3f916491ed64d45caa",
+      "ticker": "MEBL",
+      "url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-MARA-EN.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_1b13b3833ac9cff940c19ea7",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_1ab540a485f0f3fd695091f3",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_23fd3b8a960dc4f391afd644",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_1df200627618eb691f3fa3d5",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FIO-Awareness-Eng.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_2711c990306278507694f18e",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_1cb9bd92fa305e4abe90f051",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FAQsWB.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_34df320da9f17e0a5eefdb3a",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_159805f50840a887469500e3",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/NIFT-Clearing-Timings.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_4e292d362864818c02c63408",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_1f22bb3f916491ed64d45caa",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-MARA-EN.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_5f1bcabdacdb2e744be8ab37",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_0ff879243d091bd25594316e",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/FAQ-debit-cards.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_6d0e335ea866a6bc629f6b29",
+      "type": "FILED",
+      "from": "company:MEBL",
+      "to": "document:psx:269903",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269903.pdf"
+      },
+      "document_id": "psx:269903"
+     },
+     {
+      "id": "edge_73270ca3d69581fde1e375bc",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_1bdb63035bc4184f685b67de",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/NOSTRO.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_9643e9691a427de7c0c939d9",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_0ad2b38541d1f99f6ae4713f",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/Gender-Pay-Gap-2024.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_9ba6e329d33410716e32a8f4",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_10e02fd10dbf5bf6b9a9b08e",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/75-Rupees-Independence-Awareness-Urdu.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_d75b081566176ef55e079524",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_03c34a54a0b8df7da0098535",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/SOC-ENG-Jul-Dec-2022.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_de1692f29758e391ce9a03f3",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_0fce474db3a58007a45e81a4",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-BLB.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_f612427d7e807c86d68216e4",
+      "type": "HAS_SOURCE",
+      "from": "company:MEBL",
+      "to": "source:src_1a7562d07b4299bf05000c68",
+      "evidence": {
+       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/KFS-TDR-UR.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -3997,13 +8345,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 73,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 14,
+    "graph_edge_count": 13,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -4165,8 +8529,317 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 15
+    },
+    "nodes": [
+     {
+      "id": "company:HBL",
+      "type": "company",
+      "label": "HBL",
+      "ticker": "HBL"
+     },
+     {
+      "id": "document:psx:269881",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:269881",
+      "doc_type": "other",
+      "published_at": "2026-02-09T13:30:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/269881.pdf"
+     },
+     {
+      "id": "source:src_0886be7377ded9dd77a5b185",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Glossary_of_Terms_Financing_Products_(English_and_Urdu).pdf",
+      "source_id": "src_0886be7377ded9dd77a5b185",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Glossary_of_Terms_Financing_Products_(English_and_Urdu).pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_2485871e9bc2a594657f0e21",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/List_of_Extended_Branches.pdf",
+      "source_id": "src_2485871e9bc2a594657f0e21",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/List_of_Extended_Branches.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_263b1814d65380ebb7c3e4be",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Guarantee_Verification.pdf",
+      "source_id": "src_263b1814d65380ebb7c3e4be",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Guarantee_Verification.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_3b5ee76dea30c1a31b7ac103",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Letter_BPRD_No.9227_of_2023_.pdf",
+      "source_id": "src_3b5ee76dea30c1a31b7ac103",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Letter_BPRD_No.9227_of_2023_.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_44b909c567d9403d79dcde6e",
+      "type": "source",
+      "label": "https://www.hbl.com/",
+      "source_id": "src_44b909c567d9403d79dcde6e",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_4686a85ab75cfd51b17ff810",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Gender_Pay_Gap_Statement_-_2024.pdf",
+      "source_id": "src_4686a85ab75cfd51b17ff810",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Gender_Pay_Gap_Statement_-_2024.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_46ce2e7e3aae77d78772e6f9",
+      "type": "source",
+      "label": "https://www.hbl.com/about-us/corporate-information",
+      "source_id": "src_46ce2e7e3aae77d78772e6f9",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/about-us/corporate-information",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_55b8428d62759970964ee793",
+      "type": "source",
+      "label": "https://www.hbl.com//assets/documents/List_of_Extended_Branches.pdf",
+      "source_id": "src_55b8428d62759970964ee793",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com//assets/documents/List_of_Extended_Branches.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_7368630c3c9021e4f77ad006",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Entitled_Pensionersas_of_30-06-2018.pdf",
+      "source_id": "src_7368630c3c9021e4f77ad006",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Entitled_Pensionersas_of_30-06-2018.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_766dae323856fcd5f521447c",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Updated_Staurday_Branhces.pdf",
+      "source_id": "src_766dae323856fcd5f521447c",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Updated_Staurday_Branhces.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_8529e8b16d225b5a5206e7f9",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Trade_Processing.pdf",
+      "source_id": "src_8529e8b16d225b5a5206e7f9",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Trade_Processing.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_8898a80740bfe7189ab8d58f",
+      "type": "source",
+      "label": "https://www.hbl.com/assets/documents/Model-PWD-Branches.pdf",
+      "source_id": "src_8898a80740bfe7189ab8d58f",
+      "ticker": "HBL",
+      "url": "https://www.hbl.com/assets/documents/Model-PWD-Branches.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_0ab0a36ea20594e41ae337a9",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_263b1814d65380ebb7c3e4be",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Guarantee_Verification.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_3fdb3887d6326b54c08e9a7d",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_8898a80740bfe7189ab8d58f",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Model-PWD-Branches.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_4896ac3a4763db20d31605e7",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_55b8428d62759970964ee793",
+      "evidence": {
+       "source_url": "https://www.hbl.com//assets/documents/List_of_Extended_Branches.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_5d27fbe415cc5d928ca29139",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_4686a85ab75cfd51b17ff810",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Gender_Pay_Gap_Statement_-_2024.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_70da2c2da5faedefb4ab7fd2",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_2485871e9bc2a594657f0e21",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/List_of_Extended_Branches.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_873b65b866d91d96285fabd6",
+      "type": "FILED",
+      "from": "company:HBL",
+      "to": "document:psx:269881",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269881.pdf"
+      },
+      "document_id": "psx:269881"
+     },
+     {
+      "id": "edge_93ca8febebaa80669b491ac9",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_44b909c567d9403d79dcde6e",
+      "evidence": {
+       "source_url": "https://www.hbl.com/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_9ffbaaed605e5457f8125724",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_3b5ee76dea30c1a31b7ac103",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Letter_BPRD_No.9227_of_2023_.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_bcab722a28cbb1e50999f832",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_766dae323856fcd5f521447c",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Updated_Staurday_Branhces.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_bd59663f4667fd8f5e38ec6c",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_0886be7377ded9dd77a5b185",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Glossary_of_Terms_Financing_Products_(English_and_Urdu).pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_be61e906028ac8de2724a6ee",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_8529e8b16d225b5a5206e7f9",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Trade_Processing.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_e86f079df719ae5b84f52574",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_46ce2e7e3aae77d78772e6f9",
+      "evidence": {
+       "source_url": "https://www.hbl.com/about-us/corporate-information"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_eeace2dfc85fa143019e6334",
+      "type": "HAS_SOURCE",
+      "from": "company:HBL",
+      "to": "source:src_7368630c3c9021e4f77ad006",
+      "evidence": {
+       "source_url": "https://www.hbl.com/assets/documents/Entitled_Pensionersas_of_30-06-2018.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -4285,13 +8958,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 13,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 14,
+    "graph_edge_count": 13,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -4464,6 +9153,11 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [
     {
      "event_id": "evt_cbc4a2dd77b711c6c20c",
@@ -4523,6 +9217,190 @@
     }
    ],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 2,
+     "period": 0,
+     "fact": 0,
+     "event": 4,
+     "change": 0,
+     "source": 0
+    },
+    "nodes": [
+     {
+      "id": "company:ENGROH",
+      "type": "company",
+      "label": "ENGROH",
+      "ticker": "ENGROH"
+     },
+     {
+      "id": "document:psx:273140",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:273140",
+      "doc_type": "board_meeting",
+      "published_at": "2026-03-30T08:00:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/273140.pdf"
+     },
+     {
+      "id": "document:psx:278783",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:278783",
+      "doc_type": "appointment",
+      "published_at": "2026-06-18T15:21:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/278783.pdf"
+     },
+     {
+      "id": "event:evt_02da4a22b98f30173b1b",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_02da4a22b98f30173b1b",
+      "event_type": "board_meeting",
+      "event_date": "2026-03-30T08:00:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_9c204e0ab70db52ac319",
+      "type": "event",
+      "label": "agm",
+      "event_id": "evt_9c204e0ab70db52ac319",
+      "event_type": "agm",
+      "event_date": "2026-03-30T08:00:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_a797b68bb60bd06290bb",
+      "type": "event",
+      "label": "contract",
+      "event_id": "evt_a797b68bb60bd06290bb",
+      "event_type": "contract",
+      "event_date": "2026-06-18T15:21:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_cbc4a2dd77b711c6c20c",
+      "type": "event",
+      "label": "management_change",
+      "event_id": "evt_cbc4a2dd77b711c6c20c",
+      "event_type": "management_change",
+      "event_date": "2026-06-18T15:21:00+05:00",
+      "priority_weight": 3
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_283987fac669c1829725bfdf",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_cbc4a2dd77b711c6c20c",
+      "to": "document:psx:278783",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278783.pdf",
+       "page": 3
+      },
+      "document_id": "psx:278783"
+     },
+     {
+      "id": "edge_2f220744deaf4b91d1589c55",
+      "type": "HAS_EVENT",
+      "from": "company:ENGROH",
+      "to": "event:evt_9c204e0ab70db52ac319",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273140.pdf",
+       "page": 2
+      },
+      "document_id": "psx:273140"
+     },
+     {
+      "id": "edge_372202aad875dd4655f4a3f8",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_02da4a22b98f30173b1b",
+      "to": "document:psx:273140",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273140.pdf",
+       "page": 1
+      },
+      "document_id": "psx:273140"
+     },
+     {
+      "id": "edge_6bf319530ec4b0e30a651a2a",
+      "type": "FILED",
+      "from": "company:ENGROH",
+      "to": "document:psx:273140",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273140.pdf"
+      },
+      "document_id": "psx:273140"
+     },
+     {
+      "id": "edge_7fb6d212b651de322b3183e3",
+      "type": "HAS_EVENT",
+      "from": "company:ENGROH",
+      "to": "event:evt_cbc4a2dd77b711c6c20c",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278783.pdf",
+       "page": 3
+      },
+      "document_id": "psx:278783"
+     },
+     {
+      "id": "edge_9dfb6c67cc52ed0e0633dd6b",
+      "type": "HAS_EVENT",
+      "from": "company:ENGROH",
+      "to": "event:evt_a797b68bb60bd06290bb",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278783.pdf",
+       "page": 1
+      },
+      "document_id": "psx:278783"
+     },
+     {
+      "id": "edge_aa0ecf66aab37c9690d203b8",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_a797b68bb60bd06290bb",
+      "to": "document:psx:278783",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278783.pdf",
+       "page": 1
+      },
+      "document_id": "psx:278783"
+     },
+     {
+      "id": "edge_c204e15463474c669bbf22be",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_9c204e0ab70db52ac319",
+      "to": "document:psx:273140",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273140.pdf",
+       "page": 2
+      },
+      "document_id": "psx:273140"
+     },
+     {
+      "id": "edge_f324c3354eaa5b35de52c58a",
+      "type": "FILED",
+      "from": "company:ENGROH",
+      "to": "document:psx:278783",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278783.pdf"
+      },
+      "document_id": "psx:278783"
+     },
+     {
+      "id": "edge_fe39e62963dc681f3507d3df",
+      "type": "HAS_EVENT",
+      "from": "company:ENGROH",
+      "to": "event:evt_02da4a22b98f30173b1b",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273140.pdf",
+       "page": 1
+      },
+      "document_id": "psx:273140"
+     }
+    ]
+   },
    "sources": {
     "status": "degraded",
     "error": "SSLError:HTTPSConnectionPool(host='www.engro.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerific",
@@ -4530,13 +9408,34 @@
     "sources": [],
     "documents": []
    },
+   "source_quality": {
+    "status": "degraded",
+    "monitored_page_count": 0,
+    "document_link_count": 0,
+    "quality_flags": [
+     "missing_issuer_url",
+     "missing_monitored_page",
+     "no_document_links",
+     "registry_degraded"
+    ],
+    "missing_required_source": true
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 2,
     "event_count": 4,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 7,
+    "graph_edge_count": 10,
+    "brief_status": "training_only",
     "pending_synthesis": 2,
     "last_event_at": "2026-06-18T15:21:00+05:00",
-    "source_status": "degraded"
+    "source_status": "degraded",
+    "source_quality_flags": 4
    },
    "news": [
     {
@@ -4687,8 +9586,227 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 2,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 7
+    },
+    "nodes": [
+     {
+      "id": "company:ATRL",
+      "type": "company",
+      "label": "ATRL",
+      "ticker": "ATRL"
+     },
+     {
+      "id": "document:psx:278694",
+      "type": "document",
+      "label": "Disclosure of Material Information - Receipt of an offer to acquire 70% shareholding of unlisted subsidiary",
+      "document_id": "psx:278694",
+      "doc_type": "acquisition",
+      "published_at": "2026-06-17T08:40:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/278694.pdf"
+     },
+     {
+      "id": "document:psx:278850",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:278850",
+      "doc_type": "other",
+      "published_at": "2026-06-19T15:07:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/278850.pdf"
+     },
+     {
+      "id": "source:src_381915e2830479dd12099fd2",
+      "type": "source",
+      "label": "https://www.arl.com.pk/",
+      "source_id": "src_381915e2830479dd12099fd2",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/",
+      "kind": "announcements",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_4512ffc3dc41bf0168e47291",
+      "type": "source",
+      "label": "https://www.arl.com.pk/arl-sustainability-report-2025/",
+      "source_id": "src_4512ffc3dc41bf0168e47291",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/arl-sustainability-report-2025/",
+      "kind": "financial_reports",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_5da8391eac4887bd724e8a69",
+      "type": "source",
+      "label": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+      "source_id": "src_5da8391eac4887bd724e8a69",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_62353475b64be39da6e9612b",
+      "type": "source",
+      "label": "https://www.arl.com.pk/wp-content/uploads/Whistle_Blowing_Policy.pdf",
+      "source_id": "src_62353475b64be39da6e9612b",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/wp-content/uploads/Whistle_Blowing_Policy.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_977c784c977db495156a0f9d",
+      "type": "source",
+      "label": "https://www.arl.com.pk/wp-content/uploads/GENDER-DIVERSITY-POLICY.pdf",
+      "source_id": "src_977c784c977db495156a0f9d",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/wp-content/uploads/GENDER-DIVERSITY-POLICY.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_99a67474d3fb717fcde60fc1",
+      "type": "source",
+      "label": "https://www.arl.com.pk/wp-content/uploads/Code_of_conduct-1-1.pdf",
+      "source_id": "src_99a67474d3fb717fcde60fc1",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/wp-content/uploads/Code_of_conduct-1-1.pdf",
+      "kind": "governance_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_c13c87a5864d9e4393be85d7",
+      "type": "source",
+      "label": "https://www.arl.com.pk/wp-content/uploads/COC_workplace.pdf",
+      "source_id": "src_c13c87a5864d9e4393be85d7",
+      "ticker": "ATRL",
+      "url": "https://www.arl.com.pk/wp-content/uploads/COC_workplace.pdf",
+      "kind": "governance_document",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_1246a4b9cc37a4b4cd01511b",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_5da8391eac4887bd724e8a69",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_17e53501b7431853f0154ffe",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_c13c87a5864d9e4393be85d7",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/COC_workplace.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_1df4c067c007fe3d4dee99aa",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_62353475b64be39da6e9612b",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/Whistle_Blowing_Policy.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_2c235b4a16142de022d85125",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_381915e2830479dd12099fd2",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_805fd2d2003d61db5ba2a6b6",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_4512ffc3dc41bf0168e47291",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/arl-sustainability-report-2025/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_a6c77d0986dd41e88dca7829",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_977c784c977db495156a0f9d",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/GENDER-DIVERSITY-POLICY.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_b6b95b244bf5d233d59e2fbc",
+      "type": "FILED",
+      "from": "company:ATRL",
+      "to": "document:psx:278694",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278694.pdf"
+      },
+      "document_id": "psx:278694"
+     },
+     {
+      "id": "edge_bd32de7140d917e7b699fc58",
+      "type": "FILED",
+      "from": "company:ATRL",
+      "to": "document:psx:278850",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278850.pdf"
+      },
+      "document_id": "psx:278850"
+     },
+     {
+      "id": "edge_e18140174b0169561e1c2bd2",
+      "type": "HAS_SOURCE",
+      "from": "company:ATRL",
+      "to": "source:src_99a67474d3fb717fcde60fc1",
+      "evidence": {
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/Code_of_conduct-1-1.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -4751,13 +9869,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 5,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 2,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 10,
+    "graph_edge_count": 9,
+    "brief_status": "training_only",
     "pending_synthesis": 2,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -4896,6 +10030,11 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [
     {
      "event_id": "evt_e07631db4f0c4221965c",
@@ -4913,6 +10052,77 @@
     }
    ],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 1,
+     "change": 0,
+     "source": 0
+    },
+    "nodes": [
+     {
+      "id": "company:MARI",
+      "type": "company",
+      "label": "MARI",
+      "ticker": "MARI"
+     },
+     {
+      "id": "document:psx:273304",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:273304",
+      "doc_type": "other",
+      "published_at": "2026-03-31T15:12:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/273304.pdf"
+     },
+     {
+      "id": "event:evt_e07631db4f0c4221965c",
+      "type": "event",
+      "label": "contract",
+      "event_id": "evt_e07631db4f0c4221965c",
+      "event_type": "contract",
+      "event_date": "2026-03-31T15:12:00+05:00",
+      "priority_weight": 3
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_5687ab3c09c9e8d7938e30a0",
+      "type": "FILED",
+      "from": "company:MARI",
+      "to": "document:psx:273304",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273304.pdf"
+      },
+      "document_id": "psx:273304"
+     },
+     {
+      "id": "edge_a78cdd968c496c16c45e2b47",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_e07631db4f0c4221965c",
+      "to": "document:psx:273304",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273304.pdf",
+       "page": 1
+      },
+      "document_id": "psx:273304"
+     },
+     {
+      "id": "edge_d2c071c834c9b5973c13baf0",
+      "type": "HAS_EVENT",
+      "from": "company:MARI",
+      "to": "event:evt_e07631db4f0c4221965c",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273304.pdf",
+       "page": 1
+      },
+      "document_id": "psx:273304"
+     }
+    ]
+   },
    "sources": {
     "status": "degraded",
     "error": "HTTPError:403 Client Error: Forbidden for url: https://www.marienergies.com.pk/",
@@ -4920,13 +10130,34 @@
     "sources": [],
     "documents": []
    },
+   "source_quality": {
+    "status": "degraded",
+    "monitored_page_count": 0,
+    "document_link_count": 0,
+    "quality_flags": [
+     "missing_issuer_url",
+     "missing_monitored_page",
+     "no_document_links",
+     "registry_degraded"
+    ],
+    "missing_required_source": true
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 1,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 3,
+    "graph_edge_count": 3,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": "2026-03-31T15:12:00+05:00",
-    "source_status": "degraded"
+    "source_status": "degraded",
+    "source_quality_flags": 4
    },
    "news": [
     {
@@ -5059,8 +10290,317 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 13
+    },
+    "nodes": [
+     {
+      "id": "company:FCCL",
+      "type": "company",
+      "label": "FCCL",
+      "ticker": "FCCL"
+     },
+     {
+      "id": "document:psx:281026",
+      "type": "document",
+      "label": "Announcement of Financial Results for the Year Ended on 30 June 2026 and Disclosure of Material Information",
+      "document_id": "psx:281026",
+      "doc_type": "results",
+      "published_at": "2026-08-11T14:25:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/281026.pdf"
+     },
+     {
+      "id": "source:src_1a0b747f3182fb835dfe4f37",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/2026/01/20/financial-overview-for-year-2024-25/",
+      "source_id": "src_1a0b747f3182fb835dfe4f37",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/2026/01/20/financial-overview-for-year-2024-25/",
+      "kind": "financial_reports",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_3f0d35f7b0ffd3f3868811ec",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Sustainability-Report-2025.pdf",
+      "source_id": "src_3f0d35f7b0ffd3f3868811ec",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Sustainability-Report-2025.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_445cf789c46422875f15d55e",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Anti-Harassement-Policy.pdf",
+      "source_id": "src_445cf789c46422875f15d55e",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Anti-Harassement-Policy.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_5cbe6ae3a7bb844bceb632ec",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Pattern-of-Shareholding-.pdf",
+      "source_id": "src_5cbe6ae3a7bb844bceb632ec",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Pattern-of-Shareholding-.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_61e3ffcb525b717c2c15fd51",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/FCCL-Annual-Report-2025.pdf",
+      "source_id": "src_61e3ffcb525b717c2c15fd51",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/FCCL-Annual-Report-2025.pdf",
+      "kind": "annual_report",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_6c596fdb4146b24341d57804",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Corporate-Briefing-Session-FCCL.pdf",
+      "source_id": "src_6c596fdb4146b24341d57804",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Corporate-Briefing-Session-FCCL.pdf",
+      "kind": "presentation",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_8bdfbae043366961fab7e174",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Investors-Communication-Relation-Grievance-Policy.pdf",
+      "source_id": "src_8bdfbae043366961fab7e174",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Investors-Communication-Relation-Grievance-Policy.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_a38a65c9f76a2fd2560d4b0f",
+      "type": "source",
+      "label": "https://www.fccl.com.pk/",
+      "source_id": "src_a38a65c9f76a2fd2560d4b0f",
+      "ticker": "FCCL",
+      "url": "https://www.fccl.com.pk/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_bcf044c03fd0fc908a1a3f2e",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/ESG-Policy.pdf",
+      "source_id": "src_bcf044c03fd0fc908a1a3f2e",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/ESG-Policy.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_bdefd2e8f39085326d57c583",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/ELECTRONIC-DIVIDEND-MANDATE.pdf",
+      "source_id": "src_bdefd2e8f39085326d57c583",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/ELECTRONIC-DIVIDEND-MANDATE.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_d7c24a4905bef53690dcd33b",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Diversity-Equity-Inclusion.pdf",
+      "source_id": "src_d7c24a4905bef53690dcd33b",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Diversity-Equity-Inclusion.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_dc0731895e95cdb1ccf04cac",
+      "type": "source",
+      "label": "https://fccl.com.pk/eng/wp-content/uploads/2025/01/Unclaimed-Dividend-As-on-26.09.2022-1.xlsx",
+      "source_id": "src_dc0731895e95cdb1ccf04cac",
+      "ticker": "FCCL",
+      "url": "https://fccl.com.pk/eng/wp-content/uploads/2025/01/Unclaimed-Dividend-As-on-26.09.2022-1.xlsx",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_134ef63098eff2707c65c2f0",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_1a0b747f3182fb835dfe4f37",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/2026/01/20/financial-overview-for-year-2024-25/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_290b9201e433081d2925e95b",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_6c596fdb4146b24341d57804",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Corporate-Briefing-Session-FCCL.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_2c96b72fd95843334d8d918f",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_8bdfbae043366961fab7e174",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Investors-Communication-Relation-Grievance-Policy.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_36e8f85af6271378b3879e98",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_5cbe6ae3a7bb844bceb632ec",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Pattern-of-Shareholding-.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_4583ec2ae1b33df7bc93672a",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_bdefd2e8f39085326d57c583",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/ELECTRONIC-DIVIDEND-MANDATE.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_6a6f66509240483b58c1e3a2",
+      "type": "FILED",
+      "from": "company:FCCL",
+      "to": "document:psx:281026",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281026.pdf"
+      },
+      "document_id": "psx:281026"
+     },
+     {
+      "id": "edge_970ec7524b856ab38693024f",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_bcf044c03fd0fc908a1a3f2e",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/ESG-Policy.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_a94a8fae92e42e9b2938c357",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_445cf789c46422875f15d55e",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Anti-Harassement-Policy.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_bb2cce4cdd657525467a7464",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_d7c24a4905bef53690dcd33b",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Diversity-Equity-Inclusion.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_d64f82ab8f9802ff322e6b44",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_dc0731895e95cdb1ccf04cac",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/01/Unclaimed-Dividend-As-on-26.09.2022-1.xlsx"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_f11d73d15db40ce3ab5b3508",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_a38a65c9f76a2fd2560d4b0f",
+      "evidence": {
+       "source_url": "https://www.fccl.com.pk/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_f30313705a200784c7853f95",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_3f0d35f7b0ffd3f3868811ec",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Sustainability-Report-2025.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_fd36986afb9801bc2fa7c8c9",
+      "type": "HAS_SOURCE",
+      "from": "company:FCCL",
+      "to": "source:src_61e3ffcb525b717c2c15fd51",
+      "evidence": {
+       "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/FCCL-Annual-Report-2025.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -5165,13 +10705,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 11,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 14,
+    "graph_edge_count": 13,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -5303,8 +10859,141 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 4
+    },
+    "nodes": [
+     {
+      "id": "company:NRL",
+      "type": "company",
+      "label": "NRL",
+      "ticker": "NRL"
+     },
+     {
+      "id": "document:psx:280546",
+      "type": "document",
+      "label": "Material Information - Issuance of Sukuk - PKR 10,000,000,000/-",
+      "document_id": "psx:280546",
+      "doc_type": "other",
+      "published_at": "2026-07-30T12:54:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/280546.pdf"
+     },
+     {
+      "id": "source:src_0e296697ff574423e7805454",
+      "type": "source",
+      "label": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf",
+      "source_id": "src_0e296697ff574423e7805454",
+      "ticker": "NRL",
+      "url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_2ad2ec12df87dae68e766b04",
+      "type": "source",
+      "label": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
+      "source_id": "src_2ad2ec12df87dae68e766b04",
+      "ticker": "NRL",
+      "url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
+      "kind": "issuer_document",
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_328d6df321dab6cde35b908f",
+      "type": "source",
+      "label": "https://www.nrlpak.com/",
+      "source_id": "src_328d6df321dab6cde35b908f",
+      "ticker": "NRL",
+      "url": "https://www.nrlpak.com/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "source:src_dc62d9426ee51ced932547d9",
+      "type": "source",
+      "label": "https://www.nrlpak.com/CorporateBriefingSession.aspx",
+      "source_id": "src_dc62d9426ee51ced932547d9",
+      "ticker": "NRL",
+      "url": "https://www.nrlpak.com/CorporateBriefingSession.aspx",
+      "kind": "presentations",
+      "status": "ok",
+      "quality_flags": []
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_53e4d4872f3c103197d755cf",
+      "type": "HAS_SOURCE",
+      "from": "company:NRL",
+      "to": "source:src_2ad2ec12df87dae68e766b04",
+      "evidence": {
+       "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_85240e15231889932ab8a7dc",
+      "type": "HAS_SOURCE",
+      "from": "company:NRL",
+      "to": "source:src_dc62d9426ee51ced932547d9",
+      "evidence": {
+       "source_url": "https://www.nrlpak.com/CorporateBriefingSession.aspx"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_a66100d0f781fede089f163b",
+      "type": "HAS_SOURCE",
+      "from": "company:NRL",
+      "to": "source:src_328d6df321dab6cde35b908f",
+      "evidence": {
+       "source_url": "https://www.nrlpak.com/"
+      },
+      "status": "ok",
+      "quality_flags": []
+     },
+     {
+      "id": "edge_d6ec15321fc717a8d0cb4516",
+      "type": "FILED",
+      "from": "company:NRL",
+      "to": "document:psx:280546",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280546.pdf"
+      },
+      "document_id": "psx:280546"
+     },
+     {
+      "id": "edge_e82cad0a01301e357da5159a",
+      "type": "HAS_SOURCE",
+      "from": "company:NRL",
+      "to": "source:src_0e296697ff574423e7805454",
+      "evidence": {
+       "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf"
+      },
+      "status": "discovered",
+      "quality_flags": []
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -5346,13 +11035,29 @@
      }
     ]
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 2,
+    "quality_flags": [],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 6,
+    "graph_edge_count": 5,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 0
    },
    "news": [
     {
@@ -5485,8 +11190,79 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 1
+    },
+    "nodes": [
+     {
+      "id": "company:GAL",
+      "type": "company",
+      "label": "GAL",
+      "ticker": "GAL"
+     },
+     {
+      "id": "document:psx:279066",
+      "type": "document",
+      "label": "Board Meeting other than financial results",
+      "document_id": "psx:279066",
+      "doc_type": "results",
+      "published_at": "2026-06-24T12:43:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/279066.pdf"
+     },
+     {
+      "id": "source:src_2e2ca699b8f1c06260673738",
+      "type": "source",
+      "label": "https://www.ghandharanissan.com.pk/",
+      "source_id": "src_2e2ca699b8f1c06260673738",
+      "ticker": "GAL",
+      "url": "https://www.ghandharanissan.com.pk/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_b4999af66359f1eb12ffec58",
+      "type": "HAS_SOURCE",
+      "from": "company:GAL",
+      "to": "source:src_2e2ca699b8f1c06260673738",
+      "evidence": {
+       "source_url": "https://www.ghandharanissan.com.pk/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "edge_f074010b912c0b732a85885f",
+      "type": "FILED",
+      "from": "company:GAL",
+      "to": "document:psx:279066",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/279066.pdf"
+      },
+      "document_id": "psx:279066"
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -5504,13 +11280,31 @@
     ],
     "documents": []
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 1,
+    "document_link_count": 0,
+    "quality_flags": [
+     "no_document_links"
+    ],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 3,
+    "graph_edge_count": 2,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 1
    },
    "news": [
     {
@@ -5641,8 +11435,105 @@
      }
     }
    ],
+   "financial_series": {
+    "coverage": {},
+    "conflicts": [],
+    "facts": []
+   },
    "timeline": [],
    "changes": [],
+   "graph": {
+    "summary": {
+     "document": 1,
+     "period": 0,
+     "fact": 0,
+     "event": 0,
+     "change": 0,
+     "source": 2
+    },
+    "nodes": [
+     {
+      "id": "company:PTC",
+      "type": "company",
+      "label": "PTC",
+      "ticker": "PTC"
+     },
+     {
+      "id": "document:psx:280592",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:280592",
+      "doc_type": "other",
+      "published_at": "2026-07-31T09:25:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/280592.pdf"
+     },
+     {
+      "id": "source:src_91e9b1454ecaa8e142d2e252",
+      "type": "source",
+      "label": "https://www.ptcl.com.pk/",
+      "source_id": "src_91e9b1454ecaa8e142d2e252",
+      "ticker": "PTC",
+      "url": "https://www.ptcl.com.pk/",
+      "kind": "issuer_home",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "source:src_93800f4cc1a5f1be29e6af40",
+      "type": "source",
+      "label": "https://ptcl.com.pk/Home/PageDetail?ItemId=365&linkId=923&linkId=5600",
+      "source_id": "src_93800f4cc1a5f1be29e6af40",
+      "ticker": "PTC",
+      "url": "https://ptcl.com.pk/Home/PageDetail?ItemId=365&linkId=923&linkId=5600",
+      "kind": "investor_relations",
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "id": "edge_a68a5f688b75b5ab48dd1d9e",
+      "type": "FILED",
+      "from": "company:PTC",
+      "to": "document:psx:280592",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/280592.pdf"
+      },
+      "document_id": "psx:280592"
+     },
+     {
+      "id": "edge_b82bb16a396fcf15a0140547",
+      "type": "HAS_SOURCE",
+      "from": "company:PTC",
+      "to": "source:src_93800f4cc1a5f1be29e6af40",
+      "evidence": {
+       "source_url": "https://ptcl.com.pk/Home/PageDetail?ItemId=365&linkId=923&linkId=5600"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     },
+     {
+      "id": "edge_ceb567a8180d2b776fb84f2d",
+      "type": "HAS_SOURCE",
+      "from": "company:PTC",
+      "to": "source:src_91e9b1454ecaa8e142d2e252",
+      "evidence": {
+       "source_url": "https://www.ptcl.com.pk/"
+      },
+      "status": "ok",
+      "quality_flags": [
+       "no_document_links"
+      ]
+     }
+    ]
+   },
    "sources": {
     "status": "ok",
     "error": null,
@@ -5669,13 +11560,31 @@
     ],
     "documents": []
    },
+   "source_quality": {
+    "status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 0,
+    "quality_flags": [
+     "no_document_links"
+    ],
+    "missing_required_source": false
+   },
+   "brief": {
+    "current": null,
+    "history_count": 0
+   },
    "intelligence": {
     "document_count": 1,
     "event_count": 0,
     "change_count": 0,
+    "financial_fact_count": 0,
+    "graph_node_count": 4,
+    "graph_edge_count": 3,
+    "brief_status": "training_only",
     "pending_synthesis": 1,
     "last_event_at": null,
-    "source_status": "ok"
+    "source_status": "ok",
+    "source_quality_flags": 1
    },
    "news": [
     {

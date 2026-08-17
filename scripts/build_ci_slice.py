@@ -218,6 +218,125 @@ def _insider(insider, sym):
     ]
 
 
+def _financial_series(series_state, sym, limit=40):
+    row = (series_state.get("tickers") or {}).get(sym) or {}
+    facts = list(row.get("facts") or [])
+    facts.sort(key=lambda f: (f.get("period_end") or "", f.get("metric") or "", f.get("series_id") or ""), reverse=True)
+    return {
+        "coverage": row.get("coverage") or {},
+        "conflicts": (row.get("conflicts") or [])[:12],
+        "facts": [
+            {
+                "series_id": fact.get("series_id"),
+                "metric": fact.get("metric"),
+                "period_end": fact.get("period_end"),
+                "period_type": fact.get("period_type"),
+                "consolidation": fact.get("consolidation"),
+                "currency": fact.get("currency"),
+                "unit": fact.get("unit"),
+                "unit_multiplier": fact.get("unit_multiplier"),
+                "raw_value": fact.get("raw_value"),
+                "normalized_value": fact.get("normalized_value"),
+                "document_id": fact.get("document_id"),
+                "fact_id": fact.get("fact_id"),
+                "source_url": _url(fact.get("source_url")),
+                "evidence": (fact.get("evidence") or [])[:1],
+                "quality_flags": fact.get("quality_flags") or [],
+            }
+            for fact in facts[:limit]
+            if isinstance(fact, dict)
+        ],
+    }
+
+
+def _company_graph(graph_state, sym):
+    row = (graph_state.get("companies") or {}).get(sym) or {}
+    nodes_by_id = {node.get("id"): node for node in (graph_state.get("nodes") or []) if node.get("id")}
+    allowed = set()
+    if row.get("node_id"):
+        allowed.add(row["node_id"])
+    allowed.update(f"document:{doc_id}" for doc_id in (row.get("document_ids") or []))
+    allowed.update(row.get("period_ids") or [])
+    allowed.update(row.get("fact_ids") or [])
+    allowed.update(f"event:{event_id}" for event_id in (row.get("event_ids") or []))
+    allowed.update(f"change:{change_id}" for change_id in (row.get("change_ids") or []))
+    allowed.update(f"source:{source_id}" for source_id in (row.get("source_ids") or []))
+    caps = {"company": 1, "document": 12, "event": 12, "fact": 16,
+            "period": 8, "source": 12, "change": 8}
+    selected = []
+    counts = {}
+    type_order = {"company": 0, "document": 1, "event": 2, "fact": 3,
+                  "period": 4, "source": 5, "change": 6}
+    for node_id in sorted(allowed, key=lambda value: (
+            type_order.get(nodes_by_id.get(value, {}).get("type"), 9),
+            -(int(str(nodes_by_id.get(value, {}).get("published_at") or "0")[:4])
+              if str(nodes_by_id.get(value, {}).get("published_at") or "")[:4].isdigit() else 0),
+            value)):
+        node = nodes_by_id.get(node_id)
+        if not node:
+            continue
+        kind = node.get("type") or "other"
+        if counts.get(kind, 0) >= caps.get(kind, 4):
+            continue
+        counts[kind] = counts.get(kind, 0) + 1
+        selected.append(node)
+    selected_ids = {node.get("id") for node in selected}
+    edges = [
+        edge for edge in (graph_state.get("edges") or [])
+        if edge.get("from") in selected_ids and edge.get("to") in selected_ids
+    ]
+    return {
+        "summary": row.get("counts") or {},
+        "nodes": selected,
+        "edges": edges[:120],
+    }
+
+
+def _source_quality(source_qa, sym):
+    row = (source_qa.get("tickers") or {}).get(sym) or {}
+    return {
+        "status": row.get("registry_status") or "unknown",
+        "monitored_page_count": row.get("monitored_page_count") or 0,
+        "document_link_count": row.get("document_link_count") or 0,
+        "quality_flags": row.get("quality_flags") or [],
+        "missing_required_source": bool(row.get("missing_required_source")),
+    }
+
+
+def _company_brief(brief_state, document_state, sym):
+    row = (brief_state.get("companies") or {}).get(sym) or {}
+    current = row.get("current") or None
+    if not current:
+        return {"current": None, "history_count": len(row.get("history") or [])}
+    documents = document_state.get("documents") or {}
+    sections = {}
+    for key, items in (current.get("sections") or {}).items():
+        sections[key] = [
+            {
+                "text": item.get("text"),
+                "evidence": [
+                    {
+                        "doc_id": ref.get("doc_id"), "page": ref.get("page"),
+                        "source_url": _url((documents.get(ref.get("doc_id")) or {}).get("source_url")),
+                    }
+                    for ref in item.get("evidence") or [] if isinstance(ref, dict)
+                ],
+            }
+            for item in items if isinstance(item, dict)
+        ]
+    return {
+        "current": {
+            "brief_id": current.get("brief_id"),
+            "headline": current.get("headline"),
+            "approved_at": current.get("approved_at"),
+            "based_on": current.get("based_on") or [],
+            "sections": sections,
+            "limitations": current.get("limitations") or [],
+        },
+        "history_count": len(row.get("history") or []),
+    }
+
+
 def build():
     universe = load_json(STATE / "universe.json", {"symbols": {}}).get("symbols", {})
     quant = load_json(STATE / "quant.json", {"tickers": {}}).get("tickers", {})
@@ -235,6 +354,10 @@ def build():
     company_events = load_json(STATE / "company_event_ledger.json", {"companies": {}})
     synthesis_queue = load_json(STATE / "document_synthesis_queue.json", {"queue": [], "history": []})
     source_registry = load_json(STATE / "company_intel" / "source_registry.json", {"tickers": {}})
+    source_qa = load_json(STATE / "company_source_qa.json", {"tickers": {}})
+    financial_series = load_json(STATE / "company_financial_series.json", {"tickers": {}})
+    knowledge_graph = load_json(STATE / "company_intel" / "company_graph.json", {"companies": {}})
+    company_briefs = load_json(STATE / "company_briefs.json", {"companies": {}})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue)
@@ -255,6 +378,9 @@ def build():
         filings = _company_filings(company_documents, queue_status, sym)
         timeline, changes = _company_timeline(company_events, sym)
         sources = _company_sources(source_registry, sym)
+        financial = _financial_series(financial_series, sym)
+        graph = _company_graph(knowledge_graph, sym)
+        brief = _company_brief(company_briefs, company_documents, sym)
         rows.append({
             "symbol": sym,
             "name": (universe.get(sym) or {}).get("name") or f.get("name") or "",
@@ -297,19 +423,28 @@ def build():
             },
             "documents": _research_docs(research, sym),
             "filings": filings,
+            "financial_series": financial,
             "timeline": timeline,
             "changes": changes,
+            "graph": graph,
             "sources": sources,
+            "source_quality": _source_quality(source_qa, sym),
+            "brief": brief,
             "intelligence": {
                 "document_count": len(filings),
                 "event_count": len(timeline),
                 "change_count": len(changes),
+                "financial_fact_count": len(financial.get("facts") or []),
+                "graph_node_count": len(graph.get("nodes") or []),
+                "graph_edge_count": len(graph.get("edges") or []),
+                "brief_status": "approved" if brief.get("current") else "training_only",
                 "pending_synthesis": sum(
                     1 for filing in filings
                     if (filing.get("synthesis") or {}).get("approval_status") == "pending"
                 ),
                 "last_event_at": timeline[0].get("date") if timeline else None,
                 "source_status": sources.get("status"),
+                "source_quality_flags": len((_source_quality(source_qa, sym).get("quality_flags") or [])),
             },
             "news": _latest_news(news, sym),
             "insider_filings": _insider(insider, sym),
@@ -323,6 +458,8 @@ def build():
             "profile_source": profiles_state.get("source"),
             "profile_updated": profiles_state.get("updated"),
             "count": len(rows),
+            "financial_series": financial_series.get("_meta", {}),
+            "graph": knowledge_graph.get("_meta", {}),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",
         },
         "tickers": rows,

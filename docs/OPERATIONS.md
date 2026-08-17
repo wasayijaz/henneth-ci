@@ -41,13 +41,18 @@ pipeline remains authoritative. Its ordered company-intelligence segment is:
 1. `fetch_company_profiles.py` — monthly/failed-row retry DPS issuer profiles for the 20-company pilot.
 2. `fetch_company_documents.py` — daily official PSX/PUCARS metadata plus at most 24 verified 12 MB PDFs in ignored current-run cache.
 3. `document_intelligence.py` — immediate local extraction, page evidence, append-only events/changes and training-mode queue.
-4. `fetch_issuer_sources.py` — weekly same-domain issuer page hashes and report-link index.
-5. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+4. `build_financial_series.py` — evidence-linked, period-aware financial facts. Unknown period/unit/basis stays flagged, never guessed.
+5. `fetch_issuer_sources.py` — weekly same-domain issuer page hashes and report-link index.
+6. `build_source_qa.py` — compact source-health flags and URL index.
+7. `build_company_graph.py` — deterministic company/document/fact/event/source graph with source URL/page provenance.
+8. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new
 Vercel feature is used. The approval queue does not invoke an agent: training mode requires the owner
-to approve synthesis first.
+to approve synthesis first. Local synthesis training uses `prepare_synthesis_batch.py`, the
+`company-intelligence-librarian` and `company-intelligence-verifier` agents, and the deterministic
+`company_brief_review.py` approval gate; durable briefs are written only after explicit owner approval.
 
 Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.henneth.app` attached.
 `/data/*` fails closed unless a verified Supabase

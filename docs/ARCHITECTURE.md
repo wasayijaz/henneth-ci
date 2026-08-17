@@ -66,7 +66,12 @@ The product is a hybrid of five parts:
 | Official company documents | `scripts/fetch_company_documents.py` -> existing `state/research_index.json` + transient ignored PDF handoff | deterministic document extraction |
 | Page evidence, facts and events | `scripts/document_intelligence.py` -> `state/company_documents.json`, `state/company_event_ledger.json` | CI slice, approval queue |
 | Issuer source registry | `scripts/fetch_issuer_sources.py` -> `state/company_intel/source_registry.json` | CI Sources view |
+| Company financial series | `scripts/build_financial_series.py` -> `state/company_financial_series.json` | CI Financials view, graph, synthesis handoff |
+| Company source QA | `scripts/build_source_qa.py` -> `state/company_source_qa.json` | CI source-health badges and graph |
+| Company knowledge graph | `scripts/build_company_graph.py` -> `state/company_intel/company_graph.json` | CI Graph view |
 | Judgment handoff | `scripts/document_queue.py` -> `state/document_synthesis_queue.json` | owner-approved local synthesis only |
+| Synthesis training batch | `scripts/prepare_synthesis_batch.py` -> ignored `.cache/company_intel/training_batch.json` | local librarian/verifier agents |
+| Approved CI briefs | `scripts/company_brief_review.py` -> `state/company_briefs.json`, `state/company_brief_receipts.json` | CI Brief view |
 | Company Intelligence slice | `scripts/build_ci_slice.py` -> `Henneth Desk 2.CI.0/data/company_intelligence.json` | private CI app only |
 | Company Intelligence data gate | `Henneth Desk 2.CI.0/middleware.js` | `/data/*` on the CI Vercel project |
 | Brand / plan copy on the marketing site | `site/src/site.config.ts` | every Astro page |
@@ -136,9 +141,17 @@ Astro pages rendered from `site/src/data/public/tickers.json` (pilot names), `as
 `fetch_company_profiles.py` retains sourced DPS issuer profiles. `fetch_company_documents.py`
 incrementally indexes official PSX/PUCARS announcements in the existing research index and makes a
 bounded, ignored current-run PDF handoff. `document_intelligence.py` immediately extracts page-linked
-evidence, conservative facts/events, append-only changes, and a training-mode approval queue; it makes
-no model call. `fetch_issuer_sources.py` weekly discovers same-domain issuer pages and report links from
-the official DPS profile. Raw HTML/PDF bodies are not committed.
+evidence, conservative facts/events, append-only changes, a training-mode approval queue, and transient
+full-page financial normalization; it makes no model call. `build_financial_series.py`,
+`build_source_qa.py`, and `build_company_graph.py` turn retained evidence into period-aware financial
+rows, source-health flags, and an evidence-linked graph. `fetch_issuer_sources.py` weekly discovers
+same-domain issuer pages and report links from the official DPS profile. Raw HTML/PDF bodies are not
+committed.
+
+Model synthesis is training-mode only. `prepare_synthesis_batch.py` writes a compact ignored handoff for
+the librarian/verifier agents. `company_brief_review.py` is the deterministic approval gate: it validates
+document/page citations, blocks advice language, requires a clean verifier receipt, and writes durable
+briefs only after explicit owner approval.
 
 `build_ci_slice.py` joins the bounded private view into one generated file under
 `Henneth Desk 2.CI.0/data/`. The app reads no other state file and never calls a market provider.

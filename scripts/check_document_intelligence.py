@@ -46,6 +46,8 @@ def _validate_state() -> None:
 
 
 def main() -> int:
+    live_series_path = STATE / "company_financial_series.json"
+    live_series_before = live_series_path.read_bytes() if live_series_path.exists() else None
     with tempfile.TemporaryDirectory(prefix="henneth-doc-") as tmp:
         root = Path(tmp)
         text = "FFC quarterly results. EPS Rs 12.5; final dividend Rs 3. Revenue Rs 12 bn."
@@ -91,6 +93,12 @@ def main() -> int:
         assert queue.read_text(encoding="utf-8") == first_queue, "queue churned on a no-op"
         payload = json.loads(first_queue)
         assert payload["_meta"]["training_mode"] is True and payload["queue"][0]["approval_status"] == "pending"
+        receipts = root / "brief_receipts.json"
+        receipts.write_text(json.dumps({"receipts": [{"based_on": [
+            {"doc_id": doc_id, "content_sha256": extracted["content_sha256"]}
+        ]}]}), encoding="utf-8")
+        build_queue(docs, queue, receipts)
+        assert not json.loads(queue.read_text(encoding="utf-8"))["queue"], "approved receipt stayed active"
 
         # Simulate a crash after the durable document receipt but before ledger/queue writes.
         # The next metadata-only run must replay both outputs without needing raw bytes again.
@@ -98,22 +106,25 @@ def main() -> int:
         output = root / "company_documents.json"
         recovered_ledger = root / "recovered_ledger.json"
         recovered_queue = root / "recovered_queue.json"
+        recovered_series = root / "recovered_series.json"
         extraction_queue = root / "missing_extraction_queue.json"
         base_row = {"doc_id": "psx:fixture", "official_document_id": "fixture",
                     "tickers": ["FFC"], "title": "FFC quarterly results",
                     "published_at": "2026-08-18", "url": "https://example.test/ffc/fixture.pdf",
                     "text": text, "media_type": "text/plain"}
         index.write_text(json.dumps({"documents": {"psx:fixture": base_row}}), encoding="utf-8")
-        run_intelligence(index, output, extraction_queue, recovered_ledger, recovered_queue)
+        run_intelligence(index, output, extraction_queue, recovered_ledger, recovered_queue, recovered_series)
         recovered_ledger.unlink()
         recovered_queue.unlink()
         base_row.pop("text")
         index.write_text(json.dumps({"documents": {"psx:fixture": base_row}}), encoding="utf-8")
-        run_intelligence(index, output, extraction_queue, recovered_ledger, recovered_queue)
+        run_intelligence(index, output, extraction_queue, recovered_ledger, recovered_queue, recovered_series)
         recovered = json.loads(recovered_ledger.read_text(encoding="utf-8"))
         assert recovered["companies"]["FFC"]["events"], "ledger was not recovered from durable document"
         recovered_q = json.loads(recovered_queue.read_text(encoding="utf-8"))
         assert recovered_q["queue"], "queue was not recovered from durable document"
+    live_series_after = live_series_path.read_bytes() if live_series_path.exists() else None
+    assert live_series_after == live_series_before, "offline self-check touched live financial series"
     _validate_state()
     print("document intelligence self-check: ok")
     return 0

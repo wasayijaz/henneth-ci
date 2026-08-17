@@ -13,10 +13,11 @@ from typing import Any
 from psx_data import STATE, load_json, save_json
 
 OUT = STATE / "document_synthesis_queue.json"
+RECEIPTS = STATE / "company_brief_receipts.json"
 MAX_PENDING = 200
 
 
-def build_queue(documents: dict[str, Any], path=OUT) -> dict[str, Any]:
+def build_queue(documents: dict[str, Any], path=OUT, receipts_path=RECEIPTS) -> dict[str, Any]:
     prior = load_json(path, {"schema_version": 1, "queue": [], "history": [], "_meta": {}})
     prior_history = list(prior.get("history") or [])
     if not prior_history:
@@ -37,8 +38,16 @@ def build_queue(documents: dict[str, Any], path=OUT) -> dict[str, Any]:
                         "priority": event_max, "queued_at": time.strftime("%Y-%m-%d %H:%M"),
                         "approval_status": "pending", "training_mode": True,
                         "synthesis_status": "not_started"})
+    receipts = load_json(receipts_path, {"receipts": []})
+    approved = {
+        (item.get("doc_id"), item.get("content_sha256"))
+        for receipt in receipts.get("receipts") or []
+        for item in receipt.get("based_on") or []
+        if isinstance(item, dict)
+    }
     pending = [r for r in history if r.get("approval_status") == "pending"
                and r.get("synthesis_status") not in ("complete", "rejected")]
+    pending = [r for r in pending if (r.get("doc_id"), r.get("content_sha256")) not in approved]
     pending.sort(key=lambda r: (-int(r.get("priority") or 0), r.get("queued_at") or "", r.get("queue_id") or ""))
     overflow = max(0, len(pending) - MAX_PENDING)
     retained = pending[:MAX_PENDING]
@@ -47,7 +56,7 @@ def build_queue(documents: dict[str, Any], path=OUT) -> dict[str, Any]:
     out = {"schema_version": 1, "queue": retained, "history": history,
            "_meta": {"updated": time.strftime("%Y-%m-%d %H:%M"), "pending": len(retained),
                      "overflow": overflow, "retention_max": MAX_PENDING,
-                     "training_mode": True,
+                     "training_mode": True, "approved_receipts": len(approved),
                      "note": "Deterministic hand-off only; no model/provider call is made."}}
     save_json(path, out)
     return out
