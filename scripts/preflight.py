@@ -180,6 +180,8 @@ def check_company_intelligence_phase2():
     """Financial normalization, graph provenance, and synthesis training gates."""
     scripts = (
         ("check_financial_graph.py", []),
+        ("stage_issuer_documents.py", ["--self-check"]),
+        ("build_change_intelligence.py", ["--self-check"]),
         ("prepare_synthesis_batch.py", ["--self-check"]),
         ("company_brief_review.py", ["self-check"]),
     )

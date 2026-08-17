@@ -43,10 +43,11 @@ pipeline remains authoritative. Its ordered company-intelligence segment is:
 3. `document_intelligence.py` — immediate local extraction, page evidence, append-only events/changes and training-mode queue.
 4. `build_financial_series.py` — evidence-linked, period-aware financial facts. Unknown period/unit/basis stays flagged, never guessed.
 5. `fetch_issuer_sources.py` — weekly same-domain issuer page hashes and report-link index.
-6. `build_source_qa.py` — compact source-health flags and URL index.
-7. `build_company_graph.py` — deterministic company/document/fact/event/source graph with source URL/page provenance.
-8. `build_change_intelligence.py` — source-backed digest of official filings, issuer-page changes, comparable financial movements and classified events.
-9. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+6. `stage_issuer_documents.py` — weekly, bounded same-domain issuer PDFs (maximum 16 per run), followed immediately by a second extraction/financial pass.
+7. `build_source_qa.py` — compact source-health flags and URL index.
+8. `build_company_graph.py` — deterministic company/document/fact/event/source graph with source URL/page provenance.
+9. `build_change_intelligence.py` — source-backed digest of official filings, issuer-page changes, comparable financial movements and classified events.
+10. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new
@@ -54,6 +55,9 @@ Vercel feature is used. The approval queue does not invoke an agent: training mo
 to approve synthesis first. Local synthesis training uses `prepare_synthesis_batch.py`, the
 `company-intelligence-librarian` and `company-intelligence-verifier` agents, and the deterministic
 `company_brief_review.py` approval gate; durable briefs are written only after explicit owner approval.
+Manual historical expansion uses `ci_backfill.py` in batches of at most five companies and at most five
+batches per invocation. A durable cursor advances only after a completed batch; a failed provider keeps
+last-good data and leaves the unfinished batch due for a later retry.
 
 Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.henneth.app` attached.
 `/data/*` fails closed unless a verified Supabase

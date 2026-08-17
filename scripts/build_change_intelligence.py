@@ -267,14 +267,74 @@ def build(documents_path: Path = STATE / "company_documents.json",
     return payload
 
 
+def _self_check() -> int:
+    source = {
+        "tickers": {
+            "ABC": {
+                "monitored_pages": [
+                    {"url": "https://abc.example/investors", "content_sha256": "new"},
+                    {
+                        "url": "https://abc.example/results",
+                        "content_sha256": "new",
+                        "previous_sha256": "old",
+                        "last_changed_at": "2026-08-18T08:00:00+05:00",
+                    },
+                ],
+                "document_links": [],
+            }
+        }
+    }
+    source_items = _source_items(source).get("ABC") or []
+    if len(source_items) != 1 or source_items[0].get("source_url") != "https://abc.example/results":
+        print("change intelligence self-check: FAIL (absence became a source-change claim)")
+        return 1
+    series = {
+        "tickers": {
+            "ABC": {
+                "facts": [
+                    {
+                        "series_id": "old", "metric": "revenue", "period_end": "2025-06-30",
+                        "normalized_value": 100, "consolidation": "consolidated", "currency": "PKR",
+                        "unit": "million", "unit_multiplier": 1_000_000, "readiness": "model_loadable",
+                        "source_url": "https://abc.example/old.pdf", "evidence": [{"page": 2, "source_url": "https://abc.example/old.pdf"}],
+                    },
+                    {
+                        "series_id": "new", "metric": "revenue", "period_end": "2026-06-30",
+                        "normalized_value": 120, "consolidation": "consolidated", "currency": "PKR",
+                        "unit": "million", "unit_multiplier": 1_000_000, "readiness": "model_loadable",
+                        "source_url": "https://abc.example/new.pdf", "evidence": [{"page": 3, "source_url": "https://abc.example/new.pdf"}],
+                    },
+                    {
+                        "series_id": "unknown", "metric": "profit", "period_end": None,
+                        "normalized_value": 9, "readiness": "audit_only",
+                        "source_url": "https://abc.example/unknown.pdf",
+                    },
+                ]
+            }
+        }
+    }
+    financial = _financial_items(series).get("ABC") or []
+    if len(financial) != 1 or financial[0].get("delta_pct") != 20.0:
+        print("change intelligence self-check: FAIL (non-comparable facts entered the digest)")
+        return 1
+    if (financial[0].get("evidence") or {}).get("page") != 3:
+        print("change intelligence self-check: FAIL (financial evidence lost its page)")
+        return 1
+    print("change intelligence self-check: PASS")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--self-check", action="store_true")
     parser.add_argument("--documents", type=Path, default=STATE / "company_documents.json")
     parser.add_argument("--events", type=Path, default=STATE / "company_event_ledger.json")
     parser.add_argument("--series", type=Path, default=STATE / "company_financial_series.json")
     parser.add_argument("--sources", type=Path, default=STATE / "company_intel" / "source_registry.json")
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args(argv)
+    if args.self_check:
+        return _self_check()
     payload = build(args.documents, args.events, args.series, args.sources, args.output)
     print(f"change_intelligence: companies={payload['_meta']['company_count']} items={payload['_meta']['item_count']}")
     return 0

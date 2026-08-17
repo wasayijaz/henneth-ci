@@ -147,7 +147,9 @@ full-page financial normalization; it makes no model call. `build_financial_seri
 `build_source_qa.py`, `build_company_graph.py`, and `build_change_intelligence.py` turn retained
 evidence into period-aware financial rows, source-health flags, an evidence-linked graph, and a
 deterministic "what changed" digest. `fetch_issuer_sources.py` weekly discovers same-domain issuer
-pages and report links from the official DPS profile. Raw HTML/PDF bodies are not committed.
+pages and report links from the official DPS profile. `stage_issuer_documents.py` safely downloads a
+bounded same-domain PDF set into the existing transient extraction handoff; the same document
+intelligence and financial-series modules consume it immediately. Raw HTML/PDF bodies are not committed.
 
 Model synthesis is training-mode only. `prepare_synthesis_batch.py` writes a compact ignored handoff for
 the librarian/verifier agents. `company_brief_review.py` is the deterministic approval gate: it validates
