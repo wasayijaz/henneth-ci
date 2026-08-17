@@ -1,8 +1,16 @@
 {
  "generated": "2026-08-17",
  "note": "Public release notes only. Mirrors state/changelog.json — see CLAUDE.md Rule 2.",
- "current": "2026.08.16",
+ "current": "2026.08.17",
  "releases": [
+  {
+   "date": "2026-08-17",
+   "version": "2026.08.17",
+   "title": "Ask the Desk: model swap + truncation/markdown fix",
+   "notes": [
+    "Ask the Desk stopped cutting off mid-answer, and replies now render as real headings and bullet lists instead of showing literal asterisks. Earlier the same day, a Groq model retirement had started silently breaking every Ask the Desk answer — that's fixed too."
+   ]
+  },
   {
    "date": "2026-08-16",
    "version": "2026.08.16",
@@ -44,14 +52,6 @@
    "title": "Premium polish round 5: tape stability, modal/scroll-lock cleanup, sidebar restore",
    "notes": [
     "The price tape no longer jitters as numbers update, and closing a lesson or note popup now always restores normal scrolling — no more stuck screens. The sidebar remembers its width without a flash on load."
-   ]
-  },
-  {
-   "date": "2026-08-09",
-   "version": "2026.08.09",
-   "title": "SEO: orphaned /psx/ hub fixed, blog posts linked into it, canonicalization",
-   "notes": [
-    "Company pages under /psx/ are easier for Google to find now, and the blog links through to the company/ticker data it's talking about instead of dead-ending."
    ]
   }
  ]

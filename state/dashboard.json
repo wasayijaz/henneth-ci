@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 17:30",
+ "updated": "2026-08-17 17:42",
  "regime": "neutral",
  "geo_risk": {
   "score": 56,
@@ -94,6 +94,10 @@
    "score": 70.7
   },
   {
+   "ticker": "FFC",
+   "score": 66.9
+  },
+  {
    "ticker": "USRUT",
    "score": 66.6
   },
@@ -116,10 +120,6 @@
   {
    "ticker": "EFA",
    "score": 64.3
-  },
-  {
-   "ticker": "THCCL",
-   "score": 62.7
   }
  ],
  "movers_up": [
@@ -359,12 +359,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-13T17:15:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-13T18:05:00+05:00",
-   "outcome": "regime=neutral, geo-risk=46/moderate, daily-read=red session tied to HMB earnings miss + Al Shaheer (ASCNC) SECP-suspended acquisition, banks favoured on carry; news-sentinel flagged 3 impact>=4 items (escalation=true) but full pipeline not run per routine scope; watchdog=OK, pushed to desk.henneth.app"
-  },
-  {
    "started": "2026-08-13 17:40",
    "mode": "room",
    "ended": "2026-08-13 18:07",
@@ -387,6 +381,12 @@
    "mode": "light",
    "ended": "2026-08-17T11:05:00+05:00",
    "outcome": "AM checkpoint: health ok, 3 news items found (impact 1,3,3; none >=4, no escalation), no open positions (monitor skipped), preflight OK, published+pushed, watchdog OK live."
+  },
+  {
+   "started": "2026-08-17T17:06:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-17T17:31:00+05:00",
+   "outcome": "PM checkpoint: run_cloud.py exited 1 -- 3 of ~48 scripts (backtest.py, snapshot.py, fetch_intraday.py) hit JSONDecodeError reading state/liquidity.json and state/universe.json; both files independently verified valid/fresh moments later (likely transient read-during-atomic-rewrite race vs the concurrent cloud cron, mechanism not fully root-caused). preflight.py itself ran twice inside run_cloud.py and both times reported OK (1 non-gating WARN: 96 backfilling tickers). Per checkpoint step-3 stop condition (script exited non-zero), news-sentinel/monitor/escalation/build_dashboard/publish/watchdog all skipped this cycle -- no commit, no push. No open positions. Flagged for follow-up: recurring transient race on liquidity.json/universe.json reads during concurrent cloud+local runs (see 2026-08-12 17:06 PM entry for a prior instance of the same backtest.py/snapshot.py race)."
   }
  ]
 }
