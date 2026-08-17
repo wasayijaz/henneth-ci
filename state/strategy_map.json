@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 12:04",
+ "updated": "2026-08-17 17:34",
  "tickers": {
   "APL": [
    {
@@ -68,6 +68,50 @@
     "oos_n": 11,
     "oos_hit": 0.545,
     "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
+   }
+  ],
+  "BAFL": [
+   {
+    "id": "sma_golden_cross",
+    "name": "Golden cross (SMA50>SMA200)",
+    "category": "trend",
+    "net_expectancy_pct": 4.78,
+    "hit_rate": 0.75,
+    "n": 12,
+    "oos_n": 3,
+    "oos_hit": 1.0,
+    "friction_pct": 0.717,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "triple_screen_long",
+    "name": "Triple screen alignment",
+    "category": "trend",
+    "net_expectancy_pct": 1.16,
+    "hit_rate": 0.692,
+    "n": 26,
+    "oos_n": 15,
+    "oos_hit": 0.733,
+    "friction_pct": 0.717,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 18
+   },
+   {
+    "id": "oversold_bounce",
+    "name": "RSI oversold bounce",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.67,
+    "hit_rate": 0.593,
+    "n": 54,
+    "oos_n": 13,
+    "oos_hit": 0.615,
+    "friction_pct": 0.717,
     "target_pct": 5,
     "stop_pct": 3,
     "hold": 8
@@ -1133,6 +1177,22 @@
     "target_pct": 5,
     "stop_pct": 3,
     "hold": 8
+   }
+  ],
+  "AKBL": [
+   {
+    "id": "reclaim_sma200",
+    "name": "Reclaim 200-day",
+    "category": "trend",
+    "net_expectancy_pct": 1.45,
+    "hit_rate": 0.56,
+    "n": 25,
+    "oos_n": 10,
+    "oos_hit": 0.8,
+    "friction_pct": 0.924,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 20
    }
   ],
   "DCL": [
@@ -3304,9 +3364,9 @@
     "id": "pullback_trend",
     "name": "Trend pullback to 20MA",
     "category": "trend",
-    "net_expectancy_pct": 1.24,
-    "hit_rate": 0.595,
-    "n": 37,
+    "net_expectancy_pct": 1.13,
+    "hit_rate": 0.579,
+    "n": 38,
     "oos_n": 10,
     "oos_hit": 0.7,
     "friction_pct": 0.6,
@@ -4425,6 +4485,120 @@
     "target_pct": 8,
     "stop_pct": 4,
     "hold": 18
+   }
+  ],
+  "EFERT": [
+   {
+    "id": "donchian55_break",
+    "name": "Donchian 55 breakout (turtle)",
+    "category": "breakout",
+    "net_expectancy_pct": 2.33,
+    "hit_rate": 0.625,
+    "n": 32,
+    "oos_n": 12,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 25
+   },
+   {
+    "id": "roc60_leader_pullback",
+    "name": "Long-run leader, short pullback",
+    "category": "momentum",
+    "net_expectancy_pct": 2.13,
+    "hit_rate": 0.6,
+    "n": 20,
+    "oos_n": 12,
+    "oos_hit": 0.583,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 18
+   },
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 2.0,
+    "hit_rate": 0.688,
+    "n": 16,
+    "oos_n": 8,
+    "oos_hit": 0.625,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   },
+   {
+    "id": "donch55_trend_break",
+    "name": "Donchian 55 breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 1.89,
+    "hit_rate": 0.607,
+    "n": 28,
+    "oos_n": 11,
+    "oos_hit": 0.545,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 30
+   },
+   {
+    "id": "bb_pctb_reclaim",
+    "name": "Band reclaim from the low",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 1.84,
+    "hit_rate": 0.818,
+    "n": 11,
+    "oos_n": 5,
+    "oos_hit": 0.8,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 1.35,
+    "hit_rate": 0.588,
+    "n": 17,
+    "oos_n": 8,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "golden_pullback_50",
+    "name": "Golden-cross pullback",
+    "category": "trend",
+    "net_expectancy_pct": 0.98,
+    "hit_rate": 0.56,
+    "n": 50,
+    "oos_n": 19,
+    "oos_hit": 0.579,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 20
+   },
+   {
+    "id": "trend_momo_combo",
+    "name": "Trend + momentum combo",
+    "category": "momentum",
+    "net_expectancy_pct": 0.54,
+    "hit_rate": 0.578,
+    "n": 83,
+    "oos_n": 35,
+    "oos_hit": 0.543,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
    }
   ],
   "GLD": [
@@ -5605,6 +5779,150 @@
     "hold": 7
    }
   ],
+  "FFC": [
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 3.17,
+    "hit_rate": 0.778,
+    "n": 27,
+    "oos_n": 13,
+    "oos_hit": 0.769,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 2.88,
+    "hit_rate": 0.714,
+    "n": 28,
+    "oos_n": 13,
+    "oos_hit": 0.692,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   },
+   {
+    "id": "donch20_break_confirm",
+    "name": "Donchian 20 break, volume confirmed",
+    "category": "breakout",
+    "net_expectancy_pct": 0.77,
+    "hit_rate": 0.623,
+    "n": 77,
+    "oos_n": 32,
+    "oos_hit": 0.562,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 14
+   },
+   {
+    "id": "high50_break",
+    "name": "50d high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 0.71,
+    "hit_rate": 0.559,
+    "n": 59,
+    "oos_n": 23,
+    "oos_hit": 0.522,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 15
+   },
+   {
+    "id": "atr_stretch_below",
+    "name": "2-ATR stretch below 20MA",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.65,
+    "hit_rate": 0.615,
+    "n": 13,
+    "oos_n": 6,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 3,
+    "hold": 7
+   },
+   {
+    "id": "trend_momo_combo",
+    "name": "Trend + momentum combo",
+    "category": "momentum",
+    "net_expectancy_pct": 0.61,
+    "hit_rate": 0.607,
+    "n": 107,
+    "oos_n": 45,
+    "oos_hit": 0.6,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   }
+  ],
+  "HGFA": [
+   {
+    "id": "high50_break",
+    "name": "50d high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 3.97,
+    "hit_rate": 0.769,
+    "n": 13,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 1.441,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 15
+   },
+   {
+    "id": "atr_quiet_breakout",
+    "name": "Quiet base, upside break",
+    "category": "volatility",
+    "net_expectancy_pct": 2.32,
+    "hit_rate": 0.714,
+    "n": 14,
+    "oos_n": 5,
+    "oos_hit": 0.8,
+    "friction_pct": 1.441,
+    "target_pct": 7,
+    "stop_pct": 3,
+    "hold": 16
+   },
+   {
+    "id": "vol_spike_break",
+    "name": "Volume-spike breakout",
+    "category": "volume",
+    "net_expectancy_pct": 1.06,
+    "hit_rate": 0.611,
+    "n": 18,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 1.441,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 8
+   },
+   {
+    "id": "gap_up_hold",
+    "name": "Gap-up hold",
+    "category": "momentum",
+    "net_expectancy_pct": 0.98,
+    "hit_rate": 0.765,
+    "n": 17,
+    "oos_n": 5,
+    "oos_hit": 0.6,
+    "friction_pct": 1.441,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 6
+   }
+  ],
   "IBFL": [
    {
     "id": "hi252_fresh_break",
@@ -5747,6 +6065,78 @@
     "target_pct": 5,
     "stop_pct": 2.5,
     "hold": 10
+   }
+  ],
+  "NESTLE": [
+   {
+    "id": "hi252_fresh_break",
+    "name": "New 52-week high, low volatility",
+    "category": "breakout",
+    "net_expectancy_pct": 4.23,
+    "hit_rate": 0.789,
+    "n": 19,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 9,
+    "stop_pct": 4.5,
+    "hold": 22
+   },
+   {
+    "id": "high52w_break",
+    "name": "52-week high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 3.77,
+    "hit_rate": 0.778,
+    "n": 18,
+    "oos_n": 4,
+    "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 10,
+    "stop_pct": 5,
+    "hold": 20
+   },
+   {
+    "id": "high50_break",
+    "name": "50d high breakout",
+    "category": "breakout",
+    "net_expectancy_pct": 2.41,
+    "hit_rate": 0.7,
+    "n": 40,
+    "oos_n": 11,
+    "oos_hit": 0.636,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 15
+   },
+   {
+    "id": "donch20_break_confirm",
+    "name": "Donchian 20 break, volume confirmed",
+    "category": "breakout",
+    "net_expectancy_pct": 1.67,
+    "hit_rate": 0.6,
+    "n": 50,
+    "oos_n": 16,
+    "oos_hit": 0.562,
+    "friction_pct": 0.6,
+    "target_pct": 7,
+    "stop_pct": 3.5,
+    "hold": 14
+   },
+   {
+    "id": "vol_spike_break",
+    "name": "Volume-spike breakout",
+    "category": "volume",
+    "net_expectancy_pct": 0.98,
+    "hit_rate": 0.556,
+    "n": 54,
+    "oos_n": 16,
+    "oos_hit": 0.562,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 8
    }
   ],
   "TRIPF": [
@@ -6087,6 +6477,92 @@
     "hold": 12
    }
   ],
+  "PAKT": [
+   {
+    "id": "lowvol_pullback",
+    "name": "Low-volatility pullback",
+    "category": "volatility",
+    "net_expectancy_pct": 1.19,
+    "hit_rate": 0.556,
+    "n": 9,
+    "oos_n": 4,
+    "oos_hit": 0.5,
+    "friction_pct": 0.626,
+    "target_pct": 5,
+    "stop_pct": 2.5,
+    "hold": 10
+   },
+   {
+    "id": "rs_leader",
+    "name": "Relative-strength leader",
+    "category": "momentum",
+    "net_expectancy_pct": 0.92,
+    "hit_rate": 0.56,
+    "n": 84,
+    "oos_n": 23,
+    "oos_hit": 0.609,
+    "friction_pct": 0.626,
+    "target_pct": 6,
+    "stop_pct": 3.5,
+    "hold": 12
+   },
+   {
+    "id": "bb_pctb_reclaim",
+    "name": "Band reclaim from the low",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.92,
+    "hit_rate": 0.556,
+    "n": 18,
+    "oos_n": 6,
+    "oos_hit": 0.667,
+    "friction_pct": 0.626,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "oversold_bounce",
+    "name": "RSI oversold bounce",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.8,
+    "hit_rate": 0.559,
+    "n": 59,
+    "oos_n": 28,
+    "oos_hit": 0.571,
+    "friction_pct": 0.626,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
+   },
+   {
+    "id": "bb_lower_reclaim",
+    "name": "Bollinger lower reclaim",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.79,
+    "hit_rate": 0.579,
+    "n": 19,
+    "oos_n": 14,
+    "oos_hit": 0.5,
+    "friction_pct": 0.626,
+    "target_pct": 4,
+    "stop_pct": 2.5,
+    "hold": 7
+   },
+   {
+    "id": "bbpctb_momentum",
+    "name": "%b momentum ride",
+    "category": "momentum",
+    "net_expectancy_pct": 0.58,
+    "hit_rate": 0.598,
+    "n": 92,
+    "oos_n": 35,
+    "oos_hit": 0.629,
+    "friction_pct": 0.626,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 8
+   }
+  ],
   "SNBL": [
    {
     "id": "willr_uptrend_reset",
@@ -6347,6 +6823,22 @@
     "hold": 8
    }
   ],
+  "EPQL": [
+   {
+    "id": "bb_lower_reclaim",
+    "name": "Bollinger lower reclaim",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.72,
+    "hit_rate": 0.625,
+    "n": 8,
+    "oos_n": 4,
+    "oos_hit": 0.5,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 2.5,
+    "hold": 7
+   }
+  ],
   "PREMA": [
    {
     "id": "bb_lower_reclaim",
@@ -6357,6 +6849,36 @@
     "n": 8,
     "oos_n": 4,
     "oos_hit": 0.75,
+    "friction_pct": 0.6,
+    "target_pct": 4,
+    "stop_pct": 2.5,
+    "hold": 7
+   }
+  ],
+  "IPAK": [
+   {
+    "id": "stoch_double_bottom",
+    "name": "Stochastic reclaim from oversold",
+    "category": "oscillator",
+    "net_expectancy_pct": 1.24,
+    "hit_rate": 0.636,
+    "n": 11,
+    "oos_n": 3,
+    "oos_hit": 0.667,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "willr_reversal",
+    "name": "Williams %R reversal",
+    "category": "mean_reversion",
+    "net_expectancy_pct": 0.57,
+    "hit_rate": 0.615,
+    "n": 13,
+    "oos_n": 6,
+    "oos_hit": 0.667,
     "friction_pct": 0.6,
     "target_pct": 4,
     "stop_pct": 2.5,
@@ -8085,6 +8607,50 @@
     "n": 10,
     "oos_n": 7,
     "oos_hit": 0.429,
+    "friction_pct": 0.6,
+    "target_pct": 5,
+    "stop_pct": 3,
+    "hold": 9
+   }
+  ],
+  "HBL": [
+   {
+    "id": "squeeze_expansion_long",
+    "name": "Squeeze release, upside",
+    "category": "volatility",
+    "net_expectancy_pct": 1.79,
+    "hit_rate": 0.6,
+    "n": 10,
+    "oos_n": 5,
+    "oos_hit": 0.6,
+    "friction_pct": 0.6,
+    "target_pct": 8,
+    "stop_pct": 4,
+    "hold": 16
+   },
+   {
+    "id": "adx_rising_trend",
+    "name": "ADX rising trend entry",
+    "category": "trend",
+    "net_expectancy_pct": 0.95,
+    "hit_rate": 0.552,
+    "n": 29,
+    "oos_n": 8,
+    "oos_hit": 0.375,
+    "friction_pct": 0.6,
+    "target_pct": 6,
+    "stop_pct": 3,
+    "hold": 12
+   },
+   {
+    "id": "stoch_reclaim_50",
+    "name": "Stochastic reclaim 50",
+    "category": "oscillator",
+    "net_expectancy_pct": 0.81,
+    "hit_rate": 0.594,
+    "n": 32,
+    "oos_n": 11,
+    "oos_hit": 0.545,
     "friction_pct": 0.6,
     "target_pct": 5,
     "stop_pct": 3,

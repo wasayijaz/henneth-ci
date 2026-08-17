@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 12:07",
+ "updated": "2026-08-17 12:28",
  "note": "Deterministic evidence pack per PSX sector. Every figure is computed from the desk's own state files - agents debating a sector must cite THIS, never memory. macro_drivers lists only correction-survived relationships; an empty list means no global factor has a demonstrated effect on the sector, which is a finding.",
  "min_members": 3,
  "n_sectors": 31,
@@ -144,15 +144,15 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0533,
-     "beta": 0.062,
-     "p_value": 2e-05
+     "corr": 0.0532,
+     "beta": 0.0619,
+     "p_value": 0.00028
     },
     {
      "factor": "em_equity",
-     "corr": 0.047,
+     "corr": 0.0471,
      "beta": 0.0392,
-     "p_value": 0.00186
+     "p_value": 0.00208
     }
    ],
    "macro_joint_r2_pct": 0.33,
@@ -787,22 +787,22 @@
      "factor": "sp500",
      "corr": 0.0552,
      "beta": 0.0823,
-     "p_value": 0.00048
+     "p_value": 0.00026
     },
     {
      "factor": "oil",
-     "corr": -0.0523,
-     "beta": -0.0176,
-     "p_value": 0.00514
+     "corr": -0.0525,
+     "beta": -0.0177,
+     "p_value": 0.00544
     },
     {
      "factor": "em_equity",
-     "corr": 0.0478,
-     "beta": 0.051,
-     "p_value": 0.0014
+     "corr": 0.0479,
+     "beta": 0.0511,
+     "p_value": 0.00162
     }
    ],
-   "macro_joint_r2_pct": 0.75,
+   "macro_joint_r2_pct": 0.76,
    "recent_news": [
     {
      "ts": "2026-08-11",
@@ -1247,13 +1247,13 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.049,
-     "beta": 0.0684,
-     "p_value": 0.0006
+     "corr": 0.0491,
+     "beta": 0.0686,
+     "p_value": 0.00118
     },
     {
      "factor": "em_equity",
-     "corr": 0.0458,
+     "corr": 0.0459,
      "beta": 0.0458,
      "p_value": 0.00372
     }
@@ -1706,18 +1706,24 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.062,
-     "beta": 0.0662,
-     "p_value": 0.0002
+     "corr": 0.0684,
+     "beta": 0.0718,
+     "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.05,
-     "beta": 0.0382,
-     "p_value": 0.00118
+     "corr": 0.0565,
+     "beta": 0.0425,
+     "p_value": 0.00066
+    },
+    {
+     "factor": "us10y",
+     "corr": 0.0428,
+     "beta": 0.0973,
+     "p_value": 0.00442
     }
    ],
-   "macro_joint_r2_pct": 0.52,
+   "macro_joint_r2_pct": 0.63,
    "recent_news": [
     {
      "ts": "2026-08-13",
@@ -2101,14 +2107,14 @@
     {
      "factor": "sp500",
      "corr": 0.0417,
-     "beta": 0.0879,
-     "p_value": 0.0088
+     "beta": 0.0878,
+     "p_value": 0.00918
     },
     {
      "factor": "dollar",
-     "corr": -0.0375,
-     "beta": -0.1973,
-     "p_value": 0.0135
+     "corr": -0.0373,
+     "beta": -0.1966,
+     "p_value": 0.0155
     }
    ],
    "macro_joint_r2_pct": 0.37,
@@ -2453,18 +2459,12 @@
     },
     {
      "factor": "sp500",
-     "corr": 0.0538,
-     "beta": 0.0852,
-     "p_value": 0.00068
-    },
-    {
-     "factor": "dollar",
-     "corr": -0.0364,
-     "beta": -0.1403,
-     "p_value": 0.016
+     "corr": 0.0537,
+     "beta": 0.085,
+     "p_value": 0.00048
     }
    ],
-   "macro_joint_r2_pct": 0.48,
+   "macro_joint_r2_pct": 0.47,
    "recent_news": [],
    "upcoming_events": [
     {
@@ -2562,15 +2562,15 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0615,
-     "beta": 0.0547,
+     "corr": 0.0614,
+     "beta": 0.0546,
      "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.0449,
+     "corr": 0.0448,
      "beta": 0.0286,
-     "p_value": 0.0025
+     "p_value": 0.00144
     }
    ],
    "macro_joint_r2_pct": 0.51,
@@ -3014,15 +3014,15 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0551,
-     "beta": 0.0851,
-     "p_value": 2e-05
+     "corr": 0.055,
+     "beta": 0.0849,
+     "p_value": 0.00036
     },
     {
      "factor": "em_equity",
      "corr": 0.0444,
      "beta": 0.0491,
-     "p_value": 0.00272
+     "p_value": 0.00238
     }
    ],
    "macro_joint_r2_pct": 0.36,
@@ -5067,23 +5067,23 @@
     {
      "factor": "sp500",
      "corr": 0.0936,
-     "beta": 0.1126,
+     "beta": 0.1127,
      "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.0817,
-     "beta": 0.0704,
+     "corr": 0.0818,
+     "beta": 0.0706,
      "p_value": 2e-05
     },
     {
      "factor": "us10y",
-     "corr": 0.067,
-     "beta": 0.1745,
+     "corr": 0.0669,
+     "beta": 0.1744,
      "p_value": 2e-05
     }
    ],
-   "macro_joint_r2_pct": 2.56,
+   "macro_joint_r2_pct": 2.55,
    "recent_news": [
     {
      "ts": "2026-08-04",
@@ -5259,27 +5259,27 @@
    "macro_drivers": [
     {
      "factor": "oil",
-     "corr": 0.062,
+     "corr": 0.0619,
      "beta": 0.0192,
-     "p_value": 0.00258
+     "p_value": 0.0025
     },
     {
      "factor": "sp500",
-     "corr": 0.0587,
-     "beta": 0.0805,
-     "p_value": 0.00016
+     "corr": 0.0586,
+     "beta": 0.0804,
+     "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.0579,
+     "corr": 0.0578,
      "beta": 0.0568,
-     "p_value": 0.00044
+     "p_value": 2e-05
     },
     {
      "factor": "us10y",
-     "corr": 0.0478,
-     "beta": 0.1421,
-     "p_value": 0.00178
+     "corr": 0.0477,
+     "beta": 0.1416,
+     "p_value": 0.00144
     }
    ],
    "macro_joint_r2_pct": 0.9,
@@ -5739,20 +5739,20 @@
     {
      "factor": "sp500",
      "corr": 0.0513,
-     "beta": 0.0643,
-     "p_value": 0.00038
+     "beta": 0.0642,
+     "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.047,
+     "corr": 0.0469,
      "beta": 0.0421,
-     "p_value": 0.0016
+     "p_value": 0.0009
     },
     {
      "factor": "us10y",
-     "corr": 0.04,
-     "beta": 0.1084,
-     "p_value": 0.0067
+     "corr": 0.0398,
+     "beta": 0.108,
+     "p_value": 0.00688
     }
    ],
    "macro_joint_r2_pct": 0.37,
@@ -6059,18 +6059,18 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0615,
-     "beta": 0.0792,
+     "corr": 0.0614,
+     "beta": 0.0791,
      "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.0441,
+     "corr": 0.044,
      "beta": 0.0406,
-     "p_value": 0.0045
+     "p_value": 0.00364
     }
    ],
-   "macro_joint_r2_pct": 0.47,
+   "macro_joint_r2_pct": 0.46,
    "recent_news": [
     {
      "ts": "2026-08-04",
@@ -6685,21 +6685,15 @@
    "macro_drivers": [
     {
      "factor": "em_equity",
-     "corr": 0.0475,
-     "beta": 0.0604,
-     "p_value": 0.0018
+     "corr": 0.0486,
+     "beta": 0.0619,
+     "p_value": 0.00084
     },
     {
      "factor": "sp500",
-     "corr": 0.0417,
-     "beta": 0.074,
-     "p_value": 0.00456
-    },
-    {
-     "factor": "oil",
-     "corr": 0.0389,
-     "beta": 0.0156,
-     "p_value": 0.0165
+     "corr": 0.0421,
+     "beta": 0.075,
+     "p_value": 0.00248
     }
    ],
    "macro_joint_r2_pct": 0.39,
@@ -7403,15 +7397,15 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0599,
-     "beta": 0.0954,
+     "corr": 0.0598,
+     "beta": 0.0953,
      "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.0401,
-     "beta": 0.0457,
-     "p_value": 0.00824
+     "corr": 0.04,
+     "beta": 0.0456,
+     "p_value": 0.0075
     }
    ],
    "macro_joint_r2_pct": 0.42,
@@ -7807,15 +7801,15 @@
    "macro_drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0806,
-     "beta": 0.1101,
+     "corr": 0.0804,
+     "beta": 0.1098,
      "p_value": 2e-05
     },
     {
      "factor": "em_equity",
-     "corr": 0.0556,
-     "beta": 0.0544,
-     "p_value": 2e-05
+     "corr": 0.0552,
+     "beta": 0.054,
+     "p_value": 0.00066
     }
    ],
    "macro_joint_r2_pct": 0.75,

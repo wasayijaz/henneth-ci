@@ -1,9 +1,9 @@
 {
- "updated": "2026-08-10 12:40",
+ "updated": "2026-08-17 17:28",
  "window": {
-  "from": "2001-08-07",
-  "to": "2026-08-07",
-  "psx_days": 6461
+  "from": "2001-08-15",
+  "to": "2026-08-14",
+  "psx_days": 6460
  },
  "method": {
   "lag": "every factor is lagged one PSX day — global sessions close after Karachi, so yesterday's tape is the earliest information today's PSX session can price. One uniform lag, stated, no per-factor cherry-picking.",
@@ -12,12 +12,12 @@
   "us10y_units": "beta is per PERCENTAGE-POINT change in the US 10y yield",
   "hypotheses": 119,
   "bonferroni_bar": 0.00042,
-  "fdr_cutoff": 0.0165
+  "fdr_cutoff": 0.0155
  },
  "headline": {
   "hypotheses_tested": 119,
-  "survivors_bonferroni": 17,
-  "survivors_fdr": 41,
+  "survivors_bonferroni": 18,
+  "survivors_fdr": 40,
   "read": "Unlike astrology, the macro factors DO show demonstrated, correction-surviving relationships with PSX sectors — which is exactly the contrast the desk's astro page claims: the same machinery finds real effects where they exist."
  },
  "by_sector": {
@@ -32,39 +32,39 @@
     },
     {
      "factor": "sp500",
-     "corr": 0.0538,
-     "beta": 0.0852,
-     "p_value": 0.00068,
-     "demonstrated": true
-    },
-    {
-     "factor": "dollar",
-     "corr": -0.0364,
-     "beta": -0.1403,
-     "p_value": 0.016,
+     "corr": 0.0537,
+     "beta": 0.085,
+     "p_value": 0.00048,
      "demonstrated": true
     }
    ],
-   "joint_r2_pct": 0.48
+   "joint_r2_pct": 0.47
   },
   "Commercial Banks": {
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.062,
-     "beta": 0.0662,
-     "p_value": 0.0002,
+     "corr": 0.0684,
+     "beta": 0.0718,
+     "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.05,
-     "beta": 0.0382,
-     "p_value": 0.00118,
+     "corr": 0.0565,
+     "beta": 0.0425,
+     "p_value": 0.00066,
+     "demonstrated": true
+    },
+    {
+     "factor": "us10y",
+     "corr": 0.0428,
+     "beta": 0.0973,
+     "p_value": 0.00442,
      "demonstrated": true
     }
    ],
-   "joint_r2_pct": 0.52
+   "joint_r2_pct": 0.63
   },
   "Oil & Gas Exploration Companies": {
    "drivers": [
@@ -78,45 +78,45 @@
     {
      "factor": "sp500",
      "corr": 0.0936,
-     "beta": 0.1126,
+     "beta": 0.1127,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0817,
-     "beta": 0.0704,
+     "corr": 0.0818,
+     "beta": 0.0706,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "us10y",
-     "corr": 0.067,
-     "beta": 0.1745,
+     "corr": 0.0669,
+     "beta": 0.1744,
      "p_value": 2e-05,
      "demonstrated": true
     }
    ],
-   "joint_r2_pct": 2.56
+   "joint_r2_pct": 2.55
   },
   "Power Generation & Distribution": {
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0615,
-     "beta": 0.0792,
+     "corr": 0.0614,
+     "beta": 0.0791,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0441,
+     "corr": 0.044,
      "beta": 0.0406,
-     "p_value": 0.0045,
+     "p_value": 0.00364,
      "demonstrated": true
     }
    ],
-   "joint_r2_pct": 0.47
+   "joint_r2_pct": 0.46
   },
   "Cement": {
    "drivers": [
@@ -124,40 +124,40 @@
      "factor": "sp500",
      "corr": 0.0552,
      "beta": 0.0823,
-     "p_value": 0.00048,
+     "p_value": 0.00026,
      "demonstrated": true
     },
     {
      "factor": "oil",
-     "corr": -0.0523,
-     "beta": -0.0176,
-     "p_value": 0.00514,
+     "corr": -0.0525,
+     "beta": -0.0177,
+     "p_value": 0.00544,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0478,
-     "beta": 0.051,
-     "p_value": 0.0014,
+     "corr": 0.0479,
+     "beta": 0.0511,
+     "p_value": 0.00162,
      "demonstrated": true
     }
    ],
-   "joint_r2_pct": 0.75
+   "joint_r2_pct": 0.76
   },
   "Technology & Communication": {
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0599,
-     "beta": 0.0954,
+     "corr": 0.0598,
+     "beta": 0.0953,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0401,
-     "beta": 0.0457,
-     "p_value": 0.00824,
+     "corr": 0.04,
+     "beta": 0.0456,
+     "p_value": 0.0075,
      "demonstrated": true
     }
    ],
@@ -167,30 +167,30 @@
    "drivers": [
     {
      "factor": "oil",
-     "corr": 0.062,
+     "corr": 0.0619,
      "beta": 0.0192,
-     "p_value": 0.00258,
+     "p_value": 0.0025,
      "demonstrated": true
     },
     {
      "factor": "sp500",
-     "corr": 0.0587,
-     "beta": 0.0805,
-     "p_value": 0.00016,
+     "corr": 0.0586,
+     "beta": 0.0804,
+     "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0579,
+     "corr": 0.0578,
      "beta": 0.0568,
-     "p_value": 0.00044,
+     "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "us10y",
-     "corr": 0.0478,
-     "beta": 0.1421,
-     "p_value": 0.00178,
+     "corr": 0.0477,
+     "beta": 0.1416,
+     "p_value": 0.00144,
      "demonstrated": true
     }
    ],
@@ -200,16 +200,16 @@
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0533,
-     "beta": 0.062,
-     "p_value": 2e-05,
+     "corr": 0.0532,
+     "beta": 0.0619,
+     "p_value": 0.00028,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.047,
+     "corr": 0.0471,
      "beta": 0.0392,
-     "p_value": 0.00186,
+     "p_value": 0.00208,
      "demonstrated": true
     }
    ],
@@ -219,23 +219,16 @@
    "drivers": [
     {
      "factor": "em_equity",
-     "corr": 0.0475,
-     "beta": 0.0604,
-     "p_value": 0.0018,
+     "corr": 0.0486,
+     "beta": 0.0619,
+     "p_value": 0.00084,
      "demonstrated": true
     },
     {
      "factor": "sp500",
-     "corr": 0.0417,
-     "beta": 0.074,
-     "p_value": 0.00456,
-     "demonstrated": true
-    },
-    {
-     "factor": "oil",
-     "corr": 0.0389,
-     "beta": 0.0156,
-     "p_value": 0.0165,
+     "corr": 0.0421,
+     "beta": 0.075,
+     "p_value": 0.00248,
      "demonstrated": true
     }
    ],
@@ -245,16 +238,16 @@
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0615,
-     "beta": 0.0547,
+     "corr": 0.0614,
+     "beta": 0.0546,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0449,
+     "corr": 0.0448,
      "beta": 0.0286,
-     "p_value": 0.0025,
+     "p_value": 0.00144,
      "demonstrated": true
     }
    ],
@@ -264,16 +257,16 @@
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0806,
-     "beta": 0.1101,
+     "corr": 0.0804,
+     "beta": 0.1098,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0556,
-     "beta": 0.0544,
-     "p_value": 2e-05,
+     "corr": 0.0552,
+     "beta": 0.054,
+     "p_value": 0.00066,
      "demonstrated": true
     }
    ],
@@ -285,7 +278,7 @@
      "factor": "em_equity",
      "corr": 0.0266,
      "beta": 0.0226,
-     "p_value": 0.0705,
+     "p_value": 0.067,
      "demonstrated": false
     }
    ],
@@ -296,22 +289,22 @@
     {
      "factor": "sp500",
      "corr": 0.0513,
-     "beta": 0.0643,
-     "p_value": 0.00038,
+     "beta": 0.0642,
+     "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.047,
+     "corr": 0.0469,
      "beta": 0.0421,
-     "p_value": 0.0016,
+     "p_value": 0.0009,
      "demonstrated": true
     },
     {
      "factor": "us10y",
-     "corr": 0.04,
-     "beta": 0.1084,
-     "p_value": 0.0067,
+     "corr": 0.0398,
+     "beta": 0.108,
+     "p_value": 0.00688,
      "demonstrated": true
     }
    ],
@@ -321,14 +314,14 @@
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.049,
-     "beta": 0.0684,
-     "p_value": 0.0006,
+     "corr": 0.0491,
+     "beta": 0.0686,
+     "p_value": 0.00118,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0458,
+     "corr": 0.0459,
      "beta": 0.0458,
      "p_value": 0.00372,
      "demonstrated": true
@@ -340,16 +333,16 @@
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0551,
-     "beta": 0.0851,
-     "p_value": 2e-05,
+     "corr": 0.055,
+     "beta": 0.0849,
+     "p_value": 0.00036,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
      "corr": 0.0444,
      "beta": 0.0491,
-     "p_value": 0.00272,
+     "p_value": 0.00238,
      "demonstrated": true
     }
    ],
@@ -360,15 +353,15 @@
     {
      "factor": "sp500",
      "corr": 0.0417,
-     "beta": 0.0879,
-     "p_value": 0.0088,
+     "beta": 0.0878,
+     "p_value": 0.00918,
      "demonstrated": true
     },
     {
      "factor": "dollar",
-     "corr": -0.0375,
-     "beta": -0.1973,
-     "p_value": 0.0135,
+     "corr": -0.0373,
+     "beta": -0.1966,
+     "p_value": 0.0155,
      "demonstrated": true
     }
    ],
@@ -378,36 +371,36 @@
    "drivers": [
     {
      "factor": "sp500",
-     "corr": 0.0854,
-     "beta": 0.0811,
+     "corr": 0.086,
+     "beta": 0.0797,
      "p_value": 2e-05,
      "demonstrated": true
     },
     {
      "factor": "em_equity",
-     "corr": 0.0724,
-     "beta": 0.0492,
-     "p_value": 0.00016,
+     "corr": 0.0731,
+     "beta": 0.0485,
+     "p_value": 0.0002,
      "demonstrated": true
     },
     {
      "factor": "us10y",
-     "corr": 0.0388,
-     "beta": 0.0798,
-     "p_value": 0.00846,
+     "corr": 0.0457,
+     "beta": 0.0917,
+     "p_value": 0.00196,
      "demonstrated": true
     }
    ],
-   "joint_r2_pct": 0.9
+   "joint_r2_pct": 0.94
   }
  },
  "all_tests": [
   {
-   "sector": "Automobile Assembler",
+   "sector": "Commercial Banks",
    "factor": "sp500",
-   "beta": 0.062,
-   "corr": 0.0533,
-   "days": 4831,
+   "beta": 0.0718,
+   "corr": 0.0684,
+   "days": 4834,
    "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
@@ -417,7 +410,7 @@
    "factor": "em_equity",
    "beta": 0.0767,
    "corr": 0.0608,
-   "days": 4256,
+   "days": 4261,
    "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
@@ -425,19 +418,9 @@
   {
    "sector": "Food & Personal Care Products",
    "factor": "sp500",
-   "beta": 0.0547,
-   "corr": 0.0615,
-   "days": 4833,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Glass & Ceramics",
-   "factor": "sp500",
-   "beta": 0.0851,
-   "corr": 0.0551,
-   "days": 4831,
+   "beta": 0.0546,
+   "corr": 0.0614,
+   "days": 4836,
    "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
@@ -445,9 +428,9 @@
   {
    "sector": "Oil & Gas Exploration Companies",
    "factor": "em_equity",
-   "beta": 0.0704,
-   "corr": 0.0817,
-   "days": 4830,
+   "beta": 0.0706,
+   "corr": 0.0818,
+   "days": 4832,
    "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
@@ -457,7 +440,7 @@
    "factor": "oil",
    "beta": 0.0365,
    "corr": 0.1342,
-   "days": 4830,
+   "days": 4832,
    "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
@@ -465,9 +448,9 @@
   {
    "sector": "Oil & Gas Exploration Companies",
    "factor": "sp500",
-   "beta": 0.1126,
+   "beta": 0.1127,
    "corr": 0.0936,
-   "days": 4830,
+   "days": 4832,
    "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
@@ -475,100 +458,10 @@
   {
    "sector": "Oil & Gas Exploration Companies",
    "factor": "us10y",
-   "beta": 0.1745,
-   "corr": 0.067,
-   "days": 4830,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Power Generation & Distribution",
-   "factor": "sp500",
-   "beta": 0.0792,
-   "corr": 0.0615,
-   "days": 4831,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "THE MARKET (KSE100 proxy)",
-   "factor": "sp500",
-   "beta": 0.0811,
-   "corr": 0.0854,
-   "days": 4831,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Technology & Communication",
-   "factor": "sp500",
-   "beta": 0.0954,
-   "corr": 0.0599,
-   "days": 4831,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Textile Composite",
-   "factor": "em_equity",
-   "beta": 0.0544,
-   "corr": 0.0556,
-   "days": 4830,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Textile Composite",
-   "factor": "sp500",
-   "beta": 0.1101,
-   "corr": 0.0806,
-   "days": 4830,
-   "p_value": 2e-05,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Oil & Gas Marketing Companies",
-   "factor": "sp500",
-   "beta": 0.0805,
-   "corr": 0.0587,
-   "days": 4830,
-   "p_value": 0.00016,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "THE MARKET (KSE100 proxy)",
-   "factor": "em_equity",
-   "beta": 0.0492,
-   "corr": 0.0724,
-   "days": 4831,
-   "p_value": 0.00016,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Commercial Banks",
-   "factor": "sp500",
-   "beta": 0.0662,
-   "corr": 0.062,
+   "beta": 0.1744,
+   "corr": 0.0669,
    "days": 4832,
-   "p_value": 0.0002,
-   "survives_bonferroni": true,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Pharmaceuticals",
-   "factor": "sp500",
-   "beta": 0.0643,
-   "corr": 0.0513,
-   "days": 4831,
-   "p_value": 0.00038,
+   "p_value": 2e-05,
    "survives_bonferroni": true,
    "survives_fdr": true
   },
@@ -576,10 +469,80 @@
    "sector": "Oil & Gas Marketing Companies",
    "factor": "em_equity",
    "beta": 0.0568,
-   "corr": 0.0579,
-   "days": 4830,
-   "p_value": 0.00044,
-   "survives_bonferroni": false,
+   "corr": 0.0578,
+   "days": 4833,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Oil & Gas Marketing Companies",
+   "factor": "sp500",
+   "beta": 0.0804,
+   "corr": 0.0586,
+   "days": 4833,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Pharmaceuticals",
+   "factor": "sp500",
+   "beta": 0.0642,
+   "corr": 0.0513,
+   "days": 4834,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Power Generation & Distribution",
+   "factor": "sp500",
+   "beta": 0.0791,
+   "corr": 0.0614,
+   "days": 4834,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "THE MARKET (KSE100 proxy)",
+   "factor": "sp500",
+   "beta": 0.0797,
+   "corr": 0.086,
+   "days": 4834,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Technology & Communication",
+   "factor": "sp500",
+   "beta": 0.0953,
+   "corr": 0.0598,
+   "days": 4833,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Textile Composite",
+   "factor": "sp500",
+   "beta": 0.1098,
+   "corr": 0.0804,
+   "days": 4835,
+   "p_value": 2e-05,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "THE MARKET (KSE100 proxy)",
+   "factor": "em_equity",
+   "beta": 0.0485,
+   "corr": 0.0731,
+   "days": 4834,
+   "p_value": 0.0002,
+   "survives_bonferroni": true,
    "survives_fdr": true
   },
   {
@@ -587,48 +550,68 @@
    "factor": "sp500",
    "beta": 0.0823,
    "corr": 0.0552,
-   "days": 4832,
-   "p_value": 0.00048,
-   "survives_bonferroni": false,
+   "days": 4836,
+   "p_value": 0.00026,
+   "survives_bonferroni": true,
    "survives_fdr": true
   },
   {
-   "sector": "Chemical",
+   "sector": "Automobile Assembler",
    "factor": "sp500",
-   "beta": 0.0684,
-   "corr": 0.049,
-   "days": 4814,
-   "p_value": 0.0006,
-   "survives_bonferroni": false,
+   "beta": 0.0619,
+   "corr": 0.0532,
+   "days": 4834,
+   "p_value": 0.00028,
+   "survives_bonferroni": true,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Glass & Ceramics",
+   "factor": "sp500",
+   "beta": 0.0849,
+   "corr": 0.055,
+   "days": 4833,
+   "p_value": 0.00036,
+   "survives_bonferroni": true,
    "survives_fdr": true
   },
   {
    "sector": "Fertilizer",
    "factor": "sp500",
-   "beta": 0.0852,
-   "corr": 0.0538,
-   "days": 4256,
-   "p_value": 0.00068,
+   "beta": 0.085,
+   "corr": 0.0537,
+   "days": 4261,
+   "p_value": 0.00048,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
    "sector": "Commercial Banks",
    "factor": "em_equity",
-   "beta": 0.0382,
-   "corr": 0.05,
-   "days": 4832,
-   "p_value": 0.00118,
+   "beta": 0.0425,
+   "corr": 0.0565,
+   "days": 4834,
+   "p_value": 0.00066,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
-   "sector": "Cement",
+   "sector": "Textile Composite",
    "factor": "em_equity",
-   "beta": 0.051,
-   "corr": 0.0478,
-   "days": 4832,
-   "p_value": 0.0014,
+   "beta": 0.054,
+   "corr": 0.0552,
+   "days": 4835,
+   "p_value": 0.00066,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Refinery",
+   "factor": "em_equity",
+   "beta": 0.0619,
+   "corr": 0.0486,
+   "days": 4835,
+   "p_value": 0.00084,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
@@ -636,39 +619,19 @@
    "sector": "Pharmaceuticals",
    "factor": "em_equity",
    "beta": 0.0421,
-   "corr": 0.047,
-   "days": 4831,
-   "p_value": 0.0016,
+   "corr": 0.0469,
+   "days": 4834,
+   "p_value": 0.0009,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
-   "sector": "Oil & Gas Marketing Companies",
-   "factor": "us10y",
-   "beta": 0.1421,
-   "corr": 0.0478,
-   "days": 4830,
-   "p_value": 0.00178,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Refinery",
-   "factor": "em_equity",
-   "beta": 0.0604,
-   "corr": 0.0475,
-   "days": 4828,
-   "p_value": 0.0018,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Automobile Assembler",
-   "factor": "em_equity",
-   "beta": 0.0392,
-   "corr": 0.047,
-   "days": 4831,
-   "p_value": 0.00186,
+   "sector": "Chemical",
+   "factor": "sp500",
+   "beta": 0.0686,
+   "corr": 0.0491,
+   "days": 4819,
+   "p_value": 0.00118,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
@@ -676,19 +639,49 @@
    "sector": "Food & Personal Care Products",
    "factor": "em_equity",
    "beta": 0.0286,
-   "corr": 0.0449,
-   "days": 4833,
-   "p_value": 0.0025,
+   "corr": 0.0448,
+   "days": 4836,
+   "p_value": 0.00144,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
    "sector": "Oil & Gas Marketing Companies",
-   "factor": "oil",
-   "beta": 0.0192,
-   "corr": 0.062,
-   "days": 4830,
-   "p_value": 0.00258,
+   "factor": "us10y",
+   "beta": 0.1416,
+   "corr": 0.0477,
+   "days": 4833,
+   "p_value": 0.00144,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Cement",
+   "factor": "em_equity",
+   "beta": 0.0511,
+   "corr": 0.0479,
+   "days": 4836,
+   "p_value": 0.00162,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "THE MARKET (KSE100 proxy)",
+   "factor": "us10y",
+   "beta": 0.0917,
+   "corr": 0.0457,
+   "days": 4834,
+   "p_value": 0.00196,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Automobile Assembler",
+   "factor": "em_equity",
+   "beta": 0.0392,
+   "corr": 0.0471,
+   "days": 4834,
+   "p_value": 0.00208,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
@@ -697,18 +690,28 @@
    "factor": "em_equity",
    "beta": 0.0491,
    "corr": 0.0444,
-   "days": 4831,
-   "p_value": 0.00272,
+   "days": 4833,
+   "p_value": 0.00238,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
-   "sector": "Chemical",
-   "factor": "em_equity",
-   "beta": 0.0458,
-   "corr": 0.0458,
-   "days": 4814,
-   "p_value": 0.00372,
+   "sector": "Refinery",
+   "factor": "sp500",
+   "beta": 0.075,
+   "corr": 0.0421,
+   "days": 4835,
+   "p_value": 0.00248,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Oil & Gas Marketing Companies",
+   "factor": "oil",
+   "beta": 0.0192,
+   "corr": 0.0619,
+   "days": 4833,
+   "p_value": 0.0025,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
@@ -716,128 +719,118 @@
    "sector": "Power Generation & Distribution",
    "factor": "em_equity",
    "beta": 0.0406,
-   "corr": 0.0441,
-   "days": 4831,
-   "p_value": 0.0045,
+   "corr": 0.044,
+   "days": 4834,
+   "p_value": 0.00364,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
-   "sector": "Refinery",
-   "factor": "sp500",
-   "beta": 0.074,
-   "corr": 0.0417,
-   "days": 4828,
-   "p_value": 0.00456,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Cement",
-   "factor": "oil",
-   "beta": -0.0176,
-   "corr": -0.0523,
-   "days": 4832,
-   "p_value": 0.00514,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Pharmaceuticals",
-   "factor": "us10y",
-   "beta": 0.1084,
-   "corr": 0.04,
-   "days": 4831,
-   "p_value": 0.0067,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Technology & Communication",
+   "sector": "Chemical",
    "factor": "em_equity",
-   "beta": 0.0457,
-   "corr": 0.0401,
-   "days": 4831,
-   "p_value": 0.00824,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "THE MARKET (KSE100 proxy)",
-   "factor": "us10y",
-   "beta": 0.0798,
-   "corr": 0.0388,
-   "days": 4831,
-   "p_value": 0.00846,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Engineering",
-   "factor": "sp500",
-   "beta": 0.0879,
-   "corr": 0.0417,
-   "days": 3940,
-   "p_value": 0.0088,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Engineering",
-   "factor": "dollar",
-   "beta": -0.1973,
-   "corr": -0.0375,
-   "days": 3940,
-   "p_value": 0.0135,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Fertilizer",
-   "factor": "dollar",
-   "beta": -0.1403,
-   "corr": -0.0364,
-   "days": 4256,
-   "p_value": 0.016,
-   "survives_bonferroni": false,
-   "survives_fdr": true
-  },
-  {
-   "sector": "Refinery",
-   "factor": "oil",
-   "beta": 0.0156,
-   "corr": 0.0389,
-   "days": 4828,
-   "p_value": 0.0165,
+   "beta": 0.0458,
+   "corr": 0.0459,
+   "days": 4819,
+   "p_value": 0.00372,
    "survives_bonferroni": false,
    "survives_fdr": true
   },
   {
    "sector": "Commercial Banks",
    "factor": "us10y",
-   "beta": 0.0826,
-   "corr": 0.0357,
-   "days": 4832,
-   "p_value": 0.02,
+   "beta": 0.0973,
+   "corr": 0.0428,
+   "days": 4834,
+   "p_value": 0.00442,
    "survives_bonferroni": false,
-   "survives_fdr": false
+   "survives_fdr": true
+  },
+  {
+   "sector": "Cement",
+   "factor": "oil",
+   "beta": -0.0177,
+   "corr": -0.0525,
+   "days": 4836,
+   "p_value": 0.00544,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Pharmaceuticals",
+   "factor": "us10y",
+   "beta": 0.108,
+   "corr": 0.0398,
+   "days": 4834,
+   "p_value": 0.00688,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Technology & Communication",
+   "factor": "em_equity",
+   "beta": 0.0456,
+   "corr": 0.04,
+   "days": 4833,
+   "p_value": 0.0075,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Engineering",
+   "factor": "sp500",
+   "beta": 0.0878,
+   "corr": 0.0417,
+   "days": 3944,
+   "p_value": 0.00918,
+   "survives_bonferroni": false,
+   "survives_fdr": true
+  },
+  {
+   "sector": "Engineering",
+   "factor": "dollar",
+   "beta": -0.1966,
+   "corr": -0.0373,
+   "days": 3944,
+   "p_value": 0.0155,
+   "survives_bonferroni": false,
+   "survives_fdr": true
   },
   {
    "sector": "Chemical",
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0405,
-   "days": 4814,
-   "p_value": 0.021,
+   "days": 4819,
+   "p_value": 0.0205,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Fertilizer",
+   "factor": "dollar",
+   "beta": -0.1408,
+   "corr": -0.0365,
+   "days": 4261,
+   "p_value": 0.023,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Refinery",
+   "factor": "oil",
+   "beta": 0.0156,
+   "corr": 0.0388,
+   "days": 4835,
+   "p_value": 0.023,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "THE MARKET (KSE100 proxy)",
    "factor": "oil",
-   "beta": 0.0082,
-   "corr": 0.0382,
-   "days": 4831,
+   "beta": 0.0076,
+   "corr": 0.0362,
+   "days": 4834,
    "p_value": 0.024,
    "survives_bonferroni": false,
    "survives_fdr": false
@@ -846,59 +839,69 @@
    "sector": "Power Generation & Distribution",
    "factor": "oil",
    "beta": 0.0096,
-   "corr": 0.0332,
-   "days": 4831,
-   "p_value": 0.0335,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Engineering",
-   "factor": "em_equity",
-   "beta": 0.0579,
-   "corr": 0.0341,
-   "days": 3940,
-   "p_value": 0.037,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Refinery",
-   "factor": "dollar",
-   "beta": -0.1383,
-   "corr": -0.0299,
-   "days": 4828,
-   "p_value": 0.044,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Power Generation & Distribution",
-   "factor": "us10y",
-   "beta": 0.0793,
-   "corr": 0.0285,
-   "days": 4831,
-   "p_value": 0.047,
+   "corr": 0.0329,
+   "days": 4834,
+   "p_value": 0.029,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Commercial Banks",
    "factor": "gold",
-   "beta": -0.0338,
-   "corr": -0.0294,
-   "days": 4832,
-   "p_value": 0.05,
+   "beta": -0.0342,
+   "corr": -0.0302,
+   "days": 4834,
+   "p_value": 0.0355,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Refinery",
+   "factor": "dollar",
+   "beta": -0.1397,
+   "corr": -0.0301,
+   "days": 4835,
+   "p_value": 0.0365,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Engineering",
+   "factor": "em_equity",
+   "beta": 0.0582,
+   "corr": 0.0343,
+   "days": 3944,
+   "p_value": 0.04,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Oil & Gas Marketing Companies",
    "factor": "gold",
-   "beta": -0.0425,
+   "beta": -0.0424,
    "corr": -0.0287,
-   "days": 4830,
-   "p_value": 0.052,
+   "days": 4833,
+   "p_value": 0.048,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Power Generation & Distribution",
+   "factor": "us10y",
+   "beta": 0.0787,
+   "corr": 0.0282,
+   "days": 4834,
+   "p_value": 0.053,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "THE MARKET (KSE100 proxy)",
+   "factor": "gold",
+   "beta": -0.0278,
+   "corr": -0.0278,
+   "days": 4834,
+   "p_value": 0.061,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -907,58 +910,18 @@
    "factor": "em_equity",
    "beta": 0.0226,
    "corr": 0.0266,
-   "days": 4830,
-   "p_value": 0.0705,
+   "days": 4833,
+   "p_value": 0.067,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Cement",
    "factor": "dollar",
-   "beta": -0.1024,
-   "corr": -0.0264,
-   "days": 4832,
-   "p_value": 0.073,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "THE MARKET (KSE100 proxy)",
-   "factor": "gold",
-   "beta": -0.0259,
-   "corr": -0.0252,
-   "days": 4831,
-   "p_value": 0.0795,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Textile Composite",
-   "factor": "us10y",
-   "beta": 0.0697,
-   "corr": 0.0236,
-   "days": 4830,
-   "p_value": 0.0975,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Miscellaneous",
-   "factor": "sp500",
-   "beta": 0.0284,
-   "corr": 0.024,
-   "days": 4830,
-   "p_value": 0.101,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Oil & Gas Exploration Companies",
-   "factor": "gold",
-   "beta": -0.0308,
-   "corr": -0.0237,
-   "days": 4830,
-   "p_value": 0.103,
+   "beta": -0.102,
+   "corr": -0.0263,
+   "days": 4836,
+   "p_value": 0.077,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -967,18 +930,28 @@
    "factor": "dollar",
    "beta": -0.0549,
    "corr": -0.0237,
-   "days": 4833,
-   "p_value": 0.106,
+   "days": 4836,
+   "p_value": 0.096,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Automobile Assembler",
+   "sector": "Miscellaneous",
+   "factor": "sp500",
+   "beta": 0.0284,
+   "corr": 0.0239,
+   "days": 4833,
+   "p_value": 0.0985,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Textile Composite",
    "factor": "us10y",
-   "beta": 0.058,
-   "corr": 0.023,
-   "days": 4831,
-   "p_value": 0.109,
+   "beta": 0.0689,
+   "corr": 0.0233,
+   "days": 4835,
+   "p_value": 0.107,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -987,118 +960,108 @@
    "factor": "oil",
    "beta": 0.0068,
    "corr": 0.0215,
-   "days": 4814,
-   "p_value": 0.115,
+   "days": 4819,
+   "p_value": 0.11,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Chemical",
-   "factor": "us10y",
-   "beta": 0.0679,
-   "corr": 0.0224,
-   "days": 4814,
-   "p_value": 0.12,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Food & Personal Care Products",
-   "factor": "us10y",
-   "beta": 0.0411,
-   "corr": 0.0213,
-   "days": 4833,
-   "p_value": 0.123,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Chemical",
+   "sector": "Oil & Gas Exploration Companies",
    "factor": "gold",
-   "beta": -0.0336,
-   "corr": -0.0223,
-   "days": 4814,
-   "p_value": 0.127,
+   "beta": -0.03,
+   "corr": -0.0231,
+   "days": 4832,
+   "p_value": 0.111,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Pharmaceuticals",
    "factor": "oil",
-   "beta": 0.0061,
-   "corr": 0.0215,
-   "days": 4831,
-   "p_value": 0.136,
+   "beta": 0.006,
+   "corr": 0.0213,
+   "days": 4834,
+   "p_value": 0.118,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Automobile Assembler",
+   "factor": "us10y",
+   "beta": 0.0574,
+   "corr": 0.0228,
+   "days": 4834,
+   "p_value": 0.122,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Chemical",
+   "factor": "us10y",
+   "beta": 0.068,
+   "corr": 0.0225,
+   "days": 4819,
+   "p_value": 0.125,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Chemical",
+   "factor": "gold",
+   "beta": -0.0334,
+   "corr": -0.0221,
+   "days": 4819,
+   "p_value": 0.138,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Food & Personal Care Products",
-   "factor": "gold",
-   "beta": -0.0189,
-   "corr": -0.0197,
-   "days": 4833,
-   "p_value": 0.169,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Glass & Ceramics",
    "factor": "us10y",
-   "beta": 0.0637,
-   "corr": 0.0191,
-   "days": 4831,
-   "p_value": 0.17,
+   "beta": 0.0409,
+   "corr": 0.0212,
+   "days": 4836,
+   "p_value": 0.142,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Textile Composite",
    "factor": "gold",
-   "beta": -0.0286,
-   "corr": -0.0194,
-   "days": 4830,
+   "beta": -0.029,
+   "corr": -0.0197,
+   "days": 4835,
    "p_value": 0.173,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Food & Personal Care Products",
+   "factor": "gold",
+   "beta": -0.019,
+   "corr": -0.0198,
+   "days": 4836,
+   "p_value": 0.179,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Oil & Gas Marketing Companies",
    "factor": "dollar",
-   "beta": 0.0679,
-   "corr": 0.019,
-   "days": 4830,
-   "p_value": 0.178,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Fertilizer",
-   "factor": "oil",
-   "beta": 0.0057,
-   "corr": 0.0191,
-   "days": 4256,
-   "p_value": 0.18,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Fertilizer",
-   "factor": "us10y",
-   "beta": 0.0644,
-   "corr": 0.0201,
-   "days": 4256,
+   "beta": 0.0675,
+   "corr": 0.0189,
+   "days": 4833,
    "p_value": 0.184,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Technology & Communication",
-   "factor": "dollar",
-   "beta": -0.0804,
-   "corr": -0.0194,
-   "days": 4831,
-   "p_value": 0.196,
+   "sector": "Glass & Ceramics",
+   "factor": "us10y",
+   "beta": 0.0629,
+   "corr": 0.0188,
+   "days": 4833,
+   "p_value": 0.185,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1106,19 +1069,49 @@
    "sector": "Food & Personal Care Products",
    "factor": "oil",
    "beta": 0.0037,
-   "corr": 0.0184,
+   "corr": 0.0183,
+   "days": 4836,
+   "p_value": 0.189,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Fertilizer",
+   "factor": "oil",
+   "beta": 0.0056,
+   "corr": 0.0189,
+   "days": 4261,
+   "p_value": 0.19,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Fertilizer",
+   "factor": "us10y",
+   "beta": 0.0624,
+   "corr": 0.0195,
+   "days": 4261,
+   "p_value": 0.19,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Technology & Communication",
+   "factor": "dollar",
+   "beta": -0.0807,
+   "corr": -0.0194,
    "days": 4833,
-   "p_value": 0.199,
+   "p_value": 0.194,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Glass & Ceramics",
    "factor": "dollar",
-   "beta": -0.0739,
-   "corr": -0.0184,
-   "days": 4831,
-   "p_value": 0.2,
+   "beta": -0.0744,
+   "corr": -0.0185,
+   "days": 4833,
+   "p_value": 0.224,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1127,8 +1120,18 @@
    "factor": "usdpkr",
    "beta": 0.0,
    "corr": 0.0154,
-   "days": 4256,
-   "p_value": 0.254,
+   "days": 4261,
+   "p_value": 0.226,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Automobile Assembler",
+   "factor": "gold",
+   "beta": -0.0201,
+   "corr": -0.016,
+   "days": 4834,
+   "p_value": 0.246,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1137,38 +1140,8 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0138,
-   "days": 4830,
-   "p_value": 0.257,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Automobile Assembler",
-   "factor": "gold",
-   "beta": -0.0203,
-   "corr": -0.0161,
-   "days": 4831,
-   "p_value": 0.267,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Miscellaneous",
-   "factor": "oil",
-   "beta": -0.0036,
-   "corr": -0.0136,
-   "days": 4830,
-   "p_value": 0.275,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "THE MARKET (KSE100 proxy)",
-   "factor": "dollar",
-   "beta": -0.0392,
-   "corr": -0.0158,
-   "days": 4831,
-   "p_value": 0.277,
+   "days": 4835,
+   "p_value": 0.271,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1177,38 +1150,48 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0117,
-   "days": 4830,
-   "p_value": 0.3,
+   "days": 4833,
+   "p_value": 0.291,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Textile Composite",
+   "sector": "THE MARKET (KSE100 proxy)",
    "factor": "dollar",
-   "beta": -0.0531,
-   "corr": -0.0149,
-   "days": 4830,
-   "p_value": 0.303,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Commercial Banks",
-   "factor": "oil",
-   "beta": 0.0029,
-   "corr": 0.012,
-   "days": 4832,
-   "p_value": 0.309,
+   "beta": -0.0349,
+   "corr": -0.0145,
+   "days": 4834,
+   "p_value": 0.295,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Refinery",
    "factor": "us10y",
-   "beta": 0.0568,
-   "corr": 0.0148,
-   "days": 4828,
-   "p_value": 0.312,
+   "beta": 0.0582,
+   "corr": 0.0151,
+   "days": 4835,
+   "p_value": 0.299,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Miscellaneous",
+   "factor": "oil",
+   "beta": -0.0036,
+   "corr": -0.0135,
+   "days": 4833,
+   "p_value": 0.309,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Textile Composite",
+   "factor": "dollar",
+   "beta": -0.0525,
+   "corr": -0.0148,
+   "days": 4835,
+   "p_value": 0.318,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1217,28 +1200,28 @@
    "factor": "usdpkr",
    "beta": -0.0004,
    "corr": -0.0133,
-   "days": 3940,
-   "p_value": 0.333,
+   "days": 3944,
+   "p_value": 0.322,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "THE MARKET (KSE100 proxy)",
+   "factor": "usdpkr",
+   "beta": -0.0,
+   "corr": -0.0102,
+   "days": 4834,
+   "p_value": 0.335,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Technology & Communication",
    "factor": "us10y",
-   "beta": 0.0467,
-   "corr": 0.0135,
-   "days": 4831,
-   "p_value": 0.344,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Commercial Banks",
-   "factor": "usdpkr",
-   "beta": -0.0,
-   "corr": -0.0089,
-   "days": 4832,
-   "p_value": 0.354,
+   "beta": 0.0459,
+   "corr": 0.0133,
+   "days": 4833,
+   "p_value": 0.347,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1247,48 +1230,68 @@
    "factor": "oil",
    "beta": -0.0039,
    "corr": -0.0111,
-   "days": 4831,
-   "p_value": 0.368,
+   "days": 4833,
+   "p_value": 0.375,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Commercial Banks",
+   "factor": "oil",
+   "beta": 0.0025,
+   "corr": 0.0107,
+   "days": 4834,
+   "p_value": 0.385,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Engineering",
    "factor": "oil",
-   "beta": -0.0046,
+   "beta": -0.0047,
    "corr": -0.0121,
-   "days": 3940,
-   "p_value": 0.39,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Chemical",
-   "factor": "dollar",
-   "beta": 0.0423,
-   "corr": 0.0116,
-   "days": 4814,
-   "p_value": 0.413,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Pharmaceuticals",
-   "factor": "gold",
-   "beta": -0.0153,
-   "corr": -0.0114,
-   "days": 4831,
-   "p_value": 0.425,
+   "days": 3944,
+   "p_value": 0.397,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Miscellaneous",
    "factor": "dollar",
-   "beta": -0.0342,
-   "corr": -0.0111,
-   "days": 4830,
-   "p_value": 0.436,
+   "beta": -0.0351,
+   "corr": -0.0114,
+   "days": 4833,
+   "p_value": 0.413,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Commercial Banks",
+   "factor": "usdpkr",
+   "beta": -0.0,
+   "corr": -0.0081,
+   "days": 4834,
+   "p_value": 0.416,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Pharmaceuticals",
+   "factor": "gold",
+   "beta": -0.0155,
+   "corr": -0.0115,
+   "days": 4834,
+   "p_value": 0.42,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Chemical",
+   "factor": "dollar",
+   "beta": 0.0416,
+   "corr": 0.0114,
+   "days": 4819,
+   "p_value": 0.423,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1297,38 +1300,38 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0081,
-   "days": 4832,
-   "p_value": 0.441,
+   "days": 4836,
+   "p_value": 0.435,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Textile Composite",
    "factor": "oil",
-   "beta": 0.0028,
-   "corr": 0.009,
-   "days": 4830,
-   "p_value": 0.478,
+   "beta": 0.0027,
+   "corr": 0.0087,
+   "days": 4835,
+   "p_value": 0.453,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Automobile Assembler",
    "factor": "dollar",
-   "beta": -0.0304,
-   "corr": -0.01,
-   "days": 4831,
-   "p_value": 0.485,
+   "beta": -0.0307,
+   "corr": -0.0101,
+   "days": 4834,
+   "p_value": 0.49,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Food & Personal Care Products",
-   "factor": "usdpkr",
-   "beta": 0.0,
-   "corr": 0.0078,
-   "days": 4833,
-   "p_value": 0.498,
+   "sector": "Commercial Banks",
+   "factor": "dollar",
+   "beta": -0.0264,
+   "corr": -0.0097,
+   "days": 4834,
+   "p_value": 0.503,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1337,28 +1340,18 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0055,
-   "days": 4830,
-   "p_value": 0.512,
+   "days": 4833,
+   "p_value": 0.503,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Commercial Banks",
-   "factor": "dollar",
-   "beta": -0.0276,
-   "corr": -0.0099,
-   "days": 4832,
-   "p_value": 0.516,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "THE MARKET (KSE100 proxy)",
+   "sector": "Food & Personal Care Products",
    "factor": "usdpkr",
-   "beta": -0.0,
-   "corr": -0.0057,
-   "days": 4831,
-   "p_value": 0.543,
+   "beta": 0.0,
+   "corr": 0.0078,
+   "days": 4836,
+   "p_value": 0.504,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1367,28 +1360,38 @@
    "factor": "oil",
    "beta": 0.0019,
    "corr": 0.0073,
-   "days": 4831,
-   "p_value": 0.547,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Pharmaceuticals",
-   "factor": "dollar",
-   "beta": -0.0263,
-   "corr": -0.0081,
-   "days": 4831,
-   "p_value": 0.559,
+   "days": 4834,
+   "p_value": 0.555,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Miscellaneous",
    "factor": "gold",
-   "beta": 0.01,
+   "beta": 0.011,
+   "corr": 0.0086,
+   "days": 4833,
+   "p_value": 0.557,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Pharmaceuticals",
+   "factor": "dollar",
+   "beta": -0.0265,
+   "corr": -0.0081,
+   "days": 4834,
+   "p_value": 0.557,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Fertilizer",
+   "factor": "gold",
+   "beta": 0.0124,
    "corr": 0.0078,
-   "days": 4830,
-   "p_value": 0.593,
+   "days": 4261,
+   "p_value": 0.604,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1397,18 +1400,8 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0058,
-   "days": 4831,
-   "p_value": 0.601,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Fertilizer",
-   "factor": "gold",
-   "beta": 0.0109,
-   "corr": 0.0069,
-   "days": 4256,
-   "p_value": 0.647,
+   "days": 4833,
+   "p_value": 0.604,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1416,49 +1409,49 @@
    "sector": "Refinery",
    "factor": "usdpkr",
    "beta": -0.0,
-   "corr": -0.0041,
-   "days": 4828,
-   "p_value": 0.649,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Glass & Ceramics",
-   "factor": "gold",
-   "beta": 0.0113,
-   "corr": 0.0068,
-   "days": 4831,
-   "p_value": 0.659,
+   "corr": -0.0042,
+   "days": 4835,
+   "p_value": 0.625,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Cement",
    "factor": "gold",
-   "beta": -0.0087,
-   "corr": -0.0054,
-   "days": 4832,
-   "p_value": 0.713,
+   "beta": -0.0102,
+   "corr": -0.0063,
+   "days": 4836,
+   "p_value": 0.647,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
-   "sector": "Oil & Gas Exploration Companies",
-   "factor": "dollar",
-   "beta": 0.0164,
-   "corr": 0.0052,
-   "days": 4830,
-   "p_value": 0.727,
+   "sector": "Glass & Ceramics",
+   "factor": "gold",
+   "beta": 0.0115,
+   "corr": 0.0069,
+   "days": 4833,
+   "p_value": 0.652,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Engineering",
    "factor": "us10y",
-   "beta": -0.0256,
-   "corr": -0.0059,
-   "days": 3940,
-   "p_value": 0.737,
+   "beta": -0.0266,
+   "corr": -0.0061,
+   "days": 3944,
+   "p_value": 0.726,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Oil & Gas Exploration Companies",
+   "factor": "dollar",
+   "beta": 0.0158,
+   "corr": 0.005,
+   "days": 4832,
+   "p_value": 0.738,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1467,18 +1460,8 @@
    "factor": "usdpkr",
    "beta": 0.0,
    "corr": 0.0021,
-   "days": 4831,
-   "p_value": 0.744,
-   "survives_bonferroni": false,
-   "survives_fdr": false
-  },
-  {
-   "sector": "Refinery",
-   "factor": "gold",
-   "beta": -0.0084,
-   "corr": -0.0044,
-   "days": 4828,
-   "p_value": 0.765,
+   "days": 4834,
+   "p_value": 0.767,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1487,18 +1470,18 @@
    "factor": "usdpkr",
    "beta": 0.0,
    "corr": 0.0019,
-   "days": 4831,
-   "p_value": 0.768,
+   "days": 4834,
+   "p_value": 0.77,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Engineering",
    "factor": "gold",
-   "beta": -0.0089,
-   "corr": -0.0042,
-   "days": 3940,
-   "p_value": 0.79,
+   "beta": -0.0084,
+   "corr": -0.004,
+   "days": 3944,
+   "p_value": 0.8,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1507,28 +1490,38 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0015,
-   "days": 4830,
-   "p_value": 0.82,
+   "days": 4832,
+   "p_value": 0.812,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Cement",
    "factor": "us10y",
-   "beta": 0.0097,
-   "corr": 0.003,
-   "days": 4832,
-   "p_value": 0.825,
+   "beta": 0.0094,
+   "corr": 0.0029,
+   "days": 4836,
+   "p_value": 0.842,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Technology & Communication",
    "factor": "gold",
-   "beta": 0.0051,
-   "corr": 0.0029,
-   "days": 4831,
-   "p_value": 0.859,
+   "beta": 0.0047,
+   "corr": 0.0027,
+   "days": 4833,
+   "p_value": 0.849,
+   "survives_bonferroni": false,
+   "survives_fdr": false
+  },
+  {
+   "sector": "Refinery",
+   "factor": "gold",
+   "beta": -0.0043,
+   "corr": -0.0022,
+   "days": 4835,
+   "p_value": 0.871,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1536,9 +1529,9 @@
    "sector": "Technology & Communication",
    "factor": "oil",
    "beta": -0.0005,
-   "corr": -0.0013,
-   "days": 4831,
-   "p_value": 0.923,
+   "corr": -0.0015,
+   "days": 4833,
+   "p_value": 0.911,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1547,38 +1540,38 @@
    "factor": "usdpkr",
    "beta": -0.0,
    "corr": -0.0006,
-   "days": 4831,
-   "p_value": 0.927,
+   "days": 4833,
+   "p_value": 0.914,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Miscellaneous",
    "factor": "us10y",
-   "beta": 0.0034,
-   "corr": 0.0013,
-   "days": 4830,
+   "beta": 0.0025,
+   "corr": 0.001,
+   "days": 4833,
    "p_value": 0.936,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Power Generation & Distribution",
-   "factor": "gold",
-   "beta": -0.0009,
-   "corr": -0.0007,
-   "days": 4831,
-   "p_value": 0.965,
+   "factor": "dollar",
+   "beta": -0.0016,
+   "corr": -0.0005,
+   "days": 4834,
+   "p_value": 0.979,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
   {
    "sector": "Power Generation & Distribution",
-   "factor": "dollar",
-   "beta": -0.0012,
-   "corr": -0.0004,
-   "days": 4831,
-   "p_value": 0.983,
+   "factor": "gold",
+   "beta": -0.0001,
+   "corr": -0.0001,
+   "days": 4834,
+   "p_value": 0.997,
    "survives_bonferroni": false,
    "survives_fdr": false
   },
@@ -1587,7 +1580,7 @@
    "factor": "usdpkr",
    "beta": 0.0,
    "corr": 0.0,
-   "days": 4831,
+   "days": 4834,
    "p_value": 1.0,
    "survives_bonferroni": false,
    "survives_fdr": false

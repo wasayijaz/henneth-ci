@@ -29,7 +29,7 @@ Data handling: the companion reads supported page URLs, titles, headings, and li
 
 ## Category
 
-Productivity
+Tools
 
 ## Website
 

@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 11:55",
+ "updated": "2026-08-17 17:22",
  "kse100_total": 100,
  "kmi30_total": 30,
  "allshr_total": 552,
@@ -9,8 +9,8 @@
   "_note": "core = KSE100 + KMI30, full research pipeline. listed = the rest of the KSE All Share, covered with prices/quant/sector/dividends and a real page, but no deep backtests or Desk Room debates. Any script that is expensive per ticker must filter to tier == 'core'."
  },
  "symbols": {
-  "FFCXD": {
-   "symbol": "FFCXD",
+  "FFC": {
+   "symbol": "FFC",
    "name": "Fauji Fertilizer Company Limited",
    "weight_pct": 8.57,
    "in": [
@@ -19,7 +19,9 @@
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "FFCXD",
+   "board_state": "XD"
   },
   "UBL": {
    "symbol": "UBL",
@@ -91,15 +93,17 @@
    ],
    "tier": "core"
   },
-  "HBLXD": {
-   "symbol": "HBLXD",
+  "HBL": {
+   "symbol": "HBL",
    "name": "Habib Bank Limited",
    "weight_pct": 3.76,
    "in": [
     "KSE100",
     "ALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "HBLXD",
+   "board_state": "XD"
   },
   "MCB": {
    "symbol": "MCB",
@@ -157,8 +161,8 @@
    ],
    "tier": "core"
   },
-  "EFERTXD": {
-   "symbol": "EFERTXD",
+  "EFERT": {
+   "symbol": "EFERT",
    "name": "Engro Fertilizers Limited",
    "weight_pct": 2.19,
    "in": [
@@ -167,7 +171,9 @@
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "EFERTXD",
+   "board_state": "XD"
   },
   "NBP": {
    "symbol": "NBP",
@@ -201,15 +207,17 @@
    ],
    "tier": "core"
   },
-  "BAFLXD": {
-   "symbol": "BAFLXD",
+  "BAFL": {
+   "symbol": "BAFL",
    "name": "Bank Alfalah Limited",
    "weight_pct": 1.6,
    "in": [
     "KSE100",
     "ALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "BAFLXD",
+   "board_state": "XD"
   },
   "MTL": {
    "symbol": "MTL",
@@ -323,15 +331,17 @@
    ],
    "tier": "core"
   },
-  "AKBLXD": {
-   "symbol": "AKBLXD",
+  "AKBL": {
+   "symbol": "AKBL",
    "name": "Askari Bank Limited",
    "weight_pct": 0.89,
    "in": [
     "KSE100",
     "ALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "AKBLXD",
+   "board_state": "XD"
   },
   "PTC": {
    "symbol": "PTC",
@@ -366,8 +376,8 @@
    ],
    "tier": "core"
   },
-  "NESTLEXD": {
-   "symbol": "NESTLEXD",
+  "NESTLE": {
+   "symbol": "NESTLE",
    "name": "Nestle Pakistan Limited",
    "weight_pct": 0.67,
    "in": [
@@ -375,7 +385,9 @@
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "NESTLEXD",
+   "board_state": "XD"
   },
   "COLG": {
    "symbol": "COLG",
@@ -669,15 +681,17 @@
    ],
    "tier": "core"
   },
-  "PAKTXD": {
-   "symbol": "PAKTXD",
+  "PAKT": {
+   "symbol": "PAKT",
    "name": "Pakistan Tobacco Company Limited",
    "weight_pct": 0.34,
    "in": [
     "KSE100",
     "ALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "PAKTXD",
+   "board_state": "XD"
   },
   "AIRLINK": {
    "symbol": "AIRLINK",
@@ -987,15 +1001,17 @@
    ],
    "tier": "core"
   },
-  "HGFAXD": {
-   "symbol": "HGFAXD",
+  "HGFA": {
+   "symbol": "HGFA",
    "name": "HBL Growth Fund",
    "weight_pct": 0.08,
    "in": [
     "KSE100",
     "ALLSHR"
    ],
-   "tier": "core"
+   "tier": "core",
+   "source_symbol": "HGFAXD",
+   "board_state": "XD"
   },
   "HUMNL": {
    "symbol": "HUMNL",
@@ -1337,15 +1353,17 @@
    ],
    "tier": "listed"
   },
-  "IPAKXB": {
-   "symbol": "IPAKXB",
+  "IPAK": {
+   "symbol": "IPAK",
    "name": "International Packaging Films Limited",
    "weight_pct": 0.14,
    "in": [
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "listed"
+   "tier": "listed",
+   "source_symbol": "IPAKXB",
+   "board_state": "XB"
   },
   "JSBL": {
    "symbol": "JSBL",
@@ -1998,15 +2016,17 @@
    ],
    "tier": "listed"
   },
-  "EPQLXD": {
-   "symbol": "EPQLXD",
+  "EPQL": {
+   "symbol": "EPQL",
    "name": "Engro Powergen Qadirpur Limited",
    "weight_pct": 0.04,
    "in": [
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "listed"
+   "tier": "listed",
+   "source_symbol": "EPQLXD",
+   "board_state": "XD"
   },
   "FZCM": {
    "symbol": "FZCM",
@@ -2849,15 +2869,17 @@
    ],
    "tier": "listed"
   },
-  "STLXR": {
-   "symbol": "STLXR",
+  "STL": {
+   "symbol": "STL",
    "name": "Supernet Technologies Limited",
    "weight_pct": 0.02,
    "in": [
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "listed"
+   "tier": "listed",
+   "source_symbol": "STLXR",
+   "board_state": "XR"
   },
   "SYM": {
    "symbol": "SYM",
@@ -3262,14 +3284,16 @@
    ],
    "tier": "listed"
   },
-  "HIFAXD": {
-   "symbol": "HIFAXD",
+  "HIFA": {
+   "symbol": "HIFA",
    "name": "HBL Investment Fund",
    "weight_pct": 0.01,
    "in": [
     "ALLSHR"
    ],
-   "tier": "listed"
+   "tier": "listed",
+   "source_symbol": "HIFAXD",
+   "board_state": "XD"
   },
   "IMLNC": {
    "symbol": "IMLNC",
@@ -4493,15 +4517,17 @@
    ],
    "tier": "listed"
   },
-  "FPRMXR": {
-   "symbol": "FPRMXR",
+  "FPRM": {
+   "symbol": "FPRM",
    "name": "First Paramount Modaraba",
    "weight_pct": 0.0,
    "in": [
     "ALLSHR",
     "KMIALLSHR"
    ],
-   "tier": "listed"
+   "tier": "listed",
+   "source_symbol": "FPRMXR",
+   "board_state": "XR"
   },
   "FSWLNC": {
    "symbol": "FSWLNC",
