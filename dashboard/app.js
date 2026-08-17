@@ -6909,6 +6909,7 @@ async function captchaToken() {
 
 let me = null;        // auth user
 let myProfile = null; // profiles row
+let profileRealtimeChannel = null;
 let _onboardShownTracked = false;
 /* The mounted research terminal (auth-terminal.js), or null when no auth surface is up.
    _authHold keeps it mounted through onboarding: a successful signup fires SIGNED_IN, whose
@@ -7290,6 +7291,51 @@ async function saveProfile(patch) {
   const { error } = await sb.from("profiles").upsert(patch);
   if (!error) myProfile = { ...(myProfile || {}), ...patch };
   return error;
+}
+
+function stopProfileRealtime() {
+  if (profileRealtimeChannel && sb) {
+    sb.removeChannel(profileRealtimeChannel);
+    profileRealtimeChannel = null;
+  }
+}
+
+function refreshVisibleTickerNote(notes) {
+  const match = (location.hash || "").match(/^#\/ticker\/([^?]+)/);
+  if (!match) return;
+  let sym = "";
+  try { sym = decodeURIComponent(match[1]).toUpperCase(); } catch {}
+  const ta = document.getElementById("tknote");
+  if (!ta || !sym || document.activeElement === ta) return;
+  ta.value = (notes || {})[sym] || "";
+  const status = document.getElementById("tknote-status");
+  if (status) status.textContent = "Updated from your account";
+  setTimeout(() => {
+    if (status && status.isConnected && status.textContent === "Updated from your account") status.textContent = "";
+  }, 2200);
+}
+
+function startProfileRealtime(userId) {
+  stopProfileRealtime();
+  if (!sb || !userId) return;
+  profileRealtimeChannel = sb
+    .channel("profile-notes-" + userId)
+    .on("postgres_changes", {
+      event: "UPDATE",
+      schema: "public",
+      table: "profiles",
+      filter: "id=eq." + userId
+    }, (payload) => {
+      const next = payload && payload.new;
+      if (!next) return;
+      myProfile = { ...(myProfile || {}), ...next };
+      refreshVisibleTickerNote(next.notes || {});
+    })
+    .subscribe((status) => {
+      if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+        console.warn("Profile live sync unavailable:", status);
+      }
+    });
 }
 
 // Activation event — the desk's one real-action-in-30-seconds metric. Server-authoritative:
@@ -7719,6 +7765,7 @@ async function initAuth() {
         // user — Your Chart, Portfolio, Watchlist, Settings — used to paint their signed-out state
         // and then re-render, which is visible as a second flash on exactly those pages.
         await loadProfile();
+        startProfileRealtime(me?.id);
         await migrateGuestChart();   // a chart cast before signing up follows the user into their account
         if (myProfile?.lang && myProfile.lang !== lang()) { try { localStorage.setItem(LANG_KEY, myProfile.lang); } catch {} }
         applyLang();
@@ -7752,13 +7799,18 @@ async function initAuth() {
       if (me?.id && me.id === prevId) return;
       closeAuth();
       await loadProfile();
+      startProfileRealtime(me?.id);
       await migrateGuestChart();   // the whole point of the funnel: never ask for birth details twice
       applyDeskMode();
       identifyUser();              // after loadProfile, so the plan property is the real one
       if (typeof route === "function") route(true);   // re-render the page you're on with your account
       if (myProfile) maybeCoach();
     }
-    if (event === "SIGNED_OUT") { myProfile = null; applyDeskMode(); identifyUser(); if (typeof route === "function") route(true); }
+    if (event === "SIGNED_OUT") {
+      stopProfileRealtime();
+      myProfile = null; applyDeskMode(); identifyUser();
+      if (typeof route === "function") route(true);
+    }
   });
 }
 initAuth();

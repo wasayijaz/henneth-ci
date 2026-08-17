@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Henneth Desk Companion</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="panel.css">
+<link rel="stylesheet" href="thinking-loader.bundle.css">
+</head>
+<body>
+<header id="top">
+  <img src="icons/icon48.png" alt="" class="logo">
+  <span class="brand">Henneth <em>Companion</em></span>
+  <span id="healthPill" class="pill">HEALTH —</span>
+  <button id="schemeBtn" title="Toggle light/dark">◐</button>
+</header>
+
+<nav id="tabs">
+  <div class="tabbar">
+    <button class="tab on" data-tab="read">Read</button>
+    <button class="tab" data-tab="notes">Notes</button>
+  </div>
+  <div class="ticker-search">
+    <div class="search-eyebrow">READ A TICKER</div>
+    <div class="search-line">
+      <span class="search-prefix">PSX:</span>
+      <input id="tickerInput" aria-label="PSX ticker" placeholder="LUCK" autocomplete="off" spellcheck="false">
+      <button id="loadBtn" class="key"><span>Read This</span><b aria-hidden="true">↗</b></button>
+    </div>
+    <div class="search-caption">Enter a symbol or let Henneth follow your active research tab</div>
+  </div>
+</nav>
+<p id="authNote" class="sub"></p>
+
+<main id="content">
+  <div class="empty">Open a PSX ticker on TradingView, DPS or a PSX news page,<br>or search a symbol above.</div>
+</main>
+
+<footer id="foot">
+  <span>Research only — never advice, never orders.</span>
+  <a id="openDesk" href="#" target="_blank">Open in Desk ↗</a>
+</footer>
+
+<script src="api.js"></script>
+<script src="thinking-loader.bundle.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+/* ============================================================
+   HENNETH DESK COMPANION - design tokens.
+   Copied from dashboard/palette.css + themes.css token sets so the
+   extension renders in the desk's paper/olive language in both
+   schemes. RULES THAT DO NOT BREAK:
+   - every corner is HARD: border-radius always 0
+   - boxes are 1.5px solid var(--line)
+   - numbers are JetBrains Mono, tabular
+   - never hardcode a colour; every scheme-varying colour lives on
+     the light block below and is overridden token-for-token in the
+     two dark blocks, exactly like palette.css.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
+:root, *, *::before, *::after { border-radius: 0 !important; }
+:root {
+  --dur-fast: 120ms; --dur-base: 200ms; --dur-slow: 320ms;
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+* { scrollbar-width: thin; scrollbar-color: var(--ink3) transparent; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--panel2, var(--panel)); border-inline-start: 1px solid var(--hair); }
+::-webkit-scrollbar-thumb { background: var(--ink3); border: 2px solid var(--panel2, var(--panel)); }
+
+body {
+  font-size: 13.5px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+  background: var(--paper); color: var(--ink1);
+  font-family: "JetBrains Mono", Consolas, monospace;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font: inherit; }
+input, select { font: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+.sub { font-size: 11px; opacity: .6; }
+
+/* ---- LIGHT (base) - every scheme-varying token defined here ---- */
+body {
+  --paper: #f7f6f1; --paper-2: #fbfaf6; --paper-3: #fffefb;
+  --rpanel: #efeee8; --rpanel-2: #e8e7e0;
+  --rink: #20221f; --rmuted: #6f726b; --rhair: #d5d5cc; --rline: #b9bbb2;
+  --positive: #28724b; --positive-soft: #e3efe4;
+  --negative: #b44640; --negative-soft: #f3e5e2;
+  --focus: #2d6847; --warn: #c9922b; --warn-soft: #f5ecd8;
+  --shadow: 0 10px 28px rgba(38, 39, 33, .07);
+  --ink2: #43463f;
+}
+body {
+  --panel: var(--paper-2); --panel2: var(--rpanel);
+  --ink1: var(--rink); --ink3: var(--rmuted);
+  --line: var(--rline); --line2: var(--rhair); --hair: var(--rhair);
+  --up: var(--positive); --dn: var(--negative); --accent: var(--focus);
+}
+
+/* ---- DARK (OS preference) ---- */
+@media (prefers-color-scheme: dark) {
+  html:not([data-scheme="light"]) body {
+    --paper: #171512; --paper-2: #1f1d19; --paper-3: #24221d;
+    --rpanel: #1d1b17; --rpanel-2: #26241f;
+    --rink: #ece8de; --rmuted: #a6a29a; --rhair: #6e685a; --rline: #85806e;
+    --positive: #5fa97d; --positive-soft: #1e2c23;
+    --negative: #d97b72; --negative-soft: #2e1f1c;
+    --focus: #4fb37e; --warn: #c9922b; --warn-soft: #33291a;
+    --shadow: 0 10px 28px rgba(0, 0, 0, .45);
+    --ink2: #cfcbc1;
+  }
+}
+/* ---- DARK (explicit choice - wins both directions) ---- */
+html[data-scheme="dark"] body {
+  --paper: #171512; --paper-2: #1f1d19; --paper-3: #24221d;
+  --rpanel: #1d1b17; --rpanel-2: #26241f;
+  --rink: #ece8de; --rmuted: #a6a29a; --rhair: #6e685a; --rline: #85806e;
+  --positive: #5fa97d; --positive-soft: #1e2c23;
+  --negative: #d97b72; --negative-soft: #2e1f1c;
+  --focus: #4fb37e; --warn: #c9922b; --warn-soft: #33291a;
+  --shadow: 0 10px 28px rgba(0, 0, 0, .45);
+  --ink2: #cfcbc1;
+}

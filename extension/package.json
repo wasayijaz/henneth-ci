@@ -1,0 +1,16 @@
+{
+  "name": "henneth-desk-companion-extension",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:loader": "esbuild src/thinking-loader.jsx --bundle --format=iife --global-name=HennethInlineLoaderBundle --outfile=thinking-loader.bundle.js --minify"
+  },
+  "dependencies": {
+    "generative-loaders": "0.1.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.9"
+  }
+}
