@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import ipaddress
 import os
 import re
 import sys
@@ -56,6 +57,13 @@ def _validate_pdf_url(url: str, root_domain: str) -> str:
     domain = str(root_domain or "").lower().strip(".")
     if not domain or (host != domain and not host.endswith("." + domain)):
         raise ValueError("issuer document left DPS-declared root domain")
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        address = None
+    if address and (address.is_private or address.is_loopback or address.is_link_local
+                    or address.is_reserved or address.is_multicast):
+        raise ValueError("issuer document host is private or reserved")
     if not parsed.path.lower().endswith(".pdf"):
         raise ValueError("issuer document is not a PDF link")
     return url
@@ -91,6 +99,8 @@ def _fetch_pdf(url: str, root_domain: str, session: requests.Session) -> tuple[b
             current = _validate_pdf_url(urljoin(current, target), root_domain)
             continue
         break
+    else:
+        raise ValueError("too many issuer PDF redirects")
     if response is None:
         raise ValueError("issuer PDF was not fetched")
     response.raise_for_status()
@@ -164,6 +174,7 @@ def _merge_document(index: dict, symbol: str, ticker_row: dict, link: dict, meta
     row = {
         **prior,
         "id": doc_id,
+        "doc_id": doc_id,
         "hash": doc_id,
         "source": "Issuer website",
         "source_type": "issuer_document",
@@ -171,7 +182,7 @@ def _merge_document(index: dict, symbol: str, ticker_row: dict, link: dict, meta
         "date": None,
         "published_at": None,
         "first_seen_at": link.get("first_seen_at"),
-        "retrieved_at": time.strftime("%Y-%m-%d %H:%M"),
+        "retrieved_at": time.strftime("%Y-%m-%d %H:%M") if metadata else prior.get("retrieved_at"),
         "tickers": [symbol],
         "company_name": None,
         "title": link.get("label") or link.get("document_type") or "Issuer document",
@@ -225,6 +236,22 @@ def _self_check() -> int:
         return 1
     except ValueError:
         pass
+    try:
+        _validate_pdf_url("https://127.0.0.1/annual.pdf", "127.0.0.1")
+        print("issuer_document stage self-check: FAIL (private host accepted)")
+        return 1
+    except ValueError:
+        pass
+    fixture_index = {"documents": {}, "by_ticker": {}}
+    fixture = _merge_document(fixture_index, "ABC", {"issuer_url": "https://example.com"},
+                              {"id": "issuer:test", "url": "https://example.com/report.pdf",
+                               "first_seen_at": "2026-08-18T00:00:00+05:00"})
+    if fixture.get("published_at") is not None or fixture.get("date") is not None:
+        print("issuer_document stage self-check: FAIL (first-seen became publication date)")
+        return 1
+    if fixture.get("doc_id") != "issuer:test":
+        print("issuer_document stage self-check: FAIL (stable issuer doc_id missing)")
+        return 1
     print("issuer_document stage self-check: PASS")
     return 0
 

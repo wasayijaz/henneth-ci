@@ -1,23 +1,23 @@
 {
  "meta": {
-  "built": "2026-08-18 03:07",
+  "built": "2026-08-18 03:15",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-17 23:41",
   "count": 20,
   "financial_series": {
-   "updated": "2026-08-18 03:06",
+   "updated": "2026-08-18 03:15",
    "source": "state/company_documents.json + current verified extraction",
-   "source_documents": 47,
+   "source_documents": 48,
    "rejected_facts": 0,
    "append_only_values": true,
    "note": "Unknown period, unit, currency and consolidation remain explicit; facts retain source/page evidence."
   },
   "graph": {
-   "updated": "2026-08-18 03:06",
-   "node_count": 322,
-   "edge_count": 368,
-   "source_documents": 47,
+   "updated": "2026-08-18 03:15",
+   "node_count": 331,
+   "edge_count": 383,
+   "source_documents": 48,
    "note": "Every factual edge carries source URL and cited page when available."
   },
   "note": "Private company-intelligence slice. Research, not advice. No execution or order path."
@@ -1008,15 +1008,135 @@
       "synthesis_status": "not_started",
       "training_mode": true
      }
+    },
+    {
+     "doc_id": "issuer:0041077dadc52bdcd3baaa54",
+     "date": null,
+     "type": "results",
+     "title": "Download PDF",
+     "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+     "source": "Issuer website",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "ba93783c9562355e8ec551af283fd9a15937046389e55c29d7bd707887e8c9af",
+     "evidence": [
+      {
+       "page": 2,
+       "text": "t and MLCFL accepts no responsibility whatsoever for any direct or indirect consequential loss arising from any use of this report or its contents. This report may not be reproduced, distributed or published by any recipient for any purpos…",
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+      },
+      {
+       "page": 1,
+       "text": "Corporate Briefing 2023",
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+      },
+      {
+       "page": 19,
+       "text": "ctor in Pakistan 19 Particulars FY 22 FY 21 YOY % age Local Sales Cement Industry - North Sales 39,438,528 40,581,580 -2.82% Cement Industry - South Sales 8,196,369 7,537,362 8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales…",
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+      },
+      {
+       "page": 19,
+       "text": "Sales Cement Industry - North Sales 39,438,528 40,581,580 -2.82% Cement Industry - South Sales 8,196,369 7,537,362 8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cem…",
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+      }
+     ],
+     "facts": [
+      {
+       "fact_id": "fact_081d3d12f06c762951b5",
+       "type": "revenue",
+       "raw_value": "39,438,528",
+       "normalized_value": 39438528,
+       "unit": "reported",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+         "page": 19,
+         "text": "ctor in Pakistan 19 Particulars FY 22 FY 21 YOY % age Local Sales Cement Industry - North Sales 39,438,528 40,581,580 -2.82% Cement Industry - South Sales 8,196,369 7,537,362 8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_913f0c740ba8884f6905",
+       "type": "revenue",
+       "raw_value": "8,196,369",
+       "normalized_value": 8196369,
+       "unit": "reported",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+         "page": 19,
+         "text": "Sales Cement Industry - North Sales 39,438,528 40,581,580 -2.82% Cement Industry - South Sales 8,196,369 7,537,362 8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cem…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_e5112257c5ea3291f0fc",
+       "type": "revenue",
+       "raw_value": "911,035",
+       "normalized_value": 911035,
+       "unit": "reported",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+         "page": 19,
+         "text": "8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cement Industry - South Sales 4,345,147 6,747,430 -35.60% Export - Pakistan 5,256,182 9,313,832 -43.57% Total - Pakist…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_b6fb765fa97fa90aa91d",
+       "type": "revenue",
+       "raw_value": "4,345,147",
+       "normalized_value": 4345147,
+       "unit": "reported",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+         "page": 19,
+         "text": "ort Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cement Industry - South Sales 4,345,147 6,747,430 -35.60% Export - Pakistan 5,256,182 9,313,832 -43.57% Total - Pakistan 52,891,079 57,432,774 -7.91% Total Installed Capacit…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_8b800829a28097c8668e",
+       "type": "change_pct",
+       "raw_value": "1.26",
+       "normalized_value": 1.26,
+       "unit": "percent",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+         "page": 15,
+         "text": ": Grey local sale retention increased by Rs. 3,042/ton, however, grey local sale quantity decreased by 1.26%. Gross Profit: Improved grey local sale retention by Rs. 3,042/ton. Operating Profit: Increased due to high gross profit. Finance…"
+        }
+       ]
+      }
+     ],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
     }
    ],
    "financial_series": {
     "coverage": {
-     "source_documents": 3,
-     "fact_count": 22,
+     "source_documents": 4,
+     "fact_count": 27,
      "period_count": 3,
      "missing_required_source": false,
-     "missing_period_count": 0,
+     "missing_period_count": 5,
      "conflict_count": 0
     },
     "conflicts": [],
@@ -1561,6 +1681,134 @@
        }
       ],
       "quality_flags": []
+     },
+     {
+      "series_id": "series_e8db09899add8f9cfaea7176",
+      "metric": "revenue",
+      "period_end": null,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "8,196,369",
+      "normalized_value": 8196369,
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "fact_id": "fact_913f0c740ba8884f6905",
+      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "Sales Cement Industry - North Sales 39,438,528 40,581,580 -2.82% Cement Industry - South Sales 8,196,369 7,537,362 8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cem…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "series_id": "series_e2696a469058e99c86b09331",
+      "metric": "revenue",
+      "period_end": null,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "39,438,528",
+      "normalized_value": 39438528,
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "fact_id": "fact_081d3d12f06c762951b5",
+      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "ctor in Pakistan 19 Particulars FY 22 FY 21 YOY % age Local Sales Cement Industry - North Sales 39,438,528 40,581,580 -2.82% Cement Industry - South Sales 8,196,369 7,537,362 8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "series_id": "series_d7979a1098cbae1dd5f3e8d5",
+      "metric": "revenue",
+      "period_end": null,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "911,035",
+      "normalized_value": 911035,
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "fact_id": "fact_e5112257c5ea3291f0fc",
+      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "8.74% Local - Pakistan 47,634,897 48,118,942 -1.01% Export Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cement Industry - South Sales 4,345,147 6,747,430 -35.60% Export - Pakistan 5,256,182 9,313,832 -43.57% Total - Pakist…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "series_id": "series_892e4f18166de9ba5c83dd73",
+      "metric": "revenue",
+      "period_end": null,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": null,
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "4,345,147",
+      "normalized_value": 4345147,
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "fact_id": "fact_b6fb765fa97fa90aa91d",
+      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "evidence": [
+       {
+        "page": 19,
+        "text": "ort Sales Cement Industry - North Sales 911,035 2,566,402 -64.50% Cement Industry - South Sales 4,345,147 6,747,430 -35.60% Export - Pakistan 5,256,182 9,313,832 -43.57% Total - Pakistan 52,891,079 57,432,774 -7.91% Total Installed Capacit…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "series_id": "series_af3d29334ed74c21e1872f09",
+      "metric": "change_pct",
+      "period_end": null,
+      "period_type": "unknown",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "percent",
+      "unit_multiplier": 1,
+      "raw_value": "1.26",
+      "normalized_value": 1.26,
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "fact_id": "fact_8b800829a28097c8668e",
+      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "evidence": [
+       {
+        "page": 15,
+        "text": ": Grey local sale retention increased by Rs. 3,042/ton, however, grey local sale quantity decreased by 1.26%. Gross Profit: Improved grey local sale retention by Rs. 3,042/ton. Operating Profit: Increased due to high gross profit. Finance…"
+       }
+      ],
+      "quality_flags": [
+       "missing_period_end"
+      ]
      }
     ]
    },
@@ -1900,15 +2148,43 @@
        "text": "2 Maple Leaf Cement Factory Limited COMPANY INFORMATION Board of Directors Mr. Tariq Sayeed Saigol .........................Chairman Mr. Sayeed Tariq Saigol ................Chief Executive Mr. Taufique Sayeed Saigol Mr. Wale"
       }
      ]
+    },
+    {
+     "event_id": "evt_a83ff591310615eba6d5",
+     "doc_id": "issuer:0041077dadc52bdcd3baaa54",
+     "date": null,
+     "type": "briefing",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+       "page": 1,
+       "text": "Corporate Briefing 2023"
+      }
+     ]
+    },
+    {
+     "event_id": "evt_93a2b1187d8766de8a70",
+     "doc_id": "issuer:0041077dadc52bdcd3baaa54",
+     "date": null,
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+       "page": 2,
+       "text": "t and MLCFL accepts no responsibility whatsoever for any direct or indirect consequential loss arising from any use of this report or its contents. This report may not be reproduced, distributed or published by any recipient for any purpos…"
+      }
+     ]
     }
    ],
    "changes": [],
    "graph": {
     "summary": {
-     "document": 24,
+     "document": 25,
      "period": 4,
-     "fact": 22,
-     "event": 24,
+     "fact": 27,
+     "event": 26,
      "change": 0,
      "source": 14
     },
@@ -2148,6 +2424,85 @@
       "priority_weight": 4
      },
      {
+      "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_081d3d12f06c762951b5",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "metric": "revenue",
+      "raw_value": "39,438,528",
+      "normalized_value": 39438528,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_8b800829a28097c8668e",
+      "type": "fact",
+      "label": "change_pct",
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "metric": "change_pct",
+      "raw_value": "1.26",
+      "normalized_value": 1.26,
+      "period_type": "unknown",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_period_end"
+      ]
+     },
+     {
+      "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_913f0c740ba8884f6905",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "metric": "revenue",
+      "raw_value": "8,196,369",
+      "normalized_value": 8196369,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_b6fb765fa97fa90aa91d",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "metric": "revenue",
+      "raw_value": "4,345,147",
+      "normalized_value": 4345147,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
+      "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_e5112257c5ea3291f0fc",
+      "type": "fact",
+      "label": "revenue",
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "metric": "revenue",
+      "raw_value": "911,035",
+      "normalized_value": 911035,
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "quality_flags": [
+       "missing_consolidation_basis",
+       "missing_currency",
+       "missing_period_end"
+      ]
+     },
+     {
       "id": "fact:psx:263397:fact_0c6122a197a0cf5a507e",
       "type": "fact",
       "label": "revenue",
@@ -2314,86 +2669,6 @@
       "raw_value": "961,177",
       "normalized_value": 961177,
       "period_end": "2025-12-31",
-      "period_type": "quarter",
-      "consolidation": "unknown",
-      "quality_flags": [
-       "missing_consolidation_basis",
-       "missing_currency"
-      ]
-     },
-     {
-      "id": "fact:psx:271712:fact_689b327993d45cc9b763",
-      "type": "fact",
-      "label": "dividend",
-      "document_id": "psx:271712",
-      "metric": "dividend",
-      "raw_value": "26",
-      "normalized_value": 26,
-      "period_end": "2025-12-31",
-      "period_type": "quarter",
-      "consolidation": "unknown",
-      "currency": "PKR",
-      "quality_flags": [
-       "missing_consolidation_basis"
-      ]
-     },
-     {
-      "id": "fact:psx:271712:fact_8de804bbbf2f1d2cee98",
-      "type": "fact",
-      "label": "revenue",
-      "document_id": "psx:271712",
-      "metric": "revenue",
-      "raw_value": "35,419 m",
-      "normalized_value": 35419000000,
-      "period_end": "2025-12-31",
-      "period_type": "quarter",
-      "consolidation": "unknown",
-      "quality_flags": [
-       "missing_consolidation_basis",
-       "missing_currency"
-      ]
-     },
-     {
-      "id": "fact:psx:271712:fact_91e1d11ac7c6bbd323f7",
-      "type": "fact",
-      "label": "revenue",
-      "document_id": "psx:271712",
-      "metric": "revenue",
-      "raw_value": "15",
-      "normalized_value": 15,
-      "period_end": "2025-12-31",
-      "period_type": "quarter",
-      "consolidation": "unknown",
-      "quality_flags": [
-       "missing_consolidation_basis",
-       "missing_currency"
-      ]
-     },
-     {
-      "id": "fact:psx:275425:fact_3501b21a1bc7b0ed56e0",
-      "type": "fact",
-      "label": "revenue",
-      "document_id": "psx:275425",
-      "metric": "revenue",
-      "raw_value": "79,773,741",
-      "normalized_value": 79773741000,
-      "period_end": "2026-03-31",
-      "period_type": "quarter",
-      "consolidation": "unknown",
-      "currency": "PKR",
-      "quality_flags": [
-       "missing_consolidation_basis"
-      ]
-     },
-     {
-      "id": "fact:psx:275425:fact_3a4c6ed494964b8951bc",
-      "type": "fact",
-      "label": "revenue",
-      "document_id": "psx:275425",
-      "metric": "revenue",
-      "raw_value": "56,964 m",
-      "normalized_value": 56964000000,
-      "period_end": "2026-03-31",
       "period_type": "quarter",
       "consolidation": "unknown",
       "quality_flags": [
@@ -2817,17 +3092,6 @@
       "document_id": "psx:274750"
      },
      {
-      "id": "edge_6dbae9f57f042071825e47f0",
-      "type": "SUPPORTS_FACT",
-      "from": "document:psx:271712",
-      "to": "fact:psx:271712:fact_91e1d11ac7c6bbd323f7",
-      "evidence": {
-       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
-       "page": 10
-      },
-      "document_id": "psx:271712"
-     },
-     {
       "id": "edge_77dd1a2da35b8750cd55d8a2",
       "type": "REPORTS_PERIOD",
       "from": "document:psx:275425",
@@ -2837,17 +3101,6 @@
        "page": 7
       },
       "document_id": "psx:275425"
-     },
-     {
-      "id": "edge_780259228fcabc99f194851f",
-      "type": "SUPPORTS_FACT",
-      "from": "document:psx:271712",
-      "to": "fact:psx:271712:fact_689b327993d45cc9b763",
-      "evidence": {
-       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
-       "page": 8
-      },
-      "document_id": "psx:271712"
      },
      {
       "id": "edge_7a79885482420a76d51db76b",
@@ -3071,17 +3324,6 @@
       "document_id": "psx:247754"
      },
      {
-      "id": "edge_b987a111457ae19a6d13f2e4",
-      "type": "SUPPORTS_FACT",
-      "from": "document:psx:271712",
-      "to": "fact:psx:271712:fact_8de804bbbf2f1d2cee98",
-      "evidence": {
-       "source_url": "https://dps.psx.com.pk/download/document/271712.pdf",
-       "page": 4
-      },
-      "document_id": "psx:271712"
-     },
-     {
       "id": "edge_ba15d87f6de47475a82d9324",
       "type": "FILED",
       "from": "company:MLCF",
@@ -3123,17 +3365,6 @@
       "document_id": "psx:275425"
      },
      {
-      "id": "edge_c5ccbfc541bfbebeb9e6fd33",
-      "type": "SUPPORTS_FACT",
-      "from": "document:psx:275425",
-      "to": "fact:psx:275425:fact_3501b21a1bc7b0ed56e0",
-      "evidence": {
-       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
-       "page": 20
-      },
-      "document_id": "psx:275425"
-     },
-     {
       "id": "edge_ca577aa005ea7d62b391ccbc",
       "type": "HAS_EVENT",
       "from": "company:MLCF",
@@ -3154,17 +3385,6 @@
        "page": 4
       },
       "document_id": "psx:271712"
-     },
-     {
-      "id": "edge_d67fafb3609efd2c201db324",
-      "type": "SUPPORTS_FACT",
-      "from": "document:psx:275425",
-      "to": "fact:psx:275425:fact_3a4c6ed494964b8951bc",
-      "evidence": {
-       "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
-       "page": 4
-      },
-      "document_id": "psx:275425"
      },
      {
       "id": "edge_dcd7396cc91d16b5c9795154",
@@ -3405,14 +3625,14 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 24,
-    "event_count": 24,
+    "document_count": 25,
+    "event_count": 26,
     "change_count": 0,
-    "financial_fact_count": 22,
+    "financial_fact_count": 27,
     "graph_node_count": 57,
-    "graph_edge_count": 61,
+    "graph_edge_count": 56,
     "brief_status": "training_only",
-    "pending_synthesis": 24,
+    "pending_synthesis": 25,
     "last_event_at": "2026-04-28T10:25:00+05:00",
     "source_status": "degraded",
     "source_quality_flags": 1

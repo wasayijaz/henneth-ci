@@ -15,6 +15,8 @@ import time
 from psx_data import STATE, load_json, save_json
 
 DEFAULT_BATCH_SIZE = 4
+MAX_BATCH_SIZE = 5
+MAX_BATCHES_PER_RUN = 5
 CURSOR_PATH = STATE / "company_intel" / "backfill_cursor.json"
 
 
@@ -93,8 +95,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.status:
         _status()
         return 0
-    if args.batch_size < 1 or args.batches < 1 or (args.start is not None and args.start < 0):
-        parser.error("batch-size/batches must be positive and start must be zero or greater")
+    if not 1 <= args.batch_size <= MAX_BATCH_SIZE:
+        parser.error(f"--batch-size must be 1..{MAX_BATCH_SIZE}")
+    if not 1 <= args.batches <= MAX_BATCHES_PER_RUN:
+        parser.error(f"--batches must be 1..{MAX_BATCHES_PER_RUN}")
+    if args.start is not None and args.start < 0:
+        parser.error("--start must be zero or greater")
 
     symbols = _pilot_symbols()
     if not symbols:
@@ -155,7 +161,7 @@ def main(argv: list[str] | None = None) -> int:
             completed.append(batch)
         if failures:
             break
-        time.sleep(1.0)
+        time.sleep(2.0)
 
     if args.preflight and not failures:
         rc = _run("preflight.py", dry_run=args.dry_run)

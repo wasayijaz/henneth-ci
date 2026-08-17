@@ -122,6 +122,15 @@
    "ticker": "UBL"
   },
   {
+   "id": "document:issuer:0041077dadc52bdcd3baaa54",
+   "type": "document",
+   "label": "Download PDF",
+   "document_id": "issuer:0041077dadc52bdcd3baaa54",
+   "doc_type": "results",
+   "status": "ready",
+   "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+  },
+  {
    "id": "document:psx:219092",
    "type": "document",
    "label": "MLCF Financial Results for the Quarter Ended 30.09.2023",
@@ -790,6 +799,14 @@
    "priority_weight": 3
   },
   {
+   "id": "event:evt_93a2b1187d8766de8a70",
+   "type": "event",
+   "label": "earnings",
+   "event_id": "evt_93a2b1187d8766de8a70",
+   "event_type": "earnings",
+   "priority_weight": 3
+  },
+  {
    "id": "event:evt_9a6cb37aa210fe7aeede",
    "type": "event",
    "label": "board_meeting",
@@ -823,6 +840,14 @@
    "event_id": "evt_a797b68bb60bd06290bb",
    "event_type": "contract",
    "event_date": "2026-06-18T15:21:00+05:00",
+   "priority_weight": 3
+  },
+  {
+   "id": "event:evt_a83ff591310615eba6d5",
+   "type": "event",
+   "label": "briefing",
+   "event_id": "evt_a83ff591310615eba6d5",
+   "event_type": "briefing",
    "priority_weight": 3
   },
   {
@@ -923,6 +948,85 @@
    "event_type": "board_meeting",
    "event_date": "2025-12-18T12:52:00+05:00",
    "priority_weight": 3
+  },
+  {
+   "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_081d3d12f06c762951b5",
+   "type": "fact",
+   "label": "revenue",
+   "document_id": "issuer:0041077dadc52bdcd3baaa54",
+   "metric": "revenue",
+   "raw_value": "39,438,528",
+   "normalized_value": 39438528,
+   "period_type": "unknown",
+   "consolidation": "unknown",
+   "quality_flags": [
+    "missing_consolidation_basis",
+    "missing_currency",
+    "missing_period_end"
+   ]
+  },
+  {
+   "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_8b800829a28097c8668e",
+   "type": "fact",
+   "label": "change_pct",
+   "document_id": "issuer:0041077dadc52bdcd3baaa54",
+   "metric": "change_pct",
+   "raw_value": "1.26",
+   "normalized_value": 1.26,
+   "period_type": "unknown",
+   "consolidation": "consolidated",
+   "currency": "PKR",
+   "quality_flags": [
+    "missing_period_end"
+   ]
+  },
+  {
+   "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_913f0c740ba8884f6905",
+   "type": "fact",
+   "label": "revenue",
+   "document_id": "issuer:0041077dadc52bdcd3baaa54",
+   "metric": "revenue",
+   "raw_value": "8,196,369",
+   "normalized_value": 8196369,
+   "period_type": "unknown",
+   "consolidation": "unknown",
+   "quality_flags": [
+    "missing_consolidation_basis",
+    "missing_currency",
+    "missing_period_end"
+   ]
+  },
+  {
+   "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_b6fb765fa97fa90aa91d",
+   "type": "fact",
+   "label": "revenue",
+   "document_id": "issuer:0041077dadc52bdcd3baaa54",
+   "metric": "revenue",
+   "raw_value": "4,345,147",
+   "normalized_value": 4345147,
+   "period_type": "unknown",
+   "consolidation": "unknown",
+   "quality_flags": [
+    "missing_consolidation_basis",
+    "missing_currency",
+    "missing_period_end"
+   ]
+  },
+  {
+   "id": "fact:issuer:0041077dadc52bdcd3baaa54:fact_e5112257c5ea3291f0fc",
+   "type": "fact",
+   "label": "revenue",
+   "document_id": "issuer:0041077dadc52bdcd3baaa54",
+   "metric": "revenue",
+   "raw_value": "911,035",
+   "normalized_value": 911035,
+   "period_type": "unknown",
+   "consolidation": "unknown",
+   "quality_flags": [
+    "missing_consolidation_basis",
+    "missing_currency",
+    "missing_period_end"
+   ]
   },
   {
    "id": "fact:psx:263397:fact_0c6122a197a0cf5a507e",
@@ -3426,6 +3530,12 @@
    "quality_flags": []
   },
   {
+   "id": "source:url_0041077dadc52bdcd3baaa54",
+   "type": "source",
+   "label": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+   "url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+  },
+  {
    "id": "source:url_64e696f27639ee95827a19ff",
    "type": "source",
    "label": "https://dps.psx.com.pk/download/document/275425.pdf",
@@ -3511,6 +3621,17 @@
    "document_id": "psx:271712"
   },
   {
+   "id": "edge_05c948ecf38f3bc60764f8bc",
+   "type": "HAS_EVENT",
+   "from": "company:MLCF",
+   "to": "event:evt_a83ff591310615eba6d5",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 1
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_0648bd5cba9f1aa6f9b12b72",
    "type": "HAS_SOURCE",
    "from": "company:MEBL",
@@ -3585,6 +3706,17 @@
     "page": 20
    },
    "document_id": "psx:275425"
+  },
+  {
+   "id": "edge_0c4370c64d9c2baf497b15f6",
+   "type": "EVIDENCED_BY",
+   "from": "fact:issuer:0041077dadc52bdcd3baaa54:fact_b6fb765fa97fa90aa91d",
+   "to": "source:url_0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_0c775217d3a66bccc9aaf7f3",
@@ -3663,6 +3795,17 @@
     "page": 3
    },
    "document_id": "psx:271712"
+  },
+  {
+   "id": "edge_0eba22b6242d10540308ec92",
+   "type": "EVIDENCED_BY",
+   "from": "fact:issuer:0041077dadc52bdcd3baaa54:fact_913f0c740ba8884f6905",
+   "to": "source:url_0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_0fd7266bcee3303bea4a3aba",
@@ -4020,6 +4163,17 @@
    "quality_flags": [
     "registry_degraded"
    ]
+  },
+  {
+   "id": "edge_236b9c3a3669da2339530a42",
+   "type": "EVIDENCED_BY",
+   "from": "fact:issuer:0041077dadc52bdcd3baaa54:fact_081d3d12f06c762951b5",
+   "to": "source:url_0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_23fd3b8a960dc4f391afd644",
@@ -4615,6 +4769,17 @@
    "quality_flags": []
   },
   {
+   "id": "edge_4bd34e9d8198de3e13fe8c5f",
+   "type": "SUPPORTS_FACT",
+   "from": "document:issuer:0041077dadc52bdcd3baaa54",
+   "to": "fact:issuer:0041077dadc52bdcd3baaa54:fact_e5112257c5ea3291f0fc",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_4be1348c98da10a5d8843313",
    "type": "HAS_SOURCE",
    "from": "company:PSO",
@@ -4956,6 +5121,28 @@
     "source_url": "https://dps.psx.com.pk/download/document/265578.pdf"
    },
    "document_id": "psx:265578"
+  },
+  {
+   "id": "edge_6445586e5f65461fc7d4883d",
+   "type": "EVIDENCED_BY",
+   "from": "fact:issuer:0041077dadc52bdcd3baaa54:fact_e5112257c5ea3291f0fc",
+   "to": "source:url_0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
+   "id": "edge_68b017752a956392dac31dc6",
+   "type": "SUPPORTS_FACT",
+   "from": "document:issuer:0041077dadc52bdcd3baaa54",
+   "to": "fact:issuer:0041077dadc52bdcd3baaa54:fact_b6fb765fa97fa90aa91d",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_695b4197f235f82a3e6f3550",
@@ -5703,6 +5890,17 @@
    ]
   },
   {
+   "id": "edge_9559a099afe2526cb4d14440",
+   "type": "SUPPORTS_FACT",
+   "from": "document:issuer:0041077dadc52bdcd3baaa54",
+   "to": "fact:issuer:0041077dadc52bdcd3baaa54:fact_8b800829a28097c8668e",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 15
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_96054c59fd67b94a4fef7ce8",
    "type": "HAS_SOURCE",
    "from": "company:NBP",
@@ -6338,6 +6536,17 @@
    ]
   },
   {
+   "id": "edge_b84e7c67929cda7432bf74de",
+   "type": "EVIDENCED_BY",
+   "from": "fact:issuer:0041077dadc52bdcd3baaa54:fact_8b800829a28097c8668e",
+   "to": "source:url_0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 15
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_b987a111457ae19a6d13f2e4",
    "type": "SUPPORTS_FACT",
    "from": "document:psx:271712",
@@ -6496,6 +6705,17 @@
     "page": 3
    },
    "document_id": "psx:275425"
+  },
+  {
+   "id": "edge_c2e578b48f6f13074c92c541",
+   "type": "SUPPORTS_FACT",
+   "from": "document:issuer:0041077dadc52bdcd3baaa54",
+   "to": "fact:issuer:0041077dadc52bdcd3baaa54:fact_081d3d12f06c762951b5",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_c2f5ebd00ebc0fa57b8bb990",
@@ -6838,6 +7058,17 @@
    "quality_flags": []
   },
   {
+   "id": "edge_df1413750881634cfbb2003f",
+   "type": "EVIDENCED_BY",
+   "from": "event:evt_93a2b1187d8766de8a70",
+   "to": "document:issuer:0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 2
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_df156efd5980f7ecbf5e6b10",
    "type": "HAS_EVENT",
    "from": "company:UBL",
@@ -6881,6 +7112,17 @@
     "source_url": "https://dps.psx.com.pk/download/document/234448.pdf"
    },
    "document_id": "psx:234448"
+  },
+  {
+   "id": "edge_e0ef082f5e120ffceb874457",
+   "type": "EVIDENCED_BY",
+   "from": "event:evt_a83ff591310615eba6d5",
+   "to": "document:issuer:0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 1
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_e18140174b0169561e1c2bd2",
@@ -7123,6 +7365,16 @@
    "document_id": "psx:268509"
   },
   {
+   "id": "edge_eacb31a46c8af92385e5aa7d",
+   "type": "FILED",
+   "from": "company:MLCF",
+   "to": "document:issuer:0041077dadc52bdcd3baaa54",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf"
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_ebaaf13bee5cb0a6abc62f91",
    "type": "EVIDENCED_BY",
    "from": "event:evt_2e4c23aea1832e581072",
@@ -7145,6 +7397,17 @@
    "document_id": "psx:275425"
   },
   {
+   "id": "edge_ecf7d0c6bfbe803cf896f198",
+   "type": "HAS_EVENT",
+   "from": "company:MLCF",
+   "to": "event:evt_93a2b1187d8766de8a70",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 2
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
+  },
+  {
    "id": "edge_ed164dc2384b7cdb9e448765",
    "type": "HAS_EVENT",
    "from": "company:PPL",
@@ -7165,6 +7428,17 @@
    },
    "status": "discovered",
    "quality_flags": []
+  },
+  {
+   "id": "edge_edfa56bbd2b94dda86f4b95f",
+   "type": "SUPPORTS_FACT",
+   "from": "document:issuer:0041077dadc52bdcd3baaa54",
+   "to": "fact:issuer:0041077dadc52bdcd3baaa54:fact_913f0c740ba8884f6905",
+   "evidence": {
+    "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+    "page": 19
+   },
+   "document_id": "issuer:0041077dadc52bdcd3baaa54"
   },
   {
    "id": "edge_ee77e407b9e30be8ec03e9a3",
@@ -7890,6 +8164,7 @@
   "MLCF": {
    "node_id": "company:MLCF",
    "document_ids": [
+    "issuer:0041077dadc52bdcd3baaa54",
     "psx:219092",
     "psx:225623",
     "psx:227375",
@@ -7922,6 +8197,11 @@
     "period_ca62e530f591dca8c92c1a69"
    ],
    "fact_ids": [
+    "fact:issuer:0041077dadc52bdcd3baaa54:fact_081d3d12f06c762951b5",
+    "fact:issuer:0041077dadc52bdcd3baaa54:fact_8b800829a28097c8668e",
+    "fact:issuer:0041077dadc52bdcd3baaa54:fact_913f0c740ba8884f6905",
+    "fact:issuer:0041077dadc52bdcd3baaa54:fact_b6fb765fa97fa90aa91d",
+    "fact:issuer:0041077dadc52bdcd3baaa54:fact_e5112257c5ea3291f0fc",
     "fact:psx:263397:fact_0c6122a197a0cf5a507e",
     "fact:psx:263397:fact_146885515de3e34994a4",
     "fact:psx:263397:fact_18746ff0dc7adf34f1c4",
@@ -7962,7 +8242,9 @@
     "evt_80da079f60a2bdcb0dd0",
     "evt_91a4987fda7659384da9",
     "evt_92ae701cc31f45cccbd6",
+    "evt_93a2b1187d8766de8a70",
     "evt_a381730f4360f103ad22",
+    "evt_a83ff591310615eba6d5",
     "evt_c838c904bae0312daf01",
     "evt_ca3eb72c78c6aa4f9b95",
     "evt_cb44dc32c91b0c5712a5",
@@ -7989,10 +8271,10 @@
     "src_f4087fbee5940d485bc75187"
    ],
    "counts": {
-    "document": 24,
+    "document": 25,
     "period": 4,
-    "fact": 22,
-    "event": 24,
+    "fact": 27,
+    "event": 26,
     "change": 0,
     "source": 14
    }
@@ -8183,10 +8465,10 @@
   }
  },
  "_meta": {
-  "updated": "2026-08-18 03:06",
-  "node_count": 322,
-  "edge_count": 368,
-  "source_documents": 47,
+  "updated": "2026-08-18 03:15",
+  "node_count": 331,
+  "edge_count": 383,
+  "source_documents": 48,
   "note": "Every factual edge carries source URL and cited page when available."
  }
 }
