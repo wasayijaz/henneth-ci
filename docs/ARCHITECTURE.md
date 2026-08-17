@@ -69,6 +69,7 @@ The product is a hybrid of five parts:
 | Company financial series | `scripts/build_financial_series.py` -> `state/company_financial_series.json` | CI Financials view, graph, synthesis handoff |
 | Company source QA | `scripts/build_source_qa.py` -> `state/company_source_qa.json` | CI source-health badges and graph |
 | Company knowledge graph | `scripts/build_company_graph.py` -> `state/company_intel/company_graph.json` | CI Graph view |
+| Company change intelligence | `scripts/build_change_intelligence.py` -> `state/company_intel/change_intelligence.json` | CI Changes view and overview metrics |
 | Judgment handoff | `scripts/document_queue.py` -> `state/document_synthesis_queue.json` | owner-approved local synthesis only |
 | Synthesis training batch | `scripts/prepare_synthesis_batch.py` -> ignored `.cache/company_intel/training_batch.json` | local librarian/verifier agents |
 | Approved CI briefs | `scripts/company_brief_review.py` -> `state/company_briefs.json`, `state/company_brief_receipts.json` | CI Brief view |
@@ -143,10 +144,10 @@ incrementally indexes official PSX/PUCARS announcements in the existing research
 bounded, ignored current-run PDF handoff. `document_intelligence.py` immediately extracts page-linked
 evidence, conservative facts/events, append-only changes, a training-mode approval queue, and transient
 full-page financial normalization; it makes no model call. `build_financial_series.py`,
-`build_source_qa.py`, and `build_company_graph.py` turn retained evidence into period-aware financial
-rows, source-health flags, and an evidence-linked graph. `fetch_issuer_sources.py` weekly discovers
-same-domain issuer pages and report links from the official DPS profile. Raw HTML/PDF bodies are not
-committed.
+`build_source_qa.py`, `build_company_graph.py`, and `build_change_intelligence.py` turn retained
+evidence into period-aware financial rows, source-health flags, an evidence-linked graph, and a
+deterministic "what changed" digest. `fetch_issuer_sources.py` weekly discovers same-domain issuer
+pages and report links from the official DPS profile. Raw HTML/PDF bodies are not committed.
 
 Model synthesis is training-mode only. `prepare_synthesis_batch.py` writes a compact ignored handoff for
 the librarian/verifier agents. `company_brief_review.py` is the deterministic approval gate: it validates

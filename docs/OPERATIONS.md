@@ -45,7 +45,8 @@ pipeline remains authoritative. Its ordered company-intelligence segment is:
 5. `fetch_issuer_sources.py` — weekly same-domain issuer page hashes and report-link index.
 6. `build_source_qa.py` — compact source-health flags and URL index.
 7. `build_company_graph.py` — deterministic company/document/fact/event/source graph with source URL/page provenance.
-8. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+8. `build_change_intelligence.py` — source-backed digest of official filings, issuer-page changes, comparable financial movements and classified events.
+9. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new

@@ -243,6 +243,27 @@ def check_company_intelligence_phase2():
         if edge.get("type") in factual and not (edge.get("evidence") or {}).get("source_url"):
             fail(f"company_intel/company_graph.json: factual edge missing source {edge.get('id')}")
 
+    change_path = os.path.join(STATE, "company_intel", "change_intelligence.json")
+    try:
+        with open(change_path, encoding="utf-8") as f:
+            changes = json.load(f)
+    except Exception as e:
+        fail(f"company_intel/change_intelligence.json: {e}")
+        changes = {}
+    if changes and len(changes.get("companies") or {}) < 20:
+        fail("company_intel/change_intelligence.json: fewer than 20 pilot company rows")
+    for ticker, row in (changes.get("companies") or {}).items():
+        for item in row.get("items") or []:
+            label = f"company_intel/change_intelligence.json:{ticker}:{item.get('id')}"
+            if item.get("kind") not in {"document", "event", "financial", "source", "issuer_document"}:
+                fail(f"{label} invalid change kind")
+            evidence = item.get("evidence") or {}
+            if not item.get("source_url") and not evidence.get("source_url"):
+                fail(f"{label} missing source URL")
+            if item.get("kind") in {"event", "financial"} and evidence.get("page") is not None:
+                if not isinstance(evidence.get("page"), int) or evidence["page"] < 1:
+                    fail(f"{label} invalid evidence page")
+
 
 def check_company_brief_review():
     """Offline fixtures for the training-mode CI brief approval gate."""
@@ -358,6 +379,13 @@ def check_ci_slice():
         graph = row.get("graph")
         if not isinstance(graph, dict) or not isinstance(graph.get("nodes"), list) or not isinstance(graph.get("edges"), list):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing graph")
+        change_digest = row.get("change_intelligence")
+        if not isinstance(change_digest, dict) or not isinstance(change_digest.get("items"), list):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing change intelligence")
+        else:
+            for item in change_digest.get("items") or []:
+                if not item.get("source_url") and not (item.get("evidence") or {}).get("source_url"):
+                    fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} change item missing source")
         if not isinstance(row.get("brief"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing brief status")
         if not isinstance(row.get("sources"), dict) or not isinstance(row.get("intelligence"), dict):

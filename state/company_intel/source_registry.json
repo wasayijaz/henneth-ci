@@ -7,7 +7,7 @@
    "issuer_url": "https://www.kmlg.com/",
    "root_domain": "kmlg.com",
    "discovered_from": "https://dps.psx.com.pk/company/MLCF",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.kmlg.com/",
@@ -149,15 +149,14 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:51:28+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.kmlg.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTP"
+   ]
   },
   "OGDC": {
    "symbol": "OGDC",
    "dps_company_url": "https://dps.psx.com.pk/company/OGDC",
    "discovered_from": "https://dps.psx.com.pk/company/OGDC",
    "status": "degraded",
-   "error": "ConnectionError:HTTPConnectionPool(host='www.ogdcl.com', port=80): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTPC",
+   "error": "HTTPError:403 Client Error: Forbidden for url: https://www.ogdcl.com/",
    "issuer_url": "http://www.ogdcl.com/",
    "root_domain": "ogdcl.com"
   },
@@ -167,7 +166,7 @@
    "issuer_url": "https://www.dgcement.com/",
    "root_domain": "dgcement.com",
    "discovered_from": "https://dps.psx.com.pk/company/DGKC",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.dgcement.com/",
@@ -290,15 +289,14 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T02:05:19+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.dgcement.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\""
+   ]
   },
   "PPL": {
    "symbol": "PPL",
    "dps_company_url": "https://dps.psx.com.pk/company/PPL",
    "discovered_from": "https://dps.psx.com.pk/company/PPL",
    "status": "degraded",
-   "error": "ConnectionError:HTTPConnectionPool(host='www.ppl.com.pk', port=80): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTP",
+   "error": "HTTPError:403 Client Error: Forbidden for url: http://www.ppl.com.pk/",
    "issuer_url": "http://www.ppl.com.pk/",
    "root_domain": "ppl.com.pk"
   },
@@ -308,7 +306,7 @@
    "issuer_url": "https://www.ubldigital.com/",
    "root_domain": "ubldigital.com",
    "discovered_from": "https://dps.psx.com.pk/company/UBL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.ubldigital.com/",
@@ -316,13 +314,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "0a4d93fc2fee45e5ee2fc07d7eae7a0af0e87876d2f8394cc976a877d42584c1",
-     "content_length": 256673,
+     "content_sha256": "77f3c1f5ebbd14722cf1ae80a1ef68844c2f7c94bd2702dd3a331fe835b0d0f1",
+     "content_length": 256674,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:02:52+05:00",
-     "last_changed_at": "2026-08-18T02:02:52+05:00"
+     "last_changed_at": "2026-08-18T03:20:44+05:00",
+     "previous_sha256": "0a4d93fc2fee45e5ee2fc07d7eae7a0af0e87876d2f8394cc976a877d42584c1"
     },
     {
      "url": "https://corporate.ubldigital.com/",
@@ -339,8 +338,7 @@
      "last_changed_at": "2026-08-18T02:02:53+05:00"
     }
    ],
-   "document_links": [],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.ubldigital.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError"
+   "document_links": []
   },
   "PSO": {
    "symbol": "PSO",
@@ -348,7 +346,7 @@
    "issuer_url": "https://www.psopk.com/",
    "root_domain": "psopk.com",
    "discovered_from": "https://dps.psx.com.pk/company/PSO",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.psopk.com/",
@@ -356,13 +354,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "13cf27a33654b24e0ec13da2a7529d805d2cbb852e0697182c030968f2e8b194",
+     "content_sha256": "e5790bb1e5ae8f7ab34fb64e1ebcc56d0f8fc3d8a3176cba35d110b363625c01",
      "content_length": 243867,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:02:56+05:00",
-     "last_changed_at": "2026-08-18T02:02:56+05:00"
+     "last_changed_at": "2026-08-18T03:20:46+05:00",
+     "previous_sha256": "13cf27a33654b24e0ec13da2a7529d805d2cbb852e0697182c030968f2e8b194"
     },
     {
      "url": "https://psopk.com/en/cards/corporate-cards",
@@ -370,14 +369,14 @@
      "label": "Corporate Cards",
      "status": "ok",
      "error": null,
-     "content_sha256": "aa908cc802d9ca370b0cb941c996f6ab6e25ec23ad486352bcf72af209aab26e",
+     "content_sha256": "08e5c7037cd65c9b2572f70195f92730a56b805099300a0f76d83f78af5f1272",
      "content_length": 236802,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T01:58:08+05:00",
-     "last_changed_at": "2026-08-18T02:02:57+05:00",
-     "previous_sha256": "f21252f46b8baff9177d0b5c16e814c4d022d8a6230e659566f5b2a8f9147f80"
+     "last_changed_at": "2026-08-18T03:20:47+05:00",
+     "previous_sha256": "aa908cc802d9ca370b0cb941c996f6ab6e25ec23ad486352bcf72af209aab26e"
     }
    ],
    "document_links": [
@@ -426,8 +425,7 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:58:09+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.psopk.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
+   ]
   },
   "NBP": {
    "symbol": "NBP",
@@ -435,7 +433,7 @@
    "issuer_url": "https://www.nbp.com.pk/",
    "root_domain": "nbp.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/NBP",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.nbp.com.pk/",
@@ -443,13 +441,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "0ab279d9c4acef6347474d076e27bfc2b303b554fb0c79973e68326d0b4d01b4",
+     "content_sha256": "b72f987bcebe01843cadd86bd8377b63332fa52a6f2d5a06630870e84acf2d6e",
      "content_length": 94502,
      "content_type": "text/html",
      "etag": null,
-     "last_modified": "Mon, 17 Aug 2026 21:03:06 GMT",
+     "last_modified": "Mon, 17 Aug 2026 22:20:55 GMT",
      "first_seen_at": "2026-08-18T02:02:59+05:00",
-     "last_changed_at": "2026-08-18T02:02:59+05:00"
+     "last_changed_at": "2026-08-18T03:20:47+05:00",
+     "previous_sha256": "0ab279d9c4acef6347474d076e27bfc2b303b554fb0c79973e68326d0b4d01b4"
     },
     {
      "url": "https://www.nbp.com.pk/CorporateBanking/index.aspx",
@@ -457,13 +456,14 @@
      "label": "Corporate Banking",
      "status": "ok",
      "error": null,
-     "content_sha256": "b4923d5b8f2e6488a33b50fd1b1e14a4fe93865bf0a134f1f2d699c2d9af0db9",
-     "content_length": 38857,
+     "content_sha256": "40ca3b460c3f832238cb195629ee0d7ff76e1e034cddf873bea14566bf11ffef",
+     "content_length": 39210,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T01:58:10+05:00",
-     "last_changed_at": "2026-08-18T01:58:10+05:00"
+     "last_changed_at": "2026-08-18T03:20:48+05:00",
+     "previous_sha256": "b4923d5b8f2e6488a33b50fd1b1e14a4fe93865bf0a134f1f2d699c2d9af0db9"
     }
    ],
    "document_links": [
@@ -611,8 +611,7 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:58:11+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.nbp.com.pk', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HT"
+   ]
   },
   "LUCK": {
    "symbol": "LUCK",
@@ -620,7 +619,7 @@
    "issuer_url": "https://www.lucky-cement.com/",
    "root_domain": "lucky-cement.com",
    "discovered_from": "https://dps.psx.com.pk/company/LUCK",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.lucky-cement.com/",
@@ -628,13 +627,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "94c1f695a255db79558e307e5408c5d50534b2e2d0c57daec7e7084f26c93030",
+     "content_sha256": "d1c50bbe4adbf150ff7340e34d484c305abf39c334ac57daf6934f7516c239f9",
      "content_length": 316378,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:03:02+05:00",
-     "last_changed_at": "2026-08-18T02:03:02+05:00"
+     "last_changed_at": "2026-08-18T03:20:49+05:00",
+     "previous_sha256": "94c1f695a255db79558e307e5408c5d50534b2e2d0c57daec7e7084f26c93030"
     },
     {
      "url": "https://lucky-cement.com/en/about-us",
@@ -651,17 +651,47 @@
      "last_changed_at": "2026-08-18T01:58:31+05:00"
     }
    ],
-   "document_links": [],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.lucky-cement.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionErr"
+   "document_links": []
   },
   "FFC": {
    "symbol": "FFC",
    "dps_company_url": "https://dps.psx.com.pk/company/FFC",
+   "issuer_url": "https://www.ffc.com.pk/",
+   "root_domain": "ffc.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/FFC",
    "status": "degraded",
-   "error": "ConnectionError:HTTPSConnectionPool(host='dps.psx.com.pk', port=443): Max retries exceeded with url: /company/FFC (Caused by NewConnecti",
-   "issuer_url": null,
-   "root_domain": null
+   "monitored_pages": [
+    {
+     "url": "https://www.ffc.com.pk/",
+     "kind": "issuer_home",
+     "label": "Issuer website",
+     "status": "ok",
+     "error": null,
+     "content_sha256": "4c25a865f5ecf0610c160fa76536ca873c2890dc96cc0c6efd9f93102f7f6044",
+     "content_length": 235678,
+     "content_type": "text/html",
+     "etag": null,
+     "last_modified": "Sat, 15 Aug 2026 06:52:55 GMT",
+     "first_seen_at": "2026-08-18T03:20:52+05:00",
+     "last_changed_at": "2026-08-18T03:20:52+05:00"
+    },
+    {
+     "url": "https://ffc.com.pk/",
+     "kind": "announcements",
+     "label": "Media",
+     "status": "ok",
+     "error": null,
+     "content_sha256": "48b8bb970b993d08149383cac1ca84252bc500b3398366df395be246d261cec9",
+     "content_length": 235678,
+     "content_type": "text/html",
+     "etag": null,
+     "last_modified": "Sat, 15 Aug 2026 06:52:55 GMT",
+     "first_seen_at": "2026-08-18T03:20:52+05:00",
+     "last_changed_at": "2026-08-18T03:20:52+05:00"
+    }
+   ],
+   "document_links": [],
+   "error": "HTTPError:403 Client Error: Forbidden for url: https://www.ffc.com.pk/"
   },
   "BOP": {
    "symbol": "BOP",
@@ -669,7 +699,7 @@
    "issuer_url": "https://www.bop.com.pk/",
    "root_domain": "bop.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/BOP",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.bop.com.pk/",
@@ -677,17 +707,17 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "b12953bf005b064227a29bfc77f76a0a2e091132738cee92db2c185ee8f294b2",
-     "content_length": 844,
+     "content_sha256": "db11df0094971c45515dbf4462bcf80d03f425dcd8d992d727818ea18149f4f9",
+     "content_length": 954,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:03:05+05:00",
-     "last_changed_at": "2026-08-18T02:03:05+05:00"
+     "last_changed_at": "2026-08-18T03:23:07+05:00",
+     "previous_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
    ],
-   "document_links": [],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.bop.com.pk', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HT"
+   "document_links": []
   },
   "HUBC": {
    "symbol": "HUBC",
@@ -695,7 +725,7 @@
    "issuer_url": "https://www.hubpower.com/",
    "root_domain": "hubpower.com",
    "discovered_from": "https://dps.psx.com.pk/company/HUBC",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.hubpower.com/",
@@ -703,13 +733,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "cc0a05f1443634d5863232c39a3178512e57dc8ada0c23258ae081160822f078",
+     "content_sha256": "eb4843119287488b559255376170644d42fd0dcc0a6411c579fdc887bad12336",
      "content_length": 443396,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:03:09+05:00",
-     "last_changed_at": "2026-08-18T02:03:09+05:00"
+     "last_changed_at": "2026-08-18T03:20:57+05:00",
+     "previous_sha256": "cc0a05f1443634d5863232c39a3178512e57dc8ada0c23258ae081160822f078"
     },
     {
      "url": "https://hubpower.com/media/",
@@ -826,8 +857,7 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:58:46+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.hubpower.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\""
+   ]
   },
   "MEBL": {
    "symbol": "MEBL",
@@ -835,7 +865,7 @@
    "issuer_url": "https://www.meezanbank.com/",
    "root_domain": "meezanbank.com",
    "discovered_from": "https://dps.psx.com.pk/company/MEBL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.meezanbank.com/",
@@ -1524,8 +1554,7 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:58:48+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.meezanbank.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError"
+   ]
   },
   "HBL": {
    "symbol": "HBL",
@@ -1533,7 +1562,7 @@
    "issuer_url": "https://www.hbl.com/",
    "root_domain": "hbl.com",
    "discovered_from": "https://dps.psx.com.pk/company/HBL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.hbl.com/",
@@ -1541,13 +1570,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "07d96b7eca02a2147fa6b40d77b65f5e27260d55fd0f0345330889185daa9fc3",
-     "content_length": 426992,
+     "content_sha256": "f67c4976cf15738ac0b787b787967e756943fc25a98f82a203fa329a115294e8",
+     "content_length": 426993,
      "content_type": "text/html",
      "etag": null,
-     "last_modified": "Mon, 17 Aug 2026 21:03:19 GMT",
+     "last_modified": "Mon, 17 Aug 2026 22:21:08 GMT",
      "first_seen_at": "2026-08-18T02:03:13+05:00",
-     "last_changed_at": "2026-08-18T02:03:13+05:00"
+     "last_changed_at": "2026-08-18T03:21:01+05:00",
+     "previous_sha256": "07d96b7eca02a2147fa6b40d77b65f5e27260d55fd0f0345330889185daa9fc3"
     },
     {
      "url": "https://www.hbl.com/about-us/corporate-information",
@@ -1555,13 +1585,14 @@
      "label": "Corporate Information",
      "status": "ok",
      "error": null,
-     "content_sha256": "bb15d246ab6dd9f23c36210973896d7511255579f25ea11eba4d3ea94d52e494",
+     "content_sha256": "10863f318cf1d583ee7bac10398546d3b4baf68e27327a6d86bd79750e229113",
      "content_length": 324638,
      "content_type": "text/html",
      "etag": null,
-     "last_modified": "Mon, 17 Aug 2026 20:59:00 GMT",
+     "last_modified": "Mon, 17 Aug 2026 22:21:09 GMT",
      "first_seen_at": "2026-08-18T01:58:53+05:00",
-     "last_changed_at": "2026-08-18T01:58:53+05:00"
+     "last_changed_at": "2026-08-18T03:21:02+05:00",
+     "previous_sha256": "bb15d246ab6dd9f23c36210973896d7511255579f25ea11eba4d3ea94d52e494"
     }
    ],
    "document_links": [
@@ -1682,17 +1713,16 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:58:53+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.hbl.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTPS"
+   ]
   },
   "ENGROH": {
    "symbol": "ENGROH",
    "dps_company_url": "https://dps.psx.com.pk/company/ENGROH",
    "discovered_from": "https://dps.psx.com.pk/company/ENGROH",
    "status": "degraded",
-   "error": "ConnectionError:HTTPSConnectionPool(host='dps.psx.com.pk', port=443): Max retries exceeded with url: /company/ENGROH (Caused by NewConne",
-   "issuer_url": null,
-   "root_domain": null
+   "error": "SSLError:HTTPSConnectionPool(host='www.engro.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerific",
+   "issuer_url": "http://www.engro.com/",
+   "root_domain": "engro.com"
   },
   "ATRL": {
    "symbol": "ATRL",
@@ -1700,21 +1730,22 @@
    "issuer_url": "https://www.arl.com.pk/",
    "root_domain": "arl.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/ATRL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.arl.com.pk/",
-     "kind": "announcements",
-     "label": "Media",
+     "kind": "issuer_home",
+     "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "4988633a231f309efe2999f00a30f3d6a213994524f4f750371e19d08d449783",
+     "content_sha256": "5642a39ae411870d0f46ceb09ba685bf527d4630ccf9d8deccab89afb405cd6a",
      "content_length": 838356,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T01:59:05+05:00",
-     "last_changed_at": "2026-08-18T01:59:05+05:00"
+     "last_changed_at": "2026-08-18T03:21:07+05:00",
+     "previous_sha256": "4988633a231f309efe2999f00a30f3d6a213994524f4f750371e19d08d449783"
     },
     {
      "url": "https://www.arl.com.pk/arl-sustainability-report-2025/",
@@ -1777,17 +1808,74 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:59:06+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.arl.com.pk', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HT"
+   ]
   },
   "MARI": {
    "symbol": "MARI",
    "dps_company_url": "https://dps.psx.com.pk/company/MARI",
+   "issuer_url": "https://www.marienergies.com.pk/",
+   "root_domain": "marienergies.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/MARI",
-   "status": "degraded",
-   "error": "ConnectionError:HTTPSConnectionPool(host='dps.psx.com.pk', port=443): Max retries exceeded with url: /company/MARI (Caused by NewConnect",
-   "issuer_url": null,
-   "root_domain": null
+   "status": "ok",
+   "monitored_pages": [
+    {
+     "url": "https://www.marienergies.com.pk/",
+     "kind": "issuer_home",
+     "label": "Issuer website",
+     "status": "ok",
+     "error": null,
+     "content_sha256": "e15824e9f883c4113c9b10e2433f9e02a6a5d34daea7299adc5cc6d4bbb1d1f8",
+     "content_length": 153035,
+     "content_type": "text/html",
+     "etag": null,
+     "last_modified": null,
+     "first_seen_at": "2026-08-18T03:21:11+05:00",
+     "last_changed_at": "2026-08-18T03:21:11+05:00"
+    },
+    {
+     "url": "https://www.marienergies.com.pk/investors-relations/financial-highlights",
+     "kind": "investor_relations",
+     "label": "Financial Highlights",
+     "status": "ok",
+     "error": null,
+     "content_sha256": "e004167e69f96606dbe4b47a77788b8797d4208f59f64ca24e81ffdd837da385",
+     "content_length": 247687,
+     "content_type": "text/html",
+     "etag": null,
+     "last_modified": null,
+     "first_seen_at": "2026-08-18T03:21:12+05:00",
+     "last_changed_at": "2026-08-18T03:21:12+05:00"
+    }
+   ],
+   "document_links": [
+    {
+     "id": "issuer:38862f01a0d96448319edd19",
+     "url": "https://www.marienergies.com.pk/wp-content/uploads/2026/01/Gender-Pay-Gap-Statement.pdf",
+     "label": "Gender Pay Gap",
+     "document_type": "issuer_document",
+     "source_page": "https://www.marienergies.com.pk/investors-relations/financial-highlights",
+     "status": "discovered",
+     "first_seen_at": "2026-08-18T03:21:12+05:00"
+    },
+    {
+     "id": "issuer:6735e9d35ffb61088d139964",
+     "url": "https://www.marienergies.com.pk/wp-content/uploads/2025/09/Annual-Report-2024.pdf",
+     "label": "annual-report-2024.pdf",
+     "document_type": "annual_report",
+     "source_page": "https://www.marienergies.com.pk/",
+     "status": "discovered",
+     "first_seen_at": "2026-08-18T03:21:12+05:00"
+    },
+    {
+     "id": "issuer:eadae88ca6ae7d1dd4d17e56",
+     "url": "https://www.marienergies.com.pk/wp-content/uploads/2026/05/MariEnergies_InvestorRelations_UrduV2.pdf",
+     "label": "اردو کے لئے یہاں کلک کریں",
+     "document_type": "issuer_document",
+     "source_page": "https://www.marienergies.com.pk/investors-relations/financial-highlights",
+     "status": "discovered",
+     "first_seen_at": "2026-08-18T03:21:12+05:00"
+    }
+   ]
   },
   "FCCL": {
    "symbol": "FCCL",
@@ -1795,7 +1883,7 @@
    "issuer_url": "https://www.fccl.com.pk/",
    "root_domain": "fccl.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/FCCL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.fccl.com.pk/",
@@ -1803,13 +1891,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "edcfe248701e30270b26e3aa7965c083592d253f886ae8a7c8e1018c830c1ded",
+     "content_sha256": "9a0bff4006760782c0c75dc1e14b895d7475801a94e8518f556c19a226124870",
      "content_length": 180279,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:03:28+05:00",
-     "last_changed_at": "2026-08-18T02:03:28+05:00"
+     "last_changed_at": "2026-08-18T03:21:17+05:00",
+     "previous_sha256": "edcfe248701e30270b26e3aa7965c083592d253f886ae8a7c8e1018c830c1ded"
     },
     {
      "url": "https://fccl.com.pk/eng/2026/01/20/financial-overview-for-year-2024-25/",
@@ -1926,8 +2015,7 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T01:59:18+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.fccl.com.pk', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"H"
+   ]
   },
   "NRL": {
    "symbol": "NRL",
@@ -1935,7 +2023,7 @@
    "issuer_url": "https://www.nrlpak.com/",
    "root_domain": "nrlpak.com",
    "discovered_from": "https://dps.psx.com.pk/company/NRL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.nrlpak.com/",
@@ -1943,13 +2031,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "639fb2f9e2c7ecc937fecf92be1a6b25435e45e5a5183eb45de8c2164ef08981",
+     "content_sha256": "a62fb87e11d42de544942a1c6d084453a73723effb4b7e753b8b3aaebfe35ab5",
      "content_length": 64977,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:03:32+05:00",
-     "last_changed_at": "2026-08-18T02:03:32+05:00"
+     "last_changed_at": "2026-08-18T03:21:20+05:00",
+     "previous_sha256": "639fb2f9e2c7ecc937fecf92be1a6b25435e45e5a5183eb45de8c2164ef08981"
     },
     {
      "url": "https://www.nrlpak.com/CorporateBriefingSession.aspx",
@@ -1985,8 +2074,7 @@
      "status": "discovered",
      "first_seen_at": "2026-08-18T02:03:33+05:00"
     }
-   ],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.nrlpak.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HT"
+   ]
   },
   "GAL": {
    "symbol": "GAL",
@@ -1994,7 +2082,7 @@
    "issuer_url": "https://www.ghandharanissan.com.pk/",
    "root_domain": "ghandharanissan.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/GAL",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.ghandharanissan.com.pk/",
@@ -2011,8 +2099,7 @@
      "last_changed_at": "2026-08-18T02:03:36+05:00"
     }
    ],
-   "document_links": [],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.ghandharanissan.com.pk', port=443): Max retries exceeded with url: / (Caused by NewConnect"
+   "document_links": []
   },
   "PTC": {
    "symbol": "PTC",
@@ -2020,7 +2107,7 @@
    "issuer_url": "https://www.ptcl.com.pk/",
    "root_domain": "ptcl.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/PTC",
-   "status": "degraded",
+   "status": "ok",
    "monitored_pages": [
     {
      "url": "https://www.ptcl.com.pk/",
@@ -2028,13 +2115,14 @@
      "label": "Issuer website",
      "status": "ok",
      "error": null,
-     "content_sha256": "d0e6c30048ef7a733cf820d48a5bdcaa43fa90eeb6a78c890673e90ebcfe84b3",
+     "content_sha256": "5123371899b1d388f906b6fcb1645deaac33e0760aee02d813eebc051946f13c",
      "content_length": 148998,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-08-18T02:03:37+05:00",
-     "last_changed_at": "2026-08-18T02:03:37+05:00"
+     "last_changed_at": "2026-08-18T03:21:23+05:00",
+     "previous_sha256": "d0e6c30048ef7a733cf820d48a5bdcaa43fa90eeb6a78c890673e90ebcfe84b3"
     },
     {
      "url": "https://ptcl.com.pk/Home/PageDetail?ItemId=365&linkId=923&linkId=5600",
@@ -2051,11 +2139,10 @@
      "last_changed_at": "2026-08-18T01:59:30+05:00"
     }
    ],
-   "document_links": [],
-   "error": "ConnectionError:HTTPSConnectionPool(host='www.ptcl.com.pk', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"H"
+   "document_links": []
   }
  },
- "updated": "2026-08-18T03:19:26+05:00",
+ "updated": "2026-08-18T03:23:12+05:00",
  "source": "Issuer websites discovered from official PSX DPS company profiles",
  "pilot_count": 20,
  "degraded": true
