@@ -11,6 +11,39 @@ const pct = value => value == null ? "unknown" : `${value > 0 ? "+" : ""}${fmt(v
 
 let state = { session: null, data: null, selected: null, filter: "" };
 
+const SCHEME_CYCLE = { system: "light", light: "dark", dark: "system" };
+
+function deskScheme() {
+  try {
+    const value = localStorage.getItem("deskScheme");
+    return value === "light" || value === "dark" ? value : "system";
+  } catch { return "system"; }
+}
+
+function applyDeskScheme(choice) {
+  document.documentElement.setAttribute("data-scheme-switching", "");
+  if (choice === "light" || choice === "dark") {
+    document.documentElement.setAttribute("data-scheme", choice);
+    try { localStorage.setItem("deskScheme", choice); } catch {}
+  } else {
+    document.documentElement.removeAttribute("data-scheme");
+    try { localStorage.removeItem("deskScheme"); } catch {}
+  }
+  const button = $("schemeToggle");
+  if (button) {
+    button.textContent = `Scheme: ${choice}`;
+    button.setAttribute("aria-label", `Colour scheme: ${choice}. Activate to change.`);
+  }
+  const clearSwitch = () => document.documentElement.removeAttribute("data-scheme-switching");
+  requestAnimationFrame(() => requestAnimationFrame(clearSwitch));
+  setTimeout(clearSwitch, 150);
+}
+
+function setAccessState(label, fileLabel) {
+  $("authState").textContent = label;
+  if ($("fileStatus")) $("fileStatus").textContent = fileLabel;
+}
+
 function storedSession() {
   try { return JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); }
   catch { return null; }
@@ -56,7 +89,8 @@ async function signIn(email, password) {
 async function loadData(retried = false) {
   const token = state.session?.access_token;
   if (!token) return renderGate("Sign in to open the private company file.");
-  $("authState").textContent = "Loading private file";
+  setAccessState("Loading private file", "checking private file");
+  $("app").setAttribute("aria-busy", "true");
   const res = await fetch("data/company_intelligence.json", {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
@@ -66,33 +100,38 @@ async function loadData(retried = false) {
     if (fresh) return loadData(true);
   }
   if (!res.ok) {
-    $("authState").textContent = "Access blocked";
+    setAccessState("Access blocked", "private file blocked");
+    $("app").removeAttribute("aria-busy");
     return renderGate(res.status === 401
       ? "The data gate rejected this account. Owner access is required."
       : `Could not load the company file (${res.status}).`);
   }
   state.data = await res.json();
   state.selected = state.data?.tickers?.[0]?.symbol || null;
-  $("authState").textContent = "Private file open";
+  setAccessState("Private file open", "private file open");
+  $("app").removeAttribute("aria-busy");
   $("signOut").hidden = false;
   renderDesk();
 }
 
 function renderGate(message) {
   $("signOut").hidden = true;
-  $("authState").textContent = "Signed out";
+  setAccessState("Signed out", "private file closed");
+  if ($("companyStatus")) $("companyStatus").textContent = "Company Intelligence";
+  $("app").removeAttribute("aria-busy");
   $("app").innerHTML = `
     <section class="gate" aria-labelledby="gateTitle">
       <div>
         <p class="eyebrow">Private research workspace</p>
-        <h1 id="gateTitle">Company context, one layer deeper.</h1>
+        <h1 id="gateTitle">Company context,<br>one layer deeper.</h1>
         <p>Sign in with the existing Henneth account. This surface reads one private JSON file and keeps execution out of the product.</p>
       </div>
       <form id="loginForm" class="login">
-        <label>Email<input id="email" type="email" autocomplete="email" required></label>
-        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
-        <button type="submit">Sign in</button>
-        <p id="loginMsg" class="muted">${esc(message || "No signup here. Access is owner-only at the data gate.")}</p>
+        <p class="form-title">Owner access</p>
+        <label><span>Email</span><input id="email" type="email" autocomplete="email" required></label>
+        <label><span>Password</span><input id="password" type="password" autocomplete="current-password" required></label>
+        <button class="submit-btn" type="submit">Sign in</button>
+        <p id="loginMsg" class="muted" role="status" aria-live="polite">${esc(message || "No signup here. Access is owner-only at the data gate.")}</p>
       </form>
     </section>`;
   bindLogin();
@@ -113,31 +152,64 @@ function pick(symbol) {
   renderDesk();
 }
 
-function renderDesk() {
+function renderDesk(searchState) {
   const list = rows();
   if (!state.selected && list.length) state.selected = list[0].symbol;
   const row = list.find(r => r.symbol === state.selected) || list[0];
+  if (row) state.selected = row.symbol;
   $("app").innerHTML = `
-    <aside class="rail">
+    <aside class="rail" aria-label="Company directory">
+      <div class="rail-head"><strong>Company directory</strong><span>${esc(list.length)} shown</span></div>
       <div class="toolbar">
-        <input id="search" class="search" placeholder="Search symbol, company, sector" value="${esc(state.filter)}">
-        <button id="clearFilter" type="button">Clear</button>
+        <input id="search" class="search" type="search" aria-label="Search companies" aria-controls="companyList" placeholder="Search symbol, company, sector" value="${esc(state.filter)}">
+        <button id="clearFilter" type="button" aria-label="Clear company search">Clear</button>
         <span class="muted">${esc(state.data?.meta?.count || 0)} companies. Built ${esc(state.data?.meta?.built || "unknown")}.</span>
       </div>
-      <div class="list">${list.map(r => `
-        <button class="row ${r.symbol === row?.symbol ? "active" : ""}" data-symbol="${esc(r.symbol)}">
+      <div id="companyList" class="list" role="listbox" aria-label="Companies">${list.map(r => `
+        <button class="row ${r.symbol === row?.symbol ? "active" : ""}" type="button" role="option" aria-selected="${r.symbol === row?.symbol}" tabindex="${r.symbol === row?.symbol ? "0" : "-1"}" data-symbol="${esc(r.symbol)}">
           <span><b>${esc(r.symbol)}</b><small>${esc(r.name || "Name unavailable")}</small></span>
           <em>${fmt(r.liquidity?.adtv_m, 0)}M</em>
-        </button>`).join("") || `<div class="empty">No companies match that filter.</div>`}
+        </button>`).join("") || `<div class="empty" role="option" aria-disabled="true">No companies match that filter.</div>`}
       </div>
+      <span class="sr-only" role="status" aria-live="polite">${esc(list.length)} companies match.</span>
     </aside>
-    <section class="detail">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>`;
-  $("search").oninput = event => { state.filter = event.target.value; renderDesk(); };
-  $("clearFilter").onclick = () => { state.filter = ""; renderDesk(); };
+    <section class="detail" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>`;
+  if ($("companyStatus")) $("companyStatus").textContent = row ? `${row.symbol} · company intelligence` : "Company Intelligence";
+  $("search").oninput = event => {
+    const start = event.target.selectionStart;
+    const end = event.target.selectionEnd;
+    state.filter = event.target.value;
+    renderDesk({ focus: true, start, end });
+  };
+  $("clearFilter").onclick = () => {
+    state.filter = "";
+    renderDesk({ focus: true, start: 0, end: 0 });
+  };
   document.querySelectorAll("[data-symbol]").forEach(btn => {
     btn.onclick = () => pick(btn.dataset.symbol);
+    btn.onkeydown = event => moveCompanyFocus(event, btn);
   });
-  enhanceMotion();
+  if (searchState?.focus) {
+    const input = $("search");
+    input.focus({ preventScroll: true });
+    input.setSelectionRange(searchState.start, searchState.end);
+  }
+  if (!searchState) enhanceMotion();
+}
+
+function moveCompanyFocus(event, button) {
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+  const options = [...document.querySelectorAll("[data-symbol]")];
+  if (!options.length) return;
+  event.preventDefault();
+  let index = options.indexOf(button);
+  if (event.key === "ArrowDown") index = (index + 1) % options.length;
+  if (event.key === "ArrowUp") index = (index - 1 + options.length) % options.length;
+  if (event.key === "Home") index = 0;
+  if (event.key === "End") index = options.length - 1;
+  state.selected = options[index].dataset.symbol;
+  renderDesk();
+  document.querySelector(`[data-symbol="${CSS.escape(state.selected)}"]`)?.focus({ preventScroll: true });
 }
 
 function metric(label, value, note) {
@@ -233,36 +305,9 @@ function bindLogin() {
 
 function enhanceMotion() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  if (!window.gsap) return;
-  try {
-    if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
-    gsap.fromTo(".hero h1, .hero p, .metric, .panel", {
-      autoAlpha: 0,
-      y: 14,
-    }, {
-      autoAlpha: 1,
-      y: 0,
-      duration: 0.55,
-      ease: "power2.out",
-      stagger: 0.035,
-      overwrite: true,
-    });
-    if (window.ScrollTrigger) {
-      gsap.utils.toArray(".panel").forEach((panel, i) => {
-        gsap.to(panel, {
-          y: -Math.min(i, 3) * 4,
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 80%",
-            end: "bottom 40%",
-            scrub: true,
-          },
-        });
-      });
-    }
-  } catch {
-    /* Motion is decorative; the data surface must work without it. */
-  }
+  const app = $("app");
+  app.classList.remove("is-entering");
+  requestAnimationFrame(() => app.classList.add("is-entering"));
 }
 
 $("signOut").onclick = () => {
@@ -270,6 +315,9 @@ $("signOut").onclick = () => {
   state.data = null;
   renderGate("Signed out.");
 };
+
+$("schemeToggle").onclick = () => applyDeskScheme(SCHEME_CYCLE[deskScheme()]);
+applyDeskScheme(deskScheme());
 
 state.session = storedSession();
 if (state.session) loadData();
