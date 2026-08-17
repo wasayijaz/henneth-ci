@@ -37,8 +37,8 @@ uses advice language.
   authenticated /api/ask Groq endpoint. Replies are grounded in the desk's
   own data and rendered with the bundled generative-loaders terminal text
   loader.
-- **Notes** — per-ticker private notes synced to your account via the same
-  profiles.notes the desk ticker pages use. Create, edit, delete; a note
+- **Notes** — per-ticker private notes synced to your account via the Henneth
+  /api/notes proxy. Create, edit, delete; a note
   written here appears on the desk and vice versa (last-write-wins, same as
   two browser tabs).
 
@@ -61,7 +61,7 @@ uses advice language.
   detection, re-checks on SPA navigation every 1.5s
 - background.js — opens the side panel on icon click; remembers last ticker
 - api.js — authenticated fetch layer with 60s TTL cache, PKT-safe date labels,
-  and the signed-in /api/ask request
+  signed-in /api/ask request, and account notes through /api/notes
 - src/thinking-loader.jsx + thinking-loader.bundle.* — the exact
   InlineLoader gravity and TextLoader terminal components bundled for MV3
 - panel.html/css/js — the side panel UI

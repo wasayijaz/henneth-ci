@@ -74,57 +74,39 @@ function esc(s) {
 }
 
 // ---- per-user notes sync ----
-// Same profiles.notes the dashboard ticker pages use, via Supabase REST with
-// the session token. RLS scopes every read/write to the signed-in user's row.
-const SB_URL = "https://qteoncckohuoatbjjykb.supabase.co";
-const SB_KEY = "sb_publishable_aQu8P4yrAY7l8Y0AcLth5g_Z3VceUnw";
-
-function jwtPayload(token) {
-  try {
-    const part = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(part));
-  } catch (_) {
-    return null;
-  }
-}
-
-async function sbHeaders(token, extra) {
-  const h = {
-    apikey: SB_KEY,
-    Authorization: "Bearer " + token,
-    "Content-Type": "application/json",
-  };
-  if (extra) Object.assign(h, extra);
-  return h;
-}
-
+// Notes stay behind the desk origin. The server-side /api/notes route verifies
+// the same session token and applies the Supabase RLS-scoped profile update.
 async function fetchProfile() {
   const { desk_token } = await chrome.storage.local.get("desk_token");
   if (!desk_token) throw new Error("AUTH");
-  const uid = (jwtPayload(desk_token) || {}).sub;
-  if (!uid) throw new Error("AUTH");
-  const res = await fetch(SB_URL + "/rest/v1/profiles?id=eq." + encodeURIComponent(uid) + "&select=*", {
-    headers: await sbHeaders(desk_token),
+  const res = await fetch(DESK_ORIGIN + "/api/notes", {
+    headers: { Authorization: "Bearer " + desk_token },
     cache: "no-store",
   });
   if (res.status === 401) throw new Error("AUTH");
   if (!res.ok) throw new Error("HTTP " + res.status);
-  const rows = await res.json();
-  return rows && rows[0] ? rows[0] : null;
+  const body = await res.json();
+  if (!body?.ok) throw new Error(body?.error || "Could not load notes");
+  return { notes: body.notes || {} };
 }
 
 // Last-write-wins, identical to the dashboard saving from two tabs at once.
 async function saveNotes(notesMap) {
   const { desk_token } = await chrome.storage.local.get("desk_token");
   if (!desk_token) throw new Error("AUTH");
-  const uid = (jwtPayload(desk_token) || {}).sub;
-  if (!uid) throw new Error("AUTH");
-  const res = await fetch(SB_URL + "/rest/v1/profiles?id=eq." + encodeURIComponent(uid), {
-    method: "PATCH",
-    headers: await sbHeaders(desk_token, { Prefer: "return=minimal" }),
+  const res = await fetch(DESK_ORIGIN + "/api/notes", {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + desk_token,
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ notes: notesMap }),
   });
   if (res.status === 401) throw new Error("AUTH");
-  if (res.status !== 204 && !res.ok) throw new Error("HTTP " + res.status);
+  if (!res.ok) {
+    let body = null;
+    try { body = await res.json(); } catch (_) {}
+    throw new Error(body?.error || ("HTTP " + res.status));
+  }
   return true;
 }

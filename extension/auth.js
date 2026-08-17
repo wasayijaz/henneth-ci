@@ -1,18 +1,17 @@
-// Runs on desk.henneth.app only. Reads the Supabase session token from the
-// dashboard's own localStorage key and hands it to the extension so panel
-// fetches to /state/*.json carry the same Authorization header the dashboard
-// sends. The token never leaves chrome.storage.local.
+// Runs on desk.henneth.app only. Reads the dashboard's Supabase session token
+// without hard-coding the project's storage key or URL, then hands it to the
+// extension so panel fetches carry the same Authorization header. The token
+// never leaves chrome.storage.local.
 (function () {
-  const SB_KEY = "sb-qteoncckohuoatbjjykb-auth-token";
   function send() {
     let token = null;
-    try {
-      const raw = localStorage.getItem(SB_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      token = (parsed && (parsed.access_token || (parsed.session && parsed.session.access_token))) || null;
-    } catch (_) {
-      token = null;
+    for (let i = 0; i < localStorage.length && !token; i++) {
+      const key = localStorage.key(i) || "";
+      if (!/^sb-[a-z0-9]+-auth-token$/.test(key)) continue;
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || "null");
+        token = (parsed && (parsed.access_token || (parsed.session && parsed.session.access_token))) || null;
+      } catch (_) {}
     }
     if (token) chrome.runtime.sendMessage({ type: "TOKEN", token: token });
   }
