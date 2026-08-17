@@ -11,11 +11,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import re
 import sys
 import time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -25,8 +27,12 @@ INDEX_PATH = STATE / "research_index.json"
 CACHE_ROOT = ROOT / ".cache" / "company_intel"
 RAW_DIR = CACHE_ROOT / "raw"
 QUEUE_PATH = CACHE_ROOT / "extraction_queue.json"
+CACHE_CHECK = CACHE_ROOT / "issuer_document_checks.json"
 MAX_DOWNLOADS_PER_RUN = 16
 MAX_PDF_BYTES = 12 * 1024 * 1024
+MAX_REDIRECTS = 4
+LOCAL_CADENCE_DAYS = 7
+PKT = timezone(timedelta(hours=5))
 UA = {"User-Agent": "Mozilla/5.0 HennethDesk/2.CI.0 issuer-document-stager"}
 _SAFE_ID_RE = re.compile(r"[^A-Za-z0-9_.-]+")
 
@@ -47,16 +53,46 @@ def _validate_pdf_url(url: str, root_domain: str) -> str:
     if parsed.scheme != "https" or not parsed.hostname:
         raise ValueError("issuer document URL must be HTTPS")
     host = parsed.hostname.lower().strip(".")
-    if not host.endswith(str(root_domain or "").lower().strip(".")):
+    domain = str(root_domain or "").lower().strip(".")
+    if not domain or (host != domain and not host.endswith("." + domain)):
         raise ValueError("issuer document left DPS-declared root domain")
     if not parsed.path.lower().endswith(".pdf"):
         raise ValueError("issuer document is not a PDF link")
     return url
 
 
+def _schedule_skip(force: bool) -> bool:
+    if force or os.environ.get("GITHUB_EVENT_NAME") != "schedule":
+        return False
+    now = datetime.now(PKT)
+    return not (now.weekday() == 0 and now.hour == 8 and now.minute < 30)
+
+
+def _local_cadence_skip(force: bool) -> bool:
+    if force or os.environ.get("GITHUB_ACTIONS"):
+        return False
+    cached = load_json(CACHE_CHECK, {})
+    try:
+        last = datetime.fromisoformat(cached.get("last_attempt") or "")
+    except ValueError:
+        return False
+    return timedelta(0) <= datetime.now(PKT) - last < timedelta(days=LOCAL_CADENCE_DAYS)
+
+
 def _fetch_pdf(url: str, root_domain: str, session: requests.Session) -> tuple[bytes, dict]:
-    _validate_pdf_url(url, root_domain)
-    response = session.get(url, headers=UA, timeout=(10, 35), stream=True, allow_redirects=True)
+    current = _validate_pdf_url(url, root_domain)
+    response = None
+    for _ in range(MAX_REDIRECTS + 1):
+        response = session.get(current, headers=UA, timeout=(10, 35), stream=True, allow_redirects=False)
+        if response.is_redirect or response.is_permanent_redirect:
+            target = response.headers.get("location")
+            if not target:
+                raise ValueError("issuer PDF redirect omitted Location")
+            current = _validate_pdf_url(urljoin(current, target), root_domain)
+            continue
+        break
+    if response is None:
+        raise ValueError("issuer PDF was not fetched")
     response.raise_for_status()
     _validate_pdf_url(response.url, root_domain)
     declared = response.headers.get("content-length")
@@ -132,8 +168,10 @@ def _merge_document(index: dict, symbol: str, ticker_row: dict, link: dict, meta
         "source": "Issuer website",
         "source_type": "issuer_document",
         "doc_type": link.get("document_type") or "issuer_document",
-        "date": str(link.get("first_seen_at") or "")[:10] or None,
-        "published_at": link.get("first_seen_at"),
+        "date": None,
+        "published_at": None,
+        "first_seen_at": link.get("first_seen_at"),
+        "retrieved_at": time.strftime("%Y-%m-%d %H:%M"),
         "tickers": [symbol],
         "company_name": None,
         "title": link.get("label") or link.get("document_type") or "Issuer document",
@@ -181,6 +219,12 @@ def _self_check() -> int:
         return 1
     except ValueError:
         pass
+    try:
+        _validate_pdf_url("https://evilexample.com/annual.pdf", "example.com")
+        print("issuer_document stage self-check: FAIL")
+        return 1
+    except ValueError:
+        pass
     print("issuer_document stage self-check: PASS")
     return 0
 
@@ -189,6 +233,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--symbols", help="comma-separated pilot symbols")
     parser.add_argument("--limit", type=int, default=MAX_DOWNLOADS_PER_RUN)
+    parser.add_argument("--force", action="store_true")
     parser.add_argument("--metadata-only", action="store_true")
     parser.add_argument("--self-check", action="store_true")
     args = parser.parse_args(argv)
@@ -196,6 +241,12 @@ def main(argv: list[str] | None = None) -> int:
         return _self_check()
     if args.limit < 1 or args.limit > MAX_DOWNLOADS_PER_RUN:
         parser.error(f"--limit must be 1..{MAX_DOWNLOADS_PER_RUN}")
+    if _schedule_skip(args.force):
+        print("issuer_documents: outside the weekly Monday 08:xx PKT cloud window")
+        return 0
+    if _local_cadence_skip(args.force):
+        print(f"issuer_documents: inside {LOCAL_CADENCE_DAYS}d local cadence")
+        return 0
 
     registry = load_json(STATE / "company_intel" / "source_registry.json", {"tickers": {}})
     symbols = set(_symbols(args.symbols, registry))
@@ -236,6 +287,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         save_json(INDEX_PATH, index)
     save_json(QUEUE_PATH, {"schema_version": 1, "created_at": time.strftime("%Y-%m-%d %H:%M"), "documents": queue})
+    save_json(CACHE_CHECK, {"last_attempt": datetime.now(PKT).isoformat(timespec="seconds"), "failures": failed})
     print(f"issuer_documents: {len(selected)} candidates, {verified} PDFs staged, {failed} failures")
     return 0
 

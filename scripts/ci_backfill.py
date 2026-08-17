@@ -133,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
             if rc != 0:
                 failures.append("fetch_issuer_sources.py")
         if args.issuer_sources and not failures:
-            stage_args = ["--symbols", symbol_arg]
+            stage_args = ["--force", "--symbols", symbol_arg]
             if args.metadata_only:
                 stage_args.append("--metadata-only")
             for script, script_args in (
