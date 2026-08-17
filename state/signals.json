@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 11:00",
+ "updated": "2026-08-17 11:48",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -39,6 +39,24 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
+   "id": "20260817-GAL-atr_quiet_breakout",
+   "ticker": "GAL",
+   "strategy": "atr_quiet_breakout",
+   "template": "Quiet base, upside break",
+   "category": "volatility",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 16,
+   "backtest": {
+    "hit_rate": 0.7,
+    "net_expectancy_pct": 2.95,
+    "n": 10,
+    "oos_hit": 0.8
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 70% over 10 trades (+3.0% net/trade), still profitable out-of-sample."
+  },
+  {
    "id": "20260817-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
@@ -55,25 +73,7 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260817-INDU-vol_dryup_reversal",
-   "ticker": "INDU",
-   "strategy": "vol_dryup_reversal",
-   "template": "Volume dry-up then surge",
-   "category": "volume",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 12,
-   "backtest": {
-    "hit_rate": 0.56,
-    "net_expectancy_pct": 0.79,
-    "n": 134,
-    "oos_hit": 0.535
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Volume dry-up then surge is triggering now; on INDU's own history it won 56% over 134 trades (+0.8% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 11
+ "n_candidates": 12
 }
