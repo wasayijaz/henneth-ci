@@ -5416,10 +5416,31 @@ let _ask = { history: [], busy: false }; // history: [{role:"user"|"assistant", 
 const ASK_SAMPLES = ["Why is MEBL moving?", "Is FFC cheap?", "Tell me about LUCK", "FFC vs MCB",
   "Best dividend stocks", "What's happening in cement?", "What changed today?"];
 
+/* The model writes plain-text markdown (a bare **Heading** line for a section, "- " for bullets,
+   inline **bold** for emphasis) — that's its natural style, not something we asked it to stop doing.
+   Showing that raw (esc() + pre-wrap) put literal asterisks on screen. This turns the same convention
+   into real hierarchy (a heading element, a list) instead of asking the model to change how it writes. */
+function inlineMd(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+function mdLite(raw) {
+  let html = "", inList = false;
+  const closeList = () => { if (inList) { html += "</ul>"; inList = false; } };
+  for (const line of String(raw ?? "").split(/\r?\n/)) {
+    const t = line.trim();
+    if (!t) { closeList(); continue; }
+    const heading = t.match(/^\*\*(.+?)\*\*:?$/);
+    const bullet = t.match(/^[-*]\s+(.+)$/);
+    if (heading) { closeList(); html += `<h4 class="ans-h">${esc(heading[1])}</h4>`; }
+    else if (bullet) { if (!inList) { html += "<ul>"; inList = true; } html += `<li>${inlineMd(bullet[1])}</li>`; }
+    else { closeList(); html += `<p>${inlineMd(t)}</p>`; }
+  }
+  closeList();
+  return html || `<p>${esc(raw)}</p>`;
+}
+
 function askThreadHtml() {
   const turns = _ask.history.map(m => m.role === "user"
     ? `<div class="ans-q">${esc(m.content)}</div>`
-    : `<div class="ans-block"${m.error ? ' style="border-inline-start:3px solid var(--dn)"' : ""}><p style="white-space:pre-wrap">${esc(m.content)}</p></div>`
+    : `<div class="ans-block"${m.error ? ' style="border-inline-start:3px solid var(--dn)"' : ""}>${m.error ? `<p style="white-space:pre-wrap">${esc(m.content)}</p>` : mdLite(m.content)}</div>`
   ).join("");
   const busy = _ask.busy ? `<div class="ans-block"><p class="sub">Reading the desk's data and thinking…</p></div>` : "";
   const foot = _ask.history.length ? `<div class="ans-foot">Answered by a model grounded in the desk's own data — it's instructed to say "unknown" rather than invent a figure, but it is a live model, not a fixed template. Verify anything important on the ticker page. Research and education, never advice.</div>` : "";
