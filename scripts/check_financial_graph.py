@@ -30,6 +30,7 @@ def run() -> None:
     assert row["consolidation"] == "consolidated", row
     assert row["currency"] == "PKR" and row["unit_multiplier"] == 1_000_000, row
     assert row["normalized_value"] == 12_345_000_000, row
+    assert row["readiness"] == "model_loadable", row
     assert not {"missing_period_end", "missing_currency", "missing_unit_scale", "missing_consolidation_basis"}.intersection(row["quality_flags"]), row
     eps_doc = {**doc, "doc_id": "psx:eps-fixture", "title": "ABC Results"}
     eps_fact = {"fact_id": "fact_eps", "fact_type": "eps", "raw_value": "12.5", "normalized_value": 12.5,
@@ -61,8 +62,10 @@ def run() -> None:
     assert misleading and misleading["period_end"] is None, "borrowed a period from a different page"
     assert normalize_fact(missing_doc, missing_fact | {"evidence": [{"page": 0, "text": "Revenue 12,345"}]}, pages=missing_pages) is None
     repaired = _sanitize_row({"unit": "PKR/share", "unit_multiplier": 1_000_000,
-                              "raw_value": "12.5", "normalized_value": 12_500_000})
+                              "raw_value": "12.5", "normalized_value": 12_500_000,
+                              "metric": "eps", "quality_flags": ["missing_period_end"]})
     assert repaired["unit_multiplier"] == 1 and repaired["normalized_value"] == 12.5
+    assert repaired["readiness"] == "audit_only"
 
     with tempfile.TemporaryDirectory(prefix="henneth-financial-check-") as temp:
         root = Path(temp)

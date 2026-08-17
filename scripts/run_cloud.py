@@ -42,6 +42,9 @@ STEPS = [
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.
     # Pure local transform; the browser reads the generated CI slice, not this raw state file.
     "build_company_graph.py",
+    # Deterministic "what changed" digest over official filings, issuer-site changes,
+    # source-linked financial movements and event classifications. Free local transform.
+    "build_change_intelligence.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
     # other dependency and nothing downstream blocks on it. Pure local math, no network.

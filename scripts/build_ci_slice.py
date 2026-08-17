@@ -242,6 +242,7 @@ def _financial_series(series_state, sym, limit=40):
                 "source_url": _url(fact.get("source_url")),
                 "evidence": (fact.get("evidence") or [])[:1],
                 "quality_flags": fact.get("quality_flags") or [],
+                "readiness": fact.get("readiness") or "audit_only",
             }
             for fact in facts[:limit]
             if isinstance(fact, dict)
@@ -289,6 +290,47 @@ def _company_graph(graph_state, sym):
         "summary": row.get("counts") or {},
         "nodes": selected,
         "edges": edges[:120],
+    }
+
+
+def _change_intelligence(change_state, sym):
+    row = (change_state.get("companies") or {}).get(sym) or {}
+    items = []
+    for item in (row.get("items") or [])[:18]:
+        if not isinstance(item, dict):
+            continue
+        evidence = item.get("evidence") if isinstance(item.get("evidence"), dict) else {}
+        source_url = _url(item.get("source_url") or evidence.get("source_url"))
+        if not source_url:
+            continue
+        items.append({
+            "id": item.get("id"),
+            "kind": item.get("kind"),
+            "severity": item.get("severity"),
+            "date": item.get("date"),
+            "title": item.get("title"),
+            "summary": item.get("summary"),
+            "document_id": item.get("document_id"),
+            "source_url": source_url,
+            "source_page": _url(item.get("source_page")),
+            "evidence": {
+                "source_url": source_url,
+                "page": evidence.get("page"),
+                "text": evidence.get("text"),
+            },
+            "metric": item.get("metric"),
+            "delta": item.get("delta"),
+            "delta_pct": item.get("delta_pct"),
+            "period_end": item.get("period_end"),
+            "previous_period_end": item.get("previous_period_end"),
+            "consolidation": item.get("consolidation"),
+            "priority_weight": item.get("priority_weight"),
+        })
+    return {
+        "status": row.get("status") or "quiet",
+        "latest_change_at": row.get("latest_change_at"),
+        "counts": row.get("counts") or {},
+        "items": items,
     }
 
 
@@ -357,6 +399,7 @@ def build():
     source_qa = load_json(STATE / "company_source_qa.json", {"tickers": {}})
     financial_series = load_json(STATE / "company_financial_series.json", {"tickers": {}})
     knowledge_graph = load_json(STATE / "company_intel" / "company_graph.json", {"companies": {}})
+    change_intelligence = load_json(STATE / "company_intel" / "change_intelligence.json", {"companies": {}})
     company_briefs = load_json(STATE / "company_briefs.json", {"companies": {}})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
@@ -380,6 +423,7 @@ def build():
         sources = _company_sources(source_registry, sym)
         financial = _financial_series(financial_series, sym)
         graph = _company_graph(knowledge_graph, sym)
+        change_digest = _change_intelligence(change_intelligence, sym)
         brief = _company_brief(company_briefs, company_documents, sym)
         rows.append({
             "symbol": sym,
@@ -427,6 +471,7 @@ def build():
             "timeline": timeline,
             "changes": changes,
             "graph": graph,
+            "change_intelligence": change_digest,
             "sources": sources,
             "source_quality": _source_quality(source_qa, sym),
             "brief": brief,
@@ -437,6 +482,7 @@ def build():
                 "financial_fact_count": len(financial.get("facts") or []),
                 "graph_node_count": len(graph.get("nodes") or []),
                 "graph_edge_count": len(graph.get("edges") or []),
+                "change_item_count": len(change_digest.get("items") or []),
                 "brief_status": "approved" if brief.get("current") else "training_only",
                 "pending_synthesis": sum(
                     1 for filing in filings
@@ -460,6 +506,7 @@ def build():
             "count": len(rows),
             "financial_series": financial_series.get("_meta", {}),
             "graph": knowledge_graph.get("_meta", {}),
+            "change_intelligence": change_intelligence.get("_meta", {}),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",
         },
         "tickers": rows,

@@ -152,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
                     failures.append(script)
                     break
         if not failures:
-            for script in ("build_source_qa.py", "build_company_graph.py", "build_ci_slice.py"):
+            for script in ("build_source_qa.py", "build_company_graph.py", "build_change_intelligence.py", "build_ci_slice.py"):
                 rc = _run(script, dry_run=args.dry_run)
                 if rc != 0:
                     failures.append(script)

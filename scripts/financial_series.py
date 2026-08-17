@@ -139,6 +139,11 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
     # never from an unrelated page's header.
     basis, basis_flags = consolidation_basis(f"{doc.get('title') or ''} {cited_page_text}")
     currency, multiplier, unit_flags = currency_and_scale(fact, cited_page_text)
+    metric = str(fact.get("fact_type") or "other")
+    if metric == "change_pct":
+        currency = None
+        multiplier = 1
+        unit_flags = [flag for flag in unit_flags if flag not in {"missing_currency", "missing_unit_scale"}]
     flags = sorted(set(period_flags + basis_flags + unit_flags))
     raw_value = fact.get("raw_value")
     normalized = fact.get("normalized_value")
@@ -151,7 +156,6 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
                 normalized = int(number * multiplier) if number.is_integer() else number * multiplier
             except ValueError:
                 flags.append("unparseable_raw_value")
-    metric = str(fact.get("fact_type") or "other")
     consolidation = basis or "unknown"
     period_type_value = inferred_type or "unknown"
     # The source fact identity is stable across a transient full-page pass and
@@ -159,6 +163,10 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
     # the next run, so it must not create a second row for the same fact.
     series_seed = "|".join((tickers[0], metric, doc_id, str(fact.get("fact_id") or "")))
     series_id = "series_" + hashlib.sha256(series_seed.encode("utf-8")).hexdigest()[:24]
+    blocking = {"missing_period_end", "missing_currency", "missing_unit_scale",
+                "missing_consolidation_basis", "conflicting_consolidation_labels",
+                "unparseable_raw_value", "conflict"}
+    readiness = "model_loadable" if metric != "change_pct" and not blocking.intersection(flags) else "audit_only"
     return {
         "series_id": series_id, "ticker": tickers[0], "metric": metric,
         "period_end": period_end, "period_type": period_type_value,
@@ -167,5 +175,5 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
         "raw_value": raw_value, "normalized_value": normalized,
         "document_id": doc_id, "fact_id": fact.get("fact_id"),
         "source_url": source_url, "evidence": [{"page": evidence_page, "text": evidence_text}],
-        "quality_flags": flags,
+        "quality_flags": flags, "readiness": readiness,
     }

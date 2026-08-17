@@ -263,11 +263,12 @@ function detail(r) {
     <div class="grid4">
       ${metric("Official filings", intel.document_count ?? 0, `${intel.event_count ?? 0} classified events`)}
       ${metric("Financial facts", intel.financial_fact_count ?? 0, `${r.financial_series?.coverage?.period_count ?? 0} explicit periods`)}
+      ${metric("Change digest", intel.change_item_count ?? 0, `${r.change_intelligence?.latest_change_at || "no dated change"}`)}
       ${metric("Graph links", intel.graph_edge_count ?? 0, `${intel.graph_node_count ?? 0} nodes mapped`)}
-      ${metric("Synthesis queue", intel.pending_synthesis ?? 0, "approval required · training mode")}
     </div>
     ${renderViewNav(r)}
     ${state.view === "timeline" ? renderTimeline(r)
+      : state.view === "changes" ? renderChangeIntelligence(r)
       : state.view === "trends" ? renderFinancials(r)
       : state.view === "graph" ? renderGraph(r)
       : state.view === "coverage" ? renderCoverage(r)
@@ -281,6 +282,7 @@ function renderViewNav(r) {
   const tabs = [
     ["overview", "Overview"],
     ["timeline", `Timeline ${r.timeline?.length || 0}`],
+    ["changes", `Changes ${r.change_intelligence?.items?.length || 0}`],
     ["trends", `Trends ${r.financial_series?.facts?.length || 0}`],
     ["graph", `Graph ${r.graph?.edges?.length || 0}`],
     ["coverage", "Coverage"],
@@ -373,6 +375,43 @@ function renderTimeline(r) {
     </aside>`;
 }
 
+function renderChangeIntelligence(r) {
+  const digest = r.change_intelligence || {};
+  const items = digest.items || [];
+  const counts = digest.counts || {};
+  return `<section class="panel span9">
+    <span class="kicker">Official-source change intelligence</span><h2>What changed in the company file</h2>
+    <p class="section-note">Built deterministically from official filings, monitored issuer pages, source-linked financial facts and event classifications. This is a research queue, not advice.</p>
+    <div class="change-summary">
+      ${metric("Status", digest.status || "quiet", `latest ${digest.latest_change_at || "unknown"}`)}
+      ${metric("Documents", counts.document ?? 0, `${counts.issuer_document ?? 0} issuer PDFs`)}
+      ${metric("Events", counts.event ?? 0, `${counts.financial ?? 0} financial movements`)}
+      ${metric("Source pages", counts.source ?? 0, "same-domain hash changes")}
+    </div>
+    <div class="change-list">${items.length ? items.map(renderChangeItem).join("") : `<div class="empty">No source-backed change digest item is available for this company yet.</div>`}</div>
+  </section>`;
+}
+
+function renderChangeItem(item) {
+  const evidence = item.evidence || {};
+  const page = Number(evidence.page) > 0 ? `p.${Number(evidence.page)}` : "source";
+  const source = item.source_url ? `<a href="${esc(item.source_url)}" target="_blank" rel="noopener">${esc(page)}</a>` : esc(page);
+  const delta = item.kind === "financial" ? renderChangeDelta(item) : "";
+  return `<article class="change-card severity-${esc(item.severity || "routine")}">
+    <header><div><time>${esc(item.date || "undated")}</time><h3>${esc(item.title || item.kind || "change")}</h3></div><span class="pill">${esc(item.severity || "routine")}</span></header>
+    <p>${esc(item.summary || "Source-backed change retained for review.")}</p>
+    ${delta}
+    <footer><span>${esc(item.kind || "change")}${item.document_id ? ` · ${esc(item.document_id)}` : ""}</span><span>${source}</span></footer>
+    ${evidence.text ? `<blockquote>${esc(evidence.text)}</blockquote>` : ""}
+  </article>`;
+}
+
+function renderChangeDelta(item) {
+  const pctText = item.delta_pct == null ? "" : ` · ${pct(item.delta_pct)}`;
+  const period = item.previous_period_end && item.period_end ? `${item.previous_period_end} → ${item.period_end}` : item.period_end || "period unknown";
+  return `<div class="change-delta"><b>${esc(fmt(item.delta, 2))}${esc(pctText)}</b><span>${esc(period)} · ${esc(item.consolidation || "basis unknown")}</span></div>`;
+}
+
 function renderFactDelta(delta) {
   if (!delta) return "";
   const parts = [
@@ -392,7 +431,7 @@ function renderFinancials(r) {
     <p class="section-note">Only labelled values with document/page evidence are shown. Unknown period, unit, basis or currency stays flagged instead of being guessed.</p>
     <div class="series-health">
       ${metric("Facts", coverage.fact_count ?? facts.length, `${coverage.source_documents ?? 0} source documents`)}
-      ${metric("Periods", coverage.period_count ?? 0, `${coverage.missing_period_count ?? 0} missing explicit period`)}
+      ${metric("Model-loadable", coverage.model_loadable_count ?? 0, `${coverage.audit_only_count ?? facts.length} audit-only`)}
       ${metric("Conflicts", coverage.conflict_count ?? conflicts.length, "same metric/period/basis")}
     </div>
     ${conflicts.length ? `<div class="extract-error">Conflicts need review: ${esc(conflicts.map(c => `${c.metric || "metric"} ${c.period_end || "period unknown"}`).join(", "))}</div>` : ""}
@@ -408,7 +447,7 @@ function renderFinancials(r) {
           <span>${esc(fact.metric || "other")}</span>
           <span>${esc(fact.period_end || "unknown")}<small>${esc(fact.period_type || "period type unknown")}</small></span>
           <span><b>${esc(fact.raw_value ?? "unknown")}</b><small>${esc(fact.currency || "currency unknown")} · x${esc(fact.unit_multiplier ?? "?")}</small></span>
-          <span>${esc(fact.consolidation || "basis unknown")}</span>
+          <span>${esc(fact.consolidation || "basis unknown")}<small>${esc(fact.readiness || "audit_only")}</small></span>
           <span>${evidence}</span>
           <span>${esc(flags)}</span>
         </div>`;
@@ -557,7 +596,7 @@ function renderCoverage(r) {
     <section class="panel span5"><span class="kicker">Evidence coverage</span><h2>What is currently usable</h2>
       <div class="coverage-grid">
         ${metric("Extracted filings", intel.document_count ?? 0, `${intel.event_count ?? 0} events classified`)}
-        ${metric("Financial facts", financial.fact_count ?? 0, `${financial.period_count ?? 0} explicit periods`)}
+        ${metric("Financial facts", financial.fact_count ?? 0, `${financial.model_loadable_count ?? 0} model-loadable`)}
         ${metric("Issuer documents", quality.document_link_count ?? 0, `${quality.monitored_page_count ?? 0} monitored pages`)}
         ${metric("Pending synthesis", intel.pending_synthesis ?? 0, "owner approval required")}
       </div>

@@ -50,6 +50,13 @@ def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
         except (TypeError, ValueError):
             flags = list(clean.get("quality_flags") or [])
             clean["quality_flags"] = sorted(set(flags + ["unparseable_raw_value"]))
+    if unit == "percent" or clean.get("metric") == "change_pct":
+        clean["currency"] = None
+    blocking = {"missing_period_end", "missing_currency", "missing_unit_scale",
+                "missing_consolidation_basis", "conflicting_consolidation_labels",
+                "unparseable_raw_value", "conflict"}
+    clean["readiness"] = ("model_loadable" if clean.get("metric") != "change_pct"
+                           and not blocking.intersection(clean.get("quality_flags") or []) else "audit_only")
     return clean
 
 
@@ -110,6 +117,7 @@ def _assemble(rows_by_ticker: dict[str, list[dict[str, Any]]], *, source_documen
             for member in members:
                 member.setdefault("quality_flags", [])
                 member["quality_flags"] = sorted(set(member["quality_flags"] + ["conflict"]))
+                member["readiness"] = "audit_only"
             conflicts.append({"conflict_id": conflict_id, "metric": group_key[0],
                               "period_end": None if group_key[1] == "None" else group_key[1],
                               "period_type": group_key[2], "consolidation": group_key[3],
@@ -126,7 +134,9 @@ def _assemble(rows_by_ticker: dict[str, list[dict[str, Any]]], *, source_documen
                                "period_count": len({f.get("period_end") for f in facts if f.get("period_end")}),
                                "missing_required_source": any(not f.get("source_url") or not f.get("evidence") for f in facts),
                                "missing_period_count": sum(1 for f in facts if not f.get("period_end")),
-                               "conflict_count": len(conflicts)}
+                               "conflict_count": len(conflicts),
+                               "model_loadable_count": sum(1 for f in facts if f.get("readiness") == "model_loadable"),
+                               "audit_only_count": sum(1 for f in facts if f.get("readiness") != "model_loadable")}
         tickers[ticker] = bucket
     return {"schema_version": 1, "tickers": tickers,
             "_meta": {"updated": time.strftime("%Y-%m-%d %H:%M"),
