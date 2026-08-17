@@ -14,6 +14,8 @@
   let myProfile = null;
   let readRequest = 0;
   let thinkingTimer = null;
+  let askHistory = [];
+  let askBusy = false;
 
   // ---- scheme toggle (persisted, mirrors palette.css behaviour) ----
   chrome.storage.local.get(["scheme"], ({ scheme }) => {
@@ -29,6 +31,7 @@
 
   // ---- tabs ----
   tabs.forEach((t) => t.addEventListener("click", () => {
+    if (activeTab === "ask" && t.dataset.tab !== "ask") unmountAskLoaders();
     activeTab = t.dataset.tab;
     tabs.forEach((x) => x.classList.toggle("on", x === t));
     render();
@@ -64,7 +67,7 @@
       if (msg.ticker === currentSym) return; // no symbol change — do not re-render
       tickerInput.value = msg.ticker;
       currentSym = msg.ticker;
-      if (activeTab === "read") render();
+      if (activeTab === "read" || activeTab === "ask") render();
     }
   });
 
@@ -160,8 +163,95 @@
 
   function render() {
     if (activeTab === "notes") renderNotes();
+    else if (activeTab === "ask") renderAsk();
     else if (currentSym) renderRead(currentSym);
     else content.innerHTML = '<div class="empty">Open a PSX ticker on TradingView, DPS or a PSX news page,<br>or search a symbol above.</div>';
+  }
+
+  function unmountAskLoaders() {
+    if (!window.HennethInlineLoaderBundle) return;
+    content.querySelectorAll(".ask-answer-mount, #askBusyMount").forEach((node) => {
+      if (typeof window.HennethInlineLoaderBundle.unmountText === "function") {
+        window.HennethInlineLoaderBundle.unmountText(node);
+      }
+    });
+  }
+
+  function mountAskAnswers() {
+    if (!window.HennethInlineLoaderBundle || typeof window.HennethInlineLoaderBundle.mountText !== "function") return;
+    content.querySelectorAll(".ask-answer-mount").forEach((node) => {
+      window.HennethInlineLoaderBundle.mountText(node, node.dataset.answer || "");
+    });
+    const busy = content.querySelector("#askBusyMount");
+    if (busy) window.HennethInlineLoaderBundle.mountText(busy, "reading the desk...");
+  }
+
+  function renderAsk() {
+    unmountAskLoaders();
+    const tickerLabel = currentSym ? "Context: " + esc(currentSym) : "Ask across the desk";
+    const thread = askHistory.map((m) => {
+      if (m.role === "user") {
+        return '<div class="ask-turn user"><div class="ask-role">you</div><div class="ask-user-text">' +
+          esc(m.display || m.content) + "</div></div>";
+      }
+      if (m.error) {
+        return '<div class="ask-turn assistant error"><div class="ask-role">desk</div><div class="ask-error">' +
+          esc(m.content) + "</div></div>";
+      }
+      return '<div class="ask-turn assistant"><div class="ask-role">desk</div><div class="ask-answer-mount" data-answer="' +
+        esc(m.content) + '"></div></div>';
+    }).join("");
+    content.innerHTML = '<div class="card ask-card"><div class="ask-head"><div><h3>Ask the desk</h3>' +
+      '<div class="ask-context">' + tickerLabel + '</div></div><span class="pill ok">GROQ · GROUNDED</span></div>' +
+      '<div class="ask-thread">' + (thread || '<div class="ask-empty">Ask about a ticker, a sector, valuation, momentum, or today\'s market read.</div>') +
+      (askBusy ? '<div class="ask-turn assistant"><div class="ask-role">desk</div><div id="askBusyMount"></div></div>' : "") +
+      '</div><div class="ask-compose"><textarea id="askInput" rows="2" placeholder="' +
+      (currentSym ? "Ask about " + esc(currentSym) + "…" : "Ask the desk a research question…") +
+      '" aria-label="Ask the desk"></textarea><button id="askSend" class="key ask-send">' +
+      (askBusy ? "Reading…" : "Ask the desk ↗") + '</button></div>' +
+      '<div class="ask-foot">Answers use the desk\'s own data. Unknown figures stay unknown. Research and education, never advice.</div></div>';
+    mountAskAnswers();
+    const input = document.getElementById("askInput");
+    const send = document.getElementById("askSend");
+    if (input) {
+      input.focus();
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          askSend();
+        }
+      });
+    }
+    if (send) send.addEventListener("click", askSend);
+    const threadEl = content.querySelector(".ask-thread");
+    if (threadEl) threadEl.scrollTop = threadEl.scrollHeight;
+  }
+
+  async function askSend() {
+    if (askBusy) return;
+    const input = document.getElementById("askInput");
+    const text = input && input.value.trim();
+    if (!text) { if (input) input.focus(); return; }
+    const prior = askHistory.slice(-4).map((m) => ({ role: m.role, content: m.content }));
+    askHistory.push({ role: "user", content: currentSym ? currentSym + ": " + text : text, display: text });
+    askBusy = true;
+    renderAsk();
+    try {
+      const body = await askDesk(currentSym ? currentSym + ": " + text : text, prior);
+      askHistory.push({ role: "assistant", content: body.answer || "No answer came back." });
+    } catch (e) {
+      askHistory.push({
+        role: "assistant",
+        content: e.message === "AUTH"
+          ? "Sign in at desk.henneth.app to ask the desk."
+          : (e.message || "The desk could not answer right now."),
+        error: true,
+      });
+    } finally {
+      askBusy = false;
+      askHistory = askHistory.slice(-12);
+      renderAsk();
+    }
   }
 
   async function renderRead(sym) {

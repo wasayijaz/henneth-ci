@@ -33,6 +33,10 @@ uses advice language.
 - **Read** — hero price header, one-glance verdict strip (trend / valuation /
   liquidity grade / predictability), meters for RSI, predictability and
   mispricing, plus all the cards below.
+- **Ask** — a ticker-aware research conversation backed by the desk's
+  authenticated /api/ask Groq endpoint. Replies are grounded in the desk's
+  own data and rendered with the bundled generative-loaders terminal text
+  loader.
 - **Notes** — per-ticker private notes synced to your account via the same
   profiles.notes the desk ticker pages use. Create, edit, delete; a note
   written here appears on the desk and vice versa (last-write-wins, same as
@@ -56,7 +60,10 @@ uses advice language.
 - detector.js — content script on TradingView / DPS; URL+title ticker
   detection, re-checks on SPA navigation every 1.5s
 - background.js — opens the side panel on icon click; remembers last ticker
-- api.js — authenticated fetch layer with 60s TTL cache; PKT-safe date labels
+- api.js — authenticated fetch layer with 60s TTL cache, PKT-safe date labels,
+  and the signed-in /api/ask request
+- src/thinking-loader.jsx + thinking-loader.bundle.* — the exact
+  InlineLoader gravity and TextLoader terminal components bundled for MV3
 - panel.html/css/js — the side panel UI
 - tokens.css — the desk's paper/olive token set (light + dark), hard corners,
   JetBrains Mono. Kept as a deliberate copy so the extension has zero

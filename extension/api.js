@@ -20,6 +20,28 @@ async function deskFetch(path) {
   return data;
 }
 
+async function askDesk(question, history) {
+  const { desk_token } = await chrome.storage.local.get("desk_token");
+  if (!desk_token) throw new Error("AUTH");
+  const res = await fetch(DESK_ORIGIN + "/api/ask", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + desk_token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      question: String(question || "").slice(0, 500),
+      history: Array.isArray(history) ? history.slice(-4) : [],
+    }),
+    cache: "no-store",
+  });
+  if (res.status === 401) throw new Error("AUTH");
+  let body = null;
+  try { body = await res.json(); } catch (_) {}
+  if (!res.ok || !body?.ok) throw new Error(body?.error || ("HTTP " + res.status));
+  return body;
+}
+
 // State timestamps are PKT unless suffixed _utc; showing the raw date string
 // avoids the UTC off-by-one trap entirely.
 function pktLabel(dateStr) {
