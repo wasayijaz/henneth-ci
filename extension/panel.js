@@ -186,6 +186,43 @@
     if (busy) window.HennethInlineLoaderBundle.mountText(busy, "reading the desk...");
   }
 
+  function stripAskInline(text) {
+    return String(text || "")
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/__([^_]+)__/g, "$1")
+      .replace(/\x60([^\x60]+)\x60/g, "$1");
+  }
+
+  function askMarkdown(raw) {
+    let html = "";
+    let list = [];
+    const closeList = () => {
+      if (!list.length) return;
+      html += '<ul class="ask-md-list">' + list.map((item) =>
+        '<li><span class="ask-answer-mount" data-answer="' + esc(stripAskInline(item)) + '"></span></li>'
+      ).join("") + "</ul>";
+      list = [];
+    };
+    for (const line of String(raw || "").split(/\r?\n/)) {
+      const t = line.trim();
+      if (!t) { closeList(); continue; }
+      const heading = t.match(/^\*\*(.+?)\*\*:?$/);
+      const bullet = t.match(/^[-*]\s+(.+)$/);
+      if (heading) {
+        closeList();
+        html += '<h4 class="ask-md-heading">' + esc(heading[1]) + "</h4>";
+      } else if (bullet) {
+        list.push(bullet[1]);
+      } else {
+        closeList();
+        html += '<p><span class="ask-answer-mount" data-answer="' +
+          esc(stripAskInline(t)) + '"></span></p>';
+      }
+    }
+    closeList();
+    return html || '<p><span class="ask-answer-mount" data-answer="' + esc(stripAskInline(raw)) + '"></span></p>';
+  }
+
   function renderAsk() {
     unmountAskLoaders();
     const tickerLabel = currentSym ? "Context: " + esc(currentSym) : "Ask across the desk";
@@ -198,8 +235,8 @@
         return '<div class="ask-turn assistant error"><div class="ask-role">desk</div><div class="ask-error">' +
           esc(m.content) + "</div></div>";
       }
-      return '<div class="ask-turn assistant"><div class="ask-role">desk</div><div class="ask-answer-mount" data-answer="' +
-        esc(m.content) + '"></div></div>';
+      return '<div class="ask-turn assistant"><div class="ask-role">desk</div>' +
+        askMarkdown(m.content) + "</div>";
     }).join("");
     content.innerHTML = '<div class="card ask-card"><div class="ask-head"><div><h3>Ask the desk</h3>' +
       '<div class="ask-context">' + tickerLabel + '</div></div><span class="pill ok">GROQ · GROUNDED</span></div>' +
