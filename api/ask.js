@@ -35,7 +35,7 @@
 export const config = { runtime: 'edge' };
 
 const JWKS_URL = 'https://qteoncckohuoatbjjykb.supabase.co/auth/v1/.well-known/jwks.json';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_MODEL = 'openai/gpt-oss-120b'; // llama-3.3-70b-versatile retired by Groq 2026-08-16
 
 // ---- auth (mirrors middleware.js verify() — see file header) ----
 function b64urlToBytes(s) {
