@@ -33,6 +33,10 @@ STEPS = [
     # Official issuer roots discovered only from DPS profiles; weekly requests-only hash monitor
     # for bounded investor/report/governance/news index pages. No browser or paid provider.
     "fetch_issuer_sources.py",
+    # Bounded same-domain issuer PDFs from the source registry. Must be consumed immediately.
+    "stage_issuer_documents.py",
+    "document_intelligence.py",
+    "build_financial_series.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.

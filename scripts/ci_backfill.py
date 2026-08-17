@@ -132,6 +132,19 @@ def main(argv: list[str] | None = None) -> int:
             rc = _run("fetch_issuer_sources.py", "--force", "--symbols", symbol_arg, dry_run=args.dry_run)
             if rc != 0:
                 failures.append("fetch_issuer_sources.py")
+        if args.issuer_sources and not failures:
+            stage_args = ["--symbols", symbol_arg]
+            if args.metadata_only:
+                stage_args.append("--metadata-only")
+            for script, script_args in (
+                ("stage_issuer_documents.py", stage_args),
+                ("document_intelligence.py", []),
+                ("build_financial_series.py", []),
+            ):
+                rc = _run(script, *script_args, dry_run=args.dry_run)
+                if rc != 0:
+                    failures.append(script)
+                    break
         if not failures:
             for script in ("build_source_qa.py", "build_company_graph.py", "build_ci_slice.py"):
                 rc = _run(script, dry_run=args.dry_run)

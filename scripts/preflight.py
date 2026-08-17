@@ -176,6 +176,74 @@ def check_document_intelligence():
         fail(f"check_document_intelligence.py did not run — {e}")
 
 
+def check_company_intelligence_phase2():
+    """Financial normalization, graph provenance, and synthesis training gates."""
+    scripts = (
+        ("check_financial_graph.py", []),
+        ("prepare_synthesis_batch.py", ["--self-check"]),
+        ("company_brief_review.py", ["self-check"]),
+    )
+    for name, args in scripts:
+        path = os.path.join(ROOT, "scripts", name)
+        if not os.path.exists(path):
+            fail(f"{name} missing — CI phase-2 gate cannot run")
+            continue
+        try:
+            result = subprocess.run([sys.executable, path, *args], capture_output=True, text=True, timeout=30)
+            if result.returncode != 0:
+                fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        except Exception as e:  # noqa: BLE001
+            fail(f"{name} did not run — {e}")
+
+    series, err = load("company_financial_series.json")
+    if series is None:
+        fail(f"company_financial_series.json: {err}")
+    else:
+        for ticker, bucket in (series.get("tickers") or {}).items():
+            for fact in bucket.get("facts") or []:
+                label = f"company_financial_series.json:{ticker}:{fact.get('series_id')}"
+                if not fact.get("document_id") or not fact.get("source_url") or not fact.get("evidence"):
+                    fail(f"{label} missing document/source/page provenance")
+                if ".test/" in str(fact.get("source_url")) or str(fact.get("document_id")).startswith("psx:fixture"):
+                    fail(f"{label} contains test-fixture provenance")
+                evidence = (fact.get("evidence") or [{}])[0]
+                if not isinstance(evidence.get("page"), int) or evidence["page"] < 1:
+                    fail(f"{label} has invalid evidence page")
+                period = fact.get("period_end")
+                if period:
+                    try:
+                        __import__("datetime").date.fromisoformat(period)
+                    except (TypeError, ValueError):
+                        fail(f"{label} period_end is not ISO date")
+                if str(fact.get("unit") or "").lower().endswith("/share") and fact.get("unit_multiplier") != 1:
+                    fail(f"{label} per-share value has scaled multiplier")
+            for conflict in bucket.get("conflicts") or []:
+                if not conflict.get("period_end") or conflict.get("consolidation") in (None, "unknown"):
+                    fail(f"company_financial_series.json:{ticker} has an incomparable conflict")
+
+    source_qa, err = load("company_source_qa.json")
+    if source_qa is None:
+        fail(f"company_source_qa.json: {err}")
+    elif len(source_qa.get("tickers") or {}) < 20:
+        fail("company_source_qa.json: fewer than 20 pilot ticker rows")
+
+    graph_path = os.path.join(STATE, "company_intel", "company_graph.json")
+    try:
+        with open(graph_path, encoding="utf-8") as f:
+            graph = json.load(f)
+    except Exception as e:
+        fail(f"company_intel/company_graph.json: {e}")
+        graph = {}
+    node_ids = {node.get("id") for node in graph.get("nodes") or [] if isinstance(node, dict)}
+    factual = {"FILED", "SUPPORTS_FACT", "REPORTS_PERIOD", "HAS_EVENT", "EVIDENCED_BY",
+               "REVISION_OF", "HAS_CHANGE", "HAS_SOURCE"}
+    for edge in graph.get("edges") or []:
+        if edge.get("from") not in node_ids or edge.get("to") not in node_ids:
+            fail(f"company_intel/company_graph.json: dangling edge {edge.get('id')}")
+        if edge.get("type") in factual and not (edge.get("evidence") or {}).get("source_url"):
+            fail(f"company_intel/company_graph.json: factual edge missing source {edge.get('id')}")
+
+
 def check_company_brief_review():
     """Offline fixtures for the training-mode CI brief approval gate."""
     path = os.path.join(ROOT, "scripts", "company_brief_review.py")
@@ -326,6 +394,7 @@ def main():
     # --- Tier-1 maths QA: Rule 4 + payout sign guard ---
     check_rule4()
     check_document_intelligence()
+    check_company_intelligence_phase2()
     check_company_brief_review()
     check_financial_graph()
     check_synthesis_batch()
