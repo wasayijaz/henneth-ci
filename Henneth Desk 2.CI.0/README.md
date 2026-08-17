@@ -17,3 +17,9 @@ payload.sub === process.env.CI_OWNER_USER_ID
 Do not put a real owner UUID in this repo. Set `CI_OWNER_USER_ID` in the hosting environment. There is no service-role key, no signup flow, no database migration, and no execution/order path.
 
 Auth failures fail closed: missing, invalid, expired, or unconfigured tokens return `401`; a valid signed token for any non-owner account returns `403`.
+
+## Deployment and brand ownership
+
+The Vercel project root is this folder, not the repository root. Git deployments therefore rebuild only when this directory changes.
+
+Brand assets are byte-matched copies of the canonical files in `dashboard/`. Interface tokens, typography, hard-corner geometry, light/dark scheme behavior, and compact motion follow the production Henneth Desk design system; authentication and company data remain independent modules.
