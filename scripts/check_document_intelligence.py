@@ -6,7 +6,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from document_events import extract_events
+from document_events import event_is_supported, extract_events
 from document_extract import extract_entry, stable_doc_id
 from document_ledger import append_events
 from document_queue import build_queue
@@ -56,6 +56,16 @@ def main() -> int:
         noisy_kind, noisy_events, noisy_facts = extract_events(
             "doc_noisy", "UBL results", noisy["text"], noisy["pages"], ["UBL"])
         assert noisy_kind == "results" and isinstance(noisy_facts, list)
+        routine = extract_entry({"text": (
+            "Board of Directors Mr A, Chief Executive Mr B. Unclaimed dividend 26,721. "
+            "Contract liabilities 788,499. The filing was submitted to SECP."
+        ), "media_type": "text/plain"})
+        _, routine_events, _ = extract_events(
+            "doc_routine", "Company information", routine["text"], routine["pages"], ["ABC"])
+        assert not routine_events, "routine filing language became a material event"
+        assert not event_is_supported({"event_type": "dividend", "evidence": [{"text": "Unclaimed dividend 26,721"}]})
+        assert not event_is_supported({"event_type": "management_change", "evidence": [{"text": "Chief Executive Mr B"}]})
+        assert event_is_supported({"event_type": "management_change", "evidence": [{"text": "Mr B appointed as Chief Executive"}]})
         import pymupdf
         pdf = pymupdf.open()
         pdf.new_page()  # blank page keeps page-number provenance honest

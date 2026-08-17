@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from psx_data import STATE, load_json, save_json
+from document_events import event_is_supported
 
 OUT = STATE / "company_intel" / "change_intelligence.json"
 MAX_ITEMS = 18
@@ -82,7 +83,7 @@ def _event_items(events_payload: dict[str, Any], documents: dict[str, dict[str, 
     for ticker, row in sorted((companies or {}).items()):
         symbol = str(ticker).upper()
         for event in (row or {}).get("events") or []:
-            if not isinstance(event, dict):
+            if not isinstance(event, dict) or not event_is_supported(event):
                 continue
             event_type = event.get("event_type") or "other"
             doc = documents.get(event.get("doc_id")) or {}

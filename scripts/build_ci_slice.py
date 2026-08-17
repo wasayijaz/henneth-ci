@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 
 from psx_data import ROOT, STATE, load_json, save_json
+from document_events import event_is_supported
 
 APP_DIR = ROOT / "Henneth Desk 2.CI.0"
 OUT = APP_DIR / "data" / "company_intelligence.json"
@@ -130,7 +131,7 @@ def _company_timeline(event_state, sym, limit=50):
             "evidence": (event.get("evidence") or [])[:2],
         }
         for event in (company.get("events") or [])
-        if isinstance(event, dict)
+        if isinstance(event, dict) and event_is_supported(event)
     ]
     events.sort(key=lambda row: (row.get("date") or "", row.get("event_id") or ""), reverse=True)
     changes = [

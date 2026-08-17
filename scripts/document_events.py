@@ -36,17 +36,18 @@ _DOC_RULES = (
 
 _EVENT_RULES = (
     ("earnings", r"\b(results?|profit|loss|eps|financial statements?|quarter|half[- ]year)\b", 3),
-    ("board_meeting", r"\bboard\s+(meeting|of directors)|meeting of the board\b", 3),
+    ("board_meeting", r"\b(board meeting|meeting of the board)\b", 3),
     ("agm", r"\b(agm|annual general meeting)\b", 3),
     ("briefing", r"\b(corporate briefing|briefing session|investor presentation)\b", 3),
-    ("dividend", r"\b(dividend|interim dividend|final dividend|bonus share)\b", 2),
+    ("dividend", r"\b(interim dividend|final dividend|cash dividend|dividend\s+(?:of|at|@)|bonus shares?)\b", 2),
     ("acquisition", r"\b(acqui(sition|re)|merger|amalgamation|takeover)\b", 4),
-    ("regulatory_action", r"\b(secp|regulator|regulatory action|show[- ]cause|penalty|sanction)\b", 4),
-    ("management_change", r"\b(appointed|appointment|resigned|resignation|chief executive|ceo)\b", 3),
+    ("regulatory_action", r"\b(regulatory action|show[- ]cause|penalty|sanction(?:ed)?)\b", 4),
+    ("management_change", r"\b(appointed(?:\s+as)?|appointment\s+of|resigned|resignation\s+of)\b", 3),
     ("rating_change", r"\b(credit rating|rating action|downgraded?|upgraded?)\b", 3),
-    ("contract", r"\b(contract|order worth|awarded|agreement| MoU |memorandum of understanding)\b", 3),
+    ("contract", r"\b(contract\s+(?:awarded|signed|secured)|awarded\s+(?:a\s+)?contract|order worth|entered into (?:an?\s+)?agreement|memorandum of understanding|mou\s+(?:signed|with))\b", 3),
     ("credit_event", r"\b(default|trading halt|insolvency|going concern)\b", 5),
 )
+_EVENT_PATTERNS = {event_type: pattern for event_type, pattern, _ in _EVENT_RULES}
 
 # Labelled values only; this avoids mistaking page numbers for financial facts.
 _FACT_RULES = (
@@ -77,6 +78,17 @@ def classify_document(title: str | None, text: str) -> str:
         if re.search(pattern, hay, re.I):
             return kind
     return "other"
+
+
+def event_is_supported(event: dict[str, Any]) -> bool:
+    """Apply current conservative rules to retained events from older runs."""
+    pattern = _EVENT_PATTERNS.get(event.get("event_type"))
+    if not pattern:
+        return False
+    evidence_text = " ".join(
+        str(row.get("text") or "") for row in (event.get("evidence") or []) if isinstance(row, dict)
+    )
+    return bool(evidence_text and re.search(pattern, evidence_text, re.I))
 
 
 def extract_events(doc_id: str, title: str | None, text: str, pages: list[str],

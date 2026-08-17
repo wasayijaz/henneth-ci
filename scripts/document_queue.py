@@ -11,6 +11,7 @@ import time
 from typing import Any
 
 from psx_data import STATE, load_json, save_json
+from document_events import event_is_supported
 
 OUT = STATE / "document_synthesis_queue.json"
 RECEIPTS = STATE / "company_brief_receipts.json"
@@ -31,7 +32,10 @@ def build_queue(documents: dict[str, Any], path=OUT, receipts_path=RECEIPTS) -> 
         key = (doc_id, doc.get("content_sha256"))
         if key in existing_keys:
             continue
-        event_max = max((e.get("priority_weight") or 0 for e in (doc.get("events") or [])), default=0)
+        event_max = max(
+            (e.get("priority_weight") or 0 for e in (doc.get("events") or []) if event_is_supported(e)),
+            default=0,
+        )
         history.append({"queue_id": f"syn_{doc_id}_{str(doc.get('content_sha256') or '')[:12]}",
                         "doc_id": doc_id, "content_sha256": doc.get("content_sha256"),
                         "tickers": doc.get("tickers") or [], "doc_type": doc.get("doc_type"),
