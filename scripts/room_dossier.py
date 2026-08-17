@@ -32,6 +32,10 @@ def _material_hash(d):
         "docs": [x.get("hash") if isinstance(x, dict) else x for x in (d.get("documents") or [])],
         "hi_news": [n.get("headline") for n in (d.get("recent_news") or []) if (n.get("impact") or 0) >= 4],
         "next_earnings": (d.get("fundamental") or {}).get("next_earnings"),
+        "company_profile": {
+            "business_description": (d.get("company_profile") or {}).get("business_description"),
+            "incorporation": (d.get("company_profile") or {}).get("incorporation"),
+        },
         "proven": [p.get("name") for p in (d.get("technical") or {}).get("proven_strategies", [])],
     }
     return hashlib.sha1(json.dumps(mat, sort_keys=True, default=str).encode()).hexdigest()[:12]
@@ -61,6 +65,7 @@ def build():
     sect_map = load_json(STATE / "sectors.json", {}).get("tickers", {})
     news = load_json(STATE / "newslog.json", [])
     research = load_json(STATE / "research_index.json", {})  # doc digests, if present
+    profiles = load_json(STATE / "company_profiles.json", {}).get("tickers", {})
 
     # index news + digests by ticker once
     news_by = {}
@@ -77,6 +82,7 @@ def build():
         f = fund.get(sym, {})
         fv = fair.get(sym)
         sc = fsc.get(sym)
+        prof = profiles.get(sym) or {}
         proven = smap.get(sym, [])
         dh = sorted(div_hist.get(sym, []), key=lambda d: d.get("bc_start") or "", reverse=True)[:4]
         nn = sorted(news_by.get(sym, []), key=lambda n: n.get("ts") or "")[-6:]
@@ -89,6 +95,13 @@ def build():
             "indices": u.get("in", []),
             "price": _r(live.get(sym, {}).get("current") or q.get("close")),
             "asof": q.get("date"),
+            "company_profile": ({
+                "business_description": prof.get("business_description"),
+                "incorporation": prof.get("incorporation"),
+                "source_url": prof.get("source_url"),
+                "fetched": prof.get("fetched"),
+                "stale": prof.get("stale"),
+            } if prof else None),
             # --- technical snapshot (Chartist reads this) ---
             "technical": {
                 "ret_1d": _r(q.get("ret_1d")), "ret_5d": _r(q.get("ret_5d")), "ret_20d": _r(q.get("ret_20d")),

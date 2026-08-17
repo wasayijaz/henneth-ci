@@ -9,7 +9,7 @@ const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
 const fmt = (value, digits = 2) => value == null ? "unknown" : Number(value).toLocaleString("en", { maximumFractionDigits: digits });
 const pct = value => value == null ? "unknown" : `${value > 0 ? "+" : ""}${fmt(value, 1)}%`;
 
-let state = { session: null, data: null, selected: null, filter: "" };
+let state = { session: null, data: null, selected: null, filter: "", view: "overview" };
 
 const SCHEME_CYCLE = { system: "light", light: "dark", dark: "system" };
 
@@ -91,10 +91,17 @@ async function loadData(retried = false) {
   if (!token) return renderGate("Sign in to open the private company file.");
   setAccessState("Loading private file", "checking private file");
   $("app").setAttribute("aria-busy", "true");
-  const res = await fetch("data/company_intelligence.json", {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
+  let res;
+  try {
+    res = await fetch("data/company_intelligence.json", {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+  } catch {
+    $("app").removeAttribute("aria-busy");
+    setAccessState("Connection failed", "private file unavailable");
+    return renderGate("The private file could not be reached. Your session is retained; sign in again to retry.");
+  }
   if (res.status === 401 && !retried) {
     const fresh = await refreshSession();
     if (fresh) return loadData(true);
@@ -106,7 +113,13 @@ async function loadData(retried = false) {
       ? "The data gate rejected this account. Owner access is required."
       : `Could not load the company file (${res.status}).`);
   }
-  state.data = await res.json();
+  try {
+    state.data = await res.json();
+  } catch {
+    $("app").removeAttribute("aria-busy");
+    setAccessState("File invalid", "private file unavailable");
+    return renderGate("The private company file was not valid JSON. The last-good deployment remains required.");
+  }
   state.selected = state.data?.tickers?.[0]?.symbol || null;
   setAccessState("Private file open", "private file open");
   $("app").removeAttribute("aria-busy");
@@ -189,6 +202,12 @@ function renderDesk(searchState) {
     btn.onclick = () => pick(btn.dataset.symbol);
     btn.onkeydown = event => moveCompanyFocus(event, btn);
   });
+  document.querySelectorAll("[data-view]").forEach(btn => {
+    btn.onclick = () => {
+      state.view = btn.dataset.view;
+      renderDesk();
+    };
+  });
   if (searchState?.focus) {
     const input = $("search");
     input.focus({ preventScroll: true });
@@ -223,6 +242,7 @@ function detail(r) {
   const liq = r.liquidity || {};
   const source = p.source_url ? `<a href="${esc(p.source_url)}" target="_blank" rel="noopener">DPS company page</a>` : "DPS company page";
   const inc = p.incorporation?.value || p.incorporation?.matched_text || "unknown";
+  const intel = r.intelligence || {};
   return `
     <div class="hero">
       <div>
@@ -237,11 +257,29 @@ function detail(r) {
       </div>
     </div>
     <div class="grid4">
-      ${metric("Fair-value read", v.verdict || "unknown", v.mispricing_pct == null ? "model unavailable" : `${pct(v.mispricing_pct)} versus blended fair value`)}
-      ${metric("Financial rating", f.rating || "unknown", f.overall || "scorecard unavailable")}
-      ${metric("Liquidity", liq.adtv_m == null ? "unknown" : `Rs ${fmt(liq.adtv_m, 0)}M`, liq.signal_eligible ? "inside signal liquidity gate" : "research context only")}
-      ${metric("Dividend", f.div_yield || "unknown", f.payout_ratio ? `payout ${f.payout_ratio}` : "payout unknown")}
+      ${metric("Official filings", intel.document_count ?? 0, `${intel.event_count ?? 0} classified events`)}
+      ${metric("Document changes", intel.change_count ?? 0, intel.last_event_at ? `latest event ${String(intel.last_event_at).slice(0, 10)}` : "no event extracted yet")}
+      ${metric("Synthesis queue", intel.pending_synthesis ?? 0, "approval required · training mode")}
+      ${metric("Issuer monitor", intel.source_status || "unknown", "official website layer")}
     </div>
+    ${renderViewNav(r)}
+    ${state.view === "timeline" ? renderTimeline(r) : state.view === "filings" ? renderFilings(r) : state.view === "sources" ? renderSources(r) : renderOverview(r, { f, v, p, liq, source, inc })}`;
+}
+
+function renderViewNav(r) {
+  const tabs = [
+    ["overview", "Overview"],
+    ["timeline", `Timeline ${r.timeline?.length || 0}`],
+    ["filings", `Filings ${r.filings?.length || 0}`],
+    ["sources", `Sources ${(r.sources?.sources?.length || 0) + (r.sources?.documents?.length || 0)}`],
+  ];
+  return `<nav class="viewnav" aria-label="Company intelligence views" role="tablist">${tabs.map(([key, label]) => `
+    <button type="button" role="tab" aria-selected="${state.view === key}" class="${state.view === key ? "active" : ""}" data-view="${key}">${esc(label)}</button>`).join("")}</nav>`;
+}
+
+function renderOverview(r, ctx) {
+  const { f, v, p, liq, source, inc } = ctx;
+  return `
     <div class="panel span5">
       <span class="kicker">Company profile</span>
       <h2>Issuer context</h2>
@@ -259,11 +297,12 @@ function detail(r) {
         <div class="fact"><span class="label">EPS</span><span>${esc(f.eps || "unknown")}</span></div>
         <div class="fact"><span class="label">P/E</span><span>${esc(f.pe || "unknown")}</span></div>
         <div class="fact"><span class="label">Forward P/E</span><span>${esc(f.forward_pe || "unknown")}</span></div>
+        <div class="fact"><span class="label">Fair-value model</span><span>${esc(v.verdict || "unknown")}${v.mispricing_pct == null ? "" : ` · ${esc(pct(v.mispricing_pct))} versus blended fair value`}</span></div>
       </div>
     </div>
     <div class="panel span9">
       <span class="kicker">Recent evidence</span>
-      <h2>Documents and tape notes</h2>
+      <h2>Research notes and tape</h2>
       ${renderDocs(r)}
     </div>
     <div class="panel span5">
@@ -287,6 +326,78 @@ function renderDocs(r) {
     <b>${esc(d.date || "")} ${esc(d.headline || d.title || "Document")}</b>
     <span>${esc(d.type || (d.impact ? `impact ${d.impact}` : "news"))}${d.url ? `, <a href="${esc(d.url)}" target="_blank" rel="noopener">source</a>` : ""}</span>
   </div>`).join("");
+}
+
+function evidenceLink(item) {
+  if (!item) return "";
+  const page = Number(item.page) > 0 ? `page ${Number(item.page)}` : "source excerpt";
+  const excerpt = item.text ? `<blockquote>${esc(item.text)}</blockquote>` : "";
+  const link = item.source_url ? `<a href="${esc(item.source_url)}" target="_blank" rel="noopener">${page}</a>` : esc(page);
+  return `<div class="evidence"><span>${link} · extracted evidence</span>${excerpt}</div>`;
+}
+
+function renderTimeline(r) {
+  const events = r.timeline || [];
+  const changes = r.changes || [];
+  return `
+    <section class="panel span6"><span class="kicker">Evidence-linked chronology</span><h2>Company timeline</h2>
+      <p class="section-note">Deterministically classified from official documents. Priority is an extraction-routing weight, not an investment score.</p>
+      <div class="timeline">${events.length ? events.map(event => `<article class="timeline-row">
+        <time>${esc(String(event.date || "undated").slice(0, 10))}</time>
+        <div><span class="pill">${esc(event.type || "other")}</span><span class="priority">priority ${esc(event.priority_weight ?? "unknown")}</span>
+        ${(event.evidence || []).map(evidenceLink).join("")}</div>
+      </article>`).join("") : `<div class="empty">No official-document event has been extracted for this company yet.</div>`}</div>
+    </section>
+    <aside class="panel span3"><span class="kicker">Revision ledger</span><h2>Document changes</h2>
+      ${changes.length ? changes.map(change => `<div class="change-row"><b>${esc(String(change.date || "undated").slice(0, 16))}</b><span>${esc(change.type || "document revision")}</span>${renderFactDelta(change.fact_delta)}</div>`).join("") : `<p>No content-hash revision is recorded yet.</p>`}
+    </aside>`;
+}
+
+function renderFactDelta(delta) {
+  if (!delta) return "";
+  const parts = [
+    ["added", delta.added], ["changed", delta.changed], ["removed", delta.removed],
+  ].filter(([, value]) => Array.isArray(value) && value.length);
+  return parts.length ? `<ul class="delta">${parts.map(([label, value]) => `<li>${esc(label)}: ${esc(value.length)}</li>`).join("")}</ul>` : "";
+}
+
+function renderFilings(r) {
+  const filings = r.filings || [];
+  return `<section class="panel span9"><span class="kicker">Official PSX / PUCARS record</span><h2>Filings and announcements</h2>
+    <p class="section-note">Facts below are machine-extracted and always paired with their source page. Agent synthesis remains paused for owner approval.</p>
+    <div class="filings">${filings.length ? filings.map(doc => `<article class="filing">
+      <header><div><time>${esc(String(doc.date || "undated").slice(0, 10))}</time><h3>${esc(doc.title || doc.type || "Official document")}</h3></div><span class="pill ${doc.status === "ready" ? "good" : ""}">${esc(doc.status || "unknown")}</span></header>
+      <p class="filing-meta">${esc(doc.type || "unclassified")} · ${doc.url ? `<a href="${esc(doc.url)}" target="_blank" rel="noopener">open official source</a>` : "source unavailable"} · synthesis ${esc(doc.synthesis?.approval_status || "not queued")}</p>
+      ${doc.error ? `<p class="extract-error">Extraction retained for retry: ${esc(doc.error)}</p>` : ""}
+      ${renderFacts(doc.facts)}
+      ${(doc.evidence || []).map(evidenceLink).join("")}
+    </article>`).join("") : `<div class="empty">No official PDF has completed extraction for this company yet.</div>`}</div>
+  </section>`;
+}
+
+function renderFacts(facts) {
+  if (!facts?.length) return `<p class="muted">No labelled financial fact was extracted from this document.</p>`;
+  return `<div class="fact-grid">${facts.map(fact => {
+    const citation = fact.evidence?.[0];
+    const page = Number(citation?.page) > 0 ? `page ${Number(citation.page)}` : "page unknown";
+    const source = citation?.source_url ? `<a href="${esc(citation.source_url)}" target="_blank" rel="noopener">${esc(page)}</a>` : esc(page);
+    return `<div><span>${esc(fact.type || "fact")}</span><b>${esc(fact.raw_value ?? "unknown")}</b><small>${esc(fact.unit || "reported units")} · ${source}</small></div>`;
+  }).join("")}</div>`;
+}
+
+function renderSources(r) {
+  const registry = r.sources || {};
+  const pages = registry.sources || [];
+  const docs = registry.documents || [];
+  return `
+    <section class="panel span5"><span class="kicker">Issuer-owned web estate</span><h2>Monitored sources</h2>
+      <p class="section-note">Discovered from the official DPS company profile, then restricted to the same issuer domain.</p>
+      ${registry.issuer_url ? `<p><a href="${esc(registry.issuer_url)}" target="_blank" rel="noopener">Open issuer website</a></p>` : ""}
+      ${pages.length ? pages.map(page => `<div class="source-row"><div><b>${esc(page.title || page.kind || "Issuer page")}</b><span>${esc(page.kind || "page")} · ${esc(page.status || "unknown")}${page.changed ? " · changed" : ""}</span></div><a href="${esc(page.url)}" target="_blank" rel="noopener">open</a></div>`).join("") : `<div class="empty">No issuer page has been verified yet.</div>`}
+    </section>
+    <section class="panel span4"><span class="kicker">Issuer document index</span><h2>Reports and presentations</h2>
+      ${docs.length ? docs.map(doc => `<div class="source-row"><div><b>${esc(doc.title || doc.type || "Issuer document")}</b><span>${esc(doc.type || "document")}${doc.first_seen ? ` · first seen ${esc(String(doc.first_seen).slice(0, 10))}` : ""}</span></div><a href="${esc(doc.url)}" target="_blank" rel="noopener">open</a></div>`).join("") : `<div class="empty">No same-domain report link has been indexed yet.</div>`}
+    </section>`;
 }
 
 function bindLogin() {

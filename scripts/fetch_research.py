@@ -14,13 +14,35 @@ Nothing here calls an LLM. Network failures degrade to 'no new documents', never
 The by_ticker index lets dossiers surface a name's documents cheaply.
 """
 import re
+import sys
 import time
+from datetime import datetime
 
 from psx_data import STATE, ROOT, load_json, save_json
 
 FILING_HINTS = re.compile(r"\b(result|results|profit|eps|dividend|payout|board meeting|"
                           r"corporate briefing|briefing session|agm|annual general|accounts|"
                           r"quarter|q[1-4]|half.?year|financial statement)\b", re.I)
+BROKER_STALE_DAYS = 7
+BROKER_FAILED_RETRY_DAYS = 1
+BY_TICKER_LIMIT = 100  # official PSX archive + broker/news rows; CI needs more than a headline tail
+
+
+def _fresh_enough(updated: str | None, days: int) -> bool:
+    if "--force" in sys.argv or not updated:
+        return False
+    try:
+        age = datetime.now() - datetime.strptime(updated, "%Y-%m-%d %H:%M")
+    except ValueError:
+        return False
+    if age.total_seconds() < 0:
+        return False
+    return age.days < days
+
+
+def _broker_sources_fresh(meta: dict) -> bool:
+    days = BROKER_FAILED_RETRY_DAYS if meta.get("broker_sources_failed") else BROKER_STALE_DAYS
+    return _fresh_enough(meta.get("broker_sources_fetched"), days)
 
 
 def _classify(headline):
@@ -72,28 +94,39 @@ def build():
             lst = by_ticker.setdefault(t, [])
             if not any(e.get("hash") == key for e in lst):
                 lst.insert(0, entry)
-                del lst[8:]  # keep the 8 most recent per ticker
+                del lst[BY_TICKER_LIMIT:]
         added += 1
 
     # broker sources (only what the owner configured; safe if empty/unreachable)
     cfg = load_json(ROOT / "config" / "broker_sources.json", {"sources": []})
     broker_staged = 0
-    for src in (cfg.get("sources") or []):
-        if not src.get("enabled", True) or not src.get("url"):
-            continue
-        try:
-            import requests
-            r = requests.get(src["url"], timeout=20,
-                             headers={"User-Agent": "Mozilla/5.0 PSXDesk research fetch"})
-            if r.ok and r.text:
-                # stage raw text for the Librarian to digest (kept out of the served index)
-                staging = STATE / "research_staging"
-                staging.mkdir(exist_ok=True)
-                (staging / (src["broker"] + "_" + time.strftime("%Y%m%d") + ".txt")).write_text(
-                    r.text[:200000], encoding="utf-8", errors="ignore")
-                broker_staged += 1
-        except Exception as e:  # noqa: BLE001 — network failure must never crash the cycle
-            print(f"  broker source {src.get('broker')} unreachable: {str(e)[:60]}")
+    old_meta = idx.get("_meta", {})
+    broker_fetched_at = old_meta.get("broker_sources_fetched")
+    broker_failed = []
+    if _broker_sources_fresh(old_meta):
+        print(f"  broker sources skipped; last fetched {broker_fetched_at} (--force to refresh)")
+        broker_failed = old_meta.get("broker_sources_failed") or []
+    else:
+        for src in (cfg.get("sources") or []):
+            if not src.get("enabled", True) or not src.get("url"):
+                continue
+            try:
+                import requests
+                r = requests.get(src["url"], timeout=20,
+                                 headers={"User-Agent": "Mozilla/5.0 PSXDesk research fetch"})
+                if r.ok and r.text:
+                    # stage raw text for the Librarian to digest (kept out of the served index)
+                    staging = STATE / "research_staging"
+                    staging.mkdir(exist_ok=True)
+                    (staging / (src["broker"] + "_" + time.strftime("%Y%m%d") + ".txt")).write_text(
+                        r.text[:200000], encoding="utf-8", errors="ignore")
+                    broker_staged += 1
+                else:
+                    broker_failed.append(src.get("broker") or src.get("url") or "unknown")
+            except Exception as e:  # noqa: BLE001 — network failure must never crash the cycle
+                broker_failed.append(src.get("broker") or src.get("url") or "unknown")
+                print(f"  broker source {src.get('broker')} unreachable: {str(e)[:60]}")
+        broker_fetched_at = time.strftime("%Y-%m-%d %H:%M")
 
     idx["documents"] = docs
     idx["by_ticker"] = by_ticker
@@ -101,6 +134,8 @@ def build():
         "built": time.strftime("%Y-%m-%d %H:%M"),
         "n_documents": len(docs),
         "broker_staged_for_digest": broker_staged,
+        "broker_sources_fetched": broker_fetched_at,
+        "broker_sources_failed": broker_failed,
         "note": "Filing docs are headline-level from the news log; broker notes (if any sources "
                 "configured) are staged for the Librarian to digest. Nothing fabricated.",
     }

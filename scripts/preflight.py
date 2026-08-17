@@ -101,16 +101,25 @@ def check_code_syntax():
         except SyntaxError as e:
             fail(f"{os.path.relpath(path, ROOT)}: Python syntax error — {e.msg} (line {e.lineno})")
 
-    js_path = os.path.join(ROOT, "dashboard", "app.js")
-    if os.path.exists(js_path):
+    # Every shipped dashboard/CI JavaScript file. Fail closed before either live surface builds.
+    js_roots = [os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "Henneth Desk 2.CI.0")]
+    js_files = sorted(
+        p for js_root in js_roots for p in glob.glob(os.path.join(js_root, "*.js"))
+        if os.path.isfile(p)
+    )
+    node_missing = False
+    for js_path in js_files:
+        rel = os.path.relpath(js_path, ROOT).replace("\\", "/")
         try:
             r = subprocess.run(["node", "-c", js_path], capture_output=True, text=True, timeout=15)
             if r.returncode != 0:
-                fail(f"dashboard/app.js: JS syntax error —\n{(r.stderr or r.stdout)[:300]}")
+                fail(f"{rel}: JS syntax error —\n{(r.stderr or r.stdout)[:300]}")
         except FileNotFoundError:
-            warn("dashboard/app.js: skipped JS syntax check — 'node' not found on this machine")
+            if not node_missing:
+                warn("shipped *.js: skipped JS syntax check — 'node' not found on this machine")
+                node_missing = True
         except Exception as e:  # noqa: BLE001 — never let the checker itself crash the gate
-            warn(f"dashboard/app.js: JS syntax check errored — {e}")
+            warn(f"{rel}: JS syntax check errored — {e}")
 
 
 def check_provenance():
@@ -132,6 +141,117 @@ def check_provenance():
         warn(f"provenance_lint.py did not run — {e}")
 
 
+def check_rule4():
+    """Tier-1 maths QA: Rule 4 share counts and the payout-ratio sign guard.
+    A FAIL here means a published golden case no longer matches CLAUDE.md — block deploy.
+    The checker does not import production calculators, so it cannot rewrite them."""
+    path = os.path.join(ROOT, "scripts", "check_rule4.py")
+    if not os.path.exists(path):
+        fail("check_rule4.py missing — Rule 4 golden cases cannot run")
+        return
+    try:
+        r = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
+        if r.returncode != 0:
+            for line in (r.stdout or "").splitlines():
+                if line.strip().startswith("x "):
+                    fail("rule4: " + line.strip()[2:])
+            if not any(f.startswith("rule4:") for f in fails):
+                fail("check_rule4.py failed — " + ((r.stdout or r.stderr or "")[-200:]))
+    except Exception as e:  # noqa: BLE001
+        fail(f"check_rule4.py did not run — {e}")
+
+
+def check_document_intelligence():
+    """Offline fixtures plus live-state provenance for the CI document layer."""
+    path = os.path.join(ROOT, "scripts", "check_document_intelligence.py")
+    if not os.path.exists(path):
+        fail("check_document_intelligence.py missing — CI evidence cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            detail = (result.stdout or result.stderr or "")[-500:].strip()
+            fail("document intelligence check failed — " + detail)
+    except Exception as e:  # noqa: BLE001
+        fail(f"check_document_intelligence.py did not run — {e}")
+
+
+def check_company_profiles():
+    data, err = load("company_profiles.json")
+    if data is None:
+        fail(f"company_profiles.json: {err}")
+        return
+    rows = data.get("tickers")
+    if not isinstance(rows, dict) or not rows:
+        fail("company_profiles.json: missing populated tickers map")
+        return
+    pilot = data.get("pilot", {})
+    expected = pilot.get("symbols") or []
+    if expected and len(rows) < len(expected):
+        fail(f"company_profiles.json: {len(rows)} rows for {len(expected)} pilot symbols")
+    for sym, row in sorted(rows.items()):
+        if not isinstance(row, dict):
+            fail(f"company_profiles.json: {sym} row is not an object")
+            continue
+        if row.get("symbol") != sym:
+            fail(f"company_profiles.json: {sym} row symbol mismatch")
+        if not row.get("source_url"):
+            fail(f"company_profiles.json: {sym} missing source_url")
+        if not row.get("business_description") and not row.get("incorporation"):
+            fail(f"company_profiles.json: {sym} has neither business_description nor incorporation")
+        inc = row.get("incorporation")
+        if inc is not None and not isinstance(inc, dict):
+            fail(f"company_profiles.json: {sym} incorporation is not an object/null")
+
+
+def check_ci_slice():
+    path = os.path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json")
+    if not os.path.exists(path):
+        fail("Henneth Desk 2.CI.0/data/company_intelligence.json: missing generated CI slice")
+        return
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {e}")
+        return
+    if has_nonfinite(data):
+        fail("Henneth Desk 2.CI.0/data/company_intelligence.json: contains NaN/Infinity")
+    rows = data.get("tickers")
+    if not isinstance(rows, list) or not rows:
+        fail("Henneth Desk 2.CI.0/data/company_intelligence.json: no ticker rows")
+        return
+    for row in rows:
+        sym = row.get("symbol") if isinstance(row, dict) else None
+        if not sym:
+            fail("Henneth Desk 2.CI.0/data/company_intelligence.json: row missing symbol")
+            continue
+        profile = row.get("profile") or {}
+        if not profile.get("source_url"):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} profile missing source_url")
+        if not profile.get("business_description") and not profile.get("incorporation"):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} profile has no parsed content")
+        for key in ("filings", "timeline", "changes"):
+            if not isinstance(row.get(key), list):
+                fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} {key} is not a list")
+        if not isinstance(row.get("sources"), dict) or not isinstance(row.get("intelligence"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} missing intelligence/source maps")
+        if (row.get("sources") or {}).get("status") not in ("ok", "degraded"):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} issuer monitor status missing")
+        if not any(filing.get("status") == "ready" for filing in (row.get("filings") or [])):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} has no ready official filing")
+        for filing in row.get("filings") or []:
+            if not filing.get("doc_id") or not filing.get("url"):
+                fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} filing missing provenance")
+            if filing.get("status") == "ready" and not filing.get("content_sha256"):
+                fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} ready filing missing content hash")
+            for evidence in filing.get("evidence") or []:
+                if not isinstance(evidence.get("page"), int) or evidence["page"] < 1:
+                    fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} invalid evidence page")
+                if not evidence.get("text") or not evidence.get("source_url"):
+                    fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} incomplete evidence")
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")  # never die on a unicode dash in a message
@@ -145,6 +265,12 @@ def main():
     check_code_syntax()
     # --- Tier-1 accuracy QA: block assumed/hollow/stale content from reaching users ---
     check_provenance()
+    # --- Tier-1 maths QA: Rule 4 + payout sign guard ---
+    check_rule4()
+    check_document_intelligence()
+    # --- Company intelligence shape: every populated row, not a sample ---
+    check_company_profiles()
+    check_ci_slice()
 
     # --- files the dashboard hard-depends on, with the exact shape the UI reads ---
     check("health.json", top_keys=("status",))

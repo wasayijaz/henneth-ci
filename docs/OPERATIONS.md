@@ -33,6 +33,28 @@ ALWAYS — every visitor sees the full SAVED analysis 24/7 (debates, TA/FA, 52 b
 **Rule of thumb:** deterministic/data work can run in the cloud; anything that needs Claude (an agent)
 runs on the owner's machine. The cloud never runs an agent (no API key by design).
 
+### 1a. Company Intelligence surface (2.CI.0 — owner-only live surface)
+
+`Henneth Desk 2.CI.0/` is a third static surface in this repository, not a copied desk. The root
+pipeline remains authoritative. Its ordered company-intelligence segment is:
+
+1. `fetch_company_profiles.py` — monthly/failed-row retry DPS issuer profiles for the 20-company pilot.
+2. `fetch_company_documents.py` — daily official PSX/PUCARS metadata plus at most 24 verified 12 MB PDFs in ignored current-run cache.
+3. `document_intelligence.py` — immediate local extraction, page evidence, append-only events/changes and training-mode queue.
+4. `fetch_issuer_sources.py` — weekly same-domain issuer page hashes and report-link index.
+5. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+
+The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
+under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new
+Vercel feature is used. The approval queue does not invoke an agent: training mode requires the owner
+to approve synthesis first.
+
+Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.henneth.app` attached.
+`/data/*` fails closed unless a verified Supabase
+ES256 JWT carries the exact `sub` configured as `CI_OWNER_USER_ID`; a valid non-owner receives 403.
+There is no CI signup, service-role key, schema change or order path. Presentation changes must not
+alter `middleware.js`, the owner environment value, the project root, or the private no-store header.
+
 ---
 
 ## 2. The ONE publish path — never hand-push state

@@ -81,7 +81,11 @@ def main():
     # would keep serving whatever sky was current the day it shipped, and both files would sit
     # permanently dirty, adding noise to the "hand-authored files" warning below until someone
     # swept them into an unrelated --code release.
-    GENERATED = ["site/src/data/public/", "site/public/moon_ephem.bin"]
+    GENERATED = [
+        "site/src/data/public/",
+        "site/public/moon_ephem.bin",
+        "Henneth Desk 2.CI.0/data/",
+    ]
     _run(["git", "add", "-A", "--", *GENERATED])
 
     def _is_auto(path: str) -> bool:

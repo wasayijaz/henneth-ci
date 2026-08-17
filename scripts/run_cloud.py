@@ -17,6 +17,19 @@ STEPS = [
     # the per-symbol trading friction the backtest charges. Out of order, the gate falls back
     # to core-only and the backtest silently reverts to a flat friction assumption.
     "liquidity.py",
+    # DPS company pages for the top research-eligible liquid PSX names. Needs liquidity.py for
+    # the pilot list; consumers only read the retained state/company_profiles.json seam.
+    "fetch_company_profiles.py",
+    # Official PSX announcement metadata for the same 20-company pilot. In scheduled cloud
+    # runs this age-gates itself to the first 08:xx PKT cycle; PDFs are a bounded, ignored
+    # current-run handoff to the deterministic extractor and are never published or committed.
+    "fetch_company_documents.py",
+    # Must immediately consume the ignored current-run PDF handoff before any later producer
+    # can replace it. Writes bounded, source-linked page evidence for Company Intelligence.
+    "document_intelligence.py",
+    # Official issuer roots discovered only from DPS profiles; weekly requests-only hash monitor
+    # for bounded investor/report/governance/news index pages. No browser or paid provider.
+    "fetch_issuer_sources.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
     # other dependency and nothing downstream blocks on it. Pure local math, no network.
@@ -55,6 +68,14 @@ STEPS = [
     # The marketing site's public astro slice. Must run AFTER astro_engine (it reads the current
     # sky). Writes only into site/, never state/, so it cannot affect the desk's own data layer.
     "build_astro_lite.py",
+    # Allow-listed public ticker extract for henneth.app. Must run AFTER quant / fairvalue /
+    # dividends_deep / liquidity / sectors / changelog. Writes only into site/src/data/public/,
+    # never state/. publish.py already commits that folder as generated data. Not running this
+    # left public /psx/ pages on whatever extract last happened to be committed.
+    "build_public_slice.py",
+    # Private Company Intelligence app slice. Reads only retained state files and writes the
+    # one JSON file the static CI app consumes.
+    "build_ci_slice.py",
     # Diffs universe.json against the last-seen ticker set and auto-appends a templated
     # CHANGELOG.md entry when the universe grew (symbols only — nothing to leak). Must run
     # AFTER update_universe.py and BEFORE build_changelog.py so the new entry gets picked up

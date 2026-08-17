@@ -38,6 +38,7 @@ def build():
     rooms = load_json(STATE / "rooms.json", {})
     insider = load_json(STATE / "insider_activity.json", {}).get("symbols", {})
     offmkt = load_json(STATE / "offmarket_activity.json", {}).get("days", {})
+    profiles = load_json(STATE / "company_profiles.json", {}).get("tickers", {})
 
     # dividends per fiscal year, per ticker (reliable multi-year trend)
     import re
@@ -72,6 +73,7 @@ def build():
         fv = fair.get(sym)
         sc = fsc.get(sym)
         room = rooms.get(sym)
+        prof = profiles.get(sym) or {}
 
         # HEALTH
         health = None
@@ -133,6 +135,13 @@ def build():
 
         out[sym] = {
             "name": f.get("name") or "",
+            "company_profile": ({
+                "business_description": prof.get("business_description"),
+                "incorporation": prof.get("incorporation"),
+                "source_url": prof.get("source_url"),
+                "fetched": prof.get("fetched"),
+                "stale": prof.get("stale"),
+            } if prof else None),
             "health": health, "value": value, "momentum": momentum, "income": income,
             "what_changed": changed,
             "dividend_by_year": [{"year": y, "rs": round(v, 2)} for y, v in years][-6:],
