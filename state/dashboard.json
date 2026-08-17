@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 05:58",
+ "updated": "2026-08-17 12:16",
  "regime": "neutral",
  "geo_risk": {
   "score": 54,
@@ -61,22 +61,22 @@
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260817-GAL-roc_accel",
-   "ticker": "GAL",
-   "strategy": "roc_accel",
-   "template": "ROC acceleration",
-   "category": "momentum",
+   "id": "20260817-INDU-vol_dryup_reversal",
+   "ticker": "INDU",
+   "strategy": "vol_dryup_reversal",
+   "template": "Volume dry-up then surge",
+   "category": "volume",
    "sector": "Automobile Assembler",
-   "hold_sessions": 8,
+   "hold_sessions": 12,
    "backtest": {
-    "hit_rate": 0.593,
-    "net_expectancy_pct": 0.72,
-    "n": 54,
-    "oos_hit": 0.643
+    "hit_rate": 0.56,
+    "net_expectancy_pct": 0.79,
+    "n": 134,
+    "oos_hit": 0.535
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "ROC acceleration is triggering now; on GAL's own history it won 59% over 54 trades (+0.7% net/trade), still profitable out-of-sample."
+   "thesis": "Volume dry-up then surge is triggering now; on INDU's own history it won 56% over 134 trades (+0.8% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -87,7 +87,7 @@
   },
   {
    "ticker": "XLI",
-   "score": 72.0
+   "score": 72.7
   },
   {
    "ticker": "GLD",
@@ -95,7 +95,7 @@
   },
   {
    "ticker": "USRUT",
-   "score": 67.0
+   "score": 66.6
   },
   {
    "ticker": "INDU",
@@ -111,11 +111,11 @@
   },
   {
    "ticker": "USDJI",
-   "score": 64.3
+   "score": 64.7
   },
   {
    "ticker": "EFA",
-   "score": 63.3
+   "score": 64.3
   },
   {
    "ticker": "THCCL",
@@ -177,56 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global",
-   "headline": "CEPB FY26 loss shrinks 83%",
-   "tickers": [
-    "CEPB"
-   ],
-   "impact": 3,
-   "summary": "Century Paper & Board Mills Limited (PSX: CEPB) reported FY2026 results with net losses narrowing 83% to Rs58.29m, per Mettis Global. No revenue, EPS, or dividend figure disclosed in the source reviewed. Company remains loss-making (small, listed-tier constituent, weight 0.06%); logged as impact 3 (notable, results date) - not a material earnings surprise given the company remains in a loss position and its small size.",
-   "url": "https://mettisglobal.news/CEPB-FY26-loss-shrinks-83-62638"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global",
-   "headline": "Auto sector urged to lead Pakistan's $63bn export ambitions",
-   "tickers": [
-    "MACRO",
-    "INDU",
-    "MTL",
-    "GAL",
-    "GHNI",
-    "ATLH",
-    "HCAR",
-    "SAZEW"
-   ],
-   "impact": 2,
-   "summary": "Published Aug 13, 2026 11:13am PKT: Federal Minister for Planning Ahsan Iqbal, Federal Minister for Energy Sardar Awais Ahmad Khan Leghari, and SAPM on Industries Haroon Akhtar Khan called on the auto sector to shift toward export-led growth to help meet Pakistan's $63bn export target (part of a broader $100bn national export goal) under the URAAN Pakistan initiative; called for Auto Policy 2.0 implementation, five-year export plans and industrial-cluster modernisation. No new concrete measures, subsidies, or company-level figures announced - a policy exhortation/speech, not a binding action. Logged as impact 2 (minor, sector-wide policy commentary) tagged to auto-sector constituents.",
-   "url": "https://mettisglobal.news/Auto-sector-urged-to-lead-Pakistans-63bn-export-ambitions-62642"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global / CNBC",
-   "headline": "Oil climbs on fresh vessel attacks, Oman spill",
-   "tickers": [
-    "MACRO",
-    "PSO",
-    "APL",
-    "ATRL",
-    "NRL",
-    "PRL",
-    "CNERGY",
-    "OGDC",
-    "PPL",
-    "MARI",
-    "POL"
-   ],
-   "impact": 3,
-   "summary": "Published Aug 13, 2026 10:15am PKT per Mettis Global: Brent crude (Oct delivery) rose 1.01% to $88.09/bbl and WTI (Sept delivery) rose 1.15% to $82.31/bbl on Thursday, per CNBC coverage, following fatal attacks on vessels in the Red Sea/Bab el-Mandeb Strait and the Gulf of Oman, plus a spreading oil spill (approx. 400 sq km) off Oman's coast from a sanctioned tanker that ran aground June 30 carrying an estimated 800,000 barrels of Russian crude. Sub-2% single-session commodity move, continuation of the ongoing Hormuz/Gulf-tension narrative already logged repeatedly this newslog; logged as impact 3 (notable, oil-price-relevant geopolitical development) tagged to E&P and OMC/refiner constituents.",
-   "url": "https://mettisglobal.news/Oil-climbs-on-fresh-vessel-attacks-Oman-spill-62639"
-  },
   {
    "ts": "2026-08-13",
    "source": "Business Recorder / Bloom Pakistan (JS Global note)",
@@ -359,6 +309,51 @@
    "impact": 3,
    "summary": "Supplements the 2026-08-13 newslog entry that logged the DPS 3:50pm checkpoint (180,104.61, -206.60pts/-0.11%) tagged MACRO only pending a closing-bell source. Mettis Global's 'PSX Closing Bell: Red Rout' (headline/summary reviewed via search) confirms the KSE-100 closed marginally lower on Thursday Aug 13, 2026 on selling in commercial banks, technology, and oil & gas sectors; direct article fetch returned HTTP 404 this cycle, so only headline-level sector detail is confirmed, no exact points/percentage re-quoted here (see the already-logged DPS-sourced entry for the confirmed index level). Logged as impact 3 (notable), tagged MACRO per the confirmed-close supersession rule (no new company tickers named in the available summary).",
    "url": "https://mettisglobal.news/PSX-Closing-Bell-Red-Rout-62651"
+  },
+  {
+   "ts": "2026-08-14",
+   "source": "Business Recorder / ProPakistani",
+   "headline": "PSX and SBP remain closed on August 14 for Independence Day-related holiday",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "PSX and SBP were closed Friday Aug 14, 2026 on account of a public holiday; no trading session held, per Business Recorder ('PSX, SBP to remain closed on August 14') and ProPakistani ('PSX Announces Holiday on Friday'). Routine administrative/calendar item.",
+   "url": "https://www.brecorder.com/news/40434299"
+  },
+  {
+   "ts": "2026-08-15",
+   "source": "Business Recorder (BR Research)",
+   "headline": "Cement: Local demand holds the fort - FY27 dispatch data",
+   "tickers": [
+    "MACRO",
+    "LUCK",
+    "FCCL",
+    "MLCF",
+    "DGKC",
+    "CHCC",
+    "KOHC",
+    "BWCL",
+    "ACPL",
+    "PIOC",
+    "GWLC",
+    "POWER",
+    "THCCL"
+   ],
+   "impact": 3,
+   "summary": "Business Recorder BR Research ('Cement: Local demand holds the fort') reports July 2026 cement dispatches: total industry dispatches up 6% YoY to 4.48m tons; domestic dispatches up 17.3% YoY to 3.77m tons, the strongest July performance since 2020, with the improvement coming entirely from the local market. Industry dispatches projected to grow a further 7-8% in FY27 if private construction recovery and budgeted development spending continue; sector still carries substantial idle capacity and weak household affordability. Logged as impact 3 (notable sector news with concrete monthly dispatch figures) per desk criteria, tagged to core-tier cement constituents.",
+   "url": "https://www.brecorder.com/news/40434352/cement-local-demand-holds-the-fort"
+  },
+  {
+   "ts": "2026-08-17",
+   "source": "PSX Data Portal (DPS) indices page",
+   "headline": "KSE-100 intraday at 180,664.12, up 559.51 points (+0.31%) as of 12:09pm PKT",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Intraday checkpoint captured 2026-08-17 12:09pm PKT via dps.psx.com.pk/indices: KSE-100 at 180,664.12, up 559.51 points (+0.31%) against Thursday Aug 13's confirmed close of 180,104.61 (already logged; PSX/SBP were closed Friday Aug 14 for a public holiday, and Aug 15-16 were the weekend, so this is the first trading session since). This is a live intraday read, not a confirmed close - no closing-bell wire report available yet this cycle. Sub-1% move; logged as impact 3 (notable) consistent with prior similar-magnitude index entries in this newslog. Tagged MACRO only; no sector/stock-level breakdown located this cycle.",
+   "url": "https://dps.psx.com.pk/indices"
   }
  ],
  "agent_wire": [],

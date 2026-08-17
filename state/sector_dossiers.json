@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 05:57",
+ "updated": "2026-08-17 07:11",
  "note": "Deterministic evidence pack per PSX sector. Every figure is computed from the desk's own state files - agents debating a sector must cite THIS, never memory. macro_drivers lists only correction-survived relationships; an empty list means no global factor has a demonstrated effect on the sector, which is a finding.",
  "min_members": 3,
  "n_sectors": 31,
@@ -753,21 +753,21 @@
    ]
   },
   "Cement": {
-   "n_members": 17,
+   "n_members": 18,
    "breadth": {
     "above_sma50": 9,
     "advancing_1d": 6
    },
    "returns": {
-    "median_1d_pct": -0.44,
-    "median_20d_pct": -1.02,
+    "median_1d_pct": -0.62,
+    "median_20d_pct": -2.51,
     "best_20d": {
      "sym": "POWER",
      "pct": 6.54
     },
     "worst_20d": {
-     "sym": "FECTC",
-     "pct": -13.1
+     "sym": "POWERPS",
+     "pct": -22.05
     }
    },
    "valuation": {
@@ -1176,21 +1176,37 @@
      "fair_gap_pct": -10.3,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 2.0
+    },
+    {
+     "sym": "POWERPS",
+     "name": "Power Cement (Pref)",
+     "close": 23.62,
+     "ret_1d": -9.08,
+     "ret_20d": -22.05,
+     "rsi14": 38.0,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     }
    ]
   },
   "Chemical": {
-   "n_members": 22,
+   "n_members": 23,
    "breadth": {
-    "above_sma50": 10,
+    "above_sma50": 11,
     "advancing_1d": 1
    },
    "returns": {
-    "median_1d_pct": -1.48,
-    "median_20d_pct": -2.9,
+    "median_1d_pct": -1.64,
+    "median_20d_pct": -2.79,
     "best_20d": {
-     "sym": "BUXL",
-     "pct": 21.51
+     "sym": "SARC",
+     "pct": 48.33
     },
     "worst_20d": {
      "sym": "ICL",
@@ -1268,6 +1284,22 @@
     }
    ],
    "members": [
+    {
+     "sym": "SARC",
+     "name": "Sardar Chemical Industries Limited",
+     "close": 107.26,
+     "ret_1d": -6.54,
+     "ret_20d": 48.33,
+     "rsi14": 66.6,
+     "above_sma50": true,
+     "liquidity_rs_m": 6.5,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.5
+    },
     {
      "sym": "BUXL",
      "name": "Buxly Paints Limited",
@@ -1786,7 +1818,7 @@
      "pe": 11.55,
      "div_yield_pct": 5.44,
      "payout_pct": 62.89,
-     "fair_gap_pct": -14.8,
+     "fair_gap_pct": -14.4,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 28.5
     },
@@ -1818,7 +1850,7 @@
      "pe": 8.66,
      "div_yield_pct": 8.56,
      "payout_pct": 74.12,
-     "fair_gap_pct": -21.3,
+     "fair_gap_pct": -20.7,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 36.0
     },
@@ -1850,7 +1882,7 @@
      "pe": 9.73,
      "div_yield_pct": 9.8,
      "payout_pct": 95.31,
-     "fair_gap_pct": -24.8,
+     "fair_gap_pct": -31.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 6.5
     },
@@ -1866,7 +1898,7 @@
      "pe": 6.72,
      "div_yield_pct": 8.56,
      "payout_pct": 57.52,
-     "fair_gap_pct": 10.3,
+     "fair_gap_pct": 11.1,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 15.0
     },
@@ -1882,7 +1914,7 @@
      "pe": 6.17,
      "div_yield_pct": 8.68,
      "payout_pct": 53.48,
-     "fair_gap_pct": 119.3,
+     "fair_gap_pct": 120.2,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 2.5
     },
@@ -1898,7 +1930,7 @@
      "pe": 7.77,
      "div_yield_pct": 6.82,
      "payout_pct": 53.02,
-     "fair_gap_pct": -13.8,
+     "fair_gap_pct": -13.2,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 24.0
     },
@@ -1978,7 +2010,7 @@
      "pe": 6.73,
      "div_yield_pct": 6.55,
      "payout_pct": 44.07,
-     "fair_gap_pct": 7.4,
+     "fair_gap_pct": 8.1,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 6.5
     },
@@ -2479,14 +2511,14 @@
    ]
   },
   "Food & Personal Care Products": {
-   "n_members": 21,
+   "n_members": 22,
    "breadth": {
-    "above_sma50": 7,
-    "advancing_1d": 5
+    "above_sma50": 8,
+    "advancing_1d": 6
    },
    "returns": {
-    "median_1d_pct": -0.96,
-    "median_20d_pct": -3.84,
+    "median_1d_pct": -0.93,
+    "median_20d_pct": -2.93,
     "best_20d": {
      "sym": "TREET",
      "pct": 6.29
@@ -2588,7 +2620,7 @@
      "pe": 21.77,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": -39.4,
+     "fair_gap_pct": -38.9,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
@@ -2620,7 +2652,7 @@
      "pe": 25.11,
      "div_yield_pct": 6.56,
      "payout_pct": 164.79,
-     "fair_gap_pct": -68.9,
+     "fair_gap_pct": -60.4,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 1457.0
     },
@@ -2652,9 +2684,25 @@
      "pe": 12.52,
      "div_yield_pct": 6.36,
      "payout_pct": 22.52,
-     "fair_gap_pct": 207.0,
+     "fair_gap_pct": 208.5,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 30.0
+    },
+    {
+     "sym": "ISIL",
+     "name": "Ismail Industries Limited",
+     "close": 1936.95,
+     "ret_1d": 0.16,
+     "ret_20d": -0.41,
+     "rsi14": 49.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 1.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 5.0
     },
     {
      "sym": "RMPL",
@@ -2915,14 +2963,14 @@
    ]
   },
   "Glass & Ceramics": {
-   "n_members": 7,
+   "n_members": 8,
    "breadth": {
-    "above_sma50": 5,
+    "above_sma50": 6,
     "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -1.23,
-    "median_20d_pct": -2.11,
+    "median_1d_pct": -1.27,
+    "median_20d_pct": -1.61,
     "best_20d": {
      "sym": "FRCL",
      "pct": 42.53
@@ -3016,6 +3064,22 @@
      "ttm_dividend_rs": 4.0
     },
     {
+     "sym": "KCL",
+     "name": "Karam Ceramics Limited",
+     "close": 141.37,
+     "ret_1d": -7.19,
+     "ret_20d": -1.05,
+     "rsi14": 53.3,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "TGL",
      "name": "Tariq Glass Industries Limited",
      "close": 192.32,
@@ -3098,14 +3162,14 @@
    ]
   },
   "Insurance": {
-   "n_members": 25,
+   "n_members": 26,
    "breadth": {
-    "above_sma50": 18,
-    "advancing_1d": 9
+    "above_sma50": 19,
+    "advancing_1d": 10
    },
    "returns": {
     "median_1d_pct": 0.0,
-    "median_20d_pct": 1.34,
+    "median_20d_pct": 0.67,
     "best_20d": {
      "sym": "TPLI",
      "pct": 132.26
@@ -3399,6 +3463,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "EFUG",
+     "name": "EFU General Insurance Limited",
+     "close": 124.98,
+     "ret_1d": 0.79,
+     "ret_20d": -0.81,
+     "rsi14": 51.5,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.9,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 10.0
+    },
+    {
      "sym": "JLICL",
      "name": "Jubilee Life Insurance Company Limited",
      "close": 175.29,
@@ -3561,14 +3641,14 @@
    ]
   },
   "Inv. Banks / Inv. Cos. / Securities Cos.": {
-   "n_members": 27,
+   "n_members": 28,
    "breadth": {
     "above_sma50": 17,
     "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -1.27,
-    "median_20d_pct": 0.36,
+    "median_1d_pct": -1.43,
+    "median_20d_pct": 0.06,
     "best_20d": {
      "sym": "ICIBL",
      "pct": 354.0
@@ -3990,6 +4070,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "AMBL",
+     "name": "Apna Microfinance Bank Limited",
+     "close": 22.04,
+     "ret_1d": -6.89,
+     "ret_20d": -7.12,
+     "rsi14": 38.2,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "MCBIM",
      "name": "MCB Investment Management Limited.",
      "close": 155.12,
@@ -4216,10 +4312,10 @@
    ]
   },
   "Miscellaneous": {
-   "n_members": 14,
+   "n_members": 16,
    "breadth": {
-    "above_sma50": 7,
-    "advancing_1d": 5
+    "above_sma50": 8,
+    "advancing_1d": 6
    },
    "returns": {
     "median_1d_pct": -0.36,
@@ -4291,6 +4387,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "GOC",
+     "name": "GOC (Pak) Limited.",
+     "close": 200.62,
+     "ret_1d": 7.44,
+     "ret_20d": 71.21,
+     "rsi14": 88.7,
+     "above_sma50": true,
+     "liquidity_rs_m": 3.9,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.0
     },
     {
      "sym": "ARPAK",
@@ -4485,6 +4597,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "UBDL",
+     "name": "United Brands Limited",
+     "close": 23.65,
+     "ret_1d": -1.46,
+     "ret_20d": -9.7,
+     "rsi14": 41.4,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "TRIPF",
      "name": "Tri-Pack Films Limited",
      "close": 138.41,
@@ -4503,14 +4631,14 @@
    ]
   },
   "Modarabas": {
-   "n_members": 18,
+   "n_members": 19,
    "breadth": {
-    "above_sma50": 13,
-    "advancing_1d": 4
+    "above_sma50": 14,
+    "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -1.45,
-    "median_20d_pct": 0.43,
+    "median_1d_pct": -1.26,
+    "median_20d_pct": 0.75,
     "best_20d": {
      "sym": "FPJM",
      "pct": 37.14
@@ -4653,6 +4781,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "OLPM",
+     "name": "OLP Modaraba",
+     "close": 25.0,
+     "ret_1d": 2.08,
+     "ret_20d": 3.14,
+     "rsi14": 54.6,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.7,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 2.5
     },
     {
      "sym": "WASL",
@@ -6600,14 +6744,14 @@
    ]
   },
   "Sugar & Allied Industries": {
-   "n_members": 24,
+   "n_members": 25,
    "breadth": {
-    "above_sma50": 12,
-    "advancing_1d": 9
+    "above_sma50": 13,
+    "advancing_1d": 10
    },
    "returns": {
-    "median_1d_pct": -1.02,
-    "median_20d_pct": 3.47,
+    "median_1d_pct": -0.91,
+    "median_20d_pct": 3.4,
     "best_20d": {
      "sym": "CHAS",
      "pct": 43.84
@@ -6889,6 +7033,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 6.0
+    },
+    {
+     "sym": "SASML",
+     "name": "Sindh Abadgars Sugar Mills Limited",
+     "close": 399.01,
+     "ret_1d": 0.51,
+     "ret_20d": -0.5,
+     "rsi14": 58.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.3,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 2.0
     },
     {
      "sym": "AABS",
@@ -7548,10 +7708,10 @@
    ]
   },
   "Textile Composite": {
-   "n_members": 30,
+   "n_members": 32,
    "breadth": {
-    "above_sma50": 18,
-    "advancing_1d": 7
+    "above_sma50": 19,
+    "advancing_1d": 8
    },
    "returns": {
     "median_1d_pct": -1.11,
@@ -7645,6 +7805,22 @@
      "rsi14": 58.2,
      "above_sma50": true,
      "liquidity_rs_m": 1.3,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "KHYT",
+     "name": "Khyber Textile Mills Limited",
+     "close": 2199.38,
+     "ret_1d": 6.7,
+     "ret_20d": 43.28,
+     "rsi14": 87.2,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.5,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -7981,6 +8157,22 @@
      "rsi14": 45.3,
      "above_sma50": false,
      "liquidity_rs_m": 0.7,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "BHAT",
+     "name": "Bhanero Textile Mills Limited",
+     "close": 806.37,
+     "ret_1d": -3.65,
+     "ret_20d": -5.23,
+     "rsi14": 38.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
