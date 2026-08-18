@@ -2,20 +2,47 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Page not found" path="/404" noindex={true}>
-  <section class="section center">
-    <div class="wrap">
-      <p class="kicker">404</p>
-      <h1>That page moved on</h1>
-      <p class="lead nf">The page you are after isn't here — but the desk is.</p>
-      <div class="nf-cta">
-        <a href="/" class="btn btn-solid">Back home</a>
-        <a href="/plans" class="btn">See the plans</a>
+  <section class="section nf-page">
+    <div class="wrap nf-wrap">
+      <div class="nf-copy">
+        <p class="kicker">Route not found · 404</p>
+        <h1>The page moved on.<br><span>The desk didn't.</span></h1>
+        <p class="lead nf-lead">That address is not part of the public site. Start again from the research desk or see how Henneth works.</p>
+        <div class="nf-cta">
+          <a href="/" class="btn btn-solid">Back home</a>
+          <a href="/plans" class="btn">See the plans</a>
+        </div>
+      </div>
+      <div class="nf-panel" aria-label="Route diagnostic">
+        <div class="nf-panel-top"><span>henneth.site</span><span class="nf-status">offline route</span></div>
+        <div class="nf-panel-body">
+          <p><b>404</b> / no public document at this address</p>
+          <p class="nf-muted">The desk is still available for Pakistan Stock Exchange research, valuation, and market context.</p>
+          <a href="https://desk.henneth.app/today" class="nf-link">Open the desk <span>↗</span></a>
+        </div>
       </div>
     </div>
   </section>
 </Base>
 <style>
-  .center { text-align: center; }
-  .nf { max-width: 420px; margin: 0 auto 22px; }
-  .nf-cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .nf-page { min-height: 62vh; display: flex; align-items: center; }
+  .nf-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); gap: clamp(38px, 9vw, 130px); align-items: center; }
+  .nf-copy h1 { max-width: 680px; margin-bottom: 22px; font-size: clamp(38px, 6vw, 76px); line-height: .98; letter-spacing: -.06em; }
+  .nf-copy h1 span { color: var(--green, #2e7655); }
+  .nf-lead { max-width: 490px; margin-bottom: 24px; }
+  .nf-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .nf-panel { border: 1.5px solid var(--ink-1); background: var(--panel); box-shadow: 8px 8px 0 rgba(10,10,10,.1); font-family: var(--font-mono); }
+  .nf-panel-top { display: flex; justify-content: space-between; gap: 12px; padding: 11px 13px; border-bottom: 1.5px solid var(--ink-1); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  .nf-status { color: var(--dn); }
+  .nf-panel-body { padding: 25px 20px 23px; font-size: 12px; line-height: 1.7; }
+  .nf-panel-body p { margin-bottom: 15px; }
+  .nf-panel-body b { color: var(--dn); }
+  .nf-muted { color: var(--ink-2); }
+  .nf-link { display: inline-flex; gap: 8px; color: var(--ink-1); font-weight: 800; text-transform: uppercase; letter-spacing: .05em; text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 720px) {
+    .nf-page { min-height: 0; padding-top: 54px; padding-bottom: 60px; }
+    .nf-wrap { display: block; }
+    .nf-copy h1 { font-size: clamp(37px, 11vw, 58px); }
+    .nf-panel { margin-top: 42px; box-shadow: 5px 5px 0 rgba(10,10,10,.1); }
+  }
 </style>

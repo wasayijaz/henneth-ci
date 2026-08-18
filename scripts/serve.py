@@ -41,6 +41,21 @@ class NoCache(http.server.SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()
 
+    def send_error(self, code, message=None, explain=None):
+        # Mirror Vercel's custom 404 locally so a bad route is still a useful
+        # branded screen during dashboard QA instead of the stdlib error page.
+        if code == 404:
+            page = Path("dashboard/404.html")
+            if page.is_file():
+                body = page.read_bytes()
+                self.send_response(404)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+        super().send_error(code, message, explain)
+
     def log_message(self, *a):
         pass
 
