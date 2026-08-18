@@ -78,7 +78,7 @@ def main():
     # without a token so watchdog.py can prove /state/ is reachable and the deploy propagated.
     #
     # That role used to be played by natal_ephem.json, which was public for an unrelated reason
-    # (the #/cast funnel). Two problems with borrowing it. First, PUBLICATION_RESTRUCTURE.md §5
+    # (the /cast funnel). Two problems with borrowing it. First, PUBLICATION_RESTRUCTURE.md §5
     # cuts personal astro — flag natal off and the watchdog's only unauthenticated content check
     # silently stops testing anything, passing meaninglessly. Second, an ephemeris is STATIC
     # physics: it cannot go stale, so it could never detect the stale deploy the watchdog exists

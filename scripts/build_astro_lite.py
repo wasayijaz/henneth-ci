@@ -1,7 +1,7 @@
 """The PUBLIC, lighter astro layer for the marketing site.
 
 WHAT THIS IS FOR
-The terminal's personal astro (#/cast, #/mychart) reads a user's birth chart against every named
+The terminal's personal astro (/cast, /mychart) reads a user's birth chart against every named
 PSX ticker. This builds the marketing-site version of the same idea, deliberately one notch
 softer: a reader gets their Moon sign, the elements and grahas it runs with, and which SECTORS and
 COMMODITIES tradition pairs to those grahas — never a named security, never a price, never a call.

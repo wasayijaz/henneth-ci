@@ -43,7 +43,7 @@ $$;
 revoke all on function public.mark_activated(text) from public;
 grant execute on function public.mark_activated(text) to authenticated;
 
--- Anonymous, token-scoped unsubscribe RPC — backs the ungated `#/unsubscribe?t=<uuid>` route.
+-- Anonymous, token-scoped unsubscribe RPC — backs the ungated `/unsubscribe?t=<uuid>` route.
 -- Returns a boolean only; never leaks whether a token exists via error text vs silent no-op.
 -- p_scope: 'all' (sets email_optout) or a specific email_key (reserved for future per-type
 -- opt-out; v1 only implements 'all').

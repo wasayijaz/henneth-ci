@@ -188,8 +188,8 @@ the BROWSER can use to cast a person's birth chart… each user's birth date/tim
 |---|---|
 | `scripts/build_natal_ephemeris.py` | `scripts/astro_natal.py` — company first-trade charts |
 | `state/natal_ephem.json` / `.bin` | `state/astro_natal.json` |
-| `#/cast` — the birth-data wizard (`app.js:1635` `BW_STEPS`, `:1698` `renderBirthCast`) | `scripts/astro_natal_test.py` — tests the company charts |
-| `#/mychart` — `pageMyChart`, synastry, personal gochara | `app.js:1429`, `:1794`, `:1948` — impersonal consumers |
+| `/cast` — the birth-data wizard (`app.js:1635` `BW_STEPS`, `:1698` `renderBirthCast`) | `scripts/astro_natal_test.py` — tests the company charts |
+| `/mychart` — `pageMyChart`, synastry, personal gochara | `app.js:1429`, `:1794`, `:1948` — impersonal consumers |
 | birth-data intake (`app.js:3314`) | `astro`, `astro_regime`, `astro_backtest` |
 | `"cast"`, `"mychart"` in `OPEN_ROUTES` (`app.js:5194`) | |
 | funnel entry points: `app.js:656`, `:3509`, `:5312` | |
@@ -227,7 +227,7 @@ anything. It will not fail loudly. It will pass, meaninglessly.
 
 ### 5a. OWNER DECISION, 2026-07-22 — §5 is NOT being implemented as written
 
-The owner has decided to **keep** `#/cast` and `#/mychart` in the terminal, and to additionally
+The owner has decided to **keep** `/cast` and `/mychart` in the terminal, and to additionally
 build a **lighter public version on the marketing site**: birth chart → elemental affinities with
 sectors and commodities (cement, gold…) plus current transits, leading to sign-up for the
 ticker-level reading.

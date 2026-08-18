@@ -59,7 +59,7 @@ TIMEOUT = 20
 # The public exception carved out of the account gate (middleware.js PUBLIC_FILES).
 # Used here as the one content check we can still do without a token.
 #
-# This was natal_ephem.json until 2026-07-22, borrowed from the #/cast funnel. Two reasons it
+# This was natal_ephem.json until 2026-07-22, borrowed from the /cast funnel. Two reasons it
 # moved to a purpose-built file (written by build_dashboard.py):
 #   * docs/PUBLICATION_RESTRUCTURE.md §5 cuts personal astro from launch. Flag natal off with the
 #     probe still pointed at it and this check silently stops testing anything — it would not fail

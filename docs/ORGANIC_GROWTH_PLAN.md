@@ -57,7 +57,7 @@ public layer now *is* the route to paying customers in six months.
 
 | Layer | Account? | Indexable? | Contains | Job |
 |---|---|---|---|---|
-| **1 — Public** | No | **Yes** | Marketing site, blog clusters, calculators, thin ticker pages, `#/cast`, broker league table | Rankings and links |
+| **1 — Public** | No | **Yes** | Marketing site, blog clusters, calculators, thin ticker pages, `/cast`, broker league table | Rankings and links |
 | **2 — Free account** | Yes | No | Watchlist, full daily read, full chart reading, Investor desk lessons, alerts | **Email addresses** |
 | **3 — Paid (month 6)** | Paid | No (paywall schema) | Fair-value workings, strategy backtests, Desk Room, Scores, research library | Revenue |
 
@@ -137,7 +137,7 @@ Do these in order. Report after each and wait for go-ahead. Nothing here touches
 `dashboard/`, or the desk pipeline.
 
 **Block 0 — verify, don't assume (~20 min).**
-1. Confirm `henneth.app` marketing pages, `/blog/`, `/tools/*` and `#/cast` are reachable with no
+1. Confirm `henneth.app` marketing pages, `/blog/`, `/tools/*` and `/cast` are reachable with no
    account. Report anything that is gated — that is a bug against this plan.
 2. Confirm `desk.henneth.app/robots.txt` still allows crawling and pages still carry
    `<meta robots="noindex">`. Do not change it; the comment in that file explains why.

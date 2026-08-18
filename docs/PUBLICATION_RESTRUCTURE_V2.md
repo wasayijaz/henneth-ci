@@ -167,7 +167,7 @@ substantive cut:
 
 ## 5. Personal astro under the RA regs
 
-Owner decided (V1 §5a) to keep `#/cast` / `#/mychart`. Under the Jan 2026 regs the **named-ticker
+Owner decided (V1 §5a) to keep `/cast` / `/mychart`. Under the Jan 2026 regs the **named-ticker
 ranking is the exposure**: `app.js:1803-1816` scores *every PSX ticker* against the user's birth
 chart and surfaces "your strongest 3 matches." Ranking securities *for one identified person* is the
 closest thing in the whole product to 2(ha)(iv)/(v) — worse than the signals, because it is

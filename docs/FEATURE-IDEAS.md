@@ -105,10 +105,10 @@ unsurfaced. This is the desk's genuinely differentiated pillar and it is current
   a security control documented as active but inert is the worse of the two states.
 
 ### Thin routes worth filling
-`#/shipped` (14 lines), `#/ask` (17 — an input box with no corpus behind it), `#/news` (20),
-`#/calendar` (21), `#/glossary` (26 — hardcoded, ignores the generated `explainer.json`),
-`#/research` (38 — only 36 documents), `#/leaderboard` (44 — renders an empty structure).
-`#/scores` is a dead route.
+`/shipped` (14 lines), `/ask` (17 — an input box with no corpus behind it), `/news` (20),
+`/calendar` (21), `/glossary` (26 — hardcoded, ignores the generated `explainer.json`),
+`/research` (38 — only 36 documents), `/leaderboard` (44 — renders an empty structure).
+`/scores` is a dead route.
 
 ### Empty by design failure, not by choice
 - `leaderboard.json` and `broker_scorecard.json` are both literally `{}`. 410 claims filed, **0

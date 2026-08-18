@@ -103,7 +103,7 @@ capital) and the Telegram bot token.
 
 - `GROQ_API_KEY` is missing on the Vercel deployment — Ask-the-desk returns
   "Chat isn't configured yet — GROQ_API_KEY is missing on the deployment."
-- `#/cast` (cast a birth chart without an account) lost its only signed-out entry point when the
-  members-only gate card was removed. No replacement decided.
+- `/cast` (cast a birth chart without an account) is the deliberate signed-out acquisition entry
+  point. Do not add it to the members-only route list or remove the public ephemeris exception.
 - Proposed, not built: a `desk_profile` jsonb column on the Supabase `profiles` table for
   cross-device onboarding persistence.

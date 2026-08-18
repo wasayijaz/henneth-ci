@@ -84,7 +84,7 @@ A secondary, lower-probability legal angle: PECA criminalizes "unauthorized acce
 ### What's actually live and working
 - **Today** — daily macro/sector read, sectors-to-watch table, key risks, named tickers with backtest stats. Rendering correctly, real data (KSE-100 -3.56% Hormuz-blockade narrative, live global tape ticker).
 - **Board** — universe heatmap, proven-strategy setups (entry/stop/target/size), news wire, predictability table. All populated with live numbers.
-- **Scores / leaderboard** (routed at `#/leaderboard`, not `#/scores` — see UI note below) — desk-analyst and broker call tracking is live and structured correctly.
+- **Scores / leaderboard** (routed at `/leaderboard`, not `/scores` — see UI note below) — desk-analyst and broker call tracking is live and structured correctly.
 - **Accounts** — Supabase Auth sign-in button present and wired (not deep-tested past that, per your instruction not to trigger flows that need real credentials).
 - **Disclaimers** — "Research · not advice" badge in the topbar and a closing disclaimer line on every page body I checked. No-advice language audit from `CHANGELOG.md` (2026-07-12 entry) checks out live: fair-value verdicts read "below/above model fair value," not "undervalued/cheap."
 - **Cloud-independent data refresh** — confirmed via `.github/workflows/desk-data.yml`: prices/quant/backtests/fair-value already refresh every 30 min on GitHub's servers, market hours, Mon–Fri, with a preflight gate before publish and a post-deploy watchdog check. This directly contradicts the pasted strategy chat's assumption that "the loops run while the Claude app is open" — that's true only for the **AI analyst/debate layer** (Desk Room, daily read), not the core price data.
@@ -94,7 +94,7 @@ A secondary, lower-probability legal angle: PECA criminalizes "unauthorized acce
 | Finding | Detail | Severity |
 |---|---|---|
 | **Leaderboard has no track record yet** | Confirmed live: "Scoring calls since 2026-07-13 · 2 days on the record," 36 calls pending, **0 resolved**. Your own pitch is "we grade ourselves" — an empty leaderboard is a claim, not proof. The pasted strategy chat's advice to wait 8–12 weeks before charging is directly validated by what's live right now. | High — blocks paid launch, not free launch |
-| **`#/scores` is a dead route** | Navigating directly to `https://desk.henneth.app/#/scores` silently falls back to the Board view instead of the leaderboard (the actual working route is `#/leaderboard`). Minor, but if you ever link `/scores` from a tweet or ad, it'll land people on the wrong page with no error. | Low — cheap fix, worth doing before any public leaderboard-led launch push |
+| **`/scores` is a dead route** | Navigating directly to `https://desk.henneth.app/scores` silently falls back to the Board view instead of the leaderboard (the actual working route is `/leaderboard`). Minor, but if you ever link `/scores` from a tweet or ad, it'll land people on the wrong page with no error. | Low — cheap fix, worth doing before any public leaderboard-led launch push |
 | **No ToS / Privacy / Risk Disclosure pages** | No footer links found on any page checked. Confirmed against `docs/PRODUCT-ROADMAP.md`'s own "Build order" list — still open. | High — legal, not cosmetic (see §2.4) |
 | **AI analyst layer still laptop-dependent** | Per `README.md`'s own loop table, the Daily read and Desk Room debates run "locally (while the Claude app is open)." Only the deterministic price data is cloud-independent (see above). If your laptop is off, "Today"'s narrative and new debates go stale even though prices stay fresh. Paying users will notice a stale "Today" read faster than a stale price. | Medium-high — the pasted chat's #2 "three things that decide this" item, still partially open |
 | **No billing/plan-gating layer** | Nothing in the codebase (`README.md`, `PRODUCT-ROADMAP.md`) indicates Stripe/Paddle/Safepay integration exists yet. This is 100% of what's needed to actually run a subscription. | High — the literal blocker for "I want to run a subscription" |
@@ -119,7 +119,7 @@ A secondary, lower-probability legal angle: PECA criminalizes "unauthorized acce
 
 **Phase 1 — Product hardening (parallel to Phase 0)**
 5. Publish real ToS/Privacy/Risk Disclosure pages once drafted, linked from the footer on every page.
-6. Fix the `#/scores` route so it either redirects to `#/leaderboard` or renders the same view (§3).
+6. Fix the `/scores` route so it either redirects to `/leaderboard` or renders the same view (§3).
 7. Decide, deliberately, whether the AI analyst layer (Today's read, Desk Room debates) stays laptop-dependent or moves to a cloud runner (`DEPLOY.md` already scopes this: add `ANTHROPIC_API_KEY` as a GitHub secret + a `claude -p` runner — a few $/month). If you're about to charge for freshness, this stops being optional.
 8. Build the billing/plan-gating layer against whichever processor you picked in step 4.
 9. Email-digest infrastructure — **done, not live.** Python cron script (`scripts/lifecycle_email.py`), Resend-only (domain `send.henneth.app` verified). Owner steps left: apply `docs/lifecycle_email.sql` in Supabase SQL editor, add 3 repo secrets + one workflow step in `.github/workflows/desk-data.yml` (web UI — no `workflow` OAuth scope from here). See `PRODUCT-ROADMAP.md` §1a.
@@ -143,7 +143,7 @@ Run this as a literal checklist before flipping any paywall on:
 - [ ] Cancellation/refund flow works and matches what the ToS promises
 - [ ] `preflight.py` passing on the last deploy (this one's already automated — just confirm it's green)
 - [ ] Leaderboard has ≥8 weeks of public history with at least some resolved calls (not just pending)
-- [ ] `#/scores` → `#/leaderboard` routing fixed
+- [ ] `/scores` → `/leaderboard` routing fixed
 - [ ] Mobile pass done on at least one real phone (not just a resized desktop browser)
 - [ ] Ad-blocker/extension resilience re-tested (the `fetch()` → XHR fallback from `CHANGELOG.md`) on 2–3 common extensions
 - [ ] Data-freshness timestamp visible on every page that shows a price, dated as of the actual last refresh
@@ -180,7 +180,7 @@ Reconciling the internal `PRODUCT-ROADMAP.md`, the pasted strategy chat, and wha
 - Native app, only if PWA retention data actually justifies it
 
 ### UI fixes (from today's audit — see §3 for full detail)
-- Fix `#/scores` dead route
+- Fix `/scores` dead route
 - Re-check universe-grid contrast on Board (design-reviewer/design_lint pass)
 - Dedicated mobile QA pass beyond the one prior fix already shipped
 - Confirm ad-blocker/extension resilience holds under new load

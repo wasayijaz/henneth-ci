@@ -21,7 +21,7 @@ Restructure V2 in flight). Supersedes the 2026-07-14 draft below the fold where 
 
 **The problem.** Current onboarding (built 2026-07-14, `dashboard/app.js`) is a three-screen wizard:
 welcome → 4-question quiz (experience/goal/risk-temperament/sectors) → guided tour that drives the
-user through the real app by hash route (`#/today → #/board → #/ticker/FFC → #/value → #/leaderboard`)
+user through the real app by clean route (`/today → /board → /ticker/FFC → /value → /leaderboard`)
 with coach cards, then flips `profiles.onboarded = true`. It's a **tell** flow — the product explains
 itself before the user has done anything. HubSpot/Slack/Firecrawl/Apollo-style onboarding is a
 **do** flow: get the user to one real action fast, then follow up by email based on what they did or
@@ -37,7 +37,7 @@ didn't do.
    lookup, or using the position-size calculator once) fires an activation event. Track it
    server-side (Supabase row: `profiles.activated_at`, first activation type) — this is the metric
    that matters, not "wizard completed."
-3. **In-product nudges replace the guided tour.** A single dismissible coaching card on `#/today`
+3. **In-product nudges replace the guided tour.** A single dismissible coaching card on `/today`
    pointing at the watchlist add box ("Start here — add a ticker") instead of a forced multi-step
    tour. If the user ignores it, the tour doesn't chase them around the app; the email flow (below)
    does the follow-up instead.
