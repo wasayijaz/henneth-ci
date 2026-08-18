@@ -37,7 +37,7 @@ https://desk.henneth.app
 
 ## Privacy policy
 
-https://desk.henneth.app/#/legal/privacy
+https://henneth.app/legal/privacy/
 
 ## Support
 

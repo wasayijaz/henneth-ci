@@ -1,20 +1,35 @@
 ---
 import Legal from '../../layouts/Legal.astro';
-import { site } from '../../site.config.ts';
 ---
-<Legal title="Privacy policy" tab="privacy" path="/legal/privacy">
+<Legal title="Privacy policy" tab="privacy" path="/legal/privacy" draft={false}>
+  <p><b>Effective date:</b> 18 August 2026 · <b>Last updated:</b> 18 August 2026</p>
+
+  <h2>Scope and operator</h2>
+  <p>This policy applies to Henneth, the Henneth Desk research terminal at desk.henneth.app, and the Henneth Desk Companion Chrome extension. Henneth is operated as an independent research and analytics service for the Pakistan Stock Exchange. Privacy questions and deletion requests can be sent to <a href="mailto:hello@henneth.app">hello@henneth.app</a>.</p>
+
   <h2>What we collect</h2>
-  <p>If you create an account in the desk, we collect your email address and the data you choose to save — such as a watchlist, private notes, or manually entered portfolio holdings. If you contact us, we keep that correspondence.</p>
+  <p><b>Account and authentication data.</b> When you create an account, we receive your email address, an account identifier, and authentication/session information from Supabase Auth. Supabase handles your password; Henneth does not receive or store your password in plain text.</p>
+  <p><b>Information you choose to save.</b> This can include your watchlist, private per-ticker notes, practice-portfolio entries, onboarding answers, display preferences, email preferences, and messages you send to support. These items are associated with your account so the desk can restore them across sessions.</p>
+  <p><b>Ask the Desk questions.</b> When you use Ask the Desk, we receive the question and a limited amount of recent conversation context needed to answer a follow-up. The extension keeps that short thread in memory for the active panel; it does not create a separate permanent chat archive.</p>
+  <p><b>Chrome companion page signals.</b> On supported TradingView, PSX DPS, Dawn, Profit, Business Recorder, Tribune, Mettis Global, and The News pages, the extension reads the current URL, page title, headings, and limited visible text locally to identify a PSX ticker. It sends the detected ticker to the Henneth API. Full page text is not sent for ticker detection. Authenticated questions and note operations are sent only to the Henneth API.</p>
+  <p><b>Technical and analytics data.</b> Hosting and security logs may contain request timestamps, IP address, device/browser information, and error details. The public marketing site uses Google Analytics and PostHog for aggregate product measurement, such as page views, referrers, device type, and feature events. These analytics events are not sent with your password or email address.</p>
+  <p><b>Optional astrology data.</b> If you use an astrology feature, you may provide a birth date, time, and place. This is optional, stored privately with your account, used only to calculate the requested chart, and deleted with the associated profile data.</p>
 
-  <h2>How we use it</h2>
-  <p>To operate the product, to let you back into your account, and to send you the updates you asked for. We do not sell your data.</p>
+  <h2>How we use data</h2>
+  <p>We use data to authenticate you, provide ticker research, restore your watchlist and notes, answer grounded research questions, operate and secure the service, understand aggregate product usage, send requested account or lifecycle emails, prevent abuse, and respond to support or deletion requests. We do not sell data, use it for advertising profiles, or use it to determine creditworthiness or lending eligibility.</p>
 
-  <h2>Who processes it</h2>
-  <p>We use third-party infrastructure to run the service — currently our authentication and database provider, our hosting provider, Google Analytics for site measurement, and Resend (a US-based email provider) to send account and lifecycle emails (welcome, activity nudges, weekly digest). The full list and their roles will be finalised here.</p>
+  <h2>Who processes or receives data</h2>
+  <p><b>Supabase</b> provides authentication and the database that stores account/profile data, watchlists, and private notes. <b>Vercel</b> hosts the marketing site, desk, and API and may process ordinary service/security logs. <b>Groq</b> receives an authenticated Ask the Desk question, limited conversation context, and the desk’s filtered research context to generate the response. <b>Google Analytics</b> and <b>PostHog</b> process aggregate marketing/product-usage events when those analytics are enabled. <b>Resend</b> may process an email address and message metadata to deliver account, lifecycle, or opted-in digest emails. These providers process data to operate the requested Henneth feature; we do not share it with advertisers or data brokers. Providers may process data outside Pakistan under their own security and privacy terms.</p>
 
-  <h2>Analytics and cookies</h2>
-  <p>We use Google Analytics to understand how the site is used — which pages people read and how they arrive. It sets cookies and collects usage data such as your approximate location, device and browser. We use it in aggregate to improve the site; we do not use it to identify you personally, and we do not sell this data. You can block it with any standard browser setting or ad blocker without losing access to anything.</p>
+  <h2>Storage and security</h2>
+  <p>Requests between the extension, desk, and providers use HTTPS. The extension keeps the session token in Chrome extension storage and uses it only for authenticated Henneth requests; it does not expose the token to supported third-party pages. Private account rows are protected by the desk’s authenticated access controls. No broker credentials, card details, CNIC or national ID are requested by Henneth.</p>
+
+  <h2>Retention and deletion</h2>
+  <p>We keep account data and saved content while your account is active. You can request access, correction, export, or deletion at any time by emailing <a href="mailto:hello@henneth.app">hello@henneth.app</a>. Account deletion removes the profile, watchlist, practice entries, notes, and optional astrology data from the active service. Limited security, billing, email-delivery, or legal records may be retained for as long as reasonably necessary for those purposes; routine backups and provider logs may persist for a limited period before expiry.</p>
 
   <h2>Your choices</h2>
-  <p>You can unsubscribe from email at any time, and you can ask us to delete your account data. The complete set of rights and retention periods will be finalised here.</p>
+  <p>You may stop using or uninstall the extension, clear its Chrome storage, block optional analytics, unsubscribe from non-essential email, or ask us to delete your account data. Blocking analytics does not remove access to the desk. You may also contact us to ask what personal data we hold about you or to request a copy.</p>
+
+  <h2>Changes and contact</h2>
+  <p>We may update this policy when the service or its data practices change. We will update the date above and, where a change is material, provide a notice in the product or by email. Questions, access requests, and deletion requests: <a href="mailto:hello@henneth.app">hello@henneth.app</a>.</p>
 </Legal>

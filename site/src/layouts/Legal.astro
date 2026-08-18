@@ -2,8 +2,8 @@
 import Base from './Base.astro';
 import { site } from '../site.config.ts';
 
-interface Props { title: string; tab: 'terms' | 'privacy' | 'disclosures'; path: string }
-const { title, tab, path } = Astro.props;
+interface Props { title: string; tab: 'terms' | 'privacy' | 'disclosures'; path: string; draft?: boolean }
+const { title, tab, path, draft = true } = Astro.props;
 
 const tabs = [
   { k: 'terms', label: 'Terms of service', href: '/legal/terms' },
@@ -29,10 +29,10 @@ const tabs = [
       </nav>
 
       <div class="lg-body">
-        <div class="lg-callout">
+        {draft && <div class="lg-callout">
           <b>Draft — pending legal review.</b> This document is a placeholder. Final wording will be
           reviewed by a Pakistan-licensed lawyer before any paid plan opens.
-        </div>
+        </div>}
         <slot />
         <p class="lg-contact muted">
           Questions: <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
