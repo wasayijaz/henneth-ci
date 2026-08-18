@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-18 15:59",
+ "updated": "2026-08-18 17:47",
  "regime": "risk-off",
  "geo_risk": {
   "score": 59,
@@ -43,24 +43,6 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-GAL-atr_quiet_breakout",
-   "ticker": "GAL",
-   "strategy": "atr_quiet_breakout",
-   "template": "Quiet base, upside break",
-   "category": "volatility",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 16,
-   "backtest": {
-    "hit_rate": 0.7,
-    "net_expectancy_pct": 2.95,
-    "n": 10,
-    "oos_hit": 0.8
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 70% over 10 trades (+3.0% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260818-ATRL-high52w_break",
    "ticker": "ATRL",
    "strategy": "high52w_break",
@@ -77,6 +59,24 @@
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
    "thesis": "52-week high breakout is triggering now; on ATRL's own history it won 57% over 30 trades (+2.0% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260818-GAL-trend_momo_combo",
+   "ticker": "GAL",
+   "strategy": "trend_momo_combo",
+   "template": "Trend + momentum combo",
+   "category": "momentum",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 12,
+   "backtest": {
+    "hit_rate": 0.568,
+    "net_expectancy_pct": 1.25,
+    "n": 37,
+    "oos_hit": 0.667
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 57% over 37 trades (+1.2% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -95,7 +95,7 @@
   },
   {
    "ticker": "FFC",
-   "score": 66.9
+   "score": 66.6
   },
   {
    "ticker": "USRUT",
@@ -125,13 +125,8 @@
  "movers_up": [
   {
    "ticker": "USVIX",
-   "ret_1d": 11.86,
-   "close": 15.94
-  },
-  {
-   "ticker": "PRL",
-   "ret_1d": 10.0,
-   "close": 84.4
+   "ret_1d": 10.04,
+   "close": 15.68
   },
   {
    "ticker": "BAFS",
@@ -147,6 +142,11 @@
    "ticker": "CCM",
    "ret_1d": 10.0,
    "close": 53.68
+  },
+  {
+   "ticker": "SHCM",
+   "ret_1d": 10.0,
+   "close": 50.61
   }
  ],
  "movers_down": [
@@ -177,73 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-08-14",
-   "source": "Business Recorder / ProPakistani",
-   "headline": "PSX and SBP remain closed on August 14 for Independence Day-related holiday",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 1,
-   "summary": "PSX and SBP were closed Friday Aug 14, 2026 on account of a public holiday; no trading session held, per Business Recorder ('PSX, SBP to remain closed on August 14') and ProPakistani ('PSX Announces Holiday on Friday'). Routine administrative/calendar item.",
-   "url": "https://www.brecorder.com/news/40434299"
-  },
-  {
-   "ts": "2026-08-15",
-   "source": "Business Recorder (BR Research)",
-   "headline": "Cement: Local demand holds the fort - FY27 dispatch data",
-   "tickers": [
-    "MACRO",
-    "LUCK",
-    "FCCL",
-    "MLCF",
-    "DGKC",
-    "CHCC",
-    "KOHC",
-    "BWCL",
-    "ACPL",
-    "PIOC",
-    "GWLC",
-    "POWER",
-    "THCCL"
-   ],
-   "impact": 3,
-   "summary": "Business Recorder BR Research ('Cement: Local demand holds the fort') reports July 2026 cement dispatches: total industry dispatches up 6% YoY to 4.48m tons; domestic dispatches up 17.3% YoY to 3.77m tons, the strongest July performance since 2020, with the improvement coming entirely from the local market. Industry dispatches projected to grow a further 7-8% in FY27 if private construction recovery and budgeted development spending continue; sector still carries substantial idle capacity and weak household affordability. Logged as impact 3 (notable sector news with concrete monthly dispatch figures) per desk criteria, tagged to core-tier cement constituents.",
-   "url": "https://www.brecorder.com/news/40434352/cement-local-demand-holds-the-fort"
-  },
-  {
-   "ts": "2026-08-17",
-   "source": "PSX Data Portal (DPS) indices page",
-   "headline": "KSE-100 intraday at 180,664.12, up 559.51 points (+0.31%) as of 12:09pm PKT",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Intraday checkpoint captured 2026-08-17 12:09pm PKT via dps.psx.com.pk/indices: KSE-100 at 180,664.12, up 559.51 points (+0.31%) against Thursday Aug 13's confirmed close of 180,104.61 (already logged; PSX/SBP were closed Friday Aug 14 for a public holiday, and Aug 15-16 were the weekend, so this is the first trading session since). This is a live intraday read, not a confirmed close - no closing-bell wire report available yet this cycle. Sub-1% move; logged as impact 3 (notable) consistent with prior similar-magnitude index entries in this newslog. Tagged MACRO only; no sector/stock-level breakdown located this cycle.",
-   "url": "https://dps.psx.com.pk/indices"
-  },
-  {
-   "ts": "2026-08-17",
-   "source": "Mettis Global (latest-news feed) / TradingEconomics",
-   "headline": "PSX Closing Bell: Green Surge - KSE-100 confirmed close up ~398 points",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Supersedes the 2026-08-17 12:09pm intraday checkpoint (180,664.12, +559.51pts) already logged. Confirmed Monday session close, from Thursday Aug 13's confirmed close of 180,104.61: KSE-100 settled at approximately 180,502 (+397.8 points / +0.22%), per Mettis Global's 'PSX Closing Bell: Green Surge' headline (via mettisglobal.news/latest feed) and corroborated by TradingEconomics, which also cites KSE-30 up 157.6 points (+0.29%) to 53,761. Per Mettis: oil & gas stocks drove gains while banks, cement, and fertilizer sectors declined - sector-level only, no specific company named in the sources reviewed this cycle. Sub-1% net move; logged as impact 3 (notable) consistent with prior similar-magnitude index-close entries in this newslog. Tagged MACRO only per the confirmed-close supersession rule (prior intraday item was MACRO-only; no new company tickers named in the fresh source).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-17",
-   "source": "Business Recorder / Mettis Global",
-   "headline": "PPL discovers gas & condensate at Dolphin X-1 well, Sirani Exploration License, Sindh",
-   "tickers": [
-    "PPL"
-   ],
-   "impact": 3,
-   "summary": "Pakistan Petroleum Limited (PSX: PPL), operator of the Sirani Exploration License (75% working interest, with GHPL holding 25%), disclosed to PSX on Aug 17, 2026 a gas/condensate discovery at exploration well Dolphin X-1 in District Sujawal, Sindh. Well spudded Apr 17, 2026, drilled to 3,850m to test the Chiltan Formation. Post-acid testing: gas flowing at 0.942 mmscfd with heating value ~1,000 Btu/scf. Pre-acid testing: condensate at an initial rate of 94 bbl/day, declining to 46 bbl/day within 24 hours. Business Recorder headline framed it as a 'major exploration win' that 'opened a new exploration frontier across onshore marshy area and its possible extensions into shallow offshore'; however the disclosed flow rate (0.942 mmscfd) is modest relative to PPL's scale. Logged as impact 3 (notable exploration/discovery news) given the disclosed figures do not yet rise to a confirmed material production/reserve addition.",
-   "url": "https://www.brecorder.com/news/40435183/ppl-discovers-gas-amp-condensate-in-sindh-in-major-exploration-win"
-  },
   {
    "ts": "2026-08-17",
    "source": "Mettis Global",
@@ -353,16 +286,74 @@
    "impact": 2,
    "summary": "Masood Textile Mills Limited (PSX: MSOT) commissioned 6.2MW of solar power capacity, per Mettis Global. No project cost or expected savings figure disclosed in the source reviewed this cycle. Logged as impact 2 (minor company operational item).",
    "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "The Express Tribune / Mettis Global / DPS",
+   "headline": "PSX confirmed close: KSE-100 settles at 177,955.51, down 2,546.94 points (-1.41%)",
+   "tickers": [
+    "MACRO",
+    "UBL",
+    "FFC",
+    "MEBL",
+    "ENGROH",
+    "OGDC",
+    "PPL",
+    "HUBC",
+    "MARI",
+    "CNERGY"
+   ],
+   "impact": 4,
+   "summary": "Confirms/supersedes the earlier same-day unconfirmed checkpoint (DPS 178,211.92/-2,290.52 vs Mettis 177,955.51/-2,546.94, both captured ~3:30-3:38pm PKT and already logged). Per The Express Tribune ('PSX tumbles 1,806 points amid geopolitical tensions'), the confirmed close matches the Mettis figure: KSE-100 plunged 2,546.94 points (-1.41%) to settle at 177,955.51, from Monday Aug 17's confirmed close of 180,502.45; intraday high 180,602.44, low 177,866.04. Drivers cited: fading prospects for a US-Iran peace deal, oil prices near three-week highs on supply-risk concerns, and domestic unease after the Supreme Court ordered former PM Imran Khan's transfer from jail to hospital for medical treatment. Selling was broad-based across commercial banks, oil & gas exploration, oil marketing companies, cement, automobile assemblers, and power generation; the article names United Bank (UBL), Fauji Fertiliser (FFC), Meezan Bank (MEBL), Engro Holdings (ENGROH), OGDC, PPL, Hub Power (HUBC) and Mari Energies (MARI) as heavyweights under pressure, and Cnergyico PK (CNERGY) as volume leader (231.5m shares, -Rs0.22 to Rs14.79). Volume 1.03bn shares, value Rs50.7bn; of 494 companies traded, 104 advanced/368 declined/22 unchanged. Tagged to the union of the superseded item's tickers (MACRO) plus all tickers newly named in this source, per the confirmed-close supersession rule. Impact 4 (material market-wide move, >1% single-session decline with named heavyweight movers).",
+   "url": "https://tribune.com.pk/story/2624555/psx-tumbles-1806-points-amid-geopolitical-tensions"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global",
+   "headline": "Pakistan Tobacco Company (PAKT) 1HCY26 consolidated profit up 30% to Rs18.53bn",
+   "tickers": [
+    "PAKT"
+   ],
+   "impact": 4,
+   "summary": "Pakistan Tobacco Company Limited (PSX: PAKT) reported consolidated net profit for the half year ended June 30, 2026 of Rs18.53bn, up 30% from Rs14.26bn in the corresponding period last year, per Mettis Global. No EPS or dividend figure fetched this cycle. Logged as impact 4 (material earnings surprise) for this core-tier constituent.",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global",
+   "headline": "Habib Bank (HBL) 1HCY26 consolidated profit up 0.26% to Rs34.54bn",
+   "tickers": [
+    "HBL"
+   ],
+   "impact": 3,
+   "summary": "Habib Bank Limited (PSX: HBL) reported consolidated net profit after tax for the six months ended June 30, 2026 of Rs34.54bn, up 0.26% from Rs34.45bn in the corresponding period last year, per Mettis Global - essentially flat YoY. No EPS or dividend figure fetched this cycle. Logged as impact 3 (notable results date; not a material surprise given the marginal change).",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global",
+   "headline": "Attock Cement Pakistan (ACPL) FY26 profit up 97% to Rs3.42bn",
+   "tickers": [
+    "ACPL"
+   ],
+   "impact": 4,
+   "summary": "Attock Cement Pakistan Limited (PSX: ACPL) reported FY2026 (year ended June 30, 2026) net profit of Rs3.42bn, up 97% from Rs1.73bn in the preceding year, per Mettis Global. No revenue, EPS, or dividend figure fetched this cycle. Logged as impact 4 (material earnings surprise) for this listed-tier constituent, consistent with the desk's scoring of other ~90%+ profit-growth prints this cycle (e.g. CPPL, FCL).",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global",
+   "headline": "Lucky Cement (LUCK) FY26 consolidated profit up 14% to Rs96.46bn",
+   "tickers": [
+    "LUCK"
+   ],
+   "impact": 3,
+   "summary": "Lucky Cement Limited (PSX: LUCK) reported consolidated net profit for FY2026 (year ended June 30, 2026) of Rs96.46bn, up 14% from Rs84.50bn in FY25, per Mettis Global. No EPS or dividend figure fetched this cycle. Logged as impact 3 (notable results date, solid but not extreme growth) for this core-tier constituent.",
+   "url": "https://mettisglobal.news/latest/"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-08-14T17:47:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-14T17:47:00+05:00",
-   "outcome": "Holiday (2026-08-14, Independence Day, in state/calendar.json holidays) — stopped at step 2, no work done."
-  },
   {
    "started": "2026-08-14T17:22:00+05:00",
    "mode": "full",
@@ -386,6 +377,12 @@
    "mode": "full",
    "ended": "2026-08-17T18:05:00+05:00",
    "outcome": "EOD refresh: git pull --rebase --autostash conflicted (concurrent cloud commit) -- resolved by taking remote for 13 UU state/*.json, then discarded stale re-applied local state/ edits from the autostash pop (kept fresh pulled data), left unrelated hand-authored dirty files (AGENTS.md/CLAUDE.md/scripts/*.py/docs, pre-existing, not mine) untouched. run_cloud.py ALL OK. macro-agent: regime neutral, geo-risk 56/moderate (SBP reserves $17.057bn +14mn, CPI 9.2%, rate held 11.5%, PIB yields rising). news-sentinel: 5 items appended (172 total) -- KSE-100 close ~180,502 +0.22%, PPL Dolphin X-1 gas/condensate find (impact 3), GWLC kiln halt, SRVI stock-split book closure, Federal Constitutional Court tax-credit-vs-super-tax ruling (impact 4 -- wrote escalation.json for the intraday pipeline; full strategist/risk/auditor NOT run here per this routine's explicit 3-agent scope). market-analyst: daily read tone neutral, oil&gas (PPL) led while banks/cement/fertilizer lagged; watchlist narrowed to BML/PPL/GAL/FCCL on genuine multi-axis stacking (TPLT/NICL live-triggered but excluded on fundamental-caution conflict, ATRL/CNERGY excluded as overbought+avoid-sector). build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). No open positions, monitor skipped. Published data-only (18 hand-authored files held back, pre-existing dirty tree from another session). Watchdog OK (app shell, public files, account gate intact), pushed to desk.henneth.app."
+  },
+  {
+   "started": "2026-08-18T15:31:00+05:00",
+   "mode": "light-escalated",
+   "ended": "2026-08-18T16:01:00+05:00",
+   "outcome": "AM checkpoint (delayed start, ~15:31 not 11:00). health=ok (spot-check HUBC 1.87% dev). news-sentinel: 7 items appended (179 total) -- KSE-100 sharp intraday decline -1.27%/-1.41% (impact 4, no confirmed close/driver yet), Bank Makramah Rs10bn sponsor injection (impact 4), Cherat Packaging FY26 profit +83% (impact 4), Fast Cables FY26 profit +66% (impact 4), plus 3 lower-impact items; escalation.json fired (4 items >=4). macro-agent: regime neutral->risk-off -- root cause found: US-Iran ceasefire expired 2026-08-17, Strait of Hormuz tanker traffic collapsed (Pakistan ~90% oil/LNG imports transit Hormuz), corroborated by VIX +11.51%/1d, gold safe-haven bid, geo-risk 59/moderate; domestic anchors intact (SBP 11.5%, CPI 9.2%, reserves $17.057bn) but geo-shock overrides. Sector tilt: favour E&P/fixed-income-carry, avoid OMCs/refiners/autos/cement/textiles. market-analyst: daily_read.json refreshed for the intraday shock, BML leads (live trigger + fundamentals + injection news), CPPL/FCL/GAL logged with caveats, index-decline cause flagged unconfirmed not guessed. No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). Published data-only (18 hand-authored files held back, pre-existing dirty tree from another session), pushed to desk.henneth.app. Watchdog OK (app shell, public files, account gate intact)."
   }
  ]
 }
