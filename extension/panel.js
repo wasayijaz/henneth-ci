@@ -286,7 +286,7 @@
 
   async function renderRead(sym) {
     const request = ++readRequest;
-    openDesk.href = "https://desk.henneth.app/#/ticker/" + encodeURIComponent(sym);
+    openDesk.href = "https://desk.henneth.app/ticker/" + encodeURIComponent(sym);
     renderDeskLoading(sym);
 
     const [jobs] = await Promise.all([

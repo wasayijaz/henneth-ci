@@ -1,6 +1,6 @@
 /* ============================================================
    Production script — Board centre-pane renderer.
-   Repaints #view on #/board with the reference layout from
+   Repaints #view on /board with the reference layout from
    dashboard/psx-board-preview.html: .board-head, the 5-cell
    .market-strip, and the .board-grid tile set
    (strategy / universe / news / market / indices).
@@ -29,7 +29,8 @@
   if (!VIEW) return;
 
   function onBoard() {
-    return (location.hash || "").replace(/^#\/?/, "").split(/[?/]/)[0] === "board";
+    var path = window.appPathname ? window.appPathname() : location.pathname;
+    return (path || "/").replace(/^\/+|\/+$/g, "").split(/[?/]/)[0] === "board";
   }
 
   // ---- formatting ------------------------------------------------
@@ -162,11 +163,11 @@
   }
 
   // ---- markup ----------------------------------------------------
-  // The row's whole job is location.hash = "#/ticker/SYM", so the symbol cell is a
+  // The row's whole job is navigate("/ticker/SYM"), so the symbol cell is a
   // real anchor: keyboard and screen-reader users get the route with no JS at all,
   // and the row click stays as a mouse-only convenience on top of it.
   function symCell(sym) {
-    return '<td><a class="sym-link" href="#/ticker/' + encodeURIComponent(sym) + '"><strong>' + esc(sym) + "</strong></a></td>";
+    return '<td><a class="sym-link" href="/ticker/' + encodeURIComponent(sym) + '"><strong>' + esc(sym) + "</strong></a></td>";
   }
 
   function researchTable(rows) {
@@ -257,7 +258,7 @@
       '<div class="board-title">PSX Board</div>' +
       "</div>" +
       '<div class="board-actions">' +
-      '<a class="quiet-btn" href="#/today" aria-label="Open today\'s note">⋮</a>' +
+      '<a class="quiet-btn" href="/today" aria-label="Open today\'s note">⋮</a>' +
       "</div></header>" +
 
       '<section class="market-strip" aria-label="Market overview">' +
@@ -282,7 +283,7 @@
       '<div class="tile-body">' +
       tabs("strategy", ["Signals", "Proven Strategies", "Predictability", "Live Triggers"]) +
       tabPanel("strategy", TABSETS.strategy[0]) +
-      '<a class="tile-link" href="#/research">View all research →</a>' +
+      '<a class="tile-link" href="/research">View all research →</a>' +
       "</div></section>" +
 
       '<section class="tile news-tile" data-tile="news">' +
@@ -297,7 +298,7 @@
           (n.url ? '<a class="news-open" href="' + esc(n.url) + '" target="_blank" rel="noopener" aria-label="Open source">↗</a>' : '<span class="news-open">·</span>') +
           "</div>";
       }).join("") : '<div class="tile-empty">No headlines logged.</div>') +
-      '<a class="tile-link" href="#/news">View all news →</a>' +
+      '<a class="tile-link" href="/news">View all news →</a>' +
       "</div></section>" +
 
       "</div>" +
@@ -401,7 +402,7 @@
       // the symbol cell is a real anchor and already routes; this row handler is
       // only the mouse-only convenience on the rest of the row
       if (e.target.closest("a")) return;
-      location.hash = "#/ticker/" + row.getAttribute("data-sym");
+      navigate("/ticker/" + encodeURIComponent(row.getAttribute("data-sym")));
       return;
     }
     // reference behaviour: selecting a tile must not fight its own controls
@@ -439,6 +440,8 @@
     requestAnimationFrame(function () { pending = false; paint(); });
   }).observe(VIEW, { childList: true, subtree: true });
 
-  window.addEventListener("hashchange", function () { setTimeout(paint, 60); });
+  function repaintOnNavigation() { setTimeout(paint, 60); }
+  window.addEventListener("henneth:navigate", repaintOnNavigation);
+  window.addEventListener("popstate", repaintOnNavigation);
   setTimeout(paint, 60);
 })();

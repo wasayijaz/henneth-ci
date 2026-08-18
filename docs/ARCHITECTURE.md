@@ -22,7 +22,7 @@ The product is a hybrid of five parts:
 
 1. Deterministic Python (`scripts/`) fetches, measures, scores, backtests, and writes JSON into `state/`. This runs in GitHub Actions even when the owner's computer is off. No LLM. No tokens.
 2. Judgement agents (`.claude/agents/` + `prompts/`) run on the owner's machine. They write analysis back into `state/`. Visitors read the saved analysis 24/7; agents refresh it, they are not needed to serve it.
-3. The terminal (`dashboard/`) is a static hash-routed SPA. It reads `state/*.json` over HTTPS. It writes nothing to `state/`.
+3. The terminal (`dashboard/`) is a static path-routed SPA. It reads `state/*.json` over HTTPS. It writes nothing to `state/`.
 4. Supabase holds only auth and per-user rows. It never serves research.
 5. Vercel serves static files. Edge middleware gates `/state/*`. One Edge function (`api/ask.js`) answers signed-in chat.
 
@@ -58,10 +58,10 @@ The product is a hybrid of five parts:
 | Publish gate | `scripts/preflight.py` | `publish.py`, `build_dashboard.py`, the cloud workflow |
 | Live-site gate | `scripts/watchdog.py` | after every publish |
 | Account gate (data) | `middleware.js` | every `/state/*` request on the terminal |
-| Account gate (UI) | `dashboard/app.js` `OPEN_ROUTES` / `gateAllows()` | hash routes |
+| Account gate (UI) | `dashboard/app.js` `OPEN_ROUTES` / `gateAllows()` | clean dashboard paths |
 | Per-user data | Supabase `profiles` + RLS | `app.js`, the Chrome extension |
 | Public marketing extract | `scripts/build_public_slice.py`, `scripts/build_astro_lite.py` | Astro pages under `site/` |
-| Ask-the-desk | `api/ask.js` (Groq) | `#/ask` and the context rail |
+| Ask-the-desk | `api/ask.js` (Groq) | `/ask` and the context rail |
 | Company profile source | `scripts/fetch_company_profiles.py` -> `state/company_profiles.json` | CI slice, Room dossiers, explainer, ticker overview |
 | Official company documents | `scripts/fetch_company_documents.py` -> existing `state/research_index.json` + transient ignored PDF handoff | deterministic document extraction |
 | Page evidence, facts and events | `scripts/document_intelligence.py` -> `state/company_documents.json`, `state/company_event_ledger.json` | CI slice, approval queue |
@@ -77,7 +77,7 @@ The product is a hybrid of five parts:
 | Company Intelligence data gate | `Henneth Desk 2.CI.0/middleware.js` | `/data/*` on the CI Vercel project |
 | Brand / plan copy on the marketing site | `site/src/site.config.ts` | every Astro page |
 | Desk Room scaffolding | `scripts/room_*.py` | Room agents; terminal Room surfaces |
-| Astro pillar | `scripts/astro_*.py` | `#/astro`, `#/cast`, `#/mychart`, `/financial-astrology` |
+| Astro pillar | `scripts/astro_*.py` | `/astro`, `/cast`, `/mychart`, `/financial-astrology` |
 
 If you are about to add a helper, search this table first.
 
@@ -90,7 +90,10 @@ There is no application server for the research product.
 **Terminal (`dashboard/`)**
 
 - `index.html` is the shell. It loads `auth-terminal.js`, `app.js`, `rail.js`, `topbar.js`, `board.js`, `shell.js`, `icons.js`, `i18n-ur.js`.
-- Routing is the URL hash (`#/today`, `#/ticker/LUCK`). `route()` in `app.js` is the dispatcher.
+- Routing uses clean URL paths (`/today`, `/ticker/LUCK`). `route()` in `app.js` is the sole
+  dispatcher; in-app navigation uses the History API and browser back/forward arrives through
+  `popstate`. Supabase auth callbacks still arrive in the URL hash and are handled separately —
+  those callback fragments are not dashboard routes.
 - Data access is `j(filename)` in `app.js`. Locally it reads `../state/`; live it reads `state/` and attaches the Supabase bearer token. Middleware verifies that token. There is an XHR fallback because some browser extensions break `fetch`.
 - `app.js` is about 7,300 lines and owns almost every page. Adjacent files own chrome, not product rules.
 - `app.html` is a stale pre-gate shell. `scripts/vercel_build.sh` copies the whole `dashboard/` then deletes `app.html` so it is not served.
@@ -200,7 +203,7 @@ Never assume a SQL file in `docs/` has been applied. Additive first. There is no
 | Layer | What it protects | Bypassable from the client? |
 |---|---|---|
 | `middleware.js` | research files under `/state/` | no |
-| `gateAllows()` / `OPEN_ROUTES` | which hash routes render | yes — it is UX |
+| `gateAllows()` / `OPEN_ROUTES` | which clean dashboard paths render | yes — it is UX |
 | `hasFeature()` / `PLANS` / `BILLING_LIVE` | which screens are teaser-walled | yes, and while `BILLING_LIVE === false` every signed-in account is treated as Pro |
 | Supabase RLS | a user's own `profiles` row | no, if RLS stays on |
 | `isOwner()` | plan-preview chrome | yes — it is an email string compare |
@@ -292,6 +295,10 @@ One repo, two Vercel projects, one publish choke point.
 
 - Root `vercel.json`: `installCommand` is a no-op, `buildCommand` is `sh scripts/vercel_build.sh`, `outputDirectory` is `public`.
 - `vercel_build.sh` copies all of `dashboard/` into `public/`, deletes `app.html`, copies `state/` to `public/state/`. Deny-list, not allow-list — an allow-list already 404'd `auth-terminal.js` in production.
+- The terminal's Vercel configuration falls back only clean dashboard paths to the SPA shell, so a
+  refresh or shared link such as `/today`, `/ticker/LUCK`, or `/legal/privacy/` reaches the same
+  dispatcher. Static assets, `/state/*`, and `/api/*` retain their normal handling and are not
+  swallowed by the SPA fallback.
 - `ignoreCommand` skips a deploy when the commit did not touch `dashboard/`, `state/`, `api/`, `middleware.js`, the build script, or `vercel.json`.
 - Cache: HTML/JS `must-revalidate`; `state/*.json` 60s + SWR 900s. A caching service worker would violate the freshness guarantee; `dashboard/sw.js` has no fetch handler and is not shipped until push is activated.
 

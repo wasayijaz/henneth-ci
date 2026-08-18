@@ -18,13 +18,13 @@ function parsePayload(event) {
     try { d = { body: event.data.text() }; } catch (e2) { d = {}; }
   }
   const sym = typeof d.symbol === "string" ? d.symbol.trim().toUpperCase() : "";
-  // Only ever navigate to our own hash routes — never to a URL taken verbatim from the payload.
+  // Only ever navigate to our own clean routes — never to a URL taken verbatim from the payload.
   const safeSym = /^[A-Z0-9.&-]{1,20}$/.test(sym) ? sym : "";
   return {
     title: String(d.title || "Henneth Desk").slice(0, 120),
     body: String(d.body || "").slice(0, 400),
     tag: String(d.tag || (safeSym ? "watch:" + safeSym : "desk")).slice(0, 60),
-    route: safeSym ? "#/ticker/" + safeSym : "#/watchlist",
+    route: safeSym ? "/ticker/" + safeSym : "/watchlist",
   };
 }
 
@@ -42,8 +42,11 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const route = (event.notification.data && event.notification.data.route) || "#/watchlist";
-  const target = new URL("/" + route, self.location.origin).href;
+  const rawRoute = (event.notification.data && event.notification.data.route) || "/watchlist";
+  // Notification data is internal, but validate it again before constructing a navigation URL.
+  // This keeps clicks same-origin even if a stale or malformed payload reaches the worker.
+  const route = /^(?:\/watchlist|\/ticker\/[A-Z0-9.&-]{1,20})$/.test(rawRoute) ? rawRoute : "/watchlist";
+  const target = new URL(route, self.location.origin).href;
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((wins) => {
       // Reuse an already-open desk tab rather than piling up windows.

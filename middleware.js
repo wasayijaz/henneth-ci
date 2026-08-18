@@ -27,7 +27,7 @@ const JWKS_URL = 'https://qteoncckohuoatbjjykb.supabase.co/auth/v1/.well-known/j
 /* THE DELIBERATE EXCEPTIONS. Two different reasons; keep them distinguishable.
  *
  * 1. natal_ephem.bin / natal_ephem.json (owner decision, 2026-07-21).
- *    #/cast — casting a birth chart — stays open, because it is the top of the acquisition funnel:
+ *    /cast — casting a birth chart — stays open, because it is the top of the acquisition funnel:
  *    a stranger gets real value first and the chart follows them into the account they create
  *    afterwards (see migrateGuestChart in app.js).
  *    These are an ASTRONOMICAL EPHEMERIS — planetary positions over time. Public-domain physics

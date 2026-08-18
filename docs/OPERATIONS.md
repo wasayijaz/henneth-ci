@@ -461,7 +461,7 @@ worst case the backfill just continues on the next scheduled run.
   environment (§5 — no `workflow` OAuth scope). Owner must: (1) apply `lifecycle_email.sql` by hand
   in the Supabase SQL editor, (2) add the three secrets (`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`,
   `RESEND_API_KEY`) + the workflow step via the GitHub web UI. See §10 for the runbook once live.
-- **Legal pages** (`state/legal.json`, `#/legal/*`) are DRAFTS — a Pakistani lawyer must review before
+- **Legal pages** (`state/legal.json`, `/legal/*`) are DRAFTS — a Pakistani lawyer must review before
   charging (flagged in the file's `review_status`). Discoverable from: page footer, the sidebar bottom
   (`.side-legal`), the sign-in/sign-up modal (`.auth-legal`), and the Settings page.
 - **Track record** is young (see the clock on the Scores page). Do not switch on paid billing until it
@@ -569,7 +569,7 @@ dedup logic.
    409-on-insert path above), not re-send.
 4. Set `DAILY_CAP = 2` temporarily and confirm the script actually stops after 2 sends in a run.
 
-**Unsubscribe:** `#/unsubscribe?t=<uuid>` (dashboard route, ungated) calls the anonymous
+**Unsubscribe:** `/unsubscribe?t=<uuid>` (dashboard route, ungated) calls the anonymous
 `email_unsubscribe(p_token, p_scope)` RPC, which flips `email_optout` and returns a boolean. Test
 it from a signed-out browser — the whole point is it must not require a session.
 
@@ -608,7 +608,7 @@ closes that.**
 
 ### The one deliberate exception
 `natal_ephem.bin` and `natal_ephem.json` stay public (`PUBLIC_FILES` in `middleware.js`).
-`#/cast` is the top of the acquisition funnel — a stranger casts a birth chart, gets value, and it
+`/cast` is the top of the acquisition funnel — a stranger casts a birth chart, gets value, and it
 follows them into the account they create. Those two files are an astronomical ephemeris: public-
 domain physics anyone can compute, containing zero desk output. **Add to that set only if the same
 test passes** — is it public knowledge that happens to be cached here, rather than something the
@@ -861,7 +861,7 @@ visitor's experience is byte-identical to before this landed.
 
 | file | role | live today? |
 |---|---|---|
-| `dashboard/sw.js` | service worker: `push` → notification, `notificationclick` → `#/ticker/SYM` | no — nothing registers it, and it is **not copied by `vercel.json`'s buildCommand** |
+| `dashboard/sw.js` | service worker: `push` → notification, `notificationclick` → `/ticker/SYM` | no — nothing registers it, and it is **not copied by `vercel.json`'s buildCommand** |
 | `dashboard/push.js` | client helper, global `window.PSXPush` | no — not in `vercel.json`, not in `index.html` |
 | `docs/push_subscriptions.sql` | the per-user table + RLS | **not applied** to Supabase |
 | `scripts/push_send.py` | the sender (cron/manual; a static host can't push) | runs, prints "not configured", exits 0 |

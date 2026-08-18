@@ -2,7 +2,7 @@
    Topbar open-tabs strip + "+" quick-open menu
    + Board-tile collapse chevron.
    Additive only. Loaded after app.js and rail.js. Never
-   edits app.js/route() internals — watches #view / location.hash
+   edits app.js/route() internals — watches #view / clean location paths
    the same way rail.js does, with its own localStorage
    keys (openTabs, boardCardCollapsed:<id>) kept separate from the
    rail's railTab/railNotes. Production script, linked from
@@ -20,18 +20,19 @@
     });
   }
   function currentPageName() {
-    var h = (location.hash || "#/today").replace(/^#\//, "");
+    var h = (window.appPathname ? window.appPathname() : location.pathname || "/today").replace(/^\/+/, "");
     return h.split("/")[0] || "today";
   }
   function currentTicker() {
-    var m = /^#\/ticker\/([A-Za-z0-9.]+)/.exec(location.hash || "");
+    var path = window.appPathname ? window.appPathname() : location.pathname;
+    var m = /^\/ticker\/([A-Za-z0-9.]+)/.exec(path || "");
     return m ? m[1].toUpperCase() : null;
   }
-  function labelFor(page, sym, hash) {
+  function labelFor(page, sym, path) {
     if (page === "ticker" && sym) return sym;
     var navEl = document.querySelector('[data-nav="' + page + '"]');
     if (navEl && navEl.getAttribute("title")) return navEl.getAttribute("title");
-    return hash.replace(/^#\//, "") || "Today";
+    return path.replace(/^\/+/, "") || "Today";
   }
 
   // ============================================================
@@ -40,17 +41,28 @@
   // strip is the only record of where you have been, capped at TAB_CAP.
   // ============================================================
   var TAB_KEY = "openTabs", TAB_CAP = 8;
+  function cleanPath(path) {
+    path = String(path || "");
+    if (path.indexOf("#/") === 0) path = path.slice(1);
+    if (path === "/" || !path) return "/today";
+    return path.charAt(0) === "/" ? path : "/" + path;
+  }
   function readTabs() {
-    try { return JSON.parse(localStorage.getItem(TAB_KEY) || "[]"); } catch (e) { return []; }
+    try {
+      var raw = JSON.parse(localStorage.getItem(TAB_KEY) || "[]");
+      return Array.isArray(raw) ? raw.filter(function (t) { return t && t.href; }).map(function (t) {
+        return { href: cleanPath(t.href), label: t.label || cleanPath(t.href).replace(/^\//, "") };
+      }) : [];
+    } catch (e) { return []; }
   }
   function writeTabs(arr) {
     localStorage.setItem(TAB_KEY, JSON.stringify(arr.slice(0, TAB_CAP)));
   }
   function ensureTab() {
-    var hash = location.hash || "#/today";
+    var path = cleanPath((window.appPathname ? window.appPathname() : location.pathname) + location.search);
     var tabs = readTabs();
-    if (!tabs.some(function (t) { return t.href === hash; })) {
-      tabs.push({ href: hash, label: labelFor(currentPageName(), currentTicker(), hash) });
+    if (!tabs.some(function (t) { return t.href === path; })) {
+      tabs.push({ href: path, label: labelFor(currentPageName(), currentTicker(), path) });
       if (tabs.length > TAB_CAP) tabs.shift();
       writeTabs(tabs);
     }
@@ -81,12 +93,12 @@
   }
 
   // Reconcile, never reassign innerHTML: a wholesale rebuild re-inserts every tab
-  // node on every hashchange, so .tstrip-tab's entry animation replayed across the
+  // node on every navigation, so .tstrip-tab's entry animation replayed across the
   // whole strip each time the reader merely navigated. Reusing the existing node
   // for an href that is still open means only a genuinely NEW tab animates in.
   function renderTabs() {
     if (!stripEl) return;
-    var hash = location.hash || "#/today";
+    var path = cleanPath((window.appPathname ? window.appPathname() : location.pathname) + location.search);
     var tabs = readTabs();
     var existing = {};
     Array.prototype.forEach.call(stripEl.children, function (el) {
@@ -102,7 +114,7 @@
       } else {
         el = buildTab(t);
       }
-      var isOn = t.href === hash;
+      var isOn = t.href === path;
       el.classList.toggle("on", isOn);
       var link = el.querySelector("a");
       if (link) {
@@ -127,9 +139,9 @@
       if (idx === -1) return;
       tabs.splice(idx, 1);
       writeTabs(tabs);
-      if ((location.hash || "#/today") === href) {
+      if (cleanPath((window.appPathname ? window.appPathname() : location.pathname) + location.search) === href) {
         var next = tabs[idx] || tabs[idx - 1];
-        location.hash = next ? next.href : "#/today";
+        navigate(next ? next.href : "/today");
       }
       renderTabs();
     });
@@ -139,7 +151,9 @@
     ensureTab();
     renderTabs();
   }
-  window.addEventListener("hashchange", function () { setTimeout(refreshTabStrip, 0); });
+  function refreshOnNavigation() { setTimeout(refreshTabStrip, 0); }
+  window.addEventListener("henneth:navigate", refreshOnNavigation);
+  window.addEventListener("popstate", refreshOnNavigation);
   setTimeout(refreshTabStrip, 50);
 
   // ============================================================
@@ -147,7 +161,7 @@
   // .searchbox idiom (themes.css:1640-1642), NOT the .acct-menu
   // popover. #tabAddMenu IS the full-viewport scrim, so "outside"
   // is tested against .tabadd-panel, not against the menu root.
-  // Escape/hashchange guard still follows app.js:6944-6953.
+  // Escape/navigation guard still follows app.js's route teardown.
   // ============================================================
   var addBtn = document.getElementById("tabAddBtn");
   var addMenu = document.getElementById("tabAddMenu");
@@ -193,7 +207,8 @@
       document.addEventListener("keydown", function (ev) {
         if (ev.key === "Escape") closeAddMenu();
       });
-      window.addEventListener("hashchange", closeAddMenu);
+      window.addEventListener("henneth:navigate", closeAddMenu);
+      window.addEventListener("popstate", closeAddMenu);
     }
   }
 
@@ -252,7 +267,9 @@
     });
     mo.observe(view, { childList: true, subtree: true });
   }
-  window.addEventListener("hashchange", function () { setTimeout(wireBoardCollapse, 60); });
+  function wireCollapseOnNavigation() { setTimeout(wireBoardCollapse, 60); }
+  window.addEventListener("henneth:navigate", wireCollapseOnNavigation);
+  window.addEventListener("popstate", wireCollapseOnNavigation);
   setTimeout(wireBoardCollapse, 60);
 
   // ============================================================

@@ -24,7 +24,9 @@
     new MutationObserver(function () { refreshRail(); })
       .observe(view, { childList: true, subtree: false });
   }
-  window.addEventListener("hashchange", function () { setTimeout(refreshRail, 0); });
+  function refreshOnNavigation() { setTimeout(refreshRail, 0); }
+  window.addEventListener("henneth:navigate", refreshOnNavigation);
+  window.addEventListener("popstate", refreshOnNavigation);
   // Initial paint — give app.js's first route() a tick to populate #view. The
   // second pass covers a slow first load where #view was filled before the
   // observer attached, leaving no mutation to react to. Every renderer compares
@@ -157,7 +159,8 @@
   document.addEventListener("keydown", function (ev) {
     if (ev.key === "Escape") closeRailDrawer();
   });
-  window.addEventListener("hashchange", closeRailDrawer);
+  window.addEventListener("henneth:navigate", closeRailDrawer);
+  window.addEventListener("popstate", closeRailDrawer);
 
   // ============================================================
   // Tab switching
@@ -267,11 +270,11 @@
     });
   }
 
-  function labelFor(page, arg, hash) {
+  function labelFor(page, arg, path) {
     if (page === "ticker" && arg) return arg;
     var navEl = document.querySelector('[data-nav="' + page + '"]');
     if (navEl && navEl.getAttribute("title")) return navEl.getAttribute("title");
-    return hash.replace(/^#\//, "") || "Home";
+    return path.replace(/^\/+/, "") || "Home";
   }
 
   // ============================================================
@@ -291,7 +294,7 @@
     }
     var list = (typeof watchlist === "function") ? watchlist() : [];
     if (!list.length) {
-      setWatchHTML('<div class="empty">Star a company on the <a href="#/board">board</a> to watch it.</div>');
+      setWatchHTML('<div class="empty">Star a company on the <a href="/board">board</a> to watch it.</div>');
       return;
     }
     j("live.json").then(function (data) {
@@ -319,7 +322,7 @@
           chg = "close";
         }
         var here_mark = sym === here ? ' <span class="rail-watch-here" title="You are here">●</span>' : "";
-        return '<a class="rail-watch-item" href="#/ticker/' + esc(sym) + '">' +
+        return '<a class="rail-watch-item" href="/ticker/' + encodeURIComponent(sym) + '">' +
           '<span class="rail-watch-sym">' + esc(sym) + here_mark + '</span>' +
           '<span class="rail-watch-price">' + esc(price) + '</span>' +
           '<span class="rail-watch-chg ' + chgClass + '">' + esc(chg) + '</span>' +
@@ -625,7 +628,7 @@
         shell = '<div class="empty">Sign in to ask the desk about a ticker, sector, or the market.' +
           '<br><br><button type="button" class="auth-go" style="max-width:200px" data-rail-auth="signin">Sign in</button></div>';
       } else if (mode === "locked") {
-        shell = '<div class="empty">Ask needs a plan upgrade. <a href="#/plans">See plans &rarr;</a></div>';
+        shell = '<div class="empty">Ask needs a plan upgrade. <a href="/plans">See plans &rarr;</a></div>';
       } else {
         // aria-live lives on the status paragraph, not on #railAskOut: the
         // thread is rich markup and a live region over it makes a screen
@@ -636,7 +639,7 @@
           '<input id="railAskIn" class="rail-ask-in" type="text" maxlength="500" placeholder="Ask the desk…" aria-label="Ask the desk">' +
           '<button type="button" class="quiet-btn" data-rail-ask-send>Ask</button>' +
           "</div>" +
-          '<div class="rail-ask-foot"><a href="#/ask">Open the full page &rarr;</a></div>';
+          '<div class="rail-ask-foot"><a href="/ask">Open the full page &rarr;</a></div>';
       }
       askPane.innerHTML = shell;
       askPane.dataset.askMode = mode;
@@ -730,12 +733,13 @@
   // Page-swap detection — MutationObserver on #view, no route() edits.
   // ============================================================
   var lastHref = null;
+  function appPath() { return window.appPathname ? window.appPathname() : location.pathname; }
   function currentTicker() {
-    var m = /^#\/ticker\/([A-Za-z0-9.]+)/.exec(location.hash || "");
+    var m = /^\/ticker\/([A-Za-z0-9.]+)/.exec(appPath() || "");
     return m ? m[1].toUpperCase() : null;
   }
   function currentPage() {
-    var h = (location.hash || "#/today").replace(/^#\//, "");
+    var h = (appPath() || "/today").replace(/^\/+/, "");
     return h.split("/")[0] || "today";
   }
   // ============================================================
@@ -747,7 +751,7 @@
   function renderPageInfo(sym) {
     if (!pageInfoName) return;
     var page = currentPage();
-    var label = sym || labelFor(page, sym, location.hash || "#/today");
+    var label = sym || labelFor(page, sym, appPath() || "/today");
     pageInfoName.textContent = label;
   }
 
@@ -790,7 +794,7 @@
   }
 
   function refreshRail() {
-    var href = location.hash || "#/today";
+    var href = appPath() + location.search || "/today";
     var sym = currentTicker();
     safe("news", renderRailNews);
     lastHref = href;

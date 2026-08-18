@@ -1,5 +1,5 @@
-/* Henneth Desk SPA — hash router, 4 themes, canvas charts.
-   Routes: #/board · #/ticker/SYM · #/dividends · #/news
+/* Henneth Desk SPA — path router, 4 themes, canvas charts.
+   Routes: /board · /ticker/SYM · /dividends · /news
    All data from ../state/*.json (DPS-sourced). No external deps. */
 
 const $ = id => document.getElementById(id);
@@ -18,6 +18,67 @@ const todayPKT = () => new Date(Date.now() + 5 * 3600000).toISOString().slice(0,
 // reads state/ published alongside it by the GitHub Actions pipeline every 30 min.
 const LOCAL = ["localhost", "127.0.0.1", ""].includes(location.hostname);
 const DATA_BASE = LOCAL ? "../state/" : "state/";
+const APP_BASE = (document.querySelector("base")?.getAttribute("href") || "/").replace(/\/$/, "") || "";
+function appPathname() {
+  const p = location.pathname || "/";
+  return APP_BASE && p.startsWith(APP_BASE + "/") ? p.slice(APP_BASE.length) || "/" : p;
+}
+window.appPathname = appPathname;
+
+/* --------------------------------------------------------------------------
+   ONE ROUTER, TWO TRANSITION STATES
+
+   The dashboard is a static SPA, so the URL is both its addressable deep link
+   and its browser history. `navigate()` is the only in-app transition helper;
+   `route()` below remains the only dispatcher. The small `routeHash()` adapter
+   exists only for page renderers that still compare their current route while
+   this migration is rolled out. It never writes a fragment to the URL.
+
+   Supabase email callbacks still arrive as protocol fragments (`#access_token=`,
+   `#error_code=`, etc.). Those are intentionally handled separately below and
+   are never treated as dashboard routes. */
+function routeHash() {
+  const p = appPathname().replace(/\/+$/, "") || "/";
+  return p === "/" ? "#/today" : "#" + p + (location.search || "");
+}
+
+function normalizeLegacyHash() {
+  const h = location.hash || "";
+  if (!h.startsWith("#/")) return false;
+  const raw = h.slice(1);
+  try {
+    const u = new URL(raw, location.origin);
+    history.replaceState(null, "", APP_BASE + u.pathname + u.search);
+    return true;
+  } catch { return false; }
+}
+
+function navigate(path, replace = false) {
+  const u = new URL(path || "/today", location.origin);
+  const clean = u.pathname.replace(/\/{2,}/g, "/");
+  const target = (APP_BASE && !clean.startsWith(APP_BASE + "/") ? APP_BASE : "") + clean + u.search;
+  const current = (location.pathname || "/") + (location.search || "");
+  if (target === current && !location.hash) { route(true); return; }
+  history[replace ? "replaceState" : "pushState"]({}, "", target);
+  try { window.dispatchEvent(new CustomEvent("henneth:navigate", { detail: { path: target, replace } })); } catch {}
+  route(false);
+}
+window.navigate = navigate;
+
+// Keep ordinary dashboard anchors in the SPA while retaining real links for
+// modified clicks, downloads, external URLs, and mailto actions. The route
+// parser above remains the single source of truth; this only chooses whether
+// the browser performs a full document load or a History API transition.
+document.addEventListener("click", (e) => {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest?.("a[href]");
+  if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+  let u;
+  try { u = new URL(a.href, location.href); } catch { return; }
+  if (u.origin !== location.origin || u.hash || u.pathname.startsWith("/state/") || u.pathname.startsWith("/api/") || /\.[a-z0-9]{2,6}$/i.test(u.pathname)) return;
+  e.preventDefault();
+  navigate(u.pathname + u.search + u.hash);
+});
 
 // Some browser extensions (ad/anti-fraud blockers) monkey-patch window.fetch and
 // throw "TypeError: Failed to fetch" on same-origin requests unrelated to ads —
@@ -308,7 +369,7 @@ async function renderHeader() {
   if (health) { setText($("health"), "HEALTH " + health.status.toUpperCase()); setClass($("health"), "pill " + (health.status === "ok" ? "ok" : "bad")); $("health").title = (health.problems || []).join("; "); }
   const reg = macro?.regime || "—";
   setText($("regime"), "REGIME: " + reg.toUpperCase()); setClass($("regime"), "pill clickable " + (reg === "risk-off" ? "bad" : reg === "risk-on" ? "ok" : ""));
-  $("regime").onclick = () => location.hash = "#/macro";
+  $("regime").onclick = () => navigate("/macro");
   const geo = dash?.geo_risk;
   const gc = $("georisk");
   if (gc && geo?.score != null) {
@@ -319,7 +380,7 @@ async function renderHeader() {
     setText(gc, "RISK " + geo.score);
     setClass(gc, "pill clickable " + (geo.band === "elevated" ? "bad" : geo.band === "calm" ? "ok" : ""));
     gc.title = `Geopolitical & market-stress radar: ${geo.score}/100 (${geo.band}). Click for the factors.`;
-    gc.onclick = () => location.hash = "#/macro";
+    gc.onclick = () => navigate("/macro");
   } else if (gc) { setDisp(gc, "none"); }
   $("regime").title = reg === "—" ? "Macro regime — not published yet this cycle" :
     `Macro regime = the desk's risk posture (${reg}). ${reg === "risk-on" ? "Full setups allowed." : reg === "risk-off" ? "Max 2 setups, defensive only." : "Neutral — normal caution."} Click for the drivers.`;
@@ -501,7 +562,7 @@ function showGlobalStrip(gl) {
     const items = data.map(d =>
       `<div class="gitem" data-gk="${esc(d.k)}" title="${esc(d.read)}"><span>${esc(d.label)}</span>
       <b class="num"></b><i class="num"></i></div>`).join("");
-    host.innerHTML = `<div class="gstrip clickable" onclick="location.hash='#/macro'"><div class="gtrack">${items}${items}</div></div>`;
+    host.innerHTML = `<div class="gstrip clickable" onclick="navigate('/macro')"><div class="gtrack">${items}${items}</div></div>`;
     host.dataset.keys = want;
     track = host.querySelector(".gtrack");
   }
@@ -573,7 +634,7 @@ async function pageBoard() {
     const hit = bt.hit_rate != null ? Math.round(bt.hit_rate * 100) + "%" : "—";
     const nx = bt.net_expectancy_pct;
     return `
-    <div class="card clickable" onclick="location.hash='#/ticker/${esc(s.ticker)}'">
+    <div class="card clickable" onclick="navigate('/ticker/${esc(s.ticker)}')">
       <div class="tk-head"><span class="sym">${esc(s.ticker)}</span><span class="tag">${esc(s.template || "")}</span>
       ${sigBadge(s)}${s.confidence ? `<span class="pill ${s.confidence === "high" ? "ok" : ""}">${esc(s.confidence)}</span>` : ""}</div>
       <div class="statgrid num">
@@ -589,14 +650,14 @@ async function pageBoard() {
   const tg = trig?.triggers || [];
   const trigHtml = tg.length ? `<div class="card"><h2>Live triggers</h2><div class="sub">proven patterns firing now · unvetted</div>
     <table><thead><tr><th>Ticker</th><th>Strategy</th><th class="r">Price</th><th class="r">Hist</th><th class="r">When</th></tr></thead><tbody>${
-      tg.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(t.ticker)}'"><td><b>${esc(t.ticker)}</b></td><td>${esc(t.name)}</td>
+      tg.map(t => `<tr class="clickable" onclick="navigate('/ticker/${esc(t.ticker)}')"><td><b>${esc(t.ticker)}</b></td><td>${esc(t.name)}</td>
       <td class="r num">${t.price}</td><td class="r num">${Math.round(t.backtest.hit_rate * 100)}%·n${t.backtest.n}</td><td class="r num">${t.ts}</td></tr>`).join("")}</tbody></table></div>` : "";
 
   const heat = Object.entries(q).sort((a, b) => b[1].ret_1d - a[1].ret_1d).map(([s, v]) => {
     const a = Math.min(Math.abs(v.ret_1d) / 5, 1) * 0.5;
     const col = v.ret_1d > 0.05 ? "var(--up)" : v.ret_1d < -0.05 ? "var(--dn)" : null;
     const bg = col ? `style="background:color-mix(in srgb, ${col} ${Math.round(a * 100)}%, transparent)"` : "";
-    return `<div class="cell clickable" ${bg} onclick="location.hash='#/ticker/${s}'" title="RSI ${v.rsi14} · 20d ${sgn(v.ret_20d)}%">
+    return `<div class="cell clickable" ${bg} onclick="navigate('/ticker/${s}')" title="RSI ${v.rsi14} · 20d ${sgn(v.ret_20d)}%">
       <b>${s}</b><span class="px num">${fmt(lv[s]?.current ?? v.close)}</span><span class="num ${cls(v.ret_1d)}">${sgn(v.ret_1d)}%</span></div>`;
   }).join("");
 
@@ -608,18 +669,18 @@ async function pageBoard() {
   const op = pos?.open || [];
 
   const posCard = `<div class="card"><h2>Positions</h2><div class="sub"></div>${op.length ? `<table><thead><tr><th>Ticker</th><th class="r">Entry</th><th class="r">Last</th><th class="r">P/L</th><th>Status</th></tr></thead><tbody>${
-      op.map(p => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(p.ticker)}'"><td><b>${esc(p.ticker)}</b></td><td class="r num">${p.entry}</td><td class="r num">${p.last_price ?? "—"}</td><td class="r num ${cls(p.unrealized_pct || 0)}">${p.unrealized_pct != null ? sgn(p.unrealized_pct) + "%" : "—"}</td><td>${esc(p.status || "HOLD")}</td></tr>`).join("")}</tbody></table>` : '<div class="empty">Flat — no open positions.</div>'}</div>`;
+      op.map(p => `<tr class="clickable" onclick="navigate('/ticker/${esc(p.ticker)}')"><td><b>${esc(p.ticker)}</b></td><td class="r num">${p.entry}</td><td class="r num">${p.last_price ?? "—"}</td><td class="r num ${cls(p.unrealized_pct || 0)}">${p.unrealized_pct != null ? sgn(p.unrealized_pct) + "%" : "—"}</td><td>${esc(p.status || "HOLD")}</td></tr>`).join("")}</tbody></table>` : '<div class="empty">Flat — no open positions.</div>'}</div>`;
   const provenCard = `<div class="card"><h2>Proven strategies</h2><div class="sub">cleared backtest + out-of-sample bars · click through</div>
       <table><thead><tr><th>Ticker</th><th>Strategy</th><th class="r">Hit</th><th class="r">Net</th><th class="r">n</th></tr></thead><tbody>${
-      sm.map(t => `<tr class="clickable" onclick="location.hash='#/ticker/${t.s}'"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.name)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
+      sm.map(t => `<tr class="clickable" onclick="navigate('/ticker/${t.s}')"><td><b>${t.s}</b></td><td><span class="tag">${esc(t.name)}</span></td><td class="r num">${Math.round(t.hit_rate * 100)}%</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td></tr>`).join("")}</tbody></table></div>`;
   // The universe is the longest block on the board and the least urgent — at two cells per row on
   // a phone it buried predictability and proven strategies under ~60 rows of scrolling, and even on
   // a desktop grid it runs well past the fold. Cap it; wireTiles() sizes the cap to the viewport.
   const universeCard = `<div class="card"><h2>Universe</h2><div class="sub">day move · click any name</div>
     <div class="tilebox"><div class="tilebody"><div class="heat">${heat}</div></div></div></div>`;
   const predCard = `<div class="card"><h2>Predictability</h2><div class="sub"></div><table><thead><tr><th>Ticker</th><th class="r">Score</th><th class="r">RSI</th><th class="r">20d</th></tr></thead><tbody>${
-      pt.map(([s, v]) => `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b></td><td class="r num">${v.score}</td><td class="r num">${q[s]?.rsi14 ?? "—"}</td><td class="r num ${cls(q[s]?.ret_20d || 0)}">${q[s] ? sgn(q[s].ret_20d) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`;
-  const newsCard = `<div class="card"><h2>News wire</h2><div class="sub"><a href="#/news">full wire →</a></div><div class="wire">${
+      pt.map(([s, v]) => `<tr class="clickable" onclick="navigate('/ticker/${s}')"><td><b>${s}</b></td><td class="r num">${v.score}</td><td class="r num">${q[s]?.rsi14 ?? "—"}</td><td class="r num ${cls(q[s]?.ret_20d || 0)}">${q[s] ? sgn(q[s].ret_20d) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`;
+  const newsCard = `<div class="card"><h2>News wire</h2><div class="sub"><a href="/news">full wire →</a></div><div class="wire">${
       nn.length ? nn.map(n => `<p><span class="tag">${n.impact ?? ""}</span> <span class="t">${esc((n.ts || "").slice(5, 16))}</span><b>${(n.tickers || []).join(", ")}</b> ${esc(n.headline || n.summary || "")}</p>`).join("") : '<div class="empty">Wire silent.</div>'}</div></div>`;
   const agentCard = `<div class="card"><h2>Agent wire</h2><div class="sub">this cycle</div><div class="wire">${
       aw.length ? aw.map(a => `<p><b style="color:var(--accent)">${esc(a.agent)}</b> ${esc(a.summary)}</p>`).join("") : '<div class="empty">No cycle run yet.</div>'}</div></div>`;
@@ -659,7 +720,7 @@ async function pageValue() {
       <div class="fvmethods">${cells}</div>
       <div class="fvline"><span>composite fair</span> median(${vals}) = <b class="num">Rs ${fmt(r.composite_fair)}</b></div>
       <div class="fvline"><span>inputs</span> EPS Rs ${fmt(r.eps)} · trailing P/E ${r.pe}× · growth est ${r.growth_est_pct}%</div>
-      <p class="fvnote">${r.s} trades at <b class="num">Rs ${fmt(r.price)}</b> against a composite fair of <b class="num">Rs ${fmt(r.composite_fair)}</b> — about <b>${mag}% ${dir}</b> the model's blended fair value. The composite is the <b>median</b> of the four models above (median resists any single model blowing out). Model estimate on public fundamentals — research, not a price target or recommendation. <a href="#/ticker/${r.s}">full page →</a></p>
+      <p class="fvnote">${r.s} trades at <b class="num">Rs ${fmt(r.price)}</b> against a composite fair of <b class="num">Rs ${fmt(r.composite_fair)}</b> — about <b>${mag}% ${dir}</b> the model's blended fair value. The composite is the <b>median</b> of the four models above (median resists any single model blowing out). Model estimate on public fundamentals — research, not a price target or recommendation. <a href="/ticker/${r.s}">full page →</a></p>
     </div>`;
   };
   /* Both tables are sorted by mispricing, so the interesting names are at the top and the tail is
@@ -835,7 +896,7 @@ async function pageMacro() {
       }).join("");
     return `<div class="seg"><h2>What actually moves each sector</h2><div class="ln"></div><span class="pill ok">${h.survivors_bonferroni} of ${h.hypotheses_tested} measured</span></div>
     <div class="card" style="padding:0"><table><thead><tr><th>Sector</th><th>Demonstrated drivers</th><th class="r">Global tape explains</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="sub" style="margin-top:8px">Nineteen years of daily returns against the global tape — oil, gold, USD/PKR, the S&amp;P, EM flows, the US 10y — each lagged a day, since those markets close after Karachi. The same test found nothing in <a href="#/astro" style="color:var(--accent)">astrology</a>. Here it finds <b>${h.survivors_bonferroni}</b>. That contrast is the point.</p>
+    <p class="sub" style="margin-top:8px">Nineteen years of daily returns against the global tape — oil, gold, USD/PKR, the S&amp;P, EM flows, the US 10y — each lagged a day, since those markets close after Karachi. The same test found nothing in <a href="/astro" style="color:var(--accent)">astrology</a>. Here it finds <b>${h.survivors_bonferroni}</b>. That contrast is the point.</p>
     <p class="sub" style="margin-top:6px"><b>Read the last column first.</b> Even at its strongest, the world tape explains a few percent of a day's move — PSX is made at home. A driver says what <i>has tended</i> to move a sector, never what will.</p>`;
   })();
 
@@ -868,7 +929,7 @@ async function pageToday() {
   <div class="seg" style="margin-top:4px"><h2>On your watchlist</h2><div class="ln"></div><span class="pill ok">${wl.length}</span></div>
   <div class="card" style="padding:0"><table class="wl-mini"><tbody>${wl.map(s => {
     const qq = q[s], px = lv[s]?.current ?? qq.close;
-    return `<tr class="clickable" onclick="location.hash='#/ticker/${s}'"><td><b>${s}</b> <span class="sub">${esc((uni?.symbols?.[s]?.name || "").slice(0, 24))}</span></td><td class="r num">${fmt(px)}</td><td class="r num ${cls(qq.ret_1d)}">${sgn(qq.ret_1d)}%</td></tr>`;
+    return `<tr class="clickable" onclick="navigate('/ticker/${s}')"><td><b>${s}</b> <span class="sub">${esc((uni?.symbols?.[s]?.name || "").slice(0, 24))}</span></td><td class="r num">${fmt(px)}</td><td class="r num ${cls(qq.ret_1d)}">${sgn(qq.ret_1d)}%</td></tr>`;
   }).join("")}</tbody></table></div>` : "";
 
   // radar names: the ones you watch float to the top, badged
@@ -910,7 +971,7 @@ async function pageToday() {
   // the astro hook, surfaced where visitors actually land. Only for those without a chart yet —
   // once cast, it's replaced by their own reading in the sidebar, so this never nags.
   const astroTease = natalChart() ? "" : `
-  <div class="card mc-tease" onclick="location.hash='#/cast'">
+  <div class="card mc-tease" onclick="navigate('/cast')">
     <div class="mc-tease-glyphs">${["Sun", "Moon", "Jupiter", "Saturn"].map(b => pixelGlyph(b, 22)).join("")}</div>
     <div class="mc-tease-txt">
       <b>Read the whole exchange against your birth chart</b>
@@ -946,7 +1007,7 @@ async function pageToday() {
   </div>
   <div class="seg"><h2>Names on the desk's radar</h2><div class="ln"></div></div>
   ${radar.length ? `<div class="card" style="padding:0"><table><thead><tr><th>Ticker</th><th>The desk's angle</th><th>Key risk</th></tr></thead><tbody>${
-    radar.map(w => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(w.ticker)}'">
+    radar.map(w => `<tr class="clickable" onclick="navigate('/ticker/${esc(w.ticker)}')">
       <td style="white-space:nowrap"><b>${esc(w.ticker)}</b>${iw(w.ticker) ? ' <span class="wbadge">★ yours</span>' : ""}</td>
       <td class="sub" style="color:var(--ink2)">${esc(tp(w, "angle"))}</td>
       <td class="sub"><b class="dn">Risk:</b> ${esc(tp(w, "risk"))}</td></tr>`).join("")}</tbody></table></div>`
@@ -999,7 +1060,7 @@ async function pageStrategies() {
   const anyRan = board.some(stratRunOn);
   const provenCount = s => (smap?.tickers?.[s] || []).length;
   const tiles = board.map(s => { const ranS = stratRunOn(s);
-    return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
+    return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))navigate('/ticker/${esc(s)}')">
       <button class="sb-x" data-sbdel="${esc(s)}" title="Remove ${esc(s)} from the board" aria-label="remove ${esc(s)}">✕</button>
       <b>${esc(s)}</b><span class="sb-nm">${esc((names[s]?.name || "").slice(0, 24))}</span>
       <span class="pill ${ranS && provenCount(s) ? "ok" : ranS ? "" : "wait"}">${ranS ? provenCount(s) + " of " + nStrat + " proven" : "waiting for a run"}</span>
@@ -1027,7 +1088,7 @@ async function pageStrategies() {
   // ---- results: per board stock. A stock shows NOTHING until the library has actually run on it. ----
   const results = !board.length ? "" : board.map(s => {
     const list = smap?.tickers?.[s] || [];
-    const head = `<div class="sb-res-head clickable" onclick="location.hash='#/ticker/${esc(s)}'"><b>${esc(s)}</b><span class="sub">${esc((names[s]?.name || "").slice(0, 30))}</span><span class="pill ${stratRunOn(s) ? (list.length ? "ok" : "") : "wait"}">${stratRunOn(s) ? list.length + " proven" : "not run yet"}</span></div>`;
+    const head = `<div class="sb-res-head clickable" onclick="navigate('/ticker/${esc(s)}')"><b>${esc(s)}</b><span class="sub">${esc((names[s]?.name || "").slice(0, 30))}</span><span class="pill ${stratRunOn(s) ? (list.length ? "ok" : "") : "wait"}">${stratRunOn(s) ? list.length + " proven" : "not run yet"}</span></div>`;
     if (!stratRunOn(s)) return `<div class="card" style="padding:0">${head}
       <div class="empty" style="padding:14px 17px">The library's results for <b>${esc(s)}</b> aren't open yet — hit <b>Read ›</b> above for all ${nStrat} strategies backtested across ${esc(s)}'s own ~19 years of price history, and what actually held up.</div></div>`;
     return `<div class="card" style="padding:0">${head}
@@ -1865,7 +1926,7 @@ async function playAstroBoardRun() {
     sub: `Real ephemeris math — sidereal positions, Vimshottari periods, Saturn's passage — for every name on your board, read the way the tradition would.`,
     steps,
     onReveal: () => { try { board.forEach(s => sessionStorage.setItem("astroran:" + s, "1")); } catch (e) { /* private */ } },
-    onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("astro")) pageAstro(); },
+    onClose: () => { if (routeHash().replace(/^#\/?/, "").startsWith("astro")) pageAstro(); },
     renderReveal: (bodyEl) => {
       bodyEl.innerHTML = `<div class="rp-reveal">
         <div class="rp-reveal-head"><b>Your charts · ${board.map(esc).join(" · ")}</b><span>read sidereal, Lahiri ${esc(ayan)}° — the tradition's reading of each name</span></div>
@@ -2150,7 +2211,7 @@ function planWall(what, teaser) {
     <p class="sub">${me
       ? "This sits in the paid plan. Plans are being drawn for three desks — new investors, pros, and brokers."
       : "Create a free account to start exploring. Three desks are being drawn: new investors, pros, and brokers."}</p>
-    <button class="bw-go" style="max-width:250px" onclick="${me ? "location.hash='#/settings'" : "openAuth('signup')"}">${me ? "See plans →" : "Create a free account →"}</button>
+    <button class="bw-go" style="max-width:250px" onclick="${me ? "navigate('/settings')" : "openAuth('signup')"}">${me ? "See plans →" : "Create a free account →"}</button>
   </div>`;
 }
 
@@ -2327,7 +2388,7 @@ async function renderBirthCast(ov) {
     sub: "Real sidereal math on your birth chart, then the tradition's compatibility techniques across every name on the exchange.",
     steps, flagKey: null,
     // the ONE exit: navigate to the reading (myProfile already holds the chart)
-    onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("mychart")) pageMyChart(); else location.hash = "#/mychart"; },
+    onClose: () => { if (routeHash().replace(/^#\/?/, "").startsWith("mychart")) pageMyChart(); else navigate("/mychart"); },
     renderReveal: (bodyEl) => {
       if (castErr) {
         bodyEl.innerHTML = `<div class="rp-reveal"><div class="rp-reveal-head"><b>Couldn't cast the chart</b><span>${esc(castErr)}</span></div>
@@ -2409,13 +2470,13 @@ async function pageMyChart() {
       <p class="sub">${me
         ? "Your full reading — every name on the exchange ranked against your chart, your commodities, your timing windows, and the sky read against your chart each day."
         : "Create a free account to keep the chart you just cast. Unlock the full reading to see every name on the exchange ranked against it, your commodities, your timing windows, and the sky read against your chart each day."}</p>
-      <button class="bw-go" style="max-width:260px" onclick="${me ? "location.hash='#/settings'" : "openAuth('signup')"}">${me ? "Unlock my full reading →" : "Create a free account →"}</button>
+      <button class="bw-go" style="max-width:260px" onclick="${me ? "navigate('/settings')" : "openAuth('signup')"}">${me ? "Unlock my full reading →" : "Create a free account →"}</button>
       ${me ? "" : `<p class="sub" style="margin-top:8px;opacity:.7">Already have one? <a href="#" onclick="openAuth('signin');return false" style="color:var(--accent)">Sign in</a></p>`}
     </div></div>`;
 
   const rowCard = (x) => {
     const tm = x.timing;
-    return `<div class="card syn-card"><div class="syn-head clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'">
+    return `<div class="card syn-card"><div class="syn-head clickable" onclick="navigate('/ticker/${esc(x.sym)}')">
       <span class="syn-score s-${x.verdict.replace(/\s/g, "")}">${x.score}</span>
       <div><b>${esc(x.sym)}</b> <span class="sub">${esc((x.name || "").slice(0, 26))}</span><div class="sub">${esc(x.sector || "")}${x.hasChart ? "" : " · sector reading"}</div></div>
       <span class="pill ${x.verdict === "harmonious" || x.verdict === "favourable" ? "ok" : x.verdict === "testing" || x.verdict === "discordant" ? "bad" : ""}">${esc(x.verdict)}</span></div>
@@ -2517,7 +2578,7 @@ async function pageMyChart() {
 
   <div class="seg"><h2>Your whole-market map</h2><div class="ln"></div><span class="pill">${scored.length} names ranked</span></div>
   <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Resonance</th><th>Tradition's read</th></tr></thead><tbody>${
-    scored.map(x => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(x.sym)}'"><td><b>${esc(x.sym)}</b></td><td class="sub">${esc((x.sector || "").slice(0, 20))}</td>
+    scored.map(x => `<tr class="clickable" onclick="navigate('/ticker/${esc(x.sym)}')"><td><b>${esc(x.sym)}</b></td><td class="sub">${esc((x.sector || "").slice(0, 20))}</td>
       <td class="r num ${x.score >= 60 ? "up" : x.score <= 40 ? "dn" : ""}">${x.score}</td><td class="sub">${esc(x.verdict)}</td></tr>`).join("")}</tbody></table></div>`}
 
   <p class="sub" style="margin-top:14px"><button class="note-save" onclick="openBirthWizard()">Edit my birth details</button> · Your resonance map is astrological interpretation — a lens for exploration and your own decisions, never advice.</p>`;
@@ -2543,7 +2604,7 @@ async function pageAstro() {
   const names = uni?.symbols || {};
   const verifiedOf = s => !!natal?.subjects?.[s];
   const tiles = board.map(s => { const ran = astroRunOn(s);
-    return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))location.hash='#/ticker/${esc(s)}'">
+    return `<div class="sb-tile clickable" onclick="if(!event.target.closest('.sb-x'))navigate('/ticker/${esc(s)}')">
       <button class="sb-x" data-abdel="${esc(s)}" title="Remove ${esc(s)}" aria-label="remove ${esc(s)}">✕</button>
       <b>${esc(s)}</b><span class="sb-nm">${esc((names[s]?.name || "").slice(0, 24))}</span>
       <span class="pill ${ran ? (verifiedOf(s) ? "ok" : "") : "wait"}">${ran ? (verifiedOf(s) ? "natal chart" : "sector reading") : "waiting for a cast"}</span>
@@ -2800,9 +2861,17 @@ async function pageTicker(sym, _retry = 0) {
     const rets = ex.return_by_year || [];
     const spark = rets.length ? `<div class="glance-tile"><span class="glance-q">Yearly price change</span>
       <div class="yearbars">${rets.map(r => `<div class="yb"><span class="ybbar ${r.ret_pct >= 0 ? "up" : "dn"}" style="height:${Math.min(100, Math.abs(r.ret_pct) / 2.2 + 6)}%"></span><i class="${cls(r.ret_pct)}">${r.ret_pct >= 0 ? "+" : ""}${Math.round(r.ret_pct)}%</i><em>${r.year.slice(2)}</em></div>`).join("")}</div></div>` : "";
+    const cp = ex.company_profile || {};
+    const inc = cp.incorporation?.value || cp.incorporation?.matched_text || "";
+    const profile = (cp.business_description || inc) ? `<div class="glance-tile"><span class="glance-q">What does it do?</span>
+      ${cp.business_description ? `<div class="sub" style="margin-bottom:5px">${esc(cp.business_description)}</div>` : ""}
+      ${inc ? `<div class="sub" style="margin-bottom:5px">Incorporation: ${esc(inc)}</div>` : ""}
+      <div class="sub">${cp.stale ? "Profile fetch is stale; showing last retained DPS profile. " : ""}Source: ${cp.source_url ? `<a href="${esc(cp.source_url)}" target="_blank" rel="noopener">DPS company page</a>` : "DPS company page"}${cp.fetched ? ` · fetched ${esc(cp.fetched)}` : ""}</div>
+    </div>` : "";
     return `<div class="seg" style="margin-top:2px"><h2>At a glance</h2><div class="ln"></div><span class="pill">plain english</span></div>
     <div class="card"><div class="sub">The quick read for ${esc(sym)}${ex.name ? " (" + esc(ex.name) + ")" : ""} — is it healthy, is the price reasonable, and what changed. Educational, not advice.</div>
       <div class="glance-grid">
+        ${profile}
         ${tile("Is it healthy?", ex.health)}
         ${tile("Is the price reasonable?", ex.value)}
         ${tile("Which way is it moving?", ex.momentum)}
@@ -2863,13 +2932,13 @@ async function pageTicker(sym, _retry = 0) {
      than scatter null-guards through a dozen formatting sites and hope none were missed, the
      dependency is stated honestly here. */
   if (!series || series.length < 2) {
-    $("view").innerHTML = `<a class="crumb" href="#/board">← board</a>
+    $("view").innerHTML = `<a class="crumb" href="/board">← board</a>
       <div class="card"><div class="empty">Couldn't load the price history for ${esc(sym)} just now.<br><br>
       Everything on a ticker page — the chart, the drawdown, the risk profile — is computed from it, so the desk would rather show you nothing than a page of dashes. This is almost always a network blip, not a missing stock.<br>
       <button class="acct-signin" id="tkretry" style="margin-top:12px">Retry</button></div></div>`;
     const btn = document.getElementById("tkretry");
     if (btn) btn.onclick = () => pageTicker(sym, 0);
-    if (_retry < 3) setTimeout(() => { if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, _retry + 1); }, 1200);
+    if (_retry < 3) setTimeout(() => { if (routeHash().toUpperCase().includes(sym)) pageTicker(sym, _retry + 1); }, 1200);
     return;
   }
   /* Partial load: render, but never let a missing file masquerade as a fact. The banner names
@@ -2887,11 +2956,11 @@ async function pageTicker(sym, _retry = 0) {
     if (!qRaw) missing.push("quant.json");
     if (!lv) missing.push("live.json");
     setTimeout(async () => {
-      if (!location.hash.toUpperCase().includes(sym)) return;
+      if (!routeHash().toUpperCase().includes(sym)) return;
       const got = await Promise.all(missing.map(f => j(f, 0).catch(() => null)));
       const filled = got.some(d => !!d?.tickers?.[sym]);
       if (!filled) return;                       // still absent — leave the honest banner alone
-      if (location.hash.toUpperCase().includes(sym)) pageTicker(sym, 1);
+      if (routeHash().toUpperCase().includes(sym)) pageTicker(sym, 1);
     }, 1500);
   }
   const gapBanner = _gaps.length
@@ -3180,7 +3249,7 @@ async function pageTicker(sym, _retry = 0) {
   // 7. Astro — a pointer to the immersive astrological reading, not a tested signal. Kept out of the
   // confluence (it makes no edge claim); framed as an exploration lens, never desk analytics.
   const astroLens = { k: "", v: "reading", conv: "",
-    note: `The tradition's read of ${esc(sym)}'s chart — explore it on the <a href="#/astro" style="color:var(--accent)">Astro</a> board, or against your own in <a href="#/mychart" style="color:var(--accent)">Your Chart</a>.` };
+    note: `The tradition's read of ${esc(sym)}'s chart — explore it on the <a href="/astro" style="color:var(--accent)">Astro</a> board, or against your own in <a href="/mychart" style="color:var(--accent)">Your Chart</a>.` };
 
   const LENSES = [
     ["Charts · TA", taLens], ["Value · FA", faLens], ["The Desk Room", roomLens],
@@ -3258,7 +3327,7 @@ async function pageTicker(sym, _retry = 0) {
   })() : "";
 
   $("view").innerHTML = `
-  <a class="crumb" href="#/board">← board</a>
+  <a class="crumb" href="/board">← board</a>
   ${gapBanner}
   <div class="card">
     <div class="tk-head">
@@ -3311,7 +3380,7 @@ async function pageTicker(sym, _retry = 0) {
   ${!hasRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
 
   ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
-  <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="#/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
+  <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
     <table><thead><tr><th>House</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
     brokerClaims.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || c.claim?.rating || "")}${c.source_url ? ` <a href="${esc(c.source_url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}</td><td class="r num">${esc(c.resolve_by || "—")}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
 
@@ -3450,7 +3519,7 @@ async function pageDividends() {
   const dvLocked = !isSubscribed();
   const divShown = dvLocked ? divUp.slice(0, 3) : divUp;
   const divHtml = divUp.length ? divShown.map(d => `
-    <tr class="clickable" onclick="location.hash='#/ticker/${d.ticker}'">
+    <tr class="clickable" onclick="navigate('/ticker/${d.ticker}')">
       <td><b>${d.ticker}</b></td>
       <td>${esc(d.announcement || d.type.replace("_", " "))}</td>
       <td class="r num">${d.dividend_rs ?? "—"}</td>
@@ -3476,7 +3545,7 @@ async function pageDividends() {
   <div class="seg"><h2>Past payouts</h2><div class="ln"></div></div>
   <div class="card"><div class="sub">last ${past.length} closures · cash dividends (D) as % of Rs 10 face value</div>
     <table><thead><tr><th>Ticker</th><th>Payout</th><th class="r">Rs/sh</th><th class="r">Yield@now</th><th class="r">Announced</th><th class="r">Closure start</th></tr></thead><tbody>${
-    past.map(d => `<tr class="clickable" onclick="location.hash='#/ticker/${d.symbol}'"><td><b>${d.symbol}</b></td><td>${esc(d.announcement)}</td>
+    past.map(d => `<tr class="clickable" onclick="navigate('/ticker/${d.symbol}')"><td><b>${d.symbol}</b></td><td>${esc(d.announcement)}</td>
       <td class="r num">${d.dividend_rs ?? "—"}</td><td class="r num">${d.yield_pct_at_close ? d.yield_pct_at_close + "%" : "—"}</td>
       <td class="r num">${esc((d.announced || "").split(" ").slice(0, 3).join(" "))}</td><td class="r num">${d.bc_start}</td></tr>`).join("")}</tbody></table></div>`}`;
 }
@@ -3494,7 +3563,7 @@ async function pageCalendar() {
     const label = new Date(m + "-01").toLocaleDateString("en", { month: "long", year: "numeric" });
     return `<div class="card cal-month"><h2 style="font-size:13px">${label}</h2>
       <table><thead><tr><th>Date</th><th class="r">In</th><th>Ticker</th><th>Event</th><th class="r">Status</th></tr></thead><tbody>${
-      byMonth[m].map(e => `<tr class="clickable" onclick="location.hash='#/ticker/${e.ticker}'">
+      byMonth[m].map(e => `<tr class="clickable" onclick="navigate('/ticker/${e.ticker}')">
         <td class="num">${e.date}</td><td class="r">${cdBadge(e.date)}</td><td><b>${e.ticker}</b></td>
         <td class="sub">${esc(e.note || "results")}</td>
         <td class="r">${e.confirmed ? '<span class="pill ok">verified</span>' : '<span class="tag">estimate</span>'}</td></tr>`).join("")}</tbody></table></div>`;
@@ -3516,7 +3585,7 @@ async function pageNews() {
       <input id="nq" placeholder="filter ticker/text" value="${esc(newsFilter.q)}" style="font:inherit;padding:4px 10px;border:1px solid currentColor;opacity:.7;background:transparent;color:inherit;border-radius:0">
     </div>
     <div class="wire">${rows.length ? rows.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>
-      ${(n.tickers || []).map(t => `<a href="#/ticker/${esc(t)}" style="color:var(--accent);font-weight:700">${esc(t)}</a>`).join(" ")}
+      ${(n.tickers || []).map(t => `<a href="/ticker/${esc(t)}" style="color:var(--accent);font-weight:700">${esc(t)}</a>`).join(" ")}
       <b>${esc(tp(n, "headline"))}</b> ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}<br>
       <span class="t">${esc(tp(n, "summary"))} · ${esc(n.source || "")}</span></p>`).join("") : '<div class="empty">Wire silent — sentinel runs every cycle during market hours.</div>'}</div></div>`;
   $("view").querySelector(".ranges").addEventListener("click", e => {
@@ -3539,7 +3608,7 @@ async function pageResearch() {
     <div class="rdoc-top"><span class="tag">${esc(dtLabel[d.doc_type] || d.doc_type)}</span>
       <span class="rdoc-src">${esc(d.source)}${followed.has(d.source) ? ' <span class="wbadge">★ following</span>' : ""}${d.digest_level === "headline" ? ' · <span class="sub">headline only</span>' : ""}</span>
       <span class="t">${esc(d.date || "")}</span>
-      ${(d.tickers || []).slice(0, 4).map(t => `<a href="#/ticker/${esc(t)}" class="tag clickable">${esc(t)}</a>`).join(" ")}</div>
+      ${(d.tickers || []).slice(0, 4).map(t => `<a href="/ticker/${esc(t)}" class="tag clickable">${esc(t)}</a>`).join(" ")}</div>
     <div class="rdoc-digest">${esc(d.digest || "")}${d.url ? ` <a href="${esc(d.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}</div>
     ${(d.claims || []).length ? `<div class="sub" style="margin-top:4px"><b>Claims (scored later):</b> ${d.claims.map(c => esc(c.claim?.text || "")).join(" · ")}</div>` : ""}
     ${d.omissions ? `<div class="sub" style="margin-top:4px"><b class="dn">What it glosses over:</b> ${esc(d.omissions)}</div>` : ""}</div>`;
@@ -3556,7 +3625,7 @@ async function pageResearch() {
     ${sTile("Claims on the record", nClaims, "each scored when it resolves", nClaims ? "up" : "")}
     ${sTile("Latest document", esc(latest), "the wire updates weekly", "")}
   </div>
-  <div class="disclaimer">Broker research and company filings are <b>evidence the desk cross-examines, never takes at face value</b>. Brokers miss things, carry sector bias, and are often wrong — every broker claim here is extracted, scored against what actually happens, and ranked on the <a href="#/leaderboard" style="color:inherit;text-decoration:underline">broker leaderboard</a>. Educational, not advice.</div>
+  <div class="disclaimer">Broker research and company filings are <b>evidence the desk cross-examines, never takes at face value</b>. Brokers miss things, carry sector bias, and are often wrong — every broker claim here is extracted, scored against what actually happens, and ranked on the <a href="/leaderboard" style="color:inherit;text-decoration:underline">broker leaderboard</a>. Educational, not advice.</div>
   <div class="seg"><h2>Broker notes</h2><div class="ln"></div><span class="pill">${brokers.length}</span></div>
   <div class="card">${brokers.length ? (isSubscribed() ? brokers : brokers.slice(0, 2)).map(docRow).join("") : '<div class="empty">No broker notes digested yet. Add public sources in config/broker_sources.json; the desk digests each once and scores its calls. Until then, the desk forms its own view without leaning on brokers.</div>'}</div>
   <div class="seg"><h2>Company filings & briefings</h2><div class="ln"></div><span class="pill">${filings.length}</span></div>
@@ -3608,15 +3677,15 @@ async function pageLeaderboard() {
   ${pendBroker.length ? `<div class="seg"><h2>Broker calls on the record — pending</h2><div class="ln"></div><span class="pill">${pendBroker.length}</span></div>
   <div class="card"><div class="sub">harvested from public research; each will be scored against what actually happens by its horizon. Recorded to grade the house, not to follow it.</div>
     <table><thead><tr><th>House</th><th>Ticker</th><th>Call</th><th class="r">Resolves</th></tr></thead><tbody>${
-    pendBroker.slice(0, 40).map(c => `<tr><td><b>${esc(c.source)}</b></td><td><a href="#/ticker/${esc(c.ticker)}" style="color:var(--accent);font-weight:700">${esc(c.ticker)}</a></td><td class="sub">${esc(c.claim?.text || c.claim?.rating || "")}</td><td class="r num">${esc(c.resolve_by || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
+    pendBroker.slice(0, 40).map(c => `<tr><td><b>${esc(c.source)}</b></td><td><a href="/ticker/${esc(c.ticker)}" style="color:var(--accent);font-weight:700">${esc(c.ticker)}</a></td><td class="sub">${esc(c.claim?.text || c.claim?.rating || "")}</td><td class="r num">${esc(c.resolve_by || "—")}</td></tr>`).join("")}</tbody></table></div>` : ""}`;
 }
 
 /* ---------- legal pages (Terms / Privacy / Risk) — content from state/legal.json ---------- */
 async function pageLegal() {
   const doc = await j("legal.json");
-  const which = location.hash.split("/")[2] || "terms";
+  const which = routeHash().split("/")[2] || "terms";
   const tabs = [["terms", "Terms of Service"], ["privacy", "Privacy Policy"], ["risk", "Risk Disclosure"]];
-  const tabBar = `<div class="legal-tabs">${tabs.map(([k, t]) => `<a href="#/legal/${k}" class="${k === which ? "on" : ""}">${t}</a>`).join("")}</div>`;
+  const tabBar = `<div class="legal-tabs">${tabs.map(([k, t]) => `<a href="/legal/${k}" class="${k === which ? "on" : ""}">${t}</a>`).join("")}</div>`;
   const L = doc && doc[which];
   if (!L) { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Legal</h2><div class="ln"></div></div>${tabBar}<div class="card"><div class="skelwrap"><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line"></div><div class="skel-line short"></div></div></div>`; return; }
   $("view").innerHTML = `
@@ -3629,9 +3698,9 @@ async function pageLegal() {
   </div>`;
 }
 
-/* ---------- unsubscribe (ungated — #/unsubscribe?t=<uuid>, reached only from an email link) ---------- */
+/* ---------- unsubscribe (ungated — /unsubscribe?t=<uuid>, reached only from an email link) ---------- */
 async function pageUnsubscribe() {
-  const q = (location.hash.split("?")[1] || "");
+  const q = (routeHash().split("?")[1] || "");
   const token = new URLSearchParams(q).get("t") || "";
   const card = (body) => { $("view").innerHTML = `<div class="seg" style="margin-top:4px"><h2>Email preferences</h2><div class="ln"></div></div><div class="card">${body}</div>`; };
   if (!token) { card(`<div class="empty">This link is missing its token — open the unsubscribe link from an actual desk email.</div>`); return; }
@@ -3685,7 +3754,7 @@ function runRevealModal(opts) {
     closeAnimated(ov, ".replay-box");   // let the exit animation play, then drop the node
     // reveal the results inline on the page (reveal() sets the session flag once the run finishes)
     if (opts.onClose) opts.onClose();
-    else if (opts.sym && typeof pageTicker === "function" && location.hash.toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
+    else if (opts.sym && typeof pageTicker === "function" && routeHash().toUpperCase().includes(opts.sym)) pageTicker(opts.sym);
   }
   function key(e) { if (e.key === "Escape") close(); }
   ov.addEventListener("click", e => {
@@ -3843,7 +3912,7 @@ async function playStrategyRun(sym) {
           proven.map(t => `<tr><td><b>${esc(t.name)}</b> <span class="tag">${esc((t.category || "").replace(/_/g, " "))}</span></td><td class="r num">${pct(t.hit_rate)}</td><td class="r num up">${sgn(t.net_expectancy_pct)}%</td><td class="r num">${t.n}</td><td class="r num">${pct(t.oos_hit)}</td></tr>`).join("")}</tbody></table></div>`
           : `<div class="card"><div class="empty">No strategy cleared the bar on ${esc(sym)} — none held win rate ≥55%, positive expectancy after costs, AND profitability out-of-sample. The desk wouldn't signal it. That's a finding, not a gap.</div></div>`}
         <div class="rp-reveal-foot"><span>Backtested on ${esc(sym)}'s own ~19-year history, costs included, checked on unseen data. Past performance does not predict future results. Research, not advice.</span>
-          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="testlog">Read the full test log ›</button><button class="rp-btn2" onclick="location.hash='#/strategies'">All strategies ›</button></span></div>
+          <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button><button class="rp-btn2" data-a="deep" data-target="testlog">Read the full test log ›</button><button class="rp-btn2" onclick="navigate('/strategies')">All strategies ›</button></span></div>
       </div>`;
     },
   });
@@ -3912,7 +3981,7 @@ async function playBoardRun() {
     steps,
     // per-ticker flags: only the stocks this run actually covered unlock — anywhere in the product
     onReveal: () => { try { board.forEach(s => sessionStorage.setItem("stratran:" + s, "1")); } catch (e) { /* private mode */ } },
-    onClose: () => { if (location.hash.replace(/^#\/?/, "").startsWith("strategies")) pageStrategies(); },
+    onClose: () => { if (routeHash().replace(/^#\/?/, "").startsWith("strategies")) pageStrategies(); },
     renderReveal: (bodyEl) => {
       bodyEl.innerHTML = `<div class="rp-reveal">
         <div class="rp-reveal-head"><b>Your board · ${board.map(esc).join(" · ")}</b><span>what actually worked — ${pairs.length} stock–strategy pair${pairs.length === 1 ? "" : "s"} cleared win-rate ≥55%, positive expectancy after costs, and out-of-sample</span></div>
@@ -3996,14 +4065,14 @@ async function pageSettings() {
   <div class="card">
     <div class="pc-top"><b style="font-size:16px">${esc(pl.label)} plan</b>${pl.tag ? `<span class="pill">${esc(pl.tag)}</span>` : ""}</div>
     <p class="sub" style="margin:4px 0 10px">${esc(pl.blurb)}</p>
-    <div class="bd-bar"><button class="note-save" onclick="location.hash='#/plans'">See all plans</button>
+    <div class="bd-bar"><button class="note-save" onclick="navigate('/plans')">See all plans</button>
       <button class="note-save" onclick="setDeskMode('${deskMode() === "learn" ? "pro" : "learn"}')">Switch to the ${deskMode() === "learn" ? "Pro" : "Learner"} desk</button></div>
     <p class="sub" style="margin-top:10px">Payments aren't open yet — card processing through international providers isn't available in Pakistan, so billing will run through a local gateway. Nothing is charged, and plans are set manually until then.</p>
   </div>
 
   <div class="seg"><h2>Your birth details</h2><div class="ln"></div><span class="pill">${bd ? "on file" : "not set"}</span></div>
   <div class="card">
-    <p class="sub" style="margin-bottom:12px">The date, time and place that cast your chart on <a href="#/mychart" style="color:var(--accent)">Your Chart</a>. Made a mistake? Edit it and the desk recasts everything. Private to your account.</p>
+    <p class="sub" style="margin-bottom:12px">The date, time and place that cast your chart on <a href="/mychart" style="color:var(--accent)">Your Chart</a>. Made a mistake? Edit it and the desk recasts everything. Private to your account.</p>
     ${bd ? `<div class="bd-grid">
       ${birthRow("Date", bd.date)}
       ${birthRow("Time", bd.time_known === false ? "unknown (read from Moon)" : bd.time)}
@@ -4036,9 +4105,9 @@ async function pageSettings() {
 
   <div class="seg"><h2>Legal</h2><div class="ln"></div></div>
   <div class="card"><div class="follow-grid">
-    <a class="follow-chip" href="#/legal/terms">Terms of Service</a>
-    <a class="follow-chip" href="#/legal/privacy">Privacy Policy</a>
-    <a class="follow-chip" href="#/legal/risk">Risk Disclosure</a>
+    <a class="follow-chip" href="/legal/terms">Terms of Service</a>
+    <a class="follow-chip" href="/legal/privacy">Privacy Policy</a>
+    <a class="follow-chip" href="/legal/risk">Risk Disclosure</a>
   </div></div>`;
 }
 
@@ -4124,12 +4193,11 @@ async function setDeskMode(m) {
   myProfile = { ...(myProfile || {}), ui_mode: m };
   await saveProfile({ ui_mode: m });
   applyDeskMode();
-  // Setting the hash fires hashchange, which routes. Calling route() here as well rendered the
-  // destination page twice. Only route directly when the hash is ALREADY the target, because then
-  // the assignment is a no-op and no hashchange is coming.
-  const target = m === "learn" ? "#/learn" : "#/today";
-  if (location.hash === target) route(true);
-  else location.hash = target;
+  // History API navigation calls route() directly. Only route directly when the
+  // destination is already active, because pushState would otherwise add a duplicate entry.
+  const target = m === "learn" ? "/learn" : "/today";
+  if (appPathname() === target) route(true);
+  else navigate(target);
 }
 /* The nav is declared once in HTML; the shell just flips which group is visible, so there is one
    source of truth for routes and no second menu to keep in sync. */
@@ -4166,7 +4234,7 @@ async function lessonLive(kind) {
       if (!rows.length) return "";
       return `<div class="ll-live"><b>Real payouts on the desk right now</b>
         ${rows.map(r => `<div class="ll-row"><span>${esc(r.symbol)}</span><span class="sub">${esc(r.announcement || "cash dividend")}</span><b class="num">Rs ${esc(String(r.dividend_rs))}/sh</b></div>`).join("")}
-        <a href="#/dividends" class="ll-go">See every announced payout, with its buy-by date →</a></div>`;
+        <a href="/dividends" class="ll-go">See every announced payout, with its buy-by date →</a></div>`;
     }
     if (kind === "earnings") {
       const c = await j("earnings_calendar.json");
@@ -4174,7 +4242,7 @@ async function lessonLive(kind) {
       if (!ev.length) return "";
       return `<div class="ll-live"><b>Results dates the desk already knows about</b>
         ${ev.map(e => `<div class="ll-row"><span>${esc(e.ticker)}</span><span class="sub">${esc(e.note || "results")}</span><b class="num">${esc(e.date)}</b></div>`).join("")}
-        <a href="#/calendar" class="ll-go">See the full earnings calendar →</a></div>`;
+        <a href="/calendar" class="ll-go">See the full earnings calendar →</a></div>`;
     }
     if (kind === "value") {
       const fv = await j("fairvalue.json");
@@ -4182,7 +4250,7 @@ async function lessonLive(kind) {
       if (!rows.length) return "";
       return `<div class="ll-live"><b>The same ratios, on real companies</b>
         ${rows.map(([s, v]) => `<div class="ll-row"><span>${esc(s)}</span><span class="sub">P/E ${esc(String(v.pe ?? "—"))}× · EPS Rs ${esc(String(v.eps ?? "—"))}</span><b class="num">Rs ${fmt(v.price)}</b></div>`).join("")}
-        <a href="#/value" class="ll-go">See how the desk values every stock four ways →</a></div>`;
+        <a href="/value" class="ll-go">See how the desk values every stock four ways →</a></div>`;
     }
     if (kind === "research") {
       const idx = await j("research_index.json");
@@ -4190,19 +4258,19 @@ async function lessonLive(kind) {
       if (!docs.length) return "";
       return `<div class="ll-live"><b>Filings the desk has digested</b>
         ${docs.map(d => `<div class="ll-row"><span>${esc(d.source || "")}</span><span class="sub">${esc((d.digest || "").slice(0, 70))}…</span><b class="num">${esc(d.date || "")}</b></div>`).join("")}
-        <a href="#/research" class="ll-go">Read the research library →</a></div>`;
+        <a href="/research" class="ll-go">Read the research library →</a></div>`;
     }
     if (kind === "strategies") {
       const bt = await j("backtest.json");
       const n = Object.keys(bt?.results || bt?.strategies || {}).length;
       return `<div class="ll-live"><b>The bar, applied</b>
         <p class="sub">The desk holds every rule to win rate ≥55%, positive expectancy after costs, and profitability out-of-sample${n ? ` across ${n} tested sets` : ""} — and publishes the ones that failed too.</p>
-        <a href="#/strategies" class="ll-go">See which rules actually cleared it →</a></div>`;
+        <a href="/strategies" class="ll-go">See which rules actually cleared it →</a></div>`;
     }
     if (kind === "astro") {
       return `<div class="ll-live"><b>Your own chart</b>
         <p class="sub">Cast your birth chart in your browser and read the tradition against the market — framed as exploration, with the test result stated plainly.</p>
-        <a href="#/mychart" class="ll-go">Open Your Chart →</a></div>`;
+        <a href="/mychart" class="ll-go">Open Your Chart →</a></div>`;
     }
   } catch { /* a lesson must never fail to render because a data file is missing */ }
   return "";
@@ -4404,11 +4472,11 @@ function learnStreak() {
 function journeyActionState(a) {
   if (a === "watchlist") {
     const n = watchlist().length;
-    return { done: n >= 3, label: n >= 3 ? `Watchlist built — ${n} companies starred` : `Star at least 3 companies (${n}/3 so far)`, go: "#/board", cta: "Browse the board →" };
+    return { done: n >= 3, label: n >= 3 ? `Watchlist built — ${n} companies starred` : `Star at least 3 companies (${n}/3 so far)`, go: "/board", cta: "Browse the board →" };
   }
   if (a === "paper") {
     const n = (paperState().trades || []).length;
-    return { done: n > 0, label: n > 0 ? "First practice position taken" : "Open your practice portfolio and take a position", go: "#/practice", cta: "Open Practice →" };
+    return { done: n > 0, label: n > 0 ? "First practice position taken" : "Open your practice portfolio and take a position", go: "/practice", cta: "Open Practice →" };
   }
   return null;
 }
@@ -4636,7 +4704,7 @@ async function pagePractice() {
 
   <div class="seg"><h2>Holdings</h2><div class="ln"></div><span class="pill">${rows.length}</span>${rows.length ? csvBtn("holdings") : ""}</div>
   <div class="card" style="padding:0">${rows.length ? `<table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Shares</th><th class="r">Avg cost</th><th class="r">Price</th><th class="r">Value</th><th class="r">P/L</th></tr></thead><tbody>${
-    rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((uni?.symbols?.[r.s]?.name || "").slice(0, 20))}</span></td>
+    rows.map(r => `<tr class="clickable" onclick="navigate('/ticker/${r.s}')"><td><b>${r.s}</b> <span class="sub">${esc((uni?.symbols?.[r.s]?.name || "").slice(0, 20))}</span></td>
       <td class="sub">${esc((r.sector || "").slice(0, 18))}</td><td class="r num">${r.sh}</td><td class="r num">${fmt(r.avg)}</td>
       <td class="r num">${r.px ? fmt(r.px) : "—"}</td><td class="r num">${r.val ? fmt(Math.round(r.val)) : "—"}</td>
       <td class="r num ${r.pl >= 0 ? "up" : "dn"}">${r.pl != null ? sgn(+r.plp.toFixed(1)) + "%" : "—"}</td></tr>`).join("")}</tbody></table>`
@@ -4691,7 +4759,7 @@ async function sinceLastVisit(q, lv) {
   const bits = [];
   if (newSigs.length) bits.push(`<b>${newSigs.length} new setup${newSigs.length === 1 ? "" : "s"}</b>`);
   if (newsDelta) bits.push(`<b>${newsDelta} material news item${newsDelta === 1 ? "" : "s"}</b> (impact 4+)`);
-  if (movers.length) bits.push(`on your watchlist: ${movers.map(m => `<a href="#/ticker/${esc(m.s)}" class="${m.chg > 0 ? "up" : "dn"}" style="font-weight:700">${esc(m.s)} ${sgn(+m.chg.toFixed(1))}%</a>`).join(", ")}`);
+  if (movers.length) bits.push(`on your watchlist: ${movers.map(m => `<a href="/ticker/${esc(m.s)}" class="${m.chg > 0 ? "up" : "dn"}" style="font-weight:700">${esc(m.s)} ${sgn(+m.chg.toFixed(1))}%</a>`).join(", ")}`);
   return `<div class="card since-card">
     <div class="since-head"><span class="ark">since your last visit · ${esc(ago)} ago</span>
       <button class="since-x" onclick="this.closest('.since-card').remove()" aria-label="Dismiss">✕</button></div>
@@ -5031,7 +5099,7 @@ async function toolDivRun() {
   <div class="card" style="padding:0"><table><thead><tr><th>Ex-date</th><th class="r">Rs/share</th><th class="r">Price then</th><th class="r">Cash paid</th><th class="r">Shares bought</th><th class="r">Shares held</th></tr></thead><tbody>${
     r.events.slice(-18).reverse().map(e => `<tr><td class="num">${esc(e.d)}</td><td class="r num">${e.rsps}</td><td class="r num">${fmt(e.px)}</td>
       <td class="r num up">${rs(e.paidR)}</td><td class="r num">${e.bought.toFixed(1)}</td><td class="r num">${e.shR.toFixed(0)}</td></tr>`).join("")}</tbody></table>
-    <div class="sub" style="padding:9px 14px">Payouts from Yahoo's dividend events (${esc(String(deep?.coverage_from || ""))} onward), split/bonus-adjusted to match the price series — so per-share amounts are comparable to the prices shown, and dividends are not double-counted. Reinvested at the ex-date close; real reinvestment happens on the payment date, in whole shares, after withholding tax. Announced and upcoming payouts with buy-by dates live on the <a href="#/dividends" style="color:var(--accent)">Dividends</a> page.</div></div>`;
+    <div class="sub" style="padding:9px 14px">Payouts from Yahoo's dividend events (${esc(String(deep?.coverage_from || ""))} onward), split/bonus-adjusted to match the price series — so per-share amounts are comparable to the prices shown, and dividends are not double-counted. Reinvested at the ex-date close; real reinvestment happens on the payment date, in whole shares, after withholding tax. Announced and upcoming payouts with buy-by dates live on the <a href="/dividends" style="color:var(--accent)">Dividends</a> page.</div></div>`;
 }
 
 function toolPanel() {
@@ -5148,7 +5216,7 @@ function scannerHtml(cats) {
     "Six ranked lists, rebuilt every cycle from the desk's scored data — below fair value, momentum, covered yield, quality, predictability, washed-out RSI — each with the reason it qualified.");
   return `<div class="scan-grid">${cats.map(c => `<div class="card scan-card">
     <h2>${esc(c.title)}</h2>
-    ${c.rows.map(r => `<div class="scan-row clickable" onclick="location.hash='#/ticker/${esc(r.s)}'">
+    ${c.rows.map(r => `<div class="scan-row clickable" onclick="navigate('/ticker/${esc(r.s)}')">
       <b>${esc(r.s)}</b><span class="num scan-m">${esc(r.m)}</span><span class="sub">${esc(r.why)}</span></div>`).join("")}
   </div>`).join("")}</div>
   <p class="sub" style="margin-top:8px">Ranked from the desk's own data each cycle — screens, not recommendations. A list a stock qualifies for is a place to start reading, never a reason to buy. (Shariah-status screens await a verified data source — the desk won't fake it.)</p>`;
@@ -5302,7 +5370,7 @@ async function pageScreener() {
   </div>
   ${filters.length ? `<div class="seg"><h2>${out.length} match${out.length === 1 ? "" : "es"}</h2><div class="ln"></div>${out.length ? csvBtn("screen") : ""}</div>
   <div class="card" style="padding:0">${out.length ? `<table><thead><tr><th>Stock</th><th>Sector</th><th class="r">Price</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th><th class="r">Predict.</th></tr></thead><tbody>${
-      out.slice(0, 60).map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
+      out.slice(0, 60).map(r => `<tr class="clickable" onclick="navigate('/ticker/${r.s}')"><td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
         <td class="sub">${esc((r.sector || "").slice(0, 16))}</td><td class="r num">${fmt(r.price)}</td><td class="r num">${r.pe ?? "—"}</td>
         <td class="r num">${r.dy ? r.dy + "%" : "—"}</td><td class="r num ${r.gap > 0 ? "up" : r.gap < 0 ? "dn" : ""}">${r.gap != null ? sgn(r.gap) + "%" : "—"}</td>
         <td class="r num">${r.pred ?? "—"}</td></tr>`).join("")}</tbody></table>`
@@ -5621,7 +5689,7 @@ async function pageSectors() {
 
     <div class="seg"><h2>Members</h2><div class="ln"></div><span class="pill">${d.n_members}</span></div>
     <div class="card" style="padding:0"><table><thead><tr><th>Stock</th><th class="r">Price</th><th class="r">20d</th><th class="r">P/E</th><th class="r">Yield</th><th class="r">vs fair</th></tr></thead><tbody>${
-      d.members.map(m => `<tr class="clickable" onclick="location.hash='#/ticker/${esc(m.sym)}'"><td><b>${esc(m.sym)}</b> <span class="sub">${esc((m.name || "").slice(0, 20))}</span></td>
+      d.members.map(m => `<tr class="clickable" onclick="navigate('/ticker/${esc(m.sym)}')"><td><b>${esc(m.sym)}</b> <span class="sub">${esc((m.name || "").slice(0, 20))}</span></td>
         <td class="r num">${fmt(m.close)}</td><td class="r num ${(m.ret_20d || 0) >= 0 ? "up" : "dn"}">${sgn(m.ret_20d)}%</td>
         <td class="r num">${m.pe ?? "—"}</td><td class="r num">${m.div_yield_pct ? m.div_yield_pct + "%" : "—"}</td>
         <td class="r num ${(m.fair_gap_pct || 0) > 0 ? "up" : (m.fair_gap_pct || 0) < 0 ? "dn" : ""}">${m.fair_gap_pct != null ? sgn(m.fair_gap_pct) + "%" : "—"}</td></tr>`).join("")}</tbody></table></div>`}
@@ -5722,7 +5790,7 @@ async function playSectorDebate(sec) {
           <span class="rp-foot-btns"><button class="rp-btn2" data-a="replay">↻ Replay</button></span></div>
       </div>`;
     },
-    onClose: () => { if (location.hash.startsWith("#/sectors")) pageSectors(); },
+    onClose: () => { if (routeHash().startsWith("#/sectors")) pageSectors(); },
   });
 }
 
@@ -5826,16 +5894,16 @@ async function pageMarket() {
     <div class="tnote"><button class="note-save" onclick="_mkt.rules.push({lhs:'rsi14',op:'lt',rhs:40});pageMarket()">+ Add condition</button>
       <button class="pc-btn ghost" style="max-width:220px;display:inline-block;margin-left:8px" disabled>Publishing — coming soon</button>
       <div id="mkt-msg" class="sub" style="margin-top:8px"></div></div>
-    <div class="tnote warn"><b>Why publishing isn't open yet.</b> A published strategy is only worth reading if the numbers beside it are real, so the desk won't accept submissions until it can backtest every one on ~19 years of each stock's own history and show the result <b>whatever it shows</b> — including losses. That pipeline is being built. Until it is, the builder above is yours to experiment with, and the desk's own ${deskN} strategies on the <a href="#/strategies" style="color:var(--accent)">Strategies</a> page already carry their full, honest backtests.</div>`
+    <div class="tnote warn"><b>Why publishing isn't open yet.</b> A published strategy is only worth reading if the numbers beside it are real, so the desk won't accept submissions until it can backtest every one on ~19 years of each stock's own history and show the result <b>whatever it shows</b> — including losses. That pipeline is being built. Until it is, the builder above is yours to experiment with, and the desk's own ${deskN} strategies on the <a href="/strategies" style="color:var(--accent)">Strategies</a> page already carry their full, honest backtests.</div>`
       : _mkt.tab === "mine" ? (mine.length ? mine.map(card).join("")
         : `<div class="empty">You haven't published a strategy yet. Build one and the desk will test it properly.</div>`)
         : (list.length ? `<div class="mkt-grid">${list.map(card).join("")}</div>`
-          : `<div class="empty"><b>Community publishing is coming soon.</b><br><br>The desk's own <b>${deskN}</b> strategies are live on the <a href="#/strategies" style="color:var(--accent)">Strategies</a> page right now — every one backtested on each stock's own ~19-year history, with win rate, expectancy after costs and out-of-sample results shown in full. Use <b>Build a strategy</b> to compose your own idea in the meantime.</div>`)}
+          : `<div class="empty"><b>Community publishing is coming soon.</b><br><br>The desk's own <b>${deskN}</b> strategies are live on the <a href="/strategies" style="color:var(--accent)">Strategies</a> page right now — every one backtested on each stock's own ~19-year history, with win rate, expectancy after costs and out-of-sample results shown in full. Use <b>Build a strategy</b> to compose your own idea in the meantime.</div>`)}
   </div>`}`;
 }
 
-/* Shareable entry point for the astro funnel: /#/cast drops you straight into the wizard.
-   The reading itself lives at /#/mychart, which this hands off to. */
+/* Shareable entry point for the astro funnel: /cast drops you straight into the wizard.
+   The reading itself lives at /mychart, which this hands off to. */
 async function pageCast() {
   await pageMyChart();
   if (!natalChart()) setTimeout(openBirthWizard, 60);
@@ -5976,7 +6044,7 @@ async function pageCompare() {
   ];
   $("view").innerHTML = `
   <div class="seg" style="margin-top:4px"><h2>Compare</h2><div class="ln"></div><span class="pill">${cols.length}/4 names</span></div>
-  <p class="sub" style="margin-bottom:12px">The same scored fields, read across names instead of down one page. Prefer a sentence? The <a href="#/ask" style="color:var(--accent)">Ask</a> page answers "A vs B" in prose.</p>
+  <p class="sub" style="margin-bottom:12px">The same scored fields, read across names instead of down one page. Prefer a sentence? The <a href="/ask" style="color:var(--accent)">Ask</a> page answers "A vs B" in prose.</p>
   <div class="card">
     <div class="scr-row">
       <input id="cmp-in" class="ph-in combo" style="flex:1" aria-label="Add a company to compare" placeholder="Add a company — type a symbol or name"
@@ -5989,11 +6057,11 @@ async function pageCompare() {
   </div>
   ${cols.length < 2 ? `<div class="card"><div class="empty">Pick at least two names. Up to four fit side by side.</div></div>` : `
   <div class="card" style="padding:0"><table class="cmp-table"><thead><tr><th>Field</th>${
-    cols.map(c => `<th class="r"><a href="#/ticker/${esc(c.s)}" style="color:var(--accent);font-weight:700">${esc(c.s)}</a><div class="sub" style="font-weight:400">${esc((c.name || "").slice(0, 18))}</div></th>`).join("")}</tr></thead>
+    cols.map(c => `<th class="r"><a href="/ticker/${esc(c.s)}" style="color:var(--accent);font-weight:700">${esc(c.s)}</a><div class="sub" style="font-weight:400">${esc((c.name || "").slice(0, 18))}</div></th>`).join("")}</tr></thead>
     <tbody>${ROWS.map(([label, render, kls]) => `<tr><td><b>${esc(label)}</b></td>${
       cols.map(c => `<td class="r ${kls}">${render(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
   <div class="tnote" style="margin-top:10px">${csvBtn("compare")}
-    <span class="sub" style="margin-left:10px">Fair value is a <b>model estimate</b> on public fundamentals, not a price target — and the four methods behind it often disagree. "Strategies proven here" counts rules that cleared the bar on each stock's <b>own</b> history, so the counts are not directly comparable across names with different amounts of history. Terms explained in the <a href="#/glossary" style="color:var(--accent)">glossary</a>.</span></div>`}`;
+    <span class="sub" style="margin-left:10px">Fair value is a <b>model estimate</b> on public fundamentals, not a price target — and the four methods behind it often disagree. "Strategies proven here" counts rules that cleared the bar on each stock's <b>own</b> history, so the counts are not directly comparable across names with different amounts of history. Terms explained in the <a href="/glossary" style="color:var(--accent)">glossary</a>.</span></div>`}`;
 }
 
 const PAGES = { learn: pageLearn, practice: pagePractice, tools: pageTools, screener: pageScreener, scenarios: pageScenarios, ask: pageAsk, sectors: pageSectors, market: pageMarket, plans: pagePlans, cast: pageCast, today: pageToday, board: pageBoard, watchlist: pageWatchlist, portfolio: pagePortfolio, settings: pageSettings, strategies: pageStrategies, value: pageValue, macro: pageMacro, astro: pageAstro, mychart: pageMyChart, dividends: pageDividends, calendar: pageCalendar, research: pageResearch, leaderboard: pageLeaderboard, news: pageNews, legal: pageLegal, glossary: pageGlossary, compare: pageCompare, shipped: pageShipped, unsubscribe: pageUnsubscribe };
@@ -6033,7 +6101,7 @@ function animateIn() {
    remove a file from middleware.js's PUBLIC_FILES set expecting this screen to cover it. They
    guard different things.
 
-   OPEN_ROUTES is the deliberate exception list. #/cast and #/mychart stay open because casting
+   OPEN_ROUTES is the deliberate exception list. /cast and /mychart stay open because casting
    a birth chart without an account IS the acquisition funnel — guestChart() + migrateGuestChart()
    exist precisely so that a stranger can get value first and carry it into the account they
    create afterwards. Gating them would close the top of the funnel to protect the bottom.
@@ -6183,6 +6251,10 @@ function consumeAuthErrorHash() {
 }
 
 async function route(isPoll) {
+  // Fragments from old dashboard links are not sent to Vercel, so canonicalize
+  // them in the existing router before dispatching. Auth protocol fragments are
+  // deliberately excluded by normalizeLegacyHash().
+  normalizeLegacyHash();
   // Supabase auth callbacks (email confirm / password reset) arrive in the hash —
   // they're not routes; the client's detectSessionInUrl consumes SUCCESS tokens and fires
   // onAuthStateChange. Error hashes are handled up-front by consumeAuthErrorHash() in initAuth.
@@ -6190,12 +6262,10 @@ async function route(isPoll) {
   // Auth still resolving — render nothing rather than render the wrong thing and swap it out.
   // initAuth() (or the 3s backstop) calls route() again the moment the session is known.
   if (!authReady) return;
-  const h = location.hash || "#/today";
-  const [, rawPage, arg] = h.split("/");
-  // Query-string routes (#/unsubscribe?t=<uuid>) carry "?..." glued onto the page segment —
-  // strip it here so PAGES/gateAllows match on the bare page name; pageUnsubscribe() re-parses
-  // location.hash directly to read the token.
-  const page = (rawPage || "").split("?")[0];
+  const path = "/" + appPathname().replace(/^\/+|\/+$/g, "");
+  const [, rawPage, ...rest] = path.split("/");
+  const arg = rest.join("/");
+  const page = rawPage || "today";
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (page || "today")));
   // Fire and forget. Awaiting it blocked EVERY navigation on five header fetches, so a click on a
   // nav item did nothing at all until they resolved. The pills no longer jump when they land late
@@ -6223,10 +6293,10 @@ async function route(isPoll) {
   // screen reads as broken), and before any page render so no gated page fetches or flashes.
   if (!gateAllows(page)) { hideGlobalStrip(); lastPage = key; return renderGate(page); }
   // reached a permitted page: restore the full shell. Must be cleared here rather than only on
-  // sign-in, because the open routes (#/cast, legal, glossary) are reachable while signed out and
+  // sign-in, because the open routes (/cast, legal, glossary) are reachable while signed out and
   // would otherwise inherit the stripped-down chrome from a previous gated view.
   try { document.body.removeAttribute("data-gated"); } catch {}
-  // ...and drop the sign-in terminal with it: the open routes (#/cast, legal, glossary) are
+  // ...and drop the sign-in terminal with it: the open routes (/cast, legal, glossary) are
   // reachable while signed out, and the gate's terminal would otherwise stay over them.
   closeAuth();
   // The tape is desk chrome, not page content: it shows on every permitted page. Its box is
@@ -6255,7 +6325,7 @@ async function route(isPoll) {
     console.error("page render failed:", page, arg, err);
     const v = $("view");
     if (v && (!v.innerHTML || v.innerText.trim().length < 40)) {
-      v.innerHTML = `<a class="crumb" href="#/board">← board</a>
+      v.innerHTML = `<a class="crumb" href="/board">← board</a>
         <div class="card"><div class="empty">Couldn't render ${esc((page || "this page") + (arg ? " " + arg : ""))} — a data file may still be loading or unavailable this cycle.<br><br>
         <b>Try:</b> reload the page (Ctrl+Shift+R to bypass cache). If it persists, the desk's data for this name may be missing this cycle.<br>
         <span class="sub">${esc(String(err && err.message || err)).slice(0, 160)}</span></div></div>`;
@@ -6607,7 +6677,7 @@ document.getElementById("langBtn")?.addEventListener("click", () => setLang(lang
    caching the Urdu string as "English" and making setLang('en') unable to ever restore it. */
 applyLang();   // safe at module top level: reads localStorage only, never `me`
 translateTree(document.body);
-window.addEventListener("hashchange", () => route(false));
+window.addEventListener("popstate", () => route(false));
 // NOTE: do NOT call applyDeskMode() here — this line runs before `let me` is initialized further
 // down the file, and deskMode() reads it, which throws a TDZ error and aborts the whole module.
 // index.html ships data-desk="pro" as the default; initAuth re-stamps it once the plan is known.
@@ -6720,7 +6790,7 @@ function openSearch() {
   loadSearchIndex(); setTimeout(() => inp.focus(), 30);
 }
 function closeSearch() { const b = $("searchbox"); if (b) b.hidden = true; }
-function goTicker(sym) { closeSearch(); location.hash = "#/ticker/" + sym; }
+function goTicker(sym) { closeSearch(); navigate("/ticker/" + encodeURIComponent(sym)); }
 async function runSearch(q) {
   q = q.trim().toUpperCase();
   const res = $("searchresults");
@@ -6746,7 +6816,8 @@ $("searchresults")?.addEventListener("click", e => {
 $("searchbox")?.addEventListener("click", e => { if (e.target.id === "searchbox") closeSearch(); });
 $("searchclose")?.addEventListener("click", closeSearch);
 // closing whenever the route changes (e.g. after picking a ticker) and on Escape anywhere
-window.addEventListener("hashchange", closeSearch);
+window.addEventListener("henneth:navigate", closeSearch);
+window.addEventListener("popstate", closeSearch);
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeSearch();
   if (e.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
@@ -6777,7 +6848,8 @@ const closeDrawer = () => shell.classList.remove("drawer");
 $("sideOpen")?.addEventListener("click", openDrawer);
 $("sideBackdrop")?.addEventListener("click", closeDrawer);
 // close the mobile drawer after navigating or on Escape
-window.addEventListener("hashchange", closeDrawer);
+window.addEventListener("henneth:navigate", closeDrawer);
+window.addEventListener("popstate", closeDrawer);
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 
 /* drag-to-resize the sidebar (desktop, expanded only), clamped + persisted */
@@ -7023,8 +7095,8 @@ function renderAccountButton() {
     const menu = document.getElementById("acctMenu");
     document.getElementById("acctBtn").onclick = (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
-    document.getElementById("acctSettings").onclick = () => { menu.hidden = true; location.hash = "#/settings"; };
-    document.getElementById("acctPlans").onclick = () => { menu.hidden = true; location.hash = "#/plans"; };
+    document.getElementById("acctSettings").onclick = () => { menu.hidden = true; navigate("/settings"); };
+    document.getElementById("acctPlans").onclick = () => { menu.hidden = true; navigate("/plans"); };
     document.getElementById("acctMode").onclick = () => { menu.hidden = true; setDeskMode(deskMode() === "learn" ? "pro" : "learn"); };
     document.getElementById("acctTour").onclick = () => { menu.hidden = true; startTour(); };
   } else {
@@ -7043,7 +7115,8 @@ if (!window.__acctMenuGuard) {
     if (m && !m.hidden && holder && !holder.contains(e.target)) m.hidden = true;
   }, true);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAcct(); });
-  window.addEventListener("hashchange", closeAcct);
+  window.addEventListener("henneth:navigate", closeAcct);
+  window.addEventListener("popstate", closeAcct);
 }
 
 /* ---------- auth surface (sign in / create account) ----------
@@ -7322,7 +7395,7 @@ function stopProfileRealtime() {
 }
 
 function refreshVisibleTickerNote(notes) {
-  const match = (location.hash || "").match(/^#\/ticker\/([^?]+)/);
+  const match = (routeHash() || "").match(/^#\/ticker\/([^?]+)/);
   if (!match) return;
   let sym = "";
   try { sym = decodeURIComponent(match[1]).toUpperCase(); } catch {}
@@ -7401,7 +7474,7 @@ async function toggleWatch(sym, btn) {
   if (btn) btn.disabled = false;
   track(adding ? "watchlist_add" : "watchlist_remove", { sym });
   if (adding) await markActivated("watchlist");           // add only — removing isn't the activation moment
-  if (location.hash === "#/watchlist") pageWatchlist();   // live-refresh the list view
+  if (routeHash() === "#/watchlist") pageWatchlist();   // live-refresh the list view
   // The rail's Watchlist tab reads the same profile, so it goes stale the
   // moment a star is toggled from anywhere else on the desk.
   if (typeof window.refreshRail === "function") window.refreshRail();
@@ -7444,7 +7517,7 @@ async function addHolding(sym, shares, avgCost) {
 }
 async function removeHolding(sym) {
   await saveProfile({ portfolio: portfolio().filter(h => h.ticker !== (sym || "").toUpperCase()) });
-  if (location.hash.startsWith("#/portfolio")) pagePortfolio();
+  if (routeHash().startsWith("#/portfolio")) pagePortfolio();
 }
 async function submitHolding() {
   const t = document.getElementById("ph-tkr"), s = document.getElementById("ph-sh"), c = document.getElementById("ph-cost");
@@ -7597,7 +7670,7 @@ async function pagePortfolio() {
 
   <div class="card"><table><thead><tr><th>Ticker</th><th class="r">Shares</th><th class="r">Avg cost</th><th class="r">Price</th><th class="r">Value</th><th class="r">P/L</th><th class="r">Weight</th><th></th></tr></thead><tbody>${
     withW.map(r => `<tr>
-      <td class="clickable" onclick="location.hash='#/ticker/${esc(r.ticker)}'"><b>${esc(r.ticker)}</b> <span class="sub">${esc((r.name || "").slice(0, 16))}</span>${r.known ? "" : ' <span class="sub dn">not in universe</span>'}${r.sector ? `<div class="sub" style="opacity:.7">${esc(r.sector)}</div>` : ""}</td>
+      <td class="clickable" onclick="navigate('/ticker/${esc(r.ticker)}')"><b>${esc(r.ticker)}</b> <span class="sub">${esc((r.name || "").slice(0, 16))}</span>${r.known ? "" : ' <span class="sub dn">not in universe</span>'}${r.sector ? `<div class="sub" style="opacity:.7">${esc(r.sector)}</div>` : ""}</td>
       <td class="r num">${fmt(r.shares)}</td><td class="r num">${fmt(r.avg_cost)}</td>
       <td class="r num">${r.px != null ? fmt(r.px) : "—"}</td>
       <td class="r num">${r.mv != null ? fmt(r.mv, 0) : "—"}</td>
@@ -7649,7 +7722,7 @@ async function pageWatchlist() {
     } else {
       const ev = watchIntel(wl, { q, fvt: fv, news: newsAll, cal: calAll, claims: claimsAll, signals: sigAll });
       intelHtml = `<div class="seg"><h2>What changed</h2><div class="ln"></div><span class="pill">${ev.length ? ev.length + " item" + (ev.length > 1 ? "s" : "") : "quiet"}</span></div>
-      <div class="card wl-intel">${ev.length ? ev.map(e => `<div class="wi-row clickable" onclick="location.hash='#/ticker/${esc(e.s)}'">
+      <div class="card wl-intel">${ev.length ? ev.map(e => `<div class="wi-row clickable" onclick="navigate('/ticker/${esc(e.s)}')">
         <span class="tag ${e.w >= 5 ? "hot" : ""}">${esc(e.tag)}</span><b>${esc(e.s)}</b><span class="sub">${esc(e.msg)}</span></div>`).join("")
         : '<div class="empty">Nothing important changed on your names — a quiet watchlist is a feature, not a bug.</div>'}</div>`;
     }
@@ -7659,14 +7732,14 @@ async function pageWatchlist() {
   <p class="sub" style="margin-bottom:14px">The stocks you follow, with the four things that matter at a glance. Star toggles on any stock page. Research, not advice.</p>
   ${intelHtml}
   ${rows.length ? `<div class="card"><table><thead><tr><th>Ticker</th><th class="r">Price</th><th class="r">Day</th><th class="r">Valuation</th><th>Health</th><th></th></tr></thead><tbody>${
-    rows.map(r => `<tr class="clickable" onclick="location.hash='#/ticker/${r.s}'">
+    rows.map(r => `<tr class="clickable" onclick="navigate('/ticker/${r.s}')">
       <td><b>${r.s}</b> <span class="sub">${esc((r.name || "").slice(0, 20))}</span></td>
       <td class="r num">${fmt(r.px)}</td>
       <td class="r num ${cls(r.q.ret_1d)}">${sgn(r.q.ret_1d)}%</td>
       <td class="r">${r.fv ? `<span class="pill ${r.fv.verdict === "undervalued" ? "ok" : r.fv.verdict === "overvalued" ? "bad" : ""}">${verdictLabel[r.fv.verdict] || r.fv.verdict}</span>` : "—"}</td>
       <td>${r.fs ? `<span class="tag">${esc(r.fs.rating === "attractive" ? "stronger" : r.fs.rating === "caution" ? "weaker" : "mixed")}</span>` : "—"}</td>
       <td class="r">${starBtn(r.s)}</td></tr>`).join("")}</tbody></table></div>`
-    : `<div class="card"><div class="empty">No stocks yet. Open any stock and tap the ★ to add it — try <a href="#/board">the Board</a> or search (top right).</div></div>`}`;
+    : `<div class="card"><div class="empty">No stocks yet. Open any stock and tap the ★ to add it — try <a href="/board">the Board</a> or search (top right).</div></div>`}`;
 }
 
 /* ---------- plan intent, carried in from the marketing site ----------------------------
@@ -7685,8 +7758,9 @@ function capturePlanIntent() {
     const p = new URLSearchParams(location.search).get("plan");
     if (!p) return;
     if (PLANS[p]) localStorage.setItem("henneth_plan_intent", p);
-    // strip ?plan= so a refresh or a shared link doesn't re-trigger it, keeping the hash route
-    history.replaceState(null, "", location.pathname + location.hash);
+    // strip ?plan= so a refresh or a shared link doesn't re-trigger it, keeping the path route
+    // Preserve a Supabase callback fragment while removing the marketing intent query.
+    history.replaceState(null, "", location.pathname + (location.hash || ""));
   } catch { /* private mode: intent is a nicety, never required */ }
 }
 function planIntent() { try { return localStorage.getItem("henneth_plan_intent"); } catch { return null; } }
@@ -7699,7 +7773,7 @@ capturePlanIntent();
   let want = null;
   try { want = new URLSearchParams(location.search).get("auth"); } catch { return; }
   if (want !== "signup" && want !== "signin") return;
-  try { history.replaceState(null, "", location.pathname + location.hash); } catch {}
+  try { history.replaceState(null, "", location.pathname + (location.hash || "")); } catch {}
   setTimeout(() => { if (!me && typeof openAuth === "function") openAuth(want); }, 600);
 })();
 
@@ -7709,10 +7783,10 @@ capturePlanIntent();
    birth-chart cast) via markActivated(), gated on activated_at is null, not the frozen legacy
    onboarded column. */
 const COACH_STEPS = [
-  { route: "#/today", title: "Today", body: "The desk's daily plain-English read — mood, favoured sectors, a short watchlist." },
-  { route: "#/board", title: "Board", body: "The whole tape: live moves, signals that fired from backtested rules." },
-  { route: "#/ticker/FFC", title: "Desk Room", body: "Open any ticker and read the desk's debate — TA and FA argue it out, no verdict." },
-  { route: "#/leaderboard", title: "Scores", body: "Every call, ours and the brokerage houses', graded against what price did." },
+  { route: "/today", title: "Today", body: "The desk's daily plain-English read — mood, favoured sectors, a short watchlist." },
+  { route: "/board", title: "Board", body: "The whole tape: live moves, signals that fired from backtested rules." },
+  { route: "/ticker/FFC", title: "Desk Room", body: "Open any ticker and read the desk's debate — TA and FA argue it out, no verdict." },
+  { route: "/leaderboard", title: "Scores", body: "Every call, ours and the brokerage houses', graded against what price did." },
 ];
 let coachIdx = 0;
 
@@ -7736,7 +7810,7 @@ function renderCoach() {
   const s = COACH_STEPS[coachIdx];
   if (!s) { track && track("tour_completed", {}); return; }
   if (coachIdx === 0) track && track("tour_started", {});
-  location.hash = s.route;
+  navigate(s.route);
   const strip = el(`<div class="coach-strip" id="coachStrip">
     <div class="coach-body">
       <b class="coach-title">${s.title}</b>

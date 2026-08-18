@@ -14,7 +14,7 @@
   var HN_MARKUP = `<div class="page">
 
   <nav class="nav">
-    <a href="#" class="nav-brand"><img class="nav-brand-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>DESK</small></a>
+   <a href="/today" class="nav-brand"><img class="nav-brand-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>DESK</small></a>
     <div class="nav-right">
       <div class="nav-chip">Research · Not Advice</div>
       <a href="https://henneth.app/" class="nav-back">← Back to site</a>
@@ -77,7 +77,7 @@
         </p>
 
         <div class="legal">
-          <p>Henneth Desk is a research &amp; analytics tool — not an investment adviser. Nothing here is personalized advice. By continuing you agree to the <a href="#">Terms</a>, <a href="#">Privacy Policy</a> and <a href="#">Risk Disclosure</a>.</p>
+          <p>Henneth Desk is a research &amp; analytics tool — not an investment adviser. Nothing here is personalized advice. By continuing you agree to the <a href="/legal/terms">Terms</a>, <a href="/legal/privacy">Privacy Policy</a> and <a href="/legal/risk">Risk Disclosure</a>.</p>
         </div>
       </div>
 
@@ -118,25 +118,25 @@
             <p class="card-label">Your brief</p>
             <h3 id="todayBriefTitle">Balanced context, then the names worth a closer look.</h3>
             <p id="todayBriefCopy">We’ll put the market tone first, then explain what it changes for your radar.</p>
-            <a href="#" class="card-action">Open today’s brief →</a>
+            <a href="/today" class="card-action">Open today’s brief →</a>
           </article>
           <article class="today-card" tabindex="0">
             <p class="card-label">Your radar</p>
             <h3 id="todayRadarTitle">A focused starting set</h3>
             <p id="todayRadarCopy">Choose sectors or names and we’ll keep them close to the desk.</p>
-            <a href="#" class="card-action">Open radar →</a>
+            <a href="/board" class="card-action">Open radar →</a>
           </article>
           <article class="today-card" tabindex="0">
             <p class="card-label">Your next move</p>
             <h3 id="todayNextTitle">Save one name from Today.</h3>
             <p id="todayNextCopy">One meaningful action is enough to make this desk yours.</p>
-            <a href="#" class="card-action">Start here →</a>
+            <a href="/practice" class="card-action">Start here →</a>
           </article>
           <article class="today-card span" tabindex="0">
             <p class="card-label">Your next lesson</p>
             <h3 id="todayLessonTitle">The balance sheet, line by line.</h3>
             <p id="todayLessonCopy">Eight minutes, tied to the lens you just picked. Skippable, and it remembers where you stopped.</p>
-            <a href="#" class="card-action">Open the lesson →</a>
+            <a href="/learn" class="card-action">Open the lesson →</a>
           </article>
         </div>
         <details class="checklist" id="checklist" open>

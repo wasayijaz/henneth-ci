@@ -7,11 +7,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Henneth Desk">
+<base id="appBase" href="/">
+<script>try{if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&location.pathname!=='/')document.getElementById('appBase').setAttribute('href','/dashboard/');}catch(e){}</script>
 <title>Henneth Desk — PSX research and financial astrology</title>
 <meta name="description" content="The Henneth research terminal for the Pakistan Stock Exchange — company reads, model fair value, tested strategies, and a financial-astrology lens tested and scored like every other. Research, not advice.">
 
 <!-- NOINDEX IS DELIBERATE, and is the one line here most likely to be "fixed" by mistake.
-     The desk is members-only and it is a hash-routed SPA, so a crawler sees exactly one thing at
+     The desk is members-only and it is a path-routed SPA, so a crawler sees exactly one thing at
      every URL it tries: the sign-in gate. Letting that be indexed submits a few hundred URLs that
      are byte-identical thin content, which competes with henneth.app for the brand term and wins
      nothing. `follow` is kept so link equity still flows out to the marketing site.
@@ -91,8 +93,8 @@
      check: the desk has no build step (vercel.json just copies these files), so without it every
      `file://` open and every local preview would post real hits into the property.
 
-     send_page_view:false + a manual page_view is required because this is a hash router. GA4's
-     automatic pageview fires once on load and never again, so #/today, #/board and #/ticker/HUBC
+     send_page_view:false + a manual page_view is required because this is a client-side router. GA4's
+     automatic pageview fires once on load and never again, so /today, /board and /ticker/HUBC
      would all collapse into a single "/" and in-app navigation would be invisible. -->
 <script>
 if (location.hostname.indexOf('henneth.app') !== -1) {
@@ -107,23 +109,25 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
   var sendView = function () {
     gtag('event', 'page_view', {
       page_location: location.href,
-      page_path: location.pathname + location.hash,
+      page_path: location.pathname + location.search,
       page_title: document.title
     });
   };
   sendView();
-  window.addEventListener('hashchange', sendView);
+  window.addEventListener('henneth:navigate', sendView);
+  window.addEventListener('popstate', sendView);
 }
 </script>
 
 <!-- PostHog product analytics — same live-host guard as the GA tag above (matches henneth.app and
-     desk.henneth.app). Hash-route $pageview is sent manually on hashchange, for the same reason GA
+     desk.henneth.app). Path-route $pageview is sent manually on navigation, for the same reason GA
      needs it here. phc_ is PostHog's PUBLIC project key (shipped to the browser by design). -->
 <script>
 if (location.hostname.indexOf('henneth.app') !== -1) {
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId setPersonPropertiesForFlags captureException".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   posthog.init('phc_wU2HSFb2bsTr7ngo3noCJsgscF8dvcXW34DXJH3rZxjb',{api_host:'https://us.i.posthog.com',defaults:'2026-01-30'});
-  window.addEventListener('hashchange', function(){ if (window.posthog) posthog.capture('$pageview'); });
+  window.addEventListener('henneth:navigate', function(){ if (window.posthog) posthog.capture('$pageview'); });
+  window.addEventListener('popstate', function(){ if (window.posthog) posthog.capture('$pageview'); });
 }
 </script>
 
@@ -218,41 +222,41 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
            market itself, and the things you reach for on the side. -->
       <div class="side-group">
         <div class="side-head">Workspace</div>
-        <a href="#/today" data-nav="today" title="Today"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Today</span></a>
-        <a href="#/board" data-nav="board" title="Board"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Board</span></a>
-        <a href="#/watchlist" data-nav="watchlist" title="Watchlist"><svg viewBox="0 0 24 24"><path d="M12 3l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18l-5.9 3 1.2-6.5L2.5 9.9 9.1 9z"/></svg><span>Watchlist</span></a>
-        <a href="#/portfolio" data-nav="portfolio" title="Portfolio"><svg viewBox="0 0 24 24"><path d="M3 13h4l3 7 4-14 3 7h4"/></svg><span>Portfolio</span></a>
-        <a href="#/mychart" data-nav="mychart" title="Your Chart"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>Your Chart</span></a>
-        <a href="#/practice" data-nav="practice" title="Practice"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><path d="M3 10h18M8 15h4"/></svg><span>Practice</span></a>
+        <a href="/today" data-nav="today" title="Today"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>Today</span></a>
+        <a href="/board" data-nav="board" title="Board"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Board</span></a>
+        <a href="/watchlist" data-nav="watchlist" title="Watchlist"><svg viewBox="0 0 24 24"><path d="M12 3l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18l-5.9 3 1.2-6.5L2.5 9.9 9.1 9z"/></svg><span>Watchlist</span></a>
+        <a href="/portfolio" data-nav="portfolio" title="Portfolio"><svg viewBox="0 0 24 24"><path d="M3 13h4l3 7 4-14 3 7h4"/></svg><span>Portfolio</span></a>
+        <a href="/mychart" data-nav="mychart" title="Your Chart"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>Your Chart</span></a>
+        <a href="/practice" data-nav="practice" title="Practice"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><path d="M3 10h18M8 15h4"/></svg><span>Practice</span></a>
       </div>
 
       <div class="side-group">
         <div class="side-head">Research</div>
-        <a href="#/strategies" data-nav="strategies" title="Strategies"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6"/></svg><span>Strategies</span></a>
-        <a href="#/value" data-nav="value" title="Value"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 006 0zM17 7l-3 6a3 3 0 006 0z"/></svg><span>Value</span></a>
-        <a href="#/screener" data-nav="screener" title="Screener"><svg viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></svg><span>Screener</span></a>
-        <a href="#/compare" data-nav="compare" title="Compare"><svg viewBox="0 0 24 24"><path d="M4 4h7v16H4zM13 4h7v16h-7M7.5 9v6M16.5 9v6"/></svg><span>Compare</span></a>
-        <a href="#/scenarios" data-nav="scenarios" title="Scenarios"><svg viewBox="0 0 24 24"><path d="M3 19h18M5 19V9l4 3 4-7 4 5 2-2v11"/></svg><span>Scenarios</span></a>
-        <a href="#/research" data-nav="research" title="Research"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg><span>Research</span></a>
-        <a href="#/sectors" data-nav="sectors" title="Sectors"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg><span>Sectors</span></a>
-        <a href="#/leaderboard" data-nav="leaderboard" title="Scores"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/></svg><span>Scores</span></a>
+        <a href="/strategies" data-nav="strategies" title="Strategies"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6"/></svg><span>Strategies</span></a>
+        <a href="/value" data-nav="value" title="Value"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 006 0zM17 7l-3 6a3 3 0 006 0z"/></svg><span>Value</span></a>
+        <a href="/screener" data-nav="screener" title="Screener"><svg viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></svg><span>Screener</span></a>
+        <a href="/compare" data-nav="compare" title="Compare"><svg viewBox="0 0 24 24"><path d="M4 4h7v16H4zM13 4h7v16h-7M7.5 9v6M16.5 9v6"/></svg><span>Compare</span></a>
+        <a href="/scenarios" data-nav="scenarios" title="Scenarios"><svg viewBox="0 0 24 24"><path d="M3 19h18M5 19V9l4 3 4-7 4 5 2-2v11"/></svg><span>Scenarios</span></a>
+        <a href="/research" data-nav="research" title="Research"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg><span>Research</span></a>
+        <a href="/sectors" data-nav="sectors" title="Sectors"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg><span>Sectors</span></a>
+        <a href="/leaderboard" data-nav="leaderboard" title="Scores"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/></svg><span>Scores</span></a>
       </div>
 
       <div class="side-group">
         <div class="side-head">Markets</div>
-        <a href="#/news" data-nav="news" title="News"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h8M8 17h5"/></svg><span>News</span></a>
-        <a href="#/macro" data-nav="macro" title="Macro"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>Macro</span></a>
-        <a href="#/dividends" data-nav="dividends" title="Dividends"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2 3-2s3 .6 3 2-1.3 2-3 2-3 .6-3 2 1.3 2 3 2 3-.6 3-2"/></svg><span>Dividends</span></a>
-        <a href="#/calendar" data-nav="calendar" title="Earnings"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><span>Earnings</span></a>
-        <a href="#/astro" data-nav="astro" title="Astro"><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 .5-4.5 4 1.4 6-4.9-3.2L7.1 19.5l1.4-6L4 9.5 10 9z"/><circle cx="19" cy="5" r="1.6"/></svg><span>Astro</span></a>
+        <a href="/news" data-nav="news" title="News"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h8M8 17h5"/></svg><span>News</span></a>
+        <a href="/macro" data-nav="macro" title="Macro"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>Macro</span></a>
+        <a href="/dividends" data-nav="dividends" title="Dividends"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2 3-2s3 .6 3 2-1.3 2-3 2-3 .6-3 2 1.3 2 3 2 3-.6 3-2"/></svg><span>Dividends</span></a>
+        <a href="/calendar" data-nav="calendar" title="Earnings"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><span>Earnings</span></a>
+        <a href="/astro" data-nav="astro" title="Astro"><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 .5-4.5 4 1.4 6-4.9-3.2L7.1 19.5l1.4-6L4 9.5 10 9z"/><circle cx="19" cy="5" r="1.6"/></svg><span>Astro</span></a>
       </div>
 
       <div class="side-group">
         <div class="side-head">Tools</div>
-        <a href="#/market" data-nav="market" title="Marketplace"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 11H4.5zM3 9l2-5h14l2 5M9 13v3M15 13v3"/></svg><span>Marketplace</span></a>
-        <a href="#/tools" data-nav="tools" title="Tools"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18"/><path d="M8 7h8M8 11h3M13 11h3M8 15h3M13 15h3"/></svg><span>Tools</span></a>
-        <a href="#/ask" data-nav="ask" title="Ask the desk"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M9 9h6M9 13h4"/></svg><span>Ask</span></a>
-        <a class="nav-learn" href="#/learn" data-nav="learn" title="Learn"><svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3-9 3zM3 6v8M7 9v6l5 2 5-2V9"/></svg><span>Learn</span></a>
+        <a href="/market" data-nav="market" title="Marketplace"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 11H4.5zM3 9l2-5h14l2 5M9 13v3M15 13v3"/></svg><span>Marketplace</span></a>
+        <a href="/tools" data-nav="tools" title="Tools"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18"/><path d="M8 7h8M8 11h3M13 11h3M8 15h3M13 15h3"/></svg><span>Tools</span></a>
+        <a href="/ask" data-nav="ask" title="Ask the desk"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M9 9h6M9 13h4"/></svg><span>Ask</span></a>
+        <a class="nav-learn" href="/learn" data-nav="learn" title="Learn"><svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3-9 3zM3 6v8M7 9v6l5 2 5-2V9"/></svg><span>Learn</span></a>
       </div>
     </nav>
     <!-- The legal links used to sit on their own with a hairline above them, which read as a
@@ -263,7 +267,7 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
     <div class="side-foot">
       <strong>Henneth Research</strong>
       <div class="side-legal">
-        <a href="#/glossary">Glossary</a><a href="#/shipped" data-nav="shipped">Shipped</a><a href="#/legal/terms">Terms</a><a href="#/legal/privacy">Privacy</a><a href="#/legal/risk">Risk</a>
+        <a href="/glossary">Glossary</a><a href="/shipped" data-nav="shipped">Shipped</a><a href="/legal/terms">Terms</a><a href="/legal/privacy">Privacy</a><a href="/legal/risk">Risk</a>
       </div>
       <span>Market data &middot; delayed 15 min</span>
     </div>
@@ -303,7 +307,7 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
          .brand-mobile class: on desktop the sidebar already spells the name out, so only the
          mark rides in the header there; on a phone the sidebar is a drawer and the words come
          back beside it. -->
-    <a class="brand brand-top" href="#/today" aria-label="Henneth Desk"><img class="brand-top-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async"><span class="brand-mobile">Henneth <em>Desk</em></span></a>
+    <a class="brand brand-top" href="/today" aria-label="Henneth Desk"><img class="brand-top-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async"><span class="brand-mobile">Henneth <em>Desk</em></span></a>
     <span id="mkt" class="pill">—</span>
     <span id="health" class="pill">HEALTH —</span>
     <span id="regime" class="pill">REGIME —</span>
@@ -324,11 +328,11 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
           <span class="tabadd-label">Search a stock</span>
           <span class="tabadd-key">/</span>
         </a>
-        <a href="#/screener" role="menuitem">
+        <a href="/screener" role="menuitem">
           <svg class="tabadd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
           <span class="tabadd-label">Screener</span>
         </a>
-        <a href="#/ask" role="menuitem">
+        <a href="/ask" role="menuitem">
           <svg class="tabadd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/></svg>
           <span class="tabadd-label">Ask the desk</span>
         </a>
@@ -365,7 +369,7 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
       Everything here is educational information, never personalized advice or a recommendation to buy or
       sell. No guaranteed returns; past performance does not predict future results. Investing in PSX
       carries risk, including the loss of your capital. You make your own decisions; execution is manual.
-      <span class="foot-links"><a href="#/legal/terms">Terms</a> · <a href="#/legal/privacy">Privacy</a> · <a href="#/legal/risk">Risk Disclosure</a></span>
+      <span class="foot-links"><a href="/legal/terms">Terms</a> · <a href="/legal/privacy">Privacy</a> · <a href="/legal/risk">Risk Disclosure</a></span>
     </footer>
   </div>
 
@@ -468,7 +472,7 @@ window.addEventListener("error", function (e) {
 }, true);
 </script>
 <!-- Shell behaviour. All four run after app.js because each one reads state app.js owns (the
-     route, the #updated stamp, the rendered #view) and re-renders off `hashchange`. None of them
+     route, the #updated stamp, the rendered #view) and re-renders off the navigation event. None of them
      writes to app.js's own DOM — they only add the panels around it. -->
 <script src="rail.js"></script>
 <script src="topbar.js"></script>

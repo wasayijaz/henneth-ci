@@ -229,7 +229,7 @@ def _parse_ts(s):
 
 def unsub_url(row):
     token = row.get("unsub_token") or ""
-    return APP_URL + "/#/unsubscribe?t=" + urllib.parse.quote(token)
+    return APP_URL + "/unsubscribe?t=" + urllib.parse.quote(token)
 
 
 def digest_key_for(now):

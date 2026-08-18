@@ -21,7 +21,7 @@ def welcome(ctx):
             "Henneth is a research desk for the Pakistan Stock Exchange. No wizard, no quiz — "
             "pick one ticker on the Today page and the desk starts tracking it for you."
         )
-        + block_cta("Pick a ticker", APP_URL + "/#/today")
+        + block_cta("Pick a ticker", APP_URL + "/today")
         + block_note(
             "Add a stock to your watchlist, look up a Desk Room debate, or run the position-size "
             "calculator — any of these gets you started."
@@ -38,7 +38,7 @@ def nudge_24h(ctx):
             "You signed up yesterday but haven't picked a ticker yet. The desk needs one stock "
             "to start showing you anything useful — takes ten seconds."
         )
-        + block_cta("Pick a ticker", APP_URL + "/#/today")
+        + block_cta("Pick a ticker", APP_URL + "/today")
     )
     return subject, preheader, rows
 
@@ -52,7 +52,7 @@ def activated(ctx):
             "your watchlist, the Desk Room has a bull/bear debate on any ticker, and you can turn "
             "on the weekly digest any time from settings."
         )
-        + block_cta("Open the desk", APP_URL + "/#/today")
+        + block_cta("Open the desk", APP_URL + "/today")
     )
     return subject, preheader, rows
 
@@ -67,7 +67,7 @@ def digest(ctx):
         rows += block_ticker_row(sym, name, last, chg_pct)
     rows += block_note(
         "Full detail, Desk Room debates, and the calendar are on the desk."
-    ) + block_cta("Open the desk", APP_URL + "/#/today")
+    ) + block_cta("Open the desk", APP_URL + "/today")
     return subject, preheader, rows
 
 
@@ -80,7 +80,7 @@ def nudge_7d(ctx):
             "and everything else — watchlist tracking, Desk Room debates, the weekly digest — "
             "follows from there."
         )
-        + block_cta("Pick a ticker", APP_URL + "/#/today")
+        + block_cta("Pick a ticker", APP_URL + "/today")
     )
     return subject, preheader, rows
 
