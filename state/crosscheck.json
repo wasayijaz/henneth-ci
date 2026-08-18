@@ -1,288 +1,294 @@
 {
- "updated": "2026-08-17 17:40",
+ "updated": "2026-08-18 15:50",
  "checked": 8,
  "fails": [],
- "drift": [],
+ "drift": [
+  "HUBC",
+  "OGDC",
+  "FFC",
+  "MEBL",
+  "ENGROH"
+ ],
  "results": {
   "HUBC": {
-   "status": "PASS",
+   "status": "DRIFT",
    "checks": {
     "close": {
      "ours": 211.85,
-     "tv": 211.85,
-     "dev_pct": 0.0,
+     "tv": 207.89,
+     "dev_pct": 1.905,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 40.3,
-     "tv": 40.31,
-     "dev_pct": 0.019,
-     "match": true,
-     "flag": "match"
+     "tv": 36.27,
+     "dev_pct": 11.098,
+     "match": false,
+     "flag": "drift"
     },
     "sma20": {
      "ours": 217.84,
-     "tv": 217.84,
-     "dev_pct": 0.001,
+     "tv": 217.28,
+     "dev_pct": 0.255,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 222.22,
-     "tv": 222.22,
-     "dev_pct": 0.002,
+     "tv": 222.07,
+     "dev_pct": 0.069,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 214.3,
-   "tv_low": 211.5
+   "tv_high": 211.78,
+   "tv_low": 207.07
   },
   "OGDC": {
-   "status": "PASS",
+   "status": "DRIFT",
    "checks": {
     "close": {
      "ours": 321.3,
-     "tv": 321.3,
-     "dev_pct": 0.0,
+     "tv": 314.95,
+     "dev_pct": 2.016,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 50.7,
-     "tv": 50.7,
-     "dev_pct": 0.003,
-     "match": true,
-     "flag": "match"
+     "tv": 43.75,
+     "dev_pct": 15.888,
+     "match": false,
+     "flag": "drift"
     },
     "sma20": {
      "ours": 317.61,
-     "tv": 317.61,
-     "dev_pct": 0.0,
+     "tv": 317.44,
+     "dev_pct": 0.052,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 325.02,
-     "tv": 325.02,
-     "dev_pct": 0.001,
+     "tv": 324.82,
+     "dev_pct": 0.06,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 324.74,
-   "tv_low": 318.5
+   "tv_high": 320,
+   "tv_low": 314
   },
   "LUCK": {
    "status": "PASS",
    "checks": {
     "close": {
      "ours": 443.37,
-     "tv": 443.37,
-     "dev_pct": 0.0,
+     "tv": 439.3,
+     "dev_pct": 0.926,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 45.7,
-     "tv": 45.75,
-     "dev_pct": 0.104,
+     "tv": 43.35,
+     "dev_pct": 5.432,
      "match": true,
      "flag": "match"
     },
     "sma20": {
      "ours": 447.14,
-     "tv": 447.14,
-     "dev_pct": 0.0,
+     "tv": 446.79,
+     "dev_pct": 0.079,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 453.58,
-     "tv": 453.58,
-     "dev_pct": 0.0,
+     "tv": 453.68,
+     "dev_pct": 0.022,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 449.4,
-   "tv_low": 442
+   "tv_high": 444,
+   "tv_low": 438
   },
   "FFC": {
-   "status": "PASS",
+   "status": "DRIFT",
    "checks": {
     "close": {
      "ours": 552.96,
-     "tv": 552.96,
-     "dev_pct": 0.0,
+     "tv": 545.72,
+     "dev_pct": 1.327,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 45.2,
-     "tv": 45.21,
-     "dev_pct": 0.012,
-     "match": true,
-     "flag": "match"
+     "tv": 41.05,
+     "dev_pct": 10.106,
+     "match": false,
+     "flag": "drift"
     },
     "sma20": {
      "ours": 558.53,
-     "tv": 558.53,
-     "dev_pct": 0.0,
+     "tv": 558.25,
+     "dev_pct": 0.051,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 559.85,
-     "tv": 559.85,
-     "dev_pct": 0.0,
+     "tv": 559.57,
+     "dev_pct": 0.049,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 561.99,
-   "tv_low": 550
+   "tv_high": 552.96,
+   "tv_low": 544.5
   },
   "MEBL": {
-   "status": "PASS",
+   "status": "DRIFT",
    "checks": {
     "close": {
      "ours": 587.28,
-     "tv": 587.28,
-     "dev_pct": 0.0,
-     "match": true,
-     "flag": "match"
+     "tv": 567.49,
+     "dev_pct": 3.487,
+     "match": false,
+     "flag": "drift"
     },
     "rsi14": {
      "ours": 63.9,
-     "tv": 63.85,
-     "dev_pct": 0.08,
-     "match": true,
-     "flag": "match"
+     "tv": 50.82,
+     "dev_pct": 25.75,
+     "match": false,
+     "flag": "drift"
     },
     "sma20": {
      "ours": 568.51,
-     "tv": 568.51,
-     "dev_pct": 0.001,
+     "tv": 569.89,
+     "dev_pct": 0.242,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 542.54,
-     "tv": 542.54,
-     "dev_pct": 0.0,
+     "tv": 544.03,
+     "dev_pct": 0.275,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 593.5,
-   "tv_low": 585
+   "tv_high": 585,
+   "tv_low": 565.16
   },
   "UBL": {
    "status": "PASS",
    "checks": {
     "close": {
      "ours": 468.64,
-     "tv": 468.64,
-     "dev_pct": 0.0,
+     "tv": 461.98,
+     "dev_pct": 1.442,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 51.8,
-     "tv": 51.76,
-     "dev_pct": 0.069,
+     "tv": 47.48,
+     "dev_pct": 9.108,
      "match": true,
      "flag": "match"
     },
     "sma20": {
      "ours": 468.72,
-     "tv": 468.72,
-     "dev_pct": 0.001,
+     "tv": 468.22,
+     "dev_pct": 0.107,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 455.92,
-     "tv": 455.92,
-     "dev_pct": 0.0,
+     "tv": 457.07,
+     "dev_pct": 0.251,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 471.41,
-   "tv_low": 467.11
+   "tv_high": 468.99,
+   "tv_low": 459.17
   },
   "ENGROH": {
-   "status": "PASS",
+   "status": "DRIFT",
    "checks": {
     "close": {
      "ours": 274.55,
-     "tv": 274.55,
-     "dev_pct": 0.0,
+     "tv": 268.75,
+     "dev_pct": 2.158,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 47.2,
-     "tv": 47.22,
-     "dev_pct": 0.05,
-     "match": true,
-     "flag": "match"
+     "tv": 42.21,
+     "dev_pct": 11.822,
+     "match": false,
+     "flag": "drift"
     },
     "sma20": {
      "ours": 276.56,
-     "tv": 276.56,
-     "dev_pct": 0.001,
+     "tv": 276.17,
+     "dev_pct": 0.143,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 277.21,
-     "tv": 277.21,
-     "dev_pct": 0.0,
+     "tv": 277.34,
+     "dev_pct": 0.047,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 277.99,
-   "tv_low": 273.86
+   "tv_high": 274.99,
+   "tv_low": 268
   },
   "PSO": {
    "status": "PASS",
    "checks": {
     "close": {
      "ours": 382.02,
-     "tv": 382.02,
-     "dev_pct": 0.0,
+     "tv": 376.11,
+     "dev_pct": 1.571,
      "match": true,
      "flag": "match"
     },
     "rsi14": {
      "ours": 72.6,
-     "tv": 72.64,
-     "dev_pct": 0.061,
+     "tv": 66.85,
+     "dev_pct": 8.601,
      "match": true,
      "flag": "match"
     },
     "sma20": {
      "ours": 348.12,
-     "tv": 348.12,
-     "dev_pct": 0.0,
+     "tv": 349.6,
+     "dev_pct": 0.423,
      "match": true,
      "flag": "match"
     },
     "sma50": {
      "ours": 350.61,
-     "tv": 350.61,
-     "dev_pct": 0.001,
+     "tv": 351.11,
+     "dev_pct": 0.143,
      "match": true,
      "flag": "match"
     }
    },
-   "tv_high": 384,
-   "tv_low": 351.51
+   "tv_high": 390.98,
+   "tv_low": 373.05
   }
  }
 }

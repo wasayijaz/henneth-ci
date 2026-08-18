@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-17 17:57",
- "regime": "neutral",
+ "updated": "2026-08-18 15:59",
+ "regime": "risk-off",
  "geo_risk": {
-  "score": 56,
+  "score": 59,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260817-BML-obv_divergence_up",
+   "id": "20260818-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260817-TPLT-donchian55_break",
+   "id": "20260818-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260817-GAL-atr_quiet_breakout",
+   "id": "20260818-GAL-atr_quiet_breakout",
    "ticker": "GAL",
    "strategy": "atr_quiet_breakout",
    "template": "Quiet base, upside break",
@@ -61,22 +61,22 @@
    "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 70% over 10 trades (+3.0% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260817-NICL-roc60_leader_pullback",
-   "ticker": "NICL",
-   "strategy": "roc60_leader_pullback",
-   "template": "Long-run leader, short pullback",
-   "category": "momentum",
-   "sector": "Chemical",
-   "hold_sessions": 18,
+   "id": "20260818-ATRL-high52w_break",
+   "ticker": "ATRL",
+   "strategy": "high52w_break",
+   "template": "52-week high breakout",
+   "category": "breakout",
+   "sector": "Refinery",
+   "hold_sessions": 20,
    "backtest": {
-    "hit_rate": 0.615,
-    "net_expectancy_pct": 1.12,
-    "n": 13,
-    "oos_hit": 0.667
+    "hit_rate": 0.567,
+    "net_expectancy_pct": 1.96,
+    "n": 30,
+    "oos_hit": 0.5
    },
-   "confidence": "low",
+   "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+   "thesis": "52-week high breakout is triggering now; on ATRL's own history it won 57% over 30 trades (+2.0% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -124,6 +124,11 @@
  ],
  "movers_up": [
   {
+   "ticker": "USVIX",
+   "ret_1d": 11.86,
+   "close": 15.94
+  },
+  {
    "ticker": "PRL",
    "ret_1d": 10.0,
    "close": 84.4
@@ -142,11 +147,6 @@
    "ticker": "CCM",
    "ret_1d": 10.0,
    "close": 53.68
-  },
-  {
-   "ticker": "SHCM",
-   "ret_1d": 10.0,
-   "close": 50.61
   }
  ],
  "movers_down": [
@@ -177,83 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Unity Foods (UNITY) updates shareholders on pending litigation matters",
-   "tickers": [
-    "UNITY"
-   ],
-   "impact": 2,
-   "summary": "Per Mettis Global's latest-news feed: Unity Foods Limited (PSX: UNITY) provided an update on two pending shareholder litigation matters - one regulatory suit was dismissed, a separate suit was stayed pending arbitration. No monetary amount or outcome disclosed beyond the case-status update. Logged as impact 2 (minor company item).",
-   "url": "https://mettisglobal.news/latest"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Dandot Cement (DNCC) finalizes financing for Waste Heat Recovery plant",
-   "tickers": [
-    "DNCC"
-   ],
-   "impact": 3,
-   "summary": "Per Mettis Global's latest-news feed: Dandot Cement Company Limited (PSX: DNCC) secured Letters of Credit from Sinoma Energy Conservation to finance a Waste Heat Recovery (WHR) plant. No project cost, capacity, or timeline figure disclosed in the source reviewed this cycle. Logged as impact 3 (notable capex/financing action) for this listed-tier constituent.",
-   "url": "https://mettisglobal.news/latest"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Foreign currency deposits rise by $118m in July 2026 to $6.862bn",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "Per Mettis Global's latest-news feed: Pakistan's foreign currency deposits rose by $118m in July 2026, taking the total to $6.862bn. No further breakdown (resident/non-resident, sector) disclosed in the source reviewed this cycle. Logged as impact 2 (minor macro data point, moderate improvement, no threshold/shock crossed).",
-   "url": "https://mettisglobal.news/latest"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "PKR holds firm against USD, closes at Rs277.65",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 1,
-   "summary": "Per Mettis Global's latest-news feed: the rupee gained 0.83 paisa against the US dollar in interbank trading, closing at Rs277.65/USD - little changed, consistent in kind with prior daily PKR items already logged this newslog. Logged as impact 1 (routine/administrative).",
-   "url": "https://mettisglobal.news/latest"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Gold price in Pakistan falls Rs3,500 per tola",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 1,
-   "summary": "Per Mettis Global's latest-news feed: 24-karat gold fell Rs3,500 per tola to Rs460,436/tola. Routine daily commodity price print, no PSX-ticker-level read-through disclosed. Logged as impact 1 (routine/administrative).",
-   "url": "https://mettisglobal.news/latest"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Business Recorder (search-summary corroborated)",
-   "headline": "Pakistan's fiscal deficit narrows to 22-year low of 2.6% of GDP in FY26",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 4,
-   "summary": "Business Recorder headline 'Pakistan's fiscal deficit narrows to 22-year low of 2.6% of GDP in FY26: Schehzad' - direct article fetch returned HTTP 403 this cycle; figure sourced from search-result summary only, attributed to an official named Schehzad, not independently confirmed against a second full-text source. A separate search also surfaced a related item citing Pakistan's FY26 fiscal deficit at approximately Rs3.31tr / 21-year-low framing (~3.6% of GDP in one source), inconsistent with the 2.6%-of-GDP headline figure - both readings reported here unreconciled pending a follow-up cycle with full-text access. Logged as impact 4 (material macro data point - a multi-decade-low fiscal deficit reading) per desk news-impact criteria (Rule 10); escalation flagged.",
-   "url": "https://www.brecorder.com/news/40434641/pakistans-fiscal-deficit-narrows-to-22-year-low-of-26-of-gdp-in-fy26-schehzad"
-  },
-  {
-   "ts": "2026-08-13",
-   "source": "Mettis Global",
-   "headline": "PSX Closing Bell: Red Rout - sector detail for confirmed Thursday close",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Supplements the 2026-08-13 newslog entry that logged the DPS 3:50pm checkpoint (180,104.61, -206.60pts/-0.11%) tagged MACRO only pending a closing-bell source. Mettis Global's 'PSX Closing Bell: Red Rout' (headline/summary reviewed via search) confirms the KSE-100 closed marginally lower on Thursday Aug 13, 2026 on selling in commercial banks, technology, and oil & gas sectors; direct article fetch returned HTTP 404 this cycle, so only headline-level sector detail is confirmed, no exact points/percentage re-quoted here (see the already-logged DPS-sourced entry for the confirmed index level). Logged as impact 3 (notable), tagged MACRO per the confirmed-close supersession rule (no new company tickers named in the available summary).",
-   "url": "https://mettisglobal.news/PSX-Closing-Bell-Red-Rout-62651"
-  },
   {
    "ts": "2026-08-14",
    "source": "Business Recorder / ProPakistani",
@@ -353,16 +276,87 @@
    "impact": 4,
    "summary": "Pakistan's Federal Constitutional Court ruled that tax credits granted under Section 168 of the Income Tax Ordinance can be legally adjusted against super tax liability, setting aside a prior Islamabad High Court decision that had denied this to private mobile operator Zong (not a PSX-listed universe ticker) in its dispute with the FBR. Six-page judgment authored by Justice Aamer Farooq holds the tax credit is a 'separate and established legal right' and that fiscal law should be interpreted to facilitate taxpayers. Ruling sets a precedent applicable to corporate taxpayers broadly (banks and other large corporates subject to super tax), potentially reducing effective super-tax cash outflow for eligible taxpayers with unadjusted tax credits. Logged as impact 4 (material regulatory/judicial action with broad corporate-tax implications) per desk news-impact criteria (Rule 10); escalation flagged.",
    "url": "https://english.aaj.tv/news/330468232/constitutional-court-allows-tax-credit-adjustment-against-super-tax"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "PSX Data Portal (DPS) indices page / Mettis Global",
+   "headline": "KSE-100 sharp intraday/near-close decline - down ~2,290-2,547 points (-1.27% to -1.41%)",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 4,
+   "summary": "Two live readings captured this cycle (checkpoint run, page timestamps ~3:30-3:38pm PKT): DPS indices page showed KSE-100 at 178,211.92, down 2,290.52 points (-1.27%); Mettis Global's PSXRoundup/latest-news pages showed KSE-100 at 177,955.51, down 2,546.94 points (-1.41%), both measured against Monday Aug 17's confirmed close of 180,502.45 (already logged). No closing-bell wire report (Business Recorder/Mettis Closing Bell piece) or stated driver was located this cycle to corroborate sector detail or cause - not attributing a cause without a source. This is more than double the magnitude of prior single-session moves logged this cycle (which were sub-1% and scored impact 3); logged as impact 4 (material market-wide move) given the unusually large single-session percentage decline. Tagged MACRO only; follow up next cycle for the confirmed close, driver, and sector breakdown.",
+   "url": "https://dps.psx.com.pk/indices"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global (equity news feed)",
+   "headline": "Bank Makramah approves Rs10bn further sponsor investment injection",
+   "tickers": [
+    "BML"
+   ],
+   "impact": 4,
+   "summary": "Bank Makramah Limited (PSX: BML) approved an investment proposal to inject a further Rs10bn into the bank, per Mettis Global (reported 03:34pm PKT). No further detail on injection mechanism (rights issue/sponsor loan/equity), timeline, or capital-adequacy impact disclosed in the source reviewed this cycle. Logged as impact 4 (material capital-injection action for a small listed-tier bank, weight 0.31%) per desk news-impact criteria (Rule 10); escalation flagged.",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global (equity news feed)",
+   "headline": "Cherat Packaging (CPPL) FY26 profit surges 83% to Rs651m",
+   "tickers": [
+    "CPPL"
+   ],
+   "impact": 4,
+   "summary": "Cherat Packaging Limited (PSX: CPPL) reported FY2026 net profit up 83% YoY to Rs651.01m, from Rs356.43m in the prior year, per Mettis Global (reported 02:52pm PKT, headline 'Profit Surges 83% to Rs651m in FY26'). No revenue, EPS, or dividend figure disclosed in the source reviewed this cycle. Logged as impact 4 (material earnings surprise) per desk news-impact criteria (Rule 10); escalation flagged.",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global (equity news feed)",
+   "headline": "Fast Cables (FCL) FY26 profit jumps 66% to Rs2.11bn",
+   "tickers": [
+    "FCL"
+   ],
+   "impact": 4,
+   "summary": "Fast Cables Limited (PSX: FCL) reported FY2026 net profit up 66% YoY to Rs2.11bn, from Rs1.27bn in the prior year, per Mettis Global (reported 02:51pm PKT, headline 'FY26 profit jumps 66%'). No revenue, EPS, or dividend figure disclosed in the source reviewed this cycle. Logged as impact 4 (material earnings surprise) per desk news-impact criteria (Rule 10); escalation flagged.",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global (equity news feed)",
+   "headline": "Samba Bank: PAO timeline for Najd Gateway's 84.51% acquisition extended 90 days",
+   "tickers": [
+    "SBL"
+   ],
+   "impact": 3,
+   "summary": "Samba Bank Limited (PSX: SBL) disclosed that the timeline for the Public Announcement of Offer (PAO) for Najd Gateway Holding Company's proposed acquisition of an 84.51% stake has been extended by 90 days, per Mettis Global. No reason for the extension or revised terms disclosed in the source reviewed this cycle. Logged as impact 3 (notable, ongoing acquisition process update, not a new/changed deal outcome).",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global (equity news feed)",
+   "headline": "SPEL Limited FY26 profit declines 9% to Rs1.14bn",
+   "tickers": [
+    "SPEL"
+   ],
+   "impact": 3,
+   "summary": "SPEL Limited (PSX: SPEL) reported FY2026 net profit down 9% YoY to Rs1.14bn, per Mettis Global. No revenue, EPS, or dividend figure disclosed in the source reviewed this cycle. Logged as impact 3 (notable results date, moderate decline, not a severe earnings miss).",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-18",
+   "source": "Mettis Global (equity news feed)",
+   "headline": "Masood Textile Mills commissions 6.2MW solar capacity",
+   "tickers": [
+    "MSOT"
+   ],
+   "impact": 2,
+   "summary": "Masood Textile Mills Limited (PSX: MSOT) commissioned 6.2MW of solar power capacity, per Mettis Global. No project cost or expected savings figure disclosed in the source reviewed this cycle. Logged as impact 2 (minor company operational item).",
+   "url": "https://mettisglobal.news/latest/"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-08-13 17:40",
-   "mode": "room",
-   "ended": "2026-08-13 18:07",
-   "outcome": "2 full (HMB, AIRLINK) / 0 delta / 6 reaffirm (LUCK, SYS, MTL, SAZEW, PAEL, KEL); QA flags-not-blocked both full tickers (medium/low findings, no fix required); 0 resolved persona/broker calls this run; pushed, watchdog OK"
-  },
   {
    "started": "2026-08-14T17:47:00+05:00",
    "mode": "room",
@@ -386,6 +380,12 @@
    "mode": "light",
    "ended": "2026-08-17T17:31:00+05:00",
    "outcome": "PM checkpoint: run_cloud.py exited 1 -- 3 of ~48 scripts (backtest.py, snapshot.py, fetch_intraday.py) hit JSONDecodeError reading state/liquidity.json and state/universe.json; both files independently verified valid/fresh moments later (likely transient read-during-atomic-rewrite race vs the concurrent cloud cron, mechanism not fully root-caused). preflight.py itself ran twice inside run_cloud.py and both times reported OK (1 non-gating WARN: 96 backfilling tickers). Per checkpoint step-3 stop condition (script exited non-zero), news-sentinel/monitor/escalation/build_dashboard/publish/watchdog all skipped this cycle -- no commit, no push. No open positions. Flagged for follow-up: recurring transient race on liquidity.json/universe.json reads during concurrent cloud+local runs (see 2026-08-12 17:06 PM entry for a prior instance of the same backtest.py/snapshot.py race)."
+  },
+  {
+   "started": "2026-08-17T17:22:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-17T18:05:00+05:00",
+   "outcome": "EOD refresh: git pull --rebase --autostash conflicted (concurrent cloud commit) -- resolved by taking remote for 13 UU state/*.json, then discarded stale re-applied local state/ edits from the autostash pop (kept fresh pulled data), left unrelated hand-authored dirty files (AGENTS.md/CLAUDE.md/scripts/*.py/docs, pre-existing, not mine) untouched. run_cloud.py ALL OK. macro-agent: regime neutral, geo-risk 56/moderate (SBP reserves $17.057bn +14mn, CPI 9.2%, rate held 11.5%, PIB yields rising). news-sentinel: 5 items appended (172 total) -- KSE-100 close ~180,502 +0.22%, PPL Dolphin X-1 gas/condensate find (impact 3), GWLC kiln halt, SRVI stock-split book closure, Federal Constitutional Court tax-credit-vs-super-tax ruling (impact 4 -- wrote escalation.json for the intraday pipeline; full strategist/risk/auditor NOT run here per this routine's explicit 3-agent scope). market-analyst: daily read tone neutral, oil&gas (PPL) led while banks/cement/fertilizer lagged; watchlist narrowed to BML/PPL/GAL/FCCL on genuine multi-axis stacking (TPLT/NICL live-triggered but excluded on fundamental-caution conflict, ATRL/CNERGY excluded as overbought+avoid-sector). build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). No open positions, monitor skipped. Published data-only (18 hand-authored files held back, pre-existing dirty tree from another session). Watchdog OK (app shell, public files, account gate intact), pushed to desk.henneth.app."
   }
  ]
 }
