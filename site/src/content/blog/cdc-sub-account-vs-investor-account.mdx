@@ -1,0 +1,112 @@
+---
+title: CDC Sub Account vs Investor Account, the real difference
+description: PSX calls the Investor Account "more secure." CDC's own onboarding rules show what that step actually requires — and what both account types now share.
+pubDate: 2026-08-18
+cluster: Method
+draft: false
+---
+
+import Snapshot from '../../components/explain/Snapshot.astro';
+import Ledger from '../../components/explain/Ledger.astro';
+
+Every PSX account sits on one of two Central Depository Company (CDC) account types: a **Sub
+Account**, opened and run by your broker, or an **Investor Account**, opened directly with CDC.
+[PSX's own account-opening guidance](/blog/how-to-start-investing-psx/) calls the Investor Account
+"more secure than a CDC Sub Account; hence more preferable" — but it doesn't say what that actually
+costs in setup, and a common assumption (that the Investor Account is the only one with a real KYC
+check) is wrong. Since CDC and NCCPL moved to the Centralized KYC Organization (CKO) regime,
+opening *either* account type runs through the same centralized identity check; what differs is who
+administers the account afterward, and who you go through to pledge your shares.
+
+<Snapshot
+  title="In short"
+  items={[
+    { k: 'KYC gatekeeper', v: 'NCCPL, as CKO', note: 'One centralized check, done once, reusable across any broker or CDC afterward' },
+    { k: 'Sub Account run by', v: 'Your broker', note: "Under the broker's own CDC participant ID — one broker, many client sub-accounts" },
+    { k: 'Investor Account run by', v: 'CDC directly', note: 'Opened outside any single broker; CDC is the Authorized Intermediary' },
+    { k: 'Direct pledging', v: 'Investor Account only', note: "Securities Pledge Form or CDC's own web portal — no broker instruction needed for that step" },
+  ]}
+/>
+
+## The KYC check both accounts now share
+
+Before 2019, opening a brokerage account meant filling a trading account form and, separately, a
+CDC Sub-Account form. NCCPL — licensed as Pakistan's Centralized KYC Organization — merged the two
+into a single Customer Relationship Form (CRF), and made biometric verification part of it for
+resident individual customers. That verification is a one-time event: once a resident individual
+has completed it with one Authorized Intermediary — a broker opening a Sub Account, or CDC opening
+an Investor Account — it does not have to be repeated to open an account with a different
+intermediary. [NCCPL says so directly](https://www.nccpl.com.pk/en/media-centre/press-releases/nccpl-launches-centralized-know-your-customer-organization-functions):
+KYC information gathered at onboarding is shared with CDC, and a customer who has already been
+biometrically verified doesn't sit through it twice.
+
+For an Investor Account specifically, CDC's own onboarding guidance under the CKO regime is
+explicit that the biometric step happens in person, at a CDC office, for the main applicant and
+every joint applicant — with named exceptions for Non-Resident Pakistanis and foreign nationals
+(who submit a notarized Specimen Signature Card and KYC form instead) and for nominees. Eligibility
+is a valid CNIC, NICOP, POC or passport plus the standard identity documents CDC's forms require.
+
+## Where the two accounts actually diverge
+
+The KYC step being shared doesn't mean the accounts are interchangeable once open. The Ledger below
+is the mechanical difference, not PSX's framing of it:
+
+<Ledger
+  left={{
+    title: 'Sub Account',
+    kicker: 'Broker-administered',
+    points: [
+      "Maintained and operated by your broker (a CDC Participant), <strong>on your behalf</strong> — CDC's own Central Depository System rules describe it this way",
+      'One broker holds a single CDC participant ID and can run many client sub-accounts under it',
+      'Opened as part of the same paperwork as your brokerage account — no separate CDC office visit for this step alone',
+      'Transfers, sales and pledges are instructed through the broker',
+    ],
+  }}
+  right={{
+    title: 'Investor Account',
+    kicker: 'CDC-administered',
+    points: [
+      'Opened directly with CDC, independent of any one broker’s participant ID',
+      'The in-person NADRA biometric step happens at a CDC office as part of admission (exceptions apply for NRPs, foreign nationals and nominees)',
+      "Securities can be pledged directly — a Securities Pledge Form at a CDC IAS counter, or CDC's own online pledge facility — without routing the instruction through a broker",
+      'An Annual / KYC / Biometric Fee applies, set under CDC’s Schedule of Fee & Tariff and the CKO Regulations',
+    ],
+  }}
+  caption="Both hold the shares you buy in your own name at CDC — this is about who administers the account and how you instruct it, not which one 'really' belongs to you. CDC's own fee-schedule pages carry the exact PKR figure for the Investor Account's annual/KYC/biometric charge; those pages block automated retrieval, so this piece names that the fee exists and what governs it, without stating a number it hasn't verified."
+/>
+
+Pledging is the clearest practical gap. A pledge is how an investor puts shares up as collateral —
+against a margin facility, for instance. On a Sub Account, that instruction goes through the
+broker. On an Investor Account, CDC's own guidance describes filling a Securities Pledge Form and
+submitting it directly, at a CDC counter or through CDC's web portal, in favour of an eligible
+pledgee — a bank, financial institution, or exchange/clearing company authorized to hold that role.
+No broker sits in that chain.
+
+## What this means before the first trade
+
+Nothing in the CKO regime changes the account-opening sequence [Henneth's own walkthrough of
+opening a PSX account](/blog/how-to-start-investing-psx/) already covers — broker, CDC account,
+UIN, in that order. What it changes is which CDC account type is doing more of the identity-check
+work up front (whichever one you open first) versus later (an Investor Account opened after a Sub
+Account already exists still needs its own CDC-office admission step, separate from the shared
+KYC). Whichever account type ends up holding the shares, sizing the first position once the account
+is funded is a separate calculation — the desk's [position size
+calculator](/tools/position-size-calculator/) runs that against a stop distance rather than a gut
+feel. This choice applies the same way whichever company [on the board](/psx/) ends up first on the
+watchlist; it's account infrastructure, not company research.
+
+## Checking any of this yourself
+
+- [PSX — Open an Account & Invest](https://www.psx.com.pk/psx/resources-and-tools/investors/open-an-account-invest) — the "more secure... hence more preferable" language, in PSX's own words
+- [PSX — Account Opening Checklist](https://www.psx.com.pk/psx/resources-and-tools/investors/account-opening-checklist) — CDC account types named alongside required documents
+- [CDC — Investor Account Services](https://www.cdcpakistan.com/businesses/investor-account-services/) — CDC's own IAS overview
+- [CDC — Investor Account Services FAQs](https://www.cdcpakistan.com/businesses/investor-account-services/faqs-2/) — eligibility, biometric verification, pledging
+- [CDC — General Guidelines to open an IAS Account, CKO Regime](https://www.cdcpakistan.com/assets/uploads/2026/02/General-Guidelines-to-open-IAS-Account-IIA-CKO-Regime.pdf) — the in-person biometric requirement and its exceptions
+- [NCCPL — press release on launching Centralized KYC Organization functions](https://www.nccpl.com.pk/en/media-centre/press-releases/nccpl-launches-centralized-know-your-customer-organization-functions) — the CRF merger and one-time, portable biometric verification
+
+---
+
+*Research, not advice. This explains how two CDC account types differ mechanically; it is not a
+recommendation to open either one. The exact CDC fee for Investor Account admission is not stated
+here because it could not be verified against a primary source in this piece's research — check
+CDC's own Schedule of Fee & Tariff before opening an account.*
