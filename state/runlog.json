@@ -3,19 +3,19 @@
     "started": "2026-07-14T11:20:00+05:00",
     "mode": "light-escalated",
     "ended": "2026-07-14T11:35:00+05:00",
-    "outcome": "ok â€” impact-5 Hormuz blockade news triggered full escalation (macro+market-analyst), no open positions, pushed"
+    "outcome": "ok \u00e2\u20ac\u201d impact-5 Hormuz blockade news triggered full escalation (macro+market-analyst), no open positions, pushed"
   },
   {
     "started": "2026-07-14T12:05:00+05:00",
     "mode": "light",
     "ended": "2026-07-14T12:14:00+05:00",
-    "outcome": "ok â€” health degraded (tv_crosscheck fail, up to 2.48% deviation), no new news items (impact-5 Hormuz item already logged prior cycle), no open positions, pushed"
+    "outcome": "ok \u00e2\u20ac\u201d health degraded (tv_crosscheck fail, up to 2.48% deviation), no new news items (impact-5 Hormuz item already logged prior cycle), no open positions, pushed"
   },
   {
     "started": "2026-07-14T13:24:00+05:00",
     "mode": "light",
     "ended": "2026-07-14T13:30:00+05:00",
-    "outcome": "ok â€” health degraded (tv_crosscheck fail), news-sentinel found 0 new items (Hormuz story continuing, no new impact>=4), no open positions, pushed"
+    "outcome": "ok \u00e2\u20ac\u201d health degraded (tv_crosscheck fail), news-sentinel found 0 new items (Hormuz story continuing, no new impact>=4), no open positions, pushed"
   },
   {
     "started": "2026-07-17T17:00:00+05:00",
@@ -33,7 +33,7 @@
     "started": "2026-08-10T11:00:00+05:00",
     "mode": "light",
     "ended": "2026-08-10T20:52:00+05:00",
-    "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later â€” already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
+    "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later \u00e2\u20ac\u201d already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
   },
   {
     "started": "2026-08-10T17:21:00+05:00",
@@ -123,7 +123,7 @@
     "started": "2026-08-14T17:47:00+05:00",
     "mode": "room",
     "ended": "2026-08-14T17:47:00+05:00",
-    "outcome": "Holiday (2026-08-14, Independence Day, in state/calendar.json holidays) — stopped at step 2, no work done."
+    "outcome": "Holiday (2026-08-14, Independence Day, in state/calendar.json holidays) \u2014 stopped at step 2, no work done."
   },
   {
     "started": "2026-08-14T17:22:00+05:00",
@@ -190,5 +190,11 @@
     "mode": "data-only",
     "ended": "2026-08-20T00:10:00+05:00",
     "outcome": "Retry of prior blocked cycle at owner's request (not a scheduled checkpoint slot; judgment agents not re-run, deterministic layer + publish only). run_cloud.py ALL OK this time -- PRL issuer-monitor gap from the three 2026-08-19 entries no longer reproduces (source_registry.json pilot apparently expanded/self-resolved between runs; not investigated further, no code change made this session). build_dashboard.py + preflight.py both OK (1 non-gating WARN: 98 new universe tickers still backfilling history, expected). Published data-only 'Daily desk refresh 2026-08-20 (retry)' (16 pre-existing hand-authored dirty files correctly held back, not this session's). Pushed to desk.henneth.app. Watchdog OK after deploy: app shell loads, public files serve, account gate intact on rooms/dashboard/quant/health."
+  },
+  {
+    "started": "2026-08-20T20:57:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-20T21:44:00+05:00",
+    "outcome": "PM checkpoint, health ok, 6 news items found (max impact 3, no escalation), no monitor alerts (0 open positions), pushed"
   }
 ]
