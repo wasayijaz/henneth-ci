@@ -184,5 +184,11 @@
     "mode": "full",
     "ended": "2026-08-19T18:05:00+05:00",
     "outcome": "Scheduled daily refresh (psx-desk-daily-refresh): not holiday/weekend, ran all 3 agents. run_cloud.py exit 0 but 2 internal sub-step FAILs (build_dashboard.py, preflight.py) -- 3rd occurrence today of same pre-existing gap: PRL missing from state/company_intel/source_registry.json issuer-source-monitor pilot (20 tickers) though company_intelligence.json universe has 21 -> build_ci_slice.py defaults PRL sources.status to unknown -> preflight rejects. Not a new problem, not state-patched (needs code fix to fetch_issuer_sources.py pilot list, per this same conclusion reached in the 17:00 cycle). news-sentinel: 2 new items appended (192 total), max impact 3, no escalation. macro-agent: regime risk-off reconfirmed, geo-risk 56/moderate (SBP reserves, CPI 9.2%, rate 11.5% held, IMF review pending). market-analyst: daily_read.json refreshed, cautious tone on Hormuz stand-off, watchlist BML/MCB/FABL/HMB with cited triggers. No open positions, monitor skipped. build_dashboard.py and publish.py both blocked by preflight FAIL (PRL) -- nothing committed/pushed, live site stays on last-good state. Watchdog run standalone (no push occurred): OK -- app shell loads, public files serve, account gate intact on rooms/dashboard/quant/health."
+  },
+  {
+    "started": "2026-08-20T00:00:00+05:00",
+    "mode": "data-only",
+    "ended": "2026-08-20T00:10:00+05:00",
+    "outcome": "Retry of prior blocked cycle at owner's request (not a scheduled checkpoint slot; judgment agents not re-run, deterministic layer + publish only). run_cloud.py ALL OK this time -- PRL issuer-monitor gap from the three 2026-08-19 entries no longer reproduces (source_registry.json pilot apparently expanded/self-resolved between runs; not investigated further, no code change made this session). build_dashboard.py + preflight.py both OK (1 non-gating WARN: 98 new universe tickers still backfilling history, expected). Published data-only 'Daily desk refresh 2026-08-20 (retry)' (16 pre-existing hand-authored dirty files correctly held back, not this session's). Pushed to desk.henneth.app. Watchdog OK after deploy: app shell loads, public files serve, account gate intact on rooms/dashboard/quant/health."
   }
 ]
