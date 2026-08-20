@@ -22,29 +22,6 @@ _session = requests.Session()
 _session.headers.update(HEADERS)
 
 
-_BOARD_STATE_RE = re.compile(r"^(.+?)(XD|XB|XR)$", re.IGNORECASE)
-
-
-def split_board_state(symbol: str) -> tuple[str, str | None]:
-    """Return the canonical symbol and recognised PSX board-counter suffix.
-
-    DPS exposes ex-dividend, ex-bonus and ex-rights counters as symbols such as
-    ``FFCXD``.  They refer to the underlying company for research identity, but
-    ``NC`` and preference-share suffixes are separate listings and must remain
-    untouched.  The parser is deliberately narrow and case-insensitive.
-    """
-    raw = str(symbol or "").strip().upper()
-    match = _BOARD_STATE_RE.fullmatch(raw)
-    if match:
-        return match.group(1), match.group(2).upper()
-    return raw, None
-
-
-def canonical_symbol(symbol: str) -> str:
-    """Return the research identity for a DPS symbol."""
-    return split_board_state(symbol)[0]
-
-
 def _get(path: str, retries: int = 3, timeout: int = 20) -> requests.Response:
     last = None
     for i in range(retries):

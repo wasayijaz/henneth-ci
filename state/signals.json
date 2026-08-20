@@ -1,9 +1,9 @@
 {
- "updated": "2026-08-18 17:49",
+ "updated": "2026-08-20 11:30",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
-   "id": "20260818-BML-obv_divergence_up",
+   "id": "20260820-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -21,7 +21,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-TPLT-donchian55_break",
+   "id": "20260820-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -39,7 +39,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-ATRL-high52w_break",
+   "id": "20260820-ATRL-high52w_break",
    "ticker": "ATRL",
    "strategy": "high52w_break",
    "template": "52-week high breakout",
@@ -57,23 +57,23 @@
    "thesis": "52-week high breakout is triggering now; on ATRL's own history it won 57% over 30 trades (+2.0% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-GAL-trend_momo_combo",
-   "ticker": "GAL",
-   "strategy": "trend_momo_combo",
-   "template": "Trend + momentum combo",
+   "id": "20260820-NICL-roc60_leader_pullback",
+   "ticker": "NICL",
+   "strategy": "roc60_leader_pullback",
+   "template": "Long-run leader, short pullback",
    "category": "momentum",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 12,
+   "sector": "Chemical",
+   "hold_sessions": 18,
    "backtest": {
-    "hit_rate": 0.568,
-    "net_expectancy_pct": 1.25,
-    "n": 37,
+    "hit_rate": 0.615,
+    "net_expectancy_pct": 1.12,
+    "n": 13,
     "oos_hit": 0.667
    },
-   "confidence": "medium",
+   "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 57% over 37 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 14
+ "n_candidates": 12
 }

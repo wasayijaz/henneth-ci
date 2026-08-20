@@ -1632,6 +1632,30 @@
    "ticker": "PPL",
    "facts": [
     {
+     "series_id": "series_2664ef7b0db2616e6164816e",
+     "ticker": "PPL",
+     "metric": "dividend",
+     "period_end": "2025-12-31",
+     "period_type": "quarter",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "2.00",
+     "normalized_value": 2,
+     "document_id": "psx:270122",
+     "fact_id": "fact_5c3657f7ff432d5b6775",
+     "source_url": "https://dps.psx.com.pk/download/document/270122.pdf",
+     "evidence": [
+      {
+       "page": 1,
+       "text": "Rs. 1.00 per share (10%) on Convertible Preference Shares. This is in addition to interim cash dividend of Rs. 2.00 per share (20%) on Ordinary and Convertible Preference Shares already paid during the year. The dividend will be distribute…"
+      }
+     ],
+     "quality_flags": [],
+     "readiness": "model_loadable"
+    },
+    {
      "series_id": "series_afe4c634b0d17f5f45625cd3",
      "ticker": "PPL",
      "metric": "dividend",
@@ -1658,17 +1682,18 @@
    ],
    "conflicts": [],
    "coverage": {
-    "source_documents": 1,
-    "fact_count": 1,
-    "period_count": 1,
+    "source_documents": 2,
+    "fact_count": 2,
+    "period_count": 2,
     "missing_required_source": false,
     "missing_period_count": 0,
     "conflict_count": 0,
-    "model_loadable_count": 1,
+    "model_loadable_count": 2,
     "audit_only_count": 0
    },
    "metrics": {
     "dividend": [
+     "series_2664ef7b0db2616e6164816e",
      "series_afe4c634b0d17f5f45625cd3"
     ]
    }
@@ -1795,9 +1820,9 @@
   }
  },
  "_meta": {
-  "updated": "2026-08-18 03:24",
+  "updated": "2026-08-20 11:18",
   "source": "state/company_documents.json + current verified extraction",
-  "source_documents": 139,
+  "source_documents": 162,
   "rejected_facts": 0,
   "append_only_values": true,
   "note": "Unknown period, unit, currency and consolidation remain explicit; facts retain source/page evidence."

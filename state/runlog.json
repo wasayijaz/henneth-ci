@@ -3,19 +3,19 @@
     "started": "2026-07-14T11:20:00+05:00",
     "mode": "light-escalated",
     "ended": "2026-07-14T11:35:00+05:00",
-    "outcome": "ok \u00e2\u20ac\u201d impact-5 Hormuz blockade news triggered full escalation (macro+market-analyst), no open positions, pushed"
+    "outcome": "ok â€” impact-5 Hormuz blockade news triggered full escalation (macro+market-analyst), no open positions, pushed"
   },
   {
     "started": "2026-07-14T12:05:00+05:00",
     "mode": "light",
     "ended": "2026-07-14T12:14:00+05:00",
-    "outcome": "ok \u00e2\u20ac\u201d health degraded (tv_crosscheck fail, up to 2.48% deviation), no new news items (impact-5 Hormuz item already logged prior cycle), no open positions, pushed"
+    "outcome": "ok â€” health degraded (tv_crosscheck fail, up to 2.48% deviation), no new news items (impact-5 Hormuz item already logged prior cycle), no open positions, pushed"
   },
   {
     "started": "2026-07-14T13:24:00+05:00",
     "mode": "light",
     "ended": "2026-07-14T13:30:00+05:00",
-    "outcome": "ok \u00e2\u20ac\u201d health degraded (tv_crosscheck fail), news-sentinel found 0 new items (Hormuz story continuing, no new impact>=4), no open positions, pushed"
+    "outcome": "ok â€” health degraded (tv_crosscheck fail), news-sentinel found 0 new items (Hormuz story continuing, no new impact>=4), no open positions, pushed"
   },
   {
     "started": "2026-07-17T17:00:00+05:00",
@@ -33,7 +33,7 @@
     "started": "2026-08-10T11:00:00+05:00",
     "mode": "light",
     "ended": "2026-08-10T20:52:00+05:00",
-    "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later \u00e2\u20ac\u201d already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
+    "outcome": "AM checkpoint, ran far late (session-limit stall on news-sentinel subagent mid-cycle, resumed hours later â€” already past the 17:51 Desk Room run). Data layer + preflight OK. News-sentinel skipped this cycle (subagent hit session limit; superseded by same-day 17:51 Room run). No open positions, monitor skipped. Published, watchdog OK."
   },
   {
     "started": "2026-08-10T17:21:00+05:00",
@@ -123,7 +123,7 @@
     "started": "2026-08-14T17:47:00+05:00",
     "mode": "room",
     "ended": "2026-08-14T17:47:00+05:00",
-    "outcome": "Holiday (2026-08-14, Independence Day, in state/calendar.json holidays) \u2014 stopped at step 2, no work done."
+    "outcome": "Holiday (2026-08-14, Independence Day, in state/calendar.json holidays) — stopped at step 2, no work done."
   },
   {
     "started": "2026-08-14T17:22:00+05:00",
@@ -166,5 +166,23 @@
     "mode": "full",
     "ended": "2026-08-18T17:55:00+05:00",
     "outcome": "Scheduled daily refresh (psx-desk-daily-refresh): not a holiday/weekend, ran all 3 agents. run_cloud.py ALL OK. news-sentinel: no genuinely new items beyond the last 2 sessions, newslog.json unchanged (no fabrication). macro-agent: regime risk-off (reconfirmed), geo-risk 59/moderate -- SBP rate 11.5% (held 07-27, next MPC 09-14), CPI 9.2% YoY Jul, FX reserves $17.057bn (wk ended 08-07), IMF 4th EFF review/RSF mission Sep2026 (~$1.2bn), new Rs5.4trn Aug-Oct domestic borrowing plan, remittances $3.631bn Jul (+13% YoY), FY26 current account $139mn deficit. market-analyst: daily_read.json refreshed -- cautious/risk-off read on the oil-and-politics shock (KSE-100 -1.41%, even OGDC/Mari sold), watchlist BML (lead) / GAL (caveated) / FABL (carry+catalyst carve-out); ATRL/TPLT excluded. build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). No open positions, monitor skipped. Published data-only (51 hand-authored files held back, pre-existing dirty tree from another session), pushed to desk.henneth.app (83f34a86). Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
+  },
+  {
+    "started": "2026-08-19T11:00:00+05:00",
+    "mode": "light-escalated",
+    "ended": "2026-08-19T11:40:00+05:00",
+    "outcome": "AM checkpoint. health ok (fairvalue/signals built). news: 6 items appended (TRIPF impact-4 -> escalation fired, macro-agent+market-analyst ran, regime risk-off unchanged). No open positions, monitor skipped. Preflight FAIL (pre-existing, not caused this run): PRL company_intelligence issuer monitor status=unknown -> DO NOT DEPLOY. build_dashboard/publish aborted, nothing pushed. Live site unchanged from prior cycle."
+  },
+  {
+    "started": "2026-08-19T17:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-19T17:15:00+05:00",
+    "outcome": "PM checkpoint. Step 3 (run_cloud.py) preflight FAILED before any agent step: PRL company_intelligence issuer monitor status=unknown (same pre-existing gap flagged in AM run) -> DO NOT DEPLOY. Per SKILL.md Step 3, stopped immediately: no news-sentinel, no monitor, no build_dashboard/publish/watchdog. Nothing committed or pushed. Live site unchanged from prior cycle. Root cause traced: source_registry.json issuer-source pilot has 20 tickers, company_profiles.json pilot has 21 (PRL added, registry pilot not yet expanded to match) -> build_ci_slice.py defaults PRL sources.status to literal unknown, which preflight rejects. Needs a human/code fix to fetch_issuer_sources.py pilot list (or run_cloud.py step) to onboard PRL, not a state patch."
+  },
+  {
+    "started": "2026-08-19T17:15:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-19T18:05:00+05:00",
+    "outcome": "Scheduled daily refresh (psx-desk-daily-refresh): not holiday/weekend, ran all 3 agents. run_cloud.py exit 0 but 2 internal sub-step FAILs (build_dashboard.py, preflight.py) -- 3rd occurrence today of same pre-existing gap: PRL missing from state/company_intel/source_registry.json issuer-source-monitor pilot (20 tickers) though company_intelligence.json universe has 21 -> build_ci_slice.py defaults PRL sources.status to unknown -> preflight rejects. Not a new problem, not state-patched (needs code fix to fetch_issuer_sources.py pilot list, per this same conclusion reached in the 17:00 cycle). news-sentinel: 2 new items appended (192 total), max impact 3, no escalation. macro-agent: regime risk-off reconfirmed, geo-risk 56/moderate (SBP reserves, CPI 9.2%, rate 11.5% held, IMF review pending). market-analyst: daily_read.json refreshed, cautious tone on Hormuz stand-off, watchlist BML/MCB/FABL/HMB with cited triggers. No open positions, monitor skipped. build_dashboard.py and publish.py both blocked by preflight FAIL (PRL) -- nothing committed/pushed, live site stays on last-good state. Watchdog run standalone (no push occurred): OK -- app shell loads, public files serve, account gate intact on rooms/dashboard/quant/health."
   }
 ]

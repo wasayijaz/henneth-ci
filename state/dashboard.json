@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-18 17:49",
+ "updated": "2026-08-20 11:30",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 59,
+  "score": 56,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260818-BML-obv_divergence_up",
+   "id": "20260820-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-TPLT-donchian55_break",
+   "id": "20260820-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-ATRL-high52w_break",
+   "id": "20260820-ATRL-high52w_break",
    "ticker": "ATRL",
    "strategy": "high52w_break",
    "template": "52-week high breakout",
@@ -61,22 +61,22 @@
    "thesis": "52-week high breakout is triggering now; on ATRL's own history it won 57% over 30 trades (+2.0% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260818-GAL-trend_momo_combo",
-   "ticker": "GAL",
-   "strategy": "trend_momo_combo",
-   "template": "Trend + momentum combo",
+   "id": "20260820-NICL-roc60_leader_pullback",
+   "ticker": "NICL",
+   "strategy": "roc60_leader_pullback",
+   "template": "Long-run leader, short pullback",
    "category": "momentum",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 12,
+   "sector": "Chemical",
+   "hold_sessions": 18,
    "backtest": {
-    "hit_rate": 0.568,
-    "net_expectancy_pct": 1.25,
-    "n": 37,
+    "hit_rate": 0.615,
+    "net_expectancy_pct": 1.12,
+    "n": 13,
     "oos_hit": 0.667
    },
-   "confidence": "medium",
+   "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 57% over 37 trades (+1.2% net/trade), still profitable out-of-sample."
+   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -87,19 +87,19 @@
   },
   {
    "ticker": "XLI",
-   "score": 72.7
+   "score": 72.4
   },
   {
    "ticker": "GLD",
-   "score": 70.7
-  },
-  {
-   "ticker": "FFC",
-   "score": 66.6
+   "score": 71.3
   },
   {
    "ticker": "USRUT",
    "score": 66.6
+  },
+  {
+   "ticker": "FFC",
+   "score": 66.5
   },
   {
    "ticker": "INDU",
@@ -124,11 +124,6 @@
  ],
  "movers_up": [
   {
-   "ticker": "USVIX",
-   "ret_1d": 10.04,
-   "close": 15.68
-  },
-  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -147,6 +142,11 @@
    "ticker": "SHCM",
    "ret_1d": 10.0,
    "close": 50.61
+  },
+  {
+   "ticker": "ASIC",
+   "ret_1d": 9.99,
+   "close": 34.45
   }
  ],
  "movers_down": [
@@ -161,14 +161,14 @@
    "close": 1871.47
   },
   {
-   "ticker": "SGPL",
-   "ret_1d": -10.0,
-   "close": 97.59
-  },
-  {
    "ticker": "SERT",
    "ret_1d": -10.0,
    "close": 62.27
+  },
+  {
+   "ticker": "SGPL",
+   "ret_1d": -10.0,
+   "close": 97.59
   },
   {
    "ticker": "FPJM",
@@ -177,94 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-08-17",
-   "source": "Mettis Global",
-   "headline": "Gharibwal Cement halts clinker production after kiln fan damage",
-   "tickers": [
-    "GWLC"
-   ],
-   "impact": 2,
-   "summary": "Gharibwal Cement Limited (PSX: GWLC) temporarily stopped clinker production after its kiln ID fan was damaged during operation, per Mettis Global. Replacement ID fan and parts already procured from the manufacturer, with shipment expected next month; a Letter of Credit has been opened. No production-loss figure or resumption date disclosed. Logged as impact 2 (minor company operational item - temporary, remediation already underway).",
-   "url": "https://mettisglobal.news/Gharibwal-Cement-halts-clinker-production-after-kiln-fan-damage-62700"
-  },
-  {
-   "ts": "2026-08-17",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "SRVI sets August 22 book closure for 10-for-1 stock split",
-   "tickers": [
-    "SRVI"
-   ],
-   "impact": 2,
-   "summary": "Service Industries Limited (PSX: SRVI) has set August 22, 2026 as the book closure date to implement its previously-approved 10-for-1 stock split (face value reduced from Rs10 to Re1), per Mettis Global's latest-news feed. Split was approved by shareholders at the EGM held Aug 4, 2026 (per ProPakistani, separately reported). Administrative/cosmetic corporate action, not earnings-impacting; logged as impact 2 (minor company item).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-17",
-   "source": "Aaj English TV / ProPakistani / Business Recorder",
-   "headline": "Federal Constitutional Court allows tax credit adjustment against super tax",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 4,
-   "summary": "Pakistan's Federal Constitutional Court ruled that tax credits granted under Section 168 of the Income Tax Ordinance can be legally adjusted against super tax liability, setting aside a prior Islamabad High Court decision that had denied this to private mobile operator Zong (not a PSX-listed universe ticker) in its dispute with the FBR. Six-page judgment authored by Justice Aamer Farooq holds the tax credit is a 'separate and established legal right' and that fiscal law should be interpreted to facilitate taxpayers. Ruling sets a precedent applicable to corporate taxpayers broadly (banks and other large corporates subject to super tax), potentially reducing effective super-tax cash outflow for eligible taxpayers with unadjusted tax credits. Logged as impact 4 (material regulatory/judicial action with broad corporate-tax implications) per desk news-impact criteria (Rule 10); escalation flagged.",
-   "url": "https://english.aaj.tv/news/330468232/constitutional-court-allows-tax-credit-adjustment-against-super-tax"
-  },
-  {
-   "ts": "2026-08-18",
-   "source": "PSX Data Portal (DPS) indices page / Mettis Global",
-   "headline": "KSE-100 sharp intraday/near-close decline - down ~2,290-2,547 points (-1.27% to -1.41%)",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 4,
-   "summary": "Two live readings captured this cycle (checkpoint run, page timestamps ~3:30-3:38pm PKT): DPS indices page showed KSE-100 at 178,211.92, down 2,290.52 points (-1.27%); Mettis Global's PSXRoundup/latest-news pages showed KSE-100 at 177,955.51, down 2,546.94 points (-1.41%), both measured against Monday Aug 17's confirmed close of 180,502.45 (already logged). No closing-bell wire report (Business Recorder/Mettis Closing Bell piece) or stated driver was located this cycle to corroborate sector detail or cause - not attributing a cause without a source. This is more than double the magnitude of prior single-session moves logged this cycle (which were sub-1% and scored impact 3); logged as impact 4 (material market-wide move) given the unusually large single-session percentage decline. Tagged MACRO only; follow up next cycle for the confirmed close, driver, and sector breakdown.",
-   "url": "https://dps.psx.com.pk/indices"
-  },
-  {
-   "ts": "2026-08-18",
-   "source": "Mettis Global (equity news feed)",
-   "headline": "Bank Makramah approves Rs10bn further sponsor investment injection",
-   "tickers": [
-    "BML"
-   ],
-   "impact": 4,
-   "summary": "Bank Makramah Limited (PSX: BML) approved an investment proposal to inject a further Rs10bn into the bank, per Mettis Global (reported 03:34pm PKT). No further detail on injection mechanism (rights issue/sponsor loan/equity), timeline, or capital-adequacy impact disclosed in the source reviewed this cycle. Logged as impact 4 (material capital-injection action for a small listed-tier bank, weight 0.31%) per desk news-impact criteria (Rule 10); escalation flagged.",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-18",
-   "source": "Mettis Global (equity news feed)",
-   "headline": "Cherat Packaging (CPPL) FY26 profit surges 83% to Rs651m",
-   "tickers": [
-    "CPPL"
-   ],
-   "impact": 4,
-   "summary": "Cherat Packaging Limited (PSX: CPPL) reported FY2026 net profit up 83% YoY to Rs651.01m, from Rs356.43m in the prior year, per Mettis Global (reported 02:52pm PKT, headline 'Profit Surges 83% to Rs651m in FY26'). No revenue, EPS, or dividend figure disclosed in the source reviewed this cycle. Logged as impact 4 (material earnings surprise) per desk news-impact criteria (Rule 10); escalation flagged.",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-18",
-   "source": "Mettis Global (equity news feed)",
-   "headline": "Fast Cables (FCL) FY26 profit jumps 66% to Rs2.11bn",
-   "tickers": [
-    "FCL"
-   ],
-   "impact": 4,
-   "summary": "Fast Cables Limited (PSX: FCL) reported FY2026 net profit up 66% YoY to Rs2.11bn, from Rs1.27bn in the prior year, per Mettis Global (reported 02:51pm PKT, headline 'FY26 profit jumps 66%'). No revenue, EPS, or dividend figure disclosed in the source reviewed this cycle. Logged as impact 4 (material earnings surprise) per desk news-impact criteria (Rule 10); escalation flagged.",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-18",
-   "source": "Mettis Global (equity news feed)",
-   "headline": "Samba Bank: PAO timeline for Najd Gateway's 84.51% acquisition extended 90 days",
-   "tickers": [
-    "SBL"
-   ],
-   "impact": 3,
-   "summary": "Samba Bank Limited (PSX: SBL) disclosed that the timeline for the Public Announcement of Offer (PAO) for Najd Gateway Holding Company's proposed acquisition of an 84.51% stake has been extended by 90 days, per Mettis Global. No reason for the extension or revised terms disclosed in the source reviewed this cycle. Logged as impact 3 (notable, ongoing acquisition process update, not a new/changed deal outcome).",
-   "url": "https://mettisglobal.news/latest/"
-  },
   {
    "ts": "2026-08-18",
    "source": "Mettis Global (equity news feed)",
@@ -350,39 +262,141 @@
    "impact": 3,
    "summary": "Lucky Cement Limited (PSX: LUCK) reported consolidated net profit for FY2026 (year ended June 30, 2026) of Rs96.46bn, up 14% from Rs84.50bn in FY25, per Mettis Global. No EPS or dividend figure fetched this cycle. Logged as impact 3 (notable results date, solid but not extreme growth) for this core-tier constituent.",
    "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "Tri-Pack Films (TRIPF) reports Rs362m profit turnaround in 1HCY26",
+   "tickers": [
+    "TRIPF"
+   ],
+   "impact": 4,
+   "summary": "Tri-Pack Films Limited (PSX: TRIPF) reported net profit of Rs361.63m for the half year ended June 30, 2026, described by Mettis Global as a 'powerful financial turnaround'. No prior-year comparative or EPS figure captured this cycle. Logged as impact 4 (material earnings surprise - turnaround) per desk criteria; escalation flagged.",
+   "url": "https://mettisglobal.news/latest"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "Tri-Pack Films (TRIPF) commissions new tape machine with 5,000-tonne annual capacity",
+   "tickers": [
+    "TRIPF"
+   ],
+   "impact": 2,
+   "summary": "Tri-Pack Films Limited (PSX: TRIPF) commissioned a new tape machine, operational as of August 2026, adding 5,000 tonnes/year of production capacity, per Mettis Global. No project cost or revenue-impact figure disclosed. Logged as impact 2 (minor company operational item).",
+   "url": "https://mettisglobal.news/latest"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "SBP backs urban agriculture integration to tackle Pakistan's food and heat crisis",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "Per Mettis Global, the State Bank of Pakistan is supporting integration of urban agriculture into city planning to address food security and climate/heat challenges. General policy item, no PSX-ticker-level read-through disclosed. Logged as impact 1 (routine/administrative).",
+   "url": "https://mettisglobal.news/latest"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "Tax changes reset Pakistan's hybrid SUV pricing",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Per Mettis Global, recent sales-tax adjustments have prompted automakers (Chery Master Pakistan named; not a desk-universe ticker) to revise hybrid-SUV pricing strategies. No universe auto-assembler ticker directly named in the source reviewed this cycle; tagged MACRO as broad auto-sector tax/pricing news. Logged as impact 2 (minor sector item).",
+   "url": "https://mettisglobal.news/latest"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "Dawn.com (Business)",
+   "headline": "Pakistan posts $328m current account deficit in July (FY27)",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Per Dawn.com: Pakistan recorded a current account deficit of $328m in July 2026 (first month of FY27); merchandise exports $3.008bn vs imports $6.154bn; services exports $927m vs imports $1.155bn. FDI fell 20% YoY to $178.6m in July, down from $223.5m in July 2025. Article notes deficit narrowed vs $814m in June and $529m in July 2025. Logged as impact 3 (notable macro data, an improving trend, not a shock).",
+   "url": "https://www.dawn.com/news/2023807/pakistan-posts-328m-current-account-deficit-in-july"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "PSX Data Portal (DPS) indices page",
+   "headline": "KSE-100 intraday at 178,694.89, up 739.39 points (+0.42%) as of 11:12am PKT",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Intraday checkpoint captured 2026-08-19 11:12am PKT via dps.psx.com.pk/indices: KSE-100 at 178,694.89, up 739.39 points (+0.42%) against Tuesday Aug 18's confirmed close of 177,955.51 (already logged in newslog). Live intraday read, not a confirmed close. Sub-1% move; logged as impact 3 (notable), consistent with prior similar-magnitude index entries in this newslog. Tagged MACRO only.",
+   "url": "https://dps.psx.com.pk/indices"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "Business Recorder",
+   "headline": "PSX: Buying pushes KSE-100 up over 800 points",
+   "tickers": [
+    "MACRO",
+    "HUBC",
+    "MARI",
+    "OGDC",
+    "PPL",
+    "POL",
+    "HBL",
+    "NBP"
+   ],
+   "impact": 3,
+   "summary": "Supplements the already-logged 2026-08-19 11:12am DPS intraday checkpoint (178,694.89, +739.39pts/+0.42%, MACRO only, no sector detail). Per Business Recorder (search-summary; direct article fetch returned HTTP 403 this cycle), KSE-100 gained over 800 points during opening hours Wednesday, hovering at 178,769.66 (+814.16pts/+0.46%) from Tuesday Aug 18's confirmed close of 177,955.51 (already logged). Buying observed in automobile assemblers, cement, commercial banks, oil & gas exploration companies, OMCs and power generation; index-heavy stocks named as trading green: HUBCO (HUBC), MARI, OGDC, PPL, POL, HBL and NBP. Sub-1% move; tagged to the union of the superseded item's tickers (MACRO) plus tickers newly named in this source, per the confirmed-close supersession principle. Impact 3 (notable, consistent with prior similar-magnitude intraday entries).",
+   "url": "https://www.brecorder.com/news/40435530/psx-buying-pushes-kse-100-up-over-800-points"
+  },
+  {
+   "ts": "2026-08-19",
+   "source": "PSX Data Portal (DPS) indices page",
+   "headline": "KSE-100 reverses morning gains, at 176,846.36, down 1,109.14 points (-0.62%) as of 3:50pm PKT",
+   "tickers": [
+    "MACRO",
+    "HUBC",
+    "MARI",
+    "OGDC",
+    "PPL",
+    "POL",
+    "HBL",
+    "NBP"
+   ],
+   "impact": 3,
+   "summary": "Supersedes both the 2026-08-19 11:12am intraday checkpoint (178,694.89, +739.39pts/+0.42%) and the same-day Business Recorder 'over 800 points' morning-gain item (178,769.66, +814.16pts/+0.46%, sector detail: HUBC, MARI, OGDC, PPL, POL, HBL, NBP), both already logged. Per dps.psx.com.pk/indices, page timestamped 'Aug 19, 2026 5:48 PM' shows the index reading 'as of Aug 19, 2026 3:50 PM' (after the Wed 15:30 PKT close) at 176,846.36, down 1,109.14 points (-0.62%) from Tuesday Aug 18's confirmed close of 177,955.51; intraday high 178,942.31, low 176,638.10 - a roughly 2,300-point (~1.3%) intraday swing from the morning's +800-point gain to a net loss by end of session. No closing-bell wire report or stated driver for the reversal was located this cycle. Tagged to the union of the superseded items' tickers per the confirmed-close supersession rule; no new tickers named in this DPS source itself. Net close change sub-1%; logged as impact 3 (notable), consistent with prior similar-magnitude index-close entries. Follow up next cycle to confirm the official close and driver via a closing-bell wire piece.",
+   "url": "https://dps.psx.com.pk/indices"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-14T17:22:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-14T18:09:00+05:00",
-   "outcome": "HOLIDAY (Independence Day) - agents skipped per rule; data-only refresh: regime=neutral, geo-risk=54 (moderate); no new daily_read (agents not run); watchdog OK, pushed."
-  },
-  {
-   "started": "2026-08-17T11:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-17T11:05:00+05:00",
-   "outcome": "AM checkpoint: health ok, 3 news items found (impact 1,3,3; none >=4, no escalation), no open positions (monitor skipped), preflight OK, published+pushed, watchdog OK live."
-  },
-  {
-   "started": "2026-08-17T17:06:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-17T17:31:00+05:00",
-   "outcome": "PM checkpoint: run_cloud.py exited 1 -- 3 of ~48 scripts (backtest.py, snapshot.py, fetch_intraday.py) hit JSONDecodeError reading state/liquidity.json and state/universe.json; both files independently verified valid/fresh moments later (likely transient read-during-atomic-rewrite race vs the concurrent cloud cron, mechanism not fully root-caused). preflight.py itself ran twice inside run_cloud.py and both times reported OK (1 non-gating WARN: 96 backfilling tickers). Per checkpoint step-3 stop condition (script exited non-zero), news-sentinel/monitor/escalation/build_dashboard/publish/watchdog all skipped this cycle -- no commit, no push. No open positions. Flagged for follow-up: recurring transient race on liquidity.json/universe.json reads during concurrent cloud+local runs (see 2026-08-12 17:06 PM entry for a prior instance of the same backtest.py/snapshot.py race)."
-  },
-  {
-   "started": "2026-08-17T17:22:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-17T18:05:00+05:00",
-   "outcome": "EOD refresh: git pull --rebase --autostash conflicted (concurrent cloud commit) -- resolved by taking remote for 13 UU state/*.json, then discarded stale re-applied local state/ edits from the autostash pop (kept fresh pulled data), left unrelated hand-authored dirty files (AGENTS.md/CLAUDE.md/scripts/*.py/docs, pre-existing, not mine) untouched. run_cloud.py ALL OK. macro-agent: regime neutral, geo-risk 56/moderate (SBP reserves $17.057bn +14mn, CPI 9.2%, rate held 11.5%, PIB yields rising). news-sentinel: 5 items appended (172 total) -- KSE-100 close ~180,502 +0.22%, PPL Dolphin X-1 gas/condensate find (impact 3), GWLC kiln halt, SRVI stock-split book closure, Federal Constitutional Court tax-credit-vs-super-tax ruling (impact 4 -- wrote escalation.json for the intraday pipeline; full strategist/risk/auditor NOT run here per this routine's explicit 3-agent scope). market-analyst: daily read tone neutral, oil&gas (PPL) led while banks/cement/fertilizer lagged; watchlist narrowed to BML/PPL/GAL/FCCL on genuine multi-axis stacking (TPLT/NICL live-triggered but excluded on fundamental-caution conflict, ATRL/CNERGY excluded as overbought+avoid-sector). build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). No open positions, monitor skipped. Published data-only (18 hand-authored files held back, pre-existing dirty tree from another session). Watchdog OK (app shell, public files, account gate intact), pushed to desk.henneth.app."
-  },
-  {
-   "started": "2026-08-18T15:31:00+05:00",
+   "started": "2026-08-18T17:00:00+05:00",
    "mode": "light-escalated",
-   "ended": "2026-08-18T16:01:00+05:00",
-   "outcome": "AM checkpoint (delayed start, ~15:31 not 11:00). health=ok (spot-check HUBC 1.87% dev). news-sentinel: 7 items appended (179 total) -- KSE-100 sharp intraday decline -1.27%/-1.41% (impact 4, no confirmed close/driver yet), Bank Makramah Rs10bn sponsor injection (impact 4), Cherat Packaging FY26 profit +83% (impact 4), Fast Cables FY26 profit +66% (impact 4), plus 3 lower-impact items; escalation.json fired (4 items >=4). macro-agent: regime neutral->risk-off -- root cause found: US-Iran ceasefire expired 2026-08-17, Strait of Hormuz tanker traffic collapsed (Pakistan ~90% oil/LNG imports transit Hormuz), corroborated by VIX +11.51%/1d, gold safe-haven bid, geo-risk 59/moderate; domestic anchors intact (SBP 11.5%, CPI 9.2%, reserves $17.057bn) but geo-shock overrides. Sector tilt: favour E&P/fixed-income-carry, avoid OMCs/refiners/autos/cement/textiles. market-analyst: daily_read.json refreshed for the intraday shock, BML leads (live trigger + fundamentals + injection news), CPPL/FCL/GAL logged with caveats, index-decline cause flagged unconfirmed not guessed. No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). Published data-only (18 hand-authored files held back, pre-existing dirty tree from another session), pushed to desk.henneth.app. Watchdog OK (app shell, public files, account gate intact)."
+   "ended": "2026-08-18T17:51:00+05:00",
+   "outcome": "PM checkpoint (weekday close). health=ok. run_cloud.py ALL OK (universe 575, history 126 ok/96 backfilling, quant 470, backtest 70x233 best high52w_break +9.40%, fairvalue 168, signals 4 active BML/TPLT/ATRL/GAL, regime risk-off, geo-risk 59/moderate). news-sentinel: 5 new items (184 total) -- KSE-100 selloff (impact 4), PAKT (impact 4), ACPL (impact 4), HBL (impact 3), LUCK (impact 3); escalation.json fired (3 items >=4). macro-agent: regime risk-off reconfirmed, anchors refreshed, Imran Khan hearing 2026-09-16 added to next_events. market-analyst: daily_read.json refreshed, tone cautious, sector stances (E&P favoured-but-patient, banks neutral, cement/OMCs/autos/textiles avoid), 4-name watchlist BML/GAL/FCCL/MCB with named triggers; TPLT/ATRL explicitly excluded with stated reasons. No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). Published data-only (pre-existing hand-authored dirty tree from another session held back), pushed to desk.henneth.app. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
+  },
+  {
+   "started": "2026-08-18T17:52:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-18T17:55:00+05:00",
+   "outcome": "Scheduled daily refresh (psx-desk-daily-refresh): not a holiday/weekend, ran all 3 agents. run_cloud.py ALL OK. news-sentinel: no genuinely new items beyond the last 2 sessions, newslog.json unchanged (no fabrication). macro-agent: regime risk-off (reconfirmed), geo-risk 59/moderate -- SBP rate 11.5% (held 07-27, next MPC 09-14), CPI 9.2% YoY Jul, FX reserves $17.057bn (wk ended 08-07), IMF 4th EFF review/RSF mission Sep2026 (~$1.2bn), new Rs5.4trn Aug-Oct domestic borrowing plan, remittances $3.631bn Jul (+13% YoY), FY26 current account $139mn deficit. market-analyst: daily_read.json refreshed -- cautious/risk-off read on the oil-and-politics shock (KSE-100 -1.41%, even OGDC/Mari sold), watchlist BML (lead) / GAL (caveated) / FABL (carry+catalyst carve-out); ATRL/TPLT excluded. build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). No open positions, monitor skipped. Published data-only (51 hand-authored files held back, pre-existing dirty tree from another session), pushed to desk.henneth.app (83f34a86). Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
+  },
+  {
+   "started": "2026-08-19T11:00:00+05:00",
+   "mode": "light-escalated",
+   "ended": "2026-08-19T11:40:00+05:00",
+   "outcome": "AM checkpoint. health ok (fairvalue/signals built). news: 6 items appended (TRIPF impact-4 -> escalation fired, macro-agent+market-analyst ran, regime risk-off unchanged). No open positions, monitor skipped. Preflight FAIL (pre-existing, not caused this run): PRL company_intelligence issuer monitor status=unknown -> DO NOT DEPLOY. build_dashboard/publish aborted, nothing pushed. Live site unchanged from prior cycle."
+  },
+  {
+   "started": "2026-08-19T17:00:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-19T17:15:00+05:00",
+   "outcome": "PM checkpoint. Step 3 (run_cloud.py) preflight FAILED before any agent step: PRL company_intelligence issuer monitor status=unknown (same pre-existing gap flagged in AM run) -> DO NOT DEPLOY. Per SKILL.md Step 3, stopped immediately: no news-sentinel, no monitor, no build_dashboard/publish/watchdog. Nothing committed or pushed. Live site unchanged from prior cycle. Root cause traced: source_registry.json issuer-source pilot has 20 tickers, company_profiles.json pilot has 21 (PRL added, registry pilot not yet expanded to match) -> build_ci_slice.py defaults PRL sources.status to literal unknown, which preflight rejects. Needs a human/code fix to fetch_issuer_sources.py pilot list (or run_cloud.py step) to onboard PRL, not a state patch."
+  },
+  {
+   "started": "2026-08-19T17:15:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-19T18:05:00+05:00",
+   "outcome": "Scheduled daily refresh (psx-desk-daily-refresh): not holiday/weekend, ran all 3 agents. run_cloud.py exit 0 but 2 internal sub-step FAILs (build_dashboard.py, preflight.py) -- 3rd occurrence today of same pre-existing gap: PRL missing from state/company_intel/source_registry.json issuer-source-monitor pilot (20 tickers) though company_intelligence.json universe has 21 -> build_ci_slice.py defaults PRL sources.status to unknown -> preflight rejects. Not a new problem, not state-patched (needs code fix to fetch_issuer_sources.py pilot list, per this same conclusion reached in the 17:00 cycle). news-sentinel: 2 new items appended (192 total), max impact 3, no escalation. macro-agent: regime risk-off reconfirmed, geo-risk 56/moderate (SBP reserves, CPI 9.2%, rate 11.5% held, IMF review pending). market-analyst: daily_read.json refreshed, cautious tone on Hormuz stand-off, watchlist BML/MCB/FABL/HMB with cited triggers. No open positions, monitor skipped. build_dashboard.py and publish.py both blocked by preflight FAIL (PRL) -- nothing committed/pushed, live site stays on last-good state. Watchdog run standalone (no push occurred): OK -- app shell loads, public files serve, account gate intact on rooms/dashboard/quant/health."
   }
  ]
 }
