@@ -22,6 +22,29 @@ _session = requests.Session()
 _session.headers.update(HEADERS)
 
 
+_BOARD_STATE_RE = re.compile(r"^(.+?)(XD|XB|XR)$", re.IGNORECASE)
+
+
+def split_board_state(symbol: str) -> tuple[str, str | None]:
+    """Return the canonical symbol and recognised PSX board-counter suffix.
+
+    DPS exposes ex-dividend, ex-bonus and ex-rights counters as symbols such as
+    ``FFCXD``.  They refer to the underlying company for research identity, but
+    ``NC`` and preference-share suffixes are separate listings and must remain
+    untouched.  The parser is deliberately narrow and case-insensitive.
+    """
+    raw = str(symbol or "").strip().upper()
+    match = _BOARD_STATE_RE.fullmatch(raw)
+    if match:
+        return match.group(1), match.group(2).upper()
+    return raw, None
+
+
+def canonical_symbol(symbol: str) -> str:
+    """Return the research identity for a DPS symbol."""
+    return split_board_state(symbol)[0]
+
+
 def _get(path: str, retries: int = 3, timeout: int = 20) -> requests.Response:
     last = None
     for i in range(retries):
@@ -91,6 +114,41 @@ def index_constituents(index: str) -> list[dict]:
         out.append({"symbol": cells[0], "name": cells[1], "weight_pct": weight})
     out.sort(key=lambda x: -x["weight_pct"])
     return out
+
+
+# Temporary Ready-market board suffixes. PSX appends these to the ordinary ticker while a
+# corporate action is open (ex-dividend / ex-bonus / ex-right). They are the SAME listed
+# ordinary share, not a new company. DPS timeseries still answers the unsuffixed ticker
+# (verified 2026-08-17: FFC has 1238 bars, FFCXD has 0).
+#
+# Do NOT put NC (non-compliant) or PS/CPS (preference) here. Those are different listings.
+_BOARD_STATE_SUFFIXES = ("XD", "XB", "XR")
+
+
+def split_board_state(symbol: str) -> tuple[str, str | None]:
+    """Return (canonical_symbol, temporary_board_state_or_None).
+
+    Only strips a known two-letter Ready-market state suffix when the remainder looks like a
+    real ticker (letters, at least 2 characters). Unknown tails are left alone — HASCOLNC
+    stays HASCOLNC, EPCLPS stays EPCLPS, US500 stays US500.
+    """
+    if not isinstance(symbol, str) or not symbol:
+        return symbol, None
+    raw = symbol.strip().upper()
+    for suf in _BOARD_STATE_SUFFIXES:
+        if raw.endswith(suf) and len(raw) > len(suf) + 1:
+            base = raw[:-len(suf)]
+            if base.isalpha():
+                return base, suf
+            return raw, None
+    return raw, None
+
+
+def canonical_symbol(symbol: str) -> str:
+    """Henneth identity for a source ticker. Temporary XD/XB/XR notation collapses to the
+    ordinary share. Everything else is returned unchanged (uppercased)."""
+    canon, _state = split_board_state(symbol)
+    return canon
 
 
 def market_watch() -> dict[str, dict]:

@@ -16,6 +16,56 @@
   let thinkingTimer = null;
   let askHistory = [];
   let askBusy = false;
+  let deskToken = null;
+  let tokenKnown = false;
+
+  const SIGNIN_URL = "https://desk.henneth.app/?auth=signin";
+  const SIGNUP_URL = "https://desk.henneth.app/?auth=signup";
+
+  function authLink(url, label, cls) {
+    return '<a class="' + (cls || "auth-link") + '" href="' + url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
+  }
+
+  function renderAuthCard(feature, detail) {
+    content.innerHTML = '<section class="card auth-card" aria-labelledby="authTitle">' +
+      '<div class="auth-kicker">ACCOUNT CONNECTION</div>' +
+      '<h2 id="authTitle">Sign in to use ' + esc(feature) + '</h2>' +
+      '<p class="auth-lede">' + esc(detail) + '</p>' +
+      '<div class="auth-actions">' +
+      authLink(SIGNIN_URL, 'Sign in', 'auth-button primary') +
+      authLink(SIGNUP_URL, 'Create free account', 'auth-button') +
+      '</div>' +
+      '<div class="auth-help"><div class="auth-help-title">Connect Henneth in three steps</div>' +
+      '<ol><li>Open Henneth and sign in or create your free account.</li>' +
+      '<li>Keep your TradingView, PSX DPS, or supported news tab open.</li>' +
+      '<li>Return here and reopen the side panel. Henneth will follow the active ticker.</li></ol>' +
+      '<p>Research only — the extension reads the ticker locally and never places orders.</p></div>' +
+      '</section>';
+  }
+
+  function setAuthNote(message) {
+    authNote.innerHTML = message || "";
+    authNote.style.color = message ? "var(--dn)" : "";
+  }
+
+  function refreshTokenState() {
+    chrome.storage.local.get("desk_token", ({ desk_token }) => {
+      const next = desk_token || null;
+      const changed = tokenKnown && next !== deskToken;
+      deskToken = next;
+      tokenKnown = true;
+      if (!deskToken && activeTab !== "notes" && activeTab !== "ask") {
+        setAuthNote('Not signed in — ' + authLink(SIGNIN_URL, 'sign in') + ' or ' + authLink(SIGNUP_URL, 'create a free account') + '.');
+      } else if (deskToken) {
+        setAuthNote("");
+      }
+      if (changed && (activeTab === "ask" || activeTab === "notes" || (!deskToken && activeTab === "read" && currentSym))) render();
+    });
+  }
+  refreshTokenState();
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.desk_token) refreshTokenState();
+  });
 
   // ---- scheme toggle (persisted, mirrors palette.css behaviour) ----
   chrome.storage.local.get(["scheme"], ({ scheme }) => {
@@ -218,6 +268,10 @@
 
   function renderAsk() {
     unmountAskLoaders();
+    if (tokenKnown && !deskToken) {
+      renderAuthCard("Ask the desk", "Ask the desk uses your signed-in Henneth session to answer from the desk's research context.");
+      return;
+    }
     const tickerLabel = currentSym ? "Context: " + esc(currentSym) : "Ask across the desk";
     const thread = askHistory.map((m) => {
       if (m.role === "user") {
@@ -273,10 +327,14 @@
       askHistory.push({
         role: "assistant",
         content: e.message === "AUTH"
-          ? "Sign in at desk.henneth.app to ask the desk."
+          ? "Your Henneth session has expired."
           : (e.message || "The desk could not answer right now."),
         error: true,
       });
+      if (e.message === "AUTH") {
+        deskToken = null;
+        tokenKnown = true;
+      }
     } finally {
       askBusy = false;
       askHistory = askHistory.slice(-12);
@@ -305,11 +363,16 @@
     const authFail = jobs.some((j) => j.status === "rejected" && j.reason && j.reason.message === "AUTH");
 
     if (authFail) {
-      authNote.textContent = "Not signed in — open desk.henneth.app and log in, then reopen this panel.";
-      authNote.style.color = "var(--dn)";
+      deskToken = null;
+      tokenKnown = true;
+      setAuthNote("");
+      renderAuthCard("the desk's research", "Your Henneth session is not connected, so the desk cannot load this ticker yet.");
+      return;
     } else {
       const { desk_token } = await chrome.storage.local.get("desk_token");
-      authNote.textContent = desk_token ? "" : "Sign in at desk.henneth.app to load desk data.";
+      deskToken = desk_token || null;
+      tokenKnown = true;
+      setAuthNote(desk_token ? "" : 'Not signed in — ' + authLink(SIGNIN_URL, 'sign in') + ' or ' + authLink(SIGNUP_URL, 'create a free account') + '.');
     }
 
     health = v[0];
@@ -562,15 +625,23 @@
 
   // ================= NOTES TAB =================
   async function renderNotes() {
+    if (tokenKnown && !deskToken) {
+      renderAuthCard("your notes", "Private notes sync to your Henneth account so they are available in the desk and extension.");
+      return;
+    }
     content.innerHTML = '<div class="loading">Loading your notes…</div>';
     try {
       myProfile = await fetchProfile();
     } catch (e) {
       content.innerHTML = "";
+      if (e.message === "AUTH") {
+        deskToken = null;
+        tokenKnown = true;
+        renderAuthCard("your notes", "Private notes sync to your Henneth account so they are available in the desk and extension.");
+        return;
+      }
       content.appendChild(el('<div class="card"><h3>Notes</h3><div class="note">' +
-        (e.message === "AUTH"
-          ? "Sign in at desk.henneth.app first — notes sync to your account."
-          : "Could not load notes (" + esc(e.message) + "). Try again shortly.") + "</div></div>"));
+        "Could not load notes (" + esc(e.message) + "). Try again shortly.</div></div>"));
       return;
     }
     const notes = (myProfile && myProfile.notes) || {};
