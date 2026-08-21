@@ -1,29 +1,29 @@
 {
  "meta": {
-  "built": "2026-08-20 21:35",
+  "built": "2026-08-21 13:59",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-19 11:15",
   "count": 20,
   "financial_series": {
-   "updated": "2026-08-20 11:18",
+   "updated": "2026-08-21 13:47",
    "source": "state/company_documents.json + current verified extraction",
-   "source_documents": 162,
+   "source_documents": 185,
    "rejected_facts": 0,
    "append_only_values": true,
    "note": "Unknown period, unit, currency and consolidation remain explicit; facts retain source/page evidence."
   },
   "graph": {
-   "updated": "2026-08-20 11:18",
-   "node_count": 595,
-   "edge_count": 763,
-   "source_documents": 166,
+   "updated": "2026-08-21 13:47",
+   "node_count": 640,
+   "edge_count": 828,
+   "source_documents": 189,
    "note": "Every factual edge carries source URL and cited page when available."
   },
   "change_intelligence": {
-   "updated": "2026-08-20 11:18",
+   "updated": "2026-08-21 13:47",
    "company_count": 21,
-   "item_count": 242,
+   "item_count": 262,
    "note": "Deterministic official-source change digest. Research, not advice."
   },
   "note": "Private company-intelligence slice. Research, not advice. No execution or order path."
@@ -4205,6 +4205,174 @@
    ],
    "filings": [
     {
+     "doc_id": "psx:275829",
+     "date": "2026-04-29T14:51:00+05:00",
+     "type": "results",
+     "title": "FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31 2026",
+     "url": "https://dps.psx.com.pk/download/document/275829.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "797039a86f61dda25ab8df9924cdee37717a10c74ea9e4415338f8d7299661a4",
+     "evidence": [
+      {
+       "page": 1,
+       "text": "CS-04-08 (PSX/LSE/SECP) April 29, 2026 Subject: FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31, 2026 Dear Sir, We are pleased to inform you that the Board of Directors of our Company, in its meeting held on April 2",
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf"
+      },
+      {
+       "page": 1,
+       "text": "n its meeting held on April 29, 2026 at 1400 hours at Islamabad, has approved as follows: CASH DIVIDEND An Interim cash dividend for the quarter ended March 31, 2026 @ Rs 3.25 per share i.e. 32.5 percent. This is in addition to interim div…",
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf"
+      },
+      {
+       "page": 2,
+       "text": "917,632 123,760,613 Current portion of long term investments 23,511,749 84,520,671 Unpaid dividend 576,064 331,720 Current portion of lease receivables 27,574,884 48,696,323 Unclaimed dividend 200,650 202,238 Other financial assets 16 194,…",
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf"
+      },
+      {
+       "page": 5,
+       "text": "- (2,118,000) - - 2,118,000 - Transactions with owners of the Company Distributions Final dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,90…",
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf"
+      }
+     ],
+     "facts": [
+      {
+       "fact_id": "fact_321d3cf806b870e6e323",
+       "type": "dividend",
+       "raw_value": "576",
+       "normalized_value": 576,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 2,
+         "text": "917,632 123,760,613 Current portion of long term investments 23,511,749 84,520,671 Unpaid dividend 576,064 331,720 Current portion of lease receivables 27,574,884 48,696,323 Unclaimed dividend 200,650 202,238 Other financial assets 16 194,…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_a508a27f81666b3716c5",
+       "type": "dividend",
+       "raw_value": "2024",
+       "normalized_value": 2024,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 5,
+         "text": "- (2,118,000) - - 2,118,000 - Transactions with owners of the Company Distributions Final dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,90…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_66f5b8eb4871c0ce39d2",
+       "type": "dividend",
+       "raw_value": "2025",
+       "normalized_value": 2025,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 5,
+         "text": "inal dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,902,785) Second interim dividend 2025: Rs 4.05 per share - - - - - - (17,418,760) (17,4…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_66f5b8eb4871c0ce39d2",
+       "type": "dividend",
+       "raw_value": "2025",
+       "normalized_value": 2025,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 5,
+         "text": "inal dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,902,785) Second interim dividend 2025: Rs 4.05 per share - - - - - - (17,418,760) (17,4…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_66f5b8eb4871c0ce39d2",
+       "type": "dividend",
+       "raw_value": "2025",
+       "normalized_value": 2025,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 5,
+         "text": "inal dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,902,785) Second interim dividend 2025: Rs 4.05 per share - - - - - - (17,418,760) (17,4…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_80ff3fd04cffdff15035",
+       "type": "dividend",
+       "raw_value": "2026",
+       "normalized_value": 2026,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 5,
+         "text": "inal dividend 2025: Rs 5.00 per share - - - - - - (21,504,642) (21,504,642) First interim dividend 2026: Rs 3.50 per share - - - - - - (15,053,249) (15,053,249) Second interim dividend 2026: Rs 4.25 per share - - - - - - (18,278,946) (18,2…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_80ff3fd04cffdff15035",
+       "type": "dividend",
+       "raw_value": "2026",
+       "normalized_value": 2026,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 5,
+         "text": "inal dividend 2025: Rs 5.00 per share - - - - - - (21,504,642) (21,504,642) First interim dividend 2026: Rs 3.50 per share - - - - - - (15,053,249) (15,053,249) Second interim dividend 2026: Rs 4.25 per share - - - - - - (18,278,946) (18,2…"
+        }
+       ]
+      },
+      {
+       "fact_id": "fact_321d3cf806b870e6e323",
+       "type": "dividend",
+       "raw_value": "576",
+       "normalized_value": 576,
+       "unit": "PKR/share",
+       "currency": null,
+       "scale_multiplier": 1,
+       "evidence": [
+        {
+         "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+         "page": 2,
+         "text": "917,632 123,760,613 Current portion of long term investments 23,511,749 84,520,671 Unpaid dividend 576,064 331,720 Current portion of lease receivables 27,574,884 48,696,323 Unclaimed dividend 200,650 202,238 Other financial assets 16 194,…"
+        }
+       ]
+      }
+     ],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
      "doc_id": "psx:273347",
      "date": "2026-04-01T11:57:00+05:00",
      "type": "other",
@@ -4260,18 +4428,230 @@
     }
    ],
    "financial_series": {
-    "coverage": {},
+    "coverage": {
+     "source_documents": 1,
+     "fact_count": 7,
+     "period_count": 1,
+     "missing_required_source": false,
+     "missing_period_count": 0,
+     "conflict_count": 0,
+     "model_loadable_count": 1,
+     "audit_only_count": 6
+    },
     "conflicts": [],
-    "facts": []
+    "facts": [
+     {
+      "series_id": "series_a74ff773c3458b8d852a433e",
+      "metric": "profit",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "1,330,657,884",
+      "normalized_value": 1330657884,
+      "document_id": "psx:275829",
+      "fact_id": "fact_343c7a6b115c3d9a7c7a",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 2,
+        "text": "ion and evaluation assets 10 25,929,330 28,939,818 319,953,953 265,813,084 Unappropriated profit 1,330,657,884 1,271,319,016 1,407,294,379 1,348,237,696 Long term Investments in subsidiary and associates 11 163,688,975 137,640,235 Long ter…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ],
+      "readiness": "audit_only"
+     },
+     {
+      "series_id": "series_35917fef063939928b325b49",
+      "metric": "profit",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "62,869,477",
+      "normalized_value": 62869477,
+      "document_id": "psx:275829",
+      "fact_id": "fact_f4fdb954e8fa57f86896",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 3,
+        "text": ",739) (1,686,539) (1,663,476) (44,427,532) (44,569,526) (133,799,605) (123,579,669) Gross profit 62,869,477 59,914,394 166,327,298 187,327,470 Finance and other income 18 11,562,983 18,109,666 38,500,538 64,691,950 Exploration and prospect…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ],
+      "readiness": "audit_only"
+     },
+     {
+      "series_id": "series_13428c35f5c61f1a3c512ab4",
+      "metric": "profit",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "reported",
+      "unit_multiplier": 1,
+      "raw_value": "1,330,656,284",
+      "normalized_value": 1330656284,
+      "document_id": "psx:275829",
+      "fact_id": "fact_480d10de31b5f2366c2e",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 7,
+        "text": "ion and evaluation assets 10 25,929,330 28,939,818 319,953,953 265,813,084 Unappropriated profit 1,330,656,284 1,271,317,916 1,407,292,779 1,348,236,596 Long term Investments in subsidiary and associates 11 163,688,875 137,640,135 Long ter…"
+       }
+      ],
+      "quality_flags": [],
+      "readiness": "model_loadable"
+     },
+     {
+      "series_id": "series_ca6613ef97a29a57445040b4",
+      "metric": "dividend",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "2025",
+      "normalized_value": 2025,
+      "document_id": "psx:275829",
+      "fact_id": "fact_66f5b8eb4871c0ce39d2",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 5,
+        "text": "inal dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,902,785) Second interim dividend 2025: Rs 4.05 per share - - - - - - (17,418,760) (17,4…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ],
+      "readiness": "audit_only"
+     },
+     {
+      "series_id": "series_823e87b00255a036491d1011",
+      "metric": "dividend",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "576",
+      "normalized_value": 576,
+      "document_id": "psx:275829",
+      "fact_id": "fact_321d3cf806b870e6e323",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 2,
+        "text": "917,632 123,760,613 Current portion of long term investments 23,511,749 84,520,671 Unpaid dividend 576,064 331,720 Current portion of lease receivables 27,574,884 48,696,323 Unclaimed dividend 200,650 202,238 Other financial assets 16 194,…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ],
+      "readiness": "audit_only"
+     },
+     {
+      "series_id": "series_809c438e221d138191b288c7",
+      "metric": "dividend",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "2024",
+      "normalized_value": 2024,
+      "document_id": "psx:275829",
+      "fact_id": "fact_a508a27f81666b3716c5",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 5,
+        "text": "- (2,118,000) - - 2,118,000 - Transactions with owners of the Company Distributions Final dividend 2024: Rs 4.00 per share - - - - - - (17,203,714) (17,203,714) First interim dividend 2025: Rs 3.00 per share - - - - - - (12,902,785) (12,90…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ],
+      "readiness": "audit_only"
+     },
+     {
+      "series_id": "series_13503b8bba99bff9a0815492",
+      "metric": "dividend",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "unit": "PKR/share",
+      "unit_multiplier": 1,
+      "raw_value": "2026",
+      "normalized_value": 2026,
+      "document_id": "psx:275829",
+      "fact_id": "fact_80ff3fd04cffdff15035",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "evidence": [
+       {
+        "page": 5,
+        "text": "inal dividend 2025: Rs 5.00 per share - - - - - - (21,504,642) (21,504,642) First interim dividend 2026: Rs 3.50 per share - - - - - - (15,053,249) (15,053,249) Second interim dividend 2026: Rs 4.25 per share - - - - - - (18,278,946) (18,2…"
+       }
+      ],
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ],
+      "readiness": "audit_only"
+     }
+    ]
    },
-   "timeline": [],
+   "timeline": [
+    {
+     "event_id": "evt_c6a7878681e7761b60f4",
+     "doc_id": "psx:275829",
+     "date": "2026-04-29T14:51:00+05:00",
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1,
+       "text": "CS-04-08 (PSX/LSE/SECP) April 29, 2026 Subject: FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31, 2026 Dear Sir, We are pleased to inform you that the Board of Directors of our Company, in its meeting held on April 2"
+      }
+     ]
+    },
+    {
+     "event_id": "evt_bb6f01c9b8e0964f2463",
+     "doc_id": "psx:275829",
+     "date": "2026-04-29T14:51:00+05:00",
+     "type": "dividend",
+     "priority_weight": 2,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1,
+       "text": "n its meeting held on April 29, 2026 at 1400 hours at Islamabad, has approved as follows: CASH DIVIDEND An Interim cash dividend for the quarter ended March 31, 2026 @ Rs 3.25 per share i.e. 32.5 percent. This is in addition to interim div…"
+      }
+     ]
+    }
+   ],
    "changes": [],
    "graph": {
     "summary": {
-     "document": 3,
-     "period": 0,
-     "fact": 0,
-     "event": 0,
+     "document": 4,
+     "period": 2,
+     "fact": 7,
+     "event": 2,
      "change": 0,
      "source": 0
     },
@@ -4303,6 +4683,16 @@
       "source_url": "https://dps.psx.com.pk/download/document/273347.pdf"
      },
      {
+      "id": "document:psx:275829",
+      "type": "document",
+      "label": "FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31 2026",
+      "document_id": "psx:275829",
+      "doc_type": "results",
+      "published_at": "2026-04-29T14:51:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf"
+     },
+     {
       "id": "document:psx:262204",
       "type": "document",
       "label": "Material Information",
@@ -4311,9 +4701,165 @@
       "published_at": "2025-10-14T14:04:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/262204.pdf"
+     },
+     {
+      "id": "event:evt_bb6f01c9b8e0964f2463",
+      "type": "event",
+      "label": "dividend",
+      "event_id": "evt_bb6f01c9b8e0964f2463",
+      "event_type": "dividend",
+      "event_date": "2026-04-29T14:51:00+05:00",
+      "priority_weight": 2
+     },
+     {
+      "id": "event:evt_c6a7878681e7761b60f4",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_c6a7878681e7761b60f4",
+      "event_type": "earnings",
+      "event_date": "2026-04-29T14:51:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "fact:psx:275829:fact_321d3cf806b870e6e323",
+      "type": "fact",
+      "label": "dividend",
+      "document_id": "psx:275829",
+      "metric": "dividend",
+      "raw_value": "576",
+      "normalized_value": 576,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:275829:fact_343c7a6b115c3d9a7c7a",
+      "type": "fact",
+      "label": "profit",
+      "document_id": "psx:275829",
+      "metric": "profit",
+      "raw_value": "1,330,657,884",
+      "normalized_value": 1330657884,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:275829:fact_480d10de31b5f2366c2e",
+      "type": "fact",
+      "label": "profit",
+      "document_id": "psx:275829",
+      "metric": "profit",
+      "raw_value": "1,330,656,284",
+      "normalized_value": 1330656284,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "quality_flags": []
+     },
+     {
+      "id": "fact:psx:275829:fact_66f5b8eb4871c0ce39d2",
+      "type": "fact",
+      "label": "dividend",
+      "document_id": "psx:275829",
+      "metric": "dividend",
+      "raw_value": "2025",
+      "normalized_value": 2025,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:275829:fact_80ff3fd04cffdff15035",
+      "type": "fact",
+      "label": "dividend",
+      "document_id": "psx:275829",
+      "metric": "dividend",
+      "raw_value": "2026",
+      "normalized_value": 2026,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:275829:fact_a508a27f81666b3716c5",
+      "type": "fact",
+      "label": "dividend",
+      "document_id": "psx:275829",
+      "metric": "dividend",
+      "raw_value": "2024",
+      "normalized_value": 2024,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "fact:psx:275829:fact_f4fdb954e8fa57f86896",
+      "type": "fact",
+      "label": "profit",
+      "document_id": "psx:275829",
+      "metric": "profit",
+      "raw_value": "62,869,477",
+      "normalized_value": 62869477,
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown",
+      "currency": "PKR",
+      "quality_flags": [
+       "missing_consolidation_basis"
+      ]
+     },
+     {
+      "id": "period_804b87233b5a41a5af5bfaec",
+      "type": "period",
+      "label": "2026-03-31",
+      "ticker": "OGDC",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "unknown"
+     },
+     {
+      "id": "period_a36e91a17fcc9b65d279b71c",
+      "type": "period",
+      "label": "2026-03-31",
+      "ticker": "OGDC",
+      "period_end": "2026-03-31",
+      "period_type": "unknown",
+      "consolidation": "consolidated"
      }
     ],
     "edges": [
+     {
+      "id": "edge_0695b8908002110ef7ef969d",
+      "type": "FILED",
+      "from": "company:OGDC",
+      "to": "document:psx:275829",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf"
+      },
+      "document_id": "psx:275829"
+     },
      {
       "id": "edge_2913a358d2925b2ae382549c",
       "type": "FILED",
@@ -4323,6 +4869,28 @@
        "source_url": "https://dps.psx.com.pk/download/document/268175.pdf"
       },
       "document_id": "psx:268175"
+     },
+     {
+      "id": "edge_2dfa5741924f76399355177d",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275829",
+      "to": "period_804b87233b5a41a5af5bfaec",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 2
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_368cfef261b480f8f2aa467c",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275829",
+      "to": "period_804b87233b5a41a5af5bfaec",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 3
+      },
+      "document_id": "psx:275829"
      },
      {
       "id": "edge_3e223a8acfbccc2fed09eda5",
@@ -4335,6 +4903,61 @@
       "document_id": "psx:262204"
      },
      {
+      "id": "edge_465334facfb1a0384c28c2c7",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_343c7a6b115c3d9a7c7a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 2
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_6abfb19c4e12c532c60f5e9a",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_c6a7878681e7761b60f4",
+      "to": "document:psx:275829",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_77bcf51c0bdfff6e3d782e99",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275829",
+      "to": "period_a36e91a17fcc9b65d279b71c",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 7
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_87200c3b2c0d94cb8f0a74ae",
+      "type": "HAS_EVENT",
+      "from": "company:OGDC",
+      "to": "event:evt_bb6f01c9b8e0964f2463",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_8fe18ef39f88a1452b05ea7d",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_f4fdb954e8fa57f86896",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 3
+      },
+      "document_id": "psx:275829"
+     },
+     {
       "id": "edge_acdafa5c7b088e5366d316ca",
       "type": "FILED",
       "from": "company:OGDC",
@@ -4343,16 +4966,174 @@
        "source_url": "https://dps.psx.com.pk/download/document/273347.pdf"
       },
       "document_id": "psx:273347"
+     },
+     {
+      "id": "edge_b4b02026f257999e1238b9bd",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_66f5b8eb4871c0ce39d2",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 5
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_b518901adcf2cf7acf8a20be",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_a508a27f81666b3716c5",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 5
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_b6f64fb9e98d3754021418b6",
+      "type": "HAS_EVENT",
+      "from": "company:OGDC",
+      "to": "event:evt_c6a7878681e7761b60f4",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_c06b21baddac7c0e1bba9ca5",
+      "type": "REPORTS_PERIOD",
+      "from": "document:psx:275829",
+      "to": "period_804b87233b5a41a5af5bfaec",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 5
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_c8c7b4fbe06847766efd3e33",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_321d3cf806b870e6e323",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 2
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_f046526e1c4f138b091dab8b",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_bb6f01c9b8e0964f2463",
+      "to": "document:psx:275829",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_f0b8104e054c510507e8ca4d",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_80ff3fd04cffdff15035",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 5
+      },
+      "document_id": "psx:275829"
+     },
+     {
+      "id": "edge_f26fb8fd566cfa32e1559f09",
+      "type": "SUPPORTS_FACT",
+      "from": "document:psx:275829",
+      "to": "fact:psx:275829:fact_480d10de31b5f2366c2e",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 7
+      },
+      "document_id": "psx:275829"
      }
     ]
    },
    "change_intelligence": {
     "status": "active",
-    "latest_change_at": "2026-04-01",
+    "latest_change_at": "2026-04-29",
     "counts": {
-     "document": 3
+     "event": 2,
+     "document": 4
     },
     "items": [
+     {
+      "id": "chg_f09c065d5ee06ae94815ace8",
+      "kind": "event",
+      "severity": "routine",
+      "date": "2026-04-29",
+      "title": "dividend",
+      "summary": "Official document language matched the desk's event classifier.",
+      "document_id": "psx:275829",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1,
+       "text": "n its meeting held on April 29, 2026 at 1400 hours at Islamabad, has approved as follows: CASH DIVIDEND An Interim cash dividend for the quarter ended March 31, 2026 @ Rs 3.25 per share i.e. 32.5 percent. This is in addition to interim div…"
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": 2
+     },
+     {
+      "id": "chg_a40884493973df3a00e05e92",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-04-29",
+      "title": "FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31 2026",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:275829",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
+      "id": "chg_39a8a91c4d181413050d503b",
+      "kind": "event",
+      "severity": "routine",
+      "date": "2026-04-29",
+      "title": "earnings",
+      "summary": "Official document language matched the desk's event classifier.",
+      "document_id": "psx:275829",
+      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
+       "page": 1,
+       "text": "CS-04-08 (PSX/LSE/SECP) April 29, 2026 Subject: FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31, 2026 Dear Sir, We are pleased to inform you that the Board of Directors of our Company, in its meeting held on April 2"
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": 3
+     },
      {
       "id": "chg_413eb45c2056e75ec8bb2b73",
       "kind": "document",
@@ -4447,20 +5228,26 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 3,
-    "event_count": 0,
+    "document_count": 4,
+    "event_count": 2,
     "change_count": 0,
-    "financial_fact_count": 0,
-    "graph_node_count": 4,
-    "graph_edge_count": 3,
-    "change_item_count": 3,
+    "financial_fact_count": 7,
+    "graph_node_count": 16,
+    "graph_edge_count": 19,
+    "change_item_count": 6,
     "brief_status": "training_only",
-    "pending_synthesis": 3,
-    "last_event_at": null,
+    "pending_synthesis": 4,
+    "last_event_at": "2026-04-29T14:51:00+05:00",
     "source_status": "degraded",
     "source_quality_flags": 3
    },
    "news": [
+    {
+     "date": "2026-08-20",
+     "impact": 3,
+     "headline": "Government overhauls PPL and OGDC boards",
+     "url": "https://mettisglobal.news/latest/"
+    },
     {
      "date": "2026-08-19",
      "impact": 3,
@@ -4472,20 +5259,14 @@
      "impact": 3,
      "headline": "KSE-100 reverses morning gains, at 176,846.36, down 1,109.14 points (-0.62%) as of 3:50pm PKT",
      "url": "https://dps.psx.com.pk/indices"
-    },
-    {
-     "date": "2026-08-19",
-     "impact": 3,
-     "headline": "PSX: KSE-100 confirmed close settles 1,109 points lower amid late selling",
-     "url": "https://www.brecorder.com/news/40435530/psx-kse-100-settles-1100-points-lower-amid-late-selling"
     }
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 6529920,
-    "value_pkr": 2113785948,
-    "trades": 63,
-    "days": 25,
+    "shares": 6250920,
+    "value_pkr": 2023476758,
+    "trades": 60,
+    "days": 24,
     "retention_days": 90
    }
   },
@@ -4572,6 +5353,24 @@
     }
    ],
    "filings": [
+    {
+     "doc_id": "psx:281297",
+     "date": "2026-08-18T14:51:00+05:00",
+     "type": "other",
+     "title": "Book Closure dates for EGM - 15 September 2026",
+     "url": "https://dps.psx.com.pk/download/document/281297.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "96b973516af27c8cf32b02e552e7198ff4ad6db02d4941bbf99ba2651b90e2be",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
     {
      "doc_id": "psx:275641",
      "date": "2026-04-29T10:19:00+05:00",
@@ -4854,7 +5653,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 3,
+     "document": 4,
      "period": 2,
      "fact": 2,
      "event": 6,
@@ -4897,6 +5696,16 @@
       "published_at": "2026-04-29T10:19:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/275641.pdf"
+     },
+     {
+      "id": "document:psx:281297",
+      "type": "document",
+      "label": "Book Closure dates for EGM - 15 September 2026",
+      "document_id": "psx:281297",
+      "doc_type": "other",
+      "published_at": "2026-08-18T14:51:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/281297.pdf"
      },
      {
       "id": "event:evt_029490dd4df5a6812acb",
@@ -5088,6 +5897,16 @@
       "document_id": "psx:275641"
      },
      {
+      "id": "edge_a6637d56d4563b4949312122",
+      "type": "FILED",
+      "from": "company:PPL",
+      "to": "document:psx:281297",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281297.pdf"
+      },
+      "document_id": "psx:281297"
+     },
+     {
       "id": "edge_a9e151f8abc8fa7264dee324",
       "type": "REPORTS_PERIOD",
       "from": "document:psx:275641",
@@ -5210,12 +6029,35 @@
    },
    "change_intelligence": {
     "status": "active",
-    "latest_change_at": "2026-04-29",
+    "latest_change_at": "2026-08-18",
     "counts": {
-     "event": 6,
-     "document": 3
+     "document": 4,
+     "event": 6
     },
     "items": [
+     {
+      "id": "chg_afdfc39f65eb939a6bb356c0",
+      "kind": "document",
+      "severity": "watch",
+      "date": "2026-08-18",
+      "title": "Book Closure dates for EGM - 15 September 2026",
+      "summary": "Official PSX DPS document retained as other.",
+      "document_id": "psx:281297",
+      "source_url": "https://dps.psx.com.pk/download/document/281297.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281297.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
      {
       "id": "chg_c0621f7cdf97cb5db6a2bc82",
       "kind": "event",
@@ -5448,20 +6290,26 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 3,
+    "document_count": 4,
     "event_count": 6,
     "change_count": 0,
     "financial_fact_count": 2,
-    "graph_node_count": 14,
-    "graph_edge_count": 19,
-    "change_item_count": 9,
+    "graph_node_count": 15,
+    "graph_edge_count": 20,
+    "change_item_count": 10,
     "brief_status": "training_only",
-    "pending_synthesis": 3,
+    "pending_synthesis": 4,
     "last_event_at": "2026-04-29T10:19:00+05:00",
     "source_status": "degraded",
     "source_quality_flags": 3
    },
    "news": [
+    {
+     "date": "2026-08-20",
+     "impact": 3,
+     "headline": "Government overhauls PPL and OGDC boards",
+     "url": "https://mettisglobal.news/latest/"
+    },
     {
      "date": "2026-08-19",
      "impact": 3,
@@ -5473,12 +6321,6 @@
      "impact": 3,
      "headline": "KSE-100 reverses morning gains, at 176,846.36, down 1,109.14 points (-0.62%) as of 3:50pm PKT",
      "url": "https://dps.psx.com.pk/indices"
-    },
-    {
-     "date": "2026-08-19",
-     "impact": 3,
-     "headline": "PSX: KSE-100 confirmed close settles 1,109 points lower amid late selling",
-     "url": "https://www.brecorder.com/news/40435530/psx-kse-100-settles-1100-points-lower-amid-late-selling"
     }
    ],
    "insider_filings": [
@@ -5502,9 +6344,9 @@
     }
    ],
    "offmarket": {
-    "shares": 10047655,
-    "value_pkr": 2409969897,
-    "trades": 98,
+    "shares": 9739655,
+    "value_pkr": 2337688467,
+    "trades": 96,
     "days": 31,
     "retention_days": 90
    }
@@ -5692,6 +6534,42 @@
      "status": "ready",
      "error": null,
      "content_sha256": "1416d78c23dfe71f6d517be5ab4e65bdde9a962ef14d982b44262ee9d2e29e53",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:264120",
+     "date": "2025-10-29T15:25:00+05:00",
+     "type": "results",
+     "title": "FINANCIAL RESULTS FOR THE 1ST QUARTER ENDED SEPTEMBER 30, 2025",
+     "url": "https://dps.psx.com.pk/download/document/264120.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "3e76c18d4656f241c70d04a6618a1050142cc4a339600ef9e62bdcdc5325073f",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:258454",
+     "date": "2025-08-28T15:23:00+05:00",
+     "type": "results",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2025",
+     "url": "https://dps.psx.com.pk/download/document/258454.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "d6ee90cb3b0ba0cc0dbac0284628d0ae3c74e61f88d5bf48a96b1bcb4566ad5e",
      "evidence": [],
      "facts": [],
      "synthesis": {
@@ -6689,7 +7567,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 16,
+     "document": 18,
      "period": 0,
      "fact": 12,
      "event": 16,
@@ -6732,6 +7610,26 @@
       "published_at": "2026-06-30T14:47:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/279317.pdf"
+     },
+     {
+      "id": "document:psx:258454",
+      "type": "document",
+      "label": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2025",
+      "document_id": "psx:258454",
+      "doc_type": "results",
+      "published_at": "2025-08-28T15:23:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/258454.pdf"
+     },
+     {
+      "id": "document:psx:264120",
+      "type": "document",
+      "label": "FINANCIAL RESULTS FOR THE 1ST QUARTER ENDED SEPTEMBER 30, 2025",
+      "document_id": "psx:264120",
+      "doc_type": "results",
+      "published_at": "2025-10-29T15:25:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/264120.pdf"
      },
      {
       "id": "document:psx:267325",
@@ -6798,24 +7696,6 @@
       "doc_type": "corporate_briefing",
       "status": "ready",
       "source_url": "https://www.dgcement.com/Briefing/DGKC-Notice For CBS.pdf"
-     },
-     {
-      "id": "document:issuer:a4afb29be02971c3c9675c4b",
-      "type": "document",
-      "label": "Corporate Briefing Session BS 2025",
-      "document_id": "issuer:a4afb29be02971c3c9675c4b",
-      "doc_type": "results",
-      "status": "ready",
-      "source_url": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf"
-     },
-     {
-      "id": "document:issuer:bdd12208b3af905c0658a716",
-      "type": "document",
-      "label": "Presentation of Corporate Breifing 2023",
-      "document_id": "issuer:bdd12208b3af905c0658a716",
-      "doc_type": "results",
-      "status": "ready",
-      "source_url": "https://www.dgcement.com/Briefing/CBS.pdf"
      },
      {
       "id": "event:evt_0238090c47e244cc3af0",
@@ -7235,17 +8115,6 @@
     ],
     "edges": [
      {
-      "id": "edge_0988b2bd4745cad80328e36a",
-      "type": "EVIDENCED_BY",
-      "from": "event:evt_202508376c5508482555",
-      "to": "document:issuer:bdd12208b3af905c0658a716",
-      "evidence": {
-       "source_url": "https://www.dgcement.com/Briefing/CBS.pdf",
-       "page": 8
-      },
-      "document_id": "issuer:bdd12208b3af905c0658a716"
-     },
-     {
       "id": "edge_0ad1fe17a0b43b4ffc32cf04",
       "type": "FILED",
       "from": "company:DGKC",
@@ -7254,17 +8123,6 @@
        "source_url": "https://dps.psx.com.pk/download/document/268016.pdf"
       },
       "document_id": "psx:268016"
-     },
-     {
-      "id": "edge_0d01ad70abace774e46aef7f",
-      "type": "EVIDENCED_BY",
-      "from": "event:evt_208031869a03928484b9",
-      "to": "document:issuer:a4afb29be02971c3c9675c4b",
-      "evidence": {
-       "source_url": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf",
-       "page": 1
-      },
-      "document_id": "issuer:a4afb29be02971c3c9675c4b"
      },
      {
       "id": "edge_13a95d84839a7033a63caf98",
@@ -7363,16 +8221,6 @@
       "document_id": "issuer:22dbb625dcd89f66c6bace2f"
      },
      {
-      "id": "edge_45573fda6a02c681a3633cf8",
-      "type": "FILED",
-      "from": "company:DGKC",
-      "to": "document:issuer:bdd12208b3af905c0658a716",
-      "evidence": {
-       "source_url": "https://www.dgcement.com/Briefing/CBS.pdf"
-      },
-      "document_id": "issuer:bdd12208b3af905c0658a716"
-     },
-     {
       "id": "edge_5776a843c9ee94aaca4cd0a3",
       "type": "FILED",
       "from": "company:DGKC",
@@ -7392,6 +8240,16 @@
        "page": 8
       },
       "document_id": "issuer:bdd12208b3af905c0658a716"
+     },
+     {
+      "id": "edge_7012e8005c91d2c31244f266",
+      "type": "FILED",
+      "from": "company:DGKC",
+      "to": "document:psx:264120",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/264120.pdf"
+      },
+      "document_id": "psx:264120"
      },
      {
       "id": "edge_74922226792fd25c19a625d8",
@@ -7511,16 +8369,6 @@
       "document_id": "psx:275807"
      },
      {
-      "id": "edge_ab92d8a626600c9a5a4fef2f",
-      "type": "FILED",
-      "from": "company:DGKC",
-      "to": "document:issuer:a4afb29be02971c3c9675c4b",
-      "evidence": {
-       "source_url": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf"
-      },
-      "document_id": "issuer:a4afb29be02971c3c9675c4b"
-     },
-     {
       "id": "edge_b0e2d0fb16af3af5fd96bdd4",
       "type": "EVIDENCED_BY",
       "from": "event:evt_2d66fe0985dc4e911d50",
@@ -7530,17 +8378,6 @@
        "page": 2
       },
       "document_id": "issuer:649c26b5f634c25efa12d21b"
-     },
-     {
-      "id": "edge_b244e1e19f4f24958ae9b926",
-      "type": "EVIDENCED_BY",
-      "from": "event:evt_78de548688dd3f3febb7",
-      "to": "document:issuer:a4afb29be02971c3c9675c4b",
-      "evidence": {
-       "source_url": "https://www.dgcement.com/Briefing/DGKC_CBS_Letter_to_Stock_Exc.pdf",
-       "page": 1
-      },
-      "document_id": "issuer:a4afb29be02971c3c9675c4b"
      },
      {
       "id": "edge_bc56f72ebc3768b3d6ee44b0",
@@ -7606,6 +8443,16 @@
       },
       "status": "discovered",
       "quality_flags": []
+     },
+     {
+      "id": "edge_df6fca31e1eb1cab1e9376b3",
+      "type": "FILED",
+      "from": "company:DGKC",
+      "to": "document:psx:258454",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/258454.pdf"
+      },
+      "document_id": "psx:258454"
      },
      {
       "id": "edge_e0eac43dad0152a9fb27ae22",
@@ -8253,15 +9100,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 16,
+    "document_count": 18,
     "event_count": 10,
     "change_count": 0,
     "financial_fact_count": 12,
     "graph_node_count": 49,
-    "graph_edge_count": 45,
+    "graph_edge_count": 42,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 15,
+    "pending_synthesis": 17,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 0
@@ -8295,10 +9142,10 @@
     }
    ],
    "offmarket": {
-    "shares": 6725896,
-    "value_pkr": 1405228962,
-    "trades": 88,
-    "days": 34,
+    "shares": 6685896,
+    "value_pkr": 1397804762,
+    "trades": 86,
+    "days": 33,
     "retention_days": 90
    }
   },
@@ -8501,6 +9348,35 @@
       "synthesis_status": "not_started",
       "training_mode": true
      }
+    },
+    {
+     "doc_id": "psx:272732",
+     "date": "2026-03-18T12:09:00+05:00",
+     "type": "results",
+     "title": "Board Meeting Other Than Financial Results",
+     "url": "https://dps.psx.com.pk/download/document/272732.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "77ef2417ca330779a3f9477a2a3a73ff7a4617f0e44319a968a5a8a2396f683b",
+     "evidence": [
+      {
+       "page": 1,
+       "text": "xchange Building Stock Exchange Road Karachi Dear Sir, BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LlIVIITED e\"The Bank\") This is to inform you that 260th Meeting ofthe Board of Directors ofthe Bank will be held on Thursday,…",
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf"
+      },
+      {
+       "page": 1,
+       "text": "stan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LlIVIITED e\"The Bank\") This is to inform you that 260th Meeting ofthe Board of Directors of…",
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf"
+      }
+     ],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
     }
    ],
    "financial_series": {
@@ -8684,15 +9560,43 @@
        "text": "ed Stock Exchange Building Stock Exchange Road Karachi BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LIMITED (“UBL”) This is with reference to the meeting of the Board of Directors of UBL held on March 26, 2026, at 11:00 a.m. a…"
       }
      ]
+    },
+    {
+     "event_id": "evt_ffbd7f5fe28f563ace4e",
+     "doc_id": "psx:272732",
+     "date": "2026-03-18T12:09:00+05:00",
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1,
+       "text": "xchange Building Stock Exchange Road Karachi Dear Sir, BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LlIVIITED e\"The Bank\") This is to inform you that 260th Meeting ofthe Board of Directors ofthe Bank will be held on Thursday,…"
+      }
+     ]
+    },
+    {
+     "event_id": "evt_eef7cb1d81ca67502a55",
+     "doc_id": "psx:272732",
+     "date": "2026-03-18T12:09:00+05:00",
+     "type": "board_meeting",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1,
+       "text": "stan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LlIVIITED e\"The Bank\") This is to inform you that 260th Meeting ofthe Board of Directors of…"
+      }
+     ]
     }
    ],
    "changes": [],
    "graph": {
     "summary": {
-     "document": 3,
+     "document": 4,
      "period": 1,
      "fact": 1,
-     "event": 10,
+     "event": 12,
      "change": 0,
      "source": 2
     },
@@ -8702,6 +9606,16 @@
       "type": "company",
       "label": "UBL",
       "ticker": "UBL"
+     },
+     {
+      "id": "document:psx:272732",
+      "type": "document",
+      "label": "Board Meeting Other Than Financial Results",
+      "document_id": "psx:272732",
+      "doc_type": "results",
+      "published_at": "2026-03-18T12:09:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/272732.pdf"
      },
      {
       "id": "document:psx:273021",
@@ -8824,6 +9738,24 @@
       "priority_weight": 3
      },
      {
+      "id": "event:evt_eef7cb1d81ca67502a55",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_eef7cb1d81ca67502a55",
+      "event_type": "board_meeting",
+      "event_date": "2026-03-18T12:09:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_ffbd7f5fe28f563ace4e",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_ffbd7f5fe28f563ace4e",
+      "event_type": "earnings",
+      "event_date": "2026-03-18T12:09:00+05:00",
+      "priority_weight": 3
+     },
+     {
       "id": "fact:psx:280213:fact_c93db6337fb42b2f1d88",
       "type": "fact",
       "label": "profit",
@@ -8896,6 +9828,17 @@
        "page": 1
       },
       "document_id": "psx:274158"
+     },
+     {
+      "id": "edge_19c5862898b2258e4dc29ab5",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_ffbd7f5fe28f563ace4e",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1
+      },
+      "document_id": "psx:272732"
      },
      {
       "id": "edge_1e65b38998598e7bbf702767",
@@ -8975,6 +9918,17 @@
       "document_id": "psx:273021"
      },
      {
+      "id": "edge_4a06d6c5842a24e753ac7554",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_eef7cb1d81ca67502a55",
+      "to": "document:psx:272732",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1
+      },
+      "document_id": "psx:272732"
+     },
+     {
       "id": "edge_4d7377b2bf09fa50ab6d60d2",
       "type": "HAS_EVENT",
       "from": "company:UBL",
@@ -9028,6 +9982,17 @@
        "page": 1
       },
       "document_id": "psx:274158"
+     },
+     {
+      "id": "edge_6d8dad201bb427749e0510bc",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_ffbd7f5fe28f563ace4e",
+      "to": "document:psx:272732",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1
+      },
+      "document_id": "psx:272732"
      },
      {
       "id": "edge_70649ea1765071e5257bc06a",
@@ -9173,6 +10138,27 @@
        "page": 2
       },
       "document_id": "psx:280213"
+     },
+     {
+      "id": "edge_e7c16143ffa275cb1143415a",
+      "type": "HAS_EVENT",
+      "from": "company:UBL",
+      "to": "event:evt_eef7cb1d81ca67502a55",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1
+      },
+      "document_id": "psx:272732"
+     },
+     {
+      "id": "edge_f1e9d687226e2ec4ffc0df68",
+      "type": "FILED",
+      "from": "company:UBL",
+      "to": "document:psx:272732",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf"
+      },
+      "document_id": "psx:272732"
      }
     ]
    },
@@ -9181,8 +10167,8 @@
     "latest_change_at": "2026-08-18",
     "counts": {
      "source": 1,
-     "event": 10,
-     "document": 3
+     "event": 12,
+     "document": 4
     },
     "items": [
      {
@@ -9506,6 +10492,75 @@
       "previous_period_end": null,
       "consolidation": null,
       "priority_weight": 3
+     },
+     {
+      "id": "chg_dd2358676fb7a25b133cd42a",
+      "kind": "event",
+      "severity": "routine",
+      "date": "2026-03-18",
+      "title": "earnings",
+      "summary": "Official document language matched the desk's event classifier.",
+      "document_id": "psx:272732",
+      "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1,
+       "text": "xchange Building Stock Exchange Road Karachi Dear Sir, BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LlIVIITED e\"The Bank\") This is to inform you that 260th Meeting ofthe Board of Directors ofthe Bank will be held on Thursday,…"
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": 3
+     },
+     {
+      "id": "chg_b5186e41a01ebb21b03b3eac",
+      "kind": "event",
+      "severity": "routine",
+      "date": "2026-03-18",
+      "title": "board meeting",
+      "summary": "Official document language matched the desk's event classifier.",
+      "document_id": "psx:272732",
+      "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": 1,
+       "text": "stan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, BOARD MEETING OTHER THAN FINANCIAL RESULTS OF UNITED BANK LlIVIITED e\"The Bank\") This is to inform you that 260th Meeting ofthe Board of Directors of…"
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": 3
+     },
+     {
+      "id": "chg_b3fdb84d22b4b621db84d44d",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-03-18",
+      "title": "Board Meeting Other Than Financial Results",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:272732",
+      "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/272732.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
      }
     ]
    },
@@ -9549,15 +10604,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 3,
-    "event_count": 10,
+    "document_count": 4,
+    "event_count": 12,
     "change_count": 0,
     "financial_fact_count": 1,
-    "graph_node_count": 18,
-    "graph_edge_count": 27,
-    "change_item_count": 14,
+    "graph_node_count": 21,
+    "graph_edge_count": 32,
+    "change_item_count": 17,
     "brief_status": "training_only",
-    "pending_synthesis": 3,
+    "pending_synthesis": 4,
     "last_event_at": "2026-07-22T11:38:00+05:00",
     "source_status": "ok",
     "source_quality_flags": 1
@@ -9761,6 +10816,30 @@
        "page": 1,
        "text": "istan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Subject: Board Meeting other than Financial Results DearSir, This is to inform you that a meeting of the Company’s Board of Managementwill be held on Saturday…",
        "source_url": "https://dps.psx.com.pk/download/document/273920.pdf"
+      }
+     ],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:273026",
+     "date": "2026-03-26T12:22:00+05:00",
+     "type": "results",
+     "title": "Board Meeting Other Than Financial Results",
+     "url": "https://dps.psx.com.pk/download/document/273026.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "2e9d7511b776ff3377999f79e5b7597253550789e76d28d0824e13067d39dc31",
+     "evidence": [
+      {
+       "page": 1,
+       "text": "k ExchangeBuilding Stock Exchange Road Karachi Subject: Board Meetingother than Financial Results DearSir, This is to inform you that Board of Managementof the Companywill be held on Monday, March 30, 2026at 11:30 am at Karachi, to conside…",
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf"
       }
      ],
      "facts": [],
@@ -9996,6 +11075,20 @@
      ]
     },
     {
+     "event_id": "evt_1717c99feea7b84109e8",
+     "doc_id": "psx:273026",
+     "date": "2026-03-26T12:22:00+05:00",
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
+       "page": 1,
+       "text": "k ExchangeBuilding Stock Exchange Road Karachi Subject: Board Meetingother than Financial Results DearSir, This is to inform you that Board of Managementof the Companywill be held on Monday, March 30, 2026at 11:30 am at Karachi, to conside…"
+      }
+     ]
+    },
+    {
      "event_id": "evt_30027cd832df431a70a9",
      "doc_id": "issuer:ca78a4beec7f30b38e790a5e",
      "date": null,
@@ -10027,10 +11120,10 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 8,
+     "document": 9,
      "period": 1,
      "fact": 2,
-     "event": 5,
+     "event": 6,
      "change": 0,
      "source": 7
     },
@@ -10040,6 +11133,16 @@
       "type": "company",
       "label": "PSO",
       "ticker": "PSO"
+     },
+     {
+      "id": "document:psx:273026",
+      "type": "document",
+      "label": "Board Meeting Other Than Financial Results",
+      "document_id": "psx:273026",
+      "doc_type": "results",
+      "published_at": "2026-03-26T12:22:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/273026.pdf"
      },
      {
       "id": "document:psx:273920",
@@ -10123,6 +11226,15 @@
       "event_id": "evt_0f69dbef11a377b128e2",
       "event_type": "earnings",
       "event_date": "2026-04-29T11:43:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_1717c99feea7b84109e8",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_1717c99feea7b84109e8",
+      "event_type": "earnings",
+      "event_date": "2026-03-26T12:22:00+05:00",
       "priority_weight": 3
      },
      {
@@ -10285,6 +11397,17 @@
        "page": 1
       },
       "document_id": "issuer:ca78a4beec7f30b38e790a5e"
+     },
+     {
+      "id": "edge_16879a418cac4095a5de4942",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_1717c99feea7b84109e8",
+      "to": "document:psx:273026",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
+       "page": 1
+      },
+      "document_id": "psx:273026"
      },
      {
       "id": "edge_18c8b67c3825ae42392e8198",
@@ -10479,6 +11602,27 @@
        "page": 6
       },
       "document_id": "psx:275672"
+     },
+     {
+      "id": "edge_bb57f43b8a64ed6c3cdbe72b",
+      "type": "HAS_EVENT",
+      "from": "company:PSO",
+      "to": "event:evt_1717c99feea7b84109e8",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
+       "page": 1
+      },
+      "document_id": "psx:273026"
+     },
+     {
+      "id": "edge_bbed4bc6ea6b4b21b7d0414f",
+      "type": "FILED",
+      "from": "company:PSO",
+      "to": "document:psx:273026",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf"
+      },
+      "document_id": "psx:273026"
      },
      {
       "id": "edge_c0a0ea625238efa584cd81a6",
@@ -10956,17 +12100,17 @@
       "priority_weight": 3
      },
      {
-      "id": "chg_2376a0c398b66729e3538636",
+      "id": "chg_427f0620aef621e07d5b24c7",
       "kind": "document",
-      "severity": "watch",
-      "date": "2025-09-26",
-      "title": "Material Information",
-      "summary": "Official PSX DPS document retained as other.",
-      "document_id": "psx:260149",
-      "source_url": "https://dps.psx.com.pk/download/document/260149.pdf",
+      "severity": "routine",
+      "date": "2026-03-26",
+      "title": "Board Meeting Other Than Financial Results",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:273026",
+      "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
       "source_page": null,
       "evidence": {
-       "source_url": "https://dps.psx.com.pk/download/document/260149.pdf",
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
        "page": null,
        "text": null
       },
@@ -10979,19 +12123,19 @@
       "priority_weight": null
      },
      {
-      "id": "chg_c54cbfc693d4d5272db6279c",
+      "id": "chg_3f8cabfaa8b96f79f3505ece",
       "kind": "event",
-      "severity": "critical",
-      "date": "",
-      "title": "credit event",
+      "severity": "routine",
+      "date": "2026-03-26",
+      "title": "earnings",
       "summary": "Official document language matched the desk's event classifier.",
-      "document_id": "issuer:ca78a4beec7f30b38e790a5e",
-      "source_url": "https://psopk.com/source/fuelcards/corporate-cards/02.pdf",
+      "document_id": "psx:273026",
+      "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
       "source_page": null,
       "evidence": {
-       "source_url": "https://psopk.com/source/fuelcards/corporate-cards/02.pdf",
+       "source_url": "https://dps.psx.com.pk/download/document/273026.pdf",
        "page": 1,
-       "text": "SMS alerts) Telecom Operator *Push SMS Billing SMS *Email Report *Email Frequency Daily (default) Sr. No. Card No. Name on Card Email Address (for Email alerts) Mobile No. (for SMS alerts) Telecom Operator *Push SMS *Pull SMS *Email Report…"
+       "text": "k ExchangeBuilding Stock Exchange Road Karachi Subject: Board Meetingother than Financial Results DearSir, This is to inform you that Board of Managementof the Companywill be held on Monday, March 30, 2026at 11:30 am at Karachi, to conside…"
       },
       "metric": null,
       "delta": null,
@@ -10999,7 +12143,7 @@
       "period_end": null,
       "previous_period_end": null,
       "consolidation": null,
-      "priority_weight": 5
+      "priority_weight": 3
      }
     ]
    },
@@ -11077,15 +12221,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 8,
-    "event_count": 5,
+    "document_count": 9,
+    "event_count": 6,
     "change_count": 0,
     "financial_fact_count": 2,
-    "graph_node_count": 24,
-    "graph_edge_count": 28,
+    "graph_node_count": 26,
+    "graph_edge_count": 31,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 8,
+    "pending_synthesis": 9,
     "last_event_at": "2026-04-29T11:43:00+05:00",
     "source_status": "ok",
     "source_quality_flags": 0
@@ -11112,10 +12256,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 16063887,
-    "value_pkr": 5768411947,
-    "trades": 184,
-    "days": 43,
+    "shares": 15942887,
+    "value_pkr": 5726209787,
+    "trades": 178,
+    "days": 42,
     "retention_days": 90
    }
   },
@@ -11169,6 +12313,12 @@
    },
    "documents": [
     {
+     "date": "2026-08-21",
+     "type": "company_announcement",
+     "title": "Expiry of Tenure of Mr. Rehmat Ali Hasnie As President/CEO of NBP",
+     "url": "https://dps.psx.com.pk/download/document/281495.pdf"
+    },
+    {
      "date": "2026-08-19",
      "type": "board_meeting",
      "title": "Board Meeting",
@@ -11191,12 +12341,6 @@
      "type": "company_announcement",
      "title": "General Meetings / Briefing Sessions",
      "url": null
-    },
-    {
-     "date": "2026-04-30",
-     "type": "management_change",
-     "title": "APPOINTMENT OF DIRECTOR ON THE BOARD OF NATIONAL BANK OF PAKISTAN (NBP)",
-     "url": "https://dps.psx.com.pk/download/document/276032.pdf"
     }
    ],
    "filings": [
@@ -11210,6 +12354,24 @@
      "status": "ready",
      "error": null,
      "content_sha256": "c0c133447be95559506a3a9a75a28296288ec2f09750ddbae70f5fa4bd4d4f84",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:270984",
+     "date": "2026-02-25T08:48:00+05:00",
+     "type": "results",
+     "title": "Financial Results For the Year Ended December 31, 2025",
+     "url": "https://dps.psx.com.pk/download/document/270984.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "553c2560277a2f93fab7cb29d0ff8e46209875a770805826f3aa7a1d3d569809",
      "evidence": [],
      "facts": [],
      "synthesis": {
@@ -11569,7 +12731,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 14,
+     "document": 15,
      "period": 0,
      "fact": 0,
      "event": 9,
@@ -11592,6 +12754,16 @@
       "published_at": "2026-02-02T11:39:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/269545.pdf"
+     },
+     {
+      "id": "document:psx:270984",
+      "type": "document",
+      "label": "Financial Results For the Year Ended December 31, 2025",
+      "document_id": "psx:270984",
+      "doc_type": "results",
+      "published_at": "2026-02-25T08:48:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270984.pdf"
      },
      {
       "id": "document:psx:275715",
@@ -11684,15 +12856,6 @@
       "doc_type": "other",
       "status": "ready",
       "source_url": "https://www.nbp.com.pk/News/Collection-of-Passport-and-Visa-Fee-at-Authorized-Branches.pdf"
-     },
-     {
-      "id": "document:issuer:b7c7e7527dc1ef36b25ea1db",
-      "type": "document",
-      "label": "Know your Rights and Responsibilities as a Bank's Consumer",
-      "document_id": "issuer:b7c7e7527dc1ef36b25ea1db",
-      "doc_type": "other",
-      "status": "ready",
-      "source_url": "https://www.nbp.com.pk/News/C1-Annex-KYRR(Eng).pdf"
      },
      {
       "id": "event:evt_24bfbd3bb24bdfba6445",
@@ -12061,6 +13224,16 @@
       "document_id": "issuer:a68d4c4ded1f38289a7e1aea"
      },
      {
+      "id": "edge_6c5bc8cf13e2d68c06c8aed4",
+      "type": "FILED",
+      "from": "company:NBP",
+      "to": "document:psx:270984",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270984.pdf"
+      },
+      "document_id": "psx:270984"
+     },
+     {
       "id": "edge_6e7e475100e3959f562f57bd",
       "type": "FILED",
       "from": "company:NBP",
@@ -12284,16 +13457,6 @@
        "page": 2
       },
       "document_id": "issuer:a68d4c4ded1f38289a7e1aea"
-     },
-     {
-      "id": "edge_f5e969b53a1c33eaf8f2fa83",
-      "type": "FILED",
-      "from": "company:NBP",
-      "to": "document:issuer:b7c7e7527dc1ef36b25ea1db",
-      "evidence": {
-       "source_url": "https://www.nbp.com.pk/News/C1-Annex-KYRR(Eng).pdf"
-      },
-      "document_id": "issuer:b7c7e7527dc1ef36b25ea1db"
      },
      {
       "id": "edge_f7110c0e802fa3b8980bea3a",
@@ -12906,7 +14069,7 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 14,
+    "document_count": 15,
     "event_count": 4,
     "change_count": 0,
     "financial_fact_count": 0,
@@ -12914,7 +14077,7 @@
     "graph_edge_count": 40,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 14,
+    "pending_synthesis": 15,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 0
@@ -13084,6 +14247,24 @@
       "synthesis_status": "not_started",
       "training_mode": true
      }
+    },
+    {
+     "doc_id": "psx:267751",
+     "date": "2025-12-24T13:44:00+05:00",
+     "type": "board_meeting",
+     "title": "Material Information - 238th Board of Directors Meeting of FFC",
+     "url": "https://dps.psx.com.pk/download/document/267751.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "200ab2067982ee3ffa5eb02466a19402a154b5a7b357a72b73699512f495dd24",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
     }
    ],
    "financial_series": {
@@ -13095,7 +14276,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 3,
+     "document": 4,
      "period": 0,
      "fact": 0,
      "event": 0,
@@ -13140,6 +14321,16 @@
       "source_url": "https://dps.psx.com.pk/download/document/272896.pdf"
      },
      {
+      "id": "document:psx:267751",
+      "type": "document",
+      "label": "Material Information - 238th Board of Directors Meeting of FFC",
+      "document_id": "psx:267751",
+      "doc_type": "board_meeting",
+      "published_at": "2025-12-24T13:44:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/267751.pdf"
+     },
+     {
       "id": "source:src_72dbc8482677e29c0be00c20",
       "type": "source",
       "label": "https://www.ffc.com.pk/",
@@ -13169,6 +14360,16 @@
      }
     ],
     "edges": [
+     {
+      "id": "edge_0e4844f6461272367b34e756",
+      "type": "FILED",
+      "from": "company:FFC",
+      "to": "document:psx:267751",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/267751.pdf"
+      },
+      "document_id": "psx:267751"
+     },
      {
       "id": "edge_6612b570443a26b4b4ac5084",
       "type": "FILED",
@@ -13233,7 +14434,7 @@
     "status": "active",
     "latest_change_at": "2026-03-24",
     "counts": {
-     "document": 3
+     "document": 4
     },
     "items": [
      {
@@ -13304,6 +14505,29 @@
       "previous_period_end": null,
       "consolidation": null,
       "priority_weight": null
+     },
+     {
+      "id": "chg_4f2fc6cd8f146f26f5ab4eed",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2025-12-24",
+      "title": "Material Information - 238th Board of Directors Meeting of FFC",
+      "summary": "Official PSX DPS document retained as board_meeting.",
+      "document_id": "psx:267751",
+      "source_url": "https://dps.psx.com.pk/download/document/267751.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/267751.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
      }
     ]
    },
@@ -13348,15 +14572,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 3,
+    "document_count": 4,
     "event_count": 0,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 6,
-    "graph_edge_count": 5,
-    "change_item_count": 3,
+    "graph_node_count": 7,
+    "graph_edge_count": 6,
+    "change_item_count": 4,
     "brief_status": "training_only",
-    "pending_synthesis": 3,
+    "pending_synthesis": 4,
     "last_event_at": null,
     "source_status": "degraded",
     "source_quality_flags": 2
@@ -13383,10 +14607,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 2223815,
-    "value_pkr": 1289127167,
-    "trades": 39,
-    "days": 21,
+    "shares": 1999590,
+    "value_pkr": 1170063692,
+    "trades": 38,
+    "days": 20,
     "retention_days": 90
    }
   },
@@ -13526,6 +14750,24 @@
       "synthesis_status": "not_started",
       "training_mode": true
      }
+    },
+    {
+     "doc_id": "psx:266631",
+     "date": "2025-12-01T15:09:00+05:00",
+     "type": "other",
+     "title": "MATERIAL INFORMATION",
+     "url": "https://dps.psx.com.pk/download/document/266631.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "cc409c4f24a01c35492f0ecee34e17666dd949df9b3c8af449e080773c1cb8ab",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
     }
    ],
    "financial_series": {
@@ -13537,7 +14779,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 3,
+     "document": 4,
      "period": 0,
      "fact": 0,
      "event": 0,
@@ -13570,6 +14812,16 @@
       "published_at": "2026-07-01T15:14:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/279395.pdf"
+     },
+     {
+      "id": "document:psx:266631",
+      "type": "document",
+      "label": "MATERIAL INFORMATION",
+      "document_id": "psx:266631",
+      "doc_type": "other",
+      "published_at": "2025-12-01T15:09:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/266631.pdf"
      },
      {
       "id": "document:psx:267525",
@@ -13618,6 +14870,16 @@
        "source_url": "https://dps.psx.com.pk/download/document/273346.pdf"
       },
       "document_id": "psx:273346"
+     },
+     {
+      "id": "edge_495990e43aea47b470f202df",
+      "type": "FILED",
+      "from": "company:LUCK",
+      "to": "document:psx:266631",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/266631.pdf"
+      },
+      "document_id": "psx:266631"
      },
      {
       "id": "edge_4e06d91f6b67f6494f69f10a",
@@ -13672,7 +14934,7 @@
     "latest_change_at": "2026-08-18",
     "counts": {
      "source": 1,
-     "document": 3
+     "document": 4
     },
     "items": [
      {
@@ -13766,6 +15028,29 @@
       "previous_period_end": null,
       "consolidation": null,
       "priority_weight": null
+     },
+     {
+      "id": "chg_7a2970732f3b6c2b728f1f18",
+      "kind": "document",
+      "severity": "watch",
+      "date": "2025-12-01",
+      "title": "MATERIAL INFORMATION",
+      "summary": "Official PSX DPS document retained as other.",
+      "document_id": "psx:266631",
+      "source_url": "https://dps.psx.com.pk/download/document/266631.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/266631.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
      }
     ]
    },
@@ -13809,15 +15094,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 3,
+    "document_count": 4,
     "event_count": 0,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 6,
-    "graph_edge_count": 5,
-    "change_item_count": 4,
+    "graph_node_count": 7,
+    "graph_edge_count": 6,
+    "change_item_count": 5,
     "brief_status": "training_only",
-    "pending_synthesis": 3,
+    "pending_synthesis": 4,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 1
@@ -13844,10 +15129,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 1094534,
-    "value_pkr": 514624595,
-    "trades": 33,
-    "days": 20,
+    "shares": 1080534,
+    "value_pkr": 508643165,
+    "trades": 31,
+    "days": 19,
     "retention_days": 90
    }
   },
@@ -13944,6 +15229,24 @@
      "status": "ready",
      "error": null,
      "content_sha256": "df8cc060224742c2081c0ca6b1567cefbf1e8e57d17b37b9dac8b4d74e9a0104",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:270923",
+     "date": "2026-02-24T10:26:00+05:00",
+     "type": "results",
+     "title": "Financial Results for the Half Year Ended December 31, 2025",
+     "url": "https://dps.psx.com.pk/download/document/270923.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "8a65b3d66203777f1f9a35109232423e2766da6d238941cdca766a38ab22a867",
      "evidence": [],
      "facts": [],
      "synthesis": {
@@ -14566,7 +15869,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 12,
+     "document": 13,
      "period": 0,
      "fact": 6,
      "event": 14,
@@ -14579,6 +15882,16 @@
       "type": "company",
       "label": "HUBC",
       "ticker": "HUBC"
+     },
+     {
+      "id": "document:psx:270923",
+      "type": "document",
+      "label": "Financial Results for the Half Year Ended December 31, 2025",
+      "document_id": "psx:270923",
+      "doc_type": "results",
+      "published_at": "2026-02-24T10:26:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270923.pdf"
      },
      {
       "id": "document:psx:274797",
@@ -14681,15 +15994,6 @@
       "doc_type": "acquisition",
       "status": "ready",
       "source_url": "https://hubpower.com/wp-content/uploads/2024/01/HUBCO-PR-Final.pdf"
-     },
-     {
-      "id": "document:issuer:c06fbfaeb745df36432b8767",
-      "type": "document",
-      "label": "Download Press Release",
-      "document_id": "issuer:c06fbfaeb745df36432b8767",
-      "doc_type": "appointment",
-      "status": "ready",
-      "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-declares-COD-for-its-Chinese-Joint-Venture-CPHGC.pdf"
      },
      {
       "id": "event:evt_002013a4efadd1a1afd5",
@@ -15111,16 +16415,6 @@
       "quality_flags": []
      },
      {
-      "id": "edge_2bfb6c16570ede6dd8a1451a",
-      "type": "FILED",
-      "from": "company:HUBC",
-      "to": "document:issuer:c06fbfaeb745df36432b8767",
-      "evidence": {
-       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-declares-COD-for-its-Chinese-Joint-Venture-CPHGC.pdf"
-      },
-      "document_id": "issuer:c06fbfaeb745df36432b8767"
-     },
-     {
       "id": "edge_31b95828bbe1c4d1c45748e7",
       "type": "EVIDENCED_BY",
       "from": "event:evt_5d16287d9ae8e6a27554",
@@ -15184,17 +16478,6 @@
       },
       "status": "discovered",
       "quality_flags": []
-     },
-     {
-      "id": "edge_4b8975fca3708747d6a092c3",
-      "type": "EVIDENCED_BY",
-      "from": "event:evt_642ca9477213dfe6990b",
-      "to": "document:issuer:c06fbfaeb745df36432b8767",
-      "evidence": {
-       "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Hubco-declares-COD-for-its-Chinese-Joint-Venture-CPHGC.pdf",
-       "page": 1
-      },
-      "document_id": "issuer:c06fbfaeb745df36432b8767"
      },
      {
       "id": "edge_4c78707ef30185e389c20572",
@@ -15377,6 +16660,16 @@
        "page": 13
       },
       "document_id": "issuer:4957470d35d6936222e2182c"
+     },
+     {
+      "id": "edge_7c0e19094a23907aed627d38",
+      "type": "FILED",
+      "from": "company:HUBC",
+      "to": "document:psx:270923",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270923.pdf"
+      },
+      "document_id": "psx:270923"
      },
      {
       "id": "edge_7cd53102aa5c53b6dcf2c471",
@@ -16138,15 +17431,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 12,
+    "document_count": 13,
     "event_count": 5,
     "change_count": 0,
     "financial_fact_count": 6,
     "graph_node_count": 43,
-    "graph_edge_count": 54,
+    "graph_edge_count": 53,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 12,
+    "pending_synthesis": 13,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 0
@@ -16173,10 +17466,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 1901122,
-    "value_pkr": 432478440,
-    "trades": 51,
-    "days": 24,
+    "shares": 1505122,
+    "value_pkr": 347096025,
+    "trades": 48,
+    "days": 23,
     "retention_days": 90
    }
   },
@@ -16353,6 +17646,24 @@
      }
     },
     {
+     "doc_id": "psx:270359",
+     "date": "2026-02-17T15:07:00+05:00",
+     "type": "results",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED 2025-12-31",
+     "url": "https://dps.psx.com.pk/download/document/270359.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "33eedd7f94b4a9394d4603ae4c21d99fc53ddfd1ac187f00292b9f7391d6b696",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
      "doc_id": "psx:268512",
      "date": "2026-01-09T11:04:00+05:00",
      "type": "other",
@@ -16362,6 +17673,24 @@
      "status": "ready",
      "error": null,
      "content_sha256": "cf0cb6c324a9292293e3c780eb1b8c8a0dcd34c4bcfe1c493890ed531e2609d4",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:264535",
+     "date": "2025-10-30T15:08:00+05:00",
+     "type": "results",
+     "title": "Financial Results for the quarter ended September 30, 2025",
+     "url": "https://dps.psx.com.pk/download/document/264535.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "c9935fd6d595c3c6df9c3a2967e24fb5b32fb806b200eb2d06d498f4bf37cd95",
      "evidence": [],
      "facts": [],
      "synthesis": {
@@ -16380,7 +17709,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 6,
+     "document": 8,
      "period": 0,
      "fact": 0,
      "event": 1,
@@ -16403,6 +17732,16 @@
       "published_at": "2026-01-09T11:04:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/268512.pdf"
+     },
+     {
+      "id": "document:psx:270359",
+      "type": "document",
+      "label": "FINANCIAL RESULTS FOR THE YEAR ENDED 2025-12-31",
+      "document_id": "psx:270359",
+      "doc_type": "results",
+      "published_at": "2026-02-17T15:07:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270359.pdf"
      },
      {
       "id": "document:psx:270914",
@@ -16455,6 +17794,16 @@
       "source_url": "https://dps.psx.com.pk/download/document/280933.pdf"
      },
      {
+      "id": "document:psx:264535",
+      "type": "document",
+      "label": "Financial Results for the quarter ended September 30, 2025",
+      "document_id": "psx:264535",
+      "doc_type": "results",
+      "published_at": "2025-10-30T15:08:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/264535.pdf"
+     },
+     {
       "id": "event:evt_9a6cb37aa210fe7aeede",
       "type": "event",
       "label": "board_meeting",
@@ -16500,6 +17849,26 @@
       "quality_flags": [
        "no_document_links"
       ]
+     },
+     {
+      "id": "edge_42da939b9d998a4cd6c3d7ad",
+      "type": "FILED",
+      "from": "company:BOP",
+      "to": "document:psx:264535",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/264535.pdf"
+      },
+      "document_id": "psx:264535"
+     },
+     {
+      "id": "edge_557da6df1627af9545f930d5",
+      "type": "FILED",
+      "from": "company:BOP",
+      "to": "document:psx:270359",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270359.pdf"
+      },
+      "document_id": "psx:270359"
      },
      {
       "id": "edge_665144bf5985f834c2a7000e",
@@ -16580,7 +17949,7 @@
     "latest_change_at": "2026-08-18",
     "counts": {
      "source": 1,
-     "document": 6
+     "document": 8
     },
     "items": [
      {
@@ -16722,6 +18091,29 @@
       "priority_weight": null
      },
      {
+      "id": "chg_2d3a1772813afb6804724249",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-02-17",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED 2025-12-31",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:270359",
+      "source_url": "https://dps.psx.com.pk/download/document/270359.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270359.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
       "id": "chg_7be300321856350048ad6be5",
       "kind": "document",
       "severity": "watch",
@@ -16733,6 +18125,29 @@
       "source_page": null,
       "evidence": {
        "source_url": "https://dps.psx.com.pk/download/document/268512.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
+      "id": "chg_3c17170a1b5af0b0b7c7def5",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2025-10-30",
+      "title": "Financial Results for the quarter ended September 30, 2025",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:264535",
+      "source_url": "https://dps.psx.com.pk/download/document/264535.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/264535.pdf",
        "page": null,
        "text": null
       },
@@ -16777,15 +18192,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 6,
+    "document_count": 8,
     "event_count": 0,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 9,
-    "graph_edge_count": 9,
-    "change_item_count": 7,
+    "graph_node_count": 11,
+    "graph_edge_count": 11,
+    "change_item_count": 9,
     "brief_status": "training_only",
-    "pending_synthesis": 6,
+    "pending_synthesis": 8,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 1
@@ -16793,10 +18208,10 @@
    "news": [],
    "insider_filings": [],
    "offmarket": {
-    "shares": 63353004,
-    "value_pkr": 2199269496,
-    "trades": 78,
-    "days": 34,
+    "shares": 64253004,
+    "value_pkr": 2229869496,
+    "trades": 79,
+    "days": 35,
     "retention_days": 90
    }
   },
@@ -16938,6 +18353,35 @@
      }
     },
     {
+     "doc_id": "psx:269869",
+     "date": "2026-02-09T12:12:00+05:00",
+     "type": "results",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED DECEMBER 31, 2025",
+     "url": "https://dps.psx.com.pk/download/document/269869.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "fe5ebc7a73f2e3b3a628c5a914b467eef20e9e8f7675df037a1e3e73c46eeddd",
+     "evidence": [
+      {
+       "page": 1,
+       "text": "xchange L imited Stock Exchange Building Stock Exchange Road Karachi. Dear Sir, FINANCIAL RESULTS FOR THE YEAR ENDED DECEMBER 31, 2025 Best Bank 2018, 2020 & 2023 Pakistan Banking Awards FORM-3 MEBL/CS/PSX-21/013/2026 We have to inform you…",
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf"
+      },
+      {
+       "page": 1,
+       "text": "February 9, 2026 at 10 :30 a.m. (PST) in Karachi, Pakistan, recommended the following: i. CASH DIVIDEND A final Cash Dividend for the year ended December 31 , 2025 at Rs. 7/- per share i.e. 70%-. This is in addition to interim Dividend(s)…",
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf"
+      }
+     ],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
      "doc_id": "issuer:1bdb63035bc4184f685b67de",
      "date": null,
      "type": "other",
@@ -17010,6 +18454,34 @@
    },
    "timeline": [
     {
+     "event_id": "evt_780f5879019181ecca90",
+     "doc_id": "psx:269869",
+     "date": "2026-02-09T12:12:00+05:00",
+     "type": "dividend",
+     "priority_weight": 2,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf",
+       "page": 1,
+       "text": "February 9, 2026 at 10 :30 a.m. (PST) in Karachi, Pakistan, recommended the following: i. CASH DIVIDEND A final Cash Dividend for the year ended December 31 , 2025 at Rs. 7/- per share i.e. 70%-. This is in addition to interim Dividend(s)…"
+      }
+     ]
+    },
+    {
+     "event_id": "evt_64d739331252e9bbe696",
+     "doc_id": "psx:269869",
+     "date": "2026-02-09T12:12:00+05:00",
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf",
+       "page": 1,
+       "text": "xchange L imited Stock Exchange Building Stock Exchange Road Karachi. Dear Sir, FINANCIAL RESULTS FOR THE YEAR ENDED DECEMBER 31, 2025 Best Bank 2018, 2020 & 2023 Pakistan Banking Awards FORM-3 MEBL/CS/PSX-21/013/2026 We have to inform you…"
+      }
+     ]
+    },
+    {
      "event_id": "evt_909ee144aa5c6d5c6a69",
      "doc_id": "issuer:0fce474db3a58007a45e81a4",
      "date": null,
@@ -17027,10 +18499,10 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 6,
+     "document": 7,
      "period": 0,
      "fact": 0,
-     "event": 2,
+     "event": 4,
      "change": 0,
      "source": 75
     },
@@ -17040,6 +18512,16 @@
       "type": "company",
       "label": "MEBL",
       "ticker": "MEBL"
+     },
+     {
+      "id": "document:psx:269869",
+      "type": "document",
+      "label": "FINANCIAL RESULTS FOR THE YEAR ENDED DECEMBER 31, 2025",
+      "document_id": "psx:269869",
+      "doc_type": "results",
+      "published_at": "2026-02-09T12:12:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/269869.pdf"
      },
      {
       "id": "document:psx:269903",
@@ -17097,6 +18579,24 @@
       "doc_type": "other",
       "status": "ready",
       "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/NOSTRO.pdf"
+     },
+     {
+      "id": "event:evt_64d739331252e9bbe696",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_64d739331252e9bbe696",
+      "event_type": "earnings",
+      "event_date": "2026-02-09T12:12:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_780f5879019181ecca90",
+      "type": "event",
+      "label": "dividend",
+      "event_id": "evt_780f5879019181ecca90",
+      "event_type": "dividend",
+      "event_date": "2026-02-09T12:12:00+05:00",
+      "priority_weight": 2
      },
      {
       "id": "event:evt_909ee144aa5c6d5c6a69",
@@ -17249,6 +18749,28 @@
     ],
     "edges": [
      {
+      "id": "edge_0359f722160161f4824a5fd1",
+      "type": "HAS_EVENT",
+      "from": "company:MEBL",
+      "to": "event:evt_64d739331252e9bbe696",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf",
+       "page": 1
+      },
+      "document_id": "psx:269869"
+     },
+     {
+      "id": "edge_0edd88856e6330991ef69c00",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_780f5879019181ecca90",
+      "to": "document:psx:269869",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf",
+       "page": 1
+      },
+      "document_id": "psx:269869"
+     },
+     {
       "id": "edge_13b883bbed6433b6cb29e022",
       "type": "FILED",
       "from": "company:MEBL",
@@ -17257,6 +18779,16 @@
        "source_url": "https://dps.psx.com.pk/download/document/275000.pdf"
       },
       "document_id": "psx:275000"
+     },
+     {
+      "id": "edge_1acebe33927dcf70c545f908",
+      "type": "FILED",
+      "from": "company:MEBL",
+      "to": "document:psx:269869",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf"
+      },
+      "document_id": "psx:269869"
      },
      {
       "id": "edge_1b13b3833ac9cff940c19ea7",
@@ -17321,6 +18853,17 @@
        "source_url": "https://www.meezanbank.com/wp-content/themes/mbl/downloads/home-downloads/NIFT-Clearing-Timings.pdf"
       },
       "document_id": "issuer:159805f50840a887469500e3"
+     },
+     {
+      "id": "edge_376185998c9b6b61429ef934",
+      "type": "HAS_EVENT",
+      "from": "company:MEBL",
+      "to": "event:evt_780f5879019181ecca90",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf",
+       "page": 1
+      },
+      "document_id": "psx:269869"
      },
      {
       "id": "edge_4e292d362864818c02c63408",
@@ -17397,6 +18940,17 @@
       },
       "status": "discovered",
       "quality_flags": []
+     },
+     {
+      "id": "edge_9d9d73e0b9631bc00c34d0d4",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_64d739331252e9bbe696",
+      "to": "document:psx:269869",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/269869.pdf",
+       "page": 1
+      },
+      "document_id": "psx:269869"
      },
      {
       "id": "edge_a21743b323fc2483d4172abe",
@@ -18229,20 +19783,26 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 6,
-    "event_count": 1,
+    "document_count": 7,
+    "event_count": 3,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 21,
-    "graph_edge_count": 22,
+    "graph_node_count": 24,
+    "graph_edge_count": 27,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 6,
-    "last_event_at": null,
+    "pending_synthesis": 7,
+    "last_event_at": "2026-02-09T12:12:00+05:00",
     "source_status": "ok",
     "source_quality_flags": 0
    },
    "news": [
+    {
+     "date": "2026-08-20",
+     "impact": 1,
+     "headline": "Meezan Bank opens 24/7 virtual Service Center at Clifton Bridge, Karachi",
+     "url": "https://mettisglobal.news/latest/"
+    },
     {
      "date": "2026-08-18",
      "impact": 4,
@@ -18254,12 +19814,6 @@
      "impact": 3,
      "headline": "PSX: Buying returns as KSE-100 gains over 400 points - confirmed Wednesday close up 464.53 points (+0.26%)",
      "url": "https://www.brecorder.com/news/40434440/psx-buying-returns-as-kse-100-gains-over-400-points"
-    },
-    {
-     "date": "2026-08-04",
-     "impact": 3,
-     "headline": "Institutional selling wipes out PSX gains - KSE-100 confirmed Tuesday close down 1,116.80 points (-0.63%)",
-     "url": "https://tribune.com.pk/story/2622135/institutional-selling-wipes-out-psx-gains"
     }
    ],
    "insider_filings": [
@@ -18419,6 +19973,24 @@
       "synthesis_status": "not_started",
       "training_mode": true
      }
+    },
+    {
+     "doc_id": "psx:258707",
+     "date": "2025-09-02T08:35:00+05:00",
+     "type": "other",
+     "title": "Material Information",
+     "url": "https://dps.psx.com.pk/download/document/258707.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "a2cb31de55a37510aaa73da6c0a1275b8cd523679f3de2bece9f6d40160ef420",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
     }
    ],
    "financial_series": {
@@ -18430,7 +20002,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 2,
+     "document": 3,
      "period": 0,
      "fact": 0,
      "event": 0,
@@ -18443,6 +20015,16 @@
       "type": "company",
       "label": "PRL",
       "ticker": "PRL"
+     },
+     {
+      "id": "document:psx:258707",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:258707",
+      "doc_type": "other",
+      "published_at": "2025-09-02T08:35:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/258707.pdf"
      },
      {
       "id": "document:psx:259170",
@@ -18477,6 +20059,16 @@
       "document_id": "psx:259170"
      },
      {
+      "id": "edge_1d548bac35a9676ba45883ae",
+      "type": "FILED",
+      "from": "company:PRL",
+      "to": "document:psx:258707",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/258707.pdf"
+      },
+      "document_id": "psx:258707"
+     },
+     {
       "id": "edge_39677a6188d794191d675d8d",
       "type": "FILED",
       "from": "company:PRL",
@@ -18492,7 +20084,7 @@
     "status": "active",
     "latest_change_at": "2025-12-23",
     "counts": {
-     "document": 2
+     "document": 3
     },
     "items": [
      {
@@ -18540,6 +20132,29 @@
       "previous_period_end": null,
       "consolidation": null,
       "priority_weight": null
+     },
+     {
+      "id": "chg_91b0739c2dc1e798469a4b0d",
+      "kind": "document",
+      "severity": "watch",
+      "date": "2025-09-02",
+      "title": "Material Information",
+      "summary": "Official PSX DPS document retained as other.",
+      "document_id": "psx:258707",
+      "source_url": "https://dps.psx.com.pk/download/document/258707.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/258707.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
      }
     ]
    },
@@ -18567,15 +20182,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 2,
+    "document_count": 3,
     "event_count": 0,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 3,
-    "graph_edge_count": 2,
-    "change_item_count": 2,
+    "graph_node_count": 4,
+    "graph_edge_count": 3,
+    "change_item_count": 3,
     "brief_status": "training_only",
-    "pending_synthesis": 2,
+    "pending_synthesis": 3,
     "last_event_at": null,
     "source_status": "degraded",
     "source_quality_flags": 4
@@ -18602,10 +20217,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 13139032,
-    "value_pkr": 678318297,
-    "trades": 78,
-    "days": 33,
+    "shares": 12772032,
+    "value_pkr": 661803297,
+    "trades": 77,
+    "days": 32,
     "retention_days": 90
    }
   },
@@ -18718,6 +20333,24 @@
      "status": "ready",
      "error": null,
      "content_sha256": "b8e9494f545401c41e776aea443101b925a0ee1d2dcf8f338779e33b89f466f1",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:278725",
+     "date": "2026-06-17T13:35:00+05:00",
+     "type": "results",
+     "title": "Board Meeting for Agenda Other than Financial Results",
+     "url": "https://dps.psx.com.pk/download/document/278725.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "cce80b5acf714a7a5dec8304f4e727a6b0697a95d622bfdd42decc0271372c13",
      "evidence": [],
      "facts": [],
      "synthesis": {
@@ -19014,7 +20647,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 12,
+     "document": 13,
      "period": 0,
      "fact": 0,
      "event": 6,
@@ -19037,6 +20670,16 @@
       "published_at": "2026-02-09T13:30:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/269881.pdf"
+     },
+     {
+      "id": "document:psx:278725",
+      "type": "document",
+      "label": "Board Meeting for Agenda Other than Financial Results",
+      "document_id": "psx:278725",
+      "doc_type": "results",
+      "published_at": "2026-06-17T13:35:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/278725.pdf"
      },
      {
       "id": "document:psx:280267",
@@ -19129,15 +20772,6 @@
       "doc_type": "other",
       "status": "ready",
       "source_url": "https://www.hbl.com/assets/documents/Updated_Staurday_Branhces.pdf"
-     },
-     {
-      "id": "document:issuer:8529e8b16d225b5a5206e7f9",
-      "type": "document",
-      "label": "Trade Processing",
-      "document_id": "issuer:8529e8b16d225b5a5206e7f9",
-      "doc_type": "results",
-      "status": "ready",
-      "source_url": "https://www.hbl.com/assets/documents/Trade_Processing.pdf"
      },
      {
       "id": "event:evt_3f2accff160cfe70fb89",
@@ -19321,17 +20955,6 @@
      }
     ],
     "edges": [
-     {
-      "id": "edge_0278c96c37cbe0459dac095a",
-      "type": "EVIDENCED_BY",
-      "from": "event:evt_9f1dcff8394b55d2b671",
-      "to": "document:issuer:8529e8b16d225b5a5206e7f9",
-      "evidence": {
-       "source_url": "https://www.hbl.com/assets/documents/Trade_Processing.pdf",
-       "page": 1
-      },
-      "document_id": "issuer:8529e8b16d225b5a5206e7f9"
-     },
      {
       "id": "edge_0ab0a36ea20594e41ae337a9",
       "type": "HAS_SOURCE",
@@ -19576,6 +21199,16 @@
       "quality_flags": []
      },
      {
+      "id": "edge_94cc32231ba31e165ea27712",
+      "type": "FILED",
+      "from": "company:HBL",
+      "to": "document:psx:278725",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/278725.pdf"
+      },
+      "document_id": "psx:278725"
+     },
+     {
       "id": "edge_9ffbaaed605e5457f8125724",
       "type": "HAS_SOURCE",
       "from": "company:HBL",
@@ -19650,16 +21283,6 @@
       },
       "status": "discovered",
       "quality_flags": []
-     },
-     {
-      "id": "edge_c91d85f4fca63cd99775b9a5",
-      "type": "FILED",
-      "from": "company:HBL",
-      "to": "document:issuer:8529e8b16d225b5a5206e7f9",
-      "evidence": {
-       "source_url": "https://www.hbl.com/assets/documents/Trade_Processing.pdf"
-      },
-      "document_id": "issuer:8529e8b16d225b5a5206e7f9"
      },
      {
       "id": "edge_d4b720ccf07c0fbcf38bbb57",
@@ -20262,15 +21885,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 12,
+    "document_count": 13,
     "event_count": 5,
     "change_count": 0,
     "financial_fact_count": 0,
     "graph_node_count": 31,
-    "graph_edge_count": 36,
+    "graph_edge_count": 35,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 12,
+    "pending_synthesis": 13,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 0
@@ -20297,10 +21920,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 5243415,
-    "value_pkr": 1661155624,
-    "trades": 66,
-    "days": 26,
+    "shares": 5163415,
+    "value_pkr": 1638355624,
+    "trades": 65,
+    "days": 25,
     "retention_days": 90
    }
   },
@@ -20442,6 +22065,24 @@
      }
     },
     {
+     "doc_id": "psx:275863",
+     "date": "2026-04-29T15:16:00+05:00",
+     "type": "results",
+     "title": "FINANCIAL RESULT FOR THE THIRD QUARTER AND NINE MONTHS PERIOD ENDED MARCH 31, 2026",
+     "url": "https://dps.psx.com.pk/download/document/275863.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "a33de593b14b6c0a4339e14a56db4295bfa6bc4c9fc587ff8b343068e24dbc45",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
      "doc_id": "psx:274758",
      "date": "2026-04-22T09:29:00+05:00",
      "type": "other",
@@ -20487,6 +22128,24 @@
      "status": "ready",
      "error": null,
      "content_sha256": "8d20054d706ad48c44cdbfe66395356b14a50af17e705fca9c741edc2014c6ea",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:267693",
+     "date": "2025-12-23T14:54:00+05:00",
+     "type": "other",
+     "title": "MATERIAL INFORMATION",
+     "url": "https://dps.psx.com.pk/download/document/267693.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "e1d5e0ba39f488d7a8360447d9acd275b80e02c872b3236306a9bd477d1cd15e",
      "evidence": [],
      "facts": [],
      "synthesis": {
@@ -20634,7 +22293,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 10,
+     "document": 12,
      "period": 0,
      "fact": 0,
      "event": 5,
@@ -20679,6 +22338,16 @@
       "source_url": "https://dps.psx.com.pk/download/document/274758.pdf"
      },
      {
+      "id": "document:psx:275863",
+      "type": "document",
+      "label": "FINANCIAL RESULT FOR THE THIRD QUARTER AND NINE MONTHS PERIOD ENDED MARCH 31, 2026",
+      "document_id": "psx:275863",
+      "doc_type": "results",
+      "published_at": "2026-04-29T15:16:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/275863.pdf"
+     },
+     {
       "id": "document:psx:276605",
       "type": "document",
       "label": "DISCLOSURE OF MATERIAL INFORMATION",
@@ -20707,6 +22376,16 @@
       "published_at": "2026-06-19T15:07:00+05:00",
       "status": "ready",
       "source_url": "https://dps.psx.com.pk/download/document/278850.pdf"
+     },
+     {
+      "id": "document:psx:267693",
+      "type": "document",
+      "label": "MATERIAL INFORMATION",
+      "document_id": "psx:267693",
+      "doc_type": "other",
+      "published_at": "2025-12-23T14:54:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/267693.pdf"
      },
      {
       "id": "document:issuer:62353475b64be39da6e9612b",
@@ -20929,6 +22608,16 @@
       "document_id": "issuer:c13c87a5864d9e4393be85d7"
      },
      {
+      "id": "edge_373833b602bf1c1ef705b4d5",
+      "type": "FILED",
+      "from": "company:ATRL",
+      "to": "document:psx:275863",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275863.pdf"
+      },
+      "document_id": "psx:275863"
+     },
+     {
       "id": "edge_4d51dc8f286ac58d72ae5290",
       "type": "FILED",
       "from": "company:ATRL",
@@ -21023,6 +22712,16 @@
       },
       "status": "discovered",
       "quality_flags": []
+     },
+     {
+      "id": "edge_a797fb544fdefa4f734c25d1",
+      "type": "FILED",
+      "from": "company:ATRL",
+      "to": "document:psx:267693",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/267693.pdf"
+      },
+      "document_id": "psx:267693"
      },
      {
       "id": "edge_b58c1bea9d0f3b92ac4e6859",
@@ -21157,9 +22856,8 @@
     "latest_change_at": "2026-08-18",
     "counts": {
      "issuer_document": 5,
-     "document": 10,
-     "source": 1,
-     "event": 2
+     "document": 12,
+     "source": 1
     },
     "items": [
      {
@@ -21462,6 +23160,29 @@
       "priority_weight": null
      },
      {
+      "id": "chg_759adfb21e07f2f245088df0",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-04-29",
+      "title": "FINANCIAL RESULT FOR THE THIRD QUARTER AND NINE MONTHS PERIOD ENDED MARCH 31, 2026",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:275863",
+      "source_url": "https://dps.psx.com.pk/download/document/275863.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/275863.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
       "id": "chg_1bbdac374a665fd7964a3a21",
       "kind": "document",
       "severity": "watch",
@@ -21531,19 +23252,19 @@
       "priority_weight": null
      },
      {
-      "id": "chg_ef5a2ece5621abdbd5fe006b",
-      "kind": "event",
-      "severity": "routine",
-      "date": "",
-      "title": "earnings",
-      "summary": "Official document language matched the desk's event classifier.",
-      "document_id": "issuer:99a67474d3fb717fcde60fc1",
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/Code_of_conduct-1-1.pdf",
+      "id": "chg_0540b9979c75f88a3a809bdf",
+      "kind": "document",
+      "severity": "watch",
+      "date": "2025-12-23",
+      "title": "MATERIAL INFORMATION",
+      "summary": "Official PSX DPS document retained as other.",
+      "document_id": "psx:267693",
+      "source_url": "https://dps.psx.com.pk/download/document/267693.pdf",
       "source_page": null,
       "evidence": {
-       "source_url": "https://www.arl.com.pk/wp-content/uploads/Code_of_conduct-1-1.pdf",
-       "page": 6,
-       "text": "acilities which have been provided to employees should never be used for personal gain or profit and remain the property of the Company. Disclosure or dissemination of confidential or proprietary information regarding the Company, its prod…"
+       "source_url": "https://dps.psx.com.pk/download/document/267693.pdf",
+       "page": null,
+       "text": null
       },
       "metric": null,
       "delta": null,
@@ -21551,30 +23272,7 @@
       "period_end": null,
       "previous_period_end": null,
       "consolidation": null,
-      "priority_weight": 3
-     },
-     {
-      "id": "chg_712321296c7e71f4ea4c282e",
-      "kind": "event",
-      "severity": "routine",
-      "date": "",
-      "title": "earnings",
-      "summary": "Official document language matched the desk's event classifier.",
-      "document_id": "issuer:c13c87a5864d9e4393be85d7",
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/COC_workplace.pdf",
-      "source_page": null,
-      "evidence": {
-       "source_url": "https://www.arl.com.pk/wp-content/uploads/COC_workplace.pdf",
-       "page": 5,
-       "text": "l records of complaints that include the meetings, discussions, dialogues, investigations results, and other related material will be kept confidential by the Committee /Company, except for where revelation is required for disciplining or…"
-      },
-      "metric": null,
-      "delta": null,
-      "delta_pct": null,
-      "period_end": null,
-      "previous_period_end": null,
-      "consolidation": null,
-      "priority_weight": 3
+      "priority_weight": null
      }
     ]
    },
@@ -21652,15 +23350,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 10,
+    "document_count": 12,
     "event_count": 2,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 23,
-    "graph_edge_count": 27,
+    "graph_node_count": 25,
+    "graph_edge_count": 29,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 10,
+    "pending_synthesis": 12,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 0
@@ -21687,8 +23385,8 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 1360265,
-    "value_pkr": 1321533449,
+    "shares": 1324265,
+    "value_pkr": 1289571839,
     "trades": 27,
     "days": 18,
     "retention_days": 90
@@ -21777,6 +23475,35 @@
     }
    ],
    "filings": [
+    {
+     "doc_id": "psx:281377",
+     "date": "2026-08-19T14:35:00+05:00",
+     "type": "results",
+     "title": "Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting)",
+     "url": "https://dps.psx.com.pk/download/document/281377.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "5fcdb4a60c8e7bb8bcb9790876457c61d95ddc583191f64ea8ca1fca13c98cd1",
+     "evidence": [
+      {
+       "page": 1,
+       "text": "ing Stock Exchange Road Karachi. Subject: Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting) Dear Sir / Madam, This is with reference to our letter dated Augus…",
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf"
+      },
+      {
+       "page": 1,
+       "text": "stan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi. Subject: Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting) Dear Sir / Madam,…",
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf"
+      }
+     ],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
     {
      "doc_id": "psx:278783",
      "date": "2026-06-18T15:21:00+05:00",
@@ -21885,6 +23612,34 @@
    },
    "timeline": [
     {
+     "event_id": "evt_6b18cbd4ddef0fe0e777",
+     "doc_id": "psx:281377",
+     "date": "2026-08-19T14:35:00+05:00",
+     "type": "board_meeting",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1,
+       "text": "stan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi. Subject: Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting) Dear Sir / Madam,…"
+      }
+     ]
+    },
+    {
+     "event_id": "evt_503d4c8759cc797e9e2a",
+     "doc_id": "psx:281377",
+     "date": "2026-08-19T14:35:00+05:00",
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1,
+       "text": "ing Stock Exchange Road Karachi. Subject: Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting) Dear Sir / Madam, This is with reference to our letter dated Augus…"
+      }
+     ]
+    },
+    {
      "event_id": "evt_9c204e0ab70db52ac319",
      "doc_id": "psx:273140",
      "date": "2026-03-30T08:00:00+05:00",
@@ -21930,10 +23685,10 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 4,
+     "document": 5,
      "period": 0,
      "fact": 0,
-     "event": 5,
+     "event": 7,
      "change": 0,
      "source": 0
     },
@@ -21985,12 +23740,40 @@
       "source_url": "https://dps.psx.com.pk/download/document/278783.pdf"
      },
      {
+      "id": "document:psx:281377",
+      "type": "document",
+      "label": "Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting)",
+      "document_id": "psx:281377",
+      "doc_type": "results",
+      "published_at": "2026-08-19T14:35:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/281377.pdf"
+     },
+     {
       "id": "event:evt_02da4a22b98f30173b1b",
       "type": "event",
       "label": "board_meeting",
       "event_id": "evt_02da4a22b98f30173b1b",
       "event_type": "board_meeting",
       "event_date": "2026-03-30T08:00:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_503d4c8759cc797e9e2a",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_503d4c8759cc797e9e2a",
+      "event_type": "earnings",
+      "event_date": "2026-08-19T14:35:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_6b18cbd4ddef0fe0e777",
+      "type": "event",
+      "label": "board_meeting",
+      "event_id": "evt_6b18cbd4ddef0fe0e777",
+      "event_type": "board_meeting",
+      "event_date": "2026-08-19T14:35:00+05:00",
       "priority_weight": 3
      },
      {
@@ -22053,6 +23836,17 @@
       "document_id": "psx:278783"
      },
      {
+      "id": "edge_29f8e14ed58e1d11d187528f",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_6b18cbd4ddef0fe0e777",
+      "to": "document:psx:281377",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1
+      },
+      "document_id": "psx:281377"
+     },
+     {
       "id": "edge_2f220744deaf4b91d1589c55",
       "type": "HAS_EVENT",
       "from": "company:ENGROH",
@@ -22073,6 +23867,16 @@
        "page": 1
       },
       "document_id": "psx:273140"
+     },
+     {
+      "id": "edge_37dd3fef1e514a6fc427b851",
+      "type": "FILED",
+      "from": "company:ENGROH",
+      "to": "document:psx:281377",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf"
+      },
+      "document_id": "psx:281377"
      },
      {
       "id": "edge_51a66494f5f5c35f7862496a",
@@ -22104,6 +23908,17 @@
        "page": 3
       },
       "document_id": "psx:278783"
+     },
+     {
+      "id": "edge_9c14d7f1f4e32ddcad5790e9",
+      "type": "HAS_EVENT",
+      "from": "company:ENGROH",
+      "to": "event:evt_503d4c8759cc797e9e2a",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1
+      },
+      "document_id": "psx:281377"
      },
      {
       "id": "edge_9dfb6c67cc52ed0e0633dd6b",
@@ -22171,6 +23986,28 @@
       "document_id": "psx:278783"
      },
      {
+      "id": "edge_f7df472f0d20a99f7c933b6d",
+      "type": "HAS_EVENT",
+      "from": "company:ENGROH",
+      "to": "event:evt_6b18cbd4ddef0fe0e777",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1
+      },
+      "document_id": "psx:281377"
+     },
+     {
+      "id": "edge_fc4cd1a3b5d8604d228bfdbb",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_503d4c8759cc797e9e2a",
+      "to": "document:psx:281377",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1
+      },
+      "document_id": "psx:281377"
+     },
+     {
       "id": "edge_fe39e62963dc681f3507d3df",
       "type": "HAS_EVENT",
       "from": "company:ENGROH",
@@ -22185,12 +24022,81 @@
    },
    "change_intelligence": {
     "status": "active",
-    "latest_change_at": "2026-06-18",
+    "latest_change_at": "2026-08-19",
     "counts": {
-     "document": 4,
-     "event": 3
+     "event": 5,
+     "document": 5
     },
     "items": [
+     {
+      "id": "chg_bb955fb15dc8d1de7620b4e2",
+      "kind": "event",
+      "severity": "routine",
+      "date": "2026-08-19",
+      "title": "earnings",
+      "summary": "Official document language matched the desk's event classifier.",
+      "document_id": "psx:281377",
+      "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1,
+       "text": "ing Stock Exchange Road Karachi. Subject: Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting) Dear Sir / Madam, This is with reference to our letter dated Augus…"
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": 3
+     },
+     {
+      "id": "chg_27e32945064b3b8a02b48db0",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-08-19",
+      "title": "Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting)",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:281377",
+      "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
+      "id": "chg_153045394d5ca7be149cb646",
+      "kind": "event",
+      "severity": "routine",
+      "date": "2026-08-19",
+      "title": "board meeting",
+      "summary": "Official document language matched the desk's event classifier.",
+      "document_id": "psx:281377",
+      "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
+       "page": 1,
+       "text": "stan Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi. Subject: Board Meeting for the Announcement of Financial Results for the Six Months ended June 30, 2026 (Change in Timing of Board Meeting) Dear Sir / Madam,…"
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": 3
+     },
      {
       "id": "chg_f4ac43aff846518a1198b4eb",
       "kind": "document",
@@ -22377,16 +24283,16 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 4,
-    "event_count": 3,
+    "document_count": 5,
+    "event_count": 5,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 10,
-    "graph_edge_count": 14,
-    "change_item_count": 7,
+    "graph_node_count": 13,
+    "graph_edge_count": 19,
+    "change_item_count": 10,
     "brief_status": "training_only",
-    "pending_synthesis": 4,
-    "last_event_at": "2026-03-30T08:00:00+05:00",
+    "pending_synthesis": 5,
+    "last_event_at": "2026-08-19T14:35:00+05:00",
     "source_status": "degraded",
     "source_quality_flags": 3
    },
@@ -22563,6 +24469,24 @@
      }
     },
     {
+     "doc_id": "psx:268826",
+     "date": "2026-01-16T16:19:00+05:00",
+     "type": "other",
+     "title": "Material Information",
+     "url": "https://dps.psx.com.pk/download/document/268826.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "9a54112fae0adba357b3e4bc29b3a2727b5cb2d26c96146d2f5ef94ac0514332",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
      "doc_id": "issuer:eadae88ca6ae7d1dd4d17e56",
      "date": null,
      "type": "results",
@@ -22635,7 +24559,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 5,
+     "document": 6,
      "period": 0,
      "fact": 0,
      "event": 3,
@@ -22648,6 +24572,16 @@
       "type": "company",
       "label": "MARI",
       "ticker": "MARI"
+     },
+     {
+      "id": "document:psx:268826",
+      "type": "document",
+      "label": "Material Information",
+      "document_id": "psx:268826",
+      "doc_type": "other",
+      "published_at": "2026-01-16T16:19:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/268826.pdf"
      },
      {
       "id": "document:psx:269470",
@@ -22800,6 +24734,16 @@
        "page": 1
       },
       "document_id": "issuer:38862f01a0d96448319edd19"
+     },
+     {
+      "id": "edge_1945d58584fb5cdb0c21fd41",
+      "type": "FILED",
+      "from": "company:MARI",
+      "to": "document:psx:268826",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268826.pdf"
+      },
+      "document_id": "psx:268826"
      },
      {
       "id": "edge_323a712c66fc0bdf0820f650",
@@ -22957,7 +24901,7 @@
     "latest_change_at": "2026-08-18",
     "counts": {
      "issuer_document": 3,
-     "document": 5,
+     "document": 6,
      "event": 1
     },
     "items": [
@@ -23146,6 +25090,29 @@
       "priority_weight": null
      },
      {
+      "id": "chg_b5f32c0abe63a87fdacbf9c2",
+      "kind": "document",
+      "severity": "watch",
+      "date": "2026-01-16",
+      "title": "Material Information",
+      "summary": "Official PSX DPS document retained as other.",
+      "document_id": "psx:268826",
+      "source_url": "https://dps.psx.com.pk/download/document/268826.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/268826.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
       "id": "chg_70481df3e59410505688eb76",
       "kind": "event",
       "severity": "routine",
@@ -23230,15 +25197,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 5,
+    "document_count": 6,
     "event_count": 1,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 14,
-    "graph_edge_count": 16,
-    "change_item_count": 9,
+    "graph_node_count": 15,
+    "graph_edge_count": 17,
+    "change_item_count": 10,
     "brief_status": "training_only",
-    "pending_synthesis": 5,
+    "pending_synthesis": 6,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 0
@@ -23265,10 +25232,10 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 1294683,
-    "value_pkr": 887691356,
-    "trades": 45,
-    "days": 25,
+    "shares": 1159683,
+    "value_pkr": 800362376,
+    "trades": 41,
+    "days": 24,
     "retention_days": 90
    }
   },
@@ -23408,6 +25375,24 @@
       "synthesis_status": "not_started",
       "training_mode": true
      }
+    },
+    {
+     "doc_id": "psx:270463",
+     "date": "2026-02-18T13:36:00+05:00",
+     "type": "results",
+     "title": "Financial Results for the Half Year ended December 31, 2025",
+     "url": "https://dps.psx.com.pk/download/document/270463.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "be36eede8c2e6ff1b19cb4861a071bc96ec305c0aa62b013d7292f141ca03b8a",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
     }
    ],
    "financial_series": {
@@ -23419,7 +25404,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 3,
+     "document": 4,
      "period": 0,
      "fact": 0,
      "event": 0,
@@ -23432,6 +25417,16 @@
       "type": "company",
       "label": "GAL",
       "ticker": "GAL"
+     },
+     {
+      "id": "document:psx:270463",
+      "type": "document",
+      "label": "Financial Results for the Half Year ended December 31, 2025",
+      "document_id": "psx:270463",
+      "doc_type": "results",
+      "published_at": "2026-02-18T13:36:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270463.pdf"
      },
      {
       "id": "document:psx:274331",
@@ -23499,6 +25494,16 @@
       "document_id": "psx:278700"
      },
      {
+      "id": "edge_9235b79db9d0f1dbbb184330",
+      "type": "FILED",
+      "from": "company:GAL",
+      "to": "document:psx:270463",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270463.pdf"
+      },
+      "document_id": "psx:270463"
+     },
+     {
       "id": "edge_b4999af66359f1eb12ffec58",
       "type": "HAS_SOURCE",
       "from": "company:GAL",
@@ -23527,7 +25532,7 @@
     "status": "active",
     "latest_change_at": "2026-06-24",
     "counts": {
-     "document": 3
+     "document": 4
     },
     "items": [
      {
@@ -23598,6 +25603,29 @@
       "previous_period_end": null,
       "consolidation": null,
       "priority_weight": null
+     },
+     {
+      "id": "chg_1f3d4e77d8224365464e113d",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-02-18",
+      "title": "Financial Results for the Half Year ended December 31, 2025",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:270463",
+      "source_url": "https://dps.psx.com.pk/download/document/270463.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270463.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
      }
     ]
    },
@@ -23632,15 +25660,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 3,
+    "document_count": 4,
     "event_count": 0,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 5,
-    "graph_edge_count": 4,
-    "change_item_count": 3,
+    "graph_node_count": 6,
+    "graph_edge_count": 5,
+    "change_item_count": 4,
     "brief_status": "training_only",
-    "pending_synthesis": 3,
+    "pending_synthesis": 4,
     "last_event_at": null,
     "source_status": "ok",
     "source_quality_flags": 1
@@ -23817,6 +25845,24 @@
      }
     },
     {
+     "doc_id": "psx:270903",
+     "date": "2026-02-24T08:08:00+05:00",
+     "type": "results",
+     "title": "Financial Results for the Half Year Ended December 31, 2025",
+     "url": "https://dps.psx.com.pk/download/document/270903.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "740f91a8e8924ee59b8f8fc0564fcfeef57234e803a42c287158b247feaf760d",
+     "evidence": [],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
      "doc_id": "issuer:2ad2ec12df87dae68e766b04",
      "date": null,
      "type": "results",
@@ -23935,7 +25981,7 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 5,
+     "document": 6,
      "period": 0,
      "fact": 0,
      "event": 4,
@@ -23948,6 +25994,16 @@
       "type": "company",
       "label": "NRL",
       "ticker": "NRL"
+     },
+     {
+      "id": "document:psx:270903",
+      "type": "document",
+      "label": "Financial Results for the Half Year Ended December 31, 2025",
+      "document_id": "psx:270903",
+      "doc_type": "results",
+      "published_at": "2026-02-24T08:08:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270903.pdf"
      },
      {
       "id": "document:psx:275684",
@@ -24163,6 +26219,16 @@
       "quality_flags": []
      },
      {
+      "id": "edge_85b7bc554d3819037fc0d68f",
+      "type": "FILED",
+      "from": "company:NRL",
+      "to": "document:psx:270903",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270903.pdf"
+      },
+      "document_id": "psx:270903"
+     },
+     {
       "id": "edge_880cd22ed221f0f73a244594",
       "type": "HAS_EVENT",
       "from": "company:NRL",
@@ -24266,7 +26332,7 @@
     "counts": {
      "issuer_document": 2,
      "source": 1,
-     "document": 5,
+     "document": 6,
      "event": 4
     },
     "items": [
@@ -24478,6 +26544,29 @@
       "priority_weight": 3
      },
      {
+      "id": "chg_468d6af0b8fc46c05fc120c0",
+      "kind": "document",
+      "severity": "routine",
+      "date": "2026-02-24",
+      "title": "Financial Results for the Half Year Ended December 31, 2025",
+      "summary": "Official PSX DPS document retained as results.",
+      "document_id": "psx:270903",
+      "source_url": "https://dps.psx.com.pk/download/document/270903.pdf",
+      "source_page": null,
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270903.pdf",
+       "page": null,
+       "text": null
+      },
+      "metric": null,
+      "delta": null,
+      "delta_pct": null,
+      "period_end": null,
+      "previous_period_end": null,
+      "consolidation": null,
+      "priority_weight": null
+     },
+     {
       "id": "chg_134ea449c10d315386fa556c",
       "kind": "event",
       "severity": "material",
@@ -24601,15 +26690,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 5,
+    "document_count": 6,
     "event_count": 4,
     "change_count": 0,
     "financial_fact_count": 0,
-    "graph_node_count": 14,
-    "graph_edge_count": 17,
-    "change_item_count": 12,
+    "graph_node_count": 15,
+    "graph_edge_count": 18,
+    "change_item_count": 13,
     "brief_status": "training_only",
-    "pending_synthesis": 5,
+    "pending_synthesis": 6,
     "last_event_at": "2026-04-29T12:04:00+05:00",
     "source_status": "ok",
     "source_quality_flags": 0
@@ -24636,9 +26725,9 @@
    ],
    "insider_filings": [],
    "offmarket": {
-    "shares": 1566386,
-    "value_pkr": 647945204,
-    "trades": 36,
+    "shares": 1513144,
+    "value_pkr": 628665309,
+    "trades": 33,
     "days": 23,
     "retention_days": 90
    }
@@ -24782,6 +26871,35 @@
        "page": 2,
        "text": "istan Limited D-70, Block-4, Kehkashan-s, Clifton Karachi Public Announcement of offer to Acquire 10,950,306 ordinary Shares representing approximately 7.g7y. of the Attock Cement Pakistan Limited (the Target Company) jointly by Fauji ceme…",
        "source_url": "https://dps.psx.com.pk/download/document/270499.pdf"
+      }
+     ],
+     "facts": [],
+     "synthesis": {
+      "approval_status": "pending",
+      "synthesis_status": "not_started",
+      "training_mode": true
+     }
+    },
+    {
+     "doc_id": "psx:270304",
+     "date": "2026-02-17T10:54:00+05:00",
+     "type": "results",
+     "title": "Material Information - Newspapers Publication of Public Announcement of Offer to Acquire Shares and Joint Control of Attock Cement Company Limited (the Target), jointly by Fauji Cement Company Limited & Kot Addu Power Company Limited (the Joint Acquirers)",
+     "url": "https://dps.psx.com.pk/download/document/270304.pdf",
+     "source": "PSX DPS",
+     "status": "ready",
+     "error": null,
+     "content_sha256": "e6e49dec9c8b092655a66399cd2521fcf144445646ab82568038829de1ef131a",
+     "evidence": [
+      {
+       "page": 8,
+       "text": "are taking steps now to bring in powers that mean they can act swiftly and respond to its results within months. Before that, they will act now to close a legal loophole and force all AI chatbot providers to abide by the Online Safety Act…",
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf"
+      },
+      {
+       "page": 2,
+       "text": "(the Joint acquirers) ;;;r-;;!;;;i# i\"i iois tt\" 'Act') and Listed companies (substantial Acquisition or V;;; s;;\" ilialeoversl nLgutations, 20t7 (the 'Regulations') (hereinaner rclerred to as the \"Public Offer\") Dear Si(s). Pleaselefertoo…",
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf"
       }
      ],
      "facts": [],
@@ -25247,6 +27365,34 @@
      ]
     },
     {
+     "event_id": "evt_33bdf41300f32b8b2497",
+     "doc_id": "psx:270304",
+     "date": "2026-02-17T10:54:00+05:00",
+     "type": "acquisition",
+     "priority_weight": 4,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf",
+       "page": 2,
+       "text": "(the Joint acquirers) ;;;r-;;!;;;i# i\"i iois tt\" 'Act') and Listed companies (substantial Acquisition or V;;; s;;\" ilialeoversl nLgutations, 20t7 (the 'Regulations') (hereinaner rclerred to as the \"Public Offer\") Dear Si(s). Pleaselefertoo…"
+      }
+     ]
+    },
+    {
+     "event_id": "evt_2ed372c8f63eae91c2bd",
+     "doc_id": "psx:270304",
+     "date": "2026-02-17T10:54:00+05:00",
+     "type": "earnings",
+     "priority_weight": 3,
+     "evidence": [
+      {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf",
+       "page": 8,
+       "text": "are taking steps now to bring in powers that mean they can act swiftly and respond to its results within months. Before that, they will act now to close a legal loophole and force all AI chatbot providers to abide by the Online Safety Act…"
+      }
+     ]
+    },
+    {
      "event_id": "evt_dc8dcf69f4c79be8617c",
      "doc_id": "issuer:8bdfbae043366961fab7e174",
      "date": null,
@@ -25362,10 +27508,10 @@
    "changes": [],
    "graph": {
     "summary": {
-     "document": 11,
+     "document": 12,
      "period": 0,
      "fact": 5,
-     "event": 10,
+     "event": 12,
      "change": 0,
      "source": 13
     },
@@ -25375,6 +27521,16 @@
       "type": "company",
       "label": "FCCL",
       "ticker": "FCCL"
+     },
+     {
+      "id": "document:psx:270304",
+      "type": "document",
+      "label": "Material Information - Newspapers Publication of Public Announcement of Offer to Acquire Shares and Joint Control of Attock Cement Company Limited (the Target), jointly by Fauji Cement Company Limited & Kot Addu Power Company Limited (the Joint Acquirers)",
+      "document_id": "psx:270304",
+      "doc_type": "results",
+      "published_at": "2026-02-17T10:54:00+05:00",
+      "status": "ready",
+      "source_url": "https://dps.psx.com.pk/download/document/270304.pdf"
      },
      {
       "id": "document:psx:270499",
@@ -25493,6 +27649,24 @@
       "event_id": "evt_16f13f47ab1920ba1f3a",
       "event_type": "earnings",
       "priority_weight": 3
+     },
+     {
+      "id": "event:evt_2ed372c8f63eae91c2bd",
+      "type": "event",
+      "label": "earnings",
+      "event_id": "evt_2ed372c8f63eae91c2bd",
+      "event_type": "earnings",
+      "event_date": "2026-02-17T10:54:00+05:00",
+      "priority_weight": 3
+     },
+     {
+      "id": "event:evt_33bdf41300f32b8b2497",
+      "type": "event",
+      "label": "acquisition",
+      "event_id": "evt_33bdf41300f32b8b2497",
+      "event_type": "acquisition",
+      "event_date": "2026-02-17T10:54:00+05:00",
+      "priority_weight": 4
      },
      {
       "id": "event:evt_348138d4fac2d51fb98f",
@@ -25816,6 +27990,17 @@
       "document_id": "issuer:6c596fdb4146b24341d57804"
      },
      {
+      "id": "edge_1db53aa2acb8ac508e663290",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_2ed372c8f63eae91c2bd",
+      "to": "document:psx:270304",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf",
+       "page": 8
+      },
+      "document_id": "psx:270304"
+     },
+     {
       "id": "edge_218b1b58d8c4bf789a8cd6a4",
       "type": "HAS_EVENT",
       "from": "company:FCCL",
@@ -25869,6 +28054,17 @@
       },
       "status": "discovered",
       "quality_flags": []
+     },
+     {
+      "id": "edge_3fd890ed9b5b0128fbd2c08e",
+      "type": "EVIDENCED_BY",
+      "from": "event:evt_33bdf41300f32b8b2497",
+      "to": "document:psx:270304",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf",
+       "page": 2
+      },
+      "document_id": "psx:270304"
      },
      {
       "id": "edge_4142023644036dc84abe583a",
@@ -26062,6 +28258,27 @@
       "quality_flags": []
      },
      {
+      "id": "edge_ab3944038bc57583bf582dfd",
+      "type": "FILED",
+      "from": "company:FCCL",
+      "to": "document:psx:270304",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf"
+      },
+      "document_id": "psx:270304"
+     },
+     {
+      "id": "edge_ae95d9a7db504d775cccfac9",
+      "type": "HAS_EVENT",
+      "from": "company:FCCL",
+      "to": "event:evt_2ed372c8f63eae91c2bd",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf",
+       "page": 8
+      },
+      "document_id": "psx:270304"
+     },
+     {
       "id": "edge_b99437e9a9a7400e7a4f80de",
       "type": "HAS_EVENT",
       "from": "company:FCCL",
@@ -26168,6 +28385,17 @@
        "source_url": "https://fccl.com.pk/eng/wp-content/uploads/2025/05/Pattern-of-Shareholding-.pdf"
       },
       "document_id": "issuer:5cbe6ae3a7bb844bceb632ec"
+     },
+     {
+      "id": "edge_dfd3aaebda94b2d403be1101",
+      "type": "HAS_EVENT",
+      "from": "company:FCCL",
+      "to": "event:evt_33bdf41300f32b8b2497",
+      "evidence": {
+       "source_url": "https://dps.psx.com.pk/download/document/270304.pdf",
+       "page": 2
+      },
+      "document_id": "psx:270304"
      },
      {
       "id": "edge_dff5fd93d08bf0096e796a5a",
@@ -26831,15 +29059,15 @@
     "history_count": 0
    },
    "intelligence": {
-    "document_count": 11,
-    "event_count": 10,
+    "document_count": 12,
+    "event_count": 12,
     "change_count": 0,
     "financial_fact_count": 5,
-    "graph_node_count": 39,
-    "graph_edge_count": 48,
+    "graph_node_count": 42,
+    "graph_edge_count": 53,
     "change_item_count": 18,
     "brief_status": "training_only",
-    "pending_synthesis": 11,
+    "pending_synthesis": 12,
     "last_event_at": "2026-02-18T15:08:00+05:00",
     "source_status": "ok",
     "source_quality_flags": 0

@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-20 21:40",
+ "updated": "2026-08-21 14:03",
  "regime": "neutral",
  "geo_risk": {
-  "score": 61,
+  "score": 56,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260820-BML-obv_divergence_up",
+   "id": "20260821-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260820-TPLT-donchian55_break",
+   "id": "20260821-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260820-ATRL-high52w_break",
+   "id": "20260821-ATRL-high52w_break",
    "ticker": "ATRL",
    "strategy": "high52w_break",
    "template": "52-week high breakout",
@@ -61,7 +61,7 @@
    "thesis": "52-week high breakout is triggering now; on ATRL's own history it won 57% over 30 trades (+2.0% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260820-NICL-roc60_leader_pullback",
+   "id": "20260821-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -91,7 +91,7 @@
   },
   {
    "ticker": "GLD",
-   "score": 71.3
+   "score": 71.5
   },
   {
    "ticker": "USRUT",
@@ -177,75 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-08-19",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Tax changes reset Pakistan's hybrid SUV pricing",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "Per Mettis Global, recent sales-tax adjustments have prompted automakers (Chery Master Pakistan named; not a desk-universe ticker) to revise hybrid-SUV pricing strategies. No universe auto-assembler ticker directly named in the source reviewed this cycle; tagged MACRO as broad auto-sector tax/pricing news. Logged as impact 2 (minor sector item).",
-   "url": "https://mettisglobal.news/latest"
-  },
-  {
-   "ts": "2026-08-19",
-   "source": "Dawn.com (Business)",
-   "headline": "Pakistan posts $328m current account deficit in July (FY27)",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Per Dawn.com: Pakistan recorded a current account deficit of $328m in July 2026 (first month of FY27); merchandise exports $3.008bn vs imports $6.154bn; services exports $927m vs imports $1.155bn. FDI fell 20% YoY to $178.6m in July, down from $223.5m in July 2025. Article notes deficit narrowed vs $814m in June and $529m in July 2025. Logged as impact 3 (notable macro data, an improving trend, not a shock).",
-   "url": "https://www.dawn.com/news/2023807/pakistan-posts-328m-current-account-deficit-in-july"
-  },
-  {
-   "ts": "2026-08-19",
-   "source": "PSX Data Portal (DPS) indices page",
-   "headline": "KSE-100 intraday at 178,694.89, up 739.39 points (+0.42%) as of 11:12am PKT",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Intraday checkpoint captured 2026-08-19 11:12am PKT via dps.psx.com.pk/indices: KSE-100 at 178,694.89, up 739.39 points (+0.42%) against Tuesday Aug 18's confirmed close of 177,955.51 (already logged in newslog). Live intraday read, not a confirmed close. Sub-1% move; logged as impact 3 (notable), consistent with prior similar-magnitude index entries in this newslog. Tagged MACRO only.",
-   "url": "https://dps.psx.com.pk/indices"
-  },
-  {
-   "ts": "2026-08-19",
-   "source": "Business Recorder",
-   "headline": "PSX: Buying pushes KSE-100 up over 800 points",
-   "tickers": [
-    "MACRO",
-    "HUBC",
-    "MARI",
-    "OGDC",
-    "PPL",
-    "POL",
-    "HBL",
-    "NBP"
-   ],
-   "impact": 3,
-   "summary": "Supplements the already-logged 2026-08-19 11:12am DPS intraday checkpoint (178,694.89, +739.39pts/+0.42%, MACRO only, no sector detail). Per Business Recorder (search-summary; direct article fetch returned HTTP 403 this cycle), KSE-100 gained over 800 points during opening hours Wednesday, hovering at 178,769.66 (+814.16pts/+0.46%) from Tuesday Aug 18's confirmed close of 177,955.51 (already logged). Buying observed in automobile assemblers, cement, commercial banks, oil & gas exploration companies, OMCs and power generation; index-heavy stocks named as trading green: HUBCO (HUBC), MARI, OGDC, PPL, POL, HBL and NBP. Sub-1% move; tagged to the union of the superseded item's tickers (MACRO) plus tickers newly named in this source, per the confirmed-close supersession principle. Impact 3 (notable, consistent with prior similar-magnitude intraday entries).",
-   "url": "https://www.brecorder.com/news/40435530/psx-buying-pushes-kse-100-up-over-800-points"
-  },
-  {
-   "ts": "2026-08-19",
-   "source": "PSX Data Portal (DPS) indices page",
-   "headline": "KSE-100 reverses morning gains, at 176,846.36, down 1,109.14 points (-0.62%) as of 3:50pm PKT",
-   "tickers": [
-    "MACRO",
-    "HUBC",
-    "MARI",
-    "OGDC",
-    "PPL",
-    "POL",
-    "HBL",
-    "NBP"
-   ],
-   "impact": 3,
-   "summary": "Supersedes both the 2026-08-19 11:12am intraday checkpoint (178,694.89, +739.39pts/+0.42%) and the same-day Business Recorder 'over 800 points' morning-gain item (178,769.66, +814.16pts/+0.46%, sector detail: HUBC, MARI, OGDC, PPL, POL, HBL, NBP), both already logged. Per dps.psx.com.pk/indices, page timestamped 'Aug 19, 2026 5:48 PM' shows the index reading 'as of Aug 19, 2026 3:50 PM' (after the Wed 15:30 PKT close) at 176,846.36, down 1,109.14 points (-0.62%) from Tuesday Aug 18's confirmed close of 177,955.51; intraday high 178,942.31, low 176,638.10 - a roughly 2,300-point (~1.3%) intraday swing from the morning's +800-point gain to a net loss by end of session. No closing-bell wire report or stated driver for the reversal was located this cycle. Tagged to the union of the superseded items' tickers per the confirmed-close supersession rule; no new tickers named in this DPS source itself. Net close change sub-1%; logged as impact 3 (notable), consistent with prior similar-magnitude index-close entries. Follow up next cycle to confirm the official close and driver via a closing-bell wire piece.",
-   "url": "https://dps.psx.com.pk/indices"
-  },
   {
    "ts": "2026-08-19",
    "source": "Business Recorder / The Nation",
@@ -363,16 +294,73 @@
    "impact": 3,
    "summary": "Finance Minister Muhammad Aurangzeb formally requested a $10bn Exchange Stabilisation Support Facility from the United States (raised with US Treasury Secretary Scott Bessent in Washington), aimed at strengthening FX reserves and rupee stability rather than functioning as a conventional loan. Negotiations continuing with US EXIM Bank and DFC; Aurangzeb says a decision/breakthrough is expected by September 2026. Not yet approved - a pending request, no confirmed facility or drawdown. Logged as impact 3 (notable macro development pending confirmation; would be re-scored to 4+ on approval/drawdown).",
    "url": "https://www.dawn.com/news/2017402"
+  },
+  {
+   "ts": "2026-08-21",
+   "source": "MM News",
+   "headline": "PSX opens strong as KSE-100 climbs 843 points",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Friday Aug 21, 2026 morning-session open: KSE-100 at 177,734.68, up 842.92 points (+0.47%) from Thursday Aug 20's confirmed close of 176,591.77 (already logged). All-Share Index +553pts to 107,675.87; KSE-30 +212pts to 52,679.55; KMI-30 +846pts to 250,415.73; banking index +367pts to 50,504.04. Per MM News, driven by bargain hunting/selective accumulation after Thursday's mild correction; volume >27.9m shares, value Rs1.28bn (early trade). Sub-1% move; logged as impact 3 (notable), consistent with prior similar-magnitude intraday entries. Tagged MACRO only.",
+   "url": "https://mmnews.tv/psx-opens-strong-as-kse-100-climbs-843-points/"
+  },
+  {
+   "ts": "2026-08-20",
+   "source": "Dawn.com",
+   "headline": "PSX extends losses on political uncertainty - added sector/stock detail for Thu Aug 20 confirmed close",
+   "tickers": [
+    "MACRO",
+    "UBL",
+    "HUBC",
+    "BAFL",
+    "HBL",
+    "FATIMA",
+    "OGDC",
+    "ENGROH",
+    "SAZEW"
+   ],
+   "impact": 3,
+   "summary": "Supplements the already-logged Thu Aug 20, 2026 confirmed close (176,591.77, down 254.59pts/-0.14%, volatile session). Per Dawn.com, late nervous selling was attributed to political uncertainty and Middle East tensions; intraday index surged over 1,400 points to 178,291.37 before retreating to a low of 176,156.57. New detail not previously captured: United Bank (UBL), Hub Power (HUBC), Bank Al Habib (BAFL), Habib Bank (HBL) and Fatima Fertiliser (FATIMA) collectively removed ~458 points from the benchmark; OGDC, Engro Holdings (ENGROH) and Sazgar Engineering (SAZEW) collectively contributed ~321 points. Volume down 15.57% to 665m shares; traded value down 22.17% to Rs30.8bn. Market faced resistance at the 178,000-180,000 zone. Tagged to the union of the superseded MACRO-only close entry plus tickers newly named in this source, per the confirmed-close supersession rule. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries.",
+   "url": "https://www.dawn.com/news/2024208/psx-extends-losses-on-political-uncertainty"
+  },
+  {
+   "ts": "2026-08-21",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "NBP president Rehmat Ali Hasnie's tenure comes to an end",
+   "tickers": [
+    "NBP"
+   ],
+   "impact": 3,
+   "summary": "Rehmat Ali Hasnie's tenure as President and CEO of National Bank of Pakistan (PSX: NBP) expired effective August 21, 2026, per Mettis Global / an official company statement. No successor named or interim-arrangement detail disclosed in the source reviewed this cycle. Logged as impact 3 (notable management change) per desk news-impact criteria (Rule 10).",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-21",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "Symmetry Group (SYM) deploys Rs325.4m of Rs361.5m net IPO proceeds",
+   "tickers": [
+    "SYM"
+   ],
+   "impact": 2,
+   "summary": "Symmetry Group Limited (PSX: SYM) reported in its final progress report on IPO-proceeds utilization that it has deployed Rs325.4m of its Rs361.5m net IPO proceeds against approved allocations, with the remaining ~Rs36.1m absorbed into working capital, per Mettis Global. Logged as impact 2 (minor company administrative/financial item).",
+   "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-20",
+   "source": "Mettis Global (latest-news feed)",
+   "headline": "Pakistan weekly SPI inflation up 0.49% for week ended Aug 20, 2026",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Pakistan's Sensitive Price Indicator (SPI), a weekly short-term inflation gauge, increased 0.49% for the week ended August 20, 2026, per Mettis Global. No item-level breakdown or YoY comparison captured this cycle. Logged as impact 2 (minor, routine weekly economic print; not a material single move).",
+   "url": "https://mettisglobal.news/latest/"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-08-18T17:52:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-18T17:55:00+05:00",
-   "outcome": "Scheduled daily refresh (psx-desk-daily-refresh): not a holiday/weekend, ran all 3 agents. run_cloud.py ALL OK. news-sentinel: no genuinely new items beyond the last 2 sessions, newslog.json unchanged (no fabrication). macro-agent: regime risk-off (reconfirmed), geo-risk 59/moderate -- SBP rate 11.5% (held 07-27, next MPC 09-14), CPI 9.2% YoY Jul, FX reserves $17.057bn (wk ended 08-07), IMF 4th EFF review/RSF mission Sep2026 (~$1.2bn), new Rs5.4trn Aug-Oct domestic borrowing plan, remittances $3.631bn Jul (+13% YoY), FY26 current account $139mn deficit. market-analyst: daily_read.json refreshed -- cautious/risk-off read on the oil-and-politics shock (KSE-100 -1.41%, even OGDC/Mari sold), watchlist BML (lead) / GAL (caveated) / FABL (carry+catalyst carve-out); ATRL/TPLT excluded. build_dashboard+preflight OK (1 non-gating WARN: 96 backfilling tickers). No open positions, monitor skipped. Published data-only (51 hand-authored files held back, pre-existing dirty tree from another session), pushed to desk.henneth.app (83f34a86). Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
-  },
   {
    "started": "2026-08-19T11:00:00+05:00",
    "mode": "light-escalated",
@@ -396,6 +384,12 @@
    "mode": "data-only",
    "ended": "2026-08-20T00:10:00+05:00",
    "outcome": "Retry of prior blocked cycle at owner's request (not a scheduled checkpoint slot; judgment agents not re-run, deterministic layer + publish only). run_cloud.py ALL OK this time -- PRL issuer-monitor gap from the three 2026-08-19 entries no longer reproduces (source_registry.json pilot apparently expanded/self-resolved between runs; not investigated further, no code change made this session). build_dashboard.py + preflight.py both OK (1 non-gating WARN: 98 new universe tickers still backfilling history, expected). Published data-only 'Daily desk refresh 2026-08-20 (retry)' (16 pre-existing hand-authored dirty files correctly held back, not this session's). Pushed to desk.henneth.app. Watchdog OK after deploy: app shell loads, public files serve, account gate intact on rooms/dashboard/quant/health."
+  },
+  {
+   "started": "2026-08-20T20:57:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-20T21:44:00+05:00",
+   "outcome": "PM checkpoint, health ok, 6 news items found (max impact 3, no escalation), no monitor alerts (0 open positions), pushed"
   }
  ]
 }
