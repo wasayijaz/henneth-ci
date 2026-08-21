@@ -62,6 +62,13 @@
    "msg": "methods disagree 13.7x — treat composite as a rough screen"
   }
  ],
+ "ATRL": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 31.0x — treat composite as a rough screen"
+  }
+ ],
  "FCCL": [
   {
    "sev": "low",
@@ -74,20 +81,6 @@
    "sev": "low",
    "field": "fairvalue.spread",
    "msg": "methods disagree 5.1x — treat composite as a rough screen"
-  }
- ],
- "ATRL": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 31.0x — treat composite as a rough screen"
-  }
- ],
- "BOP": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 3.8x — treat composite as a rough screen"
   }
  ],
  "MLCF": [
@@ -105,6 +98,13 @@
    "sev": "medium",
    "field": "claim.price",
    "msg": "a Chair call was priced at 98.16 vs session price 92.16"
+  }
+ ],
+ "BOP": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 3.8x — treat composite as a rough screen"
   }
  ],
  "AKBL": [
@@ -197,11 +197,11 @@
    "msg": "a Dr. Omar call was priced at 41.83 vs session price 44.38"
   }
  ],
- "ABOT": [
+ "CNERGY": [
   {
    "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 4.0x — treat composite as a rough screen"
+   "field": "price_series",
+   "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
   }
  ],
  "KEL": [
@@ -211,11 +211,11 @@
    "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
   }
  ],
- "CNERGY": [
+ "ABOT": [
   {
    "sev": "low",
-   "field": "price_series",
-   "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 4.0x — treat composite as a rough screen"
   }
  ],
  "GHNI": [
@@ -449,13 +449,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "HPL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "WAFI": [
   {
    "sev": "medium",
@@ -464,6 +457,13 @@
   }
  ],
  "BOK": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
+ "HPL": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -649,13 +649,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "FML": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "GWLC": [
   {
    "sev": "medium",
@@ -697,6 +690,13 @@
    "sev": "medium",
    "field": "quant.date",
    "msg": "quant is 36 days stale (2026-07-16)"
+  }
+ ],
+ "FML": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
  "GCIL": [
@@ -760,13 +760,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "SITC": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "ARPL": [
   {
    "sev": "medium",
@@ -800,7 +793,7 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "PKGP": [
+ "SITC": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -841,6 +834,13 @@
   }
  ],
  "KPUS": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
+ "PKGP": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -1340,6 +1340,18 @@
    "escalate": true
   }
  ],
+ "MACFL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  },
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 5.6x — treat composite as a rough screen"
+  }
+ ],
  "MFL": [
   {
    "sev": "medium",
@@ -1355,13 +1367,6 @@
   }
  ],
  "OTSU": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
- "PICT": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -1411,6 +1416,13 @@
   }
  ],
  "WTL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
+ "AATM": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -1606,18 +1618,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "MACFL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  },
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 5.6x — treat composite as a rough screen"
-  }
- ],
  "MFFL": [
   {
    "sev": "medium",
@@ -1654,6 +1654,13 @@
   }
  ],
  "PAKQATAR": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
+ "PICT": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -1715,13 +1722,6 @@
   }
  ],
  "UDPL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
- "AATM": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -1847,6 +1847,13 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
+ "DADX": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
  "DFSM": [
   {
    "sev": "medium",
@@ -1917,13 +1924,6 @@
    "msg": "quant is 38 days stale (2026-07-14)"
   }
  ],
- "GFIL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "GGGL": [
   {
    "sev": "medium",
@@ -1939,6 +1939,13 @@
   }
  ],
  "HICL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
+ "INKL": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -2032,19 +2039,6 @@
    "sev": "medium",
    "field": "quant.date",
    "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
- "MDTL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  },
-  {
-   "sev": "high",
-   "field": "price_series",
-   "msg": "1 reverting price glitch(es) in the last decade (e.g. 2024-09-13 47.8%) — recent stats may be wrong",
-   "escalate": true
   }
  ],
  "MERIT": [
@@ -2234,13 +2228,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "SHNI": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "SINDM": [
   {
    "sev": "medium",
@@ -2340,13 +2327,6 @@
   }
  ],
  "WAHN": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
- "WASL": [
   {
    "sev": "medium",
    "field": "quant.date",
@@ -2534,13 +2514,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "DADX": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "DEL": [
   {
    "sev": "medium",
@@ -2653,6 +2626,13 @@
    "msg": "quant is 36 days stale (2026-07-16)"
   }
  ],
+ "GFIL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
  "GRYL": [
   {
    "sev": "medium",
@@ -2716,13 +2696,6 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
- "INKL": [
-  {
-   "sev": "medium",
-   "field": "quant.date",
-   "msg": "quant is 35 days stale (2026-07-17)"
-  }
- ],
  "JATM": [
   {
    "sev": "medium",
@@ -2763,6 +2736,19 @@
    "sev": "medium",
    "field": "quant.date",
    "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
+ "MDTL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  },
+  {
+   "sev": "high",
+   "field": "price_series",
+   "msg": "1 reverting price glitch(es) in the last decade (e.g. 2024-09-13 47.8%) — recent stats may be wrong",
+   "escalate": true
   }
  ],
  "MQTM": [
@@ -2849,6 +2835,13 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
+ "SHNI": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
  "SIBL": [
   {
    "sev": "medium",
@@ -2919,6 +2912,13 @@
    "msg": "quant is 35 days stale (2026-07-17)"
   }
  ],
+ "WASL": [
+  {
+   "sev": "medium",
+   "field": "quant.date",
+   "msg": "quant is 35 days stale (2026-07-17)"
+  }
+ ],
  "USVIX": [
   {
    "sev": "high",
@@ -2928,7 +2928,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-08-21 15:39",
+  "built": "2026-08-21 17:27",
   "tickers_with_issues": 397,
   "high_severity": 4,
   "escalate_to_agent": [
