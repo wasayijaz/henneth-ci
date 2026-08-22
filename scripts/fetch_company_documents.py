@@ -350,7 +350,8 @@ def _rebuild_ticker(index: dict, symbol: str) -> None:
     index.setdefault("by_ticker", {})[symbol] = rows
 
 
-def _stage_downloads(index: dict, candidates: list[str], session: requests.Session) -> tuple[int, int]:
+def _stage_downloads(index: dict, candidates: list[str], session: requests.Session,
+                     published_since: str | None = None) -> tuple[int, int]:
     documents = index["documents"]
     extracted = load_json(STATE / "company_documents.json", {"documents": {}})
     ready_hashes = {
@@ -366,6 +367,8 @@ def _stage_downloads(index: dict, candidates: list[str], session: requests.Sessi
     for doc_id in candidates:
         document = documents[doc_id]
         if document.get("source") != "PSX DPS" or not document.get("url"):
+            continue
+        if published_since and str(document.get("published_at") or "")[:10] < published_since:
             continue
         # A hash in the source registry is not an extraction receipt. Restage until the
         # downstream company_documents registry confirms this exact version is ready.
@@ -461,10 +464,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, help="restrict pilot symbols for a manual run")
     parser.add_argument("--symbols", help="comma-separated pilot symbols for a bounded manual batch")
     parser.add_argument("--metadata-only", action="store_true", help="do not stage PDF bytes")
+    parser.add_argument("--published-since", help="stage only documents published on/after YYYY-MM-DD")
     parser.add_argument("--self-check", action="store_true", help="run parser/security fixtures")
     args = parser.parse_args(argv)
     if args.self_check:
         return _self_check()
+    if args.published_since:
+        try:
+            datetime.strptime(args.published_since, "%Y-%m-%d")
+        except ValueError:
+            parser.error("--published-since must be YYYY-MM-DD")
     if args.limit is not None and not 1 <= args.limit <= PILOT_COUNT:
         parser.error(f"--limit must be between 1 and {PILOT_COUNT}")
     if _cloud_schedule_skip(args.force):
@@ -538,7 +547,7 @@ def main(argv: list[str] | None = None) -> int:
     download_candidates = list(dict.fromkeys(changed_ids + list(index["documents"])))
     verified = failed_downloads = 0
     if not args.metadata_only:
-        verified, failed_downloads = _stage_downloads(index, download_candidates, session)
+        verified, failed_downloads = _stage_downloads(index, download_candidates, session, args.published_since)
 
     index_changed = index != prior_index
     cursor_changed = cursors != prior_cursors

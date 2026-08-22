@@ -24,6 +24,7 @@ from psx_data import ROOT, STATE, load_json, save_json
 
 OUT = STATE / "company_documents.json"
 MAX_EVIDENCE = 8
+MAX_BRIEF_EVIDENCE = 32
 MAX_VERSIONS = 5
 
 
@@ -174,6 +175,7 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
                 "status": "ready", "stale": False, "error": None,
                 "evidence": evidence[:MAX_EVIDENCE], "events": doc_events,
                 "facts": facts[:MAX_EVIDENCE], "versions": versions,
+                "brief_evidence": list(old.get("brief_evidence") or [])[-MAX_BRIEF_EVIDENCE:],
                 "ledger_changes": ledger_changes,
             }
             # Normalize while the verified full pages are still transient.  Only

@@ -406,8 +406,12 @@ def build():
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue)
 
+    # Keep the private app bounded to the declared CI pilot.  ``profiles`` may
+    # retain stale public rows (for example a former pilot constituent), but
+    # those rows must not silently expand the 20-company CI surface.
+    pilot_symbols = (profiles_state.get("pilot") or {}).get("symbols") or list(profiles)
     symbols = sorted(
-        profiles,
+        (sym for sym in pilot_symbols if sym in profiles),
         key=lambda s: (-(liquidity.get(s, {}).get("adtv_pkr") or 0), s),
     )
     rows = []

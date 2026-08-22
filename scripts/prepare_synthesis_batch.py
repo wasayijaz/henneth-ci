@@ -8,6 +8,7 @@ ignored `.cache/company_intel/`.
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -29,7 +30,8 @@ def _approved_keys(receipts: dict[str, Any]) -> set[tuple[str, str]]:
 
 
 def select(queue: dict[str, Any], documents: dict[str, Any], receipts: dict[str, Any],
-           limit: int) -> list[dict[str, Any]]:
+           limit: int, allowed_symbols: set[str] | None = None,
+           published_since: str | None = None) -> list[dict[str, Any]]:
     approved = _approved_keys(receipts)
     docs = documents.get("documents") or {}
     candidates = []
@@ -43,6 +45,10 @@ def select(queue: dict[str, Any], documents: dict[str, Any], receipts: dict[str,
         if not (doc.get("evidence") or doc.get("events") or doc.get("facts")):
             continue
         tickers = sorted(set(doc.get("tickers") or row.get("tickers") or []))
+        if allowed_symbols is not None and not (set(tickers) & allowed_symbols):
+            continue
+        if published_since and str(doc.get("published_at") or "")[:10] < published_since:
+            continue
         candidates.append({"row": row, "doc": doc, "balance_ticker": tickers[0] if tickers else "_unassigned"})
 
     chosen = []
@@ -60,12 +66,15 @@ def select(queue: dict[str, Any], documents: dict[str, Any], receipts: dict[str,
     return chosen
 
 
-def build(limit: int = MAX_BATCH, output: Path = DEFAULT_OUT) -> dict[str, Any]:
+def build(limit: int = MAX_BATCH, output: Path = DEFAULT_OUT,
+          published_since: str | None = None) -> dict[str, Any]:
     queue = load_json(STATE / "document_synthesis_queue.json", {"queue": []})
     documents = load_json(STATE / "company_documents.json", {"documents": {}})
     receipts = load_json(STATE / "company_brief_receipts.json", {"receipts": []})
     financial = load_json(STATE / "company_financial_series.json", {"tickers": {}}).get("tickers") or {}
-    selected = select(queue, documents, receipts, limit)
+    profiles = load_json(STATE / "company_profiles.json", {"tickers": {}})
+    pilot = set((profiles.get("pilot") or {}).get("symbols") or (profiles.get("tickers") or {}).keys())
+    selected = select(queue, documents, receipts, limit, pilot, published_since)
     rows = []
     for item in selected:
         row, doc = item["row"], item["doc"]
@@ -116,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=MAX_BATCH)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--self-check", action="store_true")
+    parser.add_argument("--published-since", help="include only documents published on/after YYYY-MM-DD")
     args = parser.parse_args(argv)
     if args.self_check:
         return _self_check()
@@ -125,7 +135,9 @@ def main(argv: list[str] | None = None) -> int:
     cache_root = (ROOT / ".cache" / "company_intel").resolve()
     if not output.is_relative_to(cache_root):
         parser.error("--output must stay inside .cache/company_intel")
-    build(args.limit, output)
+    if args.published_since and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.published_since):
+        parser.error("--published-since must be YYYY-MM-DD")
+    build(args.limit, output, args.published_since)
     return 0
 
 

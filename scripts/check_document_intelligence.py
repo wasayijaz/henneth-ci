@@ -95,7 +95,9 @@ def main() -> int:
         assert ledger_payload["companies"]["FFC"]["changes"][0]["fact_delta"]["added"]
         docs = {doc_id: {"status": "ready", "content_sha256": extracted["content_sha256"],
                          "tickers": ["FFC"], "doc_type": kind,
-                         "events": events}}
+                         "events": events,
+                         "brief_evidence": [{"page": 9, "text": "retained citation",
+                                             "content_sha256": extracted["content_sha256"]}]}}
         queue = root / "queue.json"
         build_queue(docs, queue)
         first_queue = queue.read_text(encoding="utf-8")
@@ -118,16 +120,19 @@ def main() -> int:
         recovered_queue = root / "recovered_queue.json"
         recovered_series = root / "recovered_series.json"
         extraction_queue = root / "missing_extraction_queue.json"
-        base_row = {"doc_id": "psx:fixture", "official_document_id": "fixture",
+        base_row = {"doc_id": doc_id, "official_document_id": "fixture",
                     "tickers": ["FFC"], "title": "FFC quarterly results",
                     "published_at": "2026-08-18", "url": "https://example.test/ffc/fixture.pdf",
                     "text": text, "media_type": "text/plain"}
-        index.write_text(json.dumps({"documents": {"psx:fixture": base_row}}), encoding="utf-8")
+        output.write_text(json.dumps({"schema_version": 1, "documents": docs}), encoding="utf-8")
+        index.write_text(json.dumps({"documents": {doc_id: base_row}}), encoding="utf-8")
         run_intelligence(index, output, extraction_queue, recovered_ledger, recovered_queue, recovered_series)
+        retained_doc = json.loads(output.read_text(encoding="utf-8"))["documents"][doc_id]
+        assert retained_doc["brief_evidence"][0]["page"] == 9, "approved citation evidence was compacted away"
         recovered_ledger.unlink()
         recovered_queue.unlink()
         base_row.pop("text")
-        index.write_text(json.dumps({"documents": {"psx:fixture": base_row}}), encoding="utf-8")
+        index.write_text(json.dumps({"documents": {doc_id: base_row}}), encoding="utf-8")
         run_intelligence(index, output, extraction_queue, recovered_ledger, recovered_queue, recovered_series)
         recovered = json.loads(recovered_ledger.read_text(encoding="utf-8"))
         assert recovered["companies"]["FFC"]["events"], "ledger was not recovered from durable document"

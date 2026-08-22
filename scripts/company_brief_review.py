@@ -39,16 +39,48 @@ def _candidate_path(value: str) -> Path:
     return path
 
 
+def _evidence_rows(doc: dict[str, Any]) -> list[dict[str, Any]]:
+    rows = [row for row in (doc.get("brief_evidence") or []) if isinstance(row, dict)]
+    rows.extend(row for row in (doc.get("evidence") or []) if isinstance(row, dict))
+    for item in (doc.get("events") or []) + (doc.get("facts") or []):
+        rows.extend(row for row in (item.get("evidence") or []) if isinstance(row, dict))
+    return rows
+
+
 def _evidence_pages(doc: dict[str, Any]) -> set[int]:
     pages: set[int] = set()
-    for item in (doc.get("evidence") or []):
+    for item in _evidence_rows(doc):
         if isinstance(item.get("page"), int):
             pages.add(item["page"])
-    for row in (doc.get("events") or []) + (doc.get("facts") or []):
-        for item in row.get("evidence") or []:
-            if isinstance(item.get("page"), int):
-                pages.add(item["page"])
     return pages
+
+
+def _retain_approved_evidence(candidate: dict[str, Any], brief_id: str) -> None:
+    payload = load_json(STATE / "company_documents.json", {"documents": {}})
+    documents = dict(payload.get("documents") or {})
+    requested: dict[str, set[int]] = {}
+    for rows in (candidate.get("sections") or {}).values():
+        for row in rows or []:
+            for ref in row.get("evidence") or []:
+                requested.setdefault(str(ref.get("doc_id")), set()).add(ref.get("page"))
+    changed = False
+    for doc_id, pages in requested.items():
+        doc = documents.get(doc_id) or {}
+        retained = list(doc.get("brief_evidence") or [])
+        keys = {(row.get("page"), row.get("content_sha256")) for row in retained}
+        for evidence in _evidence_rows(doc):
+            page = evidence.get("page")
+            key = (page, doc.get("content_sha256"))
+            if page not in pages or key in keys:
+                continue
+            retained.append({**evidence, "content_sha256": doc.get("content_sha256"),
+                             "retained_for_brief_id": brief_id})
+            keys.add(key)
+            changed = True
+        if retained != list(doc.get("brief_evidence") or []):
+            documents[doc_id] = {**doc, "brief_evidence": retained}
+    if changed:
+        save_json(STATE / "company_documents.json", {**payload, "documents": documents})
 
 
 def validate(candidate: dict[str, Any], documents_state: dict[str, Any] | None = None) -> list[str]:
@@ -145,6 +177,9 @@ def approve(candidate: dict[str, Any]) -> str:
     brief_id = _candidate_id(candidate)
     now = time.strftime("%Y-%m-%d %H:%M")
     ticker = candidate["ticker"].upper()
+    # Evidence retention is idempotent and must also run for briefs approved
+    # before durable citation storage was introduced.
+    _retain_approved_evidence(candidate, brief_id)
     receipt_state = load_json(RECEIPTS, {"schema_version": 1, "receipts": []})
     receipts = list(receipt_state.get("receipts") or [])
     if any(row.get("brief_id") == brief_id for row in receipts):
