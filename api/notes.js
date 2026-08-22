@@ -114,12 +114,21 @@ async function writeNotes(uid, token, notes) {
     method: 'PATCH',
     headers: supabaseHeaders(token, {
       'content-type': 'application/json',
-      Prefer: 'return=minimal',
+      // return=representation (not minimal): PostgREST answers 200/204 with res.ok true
+      // even when the PATCH matched zero rows (e.g. an account whose profiles row was
+      // never created — never assume docs/lifecycle_email.sql's trigger has been applied).
+      // Without the returned rows we cannot tell "saved" from "silently discarded".
+      Prefer: 'return=representation',
     }),
     body: JSON.stringify({ notes }),
   });
   if (res.status === 401) return json(401, { ok: false, error: 'account_required' });
   if (!res.ok) return json(502, { ok: false, error: 'Could not save account notes.' });
+  const rows = await res.json();
+  if (!Array.isArray(rows) || rows.length === 0) {
+    // Zero rows matched — the note was NOT saved. Report that honestly instead of {ok:true}.
+    return json(404, { ok: false, error: 'account_setup_incomplete' });
+  }
   return json(200, { ok: true });
 }
 
