@@ -168,18 +168,20 @@
   var searchBtn = document.getElementById("searchbtn");
 
   function closeAddMenu() {
-    if (!addMenu) return;
+    if (!addMenu || addMenu.hidden) return;
     var hadFocusInside = addBtn && addMenu.contains(document.activeElement);
     addMenu.hidden = true;
     if (addBtn) {
       addBtn.setAttribute("aria-expanded", "false");
       if (hadFocusInside) addBtn.focus();
     }
+    window.popOverlay?.(closeAddMenu);
   }
   function openAddMenu() {
     if (!addMenu) return;
     addMenu.hidden = false;
     if (addBtn) addBtn.setAttribute("aria-expanded", "true");
+    window.pushOverlay?.(closeAddMenu);
   }
   if (addBtn && addMenu) {
     addBtn.addEventListener("click", function (ev) {
@@ -208,7 +210,6 @@
         if (ev.key === "Escape") closeAddMenu();
       });
       window.addEventListener("henneth:navigate", closeAddMenu);
-      window.addEventListener("popstate", closeAddMenu);
     }
   }
 

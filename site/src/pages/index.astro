@@ -901,6 +901,11 @@ const principles = [
     .seg-2:hover { color: var(--ink-1); }
     .seg-2:hover :global(.icn) { transform: translateX(3px); }
   }
+  /* The 9.5px mono type makes this link ~16px tall — well under the 44px minimum tap
+     target. Pad the hit area on touch screens without changing the desktop metrics. */
+  @media (pointer: coarse) {
+    .seg-2 { min-height: 44px; }
+  }
 
   .principles { grid-template-columns: repeat(3, 1fr); }
   .principles p { font-size: 11.5px; margin: 8px 0 0; }

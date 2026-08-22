@@ -1,0 +1,873 @@
+{
+ "schema_version": 1,
+ "pilot_symbols": [
+  "ATRL",
+  "BOP",
+  "DGKC",
+  "ENGROH",
+  "FCCL",
+  "FFC",
+  "GAL",
+  "HBL",
+  "HUBC",
+  "LUCK",
+  "MARI",
+  "MEBL",
+  "MLCF",
+  "NBP",
+  "NRL",
+  "OGDC",
+  "PPL",
+  "PRL",
+  "PSO",
+  "UBL"
+ ],
+ "supported_sectors": [
+  "BANKS",
+  "CEMENT",
+  "E&P"
+ ],
+ "companies": {
+  "ATRL": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "BOP": {
+   "sector": "BANKS",
+   "drivers": [
+    "policy_rate",
+    "deposit_cost",
+    "loan_growth",
+    "credit_cost",
+    "fee_income",
+    "capital_ratio"
+   ],
+   "edges": [
+    {
+     "from": "policy_rate",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "deposit_cost",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "loan_growth",
+     "to": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "credit_cost",
+     "to": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fee_income",
+     "to": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "profit_after_tax",
+     "to": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "eps",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "DGKC": {
+   "sector": "CEMENT",
+   "drivers": [
+    "dispatch_volume",
+    "realized_price",
+    "coal_cost",
+    "power_cost",
+    "clinker_capacity",
+    "export_price"
+   ],
+   "edges": [
+    {
+     "from": "dispatch_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "realized_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "coal_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "power_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "clinker_capacity",
+     "to": "revenue",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "ENGROH": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "FCCL": {
+   "sector": "CEMENT",
+   "drivers": [
+    "dispatch_volume",
+    "realized_price",
+    "coal_cost",
+    "power_cost",
+    "clinker_capacity",
+    "export_price"
+   ],
+   "edges": [
+    {
+     "from": "dispatch_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "realized_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "coal_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "power_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "clinker_capacity",
+     "to": "revenue",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "FFC": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "GAL": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "HBL": {
+   "sector": "BANKS",
+   "drivers": [
+    "policy_rate",
+    "deposit_cost",
+    "loan_growth",
+    "credit_cost",
+    "fee_income",
+    "capital_ratio"
+   ],
+   "edges": [
+    {
+     "from": "policy_rate",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "deposit_cost",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "loan_growth",
+     "to": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "credit_cost",
+     "to": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fee_income",
+     "to": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "profit_after_tax",
+     "to": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "eps",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "HUBC": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "LUCK": {
+   "sector": "CEMENT",
+   "drivers": [
+    "dispatch_volume",
+    "realized_price",
+    "coal_cost",
+    "power_cost",
+    "clinker_capacity",
+    "export_price"
+   ],
+   "edges": [
+    {
+     "from": "dispatch_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "realized_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "coal_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "power_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "clinker_capacity",
+     "to": "revenue",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "MARI": {
+   "sector": "E&P",
+   "drivers": [
+    "oil_price",
+    "gas_price",
+    "production_volume",
+    "decline_rate",
+    "lifting_cost",
+    "exploration_success"
+   ],
+   "edges": [
+    {
+     "from": "oil_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gas_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_mmbtu",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "production_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "boe_per_day",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "decline_rate",
+     "to": "production_volume",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "lifting_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_boe",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "exploration_success",
+     "to": "reserves",
+     "statement_line": "reserves",
+     "unit": "boe",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "MEBL": {
+   "sector": "BANKS",
+   "drivers": [
+    "policy_rate",
+    "deposit_cost",
+    "loan_growth",
+    "credit_cost",
+    "fee_income",
+    "capital_ratio"
+   ],
+   "edges": [
+    {
+     "from": "policy_rate",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "deposit_cost",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "loan_growth",
+     "to": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "credit_cost",
+     "to": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fee_income",
+     "to": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "profit_after_tax",
+     "to": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "eps",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "MLCF": {
+   "sector": "CEMENT",
+   "drivers": [
+    "dispatch_volume",
+    "realized_price",
+    "coal_cost",
+    "power_cost",
+    "clinker_capacity",
+    "export_price"
+   ],
+   "edges": [
+    {
+     "from": "dispatch_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "realized_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "coal_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "power_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "clinker_capacity",
+     "to": "revenue",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "NBP": {
+   "sector": "BANKS",
+   "drivers": [
+    "policy_rate",
+    "deposit_cost",
+    "loan_growth",
+    "credit_cost",
+    "fee_income",
+    "capital_ratio"
+   ],
+   "edges": [
+    {
+     "from": "policy_rate",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "deposit_cost",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "loan_growth",
+     "to": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "credit_cost",
+     "to": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fee_income",
+     "to": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "profit_after_tax",
+     "to": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "eps",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "NRL": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "OGDC": {
+   "sector": "E&P",
+   "drivers": [
+    "oil_price",
+    "gas_price",
+    "production_volume",
+    "decline_rate",
+    "lifting_cost",
+    "exploration_success"
+   ],
+   "edges": [
+    {
+     "from": "oil_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gas_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_mmbtu",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "production_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "boe_per_day",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "decline_rate",
+     "to": "production_volume",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "lifting_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_boe",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "exploration_success",
+     "to": "reserves",
+     "statement_line": "reserves",
+     "unit": "boe",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "PPL": {
+   "sector": "E&P",
+   "drivers": [
+    "oil_price",
+    "gas_price",
+    "production_volume",
+    "decline_rate",
+    "lifting_cost",
+    "exploration_success"
+   ],
+   "edges": [
+    {
+     "from": "oil_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gas_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_mmbtu",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "production_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "boe_per_day",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "decline_rate",
+     "to": "production_volume",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "lifting_cost",
+     "to": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_boe",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "exploration_success",
+     "to": "reserves",
+     "statement_line": "reserves",
+     "unit": "boe",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fcf",
+     "to": "valuation",
+     "statement_line": "enterprise_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  },
+  "PRL": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "PSO": {
+   "sector": null,
+   "drivers": [],
+   "edges": [],
+   "quality_flags": [
+    "sector_model_not_in_wave_1"
+   ]
+  },
+  "UBL": {
+   "sector": "BANKS",
+   "drivers": [
+    "policy_rate",
+    "deposit_cost",
+    "loan_growth",
+    "credit_cost",
+    "fee_income",
+    "capital_ratio"
+   ],
+   "edges": [
+    {
+     "from": "policy_rate",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "deposit_cost",
+     "to": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "loan_growth",
+     "to": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "credit_cost",
+     "to": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fee_income",
+     "to": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "profit_after_tax",
+     "to": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "eps",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
+  }
+ }
+}

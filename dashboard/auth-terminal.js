@@ -36,20 +36,20 @@
 
         <div class="field" id="nameField" hidden>
           <label class="field-label" for="nameInput">Full name</label>
-          <input type="text" id="nameInput" placeholder="your name" autocomplete="name" />
+          <input type="text" id="nameInput" placeholder="your name" autocomplete="name" inputmode="text" enterkeyhint="next" />
           <p class="field-err" id="errName"></p>
         </div>
 
         <div class="field">
           <label class="field-label" for="emailInput">Email</label>
-          <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" required aria-required="true" />
+          <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" required aria-required="true" inputmode="email" enterkeyhint="next" />
           <p class="field-err" id="errEmail"></p>
         </div>
 
         <div class="field">
           <label class="field-label" for="pwInput">Password</label>
           <div class="pw-wrap">
-            <input type="password" id="pwInput" placeholder="your password" autocomplete="current-password" required aria-required="true" />
+            <input type="password" id="pwInput" placeholder="your password" autocomplete="current-password" required aria-required="true" enterkeyhint="go" />
             <button type="button" class="pw-toggle" id="pwToggle">Show</button>
           </div>
           <p class="field-err" id="errPw"></p>
@@ -981,7 +981,7 @@ function hnAuthRun(root, initialTab){
     var selectedSectors = state.onboardingAnswers.radar.sectors;
     els.onboardingStep.innerHTML = '<div class="radar-grid">' +
       '<div><span class="radar-label">Sectors</span><div class="sector-list">' + sectors.map(function(s){ var active=selectedSectors.indexOf(s)!==-1; return '<button type="button" class="sector" data-sector="' + s + '" aria-pressed="' + active + '" data-od-id="sector-' + s.toLowerCase().replace(/[^a-z]+/g,'-') + '">' + s + '</button>'; }).join('') + '</div></div>' +
-      '<div><span class="radar-label">Tickers</span><div class="radar-row"><input class="radar-input" id="radarTickerInput" maxlength="8" placeholder="e.g. MEBL" aria-label="Add ticker" /><button type="button" class="ticker-add" id="tickerAdd" data-od-id="ticker-add">Add</button></div><div class="ticker-chips" id="tickerChips"></div></div>' +
+      '<div><span class="radar-label">Tickers</span><div class="radar-row"><input class="radar-input" id="radarTickerInput" type="search" inputmode="search" enterkeyhint="search" maxlength="8" placeholder="e.g. MEBL" aria-label="Add ticker" /><button type="button" class="ticker-add" id="tickerAdd" data-od-id="ticker-add">Add</button></div><div class="ticker-chips" id="tickerChips"></div></div>' +
       '<div><span class="radar-label">Or start with</span><div class="choice-list"><button type="button" class="choice" data-source="holdings" aria-pressed="' + (state.onboardingAnswers.radar.source === 'holdings') + '">My holdings</button><button type="button" class="choice" data-source="market-read" aria-pressed="' + (state.onboardingAnswers.radar.source === 'market-read') + '">Current market read</button></div><p class="radar-note">Nothing is overwritten. You can refine this from Today.</p></div>' +
       '</div>';
     els.onboardingNext.textContent = 'Recover my radar';

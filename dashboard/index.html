@@ -440,7 +440,7 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
   <div class="searchpanel">
     <div class="searchhead">
       <svg class="searchico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input id="searchinput" type="text" aria-label="Search a stock by symbol or name" placeholder="Search a stock — symbol or name…" autocomplete="off">
+      <input id="searchinput" type="search" inputmode="search" enterkeyhint="search" aria-label="Search a stock by symbol or name" placeholder="Search a stock — symbol or name…" autocomplete="off">
       <button id="searchclose" class="searchclose" aria-label="Close search">✕</button>
     </div>
     <div id="searchresults" class="searchresults"></div>
@@ -453,8 +453,12 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="i18n-ur.js?v=2"></script>
 <script src="auth-terminal.js"></script>
-<script src="app.js"></script>
+<!-- icons.js MUST load before app.js: app.js's flush() pass calls iconify(), and that pass can
+     fire during app.js boot. Loaded after, the first flush threw "iconify is not defined" and the
+     tile icons on that paint stayed bare. icons.js only defines functions — no observer, no
+     exports, no dependency on app.js — so it is safe this early. See icons.js's own header. -->
 <script src="icons.js"></script>
+<script src="app.js"></script>
 <!-- First-failure capture, armed before the shell scripts below. A panel that fails
      leaves its placeholder on screen and the reason only in the console, which is no
      help to anyone not reading one. This records the first failure — a script that

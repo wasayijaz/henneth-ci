@@ -1,0 +1,677 @@
+{
+ "schema_version": 1,
+ "registry_version": "signal_cluster_registry_v1",
+ "as_of": "2026-08-22T16:10:00+05:00",
+ "pilot_symbols": [
+  "ATRL",
+  "BOP",
+  "DGKC",
+  "ENGROH",
+  "FCCL",
+  "FFC",
+  "GAL",
+  "HBL",
+  "HUBC",
+  "LUCK",
+  "MARI",
+  "MEBL",
+  "MLCF",
+  "NBP",
+  "NRL",
+  "OGDC",
+  "PPL",
+  "PRL",
+  "PSO",
+  "UBL"
+ ],
+ "companies": {
+  "ATRL": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "BOP": {
+   "candidate_count": 3,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "rejected",
+   "rejection_reasons": {
+    "event_type_not_in_registry": 2,
+    "not_named_management_change": 1
+   },
+   "latest_detected_at": "2026-04-30T11:50:00+05:00",
+   "freshness": "recent",
+   "clusters": []
+  },
+  "DGKC": {
+   "candidate_count": 2,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "rejected",
+   "rejection_reasons": {
+    "event_type_not_in_registry": 2
+   },
+   "latest_detected_at": "2025-10-03T11:05:00+05:00",
+   "freshness": "older",
+   "clusters": []
+  },
+  "ENGROH": {
+   "candidate_count": 1,
+   "eligible_count": 1,
+   "clusterable_count": 1,
+   "coverage_status": "clusterable",
+   "rejection_reasons": {},
+   "latest_detected_at": "2026-03-13T08:07:00+05:00",
+   "freshness": "recent",
+   "clusters": [
+    {
+     "cluster_id": "cluster_e193758d1914395b6b3bc13c",
+     "symbol": "ENGROH",
+     "registry_version": "signal_cluster_registry_v1",
+     "assessment": "single_source",
+     "confidence": {
+      "band": "single_official_source",
+      "components": {
+       "originator_count": 1,
+       "distributor_count": 1,
+       "evidence_rows": 1,
+       "source_quality_levels": [
+        1
+       ]
+      }
+     },
+     "proposition": {
+      "type": "acquisition",
+      "stage": "intention",
+      "target": "Engro Polymer & Chemicals Limited",
+      "modality": "intention"
+     },
+     "assertion_key": "acquisition:engro polymer & chemicals limited:intention:2026-03-13",
+     "conflict_key": "acquisition:engro polymer & chemicals limited:2026-03-13",
+     "originators": [
+      "issuer:ENGROH"
+     ],
+     "distributors": [
+      "psx"
+     ],
+     "related_assertion_keys": [],
+     "observations": [
+      {
+       "observation_id": "evt_0489332288a01eb96490",
+       "event_id": "evt_0489332288a01eb96490",
+       "effective_date": "2026-03-13",
+       "detected_at": "2026-03-13T08:07:00+05:00",
+       "originator": "issuer:ENGROH",
+       "distributor": "psx",
+       "evidence": {
+        "document_id": "psx:272475",
+        "content_sha256": "a3d9978043ba1fe0e78aafd056eb13794762d429c250fb85e8b5ded6ed8d20bb",
+        "evidence_sha256": "f60047f35b0e998a13c5075ff73f7c34e824947bd4175a2886286f07e1ace25c",
+        "source_url": "https://dps.psx.com.pk/download/document/272475.pdf",
+        "source": "PSX DPS",
+        "page": 1,
+        "text": "n Limited, subsequent to a Public Announcement of Intention dated March 10, 2026, for the acquisition of approximately 56.19% of the paid-up share capital of Engro Polymer & Chemicals Limited (“EPCL”) held by Engro Corp, representing the e…",
+        "source_quality_level": 1,
+        "document_retrieved_at": "2026-08-18T03:18:00+05:00",
+        "document_published_at": "2026-03-13T08:07:00+05:00"
+       },
+       "provenance": [
+        {
+         "document_id": "psx:272475",
+         "content_sha256": "a3d9978043ba1fe0e78aafd056eb13794762d429c250fb85e8b5ded6ed8d20bb",
+         "evidence_sha256": "f60047f35b0e998a13c5075ff73f7c34e824947bd4175a2886286f07e1ace25c",
+         "source_url": "https://dps.psx.com.pk/download/document/272475.pdf",
+         "source": "PSX DPS",
+         "page": 1,
+         "text": "n Limited, subsequent to a Public Announcement of Intention dated March 10, 2026, for the acquisition of approximately 56.19% of the paid-up share capital of Engro Polymer & Chemicals Limited (“EPCL”) held by Engro Corp, representing the e…",
+         "source_quality_level": 1,
+         "document_retrieved_at": "2026-08-18T03:18:00+05:00",
+         "document_published_at": "2026-03-13T08:07:00+05:00"
+        }
+       ],
+       "duplicates": []
+      }
+     ],
+     "quality_flags": []
+    }
+   ]
+  },
+  "FCCL": {
+   "candidate_count": 2,
+   "eligible_count": 1,
+   "clusterable_count": 1,
+   "coverage_status": "clusterable",
+   "rejection_reasons": {
+    "blocking_quality_flags": 1,
+    "invalid_source_quality_level": 1,
+    "missing_effective_date": 1,
+    "not_explicit_acquisition_stage_target": 1
+   },
+   "latest_detected_at": "2026-08-18 03:24",
+   "freshness": "recent",
+   "clusters": [
+    {
+     "cluster_id": "cluster_46fbfc58f7e36caac3ff41d6",
+     "symbol": "FCCL",
+     "registry_version": "signal_cluster_registry_v1",
+     "assessment": "single_source",
+     "confidence": {
+      "band": "single_official_source",
+      "components": {
+       "originator_count": 1,
+       "distributor_count": 1,
+       "evidence_rows": 1,
+       "source_quality_levels": [
+        1
+       ]
+      }
+     },
+     "proposition": {
+      "type": "acquisition",
+      "stage": "public_offer",
+      "target": "Attock Cement Pakistan Limited",
+      "modality": "public_offer"
+     },
+     "assertion_key": "acquisition:attock cement pakistan limited:public_offer:2026-02-18",
+     "conflict_key": "acquisition:attock cement pakistan limited:2026-02-18",
+     "originators": [
+      "issuer:FCCL"
+     ],
+     "distributors": [
+      "psx"
+     ],
+     "related_assertion_keys": [],
+     "observations": [
+      {
+       "observation_id": "evt_d028288e2afc6923d3c1",
+       "event_id": "evt_d028288e2afc6923d3c1",
+       "effective_date": "2026-02-18",
+       "detected_at": "2026-02-18T15:08:00+05:00",
+       "originator": "issuer:FCCL",
+       "distributor": "psx",
+       "evidence": {
+        "document_id": "psx:270499",
+        "content_sha256": "4bc685561334aedd34d7b9ff957d27968507045dc585e99f0731bcae7e149b98",
+        "evidence_sha256": "412609ce598dfc2c0f9ff5d68230b58f27722f2ac71b368d708642ad071f45e6",
+        "source_url": "https://dps.psx.com.pk/download/document/270499.pdf",
+        "source": "PSX DPS",
+        "page": 2,
+        "text": "istan Limited D-70, Block-4, Kehkashan-s, Clifton Karachi Public Announcement of offer to Acquire 10,950,306 ordinary Shares representing approximately 7.g7y. of the Attock Cement Pakistan Limited (the Target Company) jointly by Fauji ceme…",
+        "source_quality_level": 1,
+        "document_retrieved_at": "2026-08-20T11:17:00+05:00",
+        "document_published_at": "2026-02-18T15:08:00+05:00"
+       },
+       "provenance": [
+        {
+         "document_id": "psx:270499",
+         "content_sha256": "4bc685561334aedd34d7b9ff957d27968507045dc585e99f0731bcae7e149b98",
+         "evidence_sha256": "412609ce598dfc2c0f9ff5d68230b58f27722f2ac71b368d708642ad071f45e6",
+         "source_url": "https://dps.psx.com.pk/download/document/270499.pdf",
+         "source": "PSX DPS",
+         "page": 2,
+         "text": "istan Limited D-70, Block-4, Kehkashan-s, Clifton Karachi Public Announcement of offer to Acquire 10,950,306 ordinary Shares representing approximately 7.g7y. of the Attock Cement Pakistan Limited (the Target Company) jointly by Fauji ceme…",
+         "source_quality_level": 1,
+         "document_retrieved_at": "2026-08-20T11:17:00+05:00",
+         "document_published_at": "2026-02-18T15:08:00+05:00"
+        }
+       ],
+       "duplicates": []
+      }
+     ],
+     "quality_flags": []
+    }
+   ]
+  },
+  "FFC": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "GAL": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "HBL": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "HUBC": {
+   "candidate_count": 2,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "rejected",
+   "rejection_reasons": {
+    "blocking_quality_flags": 2,
+    "event_type_not_in_registry": 2,
+    "invalid_source_quality_level": 2,
+    "missing_effective_date": 2
+   },
+   "latest_detected_at": "2026-08-18 03:23",
+   "freshness": "recent",
+   "clusters": []
+  },
+  "LUCK": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "MARI": {
+   "candidate_count": 1,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "rejected",
+   "rejection_reasons": {
+    "not_explicit_acquisition_stage_target": 1
+   },
+   "latest_detected_at": "2025-11-13T10:10:00+05:00",
+   "freshness": "older",
+   "clusters": []
+  },
+  "MEBL": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "MLCF": {
+   "candidate_count": 2,
+   "eligible_count": 1,
+   "clusterable_count": 1,
+   "coverage_status": "clusterable",
+   "rejection_reasons": {
+    "event_type_not_in_registry": 1
+   },
+   "latest_detected_at": "2025-12-18T12:52:00+05:00",
+   "freshness": "older",
+   "clusters": [
+    {
+     "cluster_id": "cluster_82b31911757fd2f836e1eaea",
+     "symbol": "MLCF",
+     "registry_version": "signal_cluster_registry_v1",
+     "assessment": "single_source",
+     "confidence": {
+      "band": "single_official_source",
+      "components": {
+       "originator_count": 1,
+       "distributor_count": 1,
+       "evidence_rows": 1,
+       "source_quality_levels": [
+        1
+       ]
+      }
+     },
+     "proposition": {
+      "type": "acquisition",
+      "stage": "public_offer",
+      "target": "PIONEER CEMENT LIMITED",
+      "modality": "public_offer"
+     },
+     "assertion_key": "acquisition:pioneer cement limited:public_offer:2025-12-18",
+     "conflict_key": "acquisition:pioneer cement limited:2025-12-18",
+     "originators": [
+      "issuer:MLCF"
+     ],
+     "distributors": [
+      "psx"
+     ],
+     "related_assertion_keys": [],
+     "observations": [
+      {
+       "observation_id": "evt_6e9b520a122b8f2d4a59",
+       "event_id": "evt_6e9b520a122b8f2d4a59",
+       "effective_date": "2025-12-18",
+       "detected_at": "2025-12-18T12:52:00+05:00",
+       "originator": "issuer:MLCF",
+       "distributor": "psx",
+       "evidence": {
+        "document_id": "psx:267429",
+        "content_sha256": "98cf83c9a286999c8006a7f73f490248f26694c9edbfc815b3dbd9188ee22a54",
+        "evidence_sha256": "70a110272f96813a4d6693b596c99d9dbc4c4781d42a519543557a04ec4c581f",
+        "source_url": "https://dps.psx.com.pk/download/document/267429.pdf",
+        "source": "PSX DPS",
+        "page": 3,
+        "text": "8904_5, Fax: +9242.38373067 EqnaH: mjgfl@kmlg.earn PUBLIC ANNOUNCEMENT OF PUBLIC OFFER TO ACQUIRE UP TO 26,623,096 SHARES (1.E. 11.72% SHARES) AND CONTROL OF PIONEER CEMENT LIMITED (“PIOC” OR 'TARGrr COMPANY”) BY MAPLE LEAF CEMENT FACrORY…",
+        "source_quality_level": 1,
+        "document_retrieved_at": "2026-08-18T01:54:00+05:00",
+        "document_published_at": "2025-12-18T12:52:00+05:00"
+       },
+       "provenance": [
+        {
+         "document_id": "psx:267429",
+         "content_sha256": "98cf83c9a286999c8006a7f73f490248f26694c9edbfc815b3dbd9188ee22a54",
+         "evidence_sha256": "70a110272f96813a4d6693b596c99d9dbc4c4781d42a519543557a04ec4c581f",
+         "source_url": "https://dps.psx.com.pk/download/document/267429.pdf",
+         "source": "PSX DPS",
+         "page": 3,
+         "text": "8904_5, Fax: +9242.38373067 EqnaH: mjgfl@kmlg.earn PUBLIC ANNOUNCEMENT OF PUBLIC OFFER TO ACQUIRE UP TO 26,623,096 SHARES (1.E. 11.72% SHARES) AND CONTROL OF PIONEER CEMENT LIMITED (“PIOC” OR 'TARGrr COMPANY”) BY MAPLE LEAF CEMENT FACrORY…",
+         "source_quality_level": 1,
+         "document_retrieved_at": "2026-08-18T01:54:00+05:00",
+         "document_published_at": "2025-12-18T12:52:00+05:00"
+        }
+       ],
+       "duplicates": []
+      }
+     ],
+     "quality_flags": []
+    }
+   ]
+  },
+  "NBP": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "NRL": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "OGDC": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "PPL": {
+   "candidate_count": 1,
+   "eligible_count": 1,
+   "clusterable_count": 1,
+   "coverage_status": "clusterable",
+   "rejection_reasons": {},
+   "latest_detected_at": "2026-01-09T10:41:00+05:00",
+   "freshness": "older",
+   "clusters": [
+    {
+     "cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
+     "symbol": "PPL",
+     "registry_version": "signal_cluster_registry_v1",
+     "assessment": "single_source",
+     "confidence": {
+      "band": "single_official_source",
+      "components": {
+       "originator_count": 1,
+       "distributor_count": 1,
+       "evidence_rows": 1,
+       "source_quality_levels": [
+        1
+       ]
+      }
+     },
+     "proposition": {
+      "type": "management_change",
+      "person": "Mr Mirza Nasiruddin Mashhood Ahmad",
+      "role": "Director",
+      "verb": "appointment",
+      "modality": "appointment"
+     },
+     "assertion_key": "management:appointment:mr mirza nasiruddin mashhood ahmad:director:2026-01-09",
+     "conflict_key": "management:director:2026-01-09",
+     "originators": [
+      "issuer:PPL"
+     ],
+     "distributors": [
+      "psx"
+     ],
+     "related_assertion_keys": [],
+     "observations": [
+      {
+       "observation_id": "evt_2c3f64926b9d385c3c13",
+       "event_id": "evt_2c3f64926b9d385c3c13",
+       "effective_date": "2026-01-09",
+       "detected_at": "2026-01-09T10:41:00+05:00",
+       "originator": "issuer:PPL",
+       "distributor": "psx",
+       "evidence": {
+        "document_id": "psx:268509",
+        "content_sha256": "232223d4ef13f43f5332168c87dfb21666dddbf90e4150a37e31a7883fe89ccb",
+        "evidence_sha256": "efd428447e80ebd32f25c197028280bd0675b16e78eb5ae67b8e355de37c1683",
+        "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+        "source": "PSX DPS",
+        "page": 1,
+        "text": "Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, Re: Appointment of a Director – Mr. Mirza Nasiruddin Mashhood Ahmad Pursuant to Rule 5.6.1(a) of the Stock Exchange Rules, we would like to inform that Mr…",
+        "source_quality_level": 1,
+        "document_retrieved_at": "2026-08-18T01:55:00+05:00",
+        "document_published_at": "2026-01-09T10:41:00+05:00"
+       },
+       "provenance": [
+        {
+         "document_id": "psx:268509",
+         "content_sha256": "232223d4ef13f43f5332168c87dfb21666dddbf90e4150a37e31a7883fe89ccb",
+         "evidence_sha256": "efd428447e80ebd32f25c197028280bd0675b16e78eb5ae67b8e355de37c1683",
+         "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+         "source": "PSX DPS",
+         "page": 1,
+         "text": "Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, Re: Appointment of a Director – Mr. Mirza Nasiruddin Mashhood Ahmad Pursuant to Rule 5.6.1(a) of the Stock Exchange Rules, we would like to inform that Mr…",
+         "source_quality_level": 1,
+         "document_retrieved_at": "2026-08-18T01:55:00+05:00",
+         "document_published_at": "2026-01-09T10:41:00+05:00"
+        }
+       ],
+       "duplicates": []
+      }
+     ],
+     "quality_flags": []
+    }
+   ]
+  },
+  "PRL": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "PSO": {
+   "candidate_count": 0,
+   "eligible_count": 0,
+   "clusterable_count": 0,
+   "coverage_status": "no_candidates",
+   "rejection_reasons": {},
+   "latest_detected_at": null,
+   "freshness": "unknown",
+   "clusters": []
+  },
+  "UBL": {
+   "candidate_count": 2,
+   "eligible_count": 2,
+   "clusterable_count": 2,
+   "coverage_status": "clusterable",
+   "rejection_reasons": {},
+   "latest_detected_at": "2026-07-22T11:38:00+05:00",
+   "freshness": "recent",
+   "clusters": [
+    {
+     "cluster_id": "cluster_2a04bcad22c357093bbd6280",
+     "symbol": "UBL",
+     "registry_version": "signal_cluster_registry_v1",
+     "assessment": "single_source",
+     "confidence": {
+      "band": "single_official_source",
+      "components": {
+       "originator_count": 1,
+       "distributor_count": 1,
+       "evidence_rows": 1,
+       "source_quality_levels": [
+        1
+       ]
+      }
+     },
+     "proposition": {
+      "type": "management_change",
+      "person": "Lord Zameer M. Choudrey",
+      "role": "Chairman of the Board of Directors",
+      "verb": "appointment",
+      "modality": "appointment"
+     },
+     "assertion_key": "management:appointment:lord zameer m. choudrey:chairman of the board of directors:2026-04-15",
+     "conflict_key": "management:chairman of the board of directors:2026-04-15",
+     "originators": [
+      "issuer:UBL"
+     ],
+     "distributors": [
+      "psx"
+     ],
+     "related_assertion_keys": [],
+     "observations": [
+      {
+       "observation_id": "evt_a5aaeaed2ea2e998b0cf",
+       "event_id": "evt_a5aaeaed2ea2e998b0cf",
+       "effective_date": "2026-04-15",
+       "detected_at": "2026-04-15T11:03:00+05:00",
+       "originator": "issuer:UBL",
+       "distributor": "psx",
+       "evidence": {
+        "document_id": "psx:274158",
+        "content_sha256": "83ba61381ed651ba01342cfbc84aaf6fbab22200d8fc686a85631d815f7982a2",
+        "evidence_sha256": "c053e38ea8ae0ddb2d9a26ced96e13706ad67ed7fd91c290b37fefa50f10c7f9",
+        "source_url": "https://dps.psx.com.pk/download/document/274158.pdf",
+        "source": "PSX DPS",
+        "page": 1,
+        "text": "--- NIL --- (iv) ANY OTHER PRICE-SENSITIVE INFORMATION The Board of Directors of UBL has appointed Lord Zameer M. Choudrey, CBE, SI Pk as Chairman of the Board of Directors of UBL. Further the Board has re-appointed Mr. Muhammad Jawaid Iqb…",
+        "source_quality_level": 1,
+        "document_retrieved_at": "2026-08-18T03:18:00+05:00",
+        "document_published_at": "2026-04-15T11:03:00+05:00"
+       },
+       "provenance": [
+        {
+         "document_id": "psx:274158",
+         "content_sha256": "83ba61381ed651ba01342cfbc84aaf6fbab22200d8fc686a85631d815f7982a2",
+         "evidence_sha256": "c053e38ea8ae0ddb2d9a26ced96e13706ad67ed7fd91c290b37fefa50f10c7f9",
+         "source_url": "https://dps.psx.com.pk/download/document/274158.pdf",
+         "source": "PSX DPS",
+         "page": 1,
+         "text": "--- NIL --- (iv) ANY OTHER PRICE-SENSITIVE INFORMATION The Board of Directors of UBL has appointed Lord Zameer M. Choudrey, CBE, SI Pk as Chairman of the Board of Directors of UBL. Further the Board has re-appointed Mr. Muhammad Jawaid Iqb…",
+         "source_quality_level": 1,
+         "document_retrieved_at": "2026-08-18T03:18:00+05:00",
+         "document_published_at": "2026-04-15T11:03:00+05:00"
+        }
+       ],
+       "duplicates": []
+      }
+     ],
+     "quality_flags": []
+    },
+    {
+     "cluster_id": "cluster_18be1f7964ed898c278741e9",
+     "symbol": "UBL",
+     "registry_version": "signal_cluster_registry_v1",
+     "assessment": "single_source",
+     "confidence": {
+      "band": "single_official_source",
+      "components": {
+       "originator_count": 1,
+       "distributor_count": 1,
+       "evidence_rows": 1,
+       "source_quality_levels": [
+        1
+       ]
+      }
+     },
+     "proposition": {
+      "type": "management_change",
+      "person": "Mr. Shoukat Ali",
+      "role": "Company Secretary",
+      "verb": "appointment",
+      "modality": "appointment"
+     },
+     "assertion_key": "management:appointment:mr. shoukat ali:company secretary:2026-07-22",
+     "conflict_key": "management:company secretary:2026-07-22",
+     "originators": [
+      "issuer:UBL"
+     ],
+     "distributors": [
+      "psx"
+     ],
+     "related_assertion_keys": [],
+     "observations": [
+      {
+       "observation_id": "evt_2b090e38cccab8fac9da",
+       "event_id": "evt_2b090e38cccab8fac9da",
+       "effective_date": "2026-07-22",
+       "detected_at": "2026-07-22T11:38:00+05:00",
+       "originator": "issuer:UBL",
+       "distributor": "psx",
+       "evidence": {
+        "document_id": "psx:280213",
+        "content_sha256": "5c78033e3b10d669b1d6b902d1137e54a45a067227792f43db99bfcf00d25eab",
+        "evidence_sha256": "153dc01a2c7784ac76276b60f805b14886d15e8927af105c225aa6682c368941",
+        "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+        "source": "PSX DPS",
+        "page": 2,
+        "text": "Bestway Foundation which would match the UBL’s contribution. 4- Mr. Shoukat Ali has been appointed as the Company Secretary of UBL with Immediate effect. You may please inform THE Certificate Holders of the exchange accordingly. The above…",
+        "source_quality_level": 1,
+        "document_retrieved_at": "2026-08-18T01:58:00+05:00",
+        "document_published_at": "2026-07-22T11:38:00+05:00"
+       },
+       "provenance": [
+        {
+         "document_id": "psx:280213",
+         "content_sha256": "5c78033e3b10d669b1d6b902d1137e54a45a067227792f43db99bfcf00d25eab",
+         "evidence_sha256": "153dc01a2c7784ac76276b60f805b14886d15e8927af105c225aa6682c368941",
+         "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+         "source": "PSX DPS",
+         "page": 2,
+         "text": "Bestway Foundation which would match the UBL’s contribution. 4- Mr. Shoukat Ali has been appointed as the Company Secretary of UBL with Immediate effect. You may please inform THE Certificate Holders of the exchange accordingly. The above…",
+         "source_quality_level": 1,
+         "document_retrieved_at": "2026-08-18T01:58:00+05:00",
+         "document_published_at": "2026-07-22T11:38:00+05:00"
+        }
+       ],
+       "duplicates": []
+      }
+     ],
+     "quality_flags": []
+    }
+   ]
+  }
+ },
+ "source": "state/company_intel/operating_events.json"
+}

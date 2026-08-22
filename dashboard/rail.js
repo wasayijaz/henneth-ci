@@ -636,7 +636,7 @@
         shell = '<div id="railAskOut" class="rail-ask-out"></div>' +
           '<p id="railAskStatus" class="rail-sr-only" role="status" aria-live="polite"></p>' +
           '<div class="rail-ask-bar">' +
-          '<input id="railAskIn" class="rail-ask-in" type="text" maxlength="500" placeholder="Ask the desk…" aria-label="Ask the desk">' +
+          '<input id="railAskIn" class="rail-ask-in" type="text" inputmode="text" enterkeyhint="send" maxlength="500" placeholder="Ask the desk…" aria-label="Ask the desk">' +
           '<button type="button" class="quiet-btn" data-rail-ask-send>Ask</button>' +
           "</div>" +
           '<div class="rail-ask-foot"><a href="/ask">Open the full page &rarr;</a></div>';

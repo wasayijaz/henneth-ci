@@ -140,6 +140,12 @@ const cols = [
   @media (hover: hover) {
     .ft-social-link:hover { color: var(--bg); border-color: #5a5a52; }
   }
+  /* On touch screens the 32px box is under the 44px minimum tap target, so a thumb
+     misses it. Widen the box itself on coarse pointers — the desktop 32px look is
+     unchanged because pointer:fine never matches this rule. */
+  @media (pointer: coarse) {
+    .ft-social-link { width: 44px; height: 44px; }
+  }
 
   .ft-h {
     font-size: 9.5px;

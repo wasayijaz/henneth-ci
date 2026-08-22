@@ -65,6 +65,76 @@ function navigate(path, replace = false) {
 }
 window.navigate = navigate;
 
+// Overlay history: opening a full-screen/modal overlay pushes a history entry so the phone's
+// Back gesture closes it instead of leaving the desk. popstate runs the most-recently-registered
+// closer. Escape-key handlers stay as they are — this is additive, not a replacement.
+// Re-entrant safe: _overlayBack guards our own history.back() unwind (Escape/outside-click close
+// while the overlay's entry is still live), and _inPopstate stops a popstate-driven close from
+// calling history.back() again.
+const _overlayStack = [];
+let _overlayBack = false;
+let _inPopstate = false;
+
+// Focus containment for overlays: keeps Tab/Shift+Tab cycling inside `el`, makes the app shell
+// (or whatever's behind it) inert while open, and restores focus to the trigger on release().
+// One helper shared by every overlay on the pushOverlay stack rather than one trap per overlay.
+const FOCUSABLE_SEL = 'a[href], button, input, select, textarea, summary, [tabindex], [contenteditable="true"]';
+function focusableIn(root) {
+  return [...root.querySelectorAll(FOCUSABLE_SEL)].filter(el =>
+    !el.hasAttribute("hidden") && !el.disabled && el.tabIndex !== -1
+  );
+}
+function trapFocus(el, { noInert } = {}) {
+  const trigger = document.activeElement;
+  const shellEl = document.getElementById("shell");
+  // Only inert the shell if `el` isn't part of it (e.g. the mobile drawer lives inside #shell —
+  // inerting the shell would make the drawer, and its own trigger button, unreachable).
+  const inerted = !noInert && shellEl && !shellEl.contains(el);
+  if (inerted) shellEl.inert = true;
+  let first = focusableIn(el)[0];
+  if (!first) { if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1"); first = el; }
+  first.focus();
+  function onKeydown(e) {
+    if (e.key !== "Tab") return;
+    const items = focusableIn(el);
+    if (!items.length) { e.preventDefault(); return; }
+    const last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === items[0]) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); items[0].focus(); }
+  }
+  el.addEventListener("keydown", onKeydown);
+  return function release() {
+    el.removeEventListener("keydown", onKeydown);
+    if (inerted) shellEl.inert = false;
+    if (trigger && typeof trigger.focus === "function" && document.body.contains(trigger)) trigger.focus();
+  };
+}
+
+// `el` (optional) is the overlay/panel to trap focus inside; `opts` is forwarded to trapFocus
+// (e.g. { noInert: true } for panels that live inside #shell, like the mobile drawer).
+function pushOverlay(close, el, opts) {
+  _overlayStack.push({ close, release: el ? trapFocus(el, opts) : null });
+  history.pushState({ henOverlay: true }, "", location.href);
+}
+function popOverlay(close) {
+  const i = _overlayStack.findIndex(o => o.close === close);
+  if (i === -1) return; // already unwound (e.g. by the popstate handler below)
+  const [entry] = _overlayStack.splice(i, 1);
+  entry.release?.();
+  if (!_inPopstate) { _overlayBack = true; history.back(); }
+}
+// Exposed so overlays living in other bundles (topbar.js) share one stack.
+window.pushOverlay = pushOverlay;
+window.popOverlay = popOverlay;
+window.addEventListener("popstate", () => {
+  if (_overlayBack) { _overlayBack = false; return; } // our own unwind — nothing to close
+  const entry = _overlayStack[_overlayStack.length - 1];
+  if (!entry) return;
+  _inPopstate = true;
+  entry.close();
+  _inPopstate = false;
+});
+
 // Keep ordinary dashboard anchors in the SPA while retaining real links for
 // modified clicks, downloads, external URLs, and mailto actions. The route
 // parser above remains the single source of truth; this only chooses whether
@@ -151,6 +221,27 @@ async function refreshSession() {
   return _refreshing;
 }
 
+/* A single persistent banner slot for desk-wide conditions the user must know about even though
+   nothing on the current page failed to render (offline, session expired). Only one banner shows
+   at a time — session-expired is the more urgent of the two and replaces an offline banner if both
+   fire, since there is no point telling someone to check their connection when the real problem is
+   their sign-in. */
+function showBanner(id, html) {
+  let b = document.getElementById(id);
+  if (!b) {
+    b = document.createElement("div");
+    b.id = id;
+    b.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9998;background:var(--dn);color:#fff;"
+      + "font:13px/1.4 system-ui,sans-serif;padding:8px 14px;text-align:center;border-radius:0";
+    document.body.appendChild(b);
+  }
+  b.innerHTML = html;
+}
+function hideBanner(id) { document.getElementById(id)?.remove(); }
+
+window.addEventListener("offline", () => showBanner("offlineBanner", "You're offline — showing the last data the desk loaded."));
+window.addEventListener("online", () => hideBanner("offlineBanner"));
+
 const cache = {};
 /* backtests.json stores each strategy's name/category ONCE in `meta`, not repeated on all
    ~200 per-ticker rows (that duplication was most of the file's weight, and the file is
@@ -200,6 +291,7 @@ async function j(p, ttl) {
   const url = () => DATA_BASE + p + (LIVE_FILES.has(p) ? "?t=" + Date.now() : "");
   let lastErr = null;
   let tok = await authToken();
+  let refreshed401 = false; // the refresh already happened once — a second 401 means the session is really gone
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const hdrs = tok ? { Authorization: "Bearer " + tok } : undefined;
@@ -209,6 +301,8 @@ async function j(p, ttl) {
             // Refresh once and let the retry loop use the new one. Distinguished from every
             // other HTTP error so a genuine 404 is not masked as an auth problem.
             if (r.status === 401) {
+              if (refreshed401) return Promise.reject(new Error("HTTP 401 (session expired)"));
+              refreshed401 = true;
               const fresh = await refreshSession();
               if (fresh && fresh !== tok) tok = fresh;
               return Promise.reject(new Error("HTTP 401 (auth refreshed, retrying)"));
@@ -217,6 +311,7 @@ async function j(p, ttl) {
           })
         : await xhrJson(url(), tok); // last attempt: bypass a fetch() an extension may have broken
       cache[p] = { t: Date.now(), v: p === "backtests.json" ? rehydrateBacktests(v) : v };
+      hideBanner("offlineBanner");
       return cache[p].v;
     } catch (e) { lastErr = e; /* fall through to retry */ }
     if (attempt < 2) await new Promise(res => setTimeout(res, 300));
@@ -226,6 +321,16 @@ async function j(p, ttl) {
   // policy blocked the request before it left the browser (check the Network tab's status
   // column for "(blocked)" / "ERR_BLOCKED_BY_CLIENT"), not a server-side data problem.
   console.warn(`[psx-desk] j("${p}") failed after all attempts:`, lastErr);
+  // The refresh already ran once (refreshed401) and STILL got a 401 — this is not a network
+  // hiccup, the session is gone. middleware.js fails closed, so silently serving stale/null here
+  // is a dead screen with no way back. Tell the user and point them at the same sign-in path
+  // acctOut/openAuth already use, rather than inventing a second auth flow.
+  if (refreshed401 && /401/.test(lastErr?.message || "")) {
+    showBanner("sessionBanner", `Your session expired — <button id="sessionSignIn" style="background:none;border:1px solid #fff;color:#fff;padding:2px 10px;border-radius:0;cursor:pointer;margin-left:6px">Sign in again</button>`);
+    document.getElementById("sessionSignIn")?.addEventListener("click", () => { hideBanner("sessionBanner"); openAuth("signin"); });
+  } else {
+    showBanner("offlineBanner", "You're offline — showing the last data the desk loaded.");
+  }
   return cache[p]?.v ?? null; // serve last-known-good if we ever had it
 }
 
@@ -354,10 +459,11 @@ function openWhatsNew(cl) {
     <div class="wn-body">${body}</div>
   </div>`;
   function esc2(e) { if (e.key === "Escape") close(); }
-  const close = () => { document.removeEventListener("keydown", esc2); closeAnimated(ov, ".wn-panel"); renderVersion(); };
+  const close = () => { document.removeEventListener("keydown", esc2); popOverlay(close); closeAnimated(ov, ".wn-panel"); renderVersion(); };
   ov.onclick = e => { if (e.target === ov || e.target.classList.contains("pl-x")) close(); };
   document.addEventListener("keydown", esc2);
-  ov._close = () => { document.removeEventListener("keydown", esc2); ov.remove(); };  // route() teardown: node + listener, skip renderVersion
+  pushOverlay(close, ov);
+  ov._close = () => { document.removeEventListener("keydown", esc2); popOverlay(close); ov.remove(); };  // route() teardown: node + listener, skip renderVersion
   document.body.appendChild(ov);
 }
 
@@ -1067,7 +1173,7 @@ async function pageStrategies() {
     </div>`; }).join("");
   const addTile = `<div class="sb-tile sb-add">
       <span class="sk">Add a stock</span>
-      <input id="sb-tkr" class="ph-in combo" placeholder="e.g. FFC" autocomplete="off" onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addBoardTicker()">
+      <input id="sb-tkr" class="ph-in combo" type="search" enterkeyhint="search" placeholder="e.g. FFC" autocomplete="off" onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addBoardTicker()">
       <button class="note-save" onclick="addBoardTicker()">Add to board</button>
     </div>`;
 
@@ -1113,8 +1219,8 @@ async function pageStrategies() {
   <div class="card">
     <p class="sub" style="margin-bottom:12px">Trade by a rule that isn't in the library? Explain it below. The desk codes it, backtests it on ~19 years, and if it clears the bar it joins the library.</p>
     ${me ? `<div class="rq-form">
-      <div class="ph-row"><input id="rq-title" class="ph-in" aria-label="Strategy name" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
-      <input id="rq-tkr" class="ph-in combo" aria-label="Ticker (optional)" style="flex:0 1 150px" placeholder="Ticker (optional)" autocomplete="off"></div>
+      <div class="ph-row"><input id="rq-title" class="ph-in" inputmode="text" enterkeyhint="next" aria-label="Strategy name" placeholder="Name it (e.g. Monday gap fade)" maxlength="80">
+      <input id="rq-tkr" class="ph-in combo" type="search" enterkeyhint="search" aria-label="Ticker (optional)" style="flex:0 1 150px" placeholder="Ticker (optional)" autocomplete="off"></div>
       <textarea id="rq-desc" class="tknote" style="min-height:88px" placeholder="Explain the rules in plain English: when it buys, when it exits, any filters (volume, trend, day of week…)."></textarea>
       <div class="tknote-bar"><button class="note-save" onclick="submitStratRequest()">Send to the desk</button><span id="rq-msg" class="sub"></span></div></div>`
     : `<div class="empty">Sign in to send the desk a strategy to test.<br><br><button class="auth-go" style="max-width:220px" onclick="openAuth('signup')">Create a free account</button></div>`}
@@ -1666,18 +1772,24 @@ async function saveAstroBoard(list) {
 }
 function astroRunOn(sym) { try { return !!sessionStorage.getItem("astroran:" + sym); } catch (e) { return false; } }
 async function addAstroTicker() {
-  const inp = document.getElementById("ab-tkr"), msg = document.getElementById("ab-msg");
-  const say = t => { if (msg) msg.textContent = t; };
-  const sym = (inp?.value || "").toUpperCase().trim();
-  if (!sym) return;
-  const uni = await j("universe.json");
-  if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
-  const cur = astroBoard();
-  if (cur.includes(sym)) return say(`${sym} is already on your board.`);
-  if (cur.length >= 8) return say("The board holds 8 charts — remove one first.");
-  const err = await saveAstroBoard([...cur, sym]);
-  if (err) return say("Couldn't save — try again.");
-  pageAstro();
+  if (addAstroTicker._busy) return;
+  addAstroTicker._busy = true;
+  try {
+    const inp = document.getElementById("ab-tkr"), msg = document.getElementById("ab-msg");
+    const say = t => { if (msg) msg.textContent = t; };
+    const sym = (inp?.value || "").toUpperCase().trim();
+    if (!sym) return;
+    const uni = await j("universe.json");
+    if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
+    const cur = astroBoard();
+    if (cur.includes(sym)) return say(`${sym} is already on your board.`);
+    if (cur.length >= 8) return say("The board holds 8 charts — remove one first.");
+    const err = await saveAstroBoard([...cur, sym]);
+    if (err) return say("Couldn't save — try again.");
+    pageAstro();
+  } finally {
+    addAstroTicker._busy = false;
+  }
 }
 async function removeAstroTicker(sym) {
   const err = await saveAstroBoard(astroBoard().filter(s => s !== sym));
@@ -2303,9 +2415,9 @@ function renderBirthWizard() {
     <h2 class="bw-h">When were you born?</h2>
     <p class="bw-p">The date sets your planets. Everything else refines it.</p>
     <div class="bw-digitrow">
-      <div class="bw-digitfield"><label for="bw-dd">Day</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-dd" placeholder="DD" value="${esc(dD || "")}"></div>
-      <div class="bw-digitfield"><label for="bw-mm">Month</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-mm" placeholder="MM" value="${esc(dM || "")}"></div>
-      <div class="bw-digitfield"><label for="bw-yyyy">Year</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" class="bw-digit bw-digit-y" id="bw-yyyy" placeholder="YYYY" value="${esc(dY || "")}"></div>
+      <div class="bw-digitfield"><label for="bw-dd">Day</label><input type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" maxlength="2" class="bw-digit" id="bw-dd" placeholder="DD" value="${esc(dD || "")}"></div>
+      <div class="bw-digitfield"><label for="bw-mm">Month</label><input type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" maxlength="2" class="bw-digit" id="bw-mm" placeholder="MM" value="${esc(dM || "")}"></div>
+      <div class="bw-digitfield"><label for="bw-yyyy">Year</label><input type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" maxlength="4" class="bw-digit bw-digit-y" id="bw-yyyy" placeholder="YYYY" value="${esc(dY || "")}"></div>
     </div>
     <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="bwCommitDate()">Next →</button></div>`; }
   else if (s === "time") { const [tH, tM] = (d.time || "").split(":"); body = `
@@ -2313,8 +2425,8 @@ function renderBirthWizard() {
     <h2 class="bw-h">What time?</h2>
     <p class="bw-p">Your birth time sets the fast-moving Moon and your rising sign (ascendant). The more exact, the sharper the reading.</p>
     <div class="bw-digitrow">
-      <div class="bw-digitfield"><label for="bw-hh">Hour</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-hh" placeholder="HH" value="${esc(tH || "")}" ${d.time_known === false ? "disabled" : ""}></div>
-      <div class="bw-digitfield"><label for="bw-mi">Minute</label><input type="text" inputmode="numeric" autocomplete="off" maxlength="2" class="bw-digit" id="bw-mi" placeholder="MM" value="${esc(tM || "")}" ${d.time_known === false ? "disabled" : ""}></div>
+      <div class="bw-digitfield"><label for="bw-hh">Hour</label><input type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" maxlength="2" class="bw-digit" id="bw-hh" placeholder="HH" value="${esc(tH || "")}" ${d.time_known === false ? "disabled" : ""}></div>
+      <div class="bw-digitfield"><label for="bw-mi">Minute</label><input type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" maxlength="2" class="bw-digit" id="bw-mi" placeholder="MM" value="${esc(tM || "")}" ${d.time_known === false ? "disabled" : ""}></div>
     </div>
     <label class="bw-check"><input type="checkbox" ${d.time_known === false ? "checked" : ""} onchange="bwSet('time_known',!this.checked);const hh=document.getElementById('bw-hh'),mi=document.getElementById('bw-mi');hh.disabled=mi.disabled=this.checked;if(this.checked){bwSet('time','12:00')}"> I don't know my birth time</label>
     <p class="bw-note">${d.time_known === false ? "No problem — your Moon sign anchors the reading, the way Vedic astrology reads a chart from the Moon (Chandra lagna)." : "Even an approximate time sharpens your rising sign. If you don't know it, tick the box above."}</p>
@@ -2323,9 +2435,9 @@ function renderBirthWizard() {
     <div class="bw-kick">Step 3 of 4 · ${dots}</div>
     <h2 class="bw-h">Where?</h2>
     <p class="bw-p">Your birthplace fixes the horizon for your rising sign.</p>
-    <input class="bw-in combo-city" id="bw-place" placeholder="Start typing a city…" autocomplete="off" value="${esc(d.place || "")}">
+    <input class="bw-in combo-city" id="bw-place" type="search" enterkeyhint="search" placeholder="Start typing a city…" autocomplete="off" value="${esc(d.place || "")}">
     <div id="bw-place-pop" class="bw-city-pop"></div>
-    <div class="bw-tzrow"><label>UTC offset at birth <input type="number" step="0.5" class="bw-tz" id="bw-tz" value="${d.tz ?? 5}" onchange="bwSet('tz',+this.value)"></label>
+    <div class="bw-tzrow"><label>UTC offset at birth <input type="text" inputmode="decimal" enterkeyhint="done" class="bw-tz" id="bw-tz" value="${d.tz ?? 5}" onchange="bwSet('tz',+this.value)"></label>
       <span class="bw-note" style="margin:0">set from the city; adjust if you were born during daylight-saving</span></div>
     <div class="bw-nav"><button class="bw-back" onclick="bwBack()">← back</button><button class="bw-go" onclick="if(_bw.data.lat!=null){bwNext()}else{document.getElementById('bw-place').focus()}">Next →</button></div>`;
   else if (s === "goals") body = `
@@ -2611,7 +2723,7 @@ async function pageAstro() {
     </div>`; }).join("");
   const addTile = `<div class="sb-tile sb-add">
       <span class="sk">Add a stock</span>
-      <input id="ab-tkr" class="ph-in combo" placeholder="e.g. UBL" autocomplete="off" onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addAstroTicker()">
+      <input id="ab-tkr" class="ph-in combo" type="search" enterkeyhint="search" placeholder="e.g. UBL" autocomplete="off" onkeydown="if(event.key==='Enter'&&!document.querySelector('.combo-opt.on'))addAstroTicker()">
       <button class="note-save" onclick="addAstroTicker()">Add to board</button>
     </div>`;
   const pendingA = board.filter(s => !astroRunOn(s));
@@ -3582,7 +3694,7 @@ async function pageNews() {
   <div class="card"><h2>News wire</h2><div class="sub">${news.length} items logged · nothing is ever deleted — this is the desk's memory</div>
     <div class="ranges">
       ${[0, 3, 4, 5].map(i => `<button data-imp="${i}" class="${newsFilter.imp === i ? "on" : ""}">${i ? "impact ≥" + i : "all"}</button>`).join("")}
-      <input id="nq" placeholder="filter ticker/text" value="${esc(newsFilter.q)}" style="font:inherit;padding:4px 10px;border:1px solid currentColor;opacity:.7;background:transparent;color:inherit;border-radius:0">
+      <input id="nq" type="search" inputmode="search" enterkeyhint="search" placeholder="filter ticker/text" value="${esc(newsFilter.q)}" style="font:inherit;padding:4px 10px;border:1px solid currentColor;opacity:.7;background:transparent;color:inherit;border-radius:0">
     </div>
     <div class="wire">${rows.length ? rows.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>
       ${(n.tickers || []).map(t => `<a href="/ticker/${esc(t)}" style="color:var(--accent);font-weight:700">${esc(t)}</a>`).join(" ")}
@@ -3751,6 +3863,7 @@ function runRevealModal(opts) {
     // seen" session flag and runs onReveal into a body that closeAnimated has already detached.
     done = true;
     cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
+    popOverlay(close);
     closeAnimated(ov, ".replay-box");   // let the exit animation play, then drop the node
     // reveal the results inline on the page (reveal() sets the session flag once the run finishes)
     if (opts.onClose) opts.onClose();
@@ -3768,9 +3881,10 @@ function runRevealModal(opts) {
     }, 300); }
   });
   document.addEventListener("keydown", key);
+  pushOverlay(close, ov);
   // Teardown hook for route(): drop the node AND the document listener without the close()
   // side effects (onClose/pageTicker would re-render a page we are navigating away from).
-  ov._close = () => { closing = true; done = true; cancelAnimationFrame(raf); document.removeEventListener("keydown", key); ov.remove(); };
+  ov._close = () => { closing = true; done = true; cancelAnimationFrame(raf); document.removeEventListener("keydown", key); popOverlay(close); ov.remove(); };
 
   function runLoader() {
     done = false;
@@ -3934,18 +4048,24 @@ async function saveStratBoard(list) {
   return null;
 }
 async function addBoardTicker() {
-  const inp = document.getElementById("sb-tkr"), msg = document.getElementById("sb-msg");
-  const say = t => { if (msg) msg.textContent = t; };
-  const sym = (inp?.value || "").toUpperCase().trim();
-  if (!sym) return;
-  const uni = await j("universe.json");
-  if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
-  const cur = stratBoard();
-  if (cur.includes(sym)) return say(`${sym} is already on your board.`);
-  if (cur.length >= 12) return say("The board holds 12 stocks — remove one first.");
-  const err = await saveStratBoard([...cur, sym]);
-  if (err) return say("Couldn't save — try again.");
-  pageStrategies();
+  if (addBoardTicker._busy) return;
+  addBoardTicker._busy = true;
+  try {
+    const inp = document.getElementById("sb-tkr"), msg = document.getElementById("sb-msg");
+    const say = t => { if (msg) msg.textContent = t; };
+    const sym = (inp?.value || "").toUpperCase().trim();
+    if (!sym) return;
+    const uni = await j("universe.json");
+    if (!uni?.symbols?.[sym]) return say(`${sym} isn't in the desk's universe — try the suggestions as you type.`);
+    const cur = stratBoard();
+    if (cur.includes(sym)) return say(`${sym} is already on your board.`);
+    if (cur.length >= 12) return say("The board holds 12 stocks — remove one first.");
+    const err = await saveStratBoard([...cur, sym]);
+    if (err) return say("Couldn't save — try again.");
+    pageStrategies();
+  } finally {
+    addBoardTicker._busy = false;
+  }
 }
 async function removeBoardTicker(sym) {
   const err = await saveStratBoard(stratBoard().filter(s => s !== sym));
@@ -4002,17 +4122,23 @@ async function playBoardRun() {
 /* ---------- request a strategy → strategy_requests (RLS: own rows only) ---------- */
 async function submitStratRequest() {
   if (!me || !sb) { openAuth("signup"); return; }
-  const v = id => (document.getElementById(id)?.value || "").trim();
-  const msg = document.getElementById("rq-msg");
-  const say = t => { if (msg) msg.textContent = t; };
-  const title = v("rq-title"), desc = v("rq-desc"), tkr = v("rq-tkr").toUpperCase();
-  if (!title) return say("Give it a name first.");
-  if (desc.length < 20) return say("Explain the rules — a few sentences, so the desk can code it faithfully.");
-  say("Sending…");
-  const { error } = await sb.from("strategy_requests").insert({ title, description: desc, ticker: tkr || null });
-  if (error) return say("Couldn't send — try again.");
-  ["rq-title", "rq-desc", "rq-tkr"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
-  say("Received ✓ — the desk backtests it, and if it clears the bar it joins the library.");
+  if (submitStratRequest._busy) return;
+  submitStratRequest._busy = true;
+  try {
+    const v = id => (document.getElementById(id)?.value || "").trim();
+    const msg = document.getElementById("rq-msg");
+    const say = t => { if (msg) msg.textContent = t; };
+    const title = v("rq-title"), desc = v("rq-desc"), tkr = v("rq-tkr").toUpperCase();
+    if (!title) return say("Give it a name first.");
+    if (desc.length < 20) return say("Explain the rules — a few sentences, so the desk can code it faithfully.");
+    say("Sending…");
+    const { error } = await sb.from("strategy_requests").insert({ title, description: desc, ticker: tkr || null });
+    if (error) return say("Couldn't send — try again.");
+    ["rq-title", "rq-desc", "rq-tkr"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+    say("Received ✓ — the desk backtests it, and if it clears the bar it joins the library.");
+  } finally {
+    submitStratRequest._busy = false;
+  }
 }
 
 /* ---------- router ---------- */
@@ -4693,8 +4819,8 @@ async function pagePractice() {
   <div class="card">
     <div class="ark">place a practice order</div>
     <div class="pp-form">
-      <input id="pp-sym" class="ph-in combo" aria-label="Ticker to trade" placeholder="Ticker (e.g. FFC)" autocomplete="off" style="flex:0 1 170px">
-      <input id="pp-sh" class="ph-in" aria-label="Number of shares" type="number" min="1" step="1" placeholder="Shares" style="flex:0 1 130px">
+      <input id="pp-sym" class="ph-in combo" type="search" enterkeyhint="next" aria-label="Ticker to trade" placeholder="Ticker (e.g. FFC)" autocomplete="off" style="flex:0 1 170px">
+      <input id="pp-sh" class="ph-in" aria-label="Number of shares" type="text" inputmode="numeric" enterkeyhint="done" placeholder="Shares" style="flex:0 1 130px">
       <button class="note-save" onclick="paperTrade('buy')">Buy</button>
       <button class="note-save" onclick="paperTrade('sell')">Sell</button>
       <span id="pp-msg" class="sub"></span>
@@ -4849,9 +4975,9 @@ function deskRulePanel(rows, total, invested, corr) {
   <div class="card">
     <p class="sub" style="margin-bottom:10px">Size is decided by <b>where your stop is</b>, never by how much you like the idea. This is the exact formula the desk's Strategist and Auditor both compute — if they ever disagree, the setup is killed.</p>
     <div class="pp-form">
-      <label class="dr-f">Capital (Rs)<input id="dz-cap" class="ph-in" type="number" min="1" value="${Math.round(total) || PAPER_START}" oninput="deskSizeRun()"></label>
-      <label class="dr-f">Entry (Rs)<input id="dz-entry" class="ph-in" type="number" min="0" step="0.01" placeholder="e.g. 245.56" oninput="deskSizeRun()"></label>
-      <label class="dr-f">Stop (Rs)<input id="dz-stop" class="ph-in" type="number" min="0" step="0.01" placeholder="e.g. 233.28" oninput="deskSizeRun()"></label>
+      <label class="dr-f">Capital (Rs)<input id="dz-cap" class="ph-in" type="text" inputmode="decimal" enterkeyhint="next" value="${Math.round(total) || PAPER_START}" oninput="deskSizeRun()"></label>
+      <label class="dr-f">Entry (Rs)<input id="dz-entry" class="ph-in" type="text" inputmode="decimal" enterkeyhint="next" placeholder="e.g. 245.56" oninput="deskSizeRun()"></label>
+      <label class="dr-f">Stop (Rs)<input id="dz-stop" class="ph-in" type="text" inputmode="decimal" enterkeyhint="done" placeholder="e.g. 233.28" oninput="deskSizeRun()"></label>
     </div>
     <div id="dz-out" class="sub" style="margin-top:10px">Enter an entry and a stop to size it.</div>
   </div>`;
@@ -4892,7 +5018,7 @@ const TOOL_TABS = [
   ["divreinvest", "Dividend reinvestment"], ["goal", "Goal planner"],
   ["mortgage", "Mortgage"], ["zakat", "Zakat on shares"],
 ];
-const tnum = id => +(document.getElementById(id)?.value || 0);
+const tnum = id => +(document.getElementById(id)?.value || 0) || 0; // text inputmode="decimal" can yield non-numeric text; NaN -> 0
 const rs = n => "Rs " + fmt(Math.round(n));
 /* real anchors, read from the desk's own macro layer */
 function tAnchors() {
@@ -5105,7 +5231,7 @@ async function toolDivRun() {
 function toolPanel() {
   const t = _tools.tab, a = tAnchors();
   const cpi = a.cpi != null ? a.cpi : 11, rate = a.tbill != null ? a.tbill : 12;
-  const F = (label, id, val, step) => `<label>${label}<input id="${id}" type="number" class="ph-in" value="${val}"${step ? ` step="${step}"` : ""}></label>`;
+  const F = (label, id, val, step) => `<label>${label}<input id="${id}" type="text" inputmode="decimal" enterkeyhint="done" class="ph-in" value="${val}"${step ? ` step="${step}"` : ""}></label>`;
   const run = `onclick="toolRun()"`;
   if (t === "compound") return `<div class="tgrid">
       ${F("Amount today (Rs)", "t-lump", 500000)}${F("Years", "t-years", 10)}
@@ -5130,7 +5256,7 @@ function toolPanel() {
       ${F("Value of shares (Rs)", "t-zval", 500000)}${F("Cash & bank (Rs)", "t-zcash", 200000)}${F("Debts due now (Rs)", "t-zowed", 0)}
       <button class="note-save" ${run}>Calculate</button></div>`;
   if (t === "divreinvest") return `<div class="tgrid">
-      <label>PSX ticker<input id="t-dsym" class="ph-in combo" aria-label="PSX ticker" placeholder="e.g. FFC" autocomplete="off" value="${esc(_tools.dsym || "FFC")}"></label>
+      <label>PSX ticker<input id="t-dsym" class="ph-in combo" type="search" enterkeyhint="search" aria-label="PSX ticker" placeholder="e.g. FFC" autocomplete="off" value="${esc(_tools.dsym || "FFC")}"></label>
       ${F("Amount invested (Rs)", "t-damt", 500000)}
       <label>Held for<select id="t-dyears" class="ph-in">${[1, 3, 5, 10, 15].map(y => `<option value="${y}"${(_tools.dyears || 10) === y ? " selected" : ""}>${y} year${y > 1 ? "s" : ""}</option>`).join("")}</select></label>
       <button class="note-save" onclick="toolDivRun()">Run on real history</button></div>`;
@@ -5285,7 +5411,7 @@ async function pageScenarios() {
     <div class="sc-presets">${presets.map(([f, m, l]) => `<button class="seg-opt ${_scen.factor === f && Math.abs(_scen.movePct - m) < 0.01 ? "on" : ""}" onclick="_scen={factor:'${f}',movePct:${m.toFixed(2)}};pageScenarios()">${esc(l)}</button>`).join("")}</div>
     <div class="sc-custom">
       <label>Factor<select id="sc-f" class="ph-in" onchange="_scen.factor=this.value;pageScenarios()">${Object.entries(SCEN_FACTORS).map(([k, v]) => `<option value="${k}"${_scen.factor === k ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></label>
-      <label>Move %<input id="sc-m" type="number" step="0.5" class="ph-in" value="${_scen.movePct.toFixed(1)}" onchange="_scen.movePct=+this.value||0;pageScenarios()"></label>
+      <label>Move %<input id="sc-m" type="text" inputmode="decimal" enterkeyhint="done" class="ph-in" value="${_scen.movePct.toFixed(1)}" onchange="_scen.movePct=+this.value||0;pageScenarios()"></label>
     </div>
     <div id="sc-out">${run()}</div>
   </div>
@@ -5358,7 +5484,7 @@ async function pageScreener() {
   ${locked ? planWall("The plain-English screener",
     `"Dividend above 8%, covered, below Graham value, with earnings growth" — one sentence, screened across all ${rows.length} names on the desk's scored fields.`) : `
   <div class="card">
-    <div class="scr-row"><input id="scr-in" class="ph-in" aria-label="Describe what you are screening for" style="flex:1" value="${esc(_scr.text)}" placeholder="e.g. dividend > 8% with earnings growth, below fair value"
+    <div class="scr-row"><input id="scr-in" class="ph-in" type="search" inputmode="search" enterkeyhint="search" aria-label="Describe what you are screening for" style="flex:1" value="${esc(_scr.text)}" placeholder="e.g. dividend > 8% with earnings growth, below fair value"
       onkeydown="if(event.key==='Enter'){_scr.text=this.value;pageScreener()}">
       <button class="note-save" onclick="_scr.text=document.getElementById('scr-in').value;pageScreener()">Screen</button>
       ${me && filters.length ? `<button class="note-save" onclick="saveScreen()">Save</button>` : ""}</div>
@@ -5742,10 +5868,11 @@ function secModal(kicker, html) {
     <div class="replay-body">${html}</div></div>`;
   document.body.appendChild(ov);
   const key = e => { if (e.key === "Escape") close(); };
-  function close() { closeAnimated(ov, ".replay-box"); document.removeEventListener("keydown", key); }
+  function close() { closeAnimated(ov, ".replay-box"); document.removeEventListener("keydown", key); popOverlay(close); }
   ov.addEventListener("click", e => { if (e.target === ov || e.target.classList.contains("replay-x")) close(); });
   document.addEventListener("keydown", key);
-  ov._close = () => { document.removeEventListener("keydown", key); ov.remove(); };  // route() teardown: node + listener, no exit animation
+  pushOverlay(close, ov);
+  ov._close = () => { document.removeEventListener("keydown", key); popOverlay(close); ov.remove(); };  // route() teardown: node + listener, no exit animation
 }
 
 /* ---------- Sector debate run: same shape as the ticker Desk Room replay, one level up. The steps
@@ -5816,7 +5943,7 @@ function mktRuleRow(r, i) {
   return `<div class="mkt-rule">
     <select onchange="_mkt.rules[${i}].lhs=this.value">${MKT_FIELDS.map(f => opt(f, r.lhs)).join("")}</select>
     <select onchange="_mkt.rules[${i}].op=this.value">${MKT_OPS.map(([v, l]) => `<option value="${v}"${v === r.op ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>
-    <input value="${esc(String(r.rhs))}" onchange="_mkt.rules[${i}].rhs=isNaN(parseFloat(this.value))?this.value:parseFloat(this.value)" placeholder="field or number">
+    <input value="${esc(String(r.rhs))}" inputmode="text" enterkeyhint="done" onchange="_mkt.rules[${i}].rhs=isNaN(parseFloat(this.value))?this.value:parseFloat(this.value)" placeholder="field or number">
     ${_mkt.rules.length > 1 ? `<button class="mkt-x" aria-label="Remove condition" title="Remove condition" onclick="_mkt.rules.splice(${i},1);pageMarket()">✕</button>` : "<span></span>"}
   </div>`;
 }
@@ -5883,10 +6010,10 @@ async function pageMarket() {
     <div class="ark">compose a strategy</div>
     <p class="sub" style="margin:5px 0 10px">Entry fires when <b>all</b> conditions are true on the same bar. Fields are the desk's own indicators — nothing you write is executed as code, so a strategy is always safe to run.</p>
     <div class="tgrid">
-      <label>Name<input id="mkt-name" class="ph-in" aria-label="Strategy name" maxlength="80" placeholder="e.g. Quiet base breakout"></label>
-      <label>Target %<input id="mkt-target" type="number" class="ph-in" value="7" step="0.5"></label>
-      <label>Stop %<input id="mkt-stop" type="number" class="ph-in" value="3.5" step="0.5"></label>
-      <label>Max hold (sessions)<input id="mkt-hold" type="number" class="ph-in" value="15"></label>
+      <label>Name<input id="mkt-name" class="ph-in" inputmode="text" enterkeyhint="next" aria-label="Strategy name" maxlength="80" placeholder="e.g. Quiet base breakout"></label>
+      <label>Target %<input id="mkt-target" type="text" inputmode="decimal" enterkeyhint="next" class="ph-in" value="7"></label>
+      <label>Stop %<input id="mkt-stop" type="text" inputmode="decimal" enterkeyhint="done" class="ph-in" value="3.5"></label>
+      <label>Max hold (sessions)<input id="mkt-hold" type="text" inputmode="numeric" enterkeyhint="done" class="ph-in" value="15"></label>
     </div>
     <textarea id="mkt-desc" class="tknote" style="min-height:64px;margin-top:10px" maxlength="600" placeholder="What is the idea, in plain English? What market behaviour are you trying to capture?"></textarea>
     <div class="ark" style="margin-top:14px">entry conditions — all must be true</div>
@@ -6788,8 +6915,9 @@ function openSearch() {
   const box = $("searchbox"); box.hidden = false;
   const inp = $("searchinput"); inp.value = ""; $("searchresults").innerHTML = "";
   loadSearchIndex(); setTimeout(() => inp.focus(), 30);
+  pushOverlay(closeSearch, box);
 }
-function closeSearch() { const b = $("searchbox"); if (b) b.hidden = true; }
+function closeSearch() { const b = $("searchbox"); if (b && !b.hidden) { b.hidden = true; popOverlay(closeSearch); } }
 function goTicker(sym) { closeSearch(); navigate("/ticker/" + encodeURIComponent(sym)); }
 async function runSearch(q) {
   q = q.trim().toUpperCase();
@@ -6843,8 +6971,10 @@ $("sideToggle")?.addEventListener("click", () => {
   localStorage.setItem("sideCollapsed", c ? "1" : "0");
   syncSideToggleLabel();
 });
-const openDrawer = () => shell.classList.add("drawer");
-const closeDrawer = () => shell.classList.remove("drawer");
+// noInert: the sidebar lives inside #shell, so inerting the shell here would also inert the
+// drawer (and unreachable-ize #sideOpen, its own trigger). Trap focus in the sidebar only.
+const openDrawer = () => { shell.classList.add("drawer"); pushOverlay(closeDrawer, $("sidebar"), { noInert: true }); };
+const closeDrawer = () => { if (shell.classList.contains("drawer")) { shell.classList.remove("drawer"); popOverlay(closeDrawer); } };
 $("sideOpen")?.addEventListener("click", openDrawer);
 $("sideBackdrop")?.addEventListener("click", closeDrawer);
 // close the mobile drawer after navigating or on Escape
@@ -7093,7 +7223,7 @@ function renderAccountButton() {
         <button id="acctOut">Sign out</button>
       </div>`;
     const menu = document.getElementById("acctMenu");
-    document.getElementById("acctBtn").onclick = (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; };
+    document.getElementById("acctBtn").onclick = (e) => { e.stopPropagation(); menu.hidden ? openAcct() : closeAcct(); };
     document.getElementById("acctOut").onclick = async () => { await sb.auth.signOut(); location.reload(); };
     document.getElementById("acctSettings").onclick = () => { menu.hidden = true; navigate("/settings"); };
     document.getElementById("acctPlans").onclick = () => { menu.hidden = true; navigate("/plans"); };
@@ -7105,18 +7235,32 @@ function renderAccountButton() {
   }
 }
 
+// Open/close the account menu through the shared overlay-history stack so the phone's Back
+// gesture closes the menu instead of leaving the desk (mirrors openDrawer/closeDrawer above).
+// Single stable function references so pushOverlay/popOverlay always match up.
+function openAcct() {
+  const m = document.getElementById("acctMenu");
+  if (!m || !m.hidden) return;
+  m.hidden = false;
+  pushOverlay(closeAcct);
+}
+function closeAcct() {
+  const m = document.getElementById("acctMenu");
+  if (!m || m.hidden) return;
+  m.hidden = true;
+  popOverlay(closeAcct);
+}
+
 // Close the account menu on any outside click / Escape / navigation. Registered ONCE,
 // in the CAPTURE phase so a stopPropagation() elsewhere in the SPA can't keep it stuck open.
 if (!window.__acctMenuGuard) {
   window.__acctMenuGuard = true;
-  const closeAcct = () => { const m = document.getElementById("acctMenu"); if (m) m.hidden = true; };
   document.addEventListener("click", (e) => {
     const m = document.getElementById("acctMenu"), holder = document.getElementById("acctSlot");
-    if (m && !m.hidden && holder && !holder.contains(e.target)) m.hidden = true;
+    if (m && !m.hidden && holder && !holder.contains(e.target)) closeAcct();
   }, true);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAcct(); });
   window.addEventListener("henneth:navigate", closeAcct);
-  window.addEventListener("popstate", closeAcct);
 }
 
 /* ---------- auth surface (sign in / create account) ----------
@@ -7360,7 +7504,7 @@ function openRecovery() {
   closeAuth();
   const box = el(`<div class="authbox" id="authbox"><div class="authpanel">
     <div class="auth-head"><b>Set a new password</b></div>
-    <form id="recform"><label>New password<input type="password" id="recPw" minlength="8" required autocomplete="new-password"></label>
+    <form id="recform"><label>New password<input type="password" id="recPw" inputmode="text" enterkeyhint="go" minlength="8" required autocomplete="new-password"></label>
     <button type="submit" class="auth-go">Save password</button></form>
     <div class="authmsg" id="authmsg"></div></div></div>`);
   document.body.appendChild(box);
@@ -7457,11 +7601,17 @@ async function saveTickerNote(sym) {
   const ta = document.getElementById("tknote"); if (!ta) return;
   const st = document.getElementById("tknote-status");
   if (!me) { if (st) st.textContent = "Signed out — sign in to save"; openAuth("signin"); return; }
-  const notes = { ...((myProfile && myProfile.notes) || {}) };
-  const v = ta.value.trim(); if (v) notes[sym] = v; else delete notes[sym];
-  if (st) st.textContent = "Saving…";
-  const err = await saveProfile({ notes });
-  if (st) { st.textContent = err ? "Save failed — try again" : "Saved ✓"; setTimeout(() => { if (st.isConnected) st.textContent = ""; }, 2500); }
+  if (saveTickerNote._busy) return;
+  saveTickerNote._busy = true;
+  try {
+    const notes = { ...((myProfile && myProfile.notes) || {}) };
+    const v = ta.value.trim(); if (v) notes[sym] = v; else delete notes[sym];
+    if (st) st.textContent = "Saving…";
+    const err = await saveProfile({ notes });
+    if (st) { st.textContent = err ? "Save failed — try again" : "Saved ✓"; setTimeout(() => { if (st.isConnected) st.textContent = ""; }, 2500); }
+  } finally {
+    saveTickerNote._busy = false;
+  }
 }
 async function toggleWatch(sym, btn) {
   if (!me) { openAuth("signup"); return; }               // must be signed in to save
@@ -7653,9 +7803,9 @@ async function pagePortfolio() {
 
   <div class="card ph-form">
     <div class="ph-row">
-      <input id="ph-tkr" placeholder="Ticker (e.g. FFC)" aria-label="Ticker" class="ph-in combo" autocomplete="off">
-      <input id="ph-sh" type="number" placeholder="Shares" aria-label="Shares held" class="ph-in" min="0" step="1">
-      <input id="ph-cost" type="number" placeholder="Avg cost (Rs)" aria-label="Average cost per share in rupees" class="ph-in" min="0" step="0.01">
+      <input id="ph-tkr" type="search" enterkeyhint="next" placeholder="Ticker (e.g. FFC)" aria-label="Ticker" class="ph-in combo" autocomplete="off">
+      <input id="ph-sh" type="text" inputmode="numeric" enterkeyhint="next" placeholder="Shares" aria-label="Shares held" class="ph-in">
+      <input id="ph-cost" type="text" inputmode="decimal" enterkeyhint="done" placeholder="Avg cost (Rs)" aria-label="Average cost per share in rupees" class="ph-in">
       <button class="note-save" onclick="submitHolding()">Add holding</button>
     </div>
     <span id="ph-msg" class="sub"></span>
