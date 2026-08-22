@@ -17,6 +17,14 @@ class NoCache(http.server.SimpleHTTPRequestHandler):
         # clean dashboard routes are served by dashboard/index.html, while real
         # assets and state files continue through SimpleHTTPRequestHandler.
         clean = path.split("?", 1)[0].strip("/")
+        # AGENTS.md guardrail 9: config/desk.json holds the owner's real capital and the
+        # Telegram bot token and must never be served. This handler chdirs to the repo root,
+        # so without this deny the whole config/ tree (and .env) is readable by any local
+        # client at http://127.0.0.1:<port>/config/desk.json.
+        # Point at a path that cannot exist so the normal 404 flow (the branded page below)
+        # handles it, rather than emitting a second response from inside translate_path.
+        if clean == ".env" or clean.split("/", 1)[0] in {"config", ".git"}:
+            return str(Path(".not-served").resolve())
         if not clean.startswith("dashboard/"):
             dashboard_asset = Path("dashboard", clean)
             if dashboard_asset.is_file():

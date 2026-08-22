@@ -198,7 +198,11 @@ export default async function handler(request) {
   const question = String(body?.question || '').trim().slice(0, 500);
   if (!question) return json(400, { ok: false, error: 'empty question' });
   // last exchange only — enough for a natural follow-up, small enough to stay light
-  const prevTurn = Array.isArray(body?.history) ? body.history.slice(-2) : [];
+  // Filter to objects first: a null or string element in a client-sent history array
+  // otherwise throws on m.role below and turns a malformed request into a 500.
+  const prevTurn = (Array.isArray(body?.history) ? body.history : [])
+    .filter(m => m && typeof m === 'object')
+    .slice(-2);
   const prevQuestion = prevTurn.find(m => m.role === 'user')?.content || null;
 
   const origin = new URL(request.url).origin;

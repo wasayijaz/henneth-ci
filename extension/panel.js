@@ -662,7 +662,10 @@
     }
     syms.forEach((sym) => list.appendChild(noteItem(sym, notes[sym])));
     wrap.querySelector("#newBtn").addEventListener("click", () => {
-      const s = wrap.querySelector("#newSym").value.trim().toUpperCase();
+      // Strip anything that is not a PSX symbol character. Without this a quote or bracket
+      // typed into #newSym lands inside the [data-sym="..."] selector below and throws a
+      // SyntaxError, which kills the New note button for the rest of the session.
+      const s = wrap.querySelector("#newSym").value.trim().toUpperCase().replace(/[^A-Z0-9.\-]/g, "");
       if (!s) return;
       if (list.querySelector('.empty')) list.innerHTML = "";
       if (!list.querySelector('[data-sym="' + s + '"]')) {

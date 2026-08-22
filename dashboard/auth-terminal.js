@@ -1004,8 +1004,21 @@ function hnAuthRun(root, initialTab){
     try{
       if(localStorage.getItem('henneth-onboarding-skipped') === '1'){ state.onboarded=true; showToday(); return; }
       var saved = JSON.parse(localStorage.getItem('henneth-onboarding-draft') || 'null');
-      if(saved && saved.answers) { state.onboardingAnswers = saved.answers; state.onboardingStep = Math.min(3, Number(saved.step) || 0); }
-      else if(saved && saved.goal !== undefined) state.onboardingAnswers = saved;
+      if(saved && saved.answers) {
+        // Merge onto the defaults rather than replacing them. A draft missing `radar` (an
+        // older shape, or a truncated write) would otherwise make renderOnboardingStep and
+        // prepareDesk throw on radar.tickers/radar.sectors, leaving a blank onboarding shell.
+        var a = saved.answers, r = a.radar || {};
+        state.onboardingAnswers = {
+          goal: a.goal || '', lens: a.lens || '', horizon: a.horizon || '',
+          radar: {
+            sectors: Array.isArray(r.sectors) ? r.sectors : [],
+            tickers: Array.isArray(r.tickers) ? r.tickers : [],
+            source: r.source || ''
+          }
+        };
+        state.onboardingStep = Math.min(3, Number(saved.step) || 0);
+      }
     }catch(err){}
     els.formWrap.style.display = 'none';
     els.onboardingShell.hidden = false;
