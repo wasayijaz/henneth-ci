@@ -1,5 +1,5 @@
 {
- "schema_version": 1,
+ "schema_version": 2,
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -25,16 +25,84 @@
  "supported_sectors": [
   "BANKS",
   "CEMENT",
-  "E&P"
+  "E&P",
+  "REFINERY",
+  "FERTILIZER",
+  "AUTO_ASSEMBLER",
+  "POWER",
+  "OMC",
+  "HOLDING_COMPANY"
  ],
  "companies": {
   "ATRL": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "REFINERY",
+   "drivers": [
+    "crude_supply",
+    "refinery_margin",
+    "refinery_throughput",
+    "plant_availability",
+    "product_mix",
+    "inventory_position"
+   ],
+   "edges": [
+    {
+     "from": "crude_supply",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "refinery_margin",
+     "to": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "refinery_throughput",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "barrels_per_day",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "plant_availability",
+     "to": "refinery_throughput",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "product_mix",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "inventory_position",
+     "to": "working_capital",
+     "statement_line": "inventory",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gross_profit",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "BOP": {
    "sector": "BANKS",
@@ -80,6 +148,13 @@
      "to": "profit_after_tax",
      "statement_line": "non_interest_income",
      "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "capital_ratio",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
      "basis": "declarative_assumption"
     },
     {
@@ -146,6 +221,13 @@
      "basis": "declarative_assumption"
     },
     {
+     "from": "export_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
      "from": "ebitda",
      "to": "fcf",
      "statement_line": "operating_cash_flow",
@@ -163,12 +245,74 @@
    "quality_flags": []
   },
   "ENGROH": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "HOLDING_COMPANY",
+   "drivers": [
+    "subsidiary_value",
+    "associate_earnings",
+    "holding_discount",
+    "capital_allocation",
+    "portfolio_value",
+    "dividend_income"
+   ],
+   "edges": [
+    {
+     "from": "subsidiary_value",
+     "to": "profit_after_tax",
+     "statement_line": "profit_after_tax",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "associate_earnings",
+     "to": "profit_after_tax",
+     "statement_line": "profit_after_tax",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "holding_discount",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "capital_allocation",
+     "to": "portfolio_value",
+     "statement_line": "equity_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "portfolio_value",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "dividend_income",
+     "to": "fcf",
+     "statement_line": "cash_dividends",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "profit_after_tax",
+     "to": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "eps",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "FCCL": {
    "sector": "CEMENT",
@@ -217,6 +361,13 @@
      "basis": "declarative_assumption"
     },
     {
+     "from": "export_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
      "from": "ebitda",
      "to": "fcf",
      "statement_line": "operating_cash_flow",
@@ -234,20 +385,144 @@
    "quality_flags": []
   },
   "FFC": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "FERTILIZER",
+   "drivers": [
+    "gas_supply",
+    "fertilizer_price",
+    "production_volume",
+    "fertilizer_capacity",
+    "input_cost",
+    "working_capital"
+   ],
+   "edges": [
+    {
+     "from": "gas_supply",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_mmbtu",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fertilizer_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "production_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fertilizer_capacity",
+     "to": "production_volume",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "input_cost",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "working_capital",
+     "to": "fcf",
+     "statement_line": "working_capital",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "revenue",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "GAL": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "AUTO_ASSEMBLER",
+   "drivers": [
+    "auto_assembly_capacity",
+    "sales_volume",
+    "realized_price",
+    "localization_rate",
+    "import_cost",
+    "model_mix"
+   ],
+   "edges": [
+    {
+     "from": "auto_assembly_capacity",
+     "to": "sales_volume",
+     "statement_line": "capacity",
+     "unit": "units",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "sales_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "units",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "realized_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_unit",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "localization_rate",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "import_cost",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "model_mix",
+     "to": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gross_profit",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "HBL": {
    "sector": "BANKS",
@@ -296,6 +571,13 @@
      "basis": "declarative_assumption"
     },
     {
+     "from": "capital_ratio",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
      "from": "profit_after_tax",
      "to": "eps",
      "statement_line": "eps",
@@ -313,12 +595,74 @@
    "quality_flags": []
   },
   "HUBC": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "POWER",
+   "drivers": [
+    "generation_volume",
+    "tariff",
+    "fuel_cost",
+    "generation_capacity",
+    "plant_availability",
+    "circular_debt"
+   ],
+   "edges": [
+    {
+     "from": "generation_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "mwh",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "tariff",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_kwh",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "fuel_cost",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_mwh",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "generation_capacity",
+     "to": "generation_volume",
+     "statement_line": "capacity",
+     "unit": "mwh",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "plant_availability",
+     "to": "generation_volume",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "circular_debt",
+     "to": "working_capital",
+     "statement_line": "working_capital",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "revenue",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "LUCK": {
    "sector": "CEMENT",
@@ -364,6 +708,13 @@
      "to": "revenue",
      "statement_line": "capacity",
      "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "export_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
      "basis": "declarative_assumption"
     },
     {
@@ -500,6 +851,13 @@
      "basis": "declarative_assumption"
     },
     {
+     "from": "capital_ratio",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
      "from": "profit_after_tax",
      "to": "eps",
      "statement_line": "eps",
@@ -560,6 +918,13 @@
      "to": "revenue",
      "statement_line": "capacity",
      "unit": "tonnes",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "export_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
      "basis": "declarative_assumption"
     },
     {
@@ -626,6 +991,13 @@
      "basis": "declarative_assumption"
     },
     {
+     "from": "capital_ratio",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
      "from": "profit_after_tax",
      "to": "eps",
      "statement_line": "eps",
@@ -643,12 +1015,74 @@
    "quality_flags": []
   },
   "NRL": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "REFINERY",
+   "drivers": [
+    "crude_supply",
+    "refinery_margin",
+    "refinery_throughput",
+    "plant_availability",
+    "product_mix",
+    "inventory_position"
+   ],
+   "edges": [
+    {
+     "from": "crude_supply",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "refinery_margin",
+     "to": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "refinery_throughput",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "barrels_per_day",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "plant_availability",
+     "to": "refinery_throughput",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "product_mix",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "inventory_position",
+     "to": "working_capital",
+     "statement_line": "inventory",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gross_profit",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "OGDC": {
    "sector": "E&P",
@@ -791,20 +1225,144 @@
    "quality_flags": []
   },
   "PRL": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "REFINERY",
+   "drivers": [
+    "crude_supply",
+    "refinery_margin",
+    "refinery_throughput",
+    "plant_availability",
+    "product_mix",
+    "inventory_position"
+   ],
+   "edges": [
+    {
+     "from": "crude_supply",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "refinery_margin",
+     "to": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "usd_per_bbl",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "refinery_throughput",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "barrels_per_day",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "plant_availability",
+     "to": "refinery_throughput",
+     "statement_line": "production",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "product_mix",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "inventory_position",
+     "to": "working_capital",
+     "statement_line": "inventory",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gross_profit",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "PSO": {
-   "sector": null,
-   "drivers": [],
-   "edges": [],
-   "quality_flags": [
-    "sector_model_not_in_wave_1"
-   ]
+   "sector": "OMC",
+   "drivers": [
+    "product_price",
+    "sales_volume",
+    "import_parity",
+    "storage_capacity",
+    "exchange_rate",
+    "marketing_margin"
+   ],
+   "edges": [
+    {
+     "from": "product_price",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_litre",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "sales_volume",
+     "to": "revenue",
+     "statement_line": "revenue",
+     "unit": "litres",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "import_parity",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_litre",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "storage_capacity",
+     "to": "working_capital",
+     "statement_line": "inventory",
+     "unit": "litres",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "exchange_rate",
+     "to": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_usd",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "marketing_margin",
+     "to": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "pkr_per_litre",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "gross_profit",
+     "to": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "ebitda",
+     "to": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "basis": "declarative_assumption"
+    }
+   ],
+   "quality_flags": []
   },
   "UBL": {
    "sector": "BANKS",
@@ -850,6 +1408,13 @@
      "to": "profit_after_tax",
      "statement_line": "non_interest_income",
      "unit": "pkr",
+     "basis": "declarative_assumption"
+    },
+    {
+     "from": "capital_ratio",
+     "to": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
      "basis": "declarative_assumption"
     },
     {

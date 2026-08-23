@@ -402,6 +402,22 @@ def build():
     knowledge_graph = load_json(STATE / "company_intel" / "company_graph.json", {"companies": {}})
     change_intelligence = load_json(STATE / "company_intel" / "change_intelligence.json", {"companies": {}})
     company_briefs = load_json(STATE / "company_briefs.json", {"companies": {}})
+    operating_events = load_json(STATE / "company_intel" / "operating_events.json", {"companies": {}})
+    driver_graphs = load_json(STATE / "company_intel" / "driver_graphs.json", {"companies": {}})
+    impact_scenarios = load_json(STATE / "company_intel" / "impact_scenarios.json", {"companies": {}})
+    event_studies = load_json(STATE / "company_intel" / "event_studies.json", {"studies": {}})
+    conditional_benchmarks = load_json(STATE / "company_intel" / "conditional_benchmarks.json", {"companies": {}})
+    causal_foundations = load_json(STATE / "company_intel" / "causal_foundations.json", {"companies": {}})
+    financial_model_inputs = load_json(STATE / "company_intel" / "financial_model_inputs.json", {"companies": {}})
+    financial_coverage = load_json(STATE / "company_intel" / "financial_coverage.json", {"companies": {}})
+    forecast_readiness = load_json(STATE / "company_intel" / "forecast_readiness.json", {"companies": {}})
+    signal_clusters = load_json(STATE / "company_intel" / "signal_clusters.json", {"companies": {}})
+    thesis_monitoring = load_json(STATE / "company_intel" / "thesis_monitoring.json", {"companies": {}})
+    intelligence_confidence = load_json(STATE / "company_intel" / "intelligence_confidence.json", {"companies": {}})
+    management_delivery = load_json(STATE / "company_intel" / "management_delivery.json", {"companies": {}})
+    evidence_watchlist = load_json(STATE / "company_intel" / "evidence_watchlist.json", {"companies": {}})
+    scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
+    company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue)
@@ -410,10 +426,7 @@ def build():
     # retain stale public rows (for example a former pilot constituent), but
     # those rows must not silently expand the 20-company CI surface.
     pilot_symbols = (profiles_state.get("pilot") or {}).get("symbols") or list(profiles)
-    symbols = sorted(
-        (sym for sym in pilot_symbols if sym in profiles),
-        key=lambda s: (-(liquidity.get(s, {}).get("adtv_pkr") or 0), s),
-    )
+    symbols = [sym for sym in pilot_symbols if sym in profiles]
     rows = []
     for sym in symbols:
         q = quant.get(sym, {})
@@ -430,6 +443,61 @@ def build():
         graph = _company_graph(knowledge_graph, sym)
         change_digest = _change_intelligence(change_intelligence, sym)
         brief = _company_brief(company_briefs, company_documents, sym)
+        op_events = (operating_events.get("companies", {}).get(sym) or {}).get("events") or []
+        dgraph = driver_graphs.get("companies", {}).get(sym) or {"sector": None, "drivers": [], "edges": [], "quality_flags": ["missing_driver_graph"]}
+        scenarios = (impact_scenarios.get("companies", {}).get(sym) or {}).get("scenarios") or []
+        studies = [v for v in (event_studies.get("studies") or {}).values() if v.get("symbol") == sym]
+        conditional_benchmark_row = (conditional_benchmarks.get("companies") or {}).get(sym) or {"symbol": sym, "status": "state_missing", "benchmark_count": 0, "benchmarks": [], "policy": {}, "limitations": ["conditional_benchmarks_state_missing"]}
+        causal_foundations_row = causal_foundations.get("companies", {}).get(sym) or {"symbol": sym, "sector": None, "causal_rows": [], "coverage": {"causal_row_count": 0}}
+        model_inputs = financial_model_inputs.get("companies", {}).get(sym) or {"status": "unsupported_sector_model", "observations": {}, "derived": {}}
+        financial_coverage_row = financial_coverage.get("companies", {}).get(sym) or {
+            "symbol": sym,
+            "status": "blocked_no_candidate_documents",
+            "classification": "financial_results_coverage",
+            "indexed_official_financial_doc_count": 0,
+            "indexed_official_financial_docs": [],
+            "required_annual_periods": [],
+            "missing_revenue_pat_eps_by_annual_period": [],
+            "qualification_queue": {
+                "status": "blocked_no_candidate_documents",
+                "candidate_documents": [],
+            },
+        }
+        forecast_readiness_row = forecast_readiness.get("companies", {}).get(sym) or {
+            "symbol": sym,
+            "status": "blocked",
+            "qualified_period_count": 0,
+            "qualified_periods": [],
+            "missing_requirements": ["forecast_readiness_state_missing"],
+            "blocked_outputs": {
+                "forecast": "blocked_insufficient_qualified_history",
+                "valuation": "blocked_insufficient_qualified_history",
+                "market_expectations": "blocked_insufficient_qualified_history",
+            },
+        }
+        signal_cluster_row = signal_clusters.get("companies", {}).get(sym) or {"candidate_count": 0, "eligible_count": 0, "clusterable_count": 0, "rejection_reasons": {}, "clusters": []}
+        thesis_row = (thesis_monitoring.get("companies") or {}).get(sym)
+        confidence_row = (intelligence_confidence.get("companies") or {}).get(sym)
+        management_delivery_row = (management_delivery.get("companies") or {}).get(sym)
+        evidence_watchlist_row = (evidence_watchlist.get("companies") or {}).get(sym)
+        scenario_lab_row = scenario_lab.get("companies", {}).get(sym) or {
+            "symbol": sym,
+            "status": {
+                "scenario_lab": "blocked_missing_snapshot_inputs",
+                "market_expectations": "blocked_missing_snapshot_inputs",
+                "valuation": "blocked_missing_snapshot_inputs",
+                "forecast": "blocked_insufficient_qualified_history",
+            },
+            "scenario": None,
+            "reverse_expectations": None,
+            "ebitda": None,
+            "fcf": None,
+            "dcf": None,
+        }
+        company_brain = company_brains.get("companies", {}).get(sym) or {
+            "identity": {"symbol": sym}, "domains": {}, "intelligence_objects": [],
+            "timeline": [], "coverage": {"object_count": 0},
+        }
         rows.append({
             "symbol": sym,
             "name": (universe.get(sym) or {}).get("name") or f.get("name") or "",
@@ -480,6 +548,22 @@ def build():
             "sources": sources,
             "source_quality": _source_quality(source_qa, sym),
             "brief": brief,
+            "operating_events": op_events,
+            "driver_graph": dgraph,
+            "impact_scenarios": scenarios,
+            "event_studies": studies,
+            "conditional_benchmarks": conditional_benchmark_row,
+            "causal_foundations": causal_foundations_row,
+            "financial_model_inputs": model_inputs,
+            "financial_coverage": financial_coverage_row,
+            "forecast_readiness": forecast_readiness_row,
+            "signal_clusters": signal_cluster_row,
+            "thesis_monitoring": thesis_row,
+            "intelligence_confidence": confidence_row,
+            "management_delivery": management_delivery_row,
+            "evidence_watchlist": evidence_watchlist_row,
+            "scenario_lab": scenario_lab_row,
+            "company_brain": company_brain,
             "intelligence": {
                 "document_count": len(filings),
                 "event_count": len(timeline),
@@ -496,6 +580,21 @@ def build():
                 "last_event_at": timeline[0].get("date") if timeline else None,
                 "source_status": sources.get("status"),
                 "source_quality_flags": len((_source_quality(source_qa, sym).get("quality_flags") or [])),
+                "operating_event_count": len(op_events),
+                "impact_scenario_count": len(scenarios),
+                "event_study_count": len(studies),
+                "conditional_benchmark_count": conditional_benchmark_row.get("benchmark_count", 0),
+                "causal_row_count": (causal_foundations_row.get("coverage") or {}).get("causal_row_count", 0),
+                "financial_model_status": model_inputs.get("status"),
+                "financial_coverage_status": financial_coverage_row.get("status"),
+                "financial_coverage_candidates": len(((financial_coverage_row.get("qualification_queue") or {}).get("candidate_documents")) or []),
+                "forecast_readiness_status": forecast_readiness_row.get("status"),
+                "forecast_qualified_period_count": forecast_readiness_row.get("qualified_period_count"),
+                "scenario_lab_status": (scenario_lab_row.get("status") or {}).get("scenario_lab"),
+                "market_expectations_status": (scenario_lab_row.get("status") or {}).get("market_expectations"),
+                "brain_object_count": (company_brain.get("coverage") or {}).get("object_count", 0),
+                "management_delivery_records": (management_delivery_row or {}).get("delivery_record_count", 0),
+                "evidence_watchlist_status": (evidence_watchlist_row or {}).get("status"),
             },
             "news": _latest_news(news, sym),
             "insider_filings": _insider(insider, sym),

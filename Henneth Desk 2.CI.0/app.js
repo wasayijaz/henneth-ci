@@ -6,6 +6,12 @@ const $ = id => document.getElementById(id);
 const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 }[c]));
+// New intelligence views only link to explicit web sources. State is private input,
+// so reject non-http(s) schemes before the existing esc() helper touches markup.
+const safeHref = value => {
+  const text = String(value ?? "").trim();
+  return /^https?:\/\//i.test(text) ? esc(text) : "";
+};
 const fmt = (value, digits = 2) => value == null ? "unknown" : Number(value).toLocaleString("en", { maximumFractionDigits: digits });
 const pct = value => value == null ? "unknown" : `${value > 0 ? "+" : ""}${fmt(value, 1)}%`;
 const short = (value, limit = 80) => {
@@ -13,7 +19,20 @@ const short = (value, limit = 80) => {
   return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 };
 
-let state = { session: null, data: null, selected: null, filter: "", view: "overview" };
+const ASK_MAX_QUESTION_BYTES = 4096;
+const THESIS_STATUSES = ["Strengthening", "Stable", "Weakening", "Broken"];
+const THESIS_COLUMNS = "id,symbol,thesis,expected_earnings_path,catalysts,risks,required_evidence,kill_conditions,user_fair_value_assumption,user_fair_value_basis,status,archived,created_at,updated_at";
+const THESIS_LIMITS = { thesis: 5000, expected: 2000, basis: 1000, fairValueMax: 1000000, listItems: 50, listItem: 500 };
+let state = {
+  session: null,
+  data: null,
+  selected: null,
+  filter: "",
+  view: "overview",
+  ask: { pending: {}, nextId: 0, bySymbol: {} },
+  scenario: { bySymbol: {} },
+  theses: { loaded: false, loading: false, saving: false, error: null, bySymbol: {}, drafts: {} },
+};
 
 const SCHEME_CYCLE = { system: "light", light: "dark", dark: "system" };
 
@@ -84,6 +103,70 @@ async function refreshSession() {
   }
 }
 
+function thesisErrorCode(status, payload) {
+  const text = `${payload?.code || ""} ${payload?.message || ""} ${payload?.details || ""} ${payload?.hint || ""}`;
+  if (status === 401) return "auth_expired";
+  if (status === 404 || payload?.code === "PGRST205" || /schema cache.*company_theses|company_theses.*schema cache|relation .*company_theses.*does not exist|could not find .*company_theses/i.test(text)) return "schema_unavailable";
+  return "request_failed";
+}
+
+async function companyThesisRequest(path, options = {}, retried = false) {
+  const token = state.session?.access_token;
+  if (!token) throw new Error("auth_expired");
+  const headers = {
+    apikey: SB_KEY,
+    Authorization: `Bearer ${token}`,
+  };
+  if (options.body !== undefined) headers["content-type"] = "application/json";
+  if (options.prefer) headers.Prefer = options.prefer;
+  let res;
+  try {
+    res = await fetch(`${SB_URL}/rest/v1/company_theses${path}`, {
+      method: options.method || "GET",
+      headers,
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    });
+  } catch {
+    throw new Error("network_unavailable");
+  }
+  if (res.status === 401 && !retried) {
+    const fresh = await refreshSession();
+    if (fresh) return companyThesisRequest(path, options, true);
+  }
+  if (res.status === 204) return null;
+  const payload = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(thesisErrorCode(res.status, payload));
+  return payload;
+}
+
+function groupCompanyTheses(rows) {
+  const bySymbol = {};
+  (Array.isArray(rows) ? rows : []).forEach(row => {
+    if (!row?.symbol) return;
+    (bySymbol[row.symbol] || (bySymbol[row.symbol] = [])).push(row);
+  });
+  Object.values(bySymbol).forEach(list => list.sort((a, b) => String(b.updated_at || b.created_at || "").localeCompare(String(a.updated_at || a.created_at || ""))));
+  return bySymbol;
+}
+
+async function loadCompanyTheses() {
+  if (!state.session?.access_token) return;
+  state.theses.loading = true;
+  state.theses.error = null;
+  renderDesk();
+  try {
+    const rows = await companyThesisRequest(`?select=${encodeURIComponent(THESIS_COLUMNS)}&order=updated_at.desc`);
+    state.theses.bySymbol = groupCompanyTheses(rows);
+    state.theses.loaded = true;
+  } catch (error) {
+    state.theses.error = error.message || "request_failed";
+    state.theses.loaded = true;
+  } finally {
+    state.theses.loading = false;
+    renderDesk();
+  }
+}
+
 async function signIn(email, password) {
   const session = await authRequest("token?grant_type=password", { email, password });
   saveSession(session);
@@ -129,6 +212,58 @@ async function loadData(retried = false) {
   $("app").removeAttribute("aria-busy");
   $("signOut").hidden = false;
   renderDesk();
+  loadCompanyTheses();
+}
+
+function boundAskQuestion(value) {
+  let text = String(value || "").trim();
+  if (new TextEncoder().encode(text).byteLength <= ASK_MAX_QUESTION_BYTES) return text;
+  const chars = Array.from(text);
+  while (chars.length && new TextEncoder().encode(chars.join("")).byteLength > ASK_MAX_QUESTION_BYTES) chars.pop();
+  return chars.join("").trim();
+}
+
+async function askCompany(question) {
+  const symbol = state.selected;
+  const token = state.session?.access_token;
+  const text = boundAskQuestion(question);
+  if (!symbol || !token || !text || state.ask.pending[symbol]) return;
+  const requestId = ++state.ask.nextId;
+  state.ask.pending[symbol] = requestId;
+  state.ask.bySymbol[symbol] = { question: text, error: null, answer: null, citations: [] };
+  renderDesk({ focusAsk: true });
+  let res;
+  try {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const currentToken = state.session?.access_token;
+      if (!currentToken) break;
+      res = await fetch("api/ask", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${currentToken}`, "content-type": "application/json" },
+        body: JSON.stringify({ symbol, question: text }),
+      });
+      if (res.status !== 401 || attempt === 1 || !(await refreshSession())) break;
+    }
+  } catch {
+    if (state.ask.pending[symbol] !== requestId) return;
+    delete state.ask.pending[symbol];
+    state.ask.bySymbol[symbol] = { question: text, error: "The Ask endpoint could not be reached.", answer: null, citations: [] };
+    renderDesk({ focusAsk: state.selected === symbol });
+    return;
+  }
+  if (state.ask.pending[symbol] !== requestId) return;
+  if (!res) {
+    delete state.ask.pending[symbol];
+    state.ask.bySymbol[symbol] = { question: text, error: "Your session expired before Ask could complete.", answer: null, citations: [] };
+    renderDesk({ focusAsk: state.selected === symbol });
+    return;
+  }
+  const body = await res.json().catch(() => ({}));
+  delete state.ask.pending[symbol];
+  state.ask.bySymbol[symbol] = res.ok
+    ? { question: text, error: null, answer: body.answer, citations: body.citations || [] }
+    : { question: text, error: body.error || `Ask failed (${res.status}).`, answer: null, citations: [] };
+  renderDesk({ focusAsk: state.selected === symbol });
 }
 
 function renderGate(message) {
@@ -190,7 +325,7 @@ function renderDesk(searchState) {
       </div>
       <span class="sr-only" role="status" aria-live="polite">${esc(list.length)} companies match.</span>
     </aside>
-    <section class="detail" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>`;
+    <section id="companyDetail" class="detail" role="tabpanel" tabindex="-1" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>`;
   if ($("companyStatus")) $("companyStatus").textContent = row ? `${row.symbol} · company intelligence` : "Company Intelligence";
   $("search").oninput = event => {
     const start = event.target.selectionStart;
@@ -209,15 +344,54 @@ function renderDesk(searchState) {
   document.querySelectorAll("[data-view]").forEach(btn => {
     btn.onclick = () => {
       state.view = btn.dataset.view;
-      renderDesk();
+      renderDesk({ focusView: state.view });
     };
+    btn.onkeydown = event => moveViewFocus(event, btn);
   });
+  const askForm = $("askForm");
+  if (askForm) {
+    askForm.onsubmit = event => {
+      event.preventDefault();
+      askCompany($("askInput")?.value);
+    };
+  }
+  const scenarioForm = $("scenarioForm");
+  if (scenarioForm && row) {
+    scenarioForm.oninput = () => captureScenarioInputs(row.symbol);
+    scenarioForm.onsubmit = event => {
+      event.preventDefault();
+      captureScenarioInputs(row.symbol);
+      calculateScenario(row);
+      renderDesk({ focusScenario: true });
+    };
+    $("scenarioClear")?.addEventListener("click", () => {
+      state.scenario.bySymbol[row.symbol] = blankScenarioState();
+      renderDesk({ focusScenario: true });
+    });
+  }
+  if (row) bindPrivateTheses(row);
   if (searchState?.focus) {
     const input = $("search");
     input.focus({ preventScroll: true });
     input.setSelectionRange(searchState.start, searchState.end);
   }
+  if (searchState?.focusView) {
+    document.querySelector(`[data-view="${CSS.escape(searchState.focusView)}"]`)?.focus({ preventScroll: true });
+  }
+  if (searchState?.focusAsk) {
+    $("askInput")?.focus({ preventScroll: true });
+  }
+  if (searchState?.focusScenario) {
+    $("scenarioGrowth")?.focus({ preventScroll: true });
+  }
+  if (searchState?.focusThesis) {
+    $("privateThesisText")?.focus({ preventScroll: true });
+  }
   if (!searchState) enhanceMotion();
+}
+
+function currentPilotSymbols() {
+  return new Set((state.data?.tickers || []).map(row => row.symbol).filter(Boolean));
 }
 
 function moveCompanyFocus(event, button) {
@@ -233,6 +407,20 @@ function moveCompanyFocus(event, button) {
   state.selected = options[index].dataset.symbol;
   renderDesk();
   document.querySelector(`[data-symbol="${CSS.escape(state.selected)}"]`)?.focus({ preventScroll: true });
+}
+
+function moveViewFocus(event, button) {
+  if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+  const tabs = [...document.querySelectorAll("[data-view]")];
+  if (!tabs.length) return;
+  event.preventDefault();
+  let index = tabs.indexOf(button);
+  if (event.key === "ArrowRight") index = (index + 1) % tabs.length;
+  if (event.key === "ArrowLeft") index = (index - 1 + tabs.length) % tabs.length;
+  if (event.key === "Home") index = 0;
+  if (event.key === "End") index = tabs.length - 1;
+  state.view = tabs[index].dataset.view;
+  renderDesk({ focusView: state.view });
 }
 
 function metric(label, value, note) {
@@ -267,10 +455,21 @@ function detail(r) {
       ${metric("Graph links", intel.graph_edge_count ?? 0, `${intel.graph_node_count ?? 0} nodes mapped`)}
     </div>
     ${renderViewNav(r)}
-    ${state.view === "timeline" ? renderTimeline(r)
+    ${state.view === "snapshot" ? renderInvestorSnapshot(r)
+      : state.view === "timeline" ? renderTimeline(r)
       : state.view === "changes" ? renderChangeIntelligence(r)
       : state.view === "trends" ? renderFinancials(r)
+      : state.view === "baseline" ? renderFinancialBaseline(r)
+      : state.view === "forecast" ? renderForecastReadiness(r)
+      : state.view === "intelligence" ? renderIntelligence(r)
+      : state.view === "thesis" ? renderThesisMonitor(r)
+      : state.view === "watchlist" ? renderEvidenceWatchlist(r)
+      : state.view === "scenarios" ? renderScenarioLab(r)
+      : state.view === "ask" ? renderAskHenneth(r)
       : state.view === "graph" ? renderGraph(r)
+      : state.view === "operating" ? renderOperatingIntelligence(r)
+      : state.view === "conditional" ? renderConditionalBenchmarks(r)
+      : state.view === "causal" ? renderCausalFoundations(r)
       : state.view === "coverage" ? renderCoverage(r)
       : state.view === "filings" ? renderFilings(r)
       : state.view === "sources" ? renderSources(r)
@@ -281,17 +480,433 @@ function detail(r) {
 function renderViewNav(r) {
   const tabs = [
     ["overview", "Overview"],
+    ["snapshot", "Investor snapshot"],
     ["timeline", `Timeline ${r.timeline?.length || 0}`],
     ["changes", `Changes ${r.change_intelligence?.items?.length || 0}`],
     ["trends", `Trends ${r.financial_series?.facts?.length || 0}`],
+    ["baseline", "Financial baseline"],
+    ["forecast", "Forecast readiness"],
+    ["intelligence", "Intelligence"],
+    ["thesis", `Thesis monitor ${r.thesis_monitoring?.active_thesis_count || 0}`],
+    ["watchlist", `Watchlist ${r.evidence_watchlist?.active_watch_count ?? "unknown"}`],
+    ["scenarios", "Scenarios"],
+    ["ask", "Ask Henneth"],
     ["graph", `Graph ${r.graph?.edges?.length || 0}`],
+    ["operating", `Operating intelligence ${r.operating_events?.length || 0}`],
+    ["conditional", `Conditional benchmarks ${r.conditional_benchmarks?.benchmarks?.length || 0}`],
+    ["causal", `Causal map ${r.causal_foundations?.causal_rows?.length || 0}`],
     ["coverage", "Coverage"],
     ["filings", `Filings ${r.filings?.length || 0}`],
     ["sources", `Sources ${(r.sources?.sources?.length || 0) + (r.sources?.documents?.length || 0)}`],
     ["brief", r.brief?.current ? "Brief" : "Brief queue"],
   ];
   return `<nav class="viewnav" aria-label="Company intelligence views" role="tablist">${tabs.map(([key, label]) => `
-    <button type="button" role="tab" aria-selected="${state.view === key}" class="${state.view === key ? "active" : ""}" data-view="${key}">${esc(label)}</button>`).join("")}</nav>`;
+    <button type="button" role="tab" aria-selected="${state.view === key}" aria-controls="companyDetail" class="${state.view === key ? "active" : ""}" data-view="${key}">${esc(label)}</button>`).join("")}</nav>`;
+}
+
+const OBJECT_TYPE_LABELS = {
+  reported_fact: "Reported Fact",
+  derived_fact: "Derived Fact",
+  inference: "Inference",
+  scenario: "Scenario",
+  forecast: "Forecast",
+};
+
+function objectTypeLabel(value) {
+  const key = String(value || "").trim().toLowerCase();
+  return OBJECT_TYPE_LABELS[key] || (key ? key.replaceAll("_", " ") : "Unknown object type");
+}
+
+function objectTypeClass(value) {
+  const key = String(value || "").trim().toLowerCase().replaceAll("_", "-");
+  return ["reported-fact", "derived-fact", "inference", "scenario", "forecast"].includes(key) ? key : "unknown";
+}
+
+function unknownValue(value, label = "Unknown — awaiting sourced inputs") {
+  return value == null || value === "" ? label : esc(value);
+}
+
+function confidenceValue(value) {
+  return value == null || value === "" ? "Unknown" : `${esc(fmt(value, 0))}/100`;
+}
+
+function probabilityValue(value) {
+  if (value == null || value === "") return "Unknown";
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "Unknown";
+  const percent = number >= 0 && number <= 1 ? number * 100 : number;
+  return `${esc(fmt(percent, 1))}%`;
+}
+
+function listValue(value, empty = "Unknown — awaiting sourced inputs") {
+  if (!Array.isArray(value) || !value.length) return empty;
+  return value.map(item => esc(item)).join(", ");
+}
+
+function operatingEvidence(items) {
+  if (!Array.isArray(items) || !items.length) return `<div class="oi-empty-note">No bounded evidence citation is attached.</div>`;
+  return `<div class="oi-evidence">${items.map(item => {
+    const href = safeHref(item?.source_url);
+    const page = Number(item?.page) > 0 ? `page ${Number(item.page)}` : "page unknown";
+    const doc = item?.document_id || "document unknown";
+    const sourceName = item?.source || "source unknown";
+    const hash = item?.content_sha256 || item?.evidence_sha256 || "";
+    const source = href ? `<a href="${href}" target="_blank" rel="noopener">${esc(page)} · source URL</a>` : esc(page);
+    return `<div class="oi-evidence-row"><b>${esc(doc)}</b><span>${esc(sourceName)} · ${source}${hash ? ` · hash ${esc(short(hash, 12))}` : ""}</span><blockquote>${esc(short(item?.text || "No bounded excerpt supplied.", 280))}</blockquote></div>`;
+  }).join("")}</div>`;
+}
+
+function operatingImpact(value) {
+  return value == null || value === "" || (typeof value === "number" && !Number.isFinite(value))
+    ? "Unknown — awaiting sourced inputs"
+    : esc(value);
+}
+
+const BENCHMARK_HORIZONS = ["1Q", "2Q", "4Q", "8Q"];
+
+function benchmarkReason(reason) {
+  return reason ? `<small>Reason: ${esc(reason)}</small>` : "";
+}
+
+function benchmarkDate(value) {
+  return unknownValue(value, "Unknown — awaiting sourced inputs");
+}
+
+function benchmarkReturn(value) {
+  return value == null || value === "" || !Number.isFinite(Number(value))
+    ? "Unknown — awaiting sourced inputs"
+    : pct(Number(value));
+}
+
+function benchmarkProvenance(provenance) {
+  if (!provenance || typeof provenance !== "object") return `<span>Provenance unavailable</span>`;
+  const pieces = [];
+  if (provenance.history_file) pieces.push(`history ${provenance.history_file}`);
+  if (provenance.indices_file) pieces.push(`index ${provenance.indices_file}`);
+  if (provenance.baseline_date) pieces.push(`baseline ${provenance.baseline_date}`);
+  if (provenance.target_date) pieces.push(`target ${provenance.target_date}`);
+  if (provenance.endpoint_date) pieces.push(`endpoint ${provenance.endpoint_date}`);
+  if (provenance.selected_date) pieces.push(`selected ${provenance.selected_date}`);
+  if (provenance.selected_dates && typeof provenance.selected_dates === "object") {
+    const dates = Object.entries(provenance.selected_dates)
+      .map(([horizon, values]) => `${horizon}: ${(Array.isArray(values) ? values : []).map(value => value || "unknown").join(" -> ")}`)
+      .join("; ");
+    if (dates) pieces.push(`selected dates ${dates}`);
+  }
+  return pieces.length ? pieces.map(piece => `<span>${esc(piece)}</span>`).join("") : `<span>Provenance unavailable</span>`;
+}
+
+function renderBenchmarkOutcomes(study) {
+  const relative = study.kse100_relative || {};
+  const stockMap = relative.stock_return_pct || {};
+  const indexMap = relative.index_return_pct || {};
+  const relMap = relative.relative_return_pct || relative.returns_pct || {};
+  const reasons = relative.reasons || {};
+  return `<div class="oi-benchmark-table" role="table" aria-label="Historical benchmark simple price returns">
+    <div class="oi-benchmark-row oi-benchmark-head" role="row"><span>Horizon</span><span>Target / endpoint</span><span>Stock simple return</span><span>KSE100 return</span><span>Relative return</span><span>Status</span></div>
+    ${BENCHMARK_HORIZONS.map(horizon => {
+      const outcome = (study.horizons || {})[horizon] || {};
+      const stockValue = outcome.return_pct ?? stockMap[horizon];
+      const indexValue = indexMap[horizon];
+      const relValue = relMap[horizon];
+      const reason = outcome.reason || reasons[horizon];
+      return `<div class="oi-benchmark-row" role="row">
+        <span><b>${esc(horizon)}</b></span>
+        <span>target ${benchmarkDate(outcome.target_date)}<small>endpoint ${benchmarkDate(outcome.selected_date || outcome.provenance?.endpoint_date)}</small></span>
+        <span class="oi-stock-return"><b>${benchmarkReturn(stockValue)}</b>${stockValue == null ? benchmarkReason(reason) : ""}</span>
+        <span><b>${benchmarkReturn(indexValue)}</b>${indexValue == null ? benchmarkReason(reasons[horizon]) : ""}</span>
+        <span><b>${benchmarkReturn(relValue)}</b>${relValue == null ? benchmarkReason(reasons[horizon]) : ""}</span>
+        <span>${esc(outcome.status || "unknown")}${benchmarkReason(reason)}</span>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+function renderBenchmarkAnalogues(study) {
+  const analogues = Array.isArray(study.analogues) ? study.analogues : [];
+  if (!analogues.length) return `<div class="oi-empty-note">No same-company or same-sector analogue is available for this event.</div>`;
+  return `<div class="oi-analogues">${analogues.map(analogue => `<article class="oi-analogue">
+    <header><div><span class="kicker">${esc(String(analogue.classification || "analogue").replaceAll("_", " "))}</span><h4>${esc(analogue.symbol || "Unknown symbol")}</h4></div><span class="pill">${esc(analogue.event_id || "event unknown")}</span></header>
+    <div class="oi-analogue-meta"><span>Event date ${benchmarkDate(analogue.effective_date)}</span><span>Relation ${esc(String(analogue.classification || "unknown").replaceAll("_", " "))}</span></div>
+    <div class="oi-analogue-returns">${BENCHMARK_HORIZONS.map(horizon => {
+      const outcome = (analogue.outcomes || {})[horizon] || {};
+      return `<div><span>${esc(horizon)}</span><b>${benchmarkReturn(outcome.return_pct)}</b><small>endpoint ${benchmarkDate(outcome.endpoint_date)}${outcome.reason ? ` · ${esc(outcome.reason)}` : ""}</small></div>`;
+    }).join("")}</div>
+  </article>`).join("")}</div>`;
+}
+
+function renderBenchmarkAggregate(study) {
+  const aggregate = study.analogue_aggregate || {};
+  return `<div class="oi-aggregate-grid">${BENCHMARK_HORIZONS.map(horizon => {
+    const row = aggregate[horizon] || {};
+    const statistic = row.mean_return_pct == null ? "Unknown — awaiting sourced inputs" : pct(row.mean_return_pct);
+    return `<div><span>${esc(horizon)} aggregate</span><b>${statistic}</b><small>sample n ${esc(row.n ?? "unknown")} · ${esc(row.status || "unknown")}${row.reason ? ` · ${esc(row.reason)}` : ""}</small></div>`;
+  }).join("")}</div>`;
+}
+
+function renderHistoricalBenchmarks(r, events) {
+  const studies = Array.isArray(r.event_studies) ? r.event_studies : [];
+  if (!studies.length) {
+    return `<section class="oi-section oi-benchmark-section"><header class="oi-section-head"><div><span class="kicker">Historical benchmark</span><h3>Simple price-return context</h3></div></header><div class="empty oi-empty">No historical benchmark study is available for these operating events.</div></section>`;
+  }
+  const eventById = new Map(events.map(event => [event.event_id, event]));
+  return `<section class="oi-section oi-benchmark-section"><header class="oi-section-head"><div><span class="kicker">Historical benchmark</span><h3>Descriptive, not causal</h3></div><span class="pill">${esc(studies.length)} stud${studies.length === 1 ? "y" : "ies"}</span></header>
+    <p class="section-note">Raw simple price-return methodology. These rows describe what happened after dated events; they do not attribute causality and are not advice.</p>
+    <div class="oi-benchmark-list">${studies.map(study => {
+      const event = eventById.get(study.event_id);
+      const baseline = study.baseline || {};
+      const limitations = Array.isArray(study.limitations) ? study.limitations : [];
+      return `<article class="oi-benchmark-card" aria-labelledby="study-${esc(study.study_id || study.event_id || "unknown")}">
+        <header class="oi-card-head"><div><span class="oi-type oi-type-derived-fact">Historical Benchmark</span><span class="pill">${esc(study.event_type || event?.event_type || "event")}</span><h3 id="study-${esc(study.study_id || study.event_id || "unknown")}">${esc(short(event?.description || study.event_id || "Benchmark study", 170))}</h3></div><span class="oi-confidence">descriptive, not causal</span></header>
+        <div class="oi-benchmark-meta"><div><span>Event</span><b>${esc(study.event_id || "unknown")}</b></div><div><span>Event date</span><b>${benchmarkDate(study.effective_date || event?.effective_date)}</b></div><div><span>Data cutoff</span><b>${benchmarkDate(study.data_cutoff)}</b></div><div><span>Baseline</span><b>${benchmarkDate(baseline.selected_date)}</b><small>${esc(baseline.status || "unknown")}${baseline.reason ? ` · ${esc(baseline.reason)}` : ""}</small></div></div>
+        ${renderBenchmarkOutcomes(study)}
+        <div class="oi-provenance"><span class="kicker">Provenance</span>${benchmarkProvenance(baseline.provenance)}${benchmarkProvenance(study.kse100_relative?.provenance)}</div>
+        <div class="oi-benchmark-subgrid"><section><span class="kicker">Analogues</span>${renderBenchmarkAnalogues(study)}</section><section><span class="kicker">Aggregate sample</span>${renderBenchmarkAggregate(study)}</section></div>
+        <div class="oi-limitations"><span class="kicker">Limitations</span>${limitations.length ? `<ul>${limitations.map(item => `<li>${esc(String(item).replaceAll("_", " "))}</li>`).join("")}</ul>` : `<p>No benchmark limitation flag is attached.</p>`}</div>
+      </article>`;
+    }).join("")}</div>
+  </section>`;
+}
+
+function renderOperatingIntelligence(r) {
+  const events = Array.isArray(r.operating_events) ? r.operating_events : [];
+  const graph = r.driver_graph || {};
+  const scenarios = Array.isArray(r.impact_scenarios) ? r.impact_scenarios : [];
+  const graphFlags = Array.isArray(graph.quality_flags) ? graph.quality_flags : [];
+  const supported = Boolean(graph.sector && Array.isArray(graph.drivers) && graph.drivers.length && !graphFlags.includes("sector_model_not_in_wave_1"));
+  const knownDrivers = new Set((graph.drivers || []).map(driver => String(driver)));
+  const eventById = new Map(events.map(event => [event.event_id, event]));
+  const grouped = new Map();
+  scenarios.forEach(scenario => {
+    const key = scenario.event_id || "unlinked";
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(scenario);
+  });
+  const eventCards = events.length ? events.map(event => {
+    const eventDrivers = Array.isArray(event.affected_drivers) ? event.affected_drivers : [];
+    const unmodeled = eventDrivers.filter(driver => !knownDrivers.has(String(driver)));
+    const scenariosForEvent = grouped.get(event.event_id) || [];
+    return `<article class="oi-event" aria-labelledby="oi-event-${esc(event.event_id || "unknown")}">
+      <header class="oi-card-head"><div><span class="oi-type oi-type-${objectTypeClass(event.intelligence_type)}">${esc(objectTypeLabel(event.intelligence_type))}</span><span class="pill">${esc(event.event_type || "event")}${event.event_subtype ? ` · ${esc(event.event_subtype)}` : ""}</span><h3 id="oi-event-${esc(event.event_id || "unknown")}">${esc(short(event.description || "Operating event", 180))}</h3></div><span class="oi-confidence">confidence ${confidenceValue(event.confidence)}</span></header>
+      <div class="oi-facts"><div><span>Effective</span><b>${unknownValue(event.effective_date, "Unknown")}</b></div><div><span>Detected</span><b>${unknownValue(event.detected_at, "Unknown")}</b></div><div><span>Source quality</span><b>Level ${unknownValue(event.source_quality_level, "Unknown")}</b></div><div><span>Quality flags</span><b>${listValue(event.quality_flags, "None")}</b></div></div>
+      <p class="oi-description">${esc(event.description || "No event description supplied.")}</p>
+      ${unmodeled.length ? `<p class="oi-warning">Unmodeled driver: ${listValue(unmodeled)}. No causal effect is measured.</p>` : ""}
+      ${operatingEvidence(event.evidence || (event.source_url ? [{ document_id: "document unknown", page: null, text: event.description, source_url: event.source_url }] : []))}
+      <div class="oi-event-scenarios"><span class="kicker">Scenario links</span><span>${esc(scenariosForEvent.length)} scenario${scenariosForEvent.length === 1 ? "" : "s"} attached</span></div>
+    </article>`;
+  }).join("") : `<div class="empty oi-empty">No operating events are available in the retained file.</div>`;
+
+  const driverSection = supported ? `<div class="oi-driver-status"><span class="pill good">Supported sector model</span><span>${esc(graph.sector)} · declarative only</span></div>
+    <div class="oi-driver-list">${(graph.drivers || []).map(driver => `<span class="pill">${esc(driver)}</span>`).join("")}</div>
+    <div class="oi-edge-list">${(graph.edges || []).length ? graph.edges.map(edge => `<div class="oi-edge"><span>${esc(edge.from || "Unknown driver")}</span><b>→</b><span>${esc(edge.statement_line || "Unknown statement line")}</span><b>→</b><span>${esc(edge.to || "Unknown output")}</span><em>Declarative map / hypothesis</em></div>`).join("") : `<div class="oi-empty-note">No directed driver edges are available.</div>`}</div>`
+    : `<div class="empty oi-empty">Sector model unsupported or unmodeled for this company. Driver hypotheses are not available.</div>`;
+
+  const scenarioSection = scenarios.length ? [...new Set([...events.map(event => event.event_id), ...scenarios.map(scenario => scenario.event_id)])].filter(Boolean).map(eventId => {
+    const event = eventById.get(eventId);
+    const cards = grouped.get(eventId) || [];
+    if (!cards.length) return "";
+    return `<section class="oi-scenario-group"><header><div><span class="kicker">Operating event</span><h3>${esc(short(event?.description || eventId, 140))}</h3></div><span class="pill">${esc(event?.event_id || eventId)}</span></header><div class="oi-scenarios">${cards.map(scenario => `<article class="oi-scenario oi-${esc(String(scenario.scenario || "scenario").toLowerCase())}"><header class="oi-card-head"><div><span class="oi-type oi-type-scenario">Scenario</span><h4>${esc(scenario.scenario || "Scenario")}</h4></div><b>${probabilityValue(scenario.probability)}</b></header><div class="oi-facts"><div><span>Affected drivers</span><b>${listValue(scenario.assumptions?.affected_drivers)}</b></div><div><span>Required inputs</span><b>${listValue(scenario.assumptions?.required_inputs)}</b></div><div><span>Missing inputs</span><b>${listValue(scenario.assumptions?.missing_inputs)}</b></div><div><span>Timing</span><b>${unknownValue(scenario.timing?.effective_date, "Unknown")} · lag ${unknownValue(scenario.timing?.expected_lag, "Unknown")}</b></div><div><span>Confidence</span><b>${confidenceValue(scenario.confidence)}</b></div><div><span>Impact status</span><b>${unknownValue(scenario.impact_status, "Unknown")}</b></div><div><span>Quality flags</span><b>${listValue(scenario.quality_flags, "None")}</b></div></div><div class="oi-impact-grid">${[["Revenue", scenario.revenue_impact], ["EBITDA", scenario.ebitda_impact], ["EPS", scenario.eps_impact], ["FCF", scenario.fcf_impact], ["Valuation", scenario.valuation_impact]].map(([label, value]) => `<div><span>${label} impact</span><b>${operatingImpact(value)}</b></div>`).join("")}</div>${operatingEvidence(scenario.evidence)}</article>`).join("")}</div></section>`;
+  }).join("") : `<div class="empty oi-empty">No scenarios are available. Scenario synthesis remains paused until sourced inputs are sufficient.</div>`;
+
+  return `<section class="panel span9 oi-shell"><span class="kicker">Operating intelligence</span><h2>Observation → event → driver map → scenario</h2><p class="section-note">Observation/report becomes an operating event, then a declarative driver hypothesis, then Bear/Base/Bull scenarios. Research only — not advice. Null impacts remain unknown; no values are fabricated.</p><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Operating events</span><h3>Evidence-linked observations</h3></div><span class="pill">${esc(events.length)} event${events.length === 1 ? "" : "s"}</span></header><div class="oi-events">${eventCards}</div></section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Driver map</span><h3>Sector model and directed hypotheses</h3></div></header>${driverSection}</section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Impact scenarios</span><h3>Bear / Base / Bull by operating event</h3></div></header>${scenarioSection}</section>${renderHistoricalBenchmarks(r, events)}</section>`;
+}
+
+function conditionalText(value, label = "unknown") {
+  return value == null || value === "" ? label : esc(value);
+}
+
+function conditionalList(values, empty = "none emitted") {
+  if (!Array.isArray(values) || !values.length) return empty;
+  return values.map(value => esc(String(value).replaceAll("_", " "))).join(", ");
+}
+
+function conditionalCandidateLabel(candidate) {
+  return conditionalText(candidate?.candidate_id || candidate?.event_id || candidate?.id, "candidate id unknown");
+}
+
+function renderConditionalCandidates(label, candidates) {
+  const rows = Array.isArray(candidates) ? candidates : [];
+  if (!rows.length) return `<section><h4>${esc(label)}</h4><div class="conditional-empty">No exact ${esc(label.toLowerCase())} candidate emitted.</div></section>`;
+  return `<section><h4>${esc(label)}</h4><div class="conditional-candidates">${rows.map(candidate => {
+    const href = safeHref(candidate?.source_url);
+    const date = candidate?.effective_date || candidate?.event_date || candidate?.date || null;
+    const classification = candidate?.classification || candidate?.event_class || candidate?.event_type || "class unknown";
+    const title = candidate?.description || candidate?.context || candidate?.event_subtype || classification;
+    return `<article>
+      <header><b>${conditionalCandidateLabel(candidate)}</b><span>${conditionalText(candidate?.symbol, "symbol unknown")}</span></header>
+      <div><span>Date</span><b>${conditionalText(date, "date unknown")}</b></div>
+      <div><span>Class</span><b>${conditionalText(String(classification).replaceAll("_", " "), "class unknown")}</b></div>
+      <p>${esc(short(title, 130))}</p>
+      ${href ? `<a href="${href}" target="_blank" rel="noopener">source URL</a>` : `<small>No source URL emitted.</small>`}
+    </article>`;
+  }).join("")}</div></section>`;
+}
+
+function conditionalStats(stats, n) {
+  if (!stats || typeof stats !== "object" || Number(n) < 3) return `<div class="conditional-empty">Numeric stats suppressed until n is at least 3.</div>`;
+  const rows = Object.entries(stats).filter(([, value]) => value !== null && value !== undefined && value !== "");
+  if (!rows.length) return `<div class="conditional-empty">No numeric stats emitted for this aggregate.</div>`;
+  return `<div class="conditional-stats">${rows.map(([key, value]) => `<span>${esc(key.replaceAll("_", " "))}<b>${typeof value === "number" ? esc(fmt(value, 2)) : esc(value)}</b></span>`).join("")}</div>`;
+}
+
+function renderConditionalHorizons(aggregates) {
+  const entries = aggregates && typeof aggregates === "object" && !Array.isArray(aggregates) ? Object.entries(aggregates) : [];
+  if (!entries.length) return `<div class="conditional-empty">No horizon aggregate emitted.</div>`;
+  return `<div class="conditional-horizons">${entries.map(([horizon, row]) => {
+    const n = row?.n;
+    return `<article>
+      <header><b>${esc(horizon)}</b><span>${conditionalText(row?.status, "status unknown")}</span></header>
+      <div class="conditional-horizon-meta">
+        <span>n<b>${conditionalText(n, "unknown")}</b></span>
+        <span>Reason<b>${conditionalText(row?.reason, "none emitted")}</b></span>
+      </div>
+      ${conditionalStats(row?.stats, n)}
+    </article>`;
+  }).join("")}</div>`;
+}
+
+function renderConditionalBlockedStates(blocked) {
+  const source = blocked && typeof blocked === "object" && !Array.isArray(blocked) ? blocked : {};
+  const keys = ["peer", "international", "financial", "causal"];
+  return `<div class="conditional-blocked" aria-label="Blocked benchmark states">${keys.map(key => {
+    const row = source[key] || source[`${key}_benchmark`] || source[`${key}_state`] || {};
+    const status = typeof row === "string" ? row : (row.status || "blocked");
+    const reason = typeof row === "string" ? "" : (row.reason || row.policy || "");
+    return `<span>${esc(key)}<b>${conditionalText(status, "blocked")}</b>${reason ? `<small>${esc(reason)}</small>` : ""}</span>`;
+  }).join("")}</div>`;
+}
+
+function renderConditionalPolicy(policy) {
+  const source = policy && typeof policy === "object" && !Array.isArray(policy) ? policy : {};
+  const rows = Object.entries(source);
+  if (!rows.length) return `<div class="conditional-empty">No matching policy emitted.</div>`;
+  return `<div class="conditional-policy">${rows.map(([key, value]) => `<span>${esc(key.replaceAll("_", " "))}<b>${Array.isArray(value) ? conditionalList(value) : conditionalText(String(value).replaceAll("_", " "))}</b></span>`).join("")}</div>`;
+}
+
+function renderConditionalBenchmarks(r) {
+  const conditional = r.conditional_benchmarks || {};
+  const benchmarks = Array.isArray(conditional.benchmarks) ? conditional.benchmarks : [];
+  const limitations = Array.isArray(conditional.limitations) ? conditional.limitations : [];
+  const statusCounts = benchmarks.reduce((acc, benchmark) => {
+    const key = benchmark.status || "unknown";
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+  const statusStrip = Object.keys(statusCounts).length
+    ? Object.entries(statusCounts).map(([status, count]) => `<span class="pill">${esc(status)} ${esc(count)}</span>`).join("")
+    : `<span class="muted">No conditional benchmark status emitted.</span>`;
+  const cards = benchmarks.length ? benchmarks.map(benchmark => {
+    const target = benchmark.target_event || benchmark.event || {};
+    const context = benchmark.context || benchmark.target_context || {};
+    const matching = benchmark.matching_policy || benchmark.policy || {};
+    const candidates = benchmark.candidates || {};
+    const aggregates = benchmark.horizon_aggregates || benchmark.aggregates || {};
+    return `<article class="conditional-card" aria-labelledby="conditional-${esc(benchmark.benchmark_id || target.event_id || "unknown")}">
+      <header>
+        <div><span class="pill">${conditionalText(benchmark.status, "status unknown")}</span><h3 id="conditional-${esc(benchmark.benchmark_id || target.event_id || "unknown")}">${esc(short(target.description || benchmark.description || target.event_id || "Conditional benchmark", 170))}</h3></div>
+        <b>${conditionalText(benchmark.benchmark_id || target.event_id, "benchmark id unknown")}</b>
+      </header>
+      <div class="conditional-event">
+        <div><span>Target event</span><b>${conditionalText(target.event_id || benchmark.event_id, "event id unknown")}</b></div>
+        <div><span>Event date</span><b>${conditionalText(target.effective_date || benchmark.effective_date, "date unknown")}</b></div>
+        <div><span>Event class</span><b>${conditionalText(target.event_class || target.classification || target.event_type || benchmark.event_type, "class unknown")}</b></div>
+        <div><span>Context</span><b>${conditionalList(context.conditions || benchmark.conditions, conditionalText(context.summary || benchmark.context_summary, "conditions unknown"))}</b></div>
+      </div>
+      <section><h4>Matching policy</h4>${renderConditionalPolicy(matching)}</section>
+      <div class="conditional-candidate-grid">
+        ${renderConditionalCandidates("Same company exact", candidates.same_company_exact || benchmark.same_company_exact)}
+        ${renderConditionalCandidates("Same sector exact", candidates.same_sector_exact || benchmark.same_sector_exact)}
+      </div>
+      <section><h4>Horizon aggregates</h4>${renderConditionalHorizons(aggregates)}</section>
+      ${renderConditionalBlockedStates(benchmark.blocked_states || conditional.blocked_states)}
+    </article>`;
+  }).join("") : `<div class="empty">No conditional historical benchmark row was emitted for ${esc(r.symbol)}.</div>`;
+  return `<section class="panel span9 conditional-shell" aria-labelledby="conditionalTitle">
+    <span class="kicker">Conditional historical benchmarks</span><h2 id="conditionalTitle">Matched event context, descriptive only</h2>
+    <p class="section-note">Read-only backend output from conditional_benchmarks. The browser displays exact candidate IDs, dates, classes, suppressed aggregate states and backend-supplied stats only; it does not match events, calculate benchmarks, infer causality, forecast, value the company, or provide advice.</p>
+    <div class="conditional-summary">
+      <div><span>Symbol</span><b>${conditionalText(conditional.symbol || r.symbol, "unknown")}</b></div>
+      <div><span>Status</span><b>${conditionalText(conditional.status, "unknown")}</b></div>
+      <div><span>Benchmarks</span><b>${esc(benchmarks.length)}</b></div>
+      <div><span>Policy</span><b>${Object.keys(conditional.policy || {}).length ? "emitted" : "unknown"}</b></div>
+    </div>
+    <div class="conditional-status-strip" aria-label="Conditional benchmark statuses">${statusStrip}</div>
+    <section class="conditional-section"><h3>Policy and limitations</h3>${renderConditionalPolicy(conditional.policy)}<div class="conditional-limitations">${limitations.length ? `<ul>${limitations.map(item => `<li>${esc(String(item).replaceAll("_", " "))}</li>`).join("")}</ul>` : `<p>No limitation flag is attached.</p>`}</div></section>
+    <div class="conditional-grid">${cards}</div>
+  </section>`;
+}
+
+function causalPolicyStatus(policy, key) {
+  return esc(policy?.[key] || "blocked");
+}
+
+function renderCausalEventRefs(refs) {
+  const items = Array.isArray(refs) ? refs : [];
+  if (!items.length) return `<div class="causal-empty">No official event ref attached.</div>`;
+  return `<div class="causal-refs">${items.map(ref => {
+    const href = safeHref(ref?.source_url);
+    const label = `${ref?.event_id || "event unknown"} · ${ref?.event_type || "type unknown"} · ${ref?.effective_date || "date unknown"}`;
+    return href
+      ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+      : `<span>${esc(label)}</span>`;
+  }).join("")}</div>`;
+}
+
+function renderCausalStudyRefs(refs) {
+  const items = Array.isArray(refs) ? refs : [];
+  if (!items.length) return `<div class="causal-empty">No strict event-study ref attached.</div>`;
+  return `<div class="causal-refs">${items.map(ref => `<span>${esc(ref?.study_id || "study unknown")} · event ${esc(ref?.event_id || "unknown")} · no-lookahead ${esc(ref?.strict_no_lookahead === true ? "true" : "false")} · baseline ${esc(ref?.baseline_status || "unknown")}</span>`).join("")}</div>`;
+}
+
+function renderCausalFoundations(r) {
+  const foundations = r.causal_foundations || {};
+  const rows = Array.isArray(foundations.causal_rows) ? foundations.causal_rows : [];
+  const coverage = foundations.coverage || {};
+  const statusCounts = rows.reduce((acc, row) => {
+    const key = row.evidence_status || "unknown";
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+  const statusStrip = Object.keys(statusCounts).length
+    ? Object.entries(statusCounts).map(([status, count]) => `<span class="pill">${esc(status)} ${esc(count)}</span>`).join("")
+    : `<span class="muted">No categorical evidence status emitted.</span>`;
+  const cards = rows.length ? rows.map(row => {
+    const policy = row.policy || {};
+    return `<article class="causal-card" aria-labelledby="causal-${esc(row.causal_id || row.edge_id || "unknown")}">
+      <header>
+        <div><span class="pill">${esc(row.evidence_status || "unknown")}</span><h3 id="causal-${esc(row.causal_id || row.edge_id || "unknown")}">${esc(row.driver || "unknown driver")} → ${esc(row.target || "unknown target")}</h3></div>
+        <b>${esc(row.causal_id || "causal id unknown")}</b>
+      </header>
+      <div class="causal-edge"><span>${esc(row.driver || "unknown driver")}</span><b>→</b><span>${esc(row.target || "unknown target")}</span></div>
+      <div class="causal-facts">
+        <div><span>Statement line</span><b>${esc(row.statement_line || "unknown")}</b></div>
+        <div><span>Unit</span><b>${esc(row.unit || "unknown")}</b></div>
+        <div><span>Edge basis</span><b>${esc(row.edge_basis || "unknown")}</b></div>
+        <div><span>Edge ID</span><b>${esc(row.edge_id || "unknown")}</b></div>
+      </div>
+      <section><h4>Official event refs</h4>${renderCausalEventRefs(row.event_refs)}</section>
+      <section><h4>Event-study refs</h4>${renderCausalStudyRefs(row.event_study_refs)}</section>
+      <section><h4>Next data requirement</h4><p>${esc(row.next_data_requirement || "unknown")}</p></section>
+      <div class="causal-policy" aria-label="Blocked downstream outputs">
+        <span>Numeric impact<b>${causalPolicyStatus(policy, "numeric_impact")}</b></span>
+        <span>Forecast<b>${causalPolicyStatus(policy, "forecast")}</b></span>
+        <span>Valuation<b>${causalPolicyStatus(policy, "valuation")}</b></span>
+      </div>
+    </article>`;
+  }).join("") : `<div class="empty">No causal foundation rows were emitted for ${esc(r.symbol)}.</div>`;
+  return `<section class="panel span9 causal-shell" aria-labelledby="causalTitle">
+    <span class="kicker">Causal driver evidence map</span><h2 id="causalTitle">Driver evidence, not impact estimates</h2>
+    <p class="section-note">Read-only backend output from causal_foundations. The browser displays categorical evidence, exact refs and blocked downstream policy only; it does not estimate impact, forecast, value the company, or turn this into advice.</p>
+    <div class="causal-summary">
+      <div><span>Sector model</span><b>${esc(foundations.sector || r.sector || "unknown")}</b></div>
+      <div><span>Driver edges</span><b>${esc(coverage.driver_edge_count ?? rows.length)}</b></div>
+      <div><span>Causal rows</span><b>${esc(coverage.causal_row_count ?? rows.length)}</b></div>
+      <div><span>Observed event rows</span><b>${esc(coverage.observed_event_rows ?? 0)}</b></div>
+      <div><span>Strict study rows</span><b>${esc(coverage.strict_study_rows ?? 0)}</b></div>
+    </div>
+    <div class="causal-status-strip" aria-label="Categorical evidence statuses">${statusStrip}</div>
+    <div class="causal-grid">${cards}</div>
+  </section>`;
 }
 
 function renderOverview(r, ctx) {
@@ -358,12 +973,48 @@ function evidenceLink(item) {
   return `<div class="evidence"><span>${link} · extracted evidence</span>${excerpt}</div>`;
 }
 
+function brainDomain(brain, name) {
+  return brain?.domains?.[name] || { status: "unknown", object_refs: [] };
+}
+
+function renderInvestorSnapshot(r) {
+  const brain = r.company_brain || {};
+  const brief = r.brief?.current || {};
+  const sections = brief.sections || {};
+  const firstClaim = key => sections[key]?.[0]?.text || null;
+  const domainCard = (label, domain) => `<div><span>${esc(label)}</span><b>${esc(domain.status || "unknown")}</b><small>${esc((domain.object_refs || []).length)} typed reference${(domain.object_refs || []).length === 1 ? "" : "s"}</small></div>`;
+  const scenarioStatus = r.scenario_lab?.status || {};
+  const typedCounts = (brain.intelligence_objects || []).reduce((out, item) => {
+    out[item.type] = (out[item.type] || 0) + 1;
+    return out;
+  }, {});
+  return `<section class="panel span9 brain-snapshot" aria-labelledby="snapshotTitle">
+    <span class="kicker">Investor snapshot</span><h2 id="snapshotTitle">What the retained company file supports today</h2>
+    <p class="section-note">A source-reference view of the persistent Company Brain. Missing knowledge stays visible as unknown; forecasts and valuation remain blocked until their evidence gates pass.</p>
+    <div class="brain-type-strip">${Object.keys(OBJECT_TYPE_LABELS).map(type => `<span class="oi-type-${esc(type)}">${esc(objectTypeLabel(type))}<b>${esc(typedCounts[type] || 0)}</b></span>`).join("")}</div>
+    <div class="snapshot-grid">
+      <article><h3>What the business does</h3><p>${esc(r.profile?.business_description || "Unknown — no sourced description is available.")}</p></article>
+      <article><h3>Current situation</h3><p>${esc(brief.headline || "Unknown — no owner-approved brief is current.")}</p></article>
+      <article><h3>What changed</h3><p>${esc(firstClaim("what_changed") || "Unknown — no approved change claim is available.")}</p></article>
+      <article><h3>Earnings direction</h3><p>${esc(firstClaim("financial_read") || "Unknown — qualified history is not sufficient for an earnings direction.")}</p></article>
+      <article><h3>Valuation readiness</h3><p>Scenario multiple sensitivity: ${esc(scenarioStatus.valuation || "blocked")}. Formal valuation: ${esc(brainDomain(brain, "valuation").status)}.</p></article>
+      <article><h3>Catalysts</h3>${domainCard("Coverage", brainDomain(brain, "catalysts"))}</article>
+      <article><h3>Risks</h3>${domainCard("Coverage", brainDomain(brain, "risks"))}</article>
+      <article><h3>Hidden signals</h3><p>${esc((r.signal_clusters?.clusters || []).length)} validated signal cluster${(r.signal_clusters?.clusters || []).length === 1 ? "" : "s"}; absence is not evidence of no change.</p></article>
+      <article><h3>Henneth scenarios</h3><p>${esc(scenarioStatus.scenario_lab || "blocked")}. Assumptions remain caller-supplied in the Scenarios tab.</p></article>
+    </div>
+    <section class="brain-coverage"><h3>Brain coverage</h3><div>${Object.entries(brain.domains || {}).map(([name, domain]) => `<span class="status-${esc(domain.status || "unknown")}">${esc(name.replaceAll("_", " "))}<b>${esc(domain.status || "unknown")}</b></span>`).join("")}</div></section>
+  </section>`;
+}
+
 function renderTimeline(r) {
   const events = r.timeline || [];
   const changes = r.changes || [];
+  const brainTimeline = r.company_brain?.timeline || [];
   return `
     <section class="panel span6"><span class="kicker">Evidence-linked chronology</span><h2>Company timeline</h2>
       <p class="section-note">Deterministically classified from official documents. Priority is an extraction-routing weight, not an investment score.</p>
+      <div class="brain-timeline" aria-label="Typed Company Brain timeline">${brainTimeline.length ? brainTimeline.slice(-12).reverse().map(item => `<span><time>${esc(item.date || "undated")}</time><b>${esc(objectTypeLabel(item.type))}</b><small>${esc(String(item.source_product || "source").replaceAll("_", " "))}</small></span>`).join("") : `<p>No typed Brain chronology is available.</p>`}</div>
       <div class="timeline">${events.length ? events.map(event => `<article class="timeline-row">
         <time>${esc(String(event.date || "undated").slice(0, 10))}</time>
         <div><span class="pill">${esc(event.type || "other")}</span><span class="priority">priority ${esc(event.priority_weight ?? "unknown")}</span>
@@ -418,6 +1069,871 @@ function renderFactDelta(delta) {
     ["added", delta.added], ["changed", delta.changed], ["removed", delta.removed],
   ].filter(([, value]) => Array.isArray(value) && value.length);
   return parts.length ? `<ul class="delta">${parts.map(([label, value]) => `<li>${esc(label)}: ${esc(value.length)}</li>`).join("")}</ul>` : "";
+}
+
+function scoreLabel(value) {
+  return value == null || value === "" ? "No score" : esc(fmt(value, 1));
+}
+
+function confidenceComponentRows(components) {
+  const rows = Array.isArray(components)
+    ? components
+    : components && typeof components === "object"
+      ? Object.entries(components).map(([name, component]) => ({ name, ...(component || {}) }))
+      : [];
+  return rows.map(component => ({
+    name: component.name || component.component || component.key || "unnamed_component",
+    normalized_score: component.normalized_score ?? component.score ?? null,
+    weighted_points: component.weighted_points ?? component.contribution ?? component.points ?? null,
+    rationale: component.rationale || component.reason || component.status || "No rationale supplied.",
+  }));
+}
+
+function renderIntelligenceConfidence(r) {
+  const confidence = r.intelligence_confidence || {};
+  const assessments = Array.isArray(confidence.assessments) ? confidence.assessments : [];
+  const aggregateScore = confidence.aggregate_score ?? confidence.score ?? null;
+  const aggregateBand = confidence.aggregate_band || confidence.band || "no-score";
+  const status = confidence.status || (assessments.length ? "available" : "no_score");
+  const noScore = aggregateScore == null && !assessments.length;
+  const cards = assessments.length ? assessments.map(assessment => {
+    const components = confidenceComponentRows(assessment.components);
+    return `<article class="confidence-card">
+      <header><div><span class="pill">${esc(assessment.band || "unknown band")}</span><h4>${esc(assessment.source_cluster_id || assessment.confidence_id || "source cluster")}</h4></div><b>${scoreLabel(assessment.score)}</b></header>
+      <div class="confidence-components">${components.length ? components.map(component => `<div><span>${esc(component.name)}</span><b>${scoreLabel(component.normalized_score)}</b><em>${component.weighted_points == null ? "points unknown" : `${esc(fmt(component.weighted_points, 2))} pts`}</em><small>${esc(component.rationale)}</small></div>`).join("") : `<div><span>components</span><b>0</b><small>No component rows supplied.</small></div>`}</div>
+      <footer><span>${esc((assessment.provenance_refs || []).length)} provenance reference${(assessment.provenance_refs || []).length === 1 ? "" : "s"}</span></footer>
+    </article>`;
+  }).join("") : `<div class="empty">No intelligence-confidence assessment is available for this company.</div>`;
+  return `<section class="intel-section confidence-panel" aria-label="Intelligence confidence">
+    <header><h3>Intelligence confidence</h3><span class="pill">${esc(status)}</span></header>
+    <div class="confidence-summary ${noScore ? "is-empty" : ""}">
+      <span>Aggregate score <b>${scoreLabel(aggregateScore)}</b></span>
+      <span>Aggregate band <b>${esc(aggregateBand)}</b></span>
+      <span>Assessments <b>${esc(confidence.assessment_count ?? assessments.length)}</b></span>
+    </div>
+    <p class="section-note">Displayed exactly as emitted by the intelligence-confidence state. The browser does not calculate, reweight, or infer missing scores.</p>
+    <div class="confidence-grid">${cards}</div>
+  </section>`;
+}
+
+function renderIntelligence(r) {
+  const signals = r.signal_clusters || {};
+  const clusters = signals.clusters || [];
+  const events = Array.isArray(r.operating_events) ? r.operating_events : [];
+  const studies = Array.isArray(r.event_studies) ? r.event_studies : [];
+  const model = r.financial_model_inputs || {};
+  const sourceLink = url => { const href = safeHref(url); return href ? `<a href="${href}" target="_blank" rel="noreferrer">official source</a>` : "source unavailable"; };
+  const signalCards = clusters.length ? clusters.map(c => `<article class="intel-card"><header><span class="pill">${esc(c.assessment || "unknown")}</span><b>${esc(c.proposition?.type || "signal")}</b></header><h3>${esc(c.proposition?.target || c.proposition?.role || c.proposition?.person || c.proposition?.stage || "Evidence-backed signal")}</h3><p>${esc(c.proposition?.verb || c.proposition?.modality || "No additional assertion supplied.")}</p><div class="intel-meta"><span>${esc(c.observations?.length || 0)} observations</span><span>${esc(c.confidence?.band || "unknown confidence")}</span></div>${(c.observations || []).slice(0,3).map(o => `<div class="intel-evidence">${sourceLink(o.evidence?.source_url)} · page ${esc(o.evidence?.page || "unknown")} · ${esc(o.evidence?.text || "No evidence text")}</div>`).join("")}</article>`).join("") : `<div class="empty">No eligible evidence-backed signals are available.</div>`;
+  const driverNames = [...new Set(events.flatMap(e => Array.isArray(e.affected_drivers) ? e.affected_drivers : []))];
+  const watch = driverNames.length ? driverNames.map(d => `<span class="pill">Monitor ${esc(d)}</span>`).join("") : `<span class="muted">No affected-driver monitoring target is currently evidenced.</span>`;
+  return `<section class="panel span9 intel-shell"><span class="kicker">Flagship intelligence</span><h2>Evidence → mechanism → readiness</h2><p class="section-note">A read-only composition of validated signals, operating mechanisms, historical context, and model readiness. It contains no forecasts, probabilities, or valuation claims.</p>${renderIntelligenceConfidence(r)}<section class="intel-section"><header><h3>New evidence signals</h3><span class="pill">${esc(clusters.length)} signal${clusters.length === 1 ? "" : "s"}</span></header><div class="intel-grid">${signalCards}</div></section><section class="intel-section"><header><h3>Business mechanism and affected drivers</h3></header>${events.length ? `<div class="intel-list">${events.slice(0,8).map(e => `<article><b>${esc(e.event_type || "event")}</b><span>${esc(e.description || "Unknown event")}</span><em>${esc((e.affected_drivers || []).join(", ") || "No affected drivers")}</em></article>`).join("")}</div>` : `<div class="empty">No operating events are available.</div>`}</section><section class="intel-section"><header><h3>Historical benchmark availability</h3></header><p>${studies.length ? `${esc(studies.length)} descriptive event study record${studies.length === 1 ? "" : "s"} available.` : "No historical event studies are available for this company."}</p></section><section class="intel-section"><header><h3>Financial readiness</h3></header><div class="intel-status"><span>Readiness <b>${esc(model.status || "unknown")}</b></span><span>Forecast <b>blocked_not_implemented</b></span><span>Valuation <b>blocked_not_implemented</b></span></div></section><section class="intel-section"><header><h3>Contradictions and unknowns</h3></header><p>${esc((signals.rejection_reasons && Object.keys(signals.rejection_reasons).join(", ")) || "No additional contradiction or quality flag is recorded.")}</p></section><section class="intel-section"><header><h3>What to watch next</h3></header><div class="intel-watch">${watch}</div><p class="section-note">Monitoring targets are derived only from retained affected drivers and do not represent predictions.</p></section></section>`;
+}
+
+function renderThesisMonitor(r) {
+  const monitor = r.thesis_monitoring || {};
+  const theses = Array.isArray(monitor.theses) ? monitor.theses : [];
+  const readiness = monitor.financial_readiness || {};
+  const status = monitor.status || "unknown";
+  const canonicalStatuses = "Strengthening Stable Weakening Broken";
+  const thesisCards = theses.length ? theses.map(renderThesisCard).join("") : `<div class="empty thesis-empty">No active thesis is being monitored for ${esc(r.symbol)}. The desk will show a thesis here only after the backend emits one with official-source checks.</div>`;
+  return `<section class="panel span9 thesis-shell" aria-labelledby="thesisTitle">
+    <span class="kicker">Thesis monitor</span><h2 id="thesisTitle">Active thesis checks</h2>
+    <p class="section-note">Private user-authored theses are stored separately from Henneth's deterministic monitoring. Status is displayed exactly from each source; the browser does not infer upgrades or breaks.</p>
+    ${renderPrivateTheses(r)}
+    <div class="thesis-status">
+      <span>Company status <b>${esc(status)}</b></span>
+      <span>Active theses <b>${esc(monitor.active_thesis_count ?? theses.length)}</b></span>
+      <span>Source clusters <b>${esc(monitor.source_cluster_count ?? 0)}</b></span>
+      <span>Financial readiness <b>${esc(readiness.status || "unknown")}</b></span>
+    </div>
+    ${renderManagementDelivery(r)}
+    ${thesisCards}
+  </section>`;
+}
+
+function emptyThesisDraft(symbol) {
+  return {
+    id: null,
+    symbol,
+    thesis: "",
+    expected_earnings_path: "",
+    catalysts: "",
+    risks: "",
+    required_evidence: "",
+    kill_conditions: "",
+    user_fair_value_assumption: "",
+    user_fair_value_basis: "",
+    status: "Stable",
+  };
+}
+
+function thesisDraft(symbol) {
+  return state.theses.drafts[symbol] || (state.theses.drafts[symbol] = emptyThesisDraft(symbol));
+}
+
+function linesToArray(value) {
+  return String(value || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+}
+
+function listLimitError(items) {
+  if (items.length > THESIS_LIMITS.listItems) return true;
+  return items.some(item => item.length > THESIS_LIMITS.listItem);
+}
+
+function arrayToLines(value) {
+  return Array.isArray(value) ? value.join("\n") : "";
+}
+
+function hydrateThesisDraft(row) {
+  return {
+    id: row.id,
+    symbol: row.symbol,
+    thesis: row.thesis || "",
+    expected_earnings_path: row.expected_earnings_path || "",
+    catalysts: arrayToLines(row.catalysts),
+    risks: arrayToLines(row.risks),
+    required_evidence: arrayToLines(row.required_evidence),
+    kill_conditions: arrayToLines(row.kill_conditions),
+    user_fair_value_assumption: row.user_fair_value_assumption ?? "",
+    user_fair_value_basis: row.user_fair_value_basis || "",
+    status: THESIS_STATUSES.includes(row.status) ? row.status : "Stable",
+  };
+}
+
+function readableThesisError(error) {
+  const map = {
+    auth_expired: "Your session expired. Sign in again, then retry.",
+    schema_unavailable: "Private thesis storage is not activated yet. The company_theses table is unavailable or not visible to this account.",
+    network_unavailable: "Private thesis storage could not be reached. Your draft is still on this screen.",
+    invalid_form: "Complete the required thesis fields and keep them inside the table limits. A private fair value must be above 0, no higher than 1,000,000, and include a basis.",
+    request_failed: "Private thesis storage returned an unavailable state. Try again shortly.",
+  };
+  return map[error] || "Private thesis storage is unavailable. Try again shortly.";
+}
+
+function renderPrivateTheses(r) {
+  const rows = state.theses.bySymbol[r.symbol] || [];
+  const active = rows.filter(row => !row.archived);
+  const archived = rows.filter(row => row.archived);
+  const draft = thesisDraft(r.symbol);
+  const formTitle = draft.id ? "Edit private thesis" : "Create private thesis";
+  return `<section class="private-thesis" aria-labelledby="privateThesisTitle">
+    <header>
+      <div><span class="kicker">Private thesis notebook</span><h3 id="privateThesisTitle">${esc(formTitle)}</h3></div>
+      <span class="pill">${state.theses.loading ? "loading" : state.theses.loaded ? "private rows" : "not loaded"}</span>
+    </header>
+    <p class="section-note">These rows are private user input in Supabase <code>company_theses</code>. They do not change Henneth's deterministic thesis monitoring below.</p>
+    ${state.theses.error ? `<div class="thesis-error" role="alert">${esc(readableThesisError(state.theses.error))}</div>` : ""}
+    <form id="privateThesisForm" class="private-thesis-form">
+      <label class="wide"><span>Thesis</span><textarea id="privateThesisText" required maxlength="5000" rows="3" placeholder="Write the company thesis in your own words.">${esc(draft.thesis)}</textarea></label>
+      <label><span>Status</span><select id="privateThesisStatus">${THESIS_STATUSES.map(status => `<option value="${esc(status)}" ${draft.status === status ? "selected" : ""}>${esc(status)}</option>`).join("")}</select></label>
+      <label><span>Expected earnings path</span><input id="privateThesisEarnings" type="text" maxlength="2000" value="${esc(draft.expected_earnings_path)}" placeholder="Private user view"></label>
+      <label><span>Private user fair value</span><input id="privateThesisFairValue" type="number" min="0.01" max="1000000" step="0.01" value="${esc(draft.user_fair_value_assumption)}" placeholder="Optional"></label>
+      <label><span>Fair-value basis</span><input id="privateThesisFairValueBasis" type="text" maxlength="1000" value="${esc(draft.user_fair_value_basis)}" placeholder="Required if fair value is entered"></label>
+      <label><span>Catalysts, one per line</span><textarea id="privateThesisCatalysts" rows="3" data-list-limit="50" data-line-limit="500">${esc(draft.catalysts)}</textarea></label>
+      <label><span>Risks, one per line</span><textarea id="privateThesisRisks" rows="3" data-list-limit="50" data-line-limit="500">${esc(draft.risks)}</textarea></label>
+      <label><span>Required evidence, one per line</span><textarea id="privateThesisEvidenceRequired" rows="3" data-list-limit="50" data-line-limit="500">${esc(draft.required_evidence)}</textarea></label>
+      <label><span>Kill conditions, one per line</span><textarea id="privateThesisKill" rows="3" data-list-limit="50" data-line-limit="500">${esc(draft.kill_conditions)}</textarea></label>
+      <p class="private-thesis-note">Any fair value here is Private user input, never Henneth output, a target price, or advice.</p>
+      <div class="private-thesis-actions">
+        <button type="submit" ${state.theses.saving ? "disabled" : ""}>${state.theses.saving ? "Saving" : draft.id ? "Save edits" : "Create thesis"}</button>
+        ${draft.id ? `<button id="privateThesisCancel" class="secondary" type="button">Cancel edit</button>` : ""}
+      </div>
+    </form>
+    <div class="private-thesis-list">
+      <h4>Active private theses</h4>
+      ${active.length ? active.map(renderPrivateThesisRow).join("") : `<div class="empty thesis-empty">No private thesis has been saved for ${esc(r.symbol)}.</div>`}
+      ${archived.length ? `<details class="private-thesis-archive"><summary>Archived private theses (${esc(archived.length)})</summary>${archived.map(renderPrivateThesisRow).join("")}</details>` : ""}
+    </div>
+  </section>`;
+}
+
+function renderPrivateThesisRow(row) {
+  const list = (label, items) => Array.isArray(items) && items.length
+    ? `<div><b>${esc(label)}</b><span>${items.map(esc).join(" · ")}</span></div>`
+    : "";
+  return `<article class="private-thesis-card ${row.archived ? "is-archived" : ""}">
+    <header><div><span class="pill">${esc(row.status || "Stable")}</span><h4>${esc(row.thesis || "Private thesis")}</h4></div><time>${esc(String(row.updated_at || row.created_at || "undated").slice(0, 10))}</time></header>
+    <div class="private-thesis-meta">
+      <span>Expected earnings path <b>${esc(row.expected_earnings_path || "not specified")}</b></span>
+      <span>Private user fair value <b>${row.user_fair_value_assumption == null ? "not entered" : `Rs ${esc(fmt(row.user_fair_value_assumption, 2))}`}</b><small>Private user input, never Henneth output.</small></span>
+      <span>Basis <b>${esc(row.user_fair_value_basis || "not specified")}</b></span>
+    </div>
+    <div class="private-thesis-points">
+      ${list("Catalysts", row.catalysts)}${list("Risks", row.risks)}${list("Required evidence", row.required_evidence)}${list("Kill conditions", row.kill_conditions)}
+    </div>
+    <footer>
+      <button type="button" data-thesis-action="edit" data-thesis-id="${esc(row.id)}">Edit</button>
+      <button type="button" data-thesis-action="${row.archived ? "restore" : "archive"}" data-thesis-id="${esc(row.id)}">${row.archived ? "Restore" : "Archive"}</button>
+      <button type="button" class="danger" data-thesis-action="delete" data-thesis-id="${esc(row.id)}">Delete permanently</button>
+    </footer>
+  </article>`;
+}
+
+function privateThesisPayload(symbol) {
+  const fairValueText = $("privateThesisFairValue")?.value.trim() || "";
+  const fairValue = fairValueText === "" ? null : Number(fairValueText);
+  return {
+    symbol,
+    thesis: $("privateThesisText")?.value.trim() || "",
+    expected_earnings_path: $("privateThesisEarnings")?.value.trim() || null,
+    catalysts: linesToArray($("privateThesisCatalysts")?.value),
+    risks: linesToArray($("privateThesisRisks")?.value),
+    required_evidence: linesToArray($("privateThesisEvidenceRequired")?.value),
+    kill_conditions: linesToArray($("privateThesisKill")?.value),
+    user_fair_value_assumption: fairValue,
+    user_fair_value_basis: $("privateThesisFairValueBasis")?.value.trim() || null,
+    status: THESIS_STATUSES.includes($("privateThesisStatus")?.value) ? $("privateThesisStatus").value : "Stable",
+    archived: false,
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function payloadToDraft(payload, id = null) {
+  return {
+    id,
+    symbol: payload.symbol,
+    thesis: payload.thesis || "",
+    expected_earnings_path: payload.expected_earnings_path || "",
+    catalysts: arrayToLines(payload.catalysts),
+    risks: arrayToLines(payload.risks),
+    required_evidence: arrayToLines(payload.required_evidence),
+    kill_conditions: arrayToLines(payload.kill_conditions),
+    user_fair_value_assumption: payload.user_fair_value_assumption ?? "",
+    user_fair_value_basis: payload.user_fair_value_basis || "",
+    status: THESIS_STATUSES.includes(payload.status) ? payload.status : "Stable",
+  };
+}
+
+function validatePrivateThesisPayload(payload) {
+  if (!currentPilotSymbols().has(payload.symbol)) return false;
+  if (!payload.thesis || payload.thesis.length > THESIS_LIMITS.thesis) return false;
+  if ((payload.expected_earnings_path || "").length > THESIS_LIMITS.expected) return false;
+  if ((payload.user_fair_value_basis || "").length > THESIS_LIMITS.basis) return false;
+  if (payload.user_fair_value_assumption != null && (!Number.isFinite(payload.user_fair_value_assumption) || payload.user_fair_value_assumption <= 0 || payload.user_fair_value_assumption > THESIS_LIMITS.fairValueMax || !payload.user_fair_value_basis)) return false;
+  return [payload.catalysts, payload.risks, payload.required_evidence, payload.kill_conditions].every(items => Array.isArray(items) && !listLimitError(items));
+}
+
+function findPrivateThesis(id) {
+  return Object.values(state.theses.bySymbol).flat().find(row => row.id === id);
+}
+
+async function savePrivateThesis(symbol) {
+  const draft = thesisDraft(symbol);
+  const payload = privateThesisPayload(symbol);
+  state.theses.drafts[symbol] = payloadToDraft(payload, draft.id);
+  if (!validatePrivateThesisPayload(payload)) {
+    state.theses.error = "invalid_form";
+    renderDesk({ focusThesis: true });
+    return;
+  }
+  state.theses.saving = true;
+  state.theses.error = null;
+  renderDesk({ focusThesis: true });
+  try {
+    if (draft.id) await companyThesisRequest(`?id=eq.${encodeURIComponent(draft.id)}`, { method: "PATCH", body: payload, prefer: "return=representation" });
+    else await companyThesisRequest("", { method: "POST", body: payload, prefer: "return=representation" });
+    state.theses.drafts[symbol] = emptyThesisDraft(symbol);
+    await loadCompanyTheses();
+  } catch (error) {
+    state.theses.error = error.message || "request_failed";
+  } finally {
+    state.theses.saving = false;
+    renderDesk({ focusThesis: true });
+  }
+}
+
+async function setPrivateThesisArchived(id, archived) {
+  state.theses.saving = true;
+  state.theses.error = null;
+  renderDesk();
+  try {
+    await companyThesisRequest(`?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", body: { archived, updated_at: new Date().toISOString() }, prefer: "return=representation" });
+    await loadCompanyTheses();
+  } catch (error) {
+    state.theses.error = error.message || "request_failed";
+  } finally {
+    state.theses.saving = false;
+    renderDesk();
+  }
+}
+
+async function deletePrivateThesis(id) {
+  if (!window.confirm("Permanently delete this private thesis? This cannot be undone.")) return;
+  state.theses.saving = true;
+  state.theses.error = null;
+  renderDesk();
+  try {
+    await companyThesisRequest(`?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", prefer: "return=minimal" });
+    await loadCompanyTheses();
+  } catch (error) {
+    state.theses.error = error.message || "request_failed";
+  } finally {
+    state.theses.saving = false;
+    renderDesk();
+  }
+}
+
+function bindPrivateTheses(row) {
+  const form = $("privateThesisForm");
+  if (form) {
+    form.onsubmit = event => {
+      event.preventDefault();
+      savePrivateThesis(row.symbol);
+    };
+  }
+  $("privateThesisCancel")?.addEventListener("click", () => {
+    state.theses.drafts[row.symbol] = emptyThesisDraft(row.symbol);
+    state.theses.error = null;
+    renderDesk({ focusThesis: true });
+  });
+  document.querySelectorAll("[data-thesis-action]").forEach(button => {
+    button.onclick = () => {
+      const id = button.dataset.thesisId;
+      const action = button.dataset.thesisAction;
+      const thesis = findPrivateThesis(id);
+      if (!id || !thesis) return;
+      if (action === "edit") {
+        state.theses.drafts[row.symbol] = hydrateThesisDraft(thesis);
+        state.theses.error = null;
+        renderDesk({ focusThesis: true });
+      } else if (action === "archive") {
+        setPrivateThesisArchived(id, true);
+      } else if (action === "restore") {
+        setPrivateThesisArchived(id, false);
+      } else if (action === "delete") {
+        deletePrivateThesis(id);
+      }
+    };
+  });
+}
+
+function deliveryArray(value) {
+  if (Array.isArray(value)) return value.map(item => String(item || "").trim()).filter(Boolean);
+  const text = String(value || "").trim();
+  return text ? [text] : [];
+}
+
+function deliveryValue(value, fallback = "unknown") {
+  return value == null || value === "" ? fallback : esc(value);
+}
+
+function renderDeliveryList(label, values, empty) {
+  const rows = deliveryArray(values);
+  return `<div><span>${esc(label)}</span><b>${rows.length ? rows.map(esc).join(" · ") : esc(empty || "none emitted")}</b></div>`;
+}
+
+function renderManagementDelivery(r) {
+  const delivery = r.management_delivery && typeof r.management_delivery === "object" && !Array.isArray(r.management_delivery)
+    ? r.management_delivery
+    : null;
+  if (!delivery) {
+    return `<section class="management-delivery" aria-labelledby="managementDeliveryTitle">
+      <header><div><span class="kicker">Management delivery</span><h3 id="managementDeliveryTitle">Guidance follow-through</h3></div><span class="pill">unavailable_not_generated</span></header>
+      <p class="section-note">Management delivery has not been generated into this CI slice yet. The browser does not infer blocked guidance, match assertions, score delivery, forecast results, value the company, or turn this into advice.</p>
+      <div class="delivery-empty">Unavailable: not generated.</div>
+    </section>`;
+  }
+  const records = Array.isArray(delivery.records) ? delivery.records : [];
+  return `<section class="management-delivery" aria-labelledby="managementDeliveryTitle">
+    <header><div><span class="kicker">Management delivery</span><h3 id="managementDeliveryTitle">Guidance follow-through</h3></div><span class="pill">${esc(delivery.status || "unknown")}</span></header>
+    <p class="section-note">Read-only backend output. The browser does not match assertions, score delivery, forecast results, value the company, or turn this into advice.</p>
+    <div class="delivery-grid">
+      <div><span>Company status</span><b>${esc(delivery.status || "unknown")}</b></div>
+      <div><span>Active theses</span><b>${esc(delivery.active_thesis_count ?? 0)}</b></div>
+      <div><span>Delivery records</span><b>${esc(delivery.delivery_record_count ?? records.length)}</b></div>
+      <div><span>Generated symbol</span><b>${esc(delivery.symbol || r.symbol || "unknown")}</b></div>
+    </div>
+    <div class="delivery-records">${records.length ? records.map(renderManagementDeliveryRecord).join("") : `<div class="delivery-empty">${delivery.status === "no_active_thesis" ? "No active thesis records are available for management delivery." : "No management-delivery records were emitted."}</div>`}</div>
+  </section>`;
+}
+
+function renderManagementDeliveryRecord(record) {
+  const source = record.source_assertion || {};
+  const match = record.matched_event || null;
+  const confidence = record.confidence_link || null;
+  const reasons = deliveryArray(record.reasons);
+  const limitations = deliveryArray(record.limitations);
+  const laterDate = match?.available_at || match?.effective_date || null;
+  return `<article class="delivery-record">
+    <header><div><span class="pill">${esc(record.status || "unknown")}</span><h4>${esc(record.delivery_id || "delivery record")}</h4></div><b>${esc(record.score_method || "method unknown")}</b></header>
+    <div class="delivery-grid">
+      ${renderDeliveryList("Linked assertion IDs", [record.thesis_id, record.assertion_key, record.conflict_key], "no assertion link emitted")}
+      ${renderDeliveryList("Linked event IDs", source.linked_event_ids, "no source event link emitted")}
+      <div><span>Later evidence event</span><b>${esc(match?.event_id || "not observed")}</b></div>
+      <div><span>Later evidence date</span><b>${deliveryValue(laterDate, "not observed")}</b></div>
+      <div><span>Confidence link</span><b>${confidence ? esc([confidence.confidence_id, confidence.source_cluster_id, confidence.band].filter(Boolean).join(" · ")) : "not linked"}</b></div>
+    </div>
+    <div class="delivery-record-copy">
+      <div><span class="kicker">Status reason</span>${reasons.length ? `<ul>${reasons.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : `<p>No reason emitted.</p>`}</div>
+      <div><span class="kicker">Limitations</span>${limitations.length ? `<ul>${limitations.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : `<p>No limitations emitted.</p>`}</div>
+    </div>
+  </article>`;
+}
+
+function watchlistArray(value) {
+  if (Array.isArray(value)) return value;
+  if (value == null || value === "") return [];
+  return [value];
+}
+
+function watchlistText(value, fallback = "unknown") {
+  if (value == null || value === "") return esc(fallback);
+  if (Array.isArray(value)) return value.length ? value.map(item => esc(item)).join(" · ") : esc(fallback);
+  if (typeof value === "object") return Object.entries(value).length
+    ? Object.entries(value).map(([key, item]) => `${esc(key)}: ${esc(item)}`).join(" · ")
+    : esc(fallback);
+  return esc(value);
+}
+
+function renderEvidenceWatchlist(r) {
+  const watch = r.evidence_watchlist && typeof r.evidence_watchlist === "object" && !Array.isArray(r.evidence_watchlist)
+    ? r.evidence_watchlist
+    : null;
+  if (!watch) {
+    return `<section class="panel span9 evidence-watchlist" aria-labelledby="evidenceWatchlistTitle">
+      <span class="kicker">Evidence Watchlist</span><h2 id="evidenceWatchlistTitle">What would confirm or break this signal</h2>
+      <p class="section-note">Unavailable: the CI slice has not emitted row.evidence_watchlist for this company. The browser will not create checks from other state.</p>
+      <div class="watchlist-empty">No evidence-watchlist object was emitted for ${esc(r.symbol)}.</div>
+    </section>`;
+  }
+  const items = Array.isArray(watch.items) ? watch.items : [];
+  const counts = watch.status_counts && typeof watch.status_counts === "object" && !Array.isArray(watch.status_counts)
+    ? Object.entries(watch.status_counts)
+    : [];
+  return `<section class="panel span9 evidence-watchlist" aria-labelledby="evidenceWatchlistTitle">
+    <span class="kicker">Evidence Watchlist</span><h2 id="evidenceWatchlistTitle">What would confirm or break this signal</h2>
+    <p class="section-note">Read-only backend checklist. The browser displays emitted statuses, checks, links, readiness, and policy flags only.</p>
+    <div class="watchlist-status">
+      <div><span>Active watches</span><b>${esc(watch.active_watch_count ?? "unknown")}</b></div>
+      <div><span>Current status</span><b>${esc(watch.status || "unknown")}</b></div>
+      <div><span>Status reason</span><b>${esc(watch.status_reason || "not emitted")}</b></div>
+      <div><span>Financial readiness</span><b>${watchlistText(watch.financial_readiness, "unknown")}</b></div>
+    </div>
+    <div class="watchlist-counts" aria-label="Evidence watch status counts">${counts.length ? counts.map(([status, count]) => `<span>${esc(status)} <b>${esc(count)}</b></span>`).join("") : `<span>Status counts <b>not emitted</b></span>`}</div>
+    ${items.length ? `<div class="watchlist-items">${items.map(renderEvidenceWatchItem).join("")}</div>` : `<div class="watchlist-empty">No active evidence watch is open for ${esc(r.symbol)}. This pilot company is inactive until the backend emits a monitored assertion with confirm and break checks.</div>`}
+  </section>`;
+}
+
+function renderEvidenceWatchItem(item) {
+  return `<article class="watchlist-card">
+    <header><div><span class="pill">${esc(item.status || "unknown")}</span><h3>${esc(item.monitored_assertion || "No monitored assertion emitted.")}</h3></div><b>${esc(item.confidence || "unknown confidence")}</b></header>
+    <div class="watchlist-status">
+      <div><span>Status reason</span><b>${esc(item.status_reason || "not emitted")}</b></div>
+      <div><span>Financial readiness</span><b>${watchlistText(item.financial_readiness, "unknown")}</b></div>
+      <div><span>Policy flags</span><b>${watchlistText(item.policy_flags, "none emitted")}</b></div>
+    </div>
+    <div class="watchlist-checks">
+      ${renderEvidenceWatchCheck("Confirmation check", item.confirmation_check)}
+      ${renderEvidenceWatchCheck("Break check", item.break_check)}
+      ${renderEvidenceWatchCheck("Next evidence", item.next_evidence)}
+    </div>
+    <div class="watchlist-sources">
+      ${renderEvidenceWatchLinks("Source evidence", item.source_evidence)}
+      ${renderEvidenceWatchLinks("Matched evidence", item.matched_evidence)}
+    </div>
+  </article>`;
+}
+
+function renderEvidenceWatchCheck(label, value) {
+  return `<section><h4>${esc(label)}</h4><p>${watchlistText(value, "not emitted")}</p></section>`;
+}
+
+function renderEvidenceWatchLinks(label, values) {
+  const rows = watchlistArray(values);
+  return `<section><h4>${esc(label)}</h4>${rows.length ? rows.map(renderEvidenceWatchLink).join("") : `<p>No official-source link emitted.</p>`}</section>`;
+}
+
+function renderEvidenceWatchLink(item) {
+  const href = safeHref(typeof item === "string" ? item : item?.source_url || item?.url);
+  const page = Number(item?.page) > 0 ? `page ${Number(item.page)}` : "page unknown";
+  const label = typeof item === "string" ? "official source" : item?.title || item?.document_id || item?.source || item?.source_id || "official source";
+  const reason = typeof item === "string" ? "" : item?.reason || item?.match_reason || item?.status || "";
+  const link = href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)} · ${esc(page)}</a>`
+    : `<span>${esc(label)} · ${esc(page)}</span>`;
+  return `<div>${link}${reason ? `<small>${esc(reason)}</small>` : ""}</div>`;
+}
+
+function renderThesisCard(thesis) {
+  const evidence = Array.isArray(thesis.evidence) ? thesis.evidence : [];
+  return `<article class="thesis-card">
+    <header>
+      <div><span class="pill">${esc(thesis.status || "unknown")}</span><h3>${esc(thesis.thesis_type || "official thesis")}</h3></div>
+      <b>${esc(thesis.confidence_band || "unknown confidence")}</b>
+    </header>
+    <div class="thesis-facts">
+      <span>Source cluster <b>${esc(thesis.source_cluster_id || "unknown")}</b></span>
+      <span>Inference label <b>${esc(thesis.assessment || thesis.intelligence_type || "unknown")}</b></span>
+      <span>Confidence band <b>${esc(thesis.confidence_band || "unknown")}</b></span>
+    </div>
+    <p class="thesis-assertion">${esc(thesis.monitored_assertion || thesis.assertion_key || "No monitored assertion supplied.")}</p>
+    <div class="thesis-checks">
+      ${renderThesisChecks("Prove checks", thesis.prove_checks)}
+      ${renderThesisChecks("Kill checks", thesis.kill_checks)}
+      ${renderThesisWatch(thesis.watch_items)}
+    </div>
+    <div class="thesis-evidence">
+      <span class="kicker">Evidence links</span>
+      ${evidence.length ? evidence.slice(0, 6).map(renderThesisEvidence).join("") : `<p>No bounded evidence link is attached.</p>`}
+    </div>
+  </article>`;
+}
+
+function renderThesisChecks(label, checks) {
+  const rows = Array.isArray(checks) ? checks : [];
+  return `<section><h4>${esc(label)}</h4>${rows.length ? rows.map(item => `<div><b>${esc(item.current_status || "not_observed")}</b><span>${esc(item.condition || "No condition supplied.")}</span><em>${esc(item.source_required || "official source required")}</em></div>`).join("") : `<p>No ${esc(label.toLowerCase())} are defined.</p>`}</section>`;
+}
+
+function renderThesisWatch(items) {
+  const rows = Array.isArray(items) ? items : [];
+  return `<section><h4>Watch items</h4>${rows.length ? rows.map(item => `<div><b>${esc(item.watch_type || "watch")}</b><span>${esc(item.description || "No watch description supplied.")}</span><em>${esc(item.source_required || "source required")}</em></div>`).join("") : `<p>No watch items are defined.</p>`}</section>`;
+}
+
+function renderThesisEvidence(item) {
+  const href = safeHref(item?.source_url);
+  const page = Number(item?.page) > 0 ? `page ${Number(item.page)}` : "page unknown";
+  const label = `${item?.document_id || "document unknown"} · ${page}`;
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+    : `<span>${esc(label)}</span>`;
+}
+
+function blankScenarioState() {
+  return { revenueGrowth: "", netMargin: "", exitPe: "", result: null, error: null };
+}
+
+function scenarioState(symbol) {
+  return state.scenario.bySymbol[symbol] || (state.scenario.bySymbol[symbol] = blankScenarioState());
+}
+
+function captureScenarioInputs(symbol) {
+  const current = scenarioState(symbol);
+  current.revenueGrowth = $("scenarioGrowth")?.value ?? current.revenueGrowth;
+  current.netMargin = $("scenarioMargin")?.value ?? current.netMargin;
+  current.exitPe = $("scenarioPe")?.value ?? current.exitPe;
+}
+
+function scenarioNumber(name, value, low, high) {
+  if (String(value).trim() === "") throw new Error(`${name} is required.`);
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < low || number > high) {
+    throw new Error(`${name} must be between ${low} and ${high}.`);
+  }
+  return number;
+}
+
+function calculateScenario(r) {
+  const current = scenarioState(r.symbol);
+  const baseline = r.scenario_lab?.baseline || {};
+  try {
+    const revenue = scenarioNumber("Snapshot revenue", baseline.revenue, Number.MIN_VALUE, Number.MAX_VALUE);
+    const shares = scenarioNumber("Shares outstanding", baseline.shares_out, Number.MIN_VALUE, Number.MAX_VALUE);
+    const price = scenarioNumber("Latest price", baseline.latest_price, Number.MIN_VALUE, Number.MAX_VALUE);
+    const growth = scenarioNumber("Revenue growth", current.revenueGrowth, -99.999999, 1000);
+    const margin = scenarioNumber("Net margin", current.netMargin, 0.000001, 100);
+    const pe = scenarioNumber("Exit P/E", current.exitPe, 0.000001, 200);
+    // Deliberate browser mirror of scripts/company_scenario_lab.py. The Python
+    // checker owns the formulas; check_company_scenario_lab_ui.mjs locks this
+    // interactive copy to the same operands, bounds and golden case.
+    const scenarioRevenue = revenue * (1 + growth / 100);
+    const scenarioNetIncome = scenarioRevenue * margin / 100;
+    const scenarioEps = scenarioNetIncome / shares;
+    const multipleImpliedPrice = scenarioEps * pe;
+    const requiredEps = price / pe;
+    const requiredNetIncome = requiredEps * shares;
+    const requiredRevenue = requiredNetIncome / (margin / 100);
+    const requiredRevenueGrowthPct = (requiredRevenue / revenue - 1) * 100;
+    current.result = {
+      scenarioRevenue,
+      scenarioNetIncome,
+      scenarioEps,
+      multipleImpliedPrice,
+      priceDelta: multipleImpliedPrice - price,
+      priceDeltaPct: (multipleImpliedPrice / price - 1) * 100,
+      requiredEps,
+      requiredNetIncome,
+      requiredRevenue,
+      requiredRevenueGrowthPct,
+      expectationsGapPct: requiredRevenueGrowthPct - growth,
+    };
+    current.error = null;
+  } catch (error) {
+    current.result = null;
+    current.error = error.message || "Enter valid assumptions.";
+  }
+}
+
+function scenarioMetric(label, value, suffix = "") {
+  return `<div><span>${esc(label)}</span><b>${esc(value == null ? "unknown" : `${fmt(value, 2)}${suffix}`)}</b></div>`;
+}
+
+function renderScenarioLab(r) {
+  const lab = r.scenario_lab || {};
+  const baseline = lab.baseline || {};
+  const provenance = lab.provenance || {};
+  const current = scenarioState(r.symbol);
+  const result = current.result;
+  const fundamentalsHref = safeHref(provenance.fundamentals_source_url);
+  const priceHref = safeHref(provenance.price_source_url);
+  const source = (href, label) => href ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>` : esc(`${label} unavailable`);
+  return `<section class="panel span9 scenario-shell" aria-labelledby="scenarioTitle">
+    <span class="kicker">Scenario sensitivity</span><h2 id="scenarioTitle">Change assumptions, inspect the arithmetic</h2>
+    <p class="section-note">A transparent snapshot sensitivity and reverse solve. It is not a prediction or a house case; Henneth supplies no default assumptions.</p>
+    <div class="scenario-baseline">
+      ${scenarioMetric("Snapshot revenue", baseline.revenue)}
+      ${scenarioMetric("Snapshot net income", baseline.net_income)}
+      ${scenarioMetric("Shares outstanding", baseline.shares_out)}
+      ${scenarioMetric("Snapshot EPS", baseline.eps)}
+      ${scenarioMetric("Latest price", baseline.latest_price)}
+    </div>
+    <p class="scenario-source">Fundamentals ${source(fundamentalsHref, provenance.fundamentals_as_of || "date unknown")} · Price ${source(priceHref, provenance.price_as_of || "date unknown")}</p>
+    <form id="scenarioForm" class="scenario-form" aria-describedby="scenarioHelp scenarioError">
+      <label><span>Revenue growth %</span><input id="scenarioGrowth" type="number" min="-99.999999" max="1000" step="0.1" value="${esc(current.revenueGrowth)}" placeholder="Enter assumption"></label>
+      <label><span>Net margin %</span><input id="scenarioMargin" type="number" min="0.000001" max="100" step="0.1" value="${esc(current.netMargin)}" placeholder="Enter assumption"></label>
+      <label><span>Exit P/E</span><input id="scenarioPe" type="number" min="0.000001" max="200" step="0.1" value="${esc(current.exitPe)}" placeholder="Enter assumption"></label>
+      <div class="scenario-actions"><button type="submit">Calculate</button><button id="scenarioClear" type="button" class="secondary">Clear</button></div>
+      <p id="scenarioHelp" class="muted">All three assumptions are required. Values are kept only in this browser session for ${esc(r.symbol)}.</p>
+      <p id="scenarioError" class="scenario-error" role="alert" aria-live="polite">${esc(current.error || "")}</p>
+    </form>
+    ${result ? `<div class="scenario-results">
+      <section><h3>Scenario outputs</h3><div class="scenario-metrics">
+        ${scenarioMetric("Revenue", result.scenarioRevenue)}${scenarioMetric("Net income", result.scenarioNetIncome)}${scenarioMetric("EPS", result.scenarioEps)}${scenarioMetric("Multiple-implied price", result.multipleImpliedPrice)}${scenarioMetric("Price difference", result.priceDelta)}${scenarioMetric("Price difference", result.priceDeltaPct, "%")}
+      </div></section>
+      <section><h3>Reverse expectations at the current price</h3><div class="scenario-metrics">
+        ${scenarioMetric("Required EPS", result.requiredEps)}${scenarioMetric("Required net income", result.requiredNetIncome)}${scenarioMetric("Required revenue", result.requiredRevenue)}${scenarioMetric("Required revenue growth", result.requiredRevenueGrowthPct, "%")}
+      </div></section>
+      <section><h3>Market-implied gap</h3><div class="scenario-metrics">
+        ${scenarioMetric("Caller revenue growth", current.revenueGrowth, "%")}${scenarioMetric("Required revenue growth", result.requiredRevenueGrowthPct, "%")}${scenarioMetric("Gap", result.expectationsGapPct, "%")}
+      </div></section>
+    </div>` : `<div class="empty">Enter all three assumptions to calculate a sensitivity and reverse expectations.</div>`}
+    <div class="scenario-blocked" aria-label="Unavailable model outputs">
+      ${["forecast", "EBITDA", "FCF", "DCF"].map(key => `<span>${esc(key)}<b>${esc(key === "forecast" ? (lab.status?.forecast || "blocked") : "blocked_insufficient_qualified_history")}</b></span>`).join("")}
+    </div>
+  </section>`;
+}
+
+const ASK_SECTION_LABELS = {
+  conclusion: "Conclusion",
+  evidence: "Evidence",
+  mechanism: "Mechanism",
+  historical_benchmark: "Historical benchmark",
+  financial_impact: "Financial impact",
+  scenarios: "Scenarios",
+  valuation_readiness: "Valuation readiness",
+  confidence: "Confidence",
+  what_to_watch: "What to watch",
+};
+
+function renderAskHenneth(r) {
+  const record = state.ask.bySymbol[r.symbol] || {};
+  const busy = Boolean(state.ask.pending[r.symbol]);
+  const value = record.question || "";
+  return `<section class="panel span9 ask-shell" aria-labelledby="askTitle">
+    <span class="kicker">Ask Henneth</span><h2 id="askTitle">Question this company file</h2>
+    <p class="section-note">Answers are built from the private company-intelligence contract. The model can only add validated qualitative text; facts, readiness, sections and citations are server-owned.</p>
+    <form id="askForm" class="ask-form">
+      <label for="askInput">Question for ${esc(r.symbol)}</label>
+      <div>
+        <input id="askInput" type="text" maxlength="4096" aria-describedby="askHelp" autocomplete="off" value="${esc(value)}" placeholder="What changed in the latest filing?">
+        <button type="submit" ${busy ? "disabled" : ""}>${busy ? "Reading" : "Ask"}</button>
+      </div>
+      <p id="askHelp" class="muted" role="status" aria-live="polite">${busy ? "Reading retained evidence and validating the answer." : "Use company-specific, qualitative questions. Unsafe requests are rejected before any answer is shown."}</p>
+    </form>
+    ${record.error ? `<div class="ask-error" role="alert">${esc(readableAskError(record.error))}</div>` : ""}
+    ${record.answer ? renderAskAnswer(record.answer, record.citations || []) : `<div class="empty">No Ask answer has been requested for ${esc(r.symbol)} yet.</div>`}
+  </section>`;
+}
+
+function readableAskError(error) {
+  const map = {
+    question_contains_numeric_token: "Ask rejected the question because it contained a numeric token.",
+    question_contains_unsafe_language: "Ask rejected the question because it looked like advice, prediction, prompt disclosure, or unsupported market language.",
+    provider_not_configured: "Ask is not configured on this deployment yet.",
+    provider_busy: "The model provider is busy. Try again shortly.",
+    model_output_rejected: "The answer was rejected by the contract validator.",
+    missing_citation_tie: "The answer was rejected because it was not tied to retained evidence.",
+  };
+  return map[error] || "Ask could not return a validated answer. Try again shortly.";
+}
+
+function renderAskAnswer(answer, citations) {
+  const citationById = Object.fromEntries((citations || []).map(citation => [citation.citation_id, citation]));
+  const sections = answer.sections || {};
+  const order = Object.keys(ASK_SECTION_LABELS);
+  return `<div class="ask-answer" aria-label="Ask Henneth answer for ${esc(answer.symbol || "company")}">
+    ${order.map(key => renderAskSection(key, sections[key], citationById)).join("")}
+  </div>`;
+}
+
+function renderAskSection(key, section, citationById) {
+  if (!section) return `<article class="ask-section"><header><h3>${esc(ASK_SECTION_LABELS[key])}</h3><span class="pill">missing</span></header><p>Unknown.</p></article>`;
+  const status = section.status || "unknown";
+  let body = "";
+  if (key === "evidence") {
+    const items = section.items || [];
+    body = items.length ? `<div class="ask-cites">${items.map(item => renderAskCitation(item.citation_id, citationById[item.citation_id])).join("")}</div>` : `<p>No retained citation is attached.</p>`;
+  } else if (key === "historical_benchmark") {
+    const studies = section.studies || [];
+    body = studies.length ? `<div class="ask-mini-list">${studies.map(study => `<div><b>${esc(study.event_id || "event")}</b><span>${esc(study.methodology || section.methodology || "descriptive, not causal")}</span></div>`).join("")}</div>` : `<p>No historical benchmark study is available.</p>`;
+  } else if (key === "scenarios") {
+    const scenarios = section.scenarios || [];
+    body = scenarios.length ? `<div class="ask-mini-list">${scenarios.map(scenario => `<div><b>${esc(scenario.case_name || scenario.scenario_type || "Scenario")}</b><span>${esc(scenario.impact_status || "unknown impact status")}</span></div>`).join("")}</div>` : `<p>No sourced scenario set is available.</p>`;
+  } else if (key === "valuation_readiness") {
+    const downstream = section.downstream_status || {};
+    body = `<div class="ask-readiness">${["forecast", "valuation", "market_expectations", "scenario_lab"].map(item => `<span>${esc(item.replaceAll("_", " "))}<b>${esc(downstream[item] || "blocked_not_implemented")}</b></span>`).join("")}</div>`;
+  } else if (key === "confidence") {
+    const assessments = section.assessments || [];
+    body = `<p>${esc(section.aggregate_band || section.band || "unknown")}${section.aggregate_score == null ? "" : ` · ${scoreLabel(section.aggregate_score)}`}</p>${assessments.length ? `<div class="ask-mini-list">${assessments.map(assessment => `<div><b>${esc(assessment.source_cluster_id || assessment.confidence_id || "assessment")} · ${scoreLabel(assessment.score)} · ${esc(assessment.band || "unknown")}</b><span>${(assessment.components || []).map(component => `${esc(component.name)} ${scoreLabel(component.normalized_score)} / ${component.weighted_points == null ? "points unknown" : `${esc(fmt(component.weighted_points, 2))} pts`}`).join(" · ")}</span></div>`).join("")}</div>` : `<p>No intelligence-confidence assessment is available.</p>`}`;
+  } else {
+    body = `<p>${esc(section.text || "Unknown.")}</p>${renderAskCitationLinks(section.citation_ids, citationById)}`;
+  }
+  return `<article class="ask-section"><header><h3>${esc(ASK_SECTION_LABELS[key])}</h3><span class="pill">${esc(status)}</span></header>${body}</article>`;
+}
+
+function renderAskCitationLinks(ids, citationById) {
+  const rows = (ids || []).map(id => renderAskCitation(id, citationById[id])).join("");
+  return rows ? `<div class="ask-cites compact">${rows}</div>` : "";
+}
+
+function renderAskCitation(id, citation) {
+  if (!citation) return `<span>${esc(id || "citation unavailable")}</span>`;
+  const href = safeHref(citation.source_url);
+  const label = citation.label || citation.document_id || citation.citation_id;
+  const page = citation.page ? `page ${citation.page}` : "page unknown";
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)} · ${esc(page)}</a>`
+    : `<span>${esc(label)} · ${esc(page)}</span>`;
+}
+
+function coveragePeriodLabel(slot) {
+  if (!slot) return "not emitted";
+  return slot.period_end
+    ? `${slot.period_end} · explicit ${slot.period_type || "period"} date`
+    : `unresolved · ${slot.evidence_status || slot.source || "missing explicit annual period evidence"}`;
+}
+
+function coverageDocLink(doc) {
+  const href = safeHref(doc?.source_url);
+  const label = doc?.document_id || "document unknown";
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+    : esc(label);
+}
+
+function readinessDocLink(doc) {
+  const href = safeHref(doc?.source_url || doc?.url);
+  const label = doc?.document_id || doc?.doc_id || doc?.ref_id || "document unknown";
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+    : esc(label);
+}
+
+function readinessList(items, empty = "None emitted") {
+  return Array.isArray(items) && items.length
+    ? `<ul>${items.map(item => `<li>${esc(item)}</li>`).join("")}</ul>`
+    : `<p class="muted">${esc(empty)}</p>`;
+}
+
+function renderForecastReadiness(r) {
+  const readiness = r.forecast_readiness && typeof r.forecast_readiness === "object" && !Array.isArray(r.forecast_readiness)
+    ? r.forecast_readiness
+    : null;
+  if (!readiness) {
+    return `<section class="panel span9 forecast-readiness-shell" aria-labelledby="forecastReadinessTitle">
+      <span class="kicker">Forecast / valuation readiness</span><h2 id="forecastReadinessTitle">Backend state not generated</h2>
+      <p class="section-note">Read-only readiness state is expected at row.forecast_readiness. The browser does not infer qualification, calculate projections, value the company, estimate odds, emit targets, or turn this into advice.</p>
+      <div class="empty">Forecast readiness is unavailable: not generated.</div>
+    </section>`;
+  }
+  const downstream = readiness.downstream_status || {};
+  const registry = readiness.model_registry && typeof readiness.model_registry === "object" ? readiness.model_registry : {};
+  const candidates = readiness.qualification_candidate_document_refs || readiness.qualification_candidate_documents || [];
+  const policy = readiness.policy || {};
+  const limitations = readiness.limitations || [];
+  return `<section class="panel span9 forecast-readiness-shell" aria-labelledby="forecastReadinessTitle">
+    <span class="kicker">Forecast / valuation readiness</span><h2 id="forecastReadinessTitle">Model gate and blocked outputs</h2>
+    <p class="section-note">Read-only backend output from row.forecast_readiness. The browser displays exact status, version, missing requirements, official candidate refs, policy and blocked downstream states only.</p>
+    <div class="forecast-readiness-summary">
+      <div><span>Status</span><b>${esc(readiness.status || "unknown")}</b></div>
+      <div><span>Driver registry</span><b>${esc(registry.status || "unknown")} · ${esc(registry.selected_sector || "unknown")}</b></div>
+      <div><span>Input contract</span><b>${esc(readiness.model_version || registry.model_version || "unknown")}</b></div>
+      <div><span>Qualified periods</span><b>${esc(readiness.qualified_period_count ?? "unknown")}</b></div>
+    </div>
+    <div class="forecast-readiness-downstream" aria-label="Blocked downstream model states">
+      ${["forecast", "valuation", "market_expectations", "numeric_impact"].map(key => `<span>${esc(key.replaceAll("_", " "))}<b>${esc(downstream[key] || "blocked_not_implemented")}</b></span>`).join("")}
+    </div>
+    <section class="forecast-readiness-section">
+      <h3>Missing requirements</h3>
+      ${readinessList(readiness.missing_requirements, "No missing requirements emitted.")}
+    </section>
+    <section class="forecast-readiness-section">
+      <h3>Qualification candidate document refs</h3>
+      <div class="forecast-readiness-docs">${Array.isArray(candidates) && candidates.length ? candidates.map(doc => `<article><b>${readinessDocLink(doc)}</b><span>${esc(doc.title || doc.document_title || "untitled official document")}</span><small>${esc(doc.published_at || doc.date || "date unknown")} · ${esc(doc.reason || doc.candidate_reason || doc.status || "candidate")}</small></article>`).join("") : `<div class="empty">No qualification candidate document refs were emitted.</div>`}</div>
+    </section>
+    <section class="forecast-readiness-section">
+      <h3>Policy</h3>
+      <div class="forecast-readiness-policy">
+        <span>Forecasts <b>${esc(policy.forecasts || policy.forecast || "blocked_until_qualified")}</b></span>
+        <span>Valuation <b>${esc(policy.valuation || "blocked_until_qualified")}</b></span>
+        <span>Market expectations <b>${esc(policy.market_expectations || "blocked_until_qualified")}</b></span>
+        <span>Numeric impact <b>${esc(policy.numeric_impact || "blocked_until_sourced_operands")}</b></span>
+      </div>
+    </section>
+    ${(limitations || []).length ? `<section class="forecast-readiness-section"><h3>Limitations</h3>${readinessList(limitations)}</section>` : ""}
+  </section>`;
+}
+
+function renderFinancialCoverage(r) {
+  const coverage = r.financial_coverage && typeof r.financial_coverage === "object" && !Array.isArray(r.financial_coverage)
+    ? r.financial_coverage
+    : null;
+  if (!coverage) {
+    return `<section class="baseline-section financial-coverage-panel"><h3>Financial coverage & qualification</h3><div class="empty">Financial coverage is unavailable: not generated.</div></section>`;
+  }
+  const annualSlots = Array.from({ length: 3 }, (_, index) => (coverage.required_annual_periods || [])[index] || { slot: `annual_period_${index + 1}`, period_end: null, evidence_status: "not_emitted" });
+  const missingRows = coverage.missing_revenue_pat_eps_by_annual_period || [];
+  const audit = coverage.audit_only_series || {};
+  const queue = coverage.qualification_queue || {};
+  const model = coverage.model_readiness || {};
+  const downstream = model.downstream_status || {};
+  const candidateDocs = queue.candidate_documents || [];
+  return `<section class="baseline-section financial-coverage-panel" aria-labelledby="financialCoverageTitle">
+    <h3 id="financialCoverageTitle">Financial coverage & qualification</h3>
+    <p class="section-note">Read-only coverage metadata. The browser does not infer periods, promote values, parse PDFs, or trigger restage.</p>
+    <div class="financial-coverage-summary">
+      <div><span>Status</span><b>${esc(coverage.status || "unknown")}</b></div>
+      <div><span>Official docs indexed</span><b>${esc(coverage.indexed_official_financial_doc_count ?? 0)}</b></div>
+      <div><span>Queue status</span><b>${esc(queue.status || "unknown")}</b></div>
+      <div><span>Forecast</span><b>${esc(downstream.forecast || "blocked_not_implemented")}</b></div>
+      <div><span>Valuation</span><b>${esc(downstream.valuation || "blocked_not_implemented")}</b></div>
+    </div>
+    <div class="financial-coverage-slots">${annualSlots.map(slot => `<article><span>${esc(slot.slot || "annual slot")}</span><b>${esc(coveragePeriodLabel(slot))}</b><small>${esc(slot.document_id || "no official annual document resolved")}</small></article>`).join("")}</div>
+    <div class="financial-coverage-missing">${missingRows.length ? missingRows.map(row => `<article><span>${esc(row.slot || "annual slot")}</span><b>${esc((row.missing_metrics || []).join(", ") || "none emitted")}</b><small>${esc(row.period_evidence_status || row.status || "unknown")}</small></article>`).join("") : `<div class="empty">No missing revenue/PAT/EPS rows were emitted.</div>`}</div>
+    <div class="financial-coverage-audit">
+      <div><span>Audit-only facts</span><b>${esc(audit.audit_only_fact_count ?? 0)}</b><small>Quarantined / not promoted</small></div>
+      <div><span>Model-loadable facts</span><b>${esc(audit.model_loadable_count ?? 0)}</b><small>${esc(audit.note || "Audit-only facts are retained as coverage signals only.")}</small></div>
+    </div>
+    <div class="financial-coverage-docs">
+      <span class="kicker">Candidate official documents</span>
+      ${candidateDocs.length ? candidateDocs.map(doc => `<article><b>${coverageDocLink(doc)}</b><span>${esc(doc.title || "untitled official document")}</span><small>${esc(doc.published_at || "date unknown")} · ${esc(doc.reason || "candidate")}</small></article>`).join("") : `<div class="empty">No candidate documents were emitted for the qualification queue.</div>`}
+    </div>
+    ${(coverage.limitations || []).length ? `<div class="financial-coverage-limits"><span class="kicker">Limitations</span><ul>${coverage.limitations.map(item => `<li>${esc(item)}</li>`).join("")}</ul></div>` : ""}
+  </section>`;
+}
+
+function renderFinancialBaseline(r) {
+  const model = r.financial_model_inputs || {};
+  const observations = model.observations || {};
+  const derived = model.derived || {};
+  const observationRows = Object.entries(observations)
+    .flatMap(([line, values]) => (Array.isArray(values) ? values : []).map(item => ({ line, item })));
+  const readiness = model.status || "unknown";
+  const downstream = model.downstream_status || {};
+  const downstreamCard = (key, label) => `<div><span>${esc(label)}</span><b>${esc(downstream[key] || "blocked_not_implemented")}</b></div>`;
+  const row = (line, item) => `<tr><td>${esc(line)}</td><td>${esc(item.period_end || "Unknown")}</td><td>${esc(item.normalized_value ?? item.value ?? "Unknown")}</td><td>${esc(item.currency || "Unknown")} · ${esc(item.unit || "Unknown")} × ${esc(item.unit_multiplier ?? "Unknown")}</td><td>${esc(item.column_role || "Unknown")} · ${esc(item.consolidation || "Unknown")}</td><td>${esc(item.source_url || item.document_id || "No citation")}</td></tr>`;
+  const derivedRows = Object.entries(derived).flatMap(([name, values]) => (values || []).map(v => `<tr><td>${esc(name)}</td><td>${esc(v.period_end || "Unknown")}</td><td>${esc(v.value ?? "Unknown")}</td><td>${esc(v.formula_version || "Unknown")}</td><td>${esc((v.source_fact_ids || []).join(", ") || "Unknown")}</td><td>${esc(v.availability || "Unknown")}</td></tr>`)).join("");
+  return `<section class="panel span9 baseline-shell"><span class="kicker">Financial baseline</span><h2>Reported history and deterministic derivations</h2><p class="section-note">Only current parser-version observations are shown. Values, units, citations, and readiness remain exactly as supplied by the financial model input state.</p><div class="baseline-status"><div><span>Readiness</span><b>${esc(readiness)}</b></div><div><span>Model</span><b>${esc(model.model_version || "unsupported_sector_model")}</b></div>${downstreamCard("forecast", "Forecast")}${downstreamCard("valuation", "Valuation")}${downstreamCard("market_expectations", "Market expectations")}${downstreamCard("scenario_lab", "Scenario Lab")}</div>${model.quality_flags?.length ? `<p class="baseline-warning">Quality flags: ${esc(model.quality_flags.join(", "))}</p>` : ""}${renderFinancialCoverage(r)}<section class="baseline-section"><h3>Reported observations</h3>${observationRows.length ? `<div class="baseline-table"><table><thead><tr><th>Line</th><th>Period</th><th>Value</th><th>Unit</th><th>Role / basis</th><th>Official citation</th></tr></thead><tbody>${observationRows.map(({ line, item }) => row(line, item)).join("")}</tbody></table></div>` : `<div class="empty">No verified model-loadable observations are available.</div>`}</section><section class="baseline-section"><h3>Derived metrics</h3>${derivedRows ? `<div class="baseline-table"><table><thead><tr><th>Metric</th><th>Period</th><th>Value</th><th>Formula</th><th>Operands</th><th>Available on</th></tr></thead><tbody>${derivedRows}</tbody></table></div>` : `<div class="empty">No derived growth or margin outputs are available.</div>`}</section></section>`;
 }
 
 function renderFinancials(r) {
@@ -664,6 +2180,9 @@ function enhanceMotion() {
 $("signOut").onclick = () => {
   saveSession(null);
   state.data = null;
+  state.ask.pending = {};
+  state.ask.nextId += 1;
+  state.theses = { loaded: false, loading: false, saving: false, error: null, bySymbol: {}, drafts: {} };
   renderGate("Signed out.");
 };
 

@@ -24,7 +24,7 @@ The product is a hybrid of five parts:
 2. Judgement agents (`.claude/agents/` + `prompts/`) run on the owner's machine. They write analysis back into `state/`. Visitors read the saved analysis 24/7; agents refresh it, they are not needed to serve it.
 3. The terminal (`dashboard/`) is a static path-routed SPA. It reads `state/*.json` over HTTPS. It writes nothing to `state/`.
 4. Supabase holds only auth and per-user rows. It never serves research.
-5. Vercel serves static files. Edge middleware gates `/state/*`. One Edge function (`api/ask.js`) answers signed-in chat.
+5. Vercel serves static files. Edge middleware gates `/state/*` and CI `/data/*`. The CI project also exposes a separate owner-only `Henneth Desk 2.CI.0/api/ask.js`: it verifies the Supabase ES256 owner claim, loads only the requested company row, projects it through `api/ask_contract.js`, and builds the final answer/citations server-side around qualitative model output.
 
     PSX DPS / Yahoo / Firecrawl / TV
                     |
@@ -74,7 +74,27 @@ The product is a hybrid of five parts:
 | Synthesis training batch | `scripts/prepare_synthesis_batch.py` -> ignored `.cache/company_intel/training_batch.json` | local librarian/verifier agents |
 | Approved CI briefs | `scripts/company_brief_review.py` -> `state/company_briefs.json`, `state/company_brief_receipts.json` | CI Brief view |
 | Company Intelligence slice | `scripts/build_ci_slice.py` -> `Henneth Desk 2.CI.0/data/company_intelligence.json` | private CI app only |
+| Operating events | `scripts/build_operating_events.py` -> `state/company_intel/operating_events.json` | evidence-backed Wave 1 index derived from canonical documents/events |
+| Sector driver graphs | `scripts/build_driver_graphs.py` + `sector_driver_models.py` -> `state/company_intel/driver_graphs.json` | full 20-company pilot across BANKS/CEMENT/E&P/REFINERY/FERTILIZER/AUTO_ASSEMBLER/POWER/OMC/HOLDING_COMPANY; declarative routing only, no company values |
+| Impact scenarios | `scripts/impact_engine.py` -> `state/company_intel/impact_scenarios.json` | graph-filtered event-to-driver Bear/Base/Bull scaffolding; numeric impacts remain null without sourced inputs |
+| Historical event studies | `scripts/build_event_studies.py` -> `state/company_intel/event_studies.json` | one raw-price benchmark per canonical event; strict pre-event baselines and calendar horizons |
+| Conditional historical benchmarks | `scripts/build_conditional_benchmarks.py` + `conditional_benchmarks.py` -> `state/company_intel/conditional_benchmarks.json` | exact event-type/subtype same-company and same-sector analogue resolver over existing event-study outcomes; statistics suppressed below three mature prior observations |
+| Causal driver evidence map | `scripts/build_causal_foundations.py` -> `state/company_intel/causal_foundations.json` | one categorical evidence row per driver-graph edge, resolving only same-company official events and strict event studies; no causal estimate or numeric impact |
+| Financial statement v2 facts | `scripts/financial_statement_facts.py` -> retained financial series/model inputs | conservative page/table facts; legacy rows remain audit-only |
+| Financial model inputs | `scripts/build_financial_model_inputs.py` -> `state/company_intel/financial_model_inputs.json` | exact pilot, cement-only v1 model, null-safe derived history |
+| Financial qualification coverage | `scripts/build_financial_coverage.py` -> `state/company_intel/financial_coverage.json` | metadata-only official PSX document map, evidenced annual slots, quarantined audit-only coverage and bounded-restage candidates; never infers values |
+| Forecast/valuation readiness | `scripts/build_forecast_readiness.py` + `forecast_contract.py` -> `state/company_intel/forecast_readiness.json` | exact input-qualification contract over annual consolidated official facts; sector-driver registry coverage is tracked separately and never activates an unimplemented numeric model |
+| Snapshot Scenario Lab | `scripts/build_company_scenario_lab.py` -> `state/company_intel/scenario_lab.json` | caller-supplied sensitivity, reverse-expectations and market-gap algebra over dated fundamentals/prices; generated state never selects a forecast or house case |
+| Persistent Company Brain | `scripts/build_company_brains.py` -> `state/company_intel/company_brains.json` | compact 21-domain, five-type reference index over authoritative profiles, approved briefs, operating events and resolvable event studies |
+| Thesis monitoring | `scripts/build_thesis_monitoring.py` + `thesis_monitoring.py` -> `state/company_intel/thesis_monitoring.json` | source-cluster-linked inference records with canonical Strengthening/Stable/Weakening/Broken states and explicit prove/kill/watch checks; no user thesis storage in v1 |
+| Private user theses | Supabase `company_theses` + owner-only RLS | authenticated CI create/edit/archive/restore/delete; separate from deterministic thesis monitoring and inactive until the owner applies `docs/company_theses.sql` |
+| Intelligence confidence | `scripts/build_intelligence_confidence.py` + `intelligence_confidence.py` -> `state/company_intel/intelligence_confidence.json` | transparent seven-component scores over retained signal clusters using source quality, independence, strict analogues, financial readiness, completeness and recency |
+| Management delivery | `scripts/build_management_delivery.py` + `management_delivery.py` -> `state/company_intel/management_delivery.json` | categorical follow-through checks for active theses using only same-symbol, strictly later official events with exact assertion/conflict keys; broader guidance remains blocked without first-class guidance objects |
+| Evidence watchlist | `scripts/build_evidence_watchlist.py` + `evidence_watchlist.py` -> `state/company_intel/evidence_watchlist.json` | exact-ID monitoring index over deterministic theses, delivery, confidence and financial readiness; exposes what would confirm or break a signal without forecasting or loose matching |
+| Bounded document restage | `reprocess_company_documents.py` + metadata receipts under `state/company_intel/` | explicit first-batch IDs, scoped transient run directories, no shared queue mutation |
 | Company Intelligence data gate | `Henneth Desk 2.CI.0/middleware.js` | `/data/*` on the CI Vercel project |
+| Company Intelligence Ask UI | `Henneth Desk 2.CI.0/app.js` + `styles.css` | owner-only Ask tab; per-symbol request state and nine server-owned answer sections |
+| Company Intelligence Ask UI gate | `scripts/check_ask_henneth_ui.mjs` via `scripts/preflight.py` | 20-row static UI/auth/citation/section/responsive verification |
 | Brand / plan copy on the marketing site | `site/src/site.config.ts` | every Astro page |
 | Desk Room scaffolding | `scripts/room_*.py` | Room agents; terminal Room surfaces |
 | Astro pillar | `scripts/astro_*.py` | `/astro`, `/cast`, `/mychart`, `/financial-astrology` |
@@ -163,8 +183,15 @@ briefs only after explicit owner approval.
 `Henneth Desk 2.CI.0/data/`. The app reads no other state file and never calls a market provider.
 Its separate Vercel project uses `Henneth Desk 2.CI.0/` as the project root. The shell and sign-in form load publicly, but
 middleware verifies the existing Supabase ES256 access token and serves `/data/*` only when the
-signed `sub` equals `CI_OWNER_USER_ID`. No owner UUID, service-role key, database table or signup
-path lives in the repository.
+signed `sub` equals `CI_OWNER_USER_ID`. No owner UUID, service-role key or signup path lives in the
+repository. Private user theses use the separately reviewed `company_theses` RLS contract only
+after the owner manually applies `docs/company_theses.sql`; the UI treats an absent table as an
+explicit not-activated state.
+
+Wave 1 Company Intelligence runs after the second `document_intelligence.py` /
+`build_financial_series.py` pass. It derives operating events from the append-only event ledger
+and retained evidence, builds only the three declared sector driver models, then emits scenarios
+before the slice. The pilot boundary is exact equality with `company_profiles.pilot.symbols`.
 
 ---
 
@@ -180,6 +207,10 @@ Live today, as described in [OPERATIONS.md](OPERATIONS.md) section 6 (there is n
 
 Written, not applied (SQL lives in `docs/`, owner runs it by hand):
 
+- `docs/company_theses.sql` — private per-user company theses for the exact 20-company CI pilot.
+  It grants authenticated CRUD only behind four owner predicates, revokes public/anonymous access,
+  bounds every input and labels any fair-value assumption as private user input. The CI app degrades
+  to a visible not-activated state until this file is manually applied and live RLS checks pass.
 - `docs/push_subscriptions.sql` — Web Push endpoints. Feature is inert until VAPID keys, this table, and a shipping change all exist.
 - `docs/lifecycle_email.sql` — activation columns, `mark_activated` RPC, unsubscribe RPC, `lifecycle_email_log`, `lifecycle_queue` view. `scripts/lifecycle_email.py` exists; it cannot run until this is applied and Resend + service-role secrets exist.
 
@@ -206,6 +237,7 @@ Never assume a SQL file in `docs/` has been applied. Additive first. There is no
 | `gateAllows()` / `OPEN_ROUTES` | which clean dashboard paths render | yes — it is UX |
 | `hasFeature()` / `PLANS` / `BILLING_LIVE` | which screens are teaser-walled | yes, and while `BILLING_LIVE === false` every signed-in account is treated as Pro |
 | Supabase RLS | a user's own `profiles` row | no, if RLS stays on |
+| Supabase RLS | a user's own `company_theses` rows | no, after the unapplied schema is activated and its four owner policies are verified |
 | `isOwner()` | plan-preview chrome | yes — it is an email string compare |
 
 `plan` is frozen in the database against client writes. There is no payment gateway. Do not flip `BILLING_LIVE` or `site.earlyAccess` until a local gateway, reviewed legal pages, and a service-role trial path exist.
@@ -252,7 +284,7 @@ There is no in-product RAG store, no embeddings pipeline, and no per-visitor age
 | Yahoo Finance chart API | deep history, non-PSX names, some dividends | several fetchers; ticker via `psx_data.yahoo_symbol` | same |
 | TradingView | EOD cross-check only, 15-min delayed | `tv_crosscheck.py` | advisory unless a genuine glitch; never compare TV live to DPS live |
 | Firecrawl CLI | insider filings page | `fetch_insider_offmarket.py` | `stale: true`, keep prior |
-| Supabase Auth + DB | accounts, profiles, waitlist | client SDK + RLS | signed-out fallback |
+| Supabase Auth + DB | accounts, profiles, private company theses, waitlist | client SDK/REST + RLS | signed-out or explicit feature-not-activated fallback |
 | Groq | Ask-the-desk | `api/ask.js` | 502/429, no fabricated answer |
 | Resend | lifecycle email | `lifecycle_email.py` | not live |
 | PostHog + GA4 | analytics | `index.html` snippet; `site/src/components/posthog.astro` + `Base.astro` | silent if env missing |

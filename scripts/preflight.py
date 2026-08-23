@@ -312,6 +312,128 @@ def check_ci_slice():
     if not isinstance(rows, list) or not rows:
         fail("Henneth Desk 2.CI.0/data/company_intelligence.json: no ticker rows")
         return
+    profiles, _ = load("company_profiles.json")
+    pilot = set(((profiles or {}).get("pilot") or {}).get("symbols") or [])
+    row_symbols = {row.get("symbol") for row in rows if isinstance(row, dict) and row.get("symbol")}
+    if pilot and row_symbols != pilot:
+        fail("Henneth Desk 2.CI.0/data/company_intelligence.json: ticker boundary does not match company_profiles.pilot.symbols")
+    # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
+    # state products. This catches a stale slice even when its legacy fields still look valid.
+    wave1 = {}
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "evidence_watchlist"):
+        wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
+        try:
+            with open(wave_path, encoding="utf-8") as f:
+                wave1[name] = json.load(f)
+        except Exception as e:
+            fail(f"state/company_intel/{name}.json: {e}")
+    expected_event_total = expected_scenario_total = 0
+    expected_study_total = 0
+    thesis_state = wave1.get("thesis_monitoring") or {}
+    confidence_state = wave1.get("intelligence_confidence") or {}
+    management_delivery_state = wave1.get("management_delivery") or {}
+    evidence_watchlist_state = wave1.get("evidence_watchlist") or {}
+    if set(thesis_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/thesis_monitoring.json: pilot boundary mismatch")
+    if set(thesis_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/thesis_monitoring.json: company boundary mismatch")
+    if set(confidence_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/intelligence_confidence.json: pilot boundary mismatch")
+    if set(confidence_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/intelligence_confidence.json: company boundary mismatch")
+    if set(management_delivery_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/management_delivery.json: pilot boundary mismatch")
+    if set(management_delivery_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/management_delivery.json: company boundary mismatch")
+    if set(evidence_watchlist_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/evidence_watchlist.json: pilot boundary mismatch")
+    if set(evidence_watchlist_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/evidence_watchlist.json: company boundary mismatch")
+    for row in rows:
+        sym = row.get("symbol") if isinstance(row, dict) else None
+        if not sym:
+            continue
+        expected_events = ((wave1.get("operating_events", {}).get("companies", {}).get(sym) or {}).get("events") or [])
+        expected_graph = wave1.get("driver_graphs", {}).get("companies", {}).get(sym)
+        expected_scenarios = ((wave1.get("impact_scenarios", {}).get("companies", {}).get(sym) or {}).get("scenarios") or [])
+        expected_studies = [v for v in (wave1.get("event_studies", {}).get("studies") or {}).values() if v.get("symbol") == sym]
+        conditional_benchmark_state = (wave1.get("conditional_benchmarks", {}).get("companies", {}).get(sym) or {})
+        causal_foundations_state = (wave1.get("causal_foundations", {}).get("companies", {}).get(sym) or {})
+        model_state = (wave1.get("financial_model_inputs", {}).get("companies", {}).get(sym) or {})
+        financial_coverage_state = (wave1.get("financial_coverage", {}).get("companies", {}).get(sym) or {})
+        forecast_readiness_state = (wave1.get("forecast_readiness", {}).get("companies", {}).get(sym) or {})
+        scenario_lab_state = (wave1.get("scenario_lab", {}).get("companies", {}).get(sym) or {})
+        company_brain_state = (wave1.get("company_brains", {}).get("companies", {}).get(sym) or {})
+        thesis_state_row = (thesis_state.get("companies") or {}).get(sym)
+        confidence_state_row = (confidence_state.get("companies") or {}).get(sym)
+        management_delivery_state_row = (management_delivery_state.get("companies") or {}).get(sym)
+        evidence_watchlist_state_row = (evidence_watchlist_state.get("companies") or {}).get(sym)
+        if "operating_events" not in row or not isinstance(row.get("operating_events"), list):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} operating_events missing/not list")
+        elif row.get("operating_events") != expected_events:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} operating_events stale/mismatch")
+        if "driver_graph" not in row or not isinstance(row.get("driver_graph"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} driver_graph missing/not dict")
+        elif expected_graph is not None and row.get("driver_graph") != expected_graph:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} driver_graph stale/mismatch")
+        if "impact_scenarios" not in row or not isinstance(row.get("impact_scenarios"), list):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} impact_scenarios missing/not list")
+        elif row.get("impact_scenarios") != expected_scenarios:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} impact_scenarios stale/mismatch")
+        if "event_studies" not in row or not isinstance(row.get("event_studies"), list):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} event_studies missing/not list")
+        elif row.get("event_studies") != expected_studies:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} event_studies stale/mismatch")
+        if row.get("conditional_benchmarks") != conditional_benchmark_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} conditional_benchmarks stale/mismatch")
+        if not isinstance(row.get("conditional_benchmarks"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} conditional_benchmarks missing/not object")
+        if row.get("causal_foundations") != causal_foundations_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} causal_foundations stale/mismatch")
+        if not isinstance(row.get("causal_foundations"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} causal_foundations missing/not object")
+        if row.get("financial_model_inputs") != model_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_model_inputs stale/mismatch")
+        if row.get("financial_coverage") != financial_coverage_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_coverage stale/mismatch")
+        if not isinstance(row.get("financial_coverage"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_coverage missing/not object")
+        if row.get("forecast_readiness") != forecast_readiness_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} forecast_readiness stale/mismatch")
+        if not isinstance(row.get("forecast_readiness"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} forecast_readiness missing/not object")
+        if row.get("scenario_lab") != scenario_lab_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} scenario_lab stale/mismatch")
+        if row.get("company_brain") != company_brain_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} company_brain stale/mismatch")
+        if row.get("thesis_monitoring") != thesis_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} thesis_monitoring stale/mismatch")
+        if not isinstance(row.get("thesis_monitoring"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} thesis_monitoring missing/not object")
+        if row.get("intelligence_confidence") != confidence_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} intelligence_confidence stale/mismatch")
+        if not isinstance(row.get("intelligence_confidence"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} intelligence_confidence missing/not object")
+        if row.get("management_delivery") != management_delivery_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} management_delivery stale/mismatch")
+        if not isinstance(row.get("management_delivery"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} management_delivery missing/not object")
+        if row.get("evidence_watchlist") != evidence_watchlist_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist stale/mismatch")
+        if not isinstance(row.get("evidence_watchlist"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist missing/not object")
+        expected_event_total += len(expected_events)
+        expected_scenario_total += len(expected_scenarios)
+        expected_study_total += len(expected_studies)
+    actual_event_total = sum(len(row.get("operating_events") or []) for row in rows if isinstance(row, dict))
+    actual_scenario_total = sum(len(row.get("impact_scenarios") or []) for row in rows if isinstance(row, dict))
+    actual_study_total = sum(len(row.get("event_studies") or []) for row in rows if isinstance(row, dict))
+    if actual_event_total != expected_event_total:
+        fail(f"CI slice operating event aggregate mismatch: {actual_event_total} != {expected_event_total}")
+    if actual_scenario_total != expected_scenario_total:
+        fail(f"CI slice scenario aggregate mismatch: {actual_scenario_total} != {expected_scenario_total}")
+    if actual_study_total != expected_study_total:
+        fail(f"CI slice event-study aggregate mismatch: {actual_study_total} != {expected_study_total}")
     for row in rows:
         sym = row.get("symbol") if isinstance(row, dict) else None
         if not sym:
@@ -363,6 +485,366 @@ def check_ci_slice():
                     fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} incomplete evidence")
 
 
+def check_operating_intelligence():
+    path = os.path.join(ROOT, "scripts", "check_operating_intelligence.py")
+    if not os.path.exists(path):
+        fail("check_operating_intelligence.py missing — Wave 1 CI contracts cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("operating intelligence check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_operating_intelligence.py did not run — {e}")
+
+def check_event_studies():
+    path = os.path.join(ROOT, "scripts", "check_event_studies.py")
+    if not os.path.exists(path):
+        fail("check_event_studies.py missing — historical benchmark gate cannot run")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("event studies check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_event_studies.py did not run — {e}")
+
+def check_conditional_benchmarks():
+    path = os.path.join(ROOT, "scripts", "check_conditional_benchmarks.py")
+    if not os.path.exists(path):
+        fail("check_conditional_benchmarks.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("conditional benchmarks check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_conditional_benchmarks.py did not run — {e}")
+
+def check_conditional_benchmarks_ui():
+    path = os.path.join(ROOT, "scripts", "check_conditional_benchmarks_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_conditional_benchmarks_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("conditional benchmarks UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_conditional_benchmarks_ui.mjs did not run — {e}")
+
+def check_signal_clusters():
+    path = os.path.join(ROOT, "scripts", "check_signal_clusters.py")
+    if not os.path.exists(path):
+        fail("check_signal_clusters.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0: fail(f"signal clusters check failed — {result.stdout[-400:] or result.stderr[-400:]}")
+    except Exception as e: fail(f"signal clusters check did not run — {e}")
+
+def check_thesis_monitoring():
+    path = os.path.join(ROOT, "scripts", "check_thesis_monitoring.py")
+    if not os.path.exists(path):
+        fail("check_thesis_monitoring.py missing — thesis monitoring contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("thesis monitoring check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_thesis_monitoring.py did not run — {e}")
+
+def check_intelligence_confidence():
+    path = os.path.join(ROOT, "scripts", "check_intelligence_confidence.py")
+    if not os.path.exists(path):
+        fail("check_intelligence_confidence.py missing — intelligence confidence contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("intelligence confidence check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_intelligence_confidence.py did not run — {e}")
+
+def check_management_delivery():
+    path = os.path.join(ROOT, "scripts", "check_management_delivery.py")
+    if not os.path.exists(path):
+        fail("check_management_delivery.py missing — management delivery contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("management delivery check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_management_delivery.py did not run — {e}")
+
+def check_evidence_watchlist():
+    path = os.path.join(ROOT, "scripts", "check_evidence_watchlist.py")
+    if not os.path.exists(path):
+        fail("check_evidence_watchlist.py missing — evidence watchlist contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("evidence watchlist check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_evidence_watchlist.py did not run — {e}")
+
+def check_evidence_watchlist_ui():
+    path = os.path.join(ROOT, "scripts", "check_evidence_watchlist_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_evidence_watchlist_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("evidence watchlist UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_evidence_watchlist_ui.mjs did not run — {e}")
+
+def check_management_delivery_ui():
+    path = os.path.join(ROOT, "scripts", "check_management_delivery_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_management_delivery_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("management delivery UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_management_delivery_ui.mjs did not run — {e}")
+
+def check_ask_henneth():
+    path = os.path.join(ROOT, "scripts", "check_ask_henneth.mjs")
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0: fail(f"ask contract check failed — {result.stdout[-400:] or result.stderr[-400:]}")
+    except Exception as e: fail(f"ask contract check did not run — {e}")
+
+def check_ask_henneth_endpoint():
+    path = os.path.join(ROOT, "scripts", "check_ask_henneth_endpoint.mjs")
+    if not os.path.exists(path):
+        fail("check_ask_henneth_endpoint.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail(f"ask endpoint check failed — {result.stdout[-400:] or result.stderr[-400:]}")
+    except Exception as e:
+        fail(f"ask endpoint check did not run — {e}")
+
+def check_ask_henneth_ui():
+    path = os.path.join(ROOT, "scripts", "check_ask_henneth_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_ask_henneth_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail(f"ask UI check failed — {result.stdout[-400:] or result.stderr[-400:]}")
+    except Exception as e:
+        fail(f"ask UI check did not run — {e}")
+
+def check_financial_model_inputs():
+    path = os.path.join(ROOT, "scripts", "check_financial_model_inputs.py")
+    if not os.path.exists(path):
+        fail("check_financial_model_inputs.py missing")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        fail("financial model inputs check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
+def check_financial_coverage():
+    path = os.path.join(ROOT, "scripts", "check_financial_coverage.py")
+    if not os.path.exists(path):
+        fail("check_financial_coverage.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("financial coverage check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_financial_coverage.py did not run — {e}")
+
+def check_forecast_contract():
+    path = os.path.join(ROOT, "scripts", "check_forecast_contract.py")
+    if not os.path.exists(path):
+        fail("check_forecast_contract.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("forecast readiness contract check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_forecast_contract.py did not run — {e}")
+
+def check_forecast_readiness_ui():
+    path = os.path.join(ROOT, "scripts", "check_forecast_readiness_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_forecast_readiness_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("forecast readiness UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_forecast_readiness_ui.mjs did not run — {e}")
+
+def check_causal_foundations():
+    path = os.path.join(ROOT, "scripts", "check_causal_foundations.py")
+    if not os.path.exists(path):
+        fail("check_causal_foundations.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("causal foundations check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_causal_foundations.py did not run — {e}")
+
+def check_causal_foundations_ui():
+    path = os.path.join(ROOT, "scripts", "check_causal_foundations_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_causal_foundations_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("causal foundations UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_causal_foundations_ui.mjs did not run — {e}")
+
+def check_financial_coverage_ui():
+    path = os.path.join(ROOT, "scripts", "check_financial_coverage_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_financial_coverage_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("financial coverage UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_financial_coverage_ui.mjs did not run — {e}")
+
+def check_company_scenario_lab():
+    path = os.path.join(ROOT, "scripts", "check_company_scenario_lab.py")
+    if not os.path.exists(path):
+        fail("check_company_scenario_lab.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company scenario lab check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_scenario_lab.py did not run — {e}")
+
+def check_company_scenario_lab_ui():
+    path = os.path.join(ROOT, "scripts", "check_company_scenario_lab_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_company_scenario_lab_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company scenario lab UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_scenario_lab_ui.mjs did not run — {e}")
+
+def check_company_brains():
+    path = os.path.join(ROOT, "scripts", "check_company_brains.py")
+    if not os.path.exists(path):
+        fail("check_company_brains.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company brain check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_brains.py did not run — {e}")
+
+def check_company_brain_ui():
+    path = os.path.join(ROOT, "scripts", "check_company_brain_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_company_brain_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company brain UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_brain_ui.mjs did not run — {e}")
+
+def check_thesis_monitoring_ui():
+    path = os.path.join(ROOT, "scripts", "check_thesis_monitoring_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_thesis_monitoring_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("thesis monitoring UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_thesis_monitoring_ui.mjs did not run — {e}")
+
+def check_intelligence_confidence_ui():
+    path = os.path.join(ROOT, "scripts", "check_intelligence_confidence_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_intelligence_confidence_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("intelligence confidence UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_intelligence_confidence_ui.mjs did not run — {e}")
+
+def check_company_theses_security():
+    path = os.path.join(ROOT, "scripts", "check_company_theses_security.mjs")
+    if not os.path.exists(path):
+        fail("check_company_theses_security.mjs missing — private thesis RLS contract cannot be verified")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company theses security check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_theses_security.mjs did not run — {e}")
+
+def check_company_theses_ui():
+    path = os.path.join(ROOT, "scripts", "check_company_theses_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_company_theses_ui.mjs missing — private thesis UI contract cannot be verified")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company theses UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_theses_ui.mjs did not run — {e}")
+
+def check_reprocess_documents():
+    if os.environ.get("HENNETH_REPROCESS_TRANSACTION") == "1":
+        print("  INFO: reprocess document self-check skipped inside active reprocess transaction")
+        return
+    path = os.path.join(ROOT, "scripts", "check_reprocess_company_documents.py")
+    if not os.path.exists(path):
+        fail("check_reprocess_company_documents.py missing")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=60)
+    if result.returncode != 0:
+        fail("reprocess document check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
+def check_no_raw_artifacts():
+    for root in (os.path.join(ROOT, "Henneth Desk 2.CI.0"), os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "site", "public"), os.path.join(ROOT, "site", "dist")):
+        for dirpath, _, files in os.walk(root):
+            if "node_modules" in dirpath.replace("\\", "/") or ".cache" in dirpath.replace("\\", "/"): continue
+            for name in files:
+                if name.lower() == "moon_ephem.bin": continue
+                if name.lower().endswith((".pdf", ".bin")) or "reprocess" in name.lower():
+                    fail(f"served/raw artifact present: {os.path.relpath(os.path.join(dirpath,name), ROOT)}")
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")  # never die on a unicode dash in a message
@@ -380,9 +862,40 @@ def main():
     check_rule4()
     check_document_intelligence()
     check_company_intelligence_phase2()
+    check_operating_intelligence()
+    check_event_studies()
+    check_conditional_benchmarks()
+    check_conditional_benchmarks_ui()
+    check_signal_clusters()
+    check_ask_henneth()
+    check_ask_henneth_endpoint()
+    check_ask_henneth_ui()
+    check_causal_foundations()
+    check_causal_foundations_ui()
+    check_financial_model_inputs()
+    check_financial_coverage()
+    check_forecast_contract()
+    check_forecast_readiness_ui()
+    check_financial_coverage_ui()
+    check_company_scenario_lab()
+    check_company_scenario_lab_ui()
+    check_company_brains()
+    check_company_brain_ui()
+    check_thesis_monitoring_ui()
+    check_intelligence_confidence_ui()
+    check_company_theses_security()
+    check_company_theses_ui()
+    check_intelligence_confidence()
+    check_management_delivery()
+    check_evidence_watchlist()
+    check_evidence_watchlist_ui()
+    check_management_delivery_ui()
+    check_reprocess_documents()
+    check_no_raw_artifacts()
     # --- Company intelligence shape: every populated row, not a sample ---
     check_company_profiles()
     check_ci_slice()
+    check_thesis_monitoring()
 
     # --- files the dashboard hard-depends on, with the exact shape the UI reads ---
     check("health.json", top_keys=("status",))

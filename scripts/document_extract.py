@@ -52,15 +52,20 @@ def extract_local(path: str | Path) -> dict[str, Any]:
         import pymupdf  # already pinned by requirements.txt
         with pymupdf.open(stream=raw, filetype="pdf") as pdf:
             pages = [_normalise(page.get_text("text")) for page in pdf]
+            # Transient layout only: callers may use words to align table rows/columns;
+            # this is never persisted in state.
+            words = [[tuple(w[:8]) for w in page.get_text("words")] for page in pdf]
+            page_records = [{"page": i + 1, "text": pages[i], "words": words[i], "width": float(page.rect.width), "height": float(page.rect.height)} for i, page in enumerate(pdf)]
         media = "application/pdf"
     else:
+        words = []
         text = raw.decode("utf-8", errors="replace")
         pages = [_normalise(part) for part in text.split("\f")]
         media = {
             ".html": "text/html", ".htm": "text/html", ".md": "text/markdown",
             ".csv": "text/csv", ".json": "application/json",
         }.get(suffix, "text/plain")
-    return {"text": "\n".join(pages), "pages": pages, "content_sha256": sha,
+    return {"text": "\n".join(pages), "pages": pages, "page_records": (page_records if suffix == ".pdf" else [{"page": i+1, "text": p, "words": []} for i,p in enumerate(pages)]), "words": words if suffix == ".pdf" else [], "content_sha256": sha,
             "media_type": media, "path": str(p)}
 
 
@@ -75,7 +80,7 @@ def extract_entry(entry: dict[str, Any]) -> dict[str, Any]:
     text = str(text)
     raw = text.encode("utf-8")
     pages = [_normalise(part) for part in text.split("\f")]
-    return {"text": "\n".join(pages), "pages": pages,
+    return {"text": "\n".join(pages), "pages": pages, "page_records": [{"page": i+1, "text": p, "words": []} for i,p in enumerate(pages)],
             "content_sha256": hashlib.sha256(raw).hexdigest(),
             "media_type": entry.get("media_type") or "text/plain", "path": None}
 

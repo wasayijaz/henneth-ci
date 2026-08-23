@@ -1,0 +1,438 @@
+{
+ "schema_version": 1,
+ "delivery_version": "management_delivery_v1",
+ "as_of": "2026-08-22T16:10:00+05:00",
+ "pilot_symbols": [
+  "ATRL",
+  "BOP",
+  "DGKC",
+  "ENGROH",
+  "FCCL",
+  "FFC",
+  "GAL",
+  "HBL",
+  "HUBC",
+  "LUCK",
+  "MARI",
+  "MEBL",
+  "MLCF",
+  "NBP",
+  "NRL",
+  "OGDC",
+  "PPL",
+  "PRL",
+  "PSO",
+  "UBL"
+ ],
+ "source": {
+  "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
+  "signal_clusters": "state/company_intel/signal_clusters.json",
+  "operating_events": "state/company_intel/operating_events.json",
+  "intelligence_confidence": "state/company_intel/intelligence_confidence.json"
+ },
+ "policy": {
+  "research_only": true,
+  "no_advice": true,
+  "no_odds_claims": true,
+  "no_forward_estimates": true,
+  "no_price_claims": true,
+  "same_symbol_required": true,
+  "exact_assertion_or_conflict_key_required": true
+ },
+ "guidance_coverage": {
+  "status": "blocked_no_guidance_objects",
+  "reason": "No first-class broader management guidance object source is present in the deterministic state layer."
+ },
+ "status_vocabulary": [
+  "blocked_no_guidance_objects",
+  "confirmed",
+  "contradicted",
+  "not_observed"
+ ],
+ "summary": {
+  "active_thesis_count": 6,
+  "delivery_record_count": 6,
+  "blocked_record_count": 0
+ },
+ "companies": {
+  "ATRL": {
+   "symbol": "ATRL",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "BOP": {
+   "symbol": "BOP",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "DGKC": {
+   "symbol": "DGKC",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "ENGROH": {
+   "symbol": "ENGROH",
+   "status": "tracked",
+   "active_thesis_count": 1,
+   "delivery_record_count": 1,
+   "records": [
+    {
+     "delivery_id": "delivery_6113a2e012618fcf99f3",
+     "symbol": "ENGROH",
+     "thesis_id": "thesis_a93eddb11ac67d9c99c9",
+     "source_cluster_id": "cluster_e193758d1914395b6b3bc13c",
+     "assertion_key": "acquisition:engro polymer & chemicals limited:intention:2026-03-13",
+     "conflict_key": "acquisition:engro polymer & chemicals limited:2026-03-13",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_assertion": {
+      "available_at": "2026-08-18T03:18:00+05:00",
+      "linked_event_ids": [
+       "evt_0489332288a01eb96490"
+      ],
+      "evidence": [
+       {
+        "document_id": "psx:272475",
+        "source_url": "https://dps.psx.com.pk/download/document/272475.pdf",
+        "page": 1,
+        "content_sha256": "a3d9978043ba1fe0e78aafd056eb13794762d429c250fb85e8b5ded6ed8d20bb",
+        "evidence_sha256": "f60047f35b0e998a13c5075ff73f7c34e824947bd4175a2886286f07e1ace25c",
+        "source": "PSX DPS"
+       }
+      ],
+      "monitored_assertion": "type=acquisition; stage=intention; target=Engro Polymer & Chemicals Limited; modality=intention"
+     },
+     "matched_event": null,
+     "confidence_link": {
+      "confidence_id": "confidence_bac5adbaa79d64defdee",
+      "source_cluster_id": "cluster_e193758d1914395b6b3bc13c",
+      "band": "medium"
+     },
+     "reasons": [
+      "no later official event matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    }
+   ]
+  },
+  "FCCL": {
+   "symbol": "FCCL",
+   "status": "tracked",
+   "active_thesis_count": 1,
+   "delivery_record_count": 1,
+   "records": [
+    {
+     "delivery_id": "delivery_c154febe30d1e14c8368",
+     "symbol": "FCCL",
+     "thesis_id": "thesis_9a8bcdfece1143111822",
+     "source_cluster_id": "cluster_46fbfc58f7e36caac3ff41d6",
+     "assertion_key": "acquisition:attock cement pakistan limited:public_offer:2026-02-18",
+     "conflict_key": "acquisition:attock cement pakistan limited:2026-02-18",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_assertion": {
+      "available_at": "2026-08-20T11:17:00+05:00",
+      "linked_event_ids": [
+       "evt_d028288e2afc6923d3c1"
+      ],
+      "evidence": [
+       {
+        "document_id": "psx:270499",
+        "source_url": "https://dps.psx.com.pk/download/document/270499.pdf",
+        "page": 2,
+        "content_sha256": "4bc685561334aedd34d7b9ff957d27968507045dc585e99f0731bcae7e149b98",
+        "evidence_sha256": "412609ce598dfc2c0f9ff5d68230b58f27722f2ac71b368d708642ad071f45e6",
+        "source": "PSX DPS"
+       }
+      ],
+      "monitored_assertion": "type=acquisition; stage=public_offer; target=Attock Cement Pakistan Limited; modality=public_offer"
+     },
+     "matched_event": null,
+     "confidence_link": {
+      "confidence_id": "confidence_4245ce4d208c5d1b51da",
+      "source_cluster_id": "cluster_46fbfc58f7e36caac3ff41d6",
+      "band": "medium"
+     },
+     "reasons": [
+      "no later official event matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    }
+   ]
+  },
+  "FFC": {
+   "symbol": "FFC",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "GAL": {
+   "symbol": "GAL",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "HBL": {
+   "symbol": "HBL",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "HUBC": {
+   "symbol": "HUBC",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "LUCK": {
+   "symbol": "LUCK",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "MARI": {
+   "symbol": "MARI",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "MEBL": {
+   "symbol": "MEBL",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "MLCF": {
+   "symbol": "MLCF",
+   "status": "tracked",
+   "active_thesis_count": 1,
+   "delivery_record_count": 1,
+   "records": [
+    {
+     "delivery_id": "delivery_6d2f659b5980d16b596a",
+     "symbol": "MLCF",
+     "thesis_id": "thesis_035c90ba90a29c2ce5eb",
+     "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
+     "assertion_key": "acquisition:pioneer cement limited:public_offer:2025-12-18",
+     "conflict_key": "acquisition:pioneer cement limited:2025-12-18",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_assertion": {
+      "available_at": "2026-08-18T01:54:00+05:00",
+      "linked_event_ids": [
+       "evt_6e9b520a122b8f2d4a59"
+      ],
+      "evidence": [
+       {
+        "document_id": "psx:267429",
+        "source_url": "https://dps.psx.com.pk/download/document/267429.pdf",
+        "page": 3,
+        "content_sha256": "98cf83c9a286999c8006a7f73f490248f26694c9edbfc815b3dbd9188ee22a54",
+        "evidence_sha256": "70a110272f96813a4d6693b596c99d9dbc4c4781d42a519543557a04ec4c581f",
+        "source": "PSX DPS"
+       }
+      ],
+      "monitored_assertion": "type=acquisition; stage=public_offer; target=PIONEER CEMENT LIMITED; modality=public_offer"
+     },
+     "matched_event": null,
+     "confidence_link": {
+      "confidence_id": "confidence_8b27bd9a5def7dbda1a1",
+      "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
+      "band": "medium"
+     },
+     "reasons": [
+      "no later official event matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    }
+   ]
+  },
+  "NBP": {
+   "symbol": "NBP",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "NRL": {
+   "symbol": "NRL",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "OGDC": {
+   "symbol": "OGDC",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "PPL": {
+   "symbol": "PPL",
+   "status": "tracked",
+   "active_thesis_count": 1,
+   "delivery_record_count": 1,
+   "records": [
+    {
+     "delivery_id": "delivery_4028f9309511a4370f13",
+     "symbol": "PPL",
+     "thesis_id": "thesis_019e31af532295ea2c91",
+     "source_cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
+     "assertion_key": "management:appointment:mr mirza nasiruddin mashhood ahmad:director:2026-01-09",
+     "conflict_key": "management:director:2026-01-09",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_assertion": {
+      "available_at": "2026-08-18T01:55:00+05:00",
+      "linked_event_ids": [
+       "evt_2c3f64926b9d385c3c13"
+      ],
+      "evidence": [
+       {
+        "document_id": "psx:268509",
+        "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+        "page": 1,
+        "content_sha256": "232223d4ef13f43f5332168c87dfb21666dddbf90e4150a37e31a7883fe89ccb",
+        "evidence_sha256": "efd428447e80ebd32f25c197028280bd0675b16e78eb5ae67b8e355de37c1683",
+        "source": "PSX DPS"
+       }
+      ],
+      "monitored_assertion": "type=management_change; person=Mr Mirza Nasiruddin Mashhood Ahmad; role=Director; modality=appointment"
+     },
+     "matched_event": null,
+     "confidence_link": {
+      "confidence_id": "confidence_4dd330fbadbd1014b539",
+      "source_cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
+      "band": "medium"
+     },
+     "reasons": [
+      "no later official event matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    }
+   ]
+  },
+  "PRL": {
+   "symbol": "PRL",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "PSO": {
+   "symbol": "PSO",
+   "status": "no_active_thesis",
+   "active_thesis_count": 0,
+   "delivery_record_count": 0,
+   "records": []
+  },
+  "UBL": {
+   "symbol": "UBL",
+   "status": "tracked",
+   "active_thesis_count": 2,
+   "delivery_record_count": 2,
+   "records": [
+    {
+     "delivery_id": "delivery_606cb1410dd213417098",
+     "symbol": "UBL",
+     "thesis_id": "thesis_424d0d7b251f5d9eebde",
+     "source_cluster_id": "cluster_2a04bcad22c357093bbd6280",
+     "assertion_key": "management:appointment:lord zameer m. choudrey:chairman of the board of directors:2026-04-15",
+     "conflict_key": "management:chairman of the board of directors:2026-04-15",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_assertion": {
+      "available_at": "2026-08-18T03:18:00+05:00",
+      "linked_event_ids": [
+       "evt_a5aaeaed2ea2e998b0cf"
+      ],
+      "evidence": [
+       {
+        "document_id": "psx:274158",
+        "source_url": "https://dps.psx.com.pk/download/document/274158.pdf",
+        "page": 1,
+        "content_sha256": "83ba61381ed651ba01342cfbc84aaf6fbab22200d8fc686a85631d815f7982a2",
+        "evidence_sha256": "c053e38ea8ae0ddb2d9a26ced96e13706ad67ed7fd91c290b37fefa50f10c7f9",
+        "source": "PSX DPS"
+       }
+      ],
+      "monitored_assertion": "type=management_change; person=Lord Zameer M. Choudrey; role=Chairman of the Board of Directors; modality=appointment"
+     },
+     "matched_event": null,
+     "confidence_link": {
+      "confidence_id": "confidence_5b9105090c257d873de6",
+      "source_cluster_id": "cluster_2a04bcad22c357093bbd6280",
+      "band": "medium"
+     },
+     "reasons": [
+      "no later official event matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    },
+    {
+     "delivery_id": "delivery_038f8cc90a9ebe5c7a91",
+     "symbol": "UBL",
+     "thesis_id": "thesis_b60e38f6922905214afd",
+     "source_cluster_id": "cluster_18be1f7964ed898c278741e9",
+     "assertion_key": "management:appointment:mr. shoukat ali:company secretary:2026-07-22",
+     "conflict_key": "management:company secretary:2026-07-22",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_assertion": {
+      "available_at": "2026-08-18T01:58:00+05:00",
+      "linked_event_ids": [
+       "evt_2b090e38cccab8fac9da"
+      ],
+      "evidence": [
+       {
+        "document_id": "psx:280213",
+        "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+        "page": 2,
+        "content_sha256": "5c78033e3b10d669b1d6b902d1137e54a45a067227792f43db99bfcf00d25eab",
+        "evidence_sha256": "153dc01a2c7784ac76276b60f805b14886d15e8927af105c225aa6682c368941",
+        "source": "PSX DPS"
+       }
+      ],
+      "monitored_assertion": "type=management_change; person=Mr. Shoukat Ali; role=Company Secretary; modality=appointment"
+     },
+     "matched_event": null,
+     "confidence_link": {
+      "confidence_id": "confidence_29c57586a98ec7e4a8de",
+      "source_cluster_id": "cluster_18be1f7964ed898c278741e9",
+      "band": "medium"
+     },
+     "reasons": [
+      "no later official event matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    }
+   ]
+  }
+ }
+}

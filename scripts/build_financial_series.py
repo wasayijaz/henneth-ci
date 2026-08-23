@@ -41,6 +41,9 @@ def _repair_row(row: dict[str, Any]) -> dict[str, Any]:
 def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
     """Repair impossible legacy scaling before quality-based deduplication."""
     clean = dict(row)
+    if clean.get("parser_version") != "financial_statement_v2":
+        flags = list(clean.get("quality_flags") or [])
+        clean["quality_flags"] = sorted(set(flags + ["legacy_extractor_not_model_eligible"]))
     unit = str(clean.get("unit") or "").lower()
     if unit.endswith("/share") or unit == "percent":
         clean["unit_multiplier"] = 1
@@ -55,7 +58,7 @@ def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
     blocking = {"missing_period_end", "missing_currency", "missing_unit_scale",
                 "missing_consolidation_basis", "conflicting_consolidation_labels",
                 "unparseable_raw_value", "conflict"}
-    clean["readiness"] = ("model_loadable" if clean.get("metric") != "change_pct"
+    clean["readiness"] = ("model_loadable" if clean.get("parser_version") == "financial_statement_v2" and clean.get("metric") != "change_pct"
                            and not blocking.intersection(clean.get("quality_flags") or []) else "audit_only")
     return clean
 

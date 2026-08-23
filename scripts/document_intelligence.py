@@ -19,6 +19,7 @@ from document_extract import extract_entry, stable_doc_id
 from document_ledger import OUT as LEDGER_OUT, append_events
 from document_queue import OUT as QUEUE_OUT, build_queue
 from financial_series import normalize_fact
+from financial_statement_facts import extract_facts
 from build_financial_series import OUT as SERIES_OUT, merge_rows
 from psx_data import ROOT, STATE, load_json, save_json
 
@@ -149,6 +150,9 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
                 doc_id, title, extracted["text"], extracted["pages"], _ticks(entry),
                 source_url=url, published_at=entry.get("published_at") or entry.get("date"),
                 content_sha256=content_sha)
+            v2_doc = {"doc_id": doc_id, "title": title, "source_url": url, "content_sha256": content_sha, "period_end": entry.get("period_end"), "published_at": entry.get("published_at") or entry.get("date"), "retrieved_at": entry.get("retrieved_at"), "available_on": entry.get("available_on")}
+            v2_facts = extract_facts(v2_doc, extracted["pages"], extracted.get("words"), extracted.get("page_records"))
+            facts = facts + v2_facts
             evidence: list[dict[str, Any]] = []
             for item in doc_events + facts:
                 evidence.extend(item.get("evidence") or [])

@@ -14,10 +14,20 @@ from financial_series import normalize_fact
 
 def _fixture(title: str, page: str, raw: str = "12,345") -> tuple[dict, dict, list[str]]:
     doc = {"doc_id": "psx:check", "tickers": ["ABC"], "title": title,
-           "source_url": "https://dps.psx.com.pk/download/document/1.pdf", "status": "ready"}
-    fact = {"fact_id": "fact_fixture", "fact_type": "revenue", "raw_value": raw,
-            "normalized_value": 12345, "unit": "reported", "scale_multiplier": 1,
-            "evidence": [{"source_url": doc["source_url"], "page": 1, "text": "Revenue " + raw}]}
+           "source_url": "https://dps.psx.com.pk/download/document/1.pdf", "status": "ready",
+           "content_sha256": "a" * 64, "period": "2025-09-30"}
+    fact = {"fact_id": "fact_fixture", "fact_type": "revenue", "line": "revenue",
+            "parser_version": "financial_statement_v2", "parser_revision":"block_geometry_v4",
+            "readiness": "model_loadable", "period_end": "2025-09-30", "period_type":"quarter",
+            "duration_months":3, "column_role":"current_period", "consolidation": "consolidated",
+            "currency": "PKR", "statement_type": "income_statement", "available_on": "2025-10-02",
+            "published_at": "2025-10-02", "document_id": doc["doc_id"], "source_url": doc["source_url"],
+            "content_sha256": doc["content_sha256"], "raw_value": raw,
+            "normalized_value": 12_345_000_000, "value": 12_345_000_000,
+            "unit": "PKR", "scale_multiplier": 1,
+            "evidence": [{"source_url": doc["source_url"], "page": 1, "text": "Revenue " + raw + " (Rupees in million)"}]}
+    fact["unit_multiplier"] = 1_000_000
+    fact["scale"] = 1_000_000
     return doc, fact, [page]
 
 
@@ -48,19 +58,71 @@ def run() -> None:
 
     doc2, fact2, pages2 = _fixture("ABC Annual Results for year ended 31.12.2024",
                                   "SEPARATE FINANCIAL STATEMENTS (Rupees in thousand) Revenue 12,345")
-    row2 = normalize_fact(doc2 | {"doc_id": "psx:fixture2"}, fact2 | {"fact_id": "fact_fixture2"}, pages=pages2)
+    row2 = normalize_fact(doc2 | {"doc_id": "psx:fixture2", "period": "2024-12-31"}, fact2 | {
+        "fact_id": "fact_fixture2", "document_id": "psx:fixture2", "period_end":"2024-12-31",
+        "period_type":"annual", "consolidation":"unconsolidated", "unit_multiplier":1000,
+        "scale": 1000, "normalized_value": 12_345_000, "value": 12_345_000,
+    }, pages=pages2)
     assert row2 and row2["period_end"] == "2024-12-31" and row2["consolidation"] == "unconsolidated", row2
     assert row2["unit_multiplier"] == 1_000 and row2["normalized_value"] == 12_345_000, row2
 
     missing_doc, missing_fact, missing_pages = _fixture("ABC Results", "Revenue 12,345")
+    missing_fact = {**missing_fact, "period_end": None, "period_type": "unknown", "readiness": "audit_only"}
     missing = normalize_fact(missing_doc, missing_fact, pages=missing_pages)
     assert missing and missing["period_end"] is None and "missing_period_end" in missing["quality_flags"], missing
     misleading_doc, misleading_fact, _ = _fixture("ABC Results", "Revenue 12,345")
+    misleading_fact = {**misleading_fact, "period_end": None, "period_type": "unknown", "readiness": "audit_only"}
     misleading_fact["evidence"][0]["page"] = 1
     misleading = normalize_fact(misleading_doc, misleading_fact,
                                  pages=["Revenue 12,345", "Financial period ended 31.12.2024"])
     assert misleading and misleading["period_end"] is None, "borrowed a period from a different page"
-    assert normalize_fact(missing_doc, missing_fact | {"evidence": [{"page": 0, "text": "Revenue 12,345"}]}, pages=missing_pages) is None
+    bad_page = normalize_fact(missing_doc, missing_fact | {"evidence": [{"source_url": missing_doc["source_url"], "page": 0, "text": "Revenue 12,345"}]}, pages=missing_pages)
+    assert bad_page and bad_page["readiness"] == "audit_only" and "invalid_evidence_page" in bad_page["quality_flags"], bad_page
+    valid_doc, valid_fact, valid_pages = _fixture("ABC Quarterly Results for the period ended 30.09.2025",
+                                                  "CONDENSED CONSOLIDATED STATEMENT (Rupees in million) Revenue 12,345")
+    current_v3_cases = [
+        ("missing_fact_id", {"fact_id": None}),
+        ("document_id_mismatch", {"document_id": "psx:other"}),
+        ("missing_content_sha256", {"content_sha256": None}),
+        ("content_hash_mismatch", {"content_sha256": "b" * 64}),
+        ("missing_source_url", {"source_url": None}),
+        ("source_url_mismatch", {"source_url": "https://dps.psx.com.pk/download/document/2.pdf"}),
+        ("missing_structured_currency", {"currency": None}),
+        ("missing_structured_unit_multiplier", {"unit_multiplier": None}),
+        ("missing_structured_scale", {"scale": None}),
+        ("structured_scale_mismatch", {"scale": 1000}),
+        ("invalid_structured_period_end", {"period_end": "2025/09/30"}),
+        ("missing_or_invalid_publication_date", {"available_on": "2025-10-02T09:00:00"}),
+        ("available_before_period_end", {"available_on": "2025-09-30"}),
+        ("current_period_has_comparative_linkage", {"comparative_to_period_end": "2025-09-30"}),
+        ("comparative_linkage_mismatch", {"column_role": "comparative_prior_period",
+                                           "period_end": "2024-09-30",
+                                           "comparative_to_period_end": "2025-06-30"}),
+        ("missing_comparative_linkage", {"column_role": "comparative_prior_period",
+                                          "period_end": "2024-09-30",
+                                          "comparative_to_period_end": None}),
+        ("preexisting_quality_flags_quarantine", {"quality_flags": ["reviewer_fixture_flag"]}),
+        ("non_official_source_url", {"source_url": "https://example.com/report.pdf",
+                                      "evidence": [{"source_url": "https://example.com/report.pdf", "page": 1, "text": "Revenue 12,345 (Rupees in million)"}]}),
+        ("invalid_evidence_page", {"evidence": [{"source_url": valid_doc["source_url"], "page": 0, "text": "Revenue 12,345 (Rupees in million)"}]}),
+        ("invalid_structured_consolidation", {"consolidation": "unknown"}),
+        ("invalid_structured_statement_type", {"statement_type": "balance_sheet"}),
+        ("unsupported_structured_line", {"line": "assets", "fact_type": "assets"}),
+        ("line_fact_type_mismatch", {"line": "revenue", "fact_type": "gross_profit"}),
+        ("unparseable_raw_value", {"raw_value": "lOO", "normalized_value": 100_000_000, "value": 100_000_000}),
+        ("structured_value_mismatch", {"normalized_value": 999, "value": 999}),
+        ("structured_value_mismatch", {"normalized_value": 12_345_000_000, "value": 999}),
+        ("nonfinite_structured_value", {"normalized_value": float("nan")}),
+        ("nonfinite_structured_value", {"value": float("inf")}),
+        ("nonfinite_structured_value", {"unit_multiplier": True}),
+        ("legacy_parser_revision_quarantine", {"parser_revision": "block_geometry_v2"}),
+    ]
+    for expected_flag, patch in current_v3_cases:
+        candidate = dict(valid_fact)
+        candidate["evidence"] = [dict(item) for item in valid_fact["evidence"]]
+        candidate.update(patch)
+        row_bad = normalize_fact(valid_doc, candidate, pages=valid_pages)
+        assert row_bad and row_bad["readiness"] == "audit_only" and expected_flag in row_bad["quality_flags"], (expected_flag, row_bad)
     repaired = _sanitize_row({"unit": "PKR/share", "unit_multiplier": 1_000_000,
                               "raw_value": "12.5", "normalized_value": 12_500_000,
                               "metric": "eps", "quality_flags": ["missing_period_end"]})

@@ -38,6 +38,8 @@ STEPS = [
     "document_intelligence.py",
     "build_financial_series.py",
     "build_financial_model_inputs.py",
+    "build_financial_coverage.py",
+    "build_forecast_readiness.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.
@@ -49,6 +51,8 @@ STEPS = [
     # Wave 1 Company Intelligence: evidence-backed events, declarative sector drivers,
     # and null-safe Bear/Base/Bull scenarios before the bounded app slice.
     "build_operating_events.py", "build_driver_graphs.py", "impact_engine.py", "build_signal_clusters.py",
+    "build_thesis_monitoring.py", "build_intelligence_confidence.py", "build_management_delivery.py",
+    "build_evidence_watchlist.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
     # other dependency and nothing downstream blocks on it. Pure local math, no network.
@@ -100,9 +104,20 @@ STEPS = [
     # Private Company Intelligence app slice. Reads only retained state files and writes the
     # one JSON file the static CI app consumes.
     "build_event_studies.py",
+    "build_conditional_benchmarks.py",
+    # Causal evidence must resolve against event studies rebuilt in this same cycle.
+    "build_causal_foundations.py",
     "build_company_scenario_lab.py",
     "build_company_brains.py",
     "build_ci_slice.py",
+    "check_causal_foundations.py",
+    "check_conditional_benchmarks.py",
+    "check_financial_coverage.py",
+    "check_forecast_contract.py",
+    "check_intelligence_confidence.py",
+    "check_thesis_monitoring.py",
+    "check_management_delivery.py",
+    "check_evidence_watchlist.py",
     "check_company_scenario_lab.py",
     "check_company_brains.py",
     "check_financial_model_inputs.py",

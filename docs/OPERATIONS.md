@@ -38,6 +38,15 @@ runs on the owner's machine. The cloud never runs an agent (no API key by design
 `Henneth Desk 2.CI.0/` is a third static surface in this repository, not a copied desk. The root
 pipeline remains authoritative. Its ordered company-intelligence segment is:
 
+The CI Ask endpoint is a separate owner-only edge function (`POST /api/ask`). It performs the
+owner JWT check before any data/provider request, forwards the bearer only to the same-origin
+`/data/company_intelligence.json` route, and never publishes model prose or client-supplied context
+directly. Its offline contract, endpoint, and Ask UI checks are part of `scripts/preflight.py`.
+The Ask tab keeps pending state per symbol, retries one expired bearer, discards stale responses,
+and renders the nine deterministic answer sections with explicit blocked/unknown states. It is
+safe to switch companies while a request is in flight; no client-side provider secret or raw
+backend error is rendered.
+
 1. `fetch_company_profiles.py` — monthly/failed-row retry DPS issuer profiles for the 20-company pilot.
 2. `fetch_company_documents.py` — daily official PSX/PUCARS metadata plus at most 24 verified 12 MB PDFs in ignored current-run cache.
 3. `document_intelligence.py` — immediate local extraction, page evidence, append-only events/changes and training-mode queue.
@@ -47,7 +56,44 @@ pipeline remains authoritative. Its ordered company-intelligence segment is:
 7. `build_source_qa.py` — compact source-health flags and URL index.
 8. `build_company_graph.py` — deterministic company/document/fact/event/source graph with source URL/page provenance.
 9. `build_change_intelligence.py` — source-backed digest of official filings, issuer-page changes, comparable financial movements and classified events.
-10. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+10. `build_operating_events.py`, `build_driver_graphs.py`, `impact_engine.py` — offline,
+    deterministic, evidence-gated event/driver/scenario products. Driver graphs cover all 20 pilot
+    companies through nine declarative sector models; ENGROH has an explicit holding-company model.
+    Event routing is filtered through each company's graph and never creates numeric impacts without
+    sourced operands.
+11. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+12. `build_event_studies.py` runs after indices/sectors and before the slice; it uses only retained
+    oldest-first price history, strict pre-event baselines, calendar horizons, and ex-ante analogue
+    cutoffs. KSE100-relative values mean stock raw return minus KSE100 raw return; unsupported
+    financial outcomes stay null with named missing inputs.
+13. `build_financial_model_inputs.py` builds offline v2 model inputs. Only MLCF/DGKC/LUCK/FCCL
+    have the `cement_v1` model; all other companies are explicit `unsupported_sector_model`.
+    Forecast, valuation, market-expectations and scenario outputs remain blocked until the
+    three-observation consolidated annual gate is satisfied.
+14. Document restaging is an explicit, owner-triggered two-batch workflow. The first batch is an
+    allowlisted set of `psx:<digits>` IDs resolved from `research_index.json` and the exact pilot;
+    transport uses a scoped run directory and metadata-only receipts. Shared extraction queues,
+    cursors and source registries are untouched. Normal `run_cloud.py` is offline with respect to
+    restaging; raw PDFs remain transient and preflight rejects them from served roots.
+15. `build_company_scenario_lab.py` runs after fundamentals and quant, then before the CI slice. It
+    publishes only dated snapshot operands, formula metadata and readiness. The browser supplies all
+    revenue-growth, net-margin and P/E assumptions; generated state contains no selected case. The
+    tool is sensitivity/reverse-solving arithmetic, not a forecast, valuation verdict or advice.
+    EBITDA, FCF, DCF and forecast outputs remain blocked until qualified history exists.
+16. `build_company_brains.py` runs immediately before the CI slice. The Brain is a compact reference
+    index, not another fact store: producer IDs remain authoritative, every one of the 21 business
+    domains has an explicit available/partial/unknown/blocked status, and the timeline carries typed
+    references only. Forecast and valuation domains remain blocked and empty in v1.
+17. `build_thesis_monitoring.py` converts retained signal clusters into deterministic read-only
+    monitoring records before the Brain/slice build. Each record links back to its cluster and
+    official evidence, exposes explicit prove/kill/watch checks, and uses only the canonical
+    Strengthening/Stable/Weakening/Broken vocabulary. Single-source evidence is Stable, never
+    promoted to Strengthening. This v1 does not store user-authored theses or calculate prices.
+18. `build_intelligence_confidence.py` scores retained signal clusters through seven fixed,
+    inspectable components whose weights sum to 100. Single-originator evidence cannot receive
+    corroboration credit; historical and peer inputs come only from strict no-lookahead event
+    studies. The UI displays producer scores without recalculating them, and Ask receives only a
+    capped component summary without evidence payloads or URLs.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new
@@ -58,6 +104,12 @@ to approve synthesis first. Local synthesis training uses `prepare_synthesis_bat
 Manual historical expansion uses `ci_backfill.py` in batches of at most five companies and at most five
 batches per invocation. A durable cursor advances only after a completed batch; a failed provider keeps
 last-good data and leaves the unfinished batch due for a later retry.
+
+Wave 1 builders are safe on empty or partial inputs. Events require action-language evidence and a
+source URL. Driver edges are labelled `declarative_assumption` until measured sector evidence is
+available. Bear/Base/Bull probabilities are deterministic (25/50/25); revenue, EBITDA, EPS, FCF and
+valuation impacts remain `null` with `insufficient_data` when sourced period/unit/currency inputs
+are absent.
 
 Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.henneth.app` attached.
 `/data/*` fails closed unless a verified Supabase
@@ -351,6 +403,45 @@ push refreshed data).
   never a direct client upsert — `saveProfile()` cannot touch them). New table
   `lifecycle_email_log` (service-role only, RLS on with zero policies) tracks per-user/per-key sends
   and is the idempotency guard for the cron.
+- **Private CI theses are activation-gated.** `docs/company_theses.sql` is reviewed reference SQL,
+  not an applied migration. Until the owner runs it manually, the CI Thesis Monitor shows “not
+  activated” and deterministic Henneth monitoring continues unchanged. Activation requires applying
+  the SQL, confirming Data API exposure, proving a second user cannot read or mutate the first user's
+  rows, and running Supabase security advisors. The browser uses only the publishable key plus the
+  user's bearer token. Archive/restore is normal; permanent deletion requires confirmation. Any
+  fair value is private user input, never Henneth output.
+- **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
+  after thesis/confidence state and before the CI slice. A thesis can be confirmed or contradicted
+  only by a retained same-symbol official event strictly later than its latest source observation
+  with an exact normalized assertion/conflict key. Source-linked events are excluded to prevent
+  self-confirmation. With no first-class guidance objects, broader guidance delivery remains blocked.
+- **The Evidence Watchlist is an exact-link monitoring view.** `build_evidence_watchlist.py` joins
+  active deterministic theses to their management-delivery, confidence and financial-readiness rows
+  by source IDs within the same company. It shows confirm, break and next-evidence checks from retained
+  state only. It never reads private user theses, performs loose text matching, or emits forecasts,
+  probabilities, numeric impacts, valuation or advice.
+- **Market Expectations Gap is caller-only algebra.** The Scenario Lab stores no selected case or
+  gap. After the owner enters growth, margin and P/E, the browser subtracts caller growth from the
+  reverse-solved growth required at the current price. It is not a forecast, probability or verdict.
+- **Financial qualification is metadata-only.** `build_financial_coverage.py` maps official PSX
+  document IDs and explicit annual-period wording for the exact pilot. Unknown periods stay unknown;
+  half-year notices never become annual history; audit-only facts stay quarantined. Its candidate
+  queue requires a later owner-approved bounded restage and does not authorize parsing or publishing.
+- **Forecast readiness fails closed.** `build_forecast_readiness.py` accepts a financial period only
+  when revenue, attributable PAT and basic EPS are aligned annual consolidated PKR facts from the
+  current parser, have exact official provenance, no quality flags, and a publication date strictly
+  after period end. Three such periods make inputs ready; they do not activate a forecast or valuation
+  model. The nine sector driver registries are qualitative routing coverage, not implemented models.
+- **Causal foundations are an evidence resolver, not a causal model.**
+  `build_causal_foundations.py` creates one categorical row for every existing driver edge and may
+  attach only retained same-company official events and strict baseline-before-event study records.
+  Every row names its next data requirement; numeric impact, forecast and valuation stay blocked.
+  Macro evidence remains excluded until the source layer exposes stable per-test identifiers.
+- **Conditional benchmarks never recompute returns.** `build_conditional_benchmarks.py` resolves only
+  exact event-type/subtype analogues already retained inside the target event study, requires every
+  candidate to predate the target, and separates same-company from same-current-sector history.
+  Horizon statistics remain null until at least three mature prior outcomes exist. Peer, international,
+  financial-outcome and causal interpretations stay explicitly blocked without their registries/data.
 - **Repo is private.** State data (incl. `history/`, `history_deep/`, `intraday/`) is committed so Vercel
   is self-contained.
 
