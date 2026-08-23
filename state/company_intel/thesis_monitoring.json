@@ -1,0 +1,760 @@
+{
+ "schema_version": 1,
+ "as_of": "2026-08-22T19:55:18Z",
+ "pilot_symbols": [
+  "ATRL",
+  "BOP",
+  "DGKC",
+  "ENGROH",
+  "FCCL",
+  "FFC",
+  "GAL",
+  "HBL",
+  "HUBC",
+  "LUCK",
+  "MARI",
+  "MEBL",
+  "MLCF",
+  "NBP",
+  "NRL",
+  "OGDC",
+  "PPL",
+  "PRL",
+  "PSO",
+  "UBL"
+ ],
+ "source": {
+  "signal_clusters": "state/company_intel/signal_clusters.json",
+  "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
+ },
+ "policy": {
+  "research_only": true,
+  "no_advice": true,
+  "no_price_targets": true,
+  "no_forecasts": true,
+  "source_required": "official_company_or_psx_disclosure"
+ },
+ "companies": {
+  "ATRL": {
+   "symbol": "ATRL",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "BOP": {
+   "symbol": "BOP",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "DGKC": {
+   "symbol": "DGKC",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "partial",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "ENGROH": {
+   "symbol": "ENGROH",
+   "status": "active_monitoring",
+   "source_cluster_count": 1,
+   "active_thesis_count": 1,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": [
+    {
+     "thesis_id": "thesis_a93eddb11ac67d9c99c9",
+     "symbol": "ENGROH",
+     "status": "active_monitoring",
+     "intelligence_type": "inference",
+     "source_cluster_id": "cluster_e193758d1914395b6b3bc13c",
+     "assessment": "single_source",
+     "confidence_band": "single_official_source",
+     "assertion_key": "acquisition:engro polymer & chemicals limited:intention:2026-03-13",
+     "conflict_key": "acquisition:engro polymer & chemicals limited:2026-03-13",
+     "thesis_type": "acquisition",
+     "monitored_assertion": "type=acquisition; stage=intention; target=Engro Polymer & Chemicals Limited; modality=intention",
+     "linked_event_ids": [
+      "evt_0489332288a01eb96490"
+     ],
+     "evidence": [
+      {
+       "document_id": "psx:272475",
+       "source_url": "https://dps.psx.com.pk/download/document/272475.pdf",
+       "page": 1,
+       "content_sha256": "a3d9978043ba1fe0e78aafd056eb13794762d429c250fb85e8b5ded6ed8d20bb",
+       "evidence_sha256": "f60047f35b0e998a13c5075ff73f7c34e824947bd4175a2886286f07e1ace25c",
+       "source": "PSX DPS"
+      }
+     ],
+     "prove_checks": [
+      {
+       "check_id": "prove_393227815aa6df20ad44",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "subsequent official disclosure confirms stage progression or completion",
+       "current_status": "not_observed"
+      }
+     ],
+     "kill_checks": [
+      {
+       "check_id": "kill_4c8405858fde0ee5bba7",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "official disclosure cancels, terminates, rejects, or materially contradicts the same target assertion",
+       "current_status": "not_observed"
+      }
+     ],
+     "watch_items": [
+      {
+       "watch_id": "watch_b24f0cd6885c1924a633",
+       "watch_type": "official_disclosure_refresh",
+       "description": "Monitor future retained operating events with the same conflict key.",
+       "source_required": "state/company_intel/operating_events.json"
+      },
+      {
+       "watch_id": "watch_8699bacf186d461f8442",
+       "watch_type": "model_readiness",
+       "description": "Monitor financial model input readiness before any quantified impact can be calculated.",
+       "source_required": "state/company_intel/financial_model_inputs.json"
+      }
+     ]
+    }
+   ]
+  },
+  "FCCL": {
+   "symbol": "FCCL",
+   "status": "active_monitoring",
+   "source_cluster_count": 1,
+   "active_thesis_count": 1,
+   "financial_readiness": {
+    "status": "partial",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": [
+    {
+     "thesis_id": "thesis_9a8bcdfece1143111822",
+     "symbol": "FCCL",
+     "status": "active_monitoring",
+     "intelligence_type": "inference",
+     "source_cluster_id": "cluster_46fbfc58f7e36caac3ff41d6",
+     "assessment": "single_source",
+     "confidence_band": "single_official_source",
+     "assertion_key": "acquisition:attock cement pakistan limited:public_offer:2026-02-18",
+     "conflict_key": "acquisition:attock cement pakistan limited:2026-02-18",
+     "thesis_type": "acquisition",
+     "monitored_assertion": "type=acquisition; stage=public_offer; target=Attock Cement Pakistan Limited; modality=public_offer",
+     "linked_event_ids": [
+      "evt_d028288e2afc6923d3c1"
+     ],
+     "evidence": [
+      {
+       "document_id": "psx:270499",
+       "source_url": "https://dps.psx.com.pk/download/document/270499.pdf",
+       "page": 2,
+       "content_sha256": "4bc685561334aedd34d7b9ff957d27968507045dc585e99f0731bcae7e149b98",
+       "evidence_sha256": "412609ce598dfc2c0f9ff5d68230b58f27722f2ac71b368d708642ad071f45e6",
+       "source": "PSX DPS"
+      }
+     ],
+     "prove_checks": [
+      {
+       "check_id": "prove_16c6b09162c6f1c5803c",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "subsequent official disclosure confirms stage progression or completion",
+       "current_status": "not_observed"
+      }
+     ],
+     "kill_checks": [
+      {
+       "check_id": "kill_f8c2cb964f39775e1038",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "official disclosure cancels, terminates, rejects, or materially contradicts the same target assertion",
+       "current_status": "not_observed"
+      }
+     ],
+     "watch_items": [
+      {
+       "watch_id": "watch_1383d2fa05727f6a02cf",
+       "watch_type": "official_disclosure_refresh",
+       "description": "Monitor future retained operating events with the same conflict key.",
+       "source_required": "state/company_intel/operating_events.json"
+      },
+      {
+       "watch_id": "watch_e3875159c07ca112b499",
+       "watch_type": "model_readiness",
+       "description": "Monitor financial model input readiness before any quantified impact can be calculated.",
+       "source_required": "state/company_intel/financial_model_inputs.json"
+      }
+     ]
+    }
+   ]
+  },
+  "FFC": {
+   "symbol": "FFC",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "GAL": {
+   "symbol": "GAL",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "HBL": {
+   "symbol": "HBL",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "HUBC": {
+   "symbol": "HUBC",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "LUCK": {
+   "symbol": "LUCK",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "partial",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "MARI": {
+   "symbol": "MARI",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "MEBL": {
+   "symbol": "MEBL",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "MLCF": {
+   "symbol": "MLCF",
+   "status": "active_monitoring",
+   "source_cluster_count": 1,
+   "active_thesis_count": 1,
+   "financial_readiness": {
+    "status": "partial",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": [
+    {
+     "thesis_id": "thesis_035c90ba90a29c2ce5eb",
+     "symbol": "MLCF",
+     "status": "active_monitoring",
+     "intelligence_type": "inference",
+     "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
+     "assessment": "single_source",
+     "confidence_band": "single_official_source",
+     "assertion_key": "acquisition:pioneer cement limited:public_offer:2025-12-18",
+     "conflict_key": "acquisition:pioneer cement limited:2025-12-18",
+     "thesis_type": "acquisition",
+     "monitored_assertion": "type=acquisition; stage=public_offer; target=PIONEER CEMENT LIMITED; modality=public_offer",
+     "linked_event_ids": [
+      "evt_6e9b520a122b8f2d4a59"
+     ],
+     "evidence": [
+      {
+       "document_id": "psx:267429",
+       "source_url": "https://dps.psx.com.pk/download/document/267429.pdf",
+       "page": 3,
+       "content_sha256": "98cf83c9a286999c8006a7f73f490248f26694c9edbfc815b3dbd9188ee22a54",
+       "evidence_sha256": "70a110272f96813a4d6693b596c99d9dbc4c4781d42a519543557a04ec4c581f",
+       "source": "PSX DPS"
+      }
+     ],
+     "prove_checks": [
+      {
+       "check_id": "prove_254bcc2c99ddfb1f3bf4",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "subsequent official disclosure confirms stage progression or completion",
+       "current_status": "not_observed"
+      }
+     ],
+     "kill_checks": [
+      {
+       "check_id": "kill_5c4b4ba0e29152624364",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "official disclosure cancels, terminates, rejects, or materially contradicts the same target assertion",
+       "current_status": "not_observed"
+      }
+     ],
+     "watch_items": [
+      {
+       "watch_id": "watch_554ed192f3d26bb04deb",
+       "watch_type": "official_disclosure_refresh",
+       "description": "Monitor future retained operating events with the same conflict key.",
+       "source_required": "state/company_intel/operating_events.json"
+      },
+      {
+       "watch_id": "watch_f9d0fe9ec22dbc299a28",
+       "watch_type": "model_readiness",
+       "description": "Monitor financial model input readiness before any quantified impact can be calculated.",
+       "source_required": "state/company_intel/financial_model_inputs.json"
+      }
+     ]
+    }
+   ]
+  },
+  "NBP": {
+   "symbol": "NBP",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "NRL": {
+   "symbol": "NRL",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "OGDC": {
+   "symbol": "OGDC",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "PPL": {
+   "symbol": "PPL",
+   "status": "active_monitoring",
+   "source_cluster_count": 1,
+   "active_thesis_count": 1,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": [
+    {
+     "thesis_id": "thesis_019e31af532295ea2c91",
+     "symbol": "PPL",
+     "status": "active_monitoring",
+     "intelligence_type": "inference",
+     "source_cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
+     "assessment": "single_source",
+     "confidence_band": "single_official_source",
+     "assertion_key": "management:appointment:mr mirza nasiruddin mashhood ahmad:director:2026-01-09",
+     "conflict_key": "management:director:2026-01-09",
+     "thesis_type": "management_change",
+     "monitored_assertion": "type=management_change; person=Mr Mirza Nasiruddin Mashhood Ahmad; role=Director; modality=appointment",
+     "linked_event_ids": [
+      "evt_2c3f64926b9d385c3c13"
+     ],
+     "evidence": [
+      {
+       "document_id": "psx:268509",
+       "source_url": "https://dps.psx.com.pk/download/document/268509.pdf",
+       "page": 1,
+       "content_sha256": "232223d4ef13f43f5332168c87dfb21666dddbf90e4150a37e31a7883fe89ccb",
+       "evidence_sha256": "efd428447e80ebd32f25c197028280bd0675b16e78eb5ae67b8e355de37c1683",
+       "source": "PSX DPS"
+      }
+     ],
+     "prove_checks": [
+      {
+       "check_id": "prove_11e5893e1ebc2f5decbf",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "subsequent official disclosure confirms the named person and role are effective",
+       "current_status": "not_observed"
+      }
+     ],
+     "kill_checks": [
+      {
+       "check_id": "kill_fec43156fc8035446708",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "official disclosure reverses the named appointment or reports a different effective role",
+       "current_status": "not_observed"
+      }
+     ],
+     "watch_items": [
+      {
+       "watch_id": "watch_d6c7901921732c05d9a0",
+       "watch_type": "official_disclosure_refresh",
+       "description": "Monitor future retained operating events with the same conflict key.",
+       "source_required": "state/company_intel/operating_events.json"
+      },
+      {
+       "watch_id": "watch_d34fd54c3014e353f93b",
+       "watch_type": "model_readiness",
+       "description": "Monitor financial model input readiness before any quantified impact can be calculated.",
+       "source_required": "state/company_intel/financial_model_inputs.json"
+      }
+     ]
+    }
+   ]
+  },
+  "PRL": {
+   "symbol": "PRL",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "PSO": {
+   "symbol": "PSO",
+   "status": "no_active_thesis",
+   "source_cluster_count": 0,
+   "active_thesis_count": 0,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": []
+  },
+  "UBL": {
+   "symbol": "UBL",
+   "status": "active_monitoring",
+   "source_cluster_count": 2,
+   "active_thesis_count": 2,
+   "financial_readiness": {
+    "status": "unsupported_sector_model",
+    "downstream_status": {
+     "forecast": "blocked_not_implemented",
+     "valuation": "blocked_not_implemented",
+     "market_expectations": "blocked_not_implemented",
+     "scenario_lab": "blocked_not_implemented"
+    },
+    "quality_flags": [
+     "insufficient_three_year_consolidated_v2_history"
+    ]
+   },
+   "theses": [
+    {
+     "thesis_id": "thesis_424d0d7b251f5d9eebde",
+     "symbol": "UBL",
+     "status": "active_monitoring",
+     "intelligence_type": "inference",
+     "source_cluster_id": "cluster_2a04bcad22c357093bbd6280",
+     "assessment": "single_source",
+     "confidence_band": "single_official_source",
+     "assertion_key": "management:appointment:lord zameer m. choudrey:chairman of the board of directors:2026-04-15",
+     "conflict_key": "management:chairman of the board of directors:2026-04-15",
+     "thesis_type": "management_change",
+     "monitored_assertion": "type=management_change; person=Lord Zameer M. Choudrey; role=Chairman of the Board of Directors; modality=appointment",
+     "linked_event_ids": [
+      "evt_a5aaeaed2ea2e998b0cf"
+     ],
+     "evidence": [
+      {
+       "document_id": "psx:274158",
+       "source_url": "https://dps.psx.com.pk/download/document/274158.pdf",
+       "page": 1,
+       "content_sha256": "83ba61381ed651ba01342cfbc84aaf6fbab22200d8fc686a85631d815f7982a2",
+       "evidence_sha256": "c053e38ea8ae0ddb2d9a26ced96e13706ad67ed7fd91c290b37fefa50f10c7f9",
+       "source": "PSX DPS"
+      }
+     ],
+     "prove_checks": [
+      {
+       "check_id": "prove_a7573dbd1a52ab5f3ac5",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "subsequent official disclosure confirms the named person and role are effective",
+       "current_status": "not_observed"
+      }
+     ],
+     "kill_checks": [
+      {
+       "check_id": "kill_8fc3409b706faf0357d5",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "official disclosure reverses the named appointment or reports a different effective role",
+       "current_status": "not_observed"
+      }
+     ],
+     "watch_items": [
+      {
+       "watch_id": "watch_05899325a807e8a44184",
+       "watch_type": "official_disclosure_refresh",
+       "description": "Monitor future retained operating events with the same conflict key.",
+       "source_required": "state/company_intel/operating_events.json"
+      },
+      {
+       "watch_id": "watch_390ec957b7f704fe8514",
+       "watch_type": "model_readiness",
+       "description": "Monitor financial model input readiness before any quantified impact can be calculated.",
+       "source_required": "state/company_intel/financial_model_inputs.json"
+      }
+     ]
+    },
+    {
+     "thesis_id": "thesis_b60e38f6922905214afd",
+     "symbol": "UBL",
+     "status": "active_monitoring",
+     "intelligence_type": "inference",
+     "source_cluster_id": "cluster_18be1f7964ed898c278741e9",
+     "assessment": "single_source",
+     "confidence_band": "single_official_source",
+     "assertion_key": "management:appointment:mr. shoukat ali:company secretary:2026-07-22",
+     "conflict_key": "management:company secretary:2026-07-22",
+     "thesis_type": "management_change",
+     "monitored_assertion": "type=management_change; person=Mr. Shoukat Ali; role=Company Secretary; modality=appointment",
+     "linked_event_ids": [
+      "evt_2b090e38cccab8fac9da"
+     ],
+     "evidence": [
+      {
+       "document_id": "psx:280213",
+       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
+       "page": 2,
+       "content_sha256": "5c78033e3b10d669b1d6b902d1137e54a45a067227792f43db99bfcf00d25eab",
+       "evidence_sha256": "153dc01a2c7784ac76276b60f805b14886d15e8927af105c225aa6682c368941",
+       "source": "PSX DPS"
+      }
+     ],
+     "prove_checks": [
+      {
+       "check_id": "prove_2e4e3a1db40983812795",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "subsequent official disclosure confirms the named person and role are effective",
+       "current_status": "not_observed"
+      }
+     ],
+     "kill_checks": [
+      {
+       "check_id": "kill_3e67b3f35fade1e18308",
+       "source_required": "official_company_or_psx_disclosure",
+       "condition": "official disclosure reverses the named appointment or reports a different effective role",
+       "current_status": "not_observed"
+      }
+     ],
+     "watch_items": [
+      {
+       "watch_id": "watch_ee2665abb383ba8e5a4c",
+       "watch_type": "official_disclosure_refresh",
+       "description": "Monitor future retained operating events with the same conflict key.",
+       "source_required": "state/company_intel/operating_events.json"
+      },
+      {
+       "watch_id": "watch_2ceb7a1a4c432ee4f096",
+       "watch_type": "model_readiness",
+       "description": "Monitor financial model input readiness before any quantified impact can be calculated.",
+       "source_required": "state/company_intel/financial_model_inputs.json"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

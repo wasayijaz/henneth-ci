@@ -1,23 +1,6 @@
 {
  "findings": [
   {
-   "sev": "high",
-   "file": "themes.css",
-   "line": 918,
-   "msg": "non-zero border-radius '50%' — the UI is hard-cornered (radius 0)"
-  },
-  {
-   "sev": "high",
-   "file": "themes.css",
-   "line": 1888,
-   "msg": "non-zero border-radius '7px' — the UI is hard-cornered (radius 0)"
-  },
-  {
-   "sev": "high",
-   "file": "app.js",
-   "msg": "inline non-zero border-radius '4px' — use 0"
-  },
-  {
    "sev": "low",
    "file": "themes.css",
    "line": 212,
@@ -994,10 +977,10 @@
   }
  ],
  "_meta": {
-  "built": "2026-08-23 00:35",
-  "total": 166,
-  "high": 3,
-  "escalate": true,
+  "built": "2026-08-23 01:02",
+  "total": 163,
+  "high": 0,
+  "escalate": false,
   "note": "Deterministic design-language lint. 'high' = a rule violation on screen. If escalate, run the design-reviewer agent (visual web+mobile pass)."
  }
 }

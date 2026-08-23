@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-16",
+ "updated": "2026-08-23",
  "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
  "categories": "accuracy | clarity | feature",
  "items": [
@@ -70,6 +70,17 @@
    "resolved_note": "Superseded, not literally built as specified: pageShipped (app.js:5769) now ships a 'Recently shipped' page reading state/changelog.json, covering the same trust-signal need this item asked for. Different source file (changelog vs backlog) but same user-facing gap closed — no further action needed."
   },
   {
+   "id": "dividend-type-label-drift",
+   "category": "accuracy",
+   "title": "recent_dividends carries no normalized interim/final type, so fa_memo mislabels it",
+   "why": "LOTCHEM and FCCL room-verifier qa notes this cycle both independently caught the fa_memo mislabeling a dividend's interim/final type — scripts/room_dossier.py:127-129 maps each recent_dividends entry as {payout: raw announcement string, rs, yield_pct, closure} with no normalized type field, so the Fundamentalist persona has to infer interim-vs-final from free text and gets it wrong. Two independent misses on the same missing field in one week is a pattern, not noise.",
+   "existing_check": "read scripts/room_dossier.py:100-150 — the recent_dividends list comprehension has payout/rs/yield_pct/closure fields only, no type field; `rg 'interim|final' scripts/room_dossier.py scripts/fetch_dividends.py` confirms no normalized type value is stored anywhere upstream, only present (if at all) inside the free-text announcement string. Distinct from payout-ratio-basis-mismatch (done — dps/eps ratio math) and fundamentals-basis-undisclosed (proposed — consolidated/unconsolidated EPS basis): this is dividend-event TYPE labeling only.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
    "id": "fairvalue-card-hide-method-spread",
    "category": "clarity",
    "title": "Fair-value card headlines one blended number while methods disagree 3-4x",
@@ -111,6 +122,17 @@
    "score": 1.5,
    "status": "done",
    "resolved_note": "Fixed 2026-08-07 — scripts/fetch_fundamentals.py now recomputes payout_ratio as dps/eps instead of trusting the vendor's own payoutRatio field (see module docstring + line ~77). Confirmed live in AKBL's 2026-08-07 room.qa note."
+  },
+  {
+   "id": "verify-json-missing-div-yield-crossfoot",
+   "category": "accuracy",
+   "title": "Deterministic verify.json has no check that div_yield foots against recent_dividends",
+   "why": "HMB's room-verifier qa note this cycle caught a div_yield figure that didn't reconcile against the recent_dividends entries in its own dossier — exactly the class of arithmetic mismatch the deterministic layer exists to catch before it ever reaches an LLM persona, but scripts/room_verify.py has no such rule today.",
+   "existing_check": "`rg 'div_yield|recent_dividends|cross.?foot|payout_ratio' scripts/room_verify.py` — zero hits; `rg '^def |^class' scripts/room_verify.py` shows only two functions exist, _series_glitches and verify. Distinct from the done payout-ratio-basis-mismatch item, which fixed payout_ratio at its fetch_fundamentals.py source — this is a missing cross-foot check in the separate deterministic QA layer (room_verify.py), covering div_yield against the dividend history array, not the fetch script.",
+   "impact": "high",
+   "effort": "med",
+   "score": 1.5,
+   "status": "proposed"
   },
   {
    "id": "dossier-recent-announcements-window-gap",
