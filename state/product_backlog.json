@@ -12,7 +12,8 @@
    "impact": "high",
    "effort": "low",
    "score": 3.0,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/room_verify.py now emits a room.price_staleness issue (new psx_data.price_staleness_pct() shared helper; sev high >=30%, medium >=15%) into state/verify.json, and dashboard/app.js (ticker page) surfaces it as a QA card with the stale-pct pill and backend-authored message — no re-derivation in JS."
   },
   {
    "id": "room-qa-verified-badge-missing",
@@ -34,7 +35,8 @@
    "impact": "med",
    "effort": "low",
    "score": 2.0,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/room_dossier.py's fundamental.next_earnings now mirrors build_calendar.py's own forward-event guard (parse_loose(...) >= today) and drops to null instead of passing a past date through; dashboard/app.js's nextEarn already rendered null safely, no UI change needed."
   },
   {
    "id": "claim-price-stale-in-room-prose",
@@ -45,7 +47,8 @@
    "impact": "med",
    "effort": "low",
    "score": 2.0,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — dashboard/app.js ticker page now reads verify.json's per-ticker issues, filters claim.price flags, and lists each backend-authored msg in a QA card next to the room transcript; escalated tickers (verify.json _meta.escalate_to_agent) also get a header pill."
   },
   {
    "id": "confidence-pill-hide-n",
@@ -78,7 +81,8 @@
    "impact": "med",
    "effort": "low",
    "score": 2.0,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/room_dossier.py's recent_dividends entries now carry a normalized type (interim/final/unknown) derived from fetch_dividends.py's already-parsed period code (I/II/III/IV/F) instead of free-text guessing; dashboard/app.js's Dividends table shows the same mapping as a badge next to each payout row."
   },
   {
    "id": "fairvalue-card-hide-method-spread",
@@ -88,7 +92,8 @@
    "impact": "high",
    "effort": "med",
    "score": 1.5,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Verified 2026-08-23, no code change needed — dashboard/app.js's fair-value card already surfaces per-method disagreement via the spreadWide flag, a min-max pill, and a full per-method table, plus the market-wide table in pageValue(). Confirmed the existing implementation already meets this item's ask; closing rather than duplicating."
   },
   {
    "id": "verify-json-unsurfaced-qa",
@@ -99,7 +104,8 @@
    "impact": "high",
    "effort": "med",
    "score": 1.5,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — dashboard/app.js now fetches state/verify.json on the ticker page (Promise.all alongside the other 24 state files) and renders its per-ticker issues: escalation pill in the header, price-staleness card, claim.price flag list, and a div_yield crossfoot flag — all rendered from backend-authored fields/messages, no logic re-derived in JS."
   },
   {
    "id": "fundamentals-basis-undisclosed",
@@ -110,7 +116,8 @@
    "impact": "high",
    "effort": "med",
    "score": 1.5,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/fetch_fundamentals.py now sets eps_basis to the literal 'unknown' (investigated and confirmed no consolidated/unconsolidated signal is available from the source; CLAUDE.md Rule 2: unknown, never guessed). scripts/room_dossier.py and scripts/compute_fairvalue.py pass eps_basis through; dashboard/app.js shows an 'EPS basis unknown' note next to P/E and on the fair-value card footer whenever it's unknown."
   },
   {
    "id": "payout-ratio-basis-mismatch",
@@ -132,7 +139,8 @@
    "impact": "high",
    "effort": "med",
    "score": 1.5,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/room_verify.py adds a fundamentals.div_yield crossfoot check (new _num() parser, DIV_YIELD_TOLERANCE_PCT=15.0, trailing-365-day dividend window) that flags a mismatch as sev medium with escalate:true when the vendor div_yield is >15% off the desk's own recomputed figure; dashboard/app.js shows a 'crossfoot flag' tag on the Div yield fact row."
   },
   {
    "id": "dossier-recent-announcements-window-gap",
@@ -143,7 +151,8 @@
    "impact": "med",
    "effort": "med",
    "score": 1.0,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/room_dossier.py's dividend sort now treats a missing bc_start as newest-not-oldest (was sorting to the bottom of a top-4 slice, dropping HBL's freshly announced interim dividend); recent_news no longer lets a low-impact item crowd an impact>=4 item out of the last-6 cutoff (Rule 10: impact>=4 must never silently vanish from the dossier)."
   },
   {
    "id": "ratio-stale-price-basis",
@@ -153,7 +162,8 @@
    "impact": "med",
    "effort": "med",
    "score": 1.0,
-   "status": "proposed"
+   "status": "done",
+   "resolved_note": "Fixed 2026-08-23 — scripts/run_cloud.py now runs score_fundamentals.py immediately after snapshot.py (was running before live.json's cycle refresh, the root cause of the stale-PE mismatch). scripts/compute_fairvalue.py and scripts/room_dossier.py both add a _live_pe / sc.metrics.pe read that prefers today's freshly scored P/E over fundamentals.json's own scrape-time ratio, so every consumer now shares one canonical, same-cycle P/E."
   }
  ]
 }
