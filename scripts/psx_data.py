@@ -182,6 +182,21 @@ def save_json(path: Path, obj):
     tmp.replace(path)
 
 
+def price_staleness_pct(price_then, price_now) -> float | None:
+    """How far a price captured earlier (e.g. a Desk Room session's price_at_session) has
+    drifted from a current price, as an absolute percentage. None if either input is
+    missing/non-numeric or price_then <= 0 — never a guessed number (desk hard-rule #2).
+
+    Shared by scripts/provenance_lint.py (gates publish on gross staleness) and
+    scripts/room_verify.py (persists the same figure per ticker into state/verify.json) so
+    the two checks can never silently disagree on the formula."""
+    if not isinstance(price_then, (int, float)) or not isinstance(price_now, (int, float)):
+        return None
+    if price_then <= 0:
+        return None
+    return abs(price_now / price_then - 1) * 100
+
+
 def load_config() -> dict:
     return json.loads((ROOT / "config" / "desk.json").read_text(encoding="utf-8"))
 

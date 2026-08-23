@@ -2223,7 +2223,7 @@ function i18nAuditPaint() {
       badge.id = "i18nAuditBadge";
       badge.setAttribute("data-no-i18n", "1");
       badge.style.cssText = "position:fixed;bottom:10px;right:10px;z-index:9999;background:#c0392b;"
-        + "color:#fff;font:12px/1.4 monospace;padding:6px 10px;border-radius:4px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.4)";
+        + "color:#fff;font:12px/1.4 monospace;padding:6px 10px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.4)";
       badge.title = "Click to dump untranslated strings to console";
       badge.addEventListener("click", () => window.i18nAuditReport());
       document.body.appendChild(badge);
@@ -2945,11 +2945,11 @@ function renderRoom(room, sym) {
 
 async function pageTicker(sym, _retry = 0) {
   sym = sym.toUpperCase();
-  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll, liqAll, insiderAll, offmktAll] = await Promise.all([
+  const [quant, bt, smap, uni, live, news, divs, fund, fscore, cal, hist, deep, intra, fvAll, roomsAll, claimsAll, researchIdx, explainAll, sigAll, stratLib, sectAll, smAll, predAll, liqAll, insiderAll, offmktAll, verifyAll] = await Promise.all([
     j("quant.json"), j("backtests_meta.json"), j("strategy_map.json"), j("universe.json"),
     j("live.json"), j("newslog.json"), j("dividends.json"), j("fundamentals.json"),
     j("fundamental_scores.json"), j("earnings_calendar.json"), j("history/" + sym + ".json", 300000),
-    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json"), j("insider_activity.json"), j("offmarket_activity.json")]);
+    j("history_deep/" + sym + ".json", 600000), j("intraday/" + sym + ".json", 20000), j("fairvalue.json"), j("rooms.json"), j("claims.json"), j("research_index.json"), j("explainer.json"), j("signals.json"), j("strategy_library.json"), j("sectors.json"), j("sector_macro.json"), j("predictability.json"), j("liquidity.json"), j("insider_activity.json"), j("offmarket_activity.json"), j("verify.json")]);
   /* qRaw vs q: `qRaw` answers "did the quant snapshot arrive?", `q` is what the rest of the page
      reads from. Keeping them separate is what lets the page render without quant instead of
      throwing on the first `q.avg_daily_traded_value` — the fields simply come back undefined and
@@ -2961,6 +2961,11 @@ async function pageTicker(sym, _retry = 0) {
   const fsc = fscore?.tickers?.[sym];
   const fv = fvAll?.tickers?.[sym];
   const room = roomsAll?.[sym];
+  const verIssues = (Array.isArray(verifyAll?.[sym]) ? verifyAll[sym] : []);
+  const staleIssue = verIssues.find(i => i.field === "room.price_staleness");
+  const divYieldIssue = verIssues.find(i => i.field === "fundamentals.div_yield");
+  const claimIssues = verIssues.filter(i => i.field === "claim.price");
+  const escalated = (verifyAll?._meta?.escalate_to_agent || []).includes(sym);
   // real PSX sector name — the feed only carries a numeric code ("0809"), so the old
   // `isNaN(lv.sector)` guard meant this tag never rendered for any ticker
   const mySector = (sectAll?.tickers?.[sym] || {}).sector || "";
@@ -3090,6 +3095,8 @@ async function pageTicker(sym, _retry = 0) {
   const tickerNews = (news || []).filter(n => (n.tickers || []).includes(sym)).slice(-10).reverse();
   const dHist = (divs?.history || []).filter(d => d.symbol === sym);
   const dUp = (divs?.upcoming || []).filter(d => d.symbol === sym);
+  // Mirrors room_dossier.py's recent_dividends "type" derivation from the same period code.
+  const divType = p => ["I", "II", "III", "IV"].includes(p) ? "Interim" : p === "F" ? "Final" : "Unknown";
   const insiderRows = insiderAll?.symbols?.[sym] || [];
   // offmktAll is {days: {iso_date: {symbol: {shares, value, trades}}}} -- retained history, not
   // a single trailing-week snapshot. Aggregate this symbol's rows across every retained day.
@@ -3449,6 +3456,7 @@ async function pageTicker(sym, _retry = 0) {
       <span class="tag">${esc(u?.name || "")}</span>${mySector ? `<span class="tag">${esc(mySector)}</span>` : ""}
       <span class="tag">${(u?.in || []).join(" · ")}</span>
       <a class="tag" target="_blank" href="https://www.tradingview.com/chart/?symbol=PSX%3A${sym}">TradingView ↗ (15m delayed)</a>
+      ${escalated ? `<span class="pill bad" title="Deterministic QA flagged a claim on this ticker for the LLM room-verifier to web-check.">QA: escalated</span>` : ""}
       ${typeof starBtn === "function" ? starBtn(sym) : ""}
     </div>
     <div class="prov">Prices in <b>Rs (PKR)</b> · ${priceSrc} · quant as of ${q.date} close · fundamentals ${f.fetched || "—"} · long-history chart is split/bonus-adjusted (Yahoo); DPS close is unadjusted.${liq === "low" ? ' · <b class="dn">low liquidity</b>' : ""}${lossmaking ? ' · <b class="dn">earnings negative</b>' : ""}</div>
@@ -3485,11 +3493,15 @@ async function pageTicker(sym, _retry = 0) {
       Object.entries(fv.methods).map(([k, val]) => { const up = (val / fv.price - 1) * 100; return `<tr><td>${esc(mlabel[k] || k)}</td><td class="r num">${fmt(val)}</td><td class="r num ${cls(up)}">${sgn(up.toFixed(0))}%</td></tr>`; }).join("")}
         <tr style="border-top:2px solid var(--line)"><td><b>Composite (median)</b></td><td class="r num"><b>${fmt(fv.composite_fair)}</b></td><td class="r num ${cls(fv.mispricing_pct)}"><b>${sgn(fv.mispricing_pct)}%</b></td></tr>
       </tbody></table>
-      <div class="sub" style="margin-top:8px">EPS ${fv.eps} · growth est ${fv.growth_est_pct}% · P/E ${fv.pe ?? "—"}. A wide spread between methods means the models disagree — treat as a rough screen, not a precise number.</div></div>`;
+      <div class="sub" style="margin-top:8px">EPS ${fv.eps} · growth est ${fv.growth_est_pct}% · P/E ${fv.pe ?? "—"}${(fv.eps_basis || "unknown") === "unknown" ? ` <span title="Consolidated vs unconsolidated EPS could not be confirmed from the source.">(EPS basis unknown)</span>` : ""}. A wide spread between methods means the models disagree — treat as a rough screen, not a precise number.</div></div>`;
   })() : ""}
 
   ${runDeskBar}
   ${!hasRoom ? renderRoom(room, sym) : (deskRan ? renderRoom(room, sym) : deskStub)}
+  ${hasRoom && (staleIssue || claimIssues.length) ? `<div class="card">
+    ${staleIssue ? `<div class="fact"><span>Room price staleness</span><b><span class="pill ${staleIssue.sev === "high" ? "bad" : "wait"}">${staleIssue.room_price_stale_pct}% stale</span></b><i class="sub" style="display:block;margin-top:4px">${esc(staleIssue.msg)}</i></div>` : ""}
+    ${claimIssues.length ? `<div class="fact" style="margin-top:${staleIssue ? "10px" : "0"}"><span>Claim price flags</span><b>${claimIssues.length}</b><ul class="tr-ul">${claimIssues.map(i => `<li>${esc(i.msg)}</li>`).join("")}</ul></div>` : ""}
+  </div>` : ""}
 
   ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
   <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
@@ -3534,10 +3546,10 @@ async function pageTicker(sym, _retry = 0) {
   <div class="card"><h2>Key facts</h2><div class="sub">fundamentals · stockanalysis.com${f.fetched ? " · " + f.fetched : ""}</div>
     <div class="facts">
       <div class="fact"><span>Market cap</span><b>${esc(f.market_cap || "—")}</b></div>
-      <div class="fact"><span>P/E (TTM)</span><b>${lossmaking ? '<span class="sub" style="font-size:11px">n/a · earnings negative</span>' : esc(fs.pe != null ? fs.pe : (f.pe || "—"))}</b></div>
+      <div class="fact"><span>P/E (TTM)</span><b>${lossmaking ? '<span class="sub" style="font-size:11px">n/a · earnings negative</span>' : esc(fs.pe != null ? fs.pe : (f.pe || "—"))}</b>${(f.eps_basis || "unknown") === "unknown" ? ` <span class="sub" style="font-size:10px" title="Whether this EPS is consolidated or unconsolidated could not be confirmed from the source page.">EPS basis unknown</span>` : ""}</div>
       <div class="fact"><span>Forward P/E</span><b>${esc(f.forward_pe || "—")}</b></div>
       <div class="fact"><span>EPS (TTM)</span><b>${esc(f.eps || "—")}</b></div>
-      <div class="fact"><span>Div yield</span><b>${esc(f.div_yield || "—")}</b></div>
+      <div class="fact"><span>Div yield</span><b>${esc(f.div_yield || "—")}</b>${divYieldIssue ? ` <span class="tag" style="color:var(--dn)" title="${esc(divYieldIssue.msg)}">crossfoot flag</span>` : ""}</div>
       <div class="fact"><span>Payout ratio</span><b>${esc(fs.payout_ratio != null ? fs.payout_ratio + "%" : (f.payout_ratio || "—"))}</b></div>
       <div class="fact"><span>Beta</span><b>${esc(f.beta || "—")}</b></div>
       <div class="fact"><span>Revenue</span><b>${esc(f.revenue || "—")}</b></div>
@@ -3572,7 +3584,7 @@ async function pageTicker(sym, _retry = 0) {
     <div class="card"><h2>Dividends</h2><div class="sub">face value Rs 10 assumed · buy BEFORE ex-date (~2 sessions pre-closure)</div>${
       dUp.length ? `<p style="margin-bottom:10px"><b class="up">UPCOMING:</b> ${dUp.map(d => `${esc(d.announcement)} — closure ${d.bc_start}, buy by <b>${d.buy_by}</b>`).join("; ")}</p>` : ""}
       <table><thead><tr><th>Announced</th><th>Payout</th><th class="r">Rs/sh</th><th class="r">Yield@now</th><th class="r">Closure</th></tr></thead><tbody>${
-      dHist.length ? dHist.slice(0, 8).map(d => `<tr><td>${esc((d.announced || "").split(" ").slice(0, 3).join(" "))}</td><td>${esc(d.announcement)}</td>
+      dHist.length ? dHist.slice(0, 8).map(d => `<tr><td>${esc((d.announced || "").split(" ").slice(0, 3).join(" "))}</td><td>${esc(d.announcement)} <span class="tag">${divType(d.period)}</span></td>
         <td class="r num">${d.dividend_rs ?? "—"}</td><td class="r num">${d.yield_pct_at_close ? d.yield_pct_at_close + "%" : "—"}</td><td class="r num">${d.bc_start || "—"}</td></tr>`).join("") : '<tr><td colspan="5" class="empty">no payout records</td></tr>'}</tbody></table></div>
   </div>
   <div class="card"><h2>News & developments</h2><div class="sub">sentinel-tagged for ${sym}</div><div class="wire">${

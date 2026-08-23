@@ -8,6 +8,13 @@ price feed — that is why the ticker pages showed blank fundamentals.
 This is slow-moving reference data: run WEEKLY (and the fundamentals agent verifies
 earnings dates around results season). Writes state/fundamentals.json.
 
+eps_basis is always "unknown": the quote page was checked field-by-field (all keys the page
+carries, plus a direct search for consolidat/unconsolidat/standalone/basis) for any signal of
+whether eps/pe/market_cap are consolidated- or unconsolidated-basis, on both industrials and a
+bank (which in Pakistan often file both). None exists — the page states only `revenue_type:"ttm"`
+(a time-window, not a basis). Recording "unknown" here (never a guessed basis) is desk hard-rule
+#2; a later source that does disclose it can replace this without touching any downstream reader.
+
 payout_ratio is NOT taken from the vendor's own `payoutRatio` field — spot-checked
 against the vendor's own `dps` + `eps` on the same page, it disagrees (AKBL: dps 5.00 /
 eps 17.59 = 28.4%, but the vendor's payoutRatio field says 39.37% — a different, undisclosed
@@ -21,7 +28,7 @@ import re
 import sys
 import threading
 import time
-from datetime import date
+from datetime import date, datetime
 
 import requests
 
@@ -36,6 +43,28 @@ FIELDS = {
     "revenue": "revenue", "netIncome": "net_income",
     "earningsDate": "next_earnings", "exDivDate": "ex_div_date",
 }
+STALE_DAYS = 7
+FAILED_RETRY_DAYS = 1
+
+
+def _fresh_enough(path, days: int) -> bool:
+    if "--force" in sys.argv:
+        return False
+    prev = load_json(path, {})
+    updated = prev.get("updated")
+    if not updated:
+        return False
+    try:
+        age = datetime.now() - datetime.strptime(updated, "%Y-%m-%d %H:%M")
+    except ValueError:
+        return False
+    if age.total_seconds() < 0:
+        return False
+    cadence_days = FAILED_RETRY_DAYS if prev.get("stale") or prev.get("failed") else days
+    if age.days < cadence_days:
+        print(f"fundamentals: last run {updated}; skip until {cadence_days}d cadence (--force to refresh)")
+        return True
+    return False
 
 
 def _num(s):
@@ -77,7 +106,13 @@ def scrape(symbol: str, sess: requests.Session) -> dict | None:
         out["payout_ratio"] = f"{dps / eps * 100:.2f}%"
     else:
         out.pop("payout_ratio", None)
-    return out if len(out) > 3 else None
+    # see module docstring: the source discloses no consolidated/unconsolidated signal for
+    # eps/pe/market_cap, on any ticker checked — never guessed from company type.
+    out["eps_basis"] = "unknown"
+    # eps_basis is always present now (source_url + eps_basis = 2 baseline), so the "did this
+    # scrape actually find real fields" gate needs the same +1 to keep its original meaning
+    # (>= 3 real matched fields, not >= 2).
+    return out if len(out) > 4 else None
 
 
 WORKERS = 6
@@ -109,7 +144,11 @@ def _one(sym: str):
 
 
 def main():
-    prior = load_json(STATE / "fundamentals.json", {"tickers": {}})
+    out_path = STATE / "fundamentals.json"
+    if _fresh_enough(out_path, STALE_DAYS):
+        sys.exit(0)
+
+    prior = load_json(out_path, {"tickers": {}})
 
     out, failed = {}, []
     # Liquidity research gate (see psx_data.research_symbols) — one scrape per ticker, so this
@@ -137,9 +176,10 @@ def main():
                     out[sym].pop("next_earnings", None)
             failed.append(f"{sym}:{err}" if err else sym)
 
-    save_json(STATE / "fundamentals.json", {
+    save_json(out_path, {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "source": "stockanalysis.com",
+        "stale": bool(failed),
         "tickers": out,
         "failed": failed,
     })

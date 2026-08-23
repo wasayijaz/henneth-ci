@@ -37,6 +37,7 @@ STEPS = [
     "stage_issuer_documents.py",
     "document_intelligence.py",
     "build_financial_series.py",
+    "build_financial_model_inputs.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.
@@ -45,18 +46,26 @@ STEPS = [
     # Deterministic "what changed" digest over official filings, issuer-site changes,
     # source-linked financial movements and event classifications. Free local transform.
     "build_change_intelligence.py",
+    # Wave 1 Company Intelligence: evidence-backed events, declarative sector drivers,
+    # and null-safe Bear/Base/Bull scenarios before the bounded app slice.
+    "build_operating_events.py", "build_driver_graphs.py", "impact_engine.py", "build_signal_clusters.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
     # other dependency and nothing downstream blocks on it. Pure local math, no network.
     "correlation.py",
     "fetch_dividends.py",
     "fetch_dividends_deep.py",  # 18y payout history (Yahoo events) — DPS only gives ~18 months
-    "fetch_fundamentals.py", "score_fundamentals.py",
+    "fetch_fundamentals.py",
     # Insider/off-market activity — same family as fetch_fundamentals.py (no cadence gate here
     # either; the script itself is cheap/idempotent and degrades to the prior file on failure).
     "fetch_insider_offmarket.py",
     "build_calendar.py", "quant.py", "predictability.py", "backtest.py",
     "snapshot.py",
+    # score_fundamentals.py's live_pe() reads state/live.json for TODAY's price. It must run
+    # AFTER snapshot.py writes that file this cycle, not back-to-back with fetch_fundamentals.py
+    # (which pairing left live_pe() reading the PRIOR cycle's live.json all cycle — the root
+    # cause of the P/E-off-a-stale-print mismatches room-verifier flagged on ENGROH/MEBL).
+    "score_fundamentals.py",
     "fetch_indices.py",  # append-only KSE100/KMI30 levels — the index history nobody else has
     "fetch_sectors.py",  # PSX code->name map (needs live.json); feeds Rule 4's sector limit + peer P/E
     "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
@@ -90,7 +99,15 @@ STEPS = [
     "build_public_slice.py",
     # Private Company Intelligence app slice. Reads only retained state files and writes the
     # one JSON file the static CI app consumes.
+    "build_event_studies.py",
+    "build_company_scenario_lab.py",
+    "build_company_brains.py",
     "build_ci_slice.py",
+    "check_company_scenario_lab.py",
+    "check_company_brains.py",
+    "check_financial_model_inputs.py",
+    "check_event_studies.py",
+    "check_operating_intelligence.py",
     # Diffs universe.json against the last-seen ticker set and auto-appends a templated
     # CHANGELOG.md entry when the universe grew (symbols only — nothing to leak). Must run
     # AFTER update_universe.py and BEFORE build_changelog.py so the new entry gets picked up

@@ -14,14 +14,36 @@ Checks per ticker, writing state/verify.json = { SYM: [issues], ..., _meta }:
   - fair value integrity: methods present, composite == median(methods), mispricing
     matches price vs composite
   - freshness: quant `date` not stale
-  - room session: dated calls reference a price near the session price; dissent present
+  - room session: dated calls reference a price near the session price; dissent present;
+    house view price_at_session not grossly stale vs current close (formula shared with
+    provenance_lint.py's publish-time gate, via psx_data.price_staleness_pct)
+  - div_yield crossfoot: stated fundamentals.json div_yield feet against a trailing-365-day
+    sum of the ticker's own recent dividend history (state/dividends.json)
 Severity: high (wrong number shown) / medium (stale or unsupported) / low (cosmetic).
 """
 import statistics
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
-from psx_data import STATE, load_json, save_json
+from psx_data import STATE, load_json, price_staleness_pct, save_json
+
+# div_yield tolerance for the recent_dividends crossfoot below: relative difference beyond
+# this is flagged. Loose on purpose — dividend timing (interim vs final, upcoming vs paid)
+# legitimately makes a trailing-window estimate wobble; this only catches gross mismatches.
+DIV_YIELD_TOLERANCE_PCT = 15.0
+
+
+def _num(s):
+    """'10.57%' / '12.00' -> float. None if unparseable. fundamentals.json fields are strings
+    with a trailing '%' on percentages and no unit suffix otherwise (unlike the B/M/K/T
+    parser duplicated in score_fundamentals.py/compute_fairvalue.py — div_yield and dps never
+    carry one), so a minimal parser is enough here rather than importing that heavier one."""
+    if s is None:
+        return None
+    try:
+        return float(str(s).rstrip("%").replace(",", "").strip())
+    except ValueError:
+        return None
 
 
 def _series_glitches(bars):
@@ -48,7 +70,12 @@ def verify():
     fair = load_json(STATE / "fairvalue.json", {}).get("tickers", {})
     rooms = load_json(STATE / "rooms.json", {})
     claims = load_json(STATE / "claims.json", {}).get("claims", [])
+    fund = load_json(STATE / "fundamentals.json", {}).get("tickers", {})
+    div_hist = {}
+    for d in load_json(STATE / "dividends.json", {}).get("history", []):
+        div_hist.setdefault(d.get("symbol"), []).append(d)
     today = datetime.now(timezone.utc).date()
+    cutoff_div = (today - timedelta(days=365)).isoformat()
 
     out = {}
     for sym, q in quant.items():
@@ -104,6 +131,38 @@ def verify():
                 if sp and mp and abs(mp / sp - 1) > 0.05:
                     issues.append({"sev": "medium", "field": "claim.price",
                                    "msg": f"a {c.get('source')} call was priced at {mp} vs session price {sp}"})
+            # room price staleness: same formula provenance_lint.py already gates publish on
+            # (STALE_WARN_PCT/STALE_FAIL_PCT there), via the shared psx_data.price_staleness_pct
+            # helper — persisted here per ticker so the UI can surface it, not just a build-time
+            # console WARN.
+            dev = price_staleness_pct(sp, q.get("close"))
+            if dev is not None and dev >= 15.0:
+                issues.append({"sev": "high" if dev >= 30.0 else "medium", "field": "room.price_staleness",
+                               "msg": f"house view computed at Rs {sp} vs current close Rs {q.get('close')} "
+                                      f"({dev:.0f}% stale)", "room_price_stale_pct": round(dev, 1)})
+
+        # div_yield crossfoot: reconcile the stated fundamentals.json div_yield against a
+        # trailing-365-day sum of this ticker's OWN recent_dividends (state/dividends.json,
+        # excluding not-yet-ex upcoming rows), using the desk's canonical div_yield formula
+        # (dps/price, see fetch_fundamentals.py's module docstring) — dps here rebuilt from the
+        # actual dividend history instead of trusted blind. Window mirrors sector_dossier.py's
+        # existing ttm_dividend_rs trailing-365-day convention, applied to this file's own
+        # bc_start/dividend_rs fields. Deterministic catch for the class of bug HMB's LLM
+        # room-verifier found (div_yield not footing against its own dossier dividends).
+        f = fund.get(sym)
+        stated_yield = _num((f or {}).get("div_yield"))
+        px = q.get("close")
+        paid = [d for d in div_hist.get(sym, [])
+                if d.get("kind") == "D" and not d.get("upcoming") and (d.get("bc_start") or "") >= cutoff_div]
+        if stated_yield is not None and px and paid:
+            ttm_dps = sum(d.get("dividend_rs") or 0 for d in paid)
+            implied_yield = ttm_dps / px * 100
+            if stated_yield > 0 and abs(implied_yield / stated_yield - 1) * 100 > DIV_YIELD_TOLERANCE_PCT:
+                issues.append({"sev": "medium", "field": "fundamentals.div_yield",
+                               "msg": f"stated div_yield {stated_yield:g}% vs {implied_yield:.2f}% implied by "
+                                      f"trailing-365d dividends (Rs {ttm_dps:.2f}/share at close Rs {px}) "
+                                      f"— {abs(implied_yield / stated_yield - 1) * 100:.0f}% off",
+                               "escalate": True})
 
         if issues:
             out[sym] = issues

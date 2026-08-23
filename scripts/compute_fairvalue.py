@@ -34,8 +34,19 @@ def num(s):
     return v * {"T": 1e12, "B": 1e9, "M": 1e6, "K": 1e3}.get(suf, 1)
 
 
+def _live_pe(fsc, fund, sym):
+    """P/E off TODAY's live price (score_fundamentals.py's live_pe, already computed once —
+    reused here rather than re-derived, so this file and the Room dossier never disagree with
+    the Screener over a stale-vs-live P/E). Falls back to fundamentals.json's own scrape-time
+    ratio only when no score exists yet for the symbol."""
+    m = (fsc.get(sym) or {}).get("metrics") or {}
+    pe = m.get("pe")
+    return pe if pe is not None else num((fund.get(sym) or {}).get("pe"))
+
+
 def main():
     fund = load_json(STATE / "fundamentals.json", {"tickers": {}})["tickers"]
+    fsc = load_json(STATE / "fundamental_scores.json", {"tickers": {}})["tickers"]
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
     universe = load_json(STATE / "universe.json", {"symbols": {}})["symbols"]
     sectors = load_json(STATE / "sectors.json", {"tickers": {}})["tickers"]
@@ -58,7 +69,7 @@ def main():
     sect_of = {s: r.get("sector") for s, r in sectors.items()}
     sect_pes, all_pes = {}, []
     for sym, v in fund.items():
-        pe = num(v.get("pe"))
+        pe = _live_pe(fsc, fund, sym)
         if pe and 0 < pe < 60:
             all_pes.append(pe)
             sec = sect_of.get(sym)
@@ -70,7 +81,7 @@ def main():
     out = {}
     for sym, v in fund.items():
         eps = num(v.get("eps"))
-        pe = num(v.get("pe"))
+        pe = _live_pe(fsc, fund, sym)
         fpe = num(v.get("forward_pe"))
         price = (quant.get(sym) or {}).get("close")
         if not price:
@@ -118,7 +129,8 @@ def main():
         mis = round((composite / price - 1) * 100, 1)
         verdict = "undervalued" if mis >= 15 else "overvalued" if mis <= -15 else "fair"
         out[sym] = {
-            "price": round(price, 2), "eps": eps, "pe": pe, "growth_est_pct": round(g, 1),
+            "price": round(price, 2), "eps": eps, "eps_basis": v.get("eps_basis", "unknown"),
+            "pe": pe, "growth_est_pct": round(g, 1),
             "methods": methods, "relative_pe_basis": rel_basis, "sector": my_sector,
             "composite_fair": composite,
             "mispricing_pct": mis, "verdict": verdict,

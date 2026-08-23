@@ -17,7 +17,9 @@ Design rules:
 import hashlib
 import json
 import time
+from datetime import date
 
+from build_calendar import parse_loose
 from psx_data import STATE, load_json, save_json
 
 
@@ -50,6 +52,8 @@ def _r(v, d=2):
 
 
 def build():
+    _today = date.today()
+    _today_iso = _today.isoformat()
     quant = load_json(STATE / "quant.json", {}).get("tickers", {})
     pred = load_json(STATE / "predictability.json", {}).get("tickers", {})
     smap = load_json(STATE / "strategy_map.json", {}).get("tickers", {})
@@ -84,8 +88,19 @@ def build():
         sc = fsc.get(sym)
         prof = profiles.get(sym) or {}
         proven = smap.get(sym, [])
-        dh = sorted(div_hist.get(sym, []), key=lambda d: d.get("bc_start") or "", reverse=True)[:4]
-        nn = sorted(news_by.get(sym, []), key=lambda n: n.get("ts") or "")[-6:]
+        # A row with no bc_start yet (freshly announced, book closure not scheduled/parsed) is the
+        # NEWEST thing that happened, not the oldest — treat missing bc_start as "beyond today" (not
+        # "") so it sorts to the top instead of the bottom, where a top-4 slice would drop it (root
+        # cause of HBL's 2026-08-04 interim dividend missing from a 2026-08-10 asof dossier).
+        dh = sorted(div_hist.get(sym, []), key=lambda d: d.get("bc_start") or "9999-99-99", reverse=True)[:4]
+        _nn_all = sorted(news_by.get(sym, []), key=lambda n: n.get("ts") or "")
+        nn = _nn_all[-6:]
+        # Rule 10 (CLAUDE.md): impact>=4 news re-triggers the full pipeline, so it must never
+        # silently vanish from the dossier just because newer low-impact items crowded it out of
+        # the last-6 cutoff (the other half of the HBL window-gap: its H1'26 results item).
+        _hi_dropped = [n for n in _nn_all[:-6] if (n.get("impact") or 0) >= 4]
+        if _hi_dropped:
+            nn = sorted(_hi_dropped + nn, key=lambda n: n.get("ts") or "")
         docs = (research.get("by_ticker", {}) or {}).get(sym, [])[:6]
 
         d = {
@@ -119,15 +134,34 @@ def build():
             },
             # --- fundamental snapshot (Fundamentalist reads this) ---
             "fundamental": {
-                "market_cap": f.get("market_cap"), "pe": f.get("pe"), "forward_pe": f.get("forward_pe"),
-                "eps": f.get("eps"), "div_yield": f.get("div_yield"), "payout_ratio": f.get("payout_ratio"),
+                # pe: prefer score_fundamentals.py's live_pe (today's price / eps) over
+                # fundamentals.json's own scrape-time ratio, which can lag a session's move
+                # (single canonical source — same value the Screener/Compare pages show).
+                "market_cap": f.get("market_cap"),
+                "pe": ((sc or {}).get("metrics") or {}).get("pe", f.get("pe")),
+                "forward_pe": f.get("forward_pe"),
+                "eps": f.get("eps"), "eps_basis": f.get("eps_basis", "unknown"),
+                "div_yield": f.get("div_yield"), "payout_ratio": f.get("payout_ratio"),
                 "beta": f.get("beta"), "revenue": f.get("revenue"), "net_income": f.get("net_income"),
-                "next_earnings": f.get("next_earnings"),
+                # next_earnings is a raw scraped string (e.g. "Jun 18, 2026") with no freshness
+                # check, so a date that has already passed (PSO showed Jun 18 2026 vs a Jul 16
+                # 2026 asof) was surfaced as if still upcoming. Mirror build_calendar.py's own
+                # forward-event gate (`parse_loose(...) >= today`): drop it to unknown/None
+                # rather than pass a stale date through (never guess a replacement).
+                "next_earnings": (f.get("next_earnings") if f.get("next_earnings") and
+                                   (parse_loose(f.get("next_earnings"), _today) or "") >= _today_iso
+                                   else None),
                 "scorecard": ({"rating": sc.get("rating"), "overall": sc.get("overall"),
                                "cards": sc.get("cards")} if sc else None),
                 "recent_dividends": [
                     {"payout": d.get("announcement"), "rs": d.get("dividend_rs"),
-                     "yield_pct": d.get("yield_pct_at_close"), "closure": d.get("bc_start")}
+                     "yield_pct": d.get("yield_pct_at_close"), "closure": d.get("bc_start"),
+                     # Normalized type from fetch_dividends.py's already-parsed `period` field
+                     # (I/II/III/IV/F from the PSX payout text) instead of re-parsing the free-text
+                     # `announcement` string — avoids the interim/final mislabeling that hit
+                     # LOTCHEM and FCCL when personas guessed from the raw text.
+                     "type": ("interim" if d.get("period") in ("I", "II", "III", "IV") else
+                              "final" if d.get("period") == "F" else "unknown")}
                     for d in dh
                 ],
             },
@@ -136,7 +170,8 @@ def build():
                 "price": _r(fv.get("price")), "composite_fair": _r(fv.get("composite_fair")),
                 "mispricing_pct": _r(fv.get("mispricing_pct")), "verdict": fv.get("verdict"),
                 "methods": {k: _r(v) for k, v in (fv.get("methods") or {}).items()},
-                "eps": fv.get("eps"), "growth_est_pct": fv.get("growth_est_pct"),
+                "eps": fv.get("eps"), "eps_basis": fv.get("eps_basis", "unknown"),
+                "growth_est_pct": fv.get("growth_est_pct"),
             } if fv else None),
             # --- catalysts / news / documents (all personas) ---
             "recent_news": [

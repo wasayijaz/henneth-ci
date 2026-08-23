@@ -27,6 +27,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATE = os.path.join(ROOT, "state")
 
+from psx_data import price_staleness_pct  # shared with room_verify.py's room-session staleness check
+
 fails, warns = [], []
 
 # Rendered, user-facing state files (NOT internal bookkeeping like *_meta / *_queue / *_plan).
@@ -107,11 +109,13 @@ def main():
         if not (hv.get("summary") or "").strip() or not (hv.get("conviction") or "").strip():
             fails.append(f"rooms.json[{sym}]: house_view present but summary/conviction is empty "
                          f"— renders an empty analysis section as if the desk had a view")
-        # stale: analysis was computed at a price now far from the live close
+        # stale: analysis was computed at a price now far from the live close. Formula lives in
+        # psx_data.price_staleness_pct — shared with room_verify.py's room-session check, which
+        # persists this same figure into state/verify.json for the UI.
         p_sess = sess.get("price_at_session")
         p_now = (quant.get(sym) or {}).get("close")
-        if isinstance(p_sess, (int, float)) and isinstance(p_now, (int, float)) and p_sess > 0:
-            dev = abs(p_now / p_sess - 1) * 100
+        dev = price_staleness_pct(p_sess, p_now)
+        if dev is not None:
             if dev >= STALE_FAIL_PCT:
                 fails.append(f"rooms.json[{sym}]: house view computed at Rs {p_sess} but close is now "
                              f"Rs {p_now} ({dev:.0f}% away) — the shown read is materially out of date")
