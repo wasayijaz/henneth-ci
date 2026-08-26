@@ -51,8 +51,8 @@ STEPS = [
     # Wave 1 Company Intelligence: evidence-backed events, declarative sector drivers,
     # and null-safe Bear/Base/Bull scenarios before the bounded app slice.
     "build_operating_events.py", "build_driver_graphs.py", "impact_engine.py", "build_signal_clusters.py",
-    "build_thesis_monitoring.py", "build_intelligence_confidence.py", "build_management_delivery.py",
-    "build_guidance_contradictions.py",
+    "build_thesis_monitoring.py", "build_intelligence_confidence.py", "build_guidance_contradictions.py",
+    "build_management_delivery.py",
     "build_evidence_watchlist.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no

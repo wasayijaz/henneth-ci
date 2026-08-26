@@ -1,8 +1,9 @@
-"""Deterministic Management Delivery & Contradiction Score v1.
+"""Deterministic Management Delivery & Contradiction Score v2.
 
 This module compares active deterministic thesis records with later retained
-official events. It does not infer from loose proximity, forecast outcomes, or
-invent broader management guidance when normalized guidance objects are absent.
+official events, and emits an additive company-scoped guidance delivery slice
+from first-class guidance objects. It does not infer from loose proximity,
+forecast outcomes, valuation, advice language, or browser-side matching.
 """
 from __future__ import annotations
 
@@ -14,9 +15,25 @@ from signal_clusters import _incompatible, _supersedes, normalize_propositions
 
 
 SCHEMA_VERSION = 1
-DELIVERY_VERSION = "management_delivery_v1"
+DELIVERY_VERSION = "management_delivery_v2"
 PKT = timezone(timedelta(hours=5))
 STATUSES = {"confirmed", "contradicted", "not_observed", "blocked_no_guidance_objects"}
+INCOMPATIBLE_MODALITIES = {
+    ("increase", "decrease"),
+    ("decrease", "increase"),
+    ("continue", "stop"),
+    ("stop", "continue"),
+    ("proceed", "cancel"),
+    ("cancel", "proceed"),
+    ("risk_present", "risk_mitigated"),
+    ("risk_mitigated", "risk_present"),
+    ("appointment", "resignation"),
+    ("resignation", "appointment"),
+    ("intention", "cancel"),
+    ("cancel", "intention"),
+    ("public_offer", "cancel"),
+    ("cancel", "public_offer"),
+}
 FORBIDDEN_TEXT = (
     "buy",
     "sell",
@@ -85,7 +102,7 @@ def _source_available_at(cluster: dict[str, Any], thesis: dict[str, Any]) -> str
     return None
 
 
-def _evidence_refs(event: dict[str, Any]) -> list[dict[str, Any]]:
+def _evidence_refs_from_event(event: dict[str, Any]) -> list[dict[str, Any]]:
     refs = []
     seen = set()
     for evidence in event.get("evidence") or []:
@@ -104,6 +121,141 @@ def _evidence_refs(event: dict[str, Any]) -> list[dict[str, Any]]:
             "source": evidence.get("source"),
         })
     return refs
+
+
+def _guidance_evidence_ref(obj: dict[str, Any]) -> dict[str, Any]:
+    evidence = obj.get("evidence") if isinstance(obj.get("evidence"), dict) else {}
+    return {
+        "guidance_id": obj.get("guidance_id"),
+        "document_id": evidence.get("document_id"),
+        "source_url": evidence.get("source_url"),
+        "page": evidence.get("page"),
+        "content_sha256": evidence.get("content_sha256"),
+        "evidence_sha256": evidence.get("evidence_sha256"),
+        "source": evidence.get("source"),
+        "available_on": evidence.get("available_on"),
+    }
+
+
+def _guidance_evidence_identity(obj: dict[str, Any]) -> tuple[Any, Any, Any, Any]:
+    evidence = obj.get("evidence") if isinstance(obj.get("evidence"), dict) else {}
+    return (
+        evidence.get("document_id"),
+        evidence.get("content_sha256"),
+        evidence.get("evidence_sha256"),
+        evidence.get("page"),
+    )
+
+
+def _guidance_policy_ok(obj: dict[str, Any]) -> bool:
+    policy = obj.get("policy") if isinstance(obj.get("policy"), dict) else {}
+    return (
+        obj.get("status") == "eligible"
+        and bool(policy.get("same_company_official_evidence"))
+        and policy.get("numeric_forecast") is False
+        and policy.get("valuation") is False
+        and policy.get("advice") is False
+    )
+
+
+def _later_guidance_objects(source_obj: dict[str, Any], objects: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    source_time = _parse_time((source_obj.get("evidence") or {}).get("available_on"))
+    source_identity = _guidance_evidence_identity(source_obj)
+    rejected = {
+        "not_first_class_guidance": 0,
+        "not_strictly_later": 0,
+        "self_confirming_source": 0,
+    }
+    candidates = []
+    reviewed = 0
+    for obj in objects:
+        if not isinstance(obj, dict):
+            continue
+        reviewed += 1
+        if obj.get("guidance_id") == source_obj.get("guidance_id") or not _guidance_policy_ok(obj):
+            rejected["not_first_class_guidance"] += 1
+            continue
+        object_time = _parse_time((obj.get("evidence") or {}).get("available_on"))
+        if not source_time or not object_time or object_time <= source_time:
+            rejected["not_strictly_later"] += 1
+            continue
+        if _guidance_evidence_identity(obj) == source_identity:
+            rejected["self_confirming_source"] += 1
+            continue
+        candidates.append(obj)
+    candidates.sort(key=lambda obj: ((obj.get("evidence") or {}).get("available_on") or "", obj.get("guidance_id") or ""))
+    review = {
+        "reviewed_object_count": reviewed,
+        "candidate_object_count": len(candidates),
+        "rejected_counts": rejected,
+        "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source",
+    }
+    return candidates, review
+
+
+def _guidance_record(symbol: str, source_obj: dict[str, Any], objects: list[dict[str, Any]]) -> dict[str, Any]:
+    candidates, review = _later_guidance_objects(source_obj, objects)
+    status = "not_observed"
+    match = None
+    reasons = ["no later first-class guidance object matched the exact assertion or conflict key"]
+    limitations = ["Loose same-company guidance proximity is deliberately ignored."]
+    for obj in candidates:
+        if obj.get("assertion_key") == source_obj.get("assertion_key"):
+            status = "confirmed"
+            match = {
+                "guidance_id": obj.get("guidance_id"),
+                "available_at": (obj.get("evidence") or {}).get("available_on"),
+                "assertion_key": obj.get("assertion_key"),
+                "conflict_key": obj.get("conflict_key"),
+                "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+                "evidence": [_guidance_evidence_ref(obj)],
+            }
+            reasons = ["later first-class guidance exactly matched the normalized assertion key"]
+            limitations = []
+            break
+        if obj.get("conflict_key") == source_obj.get("conflict_key") and obj.get("assertion_key") != source_obj.get("assertion_key"):
+            if (source_obj.get("modality"), obj.get("modality")) in INCOMPATIBLE_MODALITIES:
+                status = "contradicted"
+                match = {
+                    "guidance_id": obj.get("guidance_id"),
+                    "available_at": (obj.get("evidence") or {}).get("available_on"),
+                    "assertion_key": obj.get("assertion_key"),
+                    "conflict_key": obj.get("conflict_key"),
+                    "match_rule": "same_company_exact_guidance_conflict_key_incompatible_modality_strictly_later",
+                    "evidence": [_guidance_evidence_ref(obj)],
+                }
+                reasons = ["later first-class guidance matched the exact conflict key with an incompatible modality"]
+                limitations = []
+                break
+    return {
+        "guidance_record_id": _stable_id("guidance_delivery", symbol, source_obj.get("guidance_id")),
+        "symbol": symbol,
+        "guidance_id": source_obj.get("guidance_id"),
+        "assertion_key": source_obj.get("assertion_key"),
+        "conflict_key": source_obj.get("conflict_key"),
+        "status": status,
+        "scorecard_type": "categorical_status_only",
+        "source_guidance": {
+            "available_at": (source_obj.get("evidence") or {}).get("available_on"),
+            "statement": source_obj.get("statement"),
+            "domain": source_obj.get("domain"),
+            "modality": source_obj.get("modality"),
+            "evidence": [_guidance_evidence_ref(source_obj)],
+        },
+        "matched_guidance": match,
+        "guidance_review": review,
+        "reasons": reasons,
+        "limitations": limitations,
+    }
+
+
+def _guidance_records(symbol: str, guidance_row: dict[str, Any]) -> list[dict[str, Any]]:
+    objects = [
+        obj for obj in guidance_row.get("objects") or []
+        if isinstance(obj, dict) and obj.get("symbol") == symbol and _guidance_policy_ok(obj)
+    ]
+    objects.sort(key=lambda obj: ((obj.get("evidence") or {}).get("available_on") or "", obj.get("guidance_id") or ""))
+    return [_guidance_record(symbol, obj, objects) for obj in objects]
 
 
 def _confidence_link(confidence_row: dict[str, Any], source_cluster_id: str | None) -> dict[str, Any] | None:
@@ -183,7 +335,7 @@ def _match_delivery(
                 "assertion_key": prop.get("assertion_key"),
                 "conflict_key": prop.get("conflict_key"),
                 "match_rule": "same_symbol_exact_assertion_key_strictly_later",
-                "evidence": _evidence_refs(event),
+                "evidence": _evidence_refs_from_event(event),
             }, ["later official event exactly matched the normalized proposition"], []
         if prop.get("conflict_key") == conflict_key and prop.get("assertion_key") != assertion_key:
             if _incompatible(source_prop, prop) or _supersedes(prop, source_prop):
@@ -194,7 +346,7 @@ def _match_delivery(
                     "assertion_key": prop.get("assertion_key"),
                     "conflict_key": prop.get("conflict_key"),
                     "match_rule": "same_symbol_exact_conflict_key_strictly_later",
-                    "evidence": _evidence_refs(event),
+                    "evidence": _evidence_refs_from_event(event),
                 }, ["later official event matched the exact conflict key with an incompatible proposition"], []
     return "not_observed", None, ["no later official event matched the exact assertion or conflict key"], [
         "Loose same-symbol event proximity is deliberately ignored."
@@ -237,7 +389,9 @@ def build_management_delivery(
     signal_state: dict[str, Any],
     operating_events: dict[str, Any],
     confidence_state: dict[str, Any],
+    guidance_state: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    guidance_state = guidance_state or {}
     symbols = list(thesis_state.get("pilot_symbols") or signal_state.get("pilot_symbols") or [])
     companies = {}
     total = 0
@@ -247,8 +401,10 @@ def build_management_delivery(
         signal_row = (signal_state.get("companies") or {}).get(symbol) or {}
         confidence_row = (confidence_state.get("companies") or {}).get(symbol) or {}
         events = ((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []
+        guidance_row = (guidance_state.get("companies") or {}).get(symbol) or {"symbol": symbol, "status": "no_guidance_objects", "objects": []}
         clusters = _cluster_map(signal_row)
         records = []
+        guidance_records = _guidance_records(symbol, guidance_row)
         for thesis in thesis_row.get("theses") or []:
             cluster = clusters.get(thesis.get("source_cluster_id")) or {}
             record = _delivery_record(symbol, thesis, cluster, events, confidence_row)
@@ -261,7 +417,11 @@ def build_management_delivery(
             "status": "tracked" if records else "no_active_thesis",
             "active_thesis_count": len(thesis_row.get("theses") or []),
             "delivery_record_count": len(records),
+            "guidance_status": "available" if guidance_records else "blocked_no_guidance_objects",
+            "guidance_object_count": len(guidance_row.get("objects") or []),
+            "guidance_record_count": len(guidance_records),
             "records": records,
+            "guidance_records": guidance_records,
         }
     return {
         "schema_version": SCHEMA_VERSION,
@@ -273,6 +433,7 @@ def build_management_delivery(
             "signal_clusters": "state/company_intel/signal_clusters.json",
             "operating_events": "state/company_intel/operating_events.json",
             "intelligence_confidence": "state/company_intel/intelligence_confidence.json",
+            "guidance_contradictions": "state/company_intel/guidance_contradictions.json",
         },
         "policy": {
             "research_only": True,
@@ -282,10 +443,19 @@ def build_management_delivery(
             "no_price_claims": True,
             "same_symbol_required": True,
             "exact_assertion_or_conflict_key_required": True,
+            "first_class_guidance_objects_required": True,
+            "strictly_later_than_latest_source_required": True,
+            "source_linked_self_confirmation_excluded": True,
         },
         "guidance_coverage": {
-            "status": "blocked_no_guidance_objects",
-            "reason": "No first-class broader management guidance object source is present in the deterministic state layer.",
+            "status": (
+                "available" if all(row.get("guidance_record_count") for row in companies.values())
+                else "partial" if any(row.get("guidance_record_count") for row in companies.values())
+                else "blocked_no_guidance_objects"
+            ),
+            "source": "state/company_intel/guidance_contradictions.json",
+            "guidance_version": guidance_state.get("guidance_version"),
+            "reason": "Management delivery v2 consumes only first-class guidance/risk objects with exact normalized keys.",
         },
         "status_vocabulary": sorted(STATUSES),
         "summary": {

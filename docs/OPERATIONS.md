@@ -421,10 +421,13 @@ push refreshed data).
   user's bearer token. Archive/restore is normal; permanent deletion requires confirmation. Any
   fair value is private user input, never Henneth output.
 - **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
-  after thesis/confidence state and before the CI slice. A thesis can be confirmed or contradicted
-  only by a retained same-symbol official event strictly later than its latest source observation
-  with an exact normalized assertion/conflict key. Source-linked events are excluded to prevent
-  self-confirmation. With no first-class guidance objects, broader guidance delivery remains blocked.
+  after guidance, thesis and confidence state and before the CI slice. Its original thesis records
+  remain limited to retained same-symbol official events that are strictly later than the latest
+  source observation and exactly match an assertion/conflict key. A separate guidance record set
+  compares first-class same-company guidance objects only; it requires strictly later availability,
+  exact keys and incompatible modalities for a contradiction, while same evidence is excluded.
+  Companies without qualifying guidance publish an explicit blocked state. The two record sets are
+  never loosely merged or matched in the browser.
 - **The Evidence Watchlist is an exact-link monitoring view.** `build_evidence_watchlist.py` joins
   active deterministic theses to their management-delivery, confidence and financial-readiness rows
   by source IDs within the same company. It shows confirm, break and next-evidence checks from retained

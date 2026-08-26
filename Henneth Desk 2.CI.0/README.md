@@ -69,11 +69,13 @@ inactive until the owner manually applies `docs/company_theses.sql` and verifies
 an absent table renders “not activated.” `scripts/check_company_theses_security.mjs` and
 `scripts/check_company_theses_ui.mjs` gate the offline contracts.
 
-The deterministic Thesis Monitor also shows Management Delivery v1. Every active thesis receives a
+The deterministic Thesis Monitor also shows Management Delivery v2. Every active thesis keeps its
 categorical backend status based only on same-company official events that arrive strictly after the
-latest source observation and exactly match its assertion or conflict key. The browser never matches
-or scores evidence. Current broader guidance delivery is explicitly blocked because the state layer
-contains no first-class guidance objects. Backend and UI contracts are checked by
+latest source observation and exactly match its assertion or conflict key. A separate guidance record
+set compares only first-class same-company guidance objects with strictly later availability, exact
+keys and self-source exclusion; it never changes a thesis record through loose matching. The browser
+never matches or scores evidence, and companies without qualified guidance remain explicitly blocked.
+Backend and UI contracts are checked by
 `scripts/check_management_delivery.py` and `scripts/check_management_delivery_ui.mjs`.
 
 Guidance & Contradictions v1 now supplies those first-class qualitative guidance/risk objects from
