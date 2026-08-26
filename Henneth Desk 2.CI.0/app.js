@@ -61,12 +61,23 @@ const RESEARCH_TOOL_TABS = [
   ["sources", "Sources"],
   ["brief", "Brief queue"],
 ];
+// Six directory groups mirror the selected visual reference. Every existing route
+// appears exactly once in this tree; grouping is presentation-only.
+const TREE_GROUPS = [
+  { key: "overview", label: "Overview", routes: [["snapshot", "Investor Snapshot"], ["overview", "Company Profile"], ["business", "Business profile (legacy)"]] },
+  { key: "intelligence", label: "Intelligence", routes: [["research", "Research"], ["ask", "Ask Henneth"], ["graph", "Knowledge Graph"], ["operating", "Operating Intelligence"], ["intelligence", "Intelligence index (legacy)"], ["timeline", "Typed timeline (legacy)"]] },
+  { key: "financials", label: "Financials", routes: [["trends", "Financial Trends"], ["baseline", "Financial Baseline"], ["forecast", "Forecast Readiness"], ["financials", "Accounting Snapshot"]] },
+  { key: "events", label: "Events & Filings", routes: [["earnings", "Earnings"], ["events", "Events"], ["filings", "Filings"], ["sources", "Sources"], ["changes", "Change Digest (legacy)"], ["brief", "Brief queue (legacy)"]] },
+  { key: "strategy", label: "Strategy", routes: [["scenarios", "Scenarios"], ["valuation", "Valuation"], ["guidance", "Guidance"], ["catalysts", "Catalysts"], ["risks", "Risks"], ["quant", "Quant (legacy)"]] },
+  { key: "ownership", label: "Ownership & Peers", routes: [["ownership", "Ownership"], ["peers", "Peers"], ["watchlist", "Watchlist"], ["conditional", "Conditional Benchmarks"], ["causal", "Causal Map"], ["coverage", "Coverage"], ["thesis", "Thesis Monitor"], ["monitoring", "Monitoring"], ["operations", "Operations (legacy)"]] },
+];
 let state = {
   session: null,
   data: null,
   selected: null,
   filter: "",
   view: "overview",
+  tree: { expanded: {} },
   ask: { pending: {}, nextId: 0, bySymbol: {} },
   scenario: { bySymbol: {} },
   theses: { loaded: false, loading: false, saving: false, error: null, bySymbol: {}, drafts: {} },
@@ -348,6 +359,18 @@ function renderDesk(searchState) {
   const row = list.find(r => r.symbol === state.selected) || list[0];
   if (row) state.selected = row.symbol;
   $("app").innerHTML = `
+    <aside class="icon-rail" aria-label="Primary desk navigation">
+      <a class="icon-rail-brand" href="https://desk.henneth.app/today" aria-label="Henneth Desk home"><img src="logo-terminal.svg" alt="" width="34" height="30"></a>
+      <nav class="icon-rail-nav" aria-label="Desk sections">
+        <a class="icon-rail-link is-active" href="https://ci.henneth.app/" aria-current="page" title="Company Intelligence"><span aria-hidden="true">CI</span><span class="sr-only">Company Intelligence</span></a>
+        <a class="icon-rail-link" href="https://desk.henneth.app/today" title="Signals"><span aria-hidden="true">SIG</span><span class="sr-only">Signals</span></a>
+        <a class="icon-rail-link" href="https://desk.henneth.app/watchlist" title="Watchlist"><span aria-hidden="true">WAT</span><span class="sr-only">Watchlist</span></a>
+        <a class="icon-rail-link" href="https://desk.henneth.app/research" title="Research"><span aria-hidden="true">RES</span><span class="sr-only">Research</span></a>
+      </nav>
+      <div class="icon-rail-spacer"></div>
+      <button class="icon-rail-link" type="button" id="railScheme" title="Change colour scheme"><span aria-hidden="true">SET</span><span class="sr-only">Change colour scheme</span></button>
+      <button class="icon-rail-link" type="button" id="railProfile" title="Sign out"><span aria-hidden="true">USR</span><span class="sr-only">Sign out</span></button>
+    </aside>
     <aside class="rail" aria-label="Company directory">
       <div class="rail-head"><strong>Company directory</strong><span>${esc(list.length)} shown</span></div>
       <div class="toolbar">
@@ -363,7 +386,8 @@ function renderDesk(searchState) {
       </div>
       <span class="sr-only" role="status" aria-live="polite">${esc(list.length)} companies match.</span>
     </aside>
-    <section id="companyDetail" class="detail" role="tabpanel" tabindex="-1" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>`;
+    <section id="companyDetail" class="detail" role="tabpanel" tabindex="-1" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>
+    <aside class="tree-panel" aria-label="Company intelligence directory tree">${row ? renderViewNav(row) : `<div class="tree-empty">No directories available.</div>`}</aside>`;
   if ($("companyStatus")) $("companyStatus").textContent = row ? `${row.symbol} · company intelligence` : "Company Intelligence";
   $("search").oninput = event => {
     const start = event.target.selectionStart;
@@ -375,6 +399,8 @@ function renderDesk(searchState) {
     state.filter = "";
     renderDesk({ focus: true, start: 0, end: 0 });
   };
+  $("railScheme")?.addEventListener("click", () => $("schemeToggle")?.click());
+  $("railProfile")?.addEventListener("click", () => $("signOut")?.click());
   document.querySelectorAll("[data-symbol]").forEach(btn => {
     btn.onclick = () => pick(btn.dataset.symbol);
     btn.onkeydown = event => moveCompanyFocus(event, btn);
@@ -385,6 +411,14 @@ function renderDesk(searchState) {
       renderDesk({ focusView: state.view });
     };
     btn.onkeydown = event => moveViewFocus(event, btn);
+  });
+  document.querySelectorAll("[data-tree-toggle]").forEach(button => {
+    button.onclick = event => {
+      event.stopPropagation();
+      const key = button.dataset.treeToggle;
+      state.tree.expanded[key] = !state.tree.expanded[key];
+      renderDesk();
+    };
   });
   document.querySelectorAll("[data-research-route]").forEach(btn => {
     btn.onclick = () => {
@@ -456,7 +490,7 @@ function moveCompanyFocus(event, button) {
 function moveViewFocus(event, button) {
   if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
   const group = button.parentElement?.closest("[data-view-group]");
-  const tabs = [...(group || document).querySelectorAll("[data-view]")];
+  const tabs = [...(group || document).querySelectorAll("[data-view]")].filter(tab => !tab.closest("[hidden]"));
   if (!tabs.length) return;
   event.preventDefault();
   let index = tabs.indexOf(button);
@@ -499,7 +533,6 @@ function detail(r) {
       ${metric("Change digest", intel.change_item_count ?? 0, `${r.change_intelligence?.latest_change_at || "no dated change"}`)}
       ${metric("Graph links", intel.graph_edge_count ?? 0, `${intel.graph_node_count ?? 0} nodes mapped`)}
     </div>
-    ${renderViewNav(r)}
     ${state.view === "financials" ? renderCompanyFinancials(r)
       : state.view === "earnings" ? renderCompanyEarnings(r)
       : state.view === "business" ? renderCompanyBusiness(r)
@@ -552,11 +585,27 @@ function renderViewNav(r) {
     ["sources", `Sources ${(r.sources?.sources?.length || 0) + (r.sources?.documents?.length || 0)}`],
     ["brief", r.brief?.current ? "Approved brief" : "Brief queue"],
   ]);
-  const tabButton = (key, label, group) => `
-    <button type="button" role="tab" aria-selected="${state.view === key}" aria-controls="companyDetail" class="${state.view === key ? "active" : ""}" data-view="${key}" data-view-group="${group}">${esc(label)}</button>`;
-  return `<div class="viewnav-shell" aria-label="Company intelligence navigation">
-    <nav class="viewnav primary-tabs" aria-label="Primary company sections" role="tablist" data-view-group="primary">${PRIMARY_COMPANY_TABS.map(([key, label]) => tabButton(key, label, "primary")).join("")}</nav>
-    <nav class="viewnav research-tools" aria-label="Research tools" role="tablist" data-view-group="advanced">${RESEARCH_TOOL_TABS.map(([key, label]) => tabButton(key, toolLabels.get(key) || label, "advanced")).join("")}</nav>
+  const routeGroup = key => PRIMARY_COMPANY_TABS.some(([route]) => route === key) ? "primary" : "advanced";
+  const node = (key, label, depth = 0) => {
+    const active = state.view === key;
+    return `<button type="button" aria-current="${active ? "page" : "false"}" aria-controls="companyDetail" class="tree-leaf ${active ? "active" : ""} depth-${depth}" data-view="${key}" data-view-group="${routeGroup(key)}"><span class="tree-file" aria-hidden="true">FILE</span><span>${esc(label)}</span></button>`;
+  };
+  const folder = ({ key, label, routes }) => {
+    const expanded = state.tree.expanded[key] ?? true;
+    const childNodes = routes.map(([route, routeLabel]) => node(route, toolLabels.get(route) || routeLabel, 1)).join("");
+    return `<section class="tree-folder ${expanded ? "is-expanded" : ""}" data-tree-folder="${key}">
+      <div class="tree-folder-row ${state.view === key ? "active" : ""}">
+        <button class="tree-expander" type="button" aria-label="${expanded ? "Collapse" : "Expand"} ${esc(label)}" aria-expanded="${expanded}" data-tree-toggle="${key}">${expanded ? "COLLAPSE" : "EXPAND"}</button>
+        <span class="tree-folder-label"><span class="tree-folder-icon" aria-hidden="true">DIR</span><span>${esc(label)}</span></span>
+      </div>
+      <div class="tree-children" role="group" ${expanded ? "" : "hidden"}>${childNodes}</div>
+    </section>`;
+  };
+  return `<div class="viewnav-shell tree-shell" aria-label="Company intelligence navigation">
+    <div class="tree-head"><span class="tree-kicker">COMPANY INTELLIGENCE</span><span class="tree-count">${TREE_GROUPS.length} directories</span></div>
+    <nav class="tree-view primary-tabs" aria-label="Primary company sections" data-view-group="primary">${TREE_GROUPS.map(folder).join("")}</nav>
+    <div class="tree-divider" aria-hidden="true"></div>
+    <div class="tree-group-label" aria-label="Research tools" data-view-group="advanced">RESEARCH TOOLS · NESTED ABOVE</div>
   </div>`;
 }
 
