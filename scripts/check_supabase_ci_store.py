@@ -23,7 +23,11 @@ class FakeTransport:
         self.calls: list[dict[str, Any]] = []
 
     def post_json(self, url: str, headers: dict[str, str], rows: list[dict[str, Any]]) -> int:
-        self.calls.append({"url": url, "headers": dict(headers), "rows": json.loads(json.dumps(rows))})
+        self.calls.append({"kind": "json", "url": url, "headers": dict(headers), "rows": json.loads(json.dumps(rows))})
+        return 201
+
+    def upload_storage(self, url: str, headers: dict[str, str], body: bytes) -> int:
+        self.calls.append({"kind": "storage", "url": url, "headers": dict(headers), "body": body})
         return 201
 
 
@@ -31,7 +35,7 @@ def fail(message: str) -> None:
     raise AssertionError(message)
 
 
-def sample_root() -> tempfile.TemporaryDirectory[str]:
+def sample_root(with_blob: bool = False) -> tempfile.TemporaryDirectory[str]:
     tmp = tempfile.TemporaryDirectory()
     root = Path(tmp.name)
     state = root / "state"
@@ -124,6 +128,22 @@ def sample_root() -> tempfile.TemporaryDirectory[str]:
             }
         },
     }
+    if with_blob:
+        raw_dir = root / ".cache" / "company_intel" / "raw"
+        raw_dir.mkdir(parents=True)
+        pdf_body = b"%PDF-1.7\nfixture official filing bytes\n%%EOF\n"
+        pdf_path = raw_dir / "psx_1.pdf"
+        pdf_path.write_bytes(pdf_body)
+        save_json(root / ".cache" / "company_intel" / "extraction_queue.json", {
+            "schema_version": 1,
+            "documents": [{
+                "doc_id": "psx:1",
+                "path": str(pdf_path),
+                "sha256": "ignored-by-archive-which-rehashes-bytes",
+                "content_length": len(pdf_body),
+                "mime_type": "application/pdf",
+            }],
+        })
     save_json(state / "company_documents.json", docs)
     save_json(state / "company_financial_series.json", series)
     save_json(state / "company_intel" / "operating_events.json", operating)
@@ -176,6 +196,8 @@ def assert_schema_contract() -> None:
             fail("fact without page provenance was not rejected")
 
         source_keys = {row["document_key"] for row in rows.source_documents}
+        if rows.document_blobs:
+            fail("blob rows must not be prebuilt before a configured storage upload")
         for row in rows.source_documents:
             expected = {
                 "document_key",
@@ -247,14 +269,17 @@ def assert_actual_postgrest_endpoints() -> None:
         seen = [(call["url"].split("/rest/v1/", 1)[1], len(call["rows"])) for call in fake.calls]
         expected_prefixes = [
             "ci_source_documents?on_conflict=document_key",
+            "ci_document_blobs?on_conflict=document_key",
             "ci_document_facts?on_conflict=fact_key",
             "ci_state_snapshots?on_conflict=snapshot_key",
             "ci_sync_runs?on_conflict=run_key",
         ]
         actual_prefixes = [url for url, _count in seen]
-        if actual_prefixes != expected_prefixes:
+        if actual_prefixes != [prefix for prefix in expected_prefixes if "ci_document_blobs" not in prefix]:
             fail(f"PostgREST endpoints drifted: {actual_prefixes}")
         for call in fake.calls:
+            if call["kind"] != "json":
+                continue
             headers = call["headers"]
             if headers.get("apikey") != SECRET or headers.get("Authorization") != "Bearer " + SECRET:
                 fail("request headers were not set for Supabase")
@@ -266,12 +291,83 @@ def assert_actual_postgrest_endpoints() -> None:
         tmp.cleanup()
 
 
+def assert_blob_storage_contract() -> None:
+    tmp = sample_root(with_blob=True)
+    try:
+        fake = FakeTransport()
+        env = {
+            store.ENV_URL: "https://example.supabase.co",
+            store.ENV_KEY: SECRET,
+        }
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            result = store.run(root=Path(tmp.name), env=env, transport=fake, clock=lambda: FIXED_NOW)
+        if result["mode"] != "posted":
+            fail("blob fixture did not execute configured archive run")
+        kinds = [call["kind"] for call in fake.calls]
+        if kinds[:4] != ["json", "storage", "storage", "json"]:
+            fail(f"blob upload order drifted: {kinds}")
+        if "ci_source_documents?on_conflict=document_key" not in fake.calls[0]["url"]:
+            fail("source documents must be inserted before storage uploads")
+        blob_post = fake.calls[3]
+        if "ci_document_blobs?on_conflict=document_key" not in blob_post["url"]:
+            fail("blob metadata must be inserted after storage uploads")
+        storage_calls = fake.calls[1:3]
+        blob_rows = blob_post["rows"]
+        if len(blob_rows) != 2 or len(storage_calls) != 2:
+            fail("two-symbol retained document should archive one blob row per source document")
+        expected_body = b"%PDF-1.7\nfixture official filing bytes\n%%EOF\n"
+        expected_hash = store.hashlib.sha256(expected_body).hexdigest()
+        for call, row in zip(storage_calls, blob_rows):
+            if call["body"] != expected_body:
+                fail("storage upload body drifted")
+            if row["content_sha256"] != expected_hash or row["byte_size"] != len(expected_body):
+                fail("blob row did not hash and size the uploaded bytes")
+            if row["content_type"] != "application/pdf":
+                fail("blob content type must be application/pdf")
+            if not row["storage_path"].startswith(f"source-documents/{row['document_key']}/"):
+                fail("storage path must be deterministic from document_key")
+            if expected_hash not in row["storage_path"]:
+                fail("storage path must include the byte hash")
+            if not call["url"].endswith("/storage/v1/object/ci-documents/" + row["storage_path"]):
+                fail(f"storage endpoint drifted: {call['url']}")
+            headers = call["headers"]
+            if headers.get("apikey") != SECRET or headers.get("Authorization") != "Bearer " + SECRET:
+                fail("storage request headers were not set for Supabase")
+            if headers.get("Content-Type") != "application/pdf" or headers.get("x-upsert") != "true":
+                fail("storage upload headers drifted")
+        if SECRET in out.getvalue() or "Authorization" in out.getvalue() or "apikey" in out.getvalue():
+            fail("secret-bearing storage headers leaked into logs")
+    finally:
+        tmp.cleanup()
+
+
+def assert_no_local_path_skips_blob_archive() -> None:
+    tmp = sample_root(with_blob=False)
+    try:
+        fake = FakeTransport()
+        env = {
+            store.ENV_URL: "https://example.supabase.co",
+            store.ENV_KEY: SECRET,
+        }
+        with contextlib.redirect_stdout(io.StringIO()):
+            store.run(root=Path(tmp.name), env=env, transport=fake, clock=lambda: FIXED_NOW)
+        if any(call["kind"] == "storage" for call in fake.calls):
+            fail("missing local PDF path must not trigger a storage upload")
+        if any("ci_document_blobs" in call["url"] for call in fake.calls if call["kind"] == "json"):
+            fail("missing local PDF path must not insert blob metadata")
+    finally:
+        tmp.cleanup()
+
+
 def main() -> None:
     assert_absent_config_noop()
     assert_deterministic_archive_rows()
     assert_schema_contract()
     assert_actual_postgrest_endpoints()
-    print("supabase_ci_store: PASS (dry-run, schema contract, endpoints, idempotency, secret-safe logging)")
+    assert_blob_storage_contract()
+    assert_no_local_path_skips_blob_archive()
+    print("supabase_ci_store: PASS (dry-run, schema contract, endpoints, blob storage, idempotency, secret-safe logging)")
 
 
 if __name__ == "__main__":

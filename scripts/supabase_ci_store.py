@@ -4,8 +4,10 @@
 The local ``state/`` tree remains the desk's source of truth. This adapter is a
 server-only archive writer for the deployed CI tables and is inert until both
 ``HENNETH_CI_SUPABASE_URL`` and ``HENNETH_CI_SUPABASE_SERVICE_KEY`` are set.
-It never uploads binaries, never prints secrets, and never updates existing
-archive rows; duplicates are ignored by each table's deployed unique key.
+It never fetches binaries, never prints secrets, and never updates existing
+archive rows; duplicates are ignored by each table's deployed unique key. If a
+current-run verified PDF is still present in the ignored local cache, it is
+also copied into the private Henneth CI Storage bucket.
 """
 from __future__ import annotations
 
@@ -31,10 +33,15 @@ SCHEMA_VERSION = 2
 
 TABLES = {
     "source_documents": ("ci_source_documents", "document_key"),
+    "document_blobs": ("ci_document_blobs", "document_key"),
     "document_facts": ("ci_document_facts", "fact_key"),
     "state_snapshots": ("ci_state_snapshots", "snapshot_key"),
     "sync_runs": ("ci_sync_runs", "run_key"),
 }
+
+DOCUMENT_BUCKET = "ci-documents"
+PDF_CONTENT_TYPE = "application/pdf"
+PDF_MAX_BYTES = 50 * 1024 * 1024
 
 SELECTED_INTEL_PRODUCTS = (
     "operating_events.json",
@@ -72,6 +79,7 @@ class Config:
 @dataclass
 class BuildStats:
     source_documents: int = 0
+    document_blobs: int = 0
     document_facts: int = 0
     state_snapshots: int = 0
     sync_runs: int = 0
@@ -92,6 +100,8 @@ class BuildStats:
 @dataclass
 class ArchiveRows:
     source_documents: list[dict[str, Any]] = field(default_factory=list)
+    document_blobs: list[dict[str, Any]] = field(default_factory=list)
+    document_blob_candidates: list["BlobCandidate"] = field(default_factory=list)
     document_facts: list[dict[str, Any]] = field(default_factory=list)
     state_snapshots: list[dict[str, Any]] = field(default_factory=list)
     sync_runs: list[dict[str, Any]] = field(default_factory=list)
@@ -99,10 +109,18 @@ class ArchiveRows:
     def as_table_map(self) -> dict[str, list[dict[str, Any]]]:
         return {
             "source_documents": self.source_documents,
+            "document_blobs": self.document_blobs,
             "document_facts": self.document_facts,
             "state_snapshots": self.state_snapshots,
             "sync_runs": self.sync_runs,
         }
+
+
+@dataclass(frozen=True)
+class BlobCandidate:
+    document_key: str
+    local_path: str
+    content_type: str = PDF_CONTENT_TYPE
 
 
 class SupabaseTransport:
@@ -111,6 +129,11 @@ class SupabaseTransport:
     def post_json(self, url: str, headers: dict[str, str], rows: list[dict[str, Any]]) -> int:
         data = json.dumps(rows, sort_keys=True, ensure_ascii=False, allow_nan=False).encode("utf-8")
         req = urllib.request.Request(url, data=data, method="POST", headers=headers)
+        with urllib.request.urlopen(req, timeout=30) as response:
+            return int(getattr(response, "status", response.getcode()))
+
+    def upload_storage(self, url: str, headers: dict[str, str], body: bytes) -> int:
+        req = urllib.request.Request(url, data=body, method="POST", headers=headers)
         with urllib.request.urlopen(req, timeout=30) as response:
             return int(getattr(response, "status", response.getcode()))
 
@@ -424,6 +447,83 @@ def _document_rows(payload: dict[str, Any], source_documents: dict[str, dict[str
             stats.source("state/company_documents.json")
 
 
+def _path_for(record: dict[str, Any]) -> str | None:
+    download = record.get("download") if isinstance(record.get("download"), dict) else {}
+    value = (
+        record.get("local_path")
+        or record.get("path")
+        or download.get("local_path")
+        or download.get("path")
+        or download.get("file")
+    )
+    return str(value) if value not in (None, "") else None
+
+
+def _safe_blob_path(root: Path, value: str | None) -> str | None:
+    if not value:
+        return None
+    try:
+        candidate = Path(value)
+        if not candidate.is_absolute():
+            candidate = root / candidate
+        candidate = candidate.resolve()
+        raw_root = (root / ".cache" / "company_intel" / "raw").resolve()
+        if raw_root not in candidate.parents:
+            return None
+        return str(candidate)
+    except (OSError, RuntimeError, ValueError):
+        return None
+
+
+def _load_extraction_queue(root: Path) -> dict[str, dict[str, Any]]:
+    path = root / ".cache" / "company_intel" / "extraction_queue.json"
+    if not path.exists():
+        return {}
+    payload = load_json(path, {})
+    rows = payload.get("documents") if isinstance(payload, dict) else payload
+    if not isinstance(rows, list):
+        return {}
+    return {str(row.get("doc_id")): row for row in rows if isinstance(row, dict) and row.get("doc_id")}
+
+
+def _blob_candidate_path(root: Path, doc: dict[str, Any], transient: dict[str, dict[str, Any]]) -> str | None:
+    local_path = _path_for(doc)
+    doc_id = str(doc.get("doc_id") or "")
+    if not local_path and doc_id in transient:
+        local_path = _path_for(transient[doc_id])
+    return _safe_blob_path(root, local_path)
+
+
+def _document_blob_candidates(
+    *,
+    root: Path,
+    payload: dict[str, Any],
+    source_documents: dict[str, dict[str, Any]],
+    transient: dict[str, dict[str, Any]],
+    stats: BuildStats,
+) -> list[BlobCandidate]:
+    documents = payload.get("documents") if isinstance(payload.get("documents"), dict) else {}
+    candidates: dict[str, BlobCandidate] = {}
+    for _key, doc in sorted(documents.items(), key=lambda item: str(item[0])):
+        if not isinstance(doc, dict) or doc.get("status") != "ready":
+            continue
+        local_path = _blob_candidate_path(root, doc, transient)
+        if not local_path:
+            continue
+        for symbol in _symbols_from(doc):
+            row, _reason = _source_document_row(symbol, doc, {})
+            if row is None or row["document_key"] not in source_documents:
+                continue
+            content_type = str(_first_value(doc.get("media_type"), doc.get("mime_type"), PDF_CONTENT_TYPE))
+            candidates[row["document_key"]] = BlobCandidate(
+                document_key=row["document_key"],
+                local_path=local_path,
+                content_type=content_type,
+            )
+    stats.document_blobs = len(candidates)
+    return [candidates[key] for key in sorted(candidates)]
+
+
 def _document_index(documents_payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
     documents = documents_payload.get("documents") if isinstance(documents_payload.get("documents"), dict) else {}
     return {str(doc.get("doc_id") or key): doc for key, doc in documents.items() if isinstance(doc, dict)}
@@ -619,6 +719,7 @@ def _dedupe(rows: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
 def _archive_payload_sha(rows: ArchiveRows) -> str:
     return digest({
         "source_documents": rows.source_documents,
+        "document_blobs": rows.document_blobs,
         "document_facts": rows.document_facts,
         "state_snapshots": rows.state_snapshots,
     })
@@ -653,6 +754,7 @@ def build_rows(root: Path = ROOT, clock: Any | None = None) -> tuple[ArchiveRows
     stats = BuildStats()
     source_documents: dict[str, dict[str, Any]] = {}
     rows = ArchiveRows()
+    transient = _load_extraction_queue(root)
 
     _document_rows(documents_payload, source_documents, stats)
     rows.document_facts.extend(_financial_rows(series_payload, _document_index(documents_payload), source_documents, stats))
@@ -662,10 +764,18 @@ def build_rows(root: Path = ROOT, clock: Any | None = None) -> tuple[ArchiveRows
     rows.state_snapshots.extend(_intel_snapshots(state_dir / "company_intel", stats))
 
     rows.source_documents = _dedupe(list(source_documents.values()), "document_key")
+    rows.document_blob_candidates = _document_blob_candidates(
+        root=root,
+        payload=documents_payload,
+        source_documents={row["document_key"]: row for row in rows.source_documents},
+        transient=transient,
+        stats=stats,
+    )
     rows.document_facts = _dedupe(rows.document_facts, "fact_key")
     rows.state_snapshots = _dedupe(rows.state_snapshots, "snapshot_key")
     counts = {
         "source_documents": len(rows.source_documents),
+        "document_blobs": len(rows.document_blob_candidates),
         "document_facts": len(rows.document_facts),
         "state_snapshots": len(rows.state_snapshots),
         "rejected": dict(sorted(stats.rejected.items())),
@@ -673,6 +783,7 @@ def build_rows(root: Path = ROOT, clock: Any | None = None) -> tuple[ArchiveRows
     rows.sync_runs = [_sync_run(_archive_payload_sha(rows), counts, clock=clock)]
 
     stats.source_documents = len(rows.source_documents)
+    stats.document_blobs = len(rows.document_blob_candidates)
     stats.document_facts = len(rows.document_facts)
     stats.state_snapshots = len(rows.state_snapshots)
     stats.sync_runs = len(rows.sync_runs)
@@ -694,8 +805,48 @@ def _endpoint(config: Config, table_key: str) -> str:
     return f"{config.url}/rest/v1/{table}?{params}"
 
 
+def _storage_headers(config: Config, content_type: str) -> dict[str, str]:
+    return {
+        "apikey": config.service_key,
+        "Authorization": "Bearer " + config.service_key,
+        "Content-Type": content_type,
+        "cache-control": "31536000",
+        "x-upsert": "true",
+    }
+
+
+def _storage_path(document_key: str, content_sha256: str) -> str:
+    return f"source-documents/{document_key}/{content_sha256}.pdf"
+
+
+def _storage_endpoint(config: Config, storage_path: str) -> str:
+    quoted = urllib.parse.quote(storage_path, safe="/")
+    return f"{config.url}/storage/v1/object/{DOCUMENT_BUCKET}/{quoted}"
+
+
 def _chunks(rows: list[dict[str, Any]], size: int) -> list[list[dict[str, Any]]]:
     return [rows[index:index + size] for index in range(0, len(rows), size)]
+
+
+def _blob_row(candidate: BlobCandidate) -> dict[str, Any] | None:
+    try:
+        path = Path(candidate.local_path)
+        if not path.exists() or not path.is_file():
+            return None
+        body = path.read_bytes()
+    except OSError:
+        return None
+    if not body or len(body) > PDF_MAX_BYTES or not body.startswith(b"%PDF-"):
+        return None
+    content_sha = hashlib.sha256(body).hexdigest()
+    return {
+        "document_key": candidate.document_key,
+        "storage_path": _storage_path(candidate.document_key, content_sha),
+        "content_sha256": content_sha,
+        "content_type": PDF_CONTENT_TYPE,
+        "byte_size": len(body),
+        "_body": body,
+    }
 
 
 def push_rows(
@@ -706,8 +857,28 @@ def push_rows(
 ) -> dict[str, Any]:
     transport = transport or SupabaseTransport()
     statuses: dict[str, list[int]] = {}
-    for table_key, table_rows in rows.as_table_map().items():
+    table_map = rows.as_table_map()
+    ordered_keys = ("source_documents", "document_blobs", "document_facts", "state_snapshots", "sync_runs")
+    for table_key in ordered_keys:
+        table_rows = table_map[table_key]
         statuses[table_key] = []
+        if table_key == "document_blobs":
+            blob_rows: list[dict[str, Any]] = []
+            for candidate in rows.document_blob_candidates:
+                row = _blob_row(candidate)
+                if row is None:
+                    continue
+                body = row.pop("_body")
+                statuses[table_key].append(
+                    transport.upload_storage(
+                        _storage_endpoint(config, row["storage_path"]),
+                        _storage_headers(config, row["content_type"]),
+                        body,
+                    )
+                )
+                blob_rows.append(row)
+            rows.document_blobs = _dedupe(blob_rows, "document_key")
+            table_rows = rows.document_blobs
         for chunk in _chunks(table_rows, batch_size):
             statuses[table_key].append(transport.post_json(_endpoint(config, table_key), _headers(config), chunk))
     return {"batches": sum(len(value) for value in statuses.values()), "statuses": statuses}
@@ -717,7 +888,8 @@ def _public_stats(stats: BuildStats) -> str:
     rejected = ",".join(f"{key}={stats.rejected[key]}" for key in sorted(stats.rejected)) or "none"
     sources = ",".join(f"{key}={stats.sources[key]}" for key in sorted(stats.sources)) or "none"
     return (
-        f"source_documents={stats.source_documents} document_facts={stats.document_facts} "
+        f"source_documents={stats.source_documents} document_blobs={stats.document_blobs} "
+        f"document_facts={stats.document_facts} "
         f"state_snapshots={stats.state_snapshots} sync_runs={stats.sync_runs} "
         f"rejected={rejected} sources={sources}"
     )

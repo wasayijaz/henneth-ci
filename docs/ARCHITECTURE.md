@@ -235,7 +235,10 @@ Applied to the dedicated Henneth CI project:
 - `docs/henneth_ci_archive.sql` — durable document, fact, snapshot and PDF-object archive. Archive
   tables have no anon/authenticated grants and no RLS policies; a server-only sync credential is the
   sole writer. This preserves the `state/` seam as the publish source of truth while retaining a
-  tamper-resistant historical archive.
+  tamper-resistant historical archive. `scripts/supabase_ci_store.py` runs after the private CI
+  slice: it archives source-linked records every cloud cycle and uploads only ready, current-run
+  official PDF bytes from the bounded extraction handoff. Missing or invalid transient bytes are
+  skipped; they never block publication.
 
 Written, not applied in the live desk project (SQL lives in `docs/`, owner runs it by hand):
 - `docs/push_subscriptions.sql` — Web Push endpoints. Feature is inert until VAPID keys, this table, and a shipping change all exist.

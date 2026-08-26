@@ -471,7 +471,10 @@ push refreshed data).
   only the cloud-held service credential may write. The browser CI deployment is deliberately not
   cut over until the owner account, owner ID configuration and live RLS checks are migrated. The
   browser uses only a publishable key plus its bearer token. Archive/restore is normal; permanent
-  deletion requires confirmation. Any fair value is private user input, never Henneth output.
+  deletion requires confirmation. The free cloud pipeline runs `supabase_ci_store.py` after the
+  private CI slice, retaining metadata, facts, snapshots and ready current-run official PDFs. It
+  dry-runs without its two cloud secrets and treats unavailable transient PDF bytes as a safe skip.
+  Any fair value is private user input, never Henneth output.
 - **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
   after guidance, thesis and confidence state and before the CI slice. Its original thesis records
   remain limited to retained same-symbol official events that are strictly later than the latest
