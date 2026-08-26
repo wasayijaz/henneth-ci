@@ -58,6 +58,7 @@ The product is a hybrid of five parts:
 | Publish gate | `scripts/preflight.py` | `publish.py`, `build_dashboard.py`, the cloud workflow |
 | Live-site gate | `scripts/watchdog.py` | after every publish |
 | Account gate (data) | `middleware.js` | every `/state/*` request on the terminal |
+| Root state publication boundary | `scripts/root_state_publication.py`, `scripts/check_root_state_publication.py`, `scripts/vercel_build.sh`, `middleware.js` | excludes CI-owner-only artifacts from root `/state/*` and fails closed on matching request paths |
 | Account gate (UI) | `dashboard/app.js` `OPEN_ROUTES` / `gateAllows()` | clean dashboard paths |
 | Per-user data | Supabase `profiles` + RLS | `app.js`, the Chrome extension |
 | Public marketing extract | `scripts/build_public_slice.py`, `scripts/build_astro_lite.py` | Astro pages under `site/` |
@@ -265,7 +266,7 @@ Never assume a SQL file in `docs/` has been applied. Additive first. There is no
 | No lookahead | `CLAUDE.md` Rule 9 | `backtest.py` / `strategy_engine.py` |
 | News impact 4+ retriggers the full cycle | `CLAUDE.md` Rule 10 | news-sentinel + orchestrator prompt |
 | Named-security levels are not published | `docs/PUBLICATION_RESTRUCTURE.md` + V2 | `build_signals.py` computes then discards entry/stop/target/shares; public tools take the reader's own numbers |
-| `config/desk.json` is never served | `CLAUDE.md` | `vercel_build.sh` copies `dashboard/` + `state/` only; `desk_rules.json` is an allow-list export |
+| `config/desk.json` is never served | `CLAUDE.md` | `vercel_build.sh` copies `dashboard/` + root-servable `state/` only; `desk_rules.json` is an allow-list export |
 
 ---
 
@@ -333,7 +334,7 @@ One repo, two Vercel projects, one publish choke point.
 **Terminal**
 
 - Root `vercel.json`: `installCommand` is a no-op, `buildCommand` is `sh scripts/vercel_build.sh`, `outputDirectory` is `public`.
-- `vercel_build.sh` copies all of `dashboard/` into `public/`, deletes `app.html`, copies `state/` to `public/state/`. Deny-list, not allow-list — an allow-list already 404'd `auth-terminal.js` in production.
+- `vercel_build.sh` copies all of `dashboard/` into `public/`, deletes `app.html`, copies `state/` to `public/state/`, then removes the CI-owner-only artifacts (`company_documents.json`, `company_briefs.json`, `company_brief_receipts.json`, `document_synthesis_queue.json`, and `company_intel/`). The dashboard copy remains a deny-list because an allow-list already 404'd `auth-terminal.js` in production; the CI state exclusion is the opposite boundary and is checked by `scripts/check_root_state_publication.py`.
 - The terminal's Vercel configuration falls back only clean dashboard paths to the SPA shell, so a
   refresh or shared link such as `/today`, `/ticker/LUCK`, or `/legal/privacy/` reaches the same
   dispatcher. Static assets, `/state/*`, and `/api/*` retain their normal handling and are not
@@ -383,6 +384,7 @@ One repo, two Vercel projects, one publish choke point.
 | Universe / liquidity gates | `psx_data.research_symbols()` only — do not add a local `tier == "core"` filter |
 | Indicator math | `scripts/indicators.py` only; delete any local shadow in the same commit |
 | JWT verify logic | `middleware.js` and `api/ask.js` (deliberate duplicate; keep them equivalent in behaviour) |
+| CI-private root state list | `scripts/root_state_publication.py`, `middleware.js`, `scripts/vercel_build.sh`, and `scripts/check_root_state_publication.py` |
 | Dashboard filename added | nothing — `vercel_build.sh` copies the folder. Do not revive an allow-list |
 | Public page data | `build_public_slice.py` allow-list. Never read `state/` from Astro |
 

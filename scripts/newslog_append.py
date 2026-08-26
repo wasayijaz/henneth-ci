@@ -20,6 +20,7 @@ Usage:
 import json
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 STATE = Path(__file__).resolve().parent.parent / "state"
 LOG = STATE / "newslog.json"
@@ -32,6 +33,14 @@ def load_items(arg):
     if not isinstance(items, list):
         raise SystemExit("error: input must be a JSON array of items")
     return items
+
+
+def validated_http_url(value):
+    url = str(value or "").strip()
+    parsed = urlsplit(url)
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("url must be an absolute http(s) URL")
+    return url
 
 
 def main():
@@ -47,6 +56,10 @@ def main():
             raise SystemExit(f"error: tickers must be a list: {it}")
         if not (1 <= int(it["impact"]) <= 5):
             raise SystemExit(f"error: impact must be 1-5: {it}")
+        try:
+            it["url"] = validated_http_url(it["url"])
+        except ValueError as exc:
+            raise SystemExit(f"error: {exc}: {it}") from exc
 
     existing = json.loads(LOG.read_text(encoding="utf-8")) if LOG.exists() else []
     seen = {(e.get("url"), e.get("headline"), e.get("ts")) for e in existing}

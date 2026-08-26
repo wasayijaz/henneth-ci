@@ -295,7 +295,7 @@
           '<span class="news-time">' + esc(shortDate(n.ts)) + "</span>" +
           '<span class="news-source" title="' + esc(n.source || "") + '">' + esc(n.source || "—") + "</span>" +
           '<span class="news-text">' + esc(n.headline || "") + "</span>" +
-          (n.url ? '<a class="news-open" href="' + esc(n.url) + '" target="_blank" rel="noopener" aria-label="Open source">↗</a>' : '<span class="news-open">·</span>') +
+          (externalLink(n.url, "↗", 'class="news-open" aria-label="Open source"') || '<span class="news-open">·</span>') +
           "</div>";
       }).join("") : '<div class="tile-empty">No headlines logged.</div>') +
       '<a class="tile-link" href="/news">View all news →</a>' +

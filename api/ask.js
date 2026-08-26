@@ -36,6 +36,73 @@ export const config = { runtime: 'edge' };
 
 const JWKS_URL = 'https://qteoncckohuoatbjjykb.supabase.co/auth/v1/.well-known/jwks.json';
 const GROQ_MODEL = 'openai/gpt-oss-120b'; // llama-3.3-70b-versatile retired by Groq 2026-08-16
+export const BODY_LIMIT = 16 * 1024;
+const STATE_FILE_LIMIT = 2 * 1024 * 1024;
+const CONTEXT_LIMIT = 48 * 1024;
+const QUESTION_LIMIT = 500;
+const HISTORY_LIMIT = 4;
+const HISTORY_CONTENT_LIMIT = 500;
+const MODEL_OUTPUT_TOKENS = 700;
+const GENERIC_MODEL_ERROR = 'No answer came back. Try rephrasing.';
+
+export function byteLength(value) {
+  return new TextEncoder().encode(String(value)).byteLength;
+}
+
+export async function readBoundedBody(request, limit = BODY_LIMIT) {
+  const declared = Number(request.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > limit) throw new Error('body_too_large');
+  if (!request.body) {
+    const text = await request.text();
+    if (byteLength(text) > limit) throw new Error('body_too_large');
+    return text;
+  }
+  const reader = request.body.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > limit) throw new Error('body_too_large');
+      chunks.push(value);
+    }
+  } finally { reader.releaseLock(); }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return new TextDecoder().decode(bytes);
+}
+
+export function validateRequestBody(body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('bad_request');
+  if (typeof body.question !== 'string') throw new Error('bad_request');
+  const question = body.question.trim();
+  if (!question || question.length > QUESTION_LIMIT || byteLength(question) > QUESTION_LIMIT * 4)
+    throw new Error(question ? 'body_too_large' : 'empty_question');
+
+  const rawHistory = body.history == null ? [] : body.history;
+  if (!Array.isArray(rawHistory) || rawHistory.length > HISTORY_LIMIT) throw new Error('bad_request');
+  const history = rawHistory.map((turn) => {
+    if (!turn || typeof turn !== 'object' || Array.isArray(turn)) throw new Error('bad_request');
+    if (turn.role !== 'user' && turn.role !== 'assistant') throw new Error('bad_request');
+    if (typeof turn.content !== 'string') throw new Error('bad_request');
+    const content = turn.content.trim();
+    if (!content || content.length > HISTORY_CONTENT_LIMIT || byteLength(content) > HISTORY_CONTENT_LIMIT * 4)
+      throw new Error('bad_request');
+    return { role: turn.role, content };
+  });
+  return { question, history };
+}
+
+async function responseJsonBounded(response, limit = STATE_FILE_LIMIT) {
+  const declared = Number(response.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > limit) throw new Error('state_file_too_large');
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  if (bytes.byteLength > limit) throw new Error('state_file_too_large');
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
 
 // ---- auth (mirrors middleware.js verify() — see file header) ----
 function b64urlToBytes(s) {
@@ -88,7 +155,7 @@ async function fetchState(origin, token) {
   await Promise.all(STATE_FILES.map(async f => {
     try {
       const r = await fetch(origin + '/state/' + f, { headers: { Authorization: 'Bearer ' + token } });
-      out[f] = r.ok ? await r.json() : null;
+      out[f] = r.ok ? await responseJsonBounded(r) : null;
     } catch { out[f] = null; } // a degraded fetch loses that file's grounding, not the whole answer
   }));
   return out;
@@ -160,6 +227,136 @@ function buildContext(question, prevQuestion, data) {
   return ctx;
 }
 
+const MONTHS = Object.freeze([
+  ['jan', 'january'], ['feb', 'february'], ['mar', 'march'], ['apr', 'april'],
+  ['may', 'may'], ['jun', 'june'], ['jul', 'july'], ['aug', 'august'],
+  ['sep', 'september'], ['oct', 'october'], ['nov', 'november'], ['dec', 'december'],
+]);
+const MONTH_LOOKUP = new Map(MONTHS.flatMap((names, index) => names.map(name => [name, index + 1])));
+const MONTH_PATTERN = MONTHS.flatMap(names => names).join('|');
+const URL_RE = /\b(?:https?:\/\/|www\.)\S+/i;
+const PROMPT_LEAK_RE = /\b(?:system prompt|developer message|hidden instruction|context json|json block|non-negotiable rules|ignore (?:these|the) rules|the prompt says|i was instructed|only source of facts)\b/i;
+const ADVICE_RE = /\b(?:you should|you need to|i recommend|i'd recommend|my recommendation|recommend(?:ation)? is to|buy now|sell now|price target|target price|guaranteed return|can't lose|will definitely (?:rise|gain|rally|fall|drop))\b/i;
+const ISO_DATE_RE = /\b\d{4}-\d{2}-\d{2}\b/g;
+const SLASH_DATE_RE = /\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b/g;
+const NAMED_DATE_RE = new RegExp(`\\b(?:\\d{1,2}\\s+(?:${MONTH_PATTERN})\\s+\\d{2,4}|(?:${MONTH_PATTERN})\\s+\\d{1,2},?\\s+\\d{2,4})\\b`, 'gi');
+const NUMBER_RE = /(?:\bRs\.?\s*)?[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?%?/gi;
+
+function normalizeNumberToken(value) {
+  const raw = String(value).replace(/\bRs\.?\s*/i, '').replace(/,/g, '').replace(/%/g, '').replace(/^\+/, '').trim();
+  if (!raw || raw === '-' || raw === '+') return null;
+  const num = Number(raw);
+  if (!Number.isFinite(num)) return null;
+  return trimFixed(num, 6);
+}
+
+function trimFixed(num, decimals) {
+  const fixed = Number(num).toFixed(decimals);
+  return fixed.replace(/\.?0+$/, '') || '0';
+}
+
+function addNumberVariants(set, value) {
+  const num = typeof value === 'number' ? value : Number(String(value).replace(/,/g, '').replace(/%/g, ''));
+  if (!Number.isFinite(num)) return;
+  for (let decimals = 0; decimals <= 4; decimals++) set.add(trimFixed(num, decimals));
+  set.add(trimFixed(num, 6));
+}
+
+function normalizeDateText(value) {
+  return String(value).toLowerCase().replace(/,/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function addIsoDateVariants(set, iso) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!match) return;
+  const [, year, monthRaw, dayRaw] = match;
+  const monthIndex = Number(monthRaw);
+  const day = String(Number(dayRaw));
+  const monthNames = MONTHS[monthIndex - 1];
+  if (!monthNames) return;
+  set.add(normalizeDateText(iso));
+  for (const month of monthNames) {
+    set.add(normalizeDateText(`${day} ${month} ${year}`));
+    set.add(normalizeDateText(`${month} ${day} ${year}`));
+  }
+}
+
+function dateToIso(value) {
+  const text = normalizeDateText(value);
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (iso) return text;
+  let match = new RegExp(`^(\\d{1,2})\\s+(${MONTH_PATTERN})\\s+(\\d{2,4})$`, 'i').exec(text);
+  if (!match) {
+    const monthFirst = new RegExp(`^(${MONTH_PATTERN})\\s+(\\d{1,2})\\s+(\\d{2,4})$`, 'i').exec(text);
+    if (!monthFirst) return null;
+    const month = MONTH_LOOKUP.get(monthFirst[1].toLowerCase());
+    const year = monthFirst[3].length === 2 ? `20${monthFirst[3]}` : monthFirst[3];
+    return `${year}-${String(month).padStart(2, '0')}-${String(Number(monthFirst[2])).padStart(2, '0')}`;
+  }
+  const month = MONTH_LOOKUP.get(match[2].toLowerCase());
+  const year = match[3].length === 2 ? `20${match[3]}` : match[3];
+  return `${year}-${String(month).padStart(2, '0')}-${String(Number(match[1])).padStart(2, '0')}`;
+}
+
+function collectSupportedFacts(context) {
+  const numbers = new Set();
+  const dates = new Set();
+  const scanString = (value) => {
+    for (const match of String(value).matchAll(NUMBER_RE)) addNumberVariants(numbers, normalizeNumberToken(match[0]));
+    for (const match of String(value).matchAll(ISO_DATE_RE)) addIsoDateVariants(dates, match[0]);
+  };
+  const walk = (value) => {
+    if (typeof value === 'number') { addNumberVariants(numbers, value); return; }
+    if (typeof value === 'string') { scanString(value); return; }
+    if (Array.isArray(value)) { value.forEach(walk); return; }
+    if (value && typeof value === 'object') {
+      for (const [key, nested] of Object.entries(value)) {
+        scanString(key);
+        walk(nested);
+      }
+    }
+  };
+  walk(context);
+  return { numbers, dates };
+}
+
+function markDateSpans(answer, facts) {
+  const spans = [];
+  const check = (regex) => {
+    for (const match of answer.matchAll(regex)) {
+      const raw = match[0];
+      const normalized = normalizeDateText(raw);
+      const iso = dateToIso(raw);
+      if (!facts.dates.has(normalized) && !(iso && facts.dates.has(iso))) throw new Error('ungrounded_date');
+      spans.push([match.index, match.index + raw.length]);
+    }
+  };
+  check(ISO_DATE_RE);
+  check(SLASH_DATE_RE);
+  check(NAMED_DATE_RE);
+  return spans;
+}
+
+function inSpan(index, spans) {
+  return spans.some(([start, end]) => index >= start && index < end);
+}
+
+export function validateAnswer(answer, context) {
+  if (typeof answer !== 'string' || !answer.trim()) throw new Error('empty_answer');
+  if (answer.length > 6000 || byteLength(answer) > 24 * 1024) throw new Error('answer_too_large');
+  if (URL_RE.test(answer)) throw new Error('output_url');
+  if (PROMPT_LEAK_RE.test(answer)) throw new Error('prompt_leak');
+  if (ADVICE_RE.test(answer)) throw new Error('advice_language');
+  const facts = collectSupportedFacts(context);
+  const dateSpans = markDateSpans(answer, facts);
+  for (const match of answer.matchAll(NUMBER_RE)) {
+    if (inSpan(match.index, dateSpans)) continue;
+    const normalized = normalizeNumberToken(match[0]);
+    if (normalized && !facts.numbers.has(normalized)) throw new Error('ungrounded_number');
+  }
+  return answer.trim();
+}
+
 const SYSTEM_PROMPT = `You are the Henneth Desk's data assistant for the Pakistan Stock Exchange (PSX).
 
 RULES — non-negotiable:
@@ -193,26 +390,27 @@ export default async function handler(request) {
   if (!process.env.GROQ_API_KEY)
     return json(500, { ok: false, error: 'Chat isn’t configured yet — GROQ_API_KEY is missing on the deployment.' });
 
-  let body;
-  try { body = await request.json(); } catch { return json(400, { ok: false, error: 'bad json' }); }
-  const question = String(body?.question || '').trim().slice(0, 500);
-  if (!question) return json(400, { ok: false, error: 'empty question' });
-  // last exchange only — enough for a natural follow-up, small enough to stay light
-  // Filter to objects first: a null or string element in a client-sent history array
-  // otherwise throws on m.role below and turns a malformed request into a 500.
-  const prevTurn = (Array.isArray(body?.history) ? body.history : [])
-    .filter(m => m && typeof m === 'object')
-    .slice(-2);
+  let cleanRequest;
+  try {
+    cleanRequest = validateRequestBody(JSON.parse(await readBoundedBody(request)));
+  } catch (error) {
+    if (error.message === 'body_too_large') return json(413, { ok: false, error: 'body_too_large' });
+    return json(400, { ok: false, error: error.message === 'empty_question' ? 'empty question' : 'bad json' });
+  }
+  const { question } = cleanRequest;
+  const prevTurn = cleanRequest.history.slice(-2); // last exchange only — enough for a natural follow-up, small enough to stay light
   const prevQuestion = prevTurn.find(m => m.role === 'user')?.content || null;
 
   const origin = new URL(request.url).origin;
   const data = await fetchState(origin, auth.slice(7).trim());
   const context = buildContext(question, prevQuestion, data);
+  const contextJson = JSON.stringify(context);
+  if (byteLength(contextJson) > CONTEXT_LIMIT) return json(502, { ok: false, error: 'The desk data slice is too large to answer safely. Try asking about a specific ticker or sector.' });
 
   const messages = [
     { role: 'system', content: SYSTEM_PROMPT },
-    { role: 'system', content: 'CONTEXT (the desk’s own data — the only source of facts for this turn):\n' + JSON.stringify(context) },
-    ...prevTurn.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.content || '').slice(0, 500) })),
+    { role: 'system', content: 'CONTEXT (the desk’s own data — the only source of facts for this turn):\n' + contextJson },
+    ...prevTurn,
     { role: 'user', content: question },
   ];
 
@@ -221,7 +419,7 @@ export default async function handler(request) {
     groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: 'Bearer ' + process.env.GROQ_API_KEY },
-      body: JSON.stringify({ model: process.env.GROQ_MODEL || GROQ_MODEL, messages, temperature: 0.2, max_tokens: 1000 }),
+      body: JSON.stringify({ model: process.env.GROQ_MODEL || GROQ_MODEL, messages, temperature: 0.2, max_tokens: MODEL_OUTPUT_TOKENS }),
     });
   } catch {
     return json(502, { ok: false, error: 'Could not reach the model provider. Try again in a moment.' });
@@ -231,8 +429,12 @@ export default async function handler(request) {
     return json(status, { ok: false, error: status === 429 ? 'The desk’s assistant is busy — try again shortly.' : 'The model provider returned an error.' });
   }
   const payload = await groqRes.json();
-  const answer = payload?.choices?.[0]?.message?.content?.trim();
-  if (!answer) return json(502, { ok: false, error: 'No answer came back. Try rephrasing.' });
+  let answer;
+  try {
+    answer = validateAnswer(payload?.choices?.[0]?.message?.content, context);
+  } catch {
+    return json(502, { ok: false, error: GENERIC_MODEL_ERROR });
+  }
 
   return json(200, { ok: true, answer, grounded_on: Object.keys(context).filter(k => k !== 'pkt_today') });
 }

@@ -101,8 +101,8 @@ def check_code_syntax():
         except SyntaxError as e:
             fail(f"{os.path.relpath(path, ROOT)}: Python syntax error — {e.msg} (line {e.lineno})")
 
-    # Every shipped dashboard/CI JavaScript file. Fail closed before either live surface builds.
-    js_roots = [os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "Henneth Desk 2.CI.0")]
+    # Every shipped dashboard/root-API/CI JavaScript file. Fail closed before either live surface builds.
+    js_roots = [os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "api"), os.path.join(ROOT, "Henneth Desk 2.CI.0")]
     js_files = sorted(
         p for js_root in js_roots for p in glob.glob(os.path.join(js_root, "*.js"))
         if os.path.isfile(p)
@@ -159,6 +159,34 @@ def check_rule4():
                 fail("check_rule4.py failed — " + ((r.stdout or r.stderr or "")[-200:]))
     except Exception as e:  # noqa: BLE001
         fail(f"check_rule4.py did not run — {e}")
+
+
+def check_root_state_publication():
+    """Root deployment must not publish CI-owner-only artifacts under /state."""
+    path = os.path.join(ROOT, "scripts", "check_root_state_publication.py")
+    if not os.path.exists(path):
+        fail("check_root_state_publication.py missing — root /state CI-private boundary cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
+        if result.returncode != 0:
+            fail("root state publication check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:  # noqa: BLE001
+        fail(f"check_root_state_publication.py did not run — {e}")
+
+
+def check_generated_url_safety():
+    """Generated URLs must be absolute http(s) before the browser turns them into links."""
+    path = os.path.join(ROOT, "scripts", "check_generated_url_safety.py")
+    if not os.path.exists(path):
+        fail("check_generated_url_safety.py missing — generated URL link safety cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
+        if result.returncode != 0:
+            fail("generated URL safety check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:  # noqa: BLE001
+        fail(f"check_generated_url_safety.py did not run — {e}")
 
 
 def check_document_intelligence():
@@ -720,6 +748,18 @@ def check_ask_henneth():
         if result.returncode != 0: fail(f"ask contract check failed — {result.stdout[-400:] or result.stderr[-400:]}")
     except Exception as e: fail(f"ask contract check did not run — {e}")
 
+def check_root_ask_hardening():
+    path = os.path.join(ROOT, "scripts", "check_root_ask_hardening.mjs")
+    if not os.path.exists(path):
+        fail("check_root_ask_hardening.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("root ask hardening check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"root ask hardening check did not run — {e}")
+
 def check_ask_henneth_endpoint():
     path = os.path.join(ROOT, "scripts", "check_ask_henneth_endpoint.mjs")
     if not os.path.exists(path):
@@ -994,6 +1034,10 @@ def main():
     check_provenance()
     # --- Tier-1 maths QA: Rule 4 + payout sign guard ---
     check_rule4()
+    # --- Root deployment boundary: CI-owner-only artifacts never ship from desk.henneth.app ---
+    check_root_state_publication()
+    # --- Generated URL safety: state URLs can only become http(s) browser links ---
+    check_generated_url_safety()
     check_document_intelligence()
     check_company_intelligence_phase2()
     check_operating_intelligence()
@@ -1001,6 +1045,7 @@ def main():
     check_conditional_benchmarks()
     check_conditional_benchmarks_ui()
     check_signal_clusters()
+    check_root_ask_hardening()
     check_ask_henneth()
     check_ask_henneth_endpoint()
     check_ask_henneth_ui()

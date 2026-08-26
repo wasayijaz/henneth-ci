@@ -139,6 +139,12 @@ Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.
 ES256 JWT carries the exact `sub` configured as `CI_OWNER_USER_ID`; a valid non-owner receives 403.
 There is no CI signup, service-role key, schema change or order path. Presentation changes must not
 alter `middleware.js`, the owner environment value, the project root, or the private no-store header.
+The root desk deployment also strips CI-owner-only source artifacts from `public/state/`:
+`company_documents.json`, `company_briefs.json`, `company_brief_receipts.json`,
+`document_synthesis_queue.json`, and the full `company_intel/` directory. Root `middleware.js`
+returns a generic 404 for those paths before token validation as defense-in-depth, while ordinary
+desk `/state/*` authorization stays unchanged. `scripts/check_root_state_publication.py` is wired
+into preflight and must be updated with any future change to that boundary.
 
 ---
 
@@ -193,9 +199,11 @@ edits hand-authored files. Every other task is state-only and unaffected.
 Layered, so a bad cycle can't reach users and a transient glitch can't blank a page:
 
 - **`preflight.py`** (before publish): re-reads every file the UI joins on; asserts shape, non-empty,
-  no NaN/Infinity, and **per-ticker history completeness** (the "No data for XXX" class). Also runs two
+  no NaN/Infinity, and **per-ticker history completeness** (the "No data for XXX" class). Also runs
   free Tier-1 gates on every publish: **code syntax** (`check_code_syntax` — `ast.parse` all scripts +
-  `node -c app.js`) and **accuracy/provenance** (`provenance_lint.py` — see §3b). Exits non-zero
+  `node -c app.js`), the **root state publication boundary** (`check_root_state_publication.py` —
+  root builds exclude CI-owner-only artifacts and middleware denies their request paths), and
+  **accuracy/provenance** (`provenance_lint.py` — see §3b). Exits non-zero
   → `publish.py` aborts.
 - **`watchdog.py`** (after publish): fetches the LIVE Vercel URLs a browser hits and checks they are
   reachable, fresh, non-empty, health not degraded, and sampled ticker histories serve. Wired into every
@@ -270,6 +278,14 @@ The desk's credibility is that it never shows an assumed/placeholder/stale numbe
   The desk is already partly self-aware here — house views caveat their own soft spots (e.g. "leans on an
   unverified 30% growth assumption"). The weekly `psx-desk-product-scout` (§3c) reads those `qa` caveats to
   propose accuracy improvements.
+
+Root Ask-the-desk (`api/ask.js`) has its own deterministic response gate in the same publish path:
+`scripts/check_root_ask_hardening.mjs` verifies that client input is bounded and that model output cannot
+publish advice language, URLs, prompt leakage, or number/date-looking claims absent from the exact
+context slice supplied to the model. This is a per-request safety and spend bound; durable cross-request
+quota/rate limiting still belongs in the deployment/provider layer (for example Vercel/Groq quota
+controls or a real storage-backed limiter). Do not add an in-memory counter to the Edge function and call
+it a rate limit — stateless instances will not share it.
 
 ## 3c. Self-improvement loop — the desk proposing its own upgrades (2026-07-15)
 
@@ -722,6 +738,10 @@ closes that.**
 - `dashboard/app.js` attaches `Authorization: Bearer <access_token>` on every `state/` fetch.
   On a 401 it refreshes the session once and retries, so an hour-old tab recovers instead of
   appearing broken.
+- CI-owner-only source artifacts are not ordinary desk state. The root build removes
+  `company_documents.json`, `company_briefs.json`, `company_brief_receipts.json`,
+  `document_synthesis_queue.json`, and `company_intel/`, and middleware returns a generic 404 for
+  the same paths before checking a bearer.
 
 ### The one deliberate exception
 `natal_ephem.bin` and `natal_ephem.json` stay public (`PUBLIC_FILES` in `middleware.js`).

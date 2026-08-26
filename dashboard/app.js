@@ -4,6 +4,19 @@
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function safeExternalHref(u) {
+  const s = String(u ?? "").trim();
+  try {
+    const parsed = new URL(s);
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? s : "";
+  } catch {
+    return "";
+  }
+}
+function externalLink(u, html, attrs = "") {
+  const href = safeExternalHref(u);
+  return href ? `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer"${attrs ? " " + attrs : ""}>${html}</a>` : "";
+}
 const sgn = v => (v > 0 ? "+" : "") + v;
 const cls = v => v > 0.05 ? "up" : v < -0.05 ? "dn" : "";
 const fmt = (v, d = 2) => v == null ? "—" : Number(v).toLocaleString("en", { maximumFractionDigits: d });
@@ -2983,7 +2996,7 @@ async function pageTicker(sym, _retry = 0) {
     const profile = (cp.business_description || inc) ? `<div class="glance-tile"><span class="glance-q">What does it do?</span>
       ${cp.business_description ? `<div class="sub" style="margin-bottom:5px">${esc(cp.business_description)}</div>` : ""}
       ${inc ? `<div class="sub" style="margin-bottom:5px">Incorporation: ${esc(inc)}</div>` : ""}
-      <div class="sub">${cp.stale ? "Profile fetch is stale; showing last retained DPS profile. " : ""}Source: ${cp.source_url ? `<a href="${esc(cp.source_url)}" target="_blank" rel="noopener">DPS company page</a>` : "DPS company page"}${cp.fetched ? ` · fetched ${esc(cp.fetched)}` : ""}</div>
+      <div class="sub">${cp.stale ? "Profile fetch is stale; showing last retained DPS profile. " : ""}Source: ${externalLink(cp.source_url, "DPS company page") || "DPS company page"}${cp.fetched ? ` · fetched ${esc(cp.fetched)}` : ""}</div>
     </div>` : "";
     return `<div class="seg" style="margin-top:2px"><h2>At a glance</h2><div class="ln"></div><span class="pill">plain english</span></div>
     <div class="card"><div class="sub">The quick read for ${esc(sym)}${ex.name ? " (" + esc(ex.name) + ")" : ""} — is it healthy, is the price reasonable, and what changed. Educational, not advice.</div>
@@ -3506,7 +3519,10 @@ async function pageTicker(sym, _retry = 0) {
   ${brokerClaims.length ? `<div class="seg"><h2>What the brokers say</h2><div class="ln"></div><span class="pill">${brokerClaims.length}</span></div>
   <div class="card"><div class="sub">public calls from PSX research houses on ${sym}, on the record — <b>evidence to weigh, not advice to follow</b>. Each is scored on the <a href="/leaderboard" style="color:var(--accent)">Scores</a> board when it resolves.</div>
     <table><thead><tr><th>House</th><th>Call</th><th class="r">By</th><th class="r">Status</th></tr></thead><tbody>${
-    brokerClaims.map(c => `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || c.claim?.rating || "")}${c.source_url ? ` <a href="${esc(c.source_url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}</td><td class="r num">${esc(c.resolve_by || "—")}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`).join("")}</tbody></table></div>` : ""}
+    brokerClaims.map(c => {
+      const src = externalLink(c.source_url, "↗", 'style="color:var(--accent)"');
+      return `<tr><td><b>${esc(c.source)}</b></td><td>${esc(c.claim?.text || c.claim?.rating || "")}${src ? ` ${src}` : ""}</td><td class="r num">${esc(c.resolve_by || "—")}</td><td class="r"><span class="pill ${c.status === "hit" ? "ok" : c.status === "miss" ? "bad" : ""}">${esc(c.status)}</span></td></tr>`;
+    }).join("")}</tbody></table></div>` : ""}
 
   ${sigStack}
 
@@ -3588,7 +3604,7 @@ async function pageTicker(sym, _retry = 0) {
         <td class="r num">${d.dividend_rs ?? "—"}</td><td class="r num">${d.yield_pct_at_close ? d.yield_pct_at_close + "%" : "—"}</td><td class="r num">${d.bc_start || "—"}</td></tr>`).join("") : '<tr><td colspan="5" class="empty">no payout records</td></tr>'}</tbody></table></div>
   </div>
   <div class="card"><h2>News & developments</h2><div class="sub">sentinel-tagged for ${sym}</div><div class="wire">${
-    tickerNews.length ? tickerNews.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>${esc(n.headline || "")} ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}<br><span class="t">${esc(n.summary || "")}</span></p>`).join("") : '<div class="empty">Nothing tagged yet — sentinel populates this each cycle.</div>'}</div></div>
+    tickerNews.length ? tickerNews.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>${esc(n.headline || "")} ${externalLink(n.url, "source ↗", 'style="color:var(--accent)"')}<br><span class="t">${esc(n.summary || "")}</span></p>`).join("") : '<div class="empty">Nothing tagged yet — sentinel populates this each cycle.</div>'}</div></div>
   <div class="card"><h2>Insider & off-market activity</h2><div class="sub">DPS filing metadata + off-market trades, retained history · metadata only, no direction inferred</div>
     ${insiderRows.length ? `<table><thead><tr><th>Date</th><th>Insider</th><th>Role</th><th>Type</th><th class="r">Shares</th><th class="r">Price</th><th></th></tr></thead><tbody>${
       [...insiderRows].sort((a, b) => (b.date || "").localeCompare(a.date || "")).map(r => {
@@ -3597,7 +3613,7 @@ async function pageTicker(sym, _retry = 0) {
           <td>${esc(t?.transaction_type || r.title || "filing")}</td>
           <td class="r num">${t?.shares_traded != null ? Number(t.shares_traded).toLocaleString() : "—"}</td>
           <td class="r num">${t?.price_per_share != null ? t.price_per_share : "—"}</td>
-          <td class="r">${r.pdf_url ? `<a href="${esc(r.pdf_url)}" target="_blank" style="color:var(--accent)">view ↗</a>` : "—"}</td></tr>`).join("");
+          <td class="r">${externalLink(r.pdf_url, "view ↗", 'style="color:var(--accent)"') || "—"}</td></tr>`).join("");
       }).join("")
     }</tbody></table>` : '<div class="empty">No insider/substantial-shareholder filings tagged for this name.</div>'}
     ${offmkt ? `<p style="margin-top:10px"><b>Off-market:</b> ${offmkt.shares.toLocaleString()} shares · Rs ${offmkt.value.toLocaleString()} value · ${offmkt.trades} trade${offmkt.trades === 1 ? "" : "s"} across ${offmkt.dayCount} day${offmkt.dayCount === 1 ? "" : "s"} (trailing ${offRetentionDays}d)</p>` : `<div class="empty" style="margin-top:10px">No off-market trades in the trailing ${offRetentionDays}d.</div>`}
@@ -3710,7 +3726,7 @@ async function pageNews() {
     </div>
     <div class="wire">${rows.length ? rows.map(n => `<p><span class="tag">${n.impact}</span> <span class="t">${esc((n.ts || "").slice(0, 16))}</span>
       ${(n.tickers || []).map(t => `<a href="/ticker/${esc(t)}" style="color:var(--accent);font-weight:700">${esc(t)}</a>`).join(" ")}
-      <b>${esc(tp(n, "headline"))}</b> ${n.url ? `<a href="${esc(n.url)}" target="_blank" style="color:var(--accent)">↗</a>` : ""}<br>
+      <b>${esc(tp(n, "headline"))}</b> ${externalLink(n.url, "↗", 'style="color:var(--accent)"')}<br>
       <span class="t">${esc(tp(n, "summary"))} · ${esc(n.source || "")}</span></p>`).join("") : '<div class="empty">Wire silent — sentinel runs every cycle during market hours.</div>'}</div></div>`;
   $("view").querySelector(".ranges").addEventListener("click", e => {
     if (e.target.dataset.imp != null) { newsFilter.imp = +e.target.dataset.imp; pageNews(); }
@@ -3733,7 +3749,7 @@ async function pageResearch() {
       <span class="rdoc-src">${esc(d.source)}${followed.has(d.source) ? ' <span class="wbadge">★ following</span>' : ""}${d.digest_level === "headline" ? ' · <span class="sub">headline only</span>' : ""}</span>
       <span class="t">${esc(d.date || "")}</span>
       ${(d.tickers || []).slice(0, 4).map(t => `<a href="/ticker/${esc(t)}" class="tag clickable">${esc(t)}</a>`).join(" ")}</div>
-    <div class="rdoc-digest">${esc(d.digest || "")}${d.url ? ` <a href="${esc(d.url)}" target="_blank" style="color:var(--accent)">source ↗</a>` : ""}</div>
+    <div class="rdoc-digest">${esc(d.digest || "")}${externalLink(d.url, "source ↗", 'style="color:var(--accent)"') ? ` ${externalLink(d.url, "source ↗", 'style="color:var(--accent)"')}` : ""}</div>
     ${(d.claims || []).length ? `<div class="sub" style="margin-top:4px"><b>Claims (scored later):</b> ${d.claims.map(c => esc(c.claim?.text || "")).join(" · ")}</div>` : ""}
     ${d.omissions ? `<div class="sub" style="margin-top:4px"><b class="dn">What it glosses over:</b> ${esc(d.omissions)}</div>` : ""}</div>`;
   // glance row: what's in the library and how much of it is on the record
