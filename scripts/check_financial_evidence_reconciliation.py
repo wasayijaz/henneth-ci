@@ -1,0 +1,248 @@
+"""Stable checks for Financial Evidence Reconciliation v1."""
+from __future__ import annotations
+
+import json
+import math
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+STATE = ROOT / "state"
+sys.path.insert(0, str(ROOT / "scripts"))
+
+import build_financial_evidence_reconciliation as builder
+from financial_evidence_reconciliation import (
+    BLOCKED_OUTPUT_STATUS,
+    EARNINGS_BRIDGE_VERSION,
+    RECONCILIATION_VERSION,
+    build_reconciliation,
+    company_reconciliation,
+    fact_status,
+    stable_id,
+)
+from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
+from psx_data import load_json
+
+
+FORBIDDEN_KEYS = {
+    "forecast_value",
+    "valuation_value",
+    "target_price",
+    "fair_value",
+    "expected_return",
+    "market_implied_growth",
+}
+
+
+def _fail(message: str) -> None:
+    raise AssertionError(message)
+
+
+def _dump(value: object) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False)
+
+
+def _walk(value, path=()):
+    if isinstance(value, dict):
+        for key, item in value.items():
+            yield path + (str(key),), item
+            yield from _walk(item, path + (str(key),))
+    elif isinstance(value, list):
+        for idx, item in enumerate(value):
+            yield from _walk(item, path + (str(idx),))
+
+
+def _assert_no_numeric_outputs(data: dict) -> None:
+    for path, value in _walk(data):
+        key = path[-1] if path else ""
+        if isinstance(value, float) and not math.isfinite(value):
+            _fail(f"nonfinite value at {'.'.join(path)}")
+        if key in FORBIDDEN_KEYS:
+            _fail(f"forbidden forecast/valuation key at {'.'.join(path)}")
+        if len(path) >= 2 and path[-2] in {"readiness", "policy"} and key in {"forecast", "valuation", "market_expectations"}:
+            if value not in set(BLOCKED_OUTPUT_STATUS.values()):
+                _fail(f"{'.'.join(path)} is not blocked")
+
+
+def _fact(line: str = "revenue", year: int = 2025, value: float = 100.0, **overrides) -> dict:
+    source_url = overrides.pop("source_url", "https://dps.psx.com.pk/download/document/1.pdf")
+    row = {
+        "fact_id": f"{line}-{year}-{stable_id('case', line, year, value)[-6:]}",
+        "document_id": f"psx:{year}",
+        "content_sha256": f"hash-{year}",
+        "source_url": source_url,
+        "line": line,
+        "metric": line,
+        "parser_version": PARSER_VERSION,
+        "parser_revision": PARSER_REVISION,
+        "readiness": "model_loadable",
+        "period_end": f"{year}-12-31",
+        "period_type": "annual",
+        "duration_months": 12,
+        "consolidation": "consolidated",
+        "currency": "PKR",
+        "statement_type": "income_statement",
+        "unit": "PKR/share" if line == "basic_eps" else "PKR",
+        "unit_multiplier": 1 if line == "basic_eps" else 1_000_000,
+        "raw_value": str(value),
+        "normalized_value": value if line == "basic_eps" else value * 1_000_000,
+        "available_on": f"{year + 1}-02-01",
+        "published_at": f"{year + 1}-02-01T09:00:00+05:00",
+        "retrieved_at": "2026-08-26 00:00",
+        "quality_flags": [],
+        "evidence": [{"page": 1, "text": f"{line} {year}", "source_url": source_url}],
+    }
+    row.update(overrides)
+    return row
+
+
+def _ready_facts() -> list[dict]:
+    rows = []
+    for year in (2023, 2024, 2025):
+        rows.extend([
+            _fact("revenue", year, 100 + year),
+            _fact("profit_after_tax_attributable", year, 20 + year),
+            _fact("basic_eps", year, 2 + year / 1000),
+        ])
+    return rows
+
+
+def _coverage() -> dict:
+    return {
+        "required_annual_periods": [
+            {"slot": "annual_period_1", "period_end": "2025-12-31", "period_type": "annual", "document_id": "psx:2025", "matched_text": "year ended 2025"},
+            {"slot": "annual_period_2", "period_end": "2024-12-31", "period_type": "annual", "document_id": "psx:2024", "matched_text": "year ended 2024"},
+            {"slot": "annual_period_3", "period_end": "2023-12-31", "period_type": "annual", "document_id": "psx:2023", "matched_text": "year ended 2023"},
+        ]
+    }
+
+
+def _assert_shape(data: dict, pilot: list[str]) -> None:
+    _assert_no_numeric_outputs(data)
+    if data.get("reconciliation_version") != RECONCILIATION_VERSION:
+        _fail("reconciliation version mismatch")
+    if data.get("earnings_bridge_version") != EARNINGS_BRIDGE_VERSION:
+        _fail("earnings bridge version mismatch")
+    if data.get("pilot_symbols") != pilot or len(pilot) != 20 or len(set(pilot)) != 20:
+        _fail("pilot order/boundary mismatch")
+    companies = data.get("companies") or {}
+    if set(companies) != set(pilot):
+        _fail("company boundary mismatch")
+    if (data.get("summary") or {}).get("forecast_ready_company_count") != 0:
+        _fail("real state unexpectedly forecast-ready")
+    for symbol in pilot:
+        row = companies.get(symbol) or {}
+        if row.get("symbol") != symbol:
+            _fail(f"{symbol}: symbol mismatch")
+        if row.get("readiness", {}).get("forecast_readiness_status") != "blocked":
+            _fail(f"{symbol}: forecast readiness must remain blocked")
+        for key, blocked in BLOCKED_OUTPUT_STATUS.items():
+            if row.get("readiness", {}).get(key) != blocked:
+                _fail(f"{symbol}: {key} not blocked")
+        for record in row.get("facts") or []:
+            if record.get("status") not in {"eligible", "audit_only", "quarantined"}:
+                _fail(f"{symbol}: invalid fact status")
+            if not record.get("reconciliation_id") or not record.get("evidence_id"):
+                _fail(f"{symbol}: missing stable ids")
+            source = record.get("source") or {}
+            if record.get("status") == "eligible":
+                if not str(source.get("document_id") or "").startswith("psx:"):
+                    _fail(f"{symbol}: eligible fact missing official document")
+                if not str(source.get("source_url") or "").startswith("https://dps.psx.com.pk/"):
+                    _fail(f"{symbol}: eligible fact missing official URL")
+                if not isinstance(source.get("page"), int) or source.get("available_on") <= record.get("period_end"):
+                    _fail(f"{symbol}: eligible fact violates provenance/no-lookahead")
+            if record.get("status") == "audit_only" and not record.get("reasons"):
+                _fail(f"{symbol}: audit-only fact missing reason")
+        for missing in row.get("missing_slots") or []:
+            if missing.get("status") != "missing" or not missing.get("reason"):
+                _fail(f"{symbol}: missing slot lacks explicit status")
+        for conflict in row.get("conflicts") or []:
+            if conflict.get("status") != "quarantined" or conflict.get("reason") != "conflicting_values_retained_no_silent_selection":
+                _fail(f"{symbol}: conflict not quarantined")
+            values = {item.get("normalized_value") for item in conflict.get("values") or []}
+            if len(values) < 2:
+                _fail(f"{symbol}: conflict lacks conflicting values")
+
+
+def _synthetic_assertions() -> None:
+    cases = {
+        "missing_provenance": [_fact(evidence=[])],
+        "source_url_mismatch": [_fact(evidence=[{"page": 1, "text": "x", "source_url": "https://dps.psx.com.pk/download/document/other.pdf"}])],
+        "unofficial_source": [_fact(source_url="https://example.com/1.pdf", evidence=[{"page": 1, "text": "x", "source_url": "https://example.com/1.pdf"}])],
+        "unavailable_before_cutoff": [_fact(available_on="2025-12-31")],
+        "unavailable_after_cutoff_missing": [_fact(available_on=None)],
+        "audit_only_promotion": [_fact(readiness="audit_only", quality_flags=["legacy_extractor_not_model_eligible"])],
+    }
+    for name, facts in cases.items():
+        row = company_reconciliation("MLCF", facts, _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+        statuses = {record.get("status") for record in row.get("facts") or []}
+        if "eligible" in statuses:
+            _fail(f"{name}: invalid fact became eligible")
+        if name == "audit_only_promotion" and "audit_only" not in statuses:
+            _fail("audit-only fact did not retain audit-only status")
+    conflict_facts = [_fact(value=100), _fact(value=101, fact_id="revenue-2025-conflict")]
+    conflict_row = company_reconciliation("MLCF", conflict_facts, _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+    if conflict_row.get("source_conflict_count") != 1 or not conflict_row.get("conflicts"):
+        _fail("conflicting values were not retained/quarantined")
+    if any(record.get("status") != "quarantined" for record in conflict_row.get("facts") or []):
+        _fail("conflicting fact rows were not quarantined")
+    future_row = company_reconciliation("MLCF", [_fact(available_on="2027-02-01")], _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+    if any(record.get("status") == "eligible" for record in future_row.get("facts") or []):
+        _fail("future available_on became eligible")
+    ready_row = company_reconciliation("MLCF", _ready_facts(), _coverage(), {"status": "ready"}, {"status": "input_ready", "qualified_period_count": 3}, "2026-08-26")
+    if ready_row.get("eligible_fact_count") != 9 or ready_row.get("missing_slot_count") != 0:
+        _fail("ready fixture did not reconcile eligible facts")
+    if ready_row.get("readiness", {}).get("forecast") != BLOCKED_OUTPUT_STATUS["forecast"]:
+        _fail("ready fixture activated forecast output")
+    for fact in _ready_facts():
+        if fact_status(fact, "2026-08-26") != "eligible":
+            _fail("clean official fact did not classify eligible")
+
+
+def main() -> None:
+    expected = builder.build()
+    expected_again = builder.build()
+    if _dump(expected) != _dump(expected_again):
+        _fail("builder output is not deterministic")
+    pilot = expected.get("pilot_symbols") or []
+    _assert_shape(expected, pilot)
+    if any((row.get("qualified_periods") or []) for row in (expected.get("companies") or {}).values()):
+        _fail("real retained state unexpectedly has qualified periods")
+    _synthetic_assertions()
+    before = builder.OUT.read_bytes()
+    result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_financial_evidence_reconciliation.py")], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0 or builder.OUT.read_bytes() != before:
+        _fail("builder output is not byte-idempotent")
+    with tempfile.TemporaryDirectory(prefix="henneth-finrec-") as td:
+        root = Path(td)
+        payload = build_reconciliation(
+            ["MLCF"],
+            {"tickers": {"MLCF": {"facts": _ready_facts()}}},
+            {"companies": {"MLCF": _coverage()}},
+            {"companies": {"MLCF": {"status": "ready"}}},
+            {"companies": {"MLCF": {"status": "input_ready", "qualified_period_count": 3}}},
+        )
+        (root / "out.json").write_text(_dump(payload), encoding="utf-8")
+        loaded = json.loads((root / "out.json").read_text(encoding="utf-8"))
+        if loaded["companies"]["MLCF"]["eligible_fact_count"] != 9:
+            _fail("temp fixture round trip failed")
+    result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_ci_slice.py")], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        _fail(result.stdout + result.stderr)
+    slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
+    by_symbol = {row.get("symbol"): row for row in slice_data.get("tickers") or []}
+    for symbol, state_row in expected.get("companies", {}).items():
+        if (by_symbol.get(symbol) or {}).get("financial_evidence_reconciliation") != state_row:
+            _fail(f"{symbol}: CI slice financial_evidence_reconciliation mismatch")
+    print(
+        "financial_evidence_reconciliation: "
+        f"PASS ({len(pilot)} companies, "
+        f"{(expected.get('summary') or {}).get('forecast_ready_company_count')} forecast-ready)"
+    )
+
+
+if __name__ == "__main__":
+    main()

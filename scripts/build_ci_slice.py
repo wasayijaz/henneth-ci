@@ -411,6 +411,7 @@ def build():
     financial_model_inputs = load_json(STATE / "company_intel" / "financial_model_inputs.json", {"companies": {}})
     financial_coverage = load_json(STATE / "company_intel" / "financial_coverage.json", {"companies": {}})
     forecast_readiness = load_json(STATE / "company_intel" / "forecast_readiness.json", {"companies": {}})
+    financial_evidence_reconciliation = load_json(STATE / "company_intel" / "financial_evidence_reconciliation.json", {"companies": {}})
     signal_clusters = load_json(STATE / "company_intel" / "signal_clusters.json", {"companies": {}})
     thesis_monitoring = load_json(STATE / "company_intel" / "thesis_monitoring.json", {"companies": {}})
     intelligence_confidence = load_json(STATE / "company_intel" / "intelligence_confidence.json", {"companies": {}})
@@ -453,6 +454,29 @@ def build():
         conditional_benchmark_row = (conditional_benchmarks.get("companies") or {}).get(sym) or {"symbol": sym, "status": "state_missing", "benchmark_count": 0, "benchmarks": [], "policy": {}, "limitations": ["conditional_benchmarks_state_missing"]}
         causal_foundations_row = causal_foundations.get("companies", {}).get(sym) or {"symbol": sym, "sector": None, "causal_rows": [], "coverage": {"causal_row_count": 0}}
         model_inputs = financial_model_inputs.get("companies", {}).get(sym) or {"status": "unsupported_sector_model", "observations": {}, "derived": {}}
+        financial_reconciliation_row = financial_evidence_reconciliation.get("companies", {}).get(sym) or {
+            "symbol": sym,
+            "status": "blocked",
+            "eligible_fact_count": 0,
+            "audit_only_fact_count": 0,
+            "quarantined_fact_count": 0,
+            "missing_slot_count": 0,
+            "source_conflict_count": 0,
+            "facts": [],
+            "conflicts": [],
+            "missing_slots": [],
+            "qualified_periods": [],
+            "readiness": {
+                "forecast_readiness_status": "blocked",
+                "forecast_qualified_period_count": 0,
+                "financial_model_input_status": "unknown",
+                "earnings_bridge_status": "blocked",
+                "forecast": "blocked_insufficient_qualified_history",
+                "valuation": "blocked_insufficient_qualified_history",
+                "market_expectations": "blocked_insufficient_qualified_history",
+                "reason": "financial_evidence_reconciliation_state_missing",
+            },
+        }
         financial_coverage_row = financial_coverage.get("companies", {}).get(sym) or {
             "symbol": sym,
             "status": "blocked_no_candidate_documents",
@@ -576,6 +600,7 @@ def build():
             "conditional_benchmarks": conditional_benchmark_row,
             "causal_foundations": causal_foundations_row,
             "financial_model_inputs": model_inputs,
+            "financial_evidence_reconciliation": financial_reconciliation_row,
             "financial_coverage": financial_coverage_row,
             "forecast_readiness": forecast_readiness_row,
             "signal_clusters": signal_cluster_row,
@@ -610,6 +635,10 @@ def build():
                 "conditional_benchmark_count": conditional_benchmark_row.get("benchmark_count", 0),
                 "causal_row_count": (causal_foundations_row.get("coverage") or {}).get("causal_row_count", 0),
                 "financial_model_status": model_inputs.get("status"),
+                "financial_reconciliation_status": financial_reconciliation_row.get("status"),
+                "financial_reconciliation_eligible_facts": financial_reconciliation_row.get("eligible_fact_count", 0),
+                "financial_reconciliation_missing_slots": financial_reconciliation_row.get("missing_slot_count", 0),
+                "financial_reconciliation_conflicts": financial_reconciliation_row.get("source_conflict_count", 0),
                 "financial_coverage_status": financial_coverage_row.get("status"),
                 "financial_coverage_candidates": len(((financial_coverage_row.get("qualification_queue") or {}).get("candidate_documents")) or []),
                 "forecast_readiness_status": forecast_readiness_row.get("status"),

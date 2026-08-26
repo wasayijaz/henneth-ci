@@ -40,6 +40,7 @@ STEPS = [
     "build_financial_model_inputs.py",
     "build_financial_coverage.py",
     "build_forecast_readiness.py",
+    "build_financial_evidence_reconciliation.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.
@@ -117,6 +118,7 @@ STEPS = [
     "check_conditional_benchmarks.py",
     "check_financial_coverage.py",
     "check_forecast_contract.py",
+    "check_financial_evidence_reconciliation.py",
     "check_intelligence_confidence.py",
     "check_thesis_monitoring.py",
     "check_management_delivery.py",

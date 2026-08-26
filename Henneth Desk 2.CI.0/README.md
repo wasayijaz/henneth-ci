@@ -90,6 +90,11 @@ each CI company. It marks the row `healthy`, `degraded`, `stale`, or `unknown` a
 to its retained source; it never calls a first-seen page a change, treats a degraded source as fresh,
 or produces a forecast, valuation, score, or trading instruction.
 
+Financial Evidence Reconciliation v1 is the ledger behind earnings-bridge readiness. It keeps each
+retained financial fact tied to its document, page and availability date, labels it eligible,
+audit-only or quarantined, and preserves missing annual slots. It cannot promote legacy facts or
+activate the still-blocked formal forecast, valuation or market-expectations outputs.
+
 The Evidence Watchlist turns those deterministic monitoring records into a company-level checklist:
 what official evidence would confirm the assertion, what would break it, what remains unobserved, and
 which financial-readiness gate blocks quantification. It uses exact same-company source IDs only and

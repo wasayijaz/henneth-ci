@@ -109,6 +109,11 @@ backend error is rendered.
     categorical healthy/degraded/stale/unknown status and source-linked alerts. A page needs a prior
     retained hash before it is called changed; degraded sources are never treated as fresh; missing
     change activity does not turn an old source healthy.
+22. `build_financial_evidence_reconciliation.py` creates a separate financial evidence ledger from
+    retained series, coverage, model-input and readiness state. It does not parse or fetch a filing,
+    promote audit-only facts, choose through conflicts, or activate a forecast. Eligibility requires
+    exact official PSX document/page provenance and availability after the reported period; unsafe or
+    conflicting rows stay quarantined and missing annual slots remain explicit.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new

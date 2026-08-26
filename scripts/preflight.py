@@ -320,7 +320,7 @@ def check_ci_slice():
     # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
     # state products. This catches a stale slice even when its legacy fields still look valid.
     wave1 = {}
-    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_evidence_reconciliation", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
         wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
         try:
             with open(wave_path, encoding="utf-8") as f:
@@ -377,6 +377,7 @@ def check_ci_slice():
         conditional_benchmark_state = (wave1.get("conditional_benchmarks", {}).get("companies", {}).get(sym) or {})
         causal_foundations_state = (wave1.get("causal_foundations", {}).get("companies", {}).get(sym) or {})
         model_state = (wave1.get("financial_model_inputs", {}).get("companies", {}).get(sym) or {})
+        financial_reconciliation_state = (wave1.get("financial_evidence_reconciliation", {}).get("companies", {}).get(sym) or {})
         financial_coverage_state = (wave1.get("financial_coverage", {}).get("companies", {}).get(sym) or {})
         forecast_readiness_state = (wave1.get("forecast_readiness", {}).get("companies", {}).get(sym) or {})
         scenario_lab_state = (wave1.get("scenario_lab", {}).get("companies", {}).get(sym) or {})
@@ -414,6 +415,10 @@ def check_ci_slice():
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} causal_foundations missing/not object")
         if row.get("financial_model_inputs") != model_state:
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_model_inputs stale/mismatch")
+        if row.get("financial_evidence_reconciliation") != financial_reconciliation_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_evidence_reconciliation stale/mismatch")
+        if not isinstance(row.get("financial_evidence_reconciliation"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_evidence_reconciliation missing/not object")
         if row.get("financial_coverage") != financial_coverage_state:
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_coverage stale/mismatch")
         if not isinstance(row.get("financial_coverage"), dict):
@@ -771,6 +776,18 @@ def check_forecast_contract():
     except Exception as e:
         fail(f"check_forecast_contract.py did not run — {e}")
 
+def check_financial_evidence_reconciliation():
+    path = os.path.join(ROOT, "scripts", "check_financial_evidence_reconciliation.py")
+    if not os.path.exists(path):
+        fail("check_financial_evidence_reconciliation.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("financial evidence reconciliation check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_financial_evidence_reconciliation.py did not run — {e}")
+
 def check_forecast_readiness_ui():
     path = os.path.join(ROOT, "scripts", "check_forecast_readiness_ui.mjs")
     if not os.path.exists(path):
@@ -979,6 +996,7 @@ def main():
     check_financial_model_inputs()
     check_financial_coverage()
     check_forecast_contract()
+    check_financial_evidence_reconciliation()
     check_forecast_readiness_ui()
     check_financial_coverage_ui()
     check_company_scenario_lab()
