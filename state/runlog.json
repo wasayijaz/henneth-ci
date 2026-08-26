@@ -274,5 +274,11 @@
   "mode": "room",
   "ended": "2026-08-26T17:58:00+05:00",
   "outcome": "2 full (MARI, OGDC) + 0 delta + 2 reaffirm (UBL, CNERGY). QA: both flagged/blocked by room-verifier, both fixed in place (MARI div_yield 5.54%->4.49% + payout_ratio 51.69%->41.46%; OGDC div_yield 4.71%->4.89%). i18n: 21 fields translated to Urdu. room_score: 143 claims resolved (0 new this batch). NOT PUSHED — preflight FAILED on pre-existing Company Intelligence peer_registry mismatch (22 fails, unrelated to Room work, predates this cycle)."
+ },
+ {
+  "started": "2026-08-26T18:05:00+05:00",
+  "mode": "room",
+  "ended": "2026-08-26T18:08:00+05:00",
+  "outcome": "Follow-up to prior blocked cycle: fixed CI peer_registry preflight failures (state/company_intel/peer_registry.json was stale, missing member_details/formal_peer_details vs current build_peer_registry.py output -> regenerated). preflight now green (1 non-gating WARN: 101 tickers backfilling history). PUBLISHED: room cycle (MARI+OGDC full debate + QA fixes + i18n + peer_registry fix). watchdog OK."
  }
 ]
