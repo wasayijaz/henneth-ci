@@ -104,6 +104,11 @@ backend error is rendered.
     without qualifying objects publish explicit `no_guidance_objects`; contradictions are exact
     normalized-key conflicts among eligible objects only. The CI app displays the emitted rows and
     does not infer guidance, risks, contradictions, forecasts, valuation or advice in the browser.
+21. `build_ci_monitoring.py` composes retained source QA, observed changes, events, exact-ID
+    watchlist records and guidance contradictions into a 20-company monitoring pulse. It emits only
+    categorical healthy/degraded/stale/unknown status and source-linked alerts. A page needs a prior
+    retained hash before it is called changed; degraded sources are never treated as fresh; missing
+    change activity does not turn an old source healthy.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new

@@ -85,6 +85,11 @@ normalized-key conflicts among eligible objects. Numeric forecasts, valuation, a
 browser-side matching remain blocked. The backend and UI seams are checked by
 `scripts/check_guidance_contradictions.py` and `scripts/check_guidance_contradictions_ui.mjs`.
 
+Continuous Monitoring v1 composes only retained desk state into a source-health and change pulse for
+each CI company. It marks the row `healthy`, `degraded`, `stale`, or `unknown` and links every alert
+to its retained source; it never calls a first-seen page a change, treats a degraded source as fresh,
+or produces a forecast, valuation, score, or trading instruction.
+
 The Evidence Watchlist turns those deterministic monitoring records into a company-level checklist:
 what official evidence would confirm the assertion, what would break it, what remains unobserved, and
 which financial-readiness gate blocks quantification. It uses exact same-company source IDs only and

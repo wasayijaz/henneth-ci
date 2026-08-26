@@ -417,6 +417,7 @@ def build():
     management_delivery = load_json(STATE / "company_intel" / "management_delivery.json", {"companies": {}})
     guidance_contradictions = load_json(STATE / "company_intel" / "guidance_contradictions.json", {"companies": {}})
     evidence_watchlist = load_json(STATE / "company_intel" / "evidence_watchlist.json", {"companies": {}})
+    monitoring = load_json(STATE / "company_intel" / "monitoring.json", {"companies": {}})
     peer_registry = load_json(STATE / "company_intel" / "peer_registry.json", {"companies": {}})
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
     company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
@@ -483,6 +484,7 @@ def build():
         management_delivery_row = (management_delivery.get("companies") or {}).get(sym)
         guidance_contradictions_row = (guidance_contradictions.get("companies") or {}).get(sym)
         evidence_watchlist_row = (evidence_watchlist.get("companies") or {}).get(sym)
+        monitoring_row = (monitoring.get("companies") or {}).get(sym)
         peer_registry_row = (peer_registry.get("companies") or {}).get(sym) or {
             "symbol": sym,
             "registry_status": "blocked_no_formal_peer_registry",
@@ -582,6 +584,7 @@ def build():
             "management_delivery": management_delivery_row,
             "guidance_contradictions": guidance_contradictions_row,
             "evidence_watchlist": evidence_watchlist_row,
+            "monitoring": monitoring_row,
             "peer_registry": peer_registry_row,
             "scenario_lab": scenario_lab_row,
             "company_brain": company_brain,
@@ -618,6 +621,8 @@ def build():
                 "guidance_object_count": (guidance_contradictions_row or {}).get("object_count", 0),
                 "guidance_contradiction_count": (guidance_contradictions_row or {}).get("contradiction_count", 0),
                 "evidence_watchlist_status": (evidence_watchlist_row or {}).get("status"),
+                "monitoring_status": (monitoring_row or {}).get("status"),
+                "monitoring_alert_count": (monitoring_row or {}).get("alert_count", 0),
             },
             "news": _latest_news(news, sym),
             "insider_filings": _insider(insider, sym),

@@ -320,7 +320,7 @@ def check_ci_slice():
     # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
     # state products. This catches a stale slice even when its legacy fields still look valid.
     wave1 = {}
-    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "peer_registry"):
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
         wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
         try:
             with open(wave_path, encoding="utf-8") as f:
@@ -334,6 +334,7 @@ def check_ci_slice():
     management_delivery_state = wave1.get("management_delivery") or {}
     guidance_contradictions_state = wave1.get("guidance_contradictions") or {}
     evidence_watchlist_state = wave1.get("evidence_watchlist") or {}
+    monitoring_state = wave1.get("monitoring") or {}
     peer_registry_state = wave1.get("peer_registry") or {}
     if set(thesis_state.get("pilot_symbols") or []) != pilot:
         fail("state/company_intel/thesis_monitoring.json: pilot boundary mismatch")
@@ -355,6 +356,10 @@ def check_ci_slice():
         fail("state/company_intel/evidence_watchlist.json: pilot boundary mismatch")
     if set(evidence_watchlist_state.get("companies") or {}) != pilot:
         fail("state/company_intel/evidence_watchlist.json: company boundary mismatch")
+    if set(monitoring_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/monitoring.json: pilot boundary mismatch")
+    if set(monitoring_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/monitoring.json: company boundary mismatch")
     if peer_registry_state.get("method") != "pilot_official_sector_cohort_v1":
         fail("state/company_intel/peer_registry.json: method mismatch")
     if set(peer_registry_state.get("pilot_symbols") or []) != pilot:
@@ -381,6 +386,7 @@ def check_ci_slice():
         management_delivery_state_row = (management_delivery_state.get("companies") or {}).get(sym)
         guidance_contradictions_state_row = (guidance_contradictions_state.get("companies") or {}).get(sym)
         evidence_watchlist_state_row = (evidence_watchlist_state.get("companies") or {}).get(sym)
+        monitoring_state_row = (monitoring_state.get("companies") or {}).get(sym)
         peer_registry_state_row = (peer_registry_state.get("companies") or {}).get(sym)
         if "operating_events" not in row or not isinstance(row.get("operating_events"), list):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} operating_events missing/not list")
@@ -440,6 +446,10 @@ def check_ci_slice():
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist stale/mismatch")
         if not isinstance(row.get("evidence_watchlist"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist missing/not object")
+        if row.get("monitoring") != monitoring_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} monitoring stale/mismatch")
+        if not isinstance(row.get("monitoring"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} monitoring missing/not object")
         if row.get("peer_registry") != peer_registry_state_row:
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} peer_registry stale/mismatch")
         if not isinstance(row.get("peer_registry"), dict):
@@ -624,6 +634,18 @@ def check_evidence_watchlist():
             fail("evidence watchlist check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
         fail(f"check_evidence_watchlist.py did not run — {e}")
+
+def check_ci_monitoring():
+    path = os.path.join(ROOT, "scripts", "check_ci_monitoring.py")
+    if not os.path.exists(path):
+        fail("check_ci_monitoring.py missing — CI monitoring contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("CI monitoring check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_monitoring.py did not run — {e}")
 
 def check_peer_registry():
     path = os.path.join(ROOT, "scripts", "check_peer_registry.py")
@@ -960,6 +982,7 @@ def main():
     check_management_delivery()
     check_guidance_contradictions()
     check_evidence_watchlist()
+    check_ci_monitoring()
     check_peer_registry()
     check_evidence_watchlist_ui()
     check_management_delivery_ui()

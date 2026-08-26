@@ -54,6 +54,7 @@ STEPS = [
     "build_thesis_monitoring.py", "build_intelligence_confidence.py", "build_guidance_contradictions.py",
     "build_management_delivery.py",
     "build_evidence_watchlist.py",
+    "build_ci_monitoring.py",
     # Needs the history fetches for closes and liquidity.py for the research gate it iterates
     # (psx_data.research_symbols). Earlier than this it would correlate core-only; it has no
     # other dependency and nothing downstream blocks on it. Pure local math, no network.
@@ -121,6 +122,7 @@ STEPS = [
     "check_management_delivery.py",
     "check_guidance_contradictions.py",
     "check_evidence_watchlist.py",
+    "check_ci_monitoring.py",
     "check_peer_registry.py",
     "check_company_scenario_lab.py",
     "check_company_brains.py",
