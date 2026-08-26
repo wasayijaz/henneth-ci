@@ -51,6 +51,7 @@ const RESEARCH_TOOL_TABS = [
   ["forecast", "Forecast readiness"],
   ["thesis", "Thesis monitor"],
   ["watchlist", "Evidence watchlist"],
+  ["monitoring", "CI monitoring"],
   ["ask", "Ask Henneth"],
   ["graph", "Knowledge graph"],
   ["operating", "Operating intelligence"],
@@ -521,6 +522,7 @@ function detail(r) {
       : state.view === "intelligence" ? renderIntelligence(r)
       : state.view === "thesis" ? renderThesisMonitor(r)
       : state.view === "watchlist" ? renderEvidenceWatchlist(r)
+      : state.view === "monitoring" ? renderCiMonitoring(r)
       : state.view === "scenarios" ? renderScenarioLab(r)
       : state.view === "ask" ? renderAskHenneth(r)
       : state.view === "graph" ? renderGraph(r)
@@ -541,6 +543,7 @@ function renderViewNav(r) {
     ["trends", `Financial trends ${r.financial_series?.facts?.length || 0}`],
     ["thesis", `Thesis monitor ${r.thesis_monitoring?.active_thesis_count || 0}`],
     ["watchlist", `Watchlist ${r.evidence_watchlist?.active_watch_count ?? "unknown"}`],
+    ["monitoring", `Monitoring ${r.monitoring?.alert_count ?? "unknown"}`],
     ["graph", `Knowledge graph ${r.graph?.edges?.length || 0}`],
     ["operating", `Operating intelligence ${r.operating_events?.length || 0}`],
     ["conditional", `Conditional benchmarks ${r.conditional_benchmarks?.benchmarks?.length || 0}`],
@@ -1302,6 +1305,7 @@ function renderCompanyResearch(r) {
     ["ask", "Ask Henneth", "Grounded nine-section company Q&A."],
     ["thesis", "Thesis monitor", "Deterministic thesis checks plus private notebook."],
     ["watchlist", "Evidence watchlist", "Confirm/break evidence queue."],
+    ["monitoring", "CI monitoring", "Freshness, source health and emitted alerts."],
     ["conditional", "Conditional benchmarks", "Suppressed analogue context when sample size is too small."],
     ["causal", "Causal map", "Categorical causal-evidence map, not effect estimates."],
     ["graph", "Knowledge graph", "Official-source relationship graph."],
@@ -1891,6 +1895,69 @@ function renderEvidenceWatchLink(item) {
     ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)} · ${esc(page)}</a>`
     : `<span>${esc(label)} · ${esc(page)}</span>`;
   return `<div>${link}${reason ? `<small>${esc(reason)}</small>` : ""}</div>`;
+}
+
+function renderCiMonitoring(r) {
+  const monitoring = r.monitoring && typeof r.monitoring === "object" && !Array.isArray(r.monitoring)
+    ? r.monitoring
+    : null;
+  if (!monitoring) {
+    return `<section class="panel span9 ci-monitoring" aria-labelledby="ciMonitoringTitle">
+      <span class="kicker">CI monitoring</span><h2 id="ciMonitoringTitle">Freshness and alert state</h2>
+      <p class="section-note">Unavailable: the CI slice has not emitted row.monitoring for this company. The browser will not infer freshness, source health, alert state, forecasts, valuation, or advice.</p>
+      <div class="monitoring-empty">No monitoring object was emitted for ${esc(r.symbol)}.</div>
+    </section>`;
+  }
+  const sourceHealth = monitoring.source_health && typeof monitoring.source_health === "object" && !Array.isArray(monitoring.source_health)
+    ? monitoring.source_health
+    : {};
+  const activity = monitoring.activity && typeof monitoring.activity === "object" && !Array.isArray(monitoring.activity)
+    ? monitoring.activity
+    : {};
+  const alerts = Array.isArray(monitoring.alerts) ? monitoring.alerts : [];
+  return `<section class="panel span9 ci-monitoring status-${esc(monitoring.status || "unknown")}" aria-labelledby="ciMonitoringTitle">
+    <span class="kicker">CI monitoring</span><h2 id="ciMonitoringTitle">Freshness and alert state</h2>
+    <p class="section-note">Read-only backend output from row.monitoring. The browser displays emitted freshness, source health, activity counts and source-linked alerts only; it does not calculate status, reduce alerts, score companies, forecast, value the company, or turn this into advice.</p>
+    <div class="monitoring-summary" aria-label="CI monitoring status">
+      <div><span>Status</span><b>${esc(monitoring.status || "unknown")}</b></div>
+      <div><span>Status reason</span><b>${esc(monitoring.status_reason || "not emitted")}</b></div>
+      <div><span>Alert count</span><b>${esc(monitoring.alert_count ?? "unknown")}</b></div>
+      <div><span>Registry status</span><b>${esc(sourceHealth.registry_status || "unknown")}</b></div>
+    </div>
+    <div class="monitoring-times" aria-label="Latest retained monitoring timestamps">
+      <div><span>Latest source</span><b>${esc(monitoring.latest_source_at || "unknown")}</b></div>
+      <div><span>Latest change</span><b>${esc(monitoring.latest_change_at || "unknown")}</b></div>
+      <div><span>Latest event</span><b>${esc(monitoring.latest_event_at || "unknown")}</b></div>
+    </div>
+    <div class="monitoring-activity" aria-label="Backend monitoring activity">
+      <div><span>Change status</span><b>${esc(activity.change_status || "unknown")}</b></div>
+      <div><span>Watch status</span><b>${esc(activity.watch_status || "unknown")}</b></div>
+      <div><span>Active watches</span><b>${esc(activity.active_watch_count ?? "unknown")}</b></div>
+      <div><span>Guidance status</span><b>${esc(activity.guidance_status || "unknown")}</b></div>
+      <div><span>Guidance contradictions</span><b>${esc(activity.guidance_contradiction_count ?? "unknown")}</b></div>
+      <div><span>Monitored pages</span><b>${esc(sourceHealth.monitored_page_count ?? "unknown")}</b></div>
+    </div>
+    ${alerts.length ? `<div class="monitoring-alerts">${alerts.map(renderCiMonitoringAlert).join("")}</div>` : `<div class="monitoring-empty">No backend alert row is active for ${esc(r.symbol)}.</div>`}
+  </section>`;
+}
+
+function renderCiMonitoringAlert(alert) {
+  const source = alert?.source && typeof alert.source === "object" && !Array.isArray(alert.source) ? alert.source : {};
+  const href = safeHref(source.source_url);
+  const page = Number(source.page) > 0 ? `page ${Number(source.page)}` : "page unknown";
+  const label = source.document_id || source.source_id || source.source || "official source";
+  const sourceLink = href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)} · ${esc(page)}</a>`
+    : `<span>${esc(label)} · ${esc(page)}</span>`;
+  return `<article class="monitoring-alert">
+    <header><div><span class="pill">${esc(alert?.type || "unknown")}</span><h3>${esc(alert?.title || alert?.alert_id || "Monitoring alert")}</h3></div><b>${esc(alert?.status || "unknown")}</b></header>
+    <div class="monitoring-alert-meta">
+      <span>Date <b>${esc(alert?.date || "unknown")}</b></span>
+      <span>Alert ID <b>${esc(alert?.alert_id || "unknown")}</b></span>
+    </div>
+    <p>${esc(alert?.reason || "No backend reason emitted.")}</p>
+    <footer>${sourceLink}</footer>
+  </article>`;
 }
 
 function renderThesisCard(thesis) {

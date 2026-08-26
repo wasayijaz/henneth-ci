@@ -671,6 +671,18 @@ def check_evidence_watchlist_ui():
     except Exception as e:
         fail(f"check_evidence_watchlist_ui.mjs did not run — {e}")
 
+def check_ci_monitoring_ui():
+    path = os.path.join(ROOT, "scripts", "check_ci_monitoring_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_ci_monitoring_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("CI monitoring UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_monitoring_ui.mjs did not run — {e}")
+
 def check_management_delivery_ui():
     path = os.path.join(ROOT, "scripts", "check_management_delivery_ui.mjs")
     if not os.path.exists(path):
@@ -985,6 +997,7 @@ def main():
     check_ci_monitoring()
     check_peer_registry()
     check_evidence_watchlist_ui()
+    check_ci_monitoring_ui()
     check_management_delivery_ui()
     check_guidance_contradictions_ui()
     check_reprocess_documents()

@@ -29,7 +29,7 @@ const PRIMARY = [
   ["quant", "Quant"],
   ["research", "Research"],
 ];
-const ADVANCED = ["snapshot", "timeline", "changes", "trends", "baseline", "forecast", "thesis", "watchlist", "ask", "graph", "operating", "conditional", "causal", "coverage", "sources", "brief"];
+const ADVANCED = ["snapshot", "timeline", "changes", "trends", "baseline", "forecast", "thesis", "watchlist", "monitoring", "ask", "graph", "operating", "conditional", "causal", "coverage", "sources", "brief"];
 
 function extractRegistry(name) {
   const match = app.match(new RegExp(`const ${name} = (\\[[\\s\\S]*?\\]);\\n`));

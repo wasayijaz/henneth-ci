@@ -7,10 +7,12 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const APP_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "app.js");
 const CSS_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css");
 const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json");
+const STATE_PATH = path.join(ROOT, "state", "company_intel", "evidence_watchlist.json");
 
 const app = fs.readFileSync(APP_PATH, "utf8");
 const css = fs.readFileSync(CSS_PATH, "utf8");
 const slice = JSON.parse(fs.readFileSync(SLICE_PATH, "utf8"));
+const stateWatchlist = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
 let checks = 0;
 
 function assert(condition, message) {
@@ -50,7 +52,7 @@ function main() {
 
   assert(app.includes('state.view === "watchlist" ? renderEvidenceWatchlist(r)'), "Watchlist route is wired");
   assert(app.includes('["watchlist", `Watchlist ${r.evidence_watchlist?.active_watch_count ?? "unknown"}`]'), "Watchlist tab is registered from row.evidence_watchlist");
-  const block = rendererBlock("renderEvidenceWatchlist", "renderThesisCard");
+  const block = rendererBlock("renderEvidenceWatchlist", "renderEvidenceWatchLinks");
 
   for (const token of [
     "r.evidence_watchlist",
@@ -68,12 +70,13 @@ function main() {
     "source_evidence",
     "matched_evidence",
     "policy_flags",
-    "safeHref",
     "No active evidence watch is open",
     "will not create checks from other state",
   ]) {
     assert(block.includes(token), `Watchlist renderer missing ${token}`);
   }
+  const linkBlock = rendererBlock("renderEvidenceWatchLink", "renderCiMonitoring");
+  assert(linkBlock.includes("safeHref") && linkBlock.includes("source_url"), "Watchlist source links must use safeHref");
 
   assert(!/signal_clusters|thesis_monitoring|management_delivery|operating_events|causal_foundations|company_brain|price|valuation|forecast|probability|odds|advice/i.test(block.replace(/What would confirm or break this signal/g, "")), "Watchlist renderer reads outside its object or includes blocked policy language");
   assert(!/filter\(|find\(|reduce\(|match\(/.test(block), "Watchlist renderer must not infer or match evidence in the browser");
@@ -108,8 +111,10 @@ function main() {
       assert(Array.isArray(item.policy_flags), `${row.symbol} policy_flags must be an array`);
     }
   }
-  assert(active === 5, `expected 5 active evidence-watchlist companies, found ${active}`);
-  assert(inactive === 15, `expected honest empty state for 15 inactive companies, found ${inactive}`);
+  assert(active + inactive === symbols.length, `every company must classify as active or inactive, got ${active} + ${inactive} != ${symbols.length}`);
+  const expectedActive = (stateWatchlist.summary || {}).active_company_count;
+  assert(Number.isInteger(expectedActive), "state evidence_watchlist.json summary.active_company_count must be an integer");
+  assert(active === expectedActive, `CI slice active company count (${active}) must match state summary.active_company_count (${expectedActive})`);
 
   console.log(`evidence_watchlist_ui: PASS (${checks} UI/data assertions, ${symbols.length} company rows, ${active} active, ${inactive} inactive)`);
 }
