@@ -2,12 +2,22 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import subprocess
 import sys
 
-from build_signal_clusters import OUT, build
+from build_signal_clusters import (
+    OUT,
+    REGISTRY_SCHEMA_VERSION,
+    REGISTRY_VERSION,
+    build,
+    registry_contract,
+)
 from psx_data import ROOT, STATE, load_json
-from signal_clusters import build_signal_state, eligible_observation
+from signal_clusters import SUPPORTED_TYPES, build_signal_state, eligible_observation
+
+HEX64 = re.compile(r"^[0-9a-f]{64}$", re.I)
+EXPECTED_ASSESSMENTS = {"single_source", "corroborated", "contested", "inconsistent", "supersession"}
 
 
 def ev(symbol="MLCF", event_type="acquisition_divestment", subtype="acquisition", text=None,
@@ -139,14 +149,61 @@ def main():
 
     before = OUT.read_bytes() if OUT.exists() else None
     real = build()
+    profile_pilot = (load_json(STATE / "company_profiles.json", {}).get("pilot") or {}).get("symbols") or []
+    assert len(profile_pilot) == 20 and len(set(profile_pilot)) == 20, "profile pilot must be exactly 20 unique symbols"
+    assert real.get("schema_version") == 1, "signal state schema version"
+    assert real.get("registry_version") == REGISTRY_VERSION, "signal state registry version"
+    assert real.get("registry") == registry_contract(), "signal state registry declaration drift"
+    registry = real["registry"]
+    assert registry.get("schema_version") == REGISTRY_SCHEMA_VERSION and registry.get("version") == REGISTRY_VERSION
+    assert registry.get("closed") is True, "registry must be closed"
+    assert registry.get("supported_proposition_types") == sorted(SUPPORTED_TYPES)
+    assert registry.get("supported_event_types") == ["acquisition_divestment", "management_change"]
+    assert set(registry.get("event_aliases") or {}) == set(SUPPORTED_TYPES)
     pilot = set(real["pilot_symbols"])
     # 20 Exact 20-company coverage.
+    assert real["pilot_symbols"] == sorted(profile_pilot), "pilot order/boundary mismatch"
     assert len(pilot) == 20 and set(real["companies"]) == pilot
+    assert all((row.get("registry_version") == REGISTRY_VERSION) for row in real["companies"].values()), "company registry propagation"
     checks += 1
     # 21 Invalid draft clusters disappear; no broad convergence status/source.
     all_clusters = [c for row in real["companies"].values() for c in row.get("clusters", [])]
     assert real["source"] == "state/company_intel/operating_events.json"
     assert not any(c.get("status") == "convergent" or c.get("assessment") == "convergent" for c in all_clusters)
+    assert all(c.get("registry_version") == REGISTRY_VERSION for c in all_clusters), "cluster registry propagation"
+    assert all(c.get("assessment") in EXPECTED_ASSESSMENTS for c in all_clusters), "invented assessment"
+    allowed_stages = set(registry["event_aliases"]["acquisition"]["stages"])
+    allowed_actions = set(registry["event_aliases"]["management_change"]["actions"])
+    cutoff = real.get("as_of")
+    for cluster in all_clusters:
+        proposition = cluster.get("proposition") or {}
+        assert proposition.get("type") in SUPPORTED_TYPES, "invented proposition type"
+        if proposition["type"] == "acquisition":
+            assert proposition.get("stage") in allowed_stages and proposition.get("target"), "invented acquisition payload"
+        else:
+            assert proposition.get("verb") in allowed_actions and proposition.get("person") and proposition.get("role"), "invented management payload"
+        for observation in cluster.get("observations") or []:
+            # No emitted observation may become visible after the state cutoff.
+            evidence = observation.get("evidence") or {}
+            observed_times = {
+                "detected_at": observation.get("detected_at"),
+                # ``signal_clusters.py`` keeps source availability on the
+                # evidence provenance row rather than duplicating it on the
+                # compact observation projection.
+                "available_at": observation.get("available_at") or evidence.get("document_retrieved_at"),
+                "effective_date": observation.get("effective_date"),
+            }
+            for field, value in observed_times.items():
+                assert value not in (None, ""), f"missing {field} in emitted observation"
+                if field != "effective_date":
+                    assert str(value) <= str(cutoff), f"future {field} in emitted observation"
+                else:
+                    assert str(value)[:10] <= str(cutoff)[:10], "future effective_date in emitted observation"
+            assert re.match(r"^https?://", str(evidence.get("source_url") or ""), re.I), "non-official evidence URL"
+            assert HEX64.fullmatch(str(evidence.get("content_sha256") or "")), "invalid content hash"
+            assert HEX64.fullmatch(str(evidence.get("evidence_sha256") or "")), "invalid evidence hash"
+            assert isinstance(evidence.get("page"), int) and evidence["page"] > 0 and evidence.get("text"), "invalid evidence row"
+            assert observation.get("provenance"), "missing observation provenance"
     assert len(all_clusters) < 51
     checks += 1
     # 22 Builder idempotency and exact CI slice seam.

@@ -6,7 +6,6 @@ ROOT = Path(__file__).resolve().parents[1]; STATE = ROOT / "state"
 EVENT_TYPES = {"hiring_expansion", "capacity_plant_expansion", "exploration_well_discovery", "contract_tender", "management_change", "debt_refinancing", "product_launch", "supplier_change", "maintenance_shutdown", "regulatory_change", "acquisition_divestment"}
 REQUIRED = {"event_id", "company_id", "symbol", "event_type", "intelligence_type", "source_url", "source_quality_level", "confidence", "evidence", "quality_flags", "priority_weight"}
 IMPACT_KEYS = ("revenue_impact", "ebitda_impact", "eps_impact", "fcf_impact", "valuation_impact")
-EXPECTED_PILOT = {"ATRL", "BOP", "DGKC", "ENGROH", "FCCL", "FFC", "GAL", "HBL", "HUBC", "LUCK", "MARI", "MEBL", "MLCF", "NBP", "NRL", "OGDC", "PPL", "PRL", "PSO", "UBL"}
 SUPPORTED_SECTORS = {"BANKS", "CEMENT", "E&P", "REFINERY", "FERTILIZER", "AUTO_ASSEMBLER", "POWER", "OMC", "HOLDING_COMPANY"}
 STATEMENT_LINES = {
     "capacity",
@@ -54,13 +53,19 @@ def walk(x):
     elif isinstance(x, list):
         for v in x: walk(v)
 def main():
-    pilot = set((load(STATE / "company_profiles.json").get("pilot") or {}).get("symbols") or [])
-    if pilot != EXPECTED_PILOT: raise AssertionError("company_profiles: exact pilot mismatch")
+    pilot_order = list((load(STATE / "company_profiles.json").get("pilot") or {}).get("symbols") or [])
+    pilot = set(pilot_order)
+    if len(pilot_order) != 20 or len(pilot) != 20: raise AssertionError("pilot boundary must be exactly 20")
     oe = load(STATE / "company_intel" / "operating_events.json"); dg = load(STATE / "company_intel" / "driver_graphs.json"); sc = load(STATE / "company_intel" / "impact_scenarios.json")
     for label, obj in (("events", oe), ("graphs", dg), ("scenarios", sc)):
         walk(obj)
         if set(obj.get("pilot_symbols") or []) != pilot: raise AssertionError(f"{label}: pilot boundary mismatch")
         if set(obj.get("companies") or {}) != pilot: raise AssertionError(f"{label}: company boundary mismatch")
+    registry = oe.get("event_registry") or {}
+    declared = {row.get("event_type") for row in registry.get("event_types") or []}
+    if oe.get("schema_version") != 2 or oe.get("registry_version") != "operating_event_registry_v1": raise AssertionError("event registry schema/version mismatch")
+    if registry.get("status") != "closed" or not declared or declared != set(oe.get("event_types") or []): raise AssertionError("event registry is not closed or does not match emitted types")
+    if not declared.issubset(EVENT_TYPES) or not all(isinstance(path, str) and path.startswith("state/") for path in registry.get("source_paths") or []): raise AssertionError("event registry contains unsupported types or source paths")
     ids = set()
     for sym, row in oe["companies"].items():
         for e in row.get("events") or []:
@@ -70,6 +75,8 @@ def main():
             if not (1 <= e["source_quality_level"] <= 6) or not e["source_url"] or not e["evidence"]: raise AssertionError(f"event provenance {e['event_id']}")
             if e.get("priority_weight") not in {3, 4, 5}: raise AssertionError(f"event priority {e['event_id']}")
             if len(str(e.get("description") or "")) > 280: raise AssertionError(f"event excerpt too long {e['event_id']}")
+            if e.get("event_type") not in declared: raise AssertionError(f"event type omitted from closed registry {e['event_id']}")
+            if e.get("effective_date") and e.get("detected_at") and str(e["effective_date"]) > str(e["detected_at"])[:10]: raise AssertionError(f"event date after availability {e['event_id']}")
             for ev in e["evidence"]:
                 if not ev.get("document_id") or not ev.get("source") or not ev.get("source_url") or not ev.get("text") or not ev.get("content_sha256") or not ev.get("evidence_sha256"): raise AssertionError(f"evidence {e['event_id']}")
                 if not isinstance(ev.get("page"), int) or ev["page"] < 1: raise AssertionError(f"evidence page {e['event_id']}")

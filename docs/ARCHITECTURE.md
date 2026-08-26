@@ -75,7 +75,8 @@ The product is a hybrid of five parts:
 | Synthesis training batch | `scripts/prepare_synthesis_batch.py` -> ignored `.cache/company_intel/training_batch.json` | local librarian/verifier agents |
 | Approved CI briefs | `scripts/company_brief_review.py` -> `state/company_briefs.json`, `state/company_brief_receipts.json` | CI Brief view |
 | Company Intelligence slice | `scripts/build_ci_slice.py` -> `Henneth Desk 2.CI.0/data/company_intelligence.json` | private CI app only |
-| Operating events | `scripts/build_operating_events.py` -> `state/company_intel/operating_events.json` | evidence-backed Wave 1 index derived from canonical documents/events |
+| Operating events | `scripts/build_operating_events.py` -> `state/company_intel/operating_events.json` | evidence-backed Wave 1 index derived from canonical documents/events; v1 closed registry declares the five genuinely supported event classes, source systems and no-lookahead rules |
+| Signal clusters | `scripts/build_signal_clusters.py` -> `state/company_intel/signal_clusters.json` | versioned closed registry for source-qualified acquisition and management-change propositions; unsupported or future/unsafe evidence is rejected rather than clustered |
 | Sector driver graphs | `scripts/build_driver_graphs.py` + `sector_driver_models.py` -> `state/company_intel/driver_graphs.json` | full 20-company pilot across BANKS/CEMENT/E&P/REFINERY/FERTILIZER/AUTO_ASSEMBLER/POWER/OMC/HOLDING_COMPANY; declarative routing only, no company values |
 | Impact scenarios | `scripts/impact_engine.py` -> `state/company_intel/impact_scenarios.json` | graph-filtered event-to-driver Bear/Base/Bull scaffolding; numeric impacts remain null without sourced inputs |
 | Historical event studies | `scripts/build_event_studies.py` -> `state/company_intel/event_studies.json` | one raw-price benchmark per canonical event; strict pre-event baselines and calendar horizons |

@@ -530,7 +530,7 @@ def build(write: bool = True) -> dict[str, Any]:
             "operating_event_closed_registry",
             "Operating event type registry is explicit",
             [
-                _state("event type registry", "state/company_intel/operating_events.json", len(operating_events.get("event_types") or []) >= 10, f"{len(operating_events.get('event_types') or [])} event types"),
+                _state("closed event type registry", "state/company_intel/operating_events.json", bool((operating_events.get("event_registry") or {}).get("status") == "closed" and (operating_events.get("event_registry") or {}).get("registry_version") and set(operating_events.get("event_types") or []) == {item.get("event_type") for item in ((operating_events.get("event_registry") or {}).get("event_types") or [])}), f"{len(operating_events.get('event_types') or [])} closed event types"),
                 _contains("event support rules", "scripts/build_operating_events.py", ("strict_event_is_supported", "event_is_supported")),
             ],
             ["New event types need registry support and checker coverage."],
@@ -567,7 +567,7 @@ def build(write: bool = True) -> dict[str, Any]:
             "Signal cluster registry version is retained",
             [
                 _state("registry version", "state/company_intel/signal_clusters.json", bool(signal_clusters.get("registry_version")), str(signal_clusters.get("registry_version"))),
-                _state("freshness metadata", "state/company_intel/signal_clusters.json", _all_companies(signal_clusters, pilot, lambda row: isinstance(row.get("freshness"), dict)), f"{_company_count(signal_clusters)} freshness rows"),
+                _state("freshness metadata", "state/company_intel/signal_clusters.json", _all_companies(signal_clusters, pilot, lambda row: isinstance(row.get("freshness"), str) and bool(row.get("freshness")) and row.get("registry_version") == signal_clusters.get("registry_version")), f"{_company_count(signal_clusters)} versioned freshness rows"),
             ],
             ["Cluster registry changes need deterministic checker updates."],
         ),
