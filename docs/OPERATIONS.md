@@ -131,6 +131,9 @@ backend error is rendered.
     products only from qualified actuals plus owner-approved, source-labelled and dated operands;
     otherwise each product remains explicitly blocked with no numeric result. Its focused checker
     is both part of the cloud sequence and preflight.
+26. `build_ownership_source_manifest.py` emits a review-only candidate list from retained issuer
+    and PSX metadata for the exact 20-company pilot. It never downloads or parses a document and
+    cannot activate ownership; page-level official evidence and owner approval remain required.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new

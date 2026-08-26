@@ -116,6 +116,7 @@ STEPS = [
     "build_causal_foundations.py",
     "build_company_scenario_lab.py",
     "build_company_brains.py",
+    "build_ownership_source_manifest.py",  # review metadata only; never activates ownership facts
     "build_ci_completion_matrix.py",
     "build_ci_slice.py",
     "check_ci_completion_matrix.py",
@@ -123,6 +124,7 @@ STEPS = [
     "check_conditional_benchmarks.py",
     "check_financial_coverage.py",
     "check_ci_reprocess_manifest.py",
+    "check_ownership_source_manifest.py",
     "check_forecast_contract.py",
     "check_formal_financial_engines.py",
     "check_financial_evidence_reconciliation.py",

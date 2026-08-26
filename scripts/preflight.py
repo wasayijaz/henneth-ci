@@ -1099,6 +1099,15 @@ def check_ci_reprocess_manifest():
     if result.returncode != 0:
         fail("CI reprocess manifest check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
 
+def check_ownership_source_manifest():
+    path = os.path.join(ROOT, "scripts", "check_ownership_source_manifest.py")
+    if not os.path.exists(path):
+        fail("check_ownership_source_manifest.py missing")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        fail("ownership source manifest check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
 def check_no_raw_artifacts():
     for root in (os.path.join(ROOT, "Henneth Desk 2.CI.0"), os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "site", "public"), os.path.join(ROOT, "site", "dist")):
         for dirpath, _, files in os.walk(root):
@@ -1174,6 +1183,7 @@ def main():
     check_guidance_contradictions_ui()
     check_reprocess_documents()
     check_ci_reprocess_manifest()
+    check_ownership_source_manifest()
     check_no_raw_artifacts()
     # --- Company intelligence shape: every populated row, not a sample ---
     check_company_profiles()
