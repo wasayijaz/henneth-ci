@@ -1,0 +1,67 @@
+name: Henneth CI contract
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python requirements
+        run: python -m pip install -r requirements.txt
+
+      - name: Python syntax
+        run: python -m compileall -q scripts
+
+      - name: JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          patterns = (
+              "*.js",
+              "api/*.js",
+              "dashboard/*.js",
+              "Henneth Desk 2.CI.0/*.js",
+              "Henneth Desk 2.CI.0/api/*.js",
+          )
+
+          files = []
+          seen = set()
+          for pattern in patterns:
+              for path in sorted(Path().glob(pattern)):
+                  if path.is_file() and path not in seen:
+                      files.append(path)
+                      seen.add(path)
+
+          if not files:
+              raise SystemExit("No JavaScript files matched the CI contract.")
+
+          for path in files:
+              print(f"node -c {path.as_posix()}")
+              subprocess.run(["node", "-c", str(path)], check=True)
+          PY
+
+      - name: Preflight gate
+        run: python scripts/preflight.py
