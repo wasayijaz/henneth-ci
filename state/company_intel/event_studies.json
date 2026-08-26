@@ -3,9 +3,9 @@
  "pilot_symbols": [
   "ATRL",
   "BOP",
+  "CNERGY",
   "DGKC",
   "ENGROH",
-  "FCCL",
   "FFC",
   "GAL",
   "HBL",
@@ -22,15 +22,537 @@
   "PSO",
   "UBL"
  ],
- "study_count": 16,
+ "study_count": 23,
  "studies": {
+  "evt_b66212b80aa7a12b67b6": {
+   "study_id": "study_b66212b80aa7a12b67b6",
+   "event_id": "evt_b66212b80aa7a12b67b6",
+   "symbol": "ATRL",
+   "event_type": "acquisition_divestment",
+   "effective_date": "2025-10-03",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2025-10-02",
+    "selected_close": 704.88,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/ATRL.json",
+     "selected_date": "2025-10-02"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-01-03",
+     "selected_date": "2026-01-05",
+     "selected_close": 692.35,
+     "return_pct": -1.7776075360344978,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": "2026-01-05",
+      "target_date": "2026-01-03"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-04-03",
+     "selected_date": "2026-04-03",
+     "selected_close": 864.56,
+     "return_pct": 22.653501305186687,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": "2026-04-03",
+      "target_date": "2026-04-03"
+     }
+    },
+    "4Q": {
+     "target_date": "2026-10-03",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": null,
+      "target_date": "2026-10-03"
+     }
+    },
+    "8Q": {
+     "target_date": "2027-10-03",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": null,
+      "target_date": "2027-10-03"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2025-10-02",
+       "2026-01-05"
+      ],
+      "2Q": [
+       "2025-10-02",
+       "2026-04-03"
+      ],
+      "4Q": [
+       "2025-10-02",
+       null
+      ],
+      "8Q": [
+       "2025-10-02",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_a5fc61fec79e9bc76d65": {
+   "study_id": "study_a5fc61fec79e9bc76d65",
+   "event_id": "evt_a5fc61fec79e9bc76d65",
+   "symbol": "ATRL",
+   "event_type": "management_change",
+   "effective_date": "2025-10-03",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2025-10-02",
+    "selected_close": 704.88,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/ATRL.json",
+     "selected_date": "2025-10-02"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-01-03",
+     "selected_date": "2026-01-05",
+     "selected_close": 692.35,
+     "return_pct": -1.7776075360344978,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": "2026-01-05",
+      "target_date": "2026-01-03"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-04-03",
+     "selected_date": "2026-04-03",
+     "selected_close": 864.56,
+     "return_pct": 22.653501305186687,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": "2026-04-03",
+      "target_date": "2026-04-03"
+     }
+    },
+    "4Q": {
+     "target_date": "2026-10-03",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": null,
+      "target_date": "2026-10-03"
+     }
+    },
+    "8Q": {
+     "target_date": "2027-10-03",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": null,
+      "target_date": "2027-10-03"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2025-10-02",
+       "2026-01-05"
+      ],
+      "2Q": [
+       "2025-10-02",
+       "2026-04-03"
+      ],
+      "4Q": [
+       "2025-10-02",
+       null
+      ],
+      "8Q": [
+       "2025-10-02",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_2faadfd3dc7f2e8a5262": {
+   "study_id": "study_2faadfd3dc7f2e8a5262",
+   "event_id": "evt_2faadfd3dc7f2e8a5262",
+   "symbol": "ATRL",
+   "event_type": "debt_refinancing",
+   "effective_date": "2025-10-03",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2025-10-02",
+    "selected_close": 704.88,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/ATRL.json",
+     "selected_date": "2025-10-02"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-01-03",
+     "selected_date": "2026-01-05",
+     "selected_close": 692.35,
+     "return_pct": -1.7776075360344978,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": "2026-01-05",
+      "target_date": "2026-01-03"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-04-03",
+     "selected_date": "2026-04-03",
+     "selected_close": 864.56,
+     "return_pct": 22.653501305186687,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": "2026-04-03",
+      "target_date": "2026-04-03"
+     }
+    },
+    "4Q": {
+     "target_date": "2026-10-03",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": null,
+      "target_date": "2026-10-03"
+     }
+    },
+    "8Q": {
+     "target_date": "2027-10-03",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": "2025-10-02",
+      "endpoint_date": null,
+      "target_date": "2027-10-03"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2025-10-02",
+       "2026-01-05"
+      ],
+      "2Q": [
+       "2025-10-02",
+       "2026-04-03"
+      ],
+      "4Q": [
+       "2025-10-02",
+       null
+      ],
+      "8Q": [
+       "2025-10-02",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
   "evt_f4f9e65bd4a1bac668ae": {
    "study_id": "study_f4f9e65bd4a1bac668ae",
    "event_id": "evt_f4f9e65bd4a1bac668ae",
    "symbol": "BOP",
    "event_type": "debt_refinancing",
    "effective_date": "2026-04-30",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-04-29",
     "selected_close": 34.64,
@@ -153,7 +675,64 @@
      }
     }
    },
-   "analogues": [],
+   "analogues": [
+    {
+     "event_id": "evt_38ecc9a86072bc246c6f",
+     "symbol": "UBL",
+     "classification": "same_sector",
+     "effective_date": "2026-03-04",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-06-04",
+        "endpoint_date": null
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-09-04",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2027-03-04",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2028-03-04",
+        "endpoint_date": null
+       }
+      }
+     }
+    }
+   ],
    "analogue_aggregate": {
     "1Q": {
      "n": 0,
@@ -204,7 +783,7 @@
    "symbol": "BOP",
    "event_type": "contract_tender",
    "effective_date": "2026-03-05",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-03-04",
     "selected_close": 27.84,
@@ -327,7 +906,64 @@
      }
     }
    },
-   "analogues": [],
+   "analogues": [
+    {
+     "event_id": "evt_4998975af68c17c76e02",
+     "symbol": "UBL",
+     "classification": "same_sector",
+     "effective_date": "2026-03-04",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-06-04",
+        "endpoint_date": null
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-09-04",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2027-03-04",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2028-03-04",
+        "endpoint_date": null
+       }
+      }
+     }
+    }
+   ],
    "analogue_aggregate": {
     "1Q": {
      "n": 0,
@@ -378,7 +1014,7 @@
    "symbol": "BOP",
    "event_type": "management_change",
    "effective_date": "2026-03-05",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-03-04",
     "selected_close": 27.84,
@@ -501,10 +1137,298 @@
      }
     }
    },
-   "analogues": [],
+   "analogues": [
+    {
+     "event_id": "evt_f3a3780f9be0df115815",
+     "symbol": "UBL",
+     "classification": "same_sector",
+     "effective_date": "2026-03-04",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-06-04",
+        "endpoint_date": null
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-09-04",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2027-03-04",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2028-03-04",
+        "endpoint_date": null
+       }
+      }
+     }
+    }
+   ],
    "analogue_aggregate": {
     "1Q": {
      "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_61703127abf553b1e913": {
+   "study_id": "study_61703127abf553b1e913",
+   "event_id": "evt_61703127abf553b1e913",
+   "symbol": "DGKC",
+   "event_type": "acquisition_divestment",
+   "effective_date": "2026-04-30",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2026-04-29",
+    "selected_close": 178.63,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/DGKC.json",
+     "selected_date": "2026-04-29"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-07-30",
+     "selected_date": "2026-07-30",
+     "selected_close": 207.23,
+     "return_pct": 16.010748474500367,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/DGKC.json",
+      "baseline_date": "2026-04-29",
+      "endpoint_date": "2026-07-30",
+      "target_date": "2026-07-30"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-10-30",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/DGKC.json",
+      "baseline_date": "2026-04-29",
+      "endpoint_date": null,
+      "target_date": "2026-10-30"
+     }
+    },
+    "4Q": {
+     "target_date": "2027-04-30",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/DGKC.json",
+      "baseline_date": "2026-04-29",
+      "endpoint_date": null,
+      "target_date": "2027-04-30"
+     }
+    },
+    "8Q": {
+     "target_date": "2028-04-30",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/DGKC.json",
+      "baseline_date": "2026-04-29",
+      "endpoint_date": null,
+      "target_date": "2028-04-30"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2026-04-29",
+       "2026-07-30"
+      ],
+      "2Q": [
+       "2026-04-29",
+       null
+      ],
+      "4Q": [
+       "2026-04-29",
+       null
+      ],
+      "8Q": [
+       "2026-04-29",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [
+    {
+     "event_id": "evt_6e9b520a122b8f2d4a59",
+     "symbol": "MLCF",
+     "classification": "same_sector",
+     "effective_date": "2025-12-18",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": "2026-03-18",
+       "return_pct": -34.539447809329026,
+       "status": "mature",
+       "reason": null,
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-12-17",
+        "target_date": "2026-03-18",
+        "endpoint_date": "2026-03-18"
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-12-17",
+        "target_date": "2026-06-18",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-12-17",
+        "target_date": "2026-12-18",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-12-17",
+        "target_date": "2027-12-18",
+        "endpoint_date": null
+       }
+      }
+     }
+    }
+   ],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 1,
      "mean_return_pct": null,
      "status": "suppressed",
      "reason": "n_lt_3"
@@ -552,7 +1476,7 @@
    "symbol": "DGKC",
    "event_type": "debt_refinancing",
    "effective_date": "2025-10-03",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2025-10-02",
     "selected_close": 257.38,
@@ -726,7 +1650,7 @@
    "symbol": "DGKC",
    "event_type": "regulatory_change",
    "effective_date": "2025-10-03",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2025-10-02",
     "selected_close": 257.38,
@@ -900,7 +1824,7 @@
    "symbol": "ENGROH",
    "event_type": "acquisition_divestment",
    "effective_date": "2026-03-13",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-03-12",
     "selected_close": 280.99,
@@ -1068,418 +1992,13 @@
     "current_sector_analogues_survivorship_bias"
    ]
   },
-  "evt_d028288e2afc6923d3c1": {
-   "study_id": "study_d028288e2afc6923d3c1",
-   "event_id": "evt_d028288e2afc6923d3c1",
-   "symbol": "FCCL",
-   "event_type": "acquisition_divestment",
-   "effective_date": "2026-02-18",
-   "data_cutoff": "2026-08-20",
-   "baseline": {
-    "selected_date": "2026-02-17",
-    "selected_close": 54.19,
-    "status": "available",
-    "reason": null,
-    "provenance": {
-     "history_file": "state/history/FCCL.json",
-     "selected_date": "2026-02-17"
-    }
-   },
-   "horizons": {
-    "1Q": {
-     "target_date": "2026-05-18",
-     "selected_date": "2026-05-18",
-     "selected_close": 47.23,
-     "return_pct": -12.84369809928031,
-     "status": "mature",
-     "reason": null,
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": "2026-02-17",
-      "endpoint_date": "2026-05-18",
-      "target_date": "2026-05-18"
-     }
-    },
-    "2Q": {
-     "target_date": "2026-08-18",
-     "selected_date": "2026-08-18",
-     "selected_close": 55.87,
-     "return_pct": 3.10020298948146,
-     "status": "mature",
-     "reason": null,
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": "2026-02-17",
-      "endpoint_date": "2026-08-18",
-      "target_date": "2026-08-18"
-     }
-    },
-    "4Q": {
-     "target_date": "2027-02-18",
-     "selected_date": null,
-     "selected_close": null,
-     "return_pct": null,
-     "status": "immature",
-     "reason": "target_after_last_bar",
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": "2026-02-17",
-      "endpoint_date": null,
-      "target_date": "2027-02-18"
-     }
-    },
-    "8Q": {
-     "target_date": "2028-02-18",
-     "selected_date": null,
-     "selected_close": null,
-     "return_pct": null,
-     "status": "immature",
-     "reason": "target_after_last_bar",
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": "2026-02-17",
-      "endpoint_date": null,
-      "target_date": "2028-02-18"
-     }
-    }
-   },
-   "kse100_relative": {
-    "stock_return_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "index_return_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "relative_return_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "returns_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
-    "reasons": {
-     "1Q": "missing_exact_index_dates",
-     "2Q": "missing_exact_index_dates",
-     "4Q": "missing_exact_index_dates",
-     "8Q": "missing_exact_index_dates"
-    },
-    "provenance": {
-     "indices_file": "state/indices.json",
-     "selected_dates": {
-      "1Q": [
-       "2026-02-17",
-       "2026-05-18"
-      ],
-      "2Q": [
-       "2026-02-17",
-       "2026-08-18"
-      ],
-      "4Q": [
-       "2026-02-17",
-       null
-      ],
-      "8Q": [
-       "2026-02-17",
-       null
-      ]
-     }
-    }
-   },
-   "analogues": [
-    {
-     "event_id": "evt_6e9b520a122b8f2d4a59",
-     "symbol": "MLCF",
-     "classification": "same_sector",
-     "effective_date": "2025-12-18",
-     "outcomes": {
-      "1Q": {
-       "endpoint_date": null,
-       "return_pct": null,
-       "status": "unavailable",
-       "reason": "no_ex_ante_endpoint",
-       "provenance": {
-        "history_file": "state/history/MLCF.json",
-        "baseline_date": "2025-12-17",
-        "target_date": "2026-03-18",
-        "endpoint_date": null
-       }
-      },
-      "2Q": {
-       "endpoint_date": null,
-       "return_pct": null,
-       "status": "unavailable",
-       "reason": "no_ex_ante_endpoint",
-       "provenance": {
-        "history_file": "state/history/MLCF.json",
-        "baseline_date": "2025-12-17",
-        "target_date": "2026-06-18",
-        "endpoint_date": null
-       }
-      },
-      "4Q": {
-       "endpoint_date": null,
-       "return_pct": null,
-       "status": "unavailable",
-       "reason": "no_ex_ante_endpoint",
-       "provenance": {
-        "history_file": "state/history/MLCF.json",
-        "baseline_date": "2025-12-17",
-        "target_date": "2026-12-18",
-        "endpoint_date": null
-       }
-      },
-      "8Q": {
-       "endpoint_date": null,
-       "return_pct": null,
-       "status": "unavailable",
-       "reason": "no_ex_ante_endpoint",
-       "provenance": {
-        "history_file": "state/history/MLCF.json",
-        "baseline_date": "2025-12-17",
-        "target_date": "2027-12-18",
-        "endpoint_date": null
-       }
-      }
-     }
-    }
-   ],
-   "analogue_aggregate": {
-    "1Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    },
-    "2Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    },
-    "4Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    },
-    "8Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    }
-   },
-   "financial_outcomes": {
-    "revenue": null,
-    "margin": null,
-    "eps": null,
-    "roic": null,
-    "fcf": null,
-    "valuation": null,
-    "missing_inputs": [
-     "period_aligned_financials",
-     "event_attribution_model"
-    ]
-   },
-   "limitations": [
-    "raw_price_return_not_adjusted_or_total_return",
-    "historical_association_not_causal",
-    "current_sector_analogues_survivorship_bias"
-   ]
-  },
-  "evt_edaac3e8e910ea65f39c": {
-   "study_id": "study_edaac3e8e910ea65f39c",
-   "event_id": "evt_edaac3e8e910ea65f39c",
-   "symbol": "FCCL",
-   "event_type": "acquisition_divestment",
-   "effective_date": null,
-   "data_cutoff": "2026-08-20",
-   "baseline": {
-    "selected_date": null,
-    "selected_close": null,
-    "status": "unavailable",
-    "reason": "invalid_effective_date",
-    "provenance": {
-     "history_file": "state/history/FCCL.json",
-     "selected_date": null
-    }
-   },
-   "horizons": {
-    "1Q": {
-     "target_date": null,
-     "selected_date": null,
-     "selected_close": null,
-     "return_pct": null,
-     "status": "unavailable",
-     "reason": "invalid_effective_date",
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": null,
-      "endpoint_date": null,
-      "target_date": null
-     }
-    },
-    "2Q": {
-     "target_date": null,
-     "selected_date": null,
-     "selected_close": null,
-     "return_pct": null,
-     "status": "unavailable",
-     "reason": "invalid_effective_date",
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": null,
-      "endpoint_date": null,
-      "target_date": null
-     }
-    },
-    "4Q": {
-     "target_date": null,
-     "selected_date": null,
-     "selected_close": null,
-     "return_pct": null,
-     "status": "unavailable",
-     "reason": "invalid_effective_date",
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": null,
-      "endpoint_date": null,
-      "target_date": null
-     }
-    },
-    "8Q": {
-     "target_date": null,
-     "selected_date": null,
-     "selected_close": null,
-     "return_pct": null,
-     "status": "unavailable",
-     "reason": "invalid_effective_date",
-     "provenance": {
-      "history_file": "state/history/FCCL.json",
-      "baseline_date": null,
-      "endpoint_date": null,
-      "target_date": null
-     }
-    }
-   },
-   "kse100_relative": {
-    "stock_return_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "index_return_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "relative_return_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "returns_pct": {
-     "1Q": null,
-     "2Q": null,
-     "4Q": null,
-     "8Q": null
-    },
-    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
-    "reasons": {
-     "1Q": "invalid_effective_date",
-     "2Q": "invalid_effective_date",
-     "4Q": "invalid_effective_date",
-     "8Q": "invalid_effective_date"
-    },
-    "provenance": {
-     "indices_file": "state/indices.json",
-     "selected_dates": {
-      "1Q": [
-       null,
-       null
-      ],
-      "2Q": [
-       null,
-       null
-      ],
-      "4Q": [
-       null,
-       null
-      ],
-      "8Q": [
-       null,
-       null
-      ]
-     }
-    }
-   },
-   "analogues": [],
-   "analogue_aggregate": {
-    "1Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    },
-    "2Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    },
-    "4Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    },
-    "8Q": {
-     "n": 0,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
-    }
-   },
-   "financial_outcomes": {
-    "revenue": null,
-    "margin": null,
-    "eps": null,
-    "roic": null,
-    "fcf": null,
-    "valuation": null,
-    "missing_inputs": [
-     "period_aligned_financials",
-     "event_attribution_model"
-    ]
-   },
-   "limitations": [
-    "raw_price_return_not_adjusted_or_total_return",
-    "historical_association_not_causal",
-    "current_sector_analogues_survivorship_bias"
-   ]
-  },
   "evt_8308cbcd0cbea19730aa": {
    "study_id": "study_8308cbcd0cbea19730aa",
    "event_id": "evt_8308cbcd0cbea19730aa",
    "symbol": "HUBC",
    "event_type": "contract_tender",
    "effective_date": null,
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": null,
     "selected_close": null,
@@ -1653,7 +2172,7 @@
    "symbol": "HUBC",
    "event_type": "contract_tender",
    "effective_date": null,
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": null,
     "selected_close": null,
@@ -1827,7 +2346,7 @@
    "symbol": "MARI",
    "event_type": "acquisition_divestment",
    "effective_date": "2025-11-13",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2025-11-12",
     "selected_close": 681.44,
@@ -1950,10 +2469,472 @@
      }
     }
    },
+   "analogues": [
+    {
+     "event_id": "evt_b25decfc180474cbe066",
+     "symbol": "MARI",
+     "classification": "same_company",
+     "effective_date": "2025-09-30",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MARI.json",
+        "baseline_date": "2025-09-29",
+        "target_date": "2025-12-30",
+        "endpoint_date": null
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MARI.json",
+        "baseline_date": "2025-09-29",
+        "target_date": "2026-03-30",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MARI.json",
+        "baseline_date": "2025-09-29",
+        "target_date": "2026-09-30",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MARI.json",
+        "baseline_date": "2025-09-29",
+        "target_date": "2027-09-30",
+        "endpoint_date": null
+       }
+      }
+     }
+    }
+   ],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_b25decfc180474cbe066": {
+   "study_id": "study_b25decfc180474cbe066",
+   "event_id": "evt_b25decfc180474cbe066",
+   "symbol": "MARI",
+   "event_type": "acquisition_divestment",
+   "effective_date": "2025-09-30",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2025-09-29",
+    "selected_close": 737.81,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/MARI.json",
+     "selected_date": "2025-09-29"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2025-12-30",
+     "selected_date": "2025-12-30",
+     "selected_close": 717.83,
+     "return_pct": -2.708014258413405,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/MARI.json",
+      "baseline_date": "2025-09-29",
+      "endpoint_date": "2025-12-30",
+      "target_date": "2025-12-30"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-03-30",
+     "selected_date": "2026-03-30",
+     "selected_close": 613.86,
+     "return_pct": -16.79971808460172,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/MARI.json",
+      "baseline_date": "2025-09-29",
+      "endpoint_date": "2026-03-30",
+      "target_date": "2026-03-30"
+     }
+    },
+    "4Q": {
+     "target_date": "2026-09-30",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/MARI.json",
+      "baseline_date": "2025-09-29",
+      "endpoint_date": null,
+      "target_date": "2026-09-30"
+     }
+    },
+    "8Q": {
+     "target_date": "2027-09-30",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/MARI.json",
+      "baseline_date": "2025-09-29",
+      "endpoint_date": null,
+      "target_date": "2027-09-30"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2025-09-29",
+       "2025-12-30"
+      ],
+      "2Q": [
+       "2025-09-29",
+       "2026-03-30"
+      ],
+      "4Q": [
+       "2025-09-29",
+       null
+      ],
+      "8Q": [
+       "2025-09-29",
+       null
+      ]
+     }
+    }
+   },
    "analogues": [],
    "analogue_aggregate": {
     "1Q": {
      "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_d7c447a64349aa1b3210": {
+   "study_id": "study_d7c447a64349aa1b3210",
+   "event_id": "evt_d7c447a64349aa1b3210",
+   "symbol": "MLCF",
+   "event_type": "contract_tender",
+   "effective_date": "2026-03-02",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2026-02-27",
+    "selected_close": 95.0,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/MLCF.json",
+     "selected_date": "2026-02-27"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-06-02",
+     "selected_date": "2026-06-02",
+     "selected_close": 87.88,
+     "return_pct": -7.494736842105265,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/MLCF.json",
+      "baseline_date": "2026-02-27",
+      "endpoint_date": "2026-06-02",
+      "target_date": "2026-06-02"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-09-02",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/MLCF.json",
+      "baseline_date": "2026-02-27",
+      "endpoint_date": null,
+      "target_date": "2026-09-02"
+     }
+    },
+    "4Q": {
+     "target_date": "2027-03-02",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/MLCF.json",
+      "baseline_date": "2026-02-27",
+      "endpoint_date": null,
+      "target_date": "2027-03-02"
+     }
+    },
+    "8Q": {
+     "target_date": "2028-03-02",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/MLCF.json",
+      "baseline_date": "2026-02-27",
+      "endpoint_date": null,
+      "target_date": "2028-03-02"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2026-02-27",
+       "2026-06-02"
+      ],
+      "2Q": [
+       "2026-02-27",
+       null
+      ],
+      "4Q": [
+       "2026-02-27",
+       null
+      ],
+      "8Q": [
+       "2026-02-27",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [
+    {
+     "event_id": "evt_d9a05d3b01ea6986febe",
+     "symbol": "MLCF",
+     "classification": "same_company",
+     "effective_date": "2025-10-27",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": "2026-01-27",
+       "return_pct": 20.697435897435913,
+       "status": "mature",
+       "reason": null,
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-10-24",
+        "target_date": "2026-01-27",
+        "endpoint_date": "2026-01-27"
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-10-24",
+        "target_date": "2026-04-27",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-10-24",
+        "target_date": "2026-10-27",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/MLCF.json",
+        "baseline_date": "2025-10-24",
+        "target_date": "2027-10-27",
+        "endpoint_date": null
+       }
+      }
+     }
+    }
+   ],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 1,
      "mean_return_pct": null,
      "status": "suppressed",
      "reason": "n_lt_3"
@@ -2001,7 +2982,7 @@
    "symbol": "MLCF",
    "event_type": "acquisition_divestment",
    "effective_date": "2025-12-18",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2025-12-17",
     "selected_close": 127.13,
@@ -2175,7 +3156,7 @@
    "symbol": "MLCF",
    "event_type": "contract_tender",
    "effective_date": "2025-10-27",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2025-10-24",
     "selected_close": 97.5,
@@ -2349,7 +3330,7 @@
    "symbol": "PPL",
    "event_type": "management_change",
    "effective_date": "2026-01-09",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-01-08",
     "selected_close": 242.07,
@@ -2523,7 +3504,7 @@
    "symbol": "UBL",
    "event_type": "management_change",
    "effective_date": "2026-07-22",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-07-21",
     "selected_close": 474.36,
@@ -2758,14 +3739,70 @@
        }
       }
      }
+    },
+    {
+     "event_id": "evt_f3a3780f9be0df115815",
+     "symbol": "UBL",
+     "classification": "same_company",
+     "effective_date": "2026-03-04",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": "2026-06-04",
+       "return_pct": -3.334288716919842,
+       "status": "mature",
+       "reason": null,
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-06-04",
+        "endpoint_date": "2026-06-04"
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-09-04",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2027-03-04",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2028-03-04",
+        "endpoint_date": null
+       }
+      }
+     }
     }
    ],
    "analogue_aggregate": {
     "1Q": {
-     "n": 2,
-     "mean_return_pct": null,
-     "status": "suppressed",
-     "reason": "n_lt_3"
+     "n": 3,
+     "mean_return_pct": 16.00053154611899,
+     "status": "available",
+     "reason": null
     },
     "2Q": {
      "n": 0,
@@ -2810,7 +3847,7 @@
    "symbol": "UBL",
    "event_type": "management_change",
    "effective_date": "2026-04-15",
-   "data_cutoff": "2026-08-20",
+   "data_cutoff": "2026-08-25",
    "baseline": {
     "selected_date": "2026-04-14",
     "selected_close": 355.93,
@@ -2989,8 +4026,586 @@
        }
       }
      }
+    },
+    {
+     "event_id": "evt_f3a3780f9be0df115815",
+     "symbol": "UBL",
+     "classification": "same_company",
+     "effective_date": "2026-03-04",
+     "outcomes": {
+      "1Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-06-04",
+        "endpoint_date": null
+       }
+      },
+      "2Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2026-09-04",
+        "endpoint_date": null
+       }
+      },
+      "4Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2027-03-04",
+        "endpoint_date": null
+       }
+      },
+      "8Q": {
+       "endpoint_date": null,
+       "return_pct": null,
+       "status": "unavailable",
+       "reason": "no_ex_ante_endpoint",
+       "provenance": {
+        "history_file": "state/history/UBL.json",
+        "baseline_date": "2026-03-03",
+        "target_date": "2028-03-04",
+        "endpoint_date": null
+       }
+      }
+     }
     }
    ],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_f3a3780f9be0df115815": {
+   "study_id": "study_f3a3780f9be0df115815",
+   "event_id": "evt_f3a3780f9be0df115815",
+   "symbol": "UBL",
+   "event_type": "management_change",
+   "effective_date": "2026-03-04",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2026-03-03",
+    "selected_close": 418.68,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/UBL.json",
+     "selected_date": "2026-03-03"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-06-04",
+     "selected_date": "2026-06-04",
+     "selected_close": 404.72,
+     "return_pct": -3.334288716919842,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": "2026-06-04",
+      "target_date": "2026-06-04"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-09-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2026-09-04"
+     }
+    },
+    "4Q": {
+     "target_date": "2027-03-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2027-03-04"
+     }
+    },
+    "8Q": {
+     "target_date": "2028-03-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2028-03-04"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2026-03-03",
+       "2026-06-04"
+      ],
+      "2Q": [
+       "2026-03-03",
+       null
+      ],
+      "4Q": [
+       "2026-03-03",
+       null
+      ],
+      "8Q": [
+       "2026-03-03",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_4998975af68c17c76e02": {
+   "study_id": "study_4998975af68c17c76e02",
+   "event_id": "evt_4998975af68c17c76e02",
+   "symbol": "UBL",
+   "event_type": "contract_tender",
+   "effective_date": "2026-03-04",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2026-03-03",
+    "selected_close": 418.68,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/UBL.json",
+     "selected_date": "2026-03-03"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-06-04",
+     "selected_date": "2026-06-04",
+     "selected_close": 404.72,
+     "return_pct": -3.334288716919842,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": "2026-06-04",
+      "target_date": "2026-06-04"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-09-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2026-09-04"
+     }
+    },
+    "4Q": {
+     "target_date": "2027-03-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2027-03-04"
+     }
+    },
+    "8Q": {
+     "target_date": "2028-03-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2028-03-04"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2026-03-03",
+       "2026-06-04"
+      ],
+      "2Q": [
+       "2026-03-03",
+       null
+      ],
+      "4Q": [
+       "2026-03-03",
+       null
+      ],
+      "8Q": [
+       "2026-03-03",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_38ecc9a86072bc246c6f": {
+   "study_id": "study_38ecc9a86072bc246c6f",
+   "event_id": "evt_38ecc9a86072bc246c6f",
+   "symbol": "UBL",
+   "event_type": "debt_refinancing",
+   "effective_date": "2026-03-04",
+   "data_cutoff": "2026-08-25",
+   "baseline": {
+    "selected_date": "2026-03-03",
+    "selected_close": 418.68,
+    "status": "available",
+    "reason": null,
+    "provenance": {
+     "history_file": "state/history/UBL.json",
+     "selected_date": "2026-03-03"
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": "2026-06-04",
+     "selected_date": "2026-06-04",
+     "selected_close": 404.72,
+     "return_pct": -3.334288716919842,
+     "status": "mature",
+     "reason": null,
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": "2026-06-04",
+      "target_date": "2026-06-04"
+     }
+    },
+    "2Q": {
+     "target_date": "2026-09-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2026-09-04"
+     }
+    },
+    "4Q": {
+     "target_date": "2027-03-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2027-03-04"
+     }
+    },
+    "8Q": {
+     "target_date": "2028-03-04",
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "immature",
+     "reason": "target_after_last_bar",
+     "provenance": {
+      "history_file": "state/history/UBL.json",
+      "baseline_date": "2026-03-03",
+      "endpoint_date": null,
+      "target_date": "2028-03-04"
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "missing_exact_index_dates",
+     "2Q": "missing_exact_index_dates",
+     "4Q": "missing_exact_index_dates",
+     "8Q": "missing_exact_index_dates"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       "2026-03-03",
+       "2026-06-04"
+      ],
+      "2Q": [
+       "2026-03-03",
+       null
+      ],
+      "4Q": [
+       "2026-03-03",
+       null
+      ],
+      "8Q": [
+       "2026-03-03",
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
    "analogue_aggregate": {
     "1Q": {
      "n": 0,

@@ -4,31 +4,203 @@
  "pilot_symbols": [
   "MLCF",
   "OGDC",
-  "DGKC",
   "PPL",
-  "UBL",
+  "DGKC",
   "PSO",
-  "NBP",
-  "LUCK",
+  "UBL",
   "FFC",
-  "BOP",
+  "LUCK",
   "HUBC",
+  "PRL",
+  "BOP",
+  "NBP",
   "MEBL",
-  "HBL",
   "ATRL",
-  "ENGROH",
+  "HBL",
   "MARI",
-  "FCCL",
-  "NRL",
+  "ENGROH",
   "GAL",
-  "PRL"
+  "NRL",
+  "CNERGY"
  ],
  "companies": {
   "MLCF": {
    "symbol": "MLCF",
    "status": "benchmarks_available",
-   "benchmark_count": 2,
+   "benchmark_count": 3,
    "benchmarks": [
+    {
+     "benchmark_id": "conditional_3113b1593fa6de8d623b",
+     "target_event": {
+      "event_id": "evt_d7c447a64349aa1b3210",
+      "study_id": "study_d7c447a64349aa1b3210",
+      "symbol": "MLCF",
+      "event_type": "contract_tender",
+      "event_subtype": "contract",
+      "effective_date": "2026-03-02",
+      "sector": "Cement",
+      "description": "a company in Pakistan to which these shares will be transferred. On May 10, 2023, Andalus entered into an agreement with the Holding Company that along with its affiliates, Holding Company would invest in NHPL, maintaining at least a 66.66…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=contract_tender",
+       "event_subtype=contract",
+       "sector=Cement"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [
+       {
+        "event_id": "evt_d9a05d3b01ea6986febe",
+        "study_id": "study_d9a05d3b01ea6986febe",
+        "symbol": "MLCF",
+        "effective_date": "2025-10-27",
+        "classification": "same_company",
+        "event_type": "contract_tender",
+        "event_subtype": "contract",
+        "sector": "Cement",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": "2026-01-27",
+          "return_pct": 20.697435897435913,
+          "status": "mature",
+          "reason": null,
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-10-24",
+           "target_date": "2026-01-27",
+           "endpoint_date": "2026-01-27"
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-10-24",
+           "target_date": "2026-04-27",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-10-24",
+           "target_date": "2026-10-27",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-10-24",
+           "target_date": "2027-10-27",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_d7c447a64349aa1b3210",
+         "target_event_id": "evt_d7c447a64349aa1b3210"
+        }
+       }
+      ],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 1,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
     {
      "benchmark_id": "conditional_558055ff8c68f4a6b1d3",
      "target_event": {
@@ -309,11 +481,326 @@
     "Historical association is not causal."
    ]
   },
+  "PPL": {
+   "symbol": "PPL",
+   "status": "benchmarks_available",
+   "benchmark_count": 1,
+   "benchmarks": [
+    {
+     "benchmark_id": "conditional_a528c9f26b5f66fcfc74",
+     "target_event": {
+      "event_id": "evt_2c3f64926b9d385c3c13",
+      "study_id": "study_2c3f64926b9d385c3c13",
+      "symbol": "PPL",
+      "event_type": "management_change",
+      "event_subtype": "management_change",
+      "effective_date": "2026-01-09",
+      "sector": "Oil & Gas Exploration Companies",
+      "description": "Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, Re: Appointment of a Director – Mr. Mirza Nasiruddin Mashhood Ahmad Pursuant to Rule 5.6.1(a) of the Stock Exchange Rules, we would like to inform that Mr…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=management_change",
+       "event_subtype=management_change",
+       "sector=Oil & Gas Exploration Companies"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    }
+   ],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
   "DGKC": {
    "symbol": "DGKC",
    "status": "benchmarks_available",
-   "benchmark_count": 2,
+   "benchmark_count": 3,
    "benchmarks": [
+    {
+     "benchmark_id": "conditional_c275fb78a8309ced1228",
+     "target_event": {
+      "event_id": "evt_61703127abf553b1e913",
+      "study_id": "study_61703127abf553b1e913",
+      "symbol": "DGKC",
+      "event_type": "acquisition_divestment",
+      "event_subtype": "acquisition",
+      "effective_date": "2026-04-30",
+      "sector": "Cement",
+      "description": "the Company, together with other Nishat Group entities, continues to pursue the proposed acquisition of a controlling stake in Rafhan Maize Products Company Limited. Financing discussions with the foreign lender are ongoing, alongside para…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=acquisition_divestment",
+       "event_subtype=acquisition",
+       "sector=Cement"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": [
+       {
+        "event_id": "evt_6e9b520a122b8f2d4a59",
+        "study_id": "study_6e9b520a122b8f2d4a59",
+        "symbol": "MLCF",
+        "effective_date": "2025-12-18",
+        "classification": "same_sector",
+        "event_type": "acquisition_divestment",
+        "event_subtype": "acquisition",
+        "sector": "Cement",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": "2026-03-18",
+          "return_pct": -34.539447809329026,
+          "status": "mature",
+          "reason": null,
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-12-17",
+           "target_date": "2026-03-18",
+           "endpoint_date": "2026-03-18"
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-12-17",
+           "target_date": "2026-06-18",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-12-17",
+           "target_date": "2026-12-18",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MLCF.json",
+           "baseline_date": "2025-12-17",
+           "target_date": "2027-12-18",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_61703127abf553b1e913",
+         "target_event_id": "evt_61703127abf553b1e913"
+        }
+       }
+      ]
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 1,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
     {
      "benchmark_id": "conditional_8d7be361297c4b0c8d81",
      "target_event": {
@@ -559,119 +1046,11 @@
     "Historical association is not causal."
    ]
   },
-  "PPL": {
-   "symbol": "PPL",
-   "status": "benchmarks_available",
-   "benchmark_count": 1,
-   "benchmarks": [
-    {
-     "benchmark_id": "conditional_a528c9f26b5f66fcfc74",
-     "target_event": {
-      "event_id": "evt_2c3f64926b9d385c3c13",
-      "study_id": "study_2c3f64926b9d385c3c13",
-      "symbol": "PPL",
-      "event_type": "management_change",
-      "event_subtype": "management_change",
-      "effective_date": "2026-01-09",
-      "sector": "Oil & Gas Exploration Companies",
-      "description": "Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, Re: Appointment of a Director – Mr. Mirza Nasiruddin Mashhood Ahmad Pursuant to Rule 5.6.1(a) of the Stock Exchange Rules, we would like to inform that Mr…"
-     },
-     "context": {
-      "conditions": [
-       "event_type=management_change",
-       "event_subtype=management_change",
-       "sector=Oil & Gas Exploration Companies"
-      ],
-      "summary": "Exact event class and retained current-sector context."
-     },
-     "status": "no_prior_exact_analogues",
-     "matching_policy": {
-      "event_type": "exact",
-      "event_subtype": "exact",
-      "candidate_date": "strictly_before_target",
-      "same_company": "same_symbol",
-      "same_sector": "same_current_sector_other_symbol",
-      "returns": "reuse_target_event_study_analogue_outcomes",
-      "minimum_aggregate_sample": 3
-     },
-     "candidates": {
-      "same_company_exact": [],
-      "same_sector_exact": []
-     },
-     "horizon_aggregates": {
-      "1Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "2Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "4Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "8Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      }
-     },
-     "blocked_states": {
-      "peer": {
-       "status": "blocked",
-       "reason": "no_peer_registry"
-      },
-      "international": {
-       "status": "blocked",
-       "reason": "no_international_registry"
-      },
-      "financial": {
-       "status": "blocked",
-       "reason": "no_period_aligned_financials"
-      },
-      "causal": {
-       "status": "blocked",
-       "reason": "descriptive_not_causal"
-      },
-      "forecast": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      },
-      "valuation": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      }
-     }
-    }
-   ],
+  "PSO": {
+   "symbol": "PSO",
+   "status": "no_operating_events",
+   "benchmark_count": 0,
+   "benchmarks": [],
    "blocked_states": {
     "peer": {
      "status": "blocked",
@@ -705,7 +1084,7 @@
   "UBL": {
    "symbol": "UBL",
    "status": "benchmarks_available",
-   "benchmark_count": 2,
+   "benchmark_count": 5,
    "benchmarks": [
     {
      "benchmark_id": "conditional_6f10bd919f8fcf8ce488",
@@ -802,6 +1181,70 @@
          "target_study_id": "study_2b090e38cccab8fac9da",
          "target_event_id": "evt_2b090e38cccab8fac9da"
         }
+       },
+       {
+        "event_id": "evt_f3a3780f9be0df115815",
+        "study_id": "study_f3a3780f9be0df115815",
+        "symbol": "UBL",
+        "effective_date": "2026-03-04",
+        "classification": "same_company",
+        "event_type": "management_change",
+        "event_subtype": "management_change",
+        "sector": "Commercial Banks",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": "2026-06-04",
+          "return_pct": -3.334288716919842,
+          "status": "mature",
+          "reason": null,
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-06-04",
+           "endpoint_date": "2026-06-04"
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-09-04",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2027-03-04",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2028-03-04",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_2b090e38cccab8fac9da",
+         "target_event_id": "evt_2b090e38cccab8fac9da"
+        }
        }
       ],
       "same_sector_exact": [
@@ -873,14 +1316,14 @@
      },
      "horizon_aggregates": {
       "1Q": {
-       "n": 2,
-       "status": "suppressed",
-       "reason": "n_lt_3",
+       "n": 3,
+       "status": "available",
+       "reason": null,
        "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
+        "mean_return_pct": 16.00053154611899,
+        "median_return_pct": 21.372126436781613,
+        "min_return_pct": -3.334288716919842,
+        "max_return_pct": 29.9637569184952
        }
       },
       "2Q": {
@@ -975,7 +1418,72 @@
       "minimum_aggregate_sample": 3
      },
      "candidates": {
-      "same_company_exact": [],
+      "same_company_exact": [
+       {
+        "event_id": "evt_f3a3780f9be0df115815",
+        "study_id": "study_f3a3780f9be0df115815",
+        "symbol": "UBL",
+        "effective_date": "2026-03-04",
+        "classification": "same_company",
+        "event_type": "management_change",
+        "event_subtype": "management_change",
+        "sector": "Commercial Banks",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-06-04",
+           "endpoint_date": null
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-09-04",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2027-03-04",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2028-03-04",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_a5aaeaed2ea2e998b0cf",
+         "target_event_id": "evt_a5aaeaed2ea2e998b0cf"
+        }
+       }
+      ],
       "same_sector_exact": [
        {
         "event_id": "evt_5002b3c9253efe9a530d",
@@ -1115,199 +1623,23 @@
        "reason": "not_implemented"
       }
      }
-    }
-   ],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
     },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "PSO": {
-   "symbol": "PSO",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
-    },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "NBP": {
-   "symbol": "NBP",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
-    },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "LUCK": {
-   "symbol": "LUCK",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
-    },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "FFC": {
-   "symbol": "FFC",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
-    },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "BOP": {
-   "symbol": "BOP",
-   "status": "benchmarks_available",
-   "benchmark_count": 3,
-   "benchmarks": [
     {
-     "benchmark_id": "conditional_372713dd2782522004d2",
+     "benchmark_id": "conditional_0fa3c1d00c8b70be60f5",
      "target_event": {
-      "event_id": "evt_f4f9e65bd4a1bac668ae",
-      "study_id": "study_f4f9e65bd4a1bac668ae",
-      "symbol": "BOP",
-      "event_type": "debt_refinancing",
-      "event_subtype": "credit_event",
-      "effective_date": "2026-04-30",
+      "event_id": "evt_f3a3780f9be0df115815",
+      "study_id": "study_f3a3780f9be0df115815",
+      "symbol": "UBL",
+      "event_type": "management_change",
+      "event_subtype": "management_change",
+      "effective_date": "2026-03-04",
       "sector": "Commercial Banks",
-      "description": "ba (Floatation and Control) Ordinance, 1980 (the Modaraba Ordinance). In order to address going concern issue in terms of section 23 of the Modaraba Ordinance, the Bank being the parent company of the Modaraba management company is providi…"
+      "description": "in UK and Pakistan and was promoted as Chief Executive of Bestway Cement Limited. He was appointed as the Group CEO in 2004. In July 2024 he was appointed Chairman of the Board of Directors of Bestway Group. He is a fellow of the Institute…"
      },
      "context": {
       "conditions": [
-       "event_type=debt_refinancing",
-       "event_subtype=credit_event",
+       "event_type=management_change",
+       "event_subtype=management_change",
        "sector=Commercial Banks"
       ],
       "summary": "Exact event class and retained current-sector context."
@@ -1400,16 +1732,16 @@
      }
     },
     {
-     "benchmark_id": "conditional_535838ec8d982232a020",
+     "benchmark_id": "conditional_39d099b6394eb6332a13",
      "target_event": {
-      "event_id": "evt_a40a864e612cc40466e8",
-      "study_id": "study_a40a864e612cc40466e8",
-      "symbol": "BOP",
+      "event_id": "evt_4998975af68c17c76e02",
+      "study_id": "study_4998975af68c17c76e02",
+      "symbol": "UBL",
       "event_type": "contract_tender",
       "event_subtype": "contract",
-      "effective_date": "2026-03-05",
+      "effective_date": "2026-03-04",
       "sector": "Commercial Banks",
-      "description": "ven financial institution. CSR Initiatives 2025: Education • The Bank of Punjab signed an MOU with National University of Science & Technology (NUST) under which educational expenses of selected deserving students of the University were af…"
+      "description": "t a demand promissory note executed in favour of the State Bank of Pakistan. The Bank has entered into an agreement with the SBP for extending export finance to customers. These borrowings are repayable within six months, latest by June 20…"
      },
      "context": {
       "conditions": [
@@ -1507,21 +1839,21 @@
      }
     },
     {
-     "benchmark_id": "conditional_ee0c4944cbf04b9c73dd",
+     "benchmark_id": "conditional_54f0abb33b7eeedf8aa2",
      "target_event": {
-      "event_id": "evt_5002b3c9253efe9a530d",
-      "study_id": "study_5002b3c9253efe9a530d",
-      "symbol": "BOP",
-      "event_type": "management_change",
-      "event_subtype": "management_change",
-      "effective_date": "2026-03-05",
+      "event_id": "evt_38ecc9a86072bc246c6f",
+      "study_id": "study_38ecc9a86072bc246c6f",
+      "symbol": "UBL",
+      "event_type": "debt_refinancing",
+      "event_subtype": "credit_event",
+      "effective_date": "2026-03-04",
       "sector": "Commercial Banks",
-      "description": "g vote, but he shall not exercise any executive authority or power. The President/CEO, is appointed by the Government of the Punjab. The President is the Chief Executive Officer of the Bank and shall, subject to any bye-laws made in this b…"
+      "description": "onitored. • There are no significant doubts regarding the Bank’s ability to continue as a going concern. • There has been no material departure from the best practices of corporate governance. • Performance highlights for the last six year…"
      },
      "context": {
       "conditions": [
-       "event_type=management_change",
-       "event_subtype=management_change",
+       "event_type=debt_refinancing",
+       "event_subtype=credit_event",
        "sector=Commercial Banks"
       ],
       "summary": "Exact event class and retained current-sector context."
@@ -1614,6 +1946,76 @@
      }
     }
    ],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
+  "FFC": {
+   "symbol": "FFC",
+   "status": "no_operating_events",
+   "benchmark_count": 0,
+   "benchmarks": [],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
+  "LUCK": {
+   "symbol": "LUCK",
+   "status": "no_operating_events",
+   "benchmark_count": 0,
+   "benchmarks": [],
    "blocked_states": {
     "peer": {
      "status": "blocked",
@@ -1894,11 +2296,990 @@
     "Historical association is not causal."
    ]
   },
+  "PRL": {
+   "symbol": "PRL",
+   "status": "no_operating_events",
+   "benchmark_count": 0,
+   "benchmarks": [],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
+  "BOP": {
+   "symbol": "BOP",
+   "status": "benchmarks_available",
+   "benchmark_count": 3,
+   "benchmarks": [
+    {
+     "benchmark_id": "conditional_372713dd2782522004d2",
+     "target_event": {
+      "event_id": "evt_f4f9e65bd4a1bac668ae",
+      "study_id": "study_f4f9e65bd4a1bac668ae",
+      "symbol": "BOP",
+      "event_type": "debt_refinancing",
+      "event_subtype": "credit_event",
+      "effective_date": "2026-04-30",
+      "sector": "Commercial Banks",
+      "description": "ba (Floatation and Control) Ordinance, 1980 (the Modaraba Ordinance). In order to address going concern issue in terms of section 23 of the Modaraba Ordinance, the Bank being the parent company of the Modaraba management company is providi…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=debt_refinancing",
+       "event_subtype=credit_event",
+       "sector=Commercial Banks"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": [
+       {
+        "event_id": "evt_38ecc9a86072bc246c6f",
+        "study_id": "study_38ecc9a86072bc246c6f",
+        "symbol": "UBL",
+        "effective_date": "2026-03-04",
+        "classification": "same_sector",
+        "event_type": "debt_refinancing",
+        "event_subtype": "credit_event",
+        "sector": "Commercial Banks",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-06-04",
+           "endpoint_date": null
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-09-04",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2027-03-04",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2028-03-04",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_f4f9e65bd4a1bac668ae",
+         "target_event_id": "evt_f4f9e65bd4a1bac668ae"
+        }
+       }
+      ]
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
+    {
+     "benchmark_id": "conditional_535838ec8d982232a020",
+     "target_event": {
+      "event_id": "evt_a40a864e612cc40466e8",
+      "study_id": "study_a40a864e612cc40466e8",
+      "symbol": "BOP",
+      "event_type": "contract_tender",
+      "event_subtype": "contract",
+      "effective_date": "2026-03-05",
+      "sector": "Commercial Banks",
+      "description": "ven financial institution. CSR Initiatives 2025: Education • The Bank of Punjab signed an MOU with National University of Science & Technology (NUST) under which educational expenses of selected deserving students of the University were af…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=contract_tender",
+       "event_subtype=contract",
+       "sector=Commercial Banks"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": [
+       {
+        "event_id": "evt_4998975af68c17c76e02",
+        "study_id": "study_4998975af68c17c76e02",
+        "symbol": "UBL",
+        "effective_date": "2026-03-04",
+        "classification": "same_sector",
+        "event_type": "contract_tender",
+        "event_subtype": "contract",
+        "sector": "Commercial Banks",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-06-04",
+           "endpoint_date": null
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-09-04",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2027-03-04",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2028-03-04",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_a40a864e612cc40466e8",
+         "target_event_id": "evt_a40a864e612cc40466e8"
+        }
+       }
+      ]
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
+    {
+     "benchmark_id": "conditional_ee0c4944cbf04b9c73dd",
+     "target_event": {
+      "event_id": "evt_5002b3c9253efe9a530d",
+      "study_id": "study_5002b3c9253efe9a530d",
+      "symbol": "BOP",
+      "event_type": "management_change",
+      "event_subtype": "management_change",
+      "effective_date": "2026-03-05",
+      "sector": "Commercial Banks",
+      "description": "g vote, but he shall not exercise any executive authority or power. The President/CEO, is appointed by the Government of the Punjab. The President is the Chief Executive Officer of the Bank and shall, subject to any bye-laws made in this b…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=management_change",
+       "event_subtype=management_change",
+       "sector=Commercial Banks"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": [
+       {
+        "event_id": "evt_f3a3780f9be0df115815",
+        "study_id": "study_f3a3780f9be0df115815",
+        "symbol": "UBL",
+        "effective_date": "2026-03-04",
+        "classification": "same_sector",
+        "event_type": "management_change",
+        "event_subtype": "management_change",
+        "sector": "Commercial Banks",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-06-04",
+           "endpoint_date": null
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2026-09-04",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2027-03-04",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/UBL.json",
+           "baseline_date": "2026-03-03",
+           "target_date": "2028-03-04",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_5002b3c9253efe9a530d",
+         "target_event_id": "evt_5002b3c9253efe9a530d"
+        }
+       }
+      ]
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    }
+   ],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
+  "NBP": {
+   "symbol": "NBP",
+   "status": "no_operating_events",
+   "benchmark_count": 0,
+   "benchmarks": [],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
   "MEBL": {
    "symbol": "MEBL",
    "status": "no_operating_events",
    "benchmark_count": 0,
    "benchmarks": [],
+   "blocked_states": {
+    "peer": {
+     "status": "blocked",
+     "reason": "no_peer_registry"
+    },
+    "international": {
+     "status": "blocked",
+     "reason": "no_international_registry"
+    },
+    "financial": {
+     "status": "blocked",
+     "reason": "no_period_aligned_financials"
+    },
+    "causal": {
+     "status": "blocked",
+     "reason": "descriptive_not_causal"
+    }
+   },
+   "policy": {
+    "descriptive_only": true,
+    "strict_no_lookahead": true,
+    "minimum_sample_three": true,
+    "no_browser_matching": true
+   },
+   "limitations": [
+    "Current-sector membership can introduce survivorship bias.",
+    "Raw price returns are not adjusted or total returns.",
+    "Historical association is not causal."
+   ]
+  },
+  "ATRL": {
+   "symbol": "ATRL",
+   "status": "benchmarks_available",
+   "benchmark_count": 3,
+   "benchmarks": [
+    {
+     "benchmark_id": "conditional_39f800434d71f0c8f8c8",
+     "target_event": {
+      "event_id": "evt_b66212b80aa7a12b67b6",
+      "study_id": "study_b66212b80aa7a12b67b6",
+      "symbol": "ATRL",
+      "event_type": "acquisition_divestment",
+      "event_subtype": "acquisition",
+      "effective_date": "2025-10-03",
+      "sector": "Refinery",
+      "description": "eriod. He served on prominent national level committees like Committee for formulation of Takeover law. CLA Committee for review of Securities & Exchange Ordinance 1969, Committee for formulation of CDC law & regulations and Prime Minister…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=acquisition_divestment",
+       "event_subtype=acquisition",
+       "sector=Refinery"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
+    {
+     "benchmark_id": "conditional_6bb7c17ae1dc513be1c3",
+     "target_event": {
+      "event_id": "evt_a5fc61fec79e9bc76d65",
+      "study_id": "study_a5fc61fec79e9bc76d65",
+      "symbol": "ATRL",
+      "event_type": "management_change",
+      "event_subtype": "management_change",
+      "effective_date": "2025-10-03",
+      "sector": "Refinery",
+      "description": "nal abilities, he eventually rose to the highest management position in the Group and was appointed as Group Chief Executive of “Attock Group of Companies” in July 2006. He has exhaustive experience and in depth knowledge related to variou…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=management_change",
+       "event_subtype=management_change",
+       "sector=Refinery"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
+    {
+     "benchmark_id": "conditional_ae33c2922740f8e68e69",
+     "target_event": {
+      "event_id": "evt_2faadfd3dc7f2e8a5262",
+      "study_id": "study_2faadfd3dc7f2e8a5262",
+      "symbol": "ATRL",
+      "event_type": "debt_refinancing",
+      "event_subtype": "credit_event",
+      "effective_date": "2025-10-03",
+      "sector": "Refinery",
+      "description": "onitored. vi. There are no significant doubts upon the Company’s ability to continue as a going concern. vii. There has been no material departure from the best practices of Corporate Governance, as detailed in the Code of Corporate Govern…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=debt_refinancing",
+       "event_subtype=credit_event",
+       "sector=Refinery"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    }
+   ],
    "blocked_states": {
     "peer": {
      "status": "blocked",
@@ -1964,11 +3345,291 @@
     "Historical association is not causal."
    ]
   },
-  "ATRL": {
-   "symbol": "ATRL",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
+  "MARI": {
+   "symbol": "MARI",
+   "status": "benchmarks_available",
+   "benchmark_count": 2,
+   "benchmarks": [
+    {
+     "benchmark_id": "conditional_f1899cc8a7e91f38095a",
+     "target_event": {
+      "event_id": "evt_3d1dae7553f73da60ba3",
+      "study_id": "study_3d1dae7553f73da60ba3",
+      "symbol": "MARI",
+      "event_type": "acquisition_divestment",
+      "event_subtype": "acquisition",
+      "effective_date": "2025-11-13",
+      "sector": "Oil & Gas Exploration Companies",
+      "description": "The acquisition of these offshore exploration blocks is a part of Company’s long term strategy where it aims to not only find new hydrocarbon resources but also to l"
+     },
+     "context": {
+      "conditions": [
+       "event_type=acquisition_divestment",
+       "event_subtype=acquisition",
+       "sector=Oil & Gas Exploration Companies"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [
+       {
+        "event_id": "evt_b25decfc180474cbe066",
+        "study_id": "study_b25decfc180474cbe066",
+        "symbol": "MARI",
+        "effective_date": "2025-09-30",
+        "classification": "same_company",
+        "event_type": "acquisition_divestment",
+        "event_subtype": "acquisition",
+        "sector": "Oil & Gas Exploration Companies",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MARI.json",
+           "baseline_date": "2025-09-29",
+           "target_date": "2025-12-30",
+           "endpoint_date": null
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MARI.json",
+           "baseline_date": "2025-09-29",
+           "target_date": "2026-03-30",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MARI.json",
+           "baseline_date": "2025-09-29",
+           "target_date": "2026-09-30",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/MARI.json",
+           "baseline_date": "2025-09-29",
+           "target_date": "2027-09-30",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_3d1dae7553f73da60ba3",
+         "target_event_id": "evt_3d1dae7553f73da60ba3"
+        }
+       }
+      ],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
+    {
+     "benchmark_id": "conditional_a959a2913102d2b28ff4",
+     "target_event": {
+      "event_id": "evt_b25decfc180474cbe066",
+      "study_id": "study_b25decfc180474cbe066",
+      "symbol": "MARI",
+      "event_type": "acquisition_divestment",
+      "event_subtype": "acquisition",
+      "effective_date": "2025-09-30",
+      "sector": "Oil & Gas Exploration Companies",
+      "description": "and Clause 5.6.1 (a) of the PSX Regulations, we hereby convey the following information: Acquisition of Working Interest in Peshawar Block (as an Operator) from Hycarbex- American Energ~ We are pleased to inform you that Mari Energies Limi…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=acquisition_divestment",
+       "event_subtype=acquisition",
+       "sector=Oil & Gas Exploration Companies"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    }
+   ],
    "blocked_states": {
     "peer": {
      "status": "blocked",
@@ -2142,434 +3803,11 @@
     "Historical association is not causal."
    ]
   },
-  "MARI": {
-   "symbol": "MARI",
-   "status": "benchmarks_available",
-   "benchmark_count": 1,
-   "benchmarks": [
-    {
-     "benchmark_id": "conditional_f1899cc8a7e91f38095a",
-     "target_event": {
-      "event_id": "evt_3d1dae7553f73da60ba3",
-      "study_id": "study_3d1dae7553f73da60ba3",
-      "symbol": "MARI",
-      "event_type": "acquisition_divestment",
-      "event_subtype": "acquisition",
-      "effective_date": "2025-11-13",
-      "sector": "Oil & Gas Exploration Companies",
-      "description": "The acquisition of these offshore exploration blocks is a part of Company’s long term strategy where it aims to not only find new hydrocarbon resources but also to l"
-     },
-     "context": {
-      "conditions": [
-       "event_type=acquisition_divestment",
-       "event_subtype=acquisition",
-       "sector=Oil & Gas Exploration Companies"
-      ],
-      "summary": "Exact event class and retained current-sector context."
-     },
-     "status": "no_prior_exact_analogues",
-     "matching_policy": {
-      "event_type": "exact",
-      "event_subtype": "exact",
-      "candidate_date": "strictly_before_target",
-      "same_company": "same_symbol",
-      "same_sector": "same_current_sector_other_symbol",
-      "returns": "reuse_target_event_study_analogue_outcomes",
-      "minimum_aggregate_sample": 3
-     },
-     "candidates": {
-      "same_company_exact": [],
-      "same_sector_exact": []
-     },
-     "horizon_aggregates": {
-      "1Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "2Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "4Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "8Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      }
-     },
-     "blocked_states": {
-      "peer": {
-       "status": "blocked",
-       "reason": "no_peer_registry"
-      },
-      "international": {
-       "status": "blocked",
-       "reason": "no_international_registry"
-      },
-      "financial": {
-       "status": "blocked",
-       "reason": "no_period_aligned_financials"
-      },
-      "causal": {
-       "status": "blocked",
-       "reason": "descriptive_not_causal"
-      },
-      "forecast": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      },
-      "valuation": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      }
-     }
-    }
-   ],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
-    },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "FCCL": {
-   "symbol": "FCCL",
-   "status": "benchmarks_available",
-   "benchmark_count": 2,
-   "benchmarks": [
-    {
-     "benchmark_id": "conditional_f055538f571653cd6295",
-     "target_event": {
-      "event_id": "evt_d028288e2afc6923d3c1",
-      "study_id": "study_d028288e2afc6923d3c1",
-      "symbol": "FCCL",
-      "event_type": "acquisition_divestment",
-      "event_subtype": "acquisition",
-      "effective_date": "2026-02-18",
-      "sector": "Cement",
-      "description": "istan Limited D-70, Block-4, Kehkashan-s, Clifton Karachi Public Announcement of offer to Acquire 10,950,306 ordinary Shares representing approximately 7.g7y. of the Attock Cement Pakistan Limited (the Target Company) jointly by Fauji ceme…"
-     },
-     "context": {
-      "conditions": [
-       "event_type=acquisition_divestment",
-       "event_subtype=acquisition",
-       "sector=Cement"
-      ],
-      "summary": "Exact event class and retained current-sector context."
-     },
-     "status": "candidate_history_present",
-     "matching_policy": {
-      "event_type": "exact",
-      "event_subtype": "exact",
-      "candidate_date": "strictly_before_target",
-      "same_company": "same_symbol",
-      "same_sector": "same_current_sector_other_symbol",
-      "returns": "reuse_target_event_study_analogue_outcomes",
-      "minimum_aggregate_sample": 3
-     },
-     "candidates": {
-      "same_company_exact": [],
-      "same_sector_exact": [
-       {
-        "event_id": "evt_6e9b520a122b8f2d4a59",
-        "study_id": "study_6e9b520a122b8f2d4a59",
-        "symbol": "MLCF",
-        "effective_date": "2025-12-18",
-        "classification": "same_sector",
-        "event_type": "acquisition_divestment",
-        "event_subtype": "acquisition",
-        "sector": "Cement",
-        "outcomes": {
-         "1Q": {
-          "endpoint_date": null,
-          "return_pct": null,
-          "status": "unavailable",
-          "reason": "no_ex_ante_endpoint",
-          "provenance": {
-           "history_file": "state/history/MLCF.json",
-           "baseline_date": "2025-12-17",
-           "target_date": "2026-03-18",
-           "endpoint_date": null
-          }
-         },
-         "2Q": {
-          "endpoint_date": null,
-          "return_pct": null,
-          "status": "unavailable",
-          "reason": "no_ex_ante_endpoint",
-          "provenance": {
-           "history_file": "state/history/MLCF.json",
-           "baseline_date": "2025-12-17",
-           "target_date": "2026-06-18",
-           "endpoint_date": null
-          }
-         },
-         "4Q": {
-          "endpoint_date": null,
-          "return_pct": null,
-          "status": "unavailable",
-          "reason": "no_ex_ante_endpoint",
-          "provenance": {
-           "history_file": "state/history/MLCF.json",
-           "baseline_date": "2025-12-17",
-           "target_date": "2026-12-18",
-           "endpoint_date": null
-          }
-         },
-         "8Q": {
-          "endpoint_date": null,
-          "return_pct": null,
-          "status": "unavailable",
-          "reason": "no_ex_ante_endpoint",
-          "provenance": {
-           "history_file": "state/history/MLCF.json",
-           "baseline_date": "2025-12-17",
-           "target_date": "2027-12-18",
-           "endpoint_date": null
-          }
-         }
-        },
-        "outcome_source": {
-         "target_study_id": "study_d028288e2afc6923d3c1",
-         "target_event_id": "evt_d028288e2afc6923d3c1"
-        }
-       }
-      ]
-     },
-     "horizon_aggregates": {
-      "1Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "2Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "4Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "8Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      }
-     },
-     "blocked_states": {
-      "peer": {
-       "status": "blocked",
-       "reason": "no_peer_registry"
-      },
-      "international": {
-       "status": "blocked",
-       "reason": "no_international_registry"
-      },
-      "financial": {
-       "status": "blocked",
-       "reason": "no_period_aligned_financials"
-      },
-      "causal": {
-       "status": "blocked",
-       "reason": "descriptive_not_causal"
-      },
-      "forecast": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      },
-      "valuation": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      }
-     }
-    },
-    {
-     "benchmark_id": "conditional_4d9a0a5943535daf73fd",
-     "target_event": {
-      "event_id": "evt_edaac3e8e910ea65f39c",
-      "study_id": "study_edaac3e8e910ea65f39c",
-      "symbol": "FCCL",
-      "event_type": "acquisition_divestment",
-      "event_subtype": "acquisition",
-      "effective_date": "unknown",
-      "sector": "Cement",
-      "description": "ent Production capacity of 34,860 TPD PP Bags Production capacity of 72 Mn Bags per annum Acquisition of Polypropylene (PP) Bags Manufacturing plant at Hattar KPK Increase in Solar captive capacity by 15MW during the year FY 2025 MILESTONES"
-     },
-     "context": {
-      "conditions": [
-       "event_type=acquisition_divestment",
-       "event_subtype=acquisition",
-       "sector=Cement"
-      ],
-      "summary": "Exact event class and retained current-sector context."
-     },
-     "status": "blocked_invalid_target_date",
-     "matching_policy": {
-      "event_type": "exact",
-      "event_subtype": "exact",
-      "candidate_date": "strictly_before_target",
-      "same_company": "same_symbol",
-      "same_sector": "same_current_sector_other_symbol",
-      "returns": "reuse_target_event_study_analogue_outcomes",
-      "minimum_aggregate_sample": 3
-     },
-     "candidates": {
-      "same_company_exact": [],
-      "same_sector_exact": []
-     },
-     "horizon_aggregates": {
-      "1Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "2Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "4Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      },
-      "8Q": {
-       "n": 0,
-       "status": "suppressed",
-       "reason": "n_lt_3",
-       "stats": {
-        "mean_return_pct": null,
-        "median_return_pct": null,
-        "min_return_pct": null,
-        "max_return_pct": null
-       }
-      }
-     },
-     "blocked_states": {
-      "peer": {
-       "status": "blocked",
-       "reason": "no_peer_registry"
-      },
-      "international": {
-       "status": "blocked",
-       "reason": "no_international_registry"
-      },
-      "financial": {
-       "status": "blocked",
-       "reason": "no_period_aligned_financials"
-      },
-      "causal": {
-       "status": "blocked",
-       "reason": "descriptive_not_causal"
-      },
-      "forecast": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      },
-      "valuation": {
-       "status": "blocked",
-       "reason": "not_implemented"
-      }
-     }
-    }
-   ],
+  "GAL": {
+   "symbol": "GAL",
+   "status": "no_operating_events",
+   "benchmark_count": 0,
+   "benchmarks": [],
    "blocked_states": {
     "peer": {
      "status": "blocked",
@@ -2635,43 +3873,8 @@
     "Historical association is not causal."
    ]
   },
-  "GAL": {
-   "symbol": "GAL",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
-   "blocked_states": {
-    "peer": {
-     "status": "blocked",
-     "reason": "no_peer_registry"
-    },
-    "international": {
-     "status": "blocked",
-     "reason": "no_international_registry"
-    },
-    "financial": {
-     "status": "blocked",
-     "reason": "no_period_aligned_financials"
-    },
-    "causal": {
-     "status": "blocked",
-     "reason": "descriptive_not_causal"
-    }
-   },
-   "policy": {
-    "descriptive_only": true,
-    "strict_no_lookahead": true,
-    "minimum_sample_three": true,
-    "no_browser_matching": true
-   },
-   "limitations": [
-    "Current-sector membership can introduce survivorship bias.",
-    "Raw price returns are not adjusted or total returns.",
-    "Historical association is not causal."
-   ]
-  },
-  "PRL": {
-   "symbol": "PRL",
+  "CNERGY": {
+   "symbol": "CNERGY",
    "status": "no_operating_events",
    "benchmark_count": 0,
    "benchmarks": [],
@@ -2717,5 +3920,5 @@
   "state/company_intel/event_studies.json",
   "state/sectors.json"
  ],
- "as_of": "2026-08-20"
+ "as_of": "2026-08-25"
 }

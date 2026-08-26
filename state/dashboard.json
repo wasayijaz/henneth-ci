@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-22 13:18",
+ "updated": "2026-08-26 17:33",
  "regime": "neutral",
  "geo_risk": {
-  "score": 57,
+  "score": 52,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260822-BML-obv_divergence_up",
+   "id": "20260826-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260822-TPLT-donchian55_break",
+   "id": "20260826-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,25 +43,25 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260822-ATRL-high52w_break",
-   "ticker": "ATRL",
-   "strategy": "high52w_break",
-   "template": "52-week high breakout",
-   "category": "breakout",
-   "sector": "Refinery",
-   "hold_sessions": 20,
+   "id": "20260826-GAL-trend_momo_combo",
+   "ticker": "GAL",
+   "strategy": "trend_momo_combo",
+   "template": "Trend + momentum combo",
+   "category": "momentum",
+   "sector": "Automobile Assembler",
+   "hold_sessions": 12,
    "backtest": {
-    "hit_rate": 0.567,
-    "net_expectancy_pct": 1.96,
-    "n": 30,
-    "oos_hit": 0.5
+    "hit_rate": 0.579,
+    "net_expectancy_pct": 1.28,
+    "n": 38,
+    "oos_hit": 0.6
    },
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "52-week high breakout is triggering now; on ATRL's own history it won 57% over 30 trades (+2.0% net/trade), still profitable out-of-sample."
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 58% over 38 trades (+1.3% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260822-NICL-roc60_leader_pullback",
+   "id": "20260826-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -87,19 +87,19 @@
   },
   {
    "ticker": "XLI",
-   "score": 72.4
+   "score": 73.0
   },
   {
    "ticker": "GLD",
-   "score": 71.5
+   "score": 72.0
   },
   {
    "ticker": "USRUT",
-   "score": 66.6
+   "score": 66.8
   },
   {
    "ticker": "FFC",
-   "score": 66.5
+   "score": 66.3
   },
   {
    "ticker": "INDU",
@@ -178,191 +178,6 @@
  ],
  "news": [
   {
-   "ts": "2026-08-20",
-   "source": "Dawn.com",
-   "headline": "PSX extends losses on political uncertainty - added sector/stock detail for Thu Aug 20 confirmed close",
-   "tickers": [
-    "MACRO",
-    "UBL",
-    "HUBC",
-    "BAFL",
-    "HBL",
-    "FATIMA",
-    "OGDC",
-    "ENGROH",
-    "SAZEW"
-   ],
-   "impact": 3,
-   "summary": "Supplements the already-logged Thu Aug 20, 2026 confirmed close (176,591.77, down 254.59pts/-0.14%, volatile session). Per Dawn.com, late nervous selling was attributed to political uncertainty and Middle East tensions; intraday index surged over 1,400 points to 178,291.37 before retreating to a low of 176,156.57. New detail not previously captured: United Bank (UBL), Hub Power (HUBC), Bank Al Habib (BAFL), Habib Bank (HBL) and Fatima Fertiliser (FATIMA) collectively removed ~458 points from the benchmark; OGDC, Engro Holdings (ENGROH) and Sazgar Engineering (SAZEW) collectively contributed ~321 points. Volume down 15.57% to 665m shares; traded value down 22.17% to Rs30.8bn. Market faced resistance at the 178,000-180,000 zone. Tagged to the union of the superseded MACRO-only close entry plus tickers newly named in this source, per the confirmed-close supersession rule. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries.",
-   "url": "https://www.dawn.com/news/2024208/psx-extends-losses-on-political-uncertainty"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "NBP president Rehmat Ali Hasnie's tenure comes to an end",
-   "tickers": [
-    "NBP"
-   ],
-   "impact": 3,
-   "summary": "Rehmat Ali Hasnie's tenure as President and CEO of National Bank of Pakistan (PSX: NBP) expired effective August 21, 2026, per Mettis Global / an official company statement. No successor named or interim-arrangement detail disclosed in the source reviewed this cycle. Logged as impact 3 (notable management change) per desk news-impact criteria (Rule 10).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Symmetry Group (SYM) deploys Rs325.4m of Rs361.5m net IPO proceeds",
-   "tickers": [
-    "SYM"
-   ],
-   "impact": 2,
-   "summary": "Symmetry Group Limited (PSX: SYM) reported in its final progress report on IPO-proceeds utilization that it has deployed Rs325.4m of its Rs361.5m net IPO proceeds against approved allocations, with the remaining ~Rs36.1m absorbed into working capital, per Mettis Global. Logged as impact 2 (minor company administrative/financial item).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-20",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Pakistan weekly SPI inflation up 0.49% for week ended Aug 20, 2026",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "Pakistan's Sensitive Price Indicator (SPI), a weekly short-term inflation gauge, increased 0.49% for the week ended August 20, 2026, per Mettis Global. No item-level breakdown or YoY comparison captured this cycle. Logged as impact 2 (minor, routine weekly economic print; not a material single move).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Business Recorder",
-   "headline": "PSX: KSE-100 trades flat",
-   "tickers": [
-    "MACRO",
-    "ATRL",
-    "MARI",
-    "FFC",
-    "HBL",
-    "MEBL",
-    "NBP",
-    "UBL"
-   ],
-   "impact": 3,
-   "summary": "Supersedes the already-logged Aug 21 MM News open checkpoint (177,734.68, +842.92pts/+0.47%). Per Business Recorder ('PSX: KSE-100 trades flat'), the index was hovering at 176,621.25, up 29.49 points (+0.02%), around midday/first half of Friday's session, from Thursday Aug 20's confirmed close of 176,591.77 (already logged). Buying observed in automobile assemblers, cement, commercial banks, fertiliser, OMCs and refineries; index-heavy stocks named trading green: ARL (mapped to Attock Refinery Limited, ATRL in the desk universe, by name match), MARI, FFC, HBL, MEBL, NBP and UBL. Direct article fetch returned HTTP 403 this cycle; figures taken from search-indexed snippet of the same Business Recorder URL. Tagged to the union of the superseded item's tickers (MACRO) plus tickers newly named in this source, per the confirmed-close supersession rule. Sub-1% move; impact 3 (notable), consistent with prior similar-magnitude intraday entries in this newslog.",
-   "url": "https://www.brecorder.com/news/40435915/psx-kse-100-trades-flat"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "PSX Data Portal (DPS) indices page",
-   "headline": "KSE-100 at 177,166.52, up 574.76 points (+0.33%) as of Aug 21, 2026 4:50 PM",
-   "tickers": [
-    "MACRO",
-    "ATRL",
-    "MARI",
-    "FFC",
-    "HBL",
-    "MEBL",
-    "NBP",
-    "UBL"
-   ],
-   "impact": 3,
-   "summary": "Supersedes the already-logged Aug 21 MM News open checkpoint and the same-day Business Recorder 'trades flat' midday checkpoint (176,621.25, +29.49pts/+0.02%). Per dps.psx.com.pk/indices, page timestamped 'Aug 21, 2026 4:50 PM' (after Friday's 16:30 PKT second-session close) shows KSE-100 at 177,166.52, up 574.76 points (+0.33%) from Thursday Aug 20's confirmed close of 176,591.77 (already logged). Also shown: KSE-30 at 52,670.80 (+203.40pts/+0.39%), KMI-30 at 251,460.53 (+1,891.30pts/+0.76%), All Share Index at 107,641.65 (+519.21pts/+0.48%). No closing-bell wire report or stated driver located this cycle to confirm this as the official settled close; treated as the latest available checkpoint. Tagged to the union of the superseded items' tickers per the confirmed-close supersession rule; no new company-specific ticker named in this DPS source itself. Sub-1% move; impact 3 (notable), consistent with prior similar-magnitude index entries in this newslog. Follow up next cycle to confirm official close via a closing-bell wire piece.",
-   "url": "https://dps.psx.com.pk/indices"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "The Express Tribune",
-   "headline": "Govt increases petrol by 27 paisas, HSD by Rs1.64 for Aug 21",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "Per The Express Tribune, effective Aug 21, 2026 the government made a small daily fuel-price adjustment under the new daily-pricing mechanism (introduced Aug 20 amid geopolitical price volatility): petrol up Rs0.27/litre to Rs337.78/litre; High-Speed Diesel (HSD) up Rs1.64/litre to Rs364.70/litre. This follows the already-logged Aug 20 move (petrol +Rs2.97, HSD -Rs32.63). Logged as impact 2 (minor, routine small daily adjustment) - much smaller magnitude than the prior day's sharp diesel cut, per desk criteria Rule 10.",
-   "url": "https://tribune.com.pk/story/2624965/govt-increases-petrol-by-27-paisas-hsd-by-rs164-for-aug-21"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "SBP designates UBL, HBL, NBP as D-SIBs for 2026",
-   "tickers": [
-    "UBL",
-    "HBL",
-    "NBP"
-   ],
-   "impact": 4,
-   "summary": "The State Bank of Pakistan designated United Bank Limited (UBL), Habib Bank Limited (HBL) and National Bank of Pakistan (NBP) as Domestic Systemically Important Banks (D-SIBs) for 2026, requiring additional CET-1 capital buffers, per Mettis Global. Same three banks were designated D-SIBs in 2024 and 2025 (per prior Business Recorder / Mettis Global reporting); no bucket/buffer-percentage figure disclosed in the source reviewed this cycle. Logged as impact 4 (regulatory action, per desk criteria Rule 10) despite the recurring annual nature of the exercise, since it imposes a real capital requirement.",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global",
-   "headline": "PSX Closing Bell: Bulls Take the Home Stretch",
-   "tickers": [
-    "MACRO",
-    "ATRL",
-    "MARI",
-    "FFC",
-    "HBL",
-    "MEBL",
-    "NBP",
-    "UBL"
-   ],
-   "impact": 3,
-   "summary": "Confirms the already-logged Aug 21, 2026 4:50pm DPS checkpoint (177,166.52, up 574.76 points/+0.33%) as the closing-bell figure, per Mettis Global ('PSX Closing Bell: Bulls Take the Home Stretch', published Aug 21, 2026 5:04pm PKT per search-indexed snippet; direct article URL not resolved this cycle). Adds sector detail not previously captured: gain supported by oil & gas, refinery and power stocks. Tagged to the union of the superseded DPS checkpoint's tickers (MACRO, ATRL, MARI, FFC, HBL, MEBL, NBP, UBL); no new specific company ticker named in this source beyond sector level. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries in this newslog.",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Shariah-compliant equities reach 65% of PSX market cap: SECP",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "The Securities and Exchange Commission of Pakistan reported 309 Shariah-compliant equity securities now represent 65% of PSX total market capitalisation, per Mettis Global. General market-structure statistic, no individual ticker read-through disclosed. Logged as impact 2 (minor, informational sector item).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "SBP aligns regulatory framework with Shariah principles under Vision 2028",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 1,
-   "summary": "The State Bank of Pakistan introduced Shariah-compliant terminology alternatives across banking regulations as part of its Vision 2028 framework alignment, per Mettis Global. No effective date or bank-specific compliance requirement disclosed. Logged as impact 1 (routine/administrative).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Govt, Silk Road Fund discuss investment opportunities in energy, infrastructure",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "The Government of Pakistan and China's Silk Road Fund discussed cooperation in energy, infrastructure, manufacturing and privatisation, per Mettis Global. Early-stage discussion, no deal, financing amount or specific project disclosed. Silk Road Fund is not a PSX-listed entity; no universe ticker named. Logged as impact 2 (minor, preliminary macro/investment item).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global",
-   "headline": "Engro Holdings profit plunges 56% to Rs30m in 1HCY26",
-   "tickers": [
-    "ENGROH"
-   ],
-   "impact": 4,
-   "summary": "Engro Holdings Limited (PSX: ENGROH) reported profit of Rs30 million for the half year ended June 30, 2026, down 56% year-on-year, per Mettis Global (published Aug 21, 2026 4:55pm PKT). No prior-year absolute comparative, revenue, or EPS figure captured this cycle; note this is standalone/holding-company-level profit, distinct from Engro Holdings' larger consolidated group results reported separately. Logged as impact 4 (material earnings surprise, per desk criteria Rule 10) for this core-tier, 4.83%-weight constituent; escalation flagged.",
-   "url": "https://mettisglobal.news/Engro-Holdings-profit-plunges-56-to-Rs30m-in-1HCY26-62882"
-  },
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "Abdul Wahid Sethi appointed acting NBP President, CEO",
-   "tickers": [
-    "NBP"
-   ],
-   "impact": 3,
-   "summary": "Following the already-logged expiry of Rehmat Ali Hasnie's tenure as NBP President/CEO effective Aug 21, 2026, National Bank of Pakistan (PSX: NBP) named Abdul Wahid Sethi - previously SEVP/CFO of NBP - as acting President and CEO, per Mettis Global. No permanent-appointment timeline disclosed in the source reviewed this cycle. Logged as impact 3 (notable management change) per desk news-impact criteria (Rule 10).",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
    "ts": "2026-08-21",
    "source": "Mettis Global (latest-news feed)",
    "headline": "SCBPL profit drops 29% in 1HCY26",
@@ -372,39 +187,194 @@
    "impact": 4,
    "summary": "Standard Chartered Bank (Pakistan) Limited (PSX: SCBPL) reported a 29% year-on-year profit decline for the half year ended June 30, 2026, per Mettis Global's latest-news feed (direct article URL not resolved this cycle; prior comparable-period searches returned FY25/1HCY25 figures, not this 1HCY26 figure - flagged for confirmation next cycle). No absolute profit figure captured this cycle. Logged as impact 4 (material earnings decline, per desk criteria Rule 10) for this core-tier constituent; escalation flagged.",
    "url": "https://mettisglobal.news/latest/"
+  },
+  {
+   "ts": "2026-08-24",
+   "source": "MM News / PSX Data Portal (DPS) indices",
+   "headline": "KSE-100 opens the week higher after a bearish prior week, easing back by late morning",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Per MM News, KSE-100 surged 814.94 points to 177,981.46 at 9:35am PKT Monday Aug 24, 2026, rebounding from Friday Aug 21's confirmed close of 177,166.52 (already logged) after a week MM News says shed nearly 2,938 points, moved within a 5,048-point band (high 181,158, low 176,110), lost Rs247bn in market cap, on volume of 4.22bn shares worth Rs205bn. Per dps.psx.com.pk/indices, the page timestamped 'Aug 24, 2026 11:39 AM' shows the gain eased to +562.16 points (+0.32%) at 177,728.68 by late morning. Sub-1% net move so far; logged as impact 3 (notable), consistent with prior similar-magnitude intraday entries in this newslog. Tagged MACRO only; no company-specific driver named in either source.",
+   "url": "https://dps.psx.com.pk/indices"
+  },
+  {
+   "ts": "2026-08-24",
+   "source": "Dawn.com / Business Recorder / Geo News",
+   "headline": "Govt raises petrol price by Rs3.81, HSD by Rs3.59 per litre, effective through Aug 24",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Per Dawn.com and Business Recorder, OGRA under the government's daily petroleum pricing mechanism raised petrol by Rs3.81/litre to Rs341.59/litre and High-Speed Diesel (HSD) by Rs3.59/litre to Rs368.29/litre, rates effective Saturday Aug 22 through Monday Aug 24, 2026. Follows the already-logged Aug 21 adjustment (petrol +Rs0.27, HSD +Rs1.64). Logged as impact 2 (minor, routine daily adjustment under the new mechanism) - modest magnitude versus the Aug 20 sharp diesel cut already logged at impact 4.",
+   "url": "https://www.dawn.com/news/2024389/govt-hikes-petrol-price-by-rs381-high-speed-diesel-by-rs359"
+  },
+  {
+   "ts": "2026-08-24",
+   "source": "Business Recorder / Dawn.com",
+   "headline": "Moody's upgrades Pakistan's sovereign credit rating to B3 from Caa1, stable outlook",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 4,
+   "summary": "Moody's Ratings upgraded Pakistan's sovereign credit rating to B3 from Caa1 on Aug 24, 2026, maintaining a stable outlook, citing stronger governance and sustained improvement in external/fiscal position; FX reserves rose to about $17bn end-July 2026 (from $14bn a year earlier, near 3 months of import cover), and Moody's External Vulnerability Indicator improved to ~145% in 2026 from ~230% in 2025. Follows S&P's upgrade of Pakistan to 'B' from 'B-' about a month earlier. Logged as impact 4 (material macro/sovereign-rating event per Rule 10); escalation flagged.",
+   "url": "https://www.brecorder.com/news/40436306/moodys-upgrades-pakistans-rating-to-b3-maintains-stable-outlook"
+  },
+  {
+   "ts": "2026-08-24",
+   "source": "Business Recorder / Mettis Global (PSX Closing Bell)",
+   "headline": "PSX: KSE-100 closes in red, loses 200 points",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Supersedes the already-logged Aug 24, 2026 11:39am DPS intraday checkpoint (177,728.68, +562.16pts/+0.32%, MACRO only). KSE-100 confirmed close Monday Aug 24, 2026 at 176,966.68, down 199.84 points (-0.11%) from Friday Aug 21's confirmed close of 177,166.52 (already logged). Intraday high 178,122.87, low 176,735.57 - index initially surged over 800 points at the open (per the already-logged MM News item) before selling pressure intensified in the afternoon. Mettis Global's 'PSX Closing Bell: A Shade Lower' confirms the same closing figure. Sub-1% net move; tagged to the union of the superseded item's tickers (MACRO only, no company-specific tickers in that item). Impact 3 (notable), consistent with prior similar-magnitude index-close entries.",
+   "url": "https://www.brecorder.com/news/40436274/psx-kse-100-closes-in-red-loses-200-points"
+  },
+  {
+   "ts": "2026-08-22",
+   "source": "Radio Pakistan / Profit (Pakistan Today) / Bloom Pakistan",
+   "headline": "Cabinet Committee on Privatisation approves restructuring plan for FESCO, GEPCO, IESCO",
+   "tickers": [
+    "MACRO",
+    "JDWS"
+   ],
+   "impact": 3,
+   "summary": "The Cabinet Committee on Privatisation, chaired by Deputy PM/FM Ishaq Dar, approved the Restructuring Plan for Batch-I power distribution companies (FESCO, GEPCO, IESCO) on Aug 22, 2026: land assets to be carved out to the government-owned Power Holding Company, with a government-owned SPV to carve out selected assets/liabilities of the three DISCOs, implemented via a Scheme of Arrangement to be filed with SECP. Expression-of-Interest deadlines: FESCO Aug 7, GEPCO Aug 21, IESCO Sept 7, 2026. Relates to the already-logged Aug 20 item that JDW Sugar Mills (JDWS) was approached to join a FESCO privatisation-bid consortium; no bid outcome or transaction value yet. Logged as impact 3 (notable sector/privatisation-process news; no confirmed transaction for a listed company).",
+   "url": "https://www.radio.gov.pk/22-08-2026/cabinet-body-approves-plan-for-privatisation-of-fesco-gepco-iesco"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "PSX Data Portal (DPS) indices / Business Recorder",
+   "headline": "KSE-100 closes higher after volatile Moody's-driven session",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "KSE-100 confirmed close Tue Aug 25, 2026 at 177,370.70, up 404.02 points (+0.23%) from Monday Aug 24's confirmed close of 176,966.68 (already logged), per dps.psx.com.pk/indices (page timestamped Aug 25, 2026 5:27 PM: KSE-30 52,827.24 +182.71/+0.35%, KMI-30 251,579.93 +64.12/+0.03%, All Share 107,716.19 +116.44/+0.11%). Per Business Recorder, the session opened sharply higher (+649.91pts to 177,616.59) on Moody's Aug 24 upgrade of Pakistan's sovereign rating to B3 from Caa1 (already logged), fell to an intraday low of 176,577.14 on mid-session profit-taking, then recovered to close near the day's high. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries in this newslog. Tagged MACRO only.",
+   "url": "https://dps.psx.com.pk/indices"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "Mettis Global",
+   "headline": "Sapphire Fibres secures RSOQ for GEPCO privatisation",
+   "tickers": [
+    "SFL"
+   ],
+   "impact": 2,
+   "summary": "Sapphire Fibres Limited (PSX: SFL) secured the Request for Statement of Qualification (RSOQ) issued by the Privatisation Commission for the divestment of the Gujranwala Electric Power Company (GEPCO), per Mettis Global. The company's Board approved participation in the transaction; relates to the already-logged Aug 22 item on the Cabinet's approved FESCO/GEPCO/IESCO restructuring plan. No bid amount or consortium partners disclosed. Logged as impact 2 (minor company item - early-stage bid qualification, not a confirmed transaction).",
+   "url": "https://mettisglobal.news/Sapphire-Fibres-secures-RSOQ-for-GEPCO-privatisation-62928"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "Business Recorder (intra-day update)",
+   "headline": "Pakistan rupee records gain against US dollar",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "The Pakistani rupee closed marginally higher against the US dollar on Tuesday Aug 25, 2026, appreciating 0.01% (+Re0.03) to close at 277.52/USD, per Business Recorder. Negligible single-day FX move; logged as impact 1 (routine).",
+   "url": "https://www.brecorder.com/news/40436471/intra-day-update-rupee-records-gain-against-us-dollar"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "Mettis Global",
+   "headline": "Govt introduces performance-based rebate scheme to boost exports",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Government of Pakistan introduced a performance-based rebate scheme for goods/services exporters effective July 1, 2026: exporters with annual export growth up to 10% get a rebate of 1% of incremental exports, above 10% growth gets 2%; 75% paid provisionally each quarter, remainder settled after fiscal year-end, with clawback if annual exports are flat/decline. Broad sector-wide (export-oriented) policy item; no single-company figure disclosed. Logged as impact 2 (minor, administrative economic policy).",
+   "url": "https://mettisglobal.news/Govt-introduces-performancebased-rebate-scheme-to-boost-exports-62927"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "Mettis Global",
+   "headline": "Govt unveils simplest-ever tax scheme for small shopkeepers",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "The FBR held an awareness session on its new Small Shopkeepers/Retailer Scheme, requiring a 1% turnover tax and offering simplified registration and flexible payment options, per Mettis Global (published Aug 25, 2026 9:37am PKT). Routine administrative tax-policy item, no listed-company-specific impact. Logged as impact 1 (routine/administrative).",
+   "url": "https://mettisglobal.news/Govt-unveils-simplestever-tax-scheme-for-small-shopkeepers-62929"
+  },
+  {
+   "ts": "2026-08-22",
+   "source": "Business Recorder / Dawn.com / Radio Pakistan",
+   "headline": "PSX to remain closed Wednesday, August 26, 2026 for Eid Milad-un-Nabi",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "Pakistan Stock Exchange issued an official notice (and the federal government declared a nationwide public holiday, approved by PM Shehbaz Sharif) that PSX will remain closed Wednesday, August 26, 2026 for Eid Milad-un-Nabi (12th Rabi ul Awal); SBP separately confirmed it will also be closed that day. state/calendar.json's holidays list (last verified 2026-07-13) does not currently include 2026-08-26 - flagged for the desk to update, since News Sentinel does not have write access to calendar.json this cycle. Logged as impact 1 (routine/administrative calendar notice).",
+   "url": "https://www.brecorder.com/news/40435949/eid-milad-un-nabi-psx-to-remain-closed-on-august-26"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "Mettis Global",
+   "headline": "Pakistan eyes $1-2bn return to global capital markets",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Per Mettis Global, Pakistan is targeting $1-2bn in borrowing from global debt markets during the current fiscal year and preparing bond issuances arranged by consortiums including Standard Chartered and Citi, alongside a proposed $10bn US swap line (Finance Minister Aurangzeb - relates to the already-logged Aug 19 $10bn Exchange Stabilisation Support Facility request) intended as a confidence signal for investors. Also cites a planned $750m panda bond (renminbi) issuance and potential Boeing aircraft financing benefiting Pakistan International Airlines. FY26 trade deficit put at $39.5bn (four-year high); total outstanding external debt $129.7bn as of 2024, 23% owed to China. No transaction confirmed or priced yet - pending plans. Logged as impact 3 (notable macro financing development, not yet a confirmed deal), per desk criteria Rule 10.",
+   "url": "https://mettisglobal.news/Pakistan-eyes-12bn-return-to-global-capital-markets-62948"
+  },
+  {
+   "ts": "2026-08-26",
+   "source": "Business Recorder / Geo News / Daily Pakistan",
+   "headline": "Petrol price rises Rs1.12, HSD by Rs1.11 per litre, effective Aug 26-27",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Per an OGRA notification issued Tuesday under the daily petroleum-pricing mechanism, petrol rose Rs1.12/litre to Rs343.10/litre and High-Speed Diesel (HSD) rose Rs1.11/litre to Rs371.80/litre, effective Aug 26-27, 2026 (PSX/SBP closed Aug 26 for Eid Milad-un-Nabi, already logged). Dealer margins fixed at Rs9.98/litre on both products; Petroleum Levy Rs80/litre on each. Follows the already-logged Aug 24 adjustment (petrol +Rs3.81, HSD +Rs3.59). Logged as impact 2 (minor, routine daily adjustment), consistent with prior similarly small moves under this mechanism.",
+   "url": "https://www.brecorder.com/news/40436506/petrol-price-rises-rs112-diesel-sees-rs111-hike-per-litre"
+  },
+  {
+   "ts": "2026-08-25",
+   "source": "Business Recorder / Dawn.com / Pakistan Today",
+   "headline": "PSX shrugs off uncertainty as Asim Munir's Iran visit revives US-Tehran de-escalation hopes",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Additional driver detail for the already-logged Tue Aug 25, 2026 confirmed close (177,370.70/177,370.71, +404.02pts/+0.23%): per Business Recorder and Dawn.com, the session's gain was attributed to renewed hopes of US-Iran de-escalation following Field Marshal Asim Munir's one-day visit to Tehran (meetings with President Pezeshkian and FM Araghchi), with Iranian officials calling the talks a 'valuable diplomatic gain' per Pakistan Today. This geopolitical driver was not previously captured in the newslog entry for this close, which cited only Moody's rating upgrade. No new index figure or ticker; tagged MACRO only, impact 3 consistent with the already-logged close entry.",
+   "url": "https://www.dawn.com/news/2025314/equities-recover-404-points-despite-volatility"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-20T20:57:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-20T21:44:00+05:00",
-   "outcome": "PM checkpoint, health ok, 6 news items found (max impact 3, no escalation), no monitor alerts (0 open positions), pushed"
-  },
-  {
-   "started": "2026-08-21T11:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-21T11:12:00+05:00",
-   "outcome": "AM checkpoint. run_cloud.py ALL OK, preflight OK (1 non-gating WARN: 98 backfilling tickers). news-sentinel: 5 items appended (207 total) -- KSE-100 morning session +842.92pts/+0.47% to 177,734.68 (impact 3), Thu 08-20 confirmed close -254.59pts/-0.14% w/ named drags UBL/HUBC/BAFL/HBL/FATIMA and supporters OGDC/ENGROH/SAZEW (impact 3), NBP CEO tenure expiring (impact 3), SYM IPO-proceeds update (impact 2), weekly SPI +0.49% (impact 2); max impact 3, no escalation. No open positions, monitor skipped. build_dashboard+preflight OK. Published data-only (16 pre-existing hand-authored dirty files held back, not this session's), pushed to desk.henneth.app. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
-  },
-  {
-   "started": "2026-08-21T15:37:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-21T16:01:00+05:00",
-   "outcome": "2 full (ENGROH, HUBC) / 0 delta / 0 reaffirm. QA: ENGROH flags (medium/low, no fix required); HUBC flags with 1 high (KSE-100 drop dates misdated Aug18/19 -> corrected to Aug19/20 in bull+bear cases before publish). 139 claims resolved this cycle (0 persona, 0 broker due). Published + pushed to main, watchdog OK."
-  },
-  {
-   "started": "2026-08-21T17:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-21T17:34:00+05:00",
-   "outcome": "PM checkpoint (weekday close). run_cloud.py: first attempt hung (zero CPU/network progress, force-killed), retry ALL OK -- health ok, universe 577, history 126 ok/98 backfilling, quant 470, backtest 70x233 best high52w_break +9.40%, fairvalue 168, signals 4 active BML/TPLT/ATRL/NICL, regime neutral, geo-risk 57/moderate. news-sentinel: 3 new items appended (210 total) -- KSE-100 midday +0.02% (impact 3), 4:50pm checkpoint +0.33% to 177,166.52 not yet a confirmed close (impact 3), routine fuel-price adjustment (impact 2); max impact 3, no escalation. No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 98 backfilling tickers). Published data-only (19 pre-existing hand-authored dirty files held back, not this session's), pushed to desk.henneth.app. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
-  },
-  {
-   "started": "2026-08-21T17:32:00+05:00",
+   "started": "2026-08-24T18:47:00+05:00",
    "mode": "full",
-   "ended": "2026-08-21T17:56:00+05:00",
-   "outcome": "Daily agent refresh (Fri, post-close). run_cloud.py: ALL OK, preflight clean (1 non-gating WARN: 98 backfilling tickers). news-sentinel: 8 new items appended (218 total) -- SBP D-SIB designation UBL/HBL/NBP (impact 4), ENGROH 1HCY26 profit -56% (impact 4), SCBPL 1HCY26 profit -29% (impact 4, figure unconfirmed vs primary source), Fri close per Mettis 177,166.52 +0.33%, NBP acting CEO named, 3 lower-impact macro items; max impact 4 -> escalation.json written (full pipeline NOT run this cycle per scope -- agents only). macro-agent: regime neutral (unchanged), geo-risk 57/moderate; sourced SBP 11.5% held, CPI 9.2% YoY Jul, FX reserves 7.08bn, IMF 4th EFF review due Sep 2026; macro.json cites KSE close 176,591.77 -0.14% -- CONFLICTS with news-sentinel close figure above, both web-sourced not DPS, flagged for human reconciliation via state/live.json. market-analyst: daily_read.json rewritten, cautious tone, oil/gold up vs 3-day PSX losing streak, favours E&P wary power/refining, watchlist BML/ATRL/ENGROH/HUBC/MARI each with strategy+fundamental+catalyst citation. build_dashboard+preflight OK. Published data-only (pre-existing 19 hand-authored dirty files held back, not this session), pushed to desk.henneth.app. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
+   "ended": "2026-08-24T19:15:00+05:00",
+   "outcome": "regime=neutral geo-risk=56/moderate daily-read=cautious tone, Moodys B3 upgrade vs red KSE-100 close; watchdog=OK; NOT pushed - preflight FAILED on pre-existing Company Intelligence 20-company pilot mismatch (unrelated WIP feature, last-good site stays live)"
+  },
+  {
+   "started": "2026-08-25T17:00:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-25T17:20:00+05:00",
+   "outcome": "PM checkpoint. Fixed calendar.json bug: 2026-08-25 was wrongly flagged holiday since repo creation, never verified per its own note; owner confirmed market open, entry removed. run_cloud.py + internal preflight OK. news-sentinel: 3 items (max impact 3, no escalation). No open positions, monitor skipped. build_dashboard.py preflight FAILED on 4 checks (event_studies, conditional_benchmarks, ask_henneth JS, company_brains non-deterministic) -- NOT published, NOT pushed. Follow-up task spawned (task_c80bfca6)."
+  },
+  {
+   "started": "2026-08-25T17:42:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-25T18:05:00+05:00",
+   "outcome": "regime=neutral geo=53(moderate); daily_read headline set (BML/GAL/NBP watchlist); watchdog OK (last-good live, gated files intact); NOT PUBLISHED - preflight FAIL pre-existing (ask_contract.js context_too_large in Company Intelligence contract check; check_evidence_watchlist.py authoritative-vs-pure-builder mismatch), unrelated to today agents, needs owner fix"
+  },
+  {
+   "started": "2026-08-25T17:47:00+05:00",
+   "mode": "room",
+   "ended": "2026-08-25T20:05:00+05:00",
+   "outcome": "2 full (CNERGY, UBL), 0 delta, 0 reaffirm. Both QA-verified w/ fixes applied (CNERGY: mislabeled quarter; UBL: stale-price P/E). Translated (20 fields ur). room_score: 143 resolved (0 new this run). NOT PUSHED: preflight FAILED pre-existing (ask_contract context_too_large; evidence_watchlist authoritative vs pure-builder mismatch) unrelated to this batch."
+  },
+  {
+   "started": "2026-08-26T11:00:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-26T11:35:00+05:00",
+   "outcome": "AM checkpoint. FINDING: PSX/SBP closed today 2026-08-26 for Eid Milad-un-Nabi (federal holiday) per news-sentinel's web sweep, but state/calendar.json's holidays array does NOT list 2026-08-26 -- the step-2 holiday gate as coded missed it and the cycle ran anyway; owner should add this date to calendar.json (news-sentinel lacks write permission there). run_cloud.py exited 1: internal preflight.py FAIL, same pre-existing check_ask_henneth.mjs ask-contract check that blocked 2026-08-25's two cycles (unrelated to this run). news-sentinel appended 2 items (230 total) -- Pakistan $1-2bn capital-markets return plan detail (impact 3), holiday notice (impact 1); max impact 3, no escalation. No open positions, monitor skipped. build_dashboard/publish NOT run (already failed via run_cloud.py's internal calls) -- nothing committed/pushed, live site unchanged from prior cycle. Watchdog not run (nothing published)."
   }
  ]
 }

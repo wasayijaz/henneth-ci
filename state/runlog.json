@@ -220,5 +220,47 @@
     "mode": "full",
     "ended": "2026-08-21T17:56:00+05:00",
     "outcome": "Daily agent refresh (Fri, post-close). run_cloud.py: ALL OK, preflight clean (1 non-gating WARN: 98 backfilling tickers). news-sentinel: 8 new items appended (218 total) -- SBP D-SIB designation UBL/HBL/NBP (impact 4), ENGROH 1HCY26 profit -56% (impact 4), SCBPL 1HCY26 profit -29% (impact 4, figure unconfirmed vs primary source), Fri close per Mettis 177,166.52 +0.33%, NBP acting CEO named, 3 lower-impact macro items; max impact 4 -> escalation.json written (full pipeline NOT run this cycle per scope -- agents only). macro-agent: regime neutral (unchanged), geo-risk 57/moderate; sourced SBP 11.5% held, CPI 9.2% YoY Jul, FX reserves 7.08bn, IMF 4th EFF review due Sep 2026; macro.json cites KSE close 176,591.77 -0.14% -- CONFLICTS with news-sentinel close figure above, both web-sourced not DPS, flagged for human reconciliation via state/live.json. market-analyst: daily_read.json rewritten, cautious tone, oil/gold up vs 3-day PSX losing streak, favours E&P wary power/refining, watchlist BML/ATRL/ENGROH/HUBC/MARI each with strategy+fundamental+catalyst citation. build_dashboard+preflight OK. Published data-only (pre-existing 19 hand-authored dirty files held back, not this session), pushed to desk.henneth.app. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
+  },
+  {
+    "started": "2026-08-24T11:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-24T11:44:47+05:00",
+    "outcome": "AM checkpoint. health ok (fairvalue/signals built). news-sentinel appended 2 items (max impact 3, no escalation). no open positions, monitor skipped. build_dashboard/preflight FAILED: conditional_benchmarks_ui count must be exactly 16, got 18 (data drift, hardcoded check stale vs build_conditional_benchmarks.py output) -- publish ABORTED, nothing pushed to main."
+  },
+  {
+    "started": "2026-08-24T18:20:00+05:00",
+    "mode": "room",
+    "ended": "2026-08-24T18:36:44+05:00",
+    "outcome": "Desk Room loop: 2 full (NBP, FCL), 0 delta, 0 reaffirm. NBP qa=flagged (bear_case mislabel, non-blocking). FCL qa=blocked (dossier snapshot 2026-07-17 predates filed FY26 results 2026-08-18 + subsequent price move; staleness caveats added to session, no fresh numbers injected -- needs fetch_fundamentals.py+quant.py refresh next cycle). room_score: 143 claims resolved, 0 personas/0 brokers newly due. build_dashboard/preflight FAILED: 23 pre-existing Company Intelligence pilot-boundary FAILs (Henneth Desk 2.CI.0, unrelated to this Room batch, already dirty in working tree before this run) -- publish ABORTED, nothing pushed to main."
+  },
+  {
+    "started": "2026-08-24T18:47:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-24T19:15:00+05:00",
+    "outcome": "regime=neutral geo-risk=56/moderate daily-read=cautious tone, Moodys B3 upgrade vs red KSE-100 close; watchdog=OK; NOT pushed - preflight FAILED on pre-existing Company Intelligence 20-company pilot mismatch (unrelated WIP feature, last-good site stays live)"
+  },
+  {
+    "started": "2026-08-25T17:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-25T17:20:00+05:00",
+    "outcome": "PM checkpoint. Fixed calendar.json bug: 2026-08-25 was wrongly flagged holiday since repo creation, never verified per its own note; owner confirmed market open, entry removed. run_cloud.py + internal preflight OK. news-sentinel: 3 items (max impact 3, no escalation). No open positions, monitor skipped. build_dashboard.py preflight FAILED on 4 checks (event_studies, conditional_benchmarks, ask_henneth JS, company_brains non-deterministic) -- NOT published, NOT pushed. Follow-up task spawned (task_c80bfca6)."
+  },
+  {
+    "started": "2026-08-25T17:42:00+05:00",
+    "mode": "full",
+    "ended": "2026-08-25T18:05:00+05:00",
+    "outcome": "regime=neutral geo=53(moderate); daily_read headline set (BML/GAL/NBP watchlist); watchdog OK (last-good live, gated files intact); NOT PUBLISHED - preflight FAIL pre-existing (ask_contract.js context_too_large in Company Intelligence contract check; check_evidence_watchlist.py authoritative-vs-pure-builder mismatch), unrelated to today agents, needs owner fix"
+  },
+  {
+    "started": "2026-08-25T17:47:00+05:00",
+    "mode": "room",
+    "ended": "2026-08-25T20:05:00+05:00",
+    "outcome": "2 full (CNERGY, UBL), 0 delta, 0 reaffirm. Both QA-verified w/ fixes applied (CNERGY: mislabeled quarter; UBL: stale-price P/E). Translated (20 fields ur). room_score: 143 resolved (0 new this run). NOT PUSHED: preflight FAILED pre-existing (ask_contract context_too_large; evidence_watchlist authoritative vs pure-builder mismatch) unrelated to this batch."
+  },
+  {
+    "started": "2026-08-26T11:00:00+05:00",
+    "mode": "light",
+    "ended": "2026-08-26T11:35:00+05:00",
+    "outcome": "AM checkpoint. FINDING: PSX/SBP closed today 2026-08-26 for Eid Milad-un-Nabi (federal holiday) per news-sentinel's web sweep, but state/calendar.json's holidays array does NOT list 2026-08-26 -- the step-2 holiday gate as coded missed it and the cycle ran anyway; owner should add this date to calendar.json (news-sentinel lacks write permission there). run_cloud.py exited 1: internal preflight.py FAIL, same pre-existing check_ask_henneth.mjs ask-contract check that blocked 2026-08-25's two cycles (unrelated to this run). news-sentinel appended 2 items (230 total) -- Pakistan $1-2bn capital-markets return plan detail (impact 3), holiday notice (impact 1); max impact 3, no escalation. No open positions, monitor skipped. build_dashboard/publish NOT run (already failed via run_cloud.py's internal calls) -- nothing committed/pushed, live site unchanged from prior cycle. Watchdog not run (nothing published)."
   }
 ]

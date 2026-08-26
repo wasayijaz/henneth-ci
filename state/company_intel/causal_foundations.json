@@ -4,24 +4,24 @@
  "pilot_symbols": [
   "MLCF",
   "OGDC",
-  "DGKC",
   "PPL",
-  "UBL",
+  "DGKC",
   "PSO",
-  "NBP",
-  "LUCK",
+  "UBL",
   "FFC",
-  "BOP",
+  "LUCK",
   "HUBC",
+  "PRL",
+  "BOP",
+  "NBP",
   "MEBL",
-  "HBL",
   "ATRL",
-  "ENGROH",
+  "HBL",
   "MARI",
-  "FCCL",
-  "NRL",
+  "ENGROH",
   "GAL",
-  "PRL"
+  "NRL",
+  "CNERGY"
  ],
  "companies": {
   "MLCF": {
@@ -352,170 +352,6 @@
     "strict_study_rows": 0
    }
   },
-  "DGKC": {
-   "symbol": "DGKC",
-   "sector": "CEMENT",
-   "causal_rows": [
-    {
-     "causal_id": "cause_eefe3e44ac235cb22fbb",
-     "symbol": "DGKC",
-     "edge_id": "cause_eefe3e44ac235cb22fbb",
-     "driver": "clinker_capacity",
-     "target": "revenue",
-     "statement_line": "capacity",
-     "unit": "tonnes",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_ce81974f882e372a7fee",
-     "symbol": "DGKC",
-     "edge_id": "cause_ce81974f882e372a7fee",
-     "driver": "coal_cost",
-     "target": "ebitda",
-     "statement_line": "cost_of_sales",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_c2946bc201fe8712e1bb",
-     "symbol": "DGKC",
-     "edge_id": "cause_c2946bc201fe8712e1bb",
-     "driver": "dispatch_volume",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pct",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_d7637f775e8dc9e5d47f",
-     "symbol": "DGKC",
-     "edge_id": "cause_d7637f775e8dc9e5d47f",
-     "driver": "ebitda",
-     "target": "fcf",
-     "statement_line": "operating_cash_flow",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_d49b6ae70f3f61318f73",
-     "symbol": "DGKC",
-     "edge_id": "cause_d49b6ae70f3f61318f73",
-     "driver": "export_price",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_169a900dd78b4bb33ef3",
-     "symbol": "DGKC",
-     "edge_id": "cause_169a900dd78b4bb33ef3",
-     "driver": "fcf",
-     "target": "valuation",
-     "statement_line": "enterprise_value",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_2b3dea1a1b7967f8a87f",
-     "symbol": "DGKC",
-     "edge_id": "cause_2b3dea1a1b7967f8a87f",
-     "driver": "power_cost",
-     "target": "ebitda",
-     "statement_line": "cost_of_sales",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_bb84348d6756804f7d01",
-     "symbol": "DGKC",
-     "edge_id": "cause_bb84348d6756804f7d01",
-     "driver": "realized_price",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    }
-   ],
-   "coverage": {
-    "driver_edge_count": 8,
-    "causal_row_count": 8,
-    "observed_event_rows": 0,
-    "strict_study_rows": 0
-   }
-  },
   "PPL": {
    "symbol": "PPL",
    "sector": "E&P",
@@ -680,17 +516,55 @@
     "strict_study_rows": 0
    }
   },
-  "UBL": {
-   "symbol": "UBL",
-   "sector": "BANKS",
+  "DGKC": {
+   "symbol": "DGKC",
+   "sector": "CEMENT",
    "causal_rows": [
     {
-     "causal_id": "cause_7e8ab84aca6ba7b907ce",
-     "symbol": "UBL",
-     "edge_id": "cause_7e8ab84aca6ba7b907ce",
-     "driver": "capital_ratio",
-     "target": "valuation",
-     "statement_line": "equity_value",
+     "causal_id": "cause_eefe3e44ac235cb22fbb",
+     "symbol": "DGKC",
+     "edge_id": "cause_eefe3e44ac235cb22fbb",
+     "driver": "clinker_capacity",
+     "target": "revenue",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_ce81974f882e372a7fee",
+     "symbol": "DGKC",
+     "edge_id": "cause_ce81974f882e372a7fee",
+     "driver": "coal_cost",
+     "target": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_c2946bc201fe8712e1bb",
+     "symbol": "DGKC",
+     "edge_id": "cause_c2946bc201fe8712e1bb",
+     "driver": "dispatch_volume",
+     "target": "revenue",
+     "statement_line": "revenue",
      "unit": "pct",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -704,12 +578,12 @@
      }
     },
     {
-     "causal_id": "cause_c7fc5e801e87cd7e3072",
-     "symbol": "UBL",
-     "edge_id": "cause_c7fc5e801e87cd7e3072",
-     "driver": "credit_cost",
-     "target": "profit_after_tax",
-     "statement_line": "provisions",
+     "causal_id": "cause_d7637f775e8dc9e5d47f",
+     "symbol": "DGKC",
+     "edge_id": "cause_d7637f775e8dc9e5d47f",
+     "driver": "ebitda",
+     "target": "fcf",
+     "statement_line": "operating_cash_flow",
      "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -723,13 +597,13 @@
      }
     },
     {
-     "causal_id": "cause_ee416f1be89d13a20cc5",
-     "symbol": "UBL",
-     "edge_id": "cause_ee416f1be89d13a20cc5",
-     "driver": "deposit_cost",
-     "target": "net_interest_margin",
-     "statement_line": "net_interest_income",
-     "unit": "pct_points",
+     "causal_id": "cause_d49b6ae70f3f61318f73",
+     "symbol": "DGKC",
+     "edge_id": "cause_d49b6ae70f3f61318f73",
+     "driver": "export_price",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -742,31 +616,12 @@
      }
     },
     {
-     "causal_id": "cause_cc1deccf4034ca4ca11b",
-     "symbol": "UBL",
-     "edge_id": "cause_cc1deccf4034ca4ca11b",
-     "driver": "eps",
+     "causal_id": "cause_169a900dd78b4bb33ef3",
+     "symbol": "DGKC",
+     "edge_id": "cause_169a900dd78b4bb33ef3",
+     "driver": "fcf",
      "target": "valuation",
-     "statement_line": "equity_value",
-     "unit": "pkr_per_share",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_b3c11b8b58d395f6cbb6",
-     "symbol": "UBL",
-     "edge_id": "cause_b3c11b8b58d395f6cbb6",
-     "driver": "fee_income",
-     "target": "profit_after_tax",
-     "statement_line": "non_interest_income",
+     "statement_line": "enterprise_value",
      "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -780,13 +635,13 @@
      }
     },
     {
-     "causal_id": "cause_bf65fa500f5177f762f6",
-     "symbol": "UBL",
-     "edge_id": "cause_bf65fa500f5177f762f6",
-     "driver": "loan_growth",
-     "target": "net_interest_income",
-     "statement_line": "net_interest_income",
-     "unit": "pct",
+     "causal_id": "cause_2b3dea1a1b7967f8a87f",
+     "symbol": "DGKC",
+     "edge_id": "cause_2b3dea1a1b7967f8a87f",
+     "driver": "power_cost",
+     "target": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -799,32 +654,13 @@
      }
     },
     {
-     "causal_id": "cause_c332a9ab25e055ff9781",
-     "symbol": "UBL",
-     "edge_id": "cause_c332a9ab25e055ff9781",
-     "driver": "policy_rate",
-     "target": "net_interest_margin",
-     "statement_line": "net_interest_income",
-     "unit": "pct_points",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_6f382299e4017f8841aa",
-     "symbol": "UBL",
-     "edge_id": "cause_6f382299e4017f8841aa",
-     "driver": "profit_after_tax",
-     "target": "eps",
-     "statement_line": "eps",
-     "unit": "pkr_per_share",
+     "causal_id": "cause_bb84348d6756804f7d01",
+     "symbol": "DGKC",
+     "edge_id": "cause_bb84348d6756804f7d01",
+     "driver": "realized_price",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -1008,14 +844,14 @@
     "strict_study_rows": 0
    }
   },
-  "NBP": {
-   "symbol": "NBP",
+  "UBL": {
+   "symbol": "UBL",
    "sector": "BANKS",
    "causal_rows": [
     {
-     "causal_id": "cause_5848d202ffd933d2b521",
-     "symbol": "NBP",
-     "edge_id": "cause_5848d202ffd933d2b521",
+     "causal_id": "cause_7e8ab84aca6ba7b907ce",
+     "symbol": "UBL",
+     "edge_id": "cause_7e8ab84aca6ba7b907ce",
      "driver": "capital_ratio",
      "target": "valuation",
      "statement_line": "equity_value",
@@ -1032,9 +868,9 @@
      }
     },
     {
-     "causal_id": "cause_614c05f25142c0e41c04",
-     "symbol": "NBP",
-     "edge_id": "cause_614c05f25142c0e41c04",
+     "causal_id": "cause_c7fc5e801e87cd7e3072",
+     "symbol": "UBL",
+     "edge_id": "cause_c7fc5e801e87cd7e3072",
      "driver": "credit_cost",
      "target": "profit_after_tax",
      "statement_line": "provisions",
@@ -1051,9 +887,9 @@
      }
     },
     {
-     "causal_id": "cause_b272983baf089ab4b5aa",
-     "symbol": "NBP",
-     "edge_id": "cause_b272983baf089ab4b5aa",
+     "causal_id": "cause_ee416f1be89d13a20cc5",
+     "symbol": "UBL",
+     "edge_id": "cause_ee416f1be89d13a20cc5",
      "driver": "deposit_cost",
      "target": "net_interest_margin",
      "statement_line": "net_interest_income",
@@ -1070,9 +906,9 @@
      }
     },
     {
-     "causal_id": "cause_d871caf15107d3c99ce1",
-     "symbol": "NBP",
-     "edge_id": "cause_d871caf15107d3c99ce1",
+     "causal_id": "cause_cc1deccf4034ca4ca11b",
+     "symbol": "UBL",
+     "edge_id": "cause_cc1deccf4034ca4ca11b",
      "driver": "eps",
      "target": "valuation",
      "statement_line": "equity_value",
@@ -1089,9 +925,9 @@
      }
     },
     {
-     "causal_id": "cause_b39da00a829c61de3646",
-     "symbol": "NBP",
-     "edge_id": "cause_b39da00a829c61de3646",
+     "causal_id": "cause_b3c11b8b58d395f6cbb6",
+     "symbol": "UBL",
+     "edge_id": "cause_b3c11b8b58d395f6cbb6",
      "driver": "fee_income",
      "target": "profit_after_tax",
      "statement_line": "non_interest_income",
@@ -1108,9 +944,9 @@
      }
     },
     {
-     "causal_id": "cause_402d2e8e88a37067efbb",
-     "symbol": "NBP",
-     "edge_id": "cause_402d2e8e88a37067efbb",
+     "causal_id": "cause_bf65fa500f5177f762f6",
+     "symbol": "UBL",
+     "edge_id": "cause_bf65fa500f5177f762f6",
      "driver": "loan_growth",
      "target": "net_interest_income",
      "statement_line": "net_interest_income",
@@ -1127,9 +963,9 @@
      }
     },
     {
-     "causal_id": "cause_df08cc87aaa5467fccb4",
-     "symbol": "NBP",
-     "edge_id": "cause_df08cc87aaa5467fccb4",
+     "causal_id": "cause_c332a9ab25e055ff9781",
+     "symbol": "UBL",
+     "edge_id": "cause_c332a9ab25e055ff9781",
      "driver": "policy_rate",
      "target": "net_interest_margin",
      "statement_line": "net_interest_income",
@@ -1146,177 +982,13 @@
      }
     },
     {
-     "causal_id": "cause_3a928b9db696a86d8683",
-     "symbol": "NBP",
-     "edge_id": "cause_3a928b9db696a86d8683",
+     "causal_id": "cause_6f382299e4017f8841aa",
+     "symbol": "UBL",
+     "edge_id": "cause_6f382299e4017f8841aa",
      "driver": "profit_after_tax",
      "target": "eps",
      "statement_line": "eps",
      "unit": "pkr_per_share",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    }
-   ],
-   "coverage": {
-    "driver_edge_count": 8,
-    "causal_row_count": 8,
-    "observed_event_rows": 0,
-    "strict_study_rows": 0
-   }
-  },
-  "LUCK": {
-   "symbol": "LUCK",
-   "sector": "CEMENT",
-   "causal_rows": [
-    {
-     "causal_id": "cause_83670eefdf0d70512e68",
-     "symbol": "LUCK",
-     "edge_id": "cause_83670eefdf0d70512e68",
-     "driver": "clinker_capacity",
-     "target": "revenue",
-     "statement_line": "capacity",
-     "unit": "tonnes",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_5b6845209431338f725b",
-     "symbol": "LUCK",
-     "edge_id": "cause_5b6845209431338f725b",
-     "driver": "coal_cost",
-     "target": "ebitda",
-     "statement_line": "cost_of_sales",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_45a4cfa6bca12353c78d",
-     "symbol": "LUCK",
-     "edge_id": "cause_45a4cfa6bca12353c78d",
-     "driver": "dispatch_volume",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pct",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_2fb06861973406c64d4a",
-     "symbol": "LUCK",
-     "edge_id": "cause_2fb06861973406c64d4a",
-     "driver": "ebitda",
-     "target": "fcf",
-     "statement_line": "operating_cash_flow",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_e2c5b1a22073c395d822",
-     "symbol": "LUCK",
-     "edge_id": "cause_e2c5b1a22073c395d822",
-     "driver": "export_price",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_8a5c62d179862c30ac32",
-     "symbol": "LUCK",
-     "edge_id": "cause_8a5c62d179862c30ac32",
-     "driver": "fcf",
-     "target": "valuation",
-     "statement_line": "enterprise_value",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_842730e682b11439a424",
-     "symbol": "LUCK",
-     "edge_id": "cause_842730e682b11439a424",
-     "driver": "power_cost",
-     "target": "ebitda",
-     "statement_line": "cost_of_sales",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_b460c9a99a94535611ef",
-     "symbol": "LUCK",
-     "edge_id": "cause_b460c9a99a94535611ef",
-     "driver": "realized_price",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -1500,17 +1172,55 @@
     "strict_study_rows": 0
    }
   },
-  "BOP": {
-   "symbol": "BOP",
-   "sector": "BANKS",
+  "LUCK": {
+   "symbol": "LUCK",
+   "sector": "CEMENT",
    "causal_rows": [
     {
-     "causal_id": "cause_6ff64662c3f40ebe5d50",
-     "symbol": "BOP",
-     "edge_id": "cause_6ff64662c3f40ebe5d50",
-     "driver": "capital_ratio",
-     "target": "valuation",
-     "statement_line": "equity_value",
+     "causal_id": "cause_83670eefdf0d70512e68",
+     "symbol": "LUCK",
+     "edge_id": "cause_83670eefdf0d70512e68",
+     "driver": "clinker_capacity",
+     "target": "revenue",
+     "statement_line": "capacity",
+     "unit": "tonnes",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_5b6845209431338f725b",
+     "symbol": "LUCK",
+     "edge_id": "cause_5b6845209431338f725b",
+     "driver": "coal_cost",
+     "target": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_45a4cfa6bca12353c78d",
+     "symbol": "LUCK",
+     "edge_id": "cause_45a4cfa6bca12353c78d",
+     "driver": "dispatch_volume",
+     "target": "revenue",
+     "statement_line": "revenue",
      "unit": "pct",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -1524,12 +1234,12 @@
      }
     },
     {
-     "causal_id": "cause_0cad0233dbe8bba3fc7f",
-     "symbol": "BOP",
-     "edge_id": "cause_0cad0233dbe8bba3fc7f",
-     "driver": "credit_cost",
-     "target": "profit_after_tax",
-     "statement_line": "provisions",
+     "causal_id": "cause_2fb06861973406c64d4a",
+     "symbol": "LUCK",
+     "edge_id": "cause_2fb06861973406c64d4a",
+     "driver": "ebitda",
+     "target": "fcf",
+     "statement_line": "operating_cash_flow",
      "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -1543,13 +1253,13 @@
      }
     },
     {
-     "causal_id": "cause_1042a86fc70a9f2bb956",
-     "symbol": "BOP",
-     "edge_id": "cause_1042a86fc70a9f2bb956",
-     "driver": "deposit_cost",
-     "target": "net_interest_margin",
-     "statement_line": "net_interest_income",
-     "unit": "pct_points",
+     "causal_id": "cause_e2c5b1a22073c395d822",
+     "symbol": "LUCK",
+     "edge_id": "cause_e2c5b1a22073c395d822",
+     "driver": "export_price",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -1562,31 +1272,12 @@
      }
     },
     {
-     "causal_id": "cause_a8a35a21f27a07422a63",
-     "symbol": "BOP",
-     "edge_id": "cause_a8a35a21f27a07422a63",
-     "driver": "eps",
+     "causal_id": "cause_8a5c62d179862c30ac32",
+     "symbol": "LUCK",
+     "edge_id": "cause_8a5c62d179862c30ac32",
+     "driver": "fcf",
      "target": "valuation",
-     "statement_line": "equity_value",
-     "unit": "pkr_per_share",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_1dec8fe27d5151fc33bc",
-     "symbol": "BOP",
-     "edge_id": "cause_1dec8fe27d5151fc33bc",
-     "driver": "fee_income",
-     "target": "profit_after_tax",
-     "statement_line": "non_interest_income",
+     "statement_line": "enterprise_value",
      "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -1600,13 +1291,13 @@
      }
     },
     {
-     "causal_id": "cause_8c6e41aaa817e787020b",
-     "symbol": "BOP",
-     "edge_id": "cause_8c6e41aaa817e787020b",
-     "driver": "loan_growth",
-     "target": "net_interest_income",
-     "statement_line": "net_interest_income",
-     "unit": "pct",
+     "causal_id": "cause_842730e682b11439a424",
+     "symbol": "LUCK",
+     "edge_id": "cause_842730e682b11439a424",
+     "driver": "power_cost",
+     "target": "ebitda",
+     "statement_line": "cost_of_sales",
+     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -1619,32 +1310,13 @@
      }
     },
     {
-     "causal_id": "cause_86e61515c6db6826a3e8",
-     "symbol": "BOP",
-     "edge_id": "cause_86e61515c6db6826a3e8",
-     "driver": "policy_rate",
-     "target": "net_interest_margin",
-     "statement_line": "net_interest_income",
-     "unit": "pct_points",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_ed4b67a5980cae9d6aae",
-     "symbol": "BOP",
-     "edge_id": "cause_ed4b67a5980cae9d6aae",
-     "driver": "profit_after_tax",
-     "target": "eps",
-     "statement_line": "eps",
-     "unit": "pkr_per_share",
+     "causal_id": "cause_b460c9a99a94535611ef",
+     "symbol": "LUCK",
+     "edge_id": "cause_b460c9a99a94535611ef",
+     "driver": "realized_price",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "pkr_per_tonne",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -1828,6 +1500,498 @@
     "strict_study_rows": 0
    }
   },
+  "PRL": {
+   "symbol": "PRL",
+   "sector": "REFINERY",
+   "causal_rows": [
+    {
+     "causal_id": "cause_8c5c89fd83eef8a4efe6",
+     "symbol": "PRL",
+     "edge_id": "cause_8c5c89fd83eef8a4efe6",
+     "driver": "crude_supply",
+     "target": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_bbl",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_dd468cc1e4cd2eeb4f99",
+     "symbol": "PRL",
+     "edge_id": "cause_dd468cc1e4cd2eeb4f99",
+     "driver": "ebitda",
+     "target": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_51f7675ba1196cb03dc4",
+     "symbol": "PRL",
+     "edge_id": "cause_51f7675ba1196cb03dc4",
+     "driver": "gross_profit",
+     "target": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_d2e36467829a7b28ad8e",
+     "symbol": "PRL",
+     "edge_id": "cause_d2e36467829a7b28ad8e",
+     "driver": "inventory_position",
+     "target": "working_capital",
+     "statement_line": "inventory",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_04947fc981bd2941a17a",
+     "symbol": "PRL",
+     "edge_id": "cause_04947fc981bd2941a17a",
+     "driver": "plant_availability",
+     "target": "refinery_throughput",
+     "statement_line": "production",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_f541b2c584acaf3d96f4",
+     "symbol": "PRL",
+     "edge_id": "cause_f541b2c584acaf3d96f4",
+     "driver": "product_mix",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_9be0e939010e04150d9b",
+     "symbol": "PRL",
+     "edge_id": "cause_9be0e939010e04150d9b",
+     "driver": "refinery_margin",
+     "target": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "usd_per_bbl",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_5087943e83a895560144",
+     "symbol": "PRL",
+     "edge_id": "cause_5087943e83a895560144",
+     "driver": "refinery_throughput",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "barrels_per_day",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    }
+   ],
+   "coverage": {
+    "driver_edge_count": 8,
+    "causal_row_count": 8,
+    "observed_event_rows": 0,
+    "strict_study_rows": 0
+   }
+  },
+  "BOP": {
+   "symbol": "BOP",
+   "sector": "BANKS",
+   "causal_rows": [
+    {
+     "causal_id": "cause_6ff64662c3f40ebe5d50",
+     "symbol": "BOP",
+     "edge_id": "cause_6ff64662c3f40ebe5d50",
+     "driver": "capital_ratio",
+     "target": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_0cad0233dbe8bba3fc7f",
+     "symbol": "BOP",
+     "edge_id": "cause_0cad0233dbe8bba3fc7f",
+     "driver": "credit_cost",
+     "target": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_1042a86fc70a9f2bb956",
+     "symbol": "BOP",
+     "edge_id": "cause_1042a86fc70a9f2bb956",
+     "driver": "deposit_cost",
+     "target": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_a8a35a21f27a07422a63",
+     "symbol": "BOP",
+     "edge_id": "cause_a8a35a21f27a07422a63",
+     "driver": "eps",
+     "target": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_1dec8fe27d5151fc33bc",
+     "symbol": "BOP",
+     "edge_id": "cause_1dec8fe27d5151fc33bc",
+     "driver": "fee_income",
+     "target": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_8c6e41aaa817e787020b",
+     "symbol": "BOP",
+     "edge_id": "cause_8c6e41aaa817e787020b",
+     "driver": "loan_growth",
+     "target": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_86e61515c6db6826a3e8",
+     "symbol": "BOP",
+     "edge_id": "cause_86e61515c6db6826a3e8",
+     "driver": "policy_rate",
+     "target": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_ed4b67a5980cae9d6aae",
+     "symbol": "BOP",
+     "edge_id": "cause_ed4b67a5980cae9d6aae",
+     "driver": "profit_after_tax",
+     "target": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    }
+   ],
+   "coverage": {
+    "driver_edge_count": 8,
+    "causal_row_count": 8,
+    "observed_event_rows": 0,
+    "strict_study_rows": 0
+   }
+  },
+  "NBP": {
+   "symbol": "NBP",
+   "sector": "BANKS",
+   "causal_rows": [
+    {
+     "causal_id": "cause_5848d202ffd933d2b521",
+     "symbol": "NBP",
+     "edge_id": "cause_5848d202ffd933d2b521",
+     "driver": "capital_ratio",
+     "target": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_614c05f25142c0e41c04",
+     "symbol": "NBP",
+     "edge_id": "cause_614c05f25142c0e41c04",
+     "driver": "credit_cost",
+     "target": "profit_after_tax",
+     "statement_line": "provisions",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_b272983baf089ab4b5aa",
+     "symbol": "NBP",
+     "edge_id": "cause_b272983baf089ab4b5aa",
+     "driver": "deposit_cost",
+     "target": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_d871caf15107d3c99ce1",
+     "symbol": "NBP",
+     "edge_id": "cause_d871caf15107d3c99ce1",
+     "driver": "eps",
+     "target": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_b39da00a829c61de3646",
+     "symbol": "NBP",
+     "edge_id": "cause_b39da00a829c61de3646",
+     "driver": "fee_income",
+     "target": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_402d2e8e88a37067efbb",
+     "symbol": "NBP",
+     "edge_id": "cause_402d2e8e88a37067efbb",
+     "driver": "loan_growth",
+     "target": "net_interest_income",
+     "statement_line": "net_interest_income",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_df08cc87aaa5467fccb4",
+     "symbol": "NBP",
+     "edge_id": "cause_df08cc87aaa5467fccb4",
+     "driver": "policy_rate",
+     "target": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_3a928b9db696a86d8683",
+     "symbol": "NBP",
+     "edge_id": "cause_3a928b9db696a86d8683",
+     "driver": "profit_after_tax",
+     "target": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    }
+   ],
+   "coverage": {
+    "driver_edge_count": 8,
+    "causal_row_count": 8,
+    "observed_event_rows": 0,
+    "strict_study_rows": 0
+   }
+  },
   "MEBL": {
    "symbol": "MEBL",
    "sector": "BANKS",
@@ -1969,170 +2133,6 @@
      "causal_id": "cause_904f027cc8487b929bbf",
      "symbol": "MEBL",
      "edge_id": "cause_904f027cc8487b929bbf",
-     "driver": "profit_after_tax",
-     "target": "eps",
-     "statement_line": "eps",
-     "unit": "pkr_per_share",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    }
-   ],
-   "coverage": {
-    "driver_edge_count": 8,
-    "causal_row_count": 8,
-    "observed_event_rows": 0,
-    "strict_study_rows": 0
-   }
-  },
-  "HBL": {
-   "symbol": "HBL",
-   "sector": "BANKS",
-   "causal_rows": [
-    {
-     "causal_id": "cause_9c0fcc9c97bee9dde2bb",
-     "symbol": "HBL",
-     "edge_id": "cause_9c0fcc9c97bee9dde2bb",
-     "driver": "capital_ratio",
-     "target": "valuation",
-     "statement_line": "equity_value",
-     "unit": "pct",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_a5d5fa53728630ef981e",
-     "symbol": "HBL",
-     "edge_id": "cause_a5d5fa53728630ef981e",
-     "driver": "credit_cost",
-     "target": "profit_after_tax",
-     "statement_line": "provisions",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_6189fa717f39523fe7e6",
-     "symbol": "HBL",
-     "edge_id": "cause_6189fa717f39523fe7e6",
-     "driver": "deposit_cost",
-     "target": "net_interest_margin",
-     "statement_line": "net_interest_income",
-     "unit": "pct_points",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_5adcf9c43449b83b16b0",
-     "symbol": "HBL",
-     "edge_id": "cause_5adcf9c43449b83b16b0",
-     "driver": "eps",
-     "target": "valuation",
-     "statement_line": "equity_value",
-     "unit": "pkr_per_share",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_f232901504d2e84d9d5d",
-     "symbol": "HBL",
-     "edge_id": "cause_f232901504d2e84d9d5d",
-     "driver": "fee_income",
-     "target": "profit_after_tax",
-     "statement_line": "non_interest_income",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_24b161816b4717cd969e",
-     "symbol": "HBL",
-     "edge_id": "cause_24b161816b4717cd969e",
-     "driver": "loan_growth",
-     "target": "net_interest_income",
-     "statement_line": "net_interest_income",
-     "unit": "pct",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_84dc2539491b43bb43f2",
-     "symbol": "HBL",
-     "edge_id": "cause_84dc2539491b43bb43f2",
-     "driver": "policy_rate",
-     "target": "net_interest_margin",
-     "statement_line": "net_interest_income",
-     "unit": "pct_points",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_a0b692896744e6bca9ab",
-     "symbol": "HBL",
-     "edge_id": "cause_a0b692896744e6bca9ab",
      "driver": "profit_after_tax",
      "target": "eps",
      "statement_line": "eps",
@@ -2320,36 +2320,36 @@
     "strict_study_rows": 0
    }
   },
-  "ENGROH": {
-   "symbol": "ENGROH",
-   "sector": "HOLDING_COMPANY",
+  "HBL": {
+   "symbol": "HBL",
+   "sector": "BANKS",
    "causal_rows": [
     {
-     "causal_id": "cause_c80589e2484d0ee4092e",
-     "symbol": "ENGROH",
-     "edge_id": "cause_c80589e2484d0ee4092e",
-     "driver": "associate_earnings",
-     "target": "profit_after_tax",
-     "statement_line": "profit_after_tax",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_7b777cf95e880a64faf5",
-     "symbol": "ENGROH",
-     "edge_id": "cause_7b777cf95e880a64faf5",
-     "driver": "capital_allocation",
-     "target": "portfolio_value",
+     "causal_id": "cause_9c0fcc9c97bee9dde2bb",
+     "symbol": "HBL",
+     "edge_id": "cause_9c0fcc9c97bee9dde2bb",
+     "driver": "capital_ratio",
+     "target": "valuation",
      "statement_line": "equity_value",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_a5d5fa53728630ef981e",
+     "symbol": "HBL",
+     "edge_id": "cause_a5d5fa53728630ef981e",
+     "driver": "credit_cost",
+     "target": "profit_after_tax",
+     "statement_line": "provisions",
      "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -2363,13 +2363,13 @@
      }
     },
     {
-     "causal_id": "cause_7abf2207e630a113356f",
-     "symbol": "ENGROH",
-     "edge_id": "cause_7abf2207e630a113356f",
-     "driver": "dividend_income",
-     "target": "fcf",
-     "statement_line": "cash_dividends",
-     "unit": "pkr",
+     "causal_id": "cause_6189fa717f39523fe7e6",
+     "symbol": "HBL",
+     "edge_id": "cause_6189fa717f39523fe7e6",
+     "driver": "deposit_cost",
+     "target": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2382,9 +2382,9 @@
      }
     },
     {
-     "causal_id": "cause_3c4db4ed0584c0afcb07",
-     "symbol": "ENGROH",
-     "edge_id": "cause_3c4db4ed0584c0afcb07",
+     "causal_id": "cause_5adcf9c43449b83b16b0",
+     "symbol": "HBL",
+     "edge_id": "cause_5adcf9c43449b83b16b0",
      "driver": "eps",
      "target": "valuation",
      "statement_line": "equity_value",
@@ -2401,12 +2401,31 @@
      }
     },
     {
-     "causal_id": "cause_abed9d4925a1647e76a4",
-     "symbol": "ENGROH",
-     "edge_id": "cause_abed9d4925a1647e76a4",
-     "driver": "holding_discount",
-     "target": "valuation",
-     "statement_line": "equity_value",
+     "causal_id": "cause_f232901504d2e84d9d5d",
+     "symbol": "HBL",
+     "edge_id": "cause_f232901504d2e84d9d5d",
+     "driver": "fee_income",
+     "target": "profit_after_tax",
+     "statement_line": "non_interest_income",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_24b161816b4717cd969e",
+     "symbol": "HBL",
+     "edge_id": "cause_24b161816b4717cd969e",
+     "driver": "loan_growth",
+     "target": "net_interest_income",
+     "statement_line": "net_interest_income",
      "unit": "pct",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -2420,13 +2439,13 @@
      }
     },
     {
-     "causal_id": "cause_8f954b9f610e6000c5de",
-     "symbol": "ENGROH",
-     "edge_id": "cause_8f954b9f610e6000c5de",
-     "driver": "portfolio_value",
-     "target": "valuation",
-     "statement_line": "equity_value",
-     "unit": "pkr",
+     "causal_id": "cause_84dc2539491b43bb43f2",
+     "symbol": "HBL",
+     "edge_id": "cause_84dc2539491b43bb43f2",
+     "driver": "policy_rate",
+     "target": "net_interest_margin",
+     "statement_line": "net_interest_income",
+     "unit": "pct_points",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2439,32 +2458,13 @@
      }
     },
     {
-     "causal_id": "cause_d6f781e8a96f7e4f6030",
-     "symbol": "ENGROH",
-     "edge_id": "cause_d6f781e8a96f7e4f6030",
+     "causal_id": "cause_a0b692896744e6bca9ab",
+     "symbol": "HBL",
+     "edge_id": "cause_a0b692896744e6bca9ab",
      "driver": "profit_after_tax",
      "target": "eps",
      "statement_line": "eps",
      "unit": "pkr_per_share",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_5db874cb02ebcd125794",
-     "symbol": "ENGROH",
-     "edge_id": "cause_5db874cb02ebcd125794",
-     "driver": "subsidiary_value",
-     "target": "profit_after_tax",
-     "statement_line": "profit_after_tax",
-     "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2648,74 +2648,17 @@
     "strict_study_rows": 0
    }
   },
-  "FCCL": {
-   "symbol": "FCCL",
-   "sector": "CEMENT",
+  "ENGROH": {
+   "symbol": "ENGROH",
+   "sector": "HOLDING_COMPANY",
    "causal_rows": [
     {
-     "causal_id": "cause_d0dc13f621c354e95d7e",
-     "symbol": "FCCL",
-     "edge_id": "cause_d0dc13f621c354e95d7e",
-     "driver": "clinker_capacity",
-     "target": "revenue",
-     "statement_line": "capacity",
-     "unit": "tonnes",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_3ad76bd0e61bb6e63162",
-     "symbol": "FCCL",
-     "edge_id": "cause_3ad76bd0e61bb6e63162",
-     "driver": "coal_cost",
-     "target": "ebitda",
-     "statement_line": "cost_of_sales",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_9db005ce91f7b813c708",
-     "symbol": "FCCL",
-     "edge_id": "cause_9db005ce91f7b813c708",
-     "driver": "dispatch_volume",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pct",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_a3a57a46e42c7df0d33e",
-     "symbol": "FCCL",
-     "edge_id": "cause_a3a57a46e42c7df0d33e",
-     "driver": "ebitda",
-     "target": "fcf",
-     "statement_line": "operating_cash_flow",
+     "causal_id": "cause_c80589e2484d0ee4092e",
+     "symbol": "ENGROH",
+     "edge_id": "cause_c80589e2484d0ee4092e",
+     "driver": "associate_earnings",
+     "target": "profit_after_tax",
+     "statement_line": "profit_after_tax",
      "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -2729,13 +2672,13 @@
      }
     },
     {
-     "causal_id": "cause_45bb2bba27562ee78de7",
-     "symbol": "FCCL",
-     "edge_id": "cause_45bb2bba27562ee78de7",
-     "driver": "export_price",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pkr_per_tonne",
+     "causal_id": "cause_7b777cf95e880a64faf5",
+     "symbol": "ENGROH",
+     "edge_id": "cause_7b777cf95e880a64faf5",
+     "driver": "capital_allocation",
+     "target": "portfolio_value",
+     "statement_line": "equity_value",
+     "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2748,13 +2691,32 @@
      }
     },
     {
-     "causal_id": "cause_99c612ec2c13974fb321",
-     "symbol": "FCCL",
-     "edge_id": "cause_99c612ec2c13974fb321",
-     "driver": "fcf",
+     "causal_id": "cause_7abf2207e630a113356f",
+     "symbol": "ENGROH",
+     "edge_id": "cause_7abf2207e630a113356f",
+     "driver": "dividend_income",
+     "target": "fcf",
+     "statement_line": "cash_dividends",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_3c4db4ed0584c0afcb07",
+     "symbol": "ENGROH",
+     "edge_id": "cause_3c4db4ed0584c0afcb07",
+     "driver": "eps",
      "target": "valuation",
-     "statement_line": "enterprise_value",
-     "unit": "pkr",
+     "statement_line": "equity_value",
+     "unit": "pkr_per_share",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2767,138 +2729,12 @@
      }
     },
     {
-     "causal_id": "cause_ac817c94bad690a2d83b",
-     "symbol": "FCCL",
-     "edge_id": "cause_ac817c94bad690a2d83b",
-     "driver": "power_cost",
-     "target": "ebitda",
-     "statement_line": "cost_of_sales",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_9b684850b7a5be67f290",
-     "symbol": "FCCL",
-     "edge_id": "cause_9b684850b7a5be67f290",
-     "driver": "realized_price",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pkr_per_tonne",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    }
-   ],
-   "coverage": {
-    "driver_edge_count": 8,
-    "causal_row_count": 8,
-    "observed_event_rows": 0,
-    "strict_study_rows": 0
-   }
-  },
-  "NRL": {
-   "symbol": "NRL",
-   "sector": "REFINERY",
-   "causal_rows": [
-    {
-     "causal_id": "cause_e2b90ca7c59521091037",
-     "symbol": "NRL",
-     "edge_id": "cause_e2b90ca7c59521091037",
-     "driver": "crude_supply",
-     "target": "cost_of_sales",
-     "statement_line": "cost_of_sales",
-     "unit": "usd_per_bbl",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_740a7bdcad354a9ad5e4",
-     "symbol": "NRL",
-     "edge_id": "cause_740a7bdcad354a9ad5e4",
-     "driver": "ebitda",
-     "target": "fcf",
-     "statement_line": "operating_cash_flow",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_5da55b7020c14d75cf09",
-     "symbol": "NRL",
-     "edge_id": "cause_5da55b7020c14d75cf09",
-     "driver": "gross_profit",
-     "target": "ebitda",
-     "statement_line": "gross_profit",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_18db2e7a3dfcaf70baa8",
-     "symbol": "NRL",
-     "edge_id": "cause_18db2e7a3dfcaf70baa8",
-     "driver": "inventory_position",
-     "target": "working_capital",
-     "statement_line": "inventory",
-     "unit": "pkr",
-     "edge_basis": "declarative_assumption",
-     "evidence_status": "driver_edge_only",
-     "event_refs": [],
-     "event_study_refs": [],
-     "next_data_requirement": "retained_official_event_link_required",
-     "policy": {
-      "numeric_impact": "blocked",
-      "forecast": "blocked",
-      "valuation": "blocked"
-     }
-    },
-    {
-     "causal_id": "cause_1f86ef15865ee6235331",
-     "symbol": "NRL",
-     "edge_id": "cause_1f86ef15865ee6235331",
-     "driver": "plant_availability",
-     "target": "refinery_throughput",
-     "statement_line": "production",
+     "causal_id": "cause_abed9d4925a1647e76a4",
+     "symbol": "ENGROH",
+     "edge_id": "cause_abed9d4925a1647e76a4",
+     "driver": "holding_discount",
+     "target": "valuation",
+     "statement_line": "equity_value",
      "unit": "pct",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
@@ -2912,13 +2748,13 @@
      }
     },
     {
-     "causal_id": "cause_0167143adbe8cd4a5c46",
-     "symbol": "NRL",
-     "edge_id": "cause_0167143adbe8cd4a5c46",
-     "driver": "product_mix",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "pct",
+     "causal_id": "cause_8f954b9f610e6000c5de",
+     "symbol": "ENGROH",
+     "edge_id": "cause_8f954b9f610e6000c5de",
+     "driver": "portfolio_value",
+     "target": "valuation",
+     "statement_line": "equity_value",
+     "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2931,13 +2767,13 @@
      }
     },
     {
-     "causal_id": "cause_c390b315c0b3d16300e5",
-     "symbol": "NRL",
-     "edge_id": "cause_c390b315c0b3d16300e5",
-     "driver": "refinery_margin",
-     "target": "gross_profit",
-     "statement_line": "gross_profit",
-     "unit": "usd_per_bbl",
+     "causal_id": "cause_d6f781e8a96f7e4f6030",
+     "symbol": "ENGROH",
+     "edge_id": "cause_d6f781e8a96f7e4f6030",
+     "driver": "profit_after_tax",
+     "target": "eps",
+     "statement_line": "eps",
+     "unit": "pkr_per_share",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -2950,13 +2786,13 @@
      }
     },
     {
-     "causal_id": "cause_6bbbe4d3155e64e5a8bc",
-     "symbol": "NRL",
-     "edge_id": "cause_6bbbe4d3155e64e5a8bc",
-     "driver": "refinery_throughput",
-     "target": "revenue",
-     "statement_line": "revenue",
-     "unit": "barrels_per_day",
+     "causal_id": "cause_5db874cb02ebcd125794",
+     "symbol": "ENGROH",
+     "edge_id": "cause_5db874cb02ebcd125794",
+     "driver": "subsidiary_value",
+     "target": "profit_after_tax",
+     "statement_line": "profit_after_tax",
+     "unit": "pkr",
      "edge_basis": "declarative_assumption",
      "evidence_status": "driver_edge_only",
      "event_refs": [],
@@ -3140,14 +2976,14 @@
     "strict_study_rows": 0
    }
   },
-  "PRL": {
-   "symbol": "PRL",
+  "NRL": {
+   "symbol": "NRL",
    "sector": "REFINERY",
    "causal_rows": [
     {
-     "causal_id": "cause_8c5c89fd83eef8a4efe6",
-     "symbol": "PRL",
-     "edge_id": "cause_8c5c89fd83eef8a4efe6",
+     "causal_id": "cause_e2b90ca7c59521091037",
+     "symbol": "NRL",
+     "edge_id": "cause_e2b90ca7c59521091037",
      "driver": "crude_supply",
      "target": "cost_of_sales",
      "statement_line": "cost_of_sales",
@@ -3164,9 +3000,9 @@
      }
     },
     {
-     "causal_id": "cause_dd468cc1e4cd2eeb4f99",
-     "symbol": "PRL",
-     "edge_id": "cause_dd468cc1e4cd2eeb4f99",
+     "causal_id": "cause_740a7bdcad354a9ad5e4",
+     "symbol": "NRL",
+     "edge_id": "cause_740a7bdcad354a9ad5e4",
      "driver": "ebitda",
      "target": "fcf",
      "statement_line": "operating_cash_flow",
@@ -3183,9 +3019,9 @@
      }
     },
     {
-     "causal_id": "cause_51f7675ba1196cb03dc4",
-     "symbol": "PRL",
-     "edge_id": "cause_51f7675ba1196cb03dc4",
+     "causal_id": "cause_5da55b7020c14d75cf09",
+     "symbol": "NRL",
+     "edge_id": "cause_5da55b7020c14d75cf09",
      "driver": "gross_profit",
      "target": "ebitda",
      "statement_line": "gross_profit",
@@ -3202,9 +3038,9 @@
      }
     },
     {
-     "causal_id": "cause_d2e36467829a7b28ad8e",
-     "symbol": "PRL",
-     "edge_id": "cause_d2e36467829a7b28ad8e",
+     "causal_id": "cause_18db2e7a3dfcaf70baa8",
+     "symbol": "NRL",
+     "edge_id": "cause_18db2e7a3dfcaf70baa8",
      "driver": "inventory_position",
      "target": "working_capital",
      "statement_line": "inventory",
@@ -3221,9 +3057,9 @@
      }
     },
     {
-     "causal_id": "cause_04947fc981bd2941a17a",
-     "symbol": "PRL",
-     "edge_id": "cause_04947fc981bd2941a17a",
+     "causal_id": "cause_1f86ef15865ee6235331",
+     "symbol": "NRL",
+     "edge_id": "cause_1f86ef15865ee6235331",
      "driver": "plant_availability",
      "target": "refinery_throughput",
      "statement_line": "production",
@@ -3240,9 +3076,9 @@
      }
     },
     {
-     "causal_id": "cause_f541b2c584acaf3d96f4",
-     "symbol": "PRL",
-     "edge_id": "cause_f541b2c584acaf3d96f4",
+     "causal_id": "cause_0167143adbe8cd4a5c46",
+     "symbol": "NRL",
+     "edge_id": "cause_0167143adbe8cd4a5c46",
      "driver": "product_mix",
      "target": "revenue",
      "statement_line": "revenue",
@@ -3259,9 +3095,9 @@
      }
     },
     {
-     "causal_id": "cause_9be0e939010e04150d9b",
-     "symbol": "PRL",
-     "edge_id": "cause_9be0e939010e04150d9b",
+     "causal_id": "cause_c390b315c0b3d16300e5",
+     "symbol": "NRL",
+     "edge_id": "cause_c390b315c0b3d16300e5",
      "driver": "refinery_margin",
      "target": "gross_profit",
      "statement_line": "gross_profit",
@@ -3278,9 +3114,173 @@
      }
     },
     {
-     "causal_id": "cause_5087943e83a895560144",
-     "symbol": "PRL",
-     "edge_id": "cause_5087943e83a895560144",
+     "causal_id": "cause_6bbbe4d3155e64e5a8bc",
+     "symbol": "NRL",
+     "edge_id": "cause_6bbbe4d3155e64e5a8bc",
+     "driver": "refinery_throughput",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "barrels_per_day",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    }
+   ],
+   "coverage": {
+    "driver_edge_count": 8,
+    "causal_row_count": 8,
+    "observed_event_rows": 0,
+    "strict_study_rows": 0
+   }
+  },
+  "CNERGY": {
+   "symbol": "CNERGY",
+   "sector": "REFINERY",
+   "causal_rows": [
+    {
+     "causal_id": "cause_0eeb3d55acbe32ed1811",
+     "symbol": "CNERGY",
+     "edge_id": "cause_0eeb3d55acbe32ed1811",
+     "driver": "crude_supply",
+     "target": "cost_of_sales",
+     "statement_line": "cost_of_sales",
+     "unit": "usd_per_bbl",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_49cfa7ecd6139549f563",
+     "symbol": "CNERGY",
+     "edge_id": "cause_49cfa7ecd6139549f563",
+     "driver": "ebitda",
+     "target": "fcf",
+     "statement_line": "operating_cash_flow",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_8340473634abdd829008",
+     "symbol": "CNERGY",
+     "edge_id": "cause_8340473634abdd829008",
+     "driver": "gross_profit",
+     "target": "ebitda",
+     "statement_line": "gross_profit",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_a7fac9c9fdd8bfc3b147",
+     "symbol": "CNERGY",
+     "edge_id": "cause_a7fac9c9fdd8bfc3b147",
+     "driver": "inventory_position",
+     "target": "working_capital",
+     "statement_line": "inventory",
+     "unit": "pkr",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_19f3c5a37b5a045dc066",
+     "symbol": "CNERGY",
+     "edge_id": "cause_19f3c5a37b5a045dc066",
+     "driver": "plant_availability",
+     "target": "refinery_throughput",
+     "statement_line": "production",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_7ee57583eb1a9e3156bc",
+     "symbol": "CNERGY",
+     "edge_id": "cause_7ee57583eb1a9e3156bc",
+     "driver": "product_mix",
+     "target": "revenue",
+     "statement_line": "revenue",
+     "unit": "pct",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_b959fe5eae3bd5918c03",
+     "symbol": "CNERGY",
+     "edge_id": "cause_b959fe5eae3bd5918c03",
+     "driver": "refinery_margin",
+     "target": "gross_profit",
+     "statement_line": "gross_profit",
+     "unit": "usd_per_bbl",
+     "edge_basis": "declarative_assumption",
+     "evidence_status": "driver_edge_only",
+     "event_refs": [],
+     "event_study_refs": [],
+     "next_data_requirement": "retained_official_event_link_required",
+     "policy": {
+      "numeric_impact": "blocked",
+      "forecast": "blocked",
+      "valuation": "blocked"
+     }
+    },
+    {
+     "causal_id": "cause_197d5a4dd476a4e2e1e4",
+     "symbol": "CNERGY",
+     "edge_id": "cause_197d5a4dd476a4e2e1e4",
      "driver": "refinery_throughput",
      "target": "revenue",
      "statement_line": "revenue",

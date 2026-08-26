@@ -1,13 +1,13 @@
 {
  "schema_version": 1,
  "confidence_version": "intelligence_confidence_v1",
- "as_of": "2026-08-22T16:10:00+05:00",
+ "as_of": "2026-08-25T17:22:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
+  "CNERGY",
   "DGKC",
   "ENGROH",
-  "FCCL",
   "FFC",
   "GAL",
   "HBL",
@@ -82,6 +82,16 @@
    "aggregate_method": null,
    "assessments": []
   },
+  "CNERGY": {
+   "symbol": "CNERGY",
+   "status": "no_assessments",
+   "source_cluster_count": 0,
+   "assessment_count": 0,
+   "aggregate_score": null,
+   "aggregate_band": null,
+   "aggregate_method": null,
+   "assessments": []
+  },
   "DGKC": {
    "symbol": "DGKC",
    "status": "no_assessments",
@@ -102,7 +112,7 @@
    "aggregate_method": "mean_of_retained_cluster_assessments",
    "assessments": [
     {
-     "confidence_id": "confidence_bac5adbaa79d64defdee",
+     "confidence_id": "confidence_e67c5975c84b1ffc3ca3",
      "symbol": "ENGROH",
      "source_cluster_id": "cluster_e193758d1914395b6b3bc13c",
      "assertion_key": "acquisition:engro polymer & chemicals limited:intention:2026-03-13",
@@ -208,8 +218,8 @@
       "recency": {
        "weight": 5,
        "raw_facts": {
-        "as_of": "2026-08-22T16:10:00+05:00",
-        "age_days": 162,
+        "as_of": "2026-08-25T17:22:00+05:00",
+        "age_days": 165,
         "event_dates": [
          "2026-03-13"
         ]
@@ -233,161 +243,6 @@
        "study_id": "study_0489332288a01eb96490",
        "event_id": "evt_0489332288a01eb96490",
        "history_file": "state/history/ENGROH.json"
-      }
-     ],
-     "policy_flags": [
-      "research_only",
-      "no_advice",
-      "no_odds_claim",
-      "no_forward_estimate",
-      "no_price_claim"
-     ]
-    }
-   ]
-  },
-  "FCCL": {
-   "symbol": "FCCL",
-   "status": "assessed",
-   "source_cluster_count": 1,
-   "assessment_count": 1,
-   "aggregate_score": 61.0,
-   "aggregate_band": "medium",
-   "aggregate_method": "mean_of_retained_cluster_assessments",
-   "assessments": [
-    {
-     "confidence_id": "confidence_4245ce4d208c5d1b51da",
-     "symbol": "FCCL",
-     "source_cluster_id": "cluster_46fbfc58f7e36caac3ff41d6",
-     "assertion_key": "acquisition:attock cement pakistan limited:public_offer:2026-02-18",
-     "cluster_assessment": "single_source",
-     "score": 61.0,
-     "band": "medium",
-     "band_thresholds": {
-      "low": {
-       "min": 0,
-       "max": 49.9999
-      },
-      "medium": {
-       "min": 50,
-       "max": 74.9999
-      },
-      "high": {
-       "min": 75,
-       "max": 100
-      }
-     },
-     "components": {
-      "source_reliability": {
-       "weight": 20,
-       "raw_facts": {
-        "source_quality_levels": [
-         1
-        ],
-        "evidence_rows": 1
-       },
-       "normalized_score": 100,
-       "weighted_points": 20.0,
-       "rationale": "Mapped from retained official-source quality levels: 1=100, 2=70, 3=45, missing=0."
-      },
-      "signal_independence": {
-       "weight": 20,
-       "raw_facts": {
-        "distinct_originators": 1,
-        "originators": [
-         "issuer:FCCL"
-        ],
-        "distributors": [
-         "psx"
-        ]
-       },
-       "normalized_score": 25,
-       "weighted_points": 5.0,
-       "rationale": "Only distinct originators count; distributor copies of one official source do not add corroboration."
-      },
-      "historical_precedent": {
-       "weight": 20,
-       "raw_facts": {
-        "study_id": "study_d028288e2afc6923d3c1",
-        "strict_analogue_count": 1,
-        "mature_horizon_count": 2
-       },
-       "normalized_score": 50,
-       "weighted_points": 10.0,
-       "rationale": "Uses only event-study analogues dated before the assessed event; current-event horizons alone cap at 25."
-      },
-      "financial_model_quality": {
-       "weight": 15,
-       "raw_facts": {
-        "status": "partial",
-        "model_version": "cement_v1",
-        "observation_count": 0,
-        "derived_count": 0,
-        "quality_flags": [
-         "insufficient_three_year_consolidated_v2_history"
-        ]
-       },
-       "normalized_score": 60,
-       "weighted_points": 9.0,
-       "rationale": "Mapped from financial_model_inputs readiness; richer partial inputs can score 75, unsupported sectors score 35."
-      },
-      "peer_evidence": {
-       "weight": 10,
-       "raw_facts": {
-        "peer_symbol_count": 1,
-        "peer_symbols": [
-         "MLCF"
-        ],
-        "study_id": "study_d028288e2afc6923d3c1"
-       },
-       "normalized_score": 50,
-       "weighted_points": 5.0,
-       "rationale": "Peer evidence is limited to strict no-lookahead analogues in event_studies."
-      },
-      "data_completeness": {
-       "weight": 10,
-       "raw_facts": {
-        "observation_count": 1,
-        "complete_evidence_rows": 1,
-        "proposition_fields": [
-         "type",
-         "stage",
-         "target",
-         "modality"
-        ],
-        "financial_model_status": "partial"
-       },
-       "normalized_score": 100,
-       "weighted_points": 10.0,
-       "rationale": "Scores retained evidence, normalized proposition fields, and whether model inputs are at least partial."
-      },
-      "recency": {
-       "weight": 5,
-       "raw_facts": {
-        "as_of": "2026-08-22T16:10:00+05:00",
-        "age_days": 185,
-        "event_dates": [
-         "2026-02-18"
-        ]
-       },
-       "normalized_score": 40,
-       "weighted_points": 2.0,
-       "rationale": "Age is measured from retained effective/detected dates against signal_clusters.as_of."
-      }
-     },
-     "provenance_refs": [
-      {
-       "source_product": "signal_clusters",
-       "document_id": "psx:270499",
-       "source_url": "https://dps.psx.com.pk/download/document/270499.pdf",
-       "page": 2,
-       "content_sha256": "4bc685561334aedd34d7b9ff957d27968507045dc585e99f0731bcae7e149b98",
-       "evidence_sha256": "412609ce598dfc2c0f9ff5d68230b58f27722f2ac71b368d708642ad071f45e6"
-      },
-      {
-       "source_product": "event_studies",
-       "study_id": "study_d028288e2afc6923d3c1",
-       "event_id": "evt_d028288e2afc6923d3c1",
-       "history_file": "state/history/FCCL.json"
       }
      ],
      "policy_flags": [
@@ -480,7 +335,7 @@
    "aggregate_method": "mean_of_retained_cluster_assessments",
    "assessments": [
     {
-     "confidence_id": "confidence_8b27bd9a5def7dbda1a1",
+     "confidence_id": "confidence_6d72dc2353d6f582b0d5",
      "symbol": "MLCF",
      "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
      "assertion_key": "acquisition:pioneer cement limited:public_offer:2025-12-18",
@@ -586,8 +441,8 @@
       "recency": {
        "weight": 5,
        "raw_facts": {
-        "as_of": "2026-08-22T16:10:00+05:00",
-        "age_days": 247,
+        "as_of": "2026-08-25T17:22:00+05:00",
+        "age_days": 250,
         "event_dates": [
          "2025-12-18"
         ]
@@ -663,7 +518,7 @@
    "aggregate_method": "mean_of_retained_cluster_assessments",
    "assessments": [
     {
-     "confidence_id": "confidence_4dd330fbadbd1014b539",
+     "confidence_id": "confidence_a33877ddd0888dbfb2a0",
      "symbol": "PPL",
      "source_cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
      "assertion_key": "management:appointment:mr mirza nasiruddin mashhood ahmad:director:2026-01-09",
@@ -769,8 +624,8 @@
       "recency": {
        "weight": 5,
        "raw_facts": {
-        "as_of": "2026-08-22T16:10:00+05:00",
-        "age_days": 225,
+        "as_of": "2026-08-25T17:22:00+05:00",
+        "age_days": 228,
         "event_dates": [
          "2026-01-09"
         ]
@@ -829,14 +684,156 @@
   "UBL": {
    "symbol": "UBL",
    "status": "assessed",
-   "source_cluster_count": 2,
-   "assessment_count": 2,
-   "aggregate_score": 62.5,
+   "source_cluster_count": 3,
+   "assessment_count": 3,
+   "aggregate_score": 59.0,
    "aggregate_band": "medium",
    "aggregate_method": "mean_of_retained_cluster_assessments",
    "assessments": [
     {
-     "confidence_id": "confidence_5b9105090c257d873de6",
+     "confidence_id": "confidence_bd2f309de9795fdbe6e7",
+     "symbol": "UBL",
+     "source_cluster_id": "cluster_1817d30a6a5d6e0974e0e77f",
+     "assertion_key": "management:appointment:he:chairman of the board of directors:2026-03-04",
+     "cluster_assessment": "single_source",
+     "score": 52.0,
+     "band": "medium",
+     "band_thresholds": {
+      "low": {
+       "min": 0,
+       "max": 49.9999
+      },
+      "medium": {
+       "min": 50,
+       "max": 74.9999
+      },
+      "high": {
+       "min": 75,
+       "max": 100
+      }
+     },
+     "components": {
+      "source_reliability": {
+       "weight": 20,
+       "raw_facts": {
+        "source_quality_levels": [
+         1
+        ],
+        "evidence_rows": 1
+       },
+       "normalized_score": 100,
+       "weighted_points": 20.0,
+       "rationale": "Mapped from retained official-source quality levels: 1=100, 2=70, 3=45, missing=0."
+      },
+      "signal_independence": {
+       "weight": 20,
+       "raw_facts": {
+        "distinct_originators": 1,
+        "originators": [
+         "issuer:UBL"
+        ],
+        "distributors": [
+         "psx"
+        ]
+       },
+       "normalized_score": 25,
+       "weighted_points": 5.0,
+       "rationale": "Only distinct originators count; distributor copies of one official source do not add corroboration."
+      },
+      "historical_precedent": {
+       "weight": 20,
+       "raw_facts": {
+        "study_id": "study_f3a3780f9be0df115815",
+        "strict_analogue_count": 0,
+        "mature_horizon_count": 1
+       },
+       "normalized_score": 25,
+       "weighted_points": 5.0,
+       "rationale": "Uses only event-study analogues dated before the assessed event; current-event horizons alone cap at 25."
+      },
+      "financial_model_quality": {
+       "weight": 15,
+       "raw_facts": {
+        "status": "partial",
+        "model_version": "banks_v1",
+        "observation_count": 0,
+        "derived_count": 0,
+        "quality_flags": [
+         "insufficient_three_year_consolidated_v2_history"
+        ]
+       },
+       "normalized_score": 60,
+       "weighted_points": 9.0,
+       "rationale": "Mapped from financial_model_inputs readiness; richer partial inputs can score 75, unsupported sectors score 35."
+      },
+      "peer_evidence": {
+       "weight": 10,
+       "raw_facts": {
+        "peer_symbol_count": 0,
+        "peer_symbols": [],
+        "study_id": "study_f3a3780f9be0df115815"
+       },
+       "normalized_score": 0,
+       "weighted_points": 0.0,
+       "rationale": "Peer evidence is limited to strict no-lookahead analogues in event_studies."
+      },
+      "data_completeness": {
+       "weight": 10,
+       "raw_facts": {
+        "observation_count": 1,
+        "complete_evidence_rows": 1,
+        "proposition_fields": [
+         "type",
+         "person",
+         "role",
+         "modality"
+        ],
+        "financial_model_status": "partial"
+       },
+       "normalized_score": 100,
+       "weighted_points": 10.0,
+       "rationale": "Scores retained evidence, normalized proposition fields, and whether model inputs are at least partial."
+      },
+      "recency": {
+       "weight": 5,
+       "raw_facts": {
+        "as_of": "2026-08-25T17:22:00+05:00",
+        "age_days": 174,
+        "event_dates": [
+         "2026-03-04"
+        ]
+       },
+       "normalized_score": 60,
+       "weighted_points": 3.0,
+       "rationale": "Age is measured from retained effective/detected dates against signal_clusters.as_of."
+      }
+     },
+     "provenance_refs": [
+      {
+       "source_product": "signal_clusters",
+       "document_id": "psx:271999",
+       "source_url": "https://dps.psx.com.pk/download/document/271999.pdf",
+       "page": 8,
+       "content_sha256": "f36055054d186c8f569a4442919766a1c63a5556243484eb83b35188863e6287",
+       "evidence_sha256": "83fc88770d17a78ff626cbbee5015b44ca7bb789d9b5ead1d9ee87e1c02a0377"
+      },
+      {
+       "source_product": "event_studies",
+       "study_id": "study_f3a3780f9be0df115815",
+       "event_id": "evt_f3a3780f9be0df115815",
+       "history_file": "state/history/UBL.json"
+      }
+     ],
+     "policy_flags": [
+      "research_only",
+      "no_advice",
+      "no_odds_claim",
+      "no_forward_estimate",
+      "no_price_claim"
+     ]
+    },
+    {
+     "confidence_id": "confidence_56ff441f11c415365db1",
      "symbol": "UBL",
      "source_cluster_id": "cluster_2a04bcad22c357093bbd6280",
      "assertion_key": "management:appointment:lord zameer m. choudrey:chairman of the board of directors:2026-04-15",
@@ -889,7 +886,7 @@
        "weight": 20,
        "raw_facts": {
         "study_id": "study_a5aaeaed2ea2e998b0cf",
-        "strict_analogue_count": 1,
+        "strict_analogue_count": 2,
         "mature_horizon_count": 1
        },
        "normalized_score": 50,
@@ -944,8 +941,8 @@
       "recency": {
        "weight": 5,
        "raw_facts": {
-        "as_of": "2026-08-22T16:10:00+05:00",
-        "age_days": 129,
+        "as_of": "2026-08-25T17:22:00+05:00",
+        "age_days": 132,
         "event_dates": [
          "2026-04-15"
         ]
@@ -980,7 +977,7 @@
      ]
     },
     {
-     "confidence_id": "confidence_29c57586a98ec7e4a8de",
+     "confidence_id": "confidence_8804f9acc6fa3920e34f",
      "symbol": "UBL",
      "source_cluster_id": "cluster_18be1f7964ed898c278741e9",
      "assertion_key": "management:appointment:mr. shoukat ali:company secretary:2026-07-22",
@@ -1033,7 +1030,7 @@
        "weight": 20,
        "raw_facts": {
         "study_id": "study_2b090e38cccab8fac9da",
-        "strict_analogue_count": 2,
+        "strict_analogue_count": 3,
         "mature_horizon_count": 0
        },
        "normalized_score": 50,
@@ -1088,8 +1085,8 @@
       "recency": {
        "weight": 5,
        "raw_facts": {
-        "as_of": "2026-08-22T16:10:00+05:00",
-        "age_days": 31,
+        "as_of": "2026-08-25T17:22:00+05:00",
+        "age_days": 34,
         "event_dates": [
          "2026-07-22"
         ]
