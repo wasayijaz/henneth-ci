@@ -59,17 +59,52 @@ def _research_docs(research, sym, limit=5):
     ]
 
 
-def _document_queue_status(queue_state):
+def _receipt_document_id(row):
+    return row.get("doc_id") or row.get("document_id")
+
+
+def _brief_receipt_status(receipt_state):
+    approved = {}
+    for receipt in receipt_state.get("receipts") or []:
+        if not isinstance(receipt, dict):
+            continue
+        for item in receipt.get("based_on") or []:
+            if not isinstance(item, dict):
+                continue
+            doc_id = _receipt_document_id(item)
+            content_sha256 = item.get("content_sha256")
+            if not doc_id or not content_sha256:
+                continue
+            approved[(doc_id, content_sha256)] = {
+                "approval_status": "approved",
+                "synthesis_status": "complete",
+                "training_mode": True,
+                "receipt_id": receipt.get("receipt_id"),
+                "brief_id": receipt.get("brief_id"),
+                "approved_at": receipt.get("approved_at"),
+            }
+    return approved
+
+
+def _document_queue_status(queue_state, receipt_state=None):
+    approved = _brief_receipt_status(receipt_state or {})
     rows = queue_state.get("history") or queue_state.get("queue") or []
-    return {
-        (row.get("doc_id"), row.get("content_sha256")): {
+    status = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        doc_id = _receipt_document_id(row)
+        if not doc_id:
+            continue
+        key = (doc_id, row.get("content_sha256"))
+        status[key] = {
             "approval_status": row.get("approval_status"),
             "synthesis_status": row.get("synthesis_status"),
             "training_mode": bool(row.get("training_mode")),
         }
-        for row in rows
-        if isinstance(row, dict) and row.get("doc_id")
-    }
+        if key in approved:
+            status[key] = approved[key]
+    return status
 
 
 def _company_filings(document_state, queue_status, sym, limit=30):
@@ -396,6 +431,7 @@ def build():
     company_documents = load_json(STATE / "company_documents.json", {"documents": {}})
     company_events = load_json(STATE / "company_event_ledger.json", {"companies": {}})
     synthesis_queue = load_json(STATE / "document_synthesis_queue.json", {"queue": [], "history": []})
+    brief_receipts = load_json(STATE / "company_brief_receipts.json", {"receipts": []})
     source_registry = load_json(STATE / "company_intel" / "source_registry.json", {"tickers": {}})
     source_qa = load_json(STATE / "company_source_qa.json", {"tickers": {}})
     financial_series = load_json(STATE / "company_financial_series.json", {"tickers": {}})
@@ -424,7 +460,7 @@ def build():
     company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
-    queue_status = _document_queue_status(synthesis_queue)
+    queue_status = _document_queue_status(synthesis_queue, brief_receipts)
 
     # Keep the private app bounded to the declared CI pilot.  ``profiles`` may
     # retain stale public rows (for example a former pilot constituent), but

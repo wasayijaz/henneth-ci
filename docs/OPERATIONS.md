@@ -121,6 +121,9 @@ Vercel feature is used. The approval queue does not invoke an agent: training mo
 to approve synthesis first. Local synthesis training uses `prepare_synthesis_batch.py`, the
 `company-intelligence-librarian` and `company-intelligence-verifier` agents, and the deterministic
 `company_brief_review.py` approval gate; durable briefs are written only after explicit owner approval.
+CI slice shows a receipt-backed document as approved and complete only when its document ID and
+content hash exactly match an append-only owner approval receipt; it never rewrites queue history or
+receipts, and a stale hash remains pending.
 Manual historical expansion uses `ci_backfill.py` in batches of at most five companies and at most five
 batches per invocation. A durable cursor advances only after a completed batch; a failed provider keeps
 last-good data and leaves the unfinished batch due for a later retry.

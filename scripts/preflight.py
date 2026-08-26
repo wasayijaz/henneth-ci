@@ -184,6 +184,7 @@ def check_company_intelligence_phase2():
         ("build_change_intelligence.py", ["--self-check"]),
         ("prepare_synthesis_batch.py", ["--self-check"]),
         ("company_brief_review.py", ["self-check"]),
+        ("check_training_receipt_reconciliation.py", []),
     )
     for name, args in scripts:
         path = os.path.join(ROOT, "scripts", name)
