@@ -762,7 +762,15 @@ def build(write: bool = True) -> dict[str, Any]:
             "Financial coverage queue is retained for all pilot companies",
             [
                 _state("financial coverage", "state/company_intel/financial_coverage.json", _exact_pilot(financial_coverage, pilot), f"{_company_count(financial_coverage)} company rows"),
-                _state("queued companies", "state/company_intel/financial_coverage.json", int((financial_coverage.get("summary") or {}).get("queued_company_count") or 0) == len(pilot), f"{(financial_coverage.get('summary') or {}).get('queued_company_count')} queued"),
+                _state(
+                    "covered companies",
+                    "state/company_intel/financial_coverage.json",
+                    int((financial_coverage.get("summary") or {}).get("queued_company_count") or 0)
+                    + sum(1 for row in (financial_coverage.get("companies") or {}).values() if isinstance(row, dict) and row.get("status") == "complete")
+                    == len(pilot),
+                    f"{(financial_coverage.get('summary') or {}).get('queued_company_count')} queued + "
+                    f"{sum(1 for row in (financial_coverage.get('companies') or {}).values() if isinstance(row, dict) and row.get('status') == 'complete')} qualified",
+                ),
                 _check("financial coverage UI checker", "scripts/check_financial_coverage_ui.mjs"),
             ],
             ["Queue items must become qualified facts through official-document extraction, not manual estimates."],
@@ -899,11 +907,14 @@ def build(write: bool = True) -> dict[str, Any]:
         ),
         _row(
             "management_delivery_state",
-            "Management delivery state tracks thesis follow-through",
+            "Management delivery and continuous monitoring state track thesis follow-through",
             [
                 _state("management delivery", "state/company_intel/management_delivery.json", _exact_pilot(management_delivery, pilot), f"{_company_count(management_delivery)} company rows"),
                 _state("delivery records", "state/company_intel/management_delivery.json", active_thesis_count > 0, f"{active_thesis_count} active theses"),
                 _check("management delivery checker", "scripts/check_management_delivery.py"),
+                _state("continuous monitoring", "state/company_intel/monitoring.json", _exact_pilot(monitoring, pilot), f"{_company_count(monitoring)} company rows; {alert_count} retained alerts"),
+                _check("continuous monitoring checker", "scripts/check_ci_monitoring.py"),
+                _check("continuous monitoring UI checker", "scripts/check_ci_monitoring_ui.mjs"),
             ],
             ["Delivery records stay categorical until later retained official evidence resolves."],
         ),

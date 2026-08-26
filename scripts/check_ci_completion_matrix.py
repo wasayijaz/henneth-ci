@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -10,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import build_ci_completion_matrix as builder
+import check_ci_product_contracts
 from psx_data import load_json
 
 IMPACT_KEYS = ("revenue_impact", "ebitda_impact", "eps_impact", "fcf_impact", "valuation_impact")
@@ -161,6 +163,14 @@ def _assert_slice_summary(matrix: dict) -> None:
 
 
 def main() -> None:
+    delegated_to_preflight = os.environ.get("HENNETH_CI_PRODUCT_CONTRACTS_VERIFIED_BY_PREFLIGHT") == "1"
+    contract_results = [] if delegated_to_preflight else check_ci_product_contracts.run_checks()
+    if not delegated_to_preflight:
+        contract_failures = [result for result in contract_results if result.status != "passed"]
+        if contract_failures:
+            check_ci_product_contracts.print_report(contract_results)
+            failed_names = ", ".join(result.name for result in contract_failures)
+            _fail(f"CI product contract aggregate failed before completion credit: {failed_names}")
     _synthetic_status_rules()
     if not builder.OUT.exists():
         _fail("completion_matrix.json is missing")
@@ -176,7 +186,12 @@ def main() -> None:
     print(
         "ci_completion_matrix: PASS "
         f"({len(matrix['requirements'])} requirements; "
-        f"{summary['complete']} complete, {summary['partial']} partial, {summary['blocked']} blocked)"
+        f"{summary['complete']} complete, {summary['partial']} partial, {summary['blocked']} blocked; "
+        + (
+            "product checks executed by the aggregate)"
+            if not delegated_to_preflight
+            else "product checks executed by preflight direct gates)"
+        )
     )
 
 

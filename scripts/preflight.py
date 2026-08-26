@@ -1009,7 +1009,11 @@ def check_ci_completion_matrix():
         fail("check_ci_completion_matrix.py missing")
         return
     try:
-        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        matrix_env = dict(os.environ)
+        # Preflight has already executed each product checker directly. Avoid running the same
+        # aggregate a second time while retaining the completion-matrix consistency check.
+        matrix_env["HENNETH_CI_PRODUCT_CONTRACTS_VERIFIED_BY_PREFLIGHT"] = "1"
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30, env=matrix_env)
         if result.returncode != 0:
             fail("CI completion matrix check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:

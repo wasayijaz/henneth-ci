@@ -29,8 +29,8 @@
   "overall_status": "blocked",
   "requirement_count": 68,
   "counts": {
-   "complete": 57,
-   "partial": 7,
+   "complete": 58,
+   "partial": 6,
    "blocked": 4,
    "not_started": 0,
    "unknown": 0
@@ -72,6 +72,7 @@
    "causal_foundation_checker",
    "financial_model_input_state",
    "financial_parser_contract",
+   "financial_coverage_queue",
    "financial_evidence_reconciliation",
    "formal_forecast_engine_code",
    "formal_valuation_engine_code",
@@ -1044,7 +1045,7 @@
   {
    "id": "financial_coverage_queue",
    "title": "Financial coverage queue is retained for all pilot companies",
-   "status": "partial",
+   "status": "complete",
    "evidence": [
     {
      "label": "financial coverage",
@@ -1053,10 +1054,10 @@
      "detail": "20 company rows"
     },
     {
-     "label": "queued companies",
+     "label": "covered companies",
      "path": "state/company_intel/financial_coverage.json",
-     "ok": false,
-     "detail": "19 queued"
+     "ok": true,
+     "detail": "19 queued + 1 qualified"
     },
     {
      "label": "financial coverage UI checker",
@@ -1415,7 +1416,7 @@
   },
   {
    "id": "management_delivery_state",
-   "title": "Management delivery state tracks thesis follow-through",
+   "title": "Management delivery and continuous monitoring state track thesis follow-through",
    "status": "complete",
    "evidence": [
     {
@@ -1433,6 +1434,24 @@
     {
      "label": "management delivery checker",
      "path": "scripts/check_management_delivery.py",
+     "ok": true,
+     "detail": "focused checker path"
+    },
+    {
+     "label": "continuous monitoring",
+     "path": "state/company_intel/monitoring.json",
+     "ok": true,
+     "detail": "20 company rows; 151 retained alerts"
+    },
+    {
+     "label": "continuous monitoring checker",
+     "path": "scripts/check_ci_monitoring.py",
+     "ok": true,
+     "detail": "focused checker path"
+    },
+    {
+     "label": "continuous monitoring UI checker",
+     "path": "scripts/check_ci_monitoring_ui.mjs",
      "ok": true,
      "detail": "focused checker path"
     }

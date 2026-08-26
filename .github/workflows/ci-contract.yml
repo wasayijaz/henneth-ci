@@ -92,5 +92,8 @@ jobs:
           python scripts/build_ci_completion_matrix.py
           python scripts/build_ci_slice.py
 
+      - name: Company Intelligence product contract aggregate
+        run: python scripts/check_ci_product_contracts.py
+
       - name: Preflight gate
         run: python scripts/preflight.py
