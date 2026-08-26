@@ -504,9 +504,9 @@ function detail(r) {
       : state.view === "business" ? renderCompanyBusiness(r)
       : state.view === "operations" ? renderCompanyOperations(r)
       : state.view === "valuation" ? renderCompanyValuation(r)
-      : state.view === "guidance" ? renderCompanyDomainView(r, "guidance", "Guidance", "Management guidance is unavailable until first-class guidance objects exist.")
+      : state.view === "guidance" ? renderGuidanceDomainView(r, "guidance", "Guidance", "No retained official guidance assertion passed the strict v1 shape.")
       : state.view === "catalysts" ? renderCompanyDomainView(r, "catalysts", "Catalysts", "Catalysts are shown only when Company Brain references an existing typed object.")
-      : state.view === "risks" ? renderCompanyDomainView(r, "risks", "Risks", "Risks are shown only when Company Brain references an existing typed object.")
+      : state.view === "risks" ? renderGuidanceDomainView(r, "risks", "Risks", "No retained official risk assertion passed the strict v1 shape.")
       : state.view === "events" ? renderCompanyEvents(r)
       : state.view === "peers" ? renderCompanyPeers(r)
       : state.view === "ownership" ? renderCompanyOwnership(r)
@@ -1074,6 +1074,74 @@ function renderCompanyDomainView(r, domainName, title, emptyText) {
       <span>Reason <b>${esc(domain.reason || "none_emitted")}</b></span>
     </div>
     ${renderDomainRefs(r, domainName, emptyText)}
+  </section>`;
+}
+
+function guidanceState(r) {
+  return r.guidance_contradictions && typeof r.guidance_contradictions === "object" && !Array.isArray(r.guidance_contradictions)
+    ? r.guidance_contradictions
+    : null;
+}
+
+function guidanceObjects(state, domainName) {
+  return (Array.isArray(state?.objects) ? state.objects : []).filter(item => item?.domain === domainName);
+}
+
+function renderGuidanceEvidence(evidence) {
+  const href = safeHref(evidence?.source_url);
+  const page = evidence?.page ? `p.${esc(evidence.page)}` : "page unknown";
+  const doc = evidence?.document_id || "document unknown";
+  const available = evidence?.available_on || "available-on unknown";
+  const link = href ? `<a href="${href}" target="_blank" rel="noopener">${esc(doc)} ${page}</a>` : `<span>${esc(doc)} ${page}</span>`;
+  return `<div class="domain-ref-links">${link}<span>${esc(available)}</span></div>`;
+}
+
+function renderGuidanceObject(obj) {
+  return `<article class="domain-ref">
+    <header><div><span class="oi-type oi-type-${objectTypeClass(obj.domain === "risks" ? "reported_fact" : "inference")}">${esc(obj.domain || "guidance")}</span><h4>${esc(obj.guidance_id || "guidance object")}</h4></div><b>${esc(obj.status || "unknown")}</b></header>
+    <p>${esc(obj.statement || "Unknown — no statement emitted.")}</p>
+    <div class="domain-ref-meta">
+      <span>Modality <b>${esc(obj.modality || "unknown")}</b></span>
+      <span>Topic key <b>${esc(obj.topic_key || "unknown")}</b></span>
+      <span>Conflict key <b>${esc(obj.conflict_key || "unknown")}</b></span>
+    </div>
+    ${renderGuidanceEvidence(obj.evidence || {})}
+  </article>`;
+}
+
+function renderGuidanceContradictions(state) {
+  const rows = Array.isArray(state?.contradictions) ? state.contradictions : [];
+  if (!rows.length) return `<div class="empty">No exact normalized-key contradictions were emitted.</div>`;
+  return `<div class="domain-ref-list">${rows.map(row => `<article class="domain-ref">
+    <header><div><span class="oi-type oi-type-inference">${esc(row.status || "conflict")}</span><h4>${esc(row.contradiction_id || "contradiction")}</h4></div><b>exact key</b></header>
+    <div class="domain-ref-meta">
+      <span>Conflict key <b>${esc(row.conflict_key || "unknown")}</b></span>
+      <span>Objects <b>${esc((row.object_ids || []).join(" · ") || "none emitted")}</b></span>
+      <span>Rule <b>${esc(row.match_rule || "unknown")}</b></span>
+    </div>
+  </article>`).join("")}</div>`;
+}
+
+function renderGuidanceDomainView(r, domainName, title, emptyText) {
+  const state = guidanceState(r);
+  if (!state) {
+    return `<section class="panel span9 company-domain-shell" aria-labelledby="guidance-${esc(domainName)}">
+      <span class="kicker">Guidance & contradictions</span><h2 id="guidance-${esc(domainName)}">${esc(title)}</h2>
+      <p class="section-note">Unavailable: the CI slice has not emitted guidance_contradictions for this company. The browser will not derive guidance, risks, contradictions, forecasts, valuation, or advice.</p>
+      <div class="empty">Unavailable: not generated.</div>
+    </section>`;
+  }
+  const objects = guidanceObjects(state, domainName);
+  return `<section class="panel span9 company-domain-shell" aria-labelledby="guidance-${esc(domainName)}">
+    <span class="kicker">Guidance & contradictions</span><h2 id="guidance-${esc(domainName)}">${esc(title)}</h2>
+    <p class="section-note">Read-only backend output from retained official evidence. Unknown stays unknown; the browser only displays emitted assertion objects and exact-key contradiction rows.</p>
+    <div class="domain-status">
+      <span>Status <b>${esc(state.status || "unknown")}</b></span>
+      <span>${esc(title)} objects <b>${esc(objects.length)}</b></span>
+      <span>Contradictions <b>${esc(state.contradiction_count ?? 0)}</b></span>
+    </div>
+    ${objects.length ? `<div class="domain-ref-list">${objects.map(renderGuidanceObject).join("")}</div>` : `<div class="empty">${esc(emptyText)} Status: ${esc(state.status || "unknown")}.</div>`}
+    <section class="domain-subsection"><h3>Contradictions</h3>${renderGuidanceContradictions(state)}</section>
   </section>`;
 }
 

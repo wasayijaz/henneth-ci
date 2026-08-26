@@ -76,6 +76,13 @@ or scores evidence. Current broader guidance delivery is explicitly blocked beca
 contains no first-class guidance objects. Backend and UI contracts are checked by
 `scripts/check_management_delivery.py` and `scripts/check_management_delivery_ui.mjs`.
 
+Guidance & Contradictions v1 now supplies those first-class qualitative guidance/risk objects from
+retained official document evidence only when an excerpt passes a strict assertion parser. Companies
+with no qualifying evidence publish `no_guidance_objects`; contradictions require exact same-company
+normalized-key conflicts among eligible objects. Numeric forecasts, valuation, advice language and
+browser-side matching remain blocked. The backend and UI seams are checked by
+`scripts/check_guidance_contradictions.py` and `scripts/check_guidance_contradictions_ui.mjs`.
+
 The Evidence Watchlist turns those deterministic monitoring records into a company-level checklist:
 what official evidence would confirm the assertion, what would break it, what remains unobserved, and
 which financial-readiness gate blocks quantification. It uses exact same-company source IDs only and

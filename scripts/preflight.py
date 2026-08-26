@@ -320,7 +320,7 @@ def check_ci_slice():
     # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
     # state products. This catches a stale slice even when its legacy fields still look valid.
     wave1 = {}
-    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "evidence_watchlist", "peer_registry"):
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "peer_registry"):
         wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
         try:
             with open(wave_path, encoding="utf-8") as f:
@@ -332,6 +332,7 @@ def check_ci_slice():
     thesis_state = wave1.get("thesis_monitoring") or {}
     confidence_state = wave1.get("intelligence_confidence") or {}
     management_delivery_state = wave1.get("management_delivery") or {}
+    guidance_contradictions_state = wave1.get("guidance_contradictions") or {}
     evidence_watchlist_state = wave1.get("evidence_watchlist") or {}
     peer_registry_state = wave1.get("peer_registry") or {}
     if set(thesis_state.get("pilot_symbols") or []) != pilot:
@@ -346,6 +347,10 @@ def check_ci_slice():
         fail("state/company_intel/management_delivery.json: pilot boundary mismatch")
     if set(management_delivery_state.get("companies") or {}) != pilot:
         fail("state/company_intel/management_delivery.json: company boundary mismatch")
+    if set(guidance_contradictions_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/guidance_contradictions.json: pilot boundary mismatch")
+    if set(guidance_contradictions_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/guidance_contradictions.json: company boundary mismatch")
     if set(evidence_watchlist_state.get("pilot_symbols") or []) != pilot:
         fail("state/company_intel/evidence_watchlist.json: pilot boundary mismatch")
     if set(evidence_watchlist_state.get("companies") or {}) != pilot:
@@ -374,6 +379,7 @@ def check_ci_slice():
         thesis_state_row = (thesis_state.get("companies") or {}).get(sym)
         confidence_state_row = (confidence_state.get("companies") or {}).get(sym)
         management_delivery_state_row = (management_delivery_state.get("companies") or {}).get(sym)
+        guidance_contradictions_state_row = (guidance_contradictions_state.get("companies") or {}).get(sym)
         evidence_watchlist_state_row = (evidence_watchlist_state.get("companies") or {}).get(sym)
         peer_registry_state_row = (peer_registry_state.get("companies") or {}).get(sym)
         if "operating_events" not in row or not isinstance(row.get("operating_events"), list):
@@ -426,6 +432,10 @@ def check_ci_slice():
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} management_delivery stale/mismatch")
         if not isinstance(row.get("management_delivery"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} management_delivery missing/not object")
+        if row.get("guidance_contradictions") != guidance_contradictions_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} guidance_contradictions stale/mismatch")
+        if not isinstance(row.get("guidance_contradictions"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} guidance_contradictions missing/not object")
         if row.get("evidence_watchlist") != evidence_watchlist_state_row:
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist stale/mismatch")
         if not isinstance(row.get("evidence_watchlist"), dict):
@@ -591,6 +601,18 @@ def check_management_delivery():
     except Exception as e:
         fail(f"check_management_delivery.py did not run — {e}")
 
+def check_guidance_contradictions():
+    path = os.path.join(ROOT, "scripts", "check_guidance_contradictions.py")
+    if not os.path.exists(path):
+        fail("check_guidance_contradictions.py missing — guidance/contradiction contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("guidance contradictions check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_guidance_contradictions.py did not run — {e}")
+
 def check_evidence_watchlist():
     path = os.path.join(ROOT, "scripts", "check_evidence_watchlist.py")
     if not os.path.exists(path):
@@ -638,6 +660,18 @@ def check_management_delivery_ui():
             fail("management delivery UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
         fail(f"check_management_delivery_ui.mjs did not run — {e}")
+
+def check_guidance_contradictions_ui():
+    path = os.path.join(ROOT, "scripts", "check_guidance_contradictions_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_guidance_contradictions_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("guidance contradictions UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_guidance_contradictions_ui.mjs did not run — {e}")
 
 def check_ask_henneth():
     path = os.path.join(ROOT, "scripts", "check_ask_henneth.mjs")
@@ -924,10 +958,12 @@ def main():
     check_company_theses_ui()
     check_intelligence_confidence()
     check_management_delivery()
+    check_guidance_contradictions()
     check_evidence_watchlist()
     check_peer_registry()
     check_evidence_watchlist_ui()
     check_management_delivery_ui()
+    check_guidance_contradictions_ui()
     check_reprocess_documents()
     check_no_raw_artifacts()
     # --- Company intelligence shape: every populated row, not a sample ---

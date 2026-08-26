@@ -99,6 +99,11 @@ backend error is rendered.
     corroboration credit; historical and peer inputs come only from strict no-lookahead event
     studies. The UI displays producer scores without recalculating them, and Ask receives only a
     capped component summary without evidence payloads or URLs.
+20. `build_guidance_contradictions.py` emits first-class qualitative guidance/risk objects only
+    when retained same-company official document evidence has a strict assertion shape. Companies
+    without qualifying objects publish explicit `no_guidance_objects`; contradictions are exact
+    normalized-key conflicts among eligible objects only. The CI app displays the emitted rows and
+    does not infer guidance, risks, contradictions, forecasts, valuation or advice in the browser.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new

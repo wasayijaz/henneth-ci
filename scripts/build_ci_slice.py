@@ -415,6 +415,7 @@ def build():
     thesis_monitoring = load_json(STATE / "company_intel" / "thesis_monitoring.json", {"companies": {}})
     intelligence_confidence = load_json(STATE / "company_intel" / "intelligence_confidence.json", {"companies": {}})
     management_delivery = load_json(STATE / "company_intel" / "management_delivery.json", {"companies": {}})
+    guidance_contradictions = load_json(STATE / "company_intel" / "guidance_contradictions.json", {"companies": {}})
     evidence_watchlist = load_json(STATE / "company_intel" / "evidence_watchlist.json", {"companies": {}})
     peer_registry = load_json(STATE / "company_intel" / "peer_registry.json", {"companies": {}})
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
@@ -480,6 +481,7 @@ def build():
         thesis_row = (thesis_monitoring.get("companies") or {}).get(sym)
         confidence_row = (intelligence_confidence.get("companies") or {}).get(sym)
         management_delivery_row = (management_delivery.get("companies") or {}).get(sym)
+        guidance_contradictions_row = (guidance_contradictions.get("companies") or {}).get(sym)
         evidence_watchlist_row = (evidence_watchlist.get("companies") or {}).get(sym)
         peer_registry_row = (peer_registry.get("companies") or {}).get(sym) or {
             "symbol": sym,
@@ -578,6 +580,7 @@ def build():
             "thesis_monitoring": thesis_row,
             "intelligence_confidence": confidence_row,
             "management_delivery": management_delivery_row,
+            "guidance_contradictions": guidance_contradictions_row,
             "evidence_watchlist": evidence_watchlist_row,
             "peer_registry": peer_registry_row,
             "scenario_lab": scenario_lab_row,
@@ -612,6 +615,8 @@ def build():
                 "market_expectations_status": (scenario_lab_row.get("status") or {}).get("market_expectations"),
                 "brain_object_count": (company_brain.get("coverage") or {}).get("object_count", 0),
                 "management_delivery_records": (management_delivery_row or {}).get("delivery_record_count", 0),
+                "guidance_object_count": (guidance_contradictions_row or {}).get("object_count", 0),
+                "guidance_contradiction_count": (guidance_contradictions_row or {}).get("contradiction_count", 0),
                 "evidence_watchlist_status": (evidence_watchlist_row or {}).get("status"),
             },
             "news": _latest_news(news, sym),
