@@ -39,6 +39,11 @@ jobs:
           git config user.email "actions@github.com"
       - name: Deterministic pipeline (free, no agents)
         continue-on-error: true          # a mid-pipeline hiccup must not skip the gated publish
+        env:
+          # Optional server-only archive sink. Empty secrets leave supabase_ci_store.py in its
+          # explicit no-op mode; neither value is available to the browser or committed state.
+          HENNETH_CI_SUPABASE_URL: ${{ secrets.HENNETH_CI_SUPABASE_URL }}
+          HENNETH_CI_SUPABASE_SERVICE_KEY: ${{ secrets.HENNETH_CI_SUPABASE_SERVICE_KEY }}
         run: python scripts/run_cloud.py
       - name: Publish if the data passes preflight (race-safe)
         run: |
