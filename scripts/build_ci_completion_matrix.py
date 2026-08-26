@@ -213,6 +213,25 @@ def _sum_nested_count(data: dict[str, Any], key: str) -> int:
     return total
 
 
+def _blocked_impact_scenario_count(data: dict[str, Any], pilot: list[str]) -> tuple[bool, int]:
+    """Validate the retained, explicitly blocked numeric-impact scenario contract."""
+    impact_keys = ("revenue_impact", "ebitda_impact", "eps_impact", "fcf_impact", "valuation_impact")
+    blocked_statuses = {"insufficient_data", "unmodeled_driver"}
+    if not _exact_pilot(data, pilot):
+        return False, 0
+    count = 0
+    for row in (data.get("companies") or {}).values():
+        for scenario in row.get("scenarios") or []:
+            count += 1
+            if (
+                scenario.get("impact_status") not in blocked_statuses
+                or not isinstance((scenario.get("assumptions") or {}).get("missing_inputs"), list)
+                or any(key not in scenario or scenario[key] is not None for key in impact_keys)
+            ):
+                return False, count
+    return count > 0, count
+
+
 def _all_companies(data: dict[str, Any], pilot: list[str], predicate: Callable[[dict[str, Any]], bool]) -> bool:
     companies = data.get("companies") or {}
     return _exact_pilot(data, pilot) and all(predicate(companies.get(symbol) or {}) for symbol in pilot)
@@ -375,6 +394,7 @@ def build(write: bool = True) -> dict[str, Any]:
     active_thesis_count = int((management_delivery.get("summary") or {}).get("active_thesis_count") or 0)
     watch_count = int((evidence_watchlist.get("summary") or {}).get("active_watch_count") or 0)
     alert_count = int((monitoring.get("summary") or {}).get("alert_count") or 0)
+    blocked_impact_contract, blocked_impact_scenario_count = _blocked_impact_scenario_count(impact_scenarios, pilot)
 
     rows = [
         _row(
@@ -620,7 +640,7 @@ def build(write: bool = True) -> dict[str, Any]:
             "Impact scenario shells exist but numeric impacts are blocked",
             [
                 _state("impact scenario shells", "state/company_intel/impact_scenarios.json", _exact_pilot(impact_scenarios, pilot), f"{_company_count(impact_scenarios)} company rows"),
-                _contains("blocked numeric impact markers", "state/company_intel/impact_scenarios.json", ("numeric_impact", "blocked")),
+                _state("explicit blocked numeric-impact contract", "state/company_intel/impact_scenarios.json", blocked_impact_contract, f"{blocked_impact_scenario_count} retained shells with null numeric impacts and explicit missing inputs"),
             ],
             ["Sourced operands for numeric impacts and enough mature analogue samples for published aggregates."],
             ["Numeric impact, probability, EBITDA, FCF, DCF and formal forecast outputs remain blocked or null."],
@@ -928,7 +948,6 @@ def build(write: bool = True) -> dict[str, Any]:
                 _check("receipt reconciliation checker", "scripts/check_training_receipt_reconciliation.py"),
             ],
             ["Owner-approved candidate receipts are required for future synthesized briefs."],
-            ["Repo evidence cannot prove future owner approvals in advance."],
         ),
         _row(
             "ask_henneth_backend",

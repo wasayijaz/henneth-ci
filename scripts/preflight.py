@@ -979,6 +979,18 @@ def check_company_brain_formal_engines():
     except Exception as e:
         fail(f"check_company_brain_formal_engines.py did not run — {e}")
 
+def check_company_brain_source_index():
+    path = os.path.join(ROOT, "scripts", "check_company_brain_source_index.py")
+    if not os.path.exists(path):
+        fail("check_company_brain_source_index.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("Company Brain source-index check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_brain_source_index.py did not run — {e}")
+
 def check_company_brain_ui():
     path = os.path.join(ROOT, "scripts", "check_company_brain_ui.mjs")
     if not os.path.exists(path):
@@ -1163,6 +1175,7 @@ def main():
     check_company_scenario_lab_ui()
     check_company_brains()
     check_company_brain_formal_engines()
+    check_company_brain_source_index()
     check_company_brain_ui()
     check_ci_completion_matrix()
     check_ci_global_no_lookahead()

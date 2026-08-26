@@ -12,6 +12,9 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import build_ci_completion_matrix as builder
 from psx_data import load_json
 
+IMPACT_KEYS = ("revenue_impact", "ebitda_impact", "eps_impact", "fcf_impact", "valuation_impact")
+IMPACT_STATUSES = {"insufficient_data", "unmodeled_driver"}
+
 
 def _dump(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False)
@@ -93,14 +96,41 @@ def _assert_conservative_statuses(matrix: dict) -> None:
     ):
         if row.get("status") != "blocked":
             _fail(f"{row_id} must remain blocked while real computed output count is zero")
-    for row_id in ("private_thesis_live_storage", "training_owner_receipts"):
+    for row_id in ("private_thesis_live_storage",):
         if by_id[row_id].get("status") == "complete":
             _fail(f"{row_id} cannot be complete from repo evidence alone")
+    if by_id["training_owner_receipts"].get("status") != "complete":
+        _fail("append-only receipt reconciliation must be credited without claiming future approvals")
     if by_id["impact_scenario_shells"].get("status") != "partial":
         _fail("impact scenario shells must stay partial while numeric impacts are null")
+    _assert_impact_scenario_numeric_contract(matrix)
     for row_id in ("formal_forecast_engine_code", "formal_valuation_engine_code", "market_expectations_engine_code"):
         if by_id[row_id].get("status") != "complete":
             _fail(f"{row_id} should distinguish implemented source-gated engine code from blocked live outputs")
+
+
+def _assert_impact_scenario_numeric_contract(matrix: dict) -> None:
+    scenarios = load_json(ROOT / "state" / "company_intel" / "impact_scenarios.json", {})
+    pilot = set(matrix.get("pilot_symbols") or [])
+    companies = scenarios.get("companies") or {}
+    if not pilot or set(companies) != pilot:
+        _fail("impact scenario pilot boundary mismatch")
+    scenario_count = 0
+    for symbol, row in companies.items():
+        for scenario in row.get("scenarios") or []:
+            scenario_count += 1
+            if scenario.get("impact_status") not in IMPACT_STATUSES:
+                _fail(f"{symbol}: scenario impact status is not explicitly blocked")
+            assumptions = scenario.get("assumptions") or {}
+            if not isinstance(assumptions.get("missing_inputs"), list):
+                _fail(f"{symbol}: scenario missing_inputs must be explicit")
+            for key in IMPACT_KEYS:
+                if key not in scenario:
+                    _fail(f"{symbol}: scenario missing numeric impact field {key}")
+                if scenario.get(key) is not None:
+                    _fail(f"{symbol}: scenario numeric impact {key} must stay null without sourced inputs")
+    if scenario_count == 0:
+        _fail("impact scenarios must contain retained scenario shells")
 
 
 def _assert_event_study_evidence(matrix: dict) -> None:

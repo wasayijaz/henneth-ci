@@ -7,10 +7,127 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from intelligence_types import BRAIN_DOMAINS, INTELLIGENCE_TYPES, SOURCE_PRODUCTS
+from intelligence_types import BRAIN_DOMAINS, INTELLIGENCE_TYPES, SOURCE_INDEX_PRODUCTS, SOURCE_PRODUCTS
 from psx_data import STATE, load_json, save_json
 
 OUT = STATE / "company_intel" / "company_brains.json"
+SOURCE_INDEX_PRODUCT_META = {
+    "operating_events": {
+        "path": STATE / "company_intel" / "operating_events.json",
+        "state_path": "state/company_intel/operating_events.json",
+    },
+    "financial_model_inputs": {
+        "path": STATE / "company_intel" / "financial_model_inputs.json",
+        "state_path": "state/company_intel/financial_model_inputs.json",
+    },
+    "financial_evidence_reconciliation": {
+        "path": STATE / "company_intel" / "financial_evidence_reconciliation.json",
+        "state_path": "state/company_intel/financial_evidence_reconciliation.json",
+    },
+    "financial_coverage": {
+        "path": STATE / "company_intel" / "financial_coverage.json",
+        "state_path": "state/company_intel/financial_coverage.json",
+    },
+    "forecast_readiness": {
+        "path": STATE / "company_intel" / "forecast_readiness.json",
+        "state_path": "state/company_intel/forecast_readiness.json",
+    },
+    "financial_forecasts": {
+        "path": STATE / "company_intel" / "financial_forecasts.json",
+        "state_path": "state/company_intel/financial_forecasts.json",
+    },
+    "formal_valuations": {
+        "path": STATE / "company_intel" / "formal_valuations.json",
+        "state_path": "state/company_intel/formal_valuations.json",
+    },
+    "market_expectations": {
+        "path": STATE / "company_intel" / "market_expectations.json",
+        "state_path": "state/company_intel/market_expectations.json",
+    },
+    "signal_clusters": {
+        "path": STATE / "company_intel" / "signal_clusters.json",
+        "state_path": "state/company_intel/signal_clusters.json",
+    },
+    "thesis_monitoring": {
+        "path": STATE / "company_intel" / "thesis_monitoring.json",
+        "state_path": "state/company_intel/thesis_monitoring.json",
+    },
+    "guidance_contradictions": {
+        "path": STATE / "company_intel" / "guidance_contradictions.json",
+        "state_path": "state/company_intel/guidance_contradictions.json",
+    },
+    "management_delivery": {
+        "path": STATE / "company_intel" / "management_delivery.json",
+        "state_path": "state/company_intel/management_delivery.json",
+    },
+    "intelligence_confidence": {
+        "path": STATE / "company_intel" / "intelligence_confidence.json",
+        "state_path": "state/company_intel/intelligence_confidence.json",
+    },
+    "scenario_lab": {
+        "path": STATE / "company_intel" / "scenario_lab.json",
+        "state_path": "state/company_intel/scenario_lab.json",
+    },
+    "impact_scenarios": {
+        "path": STATE / "company_intel" / "impact_scenarios.json",
+        "state_path": "state/company_intel/impact_scenarios.json",
+    },
+    "driver_graphs": {
+        "path": STATE / "company_intel" / "driver_graphs.json",
+        "state_path": "state/company_intel/driver_graphs.json",
+    },
+}
+ROW_METADATA_KEYS = (
+    "symbol",
+    "status",
+    "activation_status",
+    "coverage_status",
+    "freshness",
+    "guidance_status",
+    "reason",
+    "missing_requirements",
+    "result",
+    "provenance",
+    "policy",
+    "formula_id",
+    "model_version",
+    "contract_version",
+    "classification",
+    "downstream_status",
+    "quality_flags",
+    "limitations",
+    "candidate_count",
+    "eligible_count",
+    "clusterable_count",
+    "source_cluster_count",
+    "active_thesis_count",
+    "assessment_count",
+    "aggregate_score",
+    "aggregate_band",
+    "guidance_count",
+    "risk_count",
+    "object_count",
+    "contradiction_count",
+    "delivery_record_count",
+    "guidance_object_count",
+    "guidance_record_count",
+)
+STATE_METADATA_KEYS = (
+    "schema_version",
+    "as_of",
+    "source",
+    "policy",
+    "kind",
+    "engine_version",
+    "formula_id",
+    "contract_version",
+    "coverage_version",
+    "reconciliation_version",
+    "guidance_version",
+    "delivery_version",
+    "confidence_version",
+    "registry_version",
+)
 FORMAL_ENGINE_PRODUCTS = {
     "financial_forecasts": {
         "path": STATE / "company_intel" / "financial_forecasts.json",
@@ -151,6 +268,35 @@ def _load_formal_engines() -> dict:
     }
 
 
+def _load_source_index_products() -> dict:
+    return {
+        product: load_json(SOURCE_INDEX_PRODUCT_META[product]["path"], {"companies": {}})
+        for product in SOURCE_INDEX_PRODUCTS
+    }
+
+
+def _picked(mapping: dict, keys: tuple[str, ...]) -> dict:
+    return {key: mapping[key] for key in keys if key in mapping}
+
+
+def _source_index(symbol: str, source_products: dict) -> dict:
+    refs = {}
+    for product in SOURCE_INDEX_PRODUCTS:
+        state = source_products[product]
+        row = ((state.get("companies") or {}).get(symbol) or {})
+        meta = SOURCE_INDEX_PRODUCT_META[product]
+        refs[product] = {
+            "source_product": product,
+            "state_path": meta["state_path"],
+            "source_path": f"{meta['state_path']}#/companies/{symbol}",
+            "pointer": f"/companies/{symbol}",
+            "symbol": row.get("symbol") or symbol,
+            "state_metadata": _picked(state, STATE_METADATA_KEYS),
+            "row_metadata": _picked(row, ROW_METADATA_KEYS),
+        }
+    return refs
+
+
 def _formal_engine_refs(symbol: str, formal_engines: dict) -> dict:
     refs = {}
     for product, state in formal_engines.items():
@@ -191,6 +337,7 @@ def build(write: bool = True) -> dict:
     operating = load_json(STATE / "company_intel" / "operating_events.json", {})
     studies = load_json(STATE / "company_intel" / "event_studies.json", {})
     formal_engines = _load_formal_engines()
+    source_index_products = _load_source_index_products()
     pilot = sorted((profiles.get("pilot") or {}).get("symbols") or [])
     companies = {}
     for symbol in pilot:
@@ -211,6 +358,7 @@ def build(write: bool = True) -> dict:
             "identity": identity,
             "domains": domains,
             "intelligence_objects": objects,
+            "source_index": _source_index(symbol, source_index_products),
             "formal_engine_refs": _formal_engine_refs(symbol, formal_engines),
             "timeline": timeline,
             "coverage": {
@@ -228,6 +376,7 @@ def build(write: bool = True) -> dict:
         "intelligence_types": list(INTELLIGENCE_TYPES),
         "domains": list(BRAIN_DOMAINS),
         "source_products": list(SOURCE_PRODUCTS),
+        "source_index_products": list(SOURCE_INDEX_PRODUCTS),
         "companies": companies,
     }
     if write:
