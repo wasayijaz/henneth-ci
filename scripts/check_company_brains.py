@@ -10,12 +10,6 @@ from build_company_brains import OUT, build
 from intelligence_types import BRAIN_DOMAINS, DOMAIN_STATUSES, INTELLIGENCE_TYPES, SOURCE_PRODUCTS
 from psx_data import STATE, load_json
 
-EXACT_PILOT = {
-    "ATRL", "BOP", "DGKC", "ENGROH", "FCCL", "FFC", "GAL", "HBL", "HUBC", "LUCK",
-    "MARI", "MEBL", "MLCF", "NBP", "NRL", "OGDC", "PPL", "PRL", "PSO", "UBL",
-}
-
-
 def _dump(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False)
 
@@ -104,8 +98,13 @@ def _check_company(symbol: str, company: dict, sources: dict, seen_ids: set[str]
 def main() -> None:
     if not OUT.exists():
         raise AssertionError("company_brains.json is missing")
+    profiles = load_json(STATE / "company_profiles.json", {})
+    pilot_order = list((profiles.get("pilot") or {}).get("symbols") or [])
+    pilot = set(pilot_order)
+    if len(pilot_order) != 20 or len(pilot) != 20:
+        raise AssertionError("pilot boundary must be exactly 20")
     brain = load_json(OUT, {})
-    if set(brain.get("pilot_symbols") or []) != EXACT_PILOT or set(brain.get("companies") or {}) != EXACT_PILOT:
+    if set(brain.get("pilot_symbols") or []) != pilot or set(brain.get("companies") or {}) != pilot:
         raise AssertionError("exact 20-company pilot mismatch")
     if brain.get("intelligence_types") != list(INTELLIGENCE_TYPES):
         raise AssertionError("intelligence type registry mismatch")
@@ -113,12 +112,12 @@ def main() -> None:
         raise AssertionError("brain registry mismatch")
     sources = _sources()
     seen_ids: set[str] = set()
-    for symbol in sorted(EXACT_PILOT):
+    for symbol in sorted(pilot):
         _check_company(symbol, brain["companies"][symbol], sources, seen_ids)
     if _dump(brain) != _dump(build(write=False)):
         raise AssertionError("company_brains rebuild is not deterministic")
     total = sum(company["coverage"]["object_count"] for company in brain["companies"].values())
-    print(f"company_brains: PASS ({len(EXACT_PILOT)} companies, {total} reference objects)")
+    print(f"company_brains: PASS ({len(pilot)} companies, {total} reference objects)")
 
 
 if __name__ == "__main__":

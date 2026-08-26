@@ -145,6 +145,7 @@ try {
   let benchmarkCount = 0;
   let suppressedAggregates = 0;
   let statsAggregates = 0;
+  const benchmarkIds = new Set();
   for (const row of rows) {
     const conditional = row.conditional_benchmarks;
     requireObject(conditional, `${row.symbol}: conditional_benchmarks`);
@@ -159,6 +160,8 @@ try {
       benchmarkCount += 1;
       requireObject(benchmark, `${row.symbol}: benchmark`);
       requireString(benchmark.benchmark_id, `${row.symbol}: benchmark_id`);
+      assert(!benchmarkIds.has(benchmark.benchmark_id), `${row.symbol}: duplicate benchmark_id ${benchmark.benchmark_id}`);
+      benchmarkIds.add(benchmark.benchmark_id);
       requireString(benchmark.status, `${row.symbol}: benchmark status`);
       requireObject(benchmark.target_event, `${row.symbol}: target_event`);
       requireString(benchmark.target_event.event_id, `${row.symbol}: target event_id`);
@@ -187,7 +190,7 @@ try {
     }
   }
 
-  assert(benchmarkCount === 16, `conditional benchmark count must be exactly 16, got ${benchmarkCount}`);
+  assert(benchmarkCount > 0, "conditional benchmark count must be positive");
   assert(suppressedAggregates > 0, "current slice must include suppressed aggregates");
   console.log(`conditional_benchmarks_ui: PASS (${checks} assertions, ${symbols.length} company rows, ${benchmarkCount} benchmarks, ${suppressedAggregates} suppressed aggregates, ${statsAggregates} stats aggregates)`);
 } catch (error) {

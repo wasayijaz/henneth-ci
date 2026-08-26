@@ -3,9 +3,9 @@ const encoder = new TextEncoder();
 export const PILOT_SYMBOLS = Object.freeze([
   "ATRL",
   "BOP",
+  "CNERGY",
   "DGKC",
   "ENGROH",
-  "FCCL",
   "FFC",
   "GAL",
   "HBL",
@@ -366,7 +366,7 @@ function projectStudies(row, linkedEventIds) {
   const studies = Array.isArray(row.event_studies) ? row.event_studies : [];
   return studies
     .filter((study) => !study?.event_id || linkedEventIds.has(study.event_id))
-    .slice(0, 3)
+    .slice(0, 1)
     .map((study) => ({
       study_id: boundedString(study.study_id, 120),
       event_id: boundedString(study.event_id, 120),

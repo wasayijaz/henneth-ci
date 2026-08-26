@@ -8,10 +8,6 @@ from build_financial_coverage import OUT, REQUIRED_ANNUAL_SLOT_COUNT, REQUIRED_M
 from psx_data import ROOT, STATE, load_json
 
 
-EXACT_PILOT = {
-    "ATRL", "BOP", "DGKC", "ENGROH", "FCCL", "FFC", "GAL", "HBL", "HUBC", "LUCK",
-    "MARI", "MEBL", "MLCF", "NBP", "NRL", "OGDC", "PPL", "PRL", "PSO", "UBL",
-}
 FORBIDDEN_KEYS = {"normalized_value", "raw_value", "value", "amount", "eps", "revenue", "pat"}
 ALLOWED_KEY_PATHS = {
     "missing_revenue_pat_eps_by_annual_period",
@@ -49,9 +45,9 @@ def _assert_no_values(data: dict) -> None:
             _fail(f"{'.'.join(path)} is not explicitly blocked")
 
 
-def _assert_shape(data: dict) -> None:
+def _assert_shape(data: dict, pilot: set[str]) -> None:
     symbols = data.get("pilot_symbols") or []
-    if set(symbols) != EXACT_PILOT or len(symbols) != 20:
+    if set(symbols) != pilot or len(symbols) != 20:
         _fail("expected exact 20-company pilot")
     companies = data.get("companies") or {}
     if set(companies) != set(symbols):
@@ -138,12 +134,17 @@ def main() -> None:
     )
     if not half_year or half_year.get("period_type") != "interim":
         _fail("half-year title was misclassified as annual")
+    profiles = load_json(STATE / "company_profiles.json", {})
+    pilot_order = list((profiles.get("pilot") or {}).get("symbols") or [])
+    pilot = set(pilot_order)
+    if len(pilot_order) != 20 or len(pilot) != 20:
+        _fail("pilot boundary must be exactly 20")
     expected = build()
     expected_again = build()
     if _dump(expected) != _dump(expected_again):
         _fail("builder output is not deterministic")
     _assert_no_values(expected)
-    _assert_shape(expected)
+    _assert_shape(expected, pilot)
     before = OUT.read_bytes()
     build()
     if before != OUT.read_bytes():
@@ -153,12 +154,12 @@ def main() -> None:
         _fail(result.stdout + result.stderr)
     slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
     by_symbol = {row.get("symbol"): row for row in slice_data.get("tickers") or []}
-    if set(by_symbol) != EXACT_PILOT:
+    if set(by_symbol) != pilot:
         _fail("CI slice does not contain exact pilot")
     for symbol, state_row in expected.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("financial_coverage") != state_row:
             _fail(f"{symbol}: CI slice financial_coverage mismatch")
-    print(f"financial_coverage: PASS ({len(EXACT_PILOT)} companies)")
+    print(f"financial_coverage: PASS ({len(pilot)} companies)")
 
 
 if __name__ == "__main__":

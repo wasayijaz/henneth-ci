@@ -351,7 +351,7 @@ def main() -> int:
         approved = r.load_allowlist(prod_manifest)
         assert set(approved) == set(r.APPROVED_WAVE3_ALLOWLIST)
         resolved = r.resolve_documents(sorted(r.APPROVED_WAVE3_ALLOWLIST), repo_root / "state", approved)
-        assert len(resolved) == 9
+        assert len(resolved) == 7
         assert {doc.doc_id for doc in resolved} == set(r.APPROVED_WAVE3_ALLOWLIST)
         for name, ids in {
             "extra": sorted(r.APPROVED_WAVE3_ALLOWLIST | {"psx:999999"}),
@@ -369,7 +369,7 @@ def main() -> int:
                 raise AssertionError(f"invalid manifest accepted: {name}")
 
         # The manifest may contain more than five approved IDs, but each invocation cannot.
-        assert len(r.APPROVED_WAVE3_ALLOWLIST) == 9
+        assert len(r.APPROVED_WAVE3_ALLOWLIST) == 7
         try:
             r.validate_operator_ids(sorted(r.APPROVED_WAVE3_ALLOWLIST)[:6])
         except r.UnsafeInput:

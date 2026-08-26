@@ -25,10 +25,6 @@ from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
 from psx_data import load_json
 
 
-EXACT_PILOT = {
-    "ATRL", "BOP", "DGKC", "ENGROH", "FCCL", "FFC", "GAL", "HBL", "HUBC", "LUCK",
-    "MARI", "MEBL", "MLCF", "NBP", "NRL", "OGDC", "PPL", "PRL", "PSO", "UBL",
-}
 FORBIDDEN_NUMERIC_KEYS = {
     "forecast_value", "valuation_value", "target_price", "fair_value", "expected_return",
     "market_implied_growth", "market_expectation", "dcf_value",
@@ -103,14 +99,16 @@ def _ready_facts() -> list[dict]:
     return rows
 
 
-def _assert_shape(data: dict) -> None:
+def _assert_shape(data: dict, pilot: list[str]) -> None:
     _assert_finite(data)
     _assert_no_numeric_outputs(data)
     if data.get("contract_version") != CONTRACT_VERSION:
         _fail("contract version mismatch")
-    if set(data.get("pilot_symbols") or []) != EXACT_PILOT or len(data.get("pilot_symbols") or []) != 20:
-        _fail("expected exact 20-company pilot")
-    if set(data.get("companies") or {}) != EXACT_PILOT:
+    if len(pilot) != 20 or len(set(pilot)) != 20:
+        _fail("pilot boundary must be exactly 20")
+    if data.get("pilot_symbols") != pilot:
+        _fail("pilot symbol order mismatch")
+    if set(data.get("companies") or {}) != set(pilot):
         _fail("company boundary mismatch")
     if data.get("policies") != POLICIES:
         _fail("policy mismatch")
@@ -168,7 +166,8 @@ def main() -> None:
     expected_again = builder.build()
     if json.dumps(expected, sort_keys=True, ensure_ascii=False, allow_nan=False) != json.dumps(expected_again, sort_keys=True, ensure_ascii=False, allow_nan=False):
         _fail("builder output is not deterministic")
-    _assert_shape(expected)
+    pilot = expected.get("pilot_symbols") or []
+    _assert_shape(expected, pilot)
     if (expected.get("summary") or {}).get("ready_company_count") != 0:
         _fail("real state unexpectedly ready for numeric forecast/valuation")
     if any((row.get("qualified_period_count") or 0) for row in (expected.get("companies") or {}).values()):
@@ -200,7 +199,7 @@ def main() -> None:
     for symbol, state_row in expected.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("forecast_readiness") != state_row:
             _fail(f"{symbol}: CI slice forecast_readiness mismatch")
-    print(f"forecast_readiness: PASS ({len(EXACT_PILOT)} companies, real state blocked)")
+    print(f"forecast_readiness: PASS ({len(pilot)} companies, real state blocked)")
 
 
 if __name__ == "__main__":

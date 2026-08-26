@@ -9,12 +9,6 @@ from intelligence_confidence import COMPONENT_WEIGHTS, FORBIDDEN_TEXT, build_int
 from psx_data import ROOT, STATE, load_json
 
 
-EXACT_PILOT = {
-    "ATRL", "BOP", "DGKC", "ENGROH", "FCCL", "FFC", "GAL", "HBL", "HUBC", "LUCK",
-    "MARI", "MEBL", "MLCF", "NBP", "NRL", "OGDC", "PPL", "PRL", "PSO", "UBL",
-}
-
-
 def _fail(message: str) -> None:
     raise AssertionError(message)
 
@@ -46,8 +40,8 @@ def _assert_safe_language(data: dict) -> None:
 
 def _assert_shape(data: dict, signal_state: dict, event_studies: dict, model_inputs: dict) -> int:
     symbols = list(signal_state.get("pilot_symbols") or [])
-    if set(symbols) != EXACT_PILOT or len(symbols) != 20:
-        _fail("expected exact 20-company pilot")
+    if len(symbols) != 20 or len(set(symbols)) != 20:
+        _fail("pilot boundary must be exactly 20")
     if data.get("pilot_symbols") != symbols:
         _fail("pilot symbol order mismatch")
     if data.get("component_weights") != COMPONENT_WEIGHTS or sum(COMPONENT_WEIGHTS.values()) != 100:
@@ -151,12 +145,13 @@ def main() -> None:
         _fail(result.stdout + result.stderr)
     slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
     by_symbol = {row.get("symbol"): row for row in slice_data.get("tickers") or []}
-    if set(by_symbol) != EXACT_PILOT:
+    pilot = list(signal_state.get("pilot_symbols") or [])
+    if set(by_symbol) != set(pilot):
         _fail("CI slice does not contain exact pilot")
     for symbol, state_row in real.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("intelligence_confidence") != state_row:
             _fail(f"{symbol}: CI slice confidence mismatch")
-    print(f"intelligence_confidence: PASS ({len(EXACT_PILOT)} companies, {total} assessments)")
+    print(f"intelligence_confidence: PASS ({len(pilot)} companies, {total} assessments)")
 
 
 if __name__ == "__main__":

@@ -56,6 +56,7 @@ The product is a hybrid of five parts:
 | Risk limits published to the client | `scripts/build_dashboard.py` writes `state/desk_rules.json` (allow-list of rule constants only) | `app.js` `loadDeskRules()` |
 | Health gate (Rule 6) | `scripts/data_health.py` -> `state/health.json` | signal generation, terminal banners, watchdog |
 | Publish gate | `scripts/preflight.py` | `publish.py`, `build_dashboard.py`, the cloud workflow |
+| CI contract gate | `.github/workflows/ci-contract.yml` | rebuilds deterministic CI artifacts from retained state in a clean checkout, then runs preflight; never fetches, publishes, or accepts stale generated state |
 | Live-site gate | `scripts/watchdog.py` | after every publish |
 | Account gate (data) | `middleware.js` | every `/state/*` request on the terminal |
 | Root state publication boundary | `scripts/root_state_publication.py`, `scripts/check_root_state_publication.py`, `scripts/vercel_build.sh`, `middleware.js` | excludes CI-owner-only artifacts from root `/state/*` and fails closed on matching request paths |

@@ -20,16 +20,20 @@ def build(profile_path: Path = PILOT, fundamentals_path: Path = FUND,
     profile, fundamentals, quant = load(profile_path), load(fundamentals_path), load(quant_path)
     symbols = list(profile["pilot"]["symbols"])
     companies = {}
+    fundamentals_dates = []
+    price_dates = []
     for symbol in symbols:
         f = fundamentals.get("tickers", {}).get(symbol) or {}
         q = quant.get("tickers", {}).get(symbol) or {}
         revenue = parse_scaled(f["revenue"])
         net_income = parse_scaled(f["net_income"])
         shares = parse_scaled(f["shares_out"])
-        eps = parse_scaled(f["eps"])
+        eps = net_income / shares
         price = float(q["close"])
         if min(revenue, net_income, shares, eps, price) <= 0:
             raise ValueError(f"non-positive baseline for {symbol}")
+        fundamentals_dates.append(f.get("fetched"))
+        price_dates.append(q.get("date"))
         companies[symbol] = {
             "symbol": symbol,
             "baseline": {
@@ -60,7 +64,7 @@ def build(profile_path: Path = PILOT, fundamentals_path: Path = FUND,
         }
     return {
         "schema_version": 1,
-        "as_of": {"fundamentals": fundamentals.get("updated"), "price": quant.get("updated")},
+        "as_of": {"fundamentals": max(fundamentals_dates), "price": max(price_dates)},
         "pilot_symbols": symbols,
         "assumptions": {"caller_supplied_only": True,
                         "fields": ["revenue_growth_pct", "net_margin_pct", "exit_pe"]},

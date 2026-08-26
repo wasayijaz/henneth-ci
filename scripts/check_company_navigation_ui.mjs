@@ -32,13 +32,13 @@ const PRIMARY = [
 const ADVANCED = ["snapshot", "timeline", "changes", "trends", "baseline", "forecast", "thesis", "watchlist", "monitoring", "ask", "graph", "operating", "conditional", "causal", "coverage", "sources", "brief"];
 
 function extractRegistry(name) {
-  const match = app.match(new RegExp(`const ${name} = (\\[[\\s\\S]*?\\]);\\n`));
+  const match = app.match(new RegExp(`const ${name} = (\\[[\\s\\S]*?\\]);\\r?\\n`));
   assert(match, `${name} registry present`);
   return Function(`"use strict"; return (${match[1]});`)();
 }
 
 function extractFunctionBody(name, nextName) {
-  const match = app.match(new RegExp(`function ${name}\\([^)]*\\) \\{([\\s\\S]*?)\\n\\}\\n\\nfunction ${nextName}`));
+  const match = app.match(new RegExp(`function ${name}\\([^)]*\\) \\{([\\s\\S]*?)\\r?\\n\\}\\r?\\n\\r?\\nfunction ${nextName}`));
   assert(match, `${name} body present`);
   return match[1];
 }

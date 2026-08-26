@@ -11,12 +11,6 @@ from evidence_watchlist import FORBIDDEN_TEXT, ITEM_STATUSES, build_evidence_wat
 from psx_data import ROOT, STATE, load_json
 
 
-EXACT_PILOT = [
-    "MLCF", "OGDC", "DGKC", "PPL", "UBL", "PSO", "NBP", "LUCK", "FFC", "BOP",
-    "HUBC", "MEBL", "HBL", "ATRL", "ENGROH", "MARI", "FCCL", "NRL", "GAL", "PRL",
-]
-
-
 def _fail(message: str) -> None:
     raise AssertionError(message)
 
@@ -87,8 +81,9 @@ def _assert_shape(
     model_state: dict,
     operating_events: dict,
     signal_state: dict,
+    pilot: list[str],
 ) -> int:
-    if data.get("pilot_symbols") != EXACT_PILOT:
+    if data.get("pilot_symbols") != pilot:
         _fail("pilot order mismatch")
     policy = data.get("policy") or {}
     for key in ("research_only", "no_advice", "categorical_only", "official_source_provenance_required", "same_company_exact_id_links_required", "private_user_theses_excluded"):
@@ -103,17 +98,17 @@ def _assert_shape(
         ("operating_events", operating_events),
         ("signal_clusters", signal_state),
     ):
-        if set(source_data.get("companies") or {}) != set(EXACT_PILOT):
+        if set(source_data.get("companies") or {}) != set(pilot):
             _fail(f"{source_name}: company boundary mismatch")
-    if list((model_state.get("companies") or {}).keys()) and set(model_state.get("companies") or {}) != set(EXACT_PILOT):
+    if list((model_state.get("companies") or {}).keys()) and set(model_state.get("companies") or {}) != set(pilot):
         _fail("financial_model_inputs: company boundary mismatch")
     companies = data.get("companies") or {}
-    if list(companies) != EXACT_PILOT:
+    if list(companies) != pilot:
         _fail("company order/boundary mismatch")
     documents = load_json(STATE / "company_documents.json", {"documents": {}}).get("documents") or {}
     total = 0
     seen_ids = set()
-    for symbol in EXACT_PILOT:
+    for symbol in pilot:
         row = companies.get(symbol) or {}
         theses = (thesis_state.get("companies") or {}).get(symbol, {}).get("theses") or []
         records = (delivery_state.get("companies") or {}).get(symbol, {}).get("records") or []
@@ -170,7 +165,7 @@ def _assert_shape(
             if "score" in item or "aggregate_score" in item:
                 _fail(f"{symbol}: numeric confidence score leaked into watchlist")
             _assert_evidence(symbol, item, documents)
-    if (data.get("summary") or {}).get("active_symbols") != [s for s in EXACT_PILOT if (companies.get(s) or {}).get("items")]:
+    if (data.get("summary") or {}).get("active_symbols") != [s for s in pilot if (companies.get(s) or {}).get("items")]:
         _fail("summary active symbol order mismatch")
     return total
 
@@ -191,8 +186,8 @@ def _load_sources() -> tuple[dict, dict, dict, dict, dict, dict, list[str]]:
 
 def main() -> None:
     thesis_state, delivery_state, confidence_state, model_state, operating_events, signal_state, pilot = _load_sources()
-    if pilot != EXACT_PILOT:
-        _fail("company_profiles pilot is not the exact approved 20-company CI pilot/order")
+    if len(pilot) != 20 or len(set(pilot)) != 20:
+        _fail("pilot boundary must be exactly 20")
     expected = build_evidence_watchlist(
         thesis_state,
         delivery_state,
@@ -205,7 +200,7 @@ def main() -> None:
     if _dump(expected) != _dump(build_evidence_watchlist(thesis_state, delivery_state, confidence_state, model_state, operating_events, signal_state, pilot_symbols=pilot)):
         _fail("pure builder is not deterministic")
     _assert_safe_language(expected)
-    total = _assert_shape(expected, thesis_state, delivery_state, confidence_state, model_state, operating_events, signal_state)
+    total = _assert_shape(expected, thesis_state, delivery_state, confidence_state, model_state, operating_events, signal_state, pilot)
     if not OUT.exists():
         _fail("state/company_intel/evidence_watchlist.json missing")
     real = load_json(OUT, {})
@@ -227,12 +222,12 @@ def main() -> None:
             _fail("builder output is not byte-idempotent")
     slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
     by_symbol = {row.get("symbol"): row for row in slice_data.get("tickers") or []}
-    if set(by_symbol) != set(EXACT_PILOT):
+    if set(by_symbol) != set(pilot):
         _fail("CI slice pilot boundary mismatch")
     for symbol, state_row in real.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("evidence_watchlist") != state_row:
             _fail(f"{symbol}: CI slice evidence_watchlist mismatch")
-    print(f"evidence_watchlist: PASS ({len(EXACT_PILOT)} companies, {total} items)")
+    print(f"evidence_watchlist: PASS ({len(pilot)} companies, {total} items)")
 
 
 if __name__ == "__main__":

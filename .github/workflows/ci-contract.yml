@@ -63,5 +63,34 @@ jobs:
               subprocess.run(["node", "-c", str(path)], check=True)
           PY
 
+      - name: Build generated Company Intelligence artifacts
+        run: |
+          python scripts/build_financial_model_inputs.py
+          python scripts/build_financial_coverage.py
+          python scripts/build_forecast_readiness.py
+          python scripts/build_formal_financial_engines.py
+          python scripts/build_financial_evidence_reconciliation.py
+          python scripts/build_operating_events.py
+          python scripts/build_driver_graphs.py
+          python scripts/impact_engine.py
+          python scripts/build_signal_clusters.py
+          python scripts/build_event_studies.py
+          python scripts/build_conditional_benchmarks.py
+          python scripts/build_causal_foundations.py
+          python scripts/build_thesis_monitoring.py
+          python scripts/build_intelligence_confidence.py
+          python scripts/build_guidance_contradictions.py
+          python scripts/build_management_delivery.py
+          python scripts/build_evidence_watchlist.py
+          python scripts/build_ci_monitoring.py
+          python scripts/build_peer_registry.py
+          python scripts/build_company_scenario_lab.py
+          python scripts/build_company_brains.py
+          python scripts/build_ownership_source_manifest.py
+          python scripts/build_ci_reprocess_manifest.py
+          python scripts/build_ci_slice.py
+          python scripts/build_ci_completion_matrix.py
+          python scripts/build_ci_slice.py
+
       - name: Preflight gate
         run: python scripts/preflight.py

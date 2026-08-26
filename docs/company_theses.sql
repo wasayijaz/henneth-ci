@@ -65,7 +65,7 @@ create table if not exists public.company_theses (
       'ATRL',
       'ENGROH',
       'MARI',
-      'FCCL',
+      'CNERGY',
       'NRL',
       'GAL',
       'PRL'

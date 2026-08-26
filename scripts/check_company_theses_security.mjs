@@ -25,7 +25,7 @@ const expectedSymbols = [
   "ATRL",
   "ENGROH",
   "MARI",
-  "FCCL",
+  "CNERGY",
   "NRL",
   "GAL",
   "PRL",

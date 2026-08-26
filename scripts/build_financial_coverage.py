@@ -47,6 +47,8 @@ def _period_from_doc(row: dict[str, Any], classification: str) -> dict[str, Any]
         (r"(?:quarter|period|nine months|half year|six months)\s+ended\s+([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})", "interim"),
         (r"(?:year|twelve months)\s+ended\s+(\d{4})[-./](\d{1,2})[-./](\d{1,2})", "annual"),
         (r"(?:year|twelve months)\s+ended\s+([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})", "annual"),
+        (r"(?<!half[ -])(?:year|twelve months)\s+ended\s+(?:[-:.,]\s*)?(\d{1,2})[.-](\d{1,2})[.-](\d{4})", "annual"),
+        (r"(?<!half[ -])(?:year|twelve months)\s+ended\s+(?:[-:.,]\s*)?([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})", "annual"),
         (r"31[.-]12[.-](\d{4})", "unknown"),
         (r"31[.-]03[.-](\d{4})", "unknown"),
         (r"30[.-]09[.-](\d{4})", "unknown"),
@@ -70,6 +72,8 @@ def _period_from_doc(row: dict[str, Any], classification: str) -> dict[str, Any]
             day = 30 if month in {6, 9} else 31
         elif groups[0].isdigit() and len(groups[0]) == 4:
             year, month, day = int(groups[0]), int(groups[1]), int(groups[2])
+        elif groups[0].isdigit():
+            day, month, year = int(groups[0]), int(groups[1]), int(groups[2])
         else:
             month = months.get(groups[0].lower())
             if not month:
