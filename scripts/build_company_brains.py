@@ -11,6 +11,23 @@ from intelligence_types import BRAIN_DOMAINS, INTELLIGENCE_TYPES, SOURCE_PRODUCT
 from psx_data import STATE, load_json, save_json
 
 OUT = STATE / "company_intel" / "company_brains.json"
+FORMAL_ENGINE_PRODUCTS = {
+    "financial_forecasts": {
+        "path": STATE / "company_intel" / "financial_forecasts.json",
+        "state_path": "state/company_intel/financial_forecasts.json",
+        "brain_path": "forecasts",
+    },
+    "formal_valuations": {
+        "path": STATE / "company_intel" / "formal_valuations.json",
+        "state_path": "state/company_intel/formal_valuations.json",
+        "brain_path": "valuation",
+    },
+    "market_expectations": {
+        "path": STATE / "company_intel" / "market_expectations.json",
+        "state_path": "state/company_intel/market_expectations.json",
+        "brain_path": "forecasts",
+    },
+}
 
 BRIEF_DOMAIN_MAP = {
     "what_changed": ("projects", "catalysts", "historical_events"),
@@ -127,6 +144,40 @@ def _study_objects(symbol: str, studies: dict, domains: dict, objects: list[dict
                     None, [study["event_id"]] if study.get("event_id") else None)
 
 
+def _load_formal_engines() -> dict:
+    return {
+        product: load_json(meta["path"], {"companies": {}})
+        for product, meta in FORMAL_ENGINE_PRODUCTS.items()
+    }
+
+
+def _formal_engine_refs(symbol: str, formal_engines: dict) -> dict:
+    refs = {}
+    for product, state in formal_engines.items():
+        meta = FORMAL_ENGINE_PRODUCTS[product]
+        row = ((state.get("companies") or {}).get(symbol) or {})
+        ref = {
+            "type": "formal_engine_product",
+            "source_product": product,
+            "source_path": f"{meta['state_path']}#/companies/{symbol}",
+            "symbol": row.get("symbol") or symbol,
+            "kind": state.get("kind") or product,
+            "engine_version": state.get("engine_version"),
+            "formula_id": row.get("formula_id") or state.get("formula_id"),
+            "status": row.get("status") or "blocked",
+            "reason": row.get("reason"),
+            "result": row.get("result"),
+            "provenance": row.get("provenance") or [],
+            "policy": row.get("policy") or {},
+            "as_of": _date(state.get("as_of")),
+            "brain_path": f"companies/{symbol}/domains/{meta['brain_path']}",
+        }
+        if row.get("missing_requirements") is not None:
+            ref["missing_requirements"] = row["missing_requirements"]
+        refs[product] = ref
+    return refs
+
+
 def _finalize(domains: dict) -> None:
     for row in domains.values():
         row["object_refs"] = sorted(set(row["object_refs"]))
@@ -139,6 +190,7 @@ def build(write: bool = True) -> dict:
     briefs = load_json(STATE / "company_briefs.json", {})
     operating = load_json(STATE / "company_intel" / "operating_events.json", {})
     studies = load_json(STATE / "company_intel" / "event_studies.json", {})
+    formal_engines = _load_formal_engines()
     pilot = sorted((profiles.get("pilot") or {}).get("symbols") or [])
     companies = {}
     for symbol in pilot:
@@ -159,6 +211,7 @@ def build(write: bool = True) -> dict:
             "identity": identity,
             "domains": domains,
             "intelligence_objects": objects,
+            "formal_engine_refs": _formal_engine_refs(symbol, formal_engines),
             "timeline": timeline,
             "coverage": {
                 "available_domains": sum(row["status"] == "available" for row in domains.values()),

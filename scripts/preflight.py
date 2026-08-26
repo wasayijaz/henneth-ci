@@ -122,6 +122,21 @@ def check_code_syntax():
             warn(f"{rel}: JS syntax check errored — {e}")
 
 
+def check_ci_contract_workflow():
+    """Verify the committed CI workflow still carries the repository's local gates."""
+    path = os.path.join(ROOT, "scripts", "check_ci_contract_workflow.py")
+    if not os.path.exists(path):
+        fail("check_ci_contract_workflow.py missing — CI contract workflow cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
+        if result.returncode != 0:
+            detail = (result.stdout or result.stderr or "").strip().splitlines()
+            fail("CI contract workflow check failed — " + (detail[-1] if detail else "no details"))
+    except Exception as e:  # noqa: BLE001 — never let the checker itself crash the gate
+        fail(f"check_ci_contract_workflow.py did not run — {e}")
+
+
 def check_provenance():
     """Tier-1 accuracy QA: run provenance_lint.py (placeholder/hollow/stale rendered content).
     A hard FAIL there means an assumed/empty/out-of-date value would reach users — block it."""
@@ -952,6 +967,18 @@ def check_company_brains():
     except Exception as e:
         fail(f"check_company_brains.py did not run — {e}")
 
+def check_company_brain_formal_engines():
+    path = os.path.join(ROOT, "scripts", "check_company_brain_formal_engines.py")
+    if not os.path.exists(path):
+        fail("check_company_brain_formal_engines.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("Company Brain formal engine check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_brain_formal_engines.py did not run — {e}")
+
 def check_company_brain_ui():
     path = os.path.join(ROOT, "scripts", "check_company_brain_ui.mjs")
     if not os.path.exists(path):
@@ -1093,6 +1120,7 @@ def main():
 
     # --- Tier-1 code QA: instant, free, blocks a broken build before anything else runs ---
     check_code_syntax()
+    check_ci_contract_workflow()
     # --- Tier-1 accuracy QA: block assumed/hollow/stale content from reaching users ---
     check_provenance()
     # --- Tier-1 maths QA: Rule 4 + payout sign guard ---
@@ -1125,6 +1153,7 @@ def main():
     check_company_scenario_lab()
     check_company_scenario_lab_ui()
     check_company_brains()
+    check_company_brain_formal_engines()
     check_company_brain_ui()
     check_ci_completion_matrix()
     check_ci_global_no_lookahead()
