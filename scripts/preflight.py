@@ -320,7 +320,7 @@ def check_ci_slice():
     # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
     # state products. This catches a stale slice even when its legacy fields still look valid.
     wave1 = {}
-    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "evidence_watchlist"):
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "evidence_watchlist", "peer_registry"):
         wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
         try:
             with open(wave_path, encoding="utf-8") as f:
@@ -333,6 +333,7 @@ def check_ci_slice():
     confidence_state = wave1.get("intelligence_confidence") or {}
     management_delivery_state = wave1.get("management_delivery") or {}
     evidence_watchlist_state = wave1.get("evidence_watchlist") or {}
+    peer_registry_state = wave1.get("peer_registry") or {}
     if set(thesis_state.get("pilot_symbols") or []) != pilot:
         fail("state/company_intel/thesis_monitoring.json: pilot boundary mismatch")
     if set(thesis_state.get("companies") or {}) != pilot:
@@ -349,6 +350,12 @@ def check_ci_slice():
         fail("state/company_intel/evidence_watchlist.json: pilot boundary mismatch")
     if set(evidence_watchlist_state.get("companies") or {}) != pilot:
         fail("state/company_intel/evidence_watchlist.json: company boundary mismatch")
+    if peer_registry_state.get("method") != "pilot_official_sector_cohort_v1":
+        fail("state/company_intel/peer_registry.json: method mismatch")
+    if set(peer_registry_state.get("pilot_symbols") or []) != pilot:
+        fail("state/company_intel/peer_registry.json: pilot boundary mismatch")
+    if set(peer_registry_state.get("companies") or {}) != pilot:
+        fail("state/company_intel/peer_registry.json: company boundary mismatch")
     for row in rows:
         sym = row.get("symbol") if isinstance(row, dict) else None
         if not sym:
@@ -368,6 +375,7 @@ def check_ci_slice():
         confidence_state_row = (confidence_state.get("companies") or {}).get(sym)
         management_delivery_state_row = (management_delivery_state.get("companies") or {}).get(sym)
         evidence_watchlist_state_row = (evidence_watchlist_state.get("companies") or {}).get(sym)
+        peer_registry_state_row = (peer_registry_state.get("companies") or {}).get(sym)
         if "operating_events" not in row or not isinstance(row.get("operating_events"), list):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} operating_events missing/not list")
         elif row.get("operating_events") != expected_events:
@@ -422,6 +430,10 @@ def check_ci_slice():
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist stale/mismatch")
         if not isinstance(row.get("evidence_watchlist"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} evidence_watchlist missing/not object")
+        if row.get("peer_registry") != peer_registry_state_row:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} peer_registry stale/mismatch")
+        if not isinstance(row.get("peer_registry"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} peer_registry missing/not object")
         expected_event_total += len(expected_events)
         expected_scenario_total += len(expected_scenarios)
         expected_study_total += len(expected_studies)
@@ -590,6 +602,18 @@ def check_evidence_watchlist():
             fail("evidence watchlist check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
         fail(f"check_evidence_watchlist.py did not run — {e}")
+
+def check_peer_registry():
+    path = os.path.join(ROOT, "scripts", "check_peer_registry.py")
+    if not os.path.exists(path):
+        fail("check_peer_registry.py missing — formal peer registry contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("peer registry check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_peer_registry.py did not run — {e}")
 
 def check_evidence_watchlist_ui():
     path = os.path.join(ROOT, "scripts", "check_evidence_watchlist_ui.mjs")
@@ -775,6 +799,18 @@ def check_company_brain_ui():
     except Exception as e:
         fail(f"check_company_brain_ui.mjs did not run — {e}")
 
+def check_company_navigation_ui():
+    path = os.path.join(ROOT, "scripts", "check_company_navigation_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_company_navigation_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("company navigation UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_company_navigation_ui.mjs did not run — {e}")
+
 def check_thesis_monitoring_ui():
     path = os.path.join(ROOT, "scripts", "check_thesis_monitoring_ui.mjs")
     if not os.path.exists(path):
@@ -881,6 +917,7 @@ def main():
     check_company_scenario_lab_ui()
     check_company_brains()
     check_company_brain_ui()
+    check_company_navigation_ui()
     check_thesis_monitoring_ui()
     check_intelligence_confidence_ui()
     check_company_theses_security()
@@ -888,6 +925,7 @@ def main():
     check_intelligence_confidence()
     check_management_delivery()
     check_evidence_watchlist()
+    check_peer_registry()
     check_evidence_watchlist_ui()
     check_management_delivery_ui()
     check_reprocess_documents()

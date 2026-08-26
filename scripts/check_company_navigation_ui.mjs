@@ -1,0 +1,93 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const app = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "app.js"), "utf8");
+const css = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css"), "utf8");
+const slice = JSON.parse(fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json"), "utf8"));
+let checks = 0;
+const assert = (condition, message) => { checks += 1; if (!condition) throw new Error(message); };
+
+const PRIMARY = [
+  ["overview", "Overview"],
+  ["intelligence", "Intelligence"],
+  ["financials", "Financials"],
+  ["earnings", "Earnings"],
+  ["business", "Business"],
+  ["operations", "Operations"],
+  ["scenarios", "Scenarios"],
+  ["valuation", "Valuation"],
+  ["guidance", "Guidance"],
+  ["catalysts", "Catalysts"],
+  ["risks", "Risks"],
+  ["events", "Events"],
+  ["filings", "Filings"],
+  ["peers", "Peers"],
+  ["ownership", "Ownership"],
+  ["quant", "Quant"],
+  ["research", "Research"],
+];
+const ADVANCED = ["snapshot", "timeline", "changes", "trends", "baseline", "forecast", "thesis", "watchlist", "ask", "graph", "operating", "conditional", "causal", "coverage", "sources", "brief"];
+
+function extractRegistry(name) {
+  const match = app.match(new RegExp(`const ${name} = (\\[[\\s\\S]*?\\]);\\n`));
+  assert(match, `${name} registry present`);
+  return Function(`"use strict"; return (${match[1]});`)();
+}
+
+function extractFunctionBody(name, nextName) {
+  const match = app.match(new RegExp(`function ${name}\\([^)]*\\) \\{([\\s\\S]*?)\\n\\}\\n\\nfunction ${nextName}`));
+  assert(match, `${name} body present`);
+  return match[1];
+}
+
+try {
+  assert(Array.isArray(slice.tickers) && slice.tickers.length === 20, "exact 20-company slice");
+  const primary = extractRegistry("PRIMARY_COMPANY_TABS");
+  const advanced = extractRegistry("RESEARCH_TOOL_TABS");
+  assert(JSON.stringify(primary) === JSON.stringify(PRIMARY), "exact primary tab registry/order");
+  assert(JSON.stringify(advanced.map(([key]) => key)) === JSON.stringify(ADVANCED), "secondary research-tools registry");
+  assert(!primary.some(([key]) => ADVANCED.includes(key)), "primary and secondary routes do not overlap");
+  assert(app.includes('aria-label="Primary company sections"') && app.includes('aria-label="Research tools"'), "separate tablist aria labels");
+  assert(app.includes('data-view-group="primary"') && app.includes('data-view-group="advanced"'), "view groups emitted");
+  assert(app.includes('button.parentElement?.closest("[data-view-group]")'), "keyboard navigation scoped to closest tab row");
+  assert(!app.includes('document.querySelectorAll("[data-view]");'), "keyboard navigation is not global across both tablists");
+  for (const [key] of PRIMARY) assert(app.includes(`state.view === "${key}"`) || key === "overview", `${key}: primary route dispatch`);
+  for (const key of ADVANCED) assert(app.includes(`state.view === "${key}"`), `${key}: advanced route dispatch`);
+  for (const name of ["Financials", "Earnings", "Business", "Operations", "Valuation", "Events", "Peers", "Ownership", "Quant", "Research", "DomainView"]) {
+    assert(app.includes(`function renderCompany${name}`), `renderCompany${name} exists`);
+  }
+  const peersBody = extractFunctionBody("renderCompanyPeers", "renderCompanyOwnership");
+  assert(app.includes("blocked_insufficient_qualified_history") && app.includes("Earnings bridge blocked by readiness"), "earnings blocked state");
+  assert(app.includes("Formal CI valuation") && app.includes("Legacy fair-value screen, not formal CI valuation"), "formal valuation separate from legacy fair value");
+  assert(app.includes("Formal pilot-sector cohort") && app.includes("pilot-sector cohort") && app.includes("International peer registry"), "peers registry view");
+  assert(peersBody.includes("r.peer_registry || {}") && peersBody.includes("registry.formal_peer_details") && peersBody.includes("registry.member_details"), "peers read emitted registry details");
+  assert(!peersBody.includes("registry.sector || r.sector"), "peers do not substitute row sector for emitted registry sector");
+  assert(!/state\.data\?\.tickers[\s\S]*\.filter/.test(peersBody), "peers do not filter slice rows into groups");
+  assert(!/\.filter\([^)]*sector/i.test(peersBody), "peers do not filter by sector in browser");
+  assert(app.includes("blocked_no_formal_peer_registry") && app.includes("unknown_no_authoritative_peer_data"), "peers missing-registry fallback");
+  assert(!/state\.data\?\.tickers[\s\S]*filter/.test(peersBody), "peers do not derive same-sector rows in browser");
+  assert(!/(comparable|comparability|valuation|performance|rank|ranking|similarity|multiple|benchmark)/i.test(peersBody), "peers avoid comparability/valuation/performance/rank/similarity claims");
+  assert(app.includes("unknown_no_authoritative_ownership_data") && app.includes("not ownership percentages"), "ownership unknown state");
+  assert(app.includes("Company Brain domain") && app.includes("renderDomainRefs") && app.includes("brainObjectMap"), "Company Brain domain references");
+  assert(app.includes("data-research-route") && app.includes("querySelectorAll(\"[data-research-route]\")"), "Research hub route binding");
+  assert(css.includes(".viewnav-shell") && css.includes(".research-tools") && css.includes(".company-domain-shell") && css.includes(".blocked-shell") && css.includes(".research-hub-grid"), "navigation/domain CSS");
+  for (const row of slice.tickers) {
+    assert(row.symbol && row.company_brain?.domains, `${row.symbol || "unknown"}: Company Brain available`);
+    assert(row.company_brain.domains.forecasts?.status === "blocked", `${row.symbol}: forecasts blocked`);
+    assert(row.company_brain.domains.valuation?.status === "blocked", `${row.symbol}: valuation blocked`);
+    assert(row.forecast_readiness?.status === "blocked", `${row.symbol}: forecast readiness blocked`);
+    assert(row.scenario_lab?.status?.valuation === "ready_scenario_multiple_only", `${row.symbol}: scenario multiple status separate`);
+    assert(row.peer_registry?.method === "pilot_official_sector_cohort_v1", `${row.symbol}: formal peer registry emitted`);
+    assert(row.peer_registry?.peer_set_kind === "pilot_sector_cohort", `${row.symbol}: peer registry kind`);
+    assert(Array.isArray(row.peer_registry?.formal_peers), `${row.symbol}: formal peers list`);
+    assert(row.peer_registry?.international_peers?.status === "unavailable", `${row.symbol}: international peers unavailable`);
+    for (const domain of ["guidance", "catalysts", "risks"]) assert(row.company_brain.domains[domain], `${row.symbol}: ${domain} domain exists`);
+  }
+  console.log(`company_navigation_ui: PASS (${checks} assertions, 20 company rows)`);
+} catch (error) {
+  console.error(`company_navigation_ui: FAIL — ${error.message}`);
+  process.exitCode = 1;
+}

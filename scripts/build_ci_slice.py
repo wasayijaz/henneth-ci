@@ -416,6 +416,7 @@ def build():
     intelligence_confidence = load_json(STATE / "company_intel" / "intelligence_confidence.json", {"companies": {}})
     management_delivery = load_json(STATE / "company_intel" / "management_delivery.json", {"companies": {}})
     evidence_watchlist = load_json(STATE / "company_intel" / "evidence_watchlist.json", {"companies": {}})
+    peer_registry = load_json(STATE / "company_intel" / "peer_registry.json", {"companies": {}})
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
     company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
@@ -480,6 +481,22 @@ def build():
         confidence_row = (intelligence_confidence.get("companies") or {}).get(sym)
         management_delivery_row = (management_delivery.get("companies") or {}).get(sym)
         evidence_watchlist_row = (evidence_watchlist.get("companies") or {}).get(sym)
+        peer_registry_row = (peer_registry.get("companies") or {}).get(sym) or {
+            "symbol": sym,
+            "registry_status": "blocked_no_formal_peer_registry",
+            "peer_set_kind": "pilot_sector_cohort",
+            "method": peer_registry.get("method"),
+            "sector": (sectors.get(sym) or {}).get("sector"),
+            "sector_code": (sectors.get(sym) or {}).get("code"),
+            "members": [],
+            "formal_peers": [],
+            "international_peers": {
+                "status": "unavailable",
+                "reason": "no_authoritative_international_peer_registry",
+                "members": [],
+            },
+            "limitations": ["peer_registry_state_missing"],
+        }
         scenario_lab_row = scenario_lab.get("companies", {}).get(sym) or {
             "symbol": sym,
             "status": {
@@ -562,6 +579,7 @@ def build():
             "intelligence_confidence": confidence_row,
             "management_delivery": management_delivery_row,
             "evidence_watchlist": evidence_watchlist_row,
+            "peer_registry": peer_registry_row,
             "scenario_lab": scenario_lab_row,
             "company_brain": company_brain,
             "intelligence": {

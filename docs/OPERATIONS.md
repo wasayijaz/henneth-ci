@@ -61,35 +61,40 @@ backend error is rendered.
     companies through nine declarative sector models; ENGROH has an explicit holding-company model.
     Event routing is filtered through each company's graph and never creates numeric impacts without
     sourced operands.
-11. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
-12. `build_event_studies.py` runs after indices/sectors and before the slice; it uses only retained
+11. `build_peer_registry.py` — after `fetch_sectors.py` refreshes the retained PSX sector map,
+    this emits the formal peer registry for the exact 20-company CI pilot. The only grouping
+    rule is retained official sector label/code. Missing or duplicate pilot/sector state fails
+    closed; singleton sectors publish an explicit empty `formal_peers` list; international peers
+    remain unavailable.
+12. `build_ci_slice.py` — the one bounded JSON file the CI app reads.
+13. `build_event_studies.py` runs after indices/sectors and before the slice; it uses only retained
     oldest-first price history, strict pre-event baselines, calendar horizons, and ex-ante analogue
     cutoffs. KSE100-relative values mean stock raw return minus KSE100 raw return; unsupported
     financial outcomes stay null with named missing inputs.
-13. `build_financial_model_inputs.py` builds offline v2 model inputs. Only MLCF/DGKC/LUCK/FCCL
+14. `build_financial_model_inputs.py` builds offline v2 model inputs. Only MLCF/DGKC/LUCK/FCCL
     have the `cement_v1` model; all other companies are explicit `unsupported_sector_model`.
     Forecast, valuation, market-expectations and scenario outputs remain blocked until the
     three-observation consolidated annual gate is satisfied.
-14. Document restaging is an explicit, owner-triggered two-batch workflow. The first batch is an
+15. Document restaging is an explicit, owner-triggered two-batch workflow. The first batch is an
     allowlisted set of `psx:<digits>` IDs resolved from `research_index.json` and the exact pilot;
     transport uses a scoped run directory and metadata-only receipts. Shared extraction queues,
     cursors and source registries are untouched. Normal `run_cloud.py` is offline with respect to
     restaging; raw PDFs remain transient and preflight rejects them from served roots.
-15. `build_company_scenario_lab.py` runs after fundamentals and quant, then before the CI slice. It
+16. `build_company_scenario_lab.py` runs after fundamentals and quant, then before the CI slice. It
     publishes only dated snapshot operands, formula metadata and readiness. The browser supplies all
     revenue-growth, net-margin and P/E assumptions; generated state contains no selected case. The
     tool is sensitivity/reverse-solving arithmetic, not a forecast, valuation verdict or advice.
     EBITDA, FCF, DCF and forecast outputs remain blocked until qualified history exists.
-16. `build_company_brains.py` runs immediately before the CI slice. The Brain is a compact reference
+17. `build_company_brains.py` runs immediately before the CI slice. The Brain is a compact reference
     index, not another fact store: producer IDs remain authoritative, every one of the 21 business
     domains has an explicit available/partial/unknown/blocked status, and the timeline carries typed
     references only. Forecast and valuation domains remain blocked and empty in v1.
-17. `build_thesis_monitoring.py` converts retained signal clusters into deterministic read-only
+18. `build_thesis_monitoring.py` converts retained signal clusters into deterministic read-only
     monitoring records before the Brain/slice build. Each record links back to its cluster and
     official evidence, exposes explicit prove/kill/watch checks, and uses only the canonical
     Strengthening/Stable/Weakening/Broken vocabulary. Single-source evidence is Stable, never
     promoted to Strengthening. This v1 does not store user-authored theses or calculate prices.
-18. `build_intelligence_confidence.py` scores retained signal clusters through seven fixed,
+19. `build_intelligence_confidence.py` scores retained signal clusters through seven fixed,
     inspectable components whose weights sum to 100. Single-originator evidence cannot receive
     corroboration credit; historical and peer inputs come only from strict no-lookahead event
     studies. The UI displays producer scores without recalculating them, and Ask receives only a

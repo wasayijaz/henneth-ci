@@ -327,12 +327,66 @@ Acceptance gates for that wave: exact 17-tab registry and routing, exact 20-comp
 explicit unknown/blocked states, no weakening of owner auth, no duplicate producer logic, focused
 UI/security checks, Python compile, JavaScript syntax, full preflight and final diff review.
 
+## Resume update — Main Company Navigation completed
+
+The CI company surface now has the specification's exact 17 primary tabs: Overview, Intelligence,
+Financials, Earnings, Business, Operations, Scenarios, Valuation, Guidance, Catalysts, Risks,
+Events, Filings, Peers, Ownership, Quant and Research. Existing specialist products are preserved
+in a separate research-tools row with its own keyboard navigation boundary. Business, Guidance,
+Catalysts and Risks display only Company Brain typed references. Earnings and formal valuation
+remain readiness/blocked surfaces; legacy fair value is visibly separate. Peers remain unavailable
+without a formal registry, and ownership remains unknown without authoritative ownership data.
+No browser-side peer derivation, financial calculation, forecast, inference, auth change or state
+producer was added. `check_company_navigation_ui.mjs` is preflight-wired and verifies the exact
+registry, routing, 20-company boundary, explicit states and navigation isolation.
+
+## Resume update — CI gate recovery and bounded qualification audit
+
+The full CI preflight is green after four conservative repairs: Ask Henneth now limits projected
+event studies so all 20 same-company contexts remain inside its hard context budget; the Evidence
+Watchlist tab is registered from its emitted row; Scenario Lab top-level provenance is derived only
+from its published per-company inputs; and Forecast Readiness counts the canonical `input_ready`
+status. The current real readiness remains 0/20; none of these repairs activates a forecast,
+valuation, or numerical impact model.
+
+Financial Coverage now recognises explicit annual title forms `Year Ended 30.06.2025` and `year
+ended - June 30, 2025`, while retaining the half-year rejection. The original owner-approved exact
+Batch B documents were checked one at a time and remained safely quarantined: two annual reports
+exceeded the 120-page cap, one exceeded the declared 12 MB cap, and one quarterly report was
+image-only. A transactional v4 re-evaluation rolled back when then-unfixed CI gates failed; no
+receipt or canonical financial state was retained. Do not raise caps, crop documents, OCR the
+image-only file, or promote legacy audit-only facts.
+
+The next financial qualification route needs a separate explicit approval for four newly identified
+compact official counterparts, then exact-ID diagnose before consume: MLCF `psx:257465`, DGKC
+`psx:258454`, LUCK `psx:257573`, and LUCK `psx:275898`. They must be added to an exact new
+allowlist manifest only after approval, must pass the unchanged transport caps and v4 provenance
+checks, and may still leave readiness blocked pending three aligned annual consolidated periods.
+
+## Resume update — Formal Peer Registry v1 completed
+
+The CI Peers tab now reads an emitted formal registry instead of remaining unavailable. The backend
+builds `state/company_intel/peer_registry.json` for the exact 20-company pilot after the retained
+PSX sector map refreshes and before the CI slice. Its only grouping rule is the official/exchange
+sector label/code already retained in `state/sectors.json`; missing or duplicate pilot/sector state
+fails closed. Formal peers are explicit pilot-sector cohorts, singleton sectors publish empty
+`formal_peers` arrays, and international peers remain explicitly unavailable. No browser-side peer
+derivation, valuation, performance, rank, similarity or advice path was added.
+
+Verification after this wave:
+
+- `peer_registry: PASS (20 companies, 9 sector groups, 5 singleton cohorts)`
+- `company_navigation_ui: PASS (309 assertions, 20 company rows)`
+- Full `scripts/preflight.py`: `RESULT: OK — all checks passed, safe to deploy`
+- Existing non-gating warning only: 101 newly-added universe tickers still backfilling history
+- No files were staged, committed, deployed, published, SQL-applied or document-reprocessed.
+
 ### Major work still required for the complete 68-section goal
 
 1. Qualified multi-period consolidated financial histories and evidence-linked earnings bridges.
 2. Genuine deterministic forecasts and implemented sector-specific financial models.
 3. Formal valuation, full market-expectations and mispricing engines.
-4. Formal peer and international-analogue registries.
+4. International analogue registry beyond the domestic pilot-sector peer registry.
 5. First-class guidance/contradiction objects and broader management execution scoring.
 6. Hiring, permits, tenders and other bounded alternative-data pipelines.
 7. Calibrated scenario probabilities and the specification's deeper operational numeric examples.

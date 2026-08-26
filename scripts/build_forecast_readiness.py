@@ -60,8 +60,8 @@ def build() -> dict:
         },
         "summary": {
             "company_count": len(companies),
-            "ready_company_count": sum(1 for row in companies.values() if row.get("status") == "ready"),
-            "blocked_company_count": sum(1 for row in companies.values() if row.get("status") != "ready"),
+            "ready_company_count": sum(1 for row in companies.values() if row.get("status") == "input_ready"),
+            "blocked_company_count": sum(1 for row in companies.values() if row.get("status") != "input_ready"),
             "qualified_fact_company_count": sum(1 for row in companies.values() if row.get("qualified_period_count", 0) >= 1),
         },
         "companies": companies,

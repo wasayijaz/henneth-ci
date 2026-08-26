@@ -71,7 +71,8 @@ STEPS = [
     # cause of the P/E-off-a-stale-print mismatches room-verifier flagged on ENGROH/MEBL).
     "score_fundamentals.py",
     "fetch_indices.py",  # append-only KSE100/KMI30 levels — the index history nobody else has
-    "fetch_sectors.py",  # PSX code->name map (needs live.json); feeds Rule 4's sector limit + peer P/E
+    "fetch_sectors.py",  # PSX code->name map (needs live.json); feeds Rule 4's sector limit + CI sector labels
+    "build_peer_registry.py",  # exact CI pilot grouped only by the retained official PSX sector label
     "fetch_intraday.py", "fetch_global.py", "fetch_georisk.py",
     "astro_engine.py",   # sidereal ephemeris: positions + dated events. Pure math, no network.
     "astro_history.py",  # extends the cached daily sky (bounded per run; ~70ms/day once caught up)
@@ -118,6 +119,7 @@ STEPS = [
     "check_thesis_monitoring.py",
     "check_management_delivery.py",
     "check_evidence_watchlist.py",
+    "check_peer_registry.py",
     "check_company_scenario_lab.py",
     "check_company_brains.py",
     "check_financial_model_inputs.py",

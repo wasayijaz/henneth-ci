@@ -23,6 +23,43 @@ const ASK_MAX_QUESTION_BYTES = 4096;
 const THESIS_STATUSES = ["Strengthening", "Stable", "Weakening", "Broken"];
 const THESIS_COLUMNS = "id,symbol,thesis,expected_earnings_path,catalysts,risks,required_evidence,kill_conditions,user_fair_value_assumption,user_fair_value_basis,status,archived,created_at,updated_at";
 const THESIS_LIMITS = { thesis: 5000, expected: 2000, basis: 1000, fairValueMax: 1000000, listItems: 50, listItem: 500 };
+const PRIMARY_COMPANY_TABS = [
+  ["overview", "Overview"],
+  ["intelligence", "Intelligence"],
+  ["financials", "Financials"],
+  ["earnings", "Earnings"],
+  ["business", "Business"],
+  ["operations", "Operations"],
+  ["scenarios", "Scenarios"],
+  ["valuation", "Valuation"],
+  ["guidance", "Guidance"],
+  ["catalysts", "Catalysts"],
+  ["risks", "Risks"],
+  ["events", "Events"],
+  ["filings", "Filings"],
+  ["peers", "Peers"],
+  ["ownership", "Ownership"],
+  ["quant", "Quant"],
+  ["research", "Research"],
+];
+const RESEARCH_TOOL_TABS = [
+  ["snapshot", "Investor snapshot"],
+  ["timeline", "Typed timeline"],
+  ["changes", "Change digest"],
+  ["trends", "Financial trends"],
+  ["baseline", "Financial baseline"],
+  ["forecast", "Forecast readiness"],
+  ["thesis", "Thesis monitor"],
+  ["watchlist", "Evidence watchlist"],
+  ["ask", "Ask Henneth"],
+  ["graph", "Knowledge graph"],
+  ["operating", "Operating intelligence"],
+  ["conditional", "Conditional benchmarks"],
+  ["causal", "Causal map"],
+  ["coverage", "Coverage"],
+  ["sources", "Sources"],
+  ["brief", "Brief queue"],
+];
 let state = {
   session: null,
   data: null,
@@ -348,6 +385,12 @@ function renderDesk(searchState) {
     };
     btn.onkeydown = event => moveViewFocus(event, btn);
   });
+  document.querySelectorAll("[data-research-route]").forEach(btn => {
+    btn.onclick = () => {
+      state.view = btn.dataset.researchRoute;
+      renderDesk({ focusView: state.view });
+    };
+  });
   const askForm = $("askForm");
   if (askForm) {
     askForm.onsubmit = event => {
@@ -411,7 +454,8 @@ function moveCompanyFocus(event, button) {
 
 function moveViewFocus(event, button) {
   if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
-  const tabs = [...document.querySelectorAll("[data-view]")];
+  const group = button.parentElement?.closest("[data-view-group]");
+  const tabs = [...(group || document).querySelectorAll("[data-view]")];
   if (!tabs.length) return;
   event.preventDefault();
   let index = tabs.indexOf(button);
@@ -455,7 +499,20 @@ function detail(r) {
       ${metric("Graph links", intel.graph_edge_count ?? 0, `${intel.graph_node_count ?? 0} nodes mapped`)}
     </div>
     ${renderViewNav(r)}
-    ${state.view === "snapshot" ? renderInvestorSnapshot(r)
+    ${state.view === "financials" ? renderCompanyFinancials(r)
+      : state.view === "earnings" ? renderCompanyEarnings(r)
+      : state.view === "business" ? renderCompanyBusiness(r)
+      : state.view === "operations" ? renderCompanyOperations(r)
+      : state.view === "valuation" ? renderCompanyValuation(r)
+      : state.view === "guidance" ? renderCompanyDomainView(r, "guidance", "Guidance", "Management guidance is unavailable until first-class guidance objects exist.")
+      : state.view === "catalysts" ? renderCompanyDomainView(r, "catalysts", "Catalysts", "Catalysts are shown only when Company Brain references an existing typed object.")
+      : state.view === "risks" ? renderCompanyDomainView(r, "risks", "Risks", "Risks are shown only when Company Brain references an existing typed object.")
+      : state.view === "events" ? renderCompanyEvents(r)
+      : state.view === "peers" ? renderCompanyPeers(r)
+      : state.view === "ownership" ? renderCompanyOwnership(r)
+      : state.view === "quant" ? renderCompanyQuant(r)
+      : state.view === "research" ? renderCompanyResearch(r)
+      : state.view === "snapshot" ? renderInvestorSnapshot(r)
       : state.view === "timeline" ? renderTimeline(r)
       : state.view === "changes" ? renderChangeIntelligence(r)
       : state.view === "trends" ? renderFinancials(r)
@@ -478,30 +535,26 @@ function detail(r) {
 }
 
 function renderViewNav(r) {
-  const tabs = [
-    ["overview", "Overview"],
-    ["snapshot", "Investor snapshot"],
-    ["timeline", `Timeline ${r.timeline?.length || 0}`],
-    ["changes", `Changes ${r.change_intelligence?.items?.length || 0}`],
-    ["trends", `Trends ${r.financial_series?.facts?.length || 0}`],
-    ["baseline", "Financial baseline"],
-    ["forecast", "Forecast readiness"],
-    ["intelligence", "Intelligence"],
+  const toolLabels = new Map([
+    ["timeline", `Typed timeline ${r.company_brain?.timeline?.length || 0}`],
+    ["changes", `Change digest ${r.change_intelligence?.items?.length || 0}`],
+    ["trends", `Financial trends ${r.financial_series?.facts?.length || 0}`],
     ["thesis", `Thesis monitor ${r.thesis_monitoring?.active_thesis_count || 0}`],
     ["watchlist", `Watchlist ${r.evidence_watchlist?.active_watch_count ?? "unknown"}`],
-    ["scenarios", "Scenarios"],
-    ["ask", "Ask Henneth"],
-    ["graph", `Graph ${r.graph?.edges?.length || 0}`],
+    ["graph", `Knowledge graph ${r.graph?.edges?.length || 0}`],
     ["operating", `Operating intelligence ${r.operating_events?.length || 0}`],
     ["conditional", `Conditional benchmarks ${r.conditional_benchmarks?.benchmarks?.length || 0}`],
     ["causal", `Causal map ${r.causal_foundations?.causal_rows?.length || 0}`],
-    ["coverage", "Coverage"],
-    ["filings", `Filings ${r.filings?.length || 0}`],
+    ["filings", `Filings detail ${r.filings?.length || 0}`],
     ["sources", `Sources ${(r.sources?.sources?.length || 0) + (r.sources?.documents?.length || 0)}`],
-    ["brief", r.brief?.current ? "Brief" : "Brief queue"],
-  ];
-  return `<nav class="viewnav" aria-label="Company intelligence views" role="tablist">${tabs.map(([key, label]) => `
-    <button type="button" role="tab" aria-selected="${state.view === key}" aria-controls="companyDetail" class="${state.view === key ? "active" : ""}" data-view="${key}">${esc(label)}</button>`).join("")}</nav>`;
+    ["brief", r.brief?.current ? "Approved brief" : "Brief queue"],
+  ]);
+  const tabButton = (key, label, group) => `
+    <button type="button" role="tab" aria-selected="${state.view === key}" aria-controls="companyDetail" class="${state.view === key ? "active" : ""}" data-view="${key}" data-view-group="${group}">${esc(label)}</button>`;
+  return `<div class="viewnav-shell" aria-label="Company intelligence navigation">
+    <nav class="viewnav primary-tabs" aria-label="Primary company sections" role="tablist" data-view-group="primary">${PRIMARY_COMPANY_TABS.map(([key, label]) => tabButton(key, label, "primary")).join("")}</nav>
+    <nav class="viewnav research-tools" aria-label="Research tools" role="tablist" data-view-group="advanced">${RESEARCH_TOOL_TABS.map(([key, label]) => tabButton(key, toolLabels.get(key) || label, "advanced")).join("")}</nav>
+  </div>`;
 }
 
 const OBJECT_TYPE_LABELS = {
@@ -975,6 +1028,223 @@ function evidenceLink(item) {
 
 function brainDomain(brain, name) {
   return brain?.domains?.[name] || { status: "unknown", object_refs: [] };
+}
+
+function brainObjectMap(brain) {
+  return new Map((brain?.intelligence_objects || []).map(item => [item.id, item]));
+}
+
+function renderBrainRefObject(item) {
+  if (!item) return `<article class="domain-ref missing"><h4>Missing typed object</h4><p>Company Brain references an object that is not present in this slice.</p></article>`;
+  const refs = Array.isArray(item.evidence_refs) ? item.evidence_refs : [];
+  const links = refs.length ? refs.slice(0, 3).map(ref => {
+    const href = safeHref(ref.source_url);
+    const page = ref.page ? `p.${esc(ref.page)}` : "source";
+    const doc = ref.document_id || ref.doc_id || "document unknown";
+    return href ? `<a href="${href}" target="_blank" rel="noopener">${esc(doc)} ${page}</a>` : `<span>${esc(doc)} ${page}</span>`;
+  }).join("") : `<span>Evidence refs unavailable in this slice</span>`;
+  return `<article class="domain-ref">
+    <header><div><span class="oi-type oi-type-${objectTypeClass(item.type)}">${esc(objectTypeLabel(item.type))}</span><h4>${esc(item.source_id || item.id || "typed object")}</h4></div><b>${confidenceValue(item.confidence)}</b></header>
+    <div class="domain-ref-meta">
+      <span>Source product <b>${esc(String(item.source_product || "unknown").replaceAll("_", " "))}</b></span>
+      <span>Available on <b>${esc(item.available_on || "unknown")}</b></span>
+      <span>Object id <b>${esc(item.id || "unknown")}</b></span>
+    </div>
+    <div class="domain-ref-links">${links}</div>
+  </article>`;
+}
+
+function renderDomainRefs(r, domainName, emptyText) {
+  const brain = r.company_brain || {};
+  const domain = brainDomain(brain, domainName);
+  const objects = brainObjectMap(brain);
+  const refs = Array.isArray(domain.object_refs) ? domain.object_refs : [];
+  if (!refs.length) return `<div class="empty">${esc(emptyText || "Unknown — no typed Company Brain reference is available for this domain.")}</div>`;
+  return `<div class="domain-ref-list">${refs.map(ref => renderBrainRefObject(objects.get(ref))).join("")}</div>`;
+}
+
+function renderCompanyDomainView(r, domainName, title, emptyText) {
+  const domain = brainDomain(r.company_brain || {}, domainName);
+  return `<section class="panel span9 company-domain-shell" aria-labelledby="domain-${esc(domainName)}">
+    <span class="kicker">Company Brain domain</span><h2 id="domain-${esc(domainName)}">${esc(title)}</h2>
+    <p class="section-note">Read-only Company Brain references. The browser displays existing typed objects and evidence refs only; missing knowledge stays unknown.</p>
+    <div class="domain-status">
+      <span>Status <b>${esc(domain.status || "unknown")}</b></span>
+      <span>Typed references <b>${esc((domain.object_refs || []).length)}</b></span>
+      <span>Reason <b>${esc(domain.reason || "none_emitted")}</b></span>
+    </div>
+    ${renderDomainRefs(r, domainName, emptyText)}
+  </section>`;
+}
+
+function renderCompanyBusiness(r) {
+  const domains = ["segments", "products", "facilities", "capacity", "customers", "suppliers", "employees", "management", "geography", "subsidiaries", "competitors", "projects"];
+  const brain = r.company_brain || {};
+  return `<section class="panel span9 company-domain-shell" aria-labelledby="businessTitle">
+    <span class="kicker">Business</span><h2 id="businessTitle">Operating profile from retained sources</h2>
+    <p class="section-note">This view reuses Company Brain domain coverage and the issuer profile. It does not infer segments, products, customers, suppliers, peers, or strategy where the state says unknown.</p>
+    <div class="business-profile"><span>Issuer description</span><p>${esc(r.profile?.business_description || "Unknown — no sourced description is available.")}</p></div>
+    <div class="domain-matrix">${domains.map(name => {
+      const domain = brainDomain(brain, name);
+      return `<span class="status-${esc(domain.status || "unknown")}">${esc(name.replaceAll("_", " "))}<b>${esc(domain.status || "unknown")}</b><small>${esc((domain.object_refs || []).length)} ref${(domain.object_refs || []).length === 1 ? "" : "s"}</small></span>`;
+    }).join("")}</div>
+    <section class="domain-subsection"><h3>Business references</h3>${["customers", "management", "subsidiaries", "projects"].map(name => `<section><h4>${esc(name.replaceAll("_", " "))}</h4>${renderDomainRefs(r, name)}</section>`).join("")}</section>
+  </section>`;
+}
+
+function renderCompanyOperations(r) {
+  return `<section class="company-route-stack">
+    ${renderCompanyDomainView(r, "operating_kpis", "Operating KPIs", "Unknown — no sourced operating KPI reference is available.")}
+    ${renderOperatingIntelligence(r)}
+  </section>`;
+}
+
+function renderCompanyFinancials(r) {
+  return `<section class="company-route-stack">
+    ${renderFinancials(r)}
+    ${renderFinancialBaseline(r)}
+  </section>`;
+}
+
+function renderCompanyEarnings(r) {
+  const readiness = r.forecast_readiness || {};
+  const coverage = r.financial_coverage || {};
+  const model = r.financial_model_inputs || {};
+  return `<section class="panel span9 blocked-shell" aria-labelledby="earningsTitle">
+    <span class="kicker">Earnings</span><h2 id="earningsTitle">Earnings bridge blocked by readiness</h2>
+    <p class="section-note">Earnings analysis is not generated until qualified multi-period annual consolidated history exists. This page shows readiness state only; it does not infer earnings direction, bridge drivers, forecast EPS, or value the company.</p>
+    <div class="blocked-grid">
+      <span>Readiness <b>${esc(readiness.status || "blocked")}</b></span>
+      <span>Activation <b>${esc(readiness.activation_status || "blocked_insufficient_qualified_history")}</b></span>
+      <span>Qualified periods <b>${esc(readiness.qualified_period_count ?? 0)}</b></span>
+      <span>Coverage queue <b>${esc(coverage.status || "unknown")}</b></span>
+      <span>Model inputs <b>${esc(model.status || "unknown")}</b></span>
+      <span>Forecast <b>${esc(readiness.downstream_status?.forecast || "blocked_insufficient_qualified_history")}</b></span>
+    </div>
+    ${readinessList(readiness.missing_requirements, "Missing requirement: three aligned annual revenue, PAT and EPS periods.")}
+  </section>`;
+}
+
+function renderCompanyValuation(r) {
+  const readiness = r.forecast_readiness || {};
+  const scenarioStatus = r.scenario_lab?.status || {};
+  const legacy = r.valuation || {};
+  return `<section class="panel span9 blocked-shell" aria-labelledby="valuationTitle">
+    <span class="kicker">Formal CI valuation</span><h2 id="valuationTitle">Valuation readiness blocked</h2>
+    <p class="section-note">Formal CI valuation is blocked until a qualified valuation model is implemented on sourced inputs. Scenario multiple sensitivity is separate algebra, not a formal valuation. Legacy fair-value screen below is separate from formal CI valuation and remains a legacy dashboard field.</p>
+    <div class="blocked-grid">
+      <span>Formal valuation <b>${esc(readiness.downstream_status?.valuation || "blocked_insufficient_qualified_history")}</b></span>
+      <span>Forecast gate <b>${esc(readiness.status || "blocked")}</b></span>
+      <span>Scenario sensitivity <b>${esc(scenarioStatus.valuation || "blocked")}</b></span>
+      <span>Market expectations <b>${esc(readiness.downstream_status?.market_expectations || "blocked_insufficient_qualified_history")}</b></span>
+    </div>
+    <section class="legacy-fair-value" aria-label="Legacy fair-value screen">
+      <h3>Legacy fair-value screen, not formal CI valuation</h3>
+      <p>Verdict: <b>${esc(legacy.verdict || "unknown")}</b>. Composite fair value: <b>${legacy.composite_fair == null ? "unknown" : `Rs ${esc(fmt(legacy.composite_fair, 2))}`}</b>. Mispricing: <b>${legacy.mispricing_pct == null ? "unknown" : esc(pct(legacy.mispricing_pct))}</b>.</p>
+    </section>
+  </section>`;
+}
+
+function renderCompanyEvents(r) {
+  return `<section class="company-route-stack">
+    ${renderTimeline(r)}
+    ${renderChangeIntelligence(r)}
+  </section>`;
+}
+
+function renderCompanyPeers(r) {
+  const registry = r.peer_registry || {};
+  const formalPeers = Array.isArray(registry.formal_peer_details) ? registry.formal_peer_details : [];
+  const members = Array.isArray(registry.member_details) ? registry.member_details : [];
+  const international = registry.international_peers || {};
+  const peerCard = peer => `<article>
+    <b>${esc(peer.symbol || "unknown")}</b>
+    <span>${esc(peer.name || "Name unavailable")}</span>
+    <small>${esc(registry.sector || "sector unknown")}</small>
+  </article>`;
+  if (!registry.method || registry.registry_status === "blocked_no_formal_peer_registry") {
+    return `<section class="panel span9 blocked-shell" aria-labelledby="peersTitle">
+      <span class="kicker">Peers</span><h2 id="peersTitle">No formal peer registry yet</h2>
+      <p class="section-note">Peers are unavailable because no formal peer registry exists in the authoritative CI slice. The browser does not classify companies, derive peer groups from sector labels, infer financial metrics, or create an analogue set.</p>
+      <div class="blocked-grid">
+        <span>Formal registry <b>blocked_no_formal_peer_registry</b></span>
+        <span>Sector label <b>${esc(r.sector || "unknown")}</b></span>
+        <span>Peer set <b>unknown_no_authoritative_peer_data</b></span>
+      </div>
+      <div class="empty">No peer row is rendered until a dedicated producer emits an authoritative peer registry.</div>
+    </section>`;
+  }
+  return `<section class="panel span9 blocked-shell" aria-labelledby="peersTitle">
+    <span class="kicker">Peers</span><h2 id="peersTitle">Formal pilot-sector cohort</h2>
+    <p class="section-note">Read-only formal peer registry. The backend groups the exact 20-company CI pilot by the retained official/exchange sector label only; this view does not estimate, forecast, sort by quality, or assign grades.</p>
+    <div class="blocked-grid">
+      <span>Registry method <b>${esc(registry.method || "unknown")}</b></span>
+      <span>Sector label <b>${esc(registry.sector || "unknown")}</b></span>
+      <span>Formal peers <b>${esc(formalPeers.length)}</b></span>
+      <span>Cohort members <b>${esc(members.length)}</b></span>
+      <span>Scope <b>${esc(registry.peer_set_kind || "pilot_sector_cohort")}</b></span>
+      <span>International registry <b>${esc(international.status || "unavailable")}</b></span>
+    </div>
+    <section>
+      <h3>Formal peers</h3>
+      ${formalPeers.length ? `<div class="peer-list">${formalPeers.map(peerCard).join("")}</div>` : `<div class="empty">Explicit empty group: no other exact-pilot company shares this retained sector label.</div>`}
+    </section>
+    <section>
+      <h3>Pilot-sector cohort</h3>
+      ${members.length ? `<div class="peer-list">${members.map(peerCard).join("")}</div>` : `<div class="empty">No cohort members were emitted by the registry.</div>`}
+    </section>
+    <div class="empty">International peer registry: ${esc(international.reason || "no_authoritative_international_peer_registry")}.</div>
+  </section>`;
+}
+
+function renderCompanyOwnership(r) {
+  return `<section class="panel span9 blocked-shell" aria-labelledby="ownershipTitle">
+    <span class="kicker">Ownership</span><h2 id="ownershipTitle">Ownership unknown without authoritative data</h2>
+    <p class="section-note">No authoritative ownership table is present in the retained CI slice. Insider and off-market metadata are shown elsewhere as filings/activity metadata; they are not ownership percentages, beneficial-owner facts, or free-float analysis.</p>
+    <div class="blocked-grid">
+      <span>Ownership state <b>unknown_no_authoritative_ownership_data</b></span>
+      <span>Insider filings metadata <b>${esc((r.insider_filings || []).length)}</b></span>
+      <span>Off-market retained row <b>${r.offmarket ? "metadata_available" : "none"}</b></span>
+    </div>
+  </section>`;
+}
+
+function renderCompanyQuant(r) {
+  const liq = r.liquidity || {};
+  const studies = r.event_studies || [];
+  const conditional = r.conditional_benchmarks?.benchmarks || [];
+  return `<section class="panel span9 quant-shell" aria-labelledby="quantTitle">
+    <span class="kicker">Quant</span><h2 id="quantTitle">Existing quantitative state</h2>
+    <p class="section-note">This view displays retained slice fields and existing benchmark availability only. It does not compute factors, backtests, forecasts, ranks, probabilities, or advice in the browser.</p>
+    <div class="blocked-grid">
+      <span>Current price <b>Rs ${esc(fmt(r.price?.current))}</b></span>
+      <span>20-session return <b>${esc(pct(r.price?.ret_20d))}</b></span>
+      <span>ADTV PKR <b>${esc(fmt(liq.adtv_pkr, 0))}</b></span>
+      <span>Research eligible <b>${liq.research_eligible ? "yes" : "no"}</b></span>
+      <span>Signal eligible <b>${liq.signal_eligible ? "yes" : "no"}</b></span>
+      <span>Event studies <b>${esc(studies.length)}</b></span>
+      <span>Conditional benchmarks <b>${esc(conditional.length)}</b></span>
+    </div>
+  </section>`;
+}
+
+function renderCompanyResearch(r) {
+  const tools = [
+    ["snapshot", "Investor snapshot", "Compact Company Brain and readiness summary."],
+    ["ask", "Ask Henneth", "Grounded nine-section company Q&A."],
+    ["thesis", "Thesis monitor", "Deterministic thesis checks plus private notebook."],
+    ["watchlist", "Evidence watchlist", "Confirm/break evidence queue."],
+    ["conditional", "Conditional benchmarks", "Suppressed analogue context when sample size is too small."],
+    ["causal", "Causal map", "Categorical causal-evidence map, not effect estimates."],
+    ["graph", "Knowledge graph", "Official-source relationship graph."],
+    ["sources", "Sources", "Issuer pages and document registry."],
+    ["brief", r.brief?.current ? "Approved brief" : "Brief queue", "Owner-approved synthesis state."],
+  ];
+  return `<section class="panel span9 research-hub" aria-labelledby="researchTitle">
+    <span class="kicker">Research</span><h2 id="researchTitle">Specialist research tools</h2>
+    <p class="section-note">The primary Research tab is a route hub. Specialist tools remain in the secondary research-tools row and reuse existing renderers.</p>
+    <div class="research-hub-grid">${tools.map(([key, title, text]) => `<button type="button" data-research-route="${esc(key)}"><b>${esc(title)}</b><span>${esc(text)}</span></button>`).join("")}</div>
+  </section>`;
 }
 
 function renderInvestorSnapshot(r) {
