@@ -998,11 +998,11 @@ def build(write: bool = True) -> dict[str, Any]:
         ),
         _row(
             "root_state_publication_boundary",
-            "Root state publication boundary excludes protected config",
+            "Root publication boundary excludes CI artifacts and protected config",
             [
                 _ok("root state publication boundary", "scripts/root_state_publication.py"),
                 _check("root state publication checker", "scripts/check_root_state_publication.py"),
-                _contains("config exclusion marker", "scripts/root_state_publication.py", ("config/desk.json",)),
+                _contains("root config serving guard", "scripts/serve.py", ("config/desk.json", "must never be served")),
             ],
             ["Never serve config/desk.json or secrets; keep publication scope checked."],
         ),

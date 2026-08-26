@@ -96,6 +96,8 @@ def main():
     copy_index = build.find("cp -r state public/state")
     if copy_index < 0:
         ok = fail("scripts/vercel_build.sh: state copy command not found") and ok
+    if "cp -r config" in build or "cp -R config" in build:
+        ok = fail("scripts/vercel_build.sh: config directory must never be copied to public") and ok
     for rel in CI_PRIVATE_STATE_FILES:
         token = f"public/state/{rel}"
         rm_index = build.find(token)
@@ -110,6 +112,10 @@ def main():
             ok = fail(f"scripts/vercel_build.sh: missing removal for {token}") and ok
         elif copy_index >= 0 and rm_index < copy_index:
             ok = fail(f"scripts/vercel_build.sh: removal for {token} runs before state copy") and ok
+
+    serve = read_text("scripts/serve.py")
+    if "config/desk.json" not in serve or "must never be served" not in serve:
+        ok = fail("scripts/serve.py: config/desk.json local-serving guard missing") and ok
 
     if not ok:
         sys.exit(1)
