@@ -10,6 +10,7 @@ from pathlib import Path
 
 from psx_data import ROOT, STATE, load_json, save_json
 from document_events import event_is_supported
+from build_ci_completion_matrix import slice_summary as _completion_matrix_summary
 
 APP_DIR = ROOT / "Henneth Desk 2.CI.0"
 OUT = APP_DIR / "data" / "company_intelligence.json"
@@ -458,6 +459,7 @@ def build():
     peer_registry = load_json(STATE / "company_intel" / "peer_registry.json", {"companies": {}})
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
     company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
+    completion_matrix = load_json(STATE / "company_intel" / "completion_matrix.json", {})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue, brief_receipts)
@@ -704,6 +706,7 @@ def build():
             "financial_series": financial_series.get("_meta", {}),
             "graph": knowledge_graph.get("_meta", {}),
             "change_intelligence": change_intelligence.get("_meta", {}),
+            "completion_matrix": _completion_matrix_summary(completion_matrix),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",
         },
         "tickers": rows,

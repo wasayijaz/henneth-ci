@@ -937,6 +937,33 @@ def check_company_brain_ui():
     except Exception as e:
         fail(f"check_company_brain_ui.mjs did not run — {e}")
 
+def check_ci_completion_matrix():
+    path = os.path.join(ROOT, "scripts", "check_ci_completion_matrix.py")
+    if not os.path.exists(path):
+        fail("check_ci_completion_matrix.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("CI completion matrix check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_completion_matrix.py did not run — {e}")
+
+
+def check_ci_global_no_lookahead():
+    """Consumer-facing CI dates must not exceed an explicit product cutoff."""
+    path = os.path.join(ROOT, "scripts", "check_ci_global_no_lookahead.py")
+    if not os.path.exists(path):
+        fail("check_ci_global_no_lookahead.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=45)
+        if result.returncode != 0:
+            fail("CI global no-lookahead check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_global_no_lookahead.py did not run — {e}")
+
+
 def check_company_navigation_ui():
     path = os.path.join(ROOT, "scripts", "check_company_navigation_ui.mjs")
     if not os.path.exists(path):
@@ -1009,6 +1036,15 @@ def check_reprocess_documents():
     if result.returncode != 0:
         fail("reprocess document check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
 
+def check_ci_reprocess_manifest():
+    path = os.path.join(ROOT, "scripts", "check_ci_reprocess_manifest.py")
+    if not os.path.exists(path):
+        fail("check_ci_reprocess_manifest.py missing")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        fail("CI reprocess manifest check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
 def check_no_raw_artifacts():
     for root in (os.path.join(ROOT, "Henneth Desk 2.CI.0"), os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "site", "public"), os.path.join(ROOT, "site", "dist")):
         for dirpath, _, files in os.walk(root):
@@ -1062,6 +1098,8 @@ def main():
     check_company_scenario_lab_ui()
     check_company_brains()
     check_company_brain_ui()
+    check_ci_completion_matrix()
+    check_ci_global_no_lookahead()
     check_company_navigation_ui()
     check_thesis_monitoring_ui()
     check_intelligence_confidence_ui()
@@ -1078,6 +1116,7 @@ def main():
     check_management_delivery_ui()
     check_guidance_contradictions_ui()
     check_reprocess_documents()
+    check_ci_reprocess_manifest()
     check_no_raw_artifacts()
     # --- Company intelligence shape: every populated row, not a sample ---
     check_company_profiles()

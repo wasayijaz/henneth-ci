@@ -77,9 +77,11 @@ backend error is rendered.
     three-observation consolidated annual gate is satisfied.
 15. Document restaging is an explicit, owner-triggered two-batch workflow. The first batch is an
     allowlisted set of `psx:<digits>` IDs resolved from `research_index.json` and the exact pilot;
-    transport uses a scoped run directory and metadata-only receipts. Shared extraction queues,
-    cursors and source registries are untouched. Normal `run_cloud.py` is offline with respect to
-    restaging; raw PDFs remain transient and preflight rejects them from served roots.
+    transport uses a scoped run directory and metadata-only receipts. The owner-review manifest is
+    generated separately from retained `financial_coverage.json` metadata only, and preflight fails
+    if the manual execution allowlist drifts from that current review manifest. Shared extraction
+    queues, cursors and source registries are untouched. Normal `run_cloud.py` is offline with respect
+    to restaging; raw PDFs remain transient and preflight rejects them from served roots.
 16. `build_company_scenario_lab.py` runs after fundamentals and quant, then before the CI slice. It
     publishes only dated snapshot operands, formula metadata and readiness. The browser supplies all
     revenue-growth, net-margin and P/E assumptions; generated state contains no selected case. The
@@ -114,6 +116,16 @@ backend error is rendered.
     promote audit-only facts, choose through conflicts, or activate a forecast. Eligibility requires
     exact official PSX document/page provenance and availability after the reported period; unsafe or
     conflicting rows stay quarantined and missing annual slots remain explicit.
+23. `build_ci_completion_matrix.py` emits the read-only completion audit after the current CI
+    producers have run and before the private slice is built. It maps active product requirements to
+    retained repo/state evidence, status, blockers and next required evidence; it never fetches,
+    reprocesses, calls a model, applies SQL, publishes or claims unsupported blocked features are
+    complete. The CI slice includes only a compact non-rendered summary, and
+    `check_ci_completion_matrix.py` is wired into preflight.
+24. `check_ci_global_no_lookahead.py` runs in preflight after the CI completion matrix. It compares
+    parseable consumer-facing dates in emitted CI state and the private slice only when an explicit
+    cutoff exists; a value after that cutoff fails, while opaque or no-cutoff fields are linted rather
+    than inferred.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new
