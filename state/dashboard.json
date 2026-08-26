@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-26 17:33",
+ "updated": "2026-08-26 18:05",
  "regime": "neutral",
  "geo_risk": {
   "score": 52,
@@ -347,18 +347,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-24T18:47:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-24T19:15:00+05:00",
-   "outcome": "regime=neutral geo-risk=56/moderate daily-read=cautious tone, Moodys B3 upgrade vs red KSE-100 close; watchdog=OK; NOT pushed - preflight FAILED on pre-existing Company Intelligence 20-company pilot mismatch (unrelated WIP feature, last-good site stays live)"
-  },
-  {
-   "started": "2026-08-25T17:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-25T17:20:00+05:00",
-   "outcome": "PM checkpoint. Fixed calendar.json bug: 2026-08-25 was wrongly flagged holiday since repo creation, never verified per its own note; owner confirmed market open, entry removed. run_cloud.py + internal preflight OK. news-sentinel: 3 items (max impact 3, no escalation). No open positions, monitor skipped. build_dashboard.py preflight FAILED on 4 checks (event_studies, conditional_benchmarks, ask_henneth JS, company_brains non-deterministic) -- NOT published, NOT pushed. Follow-up task spawned (task_c80bfca6)."
-  },
-  {
    "started": "2026-08-25T17:42:00+05:00",
    "mode": "full",
    "ended": "2026-08-25T18:05:00+05:00",
@@ -375,6 +363,18 @@
    "mode": "light",
    "ended": "2026-08-26T11:35:00+05:00",
    "outcome": "AM checkpoint. FINDING: PSX/SBP closed today 2026-08-26 for Eid Milad-un-Nabi (federal holiday) per news-sentinel's web sweep, but state/calendar.json's holidays array does NOT list 2026-08-26 -- the step-2 holiday gate as coded missed it and the cycle ran anyway; owner should add this date to calendar.json (news-sentinel lacks write permission there). run_cloud.py exited 1: internal preflight.py FAIL, same pre-existing check_ask_henneth.mjs ask-contract check that blocked 2026-08-25's two cycles (unrelated to this run). news-sentinel appended 2 items (230 total) -- Pakistan $1-2bn capital-markets return plan detail (impact 3), holiday notice (impact 1); max impact 3, no escalation. No open positions, monitor skipped. build_dashboard/publish NOT run (already failed via run_cloud.py's internal calls) -- nothing committed/pushed, live site unchanged from prior cycle. Watchdog not run (nothing published)."
+  },
+  {
+   "started": "2026-08-26T17:33:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-26T17:40:00+05:00",
+   "outcome": "PM checkpoint. health ok. news: 2 new items (impact 2, impact 3), no escalation. no open positions, monitor skipped. pushed (data-only, watchdog OK)."
+  },
+  {
+   "started": "2026-08-26T17:40:00+05:00",
+   "mode": "room",
+   "ended": "2026-08-26T17:58:00+05:00",
+   "outcome": "2 full (MARI, OGDC) + 0 delta + 2 reaffirm (UBL, CNERGY). QA: both flagged/blocked by room-verifier, both fixed in place (MARI div_yield 5.54%->4.49% + payout_ratio 51.69%->41.46%; OGDC div_yield 4.71%->4.89%). i18n: 21 fields translated to Urdu. room_score: 143 claims resolved (0 new this batch). NOT PUSHED — preflight FAILED on pre-existing Company Intelligence peer_registry mismatch (22 fails, unrelated to Room work, predates this cycle)."
   }
  ]
 }
