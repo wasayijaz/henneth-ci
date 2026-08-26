@@ -40,6 +40,9 @@ STEPS = [
     "build_financial_model_inputs.py",
     "build_financial_coverage.py",
     "build_forecast_readiness.py",
+    # Source-gated algebra only: stays blocked until qualified actuals and approved,
+    # dated assumptions exist. Must precede the CI audit and generated private slice.
+    "build_formal_financial_engines.py",
     "build_financial_evidence_reconciliation.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
@@ -121,6 +124,7 @@ STEPS = [
     "check_financial_coverage.py",
     "check_ci_reprocess_manifest.py",
     "check_forecast_contract.py",
+    "check_formal_financial_engines.py",
     "check_financial_evidence_reconciliation.py",
     "check_intelligence_confidence.py",
     "check_thesis_monitoring.py",

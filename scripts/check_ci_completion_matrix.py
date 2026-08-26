@@ -39,7 +39,7 @@ def _synthetic_status_rules() -> None:
 
 
 def _assert_shape(matrix: dict) -> None:
-    if matrix.get("schema_version") != 1:
+    if matrix.get("schema_version") != 2:
         _fail("schema version mismatch")
     if matrix.get("source_policy") != "retained repo/state evidence only; no fetching, model calls, SQL, publish, deploy, or source mutation":
         _fail("source policy drifted")
@@ -50,6 +50,8 @@ def _assert_shape(matrix: dict) -> None:
     ids = [row.get("id") for row in rows]
     if tuple(ids) != builder.REQUIREMENT_IDS:
         _fail("requirement registry mismatch")
+    if len(ids) != 68:
+        _fail("requirement registry must have 68 granular rows")
     if len(ids) != len(set(ids)):
         _fail("duplicate requirement id")
     counts = {status: 0 for status in builder.STATUSES}
@@ -74,18 +76,46 @@ def _assert_shape(matrix: dict) -> None:
 
 def _assert_conservative_statuses(matrix: dict) -> None:
     by_id = {row["id"]: row for row in matrix.get("requirements") or []}
-    forecast = by_id["financial_forecasts_valuation_expectations"]
+    forecast_readiness = by_id["forecast_readiness_live_inputs"]
+    forecast_outputs = by_id["formal_forecast_live_outputs"]
+    valuation_outputs = by_id["formal_valuation_live_outputs"]
+    expectations_outputs = by_id["market_expectations_live_outputs"]
     readiness = load_json(ROOT / "state" / "company_intel" / "forecast_readiness.json", {})
     ready_count = ((readiness.get("summary") or {}).get("ready_company_count") or 0)
-    if forecast.get("status") != "blocked":
-        _fail("financial forecast/valuation row must remain blocked until real readiness exists")
-    if not any(f"Real input-ready company count is {ready_count}" in blocker for blocker in forecast.get("blockers") or []):
-        _fail("forecast row did not record real readiness blocker")
-    for row_id in ("training_and_approval", "documentation_tests_deploy_readiness"):
+    if forecast_readiness.get("status") != "blocked":
+        _fail("forecast readiness live-input row must remain blocked until real readiness exists")
+    if not any(f"Real ready company count is {ready_count}" in blocker for blocker in forecast_readiness.get("blockers") or []):
+        _fail("forecast readiness row did not record real readiness blocker")
+    for row_id, row in (
+        ("formal_forecast_live_outputs", forecast_outputs),
+        ("formal_valuation_live_outputs", valuation_outputs),
+        ("market_expectations_live_outputs", expectations_outputs),
+    ):
+        if row.get("status") != "blocked":
+            _fail(f"{row_id} must remain blocked while real computed output count is zero")
+    for row_id in ("private_thesis_live_storage", "training_owner_receipts"):
         if by_id[row_id].get("status") == "complete":
             _fail(f"{row_id} cannot be complete from repo evidence alone")
-    if by_id["impact_analogue_scenario"].get("status") != "partial":
-        _fail("impact/analogue/scenario row must stay partial while numeric impacts are null")
+    if by_id["impact_scenario_shells"].get("status") != "partial":
+        _fail("impact scenario shells must stay partial while numeric impacts are null")
+    for row_id in ("formal_forecast_engine_code", "formal_valuation_engine_code", "market_expectations_engine_code"):
+        if by_id[row_id].get("status") != "complete":
+            _fail(f"{row_id} should distinguish implemented source-gated engine code from blocked live outputs")
+
+
+def _assert_event_study_evidence(matrix: dict) -> None:
+    studies = load_json(ROOT / "state" / "company_intel" / "event_studies.json", {})
+    strict, baseline_available, total = builder.strict_baseline_available_count(studies)
+    if not total or not baseline_available or strict != baseline_available:
+        _fail(f"strict event-study derivation mismatch: {strict}/{baseline_available} baseline-available, {total} total")
+    by_id = {row["id"]: row for row in matrix.get("requirements") or []}
+    strict_row = by_id["event_study_strict_baselines"]
+    details = " ".join(str(item.get("detail") or "") for item in strict_row.get("evidence") or [])
+    if f"{strict}/{baseline_available}" not in details:
+        _fail("strict event-study evidence did not report the derived strict count")
+    serialized = _dump(strict_row)
+    if "strict_no_lookahead" in serialized:
+        _fail("matrix must not depend on an invented strict_no_lookahead event-study field")
 
 
 def _assert_slice_summary(matrix: dict) -> None:
@@ -107,6 +137,7 @@ def main() -> None:
         _fail("completion matrix is not current/deterministic")
     _assert_shape(matrix)
     _assert_conservative_statuses(matrix)
+    _assert_event_study_evidence(matrix)
     _assert_slice_summary(matrix)
     summary = matrix["summary"]["counts"]
     print(

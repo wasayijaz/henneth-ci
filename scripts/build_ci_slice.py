@@ -382,6 +382,35 @@ def _source_quality(source_qa, sym):
     }
 
 
+def _formal_engine_product(engine_state, sym, kind):
+    row = (engine_state.get("companies") or {}).get(sym)
+    if isinstance(row, dict):
+        return dict(row)
+    return {
+        "symbol": sym,
+        "status": "blocked",
+        "reason": f"{kind}_state_missing",
+        "missing_requirements": [f"{kind}_state_missing"],
+        "formula_id": engine_state.get("formula_id"),
+        "result": None,
+        "provenance": [],
+        "policy": engine_state.get("policy") or {"research_only": True, "no_advice": True},
+    }
+
+
+def _formal_engine_meta(engine_state):
+    return {
+        "schema_version": engine_state.get("schema_version"),
+        "engine_version": engine_state.get("engine_version"),
+        "kind": engine_state.get("kind"),
+        "as_of": engine_state.get("as_of"),
+        "formula_id": engine_state.get("formula_id"),
+        "source": engine_state.get("source") or {},
+        "policy": engine_state.get("policy") or {},
+        "summary": engine_state.get("summary") or {},
+    }
+
+
 def _company_brief(brief_state, document_state, sym):
     row = (brief_state.get("companies") or {}).get(sym) or {}
     current = row.get("current") or None
@@ -460,6 +489,9 @@ def build():
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
     company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
     completion_matrix = load_json(STATE / "company_intel" / "completion_matrix.json", {})
+    financial_forecasts = load_json(STATE / "company_intel" / "financial_forecasts.json", {"companies": {}})
+    formal_valuations = load_json(STATE / "company_intel" / "formal_valuations.json", {"companies": {}})
+    market_expectations = load_json(STATE / "company_intel" / "market_expectations.json", {"companies": {}})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue, brief_receipts)
@@ -581,6 +613,9 @@ def build():
             "identity": {"symbol": sym}, "domains": {}, "intelligence_objects": [],
             "timeline": [], "coverage": {"object_count": 0},
         }
+        financial_forecast_row = _formal_engine_product(financial_forecasts, sym, "financial_forecasts")
+        formal_valuation_row = _formal_engine_product(formal_valuations, sym, "formal_valuations")
+        market_expectation_row = _formal_engine_product(market_expectations, sym, "market_expectations")
         rows.append({
             "symbol": sym,
             "name": (universe.get(sym) or {}).get("name") or f.get("name") or "",
@@ -651,6 +686,9 @@ def build():
             "peer_registry": peer_registry_row,
             "scenario_lab": scenario_lab_row,
             "company_brain": company_brain,
+            "financial_forecasts": financial_forecast_row,
+            "formal_valuations": formal_valuation_row,
+            "market_expectations": market_expectation_row,
             "intelligence": {
                 "document_count": len(filings),
                 "event_count": len(timeline),
@@ -690,6 +728,9 @@ def build():
                 "evidence_watchlist_status": (evidence_watchlist_row or {}).get("status"),
                 "monitoring_status": (monitoring_row or {}).get("status"),
                 "monitoring_alert_count": (monitoring_row or {}).get("alert_count", 0),
+                "financial_forecast_status": financial_forecast_row.get("status"),
+                "formal_valuation_status": formal_valuation_row.get("status"),
+                "formal_market_expectations_status": market_expectation_row.get("status"),
             },
             "news": _latest_news(news, sym),
             "insider_filings": _insider(insider, sym),
@@ -707,6 +748,9 @@ def build():
             "graph": knowledge_graph.get("_meta", {}),
             "change_intelligence": change_intelligence.get("_meta", {}),
             "completion_matrix": _completion_matrix_summary(completion_matrix),
+            "financial_forecasts": _formal_engine_meta(financial_forecasts),
+            "formal_valuations": _formal_engine_meta(formal_valuations),
+            "market_expectations": _formal_engine_meta(market_expectations),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",
         },
         "tickers": rows,

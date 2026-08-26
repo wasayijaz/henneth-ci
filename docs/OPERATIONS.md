@@ -126,6 +126,11 @@ backend error is rendered.
     parseable consumer-facing dates in emitted CI state and the private slice only when an explicit
     cutoff exists; a value after that cutoff fails, while opaque or no-cutoff fields are linted rather
     than inferred.
+25. `build_formal_financial_engines.py` runs after forecast readiness and before the CI completion
+    matrix and private slice. It emits deterministic forecast, valuation and market-expectations
+    products only from qualified actuals plus owner-approved, source-labelled and dated operands;
+    otherwise each product remains explicitly blocked with no numeric result. Its focused checker
+    is both part of the cloud sequence and preflight.
 
 The scripts exit 0 and retain last-good durable state on provider failures. Raw pages and PDFs remain
 under ignored `.cache/company_intel/`; no cloud agent, model key, paid browser, hosted database or new

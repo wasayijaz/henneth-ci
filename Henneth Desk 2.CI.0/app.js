@@ -1170,8 +1170,122 @@ function renderCompanyOperations(r) {
   </section>`;
 }
 
+const FORMAL_ENGINE_LABELS = {
+  financial_forecasts: "Financial forecast",
+  formal_valuations: "Formal valuation",
+  market_expectations: "Market expectations",
+};
+
+function humanEngineKey(value) {
+  return String(value || "unknown").replaceAll("_", " ");
+}
+
+function formalEngineProduct(r, key) {
+  const product = r?.[key];
+  if (product && typeof product === "object" && !Array.isArray(product)) return product;
+  return {
+    symbol: r?.symbol,
+    status: "blocked",
+    reason: `${key}_not_emitted`,
+    missing_requirements: [`${key}_not_emitted`],
+    result: null,
+    provenance: [],
+    policy: { research_only: true, no_advice: true },
+  };
+}
+
+function engineValue(value) {
+  if (value == null || value === "") return "unknown";
+  if (typeof value === "number" && Number.isFinite(value)) return fmt(value, 2);
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "object") return short(JSON.stringify(value), 120);
+  return value;
+}
+
+function renderFormalEngineResult(product) {
+  const result = product?.result && typeof product.result === "object" && !Array.isArray(product.result)
+    ? Object.entries(product.result)
+    : [];
+  if (!result.length) {
+    const missing = Array.isArray(product?.missing_requirements) ? product.missing_requirements : [];
+    return `<section class="forecast-readiness-section">
+      <h3>Blocked inputs</h3>
+      ${readinessList(missing, product?.reason || "No result emitted.")}
+    </section>`;
+  }
+  return `<section class="forecast-readiness-section">
+    <h3>Computed result</h3>
+    <div class="baseline-table"><table><thead><tr><th>Field</th><th>Emitted value</th></tr></thead><tbody>
+      ${result.map(([field, value]) => `<tr><td>${esc(humanEngineKey(field))}</td><td>${esc(engineValue(value))}</td></tr>`).join("")}
+    </tbody></table></div>
+  </section>`;
+}
+
+function renderFormalEngineProvenance(product) {
+  const provenance = Array.isArray(product?.provenance) ? product.provenance : [];
+  return `<section class="forecast-readiness-section">
+    <h3>Provenance</h3>
+    <div class="forecast-readiness-docs">${provenance.length ? provenance.slice(0, 8).map(ref => {
+      const href = safeHref(ref.source_url);
+      const label = ref.source_label || ref.source_id || ref.fact_id || ref.document_id || ref.metric || "source";
+      const source = href
+        ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+        : `<span>${esc(label)}</span>`;
+      const detail = [
+        ref.metric ? humanEngineKey(ref.metric) : null,
+        ref.record_type ? humanEngineKey(ref.record_type) : null,
+        ref.period_end ? `period ${ref.period_end}` : null,
+        ref.available_on ? `available ${ref.available_on}` : null,
+      ].filter(Boolean).join(" · ");
+      return `<article><b>${source}</b><span>${esc(ref.source_path || ref.document_id || "source path unavailable")}</span><small>${esc(detail || "No provenance detail emitted.")}</small></article>`;
+    }).join("") : `<div class="empty">No provenance rows were emitted.</div>`}</div>
+  </section>`;
+}
+
+function renderFormalEnginePolicy(product) {
+  const policy = product?.policy && typeof product.policy === "object" && !Array.isArray(product.policy) ? product.policy : {};
+  const entries = Object.entries(policy);
+  return `<section class="forecast-readiness-section">
+    <h3>Policy</h3>
+    <div class="forecast-readiness-policy">
+      ${entries.length ? entries.map(([key, value]) => `<span>${esc(humanEngineKey(key))}<b>${esc(engineValue(value))}</b></span>`).join("") : `<span>policy<b>not emitted</b></span>`}
+    </div>
+  </section>`;
+}
+
+function renderFormalEngineCard(r, key) {
+  const product = formalEngineProduct(r, key);
+  return `<section class="forecast-readiness-section">
+    <h3>${esc(FORMAL_ENGINE_LABELS[key] || humanEngineKey(key))}</h3>
+    <div class="blocked-grid">
+      <span>Status <b>${esc(product.status || "unknown")}</b></span>
+      <span>Formula <b>${esc(product.formula_id || "formula_id_not_emitted")}</b></span>
+      <span>Reason <b>${esc(product.reason || (product.result ? "computed_result_emitted" : "reason_not_emitted"))}</b></span>
+      <span>Result <b>${product.result ? "emitted" : "not emitted"}</b></span>
+      <span>Missing inputs <b>${esc((product.missing_requirements || []).length)}</b></span>
+      <span>Provenance <b>${esc((product.provenance || []).length)}</b></span>
+    </div>
+    ${renderFormalEngineResult(product)}
+    ${renderFormalEngineProvenance(product)}
+    ${renderFormalEnginePolicy(product)}
+  </section>`;
+}
+
+function renderFormalEnginePanel(r, keys, kicker, title, note, titleId) {
+  const products = keys.map(key => [key, formalEngineProduct(r, key)]);
+  return `<section class="panel span9 forecast-readiness-shell" aria-labelledby="${esc(titleId)}">
+    <span class="kicker">${esc(kicker)}</span><h2 id="${esc(titleId)}">${esc(title)}</h2>
+    <p class="section-note">${esc(note)}</p>
+    <div class="forecast-readiness-downstream">
+      ${products.map(([key, product]) => `<span>${esc(FORMAL_ENGINE_LABELS[key] || humanEngineKey(key))}<b>${esc(product.status || "unknown")}</b></span>`).join("")}
+    </div>
+    ${keys.map(key => renderFormalEngineCard(r, key)).join("")}
+  </section>`;
+}
+
 function renderCompanyFinancials(r) {
   return `<section class="company-route-stack">
+    ${renderFormalEnginePanel(r, ["financial_forecasts"], "Source-gated engine", "Formal financial forecast", "Displayed from the authoritative financial_forecasts row only. Computed values appear only when the engine emits them with source provenance and research-only policy.", "formalForecastTitle")}
     ${renderFinancials(r)}
     ${renderFinancialBaseline(r)}
   </section>`;
@@ -1305,19 +1419,20 @@ function renderCompanyValuation(r) {
   const scenarioStatus = r.scenario_lab?.status || {};
   const legacy = r.valuation || {};
   return `<section class="panel span9 blocked-shell" aria-labelledby="valuationTitle">
-    <span class="kicker">Formal CI valuation</span><h2 id="valuationTitle">Valuation readiness blocked</h2>
-    <p class="section-note">Formal CI valuation is blocked until a qualified valuation model is implemented on sourced inputs. Scenario multiple sensitivity is separate algebra, not a formal valuation. Legacy fair-value screen below is separate from formal CI valuation and remains a legacy dashboard field.</p>
+    <span class="kicker">Valuation overview</span><h2 id="valuationTitle">Formal CI valuation engine status</h2>
+    <p class="section-note">Formal valuation and market expectations are displayed from the source-gated engine rows below. Scenario multiple sensitivity is separate caller-supplied algebra. Legacy fair-value screen remains a separate dashboard field.</p>
     <div class="blocked-grid">
-      <span>Formal valuation <b>${esc(readiness.downstream_status?.valuation || "blocked_insufficient_qualified_history")}</b></span>
+      <span>Formal valuation <b>${esc(r.formal_valuations?.status || readiness.downstream_status?.valuation || "blocked_insufficient_qualified_history")}</b></span>
       <span>Forecast gate <b>${esc(readiness.status || "blocked")}</b></span>
       <span>Scenario sensitivity <b>${esc(scenarioStatus.valuation || "blocked")}</b></span>
-      <span>Market expectations <b>${esc(readiness.downstream_status?.market_expectations || "blocked_insufficient_qualified_history")}</b></span>
+      <span>Market expectations <b>${esc(r.market_expectations?.status || readiness.downstream_status?.market_expectations || "blocked_insufficient_qualified_history")}</b></span>
     </div>
     <section class="legacy-fair-value" aria-label="Legacy fair-value screen">
       <h3>Legacy fair-value screen, not formal CI valuation</h3>
       <p>Verdict: <b>${esc(legacy.verdict || "unknown")}</b>. Composite fair value: <b>${legacy.composite_fair == null ? "unknown" : `Rs ${esc(fmt(legacy.composite_fair, 2))}`}</b>. Mispricing: <b>${legacy.mispricing_pct == null ? "unknown" : esc(pct(legacy.mispricing_pct))}</b>.</p>
     </section>
-  </section>`;
+  </section>
+  ${renderFormalEnginePanel(r, ["formal_valuations", "market_expectations"], "Source-gated engines", "Formal valuation and market expectations", "Displayed exactly from the authoritative formal_valuations and market_expectations rows. The browser does not produce targets, reverse-solve growth, or fill missing operands.", "formalValuationEngineTitle")}`;
 }
 
 function renderCompanyEvents(r) {
@@ -1443,7 +1558,7 @@ function renderInvestorSnapshot(r) {
       <article><h3>Current situation</h3><p>${esc(brief.headline || "Unknown — no owner-approved brief is current.")}</p></article>
       <article><h3>What changed</h3><p>${esc(firstClaim("what_changed") || "Unknown — no approved change claim is available.")}</p></article>
       <article><h3>Earnings direction</h3><p>${esc(firstClaim("financial_read") || "Unknown — qualified history is not sufficient for an earnings direction.")}</p></article>
-      <article><h3>Valuation readiness</h3><p>Scenario multiple sensitivity: ${esc(scenarioStatus.valuation || "blocked")}. Formal valuation: ${esc(brainDomain(brain, "valuation").status)}.</p></article>
+      <article><h3>Valuation readiness</h3><p>Formal valuation: ${esc(r.formal_valuations?.status || brainDomain(brain, "valuation").status)}. Market expectations: ${esc(r.market_expectations?.status || scenarioStatus.market_expectations || "blocked")}.</p></article>
       <article><h3>Catalysts</h3>${domainCard("Coverage", brainDomain(brain, "catalysts"))}</article>
       <article><h3>Risks</h3>${domainCard("Coverage", brainDomain(brain, "risks"))}</article>
       <article><h3>Hidden signals</h3><p>${esc((r.signal_clusters?.clusters || []).length)} validated signal cluster${(r.signal_clusters?.clusters || []).length === 1 ? "" : "s"}; absence is not evidence of no change.</p></article>
@@ -1572,7 +1687,7 @@ function renderIntelligence(r) {
   const signalCards = clusters.length ? clusters.map(c => `<article class="intel-card"><header><span class="pill">${esc(c.assessment || "unknown")}</span><b>${esc(c.proposition?.type || "signal")}</b></header><h3>${esc(c.proposition?.target || c.proposition?.role || c.proposition?.person || c.proposition?.stage || "Evidence-backed signal")}</h3><p>${esc(c.proposition?.verb || c.proposition?.modality || "No additional assertion supplied.")}</p><div class="intel-meta"><span>${esc(c.observations?.length || 0)} observations</span><span>${esc(c.confidence?.band || "unknown confidence")}</span></div>${(c.observations || []).slice(0,3).map(o => `<div class="intel-evidence">${sourceLink(o.evidence?.source_url)} · page ${esc(o.evidence?.page || "unknown")} · ${esc(o.evidence?.text || "No evidence text")}</div>`).join("")}</article>`).join("") : `<div class="empty">No eligible evidence-backed signals are available.</div>`;
   const driverNames = [...new Set(events.flatMap(e => Array.isArray(e.affected_drivers) ? e.affected_drivers : []))];
   const watch = driverNames.length ? driverNames.map(d => `<span class="pill">Monitor ${esc(d)}</span>`).join("") : `<span class="muted">No affected-driver monitoring target is currently evidenced.</span>`;
-  return `<section class="panel span9 intel-shell"><span class="kicker">Flagship intelligence</span><h2>Evidence → mechanism → readiness</h2><p class="section-note">A read-only composition of validated signals, operating mechanisms, historical context, and model readiness. It contains no forecasts, probabilities, or valuation claims.</p>${renderIntelligenceConfidence(r)}<section class="intel-section"><header><h3>New evidence signals</h3><span class="pill">${esc(clusters.length)} signal${clusters.length === 1 ? "" : "s"}</span></header><div class="intel-grid">${signalCards}</div></section><section class="intel-section"><header><h3>Business mechanism and affected drivers</h3></header>${events.length ? `<div class="intel-list">${events.slice(0,8).map(e => `<article><b>${esc(e.event_type || "event")}</b><span>${esc(e.description || "Unknown event")}</span><em>${esc((e.affected_drivers || []).join(", ") || "No affected drivers")}</em></article>`).join("")}</div>` : `<div class="empty">No operating events are available.</div>`}</section><section class="intel-section"><header><h3>Historical benchmark availability</h3></header><p>${studies.length ? `${esc(studies.length)} descriptive event study record${studies.length === 1 ? "" : "s"} available.` : "No historical event studies are available for this company."}</p></section><section class="intel-section"><header><h3>Financial readiness</h3></header><div class="intel-status"><span>Readiness <b>${esc(model.status || "unknown")}</b></span><span>Forecast <b>blocked_not_implemented</b></span><span>Valuation <b>blocked_not_implemented</b></span></div></section><section class="intel-section"><header><h3>Contradictions and unknowns</h3></header><p>${esc((signals.rejection_reasons && Object.keys(signals.rejection_reasons).join(", ")) || "No additional contradiction or quality flag is recorded.")}</p></section><section class="intel-section"><header><h3>What to watch next</h3></header><div class="intel-watch">${watch}</div><p class="section-note">Monitoring targets are derived only from retained affected drivers and do not represent predictions.</p></section></section>`;
+  return `<section class="panel span9 intel-shell"><span class="kicker">Flagship intelligence</span><h2>Evidence → mechanism → readiness</h2><p class="section-note">A read-only composition of validated signals, operating mechanisms, historical context, model readiness, and source-gated formal engine status. Engine results appear only when emitted by the backend.</p>${renderIntelligenceConfidence(r)}<section class="intel-section"><header><h3>New evidence signals</h3><span class="pill">${esc(clusters.length)} signal${clusters.length === 1 ? "" : "s"}</span></header><div class="intel-grid">${signalCards}</div></section><section class="intel-section"><header><h3>Business mechanism and affected drivers</h3></header>${events.length ? `<div class="intel-list">${events.slice(0,8).map(e => `<article><b>${esc(e.event_type || "event")}</b><span>${esc(e.description || "Unknown event")}</span><em>${esc((e.affected_drivers || []).join(", ") || "No affected drivers")}</em></article>`).join("")}</div>` : `<div class="empty">No operating events are available.</div>`}</section><section class="intel-section"><header><h3>Historical benchmark availability</h3></header><p>${studies.length ? `${esc(studies.length)} descriptive event study record${studies.length === 1 ? "" : "s"} available.` : "No historical event studies are available for this company."}</p></section><section class="intel-section"><header><h3>Financial readiness</h3></header><div class="intel-status"><span>Model inputs <b>${esc(model.status || "unknown")}</b></span><span>Forecast engine <b>${esc(r.financial_forecasts?.status || "unknown")}</b></span><span>Valuation engine <b>${esc(r.formal_valuations?.status || "unknown")}</b></span><span>Market expectations <b>${esc(r.market_expectations?.status || "unknown")}</b></span></div></section><section class="intel-section"><header><h3>Formal engine deck</h3><span class="pill">source gated</span></header><p class="section-note">Compact status cards from the authoritative engine outputs. Results and provenance are displayed as emitted; missing inputs stay explicit.</p>${["financial_forecasts", "formal_valuations", "market_expectations"].map(key => renderFormalEngineCard(r, key)).join("")}</section><section class="intel-section"><header><h3>Contradictions and unknowns</h3></header><p>${esc((signals.rejection_reasons && Object.keys(signals.rejection_reasons).join(", ")) || "No additional contradiction or quality flag is recorded.")}</p></section><section class="intel-section"><header><h3>What to watch next</h3></header><div class="intel-watch">${watch}</div><p class="section-note">Monitoring targets are derived only from retained affected drivers and do not represent predictions.</p></section></section>`;
 }
 
 function renderThesisMonitor(r) {

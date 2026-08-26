@@ -349,7 +349,7 @@ def check_ci_slice():
     # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
     # state products. This catches a stale slice even when its legacy fields still look valid.
     wave1 = {}
-    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_evidence_reconciliation", "financial_coverage", "forecast_readiness", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_evidence_reconciliation", "financial_coverage", "forecast_readiness", "financial_forecasts", "formal_valuations", "market_expectations", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
         wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
         try:
             with open(wave_path, encoding="utf-8") as f:
@@ -409,6 +409,9 @@ def check_ci_slice():
         financial_reconciliation_state = (wave1.get("financial_evidence_reconciliation", {}).get("companies", {}).get(sym) or {})
         financial_coverage_state = (wave1.get("financial_coverage", {}).get("companies", {}).get(sym) or {})
         forecast_readiness_state = (wave1.get("forecast_readiness", {}).get("companies", {}).get(sym) or {})
+        financial_forecast_state = (wave1.get("financial_forecasts", {}).get("companies", {}).get(sym) or {})
+        formal_valuation_state = (wave1.get("formal_valuations", {}).get("companies", {}).get(sym) or {})
+        market_expectations_state = (wave1.get("market_expectations", {}).get("companies", {}).get(sym) or {})
         scenario_lab_state = (wave1.get("scenario_lab", {}).get("companies", {}).get(sym) or {})
         company_brain_state = (wave1.get("company_brains", {}).get("companies", {}).get(sym) or {})
         thesis_state_row = (thesis_state.get("companies") or {}).get(sym)
@@ -456,6 +459,18 @@ def check_ci_slice():
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} forecast_readiness stale/mismatch")
         if not isinstance(row.get("forecast_readiness"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} forecast_readiness missing/not object")
+        if row.get("financial_forecasts") != financial_forecast_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_forecasts stale/mismatch")
+        if not isinstance(row.get("financial_forecasts"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_forecasts missing/not object")
+        if row.get("formal_valuations") != formal_valuation_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} formal_valuations stale/mismatch")
+        if not isinstance(row.get("formal_valuations"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} formal_valuations missing/not object")
+        if row.get("market_expectations") != market_expectations_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} market_expectations stale/mismatch")
+        if not isinstance(row.get("market_expectations"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} market_expectations missing/not object")
         if row.get("scenario_lab") != scenario_lab_state:
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} scenario_lab stale/mismatch")
         if row.get("company_brain") != company_brain_state:
@@ -817,6 +832,18 @@ def check_forecast_contract():
     except Exception as e:
         fail(f"check_forecast_contract.py did not run — {e}")
 
+def check_formal_financial_engines():
+    path = os.path.join(ROOT, "scripts", "check_formal_financial_engines.py")
+    if not os.path.exists(path):
+        fail("check_formal_financial_engines.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("formal financial engines check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_formal_financial_engines.py did not run — {e}")
+
 def check_financial_evidence_reconciliation():
     path = os.path.join(ROOT, "scripts", "check_financial_evidence_reconciliation.py")
     if not os.path.exists(path):
@@ -1090,6 +1117,7 @@ def main():
     check_financial_model_inputs()
     check_financial_coverage()
     check_forecast_contract()
+    check_formal_financial_engines()
     check_financial_evidence_reconciliation()
     check_forecast_readiness_ui()
     check_financial_coverage_ui()
