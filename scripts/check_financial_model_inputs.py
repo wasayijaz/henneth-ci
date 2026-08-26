@@ -7,6 +7,7 @@ sys_path=str(ROOT/'scripts')
 import sys; sys.path.insert(0,sys_path)
 import subprocess
 from financial_statement_facts import extract_facts, parse_number, stable_id, PARSER_VERSION, PARSER_REVISION
+from forecast_contract import qualified_financial_fact_source
 def load(p):
  with p.open(encoding='utf-8') as f:return json.load(f)
 def walk(x):
@@ -193,7 +194,7 @@ def main():
  # Legacy quarantine and idempotent shape checks.
  for row in (load(STATE/'company_financial_series.json').get('tickers') or {}).values():
   for fact in row.get('facts') or []:
-   if fact.get('parser_version')!=PARSER_VERSION and fact.get('readiness')=='model_loadable': raise AssertionError('legacy model load')
+   if not qualified_financial_fact_source(fact) and fact.get('readiness')=='model_loadable': raise AssertionError('legacy model load')
  # Authoritative builder idempotency and exact generated slice equality.
  target=STATE/'company_intel/financial_model_inputs.json'; before=target.read_bytes(); r=subprocess.run([sys.executable,str(ROOT/'scripts/build_financial_model_inputs.py')],capture_output=True,text=True,timeout=30)
  if r.returncode!=0 or target.read_bytes()!=before: raise AssertionError('model builder not byte-idempotent')

@@ -78,7 +78,11 @@ try {
     assert(row.symbol && row.company_brain?.domains, `${row.symbol || "unknown"}: Company Brain available`);
     assert(row.company_brain.domains.forecasts?.status === "blocked", `${row.symbol}: forecasts blocked`);
     assert(row.company_brain.domains.valuation?.status === "blocked", `${row.symbol}: valuation blocked`);
-    assert(row.forecast_readiness?.status === "blocked", `${row.symbol}: forecast readiness blocked`);
+    if (row.symbol === "MLCF") {
+      assert(row.forecast_readiness?.status === "input_ready" && row.forecast_readiness?.qualified_period_count === 3, "MLCF: forecast readiness input-ready");
+    } else {
+      assert(row.forecast_readiness?.status === "blocked", `${row.symbol}: forecast readiness blocked`);
+    }
     assert(row.scenario_lab?.status?.valuation === "ready_scenario_multiple_only", `${row.symbol}: scenario multiple status separate`);
     assert(row.peer_registry?.method === "pilot_official_sector_cohort_v1", `${row.symbol}: formal peer registry emitted`);
     assert(row.peer_registry?.peer_set_kind === "pilot_sector_cohort", `${row.symbol}: peer registry kind`);

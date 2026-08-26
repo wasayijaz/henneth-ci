@@ -56,11 +56,15 @@ import sys
 from datetime import date
 
 from psx_data import STATE, ROOT, load_json
+from psx_data import canonical_symbol
 
 OUT_DIR = ROOT / "site" / "src" / "data" / "public"
 
 # The pilot. Most liquid and most searched — the names a Pakistani retail investor types.
-PILOT = ["OGDC", "PPL", "PSO", "HUBC", "FFC", "ENGRO", "ENGROH", "LUCK", "DGKC", "MLCF",
+# ENGRO is the retired Engro code; Engro Holdings is ENGROH (a genuine rename, not a
+# corporate-action suffix). Only the current ticker is listed, so the public extract never
+# emits a duplicate or a dead /psx/engro/ page.
+PILOT = ["OGDC", "PPL", "PSO", "HUBC", "FFC", "ENGROH", "LUCK", "DGKC", "MLCF",
          "HBL", "UBL", "MCB", "MEBL", "BAFL", "SYS", "TRG", "NESTLE", "PAKT", "INDU"]
 
 # Liquidity gate thresholds, mirrored from psx_data.research_symbols(). Only the resulting LABEL
@@ -209,7 +213,15 @@ def main():
     out, skipped = {}, {}
 
     for sym in wanted:
+        # After update_universe normalizes XD/XB/XR, the key is already FFC.
+        # If an older universe.json still has only FFCXD, treat that row as FFC
+        # rather than inventing a second company or dropping the public page.
         u = universe.get(sym)
+        if not u:
+            for raw, rec in universe.items():
+                if canonical_symbol(raw) == sym:
+                    u = rec
+                    break
         if not u:
             skipped[sym] = "not in universe"
             continue
@@ -259,6 +271,45 @@ def main():
         die("no tickers survived the filters — refusing to write an empty file.")
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # Keep last-good public rows for pilot names that did not survive this run.
+    # Ex-dividend / ex-bonus suffixes (FFCXD, HBLXD, ...) can drop a name from
+    # universe.json for a few sessions. Overwriting the extract without those
+    # rows would 404 live /psx/FFC/ pages. Never invent a replacement row —
+    # only reuse a previously published allow-listed object.
+    prev_path = OUT_DIR / "tickers.json"
+    if prev_path.exists() and not want_all:
+        try:
+            prev = json.loads(prev_path.read_text(encoding="utf-8"))
+            prev_tickers = prev.get("tickers") or {}
+        except (OSError, ValueError):
+            prev_tickers = {}
+        for sym in wanted:
+            if sym in out or not isinstance(prev_tickers.get(sym), dict):
+                continue
+            kept = dict(prev_tickers[sym])
+            kept["stale"] = True
+            out[sym] = kept
+            skipped[sym] = (skipped.get(sym) or "incomplete") + " — kept last public row"
+
+        # A name can resolve (universe + quant + sector) yet still lack the
+        # fundamentals/fair-value fields its previous public page had, because
+        # those state files were written while the name was suffixed. Publishing a
+        # fresh-but-thinner row would tell readers the company "has no positive
+        # earnings" when the desk simply has not re-scraped it yet. Prefer the
+        # complete last-good row (marked stale) over a thinner fresh one.
+        rich = ("market_cap", "pe", "div_yield", "model_disagreement")
+        for sym in wanted:
+            prev_row = prev_tickers.get(sym)
+            fresh = out.get(sym)
+            if not (isinstance(prev_row, dict) and isinstance(fresh, dict)):
+                continue
+            if (any(prev_row.get(k) not in (None, "", "-") for k in rich)
+                    and all(fresh.get(k) in (None, "", "-") for k in rich)):
+                kept = dict(prev_row)
+                kept["stale"] = True
+                out[sym] = kept
+                skipped[sym] = (skipped.get(sym) or "thinner than last publish") + " — kept last public row"
+
     payload = {
         "generated": date.today().isoformat(),
         "note": ("Public slice. Rendered into static pages on henneth.app. Contains no valuation "

@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from financial_series import normalize_fact
+from manual_financial_claims import MANUAL_SOURCE_METHOD, qualified_manual_rows
 from psx_data import STATE, load_json, save_json
 
 OUT = STATE / "company_financial_series.json"
@@ -41,7 +42,8 @@ def _repair_row(row: dict[str, Any]) -> dict[str, Any]:
 def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
     """Repair impossible legacy scaling before quality-based deduplication."""
     clean = dict(row)
-    if clean.get("parser_version") != "financial_statement_v2":
+    manual_fact = clean.get("source_method") == MANUAL_SOURCE_METHOD
+    if clean.get("parser_version") != "financial_statement_v2" and not manual_fact:
         flags = list(clean.get("quality_flags") or [])
         clean["quality_flags"] = sorted(set(flags + ["legacy_extractor_not_model_eligible"]))
     unit = str(clean.get("unit") or "").lower()
@@ -58,7 +60,7 @@ def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
     blocking = {"missing_period_end", "missing_currency", "missing_unit_scale",
                 "missing_consolidation_basis", "conflicting_consolidation_labels",
                 "unparseable_raw_value", "conflict"}
-    clean["readiness"] = ("model_loadable" if clean.get("parser_version") == "financial_statement_v2" and clean.get("metric") != "change_pct"
+    clean["readiness"] = ("model_loadable" if (clean.get("parser_version") == "financial_statement_v2" or manual_fact) and clean.get("metric") != "change_pct"
                            and not blocking.intersection(clean.get("quality_flags") or []) else "audit_only")
     return clean
 
@@ -179,7 +181,10 @@ def build(input_path: Path = STATE / "company_documents.json", output_path: Path
     # compacted or temporarily degraded; a rebuild must not erase a verified
     # transient full-page normalization from a prior run.
     rows_by_ticker: dict[str, list[dict[str, Any]]] = {
-        str(ticker).upper(): list((bucket or {}).get("facts") or [])
+        str(ticker).upper(): [
+            fact for fact in (bucket or {}).get("facts") or []
+            if not (isinstance(fact, dict) and fact.get("source_method") == MANUAL_SOURCE_METHOD)
+        ]
         for ticker, bucket in (previous.get("tickers") or {}).items()
     }
     rejected = 0
@@ -196,8 +201,13 @@ def build(input_path: Path = STATE / "company_documents.json", output_path: Path
                 rejected += 1
                 continue
             rows_by_ticker.setdefault(row["ticker"], []).append(row)
+    existing_facts = [fact for facts in rows_by_ticker.values() for fact in facts if isinstance(fact, dict)]
+    manual_rows, manual_meta = qualified_manual_rows(existing_facts=existing_facts)
+    for row in manual_rows:
+        rows_by_ticker.setdefault(row["ticker"], []).append(row)
     prior_source_documents = int((previous.get("_meta") or {}).get("source_documents") or 0)
     out = _assemble(rows_by_ticker, source_documents=max(source_docs, prior_source_documents), rejected=rejected)
+    out["_meta"]["manual_claims"] = manual_meta
     previous_meta = dict(previous.get("_meta") or {})
     output_meta = dict(out.get("_meta") or {})
     previous_meta.pop("updated", None)

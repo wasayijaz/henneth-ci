@@ -130,14 +130,16 @@ def _assert_shape(data: dict, pilot: list[str]) -> None:
     companies = data.get("companies") or {}
     if set(companies) != set(pilot):
         _fail("company boundary mismatch")
-    if (data.get("summary") or {}).get("forecast_ready_company_count") != 0:
-        _fail("real state unexpectedly forecast-ready")
+    summary = data.get("summary") or {}
+    if summary.get("forecast_ready_company_count") != 1 or summary.get("eligible_fact_count") != 9:
+        _fail("real state must have exactly one forecast-ready company and nine eligible manual facts")
     for symbol in pilot:
         row = companies.get(symbol) or {}
         if row.get("symbol") != symbol:
             _fail(f"{symbol}: symbol mismatch")
-        if row.get("readiness", {}).get("forecast_readiness_status") != "blocked":
-            _fail(f"{symbol}: forecast readiness must remain blocked")
+        expected_readiness = "input_ready" if symbol == "MLCF" else "blocked"
+        if row.get("readiness", {}).get("forecast_readiness_status") != expected_readiness:
+            _fail(f"{symbol}: forecast readiness status mismatch")
         for key, blocked in BLOCKED_OUTPUT_STATUS.items():
             if row.get("readiness", {}).get(key) != blocked:
                 _fail(f"{symbol}: {key} not blocked")
@@ -209,8 +211,13 @@ def main() -> None:
         _fail("builder output is not deterministic")
     pilot = expected.get("pilot_symbols") or []
     _assert_shape(expected, pilot)
-    if any((row.get("qualified_periods") or []) for row in (expected.get("companies") or {}).values()):
-        _fail("real retained state unexpectedly has qualified periods")
+    for symbol, row in (expected.get("companies") or {}).items():
+        qualified = row.get("qualified_periods") or []
+        if symbol == "MLCF":
+            if len(qualified) != 3:
+                _fail("MLCF must have exactly three qualified reconciliation periods")
+        elif qualified:
+            _fail(f"{symbol}: real retained state unexpectedly has qualified periods")
     _synthetic_assertions()
     before = builder.OUT.read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_financial_evidence_reconciliation.py")], capture_output=True, text=True, timeout=30)

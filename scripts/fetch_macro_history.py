@@ -34,6 +34,26 @@ FACTORS = {
     "em_equity": "EEM", "us10y": "^TNX", "dollar": "DX-Y.NYB",
 }
 START = "2007-01-01"
+STALE_DAYS = 7
+FAILED_RETRY_DAYS = 1
+
+
+def _fresh_enough() -> bool:
+    if "--force" in sys.argv or not OUT.exists():
+        return False
+    try:
+        prev = json.loads(OUT.read_text(encoding="utf-8"))
+        updated = prev.get("updated")
+        age = dt.datetime.now() - dt.datetime.strptime(updated, "%Y-%m-%d %H:%M")
+    except Exception:
+        return False
+    if age.total_seconds() < 0:
+        return False
+    cadence_days = FAILED_RETRY_DAYS if prev.get("stale") or prev.get("failed") else STALE_DAYS
+    if age.days < cadence_days:
+        print(f"macro_history: last run {updated}; skip until {cadence_days}d cadence (--force to refresh)")
+        return True
+    return False
 
 
 def fetch(symbol: str, sess) -> dict:
@@ -55,6 +75,9 @@ def fetch(symbol: str, sess) -> dict:
 
 def main():
     STATE.mkdir(exist_ok=True)
+    if _fresh_enough():
+        sys.exit(0)
+
     prev = {}
     if OUT.exists():
         try:
@@ -88,6 +111,8 @@ def main():
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "note": ("Daily closes for the global factors the desk's sector attribution runs on. "
                  "usdpkr up = rupee weaker. us10y is the yield x10 (Yahoo quotes ^TNX that way)."),
+        "stale": bool(failed),
+        "failed": failed,
         "factors": factors,
     }, separators=(",", ":")), encoding="utf-8")
     print(f"macro_history: {len(factors)} factors written" + (f" ({len(failed)} failed)" if failed else ""))

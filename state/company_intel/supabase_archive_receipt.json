@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project_ref": "wexonytulckejkynncvv",
+  "configured_at": "2026-08-27T00:00:00Z",
+  "status": "configured_not_synced",
+  "purpose": "Private append-only archive for source documents, source-linked facts, and deterministic Company Intelligence snapshots.",
+  "migrations": [
+    "activate_private_company_theses",
+    "create_append_only_ci_archive",
+    "harden_thesis_helper_search_path"
+  ],
+  "tables": [
+    "company_theses",
+    "ci_sync_runs",
+    "ci_source_documents",
+    "ci_document_facts",
+    "ci_state_snapshots",
+    "ci_document_blobs"
+  ],
+  "storage_bucket": {
+    "name": "ci-documents",
+    "public": false,
+    "max_pdf_bytes": 52428800
+  },
+  "access_boundary": "Archive tables have RLS enabled with no anon, authenticated, or public grants. Only the server-side sync credential may write. Browser research remains served from the existing private CI data slice.",
+  "sync_activation_requirement": "Set HENNETH_CI_SUPABASE_URL and HENNETH_CI_SUPABASE_SERVICE_KEY only in the cloud secret store, then run the deterministic archive adapter. Never store credentials in this receipt or repository."
+}

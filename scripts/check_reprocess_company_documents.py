@@ -351,12 +351,13 @@ def main() -> int:
         approved = r.load_allowlist(prod_manifest)
         assert set(approved) == set(r.APPROVED_WAVE3_ALLOWLIST)
         resolved = r.resolve_documents(sorted(r.APPROVED_WAVE3_ALLOWLIST), repo_root / "state", approved)
-        assert len(resolved) == 7
+        assert len(resolved) == len(r.APPROVED_WAVE3_ALLOWLIST)
         assert {doc.doc_id for doc in resolved} == set(r.APPROVED_WAVE3_ALLOWLIST)
+        approved_example = sorted(r.APPROVED_WAVE3_ALLOWLIST)[0]
         for name, ids in {
             "extra": sorted(r.APPROVED_WAVE3_ALLOWLIST | {"psx:999999"}),
-            "missing": sorted(set(r.APPROVED_WAVE3_ALLOWLIST) - {"psx:260032"}),
-            "duplicate": sorted(r.APPROVED_WAVE3_ALLOWLIST) + ["psx:260032"],
+            "missing": sorted(set(r.APPROVED_WAVE3_ALLOWLIST) - {approved_example}),
+            "duplicate": sorted(r.APPROVED_WAVE3_ALLOWLIST) + [approved_example],
             "invalid": sorted(r.APPROVED_WAVE3_ALLOWLIST)[:-1] + ["bad"],
         }.items():
             manifest = root / f"manifest_{name}.json"
@@ -368,10 +369,9 @@ def main() -> int:
             else:
                 raise AssertionError(f"invalid manifest accepted: {name}")
 
-        # The manifest may contain more than five approved IDs, but each invocation cannot.
-        assert len(r.APPROVED_WAVE3_ALLOWLIST) == 7
+        # Each invocation remains capped at five exact IDs.
         try:
-            r.validate_operator_ids(sorted(r.APPROVED_WAVE3_ALLOWLIST)[:6])
+            r.validate_operator_ids([f"psx:{900000 + index}" for index in range(r.MAX_DOCUMENT_IDS + 1)])
         except r.UnsafeInput:
             pass
         else:

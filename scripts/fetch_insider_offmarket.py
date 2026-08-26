@@ -29,7 +29,7 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 import requests
 
@@ -41,6 +41,34 @@ ANNOUNCEMENTS_URL = "https://dps.psx.com.pk/announcements/companies"
 FETCH_LOOKBACK_DAYS = 10          # how far back each weekly run scans for new daily CSVs
 OFFMARKET_RETENTION_DAYS = 90     # off-market days.json is pruned to this trailing window
 INSIDER_SCRAPE_WINDOW_DAYS = 14   # how far back the announcements-page scrape scans for new rows
+STALE_DAYS = 7
+FAILED_RETRY_DAYS = 1
+
+
+def _fresh_file(path, days: int) -> bool:
+    data = load_json(path, {})
+    updated = data.get("updated")
+    if not updated:
+        return False
+    try:
+        age = datetime.now() - datetime.strptime(updated, "%Y-%m-%d %H:%M")
+    except ValueError:
+        return False
+    if age.total_seconds() < 0:
+        return False
+    cadence_days = FAILED_RETRY_DAYS if data.get("stale") else days
+    return age.days < cadence_days
+
+
+def _cadence_skip() -> bool:
+    if "--force" in sys.argv:
+        return False
+    off_ok = _fresh_file(STATE / "offmarket_activity.json", STALE_DAYS)
+    insider_ok = _fresh_file(STATE / "insider_activity.json", STALE_DAYS)
+    if off_ok and insider_ok:
+        print(f"insider/offmarket: skip until {STALE_DAYS}d cadence (--force to refresh)")
+        return True
+    return False
 
 
 # ---------------------------------------------------------------------------------------------
@@ -215,6 +243,9 @@ def fetch_insider(universe_symbols: set[str]) -> dict | None:
 # ---------------------------------------------------------------------------------------------
 
 def main():
+    if _cadence_skip():
+        sys.exit(0)
+
     symbols = set(market_symbols("PSX"))
 
     # -- off-market: accumulate new days into retained history, prune trailing window --

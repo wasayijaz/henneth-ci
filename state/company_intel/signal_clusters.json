@@ -37,7 +37,8 @@
    },
    "latest_detected_at": "2025-10-03T09:21:00+05:00",
    "freshness": "older",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "BOP": {
    "candidate_count": 3,
@@ -50,7 +51,8 @@
    },
    "latest_detected_at": "2026-04-30T11:50:00+05:00",
    "freshness": "recent",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "CNERGY": {
    "candidate_count": 0,
@@ -60,7 +62,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "DGKC": {
    "candidate_count": 3,
@@ -73,7 +76,8 @@
    },
    "latest_detected_at": "2026-04-30T09:53:00+05:00",
    "freshness": "recent",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "ENGROH": {
    "candidate_count": 1,
@@ -154,7 +158,8 @@
      ],
      "quality_flags": []
     }
-   ]
+   ],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "FFC": {
    "candidate_count": 0,
@@ -164,7 +169,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "GAL": {
    "candidate_count": 0,
@@ -174,7 +180,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "HBL": {
    "candidate_count": 0,
@@ -184,7 +191,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "HUBC": {
    "candidate_count": 2,
@@ -199,7 +207,8 @@
    },
    "latest_detected_at": "2026-08-18 03:23",
    "freshness": "recent",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "LUCK": {
    "candidate_count": 0,
@@ -209,7 +218,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "MARI": {
    "candidate_count": 2,
@@ -221,7 +231,8 @@
    },
    "latest_detected_at": "2025-11-13T10:10:00+05:00",
    "freshness": "older",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "MEBL": {
    "candidate_count": 0,
@@ -231,7 +242,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "MLCF": {
    "candidate_count": 3,
@@ -314,7 +326,8 @@
      ],
      "quality_flags": []
     }
-   ]
+   ],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "NBP": {
    "candidate_count": 0,
@@ -324,7 +337,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "NRL": {
    "candidate_count": 0,
@@ -334,7 +348,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "OGDC": {
    "candidate_count": 0,
@@ -344,7 +359,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "PPL": {
    "candidate_count": 1,
@@ -426,7 +442,8 @@
      ],
      "quality_flags": []
     }
-   ]
+   ],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "PRL": {
    "candidate_count": 0,
@@ -436,7 +453,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "PSO": {
    "candidate_count": 0,
@@ -446,7 +464,8 @@
    "rejection_reasons": {},
    "latest_detected_at": null,
    "freshness": "unknown",
-   "clusters": []
+   "clusters": [],
+   "registry_version": "signal_cluster_registry_v1"
   },
   "UBL": {
    "candidate_count": 5,
@@ -672,8 +691,108 @@
      ],
      "quality_flags": []
     }
-   ]
+   ],
+   "registry_version": "signal_cluster_registry_v1"
   }
  },
- "source": "state/company_intel/operating_events.json"
+ "source": "state/company_intel/operating_events.json",
+ "registry": {
+  "schema_version": 1,
+  "version": "signal_cluster_registry_v1",
+  "closed": true,
+  "event_aliases": {
+   "acquisition": {
+    "event_types": [
+     "acquisition_divestment"
+    ],
+    "subtypes": [
+     "acquisition"
+    ],
+    "proposition_type": "acquisition",
+    "stages": [
+     "approved",
+     "completed",
+     "intention",
+     "public_offer",
+     "terminated"
+    ],
+    "required_proposition_fields": [
+     "target",
+     "stage",
+     "effective_date"
+    ]
+   },
+   "management_change": {
+    "event_types": [
+     "management_change"
+    ],
+    "subtypes": [
+     "management_change"
+    ],
+    "proposition_type": "management_change",
+    "actions": [
+     "appointment",
+     "re_appointment",
+     "resignation"
+    ],
+    "required_proposition_fields": [
+     "person",
+     "role",
+     "verb",
+     "effective_date"
+    ]
+   }
+  },
+  "supported_event_types": [
+   "acquisition_divestment",
+   "management_change"
+  ],
+  "supported_proposition_types": [
+   "acquisition",
+   "management_change"
+  ],
+  "source_policy": {
+   "intelligence_type": "reported_fact",
+   "retained_document_status": "ready",
+   "required_evidence_fields": [
+    "document_id",
+    "content_sha256",
+    "evidence_sha256",
+    "source_url",
+    "page",
+    "text"
+   ],
+   "source_url_protocols": [
+    "http",
+    "https"
+   ],
+   "unsupported_events": "rejected"
+  },
+  "no_lookahead": {
+   "cutoff_fields": [
+    "detected_at",
+    "available_at",
+    "effective_date"
+   ],
+   "future_values": "rejected"
+  },
+  "conflict_policy": {
+   "acquisition_incompatible_stages": [
+    "completed|terminated",
+    "terminated|completed"
+   ],
+   "acquisition_sequential_stages": [
+    "intention",
+    "public_offer",
+    "approved",
+    "completed"
+   ],
+   "management_incompatible_actions": [
+    "appointment|resignation",
+    "re_appointment|resignation",
+    "resignation|appointment",
+    "resignation|re_appointment"
+   ]
+  }
+ }
 }

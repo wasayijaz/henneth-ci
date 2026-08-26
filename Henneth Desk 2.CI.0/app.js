@@ -505,9 +505,9 @@ function detail(r) {
       : state.view === "business" ? renderCompanyBusiness(r)
       : state.view === "operations" ? renderCompanyOperations(r)
       : state.view === "valuation" ? renderCompanyValuation(r)
-      : state.view === "guidance" ? renderGuidanceDomainView(r, "guidance", "Guidance", "No retained official guidance assertion passed the strict v1 shape.")
+      : state.view === "guidance" ? renderGuidanceDomainView(r, "guidance", "Guidance", "No retained official management assertion passed the strict source shape.")
       : state.view === "catalysts" ? renderCompanyDomainView(r, "catalysts", "Catalysts", "Catalysts are shown only when Company Brain references an existing typed object.")
-      : state.view === "risks" ? renderGuidanceDomainView(r, "risks", "Risks", "No retained official risk assertion passed the strict v1 shape.")
+      : state.view === "risks" ? renderGuidanceDomainView(r, "risks", "Risks", "No retained official risk assertion passed the strict source shape.")
       : state.view === "events" ? renderCompanyEvents(r)
       : state.view === "peers" ? renderCompanyPeers(r)
       : state.view === "ownership" ? renderCompanyOwnership(r)
@@ -798,6 +798,19 @@ function renderConditionalCandidates(label, candidates) {
   }).join("")}</div></section>`;
 }
 
+function renderConditionalEvidenceSummary(summary) {
+  const source = summary && typeof summary === "object" && !Array.isArray(summary) ? summary : {};
+  const candidateCounts = source.candidate_counts && typeof source.candidate_counts === "object" ? source.candidate_counts : {};
+  const matureCounts = source.mature_horizon_counts && typeof source.mature_horizon_counts === "object" ? source.mature_horizon_counts : {};
+  return `<section><h4>Candidate evidence</h4><div class="conditional-policy">
+    <span>Evidence status<b>${conditionalText(source.evidence_status, "unknown")}</b></span>
+    <span>Same company exact<b>${conditionalText(candidateCounts.same_company_exact, "0")}</b></span>
+    <span>Same sector exact<b>${conditionalText(candidateCounts.same_sector_exact, "0")}</b></span>
+    <span>Latest prior candidate<b>${conditionalText(source.latest_prior_candidate_date, "none")}</b></span>
+    <span>Mature horizons<b>${esc(Object.entries(matureCounts).map(([horizon, count]) => `${horizon}: ${count}`).join(", ") || "none")}</b></span>
+  </div><p class="section-note">${esc(source.limitation || "Descriptive evidence only; no causal or forecast interpretation is emitted.")}</p></section>`;
+}
+
 function conditionalStats(stats, n) {
   if (!stats || typeof stats !== "object" || Number(n) < 3) return `<div class="conditional-empty">Numeric stats suppressed until n is at least 3.</div>`;
   const rows = Object.entries(stats).filter(([, value]) => value !== null && value !== undefined && value !== "");
@@ -873,6 +886,7 @@ function renderConditionalBenchmarks(r) {
         ${renderConditionalCandidates("Same company exact", candidates.same_company_exact || benchmark.same_company_exact)}
         ${renderConditionalCandidates("Same sector exact", candidates.same_sector_exact || benchmark.same_sector_exact)}
       </div>
+      ${renderConditionalEvidenceSummary(benchmark.candidate_evidence_summary)}
       <section><h4>Horizon aggregates</h4>${renderConditionalHorizons(aggregates)}</section>
       ${renderConditionalBlockedStates(benchmark.blocked_states || conditional.blocked_states)}
     </article>`;

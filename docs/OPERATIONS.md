@@ -101,7 +101,8 @@ backend error is rendered.
     corroboration credit; historical and peer inputs come only from strict no-lookahead event
     studies. The UI displays producer scores without recalculating them, and Ask receives only a
     capped component summary without evidence payloads or URLs.
-20. `build_guidance_contradictions.py` emits first-class qualitative guidance/risk objects only
+20. `build_guidance_contradictions.py` emits first-class qualitative management-priority,
+    delivery-promise, project/capacity-action, stated-risk and operating-constraint objects only
     when retained same-company official document evidence has a strict assertion shape. Companies
     without qualifying objects publish explicit `no_guidance_objects`; contradictions are exact
     normalized-key conflicts among eligible objects only. The CI app displays the emitted rows and
@@ -453,7 +454,8 @@ push refreshed data).
   into `public/`). Push to `main` = deploy. `Cache-Control: must-revalidate` is set, so users get fresh
   JS/CSS after each deploy (no stale-cache class on live; the local `serve.py` preview DOES cache — hard-
   reload it when testing).
-- **Supabase** = auth + per-user data ONLY (never serves research data). Per-user, row-level-secured on
+- **Supabase** = auth + per-user data, plus a dedicated server-only CI archive; it never serves
+  research data to a browser. Per-user, row-level-secured on
   the `profiles` table: `watchlist`, `notes`, `portfolio`, `followed_brokers`, `digest_prefs` (all jsonb).
   The client uses the publishable key (safe); the legacy service_role/anon keys are disabled.
   Lifecycle-email columns (added by `docs/lifecycle_email.sql`, not yet applied — see §8/§10):
@@ -462,13 +464,14 @@ push refreshed data).
   never a direct client upsert — `saveProfile()` cannot touch them). New table
   `lifecycle_email_log` (service-role only, RLS on with zero policies) tracks per-user/per-key sends
   and is the idempotency guard for the cron.
-- **Private CI theses are activation-gated.** `docs/company_theses.sql` is reviewed reference SQL,
-  not an applied migration. Until the owner runs it manually, the CI Thesis Monitor shows “not
-  activated” and deterministic Henneth monitoring continues unchanged. Activation requires applying
-  the SQL, confirming Data API exposure, proving a second user cannot read or mutate the first user's
-  rows, and running Supabase security advisors. The browser uses only the publishable key plus the
-  user's bearer token. Archive/restore is normal; permanent deletion requires confirmation. Any
-  fair value is private user input, never Henneth output.
+- **Dedicated CI archive and private theses.** The Henneth CI Supabase project is provisioned with
+  `company_theses`, five append-only archive tables, and a nonpublic PDF bucket; its receipt is
+  `state/company_intel/supabase_archive_receipt.json` and its reviewable contract is
+  `docs/henneth_ci_archive.sql`. Archive tables have RLS enabled with no browser grants or policies;
+  only the cloud-held service credential may write. The browser CI deployment is deliberately not
+  cut over until the owner account, owner ID configuration and live RLS checks are migrated. The
+  browser uses only a publishable key plus its bearer token. Archive/restore is normal; permanent
+  deletion requires confirmation. Any fair value is private user input, never Henneth output.
 - **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
   after guidance, thesis and confidence state and before the CI slice. Its original thesis records
   remain limited to retained same-symbol official events that are strictly later than the latest

@@ -400,3 +400,52 @@ Verification after this wave:
 Resume workflow: root/Terra orchestrates and timeboxes; GPT-5.5 handles most implementation and
 quick review; Luna-high handles difficult logic and independent review; deterministic checks cover
 testing. Move on when focused and full gates pass rather than reopening failed parser loops.
+
+## Resume update — approved compact filing pass and management assertions v2
+
+The owner-approved compact official PSX filing batch was processed through the exact-ID v4
+transaction path. MLCF `psx:257465` was durably retained with its verified content hash and an
+explicit `processed_unsupported` receipt: the filing yielded no qualified facts, so no financial
+values were created. DGKC `psx:258454` and LUCK `psx:275898` were image-only; LUCK `psx:257573`
+exceeded the declared safe file cap. They remain explicitly blocked with no receipt or canonical
+financial-state mutation. The caps, no-crop policy and no-OCR rule remain unchanged.
+
+Guidance & Contradictions v2 now preserves a closed qualitative assertion type for every accepted
+same-company official-evidence object: management priority, delivery promise, project/capacity
+action, stated risk or operating constraint. Exact normalized-key contradictions, no-lookahead
+provenance, and the ban on numeric forecasts, valuation and advice remain intact. The monitoring
+state, Company Brains and CI slice were rebuilt afterwards. Focused guidance, monitoring, Brain and
+UI checks and the full preflight gate passed; the only warning remains the non-gating 101-ticker
+history backfill.
+
+Next financial approval candidate: the MLCF annual sequence needs compact filings `psx:236626`
+(FY2024) and `psx:280589` (FY2026), alongside the already retained FY2025 counterpart. Approval
+must be explicit before they replace the current exact restage allowlist; they must still pass
+unchanged bounded transport and provenance checks and may remain unsupported.
+
+## Resume update — conditional candidate-evidence summaries
+
+Conditional Historical Benchmarks now emit a display-safe candidate-evidence summary for every
+event: exact same-company and same-sector candidate counts, mature outcome count per horizon, the
+latest strictly-prior candidate date, and an explicit evidence status. It is derived only from the
+already retained strict candidates, adds no return calculation, and repeats that the result is
+descriptive—not causal, a forecast, valuation or advice. The CI view renders this backend-owned
+summary beside the unchanged candidate lists and thin-sample-suppressed aggregates.
+
+Verification: the 20-company resolver check passed for 23 event benchmarks; the UI check passed
+1,815 assertions with 91 suppressed aggregates and one mature aggregate; Company Brain checks and
+the full preflight gate passed with only the existing 101-ticker non-gating history-backfill warning.
+
+## Resume update — MLCF three-year financial qualification attempt blocked by image-only filings
+
+After explicit owner approval, MLCF FY2024 `psx:236626` and FY2026 `psx:280589` passed the exact
+two-ID allowlist, retained-index, official-PSX URL and transaction self-checks. Diagnostic transport
+retrieved 4,428,106 bytes across 12 pages, then rejected both PDFs as `unsupported_image_only`.
+Together with the prior FY2025 `psx:257465` `processed_unsupported` receipt, all three annual
+counterparts are unavailable to the canonical geometry-based financial parser. No receipt was added
+for the two rejected filings, and no financial observation, forecast, valuation, market expectation
+or impact value was created. The source caps, no-OCR policy and audit-only quarantine remain binding.
+
+The two-document review manifest and exact execution allowlist now record this completed approved
+batch. `check_ci_reprocess_manifest.py` and the full preflight gate passed, with only the existing
+101-ticker non-gating history-backfill warning.

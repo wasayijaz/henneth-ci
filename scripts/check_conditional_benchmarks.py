@@ -4,6 +4,7 @@ import json, math, subprocess, sys, tempfile
 from datetime import date
 from pathlib import Path
 from psx_data import ROOT, STATE, load_json
+from conditional_benchmarks import candidate_evidence_summary
 
 OUT = STATE / "company_intel" / "conditional_benchmarks.json"
 HORIZONS = {"1Q", "2Q", "4Q", "8Q"}
@@ -49,6 +50,9 @@ def main():
                     if classification == "same_company" and event.get("symbol") != symbol: fail(f"{symbol}: same-company mismatch")
                     if classification == "same_sector" and (not (sectors.get(event.get("symbol")) or {}).get("sector") or not (sectors.get(symbol) or {}).get("sector") or event.get("symbol") == symbol or (sectors.get(event.get("symbol")) or {}).get("sector") != (sectors.get(symbol) or {}).get("sector")): fail(f"{symbol}: same-sector mismatch")
             aggregates = benchmark.get("horizon_aggregates") or {}
+            expected_summary = candidate_evidence_summary(all_candidates)
+            if benchmark.get("candidate_evidence_summary") != expected_summary:
+                fail(f"{symbol}: candidate evidence summary was not retained exactly")
             if set(aggregates) != HORIZONS: fail(f"{symbol}: horizon boundary")
             for horizon, aggregate in aggregates.items():
                 values = [((candidate.get("outcomes") or {}).get(horizon) or {}).get("return_pct") for candidate in all_candidates if ((candidate.get("outcomes") or {}).get(horizon) or {}).get("status") == "mature" and isinstance(((candidate.get("outcomes") or {}).get(horizon) or {}).get("return_pct"), (int, float))]

@@ -40,12 +40,12 @@
  },
  "summary": {
   "company_count": 20,
-  "queued_company_count": 20
+  "queued_company_count": 19
  },
  "companies": {
   "MLCF": {
    "symbol": "MLCF",
-   "status": "queued_for_qualification",
+   "status": "complete",
    "classification": "financial_results_coverage",
    "indexed_official_financial_doc_count": 24,
    "indexed_official_financial_docs": [
@@ -399,14 +399,14 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "present_model_ready_metrics": [],
-     "missing_metrics": [
+     "present_model_ready_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
+     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "missing_required_metrics"
+     "status": "complete"
     },
     {
      "slot": "annual_period_2",
@@ -417,14 +417,14 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "present_model_ready_metrics": [],
-     "missing_metrics": [
+     "present_model_ready_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
+     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "missing_required_metrics"
+     "status": "complete"
     },
     {
      "slot": "annual_period_3",
@@ -435,26 +435,24 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "present_model_ready_metrics": [],
-     "missing_metrics": [
+     "present_model_ready_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
+     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "missing_required_metrics"
+     "status": "complete"
     }
    ],
    "model_readiness": {
-    "status": "partial",
+    "status": "ready",
     "model_version": "cement_v1",
     "downstream_status": {
      "forecast": "blocked_not_implemented",
      "valuation": "blocked_not_implemented"
     },
-    "quality_flags": [
-     "insufficient_three_year_consolidated_v2_history"
-    ]
+    "quality_flags": []
    },
    "audit_only_series": {
     "audit_only_fact_count": 68,
@@ -476,7 +474,7 @@
       "fact_count": 31
      }
     ],
-    "model_loadable_count": 0,
+    "model_loadable_count": 9,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {

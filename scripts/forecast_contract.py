@@ -10,6 +10,7 @@ from datetime import date
 from typing import Any
 
 from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
+from manual_financial_claims import is_qualified_manual_fact
 from sector_driver_models import COMPANY_OVERRIDES, SECTOR_MODELS, model_for_company
 
 
@@ -117,17 +118,30 @@ def _iso_date(value: Any) -> str | None:
     text = str(value or "")
     try:
         date.fromisoformat(text)
+        return text
+    except ValueError:
+        pass
+    try:
+        return date.fromisoformat(text[:10]).isoformat()
     except ValueError:
         return None
-    return text
+
+
+def qualified_financial_fact_source(fact: dict[str, Any]) -> bool:
+    return (
+        (
+            fact.get("parser_version") == PARSER_VERSION
+            and fact.get("parser_revision") == PARSER_REVISION
+        )
+        or is_qualified_manual_fact(fact)
+    )
 
 
 def _base_fact_ok(fact: dict[str, Any]) -> bool:
     period_end = _iso_date(fact.get("period_end"))
     available_on = _iso_date(fact.get("available_on"))
     return (
-        fact.get("parser_version") == PARSER_VERSION
-        and fact.get("parser_revision") == PARSER_REVISION
+        qualified_financial_fact_source(fact)
         and fact.get("readiness") == "model_loadable"
         and fact.get("duration_months") == 12
         and fact.get("period_type") == "annual"

@@ -1,5 +1,7 @@
 {
- "schema_version": 1,
+ "schema_version": 2,
+ "registry_version": "operating_event_registry_v1",
+ "as_of": "2026-08-25",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -980,5 +982,104 @@
   "management_change",
   "regulatory_change"
  ],
+ "event_registry": {
+  "registry_version": "operating_event_registry_v1",
+  "status": "closed",
+  "intelligence_type": "reported_fact",
+  "source_paths": [
+   "state/company_documents.json",
+   "state/company_event_ledger.json"
+  ],
+  "source_systems": {
+   "psx": {
+    "source": "PSX DPS",
+    "document_id_prefix": "psx:",
+    "quality_level": 1,
+    "required_fields": [
+     "document_id",
+     "source_url",
+     "page",
+     "text",
+     "content_sha256"
+    ]
+   },
+   "issuer": {
+    "source": "Issuer website",
+    "document_id_prefix": "issuer:",
+    "quality_level": 6,
+    "required_fields": [
+     "document_id",
+     "source_url",
+     "page",
+     "text",
+     "content_sha256"
+    ]
+   }
+  },
+  "eligibility_rules": [
+   "company must be in state/company_profiles.json pilot.symbols",
+   "raw event must come from state/company_event_ledger.json",
+   "raw doc_id must resolve in state/company_documents.json",
+   "raw event_type must map to a supported canonical event type",
+   "document_events.event_is_supported(raw) must pass",
+   "operating_events.strict_event_is_supported(canonical_type, evidence) must pass",
+   "evidence rows must include text, source_url, one-based page, source, content_sha256, and evidence_sha256",
+   "detected_at is raw event_date when available, otherwise document retrieved_at",
+   "effective_date is the ISO date prefix of raw event_date only",
+   "effective_date must not be later than detected_at or the retained source cutoff"
+  ],
+  "event_types": [
+   {
+    "event_type": "acquisition_divestment",
+    "raw_event_types": [
+     "acquisition"
+    ],
+    "allowed_priority_weights": [
+     4
+    ],
+    "strict_pattern_key": "acquisition_divestment"
+   },
+   {
+    "event_type": "contract_tender",
+    "raw_event_types": [
+     "contract"
+    ],
+    "allowed_priority_weights": [
+     3
+    ],
+    "strict_pattern_key": "contract_tender"
+   },
+   {
+    "event_type": "debt_refinancing",
+    "raw_event_types": [
+     "credit_event"
+    ],
+    "allowed_priority_weights": [
+     5
+    ],
+    "strict_pattern_key": "debt_refinancing"
+   },
+   {
+    "event_type": "management_change",
+    "raw_event_types": [
+     "management_change"
+    ],
+    "allowed_priority_weights": [
+     3
+    ],
+    "strict_pattern_key": "management_change"
+   },
+   {
+    "event_type": "regulatory_change",
+    "raw_event_types": [
+     "regulatory_action"
+    ],
+    "allowed_priority_weights": [
+     4
+    ],
+    "strict_pattern_key": "regulatory_change"
+   }
+  ]
+ },
  "source": "state/company_documents.json + state/company_event_ledger.json"
 }

@@ -78,7 +78,7 @@ reader actually has (*how current is my desk?*), which `v1.14.2` does not.
 
 The terminal shows the current version at the foot of the sidebar, with a dot when it has moved
 since that browser last acknowledged one. Clicking it opens **What's new**. The same release history
-also lives at all times on **`#/shipped`** (linked from the sidebar, open to signed-out visitors) —
+also lives at all times on **`/shipped`** (linked from the sidebar, open to signed-out visitors) —
 so a completed backlog item is visible on the site itself, not only in this repo.
 
 Those notes come from `<!--public ... -->` blocks inside [`CHANGELOG.md`](CHANGELOG.md), extracted by
@@ -101,7 +101,7 @@ valuation, dividend reliability), a **"questions before buying"** checklist, and
   form sits at the **top** and the terminal scene below it, because the first thing on screen has to be
   the thing you came to do.
 
-### The personal astrology pillar (`#/astro`, `#/mychart`, `#/cast`)
+### The personal astrology pillar (`/astro`, `/mychart`, `/cast`)
 
 A Vedic (sidereal) financial-astrology layer, shipped as **exploration and cultural interest — explicitly
 not an edge claim.** It exists because it is engaging and differentiated; it is framed honestly because
@@ -149,7 +149,7 @@ the desk tested it and it failed.
 - **Scored like anything else.** `astro_claims.py` files dated, **market-relative** astro claims with a
   stamped benchmark level, graded on the same public scorecard as every broker call.
 
-### Three plans, one data layer (`#/plans`)
+### Three plans, one data layer (`/plans`)
 
 **Free → Investor → Pro → Broker.** The tier above Free is named **Investor** deliberately — a paid tier
 named for what the customer *lacks* ("Learner") reads as a label on the customer.
@@ -163,12 +163,12 @@ named for what the customer *lacks* ("Learner") reads as a label on the customer
 
 **"Free" means free, not open.** Since the account gate (2026-07-21) every one of these tiers,
 Free included, needs a signed-in account — the research data is no longer fetchable without one.
-The single exception is casting a birth chart at `#/cast`, which stays open as the acquisition
+The single exception is casting a birth chart at `/cast`, which stays open as the acquisition
 funnel. And the **Broker** row is an internal plan only: the public site deliberately makes no
 feature claims for it, because promising multi-seat admin, an API and white-label exports before
 any of it is built dates the page and creates an expectation the desk would owe.
 
-- **The Investor desk** (`#/learn`) — 4 levels that unlock in order, 17 lessons, played **one card per
+- **The Investor desk** (`/learn`) — 4 levels that unlock in order, 17 lessons, played **one card per
   screen** in a focused player rather than as a long scroller. Card kinds are visually unmistakable:
   lesson · watch out · the point · interactive · check yourself. Progress persists per user.
   Level 2 ("The documents") covers every document a Pakistani listed company publishes — annual report,
@@ -353,6 +353,13 @@ python scripts/run_cloud.py       # the whole free pipeline (fetch → quant →
 python scripts/preflight.py       # deploy gate: exits non-zero if the data would render broken
 ```
 
+The dashboard uses clean paths: `/today`, `/ticker/HBL`, `/legal/privacy`, and the other routes
+listed in `vercel.json`. The local server maps those paths to `dashboard/index.html`, matching the
+Vercel rewrites, so refreshing or sharing a deep link exercises the same shell. In-app navigation
+uses the History API and browser back/forward uses `popstate`. Supabase sign-in callbacks are the
+one deliberate exception: their protocol fragments (`#access_token=…`, `#error_code=…`) are handled
+separately and are not dashboard routes.
+
 Hosted on **Vercel** (private repo, auto-deploys on every `push` to `main`; `vercel.json` assembles the
 static site + committed `state/` data). The refresh loops push fresh data → Vercel redeploys.
 
@@ -372,14 +379,14 @@ static site + committed `state/` data). The refresh loops push fresh data → Ve
   into a committed binary table for the browser. Chosen over `pyswisseph` (won't build on 3.14) and
   `skyfield` (needs a 17 MB kernel).
 - **Cross-check:** `tradingview-ta` (screener=pakistan) verifies the quant layer; a mismatch blocks signals.
-- **Stack:** Python 3.14 (requests/pandas/numpy) · vanilla JS SPA (hash router, canvas charts, no framework)
+- **Stack:** Python 3.14 (requests/pandas/numpy) · vanilla JS SPA (History API path router, canvas charts, no framework)
   · JetBrains Mono + Pixelify Sans · **Supabase** (auth + per-user profiles/watchlist/plan) · **Vercel** hosting.
 
 ## Entitlements & security posture
 
 Billing is **not wired**. Card processing through international providers is unavailable in Pakistan, so
 payment will run through a local gateway (PayFast or similar) later. Until then plans are set manually and
-the product says so on `#/plans` rather than showing a dead checkout.
+the product says so on `/plans` rather than showing a dead checkout.
 
 - **`BILLING_LIVE = false` is the single switch.** While false, any signed-in account reads as subscribed,
   so shipping paywalls could not strip access from accounts that already had it. Flipping it moves access
@@ -392,7 +399,7 @@ the product says so on `#/plans` rather than showing a dead checkout.
   service-role-only path.
 - `ui_mode` (which desk shell you see) is deliberately client-writable — it is a view preference, not an
   entitlement.
-- **Owner preview.** `#/plans` carries an owner-only "preview as plan" switch that re-renders the whole
+- **Owner preview.** `/plans` carries an owner-only "preview as plan" switch that re-renders the whole
   product as any tier without changing the stored plan (in-memory; a reload resets it).
 - Per-user rows (watchlist, notes, birth data, learn progress) are RLS-scoped to their owner.
 - **The research layer requires an account (2026-07-21).** It is shared and read-only *to signed-in
@@ -407,7 +414,7 @@ the product says so on `#/plans` rather than showing a dead checkout.
   auth round trip per request; if the project is ever moved back to legacy HS256 keys, `alg` stops
   matching and every request fails **closed**.
 
-  **One deliberate exception:** `natal_ephem.bin` / `.json` stay public. `#/cast` is the top of the
+  **One deliberate exception:** `natal_ephem.bin` / `.json` stay public. `/cast` is the top of the
   acquisition funnel, and those two files are an astronomical ephemeris — public-domain physics
   anyone can compute, containing zero desk output.
 
@@ -441,9 +448,10 @@ the product says so on `#/plans` rather than showing a dead checkout.
   org is on Free.** Not an oversight. The mitigation is the 10-character floor above, which blocks
   the entire bottom tier of guessable passwords that HaveIBeenPwned would otherwise catch. Revisit
   only if the project moves to Pro for other reasons.
-- **The track record is young.** **95 dated claims are filed and 0 have resolved** (verified against
-  `state/claims.json` at the time of writing) — a waiting period, not a proven record, and the product
-  displays the real counts rather than implying otherwise.
+- **The track record is young.** **547 dated claims are filed; 121 have resolved** (70 miss, 51 hit)
+  **and 426 are still pending** (verified against `state/claims.json`, updated 2026-08-11) — early
+  numbers, not a proven record, and the product displays the real counts rather than implying
+  otherwise.
 - **The Broker plan is defined, not built.** No leaderboard API, white-label, or broker-side scoring exists.
 - **The astrology layer has no demonstrated edge** (see above). It is excluded from signal confluence and
   never feeds a setup.

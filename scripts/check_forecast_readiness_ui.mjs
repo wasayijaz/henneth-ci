@@ -41,13 +41,19 @@ function main() {
   for (const row of rows) {
     const readiness = row.forecast_readiness;
     assert(readiness && typeof readiness === "object" && !Array.isArray(readiness), `${row.symbol} forecast_readiness missing`);
-    assert(typeof readiness.status === "string" && readiness.status.startsWith("blocked"), `${row.symbol} forecast readiness must honestly be blocked in v1`);
+    if (row.symbol === "MLCF") {
+      assert(readiness.status === "input_ready", "MLCF forecast readiness must reflect qualified live inputs");
+      assert(readiness.qualified_period_count === 3, "MLCF qualified period count must be three");
+      assert(readiness.missing_requirements.length === 0, "MLCF input-ready row must not name missing input requirements");
+    } else {
+      assert(typeof readiness.status === "string" && readiness.status.startsWith("blocked"), `${row.symbol} forecast readiness must remain blocked without qualified inputs`);
+      assert(readiness.missing_requirements.length > 0, `${row.symbol} blocked row must name missing requirements`);
+    }
     assert(readiness.model_registry && typeof readiness.model_registry === "object" && !Array.isArray(readiness.model_registry), `${row.symbol} model_registry missing`);
     assert(readiness.model_registry.status === "supported", `${row.symbol} model registry must be supported`);
     assert(typeof readiness.model_version === "string" && readiness.model_version.length > 0, `${row.symbol} model_version missing`);
     assert(Number.isInteger(readiness.qualified_period_count), `${row.symbol} qualified_period_count missing`);
     assert(Array.isArray(readiness.missing_requirements), `${row.symbol} missing_requirements missing`);
-    assert(readiness.missing_requirements.length > 0, `${row.symbol} blocked row must name missing requirements`);
     assert(Array.isArray(candidateRefs(row)), `${row.symbol} qualification candidate document refs missing`);
     for (const doc of candidateRefs(row)) {
       assert(doc && typeof doc === "object" && !Array.isArray(doc), `${row.symbol} candidate ref must be object`);

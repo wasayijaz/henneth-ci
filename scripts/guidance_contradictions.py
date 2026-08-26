@@ -14,7 +14,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = 1
-GUIDANCE_VERSION = "guidance_contradictions_v1"
+GUIDANCE_VERSION = "guidance_contradictions_v2"
 PKT = timezone(timedelta(hours=5))
 FORBIDDEN_TEXT = (
     "buy",
@@ -36,14 +36,14 @@ NUMERIC_FORECAST = re.compile(
     re.I | re.S,
 )
 GUIDANCE_PATTERNS = (
-    re.compile(r"\b(?:company|management|board|directors|we)\s+(?:expects?|plans?|intends?|aims?|seeks?)\s+to\s+(?P<body>[^.;:]{12,180})", re.I),
-    re.compile(r"\b(?:strategy|objective|focus|priority)\s+(?:is|remains|will be)\s+(?:to\s+)?(?P<body>[^.;:]{12,180})", re.I),
-    re.compile(r"\b(?:company|management|board|directors|we)\s+(?:will|shall)\s+(?P<body>continue\s+to\s+[^.;:]{12,160})", re.I),
+    ("delivery_promise", re.compile(r"\b(?:company|management|board|directors|we)\s+(?:expects?|plans?|intends?|aims?|seeks?)\s+to\s+(?P<body>[^.;:]{12,180})", re.I)),
+    ("management_priority", re.compile(r"\b(?:strategy|objective|focus|priority)\s+(?:is|remains|will be)\s+(?:to\s+)?(?P<body>[^.;:]{12,180})", re.I)),
+    ("delivery_promise", re.compile(r"\b(?:company|management|board|directors|we)\s+(?:will|shall)\s+(?P<body>continue\s+to\s+[^.;:]{12,160})", re.I)),
 )
 RISK_PATTERNS = (
-    re.compile(r"\b(?:risk|risks)\s+(?:of|include|includes|remain|relate to)\s+(?P<body>[^.;:]{12,180})", re.I),
-    re.compile(r"\b(?:challenge|challenges|uncertainty|uncertainties)\s+(?:include|includes|remain|relate to|around)\s+(?P<body>[^.;:]{12,180})", re.I),
-    re.compile(r"\b(?P<body>(?:default in payment of debts|going concern|liquidity problems|trading halt))\b", re.I),
+    ("stated_risk", re.compile(r"\b(?:risk|risks)\s+(?:of|include|includes|remain|relate to)\s+(?P<body>[^.;:]{12,180})", re.I)),
+    ("operating_constraint", re.compile(r"\b(?:challenge|challenges|uncertainty|uncertainties)\s+(?:include|includes|remain|relate to|around)\s+(?P<body>[^.;:]{12,180})", re.I)),
+    ("operating_constraint", re.compile(r"\b(?P<body>(?:default in payment of debts|going concern|liquidity problems|trading halt))\b", re.I)),
 )
 INCOMPATIBLE_MODALITIES = {
     ("increase", "decrease"),
@@ -171,13 +171,15 @@ def _extract_assertion(symbol: str, doc: dict[str, Any], evidence: dict[str, Any
     if not clean or not clean.get("text") or not _safe_language(clean["text"]):
         return None
     for domain, patterns in (("guidance", GUIDANCE_PATTERNS), ("risks", RISK_PATTERNS)):
-        for pattern in patterns:
+        for assertion_type, pattern in patterns:
             match = pattern.search(clean["text"])
             if not match:
                 continue
             body = _text(match.group("body"), 220)
             if not body or not _safe_language(body):
                 return None
+            if domain == "guidance" and re.search(r"\b(?:project|capacity|plant|commission|expan\w*|construction)\b", body, re.I):
+                assertion_type = "project_capacity_action"
             topic = _topic(body)
             modality = _modality(body, domain)
             conflict_key = f"{domain}:{topic}"
@@ -187,6 +189,7 @@ def _extract_assertion(symbol: str, doc: dict[str, Any], evidence: dict[str, Any
                 "guidance_id": guidance_id,
                 "symbol": symbol,
                 "domain": domain,
+                "assertion_type": assertion_type,
                 "status": "eligible",
                 "statement": body,
                 "modality": modality,

@@ -16,6 +16,7 @@ import build_forecast_readiness as builder
 from forecast_contract import (
     BLOCKED_OUTPUT_STATUS,
     CONTRACT_VERSION,
+    MODEL_NOT_IMPLEMENTED_OUTPUT_STATUS,
     MODEL_VERSION_BY_SECTOR,
     POLICIES,
     REQUIRED_PERIOD_COUNT,
@@ -127,7 +128,8 @@ def _assert_shape(data: dict, pilot: list[str]) -> None:
             _fail(f"{symbol}: invalid readiness status")
         if row.get("activation_status") != "blocked_model_not_implemented":
             _fail(f"{symbol}: numeric activation not blocked")
-        if row.get("blocked_outputs") != BLOCKED_OUTPUT_STATUS:
+        expected_outputs = MODEL_NOT_IMPLEMENTED_OUTPUT_STATUS if row.get("status") == "input_ready" else BLOCKED_OUTPUT_STATUS
+        if row.get("blocked_outputs") != expected_outputs:
             _fail(f"{symbol}: blocked outputs mismatch")
         if row.get("status") == "input_ready" and row.get("qualified_period_count") < REQUIRED_PERIOD_COUNT:
             _fail(f"{symbol}: input ready without three qualified periods")
@@ -168,10 +170,15 @@ def main() -> None:
         _fail("builder output is not deterministic")
     pilot = expected.get("pilot_symbols") or []
     _assert_shape(expected, pilot)
-    if (expected.get("summary") or {}).get("ready_company_count") != 0:
-        _fail("real state unexpectedly ready for numeric forecast/valuation")
-    if any((row.get("qualified_period_count") or 0) for row in (expected.get("companies") or {}).values()):
-        _fail("real state has qualified periods; acceptance expected zero")
+    summary = expected.get("summary") or {}
+    if summary.get("ready_company_count") != 1 or summary.get("qualified_fact_company_count") != 1:
+        _fail("real state must have exactly one input-ready/qualified-fact company")
+    for symbol, row in (expected.get("companies") or {}).items():
+        if symbol == "MLCF":
+            if row.get("status") != "input_ready" or row.get("qualified_period_count") != 3:
+                _fail("MLCF must be input-ready with three qualified periods")
+        elif row.get("status") != "blocked" or row.get("qualified_period_count") != 0:
+            _fail(f"{symbol}: real state should remain blocked with zero qualified periods")
     _synthetic_contract_assertions()
     before = builder.OUT.read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_forecast_readiness.py")], capture_output=True, text=True, timeout=30)
@@ -191,6 +198,8 @@ def main() -> None:
             built = builder.build()
             if built["as_of"] != "2026-01-02" or built["companies"]["MLCF"]["status"] != "input_ready":
                 _fail("temp fixture did not build source-derived ready output")
+            if (built.get("summary") or {}).get("ready_company_count") != 1 or (built.get("summary") or {}).get("blocked_company_count") != 0:
+                _fail("temp fixture summary did not count input-ready output")
         finally:
             builder.STATE, builder.OUT = original_state, original_out
     slice_path = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
@@ -199,7 +208,7 @@ def main() -> None:
     for symbol, state_row in expected.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("forecast_readiness") != state_row:
             _fail(f"{symbol}: CI slice forecast_readiness mismatch")
-    print(f"forecast_readiness: PASS ({len(pilot)} companies, real state blocked)")
+    print(f"forecast_readiness: PASS ({len(pilot)} companies, 1 input-ready MLCF; formal outputs blocked)")
 
 
 if __name__ == "__main__":

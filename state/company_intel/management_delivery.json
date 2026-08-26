@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "delivery_version": "management_delivery_v1",
+ "delivery_version": "management_delivery_v2",
  "as_of": "2026-08-25T17:22:00+05:00",
  "pilot_symbols": [
   "ATRL",
@@ -28,7 +28,8 @@
   "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
   "signal_clusters": "state/company_intel/signal_clusters.json",
   "operating_events": "state/company_intel/operating_events.json",
-  "intelligence_confidence": "state/company_intel/intelligence_confidence.json"
+  "intelligence_confidence": "state/company_intel/intelligence_confidence.json",
+  "guidance_contradictions": "state/company_intel/guidance_contradictions.json"
  },
  "policy": {
   "research_only": true,
@@ -37,11 +38,16 @@
   "no_forward_estimates": true,
   "no_price_claims": true,
   "same_symbol_required": true,
-  "exact_assertion_or_conflict_key_required": true
+  "exact_assertion_or_conflict_key_required": true,
+  "first_class_guidance_objects_required": true,
+  "strictly_later_than_latest_source_required": true,
+  "source_linked_self_confirmation_excluded": true
  },
  "guidance_coverage": {
-  "status": "blocked_no_guidance_objects",
-  "reason": "No first-class broader management guidance object source is present in the deterministic state layer."
+  "status": "partial",
+  "source": "state/company_intel/guidance_contradictions.json",
+  "guidance_version": "guidance_contradictions_v2",
+  "reason": "Management delivery v2 consumes only first-class guidance/risk objects with exact normalized keys."
  },
  "status_vocabulary": [
   "blocked_no_guidance_objects",
@@ -60,34 +66,276 @@
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "available",
+   "guidance_object_count": 1,
+   "guidance_record_count": 1,
+   "records": [],
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_db72eeefe3a45d57fdd4",
+     "symbol": "ATRL",
+     "guidance_id": "guidance_25edf7d3ec46a892c8e8",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-24T19:17:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_25edf7d3ec46a892c8e8",
+        "document_id": "psx:260900",
+        "source_url": "https://dps.psx.com.pk/download/document/260900.pdf",
+        "page": 69,
+        "content_sha256": "e13383bba7a68c3490fc51d0b59f05aee8ac3413272b8530ea9025ae4c0035e3",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-24T19:17:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 1,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "BOP": {
    "symbol": "BOP",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "available",
+   "guidance_object_count": 3,
+   "guidance_record_count": 3,
+   "records": [],
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_07b51b6ba01dc8342f59",
+     "symbol": "BOP",
+     "guidance_id": "guidance_2517cecce33f966af975",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-22T16:10:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_2517cecce33f966af975",
+        "document_id": "psx:276095",
+        "source_url": "https://dps.psx.com.pk/download/document/276095.pdf",
+        "page": 51,
+        "content_sha256": "06dc5a3d6ef2af3b3195dba9130d76b3cbfff51d8b5e7884e611d8efba9048d1",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-22T16:10:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 3,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 2,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_33218ef10914ce576caa",
+     "symbol": "BOP",
+     "guidance_id": "guidance_5c3e048032e1c0669511",
+     "assertion_key": "risks:incurring_significant_penalty_expense:risk_present",
+     "conflict_key": "risks:incurring_significant_penalty_expense",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-22T16:10:00+05:00",
+      "statement": "incurring significant penalty or expense",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_5c3e048032e1c0669511",
+        "document_id": "psx:272102",
+        "source_url": "https://dps.psx.com.pk/download/document/272102.pdf",
+        "page": 237,
+        "content_sha256": "b2ae42c6a0bc8032863d3df5a86b23b7d22c00f0581db6ec6bbed2ec64575617",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-22T16:10:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 3,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 2,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_365d36fb9e0b479d1550",
+     "symbol": "BOP",
+     "guidance_id": "guidance_67f24359326d23619c90",
+     "assertion_key": "risks:incurring_significant_penalty_expense:risk_present",
+     "conflict_key": "risks:incurring_significant_penalty_expense",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-22T16:10:00+05:00",
+      "statement": "incurring significant penalty or expense",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_67f24359326d23619c90",
+        "document_id": "psx:276095",
+        "source_url": "https://dps.psx.com.pk/download/document/276095.pdf",
+        "page": 29,
+        "content_sha256": "06dc5a3d6ef2af3b3195dba9130d76b3cbfff51d8b5e7884e611d8efba9048d1",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-22T16:10:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 3,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 2,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "CNERGY": {
    "symbol": "CNERGY",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "DGKC": {
    "symbol": "DGKC",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "available",
+   "guidance_object_count": 1,
+   "guidance_record_count": 1,
+   "records": [],
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_c0dd25bb307b7e4dcfc7",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_9fb068254f8f34f3142d",
+     "assertion_key": "risks:default_payment_debts:risk_present",
+     "conflict_key": "risks:default_payment_debts",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-22T16:04:00+05:00",
+      "statement": "DEFAULT IN PAYMENT OF DEBTS",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_9fb068254f8f34f3142d",
+        "document_id": "psx:260947",
+        "source_url": "https://dps.psx.com.pk/download/document/260947.pdf",
+        "page": 41,
+        "content_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-22T16:04:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 1,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "ENGROH": {
    "symbol": "ENGROH",
    "status": "tracked",
    "active_thesis_count": 1,
    "delivery_record_count": 1,
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
    "records": [
     {
      "delivery_id": "delivery_6113a2e012618fcf99f3",
@@ -128,62 +376,139 @@
       "Loose same-symbol event proximity is deliberately ignored."
      ]
     }
-   ]
+   ],
+   "guidance_records": []
   },
   "FFC": {
    "symbol": "FFC",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "GAL": {
    "symbol": "GAL",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "HBL": {
    "symbol": "HBL",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "available",
+   "guidance_object_count": 1,
+   "guidance_record_count": 1,
+   "records": [],
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_90038907079450f7012d",
+     "symbol": "HBL",
+     "guidance_id": "guidance_4267d71507b8b8eb438a",
+     "assertion_key": "risks:prospective_debtor_individual_predicting_ability_pay_back_debt:risk_present",
+     "conflict_key": "risks:prospective_debtor_individual_predicting_ability_pay_back_debt",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-18T03:24:00+05:00",
+      "statement": "a prospective debtor (an individual), predicting their ability to pay back the debt, a",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_4267d71507b8b8eb438a",
+        "document_id": "issuer:0886be7377ded9dd77a5b185",
+        "source_url": "https://www.hbl.com/assets/documents/Glossary_of_Terms_Financing_Products_(English_and_Urdu).pdf",
+        "page": 2,
+        "content_sha256": "3373e5ebb71946821b7bc0e3b04c25a26b0b4486b89b8ec1878b07fb0432102c",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-18T03:24:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 1,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "HUBC": {
    "symbol": "HUBC",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "LUCK": {
    "symbol": "LUCK",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "MARI": {
    "symbol": "MARI",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "MEBL": {
    "symbol": "MEBL",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "MLCF": {
    "symbol": "MLCF",
    "status": "tracked",
    "active_thesis_count": 1,
    "delivery_record_count": 1,
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
    "records": [
     {
      "delivery_id": "delivery_6d2f659b5980d16b596a",
@@ -224,34 +549,95 @@
       "Loose same-symbol event proximity is deliberately ignored."
      ]
     }
-   ]
+   ],
+   "guidance_records": []
   },
   "NBP": {
    "symbol": "NBP",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "available",
+   "guidance_object_count": 1,
+   "guidance_record_count": 1,
+   "records": [],
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_b58b1343631cd9b63aa0",
+     "symbol": "NBP",
+     "guidance_id": "guidance_6bb001704131fe400b8c",
+     "assertion_key": "risks:default_having_exposure_advances_and_off_balance_sheet_obligations:risk_present",
+     "conflict_key": "risks:default_having_exposure_advances_and_off_balance_sheet_obligations",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-24T19:17:00+05:00",
+      "statement": "default having exposure to advances and off-balance sheet obligations and correct - controls over the accurate computation and recording of credit lo…",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_6bb001704131fe400b8c",
+        "document_id": "psx:272246",
+        "source_url": "https://dps.psx.com.pk/download/document/272246.pdf",
+        "page": 41,
+        "content_sha256": "46dcda48b56a853e7609c0dd1236311063b4a621b91536e0cce8e92e35f7d466",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-24T19:17:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 1,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "NRL": {
    "symbol": "NRL",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "OGDC": {
    "symbol": "OGDC",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "PPL": {
    "symbol": "PPL",
    "status": "tracked",
    "active_thesis_count": 1,
    "delivery_record_count": 1,
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
    "records": [
     {
      "delivery_id": "delivery_4028f9309511a4370f13",
@@ -292,27 +678,39 @@
       "Loose same-symbol event proximity is deliberately ignored."
      ]
     }
-   ]
+   ],
+   "guidance_records": []
   },
   "PRL": {
    "symbol": "PRL",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "PSO": {
    "symbol": "PSO",
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "records": []
+   "guidance_status": "blocked_no_guidance_objects",
+   "guidance_object_count": 0,
+   "guidance_record_count": 0,
+   "records": [],
+   "guidance_records": []
   },
   "UBL": {
    "symbol": "UBL",
    "status": "tracked",
    "active_thesis_count": 3,
    "delivery_record_count": 3,
+   "guidance_status": "available",
+   "guidance_object_count": 1,
+   "guidance_record_count": 1,
    "records": [
     {
      "delivery_id": "delivery_07af060041b349a5abdf",
@@ -429,6 +827,52 @@
      ],
      "limitations": [
       "Loose same-symbol event proximity is deliberately ignored."
+     ]
+    }
+   ],
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_fc9e91999675b4ca0042",
+     "symbol": "UBL",
+     "guidance_id": "guidance_4ee1f757c6ab4ef5699c",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-25T17:22:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_4ee1f757c6ab4ef5699c",
+        "document_id": "psx:271999",
+        "source_url": "https://dps.psx.com.pk/download/document/271999.pdf",
+        "page": 14,
+        "content_sha256": "f36055054d186c8f569a4442919766a1c63a5556243484eb83b35188863e6287",
+        "evidence_sha256": null,
+        "source": "PSX DPS",
+        "available_on": "2026-08-25T17:22:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 1,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
      ]
     }
    ]

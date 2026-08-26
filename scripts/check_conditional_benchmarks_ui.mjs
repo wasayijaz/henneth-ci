@@ -94,6 +94,7 @@ try {
   for (const token of [
     "function conditionalText",
     "function renderConditionalCandidates",
+    "function renderConditionalEvidenceSummary",
     "function renderConditionalHorizons",
     "function renderConditionalBlockedStates",
     "function renderConditionalBenchmarks",
@@ -175,6 +176,11 @@ try {
       requireArray(benchmark.candidates.same_sector_exact, `${row.symbol}: same_sector_exact`);
       for (const candidate of benchmark.candidates.same_company_exact) assertCandidate(candidate, `${row.symbol}: same_company_exact candidate`);
       for (const candidate of benchmark.candidates.same_sector_exact) assertCandidate(candidate, `${row.symbol}: same_sector_exact candidate`);
+      requireObject(benchmark.candidate_evidence_summary, `${row.symbol}: candidate_evidence_summary`);
+      requireString(benchmark.candidate_evidence_summary.evidence_status, `${row.symbol}: candidate evidence status`);
+      requireObject(benchmark.candidate_evidence_summary.candidate_counts, `${row.symbol}: candidate evidence counts`);
+      requireObject(benchmark.candidate_evidence_summary.mature_horizon_counts, `${row.symbol}: candidate mature horizon counts`);
+      requireString(benchmark.candidate_evidence_summary.limitation, `${row.symbol}: candidate evidence limitation`);
       requireObject(benchmark.horizon_aggregates, `${row.symbol}: horizon_aggregates`);
       assert(Object.keys(benchmark.horizon_aggregates).length > 0, `${row.symbol}: at least one horizon aggregate required`);
       for (const [horizon, aggregate] of Object.entries(benchmark.horizon_aggregates)) {

@@ -23,7 +23,7 @@ The product is a hybrid of five parts:
 1. Deterministic Python (`scripts/`) fetches, measures, scores, backtests, and writes JSON into `state/`. This runs in GitHub Actions even when the owner's computer is off. No LLM. No tokens.
 2. Judgement agents (`.claude/agents/` + `prompts/`) run on the owner's machine. They write analysis back into `state/`. Visitors read the saved analysis 24/7; agents refresh it, they are not needed to serve it.
 3. The terminal (`dashboard/`) is a static path-routed SPA. It reads `state/*.json` over HTTPS. It writes nothing to `state/`.
-4. Supabase holds only auth and per-user rows. It never serves research.
+4. Supabase holds auth, per-user rows, and the dedicated Henneth CI append-only archive. It never serves research to browsers: current research is still rendered from the private generated CI slice.
 5. Vercel serves static files. Edge middleware gates `/state/*` and CI `/data/*`. The CI project also exposes a separate owner-only `Henneth Desk 2.CI.0/api/ask.js`: it verifies the Supabase ES256 owner claim, loads only the requested company row, projects it through `api/ask_contract.js`, and builds the final answer/citations server-side around qualitative model output.
 
     PSX DPS / Yahoo / Firecrawl / TV
@@ -68,7 +68,7 @@ The product is a hybrid of five parts:
 | Official company documents | `scripts/fetch_company_documents.py` -> existing `state/research_index.json` + transient ignored PDF handoff | deterministic document extraction |
 | Page evidence, facts and events | `scripts/document_intelligence.py` -> `state/company_documents.json`, `state/company_event_ledger.json` | CI slice, approval queue |
 | Issuer source registry | `scripts/fetch_issuer_sources.py` -> `state/company_intel/source_registry.json` | CI Sources view |
-| Company financial series | `scripts/build_financial_series.py` -> `state/company_financial_series.json` | CI Financials view, graph, synthesis handoff |
+| Company financial series | `scripts/build_financial_series.py` -> `state/company_financial_series.json` | CI Financials view, graph, synthesis handoff; owner-approved manual claims enter only through `scripts/manual_financial_claims.py` after manifest, dual-review and provenance checks |
 | Company source QA | `scripts/build_source_qa.py` -> `state/company_source_qa.json` | CI source-health badges and graph |
 | Company knowledge graph | `scripts/build_company_graph.py` -> `state/company_intel/company_graph.json` | CI Graph view |
 | Company change intelligence | `scripts/build_change_intelligence.py` -> `state/company_intel/change_intelligence.json` | CI Changes view and overview metrics |
@@ -81,9 +81,9 @@ The product is a hybrid of five parts:
 | Sector driver graphs | `scripts/build_driver_graphs.py` + `sector_driver_models.py` -> `state/company_intel/driver_graphs.json` | full 20-company pilot across BANKS/CEMENT/E&P/REFINERY/FERTILIZER/AUTO_ASSEMBLER/POWER/OMC/HOLDING_COMPANY; declarative routing only, no company values |
 | Impact scenarios | `scripts/impact_engine.py` -> `state/company_intel/impact_scenarios.json` | graph-filtered event-to-driver Bear/Base/Bull scaffolding; numeric impacts remain null without sourced inputs |
 | Historical event studies | `scripts/build_event_studies.py` -> `state/company_intel/event_studies.json` | one raw-price benchmark per canonical event; strict pre-event baselines and calendar horizons |
-| Conditional historical benchmarks | `scripts/build_conditional_benchmarks.py` + `conditional_benchmarks.py` -> `state/company_intel/conditional_benchmarks.json` | exact event-type/subtype same-company and same-sector analogue resolver over existing event-study outcomes; statistics suppressed below three mature prior observations |
+| Conditional historical benchmarks | `scripts/build_conditional_benchmarks.py` + `conditional_benchmarks.py` -> `state/company_intel/conditional_benchmarks.json` | exact event-type/subtype same-company and same-sector analogue resolver over existing event-study outcomes; source-derived candidate-evidence summaries expose thin history while statistics remain suppressed below three mature prior observations |
 | Causal driver evidence map | `scripts/build_causal_foundations.py` -> `state/company_intel/causal_foundations.json` | one categorical evidence row per driver-graph edge, resolving only same-company official events and strict event studies; no causal estimate or numeric impact |
-| Financial statement v2 facts | `scripts/financial_statement_facts.py` -> retained financial series/model inputs | conservative page/table facts; legacy rows remain audit-only |
+| Financial statement v2 facts | `scripts/financial_statement_facts.py` -> retained financial series/model inputs | conservative page/table facts; legacy rows remain audit-only; manual claims keep a distinct source method/revision and do not impersonate parser output |
 | Financial model inputs | `scripts/build_financial_model_inputs.py` -> `state/company_intel/financial_model_inputs.json` | exact pilot, cement-only v1 model, null-safe derived history |
 | Financial qualification coverage | `scripts/build_financial_coverage.py` -> `state/company_intel/financial_coverage.json` | metadata-only official PSX document map, evidenced annual slots, quarantined audit-only coverage and bounded-restage candidates; never infers values |
 | CI restage review manifest | `scripts/build_ci_reprocess_manifest.py` -> `config/ci_reprocess_review_manifest.json`; `scripts/check_ci_reprocess_manifest.py` | owner-reviewable metadata-only filing restage manifest derived only from retained financial coverage; preflight locks the separate execution allowlist to this current manifest |
@@ -95,7 +95,7 @@ The product is a hybrid of five parts:
 | Private user theses | Supabase `company_theses` + owner-only RLS | authenticated CI create/edit/archive/restore/delete; separate from deterministic thesis monitoring and inactive until the owner applies `docs/company_theses.sql` |
 | Intelligence confidence | `scripts/build_intelligence_confidence.py` + `intelligence_confidence.py` -> `state/company_intel/intelligence_confidence.json` | transparent seven-component scores over retained signal clusters using source quality, independence, strict analogues, financial readiness, completeness and recency |
 | Management delivery | `scripts/build_management_delivery.py` + `management_delivery.py` -> `state/company_intel/management_delivery.json` | preserves categorical event-based follow-through for active theses and adds a separate first-class guidance record set; both require same-company, exact normalized keys, strictly later availability and self-source exclusion |
-| Guidance & contradictions | `scripts/build_guidance_contradictions.py` + `guidance_contradictions.py` -> `state/company_intel/guidance_contradictions.json` | strict qualitative guidance/risk assertion objects from retained same-company official evidence only; exact normalized-key contradictions only, no numeric forecasts, valuation, advice or browser inference |
+| Guidance & contradictions | `scripts/build_guidance_contradictions.py` + `guidance_contradictions.py` -> `state/company_intel/guidance_contradictions.json` | strict qualitative management-priority, delivery-promise, project/capacity-action, stated-risk and operating-constraint objects from retained same-company official evidence only; exact normalized-key contradictions only, no numeric forecasts, valuation, advice or browser inference |
 | Financial evidence reconciliation | `scripts/build_financial_evidence_reconciliation.py` + `financial_evidence_reconciliation.py` -> `state/company_intel/financial_evidence_reconciliation.json` | source/page/availability-ledger for retained financial facts and earnings-bridge readiness; preserves audit-only records, quarantines conflicts and lookahead/provenance failures, and cannot activate forecasts, valuation or market expectations |
 | Owner-approved training receipt view | `scripts/build_ci_slice.py` + `check_training_receipt_reconciliation.py` | read-only effective synthesis status in the CI slice reconciled by exact document ID and content hash against append-only owner approval receipts; queue history and receipt records remain unchanged |
 | CI continuous monitoring | `scripts/build_ci_monitoring.py` + `ci_monitoring.py` -> `state/company_intel/monitoring.json` | deterministic per-company source freshness and retained-change pulse composed from existing source QA, change, event, watchlist and guidance state; statuses are healthy/degraded/stale/unknown and every emitted alert has retained source provenance |
@@ -212,7 +212,13 @@ before the slice. The pilot boundary is exact equality with `company_profiles.pi
 
 ## 5. Database ownership
 
-Supabase project `qteoncckohuoatbjjykb`. Auth + per-user data only.
+The live desk remains on Supabase project `qteoncckohuoatbjjykb` for Auth and per-user data.
+Dedicated project `wexonytulckejkynncvv` (**Henneth CI**) is the server-only, append-only archive
+for retained company source documents, source-linked facts, and deterministic CI snapshots. It has
+RLS enabled, no browser grants, and a private `ci-documents` PDF bucket. It is configured but not
+yet receiving writes until the cloud-only sync credential is installed; see
+[`henneth_ci_archive.sql`](henneth_ci_archive.sql) and
+`state/company_intel/supabase_archive_receipt.json`.
 
 Live today, as described in [OPERATIONS.md](OPERATIONS.md) section 6 (there is no checked-in migration of the live schema):
 
@@ -220,12 +226,18 @@ Live today, as described in [OPERATIONS.md](OPERATIONS.md) section 6 (there is n
 - `profiles` — one row per user, RLS owner-only. Client-writable fields include `watchlist`, `notes`, `portfolio`, `followed_brokers`, `digest_prefs`. `plan` is not client-writable (`freeze_plan` / `force_free_plan` triggers). Also holds onboarding / astro-board / strategy-board / language / theme.
 - `waitlist` — marketing-site inserts.
 
-Written, not applied (SQL lives in `docs/`, owner runs it by hand):
+Applied to the dedicated Henneth CI project:
 
 - `docs/company_theses.sql` — private per-user company theses for the exact 20-company CI pilot.
   It grants authenticated CRUD only behind four owner predicates, revokes public/anonymous access,
-  bounds every input and labels any fair-value assumption as private user input. The CI app degrades
-  to a visible not-activated state until this file is manually applied and live RLS checks pass.
+  bounds every input and labels any fair-value assumption as private user input. The CI browser is
+  not cut over until its owner account and owner-id deployment configuration have been migrated.
+- `docs/henneth_ci_archive.sql` — durable document, fact, snapshot and PDF-object archive. Archive
+  tables have no anon/authenticated grants and no RLS policies; a server-only sync credential is the
+  sole writer. This preserves the `state/` seam as the publish source of truth while retaining a
+  tamper-resistant historical archive.
+
+Written, not applied in the live desk project (SQL lives in `docs/`, owner runs it by hand):
 - `docs/push_subscriptions.sql` — Web Push endpoints. Feature is inert until VAPID keys, this table, and a shipping change all exist.
 - `docs/lifecycle_email.sql` — activation columns, `mark_activated` RPC, unsubscribe RPC, `lifecycle_email_log`, `lifecycle_queue` view. `scripts/lifecycle_email.py` exists; it cannot run until this is applied and Resend + service-role secrets exist.
 
@@ -252,7 +264,7 @@ Never assume a SQL file in `docs/` has been applied. Additive first. There is no
 | `gateAllows()` / `OPEN_ROUTES` | which clean dashboard paths render | yes — it is UX |
 | `hasFeature()` / `PLANS` / `BILLING_LIVE` | which screens are teaser-walled | yes, and while `BILLING_LIVE === false` every signed-in account is treated as Pro |
 | Supabase RLS | a user's own `profiles` row | no, if RLS stays on |
-| Supabase RLS | a user's own `company_theses` rows | no, after the unapplied schema is activated and its four owner policies are verified |
+| Supabase RLS | a user's own `company_theses` rows | dedicated CI archive is configured; browser cutover still needs owner-account verification and CI deployment configuration |
 | `isOwner()` | plan-preview chrome | yes — it is an email string compare |
 
 `plan` is frozen in the database against client writes. There is no payment gateway. Do not flip `BILLING_LIVE` or `site.earlyAccess` until a local gateway, reviewed legal pages, and a service-role trial path exist.

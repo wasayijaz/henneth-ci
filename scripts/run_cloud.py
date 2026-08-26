@@ -119,6 +119,9 @@ STEPS = [
     "build_ownership_source_manifest.py",  # review metadata only; never activates ownership facts
     "build_ci_completion_matrix.py",
     "build_ci_slice.py",
+    # Server-only, append-only CI archive. It is intentionally a no-op until cloud secrets are
+    # installed; archive failure must not interrupt the deterministic public research release.
+    "supabase_ci_store.py",
     "check_ci_completion_matrix.py",
     "check_causal_foundations.py",
     "check_conditional_benchmarks.py",
@@ -152,7 +155,7 @@ STEPS = [
     "build_dashboard.py", "preflight.py",
 ]
 # steps allowed to exit non-zero without aborting the run
-ADVISORY = {"tv_crosscheck.py"}
+ADVISORY = {"tv_crosscheck.py", "supabase_ci_store.py"}
 
 
 def main():

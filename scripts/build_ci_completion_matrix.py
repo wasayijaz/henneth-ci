@@ -789,14 +789,13 @@ def build(write: bool = True) -> dict[str, Any]:
         ),
         _row(
             "forecast_readiness_live_inputs",
-            "Live state has not yet qualified forecast inputs",
+            "Live state has partially qualified forecast inputs",
             [
                 _state("ready company count", "state/company_intel/forecast_readiness.json", ready_count > 0, f"{ready_count} ready companies"),
                 _state("qualified fact company count", "state/company_intel/forecast_readiness.json", qualified_fact_company_count > 0, f"{qualified_fact_company_count} qualified-fact companies"),
             ],
-            ["At least one pilot company with three aligned annual consolidated PKR periods for revenue, attributable PAT and EPS."],
-            [f"Real ready company count is {ready_count}; qualified-fact company count is {qualified_fact_company_count}."],
-            hard_blocked=True,
+            ["More pilot companies need three aligned annual consolidated PKR periods before live readiness is complete."],
+            [f"Real ready company count is {ready_count}; qualified-fact company count is {qualified_fact_company_count}; formal numeric outputs remain blocked."],
         ),
         _row(
             "formal_forecast_engine_code",

@@ -1,5 +1,9 @@
 requests>=2.31
 numpy>=1.26
+# Pairwise correlation (scripts/correlation.py). Required on a fresh machine and on the
+# cloud runner — the workflow is only `pip install -r requirements.txt`. Compatible with
+# both the cloud runtime (Python 3.12) and a local 3.14 install.
+pandas>=2.0
 # Sidereal ephemeris for the astro pillar (scripts/astro_engine.py). Chosen deliberately:
 # pure Python, so it needs no C toolchain (pyswisseph will not build on 3.14) and no ephemeris
 # data download (skyfield wants a 17MB JPL kernel per environment). Installing it here means the

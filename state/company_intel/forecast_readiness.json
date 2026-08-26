@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "contract_version": "forecast_readiness_contract_v1",
- "as_of": "2026-08-26 17:17",
+ "as_of": "2026-08-27 01:42",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -52,9 +52,9 @@
  },
  "summary": {
   "company_count": 20,
-  "ready_company_count": 0,
-  "blocked_company_count": 20,
-  "qualified_fact_company_count": 0
+  "ready_company_count": 1,
+  "blocked_company_count": 19,
+  "qualified_fact_company_count": 1
  },
  "companies": {
   "ATRL": {
@@ -1481,7 +1481,7 @@
   },
   "MLCF": {
    "symbol": "MLCF",
-   "status": "blocked",
+   "status": "input_ready",
    "activation_status": "blocked_model_not_implemented",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
@@ -1501,11 +1501,67 @@
     ]
    },
    "model_version": "cement_v1",
-   "qualified_period_count": 0,
-   "qualified_periods": [],
-   "missing_requirements": [
-    "three_aligned_annual_revenue_pat_eps_periods"
+   "qualified_period_count": 3,
+   "qualified_periods": [
+    {
+     "period_end": "2024-06-30",
+     "available_on": "2024-09-11T09:09:00+05:00",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "manual_fact_66b17ef9298dc2847c1e5371",
+      "profit_after_tax_attributable": "manual_fact_532ab7b94f52d71ab3797be2",
+      "basic_eps": "manual_fact_9ada08b53835fb51ea67380e"
+     },
+     "document_ids": [
+      "psx:236626"
+     ]
+    },
+    {
+     "period_end": "2025-06-30",
+     "available_on": "2026-07-31T08:51:00+05:00",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "manual_fact_81f61eff38c0e596815acb84",
+      "profit_after_tax_attributable": "manual_fact_1143daa1f48237ac5b1b2534",
+      "basic_eps": "manual_fact_25817c1077196ec499d808b6"
+     },
+     "document_ids": [
+      "psx:280589"
+     ]
+    },
+    {
+     "period_end": "2026-06-30",
+     "available_on": "2026-07-31T08:51:00+05:00",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "manual_fact_e403069b32de37b41b69c478",
+      "profit_after_tax_attributable": "manual_fact_a0206ff8968fe917b0aa252c",
+      "basic_eps": "manual_fact_a8861ab3009d249c539955a3"
+     },
+     "document_ids": [
+      "psx:280589"
+     ]
+    }
    ],
+   "missing_requirements": [],
    "coverage_candidate_document_ids": [
     "psx:280589",
     "psx:275425",
@@ -1581,14 +1637,14 @@
     }
    ],
    "blocked_outputs": {
-    "forecast": "blocked_insufficient_qualified_history",
-    "valuation": "blocked_insufficient_qualified_history",
-    "market_expectations": "blocked_insufficient_qualified_history"
+    "forecast": "blocked_model_not_implemented",
+    "valuation": "blocked_model_not_implemented",
+    "market_expectations": "blocked_model_not_implemented"
    },
    "downstream_status": {
-    "forecast": "blocked_insufficient_qualified_history",
-    "valuation": "blocked_insufficient_qualified_history",
-    "market_expectations": "blocked_insufficient_qualified_history",
+    "forecast": "blocked_model_not_implemented",
+    "valuation": "blocked_model_not_implemented",
+    "market_expectations": "blocked_model_not_implemented",
     "numeric_impact": "blocked_model_not_implemented"
    },
    "policy": {
@@ -1601,9 +1657,7 @@
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
-   "quality_flags": [
-    "forecast_readiness_incomplete"
-   ]
+   "quality_flags": []
   },
   "NBP": {
    "symbol": "NBP",

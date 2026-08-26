@@ -28,53 +28,17 @@ FORBIDDEN_VALUE_KEYS = {"normalized_value", "raw_value", "value", "amount", "eps
 APPROVED_REVIEW_SLOTS: tuple[dict[str, Any], ...] = (
     {
         "symbol": "MLCF",
-        "period": "2025-06-30",
-        "classification": "financial_statement",
-        "title_pattern": r"Transmission of Annual Financial Statements.*30[.]06[.]2025",
-        "require_retained_hash": False,
-    },
-    {
-        "symbol": "MLCF",
-        "period": "2025-12-31",
+        "period": "2024-06-30",
         "classification": "financial_results",
-        "title_pattern": r"Transmission of Quarterly Financial Statements.*31[.]12[.]2025",
+        "title_pattern": r"Financial Results for the Year Ended 30[.]06[.]2024",
         "require_retained_hash": True,
     },
     {
         "symbol": "MLCF",
-        "period": "2026-03-31",
+        "period": "2026-06-30",
         "classification": "financial_results",
-        "title_pattern": r"Transmission of Quarterly Financial Statements.*31[.]03[.]2026",
+        "title_pattern": r"MLCF-Financial Results for the year ended June 30, 2026",
         "require_retained_hash": True,
-    },
-    {
-        "symbol": "DGKC",
-        "period": "2025-06-30",
-        "classification": "financial_results",
-        "title_pattern": r"TRANSMISSION OF ANNUAL REPORT.*JUNE 30, 2025",
-        "require_retained_hash": True,
-    },
-    {
-        "symbol": "DGKC",
-        "period": "2026-03-31",
-        "classification": "financial_results",
-        "title_pattern": r"TRANSMISSION OF QUARTERLY REPOR TFOR.*MARCH 31, 2026",
-        "require_retained_hash": True,
-    },
-    {
-        "symbol": "LUCK",
-        "period": "2025-06-30",
-        "classification": "financial_statement",
-        "title_pattern": r"Transmission of Annual Report.*June 30, 2025.*Lucky Cement Limited",
-        "require_retained_hash": False,
-    },
-    {
-        "symbol": "LUCK",
-        "period": "2026-03-31",
-        "classification": "financial_statement",
-        "title_pattern": r"Transmission of Quarterly Report.*Marach 31, 2026",
-        "require_retained_hash": False,
-        "allow_title_only_period": True,
     },
 )
 

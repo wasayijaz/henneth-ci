@@ -330,7 +330,7 @@
    "status": "assessed",
    "source_cluster_count": 1,
    "assessment_count": 1,
-   "aggregate_score": 51.0,
+   "aggregate_score": 57.0,
    "aggregate_band": "medium",
    "aggregate_method": "mean_of_retained_cluster_assessments",
    "assessments": [
@@ -340,7 +340,7 @@
      "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
      "assertion_key": "acquisition:pioneer cement limited:public_offer:2025-12-18",
      "cluster_assessment": "single_source",
-     "score": 51.0,
+     "score": 57.0,
      "band": "medium",
      "band_thresholds": {
       "low": {
@@ -398,16 +398,14 @@
       "financial_model_quality": {
        "weight": 15,
        "raw_facts": {
-        "status": "partial",
+        "status": "ready",
         "model_version": "cement_v1",
-        "observation_count": 0,
-        "derived_count": 0,
-        "quality_flags": [
-         "insufficient_three_year_consolidated_v2_history"
-        ]
+        "observation_count": 9,
+        "derived_count": 9,
+        "quality_flags": []
        },
-       "normalized_score": 60,
-       "weighted_points": 9.0,
+       "normalized_score": 100,
+       "weighted_points": 15.0,
        "rationale": "Mapped from financial_model_inputs readiness; richer partial inputs can score 75, unsupported sectors score 35."
       },
       "peer_evidence": {
@@ -432,7 +430,7 @@
          "target",
          "modality"
         ],
-        "financial_model_status": "partial"
+        "financial_model_status": "ready"
        },
        "normalized_score": 100,
        "weighted_points": 10.0,

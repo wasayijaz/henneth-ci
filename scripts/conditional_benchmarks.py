@@ -34,6 +34,36 @@ def _aggregate(candidates: list[dict], horizon: str) -> dict:
     return {**base, "stats": {"mean_return_pct": sum(values) / len(values), "median_return_pct": statistics.median(values), "min_return_pct": min(values), "max_return_pct": max(values)}}
 
 
+def candidate_evidence_summary(candidates: list[dict]) -> dict:
+    """Display-safe completeness evidence; never a new outcome or inference."""
+    by_class = {
+        "same_company_exact": sum(1 for row in candidates if row.get("classification") == "same_company"),
+        "same_sector_exact": sum(1 for row in candidates if row.get("classification") == "same_sector"),
+    }
+    mature_by_horizon = {
+        horizon: sum(
+            1 for row in candidates
+            if ((row.get("outcomes") or {}).get(horizon) or {}).get("status") == "mature"
+            and isinstance(((row.get("outcomes") or {}).get(horizon) or {}).get("return_pct"), (int, float))
+            and not isinstance(((row.get("outcomes") or {}).get(horizon) or {}).get("return_pct"), bool)
+        )
+        for horizon in HORIZONS
+    }
+    latest = max((str(row.get("effective_date")) for row in candidates if _date(row.get("effective_date"))), default=None)
+    evidence_status = (
+        "no_prior_exact_analogues" if not candidates
+        else "aggregate_ready" if any(count >= MIN_SAMPLE for count in mature_by_horizon.values())
+        else "thin_history_present"
+    )
+    return {
+        "evidence_status": evidence_status,
+        "candidate_counts": by_class,
+        "mature_horizon_counts": mature_by_horizon,
+        "latest_prior_candidate_date": latest,
+        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice.",
+    }
+
+
 def build_conditional_benchmarks(pilot: list[str], event_state: dict, study_state: dict, sector_rows: dict) -> dict:
     events = {event.get("event_id"): event for symbol in pilot for event in (((event_state.get("companies") or {}).get(symbol) or {}).get("events") or []) if event.get("event_id")}
     studies = study_state.get("studies") or {}
@@ -86,6 +116,7 @@ def build_conditional_benchmarks(pilot: list[str], event_state: dict, study_stat
                 "status": "blocked_invalid_target_date" if not target.get("effective_date") else ("candidate_history_present" if candidates else "no_prior_exact_analogues"),
                 "matching_policy": {"event_type": "exact", "event_subtype": "exact", "candidate_date": "strictly_before_target", "same_company": "same_symbol", "same_sector": "same_current_sector_other_symbol", "returns": "reuse_target_event_study_analogue_outcomes", "minimum_aggregate_sample": MIN_SAMPLE},
                 "candidates": {"same_company_exact": same_company, "same_sector_exact": same_sector},
+                "candidate_evidence_summary": candidate_evidence_summary(candidates),
                 "horizon_aggregates": {horizon: _aggregate(candidates, horizon) for horizon in HORIZONS},
                 "blocked_states": {
                     "peer": {"status": "blocked", "reason": "no_peer_registry"},

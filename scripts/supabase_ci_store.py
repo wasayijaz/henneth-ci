@@ -1,0 +1,760 @@
+#!/usr/bin/env python3
+"""Append source-grounded Company Intelligence state to Supabase.
+
+The local ``state/`` tree remains the desk's source of truth. This adapter is a
+server-only archive writer for the deployed CI tables and is inert until both
+``HENNETH_CI_SUPABASE_URL`` and ``HENNETH_CI_SUPABASE_SERVICE_KEY`` are set.
+It never uploads binaries, never prints secrets, and never updates existing
+archive rows; duplicates are ignored by each table's deployed unique key.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import sys
+import urllib.parse
+import urllib.request
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from psx_data import ROOT, load_json
+
+
+ENV_URL = "HENNETH_CI_SUPABASE_URL"
+ENV_KEY = "HENNETH_CI_SUPABASE_SERVICE_KEY"
+PRODUCER = "henneth-ci-state-archive"
+SCHEMA_VERSION = 2
+
+TABLES = {
+    "source_documents": ("ci_source_documents", "document_key"),
+    "document_facts": ("ci_document_facts", "fact_key"),
+    "state_snapshots": ("ci_state_snapshots", "snapshot_key"),
+    "sync_runs": ("ci_sync_runs", "run_key"),
+}
+
+SELECTED_INTEL_PRODUCTS = (
+    "operating_events.json",
+    "company_brains.json",
+    "guidance_contradictions.json",
+    "financial_evidence_reconciliation.json",
+    "evidence_watchlist.json",
+    "management_delivery.json",
+    "intelligence_confidence.json",
+    "signal_clusters.json",
+    "monitoring.json",
+    "financial_model_inputs.json",
+    "forecast_readiness.json",
+)
+
+DATE_FIELDS = (
+    "available_at",
+    "available_on",
+    "published_at",
+    "published_on",
+    "retrieved_at",
+    "detected_at",
+    "as_of",
+    "generated_at",
+    "updated_at",
+)
+
+
+@dataclass(frozen=True)
+class Config:
+    url: str
+    service_key: str
+
+
+@dataclass
+class BuildStats:
+    source_documents: int = 0
+    document_facts: int = 0
+    state_snapshots: int = 0
+    sync_runs: int = 0
+    rejected: dict[str, int] = field(default_factory=dict)
+    sources: dict[str, int] = field(default_factory=dict)
+
+    def reject(self, reason: str) -> None:
+        self.rejected[reason] = self.rejected.get(reason, 0) + 1
+
+    def source(self, path: str) -> None:
+        self.sources[path] = self.sources.get(path, 0) + 1
+
+    @property
+    def rows(self) -> int:
+        return self.source_documents + self.document_facts + self.state_snapshots + self.sync_runs
+
+
+@dataclass
+class ArchiveRows:
+    source_documents: list[dict[str, Any]] = field(default_factory=list)
+    document_facts: list[dict[str, Any]] = field(default_factory=list)
+    state_snapshots: list[dict[str, Any]] = field(default_factory=list)
+    sync_runs: list[dict[str, Any]] = field(default_factory=list)
+
+    def as_table_map(self) -> dict[str, list[dict[str, Any]]]:
+        return {
+            "source_documents": self.source_documents,
+            "document_facts": self.document_facts,
+            "state_snapshots": self.state_snapshots,
+            "sync_runs": self.sync_runs,
+        }
+
+
+class SupabaseTransport:
+    """Small injectable PostgREST transport; checks replace it with a fake."""
+
+    def post_json(self, url: str, headers: dict[str, str], rows: list[dict[str, Any]]) -> int:
+        data = json.dumps(rows, sort_keys=True, ensure_ascii=False, allow_nan=False).encode("utf-8")
+        req = urllib.request.Request(url, data=data, method="POST", headers=headers)
+        with urllib.request.urlopen(req, timeout=30) as response:
+            return int(getattr(response, "status", response.getcode()))
+
+
+def config_from_env(env: dict[str, str] | None = None) -> tuple[Config | None, list[str]]:
+    env = env or os.environ
+    missing = [name for name in (ENV_URL, ENV_KEY) if not str(env.get(name) or "").strip()]
+    if missing:
+        return None, missing
+    return Config(url=str(env[ENV_URL]).rstrip("/"), service_key=str(env[ENV_KEY])), []
+
+
+def stable_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+
+
+def digest(value: Any) -> str:
+    return hashlib.sha256(stable_json(value).encode("utf-8")).hexdigest()
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _is_sha(value: Any) -> bool:
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    return all(ch in "0123456789abcdefABCDEF" for ch in value)
+
+
+def _as_symbol(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip().upper()
+    return text or None
+
+
+def _symbols_from(value: Any) -> list[str]:
+    raw = None
+    if isinstance(value, dict):
+        raw = value.get("symbol") or value.get("ticker") or value.get("company_id") or value.get("tickers")
+    if isinstance(raw, str):
+        raw = [raw]
+    if isinstance(raw, list):
+        return sorted({symbol for item in raw if (symbol := _as_symbol(item))})
+    symbol = _as_symbol(raw)
+    return [symbol] if symbol else []
+
+
+def _first_value(*values: Any) -> Any:
+    for value in values:
+        if value not in (None, ""):
+            return value
+    return None
+
+
+def _availability(*records: dict[str, Any]) -> Any:
+    for record in records:
+        for field_name in DATE_FIELDS:
+            value = record.get(field_name)
+            if value not in (None, ""):
+                return value
+    return None
+
+
+def _date_candidates(value: Any) -> list[str]:
+    out: list[str] = []
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in DATE_FIELDS and item not in (None, ""):
+                out.append(str(item))
+            elif isinstance(item, (dict, list)):
+                out.extend(_date_candidates(item))
+    elif isinstance(value, list):
+        for item in value:
+            out.extend(_date_candidates(item))
+    return out
+
+
+def _best_available_at(payload: Any) -> str | None:
+    candidates = _date_candidates(payload)
+    return sorted(candidates)[-1] if candidates else None
+
+
+def _evidence_items(value: Any) -> list[dict[str, Any]]:
+    if isinstance(value, dict):
+        return [value]
+    if isinstance(value, list):
+        return [item for item in value if isinstance(item, dict)]
+    return []
+
+
+def _nested_evidence(record: dict[str, Any]) -> list[dict[str, Any]]:
+    evidence: list[dict[str, Any]] = []
+    for field_name in ("evidence", "evidence_refs", "provenance", "provenance_refs", "operand_provenance"):
+        evidence.extend(_evidence_items(record.get(field_name)))
+    if isinstance(record.get("source"), dict):
+        evidence.extend(_evidence_items(record.get("source")))
+    for field_name in ("events", "facts", "objects", "contradictions", "alerts", "clusters", "intelligence_objects"):
+        for child in _evidence_items(record.get(field_name)):
+            evidence.extend(_nested_evidence(child))
+    if _first_value(record.get("source_url"), record.get("content_sha256"), record.get("document_id"), record.get("doc_id")):
+        evidence.append({})
+    return evidence
+
+
+def _record_id(record: dict[str, Any], fallback: str) -> str:
+    for field_name in (
+        "id",
+        "fact_id",
+        "doc_id",
+        "document_id",
+        "series_id",
+        "event_id",
+        "guidance_id",
+        "reconciliation_id",
+        "evidence_id",
+        "cluster_id",
+        "alert_id",
+        "object_id",
+    ):
+        value = record.get(field_name)
+        if value not in (None, ""):
+            return str(value)
+    return fallback
+
+
+def _page_value(value: Any) -> int | str | None:
+    if isinstance(value, bool) or value in (None, ""):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str):
+        text = value.strip()
+        return text or None
+    return None
+
+
+def _clean_payload(record: dict[str, Any]) -> dict[str, Any]:
+    blocked = {
+        "evidence",
+        "evidence_refs",
+        "provenance",
+        "provenance_refs",
+        "operand_provenance",
+        "source",
+        "text",
+    }
+    return {str(key): value for key, value in record.items() if key not in blocked}
+
+
+def _doc_fields(record: dict[str, Any], evidence: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
+    source_url = _first_value(evidence.get("source_url"), record.get("source_url"))
+    source_sha = _first_value(evidence.get("content_sha256"), record.get("content_sha256"), record.get("source_sha256"))
+    available_at = _availability(evidence, record)
+    if not isinstance(source_url, str) or not source_url.strip():
+        return None, "missing_source_url"
+    if not _is_sha(source_sha):
+        return None, "missing_source_sha256"
+    if not available_at:
+        return None, "missing_available_at"
+    return {
+        "source_url": source_url.strip(),
+        "source_sha256": str(source_sha).lower(),
+        "available_at": available_at,
+        "source_system": str(_first_value(evidence.get("source"), record.get("source"), record.get("source_system"), "PSX DPS")),
+        "document_id": _first_value(evidence.get("document_id"), record.get("document_id"), record.get("doc_id")),
+        "document_type": _first_value(record.get("document_type"), record.get("doc_type"), record.get("type")),
+        "title": record.get("title"),
+        "published_at": _first_value(evidence.get("published_at"), record.get("published_at"), record.get("published_on")),
+    }, None
+
+
+def _document_key(symbol: str, fields: dict[str, Any]) -> str:
+    return "doc_" + digest({
+        "schema_version": SCHEMA_VERSION,
+        "symbol": symbol,
+        "source_url": fields["source_url"],
+        "source_sha256": fields["source_sha256"],
+    })
+
+
+def _source_document_row(symbol: str, record: dict[str, Any], evidence: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
+    fields, reason = _doc_fields(record, evidence)
+    if fields is None:
+        return None, reason
+    document_key = _document_key(symbol, fields)
+    metadata = _clean_payload(record)
+    metadata["schema_version"] = SCHEMA_VERSION
+    if fields.get("document_id") not in (None, ""):
+        metadata["document_id"] = str(fields["document_id"])
+    return {
+        "document_key": document_key,
+        "symbol": symbol,
+        "source_url": fields["source_url"],
+        "source_system": fields["source_system"],
+        "document_type": fields["document_type"],
+        "title": fields["title"],
+        "published_at": fields["published_at"],
+        "available_at": fields["available_at"],
+        "source_sha256": fields["source_sha256"],
+        "metadata": metadata,
+    }, None
+
+
+def _fact_row(
+    *,
+    source_path: str,
+    record_kind: str,
+    symbol: str,
+    record: dict[str, Any],
+    record_id: str,
+    document_key: str,
+    evidence: dict[str, Any],
+) -> dict[str, Any]:
+    fact_payload = _clean_payload(record)
+    fact_payload["source_path"] = source_path
+    fact_payload["record_id"] = record_id
+    fact_payload["provenance"] = {
+        "document_id": _first_value(evidence.get("document_id"), record.get("document_id"), record.get("doc_id")),
+        "source_url": _first_value(evidence.get("source_url"), record.get("source_url")),
+        "source_sha256": _first_value(evidence.get("content_sha256"), record.get("content_sha256"), record.get("source_sha256")),
+        "evidence_sha256": evidence.get("evidence_sha256"),
+        "page": _page_value(_first_value(evidence.get("page"), record.get("page"))),
+    }
+    payload_sha = digest(fact_payload)
+    fact_type = str(_first_value(record.get("fact_type"), record.get("metric"), record.get("event_type"), record_kind))
+    return {
+        "fact_key": "fact_" + digest({
+            "schema_version": SCHEMA_VERSION,
+            "document_key": document_key,
+            "symbol": symbol,
+            "fact_type": fact_type,
+            "payload_sha256": payload_sha,
+        }),
+        "document_key": document_key,
+        "symbol": symbol,
+        "fact_type": fact_type,
+        "fact_payload": fact_payload,
+        "available_at": _availability(evidence, record),
+        "payload_sha256": payload_sha,
+    }
+
+
+def _fact_rows_from_record(
+    *,
+    source_path: str,
+    record_kind: str,
+    record: dict[str, Any],
+    fallback_id: str,
+    source_documents: dict[str, dict[str, Any]],
+    stats: BuildStats,
+    default_symbols: list[str] | None = None,
+) -> list[dict[str, Any]]:
+    symbols = _symbols_from(record) or list(default_symbols or [])
+    if not symbols:
+        stats.reject("missing_symbol")
+        return []
+    record_id = _record_id(record, fallback_id)
+    out: list[dict[str, Any]] = []
+    seen = set()
+    reasons: list[str] = []
+    for evidence in _nested_evidence(record):
+        page = _page_value(_first_value(evidence.get("page"), record.get("page")))
+        if page is None:
+            reasons.append("missing_page")
+            continue
+        for symbol in symbols:
+            doc_row, reason = _source_document_row(symbol, record, evidence)
+            if doc_row is None:
+                if reason:
+                    reasons.append(reason)
+                continue
+            source_documents.setdefault(doc_row["document_key"], doc_row)
+            row = _fact_row(
+                source_path=source_path,
+                record_kind=record_kind,
+                symbol=symbol,
+                record=record,
+                record_id=record_id,
+                document_key=doc_row["document_key"],
+                evidence=evidence,
+            )
+            if row["fact_key"] not in seen:
+                seen.add(row["fact_key"])
+                out.append(row)
+    if not out:
+        stats.reject(sorted(reasons)[0] if reasons else "missing_provenance")
+    return out
+
+
+def _document_rows(payload: dict[str, Any], source_documents: dict[str, dict[str, Any]], stats: BuildStats) -> None:
+    documents = payload.get("documents") if isinstance(payload.get("documents"), dict) else {}
+    for key, doc in sorted(documents.items(), key=lambda item: str(item[0])):
+        if not isinstance(doc, dict) or doc.get("status") not in (None, "ready"):
+            stats.reject("document_not_ready")
+            continue
+        symbols = _symbols_from(doc)
+        if not symbols:
+            stats.reject("missing_symbol")
+            continue
+        for symbol in symbols:
+            row, reason = _source_document_row(symbol, doc, {})
+            if row is None:
+                if reason:
+                    stats.reject(reason)
+                continue
+            source_documents.setdefault(row["document_key"], row)
+            stats.source("state/company_documents.json")
+
+
+def _document_index(documents_payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    documents = documents_payload.get("documents") if isinstance(documents_payload.get("documents"), dict) else {}
+    return {str(doc.get("doc_id") or key): doc for key, doc in documents.items() if isinstance(doc, dict)}
+
+
+def _financial_rows(
+    payload: dict[str, Any],
+    docs_by_id: dict[str, dict[str, Any]],
+    source_documents: dict[str, dict[str, Any]],
+    stats: BuildStats,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    tickers = payload.get("tickers") if isinstance(payload.get("tickers"), dict) else {}
+    for ticker, bucket in sorted(tickers.items(), key=lambda item: str(item[0])):
+        facts = bucket.get("facts") if isinstance(bucket, dict) else []
+        for index, fact in enumerate(facts or []):
+            if not isinstance(fact, dict):
+                stats.reject("invalid_financial_fact")
+                continue
+            record = dict(fact)
+            record.setdefault("ticker", str(ticker).upper())
+            doc = docs_by_id.get(str(record.get("document_id") or ""))
+            if doc:
+                for field_name in ("title", "doc_type", "source", "available_on", "published_at", "retrieved_at"):
+                    if field_name in doc and field_name not in record:
+                        record[field_name] = doc[field_name]
+            for row in _fact_rows_from_record(
+                source_path="state/company_financial_series.json",
+                record_kind="financial_fact",
+                record=record,
+                fallback_id=f"{ticker}:{index}",
+                source_documents=source_documents,
+                stats=stats,
+                default_symbols=[str(ticker).upper()],
+            ):
+                stats.source("state/company_financial_series.json")
+                rows.append(row)
+    return rows
+
+
+def _company_records(product_payload: dict[str, Any]) -> list[tuple[str, dict[str, Any]]]:
+    companies = product_payload.get("companies") if isinstance(product_payload.get("companies"), dict) else {}
+    records: list[tuple[str, dict[str, Any]]] = []
+    for symbol, bucket in sorted(companies.items(), key=lambda item: str(item[0])):
+        if not isinstance(bucket, dict):
+            continue
+        for field_name in (
+            "events",
+            "facts",
+            "objects",
+            "contradictions",
+            "alerts",
+            "clusters",
+            "intelligence_objects",
+        ):
+            values = bucket.get(field_name)
+            if isinstance(values, list):
+                records.extend((str(symbol).upper(), item) for item in values if isinstance(item, dict))
+        if any(name in bucket for name in ("evidence", "evidence_refs", "provenance", "source")):
+            records.append((str(symbol).upper(), bucket))
+    return records
+
+
+def _intel_rows(ci_dir: Path, source_documents: dict[str, dict[str, Any]], stats: BuildStats) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for filename in SELECTED_INTEL_PRODUCTS:
+        path = ci_dir / filename
+        if not path.exists():
+            continue
+        source_path = "state/company_intel/" + filename
+        payload = load_json(path, {})
+        if not isinstance(payload, dict):
+            stats.reject("invalid_intel_product")
+            continue
+        for index, (symbol, record) in enumerate(_company_records(payload)):
+            record = dict(record)
+            record.setdefault("symbol", symbol)
+            for row in _fact_rows_from_record(
+                source_path=source_path,
+                record_kind="ci_product_record",
+                record=record,
+                fallback_id=f"{symbol}:{index}",
+                source_documents=source_documents,
+                stats=stats,
+                default_symbols=[symbol],
+            ):
+                stats.source(source_path)
+                rows.append(row)
+    return rows
+
+
+def _snapshot_key(state_name: str, symbol: str | None, available_at: str, payload_sha: str) -> str:
+    return "snap_" + digest({
+        "schema_version": SCHEMA_VERSION,
+        "state_name": state_name,
+        "symbol": symbol,
+        "available_at": available_at,
+        "payload_sha256": payload_sha,
+    })
+
+
+def _snapshot_row(state_name: str, symbol: str | None, payload: dict[str, Any]) -> dict[str, Any] | None:
+    available_at = _best_available_at(payload)
+    if not available_at:
+        return None
+    payload_sha = digest(payload)
+    return {
+        "snapshot_key": _snapshot_key(state_name, symbol, available_at, payload_sha),
+        "state_name": state_name,
+        "symbol": symbol,
+        "available_at": available_at,
+        "payload": payload,
+        "payload_sha256": payload_sha,
+    }
+
+
+def _document_snapshots(payload: dict[str, Any], stats: BuildStats) -> list[dict[str, Any]]:
+    documents = payload.get("documents") if isinstance(payload.get("documents"), dict) else {}
+    grouped: dict[str, dict[str, Any]] = {}
+    for key, doc in documents.items():
+        if not isinstance(doc, dict):
+            continue
+        for symbol in _symbols_from(doc):
+            grouped.setdefault(symbol, {})[str(key)] = doc
+    rows: list[dict[str, Any]] = []
+    for symbol, docs in sorted(grouped.items()):
+        row = _snapshot_row("company_documents", symbol, {
+            "schema_version": payload.get("schema_version"),
+            "documents": docs,
+        })
+        if row:
+            rows.append(row)
+            stats.source("state/company_documents.json")
+        else:
+            stats.reject("snapshot_missing_available_at")
+    return rows
+
+
+def _financial_snapshots(payload: dict[str, Any], stats: BuildStats) -> list[dict[str, Any]]:
+    tickers = payload.get("tickers") if isinstance(payload.get("tickers"), dict) else {}
+    rows: list[dict[str, Any]] = []
+    for ticker, bucket in sorted(tickers.items(), key=lambda item: str(item[0])):
+        if not isinstance(bucket, dict):
+            continue
+        row = _snapshot_row("company_financial_series", str(ticker).upper(), {
+            "schema_version": payload.get("schema_version"),
+            "ticker": str(ticker).upper(),
+            "facts": bucket.get("facts") if isinstance(bucket.get("facts"), list) else [],
+        })
+        if row:
+            rows.append(row)
+            stats.source("state/company_financial_series.json")
+        else:
+            stats.reject("snapshot_missing_available_at")
+    return rows
+
+
+def _intel_snapshots(ci_dir: Path, stats: BuildStats) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for filename in SELECTED_INTEL_PRODUCTS:
+        path = ci_dir / filename
+        if not path.exists():
+            continue
+        payload = load_json(path, {})
+        if not isinstance(payload, dict):
+            stats.reject("invalid_intel_product")
+            continue
+        companies = payload.get("companies") if isinstance(payload.get("companies"), dict) else {}
+        state_name = "company_intel/" + filename.removesuffix(".json")
+        for symbol, bucket in sorted(companies.items(), key=lambda item: str(item[0])):
+            if not isinstance(bucket, dict):
+                continue
+            row = _snapshot_row(state_name, str(symbol).upper(), {
+                "schema_version": payload.get("schema_version"),
+                "registry_version": payload.get("registry_version"),
+                "as_of": payload.get("as_of"),
+                "symbol": str(symbol).upper(),
+                "company": bucket,
+            })
+            if row:
+                rows.append(row)
+                stats.source("state/company_intel/" + filename)
+            else:
+                stats.reject("snapshot_missing_available_at")
+    return rows
+
+
+def _dedupe(rows: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
+    by_key = {str(row[key]): row for row in rows}
+    return [by_key[name] for name in sorted(by_key)]
+
+
+def _archive_payload_sha(rows: ArchiveRows) -> str:
+    return digest({
+        "source_documents": rows.source_documents,
+        "document_facts": rows.document_facts,
+        "state_snapshots": rows.state_snapshots,
+    })
+
+
+def _sync_run(payload_sha: str, counts: dict[str, int], clock: Any | None = None) -> dict[str, Any]:
+    now = clock() if clock else utc_now()
+    return {
+        "run_key": "run_" + digest({
+            "schema_version": SCHEMA_VERSION,
+            "producer": PRODUCER,
+            "payload_sha256": payload_sha,
+        }),
+        "producer": PRODUCER,
+        "started_at": now,
+        "completed_at": now,
+        "status": "completed",
+        "payload_sha256": payload_sha,
+        "counts": counts,
+    }
+
+
+def build_rows(root: Path = ROOT, clock: Any | None = None) -> tuple[ArchiveRows, BuildStats]:
+    state_dir = root / "state"
+    documents_payload = load_json(state_dir / "company_documents.json", {})
+    series_payload = load_json(state_dir / "company_financial_series.json", {})
+    if not isinstance(documents_payload, dict):
+        documents_payload = {}
+    if not isinstance(series_payload, dict):
+        series_payload = {}
+
+    stats = BuildStats()
+    source_documents: dict[str, dict[str, Any]] = {}
+    rows = ArchiveRows()
+
+    _document_rows(documents_payload, source_documents, stats)
+    rows.document_facts.extend(_financial_rows(series_payload, _document_index(documents_payload), source_documents, stats))
+    rows.document_facts.extend(_intel_rows(state_dir / "company_intel", source_documents, stats))
+    rows.state_snapshots.extend(_document_snapshots(documents_payload, stats))
+    rows.state_snapshots.extend(_financial_snapshots(series_payload, stats))
+    rows.state_snapshots.extend(_intel_snapshots(state_dir / "company_intel", stats))
+
+    rows.source_documents = _dedupe(list(source_documents.values()), "document_key")
+    rows.document_facts = _dedupe(rows.document_facts, "fact_key")
+    rows.state_snapshots = _dedupe(rows.state_snapshots, "snapshot_key")
+    counts = {
+        "source_documents": len(rows.source_documents),
+        "document_facts": len(rows.document_facts),
+        "state_snapshots": len(rows.state_snapshots),
+        "rejected": dict(sorted(stats.rejected.items())),
+    }
+    rows.sync_runs = [_sync_run(_archive_payload_sha(rows), counts, clock=clock)]
+
+    stats.source_documents = len(rows.source_documents)
+    stats.document_facts = len(rows.document_facts)
+    stats.state_snapshots = len(rows.state_snapshots)
+    stats.sync_runs = len(rows.sync_runs)
+    return rows, stats
+
+
+def _headers(config: Config) -> dict[str, str]:
+    return {
+        "apikey": config.service_key,
+        "Authorization": "Bearer " + config.service_key,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal,resolution=ignore-duplicates",
+    }
+
+
+def _endpoint(config: Config, table_key: str) -> str:
+    table, conflict = TABLES[table_key]
+    params = urllib.parse.urlencode({"on_conflict": conflict})
+    return f"{config.url}/rest/v1/{table}?{params}"
+
+
+def _chunks(rows: list[dict[str, Any]], size: int) -> list[list[dict[str, Any]]]:
+    return [rows[index:index + size] for index in range(0, len(rows), size)]
+
+
+def push_rows(
+    config: Config,
+    rows: ArchiveRows,
+    transport: SupabaseTransport | None = None,
+    batch_size: int = 250,
+) -> dict[str, Any]:
+    transport = transport or SupabaseTransport()
+    statuses: dict[str, list[int]] = {}
+    for table_key, table_rows in rows.as_table_map().items():
+        statuses[table_key] = []
+        for chunk in _chunks(table_rows, batch_size):
+            statuses[table_key].append(transport.post_json(_endpoint(config, table_key), _headers(config), chunk))
+    return {"batches": sum(len(value) for value in statuses.values()), "statuses": statuses}
+
+
+def _public_stats(stats: BuildStats) -> str:
+    rejected = ",".join(f"{key}={stats.rejected[key]}" for key in sorted(stats.rejected)) or "none"
+    sources = ",".join(f"{key}={stats.sources[key]}" for key in sorted(stats.sources)) or "none"
+    return (
+        f"source_documents={stats.source_documents} document_facts={stats.document_facts} "
+        f"state_snapshots={stats.state_snapshots} sync_runs={stats.sync_runs} "
+        f"rejected={rejected} sources={sources}"
+    )
+
+
+def run(
+    *,
+    root: Path = ROOT,
+    env: dict[str, str] | None = None,
+    transport: SupabaseTransport | None = None,
+    dry_run: bool = False,
+    clock: Any | None = None,
+) -> dict[str, Any]:
+    rows, stats = build_rows(root, clock=clock)
+    config, missing = config_from_env(env)
+    if missing or dry_run:
+        reason = "missing_config:" + ",".join(missing) if missing else "forced"
+        print(f"supabase_ci_store: dry-run {reason} {_public_stats(stats)}")
+        return {"mode": "dry-run", "missing": missing, "rows": rows, "stats": stats}
+    assert config is not None
+    result = push_rows(config, rows, transport=transport)
+    print(f"supabase_ci_store: posted batches={result['batches']} {_public_stats(stats)}")
+    return {"mode": "posted", "push": result, "rows": rows, "stats": stats}
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+    try:
+        run(root=args.root, dry_run=args.dry_run)
+    except Exception as exc:
+        print(f"supabase_ci_store: failed {type(exc).__name__}: {str(exc)[:160]}")
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

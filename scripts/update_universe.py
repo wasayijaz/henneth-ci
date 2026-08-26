@@ -23,6 +23,36 @@ import sys
 import time
 
 from psx_data import STATE, index_constituents, load_config, load_markets, save_json
+from psx_data import split_board_state
+
+
+def _intake(row: dict, indices: list[str], tier: str) -> dict:
+    """One PSX index row -> one Henneth universe record.
+
+    Temporary Ready-market suffixes (XD/XB/XR) collapse to the ordinary ticker so FFCXD
+    does not replace FFC as a second company. The source spelling is kept on the record.
+    NC / preference suffixes are not rewritten here.
+    """
+    raw = (row.get("symbol") or "").strip()
+    canon, state = split_board_state(raw)
+    rec = {
+        "symbol": canon,
+        "name": row.get("name"),
+        "weight_pct": row.get("weight_pct"),
+        "in": list(indices),
+        "tier": tier,
+    }
+    if state:
+        rec["source_symbol"] = raw.upper()
+        rec["board_state"] = state
+    return rec
+
+
+def _merge_source(existing: dict, incoming: dict) -> None:
+    """When the same company appears on a second index, keep any board-state metadata."""
+    if incoming.get("source_symbol") and not existing.get("source_symbol"):
+        existing["source_symbol"] = incoming["source_symbol"]
+        existing["board_state"] = incoming.get("board_state")
 
 
 def main():
@@ -39,12 +69,17 @@ def main():
 
     members = {}
     for c in kse[:top_n]:
-        members[c["symbol"]] = {**c, "in": ["KSE100"], "tier": "core"}
+        rec = _intake(c, ["KSE100"], "core")
+        members[rec["symbol"]] = rec
     for c in kmi:
-        if c["symbol"] in members:
-            members[c["symbol"]]["in"].append("KMI30")
+        rec = _intake(c, ["KMI30"], "core")
+        s = rec["symbol"]
+        if s in members:
+            if "KMI30" not in members[s]["in"]:
+                members[s]["in"].append("KMI30")
+            _merge_source(members[s], rec)
         else:
-            members[c["symbol"]] = {**c, "in": ["KMI30"], "tier": "core"}
+            members[s] = rec
     n_core = len(members)
 
     # the rest of the market, from the All Share index (every listed company)
@@ -57,18 +92,23 @@ def main():
             print(f"WARN: ALLSHR returned only {n_all} rows — keeping core tier only", file=sys.stderr)
         else:
             for c in allshr:
-                s = c["symbol"]
+                rec = _intake(c, ["ALLSHR"], "listed")
+                s = rec["symbol"]
                 if s in members:
                     if "ALLSHR" not in members[s]["in"]:
                         members[s]["in"].append("ALLSHR")
+                    _merge_source(members[s], rec)
                 else:
-                    members[s] = {**c, "in": ["ALLSHR"], "tier": "listed"}
+                    members[s] = rec
 
     kmi_all = index_constituents("KMIALLSHR") if cover_all else []
     for c in kmi_all:
-        s = c["symbol"]
+        rec = _intake(c, ["KMIALLSHR"], "listed")
+        s = rec["symbol"]
         if s in members and "KMIALLSHR" not in members[s]["in"]:
             members[s]["in"].append("KMIALLSHR")
+        if s in members:
+            _merge_source(members[s], rec)
 
     # ---- non-PSX markets, merged in from config/markets.json --------------------------------
     # This file REGENERATES universe.json from the PSX indices every cycle, so anything not

@@ -38,13 +38,8 @@ MIN_NORMALIZED_TEXT_CHARS = 32
 LEGACY_PARSER_REVISION = "legacy_geometry_v1"
 BASE_DPS_HOST = "dps.psx.com.pk"
 APPROVED_WAVE3_ALLOWLIST: frozenset[str] = frozenset({
-    "psx:260032",
-    "psx:271712",
-    "psx:275425",
-    "psx:260947",
-    "psx:275962",
-    "psx:258917",
-    "psx:276255",
+    "psx:236626",
+    "psx:280589",
 })
 
 DOCUMENT_ID_RE = re.compile(r"^psx:(\d+)$")
@@ -351,7 +346,7 @@ def _validate_redirect_url(doc: VerifiedDocument, base_url: str, location: str) 
     return f"https://{BASE_DPS_HOST}{parsed.path}"
 
 
-def _validate_pdf(body: bytes, budget: RunBudget) -> tuple[int, int]:
+def _validate_pdf(body: bytes, budget: RunBudget, *, allow_image_only: bool = False) -> tuple[int, int]:
     if not body.startswith(b"%PDF-"):
         raise DegradedDocument("pdf_magic_mismatch")
     try:
@@ -374,12 +369,13 @@ def _validate_pdf(body: bytes, budget: RunBudget) -> tuple[int, int]:
         raise DegradedDocument(f"pdf_open_failed:{type(exc).__name__}") from exc
     budget.add_pages(page_count)
     normalized_chars = len(_clean_text(normalized))
-    if normalized_chars < MIN_NORMALIZED_TEXT_CHARS:
+    if normalized_chars < MIN_NORMALIZED_TEXT_CHARS and not allow_image_only:
         raise DegradedDocument("unsupported_image_only")
     return page_count, normalized_chars
 
 
-def fetch_verified_pdf(doc: VerifiedDocument, transport: Any, budget: RunBudget) -> FetchResult:
+def fetch_verified_pdf(doc: VerifiedDocument, transport: Any, budget: RunBudget,
+                       *, allow_image_only: bool = False) -> FetchResult:
     url = doc.url
     response = None
     for hop in range(MAX_REDIRECTS + 1):
@@ -428,7 +424,7 @@ def fetch_verified_pdf(doc: VerifiedDocument, transport: Any, budget: RunBudget)
     content_sha = hashlib.sha256(raw).hexdigest()
     if doc.content_sha256 and content_sha != doc.content_sha256:
         raise DegradedDocument("known_receipt_hash_mismatch")
-    page_count, normalized_chars = _validate_pdf(raw, budget)
+    page_count, normalized_chars = _validate_pdf(raw, budget, allow_image_only=allow_image_only)
     return FetchResult(body=raw, content_sha256=content_sha, content_length=len(raw), final_url=final_url,
                        content_type=content_type, page_count=page_count, normalized_chars=normalized_chars)
 

@@ -4,8 +4,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from psx_data import STATE, load_json, save_json
-from financial_statement_facts import PARSER_VERSION, PARSER_REVISION
-from forecast_contract import selected_model_version
+from forecast_contract import qualified_financial_fact_source, selected_model_version
 
 OUT = STATE / 'company_intel' / 'financial_model_inputs.json'
 LINES = ('revenue','profit_after_tax_attributable','basic_eps','gross_profit','operating_profit')
@@ -21,7 +20,7 @@ def build():
         exchange_sector=(sectors.get(sym) or {}).get('sector')
         if not exchange_sector:
             exchange_sector=(profiles.get('companies') or {}).get(sym,{}).get('sector')
-        model=selected_model_version(sym,exchange_sector); facts=[f for f in (series.get(sym,{}).get('facts') or []) if f.get('parser_version')==PARSER_VERSION and f.get('parser_revision')==PARSER_REVISION and f.get('readiness')=='model_loadable' and f.get('line') in LINES]
+        model=selected_model_version(sym,exchange_sector); facts=[f for f in (series.get(sym,{}).get('facts') or []) if qualified_financial_fact_source(f) and f.get('readiness')=='model_loadable' and f.get('line') in LINES]
         groups={}
         for f in facts:
             key=(f.get('line'),f.get('period_end'),f.get('consolidation'),f.get('currency'),f.get('unit'),f.get('unit_multiplier'),f.get('statement_type'))

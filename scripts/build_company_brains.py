@@ -1,7 +1,6 @@
 """Build the compact, reference-only Company Brain index for the CI pilot."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import hashlib
 from pathlib import Path
 import sys
@@ -173,6 +172,41 @@ def _stable_id(symbol: str, product: str, source_id: str) -> str:
 
 def _date(value: object) -> str | None:
     return value[:10] if isinstance(value, str) and len(value) >= 10 else None
+
+
+def _metadata_dates(value: object) -> list[str]:
+    if isinstance(value, str):
+        day = _date(value)
+        return [day] if day else []
+    if isinstance(value, dict):
+        dates: list[str] = []
+        for item in value.values():
+            dates.extend(_metadata_dates(item))
+        return dates
+    if isinstance(value, list):
+        dates: list[str] = []
+        for item in value:
+            dates.extend(_metadata_dates(item))
+        return dates
+    return []
+
+
+def _input_as_of(states: list[dict], companies: dict) -> str:
+    dates: list[str] = []
+    for state in states:
+        if not isinstance(state, dict):
+            continue
+        for key in ("as_of", "updated"):
+            dates.extend(_metadata_dates(state.get(key)))
+        if isinstance(state.get("_meta"), dict):
+            for key in ("as_of", "updated", "built"):
+                dates.extend(_metadata_dates(state["_meta"].get(key)))
+    for company in companies.values():
+        for obj in company.get("intelligence_objects") or []:
+            day = _date(obj.get("available_on"))
+            if day:
+                dates.append(day)
+    return max(dates) if dates else "unknown"
 
 
 def _evidence_refs(evidence: object) -> list[dict]:
@@ -369,9 +403,10 @@ def build(write: bool = True) -> dict:
                 "object_count": len(objects),
             },
         }
+    as_of = _input_as_of([profiles, briefs, operating, studies, *formal_engines.values(), *source_index_products.values()], companies)
     result = {
         "schema_version": 1,
-        "as_of": datetime.now(timezone.utc).date().isoformat(),
+        "as_of": as_of,
         "pilot_symbols": pilot,
         "intelligence_types": list(INTELLIGENCE_TYPES),
         "domains": list(BRAIN_DOMAINS),

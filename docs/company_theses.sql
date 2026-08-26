@@ -1,6 +1,10 @@
 -- Private company thesis storage contract.
 -- Reference-only SQL: this file is NOT APPLIED by the desk. Apply manually only after review.
 -- Scope: authenticated owner-only notes for the exact 20-company PSX pilot.
+-- Activation receipt: this contract was applied to the dedicated Henneth CI project
+-- (ref `wexonytulckejkynncvv`) as migration `activate_private_company_theses` on
+-- 2026-08-27. The legacy desk project remains unchanged; retain this repeatable
+-- contract and the NOT APPLIED wording above for its separate activation path.
 
 create or replace function public.company_theses_jsonb_string_array_is_bounded(
   value jsonb,

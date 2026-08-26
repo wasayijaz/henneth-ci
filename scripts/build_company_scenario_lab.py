@@ -28,6 +28,12 @@ def build(profile_path: Path = PILOT, fundamentals_path: Path = FUND,
         revenue = parse_scaled(f["revenue"])
         net_income = parse_scaled(f["net_income"])
         shares = parse_scaled(f["shares_out"])
+        # baseline eps is DERIVED (net_income / shares_out), matching this file's own
+        # published formula_operands.baseline_eps contract and the eps definition
+        # scenario.v1/reverse.v1 use downstream. The vendor's own separately-scraped
+        # eps field (state/fundamentals.json) is not trusted here for the same reason
+        # payout_ratio is recomputed in fetch_fundamentals.py: independently-scraped
+        # vendor fields on the same page are not guaranteed mutually consistent.
         eps = net_income / shares
         price = float(q["close"])
         if min(revenue, net_income, shares, eps, price) <= 0:

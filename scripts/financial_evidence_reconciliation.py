@@ -11,8 +11,7 @@ import re
 from datetime import date
 from typing import Any
 
-from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
-from forecast_contract import BLOCKED_OUTPUT_STATUS, REQUIRED_LINES, qualified_periods
+from forecast_contract import BLOCKED_OUTPUT_STATUS, REQUIRED_LINES, qualified_financial_fact_source, qualified_periods
 
 
 RECONCILIATION_VERSION = "financial_evidence_reconciliation_v1"
@@ -38,9 +37,13 @@ def iso_date(value: Any) -> str | None:
     text = str(value or "").strip()
     try:
         date.fromisoformat(text)
+        return text
+    except ValueError:
+        pass
+    try:
+        return date.fromisoformat(text[:10]).isoformat()
     except ValueError:
         return None
-    return text
 
 
 def _num(value: Any) -> float | int | None:
@@ -96,10 +99,8 @@ def classification_reasons(fact: dict[str, Any], as_of: str | None = None) -> li
     as_of_date = iso_date(as_of)
     if fact.get("line") not in ELIGIBLE_LINES:
         reasons.append("outside_required_earnings_bridge_metric_set")
-    if fact.get("parser_version") != PARSER_VERSION:
-        reasons.append("legacy_parser_version_quarantine")
-    if fact.get("parser_revision") != PARSER_REVISION:
-        reasons.append("legacy_parser_revision_quarantine")
+    if not qualified_financial_fact_source(fact):
+        reasons.append("unqualified_financial_fact_source")
     if fact.get("readiness") == "audit_only":
         reasons.append("readiness_is_audit_only")
     elif fact.get("readiness") != "model_loadable":

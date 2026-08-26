@@ -91,6 +91,8 @@ def _assert_shape(data: dict, pilot: list[str]) -> int:
             ids.add(obj.get("guidance_id"))
             if obj.get("symbol") != symbol or obj.get("domain") not in {"guidance", "risks"}:
                 _fail(f"{symbol}: invalid guidance object symbol/domain")
+            if obj.get("assertion_type") not in {"delivery_promise", "management_priority", "project_capacity_action", "stated_risk", "operating_constraint"}:
+                _fail(f"{symbol}: invalid guidance assertion type")
             if not obj.get("assertion_key") or not obj.get("conflict_key") or not obj.get("modality"):
                 _fail(f"{symbol}: missing normalized keys")
             evidence = obj.get("evidence") or {}
