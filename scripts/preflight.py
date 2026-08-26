@@ -836,6 +836,18 @@ def check_financial_coverage_ui():
     except Exception as e:
         fail(f"check_financial_coverage_ui.mjs did not run — {e}")
 
+def check_financial_evidence_reconciliation_ui():
+    path = os.path.join(ROOT, "scripts", "check_financial_evidence_reconciliation_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_financial_evidence_reconciliation_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("financial evidence reconciliation UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_financial_evidence_reconciliation_ui.mjs did not run — {e}")
+
 def check_company_scenario_lab():
     path = os.path.join(ROOT, "scripts", "check_company_scenario_lab.py")
     if not os.path.exists(path):
@@ -999,6 +1011,7 @@ def main():
     check_financial_evidence_reconciliation()
     check_forecast_readiness_ui()
     check_financial_coverage_ui()
+    check_financial_evidence_reconciliation_ui()
     check_company_scenario_lab()
     check_company_scenario_lab_ui()
     check_company_brains()

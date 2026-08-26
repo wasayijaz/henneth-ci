@@ -1181,18 +1181,122 @@ function renderCompanyEarnings(r) {
   const readiness = r.forecast_readiness || {};
   const coverage = r.financial_coverage || {};
   const model = r.financial_model_inputs || {};
-  return `<section class="panel span9 blocked-shell" aria-labelledby="earningsTitle">
-    <span class="kicker">Earnings</span><h2 id="earningsTitle">Earnings bridge blocked by readiness</h2>
-    <p class="section-note">Earnings analysis is not generated until qualified multi-period annual consolidated history exists. This page shows readiness state only; it does not infer earnings direction, bridge drivers, forecast EPS, or value the company.</p>
-    <div class="blocked-grid">
-      <span>Readiness <b>${esc(readiness.status || "blocked")}</b></span>
-      <span>Activation <b>${esc(readiness.activation_status || "blocked_insufficient_qualified_history")}</b></span>
-      <span>Qualified periods <b>${esc(readiness.qualified_period_count ?? 0)}</b></span>
-      <span>Coverage queue <b>${esc(coverage.status || "unknown")}</b></span>
-      <span>Model inputs <b>${esc(model.status || "unknown")}</b></span>
-      <span>Forecast <b>${esc(readiness.downstream_status?.forecast || "blocked_insufficient_qualified_history")}</b></span>
+  return `<section class="company-route-stack">
+    <section class="panel span9 blocked-shell" aria-labelledby="earningsTitle">
+      <span class="kicker">Earnings</span><h2 id="earningsTitle">Earnings bridge blocked by readiness</h2>
+      <p class="section-note">Earnings analysis is not generated until qualified multi-period annual consolidated history exists. This page shows readiness state only; it does not infer earnings direction, bridge drivers, forecast EPS, or value the company.</p>
+      <div class="blocked-grid">
+        <span>Readiness <b>${esc(readiness.status || "blocked")}</b></span>
+        <span>Activation <b>${esc(readiness.activation_status || "blocked_insufficient_qualified_history")}</b></span>
+        <span>Qualified periods <b>${esc(readiness.qualified_period_count ?? 0)}</b></span>
+        <span>Coverage queue <b>${esc(coverage.status || "unknown")}</b></span>
+        <span>Model inputs <b>${esc(model.status || "unknown")}</b></span>
+        <span>Forecast gate <b>${esc(readiness.downstream_status?.forecast || "blocked_insufficient_qualified_history")}</b></span>
+      </div>
+      ${readinessList(readiness.missing_requirements, "Missing requirement: three aligned annual revenue, PAT and EPS periods.")}
+    </section>
+    ${renderFinancialEvidenceReconciliation(r)}
+  </section>`;
+}
+
+function reconciliationSourceLink(source, fallback = "official source") {
+  const href = safeHref(source?.source_url);
+  const doc = source?.document_id || source?.fact_id || fallback;
+  const page = source?.page ? ` · p.${source.page}` : "";
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(doc)}${esc(page)}</a>`
+    : `<span>${esc(doc)}${esc(page)}</span>`;
+}
+
+function reconciliationFactRow(fact) {
+  const source = fact?.source || {};
+  const reasons = Array.isArray(fact?.reasons) ? fact.reasons : [];
+  const value = fact?.normalized_value ?? "unknown";
+  return `<article class="reconciliation-row">
+    <header><b>${esc(fact?.metric || "metric unknown")}</b><span>${esc(fact?.status || "status unknown")}</span></header>
+    <div class="reconciliation-meta">
+      <span>Period <b>${esc(fact?.period_end || "unknown")}</b></span>
+      <span>Value <b>${esc(value)}</b></span>
+      <span>Basis <b>${esc(fact?.consolidation || "unknown")} · ${esc(fact?.currency || "currency unknown")}</b></span>
+      <span>Evidence <b>${reconciliationSourceLink(source)}</b></span>
     </div>
-    ${readinessList(readiness.missing_requirements, "Missing requirement: three aligned annual revenue, PAT and EPS periods.")}
+    <p>${esc(short(source.text || reasons.join(", ") || fact?.evidence_label || "No evidence note emitted.", 180))}</p>
+  </article>`;
+}
+
+function reconciliationConflictRow(conflict) {
+  const values = Array.isArray(conflict?.values) ? conflict.values : [];
+  return `<article class="reconciliation-row">
+    <header><b>${esc(conflict?.metric || "metric unknown")} conflict</b><span>${esc(conflict?.status || "quarantined")}</span></header>
+    <div class="reconciliation-meta">
+      <span>Period <b>${esc(conflict?.period_end || "unknown")}</b></span>
+      <span>Reason <b>${esc(conflict?.reason || "conflict retained")}</b></span>
+      <span>Conflict ID <b>${esc(conflict?.conflict_id || "unknown")}</b></span>
+    </div>
+    <div class="reconciliation-links">
+      ${values.length ? values.slice(0, 4).map(value => reconciliationSourceLink(value, value?.document_id || value?.fact_id || "conflict source")).join("") : `<span>No source values emitted.</span>`}
+    </div>
+  </article>`;
+}
+
+function reconciliationMissingSlotRow(slot) {
+  const source = slot?.source || {};
+  return `<article class="reconciliation-row">
+    <header><b>${esc(slot?.metric || "metric unknown")} missing</b><span>${esc(slot?.status || "missing")}</span></header>
+    <div class="reconciliation-meta">
+      <span>Slot <b>${esc(slot?.slot || "annual slot")}</b></span>
+      <span>Period <b>${esc(slot?.period_end || "unknown")}</b></span>
+      <span>Evidence <b>${esc(slot?.period_evidence_status || "unknown")}</b></span>
+      <span>Document <b>${esc(source.document_id || "no document")}</b></span>
+    </div>
+    <p>${esc(source.title || source.matched_text || slot?.reason || "Missing eligible reported fact for required annual slot.")}</p>
+  </article>`;
+}
+
+function renderFinancialEvidenceReconciliation(r) {
+  const reconciliation = r.financial_evidence_reconciliation && typeof r.financial_evidence_reconciliation === "object" && !Array.isArray(r.financial_evidence_reconciliation)
+    ? r.financial_evidence_reconciliation
+    : null;
+  if (!reconciliation) {
+    return `<section class="panel span9 financial-reconciliation" aria-labelledby="financialReconciliationTitle">
+      <span class="kicker">Financial evidence reconciliation</span><h2 id="financialReconciliationTitle">Unavailable: not generated</h2>
+      <p class="section-note">Read-only state is expected at row.financial_evidence_reconciliation. The browser does not qualify facts, count eligibility, match conflicts, calculate forecasts, value the company, or provide advice.</p>
+      <div class="empty">Financial evidence reconciliation is unavailable: not generated.</div>
+    </section>`;
+  }
+  const facts = Array.isArray(reconciliation.facts) ? reconciliation.facts : [];
+  const conflicts = Array.isArray(reconciliation.conflicts) ? reconciliation.conflicts : [];
+  const missing = Array.isArray(reconciliation.missing_slots) ? reconciliation.missing_slots : [];
+  const readiness = reconciliation.readiness || {};
+  return `<section class="panel span9 financial-reconciliation" aria-labelledby="financialReconciliationTitle">
+    <span class="kicker">Financial evidence reconciliation</span><h2 id="financialReconciliationTitle">Source ledger behind earnings readiness</h2>
+    <p class="section-note">Read-only backend output from row.financial_evidence_reconciliation. The browser displays emitted state only: it does not qualify facts, count eligibility from rows, choose among conflicts, calculate forecasts, value the company, or provide advice.</p>
+    <div class="reconciliation-summary">
+      <span>Status <b>${esc(reconciliation.status || "unknown")}</b></span>
+      <span>Eligible <b>${esc(reconciliation.eligible_fact_count ?? "unknown")}</b></span>
+      <span>Audit-only <b>${esc(reconciliation.audit_only_fact_count ?? "unknown")}</b></span>
+      <span>Quarantined <b>${esc(reconciliation.quarantined_fact_count ?? "unknown")}</b></span>
+      <span>Missing slots <b>${esc(reconciliation.missing_slot_count ?? "unknown")}</b></span>
+      <span>Conflicts <b>${esc(reconciliation.source_conflict_count ?? "unknown")}</b></span>
+    </div>
+    <div class="reconciliation-readiness">
+      <span>Earnings bridge <b>${esc(readiness.earnings_bridge_status || "blocked")}</b></span>
+      <span>Forecast readiness <b>${esc(readiness.forecast_readiness_status || "blocked")}</b></span>
+      <span>Forecast gate <b>${esc(readiness.forecast || "blocked_insufficient_qualified_history")}</b></span>
+      <span>Reason <b>${esc(readiness.reason || "formal_forecast_readiness_remains_blocked")}</b></span>
+    </div>
+    <section class="reconciliation-section">
+      <h3>Fact ledger</h3>
+      ${facts.length ? `<div class="reconciliation-list">${facts.slice(0, 6).map(reconciliationFactRow).join("")}</div><p class="muted">Bounded backend fact-row preview. The emitted summary above is authoritative for the full ledger.</p>` : `<div class="empty">No fact rows were emitted.</div>`}
+    </section>
+    <section class="reconciliation-section">
+      <h3>Conflicts</h3>
+      ${conflicts.length ? `<div class="reconciliation-list">${conflicts.slice(0, 4).map(reconciliationConflictRow).join("")}</div>` : `<div class="empty">No source conflicts were emitted.</div>`}
+    </section>
+    <section class="reconciliation-section">
+      <h3>Missing annual slots</h3>
+      ${missing.length ? `<div class="reconciliation-list">${missing.slice(0, 9).map(reconciliationMissingSlotRow).join("")}</div>` : `<div class="empty">No missing annual slots were emitted.</div>`}
+    </section>
   </section>`;
 }
 
