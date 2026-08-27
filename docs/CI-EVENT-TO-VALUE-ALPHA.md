@@ -40,7 +40,7 @@ source-qualified financial, valuation, and current-price-expectations outputs.
 | Formal engines | `financial_forecasts.json`, `formal_valuations.json`, `market_expectations.json` | Deterministic code exists; 0 computed / 20 | Alpha must prove live outputs for three cases, not merely engine code. |
 | Historical analogue state | `state/company_intel/conditional_benchmarks.json` | 21 dated benchmarks; thin samples remain suppressed | Golden cases need case-specific, cutoff-safe analogue evidence. |
 | Private thesis storage | `private_thesis_storage_receipt.json` | Schema configured; live CRUD/cross-user RLS proof absent | Persisted owner scenarios/theses stay disabled until verified. |
-| CI release integrity | Current generated state has mixed date conventions and no universal build-cutoff/reproducibility envelope | Open | Part 0 is a hard gate before new case output. |
+| CI release integrity | Generated CI state now carries a reproducible build envelope, but checked-in artifacts cannot contain the hash of the commit that contains them | In progress | Part 0 remains gated on exact release-time restamping plus live deployment/auth proof. |
 | Deployment gate | `docs/OPERATIONS.md` describes main-branch publishing; preview-to-production parity is not yet proven | Open | Part 0 must prevent a failing commit reaching production. |
 
 ## Golden-company selection register
@@ -93,7 +93,10 @@ same commit:
   `build_cutoff_at`, and `generated_at`, then writes a hash-backed manifest.
   Invalid or unknown commit identities fail closed.
 - `scripts/check_ci_artifact_integrity.py` verifies every artifact hash and
-  requires the manifest source commit to match the checked-out commit.
+  validates the stored source commit. Static checkout checks accept an older
+  generated run because a committed file cannot name its own containing commit;
+  CI and release jobs fail closed by supplying `GITHUB_SHA` /
+  `HENNETH_CI_SOURCE_COMMIT_SHA` immediately after finalization.
 - `scripts/check_ci_global_no_lookahead.py` treats the generated envelope as
   metadata rather than economic timing, while continuing to check source and
   provenance dates. It passed locally over 43 artifacts / 16,368 date
@@ -109,10 +112,11 @@ same commit:
   not an investor-facing generated artifact.
 - `.github/workflows/ci-production-release.yml` supplies the controlled
   preview-to-promotion route, guarded by the `ci-production` environment. The
-  workflow stamps the preview with `githubCommitSha`, verifies that metadata
-  through the Vercel deployment API, and after promotion verifies the
-  production domain resolves to that same deployment id and commit without a
-  rebuild. The workflow is code-complete but its Vercel Git-deploy setting,
+  preview job restamps the private CI slice to the release `github.sha` before
+  Vercel builds it, stamps the Vercel preview with `githubCommitSha`, verifies
+  that metadata through the Vercel deployment API, and after promotion verifies
+  the production domain resolves to that same deployment id and commit without
+  a rebuild. The workflow is code-complete but its Vercel Git-deploy setting,
   protected environment secrets, and first live receipt remain external
   evidence.
 - **Not evidenced yet:** a GitHub Actions green run, a preview deployment and
@@ -127,3 +131,4 @@ same commit:
 | 2026-08-27 | Alpha execution record created; no case selected or promoted. | This document and the retained baseline files named above. |
 | 2026-08-27 | Completed retained-state candidate audit without promoting weak evidence. | E&P: `company_event_ledger.json` OGDC `evt_2564e46943e475e1c5dd`; industrial: DGKC `evt_c66c444c35780cf5951e`; sales-led: PSO `evt_2f3bfdf4a586999e66b6` / `evt_30027cd832df431a70a9`. All three case slots remain unselected until the strict financial/event gates are met. |
 | 2026-08-28 | Implemented and locally verified the Part 0 integrity envelope and finalizer ordering. | 37 sealed artifacts; source-commit binding; workflow structural check; 43-artifact no-lookahead scan; focused metadata-safe deterministic checks. Live deployment/auth evidence remains open. |
+| 2026-08-28 | Repaired the artifact source-commit model so static checked-in JSON does not falsely fail after commit, while CI and release jobs restamp and verify against the exact `GITHUB_SHA`. | `check_ci_artifact_integrity.py --self-test`; CI contract exact-commit verification step; release preview restamp before Vercel build. |

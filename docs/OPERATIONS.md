@@ -206,9 +206,10 @@ alter `middleware.js`, the owner environment value, the project root, or the pri
 `ci.henneth.app` must not receive a production deployment merely because a
 commit reaches `main`. The release path is
 `.github/workflows/ci-production-release.yml`: validate the repository,
-deploy one preview, run the public and protected smoke checks, then promote
-that exact preview without rebuilding. The `ci-production` GitHub Environment
-is the owner checkpoint immediately before promotion.
+restamp the CI artifact envelope to the release commit, deploy one preview,
+run the public and protected smoke checks, then promote that exact preview
+without rebuilding. The `ci-production` GitHub Environment is the owner
+checkpoint immediately before promotion.
 
 Required one-time Vercel/GitHub configuration (external to this repository):
 

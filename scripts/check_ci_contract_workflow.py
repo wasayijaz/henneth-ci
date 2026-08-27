@@ -230,6 +230,10 @@ def validate_workflow(workflow: dict[str, Any]) -> list[str]:
     aggregate = named.get("Company Intelligence product contract aggregate")
     if not aggregate or "python scripts/check_ci_product_contracts.py" not in str(aggregate.get("run", "")):
         errors.append("steps: missing Company Intelligence product contract aggregate")
+    integrity_check = named.get("Verify finalized artifacts match this commit")
+    integrity_check_run = str(integrity_check.get("run", "")) if integrity_check else ""
+    if not integrity_check or "python scripts/check_ci_artifact_integrity.py" not in integrity_check_run:
+        errors.append("steps: missing exact-commit artifact-integrity verification after finalization")
     if setup is not None:
         setup_index = steps.index(setup)
         for label in (
@@ -238,6 +242,7 @@ def validate_workflow(workflow: dict[str, Any]) -> list[str]:
             "Set CI build cutoff",
             "JavaScript syntax",
             "Build generated Company Intelligence artifacts",
+            "Verify finalized artifacts match this commit",
             "Company Intelligence product contract aggregate",
             "Preflight gate",
         ):
@@ -245,8 +250,13 @@ def validate_workflow(workflow: dict[str, Any]) -> list[str]:
             if step is not None and steps.index(step) < setup_index:
                 errors.append(f"steps: {label} runs before Python 3.12 setup")
     ci_build_index = steps.index(ci_build) if ci_build in steps else None
+    integrity_check_index = steps.index(integrity_check) if integrity_check in steps else None
     aggregate_index = steps.index(aggregate) if aggregate in steps else None
     preflight_index = steps.index(preflight) if preflight in steps else None
+    if ci_build_index is not None and integrity_check_index is not None and integrity_check_index < ci_build_index:
+        errors.append("steps: artifact-integrity verification runs before CI artifact finalization")
+    if integrity_check_index is not None and aggregate_index is not None and aggregate_index < integrity_check_index:
+        errors.append("steps: product contract aggregate runs before exact-commit artifact verification")
     if ci_build_index is not None and aggregate_index is not None and aggregate_index < ci_build_index:
         errors.append("steps: product contract aggregate runs before CI artifact build")
     if aggregate_index is not None and preflight_index is not None and preflight_index < aggregate_index:
@@ -284,6 +294,8 @@ jobs:
           python scripts/build_ci_completion_matrix.py
           python scripts/build_ci_slice.py
           python scripts/build_ci_artifact_integrity.py
+      - name: Verify finalized artifacts match this commit
+        run: python scripts/check_ci_artifact_integrity.py
       - name: Company Intelligence product contract aggregate
         run: python scripts/check_ci_product_contracts.py
       - name: Preflight gate

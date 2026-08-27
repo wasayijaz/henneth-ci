@@ -46,9 +46,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Install Python requirements
+        run: python -m pip install -r requirements.txt
+      - name: Set release artifact cutoff
+        run: echo "HENNETH_CI_BUILD_CUTOFF_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      - name: Finalize CI artifacts for this release commit
+        env:
+          HENNETH_CI_SOURCE_COMMIT_SHA: ${{ github.sha }}
+        run: |
+          python scripts/build_ci_artifact_integrity.py
+          python scripts/check_ci_artifact_integrity.py
       - name: Build the CI preview artifact
         working-directory: Henneth Desk 2.CI.0
         env:

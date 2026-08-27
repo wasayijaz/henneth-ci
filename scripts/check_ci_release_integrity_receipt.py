@@ -137,6 +137,14 @@ def _assert_evidence(receipt: dict[str, Any], release_sha: str) -> bool:
         fail("github_ci.run_id must be a string or null")
     if github.get("checked_at") is not None:
         _assert_utc(github.get("checked_at"), "github_ci.checked_at")
+    if github.get("status") == "success":
+        if _assert_commit(github.get("commit_sha"), "github_ci.commit_sha") != release_sha:
+            fail("successful github_ci evidence must name the release commit")
+        if not isinstance(github.get("workflow"), str) or not github.get("workflow").strip():
+            fail("successful github_ci evidence must name the workflow")
+        if not isinstance(github.get("run_id"), str) or not github.get("run_id").strip():
+            fail("successful github_ci evidence must name the run")
+        _assert_utc(github.get("checked_at"), "github_ci.checked_at")
 
     for name in ("preview_deployment", "production_deployment"):
         row = evidence[name]
@@ -150,6 +158,12 @@ def _assert_evidence(receipt: dict[str, Any], release_sha: str) -> bool:
             fail(f"{name} commit does not match release commit")
         if row.get("checked_at") is not None:
             _assert_utc(row.get("checked_at"), f"{name}.checked_at")
+        if row.get("status") == "ready":
+            if not isinstance(row.get("url"), str) or not row.get("url").strip():
+                fail(f"ready {name} evidence must include a URL")
+            if _assert_commit(row.get("commit_sha"), f"{name}.commit_sha") != release_sha:
+                fail(f"ready {name} evidence must name the release commit")
+            _assert_utc(row.get("checked_at"), f"{name}.checked_at")
 
     login = evidence["public_login_smoke"]
     if not isinstance(login, dict) or set(login) != {"status", "url", "checked_at"}:
@@ -159,6 +173,10 @@ def _assert_evidence(receipt: dict[str, Any], release_sha: str) -> bool:
     if login.get("url") is not None:
         _assert_url(login.get("url"), "public_login_smoke.url")
     if login.get("checked_at") is not None:
+        _assert_utc(login.get("checked_at"), "public_login_smoke.checked_at")
+    if login.get("status") == "passed":
+        if not isinstance(login.get("url"), str) or not login.get("url").strip():
+            fail("passed public login evidence must include a URL")
         _assert_utc(login.get("checked_at"), "public_login_smoke.checked_at")
 
     owner = evidence["owner_private_data_smoke"]
@@ -172,6 +190,12 @@ def _assert_evidence(receipt: dict[str, Any], release_sha: str) -> bool:
         fail("owner private data smoke must prove HTTP 200")
     if owner.get("checked_at") is not None:
         _assert_utc(owner.get("checked_at"), "owner_private_data_smoke.checked_at")
+    if owner.get("status") == "passed":
+        if not isinstance(owner.get("url"), str) or not owner.get("url").strip():
+            fail("passed owner private-data evidence must include a URL")
+        if owner.get("http_status") != 200:
+            fail("passed owner private-data evidence must prove HTTP 200")
+        _assert_utc(owner.get("checked_at"), "owner_private_data_smoke.checked_at")
 
     non_owner = evidence["non_owner_private_data_smoke"]
     if not isinstance(non_owner, dict) or set(non_owner) != {"status", "url", "http_status", "checked_at"}:
@@ -183,6 +207,12 @@ def _assert_evidence(receipt: dict[str, Any], release_sha: str) -> bool:
     if non_owner.get("http_status") is not None and non_owner.get("http_status") != 403:
         fail("non-owner private data smoke must prove HTTP 403")
     if non_owner.get("checked_at") is not None:
+        _assert_utc(non_owner.get("checked_at"), "non_owner_private_data_smoke.checked_at")
+    if non_owner.get("status") == "passed":
+        if not isinstance(non_owner.get("url"), str) or not non_owner.get("url").strip():
+            fail("passed non-owner private-data evidence must include a URL")
+        if non_owner.get("http_status") != 403:
+            fail("passed non-owner private-data evidence must prove HTTP 403")
         _assert_utc(non_owner.get("checked_at"), "non_owner_private_data_smoke.checked_at")
 
     return _status_is_success(evidence)
@@ -352,6 +382,24 @@ def _self_test() -> int:
             pass
         else:
             print("self-test failed: verified status without evidence was accepted")
+            return 1
+        incomplete_success = _passing_receipt(commit_sha)
+        incomplete_success["required_evidence"]["preview_deployment"]["commit_sha"] = None
+        try:
+            validate(incomplete_success)
+        except AssertionError:
+            pass
+        else:
+            print("self-test failed: ready preview without commit identity was accepted")
+            return 1
+        incomplete_auth = _passing_receipt(commit_sha)
+        incomplete_auth["required_evidence"]["owner_private_data_smoke"]["checked_at"] = None
+        try:
+            validate(incomplete_auth)
+        except AssertionError:
+            pass
+        else:
+            print("self-test failed: passed owner smoke without timestamp was accepted")
             return 1
     print("ci release integrity receipt self-test: ok")
     return 0

@@ -46,6 +46,11 @@ def _analogue_outcomes(event, all_events, sectors, histories):
 
 def build():
     profiles = load_json(STATE / "company_profiles.json", {}); pilot = set((profiles.get("pilot") or {}).get("symbols") or [])
+    # The CI artifact finalizer stamps this generated file with a release envelope.
+    # Preserve that envelope when rebuilding so a checker-triggered repeat run is
+    # byte-stable; the finalizer will refresh it at the end of the next full cycle.
+    existing = load_json(OUT, {})
+    existing_meta = existing.get("_meta") if isinstance(existing, dict) else None
     event_state = load_json(STATE / "company_intel" / "operating_events.json", {}); sector_state = load_json(STATE / "sectors.json", {}).get("tickers") or {}
     sectors = {s: (sector_state.get(s) or {}).get("sector") for s in pilot}; histories = {s: _history(s) for s in pilot}; indices = _index_history()
     events = [e for s in sorted(pilot) for e in ((event_state.get("companies", {}).get(s) or {}).get("events") or [])]
@@ -64,5 +69,7 @@ def build():
         for name, h in horizons.items(): h["provenance"] = {"history_file": f"state/history/{sym}.json", "baseline_date": baseline.get("date") if baseline else None, "endpoint_date": h.get("selected_date"), "target_date": h.get("target_date")}
         studies[event["event_id"]] = {"study_id": "study_" + event["event_id"].removeprefix("evt_"), "event_id": event["event_id"], "symbol": sym, "event_type": event.get("event_type"), "effective_date": event.get("effective_date"), "data_cutoff": last_day.isoformat() if last_day else None, "baseline": {"selected_date": baseline.get("date") if baseline else None, "selected_close": baseline.get("close") if baseline else None, "status": "available" if baseline else "unavailable", "reason": None if baseline else ("invalid_effective_date" if not day else "no_baseline_close"), "provenance": {"history_file": f"state/history/{sym}.json", "selected_date": baseline.get("date") if baseline else None}}, "horizons": horizons, "kse100_relative": {"stock_return_pct": stock_map, "index_return_pct": index_map, "relative_return_pct": rel, "returns_pct": rel, "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return", "reasons": reasons, "provenance": {"indices_file": "state/indices.json", "selected_dates": {name: [baseline.get("date") if baseline else None, (horizons[name].get("selected_date"))] for name, _ in HORIZONS}}}, "analogues": analogues, "analogue_aggregate": aggregate, "financial_outcomes": {"revenue": None, "margin": None, "eps": None, "roic": None, "fcf": None, "valuation": None, "missing_inputs": ["period_aligned_financials", "event_attribution_model"]}, "limitations": ["raw_price_return_not_adjusted_or_total_return", "historical_association_not_causal", "current_sector_analogues_survivorship_bias"]}
     out = {"schema_version": 1, "pilot_symbols": sorted(pilot), "study_count": len(studies), "studies": studies, "source": "state/company_intel/operating_events.json + state/history + state/indices.json"}
+    if isinstance(existing_meta, dict):
+        out["_meta"] = existing_meta
     save_json(OUT, out); print(f"event_studies: {len(studies)} studies across {len(pilot)} pilot companies"); return out
 if __name__ == "__main__": build()
