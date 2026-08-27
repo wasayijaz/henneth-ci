@@ -593,6 +593,31 @@ def _formal_engine_meta(engine_state):
     }
 
 
+def _empty_cement_operating_series(sym, sector):
+    return {
+        "symbol": sym,
+        "status": "unknown",
+        "activation_status": "not_applicable",
+        "observation_count": 0,
+        "annual_period_count": 0,
+        "metrics": {},
+        "downstream_status": {
+            "financial_model_inputs": "not_activated",
+            "forecast": "not_activated",
+            "valuation": "not_activated",
+            "market_expectations": "not_activated",
+        },
+        "quality_flags": [
+            "not_in_cement_operating_series_scope" if str(sector or "").upper() != "CEMENT" else "cement_operating_series_state_missing",
+        ],
+    }
+
+
+def _cement_operating_series(cement_state, sym, sector):
+    row = (cement_state.get("companies") or {}).get(sym)
+    return dict(row) if isinstance(row, dict) else _empty_cement_operating_series(sym, sector)
+
+
 def _company_brief(brief_state, document_state, sym):
     row = (brief_state.get("companies") or {}).get(sym) or {}
     current = row.get("current") or None
@@ -651,6 +676,7 @@ def build():
     change_intelligence = load_json(STATE / "company_intel" / "change_intelligence.json", {"companies": {}})
     company_briefs = load_json(STATE / "company_briefs.json", {"companies": {}})
     operating_events = load_json(STATE / "company_intel" / "operating_events.json", {"companies": {}})
+    cement_operating_series = load_json(STATE / "company_intel" / "cement_operating_series.json", {"companies": {}})
     driver_graphs = load_json(STATE / "company_intel" / "driver_graphs.json", {"companies": {}})
     impact_scenarios = load_json(STATE / "company_intel" / "impact_scenarios.json", {"companies": {}})
     event_studies = load_json(STATE / "company_intel" / "event_studies.json", {"studies": {}})
@@ -701,6 +727,7 @@ def build():
         sc = score.get(sym, {})
         fv = fairvalue.get(sym, {})
         liq = liquidity.get(sym, {})
+        sector = (sectors.get(sym) or {}).get("sector") or ""
         profile = profiles.get(sym, {})
         filings = _company_filings(company_documents, queue_status, sym)
         timeline, changes = _company_timeline(company_events, sym)
@@ -710,6 +737,7 @@ def build():
         change_digest = _change_intelligence(change_intelligence, sym)
         brief = _company_brief(company_briefs, company_documents, sym)
         op_events = (operating_events.get("companies", {}).get(sym) or {}).get("events") or []
+        cement_operating_row = _cement_operating_series(cement_operating_series, sym, sector)
         dgraph = driver_graphs.get("companies", {}).get(sym) or {"sector": None, "drivers": [], "edges": [], "quality_flags": ["missing_driver_graph"]}
         scenarios = (impact_scenarios.get("companies", {}).get(sym) or {}).get("scenarios") or []
         studies = [v for v in (event_studies.get("studies") or {}).values() if v.get("symbol") == sym]
@@ -812,7 +840,7 @@ def build():
         rows.append({
             "symbol": sym,
             "name": (universe.get(sym) or {}).get("name") or f.get("name") or "",
-            "sector": (sectors.get(sym) or {}).get("sector") or "",
+            "sector": sector,
             "indices": (universe.get(sym) or {}).get("in", []),
             "price": {
                 "current": lv.get("current") or q.get("close"),
@@ -860,6 +888,7 @@ def build():
             "source_quality": _source_quality(source_qa, sym),
             "brief": brief,
             "operating_events": op_events,
+            "cement_operating_series": cement_operating_row,
             "driver_graph": dgraph,
             "impact_scenarios": scenarios,
             "event_studies": studies,
@@ -900,6 +929,7 @@ def build():
                 "source_status": sources.get("status"),
                 "source_quality_flags": len((_source_quality(source_qa, sym).get("quality_flags") or [])),
                 "operating_event_count": len(op_events),
+                "cement_operating_observation_count": cement_operating_row.get("observation_count", 0),
                 "impact_scenario_count": len(scenarios),
                 "event_study_count": len(studies),
                 "conditional_benchmark_count": conditional_benchmark_row.get("benchmark_count", 0),

@@ -928,6 +928,18 @@ def check_forecast_readiness_ui():
     except Exception as e:
         fail(f"check_forecast_readiness_ui.mjs did not run — {e}")
 
+def check_cement_operating_series_ui():
+    path = os.path.join(ROOT, "scripts", "check_cement_operating_series_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_cement_operating_series_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("cement operating series UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_cement_operating_series_ui.mjs did not run — {e}")
+
 def check_causal_foundations():
     path = os.path.join(ROOT, "scripts", "check_causal_foundations.py")
     if not os.path.exists(path):
@@ -1226,6 +1238,7 @@ def main():
     check_causal_foundations_ui()
     check_financial_model_inputs()
     check_cement_operating_series()
+    check_cement_operating_series_ui()
     check_financial_coverage()
     check_forecast_contract()
     check_owner_financial_assumptions()

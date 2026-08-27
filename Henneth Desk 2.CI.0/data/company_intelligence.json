@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-08-27 08:14",
+  "built": "2026-08-27 08:27",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
@@ -4693,6 +4693,45 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "MLCF",
+    "status": "insufficient_aligned_annual_operating_history",
+    "activation_status": "blocked_insufficient_aligned_annual_operating_history",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "retained_evidence_summary": [
+     {
+      "document_id": "issuer:0041077dadc52bdcd3baaa54",
+      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2023/08/MLCF-Road-Show-08-05-2023.pdf",
+      "pages": [
+       15,
+       19
+      ],
+      "status": "partial_context_only",
+      "reason": "retained snippets contain one retention/quantity comment and industry FY22/FY21 dispatch context, not aligned MLCF annual operating rows"
+     },
+     {
+      "document_id": "psx:275425",
+      "source_url": "https://dps.psx.com.pk/download/document/275425.pdf",
+      "pages": [
+       4,
+       20
+      ],
+      "status": "partial_period_context_only",
+      "reason": "retained 3Q FY26 export-volume comment is interim and post-PIOC acquisition, not aligned annual history"
+     }
+    ],
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "insufficient_aligned_annual_operating_history"
+    ]
+   },
    "driver_graph": {
     "sector": "CEMENT",
     "drivers": [
@@ -14009,6 +14048,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 3,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 9,
     "event_study_count": 3,
     "conditional_benchmark_count": 3,
@@ -16068,6 +16108,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "OGDC",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "E&P",
     "drivers": [
@@ -18685,6 +18742,7 @@
     "source_status": "degraded",
     "source_quality_flags": 3,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -20951,6 +21009,23 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "PPL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "E&P",
     "drivers": [
@@ -24241,6 +24316,7 @@
     "source_status": "degraded",
     "source_quality_flags": 3,
     "operating_event_count": 1,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 3,
     "event_study_count": 1,
     "conditional_benchmark_count": 1,
@@ -31585,6 +31661,1177 @@
      ]
     }
    ],
+   "cement_operating_series": {
+    "symbol": "DGKC",
+    "status": "audit_only_series_available",
+    "activation_status": "blocked_audit_only_no_model_adapter",
+    "observation_count": 31,
+    "annual_period_count": 7,
+    "metrics": {
+     "cement_production": [
+      {
+       "observation_id": "cops_e4c644c5a8587a4072c48976",
+       "symbol": "DGKC",
+       "metric": "cement_production",
+       "period_end": "2013-06-30",
+       "period_type": "annual",
+       "value": 4031801,
+       "raw_value": "4,031,801",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_c748b95515288eb32a927065",
+       "symbol": "DGKC",
+       "metric": "cement_production",
+       "period_end": "2014-06-30",
+       "period_type": "annual",
+       "value": 3988512,
+       "raw_value": "3,988,512",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_76e4d53fce4356404eccf425",
+       "symbol": "DGKC",
+       "metric": "cement_production",
+       "period_end": "2015-06-30",
+       "period_type": "annual",
+       "value": 3849672,
+       "raw_value": "3,849,672",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:773167b57f3bc15094fdf721",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 63,
+        "text": ",547,177 7,851,397 Taxation 1,922,497 1,885,899 Profit after Taxation 7,624,680 5,965,498 EPS 17.40 13.62 FY15 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,…",
+        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_c8dcc783c7474f2c1069d769",
+       "symbol": "DGKC",
+       "metric": "cement_production",
+       "period_end": "2016-06-30",
+       "period_type": "annual",
+       "value": 4426631,
+       "raw_value": "4,426,631",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:c38ef8e6e11d33c8261e262d",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2015-16_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 82,
+        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:40",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:40",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_6f4bfaf76ca6d34ddb78a0b0",
+       "symbol": "DGKC",
+       "metric": "cement_production",
+       "period_end": "2019-06-30",
+       "period_type": "annual",
+       "value": 5613650,
+       "raw_value": "5,613,650",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_01f109ee902a838395b4255f",
+       "symbol": "DGKC",
+       "metric": "cement_production",
+       "period_end": "2020-06-30",
+       "period_type": "annual",
+       "value": 5510426,
+       "raw_value": "5,510,426",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      }
+     ],
+     "cement_sales_export": [
+      {
+       "observation_id": "cops_7519be5d5d7b0324fc2ac1da",
+       "symbol": "DGKC",
+       "metric": "cement_sales_export",
+       "period_end": "2013-06-30",
+       "period_type": "annual",
+       "value": 1126174,
+       "raw_value": "1,126,174",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_9a8fa67e8d4554d92d7c"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_342ef7155232b8ab69cad5d8",
+       "symbol": "DGKC",
+       "metric": "cement_sales_export",
+       "period_end": "2014-06-30",
+       "period_type": "annual",
+       "value": 1021329,
+       "raw_value": "1,021,329",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_9a8fa67e8d4554d92d7c"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_e7cd29145650728fa8a04247",
+       "symbol": "DGKC",
+       "metric": "cement_sales_export",
+       "period_end": "2015-06-30",
+       "period_type": "annual",
+       "value": 661967,
+       "raw_value": "661,967",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:773167b57f3bc15094fdf721",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 63,
+        "text": "5 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,196,103 2,954,943 Export Sales 661,967 1,021,328 FY15 FY14 MT PKR in thousands MT PKR in thousands Local 3,19…",
+        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_59ed38341f52275718a2d876",
+       "symbol": "DGKC",
+       "metric": "cement_sales_export",
+       "period_end": "2016-06-30",
+       "period_type": "annual",
+       "value": 712298,
+       "raw_value": "712,298",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:c38ef8e6e11d33c8261e262d",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2015-16_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 82,
+        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:40",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:40",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_70a2642d9e1ea41de549"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_97f1ec44a3f5952c3994d557",
+       "symbol": "DGKC",
+       "metric": "cement_sales_export",
+       "period_end": "2019-06-30",
+       "period_type": "annual",
+       "value": 270232,
+       "raw_value": "270,232",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_8251ef2ffe658f88d2ada6e9",
+       "symbol": "DGKC",
+       "metric": "cement_sales_export",
+       "period_end": "2020-06-30",
+       "period_type": "annual",
+       "value": 158143,
+       "raw_value": "158,143",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      }
+     ],
+     "cement_sales_local": [
+      {
+       "observation_id": "cops_7fa67724f8f93158dd216219",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2013-06-30",
+       "period_type": "annual",
+       "value": 2892266,
+       "raw_value": "2,892,266",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_d143e8e6542e70ca40f5"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_c19893af6ac663a3f90a0e6f",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2014-06-30",
+       "period_type": "annual",
+       "value": 2954943,
+       "raw_value": "2,954,943",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_d143e8e6542e70ca40f5"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_786de753af7b640c0d618bf6",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2015-06-30",
+       "period_type": "annual",
+       "value": 3196103,
+       "raw_value": "3,196,103",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:773167b57f3bc15094fdf721",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 63,
+        "text": "5 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,196,103 2,954,943 Export Sales 661,967 1,021,328 FY15 FY14 MT PKR in thousands MT PKR in thousands Local 3,19…",
+        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_2dea404e3e5f24334412"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_abcd594eeb8c3128ef537a11",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2016-06-30",
+       "period_type": "annual",
+       "value": 3710393,
+       "raw_value": "3,710,393",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:c38ef8e6e11d33c8261e262d",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2015-16_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 82,
+        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:40",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:40",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_70a2642d9e1ea41de549"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_fddfd519ea6c54129e49689e",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2017-06-30",
+       "period_type": "annual",
+       "value": 3895042,
+       "raw_value": "3,895,042",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:6644afdd89fc5384830867e7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2016_17_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 61,
+        "text": "00 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 4,908,593 3,877,296 Cement sales: 4,478,065 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 4,908,962 3,854,949 Local 3,895,042 3,710,393 3,196,103 2,954,943 2,887,…",
+        "content_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
+        "local_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:40",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:40",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_698119070066e332ee58"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_373cdfc3d55e3ab07c7f229e",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2019-06-30",
+       "period_type": "annual",
+       "value": 5327410,
+       "raw_value": "5,327,410",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_75b4a51e3e39ae756c05703d",
+       "symbol": "DGKC",
+       "metric": "cement_sales_local",
+       "period_end": "2020-06-30",
+       "period_type": "annual",
+       "value": 5336680,
+       "raw_value": "5,336,680",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      }
+     ],
+     "cement_sales_total": [
+      {
+       "observation_id": "cops_10d8e0df859b42b3d995c341",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2013-06-30",
+       "period_type": "annual",
+       "value": 4018440,
+       "raw_value": "4,018,440",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_1abc967777d2dbed79a1"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_074a6e78665927527aeb0c0c",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2014-06-30",
+       "period_type": "annual",
+       "value": 3976272,
+       "raw_value": "3,976,272",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_1abc967777d2dbed79a1"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_24cc9b52565438675cfaa7f9",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2015-06-30",
+       "period_type": "annual",
+       "value": 3858070,
+       "raw_value": "3,858,070",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:773167b57f3bc15094fdf721",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 63,
+        "text": ",547,177 7,851,397 Taxation 1,922,497 1,885,899 Profit after Taxation 7,624,680 5,965,498 EPS 17.40 13.62 FY15 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,…",
+        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_1d05dfaec989a013d010"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_1250880b28e3f6ea5041d284",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2016-06-30",
+       "period_type": "annual",
+       "value": 4422691,
+       "raw_value": "4,422,691",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:c38ef8e6e11d33c8261e262d",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2015-16_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 82,
+        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:40",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:40",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_70a2642d9e1ea41de549"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_46a6edaea171f848b75e911c",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2017-06-30",
+       "period_type": "annual",
+       "value": 4478065,
+       "raw_value": "4,478,065",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:6644afdd89fc5384830867e7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2016_17_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 61,
+        "text": "00 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 4,908,593 3,877,296 Cement sales: 4,478,065 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 4,908,962 3,854,949 Local 3,895,042 3,710,393 3,196,103 2,954,943 2,887,…",
+        "content_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
+        "local_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:40",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:40",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_698119070066e332ee58"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_329c4503743597043aa6f033",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2019-06-30",
+       "period_type": "annual",
+       "value": 5597642,
+       "raw_value": "5,597,642",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_11531bf69b7a97fe25847887",
+       "symbol": "DGKC",
+       "metric": "cement_sales_total",
+       "period_end": "2020-06-30",
+       "period_type": "annual",
+       "value": 5494823,
+       "raw_value": "5,494,823",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      }
+     ],
+     "clinker_production": [
+      {
+       "observation_id": "cops_7ccaa9532b3ddc8ba9051100",
+       "symbol": "DGKC",
+       "metric": "clinker_production",
+       "period_end": "2013-06-30",
+       "period_type": "annual",
+       "value": 3924090,
+       "raw_value": "3,924,090",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_187fb68ace5174f895086c23",
+       "symbol": "DGKC",
+       "metric": "clinker_production",
+       "period_end": "2014-06-30",
+       "period_type": "annual",
+       "value": 3585103,
+       "raw_value": "3,585,103",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 29,
+        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_7501ea8b2d52c8e19c647f49",
+       "symbol": "DGKC",
+       "metric": "clinker_production",
+       "period_end": "2015-06-30",
+       "period_type": "annual",
+       "value": 3507230,
+       "raw_value": "3,507,230",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:773167b57f3bc15094fdf721",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 63,
+        "text": ",547,177 7,851,397 Taxation 1,922,497 1,885,899 Profit after Taxation 7,624,680 5,965,498 EPS 17.40 13.62 FY15 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,…",
+        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:41",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:41",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": []
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed",
+        "value_from_retained_evidence_snippet"
+       ]
+      },
+      {
+       "observation_id": "cops_d7fd1a4fa5b4c4ec382cb8de",
+       "symbol": "DGKC",
+       "metric": "clinker_production",
+       "period_end": "2019-06-30",
+       "period_type": "annual",
+       "value": 6380898,
+       "raw_value": "6,380,898",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      },
+      {
+       "observation_id": "cops_ce47bea620d81650860cd42b",
+       "symbol": "DGKC",
+       "metric": "clinker_production",
+       "period_end": "2020-06-30",
+       "period_type": "annual",
+       "value": 6841964,
+       "raw_value": "6,841,964",
+       "unit": "tonnes",
+       "unit_multiplier": 1,
+       "readiness": "audit_only",
+       "approval_status": "not_owner_approved_forecast_input",
+       "model_eligibility": "not_model_loadable",
+       "source": {
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source": "Issuer website",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "source_registry_status": "discovered",
+        "page": 74,
+        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "published_at": null,
+        "retrieved_at": "2026-08-27 03:39",
+        "available_on": null,
+        "retained_on": "2026-08-27 03:39",
+        "status": "publication_date_not_retained_audit_only",
+        "source_fact_ids": [
+         "fact_a9e8d8a145154fa49e1f"
+        ]
+       },
+       "quality_flags": [
+        "audit_only_not_forecast_input",
+        "retained_official_evidence_seed"
+       ]
+      }
+     ]
+    },
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "lane_assessment": {
+     "same_company_reference_case": "possible_audit_only",
+     "pilot_peer_operating_lane": "blocked_insufficient_aligned_peer_history"
+    },
+    "quality_flags": [
+     "audit_only_not_model_loadable"
+    ]
+   },
    "driver_graph": {
     "sector": "CEMENT",
     "drivers": [
@@ -86603,6 +87850,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 29,
+    "cement_operating_observation_count": 31,
     "impact_scenario_count": 87,
     "event_study_count": 29,
     "conditional_benchmark_count": 3,
@@ -88635,6 +89883,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "PSO",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "OMC",
     "drivers": [
@@ -90913,6 +92178,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -94534,6 +95800,23 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "UBL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "BANKS",
     "drivers": [
@@ -102323,6 +103606,7 @@
     "source_status": "ok",
     "source_quality_flags": 1,
     "operating_event_count": 5,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 15,
     "event_study_count": 5,
     "conditional_benchmark_count": 5,
@@ -103978,6 +105262,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "FFC",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "FERTILIZER",
     "drivers": [
@@ -106337,6 +107638,7 @@
     "source_status": "degraded",
     "source_quality_flags": 2,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -111742,6 +113044,23 @@
      ]
     }
    ],
+   "cement_operating_series": {
+    "symbol": "LUCK",
+    "status": "missing_retained_cement_operating_history",
+    "activation_status": "blocked_missing_retained_cement_operating_history",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "missing_retained_cement_operating_history"
+    ]
+   },
    "driver_graph": {
     "sector": "CEMENT",
     "drivers": [
@@ -143024,6 +144343,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 9,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 27,
     "event_study_count": 9,
     "conditional_benchmark_count": 0,
@@ -145514,6 +146834,23 @@
      ]
     }
    ],
+   "cement_operating_series": {
+    "symbol": "HUBC",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "POWER",
     "drivers": [
@@ -148681,6 +150018,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 2,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 6,
     "event_study_count": 2,
     "conditional_benchmark_count": 0,
@@ -149368,6 +150706,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "PRL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "REFINERY",
     "drivers": [
@@ -151505,6 +152860,7 @@
     "source_status": "degraded",
     "source_quality_flags": 4,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -155532,6 +156888,23 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "BOP",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "BANKS",
     "drivers": [
@@ -162342,6 +163715,7 @@
     "source_status": "ok",
     "source_quality_flags": 1,
     "operating_event_count": 3,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 9,
     "event_study_count": 3,
     "conditional_benchmark_count": 3,
@@ -165366,6 +166740,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "NBP",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "BANKS",
     "drivers": [
@@ -168016,6 +169407,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -170302,6 +171694,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "MEBL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "BANKS",
     "drivers": [
@@ -172624,6 +174033,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -176717,6 +178127,23 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "ATRL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "REFINERY",
     "drivers": [
@@ -183815,6 +185242,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 3,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 9,
     "event_study_count": 3,
     "conditional_benchmark_count": 3,
@@ -185627,6 +187055,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "HBL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "BANKS",
     "drivers": [
@@ -187918,6 +189363,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -190552,6 +191998,23 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "MARI",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "E&P",
     "drivers": [
@@ -195451,6 +196914,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 2,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 6,
     "event_study_count": 2,
     "conditional_benchmark_count": 2,
@@ -197245,6 +198709,23 @@
      "quality_flags": []
     }
    ],
+   "cement_operating_series": {
+    "symbol": "ENGROH",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "HOLDING_COMPANY",
     "drivers": [
@@ -200544,6 +202025,7 @@
     "source_status": "degraded",
     "source_quality_flags": 3,
     "operating_event_count": 1,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 3,
     "event_study_count": 1,
     "conditional_benchmark_count": 1,
@@ -201143,6 +202625,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "GAL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "AUTO_ASSEMBLER",
     "drivers": [
@@ -203208,6 +204707,7 @@
     "source_status": "ok",
     "source_quality_flags": 1,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -204374,6 +205874,23 @@
     "history_count": 0
    },
    "operating_events": [],
+   "cement_operating_series": {
+    "symbol": "NRL",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "REFINERY",
     "drivers": [
@@ -206485,6 +208002,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 0,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 0,
     "event_study_count": 0,
     "conditional_benchmark_count": 0,
@@ -211047,6 +212565,23 @@
      ]
     }
    ],
+   "cement_operating_series": {
+    "symbol": "CNERGY",
+    "status": "unknown",
+    "activation_status": "not_applicable",
+    "observation_count": 0,
+    "annual_period_count": 0,
+    "metrics": {},
+    "downstream_status": {
+     "financial_model_inputs": "not_activated",
+     "forecast": "not_activated",
+     "valuation": "not_activated",
+     "market_expectations": "not_activated"
+    },
+    "quality_flags": [
+     "not_in_cement_operating_series_scope"
+    ]
+   },
    "driver_graph": {
     "sector": "REFINERY",
     "drivers": [
@@ -219348,6 +220883,7 @@
     "source_status": "ok",
     "source_quality_flags": 0,
     "operating_event_count": 5,
+    "cement_operating_observation_count": 0,
     "impact_scenario_count": 15,
     "event_study_count": 5,
     "conditional_benchmark_count": 0,

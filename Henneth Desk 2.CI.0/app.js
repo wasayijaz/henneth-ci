@@ -667,6 +667,41 @@ function operatingImpact(value) {
     : esc(value);
 }
 
+function renderCementOperatingSeries(r) {
+  const row = r.cement_operating_series || {};
+  const metrics = row.metrics && typeof row.metrics === "object" && !Array.isArray(row.metrics) ? row.metrics : {};
+  const observations = Object.entries(metrics).flatMap(([metric, items]) => (Array.isArray(items) ? items : []).map(item => ({ ...item, metric })));
+  const downstream = row.downstream_status || {};
+  const metricLabels = {
+    clinker_production: "Clinker production",
+    cement_production: "Cement production",
+    cement_sales_local: "Local sales",
+    cement_sales_export: "Export sales",
+    cement_sales_total: "Total cement sales",
+  };
+  const sourceLabel = source => {
+    const href = safeHref(source.source_url);
+    const page = Number(source.page) > 0 ? `page ${Number(source.page)}` : "page unknown";
+    return href ? `<a href="${href}" target="_blank" rel="noopener">${esc(page)} · official source</a>` : esc(page);
+  };
+  const sourceAvailability = source => source.available_on
+    ? `official availability ${esc(source.available_on)}`
+    : `publication date not retained · retained ${esc(source.retained_on || source.retrieved_at || "unknown")}`;
+  const observationCards = observations.length ? observations.map(observation => {
+    const source = observation.source || {};
+    return `<article class="oi-event cement-observation" aria-labelledby="cement-${esc(observation.observation_id || observation.metric || "unknown")}">
+      <header class="oi-card-head"><div><span class="oi-type oi-type-reported-fact">Audit-only observation</span><span class="pill">${esc(metricLabels[observation.metric] || String(observation.metric || "metric").replaceAll("_", " "))}</span><h3 id="cement-${esc(observation.observation_id || observation.metric || "unknown")}">${esc(observation.period_end || "period unknown")} · ${esc(fmt(observation.value, 0))} ${esc(observation.unit || "")}</h3></div><span class="oi-confidence">not model-loadable</span></header>
+      <div class="oi-facts"><div><span>Raw value</span><b>${esc(observation.raw_value || "unknown")}</b></div><div><span>Readiness</span><b>${esc(observation.readiness || "audit_only")}</b></div><div><span>Approval</span><b>${esc(observation.approval_status || "not_owner_approved_forecast_input")}</b></div><div><span>Availability</span><b>${sourceAvailability(source)}</b></div></div>
+      <div class="oi-evidence"><div class="oi-evidence-row"><b>${esc(source.document_id || "document unknown")}</b><span>${sourceLabel(source)} · hash ${esc(short(source.content_sha256 || "hash unknown", 12))}</span><blockquote>${esc(short(source.text || "No bounded excerpt supplied.", 280))}</blockquote></div></div>
+    </article>`;
+  }).join("") : `<div class="empty oi-empty">${esc(row.status || "unknown")} — no retained annual cement operating observations are available for this company.</div>`;
+  return `<section class="oi-section cement-operating-section"><header class="oi-section-head"><div><span class="kicker">Cement operating series</span><h3>Annual production and sales facts</h3></div><span class="pill">${esc(row.observation_count ?? observations.length)} observation${(row.observation_count ?? observations.length) === 1 ? "" : "s"}</span></header>
+    <p class="section-note">Displayed exactly from the audit-only cement operating state. These rows are source-linked, not model-loadable, and do not activate financial_model_inputs, forecasts, valuations, or market expectations.</p>
+    <div class="intel-status"><span>Status <b>${esc(row.status || "unknown")}</b></span><span>Activation <b>${esc(row.activation_status || "not_applicable")}</b></span><span>Annual periods <b>${esc(row.annual_period_count ?? 0)}</b></span><span>Model path <b>${esc(downstream.financial_model_inputs || "not_activated")}</b></span><span>Forecast <b>${esc(downstream.forecast || "not_activated")}</b></span><span>Valuation <b>${esc(downstream.valuation || "not_activated")}</b></span></div>
+    <div class="oi-events">${observationCards}</div>
+  </section>`;
+}
+
 const BENCHMARK_HORIZONS = ["1Q", "2Q", "4Q", "8Q"];
 
 function benchmarkReason(reason) {
@@ -813,7 +848,7 @@ function renderOperatingIntelligence(r) {
     return `<section class="oi-scenario-group"><header><div><span class="kicker">Operating event</span><h3>${esc(short(event?.description || eventId, 140))}</h3></div><span class="pill">${esc(event?.event_id || eventId)}</span></header><div class="oi-scenarios">${cards.map(scenario => `<article class="oi-scenario oi-${esc(String(scenario.scenario || "scenario").toLowerCase())}"><header class="oi-card-head"><div><span class="oi-type oi-type-scenario">Scenario</span><h4>${esc(scenario.scenario || "Scenario")}</h4></div><b>${probabilityValue(scenario.probability)}</b></header><div class="oi-facts"><div><span>Affected drivers</span><b>${listValue(scenario.assumptions?.affected_drivers)}</b></div><div><span>Required inputs</span><b>${listValue(scenario.assumptions?.required_inputs)}</b></div><div><span>Missing inputs</span><b>${listValue(scenario.assumptions?.missing_inputs)}</b></div><div><span>Timing</span><b>${unknownValue(scenario.timing?.effective_date, "Unknown")} · lag ${unknownValue(scenario.timing?.expected_lag, "Unknown")}</b></div><div><span>Confidence</span><b>${confidenceValue(scenario.confidence)}</b></div><div><span>Impact status</span><b>${unknownValue(scenario.impact_status, "Unknown")}</b></div><div><span>Quality flags</span><b>${listValue(scenario.quality_flags, "None")}</b></div></div><div class="oi-impact-grid">${[["Revenue", scenario.revenue_impact], ["EBITDA", scenario.ebitda_impact], ["EPS", scenario.eps_impact], ["FCF", scenario.fcf_impact], ["Valuation", scenario.valuation_impact]].map(([label, value]) => `<div><span>${label} impact</span><b>${operatingImpact(value)}</b></div>`).join("")}</div>${operatingEvidence(scenario.evidence)}</article>`).join("")}</div></section>`;
   }).join("") : `<div class="empty oi-empty">No scenarios are available. Scenario synthesis remains paused until sourced inputs are sufficient.</div>`;
 
-  return `<section class="panel span9 oi-shell"><span class="kicker">Operating intelligence</span><h2>Observation → event → driver map → scenario</h2><p class="section-note">Observation/report becomes an operating event, then a declarative driver hypothesis, then Bear/Base/Bull scenarios. Research only — not advice. Null impacts remain unknown; no values are fabricated.</p><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Operating events</span><h3>Evidence-linked observations</h3></div><span class="pill">${esc(events.length)} event${events.length === 1 ? "" : "s"}</span></header><div class="oi-events">${eventCards}</div></section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Driver map</span><h3>Sector model and directed hypotheses</h3></div></header>${driverSection}</section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Impact scenarios</span><h3>Bear / Base / Bull by operating event</h3></div></header>${scenarioSection}</section>${renderHistoricalBenchmarks(r, events)}</section>`;
+  return `<section class="panel span9 oi-shell"><span class="kicker">Operating intelligence</span><h2>Observation → event → driver map → scenario</h2><p class="section-note">Observation/report becomes an operating event, then a declarative driver hypothesis, then Bear/Base/Bull scenarios. Research only — not advice. Null impacts remain unknown; no values are fabricated.</p>${renderCementOperatingSeries(r)}<section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Operating events</span><h3>Evidence-linked observations</h3></div><span class="pill">${esc(events.length)} event${events.length === 1 ? "" : "s"}</span></header><div class="oi-events">${eventCards}</div></section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Driver map</span><h3>Sector model and directed hypotheses</h3></div></header>${driverSection}</section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Impact scenarios</span><h3>Bear / Base / Bull by operating event</h3></div></header>${scenarioSection}</section>${renderHistoricalBenchmarks(r, events)}</section>`;
 }
 
 function conditionalText(value, label = "unknown") {
