@@ -226,7 +226,10 @@ yet receiving writes until the cloud-only sync credential is installed; see
 per-company CI research product, including operating evidence, historical bridges, scenarios and
 future formal-engine states; cursors, transient review artifacts and receipts stay out. After a fully successful archive cycle, the
 adapter appends a public, secret-free sync receipt keyed to the remote `ci_sync_runs` row; a failed
-or partial response records a failed latest attempt and never claims current sync health.
+or partial response records a failed latest attempt and never claims current sync health. The optional
+`supabase_ci_store.py --verify-receipt` path makes a single server-only, read-only lookup of the known
+remote `ci_sync_runs` record and checks its stable key, completion time, payload hash, and row counts
+against the local receipt; it is deliberately not a publication gate and does not mutate receipt state.
 
 Live today, as described in [OPERATIONS.md](OPERATIONS.md) section 6 (there is no checked-in migration of the live schema):
 

@@ -157,6 +157,15 @@ class SupabaseTransport:
         with urllib.request.urlopen(req, timeout=30) as response:
             return int(getattr(response, "status", response.getcode()))
 
+    def get_json(self, url: str, headers: dict[str, str]) -> list[dict[str, Any]]:
+        """Read a bounded server-only PostgREST result for archive verification."""
+        req = urllib.request.Request(url, method="GET", headers=headers)
+        with urllib.request.urlopen(req, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        if not isinstance(payload, list):
+            raise RuntimeError("archive verification returned a non-list response")
+        return [row for row in payload if isinstance(row, dict)]
+
 
 def config_from_env(env: dict[str, str] | None = None) -> tuple[Config | None, list[str]]:
     env = env or os.environ
@@ -914,6 +923,58 @@ def _project_ref(config: Config) -> str | None:
     return reference or None
 
 
+def _sync_run_verify_endpoint(config: Config, run_key: str) -> str:
+    """Return the least-privilege query for one known append-only sync run."""
+    params = urllib.parse.urlencode({
+        "select": "run_key,completed_at,status,payload_sha256,counts",
+        "run_key": "eq." + run_key,
+        "limit": "2",
+    })
+    return f"{config.url}/rest/v1/{TABLES['sync_runs'][0]}?{params}"
+
+
+def verify_latest_sync_receipt(
+    root: Path,
+    config: Config,
+    transport: SupabaseTransport | None = None,
+) -> dict[str, Any]:
+    """Read back and match the current local success receipt against Supabase.
+
+    This is intentionally opt-in and read-only.  It provides stronger evidence
+    than a successful POST response without letting a transient verifier failure
+    change archive state, public research state, or the release gate.
+    """
+    receipt = load_json(root / ARCHIVE_RECEIPT_RELATIVE_PATH, {})
+    if not isinstance(receipt, dict) or receipt.get("status") != "synced":
+        raise RuntimeError("archive verification requires a successful local sync receipt")
+    expected = receipt.get("latest_sync")
+    if not isinstance(expected, dict):
+        raise RuntimeError("archive verification requires a latest local sync receipt")
+    run_key = expected.get("run_key")
+    if not isinstance(run_key, str) or not run_key.startswith("run_"):
+        raise RuntimeError("archive verification receipt has an invalid run key")
+
+    transport = transport or SupabaseTransport()
+    remote_rows = transport.get_json(_sync_run_verify_endpoint(config, run_key), _headers(config))
+    if len(remote_rows) != 1:
+        raise RuntimeError("archive verification did not find exactly one remote sync run")
+    remote = remote_rows[0]
+    required = ("run_key", "completed_at", "status", "payload_sha256", "counts")
+    if any(key not in remote for key in required):
+        raise RuntimeError("archive verification remote sync run is incomplete")
+    if remote.get("status") != "completed":
+        raise RuntimeError("archive verification remote sync run is not completed")
+    for key in ("run_key", "completed_at", "payload_sha256", "counts"):
+        if remote.get(key) != expected.get(key):
+            raise RuntimeError(f"archive verification remote {key} does not match local receipt")
+    return {
+        "run_key": run_key,
+        "completed_at": expected["completed_at"],
+        "payload_sha256": expected["payload_sha256"],
+        "counts": expected["counts"],
+    }
+
+
 def _successful_statuses(result: dict[str, Any]) -> dict[str, list[int]]:
     statuses = result.get("statuses")
     if not isinstance(statuses, dict):
@@ -1048,8 +1109,22 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--verify-receipt",
+        action="store_true",
+        help="read back the latest successful remote sync run without writing archive state",
+    )
     args = parser.parse_args(argv)
     try:
+        if args.verify_receipt:
+            config, missing = config_from_env()
+            if missing:
+                print(f"supabase_ci_store: verify-receipt missing_config={','.join(missing)}")
+                return 0
+            assert config is not None
+            verified = verify_latest_sync_receipt(args.root, config)
+            print(f"supabase_ci_store: verify-receipt PASS run_key={verified['run_key']}")
+            return 0
         run(root=args.root, dry_run=args.dry_run)
     except Exception as exc:
         print(f"supabase_ci_store: failed {type(exc).__name__}: {str(exc)[:160]}")

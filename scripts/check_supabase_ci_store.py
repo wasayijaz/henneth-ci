@@ -30,6 +30,10 @@ class FakeTransport:
         self.calls.append({"kind": "storage", "url": url, "headers": dict(headers), "body": body})
         return 201
 
+    def get_json(self, url: str, headers: dict[str, str]) -> list[dict[str, Any]]:
+        self.calls.append({"kind": "read", "url": url, "headers": dict(headers)})
+        return []
+
 
 def fail(message: str) -> None:
     raise AssertionError(message)
@@ -346,6 +350,60 @@ def assert_partial_archive_attempt_is_never_marked_synced() -> None:
         tmp.cleanup()
 
 
+def assert_remote_receipt_readback_contract() -> None:
+    class ReadbackTransport(FakeTransport):
+        def __init__(self, remote_rows: list[dict[str, Any]]) -> None:
+            super().__init__()
+            self.remote_rows = remote_rows
+
+        def get_json(self, url: str, headers: dict[str, str]) -> list[dict[str, Any]]:
+            self.calls.append({"kind": "read", "url": url, "headers": dict(headers)})
+            return self.remote_rows
+
+    tmp = sample_root()
+    try:
+        env = {store.ENV_URL: "https://example.supabase.co", store.ENV_KEY: SECRET}
+        write_transport = FakeTransport()
+        with contextlib.redirect_stdout(io.StringIO()):
+            result = store.run(root=Path(tmp.name), env=env, transport=write_transport, clock=lambda: FIXED_NOW)
+        local_run = result["rows"].sync_runs[0]
+        remote = {
+            "run_key": local_run["run_key"],
+            "completed_at": local_run["completed_at"],
+            "status": "completed",
+            "payload_sha256": local_run["payload_sha256"],
+            "counts": local_run["counts"],
+        }
+        read_transport = ReadbackTransport([remote])
+        verified = store.verify_latest_sync_receipt(
+            Path(tmp.name),
+            store.Config("https://example.supabase.co", SECRET),
+            transport=read_transport,
+        )
+        if verified["run_key"] != local_run["run_key"]:
+            fail("remote receipt verification did not preserve the run key")
+        reads = [call for call in read_transport.calls if call["kind"] == "read"]
+        if len(reads) != 1 or "/rest/v1/ci_sync_runs?" not in reads[0]["url"]:
+            fail("remote receipt verification did not use the bounded sync-run endpoint")
+        if "select=run_key%2Ccompleted_at%2Cstatus%2Cpayload_sha256%2Ccounts" not in reads[0]["url"]:
+            fail("remote receipt verification selected fields outside its bounded contract")
+        if reads[0]["headers"].get("Authorization") != "Bearer " + SECRET:
+            fail("remote receipt verification omitted server-only authorization")
+        remote["payload_sha256"] = "0" * 64
+        try:
+            store.verify_latest_sync_receipt(
+                Path(tmp.name),
+                store.Config("https://example.supabase.co", SECRET),
+                transport=ReadbackTransport([remote]),
+            )
+        except RuntimeError:
+            pass
+        else:
+            fail("mismatched remote sync run was accepted")
+    finally:
+        tmp.cleanup()
+
+
 def assert_blob_storage_contract() -> None:
     tmp = sample_root(with_blob=True)
     try:
@@ -422,9 +480,10 @@ def main() -> None:
     assert_schema_contract()
     assert_actual_postgrest_endpoints()
     assert_partial_archive_attempt_is_never_marked_synced()
+    assert_remote_receipt_readback_contract()
     assert_blob_storage_contract()
     assert_no_local_path_skips_blob_archive()
-    print("supabase_ci_store: PASS (dry-run, schema contract, endpoints, blob storage, idempotency, secret-safe logging)")
+    print("supabase_ci_store: PASS (dry-run, schema contract, endpoints, readback, blob storage, idempotency, secret-safe logging)")
 
 
 if __name__ == "__main__":

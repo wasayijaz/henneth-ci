@@ -487,7 +487,12 @@ push refreshed data).
   dry-runs without its two cloud secrets and treats unavailable transient PDF bytes as a safe skip.
   A fully successful archive cycle appends a public, secret-free receipt (run key, payload hash,
   row counts and HTTP status classes) to `supabase_archive_receipt.json`; failed or partial runs
-  record a secret-free failed latest attempt and never claim current archive health. Any fair value is private user input, never Henneth output. The formal-assumption table is an
+  record a secret-free failed latest attempt and never claim current archive health. An owner may run
+  `python scripts/supabase_ci_store.py --verify-receipt` in the cloud environment after a successful
+  sync: it makes one bounded, read-only lookup of that receipt's `ci_sync_runs` row and fails if its
+  run key, completion time, payload hash, or row counts differ. It neither writes a new receipt nor
+  runs as a publication gate, so a transient verification failure cannot disturb research publication.
+  Any fair value is private user input, never Henneth output. The formal-assumption table is an
   append-only owner input ledger for growth, margin, exit P/E, and net debt. Its server-only
   importer reads only approved rows for `HENNETH_CI_OWNER_USER_ID`, uses approval date as the
   earliest eligible date, and does nothing until that ID plus the CI URL and service-key secrets
