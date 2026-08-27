@@ -199,7 +199,8 @@ def assert_real_state() -> None:
         assert source["source_url"] == "https://dps.psx.com.pk/download/document/260947.pdf"
         assert source["page"] == 119
         assert source["published_at"] == "2025-10-03T11:05:00+05:00"
-        assert source["available_on"] == "2025-10-03T11:05:00+05:00"
+        assert source["available_on"] is None
+        assert source["status"] == "publication_date_not_retained_audit_only"
         assert source["anchor_source_state"] == "state/company_financial_series.json"
         assert anchor in source["text"]
         assert raw_value in source["text"]

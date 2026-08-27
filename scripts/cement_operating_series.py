@@ -183,6 +183,18 @@ def observation_from_spec(
     source_link = source_links.get(spec.document_id)
     evidence_text, anchor_source_state = _evidence_text(doc, spec, financial_series)
     fact_ids = _fact_ids(doc, spec)
+    # A filing's metadata alone does not prove availability of an excerpt held
+    # only in the financial-series seam.  Keep those snippets audit-only until
+    # the document evidence owner retains the matching page text directly.
+    availability = (
+        _availability(doc)
+        if anchor_source_state == "state/company_documents.json"
+        else {
+            "available_on": None,
+            "retained_on": doc.get("retrieved_at"),
+            "status": "publication_date_not_retained_audit_only",
+        }
+    )
     return {
         "observation_id": _stable_id(spec.symbol, spec.metric, spec.period_end, spec.raw_value, spec.document_id, spec.page),
         "symbol": spec.symbol,
@@ -209,7 +221,7 @@ def observation_from_spec(
             "local_sha256": doc.get("local_sha256"),
             "published_at": doc.get("published_at"),
             "retrieved_at": doc.get("retrieved_at"),
-            **_availability(doc),
+            **availability,
             "source_fact_ids": fact_ids,
         },
         "quality_flags": [
