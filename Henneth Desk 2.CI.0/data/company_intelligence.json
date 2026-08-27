@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-08-27 10:20",
+  "built": "2026-08-27 10:29",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
@@ -45362,7 +45362,7 @@
     "eligible_fact_count": 15,
     "audit_only_fact_count": 446,
     "quarantined_fact_count": 271,
-    "missing_slot_count": 6,
+    "missing_slot_count": 1,
     "source_conflict_count": 25,
     "withheld_future_source_fact_count": 0,
     "facts": [
@@ -84288,99 +84288,19 @@
     ],
     "missing_slots": [
      {
-      "reconciliation_id": "finmissing_4f5e8f39aaf4315022af",
-      "symbol": "DGKC",
-      "metric": "revenue",
-      "period_end": null,
-      "period_type": "annual",
-      "status": "missing",
-      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-      "slot": "annual_period_2",
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
-      "source": {
-       "document_id": null,
-       "title": null,
-       "matched_text": null
-      }
-     },
-     {
-      "reconciliation_id": "finmissing_68da98cd96dfed537c39",
-      "symbol": "DGKC",
-      "metric": "profit_after_tax_attributable",
-      "period_end": null,
-      "period_type": "annual",
-      "status": "missing",
-      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-      "slot": "annual_period_2",
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
-      "source": {
-       "document_id": null,
-       "title": null,
-       "matched_text": null
-      }
-     },
-     {
-      "reconciliation_id": "finmissing_8d815146f6b1b4467736",
+      "reconciliation_id": "finmissing_00d5d3b9ba2f7562129a",
       "symbol": "DGKC",
       "metric": "basic_eps",
-      "period_end": null,
-      "period_type": "annual",
-      "status": "missing",
-      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-      "slot": "annual_period_2",
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
-      "source": {
-       "document_id": null,
-       "title": null,
-       "matched_text": null
-      }
-     },
-     {
-      "reconciliation_id": "finmissing_a48f77851f5ff2fb3547",
-      "symbol": "DGKC",
-      "metric": "revenue",
-      "period_end": null,
+      "period_end": "2023-06-30",
       "period_type": "annual",
       "status": "missing",
       "reason": "missing_eligible_reported_fact_for_required_annual_slot",
       "slot": "annual_period_3",
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
+      "period_evidence_status": "explicit",
       "source": {
-       "document_id": null,
-       "title": null,
-       "matched_text": null
-      }
-     },
-     {
-      "reconciliation_id": "finmissing_fae0344aeac2b31dc53b",
-      "symbol": "DGKC",
-      "metric": "profit_after_tax_attributable",
-      "period_end": null,
-      "period_type": "annual",
-      "status": "missing",
-      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-      "slot": "annual_period_3",
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
-      "source": {
-       "document_id": null,
-       "title": null,
-       "matched_text": null
-      }
-     },
-     {
-      "reconciliation_id": "finmissing_57487f0331c7fa14ca0e",
-      "symbol": "DGKC",
-      "metric": "basic_eps",
-      "period_end": null,
-      "period_type": "annual",
-      "status": "missing",
-      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-      "slot": "annual_period_3",
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
-      "source": {
-       "document_id": null,
-       "title": null,
-       "matched_text": null
+       "document_id": "psx:216733",
+       "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2023",
+       "matched_text": "YEAR ENDED JUNE 30, 2023"
       }
      }
     ],
@@ -84478,7 +84398,7 @@
     "symbol": "DGKC",
     "status": "queued_for_qualification",
     "classification": "financial_results_coverage",
-    "indexed_official_financial_doc_count": 8,
+    "indexed_official_financial_doc_count": 10,
     "indexed_official_financial_docs": [
      {
       "document_id": "psx:275962",
@@ -84607,6 +84527,38 @@
        "source": "title",
        "matched_text": "YEAR ENDED JUNE 30, 2025"
       }
+     },
+     {
+      "document_id": "psx:237525",
+      "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2024",
+      "doc_type": "financial_statement",
+      "classification": "financial_statement",
+      "published_at": "2024-09-26T09:59:00+05:00",
+      "source_url": "https://dps.psx.com.pk/download/document/237525.pdf",
+      "status": null,
+      "content_sha256": null,
+      "safe_period": {
+       "period_end": "2024-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "YEAR ENDED JUNE 30, 2024"
+      }
+     },
+     {
+      "document_id": "psx:216733",
+      "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2023",
+      "doc_type": "financial_statement",
+      "classification": "financial_statement",
+      "published_at": "2023-10-05T11:13:00+05:00",
+      "source_url": "https://dps.psx.com.pk/download/document/216733.pdf",
+      "status": null,
+      "content_sha256": null,
+      "safe_period": {
+       "period_end": "2023-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "YEAR ENDED JUNE 30, 2023"
+      }
      }
     ],
     "required_annual_periods": [
@@ -84620,18 +84572,22 @@
       "slot": "annual_period_1"
      },
      {
-      "period_end": null,
+      "period_end": "2024-06-30",
       "period_type": "annual",
-      "source": "unknown",
-      "slot": "annual_period_2",
-      "evidence_status": "missing_explicit_annual_period_evidence"
+      "source": "title",
+      "matched_text": "YEAR ENDED JUNE 30, 2024",
+      "document_id": "psx:237525",
+      "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2024",
+      "slot": "annual_period_2"
      },
      {
-      "period_end": null,
+      "period_end": "2023-06-30",
       "period_type": "annual",
-      "source": "unknown",
-      "slot": "annual_period_3",
-      "evidence_status": "missing_explicit_annual_period_evidence"
+      "source": "title",
+      "matched_text": "YEAR ENDED JUNE 30, 2023",
+      "document_id": "psx:216733",
+      "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2023",
+      "slot": "annual_period_3"
      }
     ],
     "missing_revenue_pat_eps_by_annual_period": [
@@ -84655,38 +84611,39 @@
      },
      {
       "slot": "annual_period_2",
-      "period_end": null,
+      "period_end": "2024-06-30",
       "period_type": "annual",
       "required_metrics": [
        "revenue",
        "profit_after_tax_attributable",
        "basic_eps"
       ],
-      "present_model_ready_metrics": [],
-      "missing_metrics": [
+      "present_model_ready_metrics": [
        "revenue",
        "profit_after_tax_attributable",
        "basic_eps"
       ],
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
-      "status": "missing_required_metrics"
+      "missing_metrics": [],
+      "period_evidence_status": "explicit",
+      "status": "complete"
      },
      {
       "slot": "annual_period_3",
-      "period_end": null,
+      "period_end": "2023-06-30",
       "period_type": "annual",
       "required_metrics": [
        "revenue",
        "profit_after_tax_attributable",
        "basic_eps"
       ],
-      "present_model_ready_metrics": [],
-      "missing_metrics": [
+      "present_model_ready_metrics": [
        "revenue",
-       "profit_after_tax_attributable",
+       "profit_after_tax_attributable"
+      ],
+      "missing_metrics": [
        "basic_eps"
       ],
-      "period_evidence_status": "missing_explicit_annual_period_evidence",
+      "period_evidence_status": "explicit",
       "status": "missing_required_metrics"
      }
     ],
@@ -88927,7 +88884,7 @@
     "financial_model_status": "blocked_model_adapter_unavailable",
     "financial_reconciliation_status": "blocked",
     "financial_reconciliation_eligible_facts": 15,
-    "financial_reconciliation_missing_slots": 6,
+    "financial_reconciliation_missing_slots": 1,
     "financial_reconciliation_conflicts": 25,
     "financial_coverage_status": "queued_for_qualification",
     "financial_coverage_candidates": 5,

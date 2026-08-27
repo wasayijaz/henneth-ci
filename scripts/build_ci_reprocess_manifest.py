@@ -47,6 +47,20 @@ APPROVED_REVIEW_SLOTS: tuple[dict[str, Any], ...] = (
         "title_pattern": r"Financial Results for the year ended June 30, 2026",
         "require_retained_hash": False,
     },
+    {
+        "symbol": "DGKC",
+        "period": "2023-06-30",
+        "classification": "financial_statement",
+        "title_pattern": r"TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2023",
+        "require_retained_hash": False,
+    },
+    {
+        "symbol": "DGKC",
+        "period": "2024-06-30",
+        "classification": "financial_statement",
+        "title_pattern": r"TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2024",
+        "require_retained_hash": False,
+    },
 )
 
 

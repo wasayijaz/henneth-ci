@@ -41,6 +41,8 @@ APPROVED_WAVE3_ALLOWLIST: frozenset[str] = frozenset({
     "psx:236626",
     "psx:280589",
     "psx:280930",
+    "psx:216733",
+    "psx:237525",
 })
 
 DOCUMENT_ID_RE = re.compile(r"^psx:(\d+)$")
