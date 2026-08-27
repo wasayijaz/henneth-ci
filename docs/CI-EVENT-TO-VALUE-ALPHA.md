@@ -119,10 +119,20 @@ same commit:
   a rebuild. The workflow is code-complete but its Vercel Git-deploy setting,
   protected environment secrets, and first live receipt remain external
   evidence.
-- **Not evidenced yet:** a GitHub Actions green run, a preview deployment and
-  production deployment of that exact commit, a public-login runtime smoke,
-  and live owner/non-owner access checks against `ci.henneth.app`. These need
-  deployed credentials and cannot be substituted with an offline contract.
+- **Observed external blocker (2026-08-28):** the `henneth-ci` Vercel project
+  is on the Hobby plan with its Git repository connected, so each pushed
+  commit can create a deployment. Its enabled Standard Protection explicitly
+  protects every domain *except* production custom domains; it therefore does
+  not protect `ci.henneth.app`. The available all-deployments protection
+  requires an upgrade. Disconnecting the repository is the available
+  reversible way to stop automatic Git deployments, but it must be an
+  owner-approved operational change because it stops the current deployment
+  path.
+- **Not evidenced yet:** the owner-approved choice of a safe production gate,
+  followed by a GitHub Actions green run, a preview deployment and production
+  deployment of that exact commit, a public-login runtime smoke, and live
+  owner/non-owner access checks against `ci.henneth.app`. These need deployed
+  credentials and cannot be substituted with an offline contract.
 
 ## Change log
 
