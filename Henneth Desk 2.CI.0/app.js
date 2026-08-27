@@ -389,13 +389,10 @@ function renderGate(message) {
   app.innerHTML = `
     <section class="gate" aria-labelledby="gateTitle">
       <img class="gate-background" src="/login-background.webp" alt="" aria-hidden="true" width="1672" height="942" loading="eager" decoding="async">
-      <div class="gate-copy">
+      <div>
         <p class="eyebrow">Private research workspace</p>
         <h1 id="gateTitle">Company context,<br>one layer deeper.</h1>
         <p>Sign in with the existing Henneth account. This surface reads one private JSON file and keeps execution out of the product.</p>
-        <figure class="gate-visual">
-          <img src="/login-background.webp" alt="Henneth company intelligence workspace" width="1672" height="942" loading="eager" decoding="async">
-        </figure>
       </div>
       <form id="loginForm" class="login">
         <p class="form-title">Owner access</p>
