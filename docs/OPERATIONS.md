@@ -482,9 +482,12 @@ push refreshed data).
   cut over until the owner account, owner ID configuration and live RLS checks are migrated. The
   browser uses only a publishable key plus its bearer token. Archive/restore is normal; permanent
   deletion requires confirmation. The free cloud pipeline runs `supabase_ci_store.py` after the
-  private CI slice, retaining metadata, facts, snapshots and ready current-run official PDFs. It
+  private CI slice, retaining metadata, facts, snapshots for every generated per-company CI research
+  product, and ready current-run official PDFs. It
   dry-runs without its two cloud secrets and treats unavailable transient PDF bytes as a safe skip.
-  Any fair value is private user input, never Henneth output. The formal-assumption table is an
+  A fully successful archive cycle appends a public, secret-free receipt (run key, payload hash,
+  row counts and HTTP status classes) to `supabase_archive_receipt.json`; failed or partial runs
+  record a secret-free failed latest attempt and never claim current archive health. Any fair value is private user input, never Henneth output. The formal-assumption table is an
   append-only owner input ledger for growth, margin, exit P/E, and net debt. Its server-only
   importer reads only approved rows for `HENNETH_CI_OWNER_USER_ID`, uses approval date as the
   earliest eligible date, and does nothing until that ID plus the CI URL and service-key secrets

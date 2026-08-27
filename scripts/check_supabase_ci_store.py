@@ -287,6 +287,61 @@ def assert_actual_postgrest_endpoints() -> None:
                 fail("append-only duplicate-ignore preference missing")
         if SECRET in text or "Authorization" in text or "apikey" in text:
             fail("secret-bearing request headers leaked into logs")
+
+        receipt_path = Path(tmp.name) / "state" / "company_intel" / "supabase_archive_receipt.json"
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if receipt.get("status") != "synced" or receipt.get("project_ref") != "example":
+            fail("successful archive transport did not write a public sync receipt")
+        sync_receipts = receipt.get("sync_receipts") or []
+        if len(sync_receipts) != 1 or sync_receipts[0].get("run_key") != result["rows"].sync_runs[0]["run_key"]:
+            fail("sync receipt did not append the stable remote sync-run key")
+        receipt_text = json.dumps(receipt)
+        if SECRET in receipt_text or "example.supabase.co" in receipt_text or "Authorization" in receipt_text:
+            fail("sync receipt retained a credential or server URL")
+    finally:
+        tmp.cleanup()
+
+
+def assert_selected_product_coverage() -> None:
+    expected = {
+        "cement_operating_series.json",
+        "earnings_bridges.json",
+        "financial_coverage.json",
+        "financial_forecasts.json",
+        "formal_valuations.json",
+        "impact_scenarios.json",
+        "market_expectations.json",
+        "scenario_lab.json",
+    }
+    selected = set(store.SELECTED_INTEL_PRODUCTS)
+    if not expected.issubset(selected):
+        fail(f"CI archive omitted per-company research products: {sorted(expected - selected)}")
+    if len(selected) != len(store.SELECTED_INTEL_PRODUCTS):
+        fail("CI archive product selection contains duplicates")
+
+
+def assert_partial_archive_attempt_is_never_marked_synced() -> None:
+    class BadTransport(FakeTransport):
+        def post_json(self, url: str, headers: dict[str, str], rows: list[dict[str, Any]]) -> int:
+            super().post_json(url, headers, rows)
+            return 500
+
+    tmp = sample_root()
+    try:
+        env = {store.ENV_URL: "https://example.supabase.co", store.ENV_KEY: SECRET}
+        try:
+            store.run(root=Path(tmp.name), env=env, transport=BadTransport(), clock=lambda: FIXED_NOW)
+        except RuntimeError:
+            pass
+        else:
+            fail("a non-success archive response must fail without a success receipt")
+        receipt_path = Path(tmp.name) / "state" / "company_intel" / "supabase_archive_receipt.json"
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if receipt.get("status") != "sync_failed" or (receipt.get("sync_receipts") or []):
+            fail("partial archive response wrote a false success receipt")
+        attempt = receipt.get("last_attempt") or {}
+        if attempt.get("status") != "failed" or attempt.get("error_type") != "RuntimeError":
+            fail("partial archive response did not preserve its failed-attempt evidence")
     finally:
         tmp.cleanup()
 
@@ -362,9 +417,11 @@ def assert_no_local_path_skips_blob_archive() -> None:
 
 def main() -> None:
     assert_absent_config_noop()
+    assert_selected_product_coverage()
     assert_deterministic_archive_rows()
     assert_schema_contract()
     assert_actual_postgrest_endpoints()
+    assert_partial_archive_attempt_is_never_marked_synced()
     assert_blob_storage_contract()
     assert_no_local_path_skips_blob_archive()
     print("supabase_ci_store: PASS (dry-run, schema contract, endpoints, blob storage, idempotency, secret-safe logging)")

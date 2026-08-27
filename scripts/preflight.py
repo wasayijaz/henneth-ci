@@ -832,6 +832,16 @@ def check_cement_operating_series():
     if result.returncode != 0:
         fail("cement operating series check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
 
+
+def check_supabase_archive_receipt():
+    path = os.path.join(ROOT, "scripts", "check_supabase_archive_receipt.py")
+    if not os.path.exists(path):
+        fail("check_supabase_archive_receipt.py missing")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        fail("Supabase archive receipt check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
 def check_financial_coverage():
     path = os.path.join(ROOT, "scripts", "check_financial_coverage.py")
     if not os.path.exists(path):
@@ -1250,6 +1260,7 @@ def main():
     check_causal_foundations_ui()
     check_financial_model_inputs()
     check_cement_operating_series()
+    check_supabase_archive_receipt()
     check_cement_operating_series_ui()
     check_financial_coverage()
     check_forecast_contract()

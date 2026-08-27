@@ -221,7 +221,11 @@ for retained company source documents, source-linked facts, and deterministic CI
 RLS enabled, no browser grants, and a private `ci-documents` PDF bucket. It is configured but not
 yet receiving writes until the cloud-only sync credential is installed; see
 [`henneth_ci_archive.sql`](henneth_ci_archive.sql) and
-`state/company_intel/supabase_archive_receipt.json`.
+`state/company_intel/supabase_archive_receipt.json`. The archive selection covers every generated
+per-company CI research product, including operating evidence, historical bridges, scenarios and
+future formal-engine states; cursors, transient review artifacts and receipts stay out. After a fully successful archive cycle, the
+adapter appends a public, secret-free sync receipt keyed to the remote `ci_sync_runs` row; a failed
+or partial response records a failed latest attempt and never claims current sync health.
 
 Live today, as described in [OPERATIONS.md](OPERATIONS.md) section 6 (there is no checked-in migration of the live schema):
 

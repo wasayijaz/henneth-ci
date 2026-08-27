@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from psx_data import ROOT, load_json
+from psx_data import ROOT, load_json, save_json
 
 
 ENV_URL = "HENNETH_CI_SUPABASE_URL"
@@ -42,19 +42,38 @@ TABLES = {
 DOCUMENT_BUCKET = "ci-documents"
 PDF_CONTENT_TYPE = "application/pdf"
 PDF_MAX_BYTES = 50 * 1024 * 1024
+ARCHIVE_RECEIPT_RELATIVE_PATH = Path("state") / "company_intel" / "supabase_archive_receipt.json"
 
 SELECTED_INTEL_PRODUCTS = (
-    "operating_events.json",
+    # Explicitly archive every generated per-company CI product.  Cursor, receipt,
+    # and transient-review files are intentionally excluded: they are not research
+    # state and must not masquerade as a source-grounded company snapshot.
+    "causal_foundations.json",
+    "cement_operating_series.json",
+    "change_intelligence.json",
     "company_brains.json",
+    "company_graph.json",
+    "conditional_benchmarks.json",
+    "driver_graphs.json",
+    "earnings_bridges.json",
     "guidance_contradictions.json",
-    "financial_evidence_reconciliation.json",
     "evidence_watchlist.json",
-    "management_delivery.json",
-    "intelligence_confidence.json",
-    "signal_clusters.json",
-    "monitoring.json",
+    "financial_coverage.json",
+    "financial_evidence_reconciliation.json",
+    "financial_forecasts.json",
     "financial_model_inputs.json",
     "forecast_readiness.json",
+    "formal_valuations.json",
+    "impact_scenarios.json",
+    "intelligence_confidence.json",
+    "management_delivery.json",
+    "market_expectations.json",
+    "monitoring.json",
+    "operating_events.json",
+    "peer_registry.json",
+    "scenario_lab.json",
+    "signal_clusters.json",
+    "thesis_monitoring.json",
 )
 
 DATE_FIELDS = (
@@ -884,6 +903,110 @@ def push_rows(
     return {"batches": sum(len(value) for value in statuses.values()), "statuses": statuses}
 
 
+def _project_ref(config: Config) -> str | None:
+    """Return the public project reference without retaining the server URL."""
+    host = (urllib.parse.urlparse(config.url).hostname or "").lower()
+    suffix = ".supabase.co"
+    if not host.endswith(suffix):
+        return None
+    reference = host[: -len(suffix)]
+    return reference or None
+
+
+def _successful_statuses(result: dict[str, Any]) -> dict[str, list[int]]:
+    statuses = result.get("statuses")
+    if not isinstance(statuses, dict):
+        raise RuntimeError("archive transport returned no status receipt")
+    normalized: dict[str, list[int]] = {}
+    for table_key, values in statuses.items():
+        if not isinstance(table_key, str) or not isinstance(values, list):
+            raise RuntimeError("archive transport returned malformed status receipt")
+        normalized_values: list[int] = []
+        for value in values:
+            if isinstance(value, bool) or not isinstance(value, int) or not 200 <= value < 300:
+                raise RuntimeError("archive transport returned a non-success status")
+            normalized_values.append(value)
+        normalized[table_key] = normalized_values
+    return normalized
+
+
+def write_sync_receipt(
+    root: Path,
+    config: Config,
+    rows: ArchiveRows,
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    """Append an evidence-only receipt after every fully successful archive payload.
+
+    ``ci_sync_runs`` remains the durable remote record.  This local receipt never
+    contains a URL, credential, source payload, or local path; it simply proves
+    that the bounded payload received successful HTTP responses in a cloud cycle.
+    Failed or partial runs deliberately write no receipt.
+    """
+    statuses = _successful_statuses(result)
+    run = rows.sync_runs[0] if len(rows.sync_runs) == 1 else None
+    if not isinstance(run, dict):
+        raise RuntimeError("archive payload did not create exactly one sync run")
+
+    path = root / ARCHIVE_RECEIPT_RELATIVE_PATH
+    prior = load_json(path, {})
+    prior = prior if isinstance(prior, dict) else {}
+    receipts = [item for item in (prior.get("sync_receipts") or []) if isinstance(item, dict)]
+    run_key = run.get("run_key")
+    if not isinstance(run_key, str) or not run_key:
+        raise RuntimeError("archive sync run is missing its stable key")
+    if not any(item.get("run_key") == run_key for item in receipts):
+        receipts.append({
+            "run_key": run_key,
+            "completed_at": run.get("completed_at"),
+            "payload_sha256": run.get("payload_sha256"),
+            "counts": run.get("counts"),
+            "http_statuses": statuses,
+        })
+
+    receipt = dict(prior)
+    receipt["schema_version"] = max(2, int(prior.get("schema_version") or 1))
+    project_ref = _project_ref(config)
+    if project_ref:
+        receipt["project_ref"] = project_ref
+    receipt["status"] = "synced"
+    receipt["sync_receipts"] = receipts
+    receipt["latest_sync"] = receipts[-1]
+    receipt["last_attempt"] = {
+        "run_key": run_key,
+        "completed_at": run.get("completed_at"),
+        "status": "synced",
+        "payload_sha256": run.get("payload_sha256"),
+        "counts": run.get("counts"),
+    }
+    save_json(path, receipt)
+    return receipt
+
+
+def write_failed_attempt_receipt(root: Path, config: Config, rows: ArchiveRows, exc: Exception) -> dict[str, Any]:
+    """Record a secret-free failed latest attempt without fabricating archive success."""
+    run = rows.sync_runs[0] if len(rows.sync_runs) == 1 else {}
+    path = root / ARCHIVE_RECEIPT_RELATIVE_PATH
+    prior = load_json(path, {})
+    prior = prior if isinstance(prior, dict) else {}
+    receipt = dict(prior)
+    receipt["schema_version"] = max(2, int(prior.get("schema_version") or 1))
+    project_ref = _project_ref(config)
+    if project_ref:
+        receipt["project_ref"] = project_ref
+    receipt["status"] = "sync_failed"
+    receipt["last_attempt"] = {
+        "run_key": run.get("run_key"),
+        "completed_at": run.get("completed_at"),
+        "status": "failed",
+        "payload_sha256": run.get("payload_sha256"),
+        "counts": run.get("counts"),
+        "error_type": type(exc).__name__,
+    }
+    save_json(path, receipt)
+    return receipt
+
+
 def _public_stats(stats: BuildStats) -> str:
     rejected = ",".join(f"{key}={stats.rejected[key]}" for key in sorted(stats.rejected)) or "none"
     sources = ",".join(f"{key}={stats.sources[key]}" for key in sorted(stats.sources)) or "none"
@@ -910,7 +1033,12 @@ def run(
         print(f"supabase_ci_store: dry-run {reason} {_public_stats(stats)}")
         return {"mode": "dry-run", "missing": missing, "rows": rows, "stats": stats}
     assert config is not None
-    result = push_rows(config, rows, transport=transport)
+    try:
+        result = push_rows(config, rows, transport=transport)
+        write_sync_receipt(root, config, rows, result)
+    except Exception as exc:
+        write_failed_attempt_receipt(root, config, rows, exc)
+        raise
     print(f"supabase_ci_store: posted batches={result['batches']} {_public_stats(stats)}")
     return {"mode": "posted", "push": result, "rows": rows, "stats": stats}
 
