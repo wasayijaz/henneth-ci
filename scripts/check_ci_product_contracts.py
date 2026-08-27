@@ -68,6 +68,7 @@ FOCUSED_CHECKS: tuple[str, ...] = (
     "check_ask_henneth_endpoint.mjs",
     "check_ask_henneth_ui.mjs",
     "check_company_navigation_ui.mjs",
+    "check_company_background_motion_ui.mjs",
 )
 
 FORBIDDEN_CHECKS = {"preflight.py", "check_ci_completion_matrix.py", Path(__file__).name}

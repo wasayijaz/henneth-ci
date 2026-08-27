@@ -18,6 +18,8 @@ const short = (value, limit = 80) => {
   const text = String(value ?? "");
   return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 };
+const CI_REVEAL_SIDES = Object.freeze(["left", "right", "top", "bottom"]);
+const CI_BACKGROUND_ATTR_RE = /product-background-(\d{2})\.png$/;
 
 const ASK_MAX_QUESTION_BYTES = 4096;
 const THESIS_STATUSES = ["Strengthening", "Stable", "Weakening", "Broken"];
@@ -84,6 +86,31 @@ let state = {
 };
 
 const SCHEME_CYCLE = { system: "light", light: "dark", dark: "system" };
+
+function ciHash(text) {
+  let hash = 2166136261;
+  for (const char of String(text || "")) {
+    hash ^= char.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function companyBackgroundRegistry() {
+  const registry = window.HENNETH_COMPANY_BACKGROUNDS;
+  return registry && typeof registry.forSymbol === "function" ? registry : null;
+}
+
+function companyVisual(row, index) {
+  const symbol = String(row?.symbol || "").trim().toUpperCase();
+  const registry = companyBackgroundRegistry();
+  const backgroundPath = registry?.forSymbol(symbol) || "";
+  const backgroundMatch = backgroundPath.match(CI_BACKGROUND_ATTR_RE);
+  const fallbackIndex = ((ciHash(`${symbol}:${index}`) + Math.max(0, index)) % 25) + 1;
+  const backgroundId = backgroundMatch ? backgroundMatch[1] : String(fallbackIndex).padStart(2, "0");
+  const revealSide = CI_REVEAL_SIDES[ciHash(`${symbol}:${backgroundId}:reveal`) % CI_REVEAL_SIDES.length];
+  return { backgroundId, backgroundPath, revealSide };
+}
 
 function deskScheme() {
   try {
@@ -319,8 +346,13 @@ function renderGate(message) {
   $("signOut").hidden = true;
   setAccessState("Signed out", "private file closed");
   if ($("companyStatus")) $("companyStatus").textContent = "Company Intelligence";
-  $("app").removeAttribute("aria-busy");
-  $("app").innerHTML = `
+  const app = $("app");
+  app.removeAttribute("aria-busy");
+  app.classList.remove("is-entering");
+  delete app.dataset.companyBg;
+  delete app.dataset.revealSide;
+  delete app.dataset.companyBackgroundSrc;
+  app.innerHTML = `
     <section class="gate" aria-labelledby="gateTitle">
       <div>
         <p class="eyebrow">Private research workspace</p>
@@ -358,6 +390,8 @@ function renderDesk(searchState) {
   if (!state.selected && list.length) state.selected = list[0].symbol;
   const row = list.find(r => r.symbol === state.selected) || list[0];
   if (row) state.selected = row.symbol;
+  const activeIndex = row ? Math.max(0, (state.data?.tickers || []).findIndex(item => item.symbol === row.symbol)) : -1;
+  const visual = row ? companyVisual(row, activeIndex) : null;
   $("app").innerHTML = `
     <aside class="icon-rail" aria-label="Primary desk navigation">
       <a class="icon-rail-brand" href="https://desk.henneth.app/today" aria-label="Henneth Desk home"><img src="logo-terminal.svg" alt="" width="34" height="30"></a>
@@ -465,7 +499,7 @@ function renderDesk(searchState) {
   if (searchState?.focusThesis) {
     $("privateThesisText")?.focus({ preventScroll: true });
   }
-  if (!searchState) enhanceMotion();
+  enhanceMotion({ visual, animate: !searchState });
 }
 
 function currentPilotSymbols() {
@@ -3046,10 +3080,20 @@ function bindLogin() {
   };
 }
 
-function enhanceMotion() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+function enhanceMotion({ visual, animate } = {}) {
   const app = $("app");
+  if (!app) return;
   app.classList.remove("is-entering");
+  if (visual?.backgroundId) {
+    app.dataset.companyBg = visual.backgroundId;
+    app.dataset.revealSide = visual.revealSide;
+    app.dataset.companyBackgroundSrc = visual.backgroundPath || "";
+  } else {
+    delete app.dataset.companyBg;
+    delete app.dataset.revealSide;
+    delete app.dataset.companyBackgroundSrc;
+  }
+  if (!animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   requestAnimationFrame(() => app.classList.add("is-entering"));
 }
 
