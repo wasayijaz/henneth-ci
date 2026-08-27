@@ -485,11 +485,13 @@ push refreshed data).
   `lifecycle_email_log` (service-role only, RLS on with zero policies) tracks per-user/per-key sends
   and is the idempotency guard for the cron.
 - **Dedicated CI archive, private theses and formal-owner inputs.** The Henneth CI Supabase project is provisioned with
-  `company_theses`, `company_financial_assumptions`, five append-only archive tables, and a nonpublic PDF bucket; its receipt is
-  `state/company_intel/supabase_archive_receipt.json` and its reviewable contract is
+  `company_theses`, `company_financial_assumptions`, five append-only archive tables, and a nonpublic PDF bucket; the archive receipt is
+  `state/company_intel/supabase_archive_receipt.json`, the private-thesis schema receipt is
+  `state/company_intel/private_thesis_storage_receipt.json`, and the reviewable archive contract is
   `docs/henneth_ci_archive.sql`. Archive tables have RLS enabled with no browser grants or policies;
-  only the cloud-held service credential may write. The browser CI deployment is deliberately not
-  cut over until the owner account, owner ID configuration and live RLS checks are migrated. The
+  only the cloud-held service credential may write. The private-thesis receipt proves schema
+  configuration only; it does not complete live storage until owner-token create/read/update/archive/
+  restore/delete and cross-user RLS smoke tests are recorded without secrets. The
   browser uses only a publishable key plus its bearer token. Archive/restore is normal; permanent
   deletion requires confirmation. The free cloud pipeline runs `supabase_ci_store.py` after the
   private CI slice, retaining metadata, facts, snapshots for every generated per-company CI research
@@ -510,10 +512,10 @@ push refreshed data).
   `approve_owner_financial_assumptions.py --row-id <uuid>` validates the owner, metric bounds,
   source label, optional HTTPS URL and rationale, then appends a new approved copy with the current
   timestamp. Missing secrets, failed fetches or invalid drafts are safe no-ops/degraded outcomes
-  and must not print key material. The optional hardening contract in
-  `docs/company_financial_assumptions_insert_hardening.sql` is reference-only until the owner
-  applies it; it narrows authenticated inserts to unapproved drafts while leaving backend approval
-  to the private credential path.
+  and must not print key material. The hardening contract in
+  `docs/company_financial_assumptions_insert_hardening.sql` is applied to the dedicated CI project as migration `harden_owner_financial_assumption_drafts`
+  (2026-08-27); it narrows authenticated inserts to unapproved drafts while leaving backend approval
+  to the private credential path. It must not be applied to the legacy desk project as part of CI work.
 - **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
   after guidance, thesis and confidence state and before the CI slice. Its original thesis records
   remain limited to retained same-symbol official events that are strictly later than the latest
@@ -660,6 +662,10 @@ worst case the backfill just continues on the next scheduled run.
   environment (§5 — no `workflow` OAuth scope). Owner must: (1) apply `lifecycle_email.sql` by hand
   in the Supabase SQL editor, (2) add the three secrets (`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`,
   `RESEND_API_KEY`) + the workflow step via the GitHub web UI. See §10 for the runbook once live.
+- **Private CI thesis storage** has a configured-schema receipt in
+  `state/company_intel/private_thesis_storage_receipt.json`, but live completion remains blocked until
+  an owner browser session proves CRUD/archive/restore/delete and a separate authenticated identity
+  proves the row cannot be read, changed, archived, restored or deleted across users.
 - **Legal pages** (`state/legal.json`, `/legal/*`) are DRAFTS — a Pakistani lawyer must review before
   charging (flagged in the file's `review_status`). Discoverable from: page footer, the sidebar bottom
   (`.side-legal`), the sign-in/sign-up modal (`.auth-legal`), and the Settings page.

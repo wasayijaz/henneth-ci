@@ -1,17 +1,26 @@
 {
  "meta": {
-  "built": "2026-08-27 10:29",
+  "built": "2026-08-27 18:33",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
   "count": 20,
   "financial_series": {
-   "updated": "2026-08-27 09:32",
+   "updated": "2026-08-27 18:17",
    "source": "state/company_documents.json + current verified extraction",
-   "source_documents": 314,
+   "source_documents": 315,
    "rejected_facts": 0,
    "append_only_values": true,
-   "note": "Unknown period, unit, currency and consolidation remain explicit; facts retain source/page evidence."
+   "note": "Unknown period, unit, currency and consolidation remain explicit; facts retain source/page evidence.",
+   "manual_claims": {
+    "source": "state/company_intel/verified_manual_financial_claims.json",
+    "source_method": "owner_verified_manual_financial_claim_v1",
+    "source_revision": "manual_vision_v1",
+    "claim_count": 9,
+    "qualified_count": 9,
+    "rejected_count": 0,
+    "rejected_claims": []
+   }
   },
   "graph": {
    "updated": "2026-08-27 06:02",
@@ -28,11 +37,11 @@
   },
   "completion_matrix": {
    "artifact": "state/company_intel/completion_matrix.json",
-   "as_of": "2026-08-27 09:32",
+   "as_of": "2026-08-27 18:17",
    "overall_status": "blocked",
    "requirement_count": 68,
-   "complete": 59,
-   "partial": 5,
+   "complete": 60,
+   "partial": 4,
    "blocked": 4
   },
   "financial_forecasts": {
@@ -13466,7 +13475,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -13538,7 +13547,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -18551,7 +18560,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -18623,7 +18632,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -24146,7 +24155,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -24218,7 +24227,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -27319,8 +27328,8 @@
      "missing_required_source": false,
      "missing_period_count": 506,
      "conflict_count": 0,
-     "model_loadable_count": 36,
-     "audit_only_count": 696
+     "model_loadable_count": 38,
+     "audit_only_count": 694
     },
     "conflicts": [],
     "facts": [
@@ -33549,7 +33558,7 @@
     "symbol": "DGKC",
     "status": "blocked_missing_model_loadable_operating_drivers",
     "reconciliation_kind": "historical_actuals_only",
-    "qualified_financial_period_count": 3,
+    "qualified_financial_period_count": 4,
     "qualified_financial_periods": [
      {
       "period_end": "2022-06-30",
@@ -33619,6 +33628,98 @@
         "source": {
          "document_id": "issuer:57fbec27bd4005d116acb827",
          "fact_id": "fact_31c99710afb5186824e5fa4c",
+         "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+         "source": "Issuer registry",
+         "page": 223,
+         "text": "(Loss)/earnings per share - basic",
+         "available_on": "2026-08-27",
+         "published_at": null,
+         "retrieved_at": "2026-08-27 05:19",
+         "issuer_registry_binding": {
+          "status": "qualified",
+          "document_id": "issuer:57fbec27bd4005d116acb827",
+          "link_id": "issuer:57fbec27bd4005d116acb827",
+          "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+          "source_page": "https://www.dgcement.com/financial.html",
+          "root_domain": "dgcement.com",
+          "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+          "evidence_page": 223,
+          "ticker": "DGKC",
+          "registry_source": "state/company_intel/source_registry.json"
+         }
+        }
+       }
+      }
+     },
+     {
+      "period_end": "2023-06-30",
+      "actuals": {
+       "revenue": {
+        "value": 70495201000.0,
+        "unit": "PKR",
+        "unit_multiplier": 1000,
+        "source": {
+         "document_id": "issuer:91e2da11249269bcac96ae5a",
+         "fact_id": "fact_720e88feb7bdfac7965e6d1b",
+         "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+         "source": "Issuer registry",
+         "page": 227,
+         "text": "Revenue",
+         "available_on": "2026-08-27",
+         "published_at": null,
+         "retrieved_at": "2026-08-27 05:19",
+         "issuer_registry_binding": {
+          "status": "qualified",
+          "document_id": "issuer:91e2da11249269bcac96ae5a",
+          "link_id": "issuer:91e2da11249269bcac96ae5a",
+          "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+          "source_page": "https://www.dgcement.com/financial.html",
+          "root_domain": "dgcement.com",
+          "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+          "evidence_page": 227,
+          "ticker": "DGKC",
+          "registry_source": "state/company_intel/source_registry.json"
+         }
+        }
+       },
+       "profit_after_tax_attributable": {
+        "value": -3530256000.0,
+        "unit": "PKR",
+        "unit_multiplier": 1000,
+        "source": {
+         "document_id": "issuer:57fbec27bd4005d116acb827",
+         "fact_id": "fact_2eb04ac24dd217a9d52eb96a",
+         "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+         "source": "Issuer registry",
+         "page": 223,
+         "text": "Owners of the parent company",
+         "available_on": "2026-08-27",
+         "published_at": null,
+         "retrieved_at": "2026-08-27 05:19",
+         "issuer_registry_binding": {
+          "status": "qualified",
+          "document_id": "issuer:57fbec27bd4005d116acb827",
+          "link_id": "issuer:57fbec27bd4005d116acb827",
+          "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+          "source_page": "https://www.dgcement.com/financial.html",
+          "root_domain": "dgcement.com",
+          "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+          "evidence_page": 223,
+          "ticker": "DGKC",
+          "registry_source": "state/company_intel/source_registry.json"
+         }
+        }
+       },
+       "basic_eps": {
+        "value": -8.06,
+        "unit": "PKR/share",
+        "unit_multiplier": 1,
+        "source": {
+         "document_id": "issuer:57fbec27bd4005d116acb827",
+         "fact_id": "fact_fc46520f2a718dac26de7887",
          "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
          "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
          "source": "Issuer registry",
@@ -43904,6 +44005,104 @@
        "readiness": "model_loadable"
       },
       {
+       "series_id": "series_8980f6c0f17ae604ca0efabd",
+       "ticker": "DGKC",
+       "metric": "basic_eps",
+       "parser_version": "financial_statement_v2",
+       "line": "basic_eps",
+       "parser_revision": "block_geometry_v5",
+       "available_on": "2026-08-27",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 05:19",
+       "statement_type": "income_statement",
+       "reported_label": "earnings per share",
+       "duration_months": 12,
+       "column_role": "current_period",
+       "comparative_to_period_end": null,
+       "period_end": "2023-06-30",
+       "period_type": "annual",
+       "consolidation": "unconsolidated",
+       "currency": "PKR",
+       "unit": "PKR/share",
+       "unit_multiplier": 1,
+       "raw_value": "(8.30)",
+       "normalized_value": -8.3,
+       "document_id": "issuer:57fbec27bd4005d116acb827",
+       "fact_id": "fact_d81a3126b8c5f690a3c26fb5",
+       "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+       "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+       "evidence": [
+        {
+         "page": 153,
+         "text": "(Loss)/earnings per share - basic and diluted (in Rupees)",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf"
+        }
+       ],
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:57fbec27bd4005d116acb827",
+        "link_id": "issuer:57fbec27bd4005d116acb827",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "root_domain": "dgcement.com",
+        "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+        "evidence_page": 153,
+        "ticker": "DGKC",
+        "registry_source": "state/company_intel/source_registry.json"
+       },
+       "quality_flags": [],
+       "readiness": "model_loadable"
+      },
+      {
+       "series_id": "series_f16aa352883ecff0a7876c1d",
+       "ticker": "DGKC",
+       "metric": "basic_eps",
+       "parser_version": "financial_statement_v2",
+       "line": "basic_eps",
+       "parser_revision": "block_geometry_v5",
+       "available_on": "2026-08-27",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 05:19",
+       "statement_type": "income_statement",
+       "reported_label": "earnings per share",
+       "duration_months": 12,
+       "column_role": "current_period",
+       "comparative_to_period_end": null,
+       "period_end": "2023-06-30",
+       "period_type": "annual",
+       "consolidation": "consolidated",
+       "currency": "PKR",
+       "unit": "PKR/share",
+       "unit_multiplier": 1,
+       "raw_value": "(8.06)",
+       "normalized_value": -8.06,
+       "document_id": "issuer:57fbec27bd4005d116acb827",
+       "fact_id": "fact_fc46520f2a718dac26de7887",
+       "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+       "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+       "evidence": [
+        {
+         "page": 223,
+         "text": "(Loss)/earnings per share - basic",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf"
+        }
+       ],
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:57fbec27bd4005d116acb827",
+        "link_id": "issuer:57fbec27bd4005d116acb827",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+        "source_page": "https://www.dgcement.com/financial.html",
+        "root_domain": "dgcement.com",
+        "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+        "evidence_page": 223,
+        "ticker": "DGKC",
+        "registry_source": "state/company_intel/source_registry.json"
+       },
+       "quality_flags": [],
+       "readiness": "model_loadable"
+      },
+      {
        "series_id": "series_3bd445986ca54b4f9510aad4",
        "ticker": "DGKC",
        "metric": "basic_eps",
@@ -44745,19 +44944,63 @@
        ]
       },
       {
-       "period_end": "2024-06-30",
-       "value": -81.71091445427729,
+       "period_end": "2023-06-30",
+       "value": -222.41887905604722,
        "availability": "2026-08-27",
        "formula_version": "financial_model_inputs_v1",
        "source_fact_ids": [
         "fact_3a7aea53c4f910b2d4ef79fd",
-        "fact_9b990fd43850cee910602108"
+        "fact_d81a3126b8c5f690a3c26fb5"
        ],
        "operand_provenance": [
         {
          "fact_id": "fact_3a7aea53c4f910b2d4ef79fd",
          "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
          "period_end": "2022-06-30"
+        },
+        {
+         "fact_id": "fact_d81a3126b8c5f690a3c26fb5",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+         "period_end": "2023-06-30"
+        }
+       ]
+      },
+      {
+       "period_end": "2023-06-30",
+       "value": -2.8915662650602414,
+       "availability": "2026-08-27",
+       "formula_version": "financial_model_inputs_v1",
+       "source_fact_ids": [
+        "fact_d81a3126b8c5f690a3c26fb5",
+        "fact_fc46520f2a718dac26de7887"
+       ],
+       "operand_provenance": [
+        {
+         "fact_id": "fact_d81a3126b8c5f690a3c26fb5",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+         "period_end": "2023-06-30"
+        },
+        {
+         "fact_id": "fact_fc46520f2a718dac26de7887",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+         "period_end": "2023-06-30"
+        }
+       ]
+      },
+      {
+       "period_end": "2024-06-30",
+       "value": -115.38461538461537,
+       "availability": "2026-08-27",
+       "formula_version": "financial_model_inputs_v1",
+       "source_fact_ids": [
+        "fact_fc46520f2a718dac26de7887",
+        "fact_9b990fd43850cee910602108"
+       ],
+       "operand_provenance": [
+        {
+         "fact_id": "fact_fc46520f2a718dac26de7887",
+         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+         "period_end": "2023-06-30"
         },
         {
          "fact_id": "fact_9b990fd43850cee910602108",
@@ -45359,10 +45602,10 @@
    "financial_evidence_reconciliation": {
     "symbol": "DGKC",
     "status": "blocked",
-    "eligible_fact_count": 15,
-    "audit_only_fact_count": 446,
-    "quarantined_fact_count": 271,
-    "missing_slot_count": 1,
+    "eligible_fact_count": 16,
+    "audit_only_fact_count": 444,
+    "quarantined_fact_count": 272,
+    "missing_slot_count": 0,
     "source_conflict_count": 25,
     "withheld_future_source_fact_count": 0,
     "facts": [
@@ -45479,11 +45722,9 @@
       "unit_multiplier": 1,
       "raw_value": "(8.30)",
       "normalized_value": -8.3,
-      "status": "audit_only",
+      "status": "quarantined",
       "reasons": [
-       "missing_or_nonconsolidated_basis",
-       "readiness_is_audit_only",
-       "unparseable_raw_value"
+       "missing_or_nonconsolidated_basis"
       ],
       "source": {
        "document_id": "issuer:57fbec27bd4005d116acb827",
@@ -45531,11 +45772,8 @@
       "unit_multiplier": 1,
       "raw_value": "(8.06)",
       "normalized_value": -8.06,
-      "status": "audit_only",
-      "reasons": [
-       "readiness_is_audit_only",
-       "unparseable_raw_value"
-      ],
+      "status": "eligible",
+      "reasons": [],
       "source": {
        "document_id": "issuer:57fbec27bd4005d116acb827",
        "fact_id": "fact_fc46520f2a718dac26de7887",
@@ -45564,8 +45802,8 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "unknown",
-      "confidence": "low"
+      "evidence_label": "fact_source_reported",
+      "confidence": "high"
      },
      {
       "reconciliation_id": "finrec_ceea2f335ae53342e868",
@@ -84286,24 +84524,7 @@
       ]
      }
     ],
-    "missing_slots": [
-     {
-      "reconciliation_id": "finmissing_00d5d3b9ba2f7562129a",
-      "symbol": "DGKC",
-      "metric": "basic_eps",
-      "period_end": "2023-06-30",
-      "period_type": "annual",
-      "status": "missing",
-      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-      "slot": "annual_period_3",
-      "period_evidence_status": "explicit",
-      "source": {
-       "document_id": "psx:216733",
-       "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2023",
-       "matched_text": "YEAR ENDED JUNE 30, 2023"
-      }
-     }
-    ],
+    "missing_slots": [],
     "qualified_periods": [
      {
       "period_end": "2022-06-30",
@@ -84322,6 +84543,26 @@
       },
       "document_ids": [
        "issuer:57fbec27bd4005d116acb827"
+      ]
+     },
+     {
+      "period_end": "2023-06-30",
+      "available_on": "2026-08-27",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "statement_type": "income_statement",
+      "monetary_unit": "PKR",
+      "monetary_unit_multiplier": 1000,
+      "eps_unit": "PKR/share",
+      "eps_unit_multiplier": 1,
+      "source_fact_ids": {
+       "revenue": "fact_720e88feb7bdfac7965e6d1b",
+       "profit_after_tax_attributable": "fact_2eb04ac24dd217a9d52eb96a",
+       "basic_eps": "fact_fc46520f2a718dac26de7887"
+      },
+      "document_ids": [
+       "issuer:57fbec27bd4005d116acb827",
+       "issuer:91e2da11249269bcac96ae5a"
       ]
      },
      {
@@ -84366,7 +84607,7 @@
     ],
     "readiness": {
      "forecast_readiness_status": "blocked_model_adapter_unavailable",
-     "forecast_qualified_period_count": 3,
+     "forecast_qualified_period_count": 4,
      "financial_model_input_status": "blocked_model_adapter_unavailable",
      "earnings_bridge_status": "blocked",
      "forecast": "blocked_insufficient_qualified_history",
@@ -84396,7 +84637,7 @@
    },
    "financial_coverage": {
     "symbol": "DGKC",
-    "status": "queued_for_qualification",
+    "status": "complete",
     "classification": "financial_results_coverage",
     "indexed_official_financial_doc_count": 10,
     "indexed_official_financial_docs": [
@@ -84638,13 +84879,12 @@
       ],
       "present_model_ready_metrics": [
        "revenue",
-       "profit_after_tax_attributable"
-      ],
-      "missing_metrics": [
+       "profit_after_tax_attributable",
        "basic_eps"
       ],
+      "missing_metrics": [],
       "period_evidence_status": "explicit",
-      "status": "missing_required_metrics"
+      "status": "complete"
      }
     ],
     "model_readiness": {
@@ -84659,12 +84899,8 @@
      ]
     },
     "audit_only_series": {
-     "audit_only_fact_count": 696,
+     "audit_only_fact_count": 694,
      "audit_only_metrics": [
-      {
-       "metric": "basic_eps",
-       "fact_count": 2
-      },
       {
        "metric": "change_pct",
        "fact_count": 202
@@ -84686,7 +84922,7 @@
        "fact_count": 299
       }
      ],
-     "model_loadable_count": 36,
+     "model_loadable_count": 38,
      "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
     },
     "qualification_queue": {
@@ -84799,7 +85035,7 @@
     },
     "registry_version": "cement_v1",
     "adapter_version": null,
-    "qualified_period_count": 3,
+    "qualified_period_count": 4,
     "qualified_periods": [
      {
       "period_end": "2022-06-30",
@@ -84818,6 +85054,26 @@
       },
       "document_ids": [
        "issuer:57fbec27bd4005d116acb827"
+      ]
+     },
+     {
+      "period_end": "2023-06-30",
+      "available_on": "2026-08-27",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "statement_type": "income_statement",
+      "monetary_unit": "PKR",
+      "monetary_unit_multiplier": 1000,
+      "eps_unit": "PKR/share",
+      "eps_unit_multiplier": 1,
+      "source_fact_ids": {
+       "revenue": "fact_720e88feb7bdfac7965e6d1b",
+       "profit_after_tax_attributable": "fact_2eb04ac24dd217a9d52eb96a",
+       "basic_eps": "fact_fc46520f2a718dac26de7887"
+      },
+      "document_ids": [
+       "issuer:57fbec27bd4005d116acb827",
+       "issuer:91e2da11249269bcac96ae5a"
       ]
      },
      {
@@ -87615,7 +87871,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -87669,7 +87925,7 @@
       },
       "row_metadata": {
        "symbol": "DGKC",
-       "status": "queued_for_qualification",
+       "status": "complete",
        "classification": "financial_results_coverage",
        "limitations": [
         "PDFs were not parsed.",
@@ -87687,7 +87943,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -88575,7 +88831,7 @@
     "cases": [
      {
       "metric": "net_margin_pct",
-      "derived_value": 5.9132,
+      "derived_value": 2.5352,
       "unit": "pct",
       "status": "historical_reference_case_not_owner_approved",
       "record_type": "derived_reference_case",
@@ -88587,12 +88843,12 @@
       "available_on": "2026-08-27",
       "formula_version": "financial_engine_assumptions_reference_case_v1",
       "period_ends": [
-       "2022-06-30",
+       "2023-06-30",
        "2024-06-30",
        "2025-06-30"
       ],
       "source": {
-       "id": "henneth_state:financial_model_inputs:DGKC:net_margin_pct:2022-06-30-2024-06-30-2025-06-30",
+       "id": "henneth_state:financial_model_inputs:DGKC:net_margin_pct:2023-06-30-2024-06-30-2025-06-30",
        "label": "DGKC historical reference-case net_margin_pct from three qualified annual observations",
        "path": "state/company_intel/financial_model_inputs.json",
        "url": null,
@@ -88601,7 +88857,7 @@
       "formula": {
        "name": "average_pat_margin_across_three_reported_annual_observations",
        "period_margin_rates_pct": [
-        5.126257113649365,
+        -5.00779620445369,
         0.8637009204265982,
         11.749564831497374
        ],
@@ -88610,11 +88866,11 @@
       "source_facts": [
        {
         "line": "revenue",
-        "fact_id": "fact_7b534d8a452f8f3c264aab40",
-        "document_id": "issuer:57fbec27bd4005d116acb827",
-        "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
-        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
-        "period_end": "2022-06-30",
+        "fact_id": "fact_720e88feb7bdfac7965e6d1b",
+        "document_id": "issuer:91e2da11249269bcac96ae5a",
+        "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+        "period_end": "2023-06-30",
         "available_on": "2026-08-27",
         "statement_type": "income_statement",
         "period_type": "annual",
@@ -88623,20 +88879,20 @@
         "currency": "PKR",
         "unit": "PKR",
         "unit_multiplier": 1000,
-        "normalized_value": 61653833000.0,
+        "normalized_value": 70495201000.0,
         "source_method": "financial_statement_v2",
         "source_revision": "block_geometry_v5",
         "evidence_pages": [
-         223
+         227
         ]
        },
        {
         "line": "profit_after_tax_attributable",
-        "fact_id": "fact_91c730095894d88bc54748df",
+        "fact_id": "fact_2eb04ac24dd217a9d52eb96a",
         "document_id": "issuer:57fbec27bd4005d116acb827",
         "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
         "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
-        "period_end": "2022-06-30",
+        "period_end": "2023-06-30",
         "available_on": "2026-08-27",
         "statement_type": "income_statement",
         "period_type": "annual",
@@ -88645,7 +88901,7 @@
         "currency": "PKR",
         "unit": "PKR",
         "unit_multiplier": 1000,
-        "normalized_value": 3160534000.0,
+        "normalized_value": -3530256000.0,
         "source_method": "financial_statement_v2",
         "source_revision": "block_geometry_v5",
         "evidence_pages": [
@@ -88752,7 +89008,7 @@
      },
      {
       "metric": "revenue_growth_pct",
-      "derived_value": 8.6829,
+      "derived_value": 5.681,
       "unit": "pct",
       "status": "historical_reference_case_not_owner_approved",
       "record_type": "derived_reference_case",
@@ -88764,12 +89020,12 @@
       "available_on": "2026-08-27",
       "formula_version": "financial_engine_assumptions_reference_case_v1",
       "period_ends": [
-       "2022-06-30",
+       "2023-06-30",
        "2024-06-30",
        "2025-06-30"
       ],
       "source": {
-       "id": "henneth_state:financial_model_inputs:DGKC:revenue_growth_pct:2022-06-30-2024-06-30-2025-06-30",
+       "id": "henneth_state:financial_model_inputs:DGKC:revenue_growth_pct:2023-06-30-2024-06-30-2025-06-30",
        "label": "DGKC historical reference-case revenue_growth_pct from three qualified annual observations",
        "path": "state/company_intel/financial_model_inputs.json",
        "url": null,
@@ -88778,18 +89034,18 @@
       "formula": {
        "name": "average_annualized_growth_between_three_reported_annual_revenue_observations",
        "interval_growth_rates_pct": [
-        7.975420481100448,
+        1.9717185628336908,
         9.39031206349763
        ]
       },
       "source_facts": [
        {
         "line": "revenue",
-        "fact_id": "fact_7b534d8a452f8f3c264aab40",
-        "document_id": "issuer:57fbec27bd4005d116acb827",
-        "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
-        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
-        "period_end": "2022-06-30",
+        "fact_id": "fact_720e88feb7bdfac7965e6d1b",
+        "document_id": "issuer:91e2da11249269bcac96ae5a",
+        "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+        "period_end": "2023-06-30",
         "available_on": "2026-08-27",
         "statement_type": "income_statement",
         "period_type": "annual",
@@ -88798,11 +89054,11 @@
         "currency": "PKR",
         "unit": "PKR",
         "unit_multiplier": 1000,
-        "normalized_value": 61653833000.0,
+        "normalized_value": 70495201000.0,
         "source_method": "financial_statement_v2",
         "source_revision": "block_geometry_v5",
         "evidence_pages": [
-         223
+         227
         ]
        },
        {
@@ -88876,20 +89132,20 @@
     "source_quality_flags": 0,
     "operating_event_count": 29,
     "cement_operating_observation_count": 36,
-    "cement_qualified_financial_period_count": 3,
+    "cement_qualified_financial_period_count": 4,
     "impact_scenario_count": 87,
     "event_study_count": 29,
     "conditional_benchmark_count": 3,
     "causal_row_count": 8,
     "financial_model_status": "blocked_model_adapter_unavailable",
     "financial_reconciliation_status": "blocked",
-    "financial_reconciliation_eligible_facts": 15,
-    "financial_reconciliation_missing_slots": 1,
+    "financial_reconciliation_eligible_facts": 16,
+    "financial_reconciliation_missing_slots": 0,
     "financial_reconciliation_conflicts": 25,
-    "financial_coverage_status": "queued_for_qualification",
+    "financial_coverage_status": "complete",
     "financial_coverage_candidates": 5,
     "forecast_readiness_status": "blocked_model_adapter_unavailable",
-    "forecast_qualified_period_count": 3,
+    "forecast_qualified_period_count": 4,
     "scenario_lab_status": "ready_snapshot_sensitivity",
     "market_expectations_status": "ready_snapshot_reverse_solve",
     "brain_object_count": 58,
@@ -92586,7 +92842,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -92658,7 +92914,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -103987,7 +104243,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -104059,7 +104315,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -108114,7 +108370,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -108186,7 +108442,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -109676,11 +109932,50 @@
      "period_count": 11,
      "missing_required_source": false,
      "missing_period_count": 222,
-     "conflict_count": 0,
+     "conflict_count": 2,
      "model_loadable_count": 42,
      "audit_only_count": 418
     },
-    "conflicts": [],
+    "conflicts": [
+     {
+      "conflict_id": "conf_4f922fe5840ad56f0845",
+      "metric": "basic_eps",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "consolidation": "unconsolidated",
+      "series_ids": [
+       "series_2225fbf6e58ee4960cd94cc0",
+       "series_475286cafda8588b10924841"
+      ],
+      "reason": "multiple evidenced values share the same period and basis"
+     },
+     {
+      "conflict_id": "conf_ba7b89980de87651d00d",
+      "metric": "revenue",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "consolidation": "unconsolidated",
+      "series_ids": [
+       "series_0b974390ea61c15536c0acf8",
+       "series_100e49192142f8bfc706b756",
+       "series_16b026dbc32193caffd976a6",
+       "series_196e6ea620c8a91de2f331c5",
+       "series_1d57a23ff3bb9134f1853f95",
+       "series_481be256c764cb7b31c826e8",
+       "series_5bd8da672fed990f0431469e",
+       "series_70da1715608d649a8a83c3fd",
+       "series_780a12b84be5b270ddc50146",
+       "series_7bd2333f282b053b59b5d48e",
+       "series_9dabcf9aed1f1fadaefcfde9",
+       "series_a1ff67cb6464a014f330e30c",
+       "series_be0a6f33ac3b5d99ee73c8f4",
+       "series_c383c519da7f84ca8c812b97",
+       "series_d8dcd31776353bb1eef3330c",
+       "series_f3a324b24cbefa943603d891"
+      ],
+      "reason": "multiple evidenced values share the same period and basis"
+     }
+    ],
     "facts": [
      {
       "series_id": "series_f0cabac8b79c4efb23b3a200",
@@ -144963,7 +145258,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -145035,7 +145330,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -150729,7 +151024,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -150801,7 +151096,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -153630,7 +153925,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -153702,7 +153997,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -164470,7 +164765,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -164542,7 +164837,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -170245,7 +170540,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -170317,7 +170612,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -174905,7 +175200,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -174977,7 +175272,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -186111,7 +186406,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -186183,7 +186478,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -190303,7 +190598,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -190375,7 +190670,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -197863,7 +198158,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -197935,7 +198230,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -202996,7 +203291,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -203068,7 +203363,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -205749,7 +206044,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -205821,7 +206116,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -209078,7 +209373,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -209150,7 +209445,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -210620,11 +210915,24 @@
      "period_count": 7,
      "missing_required_source": false,
      "missing_period_count": 20,
-     "conflict_count": 0,
+     "conflict_count": 1,
      "model_loadable_count": 16,
      "audit_only_count": 59
     },
-    "conflicts": [],
+    "conflicts": [
+     {
+      "conflict_id": "conf_3c1a41b1c50907537282",
+      "metric": "tax_expense",
+      "period_end": "2020-06-30",
+      "period_type": "annual",
+      "consolidation": "unconsolidated",
+      "series_ids": [
+       "series_d5f929c2e01fe48559c1457d",
+       "series_d881152cd6d908d638f028ba"
+      ],
+      "reason": "multiple evidenced values share the same period and basis"
+     }
+    ],
     "facts": [
      {
       "series_id": "series_5b405fcf4df93968df565c15",
@@ -223066,7 +223374,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -223138,7 +223446,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 09:32",
+       "as_of": "2026-08-27 18:17",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",

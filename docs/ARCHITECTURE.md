@@ -95,7 +95,7 @@ The product is a hybrid of five parts:
 | Snapshot Scenario Lab | `scripts/build_company_scenario_lab.py` -> `state/company_intel/scenario_lab.json` | caller-supplied sensitivity, reverse-expectations and market-gap algebra over dated fundamentals/prices; generated state never selects a forecast or house case |
 | Persistent Company Brain | `scripts/build_company_brains.py` -> `state/company_intel/company_brains.json` | compact 21-domain, five-type reference index over authoritative profiles, approved briefs, operating events, resolvable event studies and an exact per-company pointer index into retained CI source products; it never re-derives their facts |
 | Thesis monitoring | `scripts/build_thesis_monitoring.py` + `thesis_monitoring.py` -> `state/company_intel/thesis_monitoring.json` | source-cluster-linked inference records with canonical Strengthening/Stable/Weakening/Broken states and explicit prove/kill/watch checks; no user thesis storage in v1 |
-| Private user theses | Supabase `company_theses` + owner-only RLS | authenticated CI create/edit/archive/restore/delete; separate from deterministic thesis monitoring and inactive until the owner applies `docs/company_theses.sql` |
+| Private user theses | Supabase `company_theses` + owner-only RLS | authenticated CI create/edit/archive/restore/delete; separate from deterministic thesis monitoring; schema-configured receipt lives at `state/company_intel/private_thesis_storage_receipt.json`, while live completion still requires owner-token CRUD and cross-user RLS proof |
 | Intelligence confidence | `scripts/build_intelligence_confidence.py` + `intelligence_confidence.py` -> `state/company_intel/intelligence_confidence.json` | transparent seven-component scores over retained signal clusters using source quality, independence, strict analogues, financial readiness, completeness and recency |
 | Management delivery | `scripts/build_management_delivery.py` + `management_delivery.py` -> `state/company_intel/management_delivery.json` | preserves categorical event-based follow-through for active theses and adds a separate first-class guidance record set; both require same-company, exact normalized keys, strictly later availability and self-source exclusion |
 | Guidance & contradictions | `scripts/build_guidance_contradictions.py` + `guidance_contradictions.py` -> `state/company_intel/guidance_contradictions.json` | strict qualitative management-priority, delivery-promise, project/capacity-action, stated-risk and operating-constraint objects from retained same-company official evidence only; exact normalized-key contradictions only, no numeric forecasts, valuation, advice or browser inference |
@@ -204,9 +204,11 @@ briefs only after explicit owner approval.
 Its separate Vercel project uses `Henneth Desk 2.CI.0/` as the project root. The shell and sign-in form load publicly, but
 middleware verifies the existing Supabase ES256 access token and serves `/data/*` only when the
 signed `sub` equals `CI_OWNER_USER_ID`. No owner UUID, service-role key or signup path lives in the
-repository. Private user theses use the separately reviewed `company_theses` RLS contract only
-after the owner manually applies `docs/company_theses.sql`; the UI treats an absent table as an
-explicit not-activated state.
+repository. Private user theses use the separately reviewed `company_theses` RLS contract. The
+dedicated CI project has a secret-free schema receipt at
+`state/company_intel/private_thesis_storage_receipt.json`, but the browser surface is not considered
+live until owner-token CRUD and cross-user RLS smoke tests are recorded; the UI still treats an absent
+or inaccessible table as an explicit not-activated state.
 
 Wave 1 Company Intelligence runs after the second `document_intelligence.py` /
 `build_financial_series.py` pass. It derives operating events from the append-only event ledger
@@ -242,8 +244,10 @@ Applied to the dedicated Henneth CI project:
 
 - `docs/company_theses.sql` — private per-user company theses for the exact 20-company CI pilot.
   It grants authenticated CRUD only behind four owner predicates, revokes public/anonymous access,
-  bounds every input and labels any fair-value assumption as private user input. The CI browser is
-  not cut over until its owner account and owner-id deployment configuration have been migrated.
+  bounds every input and labels any fair-value assumption as private user input. Its secret-free
+  schema receipt is `state/company_intel/private_thesis_storage_receipt.json`; the completion matrix
+  credits only schema configuration until an owner browser session proves create/read/update/archive/
+  restore/delete and a second authenticated identity proves cross-user isolation.
 - `docs/company_financial_assumptions.sql` — append-only private owner input for the four explicit
   formal financial-engine operands. The server-only importer filters to the configured CI owner,
   accepts only approved/source-labelled/dated rows, and makes approval date the first eligible
@@ -259,7 +263,7 @@ Applied to the dedicated Henneth CI project:
 Written, not applied in the live desk project (SQL lives in `docs/`, owner runs it by hand):
 - `docs/push_subscriptions.sql` — Web Push endpoints. Feature is inert until VAPID keys, this table, and a shipping change all exist.
 - `docs/lifecycle_email.sql` — activation columns, `mark_activated` RPC, unsubscribe RPC, `lifecycle_email_log`, `lifecycle_queue` view. `scripts/lifecycle_email.py` exists; it cannot run until this is applied and Resend + service-role secrets exist.
-- `docs/company_financial_assumptions_insert_hardening.sql` — manual reference hardening for the CI assumptions table. It narrows authenticated inserts to inert drafts (`approved=false`, `approved_at null`) so server-side approval remains an append-copy operation. The repo does not assume this contract is live until the owner applies it.
+- `docs/company_financial_assumptions_insert_hardening.sql` — applied hardening for the dedicated CI assumptions table (migration `harden_owner_financial_assumption_drafts`, 2026-08-27). It narrows authenticated inserts to inert drafts (`approved=false`, `approved_at null`) so server-side approval remains an append-copy operation. It does not alter the legacy desk project.
 
 Never assume a SQL file in `docs/` has been applied. Additive first. There is no migration runner.
 
@@ -284,7 +288,7 @@ Never assume a SQL file in `docs/` has been applied. Additive first. There is no
 | `gateAllows()` / `OPEN_ROUTES` | which clean dashboard paths render | yes — it is UX |
 | `hasFeature()` / `PLANS` / `BILLING_LIVE` | which screens are teaser-walled | yes, and while `BILLING_LIVE === false` every signed-in account is treated as Pro |
 | Supabase RLS | a user's own `profiles` row | no, if RLS stays on |
-| Supabase RLS | a user's own `company_theses` rows | dedicated CI archive is configured; browser cutover still needs owner-account verification and CI deployment configuration |
+| Supabase RLS | a user's own `company_theses` rows | schema configured in the dedicated CI project; browser completion still needs owner-account CRUD and cross-user RLS verification |
 | `isOwner()` | plan-preview chrome | yes — it is an email string compare |
 
 `plan` is frozen in the database against client writes. There is no payment gateway. Do not flip `BILLING_LIVE` or `site.earlyAccess` until a local gateway, reviewed legal pages, and a service-role trial path exist.

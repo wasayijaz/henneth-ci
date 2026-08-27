@@ -8,7 +8,8 @@
     "activate_private_company_theses",
     "create_append_only_ci_archive",
     "harden_thesis_helper_search_path",
-    "create_owner_financial_assumptions"
+    "create_owner_financial_assumptions",
+    "harden_owner_financial_assumption_drafts"
   ],
   "tables": [
     "company_theses",
@@ -29,7 +30,7 @@
   "formal_owner_assumptions": {
     "table": "company_financial_assumptions",
     "migration": "create_owner_financial_assumptions",
-    "status": "schema_verified_waiting_for_owner_secret_and_approved_rows",
+    "status": "schema_verified_draft_hardening_live_waiting_for_owner_secret_and_approved_rows",
     "security": "RLS is enabled with authenticated users limited to their own rows; the server-side importer additionally filters to HENNETH_CI_OWNER_USER_ID and uses approval date as the first eligible date.",
     "activation_requirement": "Set HENNETH_CI_OWNER_USER_ID only in the cloud secret store, then add explicit approved, dated, source-labelled owner rows. Missing configuration or rows leaves formal engines blocked."
   }

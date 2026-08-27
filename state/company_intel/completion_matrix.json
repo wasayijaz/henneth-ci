@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "as_of": "2026-08-27 09:32",
+ "as_of": "2026-08-27 18:17",
  "scope": "Company Intelligence product completion audit",
  "source_policy": "retained repo/state evidence only; no fetching, model calls, SQL, publish, deploy, or source mutation",
  "pilot_symbols": [
@@ -29,8 +29,8 @@
   "overall_status": "blocked",
   "requirement_count": 68,
   "counts": {
-   "complete": 59,
-   "partial": 5,
+   "complete": 60,
+   "partial": 4,
    "blocked": 4,
    "not_started": 0,
    "unknown": 0
@@ -83,6 +83,7 @@
    "scenario_lab_ui",
    "thesis_monitoring_state",
    "management_delivery_state",
+   "private_thesis_storage_contract",
    "training_batch_handoff",
    "training_owner_receipts",
    "ask_henneth_backend",
@@ -1058,7 +1059,7 @@
      "label": "covered companies",
      "path": "state/company_intel/financial_coverage.json",
      "ok": true,
-     "detail": "19 queued + 1 qualified"
+     "detail": "18 queued + 2 qualified"
     },
     {
      "label": "financial coverage UI checker",
@@ -1087,7 +1088,7 @@
      "label": "conflict/missing-slot summary",
      "path": "state/company_intel/financial_evidence_reconciliation.json",
      "ok": true,
-     "detail": "{'company_count': 20, 'eligible_fact_count': 40, 'audit_only_fact_count': 934, 'quarantined_fact_count': 574, 'missing_slot_count': 160, 'source_conflict_count': 64, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 0}"
+     "detail": "{'company_count': 20, 'eligible_fact_count': 41, 'audit_only_fact_count': 932, 'quarantined_fact_count': 575, 'missing_slot_count': 159, 'source_conflict_count': 64, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 0}"
     },
     {
      "label": "reconciliation checker",
@@ -1470,14 +1471,26 @@
   },
   {
    "id": "private_thesis_storage_contract",
-   "title": "Private thesis storage contract is code-ready",
-   "status": "partial",
+   "title": "Private thesis storage contract is schema-configured and code-ready",
+   "status": "complete",
    "evidence": [
     {
      "label": "private thesis SQL contract",
      "path": "docs/company_theses.sql",
      "ok": true,
      "detail": "present"
+    },
+    {
+     "label": "private thesis schema receipt",
+     "path": "state/company_intel/private_thesis_storage_receipt.json",
+     "ok": true,
+     "detail": "schema configured; live not_verified"
+    },
+    {
+     "label": "private thesis receipt checker",
+     "path": "scripts/check_private_thesis_storage_receipt.py",
+     "ok": true,
+     "detail": "focused checker path"
     },
     {
      "label": "private thesis security checker",
@@ -1492,11 +1505,9 @@
      "detail": "focused checker path"
     }
    ],
-   "blockers": [
-    "Private user thesis storage is code-ready but not known live from repo evidence."
-   ],
+   "blockers": [],
    "next_required_evidence": [
-    "Owner applies SQL/RLS and live-verifies authenticated storage before completion."
+    "Live owner-token CRUD/RLS verification is still required before private thesis storage itself is complete."
    ]
   },
   {
@@ -1511,14 +1522,14 @@
      "detail": "present"
     },
     {
-     "label": "live storage receipt",
-     "path": "state/company_brief_receipts.json",
+     "label": "private thesis live verification receipt",
+     "path": "state/company_intel/private_thesis_storage_receipt.json",
      "ok": false,
-     "detail": "no repo evidence of applied company_theses SQL/RLS"
+     "detail": "live verification not_verified"
     }
    ],
    "blockers": [
-    "Repo evidence cannot prove the private company_theses table exists in production."
+    "Repo evidence proves schema configuration only; it does not prove owner-token CRUD or cross-user RLS isolation."
    ],
    "next_required_evidence": [
     "A live owner-token storage smoke test and receipt proving SQL/RLS is applied."

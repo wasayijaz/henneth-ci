@@ -7,6 +7,7 @@ sys_path=str(ROOT/'scripts')
 import sys; sys.path.insert(0,sys_path)
 from financial_statement_facts import extract_facts, parse_number, stable_id, PARSER_VERSION, PARSER_REVISION
 from forecast_contract import qualified_financial_fact_source
+from build_financial_series import _sanitize_row
 _raw_extract_facts = extract_facts
 def extract_facts(doc, pages, words=None, page_records=None):
  # Geometry fixtures model a primary statement explicitly, matching the
@@ -225,6 +226,8 @@ def main():
  # Table-local scale and EPS scale rules.
  assert 1_000_000 != 1 and 1 == 1; checks += 1
  assert parse_number('(2.5)') == -2.5; checks += 1
+ repaired_eps=_sanitize_row({'ticker':'DGKC','metric':'basic_eps','line':'basic_eps','parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'readiness':'audit_only','period_end':'2023-06-30','duration_months':12,'period_type':'annual','consolidation':'consolidated','currency':'PKR','statement_type':'income_statement','unit':'PKR/share','unit_multiplier':1,'raw_value':'(8.06)','normalized_value':-8.06,'quality_flags':['unparseable_raw_value'],'document_id':'psx:fixture'})
+ assert repaired_eps['normalized_value']==-8.06 and repaired_eps['unit_multiplier']==1 and 'unparseable_raw_value' not in repaired_eps.get('quality_flags',[]) and repaired_eps['readiness']=='model_loadable'; checks += 1
  # Availability/no-lookahead and mixed-duration formula contracts.
  available='2024-01-02'; period='2023-12-31'; assert available > period; checks += 1
  assert ('2023-09-30','2023-12-31') != ('2023-12-31','2023-12-31'); checks += 1

@@ -47,6 +47,7 @@ FOCUSED_CHECKS: tuple[str, ...] = (
     "check_cement_historical_reconciliation.py",
     "check_supabase_ci_store.py",
     "check_supabase_archive_receipt.py",
+    "check_private_thesis_storage_receipt.py",
     "provenance_lint.py",
     "check_generated_url_safety.py",
     "check_root_state_publication.py",

@@ -73,7 +73,8 @@ def assert_sql_hardening_contract() -> None:
     text = hardening_sql_text()
     lower = " ".join(text.lower().split())
     required = [
-        "reference-only sql: this file is not applied by the desk",
+        "applied only to the dedicated henneth ci project `wexonytulckejkynncvv` as",
+        "migration `harden_owner_financial_assumption_drafts` on 2026-08-27",
         "drop policy if exists company_financial_assumptions_insert_own on public.company_financial_assumptions",
         "create policy company_financial_assumptions_insert_own on public.company_financial_assumptions for insert to authenticated",
         "user_id = (select auth.uid())",

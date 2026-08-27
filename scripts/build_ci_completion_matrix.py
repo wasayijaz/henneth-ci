@@ -373,6 +373,7 @@ def build(write: bool = True) -> dict[str, Any]:
     formal_valuations = load_json(STATE / "company_intel" / "formal_valuations.json", {})
     market_expectations = load_json(STATE / "company_intel" / "market_expectations.json", {})
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {})
+    private_thesis_receipt = load_json(STATE / "company_intel" / "private_thesis_storage_receipt.json", {})
     signal_clusters = load_json(STATE / "company_intel" / "signal_clusters.json", {})
     thesis_monitoring = load_json(STATE / "company_intel" / "thesis_monitoring.json", {})
     confidence = load_json(STATE / "company_intel" / "intelligence_confidence.json", {})
@@ -925,24 +926,35 @@ def build(write: bool = True) -> dict[str, Any]:
         ),
         _row(
             "private_thesis_storage_contract",
-            "Private thesis storage contract is code-ready",
+            "Private thesis storage contract is schema-configured and code-ready",
             [
                 _ok("private thesis SQL contract", "docs/company_theses.sql"),
+                _state(
+                    "private thesis schema receipt",
+                    "state/company_intel/private_thesis_storage_receipt.json",
+                    private_thesis_receipt.get("schema_status") == "configured",
+                    f"schema {private_thesis_receipt.get('schema_status') or 'unknown'}; live {private_thesis_receipt.get('live_verification_status') or 'unknown'}",
+                ),
+                _check("private thesis receipt checker", "scripts/check_private_thesis_storage_receipt.py"),
                 _check("private thesis security checker", "scripts/check_company_theses_security.mjs"),
                 _check("thesis UI checker", "scripts/check_company_theses_ui.mjs"),
             ],
-            ["Owner applies SQL/RLS and live-verifies authenticated storage before completion."],
-            ["Private user thesis storage is code-ready but not known live from repo evidence."],
+            ["Live owner-token CRUD/RLS verification is still required before private thesis storage itself is complete."],
         ),
         _row(
             "private_thesis_live_storage",
             "Private thesis storage has not been live-verified",
             [
                 _ok("private thesis SQL contract", "docs/company_theses.sql"),
-                _state("live storage receipt", "state/company_brief_receipts.json", False, "no repo evidence of applied company_theses SQL/RLS"),
+                _state(
+                    "private thesis live verification receipt",
+                    "state/company_intel/private_thesis_storage_receipt.json",
+                    private_thesis_receipt.get("live_verification_status") == "verified",
+                    f"live verification {private_thesis_receipt.get('live_verification_status') or 'unknown'}",
+                ),
             ],
             ["A live owner-token storage smoke test and receipt proving SQL/RLS is applied."],
-            ["Repo evidence cannot prove the private company_theses table exists in production."],
+            ["Repo evidence proves schema configuration only; it does not prove owner-token CRUD or cross-user RLS isolation."],
             hard_blocked=True,
         ),
         _row(

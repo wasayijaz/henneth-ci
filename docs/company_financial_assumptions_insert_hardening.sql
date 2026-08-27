@@ -1,5 +1,7 @@
 -- Manual hardening for private owner financial-assumption drafts.
--- Reference-only SQL: this file is NOT APPLIED by the desk. Apply manually only after review.
+-- Applied only to the dedicated Henneth CI project `wexonytulckejkynncvv` as
+-- migration `harden_owner_financial_assumption_drafts` on 2026-08-27.
+-- Retain this reviewable contract; it is not an instruction to alter the legacy desk project.
 -- Scope: keep authenticated browser inserts as inert drafts. Server-side approval appends a
 -- separate approved copy through the private backend credential, which bypasses RLS.
 

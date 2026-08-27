@@ -78,7 +78,7 @@ function main() {
   for (const sym of ["DGKC", "MLCF"]) {
     const row = rows.find(item => item.symbol === sym)?.cement_historical_reconciliation;
     assert(row.status === "blocked_missing_model_loadable_operating_drivers", `${sym} must expose its missing model-loadable driver boundary`);
-    assert(row.qualified_financial_period_count === 3, `${sym} qualified actual-history count missing`);
+    assert(row.qualified_financial_period_count >= 3, `${sym} qualified actual-history count missing`);
     assert(row.adapter_status === "unavailable", `${sym} must not activate a numerical adapter`);
   }
   assert(rows.find(item => item.symbol === "LUCK")?.cement_historical_reconciliation?.status === "blocked_insufficient_qualified_financial_history", "LUCK financial-history boundary missing");

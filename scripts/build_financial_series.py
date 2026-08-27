@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from financial_series import normalize_fact
+from financial_series import _parse_structured_raw, normalize_fact
 from financial_statement_facts import PARSER_REVISION
 from manual_financial_claims import MANUAL_SOURCE_METHOD, qualified_manual_rows
 from psx_data import STATE, load_json, save_json
@@ -60,10 +60,14 @@ def _repair_row(row: dict[str, Any]) -> dict[str, Any]:
     if unit.endswith("/share") and repaired.get("unit_multiplier") != 1:
         repaired["unit_multiplier"] = 1
         raw = repaired.get("raw_value")
-        try:
-            number = float(str(raw).replace(",", ""))
+        number = _parse_structured_raw(raw)
+        if number is not None:
             repaired["normalized_value"] = int(number) if number.is_integer() else number
-        except (TypeError, ValueError):
+            repaired["quality_flags"] = [
+                flag for flag in (repaired.get("quality_flags") or [])
+                if flag != "unparseable_raw_value"
+            ]
+        else:
             repaired.setdefault("quality_flags", [])
             repaired["quality_flags"] = sorted(set(repaired["quality_flags"] + ["unparseable_raw_value"]))
     return repaired
@@ -83,10 +87,15 @@ def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
     unit = str(clean.get("unit") or "").lower()
     if unit.endswith("/share") or unit == "percent":
         clean["unit_multiplier"] = 1
-        try:
-            value = float(str(clean.get("raw_value")).replace(",", "").replace("%", "").strip())
+        raw = str(clean.get("raw_value") or "").replace("%", "").strip()
+        value = _parse_structured_raw(raw)
+        if value is not None:
             clean["normalized_value"] = int(value) if value.is_integer() else value
-        except (TypeError, ValueError):
+            clean["quality_flags"] = [
+                flag for flag in (clean.get("quality_flags") or [])
+                if flag != "unparseable_raw_value"
+            ]
+        else:
             flags = list(clean.get("quality_flags") or [])
             clean["quality_flags"] = sorted(set(flags + ["unparseable_raw_value"]))
     if unit == "percent" or clean.get("metric") == "change_pct":

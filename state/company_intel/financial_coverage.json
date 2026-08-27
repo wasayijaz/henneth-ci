@@ -40,7 +40,7 @@
  },
  "summary": {
   "company_count": 20,
-  "queued_company_count": 19
+  "queued_company_count": 18
  },
  "companies": {
   "MLCF": {
@@ -1085,7 +1085,7 @@
   },
   "DGKC": {
    "symbol": "DGKC",
-   "status": "queued_for_qualification",
+   "status": "complete",
    "classification": "financial_results_coverage",
    "indexed_official_financial_doc_count": 10,
    "indexed_official_financial_docs": [
@@ -1327,13 +1327,12 @@
      ],
      "present_model_ready_metrics": [
       "revenue",
-      "profit_after_tax_attributable"
-     ],
-     "missing_metrics": [
+      "profit_after_tax_attributable",
       "basic_eps"
      ],
+     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "missing_required_metrics"
+     "status": "complete"
     }
    ],
    "model_readiness": {
@@ -1348,12 +1347,8 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 696,
+    "audit_only_fact_count": 694,
     "audit_only_metrics": [
-     {
-      "metric": "basic_eps",
-      "fact_count": 2
-     },
      {
       "metric": "change_pct",
       "fact_count": 202
@@ -1375,7 +1370,7 @@
       "fact_count": 299
      }
     ],
-    "model_loadable_count": 36,
+    "model_loadable_count": 38,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {

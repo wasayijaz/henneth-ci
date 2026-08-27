@@ -162,7 +162,7 @@
   {
    "symbol": "DGKC",
    "metric": "net_margin_pct",
-   "derived_value": 5.913174288524446,
+   "derived_value": 2.5351565158234273,
    "unit": "pct",
    "approved": false,
    "approval_scope": "historical_reference_case_not_owner_approved",
@@ -174,12 +174,12 @@
    "generated_by": "build_financial_engine_assumptions.py",
    "formula_version": "financial_engine_assumptions_reference_case_v1",
    "period_ends": [
-    "2022-06-30",
+    "2023-06-30",
     "2024-06-30",
     "2025-06-30"
    ],
    "source": {
-    "id": "henneth_state:financial_model_inputs:DGKC:net_margin_pct:2022-06-30-2024-06-30-2025-06-30",
+    "id": "henneth_state:financial_model_inputs:DGKC:net_margin_pct:2023-06-30-2024-06-30-2025-06-30",
     "label": "DGKC historical reference-case net_margin_pct from three qualified annual observations",
     "path": "state/company_intel/financial_model_inputs.json",
     "available_on": "2026-08-27"
@@ -187,7 +187,7 @@
    "formula": {
     "name": "average_pat_margin_across_three_reported_annual_observations",
     "period_margin_rates_pct": [
-     5.126257113649365,
+     -5.00779620445369,
      0.8637009204265982,
      11.749564831497374
     ],
@@ -196,11 +196,11 @@
    "source_facts": [
     {
      "line": "revenue",
-     "fact_id": "fact_7b534d8a452f8f3c264aab40",
-     "document_id": "issuer:57fbec27bd4005d116acb827",
-     "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
-     "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
-     "period_end": "2022-06-30",
+     "fact_id": "fact_720e88feb7bdfac7965e6d1b",
+     "document_id": "issuer:91e2da11249269bcac96ae5a",
+     "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+     "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+     "period_end": "2023-06-30",
      "available_on": "2026-08-27",
      "statement_type": "income_statement",
      "period_type": "annual",
@@ -209,20 +209,20 @@
      "currency": "PKR",
      "unit": "PKR",
      "unit_multiplier": 1000,
-     "normalized_value": 61653833000.0,
+     "normalized_value": 70495201000.0,
      "source_method": "financial_statement_v2",
      "source_revision": "block_geometry_v5",
      "evidence_pages": [
-      223
+      227
      ]
     },
     {
      "line": "profit_after_tax_attributable",
-     "fact_id": "fact_91c730095894d88bc54748df",
+     "fact_id": "fact_2eb04ac24dd217a9d52eb96a",
      "document_id": "issuer:57fbec27bd4005d116acb827",
      "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
      "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
-     "period_end": "2022-06-30",
+     "period_end": "2023-06-30",
      "available_on": "2026-08-27",
      "statement_type": "income_statement",
      "period_type": "annual",
@@ -231,7 +231,7 @@
      "currency": "PKR",
      "unit": "PKR",
      "unit_multiplier": 1000,
-     "normalized_value": 3160534000.0,
+     "normalized_value": -3530256000.0,
      "source_method": "financial_statement_v2",
      "source_revision": "block_geometry_v5",
      "evidence_pages": [
@@ -337,7 +337,7 @@
   {
    "symbol": "DGKC",
    "metric": "revenue_growth_pct",
-   "derived_value": 8.682866272299039,
+   "derived_value": 5.681015313165661,
    "unit": "pct",
    "approved": false,
    "approval_scope": "historical_reference_case_not_owner_approved",
@@ -349,12 +349,12 @@
    "generated_by": "build_financial_engine_assumptions.py",
    "formula_version": "financial_engine_assumptions_reference_case_v1",
    "period_ends": [
-    "2022-06-30",
+    "2023-06-30",
     "2024-06-30",
     "2025-06-30"
    ],
    "source": {
-    "id": "henneth_state:financial_model_inputs:DGKC:revenue_growth_pct:2022-06-30-2024-06-30-2025-06-30",
+    "id": "henneth_state:financial_model_inputs:DGKC:revenue_growth_pct:2023-06-30-2024-06-30-2025-06-30",
     "label": "DGKC historical reference-case revenue_growth_pct from three qualified annual observations",
     "path": "state/company_intel/financial_model_inputs.json",
     "available_on": "2026-08-27"
@@ -362,18 +362,18 @@
    "formula": {
     "name": "average_annualized_growth_between_three_reported_annual_revenue_observations",
     "interval_growth_rates_pct": [
-     7.975420481100448,
+     1.9717185628336908,
      9.39031206349763
     ]
    },
    "source_facts": [
     {
      "line": "revenue",
-     "fact_id": "fact_7b534d8a452f8f3c264aab40",
-     "document_id": "issuer:57fbec27bd4005d116acb827",
-     "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
-     "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
-     "period_end": "2022-06-30",
+     "fact_id": "fact_720e88feb7bdfac7965e6d1b",
+     "document_id": "issuer:91e2da11249269bcac96ae5a",
+     "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+     "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+     "period_end": "2023-06-30",
      "available_on": "2026-08-27",
      "statement_type": "income_statement",
      "period_type": "annual",
@@ -382,11 +382,11 @@
      "currency": "PKR",
      "unit": "PKR",
      "unit_multiplier": 1000,
-     "normalized_value": 61653833000.0,
+     "normalized_value": 70495201000.0,
      "source_method": "financial_statement_v2",
      "source_revision": "block_geometry_v5",
      "evidence_pages": [
-      223
+      227
      ]
     },
     {

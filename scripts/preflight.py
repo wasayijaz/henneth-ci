@@ -852,6 +852,17 @@ def check_supabase_archive_receipt():
     if result.returncode != 0:
         fail("Supabase archive receipt check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
 
+
+def check_private_thesis_storage_receipt():
+    path = os.path.join(ROOT, "scripts", "check_private_thesis_storage_receipt.py")
+    if not os.path.exists(path):
+        fail("check_private_thesis_storage_receipt.py missing — private thesis activation boundary cannot be verified")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        fail("private thesis storage receipt check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
+
 def check_financial_coverage():
     path = os.path.join(ROOT, "scripts", "check_financial_coverage.py")
     if not os.path.exists(path):
@@ -1272,6 +1283,7 @@ def main():
     check_cement_operating_series()
     check_cement_historical_reconciliation()
     check_supabase_archive_receipt()
+    check_private_thesis_storage_receipt()
     check_cement_operating_series_ui()
     check_financial_coverage()
     check_forecast_contract()
