@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "contract_version": "forecast_readiness_contract_v1",
- "as_of": "2026-08-27 06:38",
+ "as_of": "2026-08-27 07:14",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -24,7 +24,7 @@
   "PSO",
   "UBL"
  ],
- "model_versions": {
+ "registry_versions": {
   "BANKS": "banks_v1",
   "CEMENT": "cement_v1",
   "E&P": "e_and_p_v1",
@@ -35,6 +35,7 @@
   "OMC": "omc_v1",
   "HOLDING_COMPANY": "holding_company_v1"
  },
+ "adapter_versions": {},
  "policies": {
   "research_only": true,
   "no_numeric_forecast": true,
@@ -52,21 +53,25 @@
  },
  "summary": {
   "company_count": 20,
-  "ready_company_count": 2,
-  "blocked_company_count": 18,
+  "ready_company_count": 0,
+  "history_qualified_company_count": 2,
+  "adapter_unavailable_company_count": 2,
+  "insufficient_history_company_count": 18,
+  "blocked_company_count": 20,
   "qualified_fact_company_count": 3
  },
  "companies": {
   "ATRL": {
    "symbol": "ATRL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Refinery",
     "selected_sector": "REFINERY",
-    "model_version": "refinery_v1",
+    "registry_version": "refinery_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -78,7 +83,16 @@
      "inventory_position"
     ]
    },
-   "model_version": "refinery_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -157,32 +171,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "BOP": {
    "symbol": "BOP",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Commercial Banks",
     "selected_sector": "BANKS",
-    "model_version": "banks_v1",
+    "registry_version": "banks_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -194,7 +210,16 @@
      "capital_ratio"
     ]
    },
-   "model_version": "banks_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "banks_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -273,32 +298,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "CNERGY": {
    "symbol": "CNERGY",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Refinery",
     "selected_sector": "REFINERY",
-    "model_version": "refinery_v1",
+    "registry_version": "refinery_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -310,7 +337,16 @@
      "inventory_position"
     ]
    },
-   "model_version": "refinery_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -374,32 +410,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "DGKC": {
    "symbol": "DGKC",
-   "status": "input_ready",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_model_adapter_unavailable",
+   "activation_status": "blocked_model_adapter_unavailable",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Cement",
     "selected_sector": "CEMENT",
-    "model_version": "cement_v1",
+    "registry_version": "cement_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -411,7 +449,16 @@
      "export_price"
     ]
    },
-   "model_version": "cement_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "CEMENT",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "cement_v1",
+   "adapter_version": null,
    "qualified_period_count": 3,
    "qualified_periods": [
     {
@@ -473,7 +520,9 @@
      ]
     }
    ],
-   "missing_requirements": [],
+   "missing_requirements": [
+    "executable_numerical_adapter"
+   ],
    "coverage_candidate_document_ids": [
     "psx:275962",
     "psx:275807",
@@ -549,38 +598,42 @@
     }
    ],
    "blocked_outputs": {
-    "forecast": "blocked_model_not_implemented",
-    "valuation": "blocked_model_not_implemented",
-    "market_expectations": "blocked_model_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable"
    },
    "downstream_status": {
-    "forecast": "blocked_model_not_implemented",
-    "valuation": "blocked_model_not_implemented",
-    "market_expectations": "blocked_model_not_implemented",
-    "numeric_impact": "blocked_model_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable",
+    "numeric_impact": "blocked_model_adapter_unavailable"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
-   "quality_flags": []
+   "quality_flags": [
+    "blocked_model_adapter_unavailable"
+   ]
   },
   "ENGROH": {
    "symbol": "ENGROH",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
     "selected_sector": "HOLDING_COMPANY",
-    "model_version": "holding_company_v1",
+    "registry_version": "holding_company_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": "HOLDING_COMPANY",
     "drivers": [
@@ -592,7 +645,16 @@
      "dividend_income"
     ]
    },
-   "model_version": "holding_company_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "HOLDING_COMPANY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "holding_company_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -681,32 +743,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "FFC": {
    "symbol": "FFC",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Fertilizer",
     "selected_sector": "FERTILIZER",
-    "model_version": "fertilizer_v1",
+    "registry_version": "fertilizer_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -718,7 +782,16 @@
      "working_capital"
     ]
    },
-   "model_version": "fertilizer_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "FERTILIZER",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "fertilizer_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -787,32 +860,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "GAL": {
    "symbol": "GAL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Automobile Assembler",
     "selected_sector": "AUTO_ASSEMBLER",
-    "model_version": "auto_assembler_v1",
+    "registry_version": "auto_assembler_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -824,7 +899,16 @@
      "model_mix"
     ]
    },
-   "model_version": "auto_assembler_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "AUTO_ASSEMBLER",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "auto_assembler_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -913,32 +997,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "HBL": {
    "symbol": "HBL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Commercial Banks",
     "selected_sector": "BANKS",
-    "model_version": "banks_v1",
+    "registry_version": "banks_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -950,7 +1036,16 @@
      "capital_ratio"
     ]
    },
-   "model_version": "banks_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "banks_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1039,32 +1134,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "HUBC": {
    "symbol": "HUBC",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Power Generation & Distribution",
     "selected_sector": "POWER",
-    "model_version": "power_v1",
+    "registry_version": "power_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1076,7 +1173,16 @@
      "circular_debt"
     ]
    },
-   "model_version": "power_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "POWER",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "power_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1165,32 +1271,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "LUCK": {
    "symbol": "LUCK",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Cement",
     "selected_sector": "CEMENT",
-    "model_version": "cement_v1",
+    "registry_version": "cement_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1202,7 +1310,16 @@
      "export_price"
     ]
    },
-   "model_version": "cement_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "CEMENT",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "cement_v1",
+   "adapter_version": null,
    "qualified_period_count": 2,
    "qualified_periods": [
     {
@@ -1311,32 +1428,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "MARI": {
    "symbol": "MARI",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Oil & Gas Exploration Companies",
     "selected_sector": "E&P",
-    "model_version": "e_and_p_v1",
+    "registry_version": "e_and_p_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1348,7 +1467,16 @@
      "exploration_success"
     ]
    },
-   "model_version": "e_and_p_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "E&P",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "e_and_p_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1432,32 +1560,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "MEBL": {
    "symbol": "MEBL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Commercial Banks",
     "selected_sector": "BANKS",
-    "model_version": "banks_v1",
+    "registry_version": "banks_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1469,7 +1599,16 @@
      "capital_ratio"
     ]
    },
-   "model_version": "banks_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "banks_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1558,32 +1697,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "MLCF": {
    "symbol": "MLCF",
-   "status": "input_ready",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_model_adapter_unavailable",
+   "activation_status": "blocked_model_adapter_unavailable",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Cement",
     "selected_sector": "CEMENT",
-    "model_version": "cement_v1",
+    "registry_version": "cement_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1595,7 +1736,16 @@
      "export_price"
     ]
    },
-   "model_version": "cement_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "CEMENT",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "cement_v1",
+   "adapter_version": null,
    "qualified_period_count": 3,
    "qualified_periods": [
     {
@@ -1656,7 +1806,9 @@
      ]
     }
    ],
-   "missing_requirements": [],
+   "missing_requirements": [
+    "executable_numerical_adapter"
+   ],
    "coverage_candidate_document_ids": [
     "psx:280589",
     "psx:275425",
@@ -1732,38 +1884,42 @@
     }
    ],
    "blocked_outputs": {
-    "forecast": "blocked_model_not_implemented",
-    "valuation": "blocked_model_not_implemented",
-    "market_expectations": "blocked_model_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable"
    },
    "downstream_status": {
-    "forecast": "blocked_model_not_implemented",
-    "valuation": "blocked_model_not_implemented",
-    "market_expectations": "blocked_model_not_implemented",
-    "numeric_impact": "blocked_model_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable",
+    "numeric_impact": "blocked_model_adapter_unavailable"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
-   "quality_flags": []
+   "quality_flags": [
+    "blocked_model_adapter_unavailable"
+   ]
   },
   "NBP": {
    "symbol": "NBP",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Commercial Banks",
     "selected_sector": "BANKS",
-    "model_version": "banks_v1",
+    "registry_version": "banks_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1775,7 +1931,16 @@
      "capital_ratio"
     ]
    },
-   "model_version": "banks_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "banks_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1864,32 +2029,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "NRL": {
    "symbol": "NRL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Refinery",
     "selected_sector": "REFINERY",
-    "model_version": "refinery_v1",
+    "registry_version": "refinery_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -1901,7 +2068,16 @@
      "inventory_position"
     ]
    },
-   "model_version": "refinery_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1990,32 +2166,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "OGDC": {
    "symbol": "OGDC",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Oil & Gas Exploration Companies",
     "selected_sector": "E&P",
-    "model_version": "e_and_p_v1",
+    "registry_version": "e_and_p_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -2027,7 +2205,16 @@
      "exploration_success"
     ]
    },
-   "model_version": "e_and_p_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "E&P",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "e_and_p_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2116,32 +2303,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "PPL": {
    "symbol": "PPL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Oil & Gas Exploration Companies",
     "selected_sector": "E&P",
-    "model_version": "e_and_p_v1",
+    "registry_version": "e_and_p_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -2153,7 +2342,16 @@
      "exploration_success"
     ]
    },
-   "model_version": "e_and_p_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "E&P",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "e_and_p_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2217,32 +2415,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "PRL": {
    "symbol": "PRL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Refinery",
     "selected_sector": "REFINERY",
-    "model_version": "refinery_v1",
+    "registry_version": "refinery_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -2254,7 +2454,16 @@
      "inventory_position"
     ]
    },
-   "model_version": "refinery_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2343,32 +2552,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "PSO": {
    "symbol": "PSO",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Oil & Gas Marketing Companies",
     "selected_sector": "OMC",
-    "model_version": "omc_v1",
+    "registry_version": "omc_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -2380,7 +2591,16 @@
      "marketing_margin"
     ]
    },
-   "model_version": "omc_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "OMC",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "omc_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2469,32 +2689,34 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   },
   "UBL": {
    "symbol": "UBL",
-   "status": "blocked",
-   "activation_status": "blocked_model_not_implemented",
+   "status": "blocked_insufficient_qualified_history",
+   "activation_status": "blocked_insufficient_qualified_history",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
-    "status": "supported",
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
     "exchange_sector": "Commercial Banks",
     "selected_sector": "BANKS",
-    "model_version": "banks_v1",
+    "registry_version": "banks_v1",
     "registry_source": "sector_driver_models.SECTOR_MODELS",
     "company_override": null,
     "drivers": [
@@ -2506,7 +2728,16 @@
      "capital_ratio"
     ]
    },
-   "model_version": "banks_v1",
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "registry_version": "banks_v1",
+   "adapter_version": null,
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2585,20 +2816,21 @@
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
-    "numeric_impact": "blocked_model_not_implemented"
+    "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_and_implemented",
-    "valuation": "blocked_until_qualified_and_implemented",
-    "market_expectations": "blocked_until_qualified_and_implemented",
+    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+    "valuation": "blocked_until_qualified_history_and_executable_adapter",
+    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
     "numeric_impact": "blocked_until_sourced_operands_and_implementation"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
-    "forecast_readiness_incomplete"
+    "blocked_insufficient_qualified_history"
    ]
   }
  }

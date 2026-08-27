@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "as_of": "2026-08-27 06:38",
+ "as_of": "2026-08-27 07:14",
  "scope": "Company Intelligence product completion audit",
  "source_policy": "retained repo/state evidence only; no fetching, model calls, SQL, publish, deploy, or source mutation",
  "pilot_symbols": [
@@ -29,8 +29,8 @@
   "overall_status": "blocked",
   "requirement_count": 68,
   "counts": {
-   "complete": 57,
-   "partial": 7,
+   "complete": 58,
+   "partial": 6,
    "blocked": 4,
    "not_started": 0,
    "unknown": 0
@@ -73,6 +73,7 @@
    "financial_parser_contract",
    "financial_coverage_queue",
    "financial_evidence_reconciliation",
+   "forecast_readiness_contract",
    "formal_forecast_engine_code",
    "formal_valuation_engine_code",
    "market_expectations_engine_code",
@@ -434,11 +435,11 @@
      "label": "forecast readiness contract",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "2 input-ready companies"
+     "detail": "0 input-ready companies"
     }
    ],
    "blockers": [
-    "Real input-ready company count is 2; forecast objects remain non-computed."
+    "Real input-ready company count is 0; forecast objects remain non-computed."
    ],
    "next_required_evidence": [
     "Three aligned annual consolidated PKR periods and approved assumptions before forecast objects can be computed."
@@ -1085,7 +1086,7 @@
      "label": "conflict/missing-slot summary",
      "path": "state/company_intel/financial_evidence_reconciliation.json",
      "ok": true,
-     "detail": "{'company_count': 20, 'eligible_fact_count': 40, 'audit_only_fact_count': 922, 'quarantined_fact_count': 571, 'missing_slot_count': 165, 'source_conflict_count': 63, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 2}"
+     "detail": "{'company_count': 20, 'eligible_fact_count': 40, 'audit_only_fact_count': 922, 'quarantined_fact_count': 571, 'missing_slot_count': 165, 'source_conflict_count': 63, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 0}"
     },
     {
      "label": "reconciliation checker",
@@ -1102,7 +1103,7 @@
   {
    "id": "forecast_readiness_contract",
    "title": "Forecast readiness contract exists and blocks unavailable outputs",
-   "status": "partial",
+   "status": "complete",
    "evidence": [
     {
      "label": "readiness state",
@@ -1113,8 +1114,8 @@
     {
      "label": "blocked output policy",
      "path": "state/company_intel/forecast_readiness.json",
-     "ok": false,
-     "detail": "18 blocked companies"
+     "ok": true,
+     "detail": "20 blocked companies"
     },
     {
      "label": "forecast readiness checker",
@@ -1125,19 +1126,25 @@
    ],
    "blockers": [],
    "next_required_evidence": [
-    "Three qualified periods per company are required before input_ready can become live evidence."
+    "Three qualified periods establish reported history; a separately registered executable adapter is also required before numeric forecasts can activate."
    ]
   },
   {
    "id": "forecast_readiness_live_inputs",
-   "title": "Live state has partially qualified forecast inputs",
+   "title": "Live state has partially qualified financial history",
    "status": "partial",
    "evidence": [
     {
-     "label": "ready company count",
+     "label": "history-qualified company count",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "2 ready companies"
+     "detail": "2 companies with qualified history"
+    },
+    {
+     "label": "adapter-unavailable company count",
+     "path": "state/company_intel/forecast_readiness.json",
+     "ok": true,
+     "detail": "2 companies blocked on an executable adapter"
     },
     {
      "label": "qualified fact company count",
@@ -1147,10 +1154,10 @@
     }
    ],
    "blockers": [
-    "Real ready company count is 2; qualified-fact company count is 3; formal numeric outputs remain blocked."
+    "Real history-qualified company count is 2; ready company count is 0; adapter-unavailable count is 2; formal numeric outputs remain blocked."
    ],
    "next_required_evidence": [
-    "More pilot companies need three aligned annual consolidated PKR periods before live readiness is complete."
+    "More pilot companies need three aligned annual consolidated PKR periods, and numerical adapters must be implemented, before numeric outputs can become live."
    ]
   },
   {

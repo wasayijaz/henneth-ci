@@ -49,8 +49,10 @@ function main() {
       assert(readiness.missing_requirements.length > 0, `${row.symbol} blocked row must name missing requirements`);
     }
     assert(readiness.model_registry && typeof readiness.model_registry === "object" && !Array.isArray(readiness.model_registry), `${row.symbol} model_registry missing`);
-    assert(readiness.model_registry.status === "supported", `${row.symbol} model registry must be supported`);
-    assert(typeof readiness.model_version === "string" && readiness.model_version.length > 0, `${row.symbol} model_version missing`);
+    assert(readiness.model_registry.status === "covered", `${row.symbol} qualitative driver registry must be covered`);
+    assert(readiness.model_registry.coverage_type === "qualitative_sector_driver_registry", `${row.symbol} registry coverage type missing`);
+    assert(typeof readiness.registry_version === "string" && readiness.registry_version.length > 0, `${row.symbol} registry_version missing`);
+    assert(readiness.model_adapter && readiness.model_adapter.status === "unavailable", `${row.symbol} numerical adapter must remain unavailable`);
     assert(Number.isInteger(readiness.qualified_period_count), `${row.symbol} qualified_period_count missing`);
     assert(Array.isArray(readiness.missing_requirements), `${row.symbol} missing_requirements missing`);
     assert(Array.isArray(candidateRefs(row)), `${row.symbol} qualification candidate document refs missing`);
@@ -74,7 +76,7 @@ function main() {
   assert(block.includes("r.forecast_readiness"), "renderer must read row.forecast_readiness");
   assert(block.includes("readiness.status"), "exact backend status must be displayed");
   assert(block.includes("readiness.model_registry"), "model_registry must be displayed");
-  assert(block.includes("readiness.model_version"), "model_version must be displayed");
+  assert(block.includes("readiness.registry_version") && block.includes("readiness.model_adapter"), "registry and adapter states must be displayed");
   assert(block.includes("readiness.qualified_period_count"), "qualified_period_count must be displayed");
   assert(block.includes("readiness.missing_requirements"), "missing requirements must be displayed");
   assert(block.includes("qualification_candidate_document_refs") && block.includes("readinessDocLink(doc)"), "qualification candidate refs must be displayed as official refs");

@@ -257,7 +257,11 @@ def _reference_case_records(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     model_row = (model_inputs.get("companies") or {}).get(symbol) or {}
     readiness_row = (readiness.get("companies") or {}).get(symbol) or {}
-    if model_row.get("status") != "ready" or readiness_row.get("status") != "input_ready":
+    history_qualified = (
+        model_row.get("status") in {"ready", "blocked_model_adapter_unavailable"}
+        and readiness_row.get("status") in {"input_ready", "blocked_model_adapter_unavailable"}
+    )
+    if not history_qualified:
         reason = "not_three_qualified_reported_annual_observations"
         return [], [
             {"symbol": symbol, "metric": metric, "reason": reason}

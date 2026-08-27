@@ -359,12 +359,11 @@
      "row_metadata": {
       "symbol": "ATRL",
       "status": "partial",
-      "model_version": "refinery_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -379,7 +378,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -451,7 +450,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -463,30 +462,30 @@
      },
      "row_metadata": {
       "symbol": "ATRL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "refinery_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -1286,12 +1285,11 @@
      "row_metadata": {
       "symbol": "BOP",
       "status": "partial",
-      "model_version": "banks_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -1306,7 +1304,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -1378,7 +1376,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -1390,30 +1388,30 @@
      },
      "row_metadata": {
       "symbol": "BOP",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "banks_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -2273,12 +2271,11 @@
      "row_metadata": {
       "symbol": "CNERGY",
       "status": "partial",
-      "model_version": "refinery_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -2293,7 +2290,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -2365,7 +2362,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -2377,30 +2374,30 @@
      },
      "row_metadata": {
       "symbol": "CNERGY",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "refinery_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -4348,15 +4345,16 @@
      },
      "row_metadata": {
       "symbol": "DGKC",
-      "status": "ready",
-      "model_version": "cement_v1",
+      "status": "blocked_model_adapter_unavailable",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_model_adapter_unavailable",
+       "valuation": "blocked_model_adapter_unavailable",
+       "market_expectations": "blocked_model_adapter_unavailable",
+       "scenario_lab": "blocked_model_adapter_unavailable"
       },
-      "quality_flags": []
+      "quality_flags": [
+       "blocked_model_adapter_unavailable"
+      ]
      }
     },
     "financial_evidence_reconciliation": {
@@ -4367,7 +4365,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -4439,7 +4437,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -4451,26 +4449,30 @@
      },
      "row_metadata": {
       "symbol": "DGKC",
-      "status": "input_ready",
-      "activation_status": "blocked_model_not_implemented",
-      "missing_requirements": [],
+      "status": "blocked_model_adapter_unavailable",
+      "activation_status": "blocked_model_adapter_unavailable",
+      "missing_requirements": [
+       "executable_numerical_adapter"
+      ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "cement_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
-       "forecast": "blocked_model_not_implemented",
-       "valuation": "blocked_model_not_implemented",
-       "market_expectations": "blocked_model_not_implemented",
-       "numeric_impact": "blocked_model_not_implemented"
+       "forecast": "blocked_model_adapter_unavailable",
+       "valuation": "blocked_model_adapter_unavailable",
+       "market_expectations": "blocked_model_adapter_unavailable",
+       "numeric_impact": "blocked_model_adapter_unavailable"
       },
-      "quality_flags": [],
+      "quality_flags": [
+       "blocked_model_adapter_unavailable"
+      ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -4505,7 +4507,9 @@
       "reason": "missing_source_gated_inputs",
       "missing_requirements": [
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct"
+       "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
+       "forecast_readiness_input_ready"
       ],
       "result": null,
       "provenance": [],
@@ -4548,7 +4552,9 @@
        "approved_exit_pe",
        "approved_net_debt",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct"
+       "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
+       "forecast_readiness_input_ready"
       ],
       "result": null,
       "provenance": [],
@@ -4590,7 +4596,9 @@
       "missing_requirements": [
        "approved_exit_pe",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct"
+       "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
+       "forecast_readiness_input_ready"
       ],
       "result": null,
       "provenance": [],
@@ -4829,7 +4837,9 @@
      "brain_path": "companies/DGKC/domains/forecasts",
      "missing_requirements": [
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct"
+      "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
+      "forecast_readiness_input_ready"
      ]
     },
     "formal_valuations": {
@@ -4854,7 +4864,9 @@
       "approved_exit_pe",
       "approved_net_debt",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct"
+      "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
+      "forecast_readiness_input_ready"
      ]
     },
     "market_expectations": {
@@ -4878,7 +4890,9 @@
      "missing_requirements": [
       "approved_exit_pe",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct"
+      "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
+      "forecast_readiness_input_ready"
      ]
     }
    },
@@ -5506,12 +5520,11 @@
      "row_metadata": {
       "symbol": "ENGROH",
       "status": "partial",
-      "model_version": "holding_company_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -5526,7 +5539,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -5598,7 +5611,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -5610,30 +5623,30 @@
      },
      "row_metadata": {
       "symbol": "ENGROH",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "holding_company_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -6246,12 +6259,11 @@
      "row_metadata": {
       "symbol": "FFC",
       "status": "partial",
-      "model_version": "fertilizer_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -6266,7 +6278,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -6338,7 +6350,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -6350,30 +6362,30 @@
      },
      "row_metadata": {
       "symbol": "FFC",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "fertilizer_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -6949,12 +6961,11 @@
      "row_metadata": {
       "symbol": "GAL",
       "status": "partial",
-      "model_version": "auto_assembler_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -6969,7 +6980,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -7041,7 +7052,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -7053,30 +7064,30 @@
      },
      "row_metadata": {
       "symbol": "GAL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "auto_assembler_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -7652,12 +7663,11 @@
      "row_metadata": {
       "symbol": "HBL",
       "status": "partial",
-      "model_version": "banks_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -7672,7 +7682,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -7744,7 +7754,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -7756,30 +7766,30 @@
      },
      "row_metadata": {
       "symbol": "HBL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "banks_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -8454,12 +8464,11 @@
      "row_metadata": {
       "symbol": "HUBC",
       "status": "partial",
-      "model_version": "power_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -8474,7 +8483,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -8546,7 +8555,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -8558,30 +8567,30 @@
      },
      "row_metadata": {
       "symbol": "HUBC",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "power_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -9596,15 +9605,16 @@
      },
      "row_metadata": {
       "symbol": "LUCK",
-      "status": "ready",
-      "model_version": "cement_v1",
+      "status": "blocked_model_adapter_unavailable",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_model_adapter_unavailable",
+       "valuation": "blocked_model_adapter_unavailable",
+       "market_expectations": "blocked_model_adapter_unavailable",
+       "scenario_lab": "blocked_model_adapter_unavailable"
       },
-      "quality_flags": []
+      "quality_flags": [
+       "blocked_model_adapter_unavailable"
+      ]
      }
     },
     "financial_evidence_reconciliation": {
@@ -9615,7 +9625,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -9687,7 +9697,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -9699,30 +9709,30 @@
      },
      "row_metadata": {
       "symbol": "LUCK",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "cement_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -9758,6 +9768,7 @@
       "missing_requirements": [
        "approved_net_margin_pct",
        "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
        "forecast_readiness_input_ready"
       ],
       "result": null,
@@ -9802,6 +9813,7 @@
        "approved_net_debt",
        "approved_net_margin_pct",
        "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
        "forecast_readiness_input_ready"
       ],
       "result": null,
@@ -9845,6 +9857,7 @@
        "approved_exit_pe",
        "approved_net_margin_pct",
        "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
        "forecast_readiness_input_ready"
       ],
       "result": null,
@@ -10085,6 +10098,7 @@
      "missing_requirements": [
       "approved_net_margin_pct",
       "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
       "forecast_readiness_input_ready"
      ]
     },
@@ -10111,6 +10125,7 @@
       "approved_net_debt",
       "approved_net_margin_pct",
       "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
       "forecast_readiness_input_ready"
      ]
     },
@@ -10136,6 +10151,7 @@
       "approved_exit_pe",
       "approved_net_margin_pct",
       "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
       "forecast_readiness_input_ready"
      ]
     }
@@ -10482,12 +10498,11 @@
      "row_metadata": {
       "symbol": "MARI",
       "status": "partial",
-      "model_version": "e_and_p_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -10502,7 +10517,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -10574,7 +10589,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -10586,30 +10601,30 @@
      },
      "row_metadata": {
       "symbol": "MARI",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "e_and_p_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -11210,12 +11225,11 @@
      "row_metadata": {
       "symbol": "MEBL",
       "status": "partial",
-      "model_version": "banks_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -11230,7 +11244,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -11302,7 +11316,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -11314,30 +11328,30 @@
      },
      "row_metadata": {
       "symbol": "MEBL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "banks_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -12273,15 +12287,16 @@
      },
      "row_metadata": {
       "symbol": "MLCF",
-      "status": "ready",
-      "model_version": "cement_v1",
+      "status": "blocked_model_adapter_unavailable",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_model_adapter_unavailable",
+       "valuation": "blocked_model_adapter_unavailable",
+       "market_expectations": "blocked_model_adapter_unavailable",
+       "scenario_lab": "blocked_model_adapter_unavailable"
       },
-      "quality_flags": []
+      "quality_flags": [
+       "blocked_model_adapter_unavailable"
+      ]
      }
     },
     "financial_evidence_reconciliation": {
@@ -12292,7 +12307,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -12364,7 +12379,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -12376,26 +12391,30 @@
      },
      "row_metadata": {
       "symbol": "MLCF",
-      "status": "input_ready",
-      "activation_status": "blocked_model_not_implemented",
-      "missing_requirements": [],
+      "status": "blocked_model_adapter_unavailable",
+      "activation_status": "blocked_model_adapter_unavailable",
+      "missing_requirements": [
+       "executable_numerical_adapter"
+      ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "cement_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
-       "forecast": "blocked_model_not_implemented",
-       "valuation": "blocked_model_not_implemented",
-       "market_expectations": "blocked_model_not_implemented",
-       "numeric_impact": "blocked_model_not_implemented"
+       "forecast": "blocked_model_adapter_unavailable",
+       "valuation": "blocked_model_adapter_unavailable",
+       "market_expectations": "blocked_model_adapter_unavailable",
+       "numeric_impact": "blocked_model_adapter_unavailable"
       },
-      "quality_flags": [],
+      "quality_flags": [
+       "blocked_model_adapter_unavailable"
+      ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -12430,7 +12449,9 @@
       "reason": "missing_source_gated_inputs",
       "missing_requirements": [
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct"
+       "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
+       "forecast_readiness_input_ready"
       ],
       "result": null,
       "provenance": [],
@@ -12473,7 +12494,9 @@
        "approved_exit_pe",
        "approved_net_debt",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct"
+       "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
+       "forecast_readiness_input_ready"
       ],
       "result": null,
       "provenance": [],
@@ -12515,7 +12538,9 @@
       "missing_requirements": [
        "approved_exit_pe",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct"
+       "approved_revenue_growth_pct",
+       "financial_model_inputs_ready",
+       "forecast_readiness_input_ready"
       ],
       "result": null,
       "provenance": [],
@@ -12675,8 +12700,8 @@
       "status": "assessed",
       "source_cluster_count": 1,
       "assessment_count": 1,
-      "aggregate_score": 57.0,
-      "aggregate_band": "medium"
+      "aggregate_score": 43.5,
+      "aggregate_band": "low"
      }
     },
     "scenario_lab": {
@@ -12754,7 +12779,9 @@
      "brain_path": "companies/MLCF/domains/forecasts",
      "missing_requirements": [
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct"
+      "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
+      "forecast_readiness_input_ready"
      ]
     },
     "formal_valuations": {
@@ -12779,7 +12806,9 @@
       "approved_exit_pe",
       "approved_net_debt",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct"
+      "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
+      "forecast_readiness_input_ready"
      ]
     },
     "market_expectations": {
@@ -12803,7 +12832,9 @@
      "missing_requirements": [
       "approved_exit_pe",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct"
+      "approved_revenue_growth_pct",
+      "financial_model_inputs_ready",
+      "forecast_readiness_input_ready"
      ]
     }
    },
@@ -13038,12 +13069,11 @@
      "row_metadata": {
       "symbol": "NBP",
       "status": "partial",
-      "model_version": "banks_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -13058,7 +13088,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -13130,7 +13160,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -13142,30 +13172,30 @@
      },
      "row_metadata": {
       "symbol": "NBP",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "banks_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -13741,12 +13771,11 @@
      "row_metadata": {
       "symbol": "NRL",
       "status": "partial",
-      "model_version": "refinery_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -13761,7 +13790,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -13833,7 +13862,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -13845,30 +13874,30 @@
      },
      "row_metadata": {
       "symbol": "NRL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "refinery_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -14444,12 +14473,11 @@
      "row_metadata": {
       "symbol": "OGDC",
       "status": "partial",
-      "model_version": "e_and_p_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -14464,7 +14492,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -14536,7 +14564,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -14548,30 +14576,30 @@
      },
      "row_metadata": {
       "symbol": "OGDC",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "e_and_p_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -15193,12 +15221,11 @@
      "row_metadata": {
       "symbol": "PPL",
       "status": "partial",
-      "model_version": "e_and_p_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -15213,7 +15240,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -15285,7 +15312,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -15297,30 +15324,30 @@
      },
      "row_metadata": {
       "symbol": "PPL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "e_and_p_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -15909,12 +15936,11 @@
      "row_metadata": {
       "symbol": "PRL",
       "status": "partial",
-      "model_version": "refinery_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -15929,7 +15955,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -16001,7 +16027,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -16013,30 +16039,30 @@
      },
      "row_metadata": {
       "symbol": "PRL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "refinery_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -16612,12 +16638,11 @@
      "row_metadata": {
       "symbol": "PSO",
       "status": "partial",
-      "model_version": "omc_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -16632,7 +16657,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -16704,7 +16729,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -16716,30 +16741,30 @@
      },
      "row_metadata": {
       "symbol": "PSO",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "omc_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -17544,12 +17569,11 @@
      "row_metadata": {
       "symbol": "UBL",
       "status": "partial",
-      "model_version": "banks_v1",
       "downstream_status": {
-       "forecast": "blocked_not_implemented",
-       "valuation": "blocked_not_implemented",
-       "market_expectations": "blocked_not_implemented",
-       "scenario_lab": "blocked_not_implemented"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
        "insufficient_three_year_consolidated_v2_history"
@@ -17564,7 +17588,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -17636,7 +17660,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-08-27 06:38",
+      "as_of": "2026-08-27 07:14",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -17648,30 +17672,30 @@
      },
      "row_metadata": {
       "symbol": "UBL",
-      "status": "blocked",
-      "activation_status": "blocked_model_not_implemented",
+      "status": "blocked_insufficient_qualified_history",
+      "activation_status": "blocked_insufficient_qualified_history",
       "missing_requirements": [
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_and_implemented",
-       "valuation": "blocked_until_qualified_and_implemented",
-       "market_expectations": "blocked_until_qualified_and_implemented",
+       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+       "valuation": "blocked_until_qualified_history_and_executable_adapter",
+       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
        "numeric_impact": "blocked_until_sourced_operands_and_implementation"
       },
-      "model_version": "banks_v1",
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
        "forecast": "blocked_insufficient_qualified_history",
        "valuation": "blocked_insufficient_qualified_history",
        "market_expectations": "blocked_insufficient_qualified_history",
-       "numeric_impact": "blocked_model_not_implemented"
+       "numeric_impact": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "forecast_readiness_incomplete"
+       "blocked_insufficient_qualified_history"
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }

@@ -9,6 +9,17 @@ const css = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css")
 const slice = JSON.parse(fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json"), "utf8"));
 let checks = 0;
 const assert = (condition, message) => { checks += 1; if (!condition) throw new Error(message); };
+const READINESS_STATUSES = new Set([
+  "blocked_model_adapter_unavailable",
+  "blocked_insufficient_qualified_history",
+  "blocked_unsupported_sector_model",
+  "input_ready",
+]);
+const BLOCKED_READINESS_STATUSES = new Set([
+  "blocked_model_adapter_unavailable",
+  "blocked_insufficient_qualified_history",
+  "blocked_unsupported_sector_model",
+]);
 
 const PRIMARY = [
   ["overview", "Overview"],
@@ -81,7 +92,13 @@ try {
     if (row.forecast_readiness?.status === "input_ready") {
       assert(row.forecast_readiness?.qualified_period_count >= 3, `${row.symbol}: forecast readiness input-ready`);
     } else {
-      assert(row.forecast_readiness?.status === "blocked", `${row.symbol}: forecast readiness blocked`);
+      assert(BLOCKED_READINESS_STATUSES.has(row.forecast_readiness?.status), `${row.symbol}: forecast readiness blocked`);
+      if ((row.forecast_readiness?.qualified_period_count || 0) >= 3) {
+        assert(row.forecast_readiness?.status === "blocked_model_adapter_unavailable", `${row.symbol}: qualified history blocked by adapter availability`);
+      }
+    }
+    for (const [key, value] of Object.entries(row.forecast_readiness?.downstream_status || {})) {
+      assert(READINESS_STATUSES.has(value), `${row.symbol}: ${key} readiness status`);
     }
     assert(row.scenario_lab?.status?.valuation === "ready_scenario_multiple_only", `${row.symbol}: scenario multiple status separate`);
     assert(row.peer_registry?.method === "pilot_official_sector_cohort_v1", `${row.symbol}: formal peer registry emitted`);

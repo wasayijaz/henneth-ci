@@ -35,6 +35,12 @@ FORBIDDEN_KEYS = {
     "expected_return",
     "market_implied_growth",
 }
+READINESS_STATUSES = {
+    "blocked_model_adapter_unavailable",
+    "blocked_insufficient_qualified_history",
+    "blocked_unsupported_sector_model",
+    "input_ready",
+}
 
 
 def _fail(message: str) -> None:
@@ -65,6 +71,22 @@ def _assert_no_numeric_outputs(data: dict) -> None:
         if len(path) >= 2 and path[-2] in {"readiness", "policy"} and key in {"forecast", "valuation", "market_expectations"}:
             if value not in set(BLOCKED_OUTPUT_STATUS.values()):
                 _fail(f"{'.'.join(path)} is not blocked")
+
+
+def _assert_forecast_readiness(row: dict, symbol: str) -> None:
+    readiness = row.get("readiness") or {}
+    status = readiness.get("forecast_readiness_status")
+    qualified_count = readiness.get("forecast_qualified_period_count")
+    if status not in READINESS_STATUSES:
+        _fail(f"{symbol}: invalid forecast readiness status {status!r}")
+    if qualified_count != len(row.get("qualified_periods") or []):
+        _fail(f"{symbol}: forecast readiness qualified-count mismatch")
+    if status == "input_ready" and qualified_count < 3:
+        _fail(f"{symbol}: input-ready reconciliation lacks three qualified periods")
+    if status == "blocked_model_adapter_unavailable" and qualified_count < 3:
+        _fail(f"{symbol}: adapter-unavailable readiness lacks three qualified periods")
+    if status == "blocked_insufficient_qualified_history" and qualified_count >= 3:
+        _fail(f"{symbol}: sufficient history mislabeled insufficient")
 
 
 def _fact(line: str = "revenue", year: int = 2025, value: float = 100.0, **overrides) -> dict:
@@ -168,9 +190,7 @@ def _assert_shape(data: dict, pilot: list[str]) -> None:
         row = companies.get(symbol) or {}
         if row.get("symbol") != symbol:
             _fail(f"{symbol}: symbol mismatch")
-        expected_readiness = "input_ready" if len(row.get("qualified_periods") or []) >= 3 else "blocked"
-        if row.get("readiness", {}).get("forecast_readiness_status") != expected_readiness:
-            _fail(f"{symbol}: forecast readiness status mismatch")
+        _assert_forecast_readiness(row, symbol)
         for key, blocked in BLOCKED_OUTPUT_STATUS.items():
             if row.get("readiness", {}).get(key) != blocked:
                 _fail(f"{symbol}: {key} not blocked")
@@ -213,19 +233,19 @@ def _synthetic_assertions() -> None:
         "audit_only_promotion": [_fact(readiness="audit_only", quality_flags=["legacy_extractor_not_model_eligible"])],
     }
     for name, facts in cases.items():
-        row = company_reconciliation("MLCF", facts, _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+        row = company_reconciliation("MLCF", facts, _coverage(), {}, {"status": "blocked_insufficient_qualified_history", "qualified_period_count": 0}, "2026-08-26")
         statuses = {record.get("status") for record in row.get("facts") or []}
         if "eligible" in statuses:
             _fail(f"{name}: invalid fact became eligible")
         if name == "audit_only_promotion" and "audit_only" not in statuses:
             _fail("audit-only fact did not retain audit-only status")
     conflict_facts = [_fact(value=100), _fact(value=101, fact_id="revenue-2025-conflict")]
-    conflict_row = company_reconciliation("MLCF", conflict_facts, _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+    conflict_row = company_reconciliation("MLCF", conflict_facts, _coverage(), {}, {"status": "blocked_insufficient_qualified_history", "qualified_period_count": 0}, "2026-08-26")
     if conflict_row.get("source_conflict_count") != 1 or not conflict_row.get("conflicts"):
         _fail("conflicting values were not retained/quarantined")
     if any(record.get("status") != "quarantined" for record in conflict_row.get("facts") or []):
         _fail("conflicting fact rows were not quarantined")
-    future_row = company_reconciliation("MLCF", [_fact(available_on="2027-02-01")], _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+    future_row = company_reconciliation("MLCF", [_fact(available_on="2027-02-01")], _coverage(), {}, {"status": "blocked_insufficient_qualified_history", "qualified_period_count": 0}, "2026-08-26")
     if any(record.get("status") == "eligible" for record in future_row.get("facts") or []):
         _fail("future available_on became eligible")
     ready_row = company_reconciliation("MLCF", _ready_facts(), _coverage(), {"status": "ready"}, {"status": "input_ready", "qualified_period_count": 3}, "2026-08-26")
@@ -239,7 +259,7 @@ def _synthetic_assertions() -> None:
     issuer_fact = _issuer_fact()
     if not official_financial_fact_provenance(issuer_fact):
         _fail("qualified issuer fixture did not satisfy shared official provenance")
-    issuer_row = company_reconciliation("MLCF", [issuer_fact], _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+    issuer_row = company_reconciliation("MLCF", [issuer_fact], _coverage(), {}, {"status": "blocked_insufficient_qualified_history", "qualified_period_count": 0}, "2026-08-26")
     issuer_records = issuer_row.get("facts") or []
     if len(issuer_records) != 1 or issuer_records[0].get("status") != "eligible":
         _fail("qualified issuer fact did not reconcile eligible")
@@ -261,9 +281,7 @@ def main() -> None:
     pilot = expected.get("pilot_symbols") or []
     _assert_shape(expected, pilot)
     for symbol, row in (expected.get("companies") or {}).items():
-        qualified = row.get("qualified_periods") or []
-        if row.get("readiness", {}).get("forecast_readiness_status") == "input_ready" and len(qualified) < 3:
-            _fail(f"{symbol}: input-ready reconciliation lacks three qualified periods")
+        _assert_forecast_readiness(row, symbol)
     _synthetic_assertions()
     before = builder.OUT.read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_financial_evidence_reconciliation.py")], capture_output=True, text=True, timeout=30)

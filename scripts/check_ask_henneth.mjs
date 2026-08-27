@@ -18,6 +18,17 @@ const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intel
 const REQUEST_LIMIT = 16 * 1024;
 const CONTEXT_LIMIT = 24 * 1024;
 const PILOT_SET = new Set(PILOT_SYMBOLS);
+const READINESS_STATUSES = new Set([
+  "blocked_model_adapter_unavailable",
+  "blocked_insufficient_qualified_history",
+  "blocked_unsupported_sector_model",
+  "input_ready",
+]);
+const BLOCKED_READINESS_STATUSES = new Set([
+  "blocked_model_adapter_unavailable",
+  "blocked_insufficient_qualified_history",
+  "blocked_unsupported_sector_model",
+]);
 let checks = 0;
 
 function assert(condition, message) {
@@ -83,6 +94,14 @@ function assertStringOrNull(value, label, max = 1200) {
 
 function assertNumberOrNull(value, label) {
   assert(value === null || (typeof value === "number" && Number.isFinite(value)), `${label} not number/null`);
+}
+
+function assertReadinessStatus(value, label) {
+  assert(READINESS_STATUSES.has(value), `${label} invalid readiness status: ${value}`);
+}
+
+function assertBlockedReadinessStatus(value, label) {
+  assert(BLOCKED_READINESS_STATUSES.has(value), `${label} must remain blocked: ${value}`);
 }
 
 function assertScalar(value, label) {
@@ -354,7 +373,7 @@ function assertProjectedShape(context) {
     `${context.symbol} downstream status`,
   );
   for (const [key, value] of Object.entries(context.financial_model_inputs.downstream_status)) {
-    assert(value === "blocked_not_implemented", `${context.symbol} downstream ${key}`);
+    assertReadinessStatus(value, `${context.symbol} downstream ${key}`);
   }
   assert(Array.isArray(context.financial_model_inputs.observations), `${context.symbol} observations`);
   assert(Array.isArray(context.financial_model_inputs.derived), `${context.symbol} derived`);
@@ -375,7 +394,7 @@ function assertProjectedShape(context) {
   assert(context.snapshot_readiness.scenario_lab === "ready_snapshot_sensitivity", `${context.symbol} scenario readiness`);
   assert(context.snapshot_readiness.market_expectations === "ready_snapshot_reverse_solve", `${context.symbol} reverse readiness`);
   assert(context.snapshot_readiness.valuation === "ready_scenario_multiple_only", `${context.symbol} multiple readiness`);
-  assert(context.snapshot_readiness.forecast === "blocked_insufficient_qualified_history", `${context.symbol} forecast remains blocked`);
+  assertBlockedReadinessStatus(context.snapshot_readiness.forecast, `${context.symbol} forecast readiness`);
 
   assertExactKeys(context.citation_registry, ["owner_symbol", "citations"], `${context.symbol} citation registry`);
   assert(context.citation_registry.owner_symbol === context.symbol, `${context.symbol} citation owner`);

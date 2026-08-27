@@ -634,7 +634,9 @@ def main() -> int:
                                    and "legacy_extractor_not_model_eligible" in (f.get("quality_flags") or [])
                                    for f in legacy_rows)
         mlcf_model = model_payload["companies"]["MLCF"]
-        assert mlcf_model["status"] == "ready"
+        assert mlcf_model["status"] == "blocked_model_adapter_unavailable"
+        assert (mlcf_model.get("model_registry") or {}).get("status") == "covered"
+        assert (mlcf_model.get("model_adapter") or {}).get("status") == "unavailable"
         assert {len(mlcf_model["observations"][line]) for line in
                 ("revenue", "profit_after_tax_attributable", "basic_eps")} == {3}
         assert mlcf_model["derived"]["revenue_growth_pct"]

@@ -25,7 +25,33 @@
  "companies": {
   "ATRL": {
    "symbol": "ATRL",
-   "model_version": "refinery_v1",
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Refinery",
+    "selected_sector": "REFINERY",
+    "registry_version": "refinery_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "crude_supply",
+     "refinery_margin",
+     "refinery_throughput",
+     "plant_availability",
+     "product_mix",
+     "inventory_position"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -36,10 +62,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -47,7 +73,33 @@
   },
   "BOP": {
    "symbol": "BOP",
-   "model_version": "banks_v1",
+   "registry_version": "banks_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Commercial Banks",
+    "selected_sector": "BANKS",
+    "registry_version": "banks_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "policy_rate",
+     "deposit_cost",
+     "loan_growth",
+     "credit_cost",
+     "fee_income",
+     "capital_ratio"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -58,10 +110,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -69,7 +121,33 @@
   },
   "CNERGY": {
    "symbol": "CNERGY",
-   "model_version": "refinery_v1",
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Refinery",
+    "selected_sector": "REFINERY",
+    "registry_version": "refinery_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "crude_supply",
+     "refinery_margin",
+     "refinery_throughput",
+     "plant_availability",
+     "product_mix",
+     "inventory_position"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [
@@ -1056,10 +1134,10 @@
     ]
    },
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -1067,8 +1145,34 @@
   },
   "DGKC": {
    "symbol": "DGKC",
-   "model_version": "cement_v1",
-   "status": "ready",
+   "registry_version": "cement_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Cement",
+    "selected_sector": "CEMENT",
+    "registry_version": "cement_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "dispatch_volume",
+     "realized_price",
+     "coal_cost",
+     "power_cost",
+     "clinker_capacity",
+     "export_price"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "CEMENT",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "status": "blocked_model_adapter_unavailable",
    "observations": {
     "revenue": [
      {
@@ -3205,16 +3309,44 @@
     ]
    },
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable",
+    "scenario_lab": "blocked_model_adapter_unavailable"
    },
-   "quality_flags": []
+   "quality_flags": [
+    "blocked_model_adapter_unavailable"
+   ]
   },
   "ENGROH": {
    "symbol": "ENGROH",
-   "model_version": "holding_company_v1",
+   "registry_version": "holding_company_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Inv. Banks / Inv. Cos. / Securities Cos.",
+    "selected_sector": "HOLDING_COMPANY",
+    "registry_version": "holding_company_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": "HOLDING_COMPANY",
+    "drivers": [
+     "subsidiary_value",
+     "associate_earnings",
+     "holding_discount",
+     "capital_allocation",
+     "portfolio_value",
+     "dividend_income"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "HOLDING_COMPANY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -3225,10 +3357,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -3236,7 +3368,33 @@
   },
   "FFC": {
    "symbol": "FFC",
-   "model_version": "fertilizer_v1",
+   "registry_version": "fertilizer_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Fertilizer",
+    "selected_sector": "FERTILIZER",
+    "registry_version": "fertilizer_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "gas_supply",
+     "fertilizer_price",
+     "production_volume",
+     "fertilizer_capacity",
+     "input_cost",
+     "working_capital"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "FERTILIZER",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -3247,10 +3405,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -3258,7 +3416,33 @@
   },
   "GAL": {
    "symbol": "GAL",
-   "model_version": "auto_assembler_v1",
+   "registry_version": "auto_assembler_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Automobile Assembler",
+    "selected_sector": "AUTO_ASSEMBLER",
+    "registry_version": "auto_assembler_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "auto_assembly_capacity",
+     "sales_volume",
+     "realized_price",
+     "localization_rate",
+     "import_cost",
+     "model_mix"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "AUTO_ASSEMBLER",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -3269,10 +3453,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -3280,7 +3464,33 @@
   },
   "HBL": {
    "symbol": "HBL",
-   "model_version": "banks_v1",
+   "registry_version": "banks_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Commercial Banks",
+    "selected_sector": "BANKS",
+    "registry_version": "banks_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "policy_rate",
+     "deposit_cost",
+     "loan_growth",
+     "credit_cost",
+     "fee_income",
+     "capital_ratio"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -3291,10 +3501,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -3302,7 +3512,33 @@
   },
   "HUBC": {
    "symbol": "HUBC",
-   "model_version": "power_v1",
+   "registry_version": "power_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Power Generation & Distribution",
+    "selected_sector": "POWER",
+    "registry_version": "power_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "generation_volume",
+     "tariff",
+     "fuel_cost",
+     "generation_capacity",
+     "plant_availability",
+     "circular_debt"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "POWER",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -3313,10 +3549,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -3324,8 +3560,34 @@
   },
   "LUCK": {
    "symbol": "LUCK",
-   "model_version": "cement_v1",
-   "status": "ready",
+   "registry_version": "cement_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Cement",
+    "selected_sector": "CEMENT",
+    "registry_version": "cement_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "dispatch_volume",
+     "realized_price",
+     "coal_cost",
+     "power_cost",
+     "clinker_capacity",
+     "export_price"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "CEMENT",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "status": "blocked_model_adapter_unavailable",
    "observations": {
     "revenue": [
      {
@@ -5560,16 +5822,44 @@
     ]
    },
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable",
+    "scenario_lab": "blocked_model_adapter_unavailable"
    },
-   "quality_flags": []
+   "quality_flags": [
+    "blocked_model_adapter_unavailable"
+   ]
   },
   "MARI": {
    "symbol": "MARI",
-   "model_version": "e_and_p_v1",
+   "registry_version": "e_and_p_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Oil & Gas Exploration Companies",
+    "selected_sector": "E&P",
+    "registry_version": "e_and_p_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "oil_price",
+     "gas_price",
+     "production_volume",
+     "decline_rate",
+     "lifting_cost",
+     "exploration_success"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "E&P",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -5580,10 +5870,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -5591,7 +5881,33 @@
   },
   "MEBL": {
    "symbol": "MEBL",
-   "model_version": "banks_v1",
+   "registry_version": "banks_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Commercial Banks",
+    "selected_sector": "BANKS",
+    "registry_version": "banks_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "policy_rate",
+     "deposit_cost",
+     "loan_growth",
+     "credit_cost",
+     "fee_income",
+     "capital_ratio"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -5602,10 +5918,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -5613,8 +5929,34 @@
   },
   "MLCF": {
    "symbol": "MLCF",
-   "model_version": "cement_v1",
-   "status": "ready",
+   "registry_version": "cement_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Cement",
+    "selected_sector": "CEMENT",
+    "registry_version": "cement_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "dispatch_volume",
+     "realized_price",
+     "coal_cost",
+     "power_cost",
+     "clinker_capacity",
+     "export_price"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "CEMENT",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
+   "status": "blocked_model_adapter_unavailable",
    "observations": {
     "revenue": [
      {
@@ -6194,16 +6536,44 @@
     ]
    },
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable",
+    "scenario_lab": "blocked_model_adapter_unavailable"
    },
-   "quality_flags": []
+   "quality_flags": [
+    "blocked_model_adapter_unavailable"
+   ]
   },
   "NBP": {
    "symbol": "NBP",
-   "model_version": "banks_v1",
+   "registry_version": "banks_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Commercial Banks",
+    "selected_sector": "BANKS",
+    "registry_version": "banks_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "policy_rate",
+     "deposit_cost",
+     "loan_growth",
+     "credit_cost",
+     "fee_income",
+     "capital_ratio"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6214,10 +6584,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6225,7 +6595,33 @@
   },
   "NRL": {
    "symbol": "NRL",
-   "model_version": "refinery_v1",
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Refinery",
+    "selected_sector": "REFINERY",
+    "registry_version": "refinery_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "crude_supply",
+     "refinery_margin",
+     "refinery_throughput",
+     "plant_availability",
+     "product_mix",
+     "inventory_position"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6236,10 +6632,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6247,7 +6643,33 @@
   },
   "OGDC": {
    "symbol": "OGDC",
-   "model_version": "e_and_p_v1",
+   "registry_version": "e_and_p_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Oil & Gas Exploration Companies",
+    "selected_sector": "E&P",
+    "registry_version": "e_and_p_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "oil_price",
+     "gas_price",
+     "production_volume",
+     "decline_rate",
+     "lifting_cost",
+     "exploration_success"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "E&P",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6258,10 +6680,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6269,7 +6691,33 @@
   },
   "PPL": {
    "symbol": "PPL",
-   "model_version": "e_and_p_v1",
+   "registry_version": "e_and_p_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Oil & Gas Exploration Companies",
+    "selected_sector": "E&P",
+    "registry_version": "e_and_p_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "oil_price",
+     "gas_price",
+     "production_volume",
+     "decline_rate",
+     "lifting_cost",
+     "exploration_success"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "E&P",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6280,10 +6728,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6291,7 +6739,33 @@
   },
   "PRL": {
    "symbol": "PRL",
-   "model_version": "refinery_v1",
+   "registry_version": "refinery_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Refinery",
+    "selected_sector": "REFINERY",
+    "registry_version": "refinery_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "crude_supply",
+     "refinery_margin",
+     "refinery_throughput",
+     "plant_availability",
+     "product_mix",
+     "inventory_position"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "REFINERY",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6302,10 +6776,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6313,7 +6787,33 @@
   },
   "PSO": {
    "symbol": "PSO",
-   "model_version": "omc_v1",
+   "registry_version": "omc_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Oil & Gas Marketing Companies",
+    "selected_sector": "OMC",
+    "registry_version": "omc_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "product_price",
+     "sales_volume",
+     "import_parity",
+     "storage_capacity",
+     "exchange_rate",
+     "marketing_margin"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "OMC",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6324,10 +6824,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6335,7 +6835,33 @@
   },
   "UBL": {
    "symbol": "UBL",
-   "model_version": "banks_v1",
+   "registry_version": "banks_v1",
+   "adapter_version": null,
+   "model_registry": {
+    "status": "covered",
+    "coverage_type": "qualitative_sector_driver_registry",
+    "exchange_sector": "Commercial Banks",
+    "selected_sector": "BANKS",
+    "registry_version": "banks_v1",
+    "registry_source": "sector_driver_models.SECTOR_MODELS",
+    "company_override": null,
+    "drivers": [
+     "policy_rate",
+     "deposit_cost",
+     "loan_growth",
+     "credit_cost",
+     "fee_income",
+     "capital_ratio"
+    ]
+   },
+   "model_adapter": {
+    "status": "unavailable",
+    "availability_type": "executable_numerical_adapter",
+    "selected_sector": "BANKS",
+    "adapter_version": null,
+    "adapter_source": null,
+    "reason": "blocked_model_adapter_unavailable"
+   },
    "status": "partial",
    "observations": {
     "revenue": [],
@@ -6346,10 +6872,10 @@
    },
    "derived": {},
    "downstream_status": {
-    "forecast": "blocked_not_implemented",
-    "valuation": "blocked_not_implemented",
-    "market_expectations": "blocked_not_implemented",
-    "scenario_lab": "blocked_not_implemented"
+    "forecast": "blocked_insufficient_qualified_history",
+    "valuation": "blocked_insufficient_qualified_history",
+    "market_expectations": "blocked_insufficient_qualified_history",
+    "scenario_lab": "blocked_insufficient_qualified_history"
    },
    "quality_flags": [
     "insufficient_three_year_consolidated_v2_history"
@@ -6357,5 +6883,6 @@
   }
  },
  "source": "state/company_financial_series.json",
- "model_registry_source": "scripts/sector_driver_models.py"
+ "model_registry_source": "scripts/sector_driver_models.py",
+ "model_adapter_source": null
 }

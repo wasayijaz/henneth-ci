@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "manifest_version": "ci_reprocess_review_manifest_v1",
- "manifest_id": "cirestage_5740059074521fa66495",
+ "manifest_id": "cirestage_317463bef98e2a2137dd",
  "source": {
   "financial_coverage": "state/company_intel/financial_coverage.json"
  },
@@ -49,11 +49,18 @@
    "period": "2026-06-30",
    "classification": "financial_results",
    "require_retained_hash": true
+  },
+  {
+   "symbol": "LUCK",
+   "period": "2026-06-30",
+   "classification": "financial_results",
+   "require_retained_hash": false
   }
  ],
  "document_ids": [
   "psx:236626",
-  "psx:280589"
+  "psx:280589",
+  "psx:280930"
  ],
  "documents": {
   "psx:236626": {
@@ -95,14 +102,35 @@
    },
    "approval_status": "owner_review_required",
    "reason": "metadata-derived approved review candidate for bounded CI filing restage"
+  },
+  "psx:280930": {
+   "document_id": "psx:280930",
+   "symbol": "LUCK",
+   "period": "2026-06-30",
+   "classification": "financial_results",
+   "title": "Financial Results for the year ended June 30, 2026",
+   "expected_title_pattern": "Financial Results for the year ended June 30, 2026",
+   "published_at": "2026-08-10T08:00:00+05:00",
+   "source_url": "https://dps.psx.com.pk/download/document/280930.pdf",
+   "content_sha256": null,
+   "content_identity": "transport_hash_required_before_receipt",
+   "safe_period": {
+    "period_end": "2026-06-30",
+    "period_type": "annual",
+    "source": "title",
+    "matched_text": "year ended June 30, 2026"
+   },
+   "approval_status": "owner_review_required",
+   "reason": "metadata-derived approved review candidate for bounded CI filing restage"
   }
  },
  "summary": {
-  "document_count": 2,
+  "document_count": 3,
   "symbols": [
+   "LUCK",
    "MLCF"
   ],
   "retained_hash_count": 2,
-  "transport_hash_required_count": 0
+  "transport_hash_required_count": 1
  }
 }

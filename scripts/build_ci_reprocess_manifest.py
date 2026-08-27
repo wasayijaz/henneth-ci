@@ -40,6 +40,13 @@ APPROVED_REVIEW_SLOTS: tuple[dict[str, Any], ...] = (
         "title_pattern": r"MLCF-Financial Results for the year ended June 30, 2026",
         "require_retained_hash": True,
     },
+    {
+        "symbol": "LUCK",
+        "period": "2026-06-30",
+        "classification": "financial_results",
+        "title_pattern": r"Financial Results for the year ended June 30, 2026",
+        "require_retained_hash": False,
+    },
 )
 
 

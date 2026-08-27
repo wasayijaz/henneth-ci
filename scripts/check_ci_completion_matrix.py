@@ -87,13 +87,20 @@ def _assert_conservative_statuses(matrix: dict) -> None:
     expectations_outputs = by_id["market_expectations_live_outputs"]
     readiness = load_json(ROOT / "state" / "company_intel" / "forecast_readiness.json", {})
     ready_count = ((readiness.get("summary") or {}).get("ready_company_count") or 0)
+    history_qualified_count = ((readiness.get("summary") or {}).get("history_qualified_company_count") or 0)
     companies = readiness.get("companies") or {}
     ready_symbols = [symbol for symbol, row in companies.items() if row.get("status") == "input_ready"]
-    if ready_count != len(ready_symbols) or not ready_symbols:
-        _fail("forecast readiness summary must match at least one input-ready company")
+    history_qualified_symbols = [
+        symbol for symbol, row in companies.items()
+        if row.get("status") in {"input_ready", "blocked_model_adapter_unavailable"}
+    ]
+    if ready_count != len(ready_symbols):
+        _fail("forecast readiness summary ready count mismatch")
+    if history_qualified_count != len(history_qualified_symbols) or not history_qualified_symbols:
+        _fail("forecast readiness summary must match at least one history-qualified company")
     if forecast_readiness.get("status") != "partial":
-        _fail("forecast readiness live-input row must be partial while only MLCF is input-ready")
-    if not any(f"Real ready company count is {ready_count}" in blocker for blocker in forecast_readiness.get("blockers") or []):
+        _fail("forecast readiness live-input row must be partial while adapters remain unavailable")
+    if not any(f"Real history-qualified company count is {history_qualified_count}" in blocker for blocker in forecast_readiness.get("blockers") or []):
         _fail("forecast readiness row did not record real readiness blocker")
     for row_id, row in (
         ("formal_forecast_live_outputs", forecast_outputs),

@@ -23,10 +23,15 @@ BLOCKED_OUTPUT_STATUS = {
     "valuation": "blocked_insufficient_qualified_history",
     "market_expectations": "blocked_insufficient_qualified_history",
 }
-MODEL_NOT_IMPLEMENTED_OUTPUT_STATUS = {
-    "forecast": "blocked_model_not_implemented",
-    "valuation": "blocked_model_not_implemented",
-    "market_expectations": "blocked_model_not_implemented",
+ADAPTER_UNAVAILABLE_OUTPUT_STATUS = {
+    "forecast": "blocked_model_adapter_unavailable",
+    "valuation": "blocked_model_adapter_unavailable",
+    "market_expectations": "blocked_model_adapter_unavailable",
+}
+REGISTRY_UNAVAILABLE_OUTPUT_STATUS = {
+    "forecast": "blocked_unsupported_sector_model",
+    "valuation": "blocked_unsupported_sector_model",
+    "market_expectations": "blocked_unsupported_sector_model",
 }
 POLICIES = {
     "research_only": True,
@@ -36,7 +41,7 @@ POLICIES = {
     "official_sources_only": True,
     "no_model_output_from_partial_history": True,
 }
-MODEL_VERSION_BY_SECTOR = {
+REGISTRY_VERSION_BY_SECTOR = {
     "BANKS": "banks_v1",
     "CEMENT": "cement_v1",
     "E&P": "e_and_p_v1",
@@ -47,6 +52,7 @@ MODEL_VERSION_BY_SECTOR = {
     "OMC": "omc_v1",
     "HOLDING_COMPANY": "holding_company_v1",
 }
+EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR: dict[str, str] = {}
 QUALITY_FLAG_FIELDS = ("quality_flags", "conflict_flags")
 
 
@@ -55,27 +61,59 @@ def selected_sector(symbol: str, exchange_sector: str | None) -> str | None:
     return model.get("sector") if model else None
 
 
-def selected_model_version(symbol: str, exchange_sector: str | None) -> str | None:
+def selected_registry_version(symbol: str, exchange_sector: str | None) -> str | None:
     sector = selected_sector(symbol, exchange_sector)
-    return MODEL_VERSION_BY_SECTOR.get(sector or "")
+    return REGISTRY_VERSION_BY_SECTOR.get(sector or "")
+
+
+def selected_adapter_version(symbol: str, exchange_sector: str | None) -> str | None:
+    sector = selected_sector(symbol, exchange_sector)
+    return EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR.get(sector or "")
 
 
 def registry_status(symbol: str, exchange_sector: str | None) -> dict[str, Any]:
     sector = selected_sector(symbol, exchange_sector)
     model = model_for_company(symbol, exchange_sector)
     return {
-        "status": "supported" if model else "unsupported_sector_model",
+        "status": "covered" if model else "unsupported_sector_model",
+        "coverage_type": "qualitative_sector_driver_registry",
         "exchange_sector": exchange_sector,
         "selected_sector": sector,
-        "model_version": MODEL_VERSION_BY_SECTOR.get(sector or ""),
+        "registry_version": REGISTRY_VERSION_BY_SECTOR.get(sector or ""),
         "registry_source": "sector_driver_models.SECTOR_MODELS",
         "company_override": COMPANY_OVERRIDES.get(str(symbol).upper()),
         "drivers": (model or {}).get("drivers") or [],
     }
 
 
-def supported_model_versions() -> dict[str, str]:
-    return {sector: MODEL_VERSION_BY_SECTOR[sector] for sector in SECTOR_MODELS}
+def adapter_status(symbol: str, exchange_sector: str | None) -> dict[str, Any]:
+    sector = selected_sector(symbol, exchange_sector)
+    adapter_version = EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR.get(sector or "")
+    if adapter_version:
+        status = "available"
+        reason = None
+    elif sector:
+        status = "unavailable"
+        reason = "blocked_model_adapter_unavailable"
+    else:
+        status = "unsupported_sector_model"
+        reason = "unsupported_sector_model"
+    return {
+        "status": status,
+        "availability_type": "executable_numerical_adapter",
+        "selected_sector": sector,
+        "adapter_version": adapter_version,
+        "adapter_source": None,
+        "reason": reason,
+    }
+
+
+def supported_registry_versions() -> dict[str, str]:
+    return {sector: REGISTRY_VERSION_BY_SECTOR[sector] for sector in SECTOR_MODELS}
+
+
+def available_adapter_versions() -> dict[str, str]:
+    return dict(EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR)
 
 
 def _num(value: Any) -> float | int | None:
@@ -275,13 +313,32 @@ def qualified_periods(facts: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str, Any]], coverage_row: dict[str, Any] | None = None) -> dict[str, Any]:
     registry = registry_status(symbol, exchange_sector)
+    adapter = adapter_status(symbol, exchange_sector)
     periods = qualified_periods(facts)
     missing = []
-    if registry["status"] != "supported":
-        missing.append("supported_sector_model")
+    if registry["status"] != "covered":
+        missing.append("qualitative_sector_driver_registry")
     if len(periods) < REQUIRED_PERIOD_COUNT:
         missing.append("three_aligned_annual_revenue_pat_eps_periods")
-    status = "input_ready" if not missing else "blocked"
+    history_ready = len(periods) >= REQUIRED_PERIOD_COUNT
+    registry_ready = registry["status"] == "covered"
+    if history_ready and registry_ready and adapter["status"] == "available":
+        status = "input_ready"
+        activation_status = "input_ready"
+        downstream = {key: "input_ready" for key in ("forecast", "valuation", "market_expectations")}
+    elif history_ready and registry_ready:
+        missing.append("executable_numerical_adapter")
+        status = "blocked_model_adapter_unavailable"
+        activation_status = "blocked_model_adapter_unavailable"
+        downstream = dict(ADAPTER_UNAVAILABLE_OUTPUT_STATUS)
+    elif not history_ready:
+        status = "blocked_insufficient_qualified_history"
+        activation_status = "blocked_insufficient_qualified_history"
+        downstream = dict(BLOCKED_OUTPUT_STATUS)
+    else:
+        status = "blocked_unsupported_sector_model"
+        activation_status = "blocked_unsupported_sector_model"
+        downstream = dict(REGISTRY_UNAVAILABLE_OUTPUT_STATUS)
     candidates = (((coverage_row or {}).get("qualification_queue") or {}).get("candidate_documents")) or []
     candidate_refs = [{
         "document_id": row.get("document_id"),
@@ -291,15 +348,18 @@ def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str
         "reason": row.get("reason"),
         "safe_period": row.get("safe_period"),
     } for row in candidates if row.get("document_id") and row.get("source_url")]
-    downstream = dict(MODEL_NOT_IMPLEMENTED_OUTPUT_STATUS if status == "input_ready" else BLOCKED_OUTPUT_STATUS)
-    downstream["numeric_impact"] = "blocked_model_not_implemented"
+    downstream["numeric_impact"] = (
+        status if status.startswith("blocked_") else "blocked_model_adapter_unavailable"
+    )
     return {
         "symbol": symbol,
         "status": status,
-        "activation_status": "blocked_model_not_implemented",
+        "activation_status": activation_status,
         "contract_version": CONTRACT_VERSION,
         "model_registry": registry,
-        "model_version": registry.get("model_version"),
+        "model_adapter": adapter,
+        "registry_version": registry.get("registry_version"),
+        "adapter_version": adapter.get("adapter_version"),
         "qualified_period_count": len(periods),
         "qualified_periods": periods,
         "missing_requirements": missing,
@@ -308,14 +368,15 @@ def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str
         "blocked_outputs": {key: value for key, value in downstream.items() if key != "numeric_impact"},
         "downstream_status": downstream,
         "policy": {
-            "forecasts": "blocked_until_qualified_and_implemented",
-            "valuation": "blocked_until_qualified_and_implemented",
-            "market_expectations": "blocked_until_qualified_and_implemented",
+            "forecasts": "blocked_until_qualified_history_and_executable_adapter",
+            "valuation": "blocked_until_qualified_history_and_executable_adapter",
+            "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
             "numeric_impact": "blocked_until_sourced_operands_and_implementation",
         },
         "limitations": [
             "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
+            "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
             "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate.",
         ],
-        "quality_flags": [] if status == "input_ready" else ["forecast_readiness_incomplete"],
+        "quality_flags": [] if status == "input_ready" else [status],
     }

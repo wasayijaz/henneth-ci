@@ -6,7 +6,13 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from forecast_contract import CONTRACT_VERSION, POLICIES, readiness_row, supported_model_versions
+from forecast_contract import (
+    CONTRACT_VERSION,
+    POLICIES,
+    available_adapter_versions,
+    readiness_row,
+    supported_registry_versions,
+)
 from psx_data import STATE, load_json, save_json
 
 
@@ -49,7 +55,8 @@ def build() -> dict:
         "contract_version": CONTRACT_VERSION,
         "as_of": _source_as_of(profiles, sectors, financial_series, financial_coverage),
         "pilot_symbols": pilot,
-        "model_versions": supported_model_versions(),
+        "registry_versions": supported_registry_versions(),
+        "adapter_versions": available_adapter_versions(),
         "policies": dict(POLICIES),
         "source": {
             "company_profiles": "state/company_profiles.json",
@@ -61,6 +68,18 @@ def build() -> dict:
         "summary": {
             "company_count": len(companies),
             "ready_company_count": sum(1 for row in companies.values() if row.get("status") == "input_ready"),
+            "history_qualified_company_count": sum(
+                1 for row in companies.values()
+                if row.get("status") in {"input_ready", "blocked_model_adapter_unavailable"}
+            ),
+            "adapter_unavailable_company_count": sum(
+                1 for row in companies.values()
+                if row.get("status") == "blocked_model_adapter_unavailable"
+            ),
+            "insufficient_history_company_count": sum(
+                1 for row in companies.values()
+                if row.get("status") == "blocked_insufficient_qualified_history"
+            ),
             "blocked_company_count": sum(1 for row in companies.values() if row.get("status") != "input_ready"),
             "qualified_fact_company_count": sum(1 for row in companies.values() if row.get("qualified_period_count", 0) >= 1),
         },
