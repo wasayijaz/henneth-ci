@@ -107,6 +107,20 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 @keyframes ciProcessingSettle{from{opacity:0;transform:translate3d(0,7px,0);filter:saturate(.7)}to{opacity:1;transform:none;filter:none}}
 @media (max-width:900px){.workspace[data-company-bg]::before{background-position:center top;opacity:.36}.workspace[data-company-bg]::after{background:linear-gradient(180deg,color-mix(in srgb,var(--paper-3) 66%,transparent),color-mix(in srgb,var(--paper-2) 50%,transparent))}.workspace.is-entering .detail>*:nth-child(n){animation-delay:0ms}.workspace.is-entering .detail>*:nth-child(2){animation-delay:30ms}.workspace.is-entering .detail>*:nth-child(3){animation-delay:55ms}}
 @media (prefers-reduced-motion:reduce){.workspace[data-company-bg]::before{opacity:.34;clip-path:none!important}.workspace.is-entering .detail>*{animation:none!important;filter:none!important;transform:none!important;opacity:1!important}}
+
+/* Final live tuning: the supplied company image should read as the workspace
+   backdrop through the frosted pane, not disappear behind solid white cards. */
+.workspace[data-company-bg]::before{opacity:.7}
+.workspace[data-company-bg]::after{background:linear-gradient(120deg,color-mix(in srgb,var(--paper-3) 28%,transparent),color-mix(in srgb,var(--paper-2) 18%,transparent) 48%,color-mix(in srgb,var(--paper-3) 28%,transparent));opacity:.2}
+.detail{background:rgba(255,255,255,.3)}
+.hero,.panel,.metric,.empty{background:rgba(255,255,255,.58)}
+@keyframes ciCompanyWaveLeft{0%{clip-path:inset(0 100% 0 0);opacity:0}18%{clip-path:inset(0 86% 0 0);opacity:.28}43%{clip-path:inset(0 52% 0 0);opacity:.48}68%{clip-path:inset(0 19% 0 0);opacity:.62}100%{clip-path:inset(0);opacity:.7}}
+@keyframes ciCompanyWaveRight{0%{clip-path:inset(0 0 0 100%);opacity:0}18%{clip-path:inset(0 0 0 86%);opacity:.28}43%{clip-path:inset(0 0 0 52%);opacity:.48}68%{clip-path:inset(0 0 0 19%);opacity:.62}100%{clip-path:inset(0);opacity:.7}}
+@keyframes ciCompanyWaveTop{0%{clip-path:inset(100% 0 0 0);opacity:0}18%{clip-path:inset(86% 0 0 0);opacity:.28}43%{clip-path:inset(52% 0 0 0);opacity:.48}68%{clip-path:inset(19% 0 0 0);opacity:.62}100%{clip-path:inset(0);opacity:.7}}
+@keyframes ciCompanyWaveBottom{0%{clip-path:inset(0 0 100% 0);opacity:0}18%{clip-path:inset(0 0 86% 0);opacity:.28}43%{clip-path:inset(0 0 52% 0);opacity:.48}68%{clip-path:inset(0 0 19% 0);opacity:.62}100%{clip-path:inset(0);opacity:.7}}
+@keyframes ciCompanyBgSettle{from{opacity:0;clip-path:inset(0)}to{opacity:.7;clip-path:inset(0)}}
+@media (max-width:900px){.workspace[data-company-bg]::before{opacity:.58}.workspace[data-company-bg]::after{background:linear-gradient(180deg,color-mix(in srgb,var(--paper-3) 42%,transparent),color-mix(in srgb,var(--paper-2) 28%,transparent));opacity:.26}}
+@media (prefers-reduced-motion:reduce){.workspace[data-company-bg]::before{opacity:.58;clip-path:none!important}}
 .workspace .rail,.workspace .detail,.workspace .tree-panel,.workspace .list{scrollbar-color:transparent transparent}
 .workspace .rail::-webkit-scrollbar-thumb,.workspace .detail::-webkit-scrollbar-thumb,.workspace .tree-panel::-webkit-scrollbar-thumb,.workspace .list::-webkit-scrollbar-thumb{background:transparent;border-color:transparent}
 .workspace .rail:hover,.workspace .rail:focus-within,.workspace .detail:hover,.workspace .detail:focus-within,.workspace .tree-panel:hover,.workspace .tree-panel:focus-within,.workspace .list:hover,.workspace .list:focus-within{scrollbar-color:var(--rmuted) transparent}
