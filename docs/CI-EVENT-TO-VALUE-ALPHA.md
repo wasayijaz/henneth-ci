@@ -129,10 +129,13 @@ same commit:
   CLI deployment path remains available through its protected credentials.
 - **Not evidenced yet:** the `ci-production` GitHub environment has been
   created and the owner has added the three Vercel deployment credentials.
-  The remaining protected prerequisites are short-lived owner/non-owner auth
-  proof for the HTTP smoke and the first GitHub Actions green run, matching
-  preview/production deployment, public-login runtime smoke, and live access
-  checks against `ci.henneth.app`.
+  Before the first protected release, add the four Supabase email/password
+  smoke secrets documented in the release runbook. The release smoke now
+  obtains short-lived access tokens at runtime through the existing public
+  Supabase URL/publishable key; raw tokens are neither logged nor persisted.
+  The remaining prerequisite is the first GitHub Actions green run, matching
+  preview/production deployment, public-login runtime smoke, and live owner
+  `200` / non-owner `403` checks against `ci.henneth.app`.
 
 ## Change log
 
@@ -144,3 +147,4 @@ same commit:
 | 2026-08-28 | Repaired the artifact source-commit model so static checked-in JSON does not falsely fail after commit, while CI and release jobs restamp and verify against the exact `GITHUB_SHA`. | `check_ci_artifact_integrity.py --self-test`; CI contract exact-commit verification step; release preview restamp before Vercel build. |
 | 2026-08-28 | Created the `ci-production` GitHub Environment and disconnected the Vercel CI project from Git to prevent automatic production deployments. | Owner-approved live Vercel/GitHub configuration; workflow remains blocked only on its protected secrets and first release receipt. |
 | 2026-08-28 | Scoped the preview job to `ci-production` too, so GitHub can supply the Vercel credentials at the first provider action without making them repository-wide. | Release workflow structural self-test rejects both an unprotected preview and an unprotected promotion. |
+| 2026-08-28 | Replaced expiring static smoke-token inputs with protected owner/non-owner Supabase email/password secrets. The release smoke exchanges each pair for an in-memory password-grant access token using only the existing public URL and publishable key; no token is emitted or stored. | Offline smoke self-test covers the grant request and private-data gate; workflow checker requires all four credential names and rejects obsolete token inputs. |

@@ -225,9 +225,16 @@ Required one-time Vercel/GitHub configuration (external to this repository):
    approval required, and add `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
    `VERCEL_CI_PROJECT_ID` as environment secrets. The Vercel credentials are
    supplied only to the environment-scoped preview and promotion jobs and must
-   never be copied into repository files, logs, or receipts. The protected
-   owner/non-owner smoke credentials are a separate release prerequisite; see
-   the CI Alpha record before adding them.
+   never be copied into repository files, logs, or receipts. Add four more
+   environment secrets for the authenticated smoke: `HENNETH_CI_OWNER_SMOKE_EMAIL`,
+   `HENNETH_CI_OWNER_SMOKE_PASSWORD`, `HENNETH_CI_NON_OWNER_SMOKE_EMAIL`, and
+   `HENNETH_CI_NON_OWNER_SMOKE_PASSWORD`. These are ordinary Supabase Auth
+   accounts (the owner account must match `CI_OWNER_USER_ID`; the second must
+   be a different account). The release job exchanges each pair at runtime
+   through Supabase's password grant using only the existing public project URL
+   and publishable key. Short-lived bearer tokens remain in process memory,
+   are never printed or persisted, and must not be replaced with static token
+   secrets.
 3. Run **Henneth CI controlled production release** from `main`. It uploads an
    immutable, secret-free release receipt tied to the promoted commit. Retain
    that Actions artifact as the production proof; the checked-in

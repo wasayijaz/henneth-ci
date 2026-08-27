@@ -47,10 +47,14 @@ def validate(text: str) -> list[str]:
         "secrets.VERCEL_TOKEN",
         "secrets.VERCEL_ORG_ID",
         "secrets.VERCEL_CI_PROJECT_ID",
-        "secrets.HENNETH_CI_OWNER_SMOKE_TOKEN",
-        "secrets.HENNETH_CI_NON_OWNER_SMOKE_TOKEN",
+        "secrets.HENNETH_CI_OWNER_SMOKE_EMAIL",
+        "secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD",
+        "secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL",
+        "secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
     )
     errors = [f"missing release workflow contract: {needle}" for needle in required if needle not in text]
+    if "SMOKE_TOKEN" in text:
+        errors.append("obsolete static smoke-token input remains")
 
     # GitHub only exposes environment-scoped secrets to jobs that explicitly
     # name the environment. The preview job consumes the Vercel credentials,
@@ -90,7 +94,8 @@ def self_test() -> int:
         "check_ci_vercel_deployment_commit.py --deployment-url https://ci.henneth.app --commit-sha \"$GITHUB_SHA\" --expected-deployment-id \"$PREVIEW_DEPLOYMENT_ID\"",
         "scripts/record_ci_release_integrity_receipt.py", "actions/upload-artifact@v4",
         "secrets.VERCEL_TOKEN", "secrets.VERCEL_ORG_ID", "secrets.VERCEL_CI_PROJECT_ID",
-        "secrets.HENNETH_CI_OWNER_SMOKE_TOKEN", "secrets.HENNETH_CI_NON_OWNER_SMOKE_TOKEN",
+        "secrets.HENNETH_CI_OWNER_SMOKE_EMAIL", "secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD",
+        "secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL", "secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
     ))
     if validate(passing):
         print("self-test failed: complete fixture rejected")

@@ -130,8 +130,10 @@ jobs:
         run: python scripts/check_ci_vercel_deployment_commit.py --deployment-url https://ci.henneth.app --commit-sha "$GITHUB_SHA" --expected-deployment-id "$PREVIEW_DEPLOYMENT_ID"
       - name: Production owner and non-owner smoke
         env:
-          HENNETH_CI_OWNER_SMOKE_TOKEN: ${{ secrets.HENNETH_CI_OWNER_SMOKE_TOKEN }}
-          HENNETH_CI_NON_OWNER_SMOKE_TOKEN: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_TOKEN }}
+          HENNETH_CI_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_OWNER_SMOKE_EMAIL }}
+          HENNETH_CI_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD }}
+          HENNETH_CI_NON_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL }}
+          HENNETH_CI_NON_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD }}
         run: python scripts/check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated
       - name: Create immutable release evidence artifact
         run: |

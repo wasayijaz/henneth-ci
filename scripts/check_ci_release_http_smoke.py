@@ -2,9 +2,10 @@
 """Secret-safe HTTP smoke checks for a deployed Henneth CI release.
 
 Anonymous checks prove the public login surface is reachable and private data
-fails closed.  Owner/non-owner checks are optional only because their bearer
-tokens must live in a protected CI environment, never in repository state or
-command output.  The script never prints request headers or response bodies.
+fails closed. Owner/non-owner checks are optional only because their Supabase
+email/password credentials must live in a protected CI environment. The
+script exchanges those credentials for short-lived access tokens in memory,
+never prints request headers or response bodies, and never persists tokens.
 """
 from __future__ import annotations
 
@@ -19,6 +20,10 @@ from typing import Any
 
 DATA_PATH = "/data/company_intelligence.json"
 TIMEOUT_SECONDS = 20
+# Public client configuration. Keep this synchronized with the authentication
+# client in Henneth Desk 2.CI.0/app.js; it is deliberately not a secret.
+SUPABASE_URL = "https://qteoncckohuoatbjjykb.supabase.co"
+SUPABASE_PUBLISHABLE_KEY = "sb_publishable_aQu8P4yrAY7l8Y0AcLth5g_Z3VceUnw"
 
 
 def fail(message: str) -> None:
@@ -45,6 +50,41 @@ def request(url: str, token: str | None = None) -> tuple[int, dict[str, Any] | N
     return status, payload if isinstance(payload, dict) else None, body.decode("utf-8", "replace")
 
 
+def fetch_access_token(email: str, password: str) -> str:
+    """Exchange one protected credential pair for an in-memory access token."""
+    if not email.strip() or not password:
+        fail("protected smoke email/password credentials are required")
+    body = json.dumps({"email": email, "password": password}).encode("utf-8")
+    req = urllib.request.Request(
+        SUPABASE_URL + "/auth/v1/token?grant_type=password",
+        data=body,
+        method="POST",
+        headers={
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "content-type": "application/json",
+            "User-Agent": "henneth-ci-release-smoke/1.0",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT_SECONDS) as response:
+            status = response.status
+            payload = json.loads(response.read())
+    except urllib.error.HTTPError as exc:
+        # Do not read or report the provider response: it can contain details
+        # about the account and must never become a workflow log artifact.
+        raise AssertionError(f"Supabase password grant returned HTTP {exc.code}") from exc
+    except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+        raise AssertionError(f"Supabase password grant failed: {type(exc).__name__}") from exc
+    except Exception as exc:  # noqa: BLE001 - provider failures stay secret-safe
+        raise AssertionError(f"Supabase password grant failed: {type(exc).__name__}") from exc
+    if status != 200 or not isinstance(payload, dict):
+        fail("Supabase password grant returned an invalid response")
+    token = payload.get("access_token")
+    if not isinstance(token, str) or not token.strip():
+        fail("Supabase password grant did not return an access token")
+    return token.strip()
+
+
 def shell_smoke(base_url: str) -> None:
     status, _payload, body = request(base_url.rstrip("/") + "/")
     if status != 200:
@@ -68,24 +108,97 @@ def run(base_url: str, *, require_authenticated: bool = False) -> None:
     private_smoke(base_url, None, 401, "owner_required")
     if not require_authenticated:
         return
-    owner_token = str(os.environ.get("HENNETH_CI_OWNER_SMOKE_TOKEN") or "").strip()
-    non_owner_token = str(os.environ.get("HENNETH_CI_NON_OWNER_SMOKE_TOKEN") or "").strip()
-    if not owner_token or not non_owner_token:
-        fail("protected owner and non-owner smoke tokens are required")
+    owner_token = fetch_access_token(
+        str(os.environ.get("HENNETH_CI_OWNER_SMOKE_EMAIL") or "").strip(),
+        str(os.environ.get("HENNETH_CI_OWNER_SMOKE_PASSWORD") or ""),
+    )
+    non_owner_token = fetch_access_token(
+        str(os.environ.get("HENNETH_CI_NON_OWNER_SMOKE_EMAIL") or "").strip(),
+        str(os.environ.get("HENNETH_CI_NON_OWNER_SMOKE_PASSWORD") or ""),
+    )
     private_smoke(base_url, owner_token, 200, None)
     private_smoke(base_url, non_owner_token, 403, "forbidden")
 
 
 def self_test() -> int:
+    class FakeResponse:
+        status = 200
+
+        def __init__(self, payload: dict[str, Any]):
+            self.payload = payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return json.dumps(self.payload).encode("utf-8")
+
+    original_urlopen = urllib.request.urlopen
+    original_request = request
+    original_shell_smoke = shell_smoke
+    original_private_smoke = private_smoke
+    original_fetch_access_token = fetch_access_token
+    seen: list[urllib.request.Request] = []
+
+    def fake_urlopen(req, timeout):
+        seen.append(req)
+        return FakeResponse({"access_token": "offline-token"})
+
     try:
-        private_smoke("https://example.test", None, 401, "owner_required")
-    except AssertionError:
-        # The transport is deliberately unavailable; this confirms a failure
-        # cannot be converted into a false pass.
-        pass
-    else:
-        print("self-test failed: unavailable endpoint passed")
+        urllib.request.urlopen = fake_urlopen
+        token = fetch_access_token("owner@example.test", "offline-password")
+        if token != "offline-token" or len(seen) != 1:
+            print("self-test failed: password grant fixture drifted")
+            return 1
+        headers = {key.lower(): value for key, value in seen[0].header_items()}
+        if seen[0].get_method() != "POST" or headers.get("apikey") != SUPABASE_PUBLISHABLE_KEY:
+            print("self-test failed: password grant request contract drifted")
+            return 1
+        calls = iter(((401, {"error": "owner_required"}, ""),))
+        globals()["request"] = lambda *_args, **_kwargs: next(calls)
+        private_smoke("https://ci.example.test", None, 401, "owner_required")
+        globals()["request"] = original_request
+
+        authenticated_calls: list[tuple[str | None, int, str | None]] = []
+        globals()["shell_smoke"] = lambda _base_url: None
+        globals()["fetch_access_token"] = lambda email, _password: f"token-for-{email}"
+        globals()["private_smoke"] = lambda _base_url, token, expected, error: authenticated_calls.append((token, expected, error))
+        prior_env = {name: os.environ.get(name) for name in (
+            "HENNETH_CI_OWNER_SMOKE_EMAIL", "HENNETH_CI_OWNER_SMOKE_PASSWORD",
+            "HENNETH_CI_NON_OWNER_SMOKE_EMAIL", "HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
+        )}
+        os.environ.update({
+            "HENNETH_CI_OWNER_SMOKE_EMAIL": "owner@example.test",
+            "HENNETH_CI_OWNER_SMOKE_PASSWORD": "owner-password",
+            "HENNETH_CI_NON_OWNER_SMOKE_EMAIL": "non-owner@example.test",
+            "HENNETH_CI_NON_OWNER_SMOKE_PASSWORD": "non-owner-password",
+        })
+        run("https://ci.example.test", require_authenticated=True)
+        if authenticated_calls != [
+            (None, 401, "owner_required"),
+            ("token-for-owner@example.test", 200, None),
+            ("token-for-non-owner@example.test", 403, "forbidden"),
+        ]:
+            print("self-test failed: authenticated smoke sequence drifted")
+            return 1
+    except AssertionError as exc:
+        print(f"self-test failed: {exc}")
         return 1
+    finally:
+        urllib.request.urlopen = original_urlopen
+        globals()["request"] = original_request
+        globals()["shell_smoke"] = original_shell_smoke
+        globals()["private_smoke"] = original_private_smoke
+        globals()["fetch_access_token"] = original_fetch_access_token
+        if "prior_env" in locals():
+            for name, value in prior_env.items():
+                if value is None:
+                    os.environ.pop(name, None)
+                else:
+                    os.environ[name] = value
     print("ci release HTTP smoke self-test: ok")
     return 0
 
