@@ -22,6 +22,10 @@ const CI_REVEAL_SIDES = Object.freeze(["left", "right", "top", "bottom"]);
 const CI_BACKGROUND_ATTR_RE = /product-background-(\d{2})\.(?:png|webp)$/;
 const CI_BACKGROUND_ASSET_COUNT = 25;
 const CI_MOBILE_QUERY = "(max-width:900px)";
+const CI_LEFT_MIN = 220;
+const CI_LEFT_MAX = 360;
+const CI_RIGHT_MIN = 248;
+const CI_RIGHT_MAX = 420;
 const RAIL_LINKS = [
   { href: "https://ci.henneth.app/", label: "Company Intelligence", icon: "lucide:building-2", active: true },
   { href: "https://desk.henneth.app/today", label: "Signals", icon: "lucide:activity" },
@@ -133,7 +137,10 @@ function companyVisual(row, index) {
 function safeBackgroundCssUrl(path) {
   const text = String(path || "").trim();
   return /^product backgrounds\/product-background-\d{2}\.(?:png|webp)$/i.test(text)
-    ? `url("${text}")`
+    // Encode the directory space for the actual HTTP request. Keeping the
+    // registry's filesystem path readable lets the static inventory checker
+    // stat the same file while the browser receives a valid served URL.
+    ? `url("${encodeURI(text)}")`
     : "";
 }
 
@@ -381,10 +388,13 @@ function renderGate(message) {
   app.style.removeProperty("--ci-company-bg");
   app.innerHTML = `
     <section class="gate" aria-labelledby="gateTitle">
-      <div>
+      <div class="gate-copy">
         <p class="eyebrow">Private research workspace</p>
         <h1 id="gateTitle">Company context,<br>one layer deeper.</h1>
         <p>Sign in with the existing Henneth account. This surface reads one private JSON file and keeps execution out of the product.</p>
+        <figure class="gate-visual">
+          <img src="/login-background.webp" alt="Henneth company intelligence workspace" width="1672" height="942" loading="eager" decoding="async">
+        </figure>
       </div>
       <form id="loginForm" class="login">
         <p class="form-title">Owner access</p>
@@ -423,6 +433,82 @@ function syncMobileControls(available) {
   }
   $("companyDrawerOpen")?.setAttribute("aria-expanded", app?.classList.contains("mobile-left-open") ? "true" : "false");
   $("intelligenceDrawerOpen")?.setAttribute("aria-expanded", app?.classList.contains("mobile-right-open") ? "true" : "false");
+}
+
+function bindPanelResize() {
+  const workspace = $("app");
+  if (!workspace || window.matchMedia(CI_MOBILE_QUERY).matches) return;
+  const saved = (key, fallback, min, max) => {
+    let value = NaN;
+    try { value = Number.parseInt(localStorage.getItem(key), 10); } catch {}
+    return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
+  };
+  let leftW = saved("ciLeftW", 270, CI_LEFT_MIN, CI_LEFT_MAX);
+  let rightW = saved("ciRightW", 320, CI_RIGHT_MIN, CI_RIGHT_MAX);
+  workspace.style.setProperty("--ci-left-w", `${leftW}px`);
+  workspace.style.setProperty("--ci-right-w", `${rightW}px`);
+
+  const wire = (id, side) => {
+    const handle = $(id);
+    if (!handle) return;
+    handle.style.touchAction = "none";
+    handle.tabIndex = 0;
+    handle.setAttribute("aria-valuemin", String(side === "left" ? CI_LEFT_MIN : CI_RIGHT_MIN));
+    handle.setAttribute("aria-valuemax", String(side === "left" ? CI_LEFT_MAX : CI_RIGHT_MAX));
+    let dragging = false;
+    let pointerId = null;
+    let startX = 0;
+    let startW = 0;
+    const setWidth = width => {
+      const min = side === "left" ? CI_LEFT_MIN : CI_RIGHT_MIN;
+      const max = side === "left" ? CI_LEFT_MAX : CI_RIGHT_MAX;
+      const next = Math.min(max, Math.max(min, width));
+      if (side === "left") leftW = next;
+      else rightW = next;
+      workspace.style.setProperty(side === "left" ? "--ci-left-w" : "--ci-right-w", `${next}px`);
+      handle.setAttribute("aria-valuenow", String(next));
+      return next;
+    };
+    setWidth(side === "left" ? leftW : rightW);
+    handle.addEventListener("pointerdown", event => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      dragging = true;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startW = side === "left" ? leftW : rightW;
+      handle.setPointerCapture(pointerId);
+      workspace.classList.add("ci-resizing");
+      event.preventDefault();
+    });
+    handle.addEventListener("pointermove", event => {
+      if (!dragging || event.pointerId !== pointerId) return;
+      const delta = side === "left" ? event.clientX - startX : startX - event.clientX;
+      setWidth(startW + delta);
+    });
+    const end = event => {
+      if (!dragging || event.pointerId !== pointerId) return;
+      dragging = false;
+      if (handle.hasPointerCapture(pointerId)) handle.releasePointerCapture(pointerId);
+      pointerId = null;
+      workspace.classList.remove("ci-resizing");
+      try { localStorage.setItem(side === "left" ? "ciLeftW" : "ciRightW", String(side === "left" ? leftW : rightW)); } catch {}
+    };
+    handle.addEventListener("pointerup", end);
+    handle.addEventListener("pointercancel", end);
+    handle.addEventListener("keydown", event => {
+      const step = event.shiftKey ? 24 : 12;
+      const current = side === "left" ? leftW : rightW;
+      const keyStep = side === "left"
+        ? { ArrowLeft: -step, ArrowRight: step }
+        : { ArrowLeft: step, ArrowRight: -step };
+      if (!(event.key in keyStep)) return;
+      const next = setWidth(current + keyStep[event.key]);
+      try { localStorage.setItem(side === "left" ? "ciLeftW" : "ciRightW", String(next)); } catch {}
+      event.preventDefault();
+    });
+  };
+  wire("companyResize", "left");
+  wire("intelligenceResize", "right");
 }
 
 function syncDrawerBackdrops() {
@@ -483,6 +569,7 @@ function renderDesk(searchState) {
     <div class="drawer-backdrop company-backdrop" data-drawer-close="company" aria-hidden="true" hidden></div>
     <div class="drawer-backdrop intelligence-backdrop" data-drawer-close="intelligence" aria-hidden="true" hidden></div>
     <aside id="companyDirectory" class="rail" aria-label="Company directory">
+      <div class="ci-resize-handle ci-resize-left" id="companyResize" role="separator" aria-orientation="vertical" aria-label="Resize company directory"></div>
       <div class="rail-head"><strong>Company directory</strong><span>${esc(list.length)} shown</span></div>
       <div class="toolbar">
         <input id="search" class="search" type="search" aria-label="Search companies" aria-controls="companyList" placeholder="Search symbol, company, sector" value="${esc(state.filter)}">
@@ -498,8 +585,12 @@ function renderDesk(searchState) {
       <span class="sr-only" role="status" aria-live="polite">${esc(list.length)} companies match.</span>
     </aside>
     <section id="companyDetail" class="detail" role="tabpanel" tabindex="-1" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>
-    <aside id="companyIntelligenceTree" class="tree-panel" aria-label="Company intelligence directory tree">${row ? renderViewNav(row) : `<div class="tree-empty">No directories available.</div>`}</aside>`;
+    <aside id="companyIntelligenceTree" class="tree-panel" aria-label="Company intelligence directory tree">
+      <div class="ci-resize-handle ci-resize-right" id="intelligenceResize" role="separator" aria-orientation="vertical" aria-label="Resize intelligence directory"></div>
+      ${row ? renderViewNav(row) : `<div class="tree-empty">No directories available.</div>`}
+    </aside>`;
   if ($("companyStatus")) $("companyStatus").textContent = row ? `${row.symbol} · company intelligence` : "Company Intelligence";
+  bindPanelResize();
   syncMobileControls(true);
   syncDrawerBackdrops();
   $("search").oninput = event => {
