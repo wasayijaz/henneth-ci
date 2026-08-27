@@ -208,8 +208,11 @@ commit reaches `main`. The release path is
 `.github/workflows/ci-production-release.yml`: validate the repository,
 restamp the CI artifact envelope to the release commit, deploy one preview,
 run the public and protected smoke checks, then promote that exact preview
-without rebuilding. The `ci-production` GitHub Environment is the owner
-checkpoint immediately before promotion.
+without rebuilding. The `ci-production` GitHub Environment scopes deployment
+credentials to the two jobs that use them: the first Vercel preview action and
+the later promotion. If required reviewers are available for the repository,
+configure them there; GitHub environment secrets are unavailable to a job that
+does not name that environment.
 
 Required one-time Vercel/GitHub configuration (external to this repository):
 
@@ -220,10 +223,11 @@ Required one-time Vercel/GitHub configuration (external to this repository):
    inspected in the Vercel project.
 2. Create the protected GitHub Environment `ci-production`, with owner
    approval required, and add `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
-   `VERCEL_CI_PROJECT_ID`, `HENNETH_CI_OWNER_SMOKE_TOKEN`, and
-   `HENNETH_CI_NON_OWNER_SMOKE_TOKEN` as environment secrets. Tokens are only
-   supplied to the protected promotion job and must never be copied into
-   repository files, logs, or receipts.
+   `VERCEL_CI_PROJECT_ID` as environment secrets. The Vercel credentials are
+   supplied only to the environment-scoped preview and promotion jobs and must
+   never be copied into repository files, logs, or receipts. The protected
+   owner/non-owner smoke credentials are a separate release prerequisite; see
+   the CI Alpha record before adding them.
 3. Run **Henneth CI controlled production release** from `main`. It uploads an
    immutable, secret-free release receipt tied to the promoted commit. Retain
    that Actions artifact as the production proof; the checked-in

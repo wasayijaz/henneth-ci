@@ -39,6 +39,10 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Vercel credentials intentionally live only in this protected environment.
+    # GitHub makes environment secrets available to the job that names it, so the
+    # approval happens before the first provider action (the tested preview).
+    environment: ci-production
     outputs:
       url: ${{ steps.deploy.outputs.url }}
       deployment_id: ${{ steps.verify-preview.outputs.deployment_id }}
@@ -130,9 +134,6 @@ jobs:
           HENNETH_CI_NON_OWNER_SMOKE_TOKEN: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_TOKEN }}
         run: python scripts/check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated
       - name: Create immutable release evidence artifact
-        env:
-          HENNETH_CI_OWNER_SMOKE_TOKEN: ${{ secrets.HENNETH_CI_OWNER_SMOKE_TOKEN }}
-          HENNETH_CI_NON_OWNER_SMOKE_TOKEN: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_TOKEN }}
         run: |
           python scripts/record_ci_release_integrity_receipt.py \
             --output "$RUNNER_TEMP/ci-release-integrity-receipt.json" \

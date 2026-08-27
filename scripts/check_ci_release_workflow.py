@@ -50,7 +50,22 @@ def validate(text: str) -> list[str]:
         "secrets.HENNETH_CI_OWNER_SMOKE_TOKEN",
         "secrets.HENNETH_CI_NON_OWNER_SMOKE_TOKEN",
     )
-    return [f"missing release workflow contract: {needle}" for needle in required if needle not in text]
+    errors = [f"missing release workflow contract: {needle}" for needle in required if needle not in text]
+
+    # GitHub only exposes environment-scoped secrets to jobs that explicitly
+    # name the environment. The preview job consumes the Vercel credentials,
+    # so protecting only the later promote job would leave it empty in CI.
+    preview_start = text.find("  preview:\n")
+    promote_start = text.find("  promote:\n")
+    if preview_start < 0 or promote_start < 0 or promote_start <= preview_start:
+        return errors
+    preview_job = text[preview_start:promote_start]
+    promote_job = text[promote_start:]
+    if "environment: ci-production" not in preview_job:
+        errors.append("preview job consumes protected Vercel secrets without ci-production environment")
+    if "environment: ci-production" not in promote_job:
+        errors.append("promote job must retain ci-production environment")
+    return errors
 
 
 def self_test() -> int:
@@ -80,8 +95,13 @@ def self_test() -> int:
     if validate(passing):
         print("self-test failed: complete fixture rejected")
         return 1
-    if not validate(passing.replace("environment: ci-production", "")):
-        print("self-test failed: unprotected production fixture accepted")
+    preview_unprotected = passing.replace("environment: ci-production", "", 1)
+    if not validate(preview_unprotected):
+        print("self-test failed: unprotected preview fixture accepted")
+        return 1
+    promote_unprotected = passing.rsplit("environment: ci-production", 1)[0] + passing.rsplit("environment: ci-production", 1)[1]
+    if not validate(promote_unprotected):
+        print("self-test failed: unprotected promotion fixture accepted")
         return 1
     print("ci release workflow self-test: ok")
     return 0

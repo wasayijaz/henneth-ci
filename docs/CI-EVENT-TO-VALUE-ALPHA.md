@@ -111,7 +111,8 @@ same commit:
   Its current receipt is deliberately `not_verified`; it is release evidence,
   not an investor-facing generated artifact.
 - `.github/workflows/ci-production-release.yml` supplies the controlled
-  preview-to-promotion route, guarded by the `ci-production` environment. The
+  preview-to-promotion route, with deployment credentials scoped through the
+  `ci-production` environment on both Vercel-consuming jobs. The
   preview job restamps the private CI slice to the release `github.sha` before
   Vercel builds it, stamps the Vercel preview with `githubCommitSha`, verifies
   that metadata through the Vercel deployment API, and after promotion verifies
@@ -127,10 +128,11 @@ same commit:
   push cannot bypass the protected release workflow. The workflow's Vercel
   CLI deployment path remains available through its protected credentials.
 - **Not evidenced yet:** the `ci-production` GitHub environment has been
-  created, but it has no release secrets yet. After its required credentials
-  are added, the remaining proof is a GitHub Actions green run, matching
-  preview/production deployment, public-login runtime smoke, and live
-  owner/non-owner access checks against `ci.henneth.app`.
+  created and the owner has added the three Vercel deployment credentials.
+  The remaining protected prerequisites are short-lived owner/non-owner auth
+  proof for the HTTP smoke and the first GitHub Actions green run, matching
+  preview/production deployment, public-login runtime smoke, and live access
+  checks against `ci.henneth.app`.
 
 ## Change log
 
@@ -141,3 +143,4 @@ same commit:
 | 2026-08-28 | Implemented and locally verified the Part 0 integrity envelope and finalizer ordering. | 37 sealed artifacts; source-commit binding; workflow structural check; 43-artifact no-lookahead scan; focused metadata-safe deterministic checks. Live deployment/auth evidence remains open. |
 | 2026-08-28 | Repaired the artifact source-commit model so static checked-in JSON does not falsely fail after commit, while CI and release jobs restamp and verify against the exact `GITHUB_SHA`. | `check_ci_artifact_integrity.py --self-test`; CI contract exact-commit verification step; release preview restamp before Vercel build. |
 | 2026-08-28 | Created the `ci-production` GitHub Environment and disconnected the Vercel CI project from Git to prevent automatic production deployments. | Owner-approved live Vercel/GitHub configuration; workflow remains blocked only on its protected secrets and first release receipt. |
+| 2026-08-28 | Scoped the preview job to `ci-production` too, so GitHub can supply the Vercel credentials at the first provider action without making them repository-wide. | Release workflow structural self-test rejects both an unprotected preview and an unprotected promotion. |
