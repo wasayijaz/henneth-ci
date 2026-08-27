@@ -7024,24 +7024,35 @@ if (shell) {
   requestAnimationFrame(sideReady);
   setTimeout(sideReady, 300);
 }
-$("sideResize")?.addEventListener("mousedown", e => {
-  if (shell.classList.contains("collapsed")) return;
-  e.preventDefault();
-  shell.classList.add("resizing");
-  const move = ev => {
-    const w = Math.min(SIDE_MAX, Math.max(SIDE_MIN, ev.clientX));
+const sideResize = $("sideResize");
+if (sideResize) {
+  sideResize.style.touchAction = "none";
+  let dragging = false, dragId = null;
+  sideResize.addEventListener("pointerdown", e => {
+    if (shell.classList.contains("collapsed") || (e.pointerType === "mouse" && e.button !== 0)) return;
+    dragging = true;
+    dragId = e.pointerId;
+    sideResize.setPointerCapture(e.pointerId);
+    shell.classList.add("resizing");
+    e.preventDefault();
+  });
+  sideResize.addEventListener("pointermove", e => {
+    if (!dragging || e.pointerId !== dragId) return;
+    const w = Math.min(SIDE_MAX, Math.max(SIDE_MIN, e.clientX));
     shell.style.setProperty("--side-w", w + "px");
-  };
-  const up = () => {
+  });
+  const endSideResize = e => {
+    if (!dragging || e.pointerId !== dragId) return;
+    dragging = false;
+    dragId = null;
+    if (sideResize.hasPointerCapture(e.pointerId)) sideResize.releasePointerCapture(e.pointerId);
     shell.classList.remove("resizing");
     const w = parseInt(getComputedStyle(shell).getPropertyValue("--side-w"), 10);
     if (w) localStorage.setItem("sideW", w);
-    document.removeEventListener("mousemove", move);
-    document.removeEventListener("mouseup", up);
   };
-  document.addEventListener("mousemove", move);
-  document.addEventListener("mouseup", up);
-});
+  sideResize.addEventListener("pointerup", endSideResize);
+  sideResize.addEventListener("pointercancel", endSideResize);
+}
 
 
 /* ================= ACCOUNTS + ONBOARDING (merged from auth.js: the deploy workflow only ships app.js) ================= */

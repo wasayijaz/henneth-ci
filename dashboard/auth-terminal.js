@@ -14,7 +14,7 @@
   var HN_MARKUP = `<div class="page">
 
   <nav class="nav">
-   <a href="/today" class="nav-brand"><img class="nav-brand-mark" src="logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>DESK</small></a>
+   <a href="/today" class="nav-brand"><img class="nav-brand-mark" src="/logo-terminal.svg" alt="" width="535" height="472" decoding="async">HENNETH<small>DESK</small></a>
     <div class="nav-right">
       <div class="nav-chip">Research · Not Advice</div>
       <a href="https://henneth.app/" class="nav-back">← Back to site</a>

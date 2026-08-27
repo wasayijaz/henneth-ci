@@ -113,6 +113,7 @@
     // handle never gets a pointermove.
     railResize.style.touchAction = "none";
     railResize.addEventListener("pointerdown", function (ev) {
+      if (shell.classList.contains("rail-collapsed") || (ev.pointerType === "mouse" && ev.button !== 0)) return;
       dragging = true; startX = ev.clientX; startW = railW; dragId = ev.pointerId;
       railResize.setPointerCapture(ev.pointerId);
       shell.classList.add("rail-resizing");
