@@ -1,18 +1,12 @@
 {
  "reaffirm": [
   "UBL",
+  "OGDC",
+  "MARI",
   "CNERGY"
  ],
  "delta": [],
  "full": [
-  {
-   "symbol": "MARI",
-   "why": "material change since last Room"
-  },
-  {
-   "symbol": "OGDC",
-   "why": "material change since last Room"
-  },
   {
    "symbol": "PPL",
    "why": "material change since last Room"
@@ -50,10 +44,6 @@
    "why": "material change since last Room"
   },
   {
-   "symbol": "SYS",
-   "why": "material change since last Room"
-  },
-  {
    "symbol": "HUBC",
    "why": "material change since last Room"
   },
@@ -63,6 +53,14 @@
   },
   {
    "symbol": "SRVI",
+   "why": "never covered"
+  },
+  {
+   "symbol": "GLAXO",
+   "why": "never covered"
+  },
+  {
+   "symbol": "AGP",
    "why": "never covered"
   },
   {
@@ -146,6 +144,10 @@
    "why": "material change since last Room"
   },
   {
+   "symbol": "SYS",
+   "why": "material change since last Room"
+  },
+  {
    "symbol": "HMB",
    "why": "material change since last Room"
   },
@@ -186,10 +188,6 @@
    "why": "never covered"
   },
   {
-   "symbol": "GLAXO",
-   "why": "never covered"
-  },
-  {
    "symbol": "NATF",
    "why": "never covered"
   },
@@ -198,19 +196,15 @@
    "why": "never covered"
   },
   {
-   "symbol": "AGP",
-   "why": "never covered"
-  },
-  {
    "symbol": "ISL",
    "why": "never covered"
   },
   {
-   "symbol": "TPLRF1",
+   "symbol": "PIBTL",
    "why": "never covered"
   },
   {
-   "symbol": "PIBTL",
+   "symbol": "TPLRF1",
    "why": "never covered"
   },
   {
@@ -395,15 +389,13 @@
   }
  ],
  "_meta": {
-  "built": "2026-08-26 17:47",
+  "built": "2026-08-27 21:24",
   "full_budget": 2,
   "run_full_now": [
-   "MARI",
-   "OGDC"
+   "PPL",
+   "FFC"
   ],
   "deferred_full": [
-   "PPL",
-   "FFC",
    "HBL",
    "MEBL",
    "BOP",
@@ -411,10 +403,11 @@
    "BAHL",
    "PAEL",
    "SAZEW",
-   "SYS",
    "HUBC",
    "NBP",
    "SRVI",
+   "GLAXO",
+   "AGP",
    "SGF",
    "AICL",
    "AIRLINK",
@@ -435,6 +428,7 @@
    "AKBL",
    "LUCK",
    "FCCL",
+   "SYS",
    "HMB",
    "ENGROH",
    "FCL",
@@ -445,13 +439,11 @@
    "SEARL",
    "NML",
    "KOHC",
-   "GLAXO",
    "NATF",
    "TRG",
-   "AGP",
    "ISL",
-   "TPLRF1",
    "PIBTL",
+   "TPLRF1",
    "NPL",
    "AHCL",
    "CPHL",
@@ -499,10 +491,10 @@
    "POL"
   ],
   "counts": {
-   "full_due": 97,
+   "full_due": 95,
    "full_now": 2,
    "delta": 0,
-   "reaffirm": 2
+   "reaffirm": 4
   },
   "est_tokens_today": 44000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."

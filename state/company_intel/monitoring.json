@@ -1,11 +1,11 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-08-27T09:32:00+05:00",
+ "as_of": "2026-08-27T21:10:00+05:00",
  "source_as_of": {
   "source_registry": "2026-08-27T03:47:04+05:00",
   "source_qa": "2026-08-27 05:01",
-  "change_intelligence": "2026-08-27 06:02",
+  "change_intelligence": "2026-08-27 21:10",
   "event_ledger": "2026-08-27 09:32",
   "operating_events": "2026-08-27",
   "evidence_watchlist": "2026-08-27T09:31:00+05:00",
@@ -1547,8 +1547,8 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-08-27T03:47:04+05:00",
-   "latest_change_at": "2026-08-27T05:20:00+05:00",
-   "latest_event_at": "2026-08-27T05:20:00+05:00",
+   "latest_change_at": "2026-08-27T06:15:00+05:00",
+   "latest_event_at": "2026-08-27T06:15:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -3040,8 +3040,8 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-08-18T03:21:12+05:00",
-   "latest_change_at": "2026-08-18T00:00:00+05:00",
-   "latest_event_at": "2026-03-31T15:12:00+05:00",
+   "latest_change_at": "2026-08-27T06:37:00+05:00",
+   "latest_event_at": "2026-08-27T06:37:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -3052,9 +3052,9 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
+     "document": 11,
      "issuer_document": 3,
-     "document": 10,
-     "event": 3
+     "event": 4
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -3062,6 +3062,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_ab567af3c172c6779d45",
+     "symbol": "MARI",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "annual-report-2024.pdf",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.marienergies.com.pk/wp-content/uploads/2025/09/Annual-Report-2024.pdf",
+      "document_id": "issuer:6735e9d35ffb61088d139964",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_9d19272e419ee22720dfc934",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
     {
      "alert_id": "ci_alert_cec8f0553396093b4deb",
      "symbol": "MARI",
@@ -3160,26 +3180,6 @@
       "change_id": "chg_5c0789ce132349acde48f093",
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_9de7f628eed804839ae9",
-     "symbol": "MARI",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-03-31T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/273304.pdf",
-      "document_id": "psx:273304",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_f3026a0e206c96a446c5ea3c",
-      "kind": "document",
-      "date_basis": "published_at"
      }
     }
    ],
@@ -3772,8 +3772,8 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-08-24T19:40:25+05:00",
-   "latest_change_at": "2026-08-27T06:01:00+05:00",
-   "latest_event_at": "2026-08-27T06:01:00+05:00",
+   "latest_change_at": "2026-08-27T09:31:00+05:00",
+   "latest_event_at": "2026-08-27T09:31:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -3784,8 +3784,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 2,
-     "issuer_document": 16
+     "document": 4,
+     "issuer_document": 14
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -3809,6 +3809,46 @@
      },
      "evidence_identity": {
       "change_id": "chg_4a5698b5794aff3c0db0a5d1",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_a6725c6dfba6adbf6ae7",
+     "symbol": "CNERGY",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report 2024-25 & AGM Notice 2024-25",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.cnergyico.com/reports/Annual_Reports/fy2425/fy2425.pdf",
+      "document_id": "issuer:4dd8b5c00b64c0f16c89cf82",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_94c22ed124c8c1a077ce8304",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_5576aaaee576bc6e3b15",
+     "symbol": "CNERGY",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report for Fiscal Year 2019-2020",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2020.pdf",
+      "document_id": "issuer:4dcb8d4eb90b45225deca1eb",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_a6c17d5847421a40e04b1e4a",
       "kind": "document",
       "date_basis": "retrieved_at"
      }
@@ -3869,46 +3909,6 @@
      },
      "evidence_identity": {
       "change_id": "chg_aee8092775c7034d238689ed",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_ddf6b31057ae7f7545ca",
-     "symbol": "CNERGY",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-24T00:00:00+05:00",
-     "title": "Annual General Meeting of Byco Petroleum Pakistan Limited will be held on 25th January 2018 at 09:00 a.m at the Moosa D. Desai Auditorium,ICAP,Clifton Karachi. (Press Release)",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.cnergyico.com/files/23_AGM.pdf",
-      "document_id": "issuer:7533ad984ad7f092b069f818",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_df7748d959d7a42b0e75ddf5",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_bd919242d1e6c72ecbf0",
-     "symbol": "CNERGY",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-24T00:00:00+05:00",
-     "title": "Byco Petroleum Reports Annual Gross Profit of Rs1.9Bn Amid Industry-Wide Challenges.",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.cnergyico.com/files/pressrelease_eng.pdf",
-      "document_id": "issuer:64e3df981f7c446d69ca2122",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_804df93d6372ca601e027b09",
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }

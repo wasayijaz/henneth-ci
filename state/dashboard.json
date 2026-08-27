@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-26 18:05",
+ "updated": "2026-08-27 21:49",
  "regime": "neutral",
  "geo_risk": {
-  "score": 52,
+  "score": 54,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260826-BML-obv_divergence_up",
+   "id": "20260827-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260826-TPLT-donchian55_break",
+   "id": "20260827-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260826-GAL-trend_momo_combo",
+   "id": "20260827-GAL-trend_momo_combo",
    "ticker": "GAL",
    "strategy": "trend_momo_combo",
    "template": "Trend + momentum combo",
@@ -52,7 +52,7 @@
    "hold_sessions": 12,
    "backtest": {
     "hit_rate": 0.579,
-    "net_expectancy_pct": 1.28,
+    "net_expectancy_pct": 1.3,
     "n": 38,
     "oos_hit": 0.6
    },
@@ -61,7 +61,7 @@
    "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 58% over 38 trades (+1.3% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260826-NICL-roc60_leader_pullback",
+   "id": "20260827-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -83,7 +83,7 @@
  "top_predictable": [
   {
    "ticker": "DCR",
-   "score": 76.5
+   "score": 76.8
   },
   {
    "ticker": "XLI",
@@ -177,61 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-08-21",
-   "source": "Mettis Global (latest-news feed)",
-   "headline": "SCBPL profit drops 29% in 1HCY26",
-   "tickers": [
-    "SCBPL"
-   ],
-   "impact": 4,
-   "summary": "Standard Chartered Bank (Pakistan) Limited (PSX: SCBPL) reported a 29% year-on-year profit decline for the half year ended June 30, 2026, per Mettis Global's latest-news feed (direct article URL not resolved this cycle; prior comparable-period searches returned FY25/1HCY25 figures, not this 1HCY26 figure - flagged for confirmation next cycle). No absolute profit figure captured this cycle. Logged as impact 4 (material earnings decline, per desk criteria Rule 10) for this core-tier constituent; escalation flagged.",
-   "url": "https://mettisglobal.news/latest/"
-  },
-  {
-   "ts": "2026-08-24",
-   "source": "MM News / PSX Data Portal (DPS) indices",
-   "headline": "KSE-100 opens the week higher after a bearish prior week, easing back by late morning",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Per MM News, KSE-100 surged 814.94 points to 177,981.46 at 9:35am PKT Monday Aug 24, 2026, rebounding from Friday Aug 21's confirmed close of 177,166.52 (already logged) after a week MM News says shed nearly 2,938 points, moved within a 5,048-point band (high 181,158, low 176,110), lost Rs247bn in market cap, on volume of 4.22bn shares worth Rs205bn. Per dps.psx.com.pk/indices, the page timestamped 'Aug 24, 2026 11:39 AM' shows the gain eased to +562.16 points (+0.32%) at 177,728.68 by late morning. Sub-1% net move so far; logged as impact 3 (notable), consistent with prior similar-magnitude intraday entries in this newslog. Tagged MACRO only; no company-specific driver named in either source.",
-   "url": "https://dps.psx.com.pk/indices"
-  },
-  {
-   "ts": "2026-08-24",
-   "source": "Dawn.com / Business Recorder / Geo News",
-   "headline": "Govt raises petrol price by Rs3.81, HSD by Rs3.59 per litre, effective through Aug 24",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "Per Dawn.com and Business Recorder, OGRA under the government's daily petroleum pricing mechanism raised petrol by Rs3.81/litre to Rs341.59/litre and High-Speed Diesel (HSD) by Rs3.59/litre to Rs368.29/litre, rates effective Saturday Aug 22 through Monday Aug 24, 2026. Follows the already-logged Aug 21 adjustment (petrol +Rs0.27, HSD +Rs1.64). Logged as impact 2 (minor, routine daily adjustment under the new mechanism) - modest magnitude versus the Aug 20 sharp diesel cut already logged at impact 4.",
-   "url": "https://www.dawn.com/news/2024389/govt-hikes-petrol-price-by-rs381-high-speed-diesel-by-rs359"
-  },
-  {
-   "ts": "2026-08-24",
-   "source": "Business Recorder / Dawn.com",
-   "headline": "Moody's upgrades Pakistan's sovereign credit rating to B3 from Caa1, stable outlook",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 4,
-   "summary": "Moody's Ratings upgraded Pakistan's sovereign credit rating to B3 from Caa1 on Aug 24, 2026, maintaining a stable outlook, citing stronger governance and sustained improvement in external/fiscal position; FX reserves rose to about $17bn end-July 2026 (from $14bn a year earlier, near 3 months of import cover), and Moody's External Vulnerability Indicator improved to ~145% in 2026 from ~230% in 2025. Follows S&P's upgrade of Pakistan to 'B' from 'B-' about a month earlier. Logged as impact 4 (material macro/sovereign-rating event per Rule 10); escalation flagged.",
-   "url": "https://www.brecorder.com/news/40436306/moodys-upgrades-pakistans-rating-to-b3-maintains-stable-outlook"
-  },
-  {
-   "ts": "2026-08-24",
-   "source": "Business Recorder / Mettis Global (PSX Closing Bell)",
-   "headline": "PSX: KSE-100 closes in red, loses 200 points",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Supersedes the already-logged Aug 24, 2026 11:39am DPS intraday checkpoint (177,728.68, +562.16pts/+0.32%, MACRO only). KSE-100 confirmed close Monday Aug 24, 2026 at 176,966.68, down 199.84 points (-0.11%) from Friday Aug 21's confirmed close of 177,166.52 (already logged). Intraday high 178,122.87, low 176,735.57 - index initially surged over 800 points at the open (per the already-logged MM News item) before selling pressure intensified in the afternoon. Mettis Global's 'PSX Closing Bell: A Shade Lower' confirms the same closing figure. Sub-1% net move; tagged to the union of the superseded item's tickers (MACRO only, no company-specific tickers in that item). Impact 3 (notable), consistent with prior similar-magnitude index-close entries.",
-   "url": "https://www.brecorder.com/news/40436274/psx-kse-100-closes-in-red-loses-200-points"
-  },
   {
    "ts": "2026-08-22",
    "source": "Radio Pakistan / Profit (Pakistan Today) / Bloom Pakistan",
@@ -342,16 +287,75 @@
    "impact": 3,
    "summary": "Additional driver detail for the already-logged Tue Aug 25, 2026 confirmed close (177,370.70/177,370.71, +404.02pts/+0.23%): per Business Recorder and Dawn.com, the session's gain was attributed to renewed hopes of US-Iran de-escalation following Field Marshal Asim Munir's one-day visit to Tehran (meetings with President Pezeshkian and FM Araghchi), with Iranian officials calling the talks a 'valuable diplomatic gain' per Pakistan Today. This geopolitical driver was not previously captured in the newslog entry for this close, which cited only Moody's rating upgrade. No new index figure or ticker; tagged MACRO only, impact 3 consistent with the already-logged close entry.",
    "url": "https://www.dawn.com/news/2025314/equities-recover-404-points-despite-volatility"
+  },
+  {
+   "ts": "2026-08-27",
+   "source": "Business Recorder / The Express Tribune",
+   "headline": "PSX: KSE-100 ends flat amid late selling",
+   "tickers": [
+    "MACRO",
+    "HUBC",
+    "ENGROH",
+    "POL",
+    "UBL",
+    "FFC",
+    "NBP",
+    "PPL",
+    "PSO",
+    "OGDC",
+    "SYS"
+   ],
+   "impact": 3,
+   "summary": "KSE-100 confirmed close Thu Aug 27, 2026 (first session after Wed Aug 26 Eid Milad-un-Nabi holiday, already logged) at 177,322.77, down 47.93 points (-0.03%) from Tue Aug 25's confirmed close of 177,370.70 (already logged), per Business Recorder ('PSX: KSE-100 ends flat amid late selling') and The Express Tribune ('PSX up 800 points after holiday reopen'). Index opened strongly and hit an intraday high of 178,650.01 (+1,279pts/+0.72%) before sustained afternoon selling erased the gains. Volume 611.6m shares, value Rs34.5bn. Per Tribune: positive contributors HUBC, ENGROH, POL, UBL and FFC added ~494 points collectively; negative contributors NBP, PPL, PSO, OGDC and SYS erased ~615 points on profit-taking. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries in this newslog.",
+   "url": "https://www.brecorder.com/news/40436639/psx-kse-100-ends-flat-amid-late-selling"
+  },
+  {
+   "ts": "2026-08-27",
+   "source": "The Express Tribune",
+   "headline": "Attock Petroleum Limited FY26 earnings up 63% YoY, PKR 40/share final dividend",
+   "tickers": [
+    "APL"
+   ],
+   "impact": 4,
+   "summary": "Attock Petroleum Limited (PSX: APL) reported FY26 earnings up 63% year-on-year and declared a PKR 40/share final dividend, per The Express Tribune's PSX market-recap coverage of the Aug 27, 2026 session. No absolute profit/EPS figure captured this cycle. Logged as impact 4 (material earnings surprise plus dividend declaration, per desk criteria Rule 10); escalation flagged.",
+   "url": "https://tribune.com.pk/story/2626025/psx-up-800-points-after-holiday-reopen"
+  },
+  {
+   "ts": "2026-08-27",
+   "source": "The Express Tribune",
+   "headline": "Pakistan Oilfields Limited 4QFY26 earnings up 67% YoY, record PKR 100/share annual dividend",
+   "tickers": [
+    "POL"
+   ],
+   "impact": 4,
+   "summary": "Pakistan Oilfields Limited (PSX: POL) reported 4QFY26 earnings up 67% year-on-year and announced a record PKR 100/share annual dividend, per The Express Tribune's PSX market-recap coverage of the Aug 27, 2026 session. No absolute profit/EPS figure captured this cycle. Logged as impact 4 (material earnings surprise plus record dividend, per desk criteria Rule 10); escalation flagged.",
+   "url": "https://tribune.com.pk/story/2626025/psx-up-800-points-after-holiday-reopen"
+  },
+  {
+   "ts": "2026-08-27",
+   "source": "The Express Tribune",
+   "headline": "Hub Power Company 4QFY26 earnings up 39% YoY, PKR 5/share quarterly dividend",
+   "tickers": [
+    "HUBC"
+   ],
+   "impact": 4,
+   "summary": "The Hub Power Company Limited (PSX: HUBC) reported 4QFY26 earnings up 39% year-on-year and declared a PKR 5/share quarterly dividend, per The Express Tribune's PSX market-recap coverage of the Aug 27, 2026 session. No absolute profit/EPS figure captured this cycle. Logged as impact 4 (material earnings surprise plus dividend, per desk criteria Rule 10); escalation flagged.",
+   "url": "https://tribune.com.pk/story/2626025/psx-up-800-points-after-holiday-reopen"
+  },
+  {
+   "ts": "2026-08-27",
+   "source": "Business Recorder (BR Research)",
+   "headline": "IT exports eye the next leap",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 2,
+   "summary": "Pakistan's IT export receipts stood at $417m in July 2026, up 18% year-on-year and broadly unchanged from $416m in June, the second-highest monthly figure in the recent series after $437m in Dec-25, per Business Recorder's BR Research. Sector-wide item, no single listed-company figure disclosed. Logged as impact 2 (minor, informational sector/economic item).",
+   "url": "https://www.brecorder.com/news/40436348/it-exports-eye-the-next-leap"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-08-25T17:42:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-25T18:05:00+05:00",
-   "outcome": "regime=neutral geo=53(moderate); daily_read headline set (BML/GAL/NBP watchlist); watchdog OK (last-good live, gated files intact); NOT PUBLISHED - preflight FAIL pre-existing (ask_contract.js context_too_large in Company Intelligence contract check; check_evidence_watchlist.py authoritative-vs-pure-builder mismatch), unrelated to today agents, needs owner fix"
-  },
   {
    "started": "2026-08-25T17:47:00+05:00",
    "mode": "room",
@@ -375,6 +379,12 @@
    "mode": "room",
    "ended": "2026-08-26T17:58:00+05:00",
    "outcome": "2 full (MARI, OGDC) + 0 delta + 2 reaffirm (UBL, CNERGY). QA: both flagged/blocked by room-verifier, both fixed in place (MARI div_yield 5.54%->4.49% + payout_ratio 51.69%->41.46%; OGDC div_yield 4.71%->4.89%). i18n: 21 fields translated to Urdu. room_score: 143 claims resolved (0 new this batch). NOT PUSHED — preflight FAILED on pre-existing Company Intelligence peer_registry mismatch (22 fails, unrelated to Room work, predates this cycle)."
+  },
+  {
+   "started": "2026-08-26T18:05:00+05:00",
+   "mode": "room",
+   "ended": "2026-08-26T18:08:00+05:00",
+   "outcome": "Follow-up to prior blocked cycle: fixed CI peer_registry preflight failures (state/company_intel/peer_registry.json was stale, missing member_details/formal_peer_details vs current build_peer_registry.py output -> regenerated). preflight now green (1 non-gating WARN: 101 tickers backfilling history). PUBLISHED: room cycle (MARI+OGDC full debate + QA fixes + i18n + peer_registry fix). watchdog OK."
   }
  ]
 }
