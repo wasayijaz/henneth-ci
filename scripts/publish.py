@@ -29,10 +29,45 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+LOCK = ROOT / ".git" / "index.lock"
 
 
 def _run(cmd, **kw):
     return subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, **kw)
+
+
+def _git_running() -> bool:
+    r = _run(["tasklist", "/FI", "IMAGENAME eq git.exe"])
+    # a real match adds a data row containing "git.exe"; no match prints "INFO: No tasks..."
+    return "git.exe" in r.stdout
+
+
+def _clear_stale_lock(retries=5, delay=2):
+    """A leftover .git/index.lock (e.g. from a prior run interrupted mid-`git add`) makes
+    every `git add` below fail silently, since nothing here checked their returncode — the
+    index stays empty, `git diff --cached --quiet` sees nothing staged, and publish prints a
+    false "no state change" even though state/ is genuinely dirty. Hit for real on 2026-08-27:
+    a scheduled run reported NOTHING PUBLISHED while ~300 state/ files sat uncommitted.
+    Fail loud instead: if a git process actually holds the lock, wait for it; if nothing does,
+    the lock is stale — clear it and say so.
+    """
+    if not LOCK.exists():
+        return
+    for _ in range(retries):
+        if not _git_running():
+            break
+        time.sleep(delay)
+    else:
+        print(f"publish: .git/index.lock present and a git process is still running after "
+              f"{retries * delay}s — refusing to touch it. Wait for it to finish and re-run.")
+        sys.exit(1)
+    if LOCK.exists():
+        try:
+            LOCK.unlink()
+        except OSError as e:
+            print(f"publish: found stale .git/index.lock but could not remove it: {e}")
+            sys.exit(1)
+        print("publish: cleared a stale .git/index.lock (no git process was holding it) before staging.")
 
 
 def main():
@@ -40,6 +75,8 @@ def main():
     # message "--code"
     positional = [a for a in sys.argv[1:] if not a.startswith("--")]
     msg = positional[0] if positional else f"Desk refresh {time.strftime('%Y-%m-%d %H:%M')}"
+
+    _clear_stale_lock()
 
     # 1) preflight gate
     pf = _run([sys.executable, "scripts/preflight.py"])
@@ -69,7 +106,10 @@ def main():
     if code_mode:
         print("publish: --code — only files YOU already staged (git add <file>) ship as code. "
               "Dirty-but-unstaged hand-authored files are left alone (they may be someone else's).")
-    _run(["git", "add", "-A", "--", "state/"])
+    add_state = _run(["git", "add", "-A", "--", "state/"])
+    if add_state.returncode != 0:
+        print("publish: `git add -- state/` failed:\n" + (add_state.stderr or add_state.stdout)[:300])
+        sys.exit(1)
 
     # GENERATED ARTEFACTS THAT LIVE OUTSIDE state/.
     # The marketing build is hermetic — it never reads state/ — so the pipeline hands it data by
@@ -86,7 +126,10 @@ def main():
         "site/public/moon_ephem.bin",
         "Henneth Desk 2.CI.0/data/",
     ]
-    _run(["git", "add", "-A", "--", *GENERATED])
+    add_gen = _run(["git", "add", "-A", "--", *GENERATED])
+    if add_gen.returncode != 0:
+        print("publish: `git add -- GENERATED` failed:\n" + (add_gen.stderr or add_gen.stdout)[:300])
+        sys.exit(1)
 
     def _is_auto(path: str) -> bool:
         p = path.replace("\\", "/")
