@@ -93,6 +93,36 @@ def main():
  assert all(f.get('quality_flags') for f in facts); checks += 1  # no geometry -> audit-only
  def w(x,y,text,line,word,block=0):
   return (x,y,x+max(8,len(text)*5),y+8,text,block,line,word)
+ def raw_doc(name, period='2025-12-31'):
+  return {'doc_id':'psx:'+name,'title':'Annual Financial Results','period_end':period,'published_at':'2026-01-01','source_url':'https://dps.psx.com.pk/download/document/'+name+'.pdf','content_sha256':name+'hash'}
+ def statement_words(heading, label, current='100', prior='90'):
+  return [
+   w(10,0,'Consolidated',0,0), *[w(10+i*45,10,part,1,i) for i,part in enumerate(heading.split())],
+   w(10,25,'PKR',2,0), w(35,25,'in',2,1), w(50,25,'million',2,2),
+   w(600,45,'2025',3,0), w(680,45,'2024',3,1),
+   *[w(10+i*70,65,part,4,i) for i,part in enumerate(label.split())],
+   w(600,65,current,4,20), w(680,65,prior,4,21)]
+ def raw_model_facts(name, heading, label):
+  return [f for f in _raw_extract_facts(raw_doc(name),[name],words=[statement_words(heading,label)]) if f.get('readiness')=='model_loadable']
+ new_cases=[
+  ('cash_and_cash_equivalents','Statement of Financial Position','Cash and cash equivalents','balance_sheet'),
+  ('short_term_borrowings','Statement of Financial Position','Short-term borrowings','balance_sheet'),
+  ('long_term_borrowings','Statement of Financial Position','Long-term borrowings','balance_sheet'),
+  ('operating_cash_flow','Statement of Cash Flows','Net cash generated from operating activities','cash_flow_statement'),
+  ('capital_expenditure','Statement of Cash Flows','Capital expenditure','cash_flow_statement'),
+  ('depreciation_amortization','Statement of Cash Flows','Depreciation and amortization','cash_flow_statement')]
+ wrong_heading={'balance_sheet':'Statement of Cash Flows','cash_flow_statement':'Statement of Financial Position'}
+ for line,heading,label,statement_type in new_cases:
+  got=raw_model_facts('accepted_'+line,heading,label)
+  assert [f.get('line') for f in got] == [line,line], line+' accepted line'
+  assert {f.get('statement_type') for f in got} == {statement_type}, line+' statement type'
+  assert all(f.get('document_id')=='psx:accepted_'+line and f.get('source_url') and f.get('content_sha256') and f.get('page')==1 for f in got), line+' provenance'
+  rejected=raw_model_facts('wrong_heading_'+line,wrong_heading[statement_type],label)
+  assert rejected == [], line+' wrong heading rejected'
+  checks += 4; geometry_fixtures += 2
+ assert raw_model_facts('cashflow_cash_reject','Statement of Cash Flows','Cash and cash equivalents') == []; checks += 1; geometry_fixtures += 1
+ assert raw_model_facts('current_portion_long_term_reject','Statement of Financial Position','Current portion of long-term borrowings') == []; checks += 1; geometry_fixtures += 1
+ assert _raw_extract_facts(raw_doc('fallback_new_reject'),['Cash and cash equivalents 100\nCapital expenditure 50'],words=None) == []; checks += 1
  # Reviewer fixture 1: two duration phrases on one horizontal line use Voronoi groups,
  # allowing duplicate year labels across groups.
  dual=[

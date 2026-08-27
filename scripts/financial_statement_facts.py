@@ -13,7 +13,7 @@ from typing import Any
 PARSER_VERSION = "financial_statement_v2"
 PARSER_REVISION = "block_geometry_v5"
 
-LINE_PATTERNS = {
+INCOME_STATEMENT_LINE_PATTERNS = {
     # ``sales`` by itself also occurs in ``cost of sales``.  Keep revenue
     # matching broad enough for issuer wording, but do not classify a cost row
     # as revenue while scanning adjacent geometry lines.
@@ -29,6 +29,29 @@ LINE_PATTERNS = {
     "profit_after_tax_attributable": r"(?:owners of (?:the )?(?:parent|holding) company|profit after tax(?:ation)? attributable|profit attributable to owners|profit after tax(?:ation)?|profit for the period)",
     "tax_expense": r"(?:taxation|income tax expense|tax expense)",
     "basic_eps": r"(?:basic )?eps(?:\s|$)|earnings per share",
+}
+
+BALANCE_SHEET_LINE_PATTERNS = {
+    "cash_and_cash_equivalents": r"\bcash\s+and\s+(?:cash\s+equivalents|bank\s+balances)\b",
+    "short_term_borrowings": r"\bshort[-\s]?term\s+(?:borrowings|financ(?:e|ing)|loans?)\b",
+    "long_term_borrowings": r"\blong[-\s]?term\s+(?:borrowings|financ(?:e|ing)|loans?)\b",
+}
+
+CASH_FLOW_LINE_PATTERNS = {
+    "operating_cash_flow": r"\b(?:net\s+)?cash\s+(?:generated\s+from|provided\s+by|used\s+in|flows?\s+from)\s+operating\s+activities\b",
+    "capital_expenditure": r"\b(?:capital\s+expenditure|fixed\s+capital\s+expenditure|(?:purchase|acquisition|additions?)\s+of\s+property,\s+plant\s+and\s+equipment)\b",
+    "depreciation_amortization": r"\bdepreciation\s+(?:and|/)\s+amorti[sz]ation\b",
+}
+
+LINE_PATTERNS = {
+    **INCOME_STATEMENT_LINE_PATTERNS,
+    **BALANCE_SHEET_LINE_PATTERNS,
+    **CASH_FLOW_LINE_PATTERNS,
+}
+STATEMENT_LINE_PATTERNS = {
+    "income_statement": INCOME_STATEMENT_LINE_PATTERNS,
+    "balance_sheet": BALANCE_SHEET_LINE_PATTERNS,
+    "cash_flow_statement": CASH_FLOW_LINE_PATTERNS,
 }
 SCALE_MAP = {"thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000, "mn": 1_000_000, "bn": 1_000_000_000}
 
@@ -349,8 +372,9 @@ def _nearest_headers_for_row(header_sets: list[dict[str, Any]], row: dict[str, A
     return max(prior, key=lambda h: (h["line"]["y1"], len(h.get("headers") or []))) if prior else None
 
 
-def _line_match(row: dict[str, Any]) -> tuple[str, re.Match[str]] | None:
-    for line, pattern in LINE_PATTERNS.items():
+def _line_match(row: dict[str, Any], statement_type: str | None = None) -> tuple[str, re.Match[str]] | None:
+    patterns = STATEMENT_LINE_PATTERNS.get(statement_type) if statement_type else LINE_PATTERNS
+    for line, pattern in patterns.items():
         m = re.search(pattern, row["text"], re.I)
         if m:
             if line == "revenue":
@@ -361,6 +385,8 @@ def _line_match(row: dict[str, Any]) -> tuple[str, re.Match[str]] | None:
                 if re.search(r"\bgross\s+sales\b", text, re.I) or re.search(
                         r"\bless\s*:\s*sales\s+tax\b", text, re.I):
                     continue
+            if line == "long_term_borrowings" and re.search(r"\bcurrent\s+portion\s+of\b", row["text"], re.I):
+                continue
             return line, m
     return None
 
@@ -507,7 +533,7 @@ def _aligned_cells(headers: list[dict[str, Any]], nums: list[dict[str, Any]]) ->
 
 def _fallback_facts(doc: dict[str, Any], page_no: int, page_text: str, period: str, available_on: str | None) -> list[dict[str, Any]]:
     out = []
-    for line, pattern in LINE_PATTERNS.items():
+    for line, pattern in INCOME_STATEMENT_LINE_PATTERNS.items():
         m = re.search(rf"(?im)^\s*({pattern})[^\n]*?\s+([\(\-]?\d[\d,]*(?:\.\d+)?\)?-?)\s*$", page_text)
         if not m:
             continue
@@ -558,7 +584,8 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
     # ``Revenue``) with the same year columns.  They are page-evidenced but are
     # not primary income statements; require a local statement heading before
     # accepting any row.
-    if not _statement_heading(lines):
+    heading = _statement_heading(lines)
+    if not heading:
         return []
     try:
         manifest_date = date.fromisoformat(str(period)[:10])
@@ -569,7 +596,8 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
         return []
     out: list[dict[str, Any]] = []
     for row in lines:
-        matched = _line_match(row)
+        statement_type = str(heading.get("type") or "")
+        matched = _line_match(row, statement_type)
         if not matched:
             continue
         line_name, label_match = matched
@@ -693,7 +721,8 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
                 "content_sha256": doc.get("content_sha256"),
                 "page": page_no,
                 "evidence": [{"page": page_no, "text": row["text"][:240], "source_url": doc.get("source_url")}],
-                "statement_type": "income_statement",
+                "statement_type": statement_type,
+                "statement_heading": heading,
                 "line": line_name,
                 "fact_type": line_name,
                 "reported_label": label_match.group(0),
@@ -749,6 +778,10 @@ def _statement_heading(lines: list[dict[str, Any]]) -> dict[str, Any] | None:
             return {"type": "income_statement", "basis": _basis_from_text(text), "bbox": _round_bbox(line)}
         if re.search(r"\b(?:profit|loss|income)\b.*\bstatement\b", text, re.I):
             return {"type": "income_statement", "basis": _basis_from_text(text), "bbox": _round_bbox(line)}
+        if re.search(r"\bstatement\b.*\bfinancial\s+position\b|\bbalance\s+sheet\b", text, re.I):
+            return {"type": "balance_sheet", "basis": _basis_from_text(text), "bbox": _round_bbox(line)}
+        if re.search(r"\bstatement\b.*\bcash\s+flows?\b|\bcash\s+flows?\b.*\bstatement\b", text, re.I):
+            return {"type": "cash_flow_statement", "basis": _basis_from_text(text), "bbox": _round_bbox(line)}
     top = " ".join(line["text"] for line in lines[:6])
     if re.search(r"\bstatement\b.*\bcomprehensive\s+income\b", top, re.I) \
             and not re.search(r"\bprofit\s+or\s+loss\b", top, re.I):
@@ -757,6 +790,12 @@ def _statement_heading(lines: list[dict[str, Any]]) -> dict[str, Any] | None:
             or re.search(r"\b(?:profit|loss|income)\b.*\bstatement\b", top, re.I):
         first = lines[0]
         return {"type": "income_statement", "basis": _basis_from_text(top), "bbox": _round_bbox(first)}
+    if re.search(r"\bstatement\b.*\bfinancial\s+position\b|\bbalance\s+sheet\b", top, re.I):
+        first = lines[0]
+        return {"type": "balance_sheet", "basis": _basis_from_text(top), "bbox": _round_bbox(first)}
+    if re.search(r"\bstatement\b.*\bcash\s+flows?\b|\bcash\s+flows?\b.*\bstatement\b", top, re.I):
+        first = lines[0]
+        return {"type": "cash_flow_statement", "basis": _basis_from_text(top), "bbox": _round_bbox(first)}
     return None
 
 
@@ -863,6 +902,7 @@ def diagnose_page_records(doc: dict[str, Any], page_records: list[dict[str, Any]
                 ],
             })
         page_reasons: set[str] = set()
+        statement_type = (page_diag["candidate_statement"] or {}).get("type")
         if not page_diag["candidate_statement"]:
             page_reasons.add("no_candidate_heading")
         if not period:
@@ -875,7 +915,7 @@ def diagnose_page_records(doc: dict[str, Any], page_records: list[dict[str, Any]
         if facts_on_page:
             page_diag["parser_decision"] = "emitted_model_loadable" if any(f.get("readiness") == "model_loadable" for f in facts_on_page) else "emitted_audit_only"
         for row in lines:
-            matched = _line_match(row)
+            matched = _line_match(row, statement_type)
             if not matched:
                 continue
             line_name, _ = matched
