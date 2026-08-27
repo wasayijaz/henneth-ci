@@ -95,6 +95,7 @@ try {
   assert(app.includes("closeMobileDrawers()") && app.includes("btn.onclick = () => pick(btn.dataset.symbol)") && app.includes("state.view = btn.dataset.view"), "company/tab selection closes mobile drawers");
   assert(css.includes("scrollbar-color:transparent transparent") && css.includes(".detail:hover") && css.includes(".tree-panel:focus-within") && css.includes(".list:focus-within"), "panel scrollbars are hidden until hover or focus");
   assert(css.includes(".workspace.mobile-left-open .rail") && css.includes(".workspace.mobile-right-open .tree-panel") && css.includes(".drawer-backdrop"), "mobile drawers are app-state controlled");
+  assert(css.includes(".drawer-backdrop{display:none}"), "mobile drawer backdrops do not consume desktop workspace grid cells");
   assert(css.includes(".viewnav-shell") && css.includes(".research-tools") && css.includes(".company-domain-shell") && css.includes(".blocked-shell") && css.includes(".research-hub-grid"), "navigation/domain CSS");
   for (const row of slice.tickers) {
     assert(row.symbol && row.company_brain?.domains, `${row.symbol || "unknown"}: Company Brain available`);
