@@ -500,6 +500,14 @@ function renderDesk(searchState) {
   };
   $("railScheme")?.addEventListener("click", () => $("schemeToggle")?.click());
   $("railProfile")?.addEventListener("click", () => $("signOut")?.click());
+  const setMobilePanel = (side, open) => {
+    const workspace = $("app");
+    workspace?.classList.toggle(`mobile-${side}-open`, open);
+    const button = side === "left" ? $("ciLeftToggle") : $("ciRightToggle");
+    button?.setAttribute("aria-expanded", String(open));
+  };
+  $("ciLeftToggle")?.addEventListener("click", () => setMobilePanel("left", !$("app")?.classList.contains("mobile-left-open")));
+  $("ciRightToggle")?.addEventListener("click", () => setMobilePanel("right", !$("app")?.classList.contains("mobile-right-open")));
   document.querySelectorAll("[data-symbol]").forEach(btn => {
     btn.onclick = () => pick(btn.dataset.symbol);
     btn.onkeydown = event => moveCompanyFocus(event, btn);

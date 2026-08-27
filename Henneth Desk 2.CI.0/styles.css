@@ -104,3 +104,27 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 @keyframes ciProcessingSettle{from{opacity:0;transform:translate3d(0,7px,0);filter:saturate(.7)}to{opacity:1;transform:none;filter:none}}
 @media (max-width:900px){.workspace[data-company-bg]::before{background-position:center top;opacity:.36}.workspace[data-company-bg]::after{background:linear-gradient(180deg,color-mix(in srgb,var(--paper-3) 66%,transparent),color-mix(in srgb,var(--paper-2) 50%,transparent))}.workspace.is-entering .detail>*:nth-child(n){animation-delay:0ms}.workspace.is-entering .detail>*:nth-child(2){animation-delay:30ms}.workspace.is-entering .detail>*:nth-child(3){animation-delay:55ms}}
 @media (prefers-reduced-motion:reduce){.workspace[data-company-bg]::before{opacity:.34;clip-path:none!important}.workspace.is-entering .detail>*{animation:none!important;filter:none!important;transform:none!important;opacity:1!important}}
+.workspace .rail,.workspace .detail,.workspace .tree-panel,.workspace .list{scrollbar-color:transparent transparent}
+.workspace .rail::-webkit-scrollbar-thumb,.workspace .detail::-webkit-scrollbar-thumb,.workspace .tree-panel::-webkit-scrollbar-thumb,.workspace .list::-webkit-scrollbar-thumb{background:transparent;border-color:transparent}
+.workspace .rail:hover,.workspace .rail:focus-within,.workspace .detail:hover,.workspace .detail:focus-within,.workspace .tree-panel:hover,.workspace .tree-panel:focus-within,.workspace .list:hover,.workspace .list:focus-within{scrollbar-color:var(--rmuted) transparent}
+.workspace .rail:hover::-webkit-scrollbar-thumb,.workspace .rail:focus-within::-webkit-scrollbar-thumb,.workspace .detail:hover::-webkit-scrollbar-thumb,.workspace .detail:focus-within::-webkit-scrollbar-thumb,.workspace .tree-panel:hover::-webkit-scrollbar-thumb,.workspace .tree-panel:focus-within::-webkit-scrollbar-thumb,.workspace .list:hover::-webkit-scrollbar-thumb,.workspace .list:focus-within::-webkit-scrollbar-thumb{background:var(--rmuted);border-color:var(--rpanel)}
+
+/* Keep the CI gate and workspace on the same explicit typeface as Henneth Desk,
+   including controls whose user-agent styles otherwise substitute a system font. */
+html,body,button,input,textarea,select{font-family:"JetBrains Mono","JBM Fallback",ui-monospace,"Cascadia Mono",Consolas,monospace}
+
+/* Owner gate: use the supplied constellation scene only while signed out. The
+   layered tint keeps the copy readable without flattening the artwork. */
+body:has(.gate){background:#172a35 url("login-background.webp") center/cover fixed no-repeat}
+body:has(.gate)::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(7,18,25,.72),rgba(10,31,40,.38) 55%,rgba(7,18,25,.66));z-index:0}
+body:has(.gate) .shell{position:relative;z-index:1;background:transparent}
+body:has(.gate) .topbar,body:has(.gate) .statusbar{background:rgba(9,22,29,.62);color:#f7f6f1;border-color:rgba(255,255,255,.25);backdrop-filter:blur(18px) saturate(130%)}
+body:has(.gate) .brand-name,body:has(.gate) .desk-tab,body:has(.gate) .auth-state{color:#f7f6f1}
+body:has(.gate) .desk-tab{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28)}
+body:has(.gate) .gate{color:#fff}
+body:has(.gate) .gate>div>p:last-child{color:rgba(255,255,255,.82)}
+body:has(.gate) .login{background:rgba(245,250,248,.16);border:1px solid rgba(255,255,255,.58);box-shadow:0 18px 48px rgba(3,12,17,.3),inset 0 1px 0 rgba(255,255,255,.3);backdrop-filter:blur(24px) saturate(135%);-webkit-backdrop-filter:blur(24px) saturate(135%)}
+body:has(.gate) .login input{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55);color:#fff}
+body:has(.gate) .login input::placeholder,body:has(.gate) .login label span,body:has(.gate) #loginMsg{color:rgba(255,255,255,.78)}
+body:has(.gate) .form-title{border-color:rgba(255,255,255,.34)}
+body:has(.gate) .submit-btn{background:#f7f6f1;color:#172a35;border-color:#f7f6f1}
