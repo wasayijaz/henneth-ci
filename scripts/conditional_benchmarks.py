@@ -34,6 +34,47 @@ def _aggregate(candidates: list[dict], horizon: str) -> dict:
     return {**base, "stats": {"mean_return_pct": sum(values) / len(values), "median_return_pct": statistics.median(values), "min_return_pct": min(values), "max_return_pct": max(values)}}
 
 
+def _mature_count(candidates: list[dict], horizon: str) -> int:
+    return sum(
+        1 for row in candidates
+        if ((row.get("outcomes") or {}).get(horizon) or {}).get("status") == "mature"
+        and isinstance(((row.get("outcomes") or {}).get(horizon) or {}).get("return_pct"), (int, float))
+        and not isinstance(((row.get("outcomes") or {}).get(horizon) or {}).get("return_pct"), bool)
+    )
+
+
+def readiness_ledger(candidates: list[dict]) -> dict:
+    """Metadata-only next-evidence ledger; never widens matches or creates outcomes."""
+    mature_by_horizon = {horizon: _mature_count(candidates, horizon) for horizon in HORIZONS}
+    missing_by_horizon = {
+        horizon: max(0, MIN_SAMPLE - mature_by_horizon[horizon])
+        for horizon in HORIZONS
+    }
+    ready_horizons = [horizon for horizon in HORIZONS if mature_by_horizon[horizon] >= MIN_SAMPLE]
+    nearest_horizon = min(HORIZONS, key=lambda horizon: (missing_by_horizon[horizon], HORIZONS.index(horizon)))
+    latest = max((str(row.get("effective_date")) for row in candidates if _date(row.get("effective_date"))), default=None)
+    if ready_horizons:
+        status = "aggregate_ready"
+        next_required = "No additional mature strict analogue sample is required for already-ready horizons; expand retained exact history before adding new horizons."
+    elif candidates:
+        status = "needs_more_mature_outcomes"
+        next_required = f"{missing_by_horizon[nearest_horizon]} additional mature strict prior exact analogue outcome(s) for {nearest_horizon} before publishing aggregate statistics."
+    else:
+        status = "needs_prior_exact_analogues"
+        next_required = f"{MIN_SAMPLE} mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+    return {
+        "status": status,
+        "minimum_mature_outcome_sample": MIN_SAMPLE,
+        "strict_candidate_count": len(candidates),
+        "mature_horizon_counts": mature_by_horizon,
+        "missing_mature_outcomes_to_minimum": missing_by_horizon,
+        "aggregate_ready_horizons": ready_horizons,
+        "nearest_ready_horizon": nearest_horizon,
+        "latest_prior_candidate_date": latest,
+        "next_required_evidence": next_required,
+    }
+
+
 def candidate_evidence_summary(candidates: list[dict]) -> dict:
     """Display-safe completeness evidence; never a new outcome or inference."""
     by_class = {
@@ -61,6 +102,48 @@ def candidate_evidence_summary(candidates: list[dict]) -> dict:
         "mature_horizon_counts": mature_by_horizon,
         "latest_prior_candidate_date": latest,
         "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice.",
+    }
+
+
+def _event_class_summary(rows: list[dict]) -> list[dict]:
+    grouped: dict[tuple[Any, Any], list[dict]] = {}
+    for row in rows:
+        target = row.get("target_event") or {}
+        grouped.setdefault((target.get("event_type"), target.get("event_subtype")), []).append(row)
+    summary = []
+    for (event_type, event_subtype), items in sorted(grouped.items(), key=lambda item: (str(item[0][0] or ""), str(item[0][1] or ""))):
+        ledgers = [item.get("readiness_ledger") or {} for item in items]
+        missing = [
+            int((ledger.get("missing_mature_outcomes_to_minimum") or {}).get(ledger.get("nearest_ready_horizon")) or MIN_SAMPLE)
+            for ledger in ledgers
+        ]
+        summary.append({
+            "event_type": event_type,
+            "event_subtype": event_subtype,
+            "benchmark_count": len(items),
+            "candidate_history_present_count": sum(1 for ledger in ledgers if int(ledger.get("strict_candidate_count") or 0) > 0),
+            "aggregate_ready_count": sum(1 for ledger in ledgers if ledger.get("status") == "aggregate_ready"),
+            "total_strict_candidate_count": sum(int(ledger.get("strict_candidate_count") or 0) for ledger in ledgers),
+            "minimum_missing_mature_outcomes_to_publish": min(missing) if missing else MIN_SAMPLE,
+        })
+    return summary
+
+
+def _readiness_summary(rows: list[dict]) -> dict:
+    ledgers = [row.get("readiness_ledger") or {} for row in rows]
+    missing = [
+        int((ledger.get("missing_mature_outcomes_to_minimum") or {}).get(ledger.get("nearest_ready_horizon")) or MIN_SAMPLE)
+        for ledger in ledgers
+    ]
+    return {
+        "dated_benchmark_count": len(rows),
+        "benchmarks_with_candidates": sum(1 for ledger in ledgers if int(ledger.get("strict_candidate_count") or 0) > 0),
+        "aggregate_ready_benchmark_count": sum(1 for ledger in ledgers if ledger.get("status") == "aggregate_ready"),
+        "suppressed_benchmark_count": sum(1 for ledger in ledgers if ledger.get("status") != "aggregate_ready"),
+        "total_strict_candidate_count": sum(int(ledger.get("strict_candidate_count") or 0) for ledger in ledgers),
+        "minimum_missing_mature_outcomes_to_publish": min(missing) if missing else MIN_SAMPLE,
+        "event_class_gaps": _event_class_summary(rows),
+        "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules.",
     }
 
 
@@ -123,6 +206,7 @@ def build_conditional_benchmarks(pilot: list[str], event_state: dict, study_stat
                 "matching_policy": {"event_type": "exact", "event_subtype": "exact", "candidate_date": "strictly_before_target", "same_company": "same_symbol", "same_sector": "same_current_sector_other_symbol", "returns": "reuse_target_event_study_analogue_outcomes", "minimum_aggregate_sample": MIN_SAMPLE},
                 "candidates": {"same_company_exact": same_company, "same_sector_exact": same_sector},
                 "candidate_evidence_summary": candidate_evidence_summary(candidates),
+                "readiness_ledger": readiness_ledger(candidates),
                 "horizon_aggregates": {horizon: _aggregate(candidates, horizon) for horizon in HORIZONS},
                 "blocked_states": {
                     "peer": {"status": "blocked", "reason": "no_peer_registry"},
@@ -133,5 +217,6 @@ def build_conditional_benchmarks(pilot: list[str], event_state: dict, study_stat
                     "valuation": {"status": "blocked", "reason": "not_implemented"},
                 },
             })
-        companies[symbol] = {"symbol": symbol, "status": "benchmarks_available" if benchmarks else "no_operating_events", "benchmark_count": len(benchmarks), "benchmarks": benchmarks, "blocked_states": {"peer": {"status": "blocked", "reason": "no_peer_registry"}, "international": {"status": "blocked", "reason": "no_international_registry"}, "financial": {"status": "blocked", "reason": "no_period_aligned_financials"}, "causal": {"status": "blocked", "reason": "descriptive_not_causal"}}, "policy": {"descriptive_only": True, "strict_no_lookahead": True, "minimum_sample_three": True, "no_browser_matching": True}, "limitations": ["Current-sector membership can introduce survivorship bias.", "Raw price returns are not adjusted or total returns.", "Historical association is not causal."]}
-    return {"schema_version": 1, "benchmark_version": "conditional_benchmarks_v1", "pilot_symbols": pilot, "companies": companies, "policy": {"descriptive_only": True, "no_causal_claim": True, "no_forecast_or_valuation": True, "no_advice": True}, "source": ["state/company_intel/operating_events.json", "state/company_intel/event_studies.json", "state/sectors.json"]}
+        companies[symbol] = {"symbol": symbol, "status": "benchmarks_available" if benchmarks else "no_operating_events", "benchmark_count": len(benchmarks), "benchmarks": benchmarks, "readiness_summary": _readiness_summary(benchmarks), "blocked_states": {"peer": {"status": "blocked", "reason": "no_peer_registry"}, "international": {"status": "blocked", "reason": "no_international_registry"}, "financial": {"status": "blocked", "reason": "no_period_aligned_financials"}, "causal": {"status": "blocked", "reason": "descriptive_not_causal"}}, "policy": {"descriptive_only": True, "strict_no_lookahead": True, "minimum_sample_three": True, "no_browser_matching": True}, "limitations": ["Current-sector membership can introduce survivorship bias.", "Raw price returns are not adjusted or total returns.", "Historical association is not causal."]}
+    all_benchmarks = [benchmark for row in companies.values() for benchmark in row.get("benchmarks", [])]
+    return {"schema_version": 1, "benchmark_version": "conditional_benchmarks_v1", "pilot_symbols": pilot, "companies": companies, "readiness_summary": _readiness_summary(all_benchmarks), "policy": {"descriptive_only": True, "no_causal_claim": True, "no_forecast_or_valuation": True, "no_advice": True}, "source": ["state/company_intel/operating_events.json", "state/company_intel/event_studies.json", "state/sectors.json"]}

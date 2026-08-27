@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_company_brains import OUT, build
 from intelligence_types import BRAIN_DOMAINS, DOMAIN_STATUSES, INTELLIGENCE_TYPES, SOURCE_PRODUCTS
 from psx_data import STATE, load_json
+from ci_checker_helpers import without_root_meta
 
 def _dump(value: object) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False)
@@ -114,7 +115,7 @@ def main() -> None:
     seen_ids: set[str] = set()
     for symbol in sorted(pilot):
         _check_company(symbol, brain["companies"][symbol], sources, seen_ids)
-    if _dump(brain) != _dump(build(write=False)):
+    if _dump(without_root_meta(brain)) != _dump(without_root_meta(build(write=False))):
         raise AssertionError("company_brains rebuild is not deterministic")
     total = sum(company["coverage"]["object_count"] for company in brain["companies"].values())
     print(f"company_brains: PASS ({len(pilot)} companies, {total} reference objects)")

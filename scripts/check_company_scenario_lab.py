@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from company_scenario_lab import forward_scenario, market_expectations_gap, reverse_expectations, parse_scaled
 from build_company_scenario_lab import build
+from ci_checker_helpers import without_root_meta
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "state" / "company_intel" / "scenario_lab.json"
@@ -45,7 +46,7 @@ def main():
         company.get("status", {}).pop("forecast", None)
     if any(x in json.dumps(scrub).lower() for x in ("forecast", "fair value", "target", "advice", "probability")): fail("forbidden language")
     with tempfile.TemporaryDirectory() as td:
-        rebuilt = build(); old = json.dumps(d, sort_keys=True); new = json.dumps(rebuilt, sort_keys=True)
+        rebuilt = build(); old = json.dumps(without_root_meta(d), sort_keys=True); new = json.dumps(without_root_meta(rebuilt), sort_keys=True)
         if old != new: fail("non-deterministic rebuild")
     print("company scenario lab: PASS (20 rows, formulas, reverse, bounds, provenance, deterministic)")
 

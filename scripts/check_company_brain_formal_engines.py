@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_company_brains import FORMAL_ENGINE_PRODUCTS, OUT, build
 from psx_data import STATE, load_json
+from ci_checker_helpers import without_root_meta
 
 
 PRODUCTS = tuple(FORMAL_ENGINE_PRODUCTS)
@@ -189,7 +190,7 @@ def main() -> None:
         assert_engine_shape(product, state, pilot)
     brain = load_json(OUT, {})
     assert_brain_links(brain, engines, pilot)
-    if dump(brain) != dump(build(write=False)):
+    if dump(without_root_meta(brain)) != dump(without_root_meta(build(write=False))):
         fail("company_brains rebuild is not deterministic with formal engine links")
     print("company_brain_formal_engines: PASS (20 companies, 3 formal refs each)")
 

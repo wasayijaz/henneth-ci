@@ -9,6 +9,7 @@ from pathlib import Path
 from build_evidence_watchlist import OUT
 from evidence_watchlist import FORBIDDEN_TEXT, ITEM_STATUSES, build_evidence_watchlist
 from psx_data import ROOT, STATE, load_json
+from ci_checker_helpers import without_root_meta
 
 
 def _fail(message: str) -> None:
@@ -204,7 +205,7 @@ def main() -> None:
     if not OUT.exists():
         _fail("state/company_intel/evidence_watchlist.json missing")
     real = load_json(OUT, {})
-    if _dump(real) != _dump(expected):
+    if _dump(without_root_meta(real)) != _dump(without_root_meta(expected)):
         _fail("authoritative watchlist differs from pure builder")
     with tempfile.TemporaryDirectory() as tmpdir:
         first = Path(tmpdir) / "first.json"

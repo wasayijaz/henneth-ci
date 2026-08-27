@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import build_ci_completion_matrix as builder
 import check_ci_product_contracts
 from psx_data import load_json
+from ci_checker_helpers import without_root_meta
 
 IMPACT_KEYS = ("revenue_impact", "ebitda_impact", "eps_impact", "fcf_impact", "valuation_impact")
 IMPACT_STATUSES = {"insufficient_data", "unmodeled_driver"}
@@ -176,6 +177,47 @@ def _assert_event_study_evidence(matrix: dict) -> None:
         _fail("matrix must not depend on an invented strict_no_lookahead event-study field")
 
 
+def _assert_conditional_benchmark_readiness(matrix: dict) -> None:
+    conditional = load_json(ROOT / "state" / "company_intel" / "conditional_benchmarks.json", {})
+    summary = conditional.get("readiness_summary") or {}
+    required = {
+        "dated_benchmark_count",
+        "benchmarks_with_candidates",
+        "aggregate_ready_benchmark_count",
+        "suppressed_benchmark_count",
+        "total_strict_candidate_count",
+        "minimum_missing_mature_outcomes_to_publish",
+        "event_class_gaps",
+        "policy",
+    }
+    if not required.issubset(summary):
+        _fail("conditional benchmark readiness summary is incomplete")
+    if summary.get("dated_benchmark_count") != sum(int(row.get("benchmark_count") or 0) for row in (conditional.get("companies") or {}).values()):
+        _fail("conditional readiness dated benchmark count mismatch")
+    if summary.get("aggregate_ready_benchmark_count", 0) + summary.get("suppressed_benchmark_count", 0) != summary.get("dated_benchmark_count"):
+        _fail("conditional readiness ready/suppressed counts do not sum to dated benchmarks")
+    if not isinstance(summary.get("event_class_gaps"), list) or not summary.get("event_class_gaps"):
+        _fail("conditional readiness event-class gap ledger is missing")
+    by_id = {row["id"]: row for row in matrix.get("requirements") or []}
+    state_row = by_id["conditional_benchmark_state"]
+    strict_row = by_id["conditional_benchmark_strict_candidates"]
+    state_details = " ".join(str(item.get("detail") or "") for item in state_row.get("evidence") or [])
+    strict_details = " ".join(str(item.get("detail") or "") for item in strict_row.get("evidence") or [])
+    expected_state = (
+        f"{summary.get('benchmarks_with_candidates')} rows with candidates; "
+        f"{summary.get('aggregate_ready_benchmark_count')} aggregate-ready; "
+        f"{summary.get('suppressed_benchmark_count')} suppressed"
+    )
+    expected_strict = (
+        f"{summary.get('total_strict_candidate_count')} retained strict candidates; "
+        f"nearest missing mature outcomes to publish: {summary.get('minimum_missing_mature_outcomes_to_publish')}"
+    )
+    if expected_state not in state_details:
+        _fail("completion matrix did not report conditional readiness counts")
+    if expected_strict not in strict_details:
+        _fail("completion matrix did not report conditional strict sample readiness")
+
+
 def _assert_slice_summary(matrix: dict) -> None:
     slice_path = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
     ci_slice = load_json(slice_path, {})
@@ -199,11 +241,12 @@ def main() -> None:
         _fail("completion_matrix.json is missing")
     matrix = load_json(builder.OUT, {})
     rebuilt = builder.build(write=False)
-    if _dump(matrix) != _dump(rebuilt):
+    if _dump(without_root_meta(matrix)) != _dump(without_root_meta(rebuilt)):
         _fail("completion matrix is not current/deterministic")
     _assert_shape(matrix)
     _assert_conservative_statuses(matrix)
     _assert_event_study_evidence(matrix)
+    _assert_conditional_benchmark_readiness(matrix)
     _assert_slice_summary(matrix)
     summary = matrix["summary"]["counts"]
     print(

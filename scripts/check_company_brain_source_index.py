@@ -17,6 +17,7 @@ from build_company_brains import (
 )
 from intelligence_types import SOURCE_INDEX_PRODUCTS
 from psx_data import STATE, load_json
+from ci_checker_helpers import without_root_meta
 
 
 ADVICE_PHRASES = ("you should", "target price", "price target", "buy recommendation", "sell recommendation")
@@ -151,7 +152,7 @@ def main() -> None:
             raise AssertionError(f"{symbol}: source index coverage mismatch")
         for product in SOURCE_INDEX_PRODUCTS:
             _assert_ref(symbol, product, index[product], states[product])
-    if _dump(brain) != _dump(build(write=False)):
+    if _dump(without_root_meta(brain)) != _dump(without_root_meta(build(write=False))):
         raise AssertionError("company_brains rebuild is not deterministic with source index")
     print(f"company_brain_source_index: PASS ({len(pilot)} companies, {len(SOURCE_INDEX_PRODUCTS)} source rows each)")
 

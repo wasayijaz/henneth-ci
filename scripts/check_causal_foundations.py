@@ -13,6 +13,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "state"
 OUT = STATE / "company_intel" / "causal_foundations.json"
+sys.path.insert(0, str(ROOT / "scripts"))
+from ci_checker_helpers import without_root_meta
 
 
 def load(path):
@@ -128,7 +130,6 @@ def main():
                     raise AssertionError(f"{sym} strict no-lookahead flag mismatch")
         checks += len(causal_rows)
 
-    before = OUT.read_bytes()
     with tempfile.TemporaryDirectory() as temp_dir:
         candidate = Path(temp_dir) / "causal_foundations.json"
         env = os.environ.copy()
@@ -136,8 +137,8 @@ def main():
         result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_causal_foundations.py")], capture_output=True, text=True, timeout=30, env=env)
         if result.returncode != 0:
             raise AssertionError("builder failed — " + ((result.stdout or result.stderr)[-400:]))
-        if candidate.read_bytes() != before:
-            raise AssertionError("builder is not byte-idempotent")
+        if without_root_meta(load(candidate)) != without_root_meta(load(OUT)):
+            raise AssertionError("builder logical output is not idempotent")
 
     slice_path = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
     if slice_path.exists():

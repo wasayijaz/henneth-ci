@@ -401,6 +401,12 @@ def build(write: bool = True) -> dict[str, Any]:
     event_count = sum(len(((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []) for symbol in pilot)
     dated_event_count = sum(1 for symbol in pilot for event in (((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []) if event.get("effective_date"))
     benchmark_count = sum(int(((conditional_benchmarks.get("companies") or {}).get(symbol) or {}).get("benchmark_count") or 0) for symbol in pilot)
+    conditional_readiness = conditional_benchmarks.get("readiness_summary") or {}
+    conditional_candidate_count = int(conditional_readiness.get("benchmarks_with_candidates") or 0)
+    conditional_ready_count = int(conditional_readiness.get("aggregate_ready_benchmark_count") or 0)
+    conditional_suppressed_count = int(conditional_readiness.get("suppressed_benchmark_count") or 0)
+    conditional_total_candidates = int(conditional_readiness.get("total_strict_candidate_count") or 0)
+    conditional_min_missing = int(conditional_readiness.get("minimum_missing_mature_outcomes_to_publish") or 0)
     causal_row_count = sum(len(((causal_foundations.get("companies") or {}).get(symbol) or {}).get("causal_rows") or []) for symbol in pilot)
     guidance_object_count = sum(int(((guidance.get("companies") or {}).get(symbol) or {}).get("object_count") or 0) for symbol in pilot)
     active_thesis_count = int((management_delivery.get("summary") or {}).get("active_thesis_count") or 0)
@@ -712,6 +718,7 @@ def build(write: bool = True) -> dict[str, Any]:
             [
                 _state("conditional benchmarks", "state/company_intel/conditional_benchmarks.json", _exact_pilot(conditional_benchmarks, pilot), f"{_company_count(conditional_benchmarks)} company rows"),
                 _state("dated benchmark count", "state/company_intel/conditional_benchmarks.json", benchmark_count == dated_event_count, f"{benchmark_count}/{dated_event_count} dated events; {event_count - dated_event_count} undated events excluded by no-lookahead"),
+                _state("readiness ledger", "state/company_intel/conditional_benchmarks.json", conditional_readiness.get("dated_benchmark_count") == benchmark_count, f"{conditional_candidate_count} rows with candidates; {conditional_ready_count} aggregate-ready; {conditional_suppressed_count} suppressed"),
             ],
             ["Keep benchmark rows aligned one-for-one to dated retained operating events; undated evidence stays excluded."],
         ),
@@ -721,6 +728,7 @@ def build(write: bool = True) -> dict[str, Any]:
             [
                 _contains("candidate groups", "state/company_intel/conditional_benchmarks.json", ("same_company_exact", "same_sector_exact")),
                 _contains("blocked states", "state/company_intel/conditional_benchmarks.json", ("descriptive_not_causal", "n_lt_3")),
+                _state("strict sample readiness", "state/company_intel/conditional_benchmarks.json", conditional_total_candidates >= conditional_candidate_count and conditional_suppressed_count >= 0, f"{conditional_total_candidates} retained strict candidates; nearest missing mature outcomes to publish: {conditional_min_missing}"),
                 _check("conditional benchmark checker", "scripts/check_conditional_benchmarks.py"),
             ],
             ["Published aggregate statistics require mature ex-ante samples; thin samples stay suppressed."],
