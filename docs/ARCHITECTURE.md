@@ -182,8 +182,9 @@ Astro pages rendered from `site/src/data/public/tickers.json` (pilot names), `as
 ### 4e. What the private Company Intelligence app sees
 
 `fetch_company_profiles.py` retains sourced DPS issuer profiles. `fetch_company_documents.py`
-incrementally indexes official PSX/PUCARS announcements in the existing research index and makes a
-bounded, ignored current-run PDF handoff. `document_intelligence.py` immediately extracts page-linked
+incrementally indexes official PSX/PUCARS announcements in the existing research index, can merge an
+explicit metadata-only historical seed manifest for at most five exact `psx:<digits>` official IDs,
+and makes a bounded, ignored current-run PDF handoff. `document_intelligence.py` immediately extracts page-linked
 evidence, conservative facts/events, append-only changes, a training-mode approval queue, and transient
 full-page financial normalization; it makes no model call. `build_financial_series.py`,
 `build_source_qa.py`, `build_company_graph.py`, and `build_change_intelligence.py` turn retained

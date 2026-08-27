@@ -49,6 +49,15 @@ backend error is rendered.
 
 1. `fetch_company_profiles.py` — monthly/failed-row retry DPS issuer profiles for the 20-company pilot.
 2. `fetch_company_documents.py` — daily official PSX/PUCARS metadata plus at most 24 verified 12 MB PDFs in ignored current-run cache.
+   Historical annual-report metadata can be seeded only by an explicit operator-reviewed JSON
+   manifest passed to `fetch_company_documents.py --historical-metadata-manifest <path>`. The
+   manifest is capped at five documents and is metadata-only: exact `psx:<digits>` id, matching
+   numeric `official_document_id`, exact pilot `ticker`, current universe `company_name`, canonical
+   `https://dps.psx.com.pk/download/document/<id>.pdf` URL, `title`, snake_case `type`, ISO
+   `published_at` with `+05:00`, and `period: { "period_type": "annual|interim", "period_end":
+   "YYYY-MM-DD" }`. It rejects raw text, facts, availability or download fields, and a dry run is
+   available with `--dry-run`. Do not commit a production seed manifest unless the exact PSX title
+   and company metadata have been source-reviewed first.
 3. `document_intelligence.py` — immediate local extraction, page evidence, append-only events/changes and training-mode queue.
 4. `build_financial_series.py` — evidence-linked, period-aware financial facts. Unknown period/unit/basis stays flagged, never guessed.
 5. `fetch_issuer_sources.py` — weekly same-domain issuer page hashes and report-link index.

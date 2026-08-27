@@ -49,8 +49,16 @@ MAX_PDF_BYTES = 12 * 1024 * 1024
 LOCAL_CADENCE_HOURS = 20
 
 _DOC_ID_RE = re.compile(r"/download/document/(\d+)\.pdf(?:$|[?#])", re.I)
+_EXACT_DOC_ID_RE = re.compile(r"^psx:(\d+)$")
 _SPACE_RE = re.compile(r"\s+")
 _SAFE_ID_RE = re.compile(r"[^A-Za-z0-9_.-]+")
+_DOC_TYPE_RE = re.compile(r"^[a-z][a-z0-9_]{2,60}$")
+_ALLOWED_SEED_KEYS = {
+    "id", "official_document_id", "ticker", "company_name", "title", "type",
+    "doc_type", "period", "published_at", "url",
+}
+_ALLOWED_PERIOD_TYPES = {"annual", "interim"}
+MAX_HISTORICAL_SEED_DOCUMENTS = 5
 
 _CLASSIFIERS = (
     ("material_information", re.compile(r"\b(material information|material fact)\b", re.I)),
@@ -192,6 +200,221 @@ def _validate_official_pdf_url(url: str) -> None:
         raise ValueError("document URL is not on the official DPS HTTPS host")
     if not _DOC_ID_RE.search(parsed.path):
         raise ValueError("document URL is not an official DPS PDF path")
+
+
+def _canonical_official_pdf_url(official_id: str) -> str:
+    return f"{BASE_URL}/download/document/{official_id}.pdf"
+
+
+def _validate_seed_published_at(value: object) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("published_at is required")
+    try:
+        parsed = datetime.fromisoformat(value.strip())
+    except ValueError as exc:
+        raise ValueError("published_at must be ISO 8601") from exc
+    if parsed.tzinfo is None:
+        raise ValueError("published_at must include the PKT +05:00 offset")
+    if parsed.utcoffset() != timedelta(hours=5):
+        raise ValueError("published_at must use the PKT +05:00 offset")
+    return parsed.isoformat(timespec="seconds")
+
+
+def _validate_seed_period(value: object) -> dict:
+    if not isinstance(value, dict):
+        raise ValueError("period is required and must be an object")
+    unexpected = set(value) - {"period_end", "period_type"}
+    if unexpected:
+        raise ValueError(f"period has unsupported key(s): {', '.join(sorted(unexpected))}")
+    period_type = value.get("period_type")
+    period_end = value.get("period_end")
+    if period_type not in _ALLOWED_PERIOD_TYPES:
+        raise ValueError("period.period_type must be annual or interim")
+    if not isinstance(period_end, str):
+        raise ValueError("period.period_end must be YYYY-MM-DD")
+    try:
+        datetime.strptime(period_end, "%Y-%m-%d")
+    except ValueError as exc:
+        raise ValueError("period.period_end must be YYYY-MM-DD") from exc
+    return {"period_end": period_end, "period_type": period_type}
+
+
+def _validate_historical_seed_row(row: object, pilot: dict[str, str]) -> dict:
+    if not isinstance(row, dict):
+        raise ValueError("manifest document row must be an object")
+    unexpected = set(row) - _ALLOWED_SEED_KEYS
+    if unexpected:
+        raise ValueError(f"unsupported metadata key(s): {', '.join(sorted(unexpected))}")
+
+    raw_id = row.get("id")
+    if not isinstance(raw_id, str):
+        raise ValueError("id is required")
+    match = _EXACT_DOC_ID_RE.match(raw_id)
+    if not match:
+        raise ValueError("id must be exact psx:<digits>")
+    official_id = match.group(1)
+    if str(row.get("official_document_id") or "") != official_id:
+        raise ValueError("official_document_id must match the numeric id")
+
+    ticker = str(row.get("ticker") or "").strip().upper()
+    if ticker not in pilot:
+        raise ValueError(f"{ticker or '<missing>'}: ticker is not in the current CI pilot")
+    company_name = _clean(str(row.get("company_name") or ""))
+    if company_name != pilot[ticker]:
+        raise ValueError(f"{ticker}: company_name does not match the current universe company")
+
+    title = _clean(str(row.get("title") or ""))
+    if not title:
+        raise ValueError(f"{raw_id}: title is required")
+    doc_type = str(row.get("type") or row.get("doc_type") or "").strip().lower()
+    if not _DOC_TYPE_RE.match(doc_type):
+        raise ValueError(f"{raw_id}: type must be a snake_case document type")
+    period = _validate_seed_period(row.get("period"))
+    published_at = _validate_seed_published_at(row.get("published_at"))
+    published_date = datetime.fromisoformat(published_at).date()
+    if published_date > _now().date():
+        raise ValueError(f"{raw_id}: published_at cannot be in the future")
+    period_end = datetime.strptime(period["period_end"], "%Y-%m-%d").date()
+    if period_end > published_date:
+        raise ValueError(f"{raw_id}: period_end cannot be after published_at")
+
+    url = str(row.get("url") or "").strip()
+    expected_url = _canonical_official_pdf_url(official_id)
+    if url != expected_url:
+        raise ValueError(f"{raw_id}: url must be exactly {expected_url}")
+    _validate_official_pdf_url(url)
+
+    return {
+        "id": raw_id,
+        "hash": raw_id,
+        "source": "PSX DPS",
+        "source_type": "filing",
+        "doc_type": doc_type,
+        "date": published_at[:10],
+        "published_at": published_at,
+        "tickers": [ticker],
+        "company_name": company_name,
+        "title": title,
+        "digest": title,
+        "digest_level": "headline",
+        "claims": [],
+        "url": url,
+        "source_page": SOURCE_PAGE,
+        "official_document_id": official_id,
+        "period": period,
+        "metadata_origin": "operator_seeded_exact_psx_document_id",
+        "omissions": None,
+    }
+
+
+def _historical_seed_manifest_rows(path: Path) -> list[dict]:
+    manifest = load_json(path, None)
+    if not isinstance(manifest, dict):
+        raise ValueError("manifest must be a JSON object")
+    unexpected = set(manifest) - {"schema_version", "documents"}
+    if unexpected:
+        raise ValueError(f"manifest has unsupported key(s): {', '.join(sorted(unexpected))}")
+    rows = manifest.get("documents")
+    if not isinstance(rows, list):
+        raise ValueError("manifest.documents must be a list")
+    if len(rows) > MAX_HISTORICAL_SEED_DOCUMENTS:
+        raise ValueError(f"manifest may contain at most {MAX_HISTORICAL_SEED_DOCUMENTS} documents")
+    if not rows:
+        raise ValueError("manifest.documents must not be empty")
+    return rows
+
+
+def _current_pilot_companies(profiles_path: Path, universe_path: Path) -> dict[str, str]:
+    profiles = load_json(profiles_path, {})
+    universe = load_json(universe_path, {})
+    pilot_symbols = [str(symbol).upper() for symbol in ((profiles.get("pilot") or {}).get("symbols") or [])]
+    profile_rows = profiles.get("tickers") or {}
+    universe_rows = universe.get("symbols") or {}
+    pilot: dict[str, str] = {}
+    for symbol in pilot_symbols:
+        profile_row = profile_rows.get(symbol) or {}
+        universe_row = universe_rows.get(symbol) or {}
+        if profile_row.get("symbol") != symbol:
+            continue
+        name = _clean(str(universe_row.get("name") or ""))
+        if name:
+            pilot[symbol] = name
+    return pilot
+
+
+def _validate_seed_against_existing(existing: dict | None, incoming: dict) -> None:
+    if not existing:
+        return
+    if existing.get("source") not in (None, "", "PSX DPS"):
+        raise ValueError(f"{incoming['id']}: retained row is not a PSX DPS filing")
+    immutable = ("id", "hash", "url", "official_document_id", "published_at", "title", "doc_type", "company_name")
+    for key in immutable:
+        value = existing.get(key)
+        if value not in (None, "", []) and value != incoming.get(key):
+            raise ValueError(f"{incoming['id']}: retained {key} conflicts with seed manifest")
+    tickers = existing.get("tickers") or []
+    if tickers and tickers != incoming["tickers"]:
+        raise ValueError(f"{incoming['id']}: retained tickers conflict with seed manifest")
+    period = existing.get("period")
+    if period not in (None, {}) and period != incoming["period"]:
+        raise ValueError(f"{incoming['id']}: retained period conflicts with seed manifest")
+
+
+def seed_historical_metadata(
+    manifest_path: Path,
+    index_path: Path = INDEX_PATH,
+    profiles_path: Path = STATE / "company_profiles.json",
+    universe_path: Path = STATE / "universe.json",
+    dry_run: bool = False,
+) -> dict:
+    """Validate and merge an explicit exact-ID historical PSX metadata manifest."""
+    pilot = _current_pilot_companies(profiles_path, universe_path)
+    if not pilot:
+        raise ValueError("current CI pilot company map is unavailable")
+    rows = _historical_seed_manifest_rows(manifest_path)
+    incoming_rows = [_validate_historical_seed_row(row, pilot) for row in rows]
+    if len({row["id"] for row in incoming_rows}) != len(incoming_rows):
+        raise ValueError("manifest contains duplicate document ids")
+
+    prior_index = load_json(index_path, {"documents": {}, "by_ticker": {}, "_meta": {}})
+    index = {
+        "documents": dict(prior_index.get("documents") or {}),
+        "by_ticker": dict(prior_index.get("by_ticker") or {}),
+        "_meta": dict(prior_index.get("_meta") or {}),
+    }
+    changed_ids: list[str] = []
+    touched_symbols = sorted({row["tickers"][0] for row in incoming_rows})
+    for incoming in incoming_rows:
+        existing = index["documents"].get(incoming["id"])
+        _validate_seed_against_existing(existing, incoming)
+        merged = _merge_document(existing, incoming)
+        if merged != existing:
+            index["documents"][incoming["id"]] = merged
+            changed_ids.append(incoming["id"])
+    for symbol in touched_symbols:
+        _rebuild_ticker(index, symbol)
+    changed = index != prior_index
+    if changed and not dry_run:
+        index["_meta"] = {
+            **index.get("_meta", {}),
+            "built": time.strftime("%Y-%m-%d %H:%M"),
+            "n_documents": len(index["documents"]),
+            "official_psx_documents": sum(
+                1 for doc in index["documents"].values() if doc.get("source") == "PSX DPS"),
+            "official_psx_source": SOURCE_PAGE,
+            "historical_psx_metadata_seed": {
+                "mode": "explicit_operator_manifest",
+                "max_documents_per_manifest": MAX_HISTORICAL_SEED_DOCUMENTS,
+            },
+        }
+        save_json(index_path, index)
+    return {
+        "validated": len(incoming_rows),
+        "changed": len(set(changed_ids)),
+        "symbols": touched_symbols,
+        "dry_run": dry_run,
+        "path": str(index_path),
+    }
 
 
 def fetch_document_bytes(
@@ -465,10 +688,35 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--symbols", help="comma-separated pilot symbols for a bounded manual batch")
     parser.add_argument("--metadata-only", action="store_true", help="do not stage PDF bytes")
     parser.add_argument("--published-since", help="stage only documents published on/after YYYY-MM-DD")
+    parser.add_argument(
+        "--historical-metadata-manifest",
+        type=Path,
+        help="explicit operator-reviewed exact psx:<digits> metadata manifest, max 5 documents",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="validate and report manifest changes without writing research_index.json",
+    )
     parser.add_argument("--self-check", action="store_true", help="run parser/security fixtures")
     args = parser.parse_args(argv)
     if args.self_check:
         return _self_check()
+    if args.dry_run and not args.historical_metadata_manifest:
+        parser.error("--dry-run only applies with --historical-metadata-manifest")
+    if args.historical_metadata_manifest:
+        try:
+            result = seed_historical_metadata(args.historical_metadata_manifest, dry_run=args.dry_run)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            print(f"company_documents historical seed: rejected — {exc}", file=sys.stderr)
+            return 1
+        action = "validated" if args.dry_run else "merged"
+        print(
+            f"company_documents historical seed: {action} {result['validated']} document(s), "
+            f"{result['changed']} change(s), symbols {', '.join(result['symbols'])}; "
+            f"path {result['path']}"
+        )
+        return 0
     if args.published_since:
         try:
             datetime.strptime(args.published_since, "%Y-%m-%d")
