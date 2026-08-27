@@ -106,7 +106,7 @@ def _statement_pdf() -> bytes:
     doc = pymupdf.open()
     page = doc.new_page(width=595, height=842)
     rows = [
-        (50, 70, "Consolidated"),
+        (50, 70, "Consolidated statement of profit or loss"),
         (50, 90, "PKR in million"),
         (170, 115, "Year ended"),
         (140, 140, "2025                    2024"),
@@ -580,7 +580,7 @@ def main() -> int:
             )
             assert rc == 0
             committed = r._verified_commits(temp_state, [(verified_doc, verified_fetch)])
-            assert committed == [{"doc_id": "psx:111", "content_sha256": statement_sha, "status": "success"}]
+            assert committed == [{"doc_id": "psx:111", "content_sha256": statement_sha, "status": "success"}], committed
             bfmi.STATE = temp_state
             bfmi.OUT = temp_state / "company_intel" / "financial_model_inputs.json"
             model_payload = bfmi.build()

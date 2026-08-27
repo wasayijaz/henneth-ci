@@ -29,13 +29,17 @@ CACHE_ROOT = ROOT / ".cache" / "company_intel"
 RAW_DIR = CACHE_ROOT / "raw"
 QUEUE_PATH = CACHE_ROOT / "extraction_queue.json"
 CACHE_CHECK = CACHE_ROOT / "issuer_document_checks.json"
-MAX_DOWNLOADS_PER_RUN = 16
-MAX_PDF_BYTES = 12 * 1024 * 1024
+# Official issuer annual reports regularly exceed the smaller PSX-announcement
+# handoff limit.  Keep these downloads within the private CI archive's 50 MiB
+# object boundary and stage only a three-report annual-history batch per run.
+MAX_DOWNLOADS_PER_RUN = 3
+MAX_PDF_BYTES = 50 * 1024 * 1024
 MAX_REDIRECTS = 4
 LOCAL_CADENCE_DAYS = 7
 PKT = timezone(timedelta(hours=5))
 UA = {"User-Agent": "Mozilla/5.0 HennethDesk/2.CI.0 issuer-document-stager"}
 _SAFE_ID_RE = re.compile(r"[^A-Za-z0-9_.-]+")
+_REPORT_YEAR_RE = re.compile(r"(?:19|20)\d{2}")
 
 
 def _safe_cache_path(doc_id: str) -> Path:
@@ -127,6 +131,30 @@ def _fetch_pdf(url: str, root_domain: str, session: requests.Session) -> tuple[b
     }
 
 
+def _verified_cache_metadata(doc_id: str, expected_sha256: str | None) -> tuple[Path, dict] | None:
+    """Return a reprocessable cached PDF only when it still matches retained proof."""
+    if not expected_sha256:
+        return None
+    path = _safe_cache_path(doc_id)
+    if not path.is_file() or path.stat().st_size > MAX_PDF_BYTES:
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        prefix = handle.read(5)
+        if prefix != b"%PDF-":
+            return None
+        digest.update(prefix)
+        for chunk in iter(lambda: handle.read(65536), b""):
+            digest.update(chunk)
+    if digest.hexdigest() != expected_sha256:
+        return None
+    return path, {
+        "content_sha256": expected_sha256,
+        "content_length": path.stat().st_size,
+        "mime_type": "application/pdf",
+    }
+
+
 def _symbols(value: str | None, registry: dict) -> list[str]:
     all_symbols = [str(s).upper() for s in (registry.get("tickers") or {})]
     if not value:
@@ -136,7 +164,21 @@ def _symbols(value: str | None, registry: dict) -> list[str]:
     return [symbol for symbol in requested if symbol in known]
 
 
-def _candidate_rows(registry: dict, index: dict, limit: int) -> list[tuple[str, dict, dict]]:
+def _document_sort_key(candidate: tuple[str, dict, dict]) -> tuple[int, int, str]:
+    """Stage annual reports first, newest evidence before older context."""
+    _symbol, _ticker_row, document = candidate
+    text = f"{document.get('document_type') or ''} {document.get('label') or ''} {document.get('url') or ''}".lower()
+    kind_priority = (
+        2 if "sustainability" in text or "bcsr" in text or "environmental" in text else
+        0 if "annual" in text else
+        1 if "financial" in text else 2
+    )
+    years = [int(value) for value in _REPORT_YEAR_RE.findall(text)]
+    return kind_priority, -(max(years) if years else 0), str(document.get("url") or "")
+
+
+def _candidate_rows(registry: dict, index: dict, limit: int, *, restage_ready: bool = False,
+                    document_ids: set[str] | None = None) -> list[tuple[str, dict, dict]]:
     extracted = load_json(STATE / "company_documents.json", {"documents": {}})
     ready_hashes = {
         doc_id: row.get("content_sha256")
@@ -151,8 +193,11 @@ def _candidate_rows(registry: dict, index: dict, limit: int) -> list[tuple[str, 
             doc_id = document.get("id")
             if not url or not doc_id or not str(urlparse(url).path).lower().endswith(".pdf"):
                 continue
+            if document_ids is not None and doc_id not in document_ids:
+                continue
             prior = (index.get("documents") or {}).get(doc_id) or {}
-            if prior.get("content_sha256") and ready_hashes.get(doc_id) == prior.get("content_sha256"):
+            if (not restage_ready and prior.get("content_sha256")
+                    and ready_hashes.get(doc_id) == prior.get("content_sha256")):
                 continue
             try:
                 _validate_pdf_url(url, root_domain)
@@ -160,6 +205,8 @@ def _candidate_rows(registry: dict, index: dict, limit: int) -> list[tuple[str, 
                 continue
             rows_by_symbol.setdefault(symbol, []).append((symbol, row, document))
     selected: list[tuple[str, dict, dict]] = []
+    for symbol in rows_by_symbol:
+        rows_by_symbol[symbol].sort(key=_document_sort_key)
     while len(selected) < limit and any(rows_by_symbol.values()):
         for symbol in sorted(rows_by_symbol):
             if rows_by_symbol[symbol] and len(selected) < limit:
@@ -252,6 +299,18 @@ def _self_check() -> int:
     if fixture.get("doc_id") != "issuer:test":
         print("issuer_document stage self-check: FAIL (stable issuer doc_id missing)")
         return 1
+    report_rows = [
+        ("ABC", {}, {"document_type": "financial_report", "url": "https://example.com/q3-2026.pdf"}),
+        ("ABC", {}, {"document_type": "annual_report", "url": "https://example.com/bcsr-annual-2026.pdf"}),
+        ("ABC", {}, {"document_type": "annual_report", "url": "https://example.com/annual-2024.pdf"}),
+        ("ABC", {}, {"document_type": "annual_report", "url": "https://example.com/annual-2025.pdf"}),
+    ]
+    if [row[2]["url"] for row in sorted(report_rows, key=_document_sort_key)] != [
+        "https://example.com/annual-2025.pdf", "https://example.com/annual-2024.pdf",
+        "https://example.com/q3-2026.pdf", "https://example.com/bcsr-annual-2026.pdf",
+    ]:
+        print("issuer_document stage self-check: FAIL (annual/latest priority missing)")
+        return 1
     print("issuer_document stage self-check: PASS")
     return 0
 
@@ -262,6 +321,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=MAX_DOWNLOADS_PER_RUN)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--metadata-only", action="store_true")
+    parser.add_argument("--restage-ready", action="store_true",
+                        help="re-fetch already verified registry PDFs for a bounded parser revision")
+    parser.add_argument("--reuse-verified-cache", action="store_true",
+                        help="for --restage-ready, requeue only a cache file that re-hashes to retained proof")
+    parser.add_argument("--document-id", action="append",
+                        help="exact retained issuer document ID; may be repeated within --limit")
     parser.add_argument("--self-check", action="store_true")
     args = parser.parse_args(argv)
     if args.self_check:
@@ -284,7 +349,20 @@ def main(argv: list[str] | None = None) -> int:
         "by_ticker": dict(prior_index.get("by_ticker") or {}),
         "_meta": dict(prior_index.get("_meta") or {}),
     }
-    selected = _candidate_rows(scoped, index, args.limit)
+    requested_ids = {str(value).strip() for value in (args.document_id or []) if str(value).strip()}
+    known_ids = {
+        str(document.get("id"))
+        for ticker in (scoped.get("tickers") or {}).values()
+        for document in (ticker.get("document_links") or [])
+        if document.get("id")
+    }
+    unknown_ids = requested_ids - known_ids
+    if unknown_ids:
+        parser.error("--document-id is not a retained issuer PDF for the selected symbol")
+    if len(requested_ids) > args.limit:
+        parser.error("number of --document-id values exceeds --limit")
+    selected = _candidate_rows(scoped, index, args.limit, restage_ready=args.restage_ready,
+                               document_ids=requested_ids or None)
     queue = []
     verified = failed = 0
     session = requests.Session()
@@ -292,9 +370,15 @@ def main(argv: list[str] | None = None) -> int:
         try:
             metadata = None
             if not args.metadata_only:
-                body, metadata = _fetch_pdf(link["url"], ticker_row.get("root_domain"), session)
-                path = _safe_cache_path(link["id"])
-                path.write_bytes(body)
+                prior = (index.get("documents") or {}).get(link["id"]) or {}
+                cached = (_verified_cache_metadata(link["id"], prior.get("content_sha256"))
+                          if args.restage_ready and args.reuse_verified_cache else None)
+                if cached:
+                    path, metadata = cached
+                else:
+                    body, metadata = _fetch_pdf(link["url"], ticker_row.get("root_domain"), session)
+                    path = _safe_cache_path(link["id"])
+                    path.write_bytes(body)
                 queue.append({
                     "doc_id": link["id"], "path": str(path),
                     "sha256": metadata["content_sha256"],

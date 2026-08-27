@@ -40,6 +40,9 @@ STEPS = [
     "build_financial_model_inputs.py",
     "build_financial_coverage.py",
     "build_forecast_readiness.py",
+    # Deterministic market operands for the formal engines. Emits only objective current_price
+    # and shares_out records from retained dated state; forward assumptions remain owner-approved.
+    "build_financial_engine_assumptions.py",
     # Source-gated algebra only: stays blocked until qualified actuals and approved,
     # dated assumptions exist. Must precede the CI audit and generated private slice.
     "build_formal_financial_engines.py",
@@ -129,6 +132,7 @@ STEPS = [
     "check_ci_reprocess_manifest.py",
     "check_ownership_source_manifest.py",
     "check_forecast_contract.py",
+    "check_financial_engine_assumptions.py",
     "check_formal_financial_engines.py",
     "check_financial_evidence_reconciliation.py",
     "check_intelligence_confidence.py",

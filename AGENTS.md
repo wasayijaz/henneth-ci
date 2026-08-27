@@ -12,6 +12,8 @@ scores, and monitors signals. **It never places orders.** Execution is manual by
 | [`CLAUDE.md`](CLAUDE.md) | **Governance.** The hard rules — risk limits, position sizing, veto authority, data provenance. Binding on every agent and every cycle. |
 | [`docs/OPERATIONS.md`](docs/OPERATIONS.md) | **Operations.** The hybrid cloud/app model, the one publish path, safety gates, how to run each flow without breaking the live site. |
 | [`docs/GOTCHAS.md`](docs/GOTCHAS.md) | **Sharp edges.** Traps that already cost debugging time — the auth gate, the CSS at-rule trap, encoding, frozen breakpoints. |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **The system as it is today.** Modules, data flows, ownership, seams. Read this before adding anything — it exists to stop you building a second implementation of something that already exists. |
+| [`docs/TECH-DEBT.md`](docs/TECH-DEBT.md) | **Known debt, with evidence.** Each entry names its trigger. Check it before "fixing" something that is already logged, and add to it when you knowingly leave debt behind. |
 
 `CLAUDE.md` is auto-loaded by Claude Code but **not** by other harnesses. If you are not Claude Code,
 read it explicitly before doing anything that touches signals, sizing, or published output.
@@ -53,12 +55,133 @@ logs/            one transcript per cycle run
 
 ## Engineering conventions
 
-- Python 3.14; deps `requests`, `pandas`, `numpy`. Scripts must be idempotent and safe to re-run.
-  A network failure writes a degraded health status and **exits 0** — never crash the cycle.
+- **Canonical Python for published numbers is 3.12** — that is what
+  `.github/workflows/desk-data.yml` installs. The owner's machine may be 3.14. Do not use a
+  3.13+ language feature, and do not bump the workflow as a drive-by. Deps: `requests`,
+  `pandas`, `numpy`, plus the two specialised pins in `requirements.txt` (`pymeeus`,
+  `pymupdf`). Scripts must be idempotent and safe to re-run. A network failure writes a
+  degraded health status and **exits 0** — never crash the cycle.
 - No backward-compatibility layers. Remove obsolete paths rather than adding fallbacks or migrations.
 - Simplest implementation that fully meets the current requirement. No speculative abstraction.
 - Grow in layers: never trade a working product for unfinished complexity.
 - Prefer existing dependencies over new ones or hand-rolled equivalents.
+
+## Shared vocabulary
+
+These seven words are used throughout this repo's docs with exact meanings. Use them the same way.
+
+| Term | Meaning here |
+|---|---|
+| **Module** | Anything with an interface and an implementation. A Python script, a JS function, a state file, an agent definition, an HTTP endpoint. |
+| **Interface** | Everything a caller must understand to use the module correctly — its behaviour, its invariants, the errors it can raise, its configuration, and the performance characteristics that matter. Not just the signature. |
+| **Implementation** | The behaviour hidden behind the interface. Callers must not need to know it. |
+| **Seam** | A location where behaviour can change without forcing calling code to change. `state/*.json` is the desk's biggest seam: Python writes, JS reads, neither knows the other. |
+| **Depth** | The amount of useful behaviour available through a small interface. `psx_data.save_json(path, obj)` is deep — one call buys atomic write, NaN scrubbing, and UTF-8 correctness. |
+| **Locality** | Related knowledge, bugs and changes concentrated in one place. When a rule lives in five files, a fix in one is a bug in four. |
+| **Leverage** | Giving many callers a useful capability through a small interface. Centralising the Yahoo endpoint would give six fetchers retry and error handling for free. |
+
+## Engineering guardrails
+
+Binding on every agent working in this repo. `CLAUDE.md`'s desk rules govern *what the desk may say*;
+these govern *how the code gets changed*.
+
+**Before you change anything**
+
+1. Understand the existing behaviour first. Read both sides of an interaction — the writer and the
+   reader, the Python and the JS — before concluding what something does.
+2. Search for an existing implementation before adding a new one. This repo has been built by many
+   agent sessions; the most common failure mode is a second implementation of something that
+   already works. `graft ask` and `docs/ARCHITECTURE.md` exist for exactly this.
+3. Prefer small, coherent changes over sweeping ones. One concern per change.
+4. Protect production behaviour. The live desk publishes itself on a cron; a broken change reaches
+   the public site without a human in the loop. Assume no one will catch it for you.
+
+**Structure**
+
+5. Do not duplicate business logic. If a rule already exists in Python, do not re-derive it in JS,
+   TypeScript, or an agent prompt. If it must exist in two places (the position-size calculator is
+   a deliberate case), say so in a comment at both sites and name the other one.
+6. Keep authoritative business rules centralised. Risk limits, sizing, health gating and publication
+   scope each have exactly one owner. Change the owner, not a copy.
+7. Keep modules deep where the evidence supports it: a small interface hiding real behaviour. Do not
+   manufacture depth by wrapping one call in another.
+8. Maintain clear seams. `state/` is the seam between the deterministic layer and every consumer.
+   Do not let a consumer reach around it, and do not let a producer render.
+9. Improve locality. When you touch a rule that is scattered, either consolidate it or log it in
+   `docs/TECH-DEBT.md` with a concrete trigger. Do not scatter it further.
+10. Prefer simple interfaces. Fewer arguments, fewer modes, fewer flags.
+11. Do not implement speculative architecture. Build the smallest thing that fully meets the current
+    requirement. No config option for a case that does not exist yet.
+
+**Correctness**
+
+12. Test important behaviour through stable interfaces, not internals. This repo has no test
+    framework; today that means the linters (`preflight.py`, `provenance_lint.py`) and a real run.
+13. When you fix a meaningful bug, add a check that would have caught it — a lint rule, a preflight
+    assertion, a guard — not just the fix.
+14. Treat schema and migration work conservatively. Additive first. Every SQL file in `docs/` is
+    applied by hand by the owner; never assume one has been applied.
+15. Treat authentication and permissions as high-risk. `middleware.js` and the Supabase RLS policies
+    are the only things standing between a signed-out visitor and the desk's research. Never weaken
+    them to make something work. If a change requires relaxing a gate, stop and ask the owner.
+16. Protect secrets. Never print, log, commit, or echo a key value. `config/desk.json` and `.env`
+    stay out of every served directory and every diff.
+17. Handle external service failure deliberately. PSX, Yahoo, TradingView, Groq, Supabase and Resend
+    all fail. A failure writes a degraded status and exits 0; it never crashes the cycle and never
+    fabricates a value to keep going.
+
+**Dependencies and providers**
+
+18. Minimise dependencies. Prefer the four already installed. A new package needs a reason that
+    survives "could this be twenty lines of stdlib?".
+19. Isolate third-party provider logic. Supabase, Groq, Resend and Vercel specifics belong behind
+    one module each, not sprinkled through callers.
+
+**Finishing**
+
+20. Run the verification commands below after any meaningful change. State what you ran and what it
+    said — do not claim a check passed that you did not run.
+21. Inspect the final diff before you finish. Unstaged noise, stray debug output and half-finished
+    edits from another session are a real, documented hazard here.
+22. Preserve backwards compatibility only where a real consumer depends on it. This desk has one
+    owner and no external API clients — obsolete paths get deleted, not wrapped.
+23. Document meaningful technical debt in `docs/TECH-DEBT.md`, with a concrete trigger for when it
+    must be paid. "Clean this up eventually" is not a trigger.
+24. Document architectural changes in `docs/ARCHITECTURE.md` in the same change that makes them.
+25. Keep temporary workarounds identifiable and removable. Mark them, name the condition that
+    retires them, and log them in `docs/TECH-DEBT.md`.
+26. Preserve Git history and unrelated work. Never rewrite history, never `git add -A`, never stage
+    a file you did not author this session. Publishing is the owner's action.
+27. Explain important changes to the owner in plain English. The owner does not read code. A change
+    is not delivered until it has been described in terms of what the product now does.
+
+## Verification
+
+There is **no test framework** (no pytest, no Jest). High-consequence maths is checked by
+`python scripts/check_rule4.py`, which `preflight.py` runs on every publish. These are the
+real checks — run the ones your change touches.
+
+```bash
+python -m compileall -q scripts          # syntax-checks every Python file
+node -c dashboard/app.js                 # one file; preflight now checks every shipped *.js
+python scripts/check_rule4.py            # Rule 4 + payout-ratio golden cases
+python scripts/preflight.py              # THE gate: shape, freshness, syntax, provenance
+python scripts/provenance_lint.py        # provenance subset, standalone
+python scripts/design_lint.py            # UI conventions — advisory, never fails
+cd site && npm run build                 # the marketing site actually builds
+```
+
+Setup, if a fresh checkout: `pip install -r requirements.txt` then `cd site && npm install`.
+`requirements.txt` is the only Python dependency source of truth (cloud and local).
+
+`preflight.py` is the only hard gate — `publish.py` runs it first and refuses to publish on FAIL,
+so the last-good site stays live. `--strict` promotes WARNs to failures.
+
+Not side-effect-free, do not run casually: `scripts/run_cloud.py` (writes `state/`, needs network),
+`scripts/publish.py` (**pushes to `main` on success**).
+
+What does not exist, and should not be assumed: unit tests, integration tests, a Python linter or
+type checker, a JS/TS linter, a wired `astro check`, and any CI trigger on push or pull request.
 
 ## Publishing
 

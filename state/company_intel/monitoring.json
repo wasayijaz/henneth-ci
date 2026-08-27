@@ -1,15 +1,15 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-08-26T23:08:48+05:00",
+ "as_of": "2026-08-27T06:02:00+05:00",
  "source_as_of": {
-  "source_registry": "2026-08-24T19:40:25+05:00",
-  "source_qa": "2026-08-24 19:43",
-  "change_intelligence": "2026-08-25 17:27",
-  "event_ledger": "2026-08-25 17:22",
-  "operating_events": "2026-08-25",
-  "evidence_watchlist": "2026-08-25T17:22:00+05:00",
-  "guidance_contradictions": "2026-08-26T23:08:48+05:00"
+  "source_registry": "2026-08-27T03:47:04+05:00",
+  "source_qa": "2026-08-27 05:01",
+  "change_intelligence": "2026-08-27 06:02",
+  "event_ledger": "2026-08-27 06:01",
+  "operating_events": "2026-08-27",
+  "evidence_watchlist": "2026-08-27T06:01:00+05:00",
+  "guidance_contradictions": "2026-08-27T06:01:00+05:00"
  },
  "pilot_symbols": [
   "MLCF",
@@ -76,10 +76,10 @@
  },
  "summary": {
   "company_count": 20,
-  "alert_count": 151,
+  "alert_count": 150,
   "status_counts": {
-   "degraded": 9,
-   "healthy": 11,
+   "degraded": 8,
+   "healthy": 12,
    "stale": 0,
    "unknown": 0
   }
@@ -710,22 +710,20 @@
    "symbol": "DGKC",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-08-18T03:18:11+05:00",
-   "latest_change_at": "2026-08-22T00:00:00+05:00",
-   "latest_event_at": "2026-04-30T09:53:00+05:00",
+   "latest_source_at": "2026-08-27T03:36:42+05:00",
+   "latest_change_at": "2026-08-27T05:19:00+05:00",
+   "latest_event_at": "2026-08-27T05:19:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
-    "document_link_count": 10,
+    "document_link_count": 64,
     "quality_flags": [],
     "missing_required_source": false
    },
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 7,
-     "issuer_document": 10,
-     "source": 1
+     "issuer_document": 18
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -734,43 +732,123 @@
    },
    "alerts": [
     {
-     "alert_id": "ci_alert_47b33a0671f368d8be36",
+     "alert_id": "ci_alert_e975ffd96c8308983df9",
      "symbol": "DGKC",
      "type": "retained_change",
      "status": "observed",
-     "date": "2026-08-22T00:00:00+05:00",
-     "title": "Presentation Corporate Briefing Session 2019-20",
-     "reason": "Official Issuer website document retained as results.",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019-20.pdf",
-      "document_id": "issuer:ded90b52a315b344f37ddd59",
+      "source_url": "https://www.dgcement.com/financial-reports/2015-16_f.pdf",
+      "document_id": "issuer:c38ef8e6e11d33c8261e262d",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_4771a49dc2a1d4227c54470a",
-      "kind": "document",
-      "date_basis": "retrieved_at"
+      "change_id": "chg_b4f5664a700e651f47bb814e",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
-     "alert_id": "ci_alert_f6a62568c02e483d678d",
+     "alert_id": "ci_alert_e63d8bf37eae210feac5",
      "symbol": "DGKC",
      "type": "retained_change",
      "status": "observed",
-     "date": "2026-08-19T00:00:00+05:00",
-     "title": "Board Meeting",
-     "reason": "Official PSX DPS document retained as board_meeting.",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281382.pdf",
-      "document_id": "psx:281382",
+      "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+      "document_id": "issuer:773167b57f3bc15094fdf721",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_b6850a1d3fbe97bf2f5369e5",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_b768a611708222bf75f417ba",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_dca84758d02804c3766c",
+     "symbol": "DGKC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+      "document_id": "issuer:91e2da11249269bcac96ae5a",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_f5dc2621a88a6af5ee8dc898",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_d3ab81bd4a85a0a5a793",
+     "symbol": "DGKC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "1st Quarter Report",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.dgcement.com/financial-reports/2018_19_1.pdf",
+      "document_id": "issuer:9e051da71faef892d698a311",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_ffc4d09703aedcaebebe9ee5",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_c203a8de326e28ba2075",
+     "symbol": "DGKC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.dgcement.com/financial-reports/2017_18_f.pdf",
+      "document_id": "issuer:43ac877ba324a54f904064df",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_6fb66682c3e4ac4fa9526e99",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_b1560c014f8ae70a626e",
+     "symbol": "DGKC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "BCSR Cross referred 2024",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.dgcement.com/financial-reports/BCSR Cross referred with Annual report 24.pdf",
+      "document_id": "issuer:a7a6ba17e4fbca51c4fdd0d7",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_85b47032b1ba2811bdf0666c",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
@@ -790,86 +868,6 @@
      "evidence_identity": {
       "content_sha256": "9dad90fdb6aab58730b31a666d000b4930d54219d49d8e910caae919ded2e6a3",
       "previous_sha256": "dbea9dd2b07b13accdf870d8386e40a57e98a994c61d04befd757df4a1a3e523"
-     }
-    },
-    {
-     "alert_id": "ci_alert_d9f1496d421943d7aa5f",
-     "symbol": "DGKC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "PSX Letter - Corporate Briefing Session FY 2022 Through Video Link",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.dgcement.com/Briefing/DGKC-PSXLetter-CorporateBriefing22.pdf",
-      "document_id": "issuer:22dbb625dcd89f66c6bace2f",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_9e8518320c01485d793f2520",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_c95d97f2a56612228aef",
-     "symbol": "DGKC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Presentation of Corporate Breifing 2023",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.dgcement.com/Briefing/CBS.pdf",
-      "document_id": "issuer:bdd12208b3af905c0658a716",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_0b970b9adaebe1547c007865",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_c56ef65f08b3fde9b502",
-     "symbol": "DGKC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Presentation Corporate Briefing Session 2025",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.dgcement.com/Briefing/DGKC CBS Presentation 21112025.pdf",
-      "document_id": "issuer:c7230a44854c74a77777465a",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_f4b3ad54a8d663c48acd38ca",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_c49abf3e0088f199c977",
-     "symbol": "DGKC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Presentation Corporate Briefing Session 2018-19",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.dgcement.com/Briefing/PresentationCorportaeBriefingSession2019.pdf",
-      "document_id": "issuer:f4a7021625875b85071b426f",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_f10285e13cbe43bec4cf34cf",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
      }
     }
    ],
@@ -1546,32 +1544,149 @@
   },
   "LUCK": {
    "symbol": "LUCK",
-   "status": "degraded",
-   "status_reason": "source registry or monitored source quality is degraded",
-   "latest_source_at": "2026-08-22T16:04:44+05:00",
-   "latest_change_at": "2026-08-22T00:00:00+05:00",
-   "latest_event_at": null,
+   "status": "healthy",
+   "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
+   "latest_source_at": "2026-08-27T03:47:04+05:00",
+   "latest_change_at": "2026-08-27T05:20:00+05:00",
+   "latest_event_at": "2026-08-27T05:20:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
-    "document_link_count": 0,
-    "quality_flags": [
-     "no_document_links"
-    ],
+    "document_link_count": 22,
+    "quality_flags": [],
     "missing_required_source": false
    },
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "source": 1,
-     "document": 5
+     "issuer_document": 18
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
-    "guidance_status": "no_guidance_objects",
+    "guidance_status": "available",
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_e5f94b1c7d0d0bfb634f",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report 2020",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2020_2b3d73a146.pdf",
+      "document_id": "issuer:ecea2e5a767d1620161027a3",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_cb0ca29729e1dbbb9228ea7f",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_df367cfa630da64004c1",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Half Yearly Report – December 31, 2021",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://assets.lucky-cement.com/Half_Yearly_Report_December_31_2021_8c81e81f16.pdf",
+      "document_id": "issuer:e6546184f97187c5da694b09",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_5949f74c2945fbe0f8a8f882",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_dde577468e602d6b6b3c",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report 2023",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_45fa195b0e01efdc7315ae28",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_c70ef6a4b337540c17b6",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "First Quarterly Report As On September 30, 2024",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://assets.lucky-cement.com/First_Quarterly_Report_as_on_September_30_2024_ba5614cb75.pdf",
+      "document_id": "issuer:9eaee8de519404ee83297a83",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_bbad7784ec5aa1fff80a4e7a",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_b6bb8ff4b29d2fad225d",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report 2022",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2022_e3b3009def.pdf",
+      "document_id": "issuer:da804cd7e5c10e7c7df6689a",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_253565ef60898f037fce15db",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_b1eb53d22c10869a1c86",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Third Quarter Report 31st March, 2023",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://assets.lucky-cement.com/Third_Quarter_Report_31st_March_2023_a34115fe7f.pdf",
+      "document_id": "issuer:640901d0382909d2136ed862",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_49a7e4cab8f6bedc16588704",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
     {
      "alert_id": "ci_alert_785c4bd20ad4891ed4ba",
      "symbol": "LUCK",
@@ -1590,151 +1705,9 @@
       "content_sha256": "5eb4ec8717a63b44829589debd0b3f0ca8b5f146c0e6fa1635a4585dcd7970ba",
       "previous_sha256": "d1c50bbe4adbf150ff7340e34d484c305abf39c334ac57daf6934f7516c239f9"
      }
-    },
-    {
-     "alert_id": "ci_alert_c7eda6d83460f54b07d5",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-22T00:00:00+05:00",
-     "title": "Issuer website",
-     "reason": "Same-domain issuer page hash changed since the previous retained check.",
-     "source": {
-      "source_url": "https://www.lucky-cement.com/",
-      "document_id": null,
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_b5e68656ed71ac276526639c",
-      "kind": "source",
-      "date_basis": "last_changed_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_47822193bf48c6a6ea66",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-19T00:00:00+05:00",
-     "title": "Disclosure of Interest by an Associated Company",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281386.pdf",
-      "document_id": "psx:281386",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_2429584da5bb03e4a4b8d891",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_09f32177f4565f103684",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-07-01T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/279395.pdf",
-      "document_id": "psx:279395",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_688b41e552bf99598b9646c3",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_8cc4d0e852067b5d8258",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-04-01T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/273346.pdf",
-      "document_id": "psx:273346",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_7c253eeb1d00e9794628f8ee",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_53cd7d8347b1e4ce5888",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2025-12-19T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/267525.pdf",
-      "document_id": "psx:267525",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_9b14ee9fc904d5d496711e14",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_7202e4453d4e02106ddf",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2025-12-01T00:00:00+05:00",
-     "title": "MATERIAL INFORMATION",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/266631.pdf",
-      "document_id": "psx:266631",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_7a2970732f3b6c2b728f1f18",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_298d6f54141e25754faa",
-     "symbol": "LUCK",
-     "type": "source_registry_degraded",
-     "status": "open",
-     "date": null,
-     "title": "issuer source registry degraded",
-     "reason": "no_document_links",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/company/LUCK",
-      "document_id": null,
-      "source_id": null,
-      "source": "issuer_source_registry"
-     },
-     "evidence_identity": {
-      "registry_status": "ok",
-      "quality_flags": [
-       "no_document_links"
-      ],
-      "missing_required_source": false
-     }
     }
    ],
-   "alert_count": 8,
+   "alert_count": 7,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -3799,8 +3772,8 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-08-24T19:40:25+05:00",
-   "latest_change_at": "2026-08-24T00:00:00+05:00",
-   "latest_event_at": "2026-04-28T14:40:00+05:00",
+   "latest_change_at": "2026-08-27T06:01:00+05:00",
+   "latest_event_at": "2026-08-27T06:01:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -3811,14 +3784,55 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 18
+     "document": 2,
+     "issuer_document": 16
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
-    "guidance_status": "no_guidance_objects",
+    "guidance_status": "available",
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_ac28e303d8954ce5acb3",
+     "symbol": "CNERGY",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report for Fiscal Year 2022-2023",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2023.pdf",
+      "document_id": "issuer:d4529333539b04c18f5553ba",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_4a5698b5794aff3c0db0a5d1",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_1e82a22fa3ae9560fdbe",
+     "symbol": "CNERGY",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Annual Report for Fiscal Year 2020-2021",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2021.pdf",
+      "document_id": "issuer:65e8a35ca116cd2bd32ec092",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_5e2992000c18572018c3fa99",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
     {
      "alert_id": "ci_alert_fe4fe3b4cbd4bec197b3",
      "symbol": "CNERGY",
@@ -3895,46 +3909,6 @@
      },
      "evidence_identity": {
       "change_id": "chg_804df93d6372ca601e027b09",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_b450b604c34b5ef9e218",
-     "symbol": "CNERGY",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-24T00:00:00+05:00",
-     "title": "Notice of 28th Annual General Meeting Cnergyico Pk Limited",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.cnergyico.com/files/agm_notice_22.pdf",
-      "document_id": "issuer:346dae397dde273f7681c346",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_5e3a7fe0c52c436d0ae1c6bb",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_9bcf9bd0a545e7691e0d",
-     "symbol": "CNERGY",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-24T00:00:00+05:00",
-     "title": "Annual Report for Fiscal Year 2020-2021",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2021.pdf",
-      "document_id": "issuer:65e8a35ca116cd2bd32ec092",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_e4c72d594a572b3839711786",
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }

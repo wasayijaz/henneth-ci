@@ -1251,14 +1251,14 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "present_model_ready_metrics": [],
-     "missing_metrics": [
+     "present_model_ready_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
+     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "missing_required_metrics"
+     "status": "complete"
     },
     {
      "slot": "annual_period_2",
@@ -1298,41 +1298,43 @@
     }
    ],
    "model_readiness": {
-    "status": "partial",
+    "status": "ready",
     "model_version": "cement_v1",
     "downstream_status": {
      "forecast": "blocked_not_implemented",
      "valuation": "blocked_not_implemented"
     },
-    "quality_flags": [
-     "insufficient_three_year_consolidated_v2_history"
-    ]
+    "quality_flags": []
    },
    "audit_only_series": {
-    "audit_only_fact_count": 78,
+    "audit_only_fact_count": 696,
     "audit_only_metrics": [
      {
+      "metric": "basic_eps",
+      "fact_count": 2
+     },
+     {
       "metric": "change_pct",
-      "fact_count": 25
+      "fact_count": 202
      },
      {
       "metric": "dividend",
-      "fact_count": 3
+      "fact_count": 18
      },
      {
       "metric": "eps",
-      "fact_count": 3
+      "fact_count": 25
      },
      {
       "metric": "profit",
-      "fact_count": 21
+      "fact_count": 150
      },
      {
       "metric": "revenue",
-      "fact_count": 26
+      "fact_count": 299
      }
     ],
-    "model_loadable_count": 0,
+    "model_loadable_count": 36,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {
@@ -2506,14 +2508,14 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "present_model_ready_metrics": [],
-     "missing_metrics": [
+     "present_model_ready_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
+     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "missing_required_metrics"
+     "status": "complete"
     },
     {
      "slot": "annual_period_3",
@@ -2535,20 +2537,51 @@
     }
    ],
    "model_readiness": {
-    "status": "partial",
+    "status": "ready",
     "model_version": "cement_v1",
     "downstream_status": {
      "forecast": "blocked_not_implemented",
      "valuation": "blocked_not_implemented"
     },
-    "quality_flags": [
-     "insufficient_three_year_consolidated_v2_history"
-    ]
+    "quality_flags": []
    },
    "audit_only_series": {
-    "audit_only_fact_count": 0,
-    "audit_only_metrics": [],
-    "model_loadable_count": 0,
+    "audit_only_fact_count": 418,
+    "audit_only_metrics": [
+     {
+      "metric": "basic_eps",
+      "fact_count": 2
+     },
+     {
+      "metric": "change_pct",
+      "fact_count": 84
+     },
+     {
+      "metric": "dividend",
+      "fact_count": 8
+     },
+     {
+      "metric": "eps",
+      "fact_count": 7
+     },
+     {
+      "metric": "profit",
+      "fact_count": 107
+     },
+     {
+      "metric": "profit_after_tax_attributable",
+      "fact_count": 6
+     },
+     {
+      "metric": "revenue",
+      "fact_count": 192
+     },
+     {
+      "metric": "tax_expense",
+      "fact_count": 12
+     }
+    ],
+    "model_loadable_count": 42,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {
@@ -5807,10 +5840,10 @@
      "status": null,
      "content_sha256": null,
      "safe_period": {
-      "period_end": "2025-30-06",
+      "period_end": null,
       "period_type": "annual",
-      "source": "title",
-      "matched_text": "Year Ended 06-30-2025"
+      "source": "metadata",
+      "matched_text": "annual_report"
      }
     },
     {
@@ -5832,22 +5865,20 @@
    ],
    "required_annual_periods": [
     {
-     "period_end": "2025-30-06",
-     "period_type": "annual",
-     "source": "title",
-     "matched_text": "Year Ended 06-30-2025",
-     "document_id": "psx:261060",
-     "title": "Transmission of Annual Report for the Year Ended 06-30-2025",
-     "slot": "annual_period_1"
-    },
-    {
      "period_end": "2025-06-30",
      "period_type": "annual",
      "source": "title",
      "matched_text": "Year Ended 2025-06-30",
      "document_id": "psx:260295",
      "title": "Financial Results for the Year Ended 2025-06-30",
-     "slot": "annual_period_2"
+     "slot": "annual_period_1"
+    },
+    {
+     "period_end": null,
+     "period_type": "annual",
+     "source": "unknown",
+     "slot": "annual_period_2",
+     "evidence_status": "missing_explicit_annual_period_evidence"
     },
     {
      "period_end": null,
@@ -5860,7 +5891,7 @@
    "missing_revenue_pat_eps_by_annual_period": [
     {
      "slot": "annual_period_1",
-     "period_end": "2025-30-06",
+     "period_end": "2025-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -5878,7 +5909,7 @@
     },
     {
      "slot": "annual_period_2",
-     "period_end": "2025-06-30",
+     "period_end": null,
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -5891,7 +5922,7 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "period_evidence_status": "explicit",
+     "period_evidence_status": "missing_explicit_annual_period_evidence",
      "status": "missing_required_metrics"
     },
     {
@@ -5932,7 +5963,7 @@
    },
    "qualification_queue": {
     "status": "needs_owner_approved_bounded_restage",
-    "queue_id": "finqual_a1a3f1df9951ca153f98",
+    "queue_id": "finqual_96404bf2329379a09ff8",
     "candidate_documents": [
      {
       "document_id": "psx:275242",
@@ -6505,9 +6536,18 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 0,
-    "audit_only_metrics": [],
-    "model_loadable_count": 0,
+    "audit_only_fact_count": 27,
+    "audit_only_metrics": [
+     {
+      "metric": "profit",
+      "fact_count": 9
+     },
+     {
+      "metric": "revenue",
+      "fact_count": 18
+     }
+    ],
+    "model_loadable_count": 16,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {

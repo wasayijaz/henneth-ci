@@ -847,6 +847,18 @@ def check_forecast_contract():
     except Exception as e:
         fail(f"check_forecast_contract.py did not run — {e}")
 
+def check_financial_engine_assumptions():
+    path = os.path.join(ROOT, "scripts", "check_financial_engine_assumptions.py")
+    if not os.path.exists(path):
+        fail("check_financial_engine_assumptions.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("financial engine assumptions check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_financial_engine_assumptions.py did not run — {e}")
+
 def check_formal_financial_engines():
     path = os.path.join(ROOT, "scripts", "check_formal_financial_engines.py")
     if not os.path.exists(path):
@@ -858,6 +870,18 @@ def check_formal_financial_engines():
             fail("formal financial engines check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
         fail(f"check_formal_financial_engines.py did not run — {e}")
+
+def check_ci_reference_cases():
+    path = os.path.join(ROOT, "scripts", "check_ci_reference_cases.py")
+    if not os.path.exists(path):
+        fail("check_ci_reference_cases.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("CI reference-case check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_reference_cases.py did not run — {e}")
 
 def check_financial_evidence_reconciliation():
     path = os.path.join(ROOT, "scripts", "check_financial_evidence_reconciliation.py")
@@ -918,6 +942,18 @@ def check_financial_coverage_ui():
             fail("financial coverage UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
         fail(f"check_financial_coverage_ui.mjs did not run — {e}")
+
+def check_historical_reference_cases_ui():
+    path = os.path.join(ROOT, "scripts", "check_historical_reference_cases_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_historical_reference_cases_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("historical reference cases UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_historical_reference_cases_ui.mjs did not run — {e}")
 
 def check_financial_evidence_reconciliation_ui():
     path = os.path.join(ROOT, "scripts", "check_financial_evidence_reconciliation_ui.mjs")
@@ -1170,10 +1206,13 @@ def main():
     check_financial_model_inputs()
     check_financial_coverage()
     check_forecast_contract()
+    check_financial_engine_assumptions()
     check_formal_financial_engines()
+    check_ci_reference_cases()
     check_financial_evidence_reconciliation()
     check_forecast_readiness_ui()
     check_financial_coverage_ui()
+    check_historical_reference_cases_ui()
     check_financial_evidence_reconciliation_ui()
     check_company_scenario_lab()
     check_company_scenario_lab_ui()

@@ -6,6 +6,7 @@ This is the only data file the CI app reads. It is a private research surface, b
 keeps the same rule: every displayed fact traces to the state layer or is marked unknown.
 """
 import time
+from datetime import date
 from pathlib import Path
 
 from psx_data import ROOT, STATE, load_json, save_json
@@ -31,6 +32,187 @@ def _round(value, places=2):
 def _url(value):
     value = str(value or "").strip()
     return value if value.startswith(("http://", "https://")) else None
+
+
+def _iso_date(value):
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return date.fromisoformat(text[:10]).isoformat()
+    except ValueError:
+        return None
+
+
+def _state_date(state):
+    if not isinstance(state, dict):
+        return None
+    for key in ("as_of", "updated", "built", "fetched"):
+        parsed = _iso_date(state.get(key))
+        if parsed:
+            return parsed
+    for key in ("_meta", "meta"):
+        meta = state.get(key)
+        if isinstance(meta, dict) and meta:
+            parsed = _state_date(meta)
+            if parsed:
+                return parsed
+    return None
+
+
+def _slice_source_cutoff(*states):
+    dates = [_state_date(state) for state in states]
+    dates = [value for value in dates if value]
+    return max(dates) if dates else None
+
+
+def _finite(value):
+    if isinstance(value, bool):
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if number == number and number not in (float("inf"), float("-inf")) else None
+
+
+def _source_ok(source, cutoff):
+    if not isinstance(source, dict):
+        return False
+    available_on = _iso_date(source.get("available_on"))
+    if not available_on or (cutoff and available_on > cutoff):
+        return False
+    return bool(source.get("id") and source.get("label") and (source.get("path") or _url(source.get("url"))))
+
+
+def _reference_source_fact(fact, cutoff):
+    if not isinstance(fact, dict):
+        return None
+    available_on = _iso_date(fact.get("available_on"))
+    period_end = _iso_date(fact.get("period_end"))
+    if not available_on or not period_end or (cutoff and available_on > cutoff):
+        return None
+    normalized_value = _finite(fact.get("normalized_value"))
+    if normalized_value is None:
+        return None
+    if not fact.get("fact_id") or not fact.get("document_id") or not _url(fact.get("source_url")):
+        return None
+    return {
+        "line": fact.get("line"),
+        "fact_id": fact.get("fact_id"),
+        "document_id": fact.get("document_id"),
+        "content_sha256": fact.get("content_sha256"),
+        "source_url": _url(fact.get("source_url")),
+        "period_end": period_end,
+        "available_on": available_on,
+        "statement_type": fact.get("statement_type"),
+        "period_type": fact.get("period_type"),
+        "duration_months": fact.get("duration_months"),
+        "consolidation": fact.get("consolidation"),
+        "currency": fact.get("currency"),
+        "unit": fact.get("unit"),
+        "unit_multiplier": fact.get("unit_multiplier"),
+        "normalized_value": normalized_value,
+        "source_method": fact.get("source_method"),
+        "source_revision": fact.get("source_revision"),
+        "evidence_pages": fact.get("evidence_pages") or [],
+    }
+
+
+def _historical_reference_cases(assumptions_state, sym, cutoff):
+    cases = []
+    rejected = 0
+    for record in assumptions_state.get("records") or []:
+        if not isinstance(record, dict) or record.get("symbol") != sym:
+            continue
+        if record.get("record_type") != "derived_reference_case":
+            continue
+        source = record.get("source") or {}
+        available_on = _iso_date(record.get("available_on") or source.get("available_on"))
+        source_facts = [
+            _reference_source_fact(fact, cutoff)
+            for fact in (record.get("source_facts") or [])
+        ]
+        source_facts = [fact for fact in source_facts if fact]
+        safe = (
+            record.get("approved") is False
+            and "value" not in record
+            and available_on is not None
+            and (not cutoff or available_on <= cutoff)
+            and _source_ok(source, cutoff)
+            and len(source_facts) == len(record.get("source_facts") or [])
+            and bool(source_facts)
+        )
+        if not safe:
+            rejected += 1
+            continue
+        cases.append({
+            "metric": record.get("metric"),
+            "derived_value": _round(record.get("derived_value"), 4),
+            "unit": record.get("unit"),
+            "status": "historical_reference_case_not_owner_approved",
+            "record_type": record.get("record_type"),
+            "epistemic_type": record.get("epistemic_type"),
+            "case_type": record.get("case_type"),
+            "assumption_status": record.get("assumption_status"),
+            "approval_scope": record.get("approval_scope"),
+            "approved": False,
+            "available_on": available_on,
+            "formula_version": record.get("formula_version"),
+            "period_ends": [_iso_date(value) for value in (record.get("period_ends") or []) if _iso_date(value)],
+            "source": {
+                "id": source.get("id"),
+                "label": source.get("label"),
+                "path": source.get("path"),
+                "url": _url(source.get("url")),
+                "available_on": _iso_date(source.get("available_on")),
+            },
+            "formula": record.get("formula") or {},
+            "source_facts": source_facts,
+            "policy": {
+                "historical_baseline_only": True,
+                "not_owner_approved": True,
+                "not_a_forecast": True,
+                "not_a_valuation": True,
+                "not_market_expectations": True,
+                "not_accepted_by_formal_engine_approved_records": True,
+            },
+        })
+    cases.sort(key=lambda row: (row.get("metric") or "", row.get("available_on") or "", row.get("source", {}).get("id") or ""))
+    return {
+        "status": "available" if cases else "none",
+        "case_count": len(cases),
+        "rejected_record_count": rejected,
+        "source_cutoff": cutoff,
+        "policy": {
+            "historical_baselines_only": True,
+            "not_owner_approved_assumptions": True,
+            "not_forecasts_or_valuations_or_market_expectations": True,
+            "formal_engine_eligibility_unchanged": True,
+        },
+        "cases": cases,
+    }
+
+
+def _reference_case_meta(assumptions_state, cutoff, rows):
+    counts = [((row.get("historical_reference_cases") or {}).get("case_count") or 0) for row in rows]
+    return {
+        "schema_version": assumptions_state.get("schema_version"),
+        "as_of": assumptions_state.get("as_of"),
+        "source_cutoff": cutoff,
+        "source": assumptions_state.get("source") or {},
+        "policy": {
+            "historical_baselines_only": True,
+            "not_owner_approved_assumptions": True,
+            "not_forecasts_or_valuations_or_market_expectations": True,
+            "formal_engine_eligibility_unchanged": True,
+        },
+        "summary": {
+            "company_count": len(rows),
+            "company_with_reference_cases_count": sum(1 for count in counts if count),
+            "reference_case_count": sum(counts),
+        },
+    }
 
 
 def _latest_news(news, sym, limit=3):
@@ -492,9 +674,19 @@ def build():
     financial_forecasts = load_json(STATE / "company_intel" / "financial_forecasts.json", {"companies": {}})
     formal_valuations = load_json(STATE / "company_intel" / "formal_valuations.json", {"companies": {}})
     market_expectations = load_json(STATE / "company_intel" / "market_expectations.json", {"companies": {}})
+    financial_engine_assumptions = load_json(STATE / "company_intel" / "financial_engine_assumptions.json", {"records": []})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue, brief_receipts)
+    source_cutoff = _slice_source_cutoff(
+        profiles_state,
+        financial_model_inputs,
+        forecast_readiness,
+        financial_engine_assumptions,
+        financial_forecasts,
+        formal_valuations,
+        market_expectations,
+    )
 
     # Keep the private app bounded to the declared CI pilot.  ``profiles`` may
     # retain stale public rows (for example a former pilot constituent), but
@@ -616,6 +808,7 @@ def build():
         financial_forecast_row = _formal_engine_product(financial_forecasts, sym, "financial_forecasts")
         formal_valuation_row = _formal_engine_product(formal_valuations, sym, "formal_valuations")
         market_expectation_row = _formal_engine_product(market_expectations, sym, "market_expectations")
+        historical_reference_cases = _historical_reference_cases(financial_engine_assumptions, sym, source_cutoff)
         rows.append({
             "symbol": sym,
             "name": (universe.get(sym) or {}).get("name") or f.get("name") or "",
@@ -689,6 +882,7 @@ def build():
             "financial_forecasts": financial_forecast_row,
             "formal_valuations": formal_valuation_row,
             "market_expectations": market_expectation_row,
+            "historical_reference_cases": historical_reference_cases,
             "intelligence": {
                 "document_count": len(filings),
                 "event_count": len(timeline),
@@ -731,6 +925,7 @@ def build():
                 "financial_forecast_status": financial_forecast_row.get("status"),
                 "formal_valuation_status": formal_valuation_row.get("status"),
                 "formal_market_expectations_status": market_expectation_row.get("status"),
+                "historical_reference_case_count": historical_reference_cases.get("case_count", 0),
             },
             "news": _latest_news(news, sym),
             "insider_filings": _insider(insider, sym),
@@ -751,6 +946,7 @@ def build():
             "financial_forecasts": _formal_engine_meta(financial_forecasts),
             "formal_valuations": _formal_engine_meta(formal_valuations),
             "market_expectations": _formal_engine_meta(market_expectations),
+            "historical_reference_cases": _reference_case_meta(financial_engine_assumptions, source_cutoff, rows),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",
         },
         "tickers": rows,

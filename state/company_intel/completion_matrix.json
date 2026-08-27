@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "as_of": "2026-08-27 01:42",
+ "as_of": "2026-08-27 06:01",
  "scope": "Company Intelligence product completion audit",
  "source_policy": "retained repo/state evidence only; no fetching, model calls, SQL, publish, deploy, or source mutation",
  "pilot_symbols": [
@@ -29,8 +29,8 @@
   "overall_status": "blocked",
   "requirement_count": 68,
   "counts": {
-   "complete": 58,
-   "partial": 6,
+   "complete": 56,
+   "partial": 8,
    "blocked": 4,
    "not_started": 0,
    "unknown": 0
@@ -66,12 +66,10 @@
    "event_study_horizons",
    "event_study_analogues",
    "event_study_checker",
-   "conditional_benchmark_state",
    "causal_foundation_state",
    "causal_foundation_policy",
    "causal_foundation_checker",
    "financial_model_input_state",
-   "financial_parser_contract",
    "financial_coverage_queue",
    "financial_evidence_reconciliation",
    "formal_forecast_engine_code",
@@ -435,11 +433,11 @@
      "label": "forecast readiness contract",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "1 input-ready companies"
+     "detail": "2 input-ready companies"
     }
    ],
    "blockers": [
-    "Real input-ready company count is 1; forecast objects remain non-computed."
+    "Real input-ready company count is 2; forecast objects remain non-computed."
    ],
    "next_required_evidence": [
     "Three aligned annual consolidated PKR periods and approved assumptions before forecast objects can be computed."
@@ -489,7 +487,7 @@
      "label": "canonical event rows",
      "path": "state/company_intel/operating_events.json",
      "ok": true,
-     "detail": "23 events"
+     "detail": "63 events"
     }
    ],
    "blockers": [],
@@ -736,7 +734,7 @@
      "label": "explicit blocked numeric-impact contract",
      "path": "state/company_intel/impact_scenarios.json",
      "ok": true,
-     "detail": "69 retained shells with null numeric impacts and explicit missing inputs"
+     "detail": "189 retained shells with null numeric impacts and explicit missing inputs"
     }
    ],
    "blockers": [
@@ -755,7 +753,7 @@
      "label": "event-study state",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "23 studies for 23 events"
+     "detail": "63 studies for 63 events"
     },
     {
      "label": "pilot boundary",
@@ -778,7 +776,7 @@
      "label": "strict baseline derivation",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "21/21 baseline-available studies have baseline.selected_date before effective_date; 23 total studies"
+     "detail": "21/21 baseline-available studies have baseline.selected_date before effective_date; 63 total studies"
     },
     {
      "label": "event study checker",
@@ -801,7 +799,7 @@
      "label": "1Q/2Q/4Q/8Q horizons",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "23/23 studies"
+     "detail": "63/63 studies"
     },
     {
      "label": "raw return limitations",
@@ -824,7 +822,7 @@
      "label": "analogue contract",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "23/23 studies"
+     "detail": "63/63 studies"
     },
     {
      "label": "thin sample suppression",
@@ -870,7 +868,7 @@
   {
    "id": "conditional_benchmark_state",
    "title": "Conditional benchmark state exists for every pilot company",
-   "status": "complete",
+   "status": "partial",
    "evidence": [
     {
      "label": "conditional benchmarks",
@@ -881,8 +879,8 @@
     {
      "label": "benchmark count",
      "path": "state/company_intel/conditional_benchmarks.json",
-     "ok": true,
-     "detail": "23 benchmarks"
+     "ok": false,
+     "detail": "21 benchmarks"
     }
    ],
    "blockers": [],
@@ -1016,7 +1014,7 @@
   {
    "id": "financial_parser_contract",
    "title": "Financial parser contract is fail-closed and fixture-backed",
-   "status": "complete",
+   "status": "partial",
    "evidence": [
     {
      "label": "financial model input checker",
@@ -1033,8 +1031,8 @@
     {
      "label": "current parser revision",
      "path": "scripts/check_financial_model_inputs.py",
-     "ok": true,
-     "detail": "all expected markers present"
+     "ok": false,
+     "detail": "missing markers: block_geometry_v4"
     }
    ],
    "blockers": [],
@@ -1086,7 +1084,7 @@
      "label": "conflict/missing-slot summary",
      "path": "state/company_intel/financial_evidence_reconciliation.json",
      "ok": true,
-     "detail": "{'company_count': 20, 'eligible_fact_count': 9, 'audit_only_fact_count': 304, 'quarantined_fact_count': 33, 'missing_slot_count': 171, 'source_conflict_count': 8, 'forecast_ready_company_count': 1}"
+     "detail": "{'company_count': 20, 'eligible_fact_count': 9, 'audit_only_fact_count': 888, 'quarantined_fact_count': 588, 'missing_slot_count': 171, 'source_conflict_count': 59, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 2}"
     },
     {
      "label": "reconciliation checker",
@@ -1115,7 +1113,7 @@
      "label": "blocked output policy",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": false,
-     "detail": "19 blocked companies"
+     "detail": "18 blocked companies"
     },
     {
      "label": "forecast readiness checker",
@@ -1138,17 +1136,17 @@
      "label": "ready company count",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "1 ready companies"
+     "detail": "2 ready companies"
     },
     {
      "label": "qualified fact company count",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "1 qualified-fact companies"
+     "detail": "3 qualified-fact companies"
     }
    ],
    "blockers": [
-    "Real ready company count is 1; qualified-fact company count is 1; formal numeric outputs remain blocked."
+    "Real ready company count is 2; qualified-fact company count is 3; formal numeric outputs remain blocked."
    ],
    "next_required_evidence": [
     "More pilot companies need three aligned annual consolidated PKR periods before live readiness is complete."
@@ -1441,7 +1439,7 @@
      "label": "continuous monitoring",
      "path": "state/company_intel/monitoring.json",
      "ok": true,
-     "detail": "20 company rows; 151 retained alerts"
+     "detail": "20 company rows; 150 retained alerts"
     },
     {
      "label": "continuous monitoring checker",

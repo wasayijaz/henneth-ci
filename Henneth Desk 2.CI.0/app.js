@@ -2609,6 +2609,78 @@ function renderFinancialCoverage(r) {
   </section>`;
 }
 
+function referenceCaseRows(r) {
+  return Array.isArray(r?.historical_reference_cases?.cases) ? r.historical_reference_cases.cases : [];
+}
+
+function referenceCaseValue(value, unit) {
+  if (value == null || value === "") return "not emitted";
+  const body = typeof value === "number" && Number.isFinite(value) ? fmt(value, 4) : value;
+  return `${body}${unit ? ` ${unit}` : ""}`;
+}
+
+function referenceCasePeriods(record) {
+  const periods = Array.isArray(record?.period_ends) ? record.period_ends : [];
+  return periods.length ? periods.join(", ") : "period_ends not emitted";
+}
+
+function referenceCaseFormula(record) {
+  const formula = record?.formula && typeof record.formula === "object" && !Array.isArray(record.formula) ? record.formula : {};
+  const detail = Object.entries(formula)
+    .map(([key, value]) => `${humanEngineKey(key)}: ${engineValue(value)}`)
+    .join(" · ");
+  return [record?.formula_version, formula.name, detail].filter(Boolean).join(" · ") || "formula not emitted";
+}
+
+function referenceCaseSourceLinks(record) {
+  const facts = Array.isArray(record?.source_facts) ? record.source_facts : [];
+  const seen = new Set();
+  const links = facts.flatMap(fact => {
+    const pages = Array.isArray(fact?.evidence_pages) && fact.evidence_pages.length ? fact.evidence_pages : [null];
+    return pages.map(page => ({ fact, page }));
+  }).filter(({ fact, page }) => {
+    const key = [fact?.source_url, fact?.document_id, fact?.period_end, page].join("|");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  if (!links.length) return `<div class="empty">No official source fact links were emitted.</div>`;
+  return links.map(({ fact, page }) => {
+    const href = safeHref(fact?.source_url);
+    const label = [
+      fact?.document_id || "official document",
+      fact?.period_end || "period unknown",
+      page ? `p.${page}` : "page unknown",
+    ].join(" · ");
+    const body = href
+      ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+      : `<span>${esc(label)}</span>`;
+    return `<article>${body}<small>${esc(fact?.line || "line unknown")} · ${esc(fact?.consolidation || "basis unknown")} · ${esc(fact?.available_on || "availability unknown")}</small></article>`;
+  }).join("");
+}
+
+function renderHistoricalReferenceCases(r) {
+  const records = referenceCaseRows(r);
+  return `<section class="baseline-section historical-reference-cases" aria-labelledby="historicalReferenceCasesTitle">
+    <h3 id="historicalReferenceCasesTitle">Reported-history reference cases</h3>
+    <p class="section-note">Read-only rows from row.historical_reference_cases. They are reported-history-derived reference cases only: not forecasts, not formal valuations, not targets, not recommendations, and not advice.</p>
+    ${records.length ? `<div class="reference-case-list">${records.map(record => `<article class="reference-case-card">
+      <header>
+        <div><span>Metric</span><b>${esc(record.metric || "metric not emitted")}</b></div>
+        <div><span>Derived value</span><b>${esc(referenceCaseValue(record.derived_value, record.unit))}</b></div>
+      </header>
+      <div class="reference-case-grid">
+        <span>Covered period ends <b>${esc(referenceCasePeriods(record))}</b></span>
+        <span>Availability <b>${esc(record.available_on || "available_on not emitted")}</b></span>
+        <span>Status <b>${esc(record.assumption_status || record.approval_scope || "status not emitted")}</b></span>
+        <span>Record type <b>${esc(record.record_type || record.case_type || "record type not emitted")}</b></span>
+      </div>
+      <div class="reference-case-formula"><span class="kicker">Formula</span><p>${esc(referenceCaseFormula(record))}</p></div>
+      <div class="reference-case-sources"><span class="kicker">Official source links</span>${referenceCaseSourceLinks(record)}</div>
+    </article>`).join("")}</div>` : `<div class="empty">No historical_reference_cases rows were emitted for ${esc(r.symbol || "this company")}.</div>`}
+  </section>`;
+}
+
 function renderFinancialBaseline(r) {
   const model = r.financial_model_inputs || {};
   const observations = model.observations || {};
@@ -2620,7 +2692,7 @@ function renderFinancialBaseline(r) {
   const downstreamCard = (key, label) => `<div><span>${esc(label)}</span><b>${esc(downstream[key] || "blocked_not_implemented")}</b></div>`;
   const row = (line, item) => `<tr><td>${esc(line)}</td><td>${esc(item.period_end || "Unknown")}</td><td>${esc(item.normalized_value ?? item.value ?? "Unknown")}</td><td>${esc(item.currency || "Unknown")} · ${esc(item.unit || "Unknown")} × ${esc(item.unit_multiplier ?? "Unknown")}</td><td>${esc(item.column_role || "Unknown")} · ${esc(item.consolidation || "Unknown")}</td><td>${esc(item.source_url || item.document_id || "No citation")}</td></tr>`;
   const derivedRows = Object.entries(derived).flatMap(([name, values]) => (values || []).map(v => `<tr><td>${esc(name)}</td><td>${esc(v.period_end || "Unknown")}</td><td>${esc(v.value ?? "Unknown")}</td><td>${esc(v.formula_version || "Unknown")}</td><td>${esc((v.source_fact_ids || []).join(", ") || "Unknown")}</td><td>${esc(v.availability || "Unknown")}</td></tr>`)).join("");
-  return `<section class="panel span9 baseline-shell"><span class="kicker">Financial baseline</span><h2>Reported history and deterministic derivations</h2><p class="section-note">Only current parser-version observations are shown. Values, units, citations, and readiness remain exactly as supplied by the financial model input state.</p><div class="baseline-status"><div><span>Readiness</span><b>${esc(readiness)}</b></div><div><span>Model</span><b>${esc(model.model_version || "unsupported_sector_model")}</b></div>${downstreamCard("forecast", "Forecast")}${downstreamCard("valuation", "Valuation")}${downstreamCard("market_expectations", "Market expectations")}${downstreamCard("scenario_lab", "Scenario Lab")}</div>${model.quality_flags?.length ? `<p class="baseline-warning">Quality flags: ${esc(model.quality_flags.join(", "))}</p>` : ""}${renderFinancialCoverage(r)}<section class="baseline-section"><h3>Reported observations</h3>${observationRows.length ? `<div class="baseline-table"><table><thead><tr><th>Line</th><th>Period</th><th>Value</th><th>Unit</th><th>Role / basis</th><th>Official citation</th></tr></thead><tbody>${observationRows.map(({ line, item }) => row(line, item)).join("")}</tbody></table></div>` : `<div class="empty">No verified model-loadable observations are available.</div>`}</section><section class="baseline-section"><h3>Derived metrics</h3>${derivedRows ? `<div class="baseline-table"><table><thead><tr><th>Metric</th><th>Period</th><th>Value</th><th>Formula</th><th>Operands</th><th>Available on</th></tr></thead><tbody>${derivedRows}</tbody></table></div>` : `<div class="empty">No derived growth or margin outputs are available.</div>`}</section></section>`;
+  return `<section class="panel span9 baseline-shell"><span class="kicker">Financial baseline</span><h2>Reported history and deterministic derivations</h2><p class="section-note">Only current parser-version observations are shown. Values, units, citations, and readiness remain exactly as supplied by the financial model input state.</p><div class="baseline-status"><div><span>Readiness</span><b>${esc(readiness)}</b></div><div><span>Model</span><b>${esc(model.model_version || "unsupported_sector_model")}</b></div>${downstreamCard("forecast", "Forecast")}${downstreamCard("valuation", "Valuation")}${downstreamCard("market_expectations", "Market expectations")}${downstreamCard("scenario_lab", "Scenario Lab")}</div>${model.quality_flags?.length ? `<p class="baseline-warning">Quality flags: ${esc(model.quality_flags.join(", "))}</p>` : ""}${renderFinancialCoverage(r)}${renderHistoricalReferenceCases(r)}<section class="baseline-section"><h3>Reported observations</h3>${observationRows.length ? `<div class="baseline-table"><table><thead><tr><th>Line</th><th>Period</th><th>Value</th><th>Unit</th><th>Role / basis</th><th>Official citation</th></tr></thead><tbody>${observationRows.map(({ line, item }) => row(line, item)).join("")}</tbody></table></div>` : `<div class="empty">No verified model-loadable observations are available.</div>`}</section><section class="baseline-section"><h3>Derived metrics</h3>${derivedRows ? `<div class="baseline-table"><table><thead><tr><th>Metric</th><th>Period</th><th>Value</th><th>Formula</th><th>Operands</th><th>Available on</th></tr></thead><tbody>${derivedRows}</tbody></table></div>` : `<div class="empty">No derived growth or margin outputs are available.</div>`}</section></section>`;
 }
 
 function renderFinancials(r) {

@@ -39,6 +39,49 @@ which file changed.
 
 ---
 
+## 2026-08-18 — v2026.08.18 — Desk clean URLs
+
+<!--public
+Desk links are now clean paths such as `/today`, `/watchlist`, and `/ticker/HBL`, so shared links
+open directly and remain reliable after refresh. Existing old links are upgraded automatically.
+-->
+
+### What changed
+
+The dashboard now uses the History API and path-based dispatch instead of hash navigation. Vercel
+routes clean dashboard paths back to the shell, while `/state/*` authentication, signed-out open
+routes, OAuth callback fragments, extension links, email links, and browser back/forward behavior
+remain unchanged. The marketing site was already path-based; its links into the desk now use the
+same clean paths.
+
+---
+
+## 2026-08-17 — v2026.08.17 — Ask the Desk: model swap + truncation/markdown fix
+
+<!--public
+Ask the Desk stopped cutting off mid-answer, and replies now render as real headings and bullet
+lists instead of showing literal asterisks. Earlier the same day, a Groq model retirement had
+started silently breaking every Ask the Desk answer — that's fixed too.
+-->
+
+### What changed
+
+**1. Retired-model outage.** Groq retired `llama-3.3-70b-versatile` on 2026-08-16, which broke every
+Ask the Desk call with no visible warning beyond an API error. `api/ask.js` now points `GROQ_MODEL`
+at `openai/gpt-oss-120b`. One line (`f72c4f43`).
+
+**2. Mid-answer truncation.** `max_tokens` in the same file was `500`, tight enough that longer
+answers cut off before the thought finished. Raised to `1000`.
+
+**3. Literal `**markdown**` instead of structure.** The model's replies followed the prompt's
+`**Bold Label**` / `- ` bullet convention, but the dashboard printed that convention as raw
+asterisks and dashes rather than rendering it. `dashboard/app.js` gained `mdLite()`/`inlineMd()` to
+turn the same convention into real `<h4>`/`<ul>`/`<strong>` markup; `dashboard/themes.css` tunes the
+resulting heading/bold weight onto `--ink1` (darker) while body text stays `--ink2`, so the new
+structure reads as hierarchy rather than just heavier text. (`f19ae352`)
+
+---
+
 ## 2026-08-16 — v2026.08.16 — Desk UI overhaul: app shell, context rail, dark theme
 
 <!--public
@@ -1075,3 +1118,33 @@ nothing is fabricated.
 1. Iterate locally: `preview.bat` (or `python scripts/serve.py`) → http://localhost:8877/dashboard/
 2. Before any push: `python scripts/run_cloud.py` (or at minimum `python scripts/preflight.py`) must exit 0.
 3. Push a batch, not every edit. CI re-runs the pipeline + preflight; a bad data cycle can no longer publish.
+
+## 2026-08-17 — v2026.08.17.2 — 13 new tickers added to coverage
+
+<!--public
+The desk now also tracks: AKBL, BAFL, EFERT, EPQL, FFC, FPRM, HBL, HGFA, HIFA, IPAK, NESTLE, PAKT, STL. History is backfilling, so charts fill in over the next few sessions.
+-->
+
+### Universe expansion
+
+Auto-recorded by scripts/changelog_tickers.py: AKBL, BAFL, EFERT, EPQL, FFC, FPRM, HBL, HGFA, HIFA, IPAK, NESTLE, PAKT, STL added to state/universe.json this cycle.
+
+## 2026-08-19 — v2026.08.19 — 2 new tickers added to coverage
+
+<!--public
+The desk now also tracks: FPRMR2, STLR. History is backfilling, so charts fill in over the next few sessions.
+-->
+
+### Universe expansion
+
+Auto-recorded by scripts/changelog_tickers.py: FPRMR2, STLR added to state/universe.json this cycle.
+
+## 2026-08-24 — v2026.08.24 — 3 new tickers added to coverage
+
+<!--public
+The desk now also tracks: GCWLPRS, SGPLR, TISL. History is backfilling, so charts fill in over the next few sessions.
+-->
+
+### Universe expansion
+
+Auto-recorded by scripts/changelog_tickers.py: GCWLPRS, SGPLR, TISL added to state/universe.json this cycle.

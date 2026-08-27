@@ -2,7 +2,9 @@ import { buildAnswerSections, byteLength, projectCompany, validateModelOutput, v
 
 export const config = { runtime: "edge" };
 export const BODY_LIMIT = 16 * 1024;
-const DATA_LIMIT = 4 * 1024 * 1024;
+// A bounded owner-only slice currently carries 20 Company Brains and their
+// provenance. Keep a hard cap while accommodating the published artifact.
+const DATA_LIMIT = 8 * 1024 * 1024;
 const JWKS_URL = "https://qteoncckohuoatbjjykb.supabase.co/auth/v1/.well-known/jwks.json";
 const DEFAULT_MODEL = "openai/gpt-oss-120b";
 let keyCache = null;

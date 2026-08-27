@@ -131,13 +131,18 @@ def _assert_shape(data: dict, pilot: list[str]) -> None:
     if set(companies) != set(pilot):
         _fail("company boundary mismatch")
     summary = data.get("summary") or {}
-    if summary.get("forecast_ready_company_count") != 1 or summary.get("eligible_fact_count") != 9:
-        _fail("real state must have exactly one forecast-ready company and nine eligible manual facts")
+    expected_ready = sum(1 for row in companies.values()
+                         if (row.get("readiness") or {}).get("forecast_readiness_status") == "input_ready")
+    expected_eligible = sum(1 for row in companies.values() for fact in row.get("facts") or []
+                            if fact.get("status") == "eligible")
+    if (summary.get("forecast_ready_company_count") != expected_ready
+            or summary.get("eligible_fact_count") != expected_eligible):
+        _fail("real-state reconciliation summary does not match its fact rows")
     for symbol in pilot:
         row = companies.get(symbol) or {}
         if row.get("symbol") != symbol:
             _fail(f"{symbol}: symbol mismatch")
-        expected_readiness = "input_ready" if symbol == "MLCF" else "blocked"
+        expected_readiness = "input_ready" if len(row.get("qualified_periods") or []) >= 3 else "blocked"
         if row.get("readiness", {}).get("forecast_readiness_status") != expected_readiness:
             _fail(f"{symbol}: forecast readiness status mismatch")
         for key, blocked in BLOCKED_OUTPUT_STATUS.items():
@@ -213,11 +218,8 @@ def main() -> None:
     _assert_shape(expected, pilot)
     for symbol, row in (expected.get("companies") or {}).items():
         qualified = row.get("qualified_periods") or []
-        if symbol == "MLCF":
-            if len(qualified) != 3:
-                _fail("MLCF must have exactly three qualified reconciliation periods")
-        elif qualified:
-            _fail(f"{symbol}: real retained state unexpectedly has qualified periods")
+        if row.get("readiness", {}).get("forecast_readiness_status") == "input_ready" and len(qualified) < 3:
+            _fail(f"{symbol}: input-ready reconciliation lacks three qualified periods")
     _synthetic_assertions()
     before = builder.OUT.read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_financial_evidence_reconciliation.py")], capture_output=True, text=True, timeout=30)

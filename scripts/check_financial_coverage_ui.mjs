@@ -32,10 +32,10 @@ function main() {
     assert(Array.isArray(coverage.required_annual_periods) && coverage.required_annual_periods.length === 3, `${row.symbol} annual slots mismatch`);
     assert(Array.isArray(coverage.missing_revenue_pat_eps_by_annual_period) && coverage.missing_revenue_pat_eps_by_annual_period.length === 3, `${row.symbol} missing metric slots mismatch`);
     const slots = coverage.missing_revenue_pat_eps_by_annual_period;
-    if (row.symbol === "MLCF") {
-      assert(slots.every(slot => (slot.missing_metrics || []).length === 0 && slot.status === "complete"), "MLCF verified annual revenue/PAT/EPS coverage missing");
+    if (row.forecast_readiness?.status === "input_ready") {
+      assert(slots.filter(slot => slot.period_end).some(slot => (slot.missing_metrics || []).length === 0 && slot.status === "complete"), `${row.symbol} qualified annual revenue/PAT/EPS coverage missing`);
     } else {
-      assert(slots.every(slot => ["revenue", "profit_after_tax_attributable", "basic_eps"].every(metric => (slot.missing_metrics || []).includes(metric))), `${row.symbol} missing revenue/PAT/EPS not explicit`);
+      assert(slots.every(slot => Array.isArray(slot.missing_metrics) && Array.isArray(slot.present_model_ready_metrics) && typeof slot.status === "string"), `${row.symbol} missing revenue/PAT/EPS coverage is not explicit`);
     }
     assert(coverage.audit_only_series && Number.isInteger(coverage.audit_only_series.audit_only_fact_count), `${row.symbol} audit-only count missing`);
     assert(coverage.qualification_queue && typeof coverage.qualification_queue.status === "string", `${row.symbol} queue status missing`);

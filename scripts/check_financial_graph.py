@@ -17,7 +17,7 @@ def _fixture(title: str, page: str, raw: str = "12,345") -> tuple[dict, dict, li
            "source_url": "https://dps.psx.com.pk/download/document/1.pdf", "status": "ready",
            "content_sha256": "a" * 64, "period": "2025-09-30"}
     fact = {"fact_id": "fact_fixture", "fact_type": "revenue", "line": "revenue",
-            "parser_version": "financial_statement_v2", "parser_revision":"block_geometry_v4",
+            "parser_version": "financial_statement_v2", "parser_revision":"block_geometry_v5",
             "readiness": "model_loadable", "period_end": "2025-09-30", "period_type":"quarter",
             "duration_months":3, "column_role":"current_period", "consolidation": "consolidated",
             "currency": "PKR", "statement_type": "income_statement", "available_on": "2025-10-02",
@@ -42,6 +42,12 @@ def run() -> None:
     assert row["normalized_value"] == 12_345_000_000, row
     assert row["readiness"] == "model_loadable", row
     assert not {"missing_period_end", "missing_currency", "missing_unit_scale", "missing_consolidation_basis"}.intersection(row["quality_flags"]), row
+    bounded_doc = {**doc, "doc_id": "psx:bounded-page", "page_count": 200}
+    bounded_fact = {**fact, "fact_id": "fact_bounded_page", "document_id": bounded_doc["doc_id"]}
+    bounded_fact["evidence"] = [{"source_url": doc["source_url"], "page": 155,
+                                  "text": "Revenue 12,345 (Rupees in million)"}]
+    bounded = normalize_fact(bounded_doc, bounded_fact, pages=["cover excerpt"])
+    assert bounded and "invalid_evidence_page" not in bounded["quality_flags"], bounded
     eps_doc = {**doc, "doc_id": "psx:eps-fixture", "title": "ABC Results"}
     eps_fact = {"fact_id": "fact_eps", "fact_type": "eps", "raw_value": "12.5", "normalized_value": 12.5,
                 "unit": "PKR/share", "scale_multiplier": 1,
@@ -123,6 +129,41 @@ def run() -> None:
         candidate.update(patch)
         row_bad = normalize_fact(valid_doc, candidate, pages=valid_pages)
         assert row_bad and row_bad["readiness"] == "audit_only" and expected_flag in row_bad["quality_flags"], (expected_flag, row_bad)
+
+    # Issuer PDFs are eligible only through the retained same-domain source
+    # registry link. A direct URL, hash mismatch, or missing page evidence
+    # remains audit-only even when the parser emitted a v2 fact.
+    issuer_url = "https://issuer.example/investors/annual-2025.pdf"
+    issuer_hash = "c" * 64
+    issuer_doc = {**valid_doc, "doc_id": "issuer:fixture", "source_url": issuer_url,
+                  "content_sha256": issuer_hash, "local_sha256": issuer_hash,
+                  "media_type": "application/pdf", "status": "ready", "tickers": ["ABC"]}
+    issuer_fact = {**valid_fact, "document_id": "issuer:fixture", "source_url": issuer_url,
+                   "content_sha256": issuer_hash,
+                   "evidence": [{"source_url": issuer_url, "page": 1,
+                                 "text": "Revenue 12,345 (Rupees in million)"}]}
+    issuer_registry = {"tickers": {"ABC": {
+        "root_domain": "issuer.example", "issuer_url": "https://issuer.example/",
+        "document_links": [{"id": "issuer:fixture", "url": issuer_url,
+                            "source_page": "https://issuer.example/investors/",
+                            "status": "discovered"}],
+    }}}
+    issuer_row = normalize_fact(issuer_doc, issuer_fact, pages=valid_pages,
+                                source_registry=issuer_registry)
+    assert issuer_row and issuer_row["readiness"] == "model_loadable", issuer_row
+    assert issuer_row.get("issuer_registry_binding", {}).get("link_id") == "issuer:fixture", issuer_row
+    assert normalize_fact(issuer_doc, issuer_fact, pages=valid_pages)["readiness"] == "audit_only"
+    for patch in (
+        {"source_url": "https://evil.example/annual-2025.pdf"},
+        {"content_sha256": "d" * 64},
+        {"evidence": [{"source_url": issuer_url, "page": 0, "text": "Revenue"}]},
+    ):
+        candidate = dict(issuer_fact)
+        candidate["evidence"] = [dict(item) for item in issuer_fact["evidence"]]
+        candidate.update(patch)
+        bad = normalize_fact(issuer_doc, candidate, pages=valid_pages,
+                             source_registry=issuer_registry)
+        assert bad and bad["readiness"] == "audit_only", (patch, bad)
     repaired = _sanitize_row({"unit": "PKR/share", "unit_multiplier": 1_000_000,
                               "raw_value": "12.5", "normalized_value": 12_500_000,
                               "metric": "eps", "quality_flags": ["missing_period_end"]})

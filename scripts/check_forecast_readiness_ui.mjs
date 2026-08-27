@@ -41,10 +41,9 @@ function main() {
   for (const row of rows) {
     const readiness = row.forecast_readiness;
     assert(readiness && typeof readiness === "object" && !Array.isArray(readiness), `${row.symbol} forecast_readiness missing`);
-    if (row.symbol === "MLCF") {
-      assert(readiness.status === "input_ready", "MLCF forecast readiness must reflect qualified live inputs");
-      assert(readiness.qualified_period_count === 3, "MLCF qualified period count must be three");
-      assert(readiness.missing_requirements.length === 0, "MLCF input-ready row must not name missing input requirements");
+    if (readiness.status === "input_ready") {
+      assert(readiness.qualified_period_count >= 3, `${row.symbol} qualified period count must be at least three`);
+      assert(readiness.missing_requirements.length === 0, `${row.symbol} input-ready row must not name missing input requirements`);
     } else {
       assert(typeof readiness.status === "string" && readiness.status.startsWith("blocked"), `${row.symbol} forecast readiness must remain blocked without qualified inputs`);
       assert(readiness.missing_requirements.length > 0, `${row.symbol} blocked row must name missing requirements`);

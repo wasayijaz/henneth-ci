@@ -15,6 +15,7 @@ import math
 import re
 from datetime import date
 from typing import Any, Iterable
+from urllib.parse import urlparse
 
 from financial_statement_facts import PARSER_VERSION, PARSER_REVISION
 
@@ -38,6 +39,104 @@ _STRUCTURED_LINES = {
     "profit_before_tax", "tax_expense", "profit_after_tax_attributable", "basic_eps",
 }
 _OFFICIAL_PSX_DOCUMENT_RE = re.compile(r"^https://dps\.psx\.com\.pk/download/document/\d+\.pdf$")
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.I)
+
+
+def _document_available_on(doc: dict[str, Any], fact: dict[str, Any]) -> str | None:
+    """Return the authoritative date-level availability for a source receipt."""
+    for value in (doc.get("available_on"), doc.get("published_at"), doc.get("retrieved_at"),
+                  fact.get("available_on")):
+        parsed = _iso_date_value(value)
+        if parsed is not None:
+            return parsed.isoformat()
+    return None
+
+
+def _same_domain(host: Any, root_domain: Any) -> bool:
+    host_text = str(host or "").lower().rstrip(".")
+    root_text = str(root_domain or "").lower().lstrip(".").rstrip(".")
+    if host_text.startswith("www."):
+        host_text = host_text[4:]
+    if root_text.startswith("www."):
+        root_text = root_text[4:]
+    return bool(host_text and root_text and (host_text == root_text or host_text.endswith("." + root_text)))
+
+
+def issuer_registry_binding(doc: dict[str, Any], fact: dict[str, Any],
+                            registry: dict[str, Any] | None,
+                            *, evidence_page: Any = None,
+                            evidence_text: str = "") -> tuple[dict[str, Any] | None, list[str]]:
+    """Validate an issuer PDF against the retained same-domain source registry.
+
+    The registry is deliberately required as an explicit input.  A URL that is
+    merely HTTPS (or happens to look like an issuer PDF) is not provenance.
+    ``company_documents.json`` supplies the verified bytes/hash and page
+    evidence; the registry supplies the retained issuer link and domain.
+    """
+    flags: list[str] = []
+    doc_id = str(doc.get("doc_id") or "")
+    source_url = str(fact.get("source_url") or doc.get("source_url") or "")
+    if not doc_id.startswith("issuer:"):
+        flags.append("issuer_document_id_required")
+    if not source_url:
+        flags.append("issuer_source_url_required")
+    parsed = urlparse(source_url)
+    if parsed.scheme != "https" or not parsed.path.lower().endswith(".pdf"):
+        flags.append("issuer_pdf_url_required")
+    doc_hash = str(doc.get("content_sha256") or "").lower()
+    fact_hash = str(fact.get("content_sha256") or "").lower()
+    if not _SHA256_RE.fullmatch(doc_hash) or not _SHA256_RE.fullmatch(fact_hash):
+        flags.append("issuer_content_sha256_required")
+    elif doc_hash != fact_hash:
+        flags.append("issuer_content_hash_mismatch")
+    if doc.get("status") != "ready":
+        flags.append("issuer_document_not_verified")
+    if str(doc.get("media_type") or doc.get("mime_type") or "").lower() not in {"application/pdf", "application/x-pdf"}:
+        flags.append("issuer_pdf_media_type_required")
+    local_hash = str(doc.get("local_sha256") or "").lower()
+    if local_hash and local_hash != doc_hash:
+        flags.append("issuer_local_content_hash_mismatch")
+    if not isinstance(evidence_page, int) or isinstance(evidence_page, bool) or evidence_page < 1 or not evidence_text.strip():
+        flags.append("issuer_page_evidence_required")
+    tickers = {str(t).strip().upper() for t in (doc.get("tickers") or fact.get("tickers") or []) if str(t).strip()}
+    ticker_rows = (registry or {}).get("tickers") if isinstance(registry, dict) else None
+    if not isinstance(ticker_rows, dict) or not tickers:
+        flags.append("issuer_registry_required")
+        return None, sorted(set(flags))
+    matches: list[tuple[str, dict[str, Any], dict[str, Any]]] = []
+    for ticker in sorted(tickers):
+        row = ticker_rows.get(ticker)
+        if not isinstance(row, dict):
+            continue
+        root_domain = row.get("root_domain")
+        if not _same_domain(parsed.hostname, root_domain):
+            continue
+        for link in row.get("document_links") or []:
+            if not isinstance(link, dict):
+                continue
+            if str(link.get("id") or "") == doc_id and str(link.get("url") or "") == source_url:
+                link_page = urlparse(str(link.get("source_page") or row.get("issuer_url") or ""))
+                if not _same_domain(link_page.hostname, root_domain):
+                    continue
+                matches.append((ticker, row, link))
+    if len(matches) != 1:
+        flags.append("issuer_registry_link_not_found")
+        return None, sorted(set(flags))
+    ticker, row, link = matches[0]
+    if flags:
+        return None, sorted(set(flags))
+    return {
+        "status": "qualified",
+        "document_id": doc_id,
+        "link_id": str(link.get("id")),
+        "source_url": source_url,
+        "source_page": str(link.get("source_page") or row.get("issuer_url") or ""),
+        "root_domain": str(row.get("root_domain") or ""),
+        "content_sha256": doc_hash,
+        "evidence_page": evidence_page,
+        "ticker": ticker,
+        "registry_source": "state/company_intel/source_registry.json",
+    }, []
 
 
 def _iso_date(day: str, month: str, year: str) -> str | None:
@@ -160,7 +259,8 @@ def _iso_date_value(value: Any) -> date | None:
         return None
 
 
-def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable[str] = ()) -> dict[str, Any] | None:
+def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable[str] = (),
+                   source_registry: dict[str, Any] | None = None) -> dict[str, Any] | None:
     """Return one bounded series row or ``None`` when no source identity exists."""
     doc_id = str(doc.get("doc_id") or "")
     ticker_values = doc.get("tickers") or fact.get("tickers") or []
@@ -174,18 +274,39 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
         return None
     cited_page = evidence.get("page")
     page_list = [str(p or "") for p in pages]
-    valid_evidence_page = isinstance(cited_page, int) and not isinstance(cited_page, bool) and 0 < cited_page <= len(page_list)
-    cited_page_text = page_list[cited_page - 1] if valid_evidence_page else evidence_text
+    page_count = doc.get("page_count")
+    durable_page_count = (isinstance(page_count, int) and not isinstance(page_count, bool)
+                          and page_count > 0)
+    valid_evidence_page = (isinstance(cited_page, int) and not isinstance(cited_page, bool)
+                           and cited_page > 0 and (
+                               cited_page <= len(page_list)
+                               or (durable_page_count and cited_page <= page_count)
+                           ))
+    # Durable document state retains only bounded excerpts, not one entry per
+    # PDF page.  When page_count proves the cited page exists but that page is
+    # outside the bounded excerpt list, keep using the exact fact evidence.
+    cited_page_text = (page_list[cited_page - 1]
+                       if valid_evidence_page and cited_page <= len(page_list)
+                       else evidence_text)
     # A period may come from the title or the exact page cited by this fact;
     # never borrow a reporting header from a different page in the same PDF.
     if fact.get("parser_version") == "financial_statement_v2":
-        period_end = fact.get("period_end"); inferred_type = fact.get("period_type") or "unknown"; period_flags = [] if period_end else ["missing_period_end"]
+        period_end = fact.get("period_end")
+        # Geometry-backed statement facts carry an exact duration.  Older
+        # retained v2 rows predate the explicit period_type field, so preserve
+        # the source fact and deterministically enrich the missing redundant
+        # label rather than treating a verified 12-month statement as unknown.
+        inferred_type = fact.get("period_type") or (
+            "annual" if fact.get("duration_months") == 12 else "unknown"
+        )
+        period_flags = [] if period_end else ["missing_period_end"]
     else:
         period_end, inferred_type, period_flags = explicit_period_end(doc.get("title"), [cited_page_text])
     # All table-unit and consolidation decisions are made from the cited page,
     # never from an unrelated page's header.
     basis, basis_flags = (fact.get("consolidation"), []) if fact.get("parser_version") == "financial_statement_v2" else consolidation_basis(f"{doc.get('title') or ''} {cited_page_text}")
     currency, multiplier, unit_flags = currency_and_scale(fact, cited_page_text)
+    issuer_binding = None
     if structured_v3:
         currency = fact.get("currency")
         multiplier = fact.get("unit_multiplier")
@@ -240,7 +361,12 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
         else:
             if not (source_url == fact_source == evidence_source == doc.get("source_url")):
                 flags.append("source_url_mismatch")
-        if source_url and not _OFFICIAL_PSX_DOCUMENT_RE.fullmatch(str(source_url)):
+        if str(doc_id).startswith("issuer:"):
+            issuer_binding, issuer_flags = issuer_registry_binding(
+                doc, fact, source_registry, evidence_page=evidence_page,
+                evidence_text=evidence_text)
+            flags.extend(issuer_flags)
+        elif not _OFFICIAL_PSX_DOCUMENT_RE.fullmatch(str(source_url)):
             flags.append("non_official_source_url")
         if not valid_evidence_page: flags.append("invalid_evidence_page")
         if currency != "PKR": flags.append("invalid_structured_currency")
@@ -254,9 +380,16 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
         if fact.get("column_role") not in {"current_period","comparative_prior_period"}: flags.append("invalid_structured_column_role")
         manifest = doc.get("manifest") if isinstance(doc.get("manifest"), dict) else {}
         authoritative_period = doc.get("period") or manifest.get("period") or doc.get("period_end")
+        # Issuer report indexes may omit a publication-period field entirely.
+        # A v2 fact's period is still authoritative when it comes from the
+        # statement header/table geometry: current-period rows name that
+        # period directly; comparative rows explicitly link back to it.
+        if not authoritative_period:
+            authoritative_period = (period_end if fact.get("column_role") == "current_period"
+                                    else fact.get("comparative_to_period_end"))
         authoritative_date = _iso_date_value(authoritative_period)
         period_date = _iso_date_value(period_end)
-        available_on = fact.get("available_on") or doc.get("available_on")
+        available_on = _document_available_on(doc, fact)
         available_date = _iso_date_value(available_on)
         linkage = fact.get("comparative_to_period_end")
         linkage_date = _iso_date_value(linkage) if linkage else None
@@ -310,9 +443,13 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
                 "missing_structured_scale", "structured_scale_mismatch",
                 "invalid_structured_period_end", "missing_authoritative_period",
                 "current_period_has_comparative_linkage", "comparative_linkage_mismatch",
-                "preexisting_quality_flags_quarantine"}
+                "preexisting_quality_flags_quarantine", "issuer_document_id_required",
+                "issuer_source_url_required", "issuer_pdf_url_required", "issuer_content_sha256_required",
+                "issuer_content_hash_mismatch", "issuer_document_not_verified", "issuer_pdf_media_type_required",
+                "issuer_local_content_hash_mismatch", "issuer_page_evidence_required",
+                "issuer_registry_required", "issuer_registry_link_not_found"}
     readiness = "model_loadable" if fact.get("readiness") == "model_loadable" and metric != "change_pct" and not blocking.intersection(flags) else "audit_only"
-    available_on = fact.get("available_on") or doc.get("available_on")
+    available_on = _document_available_on(doc, fact)
     if fact.get("parser_version") == "financial_statement_v2" and not available_on:
         flags.append("missing_or_invalid_publication_date")
         readiness = "audit_only"
@@ -330,6 +467,8 @@ def normalize_fact(doc: dict[str, Any], fact: dict[str, Any], *, pages: Iterable
         "raw_value": raw_value, "normalized_value": normalized,
         "document_id": doc_id, "fact_id": fact.get("fact_id"),
         "content_sha256": fact.get("content_sha256") or doc.get("content_sha256"),
-        "source_url": source_url, "evidence": [{"page": evidence_page, "text": evidence_text}],
+        "source_url": source_url,
+        "evidence": [{"page": evidence_page, "text": evidence_text, "source_url": source_url}],
+        **({"issuer_registry_binding": issuer_binding} if issuer_binding else {}),
         "quality_flags": flags, "readiness": readiness,
     }

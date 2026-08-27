@@ -78,8 +78,8 @@ try {
     assert(row.symbol && row.company_brain?.domains, `${row.symbol || "unknown"}: Company Brain available`);
     assert(row.company_brain.domains.forecasts?.status === "blocked", `${row.symbol}: forecasts blocked`);
     assert(row.company_brain.domains.valuation?.status === "blocked", `${row.symbol}: valuation blocked`);
-    if (row.symbol === "MLCF") {
-      assert(row.forecast_readiness?.status === "input_ready" && row.forecast_readiness?.qualified_period_count === 3, "MLCF: forecast readiness input-ready");
+    if (row.forecast_readiness?.status === "input_ready") {
+      assert(row.forecast_readiness?.qualified_period_count >= 3, `${row.symbol}: forecast readiness input-ready`);
     } else {
       assert(row.forecast_readiness?.status === "blocked", `${row.symbol}: forecast readiness blocked`);
     }

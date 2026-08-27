@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "delivery_version": "management_delivery_v2",
- "as_of": "2026-08-25T17:22:00+05:00",
+ "as_of": "2026-08-27T06:01:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -266,11 +266,204 @@
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "guidance_status": "blocked_no_guidance_objects",
-   "guidance_object_count": 0,
-   "guidance_record_count": 0,
+   "guidance_status": "available",
+   "guidance_object_count": 4,
+   "guidance_record_count": 4,
    "records": [],
-   "guidance_records": []
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_0a7295849945a09b2d72",
+     "symbol": "CNERGY",
+     "guidance_id": "guidance_8bea1120e5d855f455a6",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "confirmed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T06:00:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_8bea1120e5d855f455a6",
+        "document_id": "issuer:d4529333539b04c18f5553ba",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2023.pdf",
+        "page": 62,
+        "content_sha256": "75fbedd169b1bfd612884d590af9cf33ef9a03f85985bff51c706a261747265c",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:00:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": {
+      "guidance_id": "guidance_97c12351535956f4956d",
+      "available_at": "2026-08-27T06:01:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_97c12351535956f4956d",
+        "document_id": "issuer:65e8a35ca116cd2bd32ec092",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2021.pdf",
+        "page": 31,
+        "content_sha256": "a0626f1d38994f79de1ff0ab76d1beaf9f4c5aaf26060b141694e477a3069c86",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:01:00+05:00"
+       }
+      ]
+     },
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 1,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 2,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_89b95a37cbbd9fd55dc9",
+     "symbol": "CNERGY",
+     "guidance_id": "guidance_8dfb0edcb6e82d823a82",
+     "assertion_key": "guidance:upgrade_neries_produce_more_environ_mentally_friendly_euro_v:proceed",
+     "conflict_key": "guidance:upgrade_neries_produce_more_environ_mentally_friendly_euro_v",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T06:00:00+05:00",
+      "statement": "upgrade its reﬁneries to produce more environ- mentally friendly Euro-V fuels",
+      "domain": "guidance",
+      "modality": "proceed",
+      "evidence": [
+       {
+        "guidance_id": "guidance_8dfb0edcb6e82d823a82",
+        "document_id": "issuer:d4529333539b04c18f5553ba",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2023.pdf",
+        "page": 29,
+        "content_sha256": "75fbedd169b1bfd612884d590af9cf33ef9a03f85985bff51c706a261747265c",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:00:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 1,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 2,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_401ffa3e34d85c8ede1d",
+     "symbol": "CNERGY",
+     "guidance_id": "guidance_a068273221bf335eec40",
+     "assertion_key": "guidance:seek_out_new_way:continue",
+     "conflict_key": "guidance:seek_out_new_way",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T06:00:00+05:00",
+      "statement": "continue to seek out new way…",
+      "domain": "guidance",
+      "modality": "continue",
+      "evidence": [
+       {
+        "guidance_id": "guidance_a068273221bf335eec40",
+        "document_id": "issuer:d4529333539b04c18f5553ba",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2023.pdf",
+        "page": 33,
+        "content_sha256": "75fbedd169b1bfd612884d590af9cf33ef9a03f85985bff51c706a261747265c",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:00:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 1,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 2,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_6bea1ae9f19f9f488037",
+     "symbol": "CNERGY",
+     "guidance_id": "guidance_97c12351535956f4956d",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T06:01:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_97c12351535956f4956d",
+        "document_id": "issuer:65e8a35ca116cd2bd32ec092",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2021.pdf",
+        "page": 31,
+        "content_sha256": "a0626f1d38994f79de1ff0ab76d1beaf9f4c5aaf26060b141694e477a3069c86",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:01:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "DGKC": {
    "symbol": "DGKC",
@@ -278,8 +471,8 @@
    "active_thesis_count": 0,
    "delivery_record_count": 0,
    "guidance_status": "available",
-   "guidance_object_count": 1,
-   "guidance_record_count": 1,
+   "guidance_object_count": 10,
+   "guidance_record_count": 10,
    "records": [],
    "guidance_records": [
     {
@@ -288,7 +481,7 @@
      "guidance_id": "guidance_9fb068254f8f34f3142d",
      "assertion_key": "risks:default_payment_debts:risk_present",
      "conflict_key": "risks:default_payment_debts",
-     "status": "not_observed",
+     "status": "confirmed",
      "scorecard_type": "categorical_status_only",
      "source_guidance": {
       "available_at": "2026-08-22T16:04:00+05:00",
@@ -308,13 +501,505 @@
        }
       ]
      },
-     "matched_guidance": null,
+     "matched_guidance": {
+      "guidance_id": "guidance_0d92346ee9037371d00d",
+      "available_at": "2026-08-27T05:19:00+05:00",
+      "assertion_key": "risks:default_payment_debts:risk_present",
+      "conflict_key": "risks:default_payment_debts",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_0d92346ee9037371d00d",
+        "document_id": "issuer:39fe974f6ef82bbeadf83938",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2025.pdf",
+        "page": 40,
+        "content_sha256": "96ca1120b238541d4916fb1c777614ee6045f30ab130d2f18e8a1fd5c62bdf73",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:19:00+05:00"
+       }
+      ]
+     },
      "guidance_review": {
-      "reviewed_object_count": 1,
-      "candidate_object_count": 0,
+      "reviewed_object_count": 10,
+      "candidate_object_count": 9,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_6087d8adcef24f055ead",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_39e73a266a3914822d8c",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "confirmed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:39:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_39e73a266a3914822d8c",
+        "document_id": "issuer:5943c09923394ef40e90cc78",
+        "source_url": "https://www.dgcement.com/financial-reports/DGKCAnnual_Report_2020.pdf",
+        "page": 44,
+        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:39:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": {
+      "guidance_id": "guidance_4d0322a9bc28e035281b",
+      "available_at": "2026-08-27T03:40:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_4d0322a9bc28e035281b",
+        "document_id": "issuer:6644afdd89fc5384830867e7",
+        "source_url": "https://www.dgcement.com/financial-reports/2016_17_f.pdf",
+        "page": 17,
+        "content_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:40:00+05:00"
+       }
+      ]
+     },
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 8,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 1,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_298c5781f94ceb3a866e",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_4d0322a9bc28e035281b",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "confirmed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:40:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_4d0322a9bc28e035281b",
+        "document_id": "issuer:6644afdd89fc5384830867e7",
+        "source_url": "https://www.dgcement.com/financial-reports/2016_17_f.pdf",
+        "page": 17,
+        "content_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:40:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": {
+      "guidance_id": "guidance_2dc69bc5e7a63539c471",
+      "available_at": "2026-08-27T03:41:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_2dc69bc5e7a63539c471",
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "page": 35,
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:41:00+05:00"
+       }
+      ]
+     },
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 6,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_9d1f9564dba5eb720c22",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_5cdda9c9eda1b6e76cdc",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "confirmed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:40:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_5cdda9c9eda1b6e76cdc",
+        "document_id": "issuer:c38ef8e6e11d33c8261e262d",
+        "source_url": "https://www.dgcement.com/financial-reports/2015-16_f.pdf",
+        "page": 19,
+        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:40:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": {
+      "guidance_id": "guidance_2dc69bc5e7a63539c471",
+      "available_at": "2026-08-27T03:41:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_2dc69bc5e7a63539c471",
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "page": 35,
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:41:00+05:00"
+       }
+      ]
+     },
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 6,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_d5a9afbdcd76ba898502",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_2dc69bc5e7a63539c471",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "confirmed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:41:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_2dc69bc5e7a63539c471",
+        "document_id": "issuer:26f095b5a39a5c2fce8ae3f7",
+        "source_url": "https://www.dgcement.com/financial-reports/2013-14_f.pdf",
+        "page": 35,
+        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:41:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": {
+      "guidance_id": "guidance_f5cf7cd7e1d1312629f2",
+      "available_at": "2026-08-27T03:46:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_f5cf7cd7e1d1312629f2",
+        "document_id": "issuer:ca644787b36dc7ace085ff54",
+        "source_url": "https://www.dgcement.com/financial-reports/DG_Annual_Report_2022.pdf",
+        "page": 34,
+        "content_sha256": "5bbaee24c08b67b82e4dfdf07240c732d958567576fe3db4e81f2e5646fedbb9",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:46:00+05:00"
+       }
+      ]
+     },
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 4,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 5,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_b1ea3b1afa5d86be9442",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_b54f24564d628b4b0a19",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "confirmed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:41:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_b54f24564d628b4b0a19",
+        "document_id": "issuer:773167b57f3bc15094fdf721",
+        "source_url": "https://www.dgcement.com/financial-reports/2014-15_f.pdf",
+        "page": 31,
+        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:41:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": {
+      "guidance_id": "guidance_f5cf7cd7e1d1312629f2",
+      "available_at": "2026-08-27T03:46:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_f5cf7cd7e1d1312629f2",
+        "document_id": "issuer:ca644787b36dc7ace085ff54",
+        "source_url": "https://www.dgcement.com/financial-reports/DG_Annual_Report_2022.pdf",
+        "page": 34,
+        "content_sha256": "5bbaee24c08b67b82e4dfdf07240c732d958567576fe3db4e81f2e5646fedbb9",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:46:00+05:00"
+       }
+      ]
+     },
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 4,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 5,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_e2018834c3f0c4dd723c",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_f5cf7cd7e1d1312629f2",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:46:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_f5cf7cd7e1d1312629f2",
+        "document_id": "issuer:ca644787b36dc7ace085ff54",
+        "source_url": "https://www.dgcement.com/financial-reports/DG_Annual_Report_2022.pdf",
+        "page": 34,
+        "content_sha256": "5bbaee24c08b67b82e4dfdf07240c732d958567576fe3db4e81f2e5646fedbb9",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:46:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 3,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 6,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_b3af214db2fda301fdaa",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_0d92346ee9037371d00d",
+     "assertion_key": "risks:default_payment_debts:risk_present",
+     "conflict_key": "risks:default_payment_debts",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T05:19:00+05:00",
+      "statement": "DEFAULT IN PAYMENT OF DEBTS",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_0d92346ee9037371d00d",
+        "document_id": "issuer:39fe974f6ef82bbeadf83938",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2025.pdf",
+        "page": 40,
+        "content_sha256": "96ca1120b238541d4916fb1c777614ee6045f30ab130d2f18e8a1fd5c62bdf73",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:19:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 9,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_76cd4d2fefe50af15f8f",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_4a9a86835bca46d992f0",
+     "assertion_key": "risks:default_payment_debts:risk_present",
+     "conflict_key": "risks:default_payment_debts",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T05:19:00+05:00",
+      "statement": "DEFAULT IN PAYMENT OF DEBTS",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_4a9a86835bca46d992f0",
+        "document_id": "issuer:91e2da11249269bcac96ae5a",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2024.pdf",
+        "page": 40,
+        "content_sha256": "0ad5d727db34da4a4edf0ce0851ee6bd23a7c2cee0e446ab2341818387c33df1",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:19:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 9,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_797644d506f2232f3677",
+     "symbol": "DGKC",
+     "guidance_id": "guidance_98bfd2bc24f63f822f35",
+     "assertion_key": "risks:default_payment_debts:risk_present",
+     "conflict_key": "risks:default_payment_debts",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T05:19:00+05:00",
+      "statement": "DEFAULT IN PAYMENT OF DEBTS",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_98bfd2bc24f63f822f35",
+        "document_id": "issuer:57fbec27bd4005d116acb827",
+        "source_url": "https://www.dgcement.com/financial-reports/DGAnnual2023.pdf",
+        "page": 40,
+        "content_sha256": "a21680c7c43bd056faa63960bd21ce7e9550dfa62b058127e0ed2cb9f93bb8ce",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:19:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 10,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 9,
        "self_confirming_source": 0
       },
       "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
@@ -365,7 +1050,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_e67c5975c84b1ffc3ca3",
+      "confidence_id": "confidence_a8692686bbf72617be38",
       "source_cluster_id": "cluster_e193758d1914395b6b3bc13c",
       "band": "medium"
      },
@@ -473,11 +1158,188 @@
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "guidance_status": "blocked_no_guidance_objects",
-   "guidance_object_count": 0,
-   "guidance_record_count": 0,
+   "guidance_status": "available",
+   "guidance_object_count": 4,
+   "guidance_record_count": 4,
    "records": [],
-   "guidance_records": []
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_7cab7378e43a21e671cc",
+     "symbol": "LUCK",
+     "guidance_id": "guidance_48d94f1e29741ff85e1b",
+     "assertion_key": "risks:default_customers_discharge_obligations_and_cause_financial_loss:risk_present",
+     "conflict_key": "risks:default_customers_discharge_obligations_and_cause_financial_loss",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T03:59:00+05:00",
+      "statement": "default by Company’s customers to discharge their obligations and cause financial loss to the Company Assessment",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_48d94f1e29741ff85e1b",
+        "document_id": "issuer:da804cd7e5c10e7c7df6689a",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2022_e3b3009def.pdf",
+        "page": 108,
+        "content_sha256": "3b854e6b6dcc19bd9467d61255dc4ffa6176e1669d324d54e51e8227738d678f",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T03:59:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 3,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_aa38112e255a2c20d27c",
+     "symbol": "LUCK",
+     "guidance_id": "guidance_6e63fc905a36c592d4d1",
+     "assertion_key": "risks:default_payment_any_obligation_has_sufficient_capacity_generating:risk_present",
+     "conflict_key": "risks:default_payment_any_obligation_has_sufficient_capacity_generating",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T05:20:00+05:00",
+      "statement": "default in payment of any obligation, as it has sufficient capacity of generating cash flows",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_6e63fc905a36c592d4d1",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "page": 103,
+        "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:20:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_7acbb7feefecd200c8c3",
+     "symbol": "LUCK",
+     "guidance_id": "guidance_86e716d51384ad8ece6e",
+     "assertion_key": "risks:default_payment_any_obligation_has_sufficient_capacity_generating:risk_present",
+     "conflict_key": "risks:default_payment_any_obligation_has_sufficient_capacity_generating",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T05:20:00+05:00",
+      "statement": "default in payment of any obligation, as it has sufficient capacity of generating cash flows",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_86e716d51384ad8ece6e",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "page": 101,
+        "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:20:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    },
+    {
+     "guidance_record_id": "guidance_delivery_62c7911ae60f0553477c",
+     "symbol": "LUCK",
+     "guidance_id": "guidance_b1a5ff580cc3fe812b72",
+     "assertion_key": "risks:default_payment_any_obligation_has_sufficient_capacity_generating:risk_present",
+     "conflict_key": "risks:default_payment_any_obligation_has_sufficient_capacity_generating",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T05:20:00+05:00",
+      "statement": "default in payment of any obligation, as it has sufficient capacity of generating cash flows",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_b1a5ff580cc3fe812b72",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "page": 101,
+        "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T05:20:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 4,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "MARI": {
    "symbol": "MARI",
@@ -538,7 +1400,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_6d72dc2353d6f582b0d5",
+      "confidence_id": "confidence_4cbb56ed35dcce9edd02",
       "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
       "band": "medium"
      },
@@ -667,7 +1529,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_a33877ddd0888dbfb2a0",
+      "confidence_id": "confidence_b95d4fcd98a1b2fc0e09",
       "source_cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
       "band": "medium"
      },
@@ -740,7 +1602,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_bd2f309de9795fdbe6e7",
+      "confidence_id": "confidence_5ef50d4d77861bc48146",
       "source_cluster_id": "cluster_1817d30a6a5d6e0974e0e77f",
       "band": "medium"
      },
@@ -779,7 +1641,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_56ff441f11c415365db1",
+      "confidence_id": "confidence_04eeaa560a6fb180e159",
       "source_cluster_id": "cluster_2a04bcad22c357093bbd6280",
       "band": "medium"
      },
@@ -818,7 +1680,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_8804f9acc6fa3920e34f",
+      "confidence_id": "confidence_7bf51bf84a64f7be67b3",
       "source_cluster_id": "cluster_18be1f7964ed898c278741e9",
       "band": "medium"
      },

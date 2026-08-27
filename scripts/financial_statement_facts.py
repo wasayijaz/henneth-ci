@@ -11,16 +11,23 @@ from datetime import date, timedelta
 from typing import Any
 
 PARSER_VERSION = "financial_statement_v2"
-PARSER_REVISION = "block_geometry_v4"
+PARSER_REVISION = "block_geometry_v5"
 
 LINE_PATTERNS = {
-    "revenue": r"(?:revenue|net sales|sales|turnover)",
+    # ``sales`` by itself also occurs in ``cost of sales``.  Keep revenue
+    # matching broad enough for issuer wording, but do not classify a cost row
+    # as revenue while scanning adjacent geometry lines.
+    "revenue": r"(?:revenue|net sales|(?<!cost of )sales|turnover)",
     "gross_profit": r"gross profit",
     "operating_profit": r"(?:operating profit|profit from operations)",
     "finance_cost": r"(?:finance cost|finance costs|financial charges)",
     "profit_before_tax": r"(?:profit before tax|profit before taxation)",
+    # Keep PAT before tax: issuer tables commonly label the total as
+    # ``Profit after taxation`` and would otherwise be misclassified by the
+    # broad ``taxation`` expression below.  The owner row is the attributable
+    # value needed by the forecast gate; retain the existing PAT wording too.
+    "profit_after_tax_attributable": r"(?:owners of (?:the )?(?:parent|holding) company|profit after tax(?:ation)? attributable|profit attributable to owners|profit after tax(?:ation)?|profit for the period)",
     "tax_expense": r"(?:taxation|income tax expense|tax expense)",
-    "profit_after_tax_attributable": r"(?:profit after tax attributable|profit attributable to owners|profit for the period)",
     "basic_eps": r"(?:basic )?eps(?:\s|$)|earnings per share",
 }
 SCALE_MAP = {"thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000, "mn": 1_000_000, "bn": 1_000_000_000}
@@ -45,9 +52,14 @@ def parse_number(value: str) -> float | None:
 
 def detect_scale_info(text: str) -> tuple[int | None, list[str]]:
     m = re.search(r"(?:rupees?|rs\.?|pkr)\s+in\s+(thousand|million|billion|bn|mn)", text or "", re.I)
-    if not m:
-        return None, ["missing_table_scale"]
-    return SCALE_MAP[m.group(1).lower()], []
+    if m:
+        return SCALE_MAP[m.group(1).lower()], []
+    # Annual reports frequently abbreviate thousands as ``PKR in '000`` (or
+    # use typographic quotes).  This is still explicit table-scale evidence,
+    # unlike an unqualified number elsewhere on the page.
+    if re.search(r"(?:rupees?|rs\.?|pkr)\s+in\s*[^0-9A-Za-z]?0{3}[^0-9A-Za-z]?", text or "", re.I):
+        return 1_000, []
+    return None, ["missing_table_scale"]
 
 
 def detect_scale(text: str) -> int:
@@ -258,8 +270,19 @@ def _wrapped_header_descriptors(lines: list[dict[str, Any]], occurrences: list[d
             year_gap = min(float(h["y0"]) for h in headers) - duration_y1
             if not (0 <= year_gap <= 60):
                 continue
+            header_min_x = min(float(h["x0"]) for h in headers)
+            header_max_x = max(float(h["x1"]) for h in headers)
+            # A normal statement table has a ``Note`` column immediately to
+            # the left of the year columns.  Only reject a same-band notes
+            # label when it sits to the right of all year headers, where it is
+            # evidence of an unrelated notes table rather than a statement
+            # header.  This preserves the geometry safety gate while accepting
+            # wrapped annual-report headers such as Lucky's.
             if any(abs(float(line["cy"]) - sum(float(h["cy"]) for h in headers) / len(headers)) <= 3
-                   and re.search(r"\bnotes?\b", line["text"], re.I) for line in lines):
+                   and re.search(r"\bnotes?\b", line["text"], re.I)
+                   and min((float(tok["x0"]) for tok in line["tokens"]
+                            if re.fullmatch(r"notes?", tok["text"], re.I)), default=header_min_x)
+                   > header_max_x for line in lines):
                 continue
             if [h["year"] for h in headers] != expected_years:
                 continue
@@ -315,15 +338,29 @@ def _header_descriptors(lines: list[dict[str, Any]], manifest_date: date, title:
     return deduped
 
 
-def _nearest_headers_for_row(header_sets: list[dict[str, Any]], row: dict[str, Any]) -> dict[str, Any] | None:
-    prior = [h for h in header_sets if h["line"]["y1"] < row["y0"] and row["y0"] - h["line"]["y1"] <= 120]
-    return max(prior, key=lambda h: h["line"]["y1"]) if prior else None
+def _nearest_headers_for_row(header_sets: list[dict[str, Any]], row: dict[str, Any],
+                             *, max_distance: float = 120) -> dict[str, Any] | None:
+    prior = [h for h in header_sets if h["line"]["y1"] < row["y0"]
+             and row["y0"] - h["line"]["y1"] <= max_distance]
+    # A wrapped multi-duration table can yield both a partial direct header
+    # candidate and the complete geometry candidate on the same visual band.
+    # Prefer the complete band on a tie; otherwise a 9-month row can silently
+    # displace the matching 3-month columns.
+    return max(prior, key=lambda h: (h["line"]["y1"], len(h.get("headers") or []))) if prior else None
 
 
 def _line_match(row: dict[str, Any]) -> tuple[str, re.Match[str]] | None:
     for line, pattern in LINE_PATTERNS.items():
         m = re.search(pattern, row["text"], re.I)
         if m:
+            if line == "revenue":
+                text = row["text"]
+                # Gross-sales and sales-tax deduction rows are not the
+                # canonical revenue line and would otherwise create duplicate
+                # revenue facts from the same statement.
+                if re.search(r"\bgross\s+sales\b", text, re.I) or re.search(
+                        r"\bless\s*:\s*sales\s+tax\b", text, re.I):
+                    continue
             return line, m
     return None
 
@@ -340,7 +377,10 @@ def _nearest_basis(lines: list[dict[str, Any]], row: dict[str, Any], floor_y: fl
 
 
 def _nearest_scale(lines: list[dict[str, Any]], row: dict[str, Any], floor_y: float) -> tuple[int | None, list[str], bool]:
-    prior = [l for l in lines if floor_y <= l["y1"] < row["y0"]]
+    # The scale line can overlap the first statement row by a few points in
+    # tightly typeset annual reports; retain the local evidence band without
+    # reaching into the row below.
+    prior = [l for l in lines if floor_y <= l["y0"] < row["y0"] + 3]
     for line in reversed(prior):
         scale, flags = detect_scale_info(line["text"])
         if scale:
@@ -514,6 +554,12 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
     lines = build_lines(page_words)
     if not lines:
         return []
+    # Notes and management-review tables often reuse labels (for example
+    # ``Revenue``) with the same year columns.  They are page-evidenced but are
+    # not primary income statements; require a local statement heading before
+    # accepting any row.
+    if not _statement_heading(lines):
+        return []
     try:
         manifest_date = date.fromisoformat(str(period)[:10])
     except (TypeError, ValueError):
@@ -527,7 +573,10 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
         if not matched:
             continue
         line_name, label_match = matched
-        headers = _nearest_headers_for_row(header_sets, row)
+        if line_name == "profit_after_tax_attributable" and _is_non_attributable_pat_row(lines, row):
+            continue
+        long_row = line_name in {"profit_after_tax_attributable", "basic_eps"}
+        headers = _nearest_headers_for_row(header_sets, row, max_distance=500 if long_row else 120)
         if not headers:
             continue
         floor_y = max(0, headers["line"]["y0"] - 90)
@@ -536,13 +585,73 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
         label_end = _label_end_x(row, line_name)
         note_bands = _note_bands(lines, headers["line"], row)
         nums = _numeric_cells(row, label_end, note_bands)
+        needed = len(headers["headers"])
+        # PyMuPDF may place the label, note number, and each year value in
+        # separate blocks despite sharing one visual baseline.  Collect only
+        # numeric cells from that exact baseline before considering wrapped
+        # continuation lines; otherwise the next row's label (sorted first by
+        # x-coordinate) can incorrectly invalidate this row.
+        if len(nums) < needed:
+            for band_line in lines:
+                if band_line is row or abs(float(band_line["y0"]) - float(row["y0"])) > 3:
+                    continue
+                part = _numeric_only_continuation(band_line, label_end, note_bands)
+                if part:
+                    nums.extend(part)
+            nums = sorted(nums, key=lambda c: c["cx"])
+        # Some PDFs split a wrapped EPS value into one text block per column
+        # (``21.09`` and ``1.42`` are separate lines at the same y).  Gather
+        # those cells as one geometry band, but only when the neighbouring
+        # text explicitly identifies the EPS units/qualifier.
+        if not nums and line_name == "basic_eps":
+            continuations = [l for l in lines if l is not row and
+                             -4 <= l["y0"] - row["y1"] <= 35]
+            # Lucky's consolidated statement puts continuing/discontinued EPS
+            # on labelled rows and the full-year basic EPS on a following
+            # numeric-only row.  Prefer that explicit total row; accepting the
+            # first labelled continuation would silently publish continuing
+            # EPS as the annual metric.
+            eps_nums = []
+            eps_row = None
+            for continuation in continuations:
+                part = _numeric_only_continuation(continuation, label_end, note_bands)
+                if len(part) == needed:
+                    eps_nums = part
+                    eps_row = continuation
+                    break
+            if eps_nums:
+                nums = sorted(eps_nums, key=lambda c: c["cx"])
+                row = {**row, "text": row["text"] + " " + eps_row["text"],
+                       "y1": max(row["y1"], eps_row["y1"]),
+                       "x1": max(row["x1"], eps_row["x1"])}
+            elif any(re.search(r"\b(?:share|diluted|rupees?)\b", l["text"], re.I) for l in continuations):
+                for continuation in continuations:
+                    eps_nums.extend(_numeric_cells(continuation, label_end, note_bands))
+                if len(eps_nums) == needed:
+                    nums = sorted(eps_nums, key=lambda c: c["cx"])
         if not nums:
             continuation_row = row
             invalid_continuation = False
-            needed = len(headers["headers"])
-            continuations=[l for l in lines if l is not row and -4 <= l["y0"] - row["y1"] <= 35]
+            continuations=[l for l in lines if l is not row and
+                           ((line_name == "basic_eps" and -4 <= l["y0"] - row["y1"] <= 35) or
+                            (line_name != "basic_eps" and 3 < l["y0"] - row["y1"] <= 35))]
             for continuation in continuations:
                 if len(nums) == needed and _line_match(continuation):
+                    break
+                # EPS labels are often wrapped as ``... basic`` followed by
+                # ``and diluted in Rupees`` while the values remain on that
+                # second visual line.  Accept only an explicit EPS qualifier
+                # and the same-column numeric cells; ordinary continuation
+                # rows retain the stricter all-numeric gate below.
+                if line_name == "basic_eps" and re.search(r"\b(?:share|diluted|rupees?)\b", continuation["text"], re.I):
+                    part = _numeric_cells(continuation, label_end, note_bands)
+                    if len(part) == needed:
+                        nums.extend(part)
+                        continuation_row = {**continuation_row, "text": continuation_row["text"] + " " + continuation["text"], "y1": max(continuation_row["y1"], continuation["y1"]), "x1": max(continuation_row["x1"], continuation["x1"])}
+                        break
+                # A new statement row marks the end of a wrapped numeric
+                # continuation; never consume values from the following row.
+                if _line_match(continuation):
                     break
                 part, invalid = _continuation_cells_or_invalid(continuation, label_end, note_bands)
                 if invalid:
@@ -590,6 +699,7 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
                 "reported_label": label_match.group(0),
                 "period_end": period_end,
                 "duration_months": header["duration_months"],
+                "period_type": "annual" if header["duration_months"] == 12 else "interim",
                 "column_role": role,
                 "comparative_to_period_end": period if role == "comparative_prior_period" else None,
                 "consolidation": basis,
@@ -606,17 +716,73 @@ def _structured_page_facts(doc: dict[str, Any], page_no: int, page_words: list[t
                 "published_at": doc.get("published_at"),
                 "retrieved_at": doc.get("retrieved_at"),
             })
-    return out
+    # A wrapped PDF row can be visited more than once when PyMuPDF exposes
+    # duplicate visual blocks.  Keep one fact per page/line/period/column;
+    # retaining duplicates would look like multiple revenue observations.
+    deduped: list[dict[str, Any]] = []
+    seen: set[tuple[Any, ...]] = set()
+    for fact in out:
+        key = (fact.get("page"), fact.get("line"), fact.get("period_end"),
+               fact.get("column_role"), fact.get("consolidation"))
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(fact)
+    return deduped
 
 
 def _statement_heading(lines: list[dict[str, Any]]) -> dict[str, Any] | None:
+    # Issuer PDFs vary between a single heading line and wrapped headings such
+    # as ``Consolidated Statement of`` / ``Profit or Loss``.  Search individual
+    # lines first, then a bounded top-of-page join so unrelated body text is
+    # never used as a statement descriptor.
     for line in lines[:12]:
         text = line["text"]
+        # A comprehensive-income statement repeats the PAT/attribution labels,
+        # but is not the primary income statement used by the model.  Accept a
+        # combined ``profit or loss and ... comprehensive income`` heading,
+        # while rejecting a standalone comprehensive statement.
+        if re.search(r"\bstatement\b.*\bcomprehensive\s+income\b", text, re.I) \
+                and not re.search(r"\bprofit\s+or\s+loss\b", text, re.I):
+            continue
         if re.search(r"\bstatement\b.*\b(?:profit|loss|income|comprehensive|operations)\b", text, re.I):
             return {"type": "income_statement", "basis": _basis_from_text(text), "bbox": _round_bbox(line)}
         if re.search(r"\b(?:profit|loss|income)\b.*\bstatement\b", text, re.I):
             return {"type": "income_statement", "basis": _basis_from_text(text), "bbox": _round_bbox(line)}
+    top = " ".join(line["text"] for line in lines[:6])
+    if re.search(r"\bstatement\b.*\bcomprehensive\s+income\b", top, re.I) \
+            and not re.search(r"\bprofit\s+or\s+loss\b", top, re.I):
+        return None
+    if re.search(r"\bstatement\b.*\b(?:profit|loss|income|comprehensive|operations)\b", top, re.I) \
+            or re.search(r"\b(?:profit|loss|income)\b.*\bstatement\b", top, re.I):
+        first = lines[0]
+        return {"type": "income_statement", "basis": _basis_from_text(top), "bbox": _round_bbox(first)}
     return None
+
+
+def _is_non_attributable_pat_row(lines: list[dict[str, Any]], row: dict[str, Any]) -> bool:
+    """Reject PAT subtotals/totals when the statement exposes an owner row.
+
+    Consolidated statements commonly show continuing PAT, discontinued PAT,
+    total PAT, then an ``Attributable to: Owners ...`` split row.  The model
+    metric is the owner-attributable amount, not any of those subtotals.  A
+    standalone ``Profit after taxation`` line remains valid for statements
+    that do not present an attribution section (for example unconsolidated
+    statements).
+    """
+    text = row["text"]
+    if re.search(r"\bowners?\s+of\s+(?:the\s+)?(?:parent|holding)\s+company\b|\battributable\s+to\s+owners?\b|\bprofit\s+attributable\s+to\s+owners?\b", text, re.I):
+        return False
+    if re.search(r"\bprofit\s+after\s+tax(?:ation)?\s+from\s+(?:continuing|discontinued)\s+operations\b", text, re.I):
+        return True
+    if not re.search(r"\bprofit\s+after\s+tax(?:ation)?\b|\bprofit\s+for\s+the\s+period\b", text, re.I):
+        return False
+    for candidate in lines:
+        if candidate is row or not (0 < candidate["y0"] - row["y0"] <= 70):
+            continue
+        if re.search(r"\bowners?\s+of\s+(?:the\s+)?(?:parent|holding)\s+company\b|\battributable\s+to\s+owners?\b", candidate["text"], re.I):
+            return True
+    return False
 
 
 def _basis_from_text(text: str) -> str | None:
@@ -761,19 +927,61 @@ def diagnose_page_records(doc: dict[str, Any], page_records: list[dict[str, Any]
 def _extract_period(doc: dict[str, Any], pages: list[str]) -> str | None:
     if doc.get("period_end"):
         return str(doc["period_end"])[:10]
-    text = f"{doc.get('title') or ''} {' '.join(pages)[:2000]}"
-    m = re.search(r"(?:ended|ending)\s+(\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}-\d{2}-\d{2})", text, re.I)
-    if not m:
-        return None
-    raw = m.group(1).replace("/", "-").replace(".", "-")
-    parts = raw.split("-")
-    return "-".join(reversed(parts)) if len(parts[0]) <= 2 else raw
+    title = str(doc.get("title") or "")
+    preferred_years = {int(y) for y in re.findall(r"20\d{2}", title)}
+
+    def from_text(text: str) -> str | None:
+        m = re.search(r"(?:ended|ending)\s+(\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}-\d{2}-\d{2})", text, re.I)
+        if m:
+            raw = m.group(1).replace("/", "-").replace(".", "-")
+            parts = raw.split("-")
+            candidate = "-".join(reversed(parts)) if len(parts[0]) <= 2 else raw
+            if not preferred_years or int(candidate[:4]) in preferred_years:
+                return candidate
+            return None
+        month_names = ("January|February|March|April|May|June|July|August|September|October|"
+                       "November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec")
+        named = re.search(
+            rf"(?:ended|ending)\s+(?:the\s+)?({month_names})\s+(\d{{1,2}})(?:st|nd|rd|th)?[,]?\s+(20\d{{2}})",
+            text, re.I)
+        if not named or (preferred_years and int(named.group(3)) not in preferred_years):
+            return None
+        try:
+            month_number = next(i for i, name in enumerate(
+                ("january", "february", "march", "april", "may", "june", "july", "august",
+                 "september", "october", "november", "december"), 1)
+                if name.startswith(named.group(1).lower().rstrip(".")))
+            return date(int(named.group(3)), month_number, int(named.group(2))).isoformat()
+        except (StopIteration, TypeError, ValueError):
+            return None
+
+    # Search each page so long annual reports cannot hide the reporting date
+    # after an arbitrary text prefix.  Prefer a date on a page whose local text
+    # identifies a primary financial statement; narrative pages often mention
+    # prior/future year dates as context.
+    candidates: list[tuple[int, int, str]] = []
+    for index, page in enumerate(pages):
+        page_text = str(page or "")
+        candidate = from_text(page_text)
+        if not candidate:
+            continue
+        score = 2 if re.search(r"statement\s+of\s+(?:profit|income)|profit\s+or\s+loss|financial\s+statements", page_text, re.I) else 0
+        candidates.append((score, -index, candidate))
+    if candidates:
+        return max(candidates)[2]
+    candidate = from_text(title)
+    if candidate:
+        return candidate
+    return None
 
 
 def _available_on(doc: dict[str, Any]) -> str | None:
     published = doc.get("published_at") or doc.get("retrieved_at")
     try:
-        return (date.fromisoformat(str(published)[:10]) + timedelta(days=1)).isoformat() if published else None
+        # Daily CI state is available on the recorded official publication or
+        # verified retrieval date.  Do not manufacture a next-day delay: that
+        # would make already-retained source evidence look like future data.
+        return date.fromisoformat(str(published)[:10]).isoformat() if published else None
     except ValueError:
         return None
 

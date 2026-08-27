@@ -76,6 +76,12 @@ def build_conditional_benchmarks(pilot: list[str], event_state: dict, study_stat
             target_study = studies.get(target_id) or {}
             target_sector = (sector_rows.get(symbol) or {}).get("sector")
             target_date = _date(target.get("effective_date"))
+            # A conditional benchmark has a strict before/after boundary.  A
+            # target without a parseable effective date cannot define that
+            # boundary, so retain it only in the operating-event source rather
+            # than emitting a superficially "blocked" benchmark row.
+            if not target_date:
+                continue
             same_company, same_sector = [], []
             for analogue in target_study.get("analogues") or []:
                 candidate_event = events.get(analogue.get("event_id")) or {}
@@ -111,9 +117,9 @@ def build_conditional_benchmarks(pilot: list[str], event_state: dict, study_stat
             candidates = same_company + same_sector
             benchmarks.append({
                 "benchmark_id": _id(symbol, target_id, target.get("event_type"), target.get("event_subtype")),
-                "target_event": {"event_id": target_id, "study_id": target_study.get("study_id"), "symbol": symbol, "event_type": target.get("event_type"), "event_subtype": target.get("event_subtype"), "effective_date": target.get("effective_date") or "unknown", "sector": target_sector, "description": target.get("description")},
+                "target_event": {"event_id": target_id, "study_id": target_study.get("study_id"), "symbol": symbol, "event_type": target.get("event_type"), "event_subtype": target.get("event_subtype"), "effective_date": target.get("effective_date"), "sector": target_sector, "description": target.get("description")},
                 "context": {"conditions": [f"event_type={target.get('event_type')}", f"event_subtype={target.get('event_subtype')}", f"sector={target_sector or 'unknown'}"], "summary": "Exact event class and retained current-sector context."},
-                "status": "blocked_invalid_target_date" if not target.get("effective_date") else ("candidate_history_present" if candidates else "no_prior_exact_analogues"),
+                "status": "candidate_history_present" if candidates else "no_prior_exact_analogues",
                 "matching_policy": {"event_type": "exact", "event_subtype": "exact", "candidate_date": "strictly_before_target", "same_company": "same_symbol", "same_sector": "same_current_sector_other_symbol", "returns": "reuse_target_event_study_analogue_outcomes", "minimum_aggregate_sample": MIN_SAMPLE},
                 "candidates": {"same_company_exact": same_company, "same_sector_exact": same_sector},
                 "candidate_evidence_summary": candidate_evidence_summary(candidates),

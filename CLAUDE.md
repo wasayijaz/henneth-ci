@@ -2,6 +2,13 @@
 
 Every agent and every cycle in this repo obeys these rules. They are not suggestions.
 
+@AGENTS.md
+
+`AGENTS.md` carries the shared engineering rules — vocabulary, guardrails, verification commands —
+and is binding on every harness. This file carries the desk's domain governance and is the
+authoritative text for it. Where the two overlap, this file wins on *what the desk may say*;
+`AGENTS.md` wins on *how the code gets changed*.
+
 ## Identity
 Personal trading intelligence desk for the Pakistan Stock Exchange (PSX). It researches,
 scores, and monitors signals. It NEVER places orders. Execution is manual by the owner.
@@ -88,6 +95,7 @@ scores, and monitors signals. It NEVER places orders. Execution is manual by the
 - Every run appends one line to `state/runlog.json` (started, mode, ended, outcome).
 
 ## Python
-- Python 3.14, deps: requests, pandas, numpy (already installed).
+- Published numbers are produced on **Python 3.12** (GitHub Actions). Local may be 3.14.
+  Deps come from `requirements.txt` (`requests`, `pandas`, `numpy`, `pymeeus`, `pymupdf`).
 - Scripts must be idempotent and safe to re-run. Network failures → write degraded
   health status, exit 0. Never crash the cycle.

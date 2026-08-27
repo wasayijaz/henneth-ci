@@ -13,14 +13,44 @@ import hashlib
 import json
 import sys
 import time
+from datetime import date
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from financial_series import normalize_fact
+from financial_statement_facts import PARSER_REVISION
 from manual_financial_claims import MANUAL_SOURCE_METHOD, qualified_manual_rows
 from psx_data import STATE, load_json, save_json
 
 OUT = STATE / "company_financial_series.json"
+
+
+def _issuer_binding_ok(row: dict[str, Any]) -> bool:
+    binding = row.get("issuer_registry_binding")
+    if not isinstance(binding, dict) or binding.get("status") != "qualified":
+        return False
+    source_url = str(row.get("source_url") or "")
+    source_page = str(binding.get("source_page") or "")
+    root = str(binding.get("root_domain") or "").lower().rstrip(".")
+    if root.startswith("www."):
+        root = root[4:]
+    def _host(value: str) -> str:
+        host = (urlparse(value).hostname or "").lower().rstrip(".")
+        return host[4:] if host.startswith("www.") else host
+    host, page_host = _host(source_url), _host(source_page)
+    evidence = row.get("evidence") if isinstance(row.get("evidence"), list) else []
+    first_evidence = evidence[0] if evidence and isinstance(evidence[0], dict) else {}
+    return (
+        str(binding.get("document_id") or "") == str(row.get("document_id") or "")
+        and str(binding.get("link_id") or "") == str(row.get("document_id") or "")
+        and str(binding.get("source_url") or "") == source_url
+        and str(binding.get("content_sha256") or "") == str(row.get("content_sha256") or "")
+        and binding.get("evidence_page") == first_evidence.get("page")
+        and source_url.startswith("https://") and source_url.lower().endswith(".pdf")
+        and bool(root and (host == root or host.endswith("." + root))
+                 and (page_host == root or page_host.endswith("." + root)))
+    )
 
 
 def _repair_row(row: dict[str, Any]) -> dict[str, Any]:
@@ -46,6 +76,10 @@ def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
     if clean.get("parser_version") != "financial_statement_v2" and not manual_fact:
         flags = list(clean.get("quality_flags") or [])
         clean["quality_flags"] = sorted(set(flags + ["legacy_extractor_not_model_eligible"]))
+    if (clean.get("parser_version") == "financial_statement_v2"
+            and clean.get("parser_revision") != PARSER_REVISION):
+        flags = list(clean.get("quality_flags") or [])
+        clean["quality_flags"] = sorted(set(flags + ["legacy_parser_revision_quarantine"]))
     unit = str(clean.get("unit") or "").lower()
     if unit.endswith("/share") or unit == "percent":
         clean["unit_multiplier"] = 1
@@ -57,9 +91,16 @@ def _sanitize_row(row: dict[str, Any]) -> dict[str, Any]:
             clean["quality_flags"] = sorted(set(flags + ["unparseable_raw_value"]))
     if unit == "percent" or clean.get("metric") == "change_pct":
         clean["currency"] = None
+    if (clean.get("parser_version") == "financial_statement_v2"
+            and str(clean.get("document_id") or "").startswith("issuer:")):
+        binding = clean.get("issuer_registry_binding")
+        if not _issuer_binding_ok(clean):
+            flags = list(clean.get("quality_flags") or [])
+            clean["quality_flags"] = sorted(set(flags + ["issuer_registry_binding_required"]))
     blocking = {"missing_period_end", "missing_currency", "missing_unit_scale",
                 "missing_consolidation_basis", "conflicting_consolidation_labels",
-                "unparseable_raw_value", "conflict"}
+                "unparseable_raw_value", "conflict", "issuer_registry_binding_required",
+                "legacy_extractor_not_model_eligible", "legacy_parser_revision_quarantine"}
     clean["readiness"] = ("model_loadable" if (clean.get("parser_version") == "financial_statement_v2" or manual_fact) and clean.get("metric") != "change_pct"
                            and not blocking.intersection(clean.get("quality_flags") or []) else "audit_only")
     return clean
@@ -94,7 +135,21 @@ def _assemble(rows_by_ticker: dict[str, list[dict[str, Any]]], *, source_documen
             explicit += int(row.get("consolidation") not in (None, "unknown"))
             explicit += int(row.get("period_type") not in (None, "unknown"))
             evidence = row.get("evidence") if isinstance(row.get("evidence"), list) else []
-            return (explicit + int(bool(row.get("source_url"))) + int(bool(evidence)),
+            linked_evidence = sum(
+                1 for item in evidence
+                if isinstance(item, dict) and item.get("source_url") == row.get("source_url")
+            )
+            availability = str(row.get("available_on") or "")
+            # A subsequent normalization may correct a stale parser-level
+            # availability copy from the document receipt.  For the same fact,
+            # retain the earliest valid source date; a later date can only
+            # weaken the daily no-lookahead guarantee.
+            try:
+                availability_rank = -date.fromisoformat(availability[:10]).toordinal()
+            except ValueError:
+                availability_rank = -10**9
+            return (explicit + int(bool(row.get("source_url"))) + int(bool(evidence)) + linked_evidence,
+                    int(availability_rank != -10**9), availability_rank,
                     -len(row.get("quality_flags") or []),
                     sum(len(str(item.get("text") or "")) for item in evidence if isinstance(item, dict)),
                     json.dumps(row, sort_keys=True, separators=(",", ":")))
@@ -113,13 +168,21 @@ def _assemble(rows_by_ticker: dict[str, list[dict[str, Any]]], *, source_documen
             groups.setdefault(group_key, []).append(row)
         conflicts = []
         for group_key, members in sorted(groups.items()):
-            values = {str((m.get("normalized_value"), m.get("raw_value"))) for m in members}
+            # A quarantined legacy extraction is retained for auditability but
+            # cannot contradict a geometry-verified statement fact.  Only
+            # compare like-for-like, model-eligible parser outputs here; a
+            # disagreement within that tier remains a real blocking conflict.
+            comparable = [m for m in members if (
+                m.get("parser_version") == "financial_statement_v2"
+                and not (m.get("quality_flags") or [])
+            )]
+            values = {str((m.get("normalized_value"), m.get("raw_value"))) for m in comparable}
             # Unknown periods/bases are not comparable and must remain visible
             # without being labelled as a conflict.
             if len(values) <= 1 or group_key[1] in {"None", "unknown"} or group_key[3] in {"None", "unknown"}:
                 continue
             conflict_id = "conf_" + hashlib.sha256("|".join(group_key).encode()).hexdigest()[:20]
-            for member in members:
+            for member in comparable:
                 member.setdefault("quality_flags", [])
                 member["quality_flags"] = sorted(set(member["quality_flags"] + ["conflict"]))
                 member["readiness"] = "audit_only"
@@ -173,8 +236,11 @@ def merge_rows(rows: list[dict[str, Any]], output_path: Path = OUT) -> dict[str,
     return out
 
 
-def build(input_path: Path = STATE / "company_documents.json", output_path: Path = OUT) -> dict[str, Any]:
+def build(input_path: Path = STATE / "company_documents.json", output_path: Path = OUT,
+          source_registry_path: Path | None = None) -> dict[str, Any]:
     payload = load_json(input_path, {})
+    registry_path = source_registry_path or (STATE / "company_intel" / "source_registry.json")
+    source_registry = load_json(registry_path, {"tickers": {}})
     rows = _rows(payload)
     previous = load_json(output_path, {}) if output_path.exists() else {}
     # Durable rows are append-only.  The bounded document surface can be
@@ -196,7 +262,7 @@ def build(input_path: Path = STATE / "company_documents.json", output_path: Path
         for fact in doc.get("facts") or []:
             if not isinstance(fact, dict):
                 continue
-            row = normalize_fact(doc, fact, pages=_evidence_pages(doc))
+            row = normalize_fact(doc, fact, pages=_evidence_pages(doc), source_registry=source_registry)
             if row is None:
                 rejected += 1
                 continue

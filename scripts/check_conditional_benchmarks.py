@@ -28,7 +28,7 @@ def main():
     events = {event.get("event_id"): event for symbol in pilot for event in (((events_state.get("companies") or {}).get(symbol) or {}).get("events") or [])}
     studies = studies_state.get("studies") or {}; total = 0
     for symbol in pilot:
-        row = data["companies"][symbol]; expected_ids = [event.get("event_id") for event in (((events_state.get("companies") or {}).get(symbol) or {}).get("events") or [])]
+        row = data["companies"][symbol]; expected_ids = [event.get("event_id") for event in (((events_state.get("companies") or {}).get(symbol) or {}).get("events") or []) if iso(event.get("effective_date"))]
         benchmarks = row.get("benchmarks") or []
         if row.get("symbol") != symbol or [b.get("target_event", {}).get("event_id") for b in benchmarks] != expected_ids: fail(f"{symbol}: target coverage/order mismatch")
         if row.get("benchmark_count") != len(benchmarks): fail(f"{symbol}: count mismatch")
@@ -62,7 +62,8 @@ def main():
                 if len(values) >= 3 and (aggregate.get("status") != "available" or any(value is None for value in numeric)): fail(f"{symbol}: mature aggregate missing")
             blocked = benchmark.get("blocked_states") or {}
             if (blocked.get("causal") or {}).get("reason") != "descriptive_not_causal" or not all((blocked.get(key) or {}).get("status") == "blocked" for key in ("peer", "international", "financial", "causal", "forecast", "valuation")): fail(f"{symbol}: blocked states")
-    if total != len(events): fail("benchmark count must equal operating event count")
+    expected_total = sum(1 for event in events.values() if iso(event.get("effective_date")))
+    if total != expected_total: fail("benchmark count must equal dated operating event count")
     before = OUT.read_bytes()
     with tempfile.TemporaryDirectory() as temp:
         candidate = Path(temp) / "conditional.json"; result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_conditional_benchmarks.py"), "--out", str(candidate)], capture_output=True, text=True, timeout=30)

@@ -451,7 +451,11 @@ def build_signal_state(operating_events: dict[str, Any], pilot_symbols: list[str
         rejections: dict[str, int] = {}
         latest = None
         for event in events:
-            detected = event.get("detected_at")
+            # Emit the same timezone-explicit representation used for the
+            # product cutoff.  Comparing a raw local timestamp against an
+            # offset-aware cutoff can otherwise make an equal instant look
+            # like future data to downstream validators.
+            detected = _iso_time(event.get("detected_at"))
             if detected and (latest is None or str(detected) > str(latest)):
                 latest = detected
             observations, reasons = eligible_observations(event, as_of, document_index)

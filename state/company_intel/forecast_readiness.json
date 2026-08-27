@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "contract_version": "forecast_readiness_contract_v1",
- "as_of": "2026-08-27 01:42",
+ "as_of": "2026-08-27 06:01",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -52,9 +52,9 @@
  },
  "summary": {
   "company_count": 20,
-  "ready_company_count": 1,
-  "blocked_company_count": 19,
-  "qualified_fact_company_count": 1
+  "ready_company_count": 2,
+  "blocked_company_count": 18,
+  "qualified_fact_company_count": 3
  },
  "companies": {
   "ATRL": {
@@ -392,7 +392,7 @@
   },
   "DGKC": {
    "symbol": "DGKC",
-   "status": "blocked",
+   "status": "input_ready",
    "activation_status": "blocked_model_not_implemented",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
@@ -412,11 +412,68 @@
     ]
    },
    "model_version": "cement_v1",
-   "qualified_period_count": 0,
-   "qualified_periods": [],
-   "missing_requirements": [
-    "three_aligned_annual_revenue_pat_eps_periods"
+   "qualified_period_count": 3,
+   "qualified_periods": [
+    {
+     "period_end": "2022-06-30",
+     "available_on": "2026-08-27",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1000,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "fact_7b534d8a452f8f3c264aab40",
+      "profit_after_tax_attributable": "fact_91c730095894d88bc54748df",
+      "basic_eps": "fact_31c99710afb5186824e5fa4c"
+     },
+     "document_ids": [
+      "issuer:57fbec27bd4005d116acb827"
+     ]
+    },
+    {
+     "period_end": "2024-06-30",
+     "available_on": "2026-08-27",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1000,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "fact_063a8833d046d4b83f21294d",
+      "profit_after_tax_attributable": "fact_01067a087cecc04c23c2ceb5",
+      "basic_eps": "fact_8f1115b75fe057745f21986e"
+     },
+     "document_ids": [
+      "issuer:39fe974f6ef82bbeadf83938",
+      "issuer:91e2da11249269bcac96ae5a"
+     ]
+    },
+    {
+     "period_end": "2025-06-30",
+     "available_on": "2026-08-27",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1000,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "fact_f5a50636a81e6a6bbc063176",
+      "profit_after_tax_attributable": "fact_ad38f41dbfc4ca549a54e3d8",
+      "basic_eps": "fact_ab6b180a01741c4ac4a76a81"
+     },
+     "document_ids": [
+      "issuer:39fe974f6ef82bbeadf83938"
+     ]
+    }
    ],
+   "missing_requirements": [],
    "coverage_candidate_document_ids": [
     "psx:275962",
     "psx:275807",
@@ -492,14 +549,14 @@
     }
    ],
    "blocked_outputs": {
-    "forecast": "blocked_insufficient_qualified_history",
-    "valuation": "blocked_insufficient_qualified_history",
-    "market_expectations": "blocked_insufficient_qualified_history"
+    "forecast": "blocked_model_not_implemented",
+    "valuation": "blocked_model_not_implemented",
+    "market_expectations": "blocked_model_not_implemented"
    },
    "downstream_status": {
-    "forecast": "blocked_insufficient_qualified_history",
-    "valuation": "blocked_insufficient_qualified_history",
-    "market_expectations": "blocked_insufficient_qualified_history",
+    "forecast": "blocked_model_not_implemented",
+    "valuation": "blocked_model_not_implemented",
+    "market_expectations": "blocked_model_not_implemented",
     "numeric_impact": "blocked_model_not_implemented"
    },
    "policy": {
@@ -512,9 +569,7 @@
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
-   "quality_flags": [
-    "forecast_readiness_incomplete"
-   ]
+   "quality_flags": []
   },
   "ENGROH": {
    "symbol": "ENGROH",
@@ -1148,8 +1203,48 @@
     ]
    },
    "model_version": "cement_v1",
-   "qualified_period_count": 0,
-   "qualified_periods": [],
+   "qualified_period_count": 2,
+   "qualified_periods": [
+    {
+     "period_end": "2024-06-30",
+     "available_on": "2026-08-27",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1000,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "fact_887b900f06e64e3f60d52c27",
+      "profit_after_tax_attributable": "fact_8a1290edd8af69a086e66181",
+      "basic_eps": "fact_bd8c45a2ab01920ae8c5094c"
+     },
+     "document_ids": [
+      "issuer:814f586f0a7a9fb56900185d",
+      "issuer:a4ad80e1b79ef02784142ce8"
+     ]
+    },
+    {
+     "period_end": "2025-06-30",
+     "available_on": "2026-08-27",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "monetary_unit": "PKR",
+     "monetary_unit_multiplier": 1000,
+     "eps_unit": "PKR/share",
+     "eps_unit_multiplier": 1,
+     "source_fact_ids": {
+      "revenue": "fact_0d1e26cd6ab3d94ceb02b69d",
+      "profit_after_tax_attributable": "fact_c36f5d4807f30d47432d2f0c",
+      "basic_eps": "fact_f93d0864506a39f18933426d"
+     },
+     "document_ids": [
+      "issuer:814f586f0a7a9fb56900185d"
+     ]
+    }
+   ],
    "missing_requirements": [
     "three_aligned_annual_revenue_pat_eps_periods"
    ],

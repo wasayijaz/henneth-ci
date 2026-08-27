@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import date
 from typing import Any
+from urllib.parse import urlparse
 
 from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
 from manual_financial_claims import is_qualified_manual_fact
@@ -102,15 +103,45 @@ def _official_fact(fact: dict[str, Any]) -> bool:
     evidence = fact.get("evidence") or []
     first_evidence = evidence[0] if evidence and isinstance(evidence[0], dict) else {}
     source_url = str(fact.get("source_url") or "")
-    return (
-        str(fact.get("document_id") or "").startswith("psx:")
-        and str(fact.get("fact_id") or "")
-        and source_url.startswith("https://dps.psx.com.pk/")
+    base = (
+        str(fact.get("fact_id") or "")
         and str(fact.get("content_sha256") or "")
         and isinstance(first_evidence.get("page"), int)
+        and not isinstance(first_evidence.get("page"), bool)
         and first_evidence.get("page") >= 1
         and str(first_evidence.get("text") or "")
         and first_evidence.get("source_url") == source_url
+    )
+    if not base:
+        return False
+    if str(fact.get("document_id") or "").startswith("psx:"):
+        return bool(source_url.startswith("https://dps.psx.com.pk/"))
+    if not str(fact.get("document_id") or "").startswith("issuer:"):
+        return False
+    content_hash = str(fact.get("content_sha256") or "")
+    if len(content_hash) != 64 or any(char not in "0123456789abcdefABCDEF" for char in content_hash):
+        return False
+    binding = fact.get("issuer_registry_binding")
+    if not isinstance(binding, dict) or binding.get("status") != "qualified":
+        return False
+    link_url = str(binding.get("source_url") or "")
+    source_page = str(binding.get("source_page") or "")
+    def _host(value: str) -> str:
+        text = value.lower().rstrip(".")
+        return text[4:] if text.startswith("www.") else text
+    root_domain = _host(str(binding.get("root_domain") or ""))
+    host = _host(urlparse(source_url).hostname or "")
+    page_host = _host(urlparse(source_page).hostname or "")
+    return (
+        str(binding.get("document_id") or "") == str(fact.get("document_id") or "")
+        and str(binding.get("link_id") or "") == str(fact.get("document_id") or "")
+        and link_url == source_url
+        and str(binding.get("content_sha256") or "") == str(fact.get("content_sha256") or "")
+        and source_url.startswith("https://")
+        and source_url.lower().endswith(".pdf")
+        and bool(root_domain and (host == root_domain or host.endswith("." + root_domain))
+                 and (page_host == root_domain or page_host.endswith("." + root_domain)))
+        and binding.get("evidence_page") == first_evidence.get("page")
     )
 
 

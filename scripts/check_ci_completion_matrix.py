@@ -88,8 +88,9 @@ def _assert_conservative_statuses(matrix: dict) -> None:
     readiness = load_json(ROOT / "state" / "company_intel" / "forecast_readiness.json", {})
     ready_count = ((readiness.get("summary") or {}).get("ready_company_count") or 0)
     companies = readiness.get("companies") or {}
-    if ready_count != 1 or (companies.get("MLCF") or {}).get("status") != "input_ready":
-        _fail("forecast readiness must report exactly one input-ready company: MLCF")
+    ready_symbols = [symbol for symbol, row in companies.items() if row.get("status") == "input_ready"]
+    if ready_count != len(ready_symbols) or not ready_symbols:
+        _fail("forecast readiness summary must match at least one input-ready company")
     if forecast_readiness.get("status") != "partial":
         _fail("forecast readiness live-input row must be partial while only MLCF is input-ready")
     if not any(f"Real ready company count is {ready_count}" in blocker for blocker in forecast_readiness.get("blockers") or []):

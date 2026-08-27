@@ -15,6 +15,7 @@ import argparse
 import hashlib
 import html
 import ipaddress
+import json
 import os
 import re
 import sys
@@ -49,6 +50,18 @@ MAX_HTML_BYTES = 2 * 1024 * 1024
 LOCAL_CADENCE_DAYS = 7
 MAX_REDIRECTS = 4
 
+# One issuer index page is allowed after the home page.  Prefer pages that can
+# disclose dated financial reports over generic corporate/news pages; sorting
+# by URL made the bounded monitor select arbitrary sibling pages instead.
+_PAGE_KIND_PRIORITY = {
+    "financial_reports": 0,
+    "investor_relations": 1,
+    "announcements": 2,
+    "presentations": 3,
+    "governance": 4,
+    "issuer_home": 5,
+}
+
 _WEBSITE_RE = re.compile(
     r'class=["\'][^"\']*item__head[^"\']*["\'][^>]*>\s*WEBSITE\s*</div>'
     r'.{0,600}?<a[^>]+href=["\']([^"\']+)',
@@ -57,6 +70,11 @@ _WEBSITE_RE = re.compile(
 _LINK_HINT = re.compile(
     r"\b(investor|shareholder|financial|annual|quarterly|report|presentation|governance|"
     r"corporate|announcement|news|media|disclosure)\b",
+    re.I,
+)
+_STRUCTURED_DOCUMENT_RE = re.compile(
+    r'"title"\s*:\s*"(?P<label>(?:\\.|[^"\\])*)"[^{}]{0,320}?'
+    r'"(?:fileUrl|file_url)"\s*:\s*"(?P<url>(?:\\.|[^"\\])*)"',
     re.I,
 )
 _SPACE_RE = re.compile(r"\s+")
@@ -144,7 +162,7 @@ def _bounded_get(
     raise ValueError("too many issuer redirects")
 
 
-def _fetch_root(session: requests.Session, url: str, prior_pages: dict[str, dict]) -> tuple[str, str, requests.Response, bytes]:
+def _fetch_root(session: requests.Session, url: str, prior_pages: dict[str, dict], *, force: bool = False) -> tuple[str, str, requests.Response, bytes]:
     """Prefer HTTPS for legacy DPS URLs, falling back to the exact declared HTTP URL."""
     normalized, domain = _validate_url(url)
     candidates = [normalized]
@@ -154,7 +172,7 @@ def _fetch_root(session: requests.Session, url: str, prior_pages: dict[str, dict
     for candidate in candidates:
         try:
             response, body = _bounded_get(
-                session, candidate, domain, _conditional_headers(prior_pages.get(candidate)),
+                session, candidate, domain, {} if force else _conditional_headers(prior_pages.get(candidate)),
             )
             return candidate, domain, response, body
         except (requests.RequestException, OSError, ValueError) as exc:
@@ -252,13 +270,26 @@ def _kind(label: str, url: str) -> str:
         return "governance"
     if "presentation" in text or "briefing" in text:
         return "presentations"
-    if "investor" in text or "shareholder" in text:
-        return "investor_relations"
     if "financial" in text or "annual" in text or "quarter" in text or "report" in text:
         return "financial_reports"
+    if "investor" in text or "shareholder" in text:
+        return "investor_relations"
     if "news" in text or "announcement" in text or "media" in text or "disclosure" in text:
         return "announcements"
     return "issuer_home"
+
+
+def _candidate_sort_key(row: dict) -> tuple[int, int, str]:
+    """Order the one bounded non-home crawl by disclosure value, then URL."""
+    text = f"{row.get('label') or ''} {row.get('url') or ''}".lower()
+    # An annual report/financial-statement index can expose the source PDFs.
+    # Highlights and ratios are useful context, but cannot qualify reported facts.
+    financial_specificity = (
+        0 if re.search(r"annual|financial\s*(?:statement|report)", text) else
+        2 if re.search(r"highlight|ratio", text) else 1
+    )
+    return (_PAGE_KIND_PRIORITY.get(str(row.get("kind") or ""), 99), financial_specificity,
+            str(row.get("url") or ""))
 
 
 def discover_high_signal_links(body: bytes, base_url: str, domain: str,
@@ -295,6 +326,10 @@ def discover_high_signal_links(body: bytes, base_url: str, domain: str,
 
 def _issuer_document_type(label: str, url: str) -> str:
     text = f"{label} {url}".lower()
+    # Sustainability/BCSR files can mention an annual report as a cross-reference
+    # but are not financial statements and must not consume the annual-report slot.
+    if "sustainability" in text or "bcsr" in text or "environmental" in text:
+        return "governance_document"
     if "annual" in text:
         return "annual_report"
     if "quarter" in text or "half year" in text or "financial" in text:
@@ -310,9 +345,21 @@ def discover_document_links(body: bytes, base_url: str, domain: str,
                             include_all: bool = False) -> list[dict]:
     """Return same-domain report/document links without downloading their content."""
     parser = LinkParser()
-    parser.feed(body.decode("utf-8", errors="replace"))
+    text = body.decode("utf-8", errors="replace")
+    parser.feed(text)
     documents: dict[str, dict] = {}
-    for href, label in parser.links:
+    candidates = list(parser.links)
+    # Some issuer sites render report rows as escaped JSON in a hydration script
+    # instead of anchors.  Decode only this finite title/fileUrl pattern; all
+    # normal URL/domain/PDF checks below still apply.
+    for match in _STRUCTURED_DOCUMENT_RE.finditer(text.replace(r'\"', '"')):
+        try:
+            label = json.loads(f'"{match.group("label")}"')
+            href = json.loads(f'"{match.group("url")}"')
+        except (TypeError, json.JSONDecodeError):
+            continue
+        candidates.append((str(href), _clean(str(label))))
+    for href, label in candidates:
         try:
             normalized, _ = _validate_url(urljoin(base_url, href), domain)
         except (ValueError, TypeError):
@@ -432,12 +479,29 @@ def _self_check() -> int:
         "https://www.example.com/", "example.com", "EXM",
     )
     checks.append(len(links) == 1 and links[0]["kind"] == "investor_relations")
+    candidates = [
+        {"url": "https://www.example.com/briefing", "kind": "presentations"},
+        {"url": "https://www.example.com/highlights", "kind": "financial_reports", "label": "Financial Highlights"},
+        {"url": "https://www.example.com/reports", "kind": "financial_reports", "label": "Financial Reports"},
+        {"url": "https://www.example.com/investors", "kind": "investor_relations"},
+    ]
+    checks.append([row["kind"] for row in sorted(candidates, key=_candidate_sort_key)] == [
+        "financial_reports", "financial_reports", "investor_relations", "presentations",
+    ] and sorted(candidates, key=_candidate_sort_key)[0]["url"] == "https://www.example.com/reports")
     docs = discover_document_links(
         b'<a href="/reports/annual-2025.pdf">Annual Report 2025</a>'
+        b'<a href="/reports/bcsr-annual-2025.pdf">BCSR cross-referred with annual report</a>'
         b'<a href="https://other.test/report.pdf">Report</a>',
         "https://www.example.com/investors", "example.com", include_all=True,
     )
-    checks.append(len(docs) == 1 and docs[0]["document_type"] == "annual_report")
+    checks.append(len(docs) == 2 and {row["document_type"] for row in docs} == {
+        "annual_report", "governance_document",
+    })
+    structured_docs = discover_document_links(
+        b'<script>{\\"title\\":\\"Annual Report 2025\\",\\"fileUrl\\":\\"https://reports.example.com/annual-2025.pdf\\"}</script>',
+        "https://www.example.com/reports", "example.com", include_all=True,
+    )
+    checks.append(len(structured_docs) == 1 and structured_docs[0]["document_type"] == "annual_report")
     try:
         _validate_url("http://127.0.0.1/private")
         checks.append(False)
@@ -496,7 +560,7 @@ def main(argv: list[str] | None = None) -> int:
             prior_pages = {row["url"]: row for row in (prior_ticker.get("monitored_pages") or [])
                            if row.get("url")}
             issuer_url, domain, root_response, root_body = _fetch_root(
-                session, issuer_url, prior_pages,
+                session, issuer_url, prior_pages, force=args.force,
             )
             root_candidate = {"url": issuer_url, "kind": "issuer_home", "label": "Issuer website"}
             root_record = _page_record(prior_pages.get(issuer_url), root_candidate, root_response, root_body)
@@ -511,15 +575,16 @@ def main(argv: list[str] | None = None) -> int:
                 ]
             candidates = [root_candidate] + discovered
             deduped = {row["url"]: row for row in candidates}
-            ordered = [deduped[issuer_url]] + [
-                row for url, row in sorted(deduped.items()) if url != issuer_url
-            ]
+            ordered = [deduped[issuer_url]] + sorted(
+                (row for url, row in deduped.items() if url != issuer_url),
+                key=_candidate_sort_key,
+            )
             page_records = [root_record]
             for candidate in ordered[1:MAX_MONITORED_PAGES]:
                 old = prior_pages.get(candidate["url"])
                 try:
                     response, body = _bounded_get(
-                        session, candidate["url"], domain, _conditional_headers(old),
+                        session, candidate["url"], domain, {} if args.force else _conditional_headers(old),
                     )
                     page_records.append(_page_record(old, candidate, response, body))
                     discovered_documents.extend(discover_document_links(

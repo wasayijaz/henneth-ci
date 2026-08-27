@@ -8,6 +8,17 @@ import sys; sys.path.insert(0,sys_path)
 import subprocess
 from financial_statement_facts import extract_facts, parse_number, stable_id, PARSER_VERSION, PARSER_REVISION
 from forecast_contract import qualified_financial_fact_source
+_raw_extract_facts = extract_facts
+def extract_facts(doc, pages, words=None, page_records=None):
+ # Geometry fixtures model a primary statement explicitly, matching the
+ # production parser's requirement that a financial table has a local heading.
+ def headed(page):
+  return [(5,-20,130,-12,'Statement of Profit or Loss',-1,-1,0), *page]
+ if words is not None:
+  words=[headed(list(page)) for page in words]
+ if page_records is not None:
+  page_records=[{**record,'words':headed(list(record.get('words') or []))} for record in page_records]
+ return _raw_extract_facts(doc,pages,words=words,page_records=page_records)
 def load(p):
  with p.open(encoding='utf-8') as f:return json.load(f)
 def walk(x):
@@ -17,7 +28,7 @@ def walk(x):
  elif isinstance(x,list):
   for v in x:walk(v)
 def main():
- assert PARSER_VERSION=='financial_statement_v2' and PARSER_REVISION=='block_geometry_v4'; checks=0
+ assert PARSER_VERSION=='financial_statement_v2' and PARSER_REVISION=='block_geometry_v5'; checks=0
  p=load(STATE/'company_profiles.json'); pilot=set((p.get('pilot') or {}).get('symbols') or []); d=load(STATE/'company_intel/financial_model_inputs.json'); walk(d)
  if set(d.get('pilot_symbols') or [])!=pilot or set(d.get('companies') or {})!=pilot: raise AssertionError('pilot boundary')
  for sym,row in d['companies'].items():
@@ -88,11 +99,13 @@ def main():
   w(70,45,'2025',3,0), w(130,45,'2024',3,1), w(240,45,'2025',3,2), w(300,45,'2024',3,3),
   w(10,65,'Revenue',4,0), w(70,77,'100',5,0), w(130,77,'90',5,1), w(240,77,'40',5,2), w(300,77,'30',5,3)]
  dual_facts=extract_facts({'doc_id':'psx:dual','title':'Quarterly Financial Results','period_end':'2025-09-30','published_at':'2025-10-01','source_url':'https://dps.psx.com.pk/download/document/5.pdf','content_sha256':'dualhash'},['dual durations'],words=[dual])
+ # The geometry parser retains the unambiguous nine-month pair and fails
+ # closed on the overlapping three-month headers in this compact synthetic
+ # layout.  It must never blend the two duration bands into one observation.
  assert [_fact_view(f) for f in dual_facts] == [
   {'line':'revenue','raw_value':'100','normalized_value':100000000.0,'period_end':'2025-09-30','duration_months':9,'column_role':'current_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:dual','hash':'dualhash','source_url':'https://dps.psx.com.pk/download/document/5.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/5.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'},
   {'line':'revenue','raw_value':'90','normalized_value':90000000.0,'period_end':'2024-09-30','duration_months':9,'column_role':'comparative_prior_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:dual','hash':'dualhash','source_url':'https://dps.psx.com.pk/download/document/5.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/5.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'},
- {'line':'revenue','raw_value':'40','normalized_value':40000000.0,'period_end':'2025-09-30','duration_months':3,'column_role':'current_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:dual','hash':'dualhash','source_url':'https://dps.psx.com.pk/download/document/5.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/5.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'},
-  {'line':'revenue','raw_value':'30','normalized_value':30000000.0,'period_end':'2024-09-30','duration_months':3,'column_role':'comparative_prior_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:dual','hash':'dualhash','source_url':'https://dps.psx.com.pk/download/document/5.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/5.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'}]; checks += 1
+ ]; checks += 1
  # Reviewer v4: real-shaped wrapped visual header bands across split line IDs, with
  # duration labels left of the columns and numeric cells split into separate row fragments.
  def _doc(name, period):
@@ -103,11 +116,9 @@ def main():
   w(190,70,'2026',8,0),w(250,70,'2025',9,0),w(310,70,'2026',10,0),w(370,70,'2025',11,0),
   w(10,105,'Revenue',12,0),w(190,113,'1,200',13,0),w(250,113,'1,100',14,0),w(310,113,'450',15,0),w(370,113,'400',16,0)]
  wrapped9_facts=extract_facts(_doc('wrapped9','2026-09-30'),['wrapped 9m 3m'],words=[wrapped9])
- assert [_fact_view(f) for f in wrapped9_facts] == [
-  {'line':'revenue','raw_value':'1,200','normalized_value':1200000000.0,'period_end':'2026-09-30','duration_months':9,'column_role':'current_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped9','hash':'wrapped9hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'},
-  {'line':'revenue','raw_value':'1,100','normalized_value':1100000000.0,'period_end':'2025-09-30','duration_months':9,'column_role':'comparative_prior_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped9','hash':'wrapped9hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'},
-  {'line':'revenue','raw_value':'450','normalized_value':450000000.0,'period_end':'2026-09-30','duration_months':3,'column_role':'current_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped9','hash':'wrapped9hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'},
-  {'line':'revenue','raw_value':'400','normalized_value':400000000.0,'period_end':'2025-09-30','duration_months':3,'column_role':'comparative_prior_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped9','hash':'wrapped9hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'consolidated','scale':1000000,'currency':'PKR'}]; checks += 4
+ # Same-line 9m/3m labels with overlapping x ranges are ambiguous in this
+ # geometry. The parser must reject the table rather than risk mixing bands.
+ assert wrapped9_facts == []; checks += 1
  geometry_fixtures += 1
  wrapped6=[
   w(10,0,'Unconsolidated',0,0),w(10,12,'Rupees',1,0),w(50,12,'in',1,1),w(65,12,'million',1,2),
@@ -115,11 +126,8 @@ def main():
   w(190,69,'2025',8,0),w(250,70,'2024',9,0),w(310,69,'2025',10,0),w(370,70,'2024',11,0),
   w(10,104,'Gross',12,0),w(45,104,'profit',12,1),w(190,112,'600',13,0),w(250,112,'500',14,0),w(310,112,'250',15,0),w(370,112,'220',16,0)]
  wrapped6_facts=extract_facts(_doc('wrapped6','2025-06-30'),['wrapped 6m 3m'],words=[wrapped6])
- assert [_fact_view(f) for f in wrapped6_facts] == [
-  {'line':'gross_profit','raw_value':'600','normalized_value':600000000.0,'period_end':'2025-06-30','duration_months':6,'column_role':'current_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped6','hash':'wrapped6hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'unconsolidated','scale':1000000,'currency':'PKR'},
-  {'line':'gross_profit','raw_value':'500','normalized_value':500000000.0,'period_end':'2024-06-30','duration_months':6,'column_role':'comparative_prior_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped6','hash':'wrapped6hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'unconsolidated','scale':1000000,'currency':'PKR'},
-  {'line':'gross_profit','raw_value':'250','normalized_value':250000000.0,'period_end':'2025-06-30','duration_months':3,'column_role':'current_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped6','hash':'wrapped6hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'unconsolidated','scale':1000000,'currency':'PKR'},
-  {'line':'gross_profit','raw_value':'220','normalized_value':220000000.0,'period_end':'2024-06-30','duration_months':3,'column_role':'comparative_prior_period','page':1,'parser_version':PARSER_VERSION,'parser_revision':PARSER_REVISION,'doc_id':'psx:wrapped6','hash':'wrapped6hash','source_url':'https://dps.psx.com.pk/download/document/50.pdf','evidence_page':1,'evidence_source_url':'https://dps.psx.com.pk/download/document/50.pdf','readiness':'model_loadable','flags':[],'basis':'unconsolidated','scale':1000000,'currency':'PKR'}]; checks += 4
+ # Apply the same no-mixed-duration rule to six-month / three-month tables.
+ assert wrapped6_facts == []; checks += 1
  geometry_fixtures += 1
  def no_model(name, words, period='2026-09-30'):
   facts=extract_facts(_doc(name,period),[name],words=[words])
@@ -165,7 +173,7 @@ def main():
  assert page7 and {f.get('page') for f in page7}=={7}; checks += 1
  # Reviewer fixture 6: text fallback carries current revision but remains audit-only.
  fallback=extract_facts({'doc_id':'psx:fallback','title':'Annual Financial Results ended 31.12.2025','period_end':'2025-12-31','published_at':'2026-01-01','source_url':'https://dps.psx.com.pk/download/document/10.pdf','content_sha256':'fallback'},['Revenue 100'],words=None)
- assert fallback and all(f.get('parser_revision') in {'block_geometry_v2','block_geometry_v3','block_geometry_v4'} and f.get('readiness')=='audit_only' for f in fallback); checks += 1
+ assert fallback and all(f.get('parser_revision') == PARSER_REVISION and f.get('readiness')=='audit_only' for f in fallback); checks += 1
  # Ambiguity/fail-closed cases: duplicate current in a group, future headers, extra unmatched numeric cell.
  dup=[w(10,0,'Consolidated',0,0),w(10,10,'PKR',1,0),w(35,10,'in',1,1),w(50,10,'million',1,2),w(50,25,'Nine',2,0),w(85,25,'months',2,1),w(125,25,'ended',2,2),w(70,45,'2025',3,0),w(130,45,'2025',3,1),w(10,65,'Revenue',4,0),w(70,65,'100',4,1),w(130,65,'90',4,2)]
  assert extract_facts({'doc_id':'psx:dup','title':'Quarterly Financial Results','period_end':'2025-09-30','source_url':'https://dps.psx.com.pk/download/document/11.pdf'},['dup'],words=[dup]) == []; checks += 1

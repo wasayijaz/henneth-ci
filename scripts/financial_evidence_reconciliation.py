@@ -156,6 +156,22 @@ def _fact_sort_key(fact: dict[str, Any]) -> tuple[str, str, str, str]:
     )
 
 
+def _published_facts_as_of(facts: list[dict[str, Any]], as_of: str | None) -> tuple[list[dict[str, Any]], int]:
+    """Keep future-dated evidence in the durable series, never in this snapshot."""
+    cutoff = iso_date(as_of)
+    if cutoff is None:
+        return list(facts), 0
+    published: list[dict[str, Any]] = []
+    withheld = 0
+    for fact in facts:
+        available_on = iso_date(fact.get("available_on"))
+        if available_on is not None and available_on > cutoff:
+            withheld += 1
+            continue
+        published.append(fact)
+    return published, withheld
+
+
 def _fact_record(symbol: str, fact: dict[str, Any], as_of: str | None = None) -> dict[str, Any]:
     status = fact_status(fact, as_of)
     reasons = classification_reasons(fact, as_of)
@@ -291,6 +307,7 @@ def company_reconciliation(
     as_of: str | None = None,
 ) -> dict[str, Any]:
     facts = [fact for fact in facts if isinstance(fact, dict)]
+    facts, future_source_fact_count = _published_facts_as_of(facts, as_of)
     coverage_row = coverage_row or {}
     model_row = model_row or {}
     readiness_row = readiness_row or {}
@@ -327,6 +344,7 @@ def company_reconciliation(
         "quarantined_fact_count": status_counts.get("quarantined", 0),
         "missing_slot_count": len(missing_slots),
         "source_conflict_count": len(conflicts),
+        "withheld_future_source_fact_count": future_source_fact_count,
         "facts": fact_records,
         "conflicts": conflicts,
         "missing_slots": missing_slots,
@@ -373,6 +391,7 @@ def build_reconciliation(
         "quarantined_fact_count": sum(row["quarantined_fact_count"] for row in companies.values()),
         "missing_slot_count": sum(row["missing_slot_count"] for row in companies.values()),
         "source_conflict_count": sum(row["source_conflict_count"] for row in companies.values()),
+        "withheld_future_source_fact_count": sum(row["withheld_future_source_fact_count"] for row in companies.values()),
         "forecast_ready_company_count": sum(1 for row in (readiness_rows.values()) if row.get("status") == "input_ready"),
     }
     return {

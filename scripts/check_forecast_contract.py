@@ -100,6 +100,33 @@ def _ready_facts() -> list[dict]:
     return rows
 
 
+def _issuer_ready_facts() -> list[dict]:
+    rows = []
+    issuer_base = "https://issuer.example/investors/"
+    for year in (2021, 2022, 2023):
+        for fact in (
+            _fact("revenue", year, value=100 + year),
+            _fact("profit_after_tax_attributable", year, value=20 + year),
+            _fact("basic_eps", year, value=2 + year / 1000, eps=True),
+        ):
+            url = f"{issuer_base}annual-{year}.pdf"
+            doc_id = f"issuer:{year}"
+            content_hash = ("abcdef0123456789" * 4)[:64]
+            content_hash = content_hash[:-1] + str(year % 10)
+            fact = {**fact, "document_id": doc_id, "source_url": url,
+                    "issuer_registry_binding": {
+                        "status": "qualified", "document_id": doc_id,
+                        "link_id": doc_id, "source_url": url,
+                        "source_page": issuer_base, "root_domain": "issuer.example",
+                        "content_sha256": content_hash,
+                        "evidence_page": 1,
+                    }}
+            fact["content_sha256"] = content_hash
+            fact["evidence"] = [{"page": 1, "text": fact["line"], "source_url": url}]
+            rows.append(fact)
+    return rows
+
+
 def _assert_shape(data: dict, pilot: list[str]) -> None:
     _assert_finite(data)
     _assert_no_numeric_outputs(data)
@@ -143,6 +170,15 @@ def _synthetic_contract_assertions() -> None:
         _fail("synthetic input-ready row activated numeric outputs")
     if (ready.get("model_registry") or {}).get("model_version") != "cement_v1":
         _fail("synthetic ready row selected wrong model")
+    issuer_ready = readiness_row("MLCF", "Cement", _issuer_ready_facts(), {"qualification_queue": {"candidate_documents": []}})
+    if issuer_ready.get("status") != "input_ready" or issuer_ready.get("qualified_period_count") != 3:
+        _fail("qualified issuer binding did not become input-ready")
+    tampered_issuer = _issuer_ready_facts()
+    tampered_issuer[0] = {**tampered_issuer[0], "issuer_registry_binding": {
+        **tampered_issuer[0]["issuer_registry_binding"], "content_sha256": "tampered",
+    }}
+    if readiness_row("MLCF", "Cement", tampered_issuer, {}).get("status") == "input_ready":
+        _fail("tampered issuer binding activated readiness")
     cases = {
         "future_availability": [_fact("revenue", 2021, available_on="2020-01-01"), *_ready_facts()[1:]],
         "audit_only": [{**_ready_facts()[0], "readiness": "audit_only"}, *_ready_facts()[1:]],
@@ -171,14 +207,19 @@ def main() -> None:
     pilot = expected.get("pilot_symbols") or []
     _assert_shape(expected, pilot)
     summary = expected.get("summary") or {}
-    if summary.get("ready_company_count") != 1 or summary.get("qualified_fact_company_count") != 1:
-        _fail("real state must have exactly one input-ready/qualified-fact company")
+    ready_symbols = sorted(symbol for symbol, row in (expected.get("companies") or {}).items()
+                           if row.get("status") == "input_ready")
+    qualified_symbols = sorted(symbol for symbol, row in (expected.get("companies") or {}).items()
+                               if row.get("qualified_period_count", 0) >= 1)
+    if (summary.get("ready_company_count") != len(ready_symbols)
+            or summary.get("qualified_fact_company_count") != len(qualified_symbols)):
+        _fail("real-state readiness summary does not match its qualified companies")
     for symbol, row in (expected.get("companies") or {}).items():
-        if symbol == "MLCF":
-            if row.get("status") != "input_ready" or row.get("qualified_period_count") != 3:
-                _fail("MLCF must be input-ready with three qualified periods")
-        elif row.get("status") != "blocked" or row.get("qualified_period_count") != 0:
-            _fail(f"{symbol}: real state should remain blocked with zero qualified periods")
+        if row.get("status") == "input_ready":
+            if row.get("qualified_period_count", 0) < 3:
+                _fail(f"{symbol}: input-ready state lacks three qualified periods")
+        elif row.get("status") != "blocked" or row.get("qualified_period_count", 0) >= 3:
+            _fail(f"{symbol}: real state has inconsistent readiness")
     _synthetic_contract_assertions()
     before = builder.OUT.read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_forecast_readiness.py")], capture_output=True, text=True, timeout=30)
@@ -208,7 +249,7 @@ def main() -> None:
     for symbol, state_row in expected.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("forecast_readiness") != state_row:
             _fail(f"{symbol}: CI slice forecast_readiness mismatch")
-    print(f"forecast_readiness: PASS ({len(pilot)} companies, 1 input-ready MLCF; formal outputs blocked)")
+    print(f"forecast_readiness: PASS ({len(pilot)} companies, {len(ready_symbols)} input-ready; formal outputs remain source-gated)")
 
 
 if __name__ == "__main__":

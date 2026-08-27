@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from datetime import date
 from typing import Any
 
 from psx_data import STATE, load_json, save_json
@@ -79,8 +80,15 @@ def _period_from_doc(row: dict[str, Any], classification: str) -> dict[str, Any]
             if not month:
                 return None
             day, year = int(groups[1]), int(groups[2])
+        try:
+            period_end = date(year, month, day).isoformat()
+        except ValueError:
+            # Ambiguous title fragments such as a malformed ``2025-30-06``
+            # must never become an annual slot.  Keep the document visible but
+            # leave its period unqualified for a future bounded restage.
+            continue
         return {
-            "period_end": f"{year:04d}-{month:02d}-{day:02d}",
+            "period_end": period_end,
             "period_type": period_type,
             "source": "title",
             "matched_text": match.group(0),

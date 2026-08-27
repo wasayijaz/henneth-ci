@@ -19,7 +19,7 @@ from document_extract import extract_entry, stable_doc_id
 from document_ledger import OUT as LEDGER_OUT, append_events
 from document_queue import OUT as QUEUE_OUT, build_queue
 from financial_series import normalize_fact
-from financial_statement_facts import extract_facts
+from financial_statement_facts import _available_on, extract_facts
 from build_financial_series import OUT as SERIES_OUT, merge_rows
 from psx_data import ROOT, STATE, load_json, save_json
 
@@ -112,6 +112,7 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
     if isinstance(extraction_rows, dict):
         extraction_rows = extraction_rows.get("documents") or extraction_rows.get("queue") or []
     transient = {str(r.get("doc_id")): r for r in extraction_rows if isinstance(r, dict) and r.get("doc_id")}
+    source_registry = load_json(STATE / "company_intel" / "source_registry.json", {"tickers": {}})
     prior = _load_registry(output_path)
     documents = dict(prior.get("documents") or {})
     processed = failed = staged = 0
@@ -152,7 +153,11 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
                 content_sha256=content_sha)
             v2_doc = {"doc_id": doc_id, "title": title, "source_url": url, "content_sha256": content_sha, "period_end": entry.get("period_end"), "published_at": entry.get("published_at") or entry.get("date"), "retrieved_at": entry.get("retrieved_at"), "available_on": entry.get("available_on")}
             v2_facts = extract_facts(v2_doc, extracted["pages"], extracted.get("words"), extracted.get("page_records"))
+            # Retain geometry-backed facts first.  Legacy extractor claims can
+            # be numerous, and a shared evidence cap must never evict the
+            # stricter page/table facts that downstream financial models need.
             facts = facts + v2_facts
+            retained_facts = v2_facts + facts[:-len(v2_facts)] if v2_facts else facts
             evidence: list[dict[str, Any]] = []
             for item in doc_events + facts:
                 evidence.extend(item.get("evidence") or [])
@@ -172,13 +177,15 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
                 "title": title, "doc_type": doc_type,
                 "published_at": entry.get("published_at") or entry.get("date"),
                 "retrieved_at": entry.get("retrieved_at") or (old.get("retrieved_at") if old.get("content_sha256") == content_sha else time.strftime("%Y-%m-%d %H:%M")),
+                "available_on": _available_on(v2_doc),
                 "source_url": url, "source": entry.get("source"),
                 "content_sha256": content_sha, "local_sha256": extracted["content_sha256"],
                 "content_length": entry.get("content_length"),
+                "page_count": len(extracted["pages"]),
                 "media_type": entry.get("mime_type") or entry.get("media_type") or extracted["media_type"],
                 "status": "ready", "stale": False, "error": None,
                 "evidence": evidence[:MAX_EVIDENCE], "events": doc_events,
-                "facts": facts[:MAX_EVIDENCE], "versions": versions,
+                "facts": retained_facts[:MAX_EVIDENCE], "versions": versions,
                 "brief_evidence": list(old.get("brief_evidence") or [])[-MAX_BRIEF_EVIDENCE:],
                 "ledger_changes": ledger_changes,
             }
@@ -186,7 +193,8 @@ def run(index_path: Path = STATE / "research_index.json", output_path: Path = OU
             # bounded values/evidence are retained by the series writer; raw PDF
             # bytes and full page text never enter durable state.
             for fact in facts:
-                series_row = normalize_fact(record, fact, pages=extracted["pages"])
+                series_row = normalize_fact(record, fact, pages=extracted["pages"],
+                                            source_registry=source_registry)
                 if series_row:
                     transient_series.append(series_row)
             if record != old:

@@ -127,12 +127,21 @@ backend error is rendered.
     parseable consumer-facing dates in emitted CI state and the private slice only when an explicit
     cutoff exists; a value after that cutoff fails, while opaque or no-cutoff fields are linted rather
     than inferred.
-25. `build_formal_financial_engines.py` runs after forecast readiness and before the CI completion
+25. `build_financial_engine_assumptions.py` runs after forecast readiness and before the formal
+    engines. It emits deterministic market operands (`current_price`, `shares_out`) from retained
+    dated state and preserves any owner-approved records already in the assumptions file. For a
+    company with three qualified annual observations it also emits explicitly typed historical
+    reference cases for revenue growth and net margin. Those records carry `derived_value`, exact
+    source facts and a `not_owner_approved_forecast_input` status; they never expose the formal
+    engine's accepted `value` field. Net debt and P/E assumptions remain owner-approved inputs, so
+    formal forecast, valuation and market-expectations products stay blocked until all required
+    approvals exist.
+26. `build_formal_financial_engines.py` runs after forecast readiness and before the CI completion
     matrix and private slice. It emits deterministic forecast, valuation and market-expectations
-    products only from qualified actuals plus owner-approved, source-labelled and dated operands;
+    products only from qualified actuals plus approved, source-labelled and dated operands;
     otherwise each product remains explicitly blocked with no numeric result. Its focused checker
     is both part of the cloud sequence and preflight.
-26. `build_ownership_source_manifest.py` emits a review-only candidate list from retained issuer
+27. `build_ownership_source_manifest.py` emits a review-only candidate list from retained issuer
     and PSX metadata for the exact 20-company pilot. It never downloads or parses a document and
     cannot activate ownership; page-level official evidence and owner approval remain required.
 

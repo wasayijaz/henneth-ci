@@ -179,7 +179,14 @@ def save_json(path: Path, obj):
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(_clean(obj), indent=1, ensure_ascii=False, allow_nan=False),
                    encoding="utf-8")
-    tmp.replace(path)
+    for attempt in range(8):
+        try:
+            tmp.replace(path)
+            return
+        except PermissionError:
+            if attempt == 7:
+                raise
+            time.sleep(0.15 * (attempt + 1))
 
 
 def price_staleness_pct(price_then, price_now) -> float | None:
