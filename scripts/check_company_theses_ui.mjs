@@ -38,11 +38,21 @@ function main() {
   assert(app.includes('payload?.code === "PGRST205"'), "schema detection names the missing-table schema-cache code");
   assert(!/PGRST\|schema cache/.test(app), "schema detection must not classify every PGRST error as schema unavailable");
   assert(!/payload\.(?:message|details|hint)/.test(app.replace(/function thesisErrorCode[\s\S]*?\n\}/, "")), "raw backend error fields are not rendered outside classifier");
+  assert(app.includes("private_thesis_storage"), "secret-free private thesis storage receipt summary is rendered from the CI slice");
+  assert(app.includes("Live completion is not verified. Cross-user RLS proof is still required before this storage is complete."), "UI keeps the cross-user RLS completion boundary visible");
+  assert(app.includes("Owner-session read check"), "UI exposes owner-session smoke check state");
+  assert(app.includes("Check live storage"), "UI exposes a manual live storage check button");
+  assert(app.includes("Read check passed") && app.includes("company_theses was reachable with this bearer token"), "smoke check success copy is scoped to the current bearer token");
 
   assert(app.includes('method: "GET"') || app.includes("options.method || \"GET\""), "GET path exists");
   assert(app.includes('method: "POST"'), "create path exists");
   assert(app.includes('method: "PATCH"'), "edit/archive path exists");
   assert(app.includes('method: "DELETE"'), "hard delete path exists");
+  const smokeBlock = app.slice(app.indexOf("async function runPrivateThesisSmokeCheck"), app.indexOf("function renderPrivateTheses"));
+  assert(smokeBlock.includes('method: "GET"'), "live storage smoke check must be read-only GET");
+  assert(smokeBlock.includes("id,symbol,updated_at") && smokeBlock.includes("limit=1"), "live storage smoke check must use a bounded non-sensitive select");
+  assert(!/method:\s*"(POST|PATCH|DELETE)"/.test(smokeBlock), "live storage smoke check must not mutate rows");
+  assert(!/cross-user RLS proof is (?:confirmed|proven|verified)/i.test(smokeBlock), "owner-session smoke check must not claim cross-user isolation");
   assert(app.includes("setPrivateThesisArchived(id, true)"), "archive is a normal reversible action");
   assert(app.includes("setPrivateThesisArchived(id, false)"), "restore path exists");
   assert(/window\.confirm\("Permanently delete this private thesis\? This cannot be undone\."\)/.test(app), "hard delete requires explicit confirmation");
@@ -67,6 +77,7 @@ function main() {
   assert(saveBlock.includes("state.theses.drafts[symbol] = payloadToDraft(payload, draft.id)") && saveBlock.indexOf("state.theses.drafts[symbol] = payloadToDraft(payload, draft.id)") < saveBlock.indexOf("await companyThesisRequest"), "draft is preserved before the network save");
 
   assert(css.includes(".private-thesis") && css.includes(".private-thesis-form") && css.includes(".private-thesis-card"), "private thesis styles exist");
+  assert(css.includes(".private-thesis-verification"), "private thesis live verification styles exist");
   assert(/@media \(max-width:900px\)[\s\S]*?\.private-thesis-form/.test(css), "private thesis UI has a mobile layout");
 
   console.log(`company_theses_ui: PASS (${checks} UI/security assertions, ${symbols.length} company rows)`);

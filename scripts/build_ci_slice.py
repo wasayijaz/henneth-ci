@@ -215,6 +215,113 @@ def _reference_case_meta(assumptions_state, cutoff, rows):
     }
 
 
+def _private_thesis_storage_meta(receipt):
+    if not isinstance(receipt, dict):
+        receipt = {}
+    return {
+        "schema_status": receipt.get("schema_status") or "unknown",
+        "live_verification_status": receipt.get("live_verification_status") or "unknown",
+        "completion_boundary": receipt.get("completion_boundary"),
+        "live_verification_required": receipt.get("live_verification_required") or [],
+    }
+
+
+def _assumption_gap_product(row):
+    if not isinstance(row, dict):
+        return {}
+    return {
+        "status": row.get("status"),
+        "required_approved_records": [
+            value for value in (row.get("required_approved_records") or [])
+            if isinstance(value, str) and value
+        ],
+        "accepted_records": [
+            {
+                "metric": ref.get("metric"),
+                "record_type": ref.get("record_type"),
+                "approval_scope": ref.get("approval_scope"),
+                "available_on": _iso_date(ref.get("available_on")),
+                "source_id": ref.get("source_id"),
+                "source_label": ref.get("source_label"),
+                "source_path": ref.get("source_path"),
+                "source_url": _url(ref.get("source_url")),
+            }
+            for ref in (row.get("accepted_records") or [])
+            if isinstance(ref, dict)
+        ],
+        "missing_approved_records": [
+            value for value in (row.get("missing_approved_records") or [])
+            if isinstance(value, str) and value
+        ],
+        "missing_prerequisites": [
+            value for value in (row.get("missing_prerequisites") or [])
+            if isinstance(value, str) and value
+        ],
+        "policy": row.get("policy") or {},
+    }
+
+
+def _assumption_gap_review(assumptions_state, sym):
+    gaps = assumptions_state.get("assumption_gaps") or {}
+    companies = gaps.get("companies") or {}
+    row = companies.get(sym)
+    if not isinstance(row, dict):
+        return {
+            "symbol": sym,
+            "status": "assumption_gap_manifest_not_emitted",
+            "products": {},
+            "historical_reference_cases": [],
+            "reference_cases_can_satisfy_missing_records": False,
+            "next_required_action": "financial_engine_assumption_gap_manifest_required",
+            "policy": {
+                "gap_manifest_only": True,
+                "does_not_approve_assumptions": True,
+                "does_not_compute_formal_outputs": True,
+                "derived_reference_cases_are_not_approved_records": True,
+            },
+        }
+    products = row.get("products") or {}
+    return {
+        "symbol": sym,
+        "status": row.get("status"),
+        "forecast_readiness_status": row.get("forecast_readiness_status"),
+        "financial_model_inputs_status": row.get("financial_model_inputs_status"),
+        "qualified_period_count": row.get("qualified_period_count"),
+        "products": {
+            key: _assumption_gap_product(products.get(key))
+            for key in ("forecast", "valuation", "market_expectations")
+        },
+        "historical_reference_cases": [
+            {
+                "metric": ref.get("metric"),
+                "assumption_status": ref.get("assumption_status"),
+                "case_type": ref.get("case_type"),
+                "formula_version": ref.get("formula_version"),
+                "available_on": _iso_date(ref.get("available_on")),
+                "source_id": ref.get("source_id"),
+                "policy": ref.get("policy") or {},
+            }
+            for ref in (row.get("historical_reference_cases") or [])
+            if isinstance(ref, dict)
+        ],
+        "reference_cases_can_satisfy_missing_records": row.get("reference_cases_can_satisfy_missing_records") is True,
+        "next_required_action": row.get("next_required_action"),
+        "source": gaps.get("source") or {},
+        "policy": gaps.get("policy") or {},
+    }
+
+
+def _assumption_gap_meta(assumptions_state):
+    gaps = assumptions_state.get("assumption_gaps") or {}
+    return {
+        "schema_version": gaps.get("schema_version"),
+        "as_of": gaps.get("as_of"),
+        "source": gaps.get("source") or {},
+        "summary": gaps.get("summary") or {},
+        "policy": gaps.get("policy") or {},
+    }
+
+
 def _latest_news(news, sym, limit=3):
     rows = [n for n in news if sym in (n.get("tickers") or [])]
     rows.sort(key=lambda n: n.get("ts") or "", reverse=True)
@@ -721,6 +828,7 @@ def build():
     formal_valuations = load_json(STATE / "company_intel" / "formal_valuations.json", {"companies": {}})
     market_expectations = load_json(STATE / "company_intel" / "market_expectations.json", {"companies": {}})
     financial_engine_assumptions = load_json(STATE / "company_intel" / "financial_engine_assumptions.json", {"records": []})
+    private_thesis_receipt = load_json(STATE / "company_intel" / "private_thesis_storage_receipt.json", {})
     insider = load_json(STATE / "insider_activity.json", {"symbols": {}})
     offmarket = load_json(STATE / "offmarket_activity.json", {"days": {}})
     queue_status = _document_queue_status(synthesis_queue, brief_receipts)
@@ -859,6 +967,7 @@ def build():
         formal_valuation_row = _formal_engine_product(formal_valuations, sym, "formal_valuations")
         market_expectation_row = _formal_engine_product(market_expectations, sym, "market_expectations")
         historical_reference_cases = _historical_reference_cases(financial_engine_assumptions, sym, source_cutoff)
+        assumption_gap_review = _assumption_gap_review(financial_engine_assumptions, sym)
         rows.append({
             "symbol": sym,
             "name": (universe.get(sym) or {}).get("name") or f.get("name") or "",
@@ -936,6 +1045,7 @@ def build():
             "formal_valuations": formal_valuation_row,
             "market_expectations": market_expectation_row,
             "historical_reference_cases": historical_reference_cases,
+            "financial_engine_assumption_gaps": assumption_gap_review,
             "intelligence": {
                 "document_count": len(filings),
                 "event_count": len(timeline),
@@ -981,6 +1091,7 @@ def build():
                 "formal_valuation_status": formal_valuation_row.get("status"),
                 "formal_market_expectations_status": market_expectation_row.get("status"),
                 "historical_reference_case_count": historical_reference_cases.get("case_count", 0),
+                "financial_engine_assumption_gap_status": assumption_gap_review.get("status"),
             },
             "news": _latest_news(news, sym),
             "insider_filings": _insider(insider, sym),
@@ -1002,6 +1113,8 @@ def build():
             "formal_valuations": _formal_engine_meta(formal_valuations),
             "market_expectations": _formal_engine_meta(market_expectations),
             "historical_reference_cases": _reference_case_meta(financial_engine_assumptions, source_cutoff, rows),
+            "financial_engine_assumption_gaps": _assumption_gap_meta(financial_engine_assumptions),
+            "private_thesis_storage": _private_thesis_storage_meta(private_thesis_receipt),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",
         },
         "tickers": rows,

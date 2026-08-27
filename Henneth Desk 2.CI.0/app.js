@@ -90,7 +90,7 @@ let state = {
   tree: { expanded: {} },
   ask: { pending: {}, nextId: 0, bySymbol: {} },
   scenario: { bySymbol: {} },
-  theses: { loaded: false, loading: false, saving: false, error: null, bySymbol: {}, drafts: {} },
+  theses: { loaded: false, loading: false, saving: false, error: null, bySymbol: {}, drafts: {}, smoke: { running: false, status: "not_run", checkedAt: null, error: null, rowCount: null } },
 };
 
 const SCHEME_CYCLE = { system: "light", light: "dark", dark: "system" };
@@ -2076,18 +2076,73 @@ function readableThesisError(error) {
   return map[error] || "Private thesis storage is unavailable. Try again shortly.";
 }
 
+function privateThesisStorageMeta() {
+  return state.data?.meta?.private_thesis_storage || {};
+}
+
+function privateThesisSmokeText() {
+  const smoke = state.theses.smoke || {};
+  if (smoke.running) return "Checking this signed-in owner session...";
+  if (smoke.status === "passed") {
+    const checked = smoke.checkedAt ? ` at ${String(smoke.checkedAt).slice(11, 16)} UTC` : "";
+    const rowCount = smoke.rowCount == null ? "unknown row visibility" : `${smoke.rowCount} visible sample row${smoke.rowCount === 1 ? "" : "s"}`;
+    return `Read check passed${checked}: company_theses was reachable with this bearer token (${rowCount}).`;
+  }
+  if (smoke.status === "failed") return `Read check failed: ${readableThesisError(smoke.error)}`;
+  return "Not run in this browser session.";
+}
+
+async function runPrivateThesisSmokeCheck() {
+  state.theses.smoke = { running: true, status: "checking", checkedAt: null, error: null, rowCount: null };
+  renderDesk();
+  try {
+    // Read-only owner-session smoke test: this must never create, edit, archive, restore or delete thesis rows.
+    const rows = await companyThesisRequest(`?select=${encodeURIComponent("id,symbol,updated_at")}&limit=1`, { method: "GET" });
+    state.theses.smoke = {
+      running: false,
+      status: "passed",
+      checkedAt: new Date().toISOString(),
+      error: null,
+      rowCount: Array.isArray(rows) ? rows.length : null,
+    };
+  } catch (error) {
+    state.theses.smoke = {
+      running: false,
+      status: "failed",
+      checkedAt: new Date().toISOString(),
+      error: error.message || "request_failed",
+      rowCount: null,
+    };
+  } finally {
+    renderDesk();
+  }
+}
+
 function renderPrivateTheses(r) {
   const rows = state.theses.bySymbol[r.symbol] || [];
   const active = rows.filter(row => !row.archived);
   const archived = rows.filter(row => row.archived);
   const draft = thesisDraft(r.symbol);
   const formTitle = draft.id ? "Edit private thesis" : "Create private thesis";
+  const storage = privateThesisStorageMeta();
+  const liveStatus = storage.live_verification_status || "unknown";
+  const schemaStatus = storage.schema_status || "unknown";
+  const liveCopy = liveStatus === "verified"
+    ? "Live verification receipt is recorded."
+    : "Live completion is not verified. Cross-user RLS proof is still required before this storage is complete.";
   return `<section class="private-thesis" aria-labelledby="privateThesisTitle">
     <header>
       <div><span class="kicker">Private thesis notebook</span><h3 id="privateThesisTitle">${esc(formTitle)}</h3></div>
-      <span class="pill">${state.theses.loading ? "loading" : state.theses.loaded ? "private rows" : "not loaded"}</span>
+      <span class="pill">${esc(liveStatus === "verified" ? "live verified" : `live ${liveStatus}`)}</span>
     </header>
     <p class="section-note">These rows are private user input in Supabase <code>company_theses</code>. They do not change Henneth's deterministic thesis monitoring below.</p>
+    <div class="private-thesis-verification" aria-live="polite">
+      <span>Schema receipt <b>${esc(schemaStatus)}</b></span>
+      <span>Live verification <b>${esc(liveStatus)}</b></span>
+      <span>Owner-session read check <b>${esc(privateThesisSmokeText())}</b></span>
+      <p>${esc(liveCopy)}</p>
+      <button id="privateThesisSmoke" class="secondary" type="button" ${state.theses.smoke?.running ? "disabled" : ""}>${state.theses.smoke?.running ? "Checking" : "Check live storage"}</button>
+    </div>
     ${state.theses.error ? `<div class="thesis-error" role="alert">${esc(readableThesisError(state.theses.error))}</div>` : ""}
     <form id="privateThesisForm" class="private-thesis-form">
       <label class="wide"><span>Thesis</span><textarea id="privateThesisText" required maxlength="5000" rows="3" placeholder="Write the company thesis in your own words.">${esc(draft.thesis)}</textarea></label>
@@ -2252,6 +2307,7 @@ function bindPrivateTheses(row) {
     state.theses.error = null;
     renderDesk({ focusThesis: true });
   });
+  $("privateThesisSmoke")?.addEventListener("click", runPrivateThesisSmokeCheck);
   document.querySelectorAll("[data-thesis-action]").forEach(button => {
     button.onclick = () => {
       const id = button.dataset.thesisId;
@@ -2763,6 +2819,96 @@ function readinessList(items, empty = "None emitted") {
     : `<p class="muted">${esc(empty)}</p>`;
 }
 
+const ASSUMPTION_GAP_PRODUCTS = [
+  ["forecast", "Forecast"],
+  ["valuation", "Valuation"],
+  ["market_expectations", "Market expectations"],
+];
+
+function assumptionMetricLabel(value) {
+  const labels = {
+    revenue_growth_pct: "Revenue growth",
+    net_margin_pct: "Net margin",
+    shares_out: "Shares outstanding",
+    current_price: "Current price",
+    exit_pe: "Exit P/E",
+    net_debt: "Net debt",
+  };
+  return labels[value] || humanEngineKey(value);
+}
+
+function assumptionRecordLink(record) {
+  const label = record?.source_label || record?.source_id || record?.metric || "source";
+  const href = safeHref(record?.source_url);
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>`
+    : `<span>${esc(label)}</span>`;
+}
+
+function renderAssumptionGapProduct(key, product) {
+  const required = Array.isArray(product?.required_approved_records) ? product.required_approved_records : [];
+  const missing = Array.isArray(product?.missing_approved_records) ? product.missing_approved_records : [];
+  const accepted = Array.isArray(product?.accepted_records) ? product.accepted_records : [];
+  const prerequisites = Array.isArray(product?.missing_prerequisites) ? product.missing_prerequisites : [];
+  return `<section class="forecast-readiness-section">
+    <h3>${esc(ASSUMPTION_GAP_PRODUCTS.find(([item]) => item === key)?.[1] || humanEngineKey(key))}</h3>
+    <div class="blocked-grid">
+      <span>Status <b>${esc(product?.status || "not_evaluated")}</b></span>
+      <span>Required records <b>${esc(required.length)}</b></span>
+      <span>Accepted records <b>${esc(accepted.length)}</b></span>
+      <span>Missing approvals <b>${esc(missing.length)}</b></span>
+    </div>
+    <div class="baseline-table"><table><thead><tr><th>Required record</th><th>Review state</th><th>Source / blocker</th></tr></thead><tbody>
+      ${required.length ? required.map(metric => {
+        const record = accepted.find(item => item.metric === metric);
+        const isMissing = missing.includes(metric);
+        const blocker = isMissing ? "owner approval required" : prerequisites.join(", ") || "accepted deterministic operand";
+        const source = record ? assumptionRecordLink(record) : esc(blocker);
+        return `<tr><td>${esc(assumptionMetricLabel(metric))}</td><td>${esc(record ? "accepted" : isMissing ? "missing approved record" : "pending prerequisite")}</td><td>${source}</td></tr>`;
+      }).join("") : `<tr><td colspan="3">No required records were emitted for this product.</td></tr>`}
+    </tbody></table></div>
+  </section>`;
+}
+
+function renderFinancialEngineAssumptionReview(r) {
+  const gaps = r.financial_engine_assumption_gaps && typeof r.financial_engine_assumption_gaps === "object" && !Array.isArray(r.financial_engine_assumption_gaps)
+    ? r.financial_engine_assumption_gaps
+    : null;
+  if (!gaps) {
+    return `<section class="forecast-readiness-section"><h3>Owner assumption review</h3><div class="empty">financial_engine_assumptions.assumption_gaps is not available in the CI slice.</div></section>`;
+  }
+  const products = gaps.products || {};
+  const refs = Array.isArray(gaps.historical_reference_cases) ? gaps.historical_reference_cases : [];
+  const policy = gaps.policy || {};
+  return `<section class="forecast-readiness-section" aria-labelledby="assumptionGapReviewTitle">
+    <h3 id="assumptionGapReviewTitle">Owner assumption review</h3>
+    <p class="section-note">Read-only projection of financial_engine_assumptions.assumption_gaps. It shows which owner-approved, source-labelled records are still needed before formal forecasts, valuations, or market expectations can activate; it does not approve assumptions, compute formal outputs, or turn reference cases into forecast inputs.</p>
+    <div class="forecast-readiness-summary">
+      <div><span>Status</span><b>${esc(gaps.status || "unknown")}</b></div>
+      <div><span>Financial inputs</span><b>${esc(gaps.financial_model_inputs_status || "unknown")}</b></div>
+      <div><span>Readiness</span><b>${esc(gaps.forecast_readiness_status || "unknown")}</b></div>
+      <div><span>Qualified periods</span><b>${esc(gaps.qualified_period_count ?? "unknown")}</b></div>
+      <div><span>Next action</span><b>${esc(gaps.next_required_action || "not emitted")}</b></div>
+      <div><span>Reference cases satisfy gaps</span><b>${gaps.reference_cases_can_satisfy_missing_records ? "yes" : "no"}</b></div>
+    </div>
+    ${ASSUMPTION_GAP_PRODUCTS.map(([key]) => renderAssumptionGapProduct(key, products[key])).join("")}
+    <section class="forecast-readiness-section">
+      <h3>Historical reference cases</h3>
+      <p class="section-note">Reference cases are reported-history baselines only. They remain separate from owner-approved forward and valuation records.</p>
+      <div class="forecast-readiness-docs">${refs.length ? refs.map(ref => `<article><b>${esc(assumptionMetricLabel(ref.metric || "reference_case"))}</b><span>${esc(ref.assumption_status || ref.case_type || "historical_reference_case")}</span><small>${esc(ref.available_on || "available_on unknown")} · ${esc(ref.formula_version || "formula not emitted")}</small></article>`).join("") : `<div class="empty">No historical reference-case refs were emitted for this company.</div>`}</div>
+    </section>
+    <section class="forecast-readiness-section">
+      <h3>Manifest policy</h3>
+      <div class="forecast-readiness-policy">
+        <span>Gap manifest only <b>${policy.gap_manifest_only ? "true" : "not emitted"}</b></span>
+        <span>Does not approve assumptions <b>${policy.does_not_approve_assumptions ? "true" : "not emitted"}</b></span>
+        <span>Does not compute outputs <b>${policy.does_not_compute_formal_outputs ? "true" : "not emitted"}</b></span>
+        <span>Reference cases are not approved records <b>${policy.derived_reference_cases_are_not_approved_records ? "true" : "not emitted"}</b></span>
+      </div>
+    </section>
+  </section>`;
+}
+
 function renderForecastReadiness(r) {
   const readiness = r.forecast_readiness && typeof r.forecast_readiness === "object" && !Array.isArray(r.forecast_readiness)
     ? r.forecast_readiness
@@ -2797,6 +2943,7 @@ function renderForecastReadiness(r) {
       <h3>Missing requirements</h3>
       ${readinessList(readiness.missing_requirements, "No missing requirements emitted.")}
     </section>
+    ${renderFinancialEngineAssumptionReview(r)}
     <section class="forecast-readiness-section">
       <h3>Qualification candidate document refs</h3>
       <div class="forecast-readiness-docs">${Array.isArray(candidates) && candidates.length ? candidates.map(doc => `<article><b>${readinessDocLink(doc)}</b><span>${esc(doc.title || doc.document_title || "untitled official document")}</span><small>${esc(doc.published_at || doc.date || "date unknown")} · ${esc(doc.reason || doc.candidate_reason || doc.status || "candidate")}</small></article>`).join("") : `<div class="empty">No qualification candidate document refs were emitted.</div>`}</div>

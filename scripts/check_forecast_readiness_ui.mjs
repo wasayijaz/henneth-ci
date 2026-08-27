@@ -7,10 +7,12 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const APP_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "app.js");
 const CSS_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css");
 const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json");
+const ASSUMPTIONS_PATH = path.join(ROOT, "state", "company_intel", "financial_engine_assumptions.json");
 
 const app = fs.readFileSync(APP_PATH, "utf8");
 const css = fs.readFileSync(CSS_PATH, "utf8");
 const slice = JSON.parse(fs.readFileSync(SLICE_PATH, "utf8"));
+const assumptions = JSON.parse(fs.readFileSync(ASSUMPTIONS_PATH, "utf8"));
 let checks = 0;
 
 function assert(condition, message) {
@@ -28,6 +30,18 @@ function functionBlock(source, name, nextName) {
 function candidateRefs(row) {
   const readiness = row.forecast_readiness || {};
   return readiness.qualification_candidate_document_refs || readiness.qualification_candidate_documents || [];
+}
+
+function assumptionGap(row) {
+  return row.financial_engine_assumption_gaps;
+}
+
+function manifestGap(symbol) {
+  return assumptions.assumption_gaps?.companies?.[symbol];
+}
+
+function list(value) {
+  return Array.isArray(value) ? value : [];
 }
 
 function main() {
@@ -76,6 +90,31 @@ function main() {
     }
     assert(readiness.policy && typeof readiness.policy === "object" && !Array.isArray(readiness.policy), `${row.symbol} policy missing`);
     assert(Array.isArray(readiness.limitations), `${row.symbol} limitations missing`);
+
+    const gap = assumptionGap(row);
+    const manifest = manifestGap(row.symbol);
+    assert(gap && typeof gap === "object" && !Array.isArray(gap), `${row.symbol} financial_engine_assumption_gaps missing`);
+    assert(manifest && typeof manifest === "object" && !Array.isArray(manifest), `${row.symbol} source assumption_gaps manifest missing`);
+    assert(gap.status === manifest.status, `${row.symbol} gap status does not match manifest`);
+    assert(gap.forecast_readiness_status === manifest.forecast_readiness_status, `${row.symbol} readiness status does not match manifest`);
+    assert(gap.financial_model_inputs_status === manifest.financial_model_inputs_status, `${row.symbol} financial input status does not match manifest`);
+    assert(gap.reference_cases_can_satisfy_missing_records === false, `${row.symbol} reference cases must not satisfy missing approved records`);
+    assert(gap.next_required_action === manifest.next_required_action, `${row.symbol} next action does not match manifest`);
+    assert(gap.policy?.gap_manifest_only === true, `${row.symbol} gap manifest policy missing`);
+    assert(gap.policy?.does_not_approve_assumptions === true, `${row.symbol} approval policy missing`);
+    assert(gap.policy?.does_not_compute_formal_outputs === true, `${row.symbol} no-compute policy missing`);
+    assert(gap.policy?.derived_reference_cases_are_not_approved_records === true, `${row.symbol} reference-case policy missing`);
+    for (const product of ["forecast", "valuation", "market_expectations"]) {
+      const projected = gap.products?.[product];
+      const source = manifest.products?.[product];
+      assert(projected && typeof projected === "object" && !Array.isArray(projected), `${row.symbol} ${product} projected gap missing`);
+      assert(source && typeof source === "object" && !Array.isArray(source), `${row.symbol} ${product} manifest gap missing`);
+      assert(projected.status === source.status, `${row.symbol} ${product} status mismatch`);
+      assert(JSON.stringify(list(projected.required_approved_records)) === JSON.stringify(list(source.required_approved_records)), `${row.symbol} ${product} required approved records mismatch`);
+      assert(JSON.stringify(list(projected.missing_approved_records)) === JSON.stringify(list(source.missing_approved_records)), `${row.symbol} ${product} missing approved records mismatch`);
+      assert(JSON.stringify(list(projected.missing_prerequisites)) === JSON.stringify(list(source.missing_prerequisites)), `${row.symbol} ${product} missing prerequisites mismatch`);
+      assert(list(projected.accepted_records).every(record => record.metric && record.record_type && record.approval_scope && record.source_id && record.source_path), `${row.symbol} ${product} accepted records must retain source fields`);
+    }
   }
 
   assert(app.includes('["forecast", "Forecast readiness"]'), "Forecast Readiness tab missing");
@@ -93,6 +132,20 @@ function main() {
   assert(block.includes("readiness.policy") && block.includes("readiness.limitations"), "policy and limitations must be displayed");
   assert(block.includes("does not infer qualification, calculate projections, value the company, estimate odds, emit targets, or turn this into advice"), "read-only no-forecast boundary copy missing");
   assert(app.includes("function readinessDocLink(doc)") && app.includes("safeHref(doc?.source_url || doc?.url)"), "candidate document links must use safeHref");
+  assert(app.includes("function renderFinancialEngineAssumptionReview(r)"), "financial engine assumption review renderer missing");
+  assert(app.includes("financial_engine_assumption_gaps"), "financial engine assumption gaps field is not read by the app");
+  assert(app.includes("financial_engine_assumptions.assumption_gaps"), "assumption gap manifest source label missing");
+  assert(app.includes("does not approve assumptions, compute formal outputs, or turn reference cases into forecast inputs"), "assumption review boundary copy missing");
+  assert(app.includes("reference_cases_can_satisfy_missing_records") && app.includes("Reference cases satisfy gaps"), "reference-case non-activation status missing");
+  assert(app.includes("function renderAssumptionGapProduct") && app.includes("required_approved_records") && app.includes("missing_approved_records") && app.includes("accepted_records"), "assumption review product tables missing");
+  assert(app.includes("safeHref(record?.source_url)"), "assumption record links must use safeHref");
+
+  const reviewBlock = functionBlock(app, "renderFinancialEngineAssumptionReview", "renderForecastReadiness");
+  assert(reviewBlock.includes("r.financial_engine_assumption_gaps"), "assumption review must read row.financial_engine_assumption_gaps");
+  assert(reviewBlock.includes("does_not_approve_assumptions") && reviewBlock.includes("does_not_compute_formal_outputs"), "assumption review must display manifest policy");
+  assert(!/\b(?:approve|approved)\s*\(/i.test(reviewBlock), "assumption review must not call approval code");
+  assert(!/\b(?:fetch|companyThesisRequest|authRequest|calculateScenario|setScenarioInputs)\s*\(/i.test(reviewBlock), "assumption review must not fetch, write, or calculate");
+  assert(!/\bvalue\b/.test(reviewBlock), "assumption review must not render accepted assumption values");
 
   const forbidden = [
     /\b(?:eps|price|revenue|income|cashflow|cash_flow|fcf|ebitda)\s*[*+\-/]/i,
