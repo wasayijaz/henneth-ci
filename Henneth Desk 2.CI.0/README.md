@@ -11,7 +11,7 @@ data/company_intelligence.json
 The reading workspace uses a local, static company-background registry. The current 20 pilot
 companies have distinct assigned textures; the remaining five supplied textures are explicitly
 reserved for the next companies added to the slice. A selected company reveals its texture through
-a short stepped wave from a deterministic side, while its detail panels settle once. The surface is
+a short stepped wave from a randomly selected side, while its detail panels settle once. The surface is
 frosted for legibility and respects `prefers-reduced-motion`. `check_company_backgrounds.mjs` and
 `scripts/check_company_background_motion_ui.mjs` validate the asset inventory and UI contract.
 

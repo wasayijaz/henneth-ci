@@ -101,6 +101,15 @@ function companyBackgroundRegistry() {
   return registry && typeof registry.forSymbol === "function" ? registry : null;
 }
 
+function randomRevealSide(fallbackSeed) {
+  const entropy = new Uint32Array(1);
+  if (globalThis.crypto?.getRandomValues) {
+    globalThis.crypto.getRandomValues(entropy);
+    return CI_REVEAL_SIDES[entropy[0] % CI_REVEAL_SIDES.length];
+  }
+  return CI_REVEAL_SIDES[ciHash(fallbackSeed) % CI_REVEAL_SIDES.length];
+}
+
 function companyVisual(row, index) {
   const symbol = String(row?.symbol || "").trim().toUpperCase();
   const registry = companyBackgroundRegistry();
@@ -108,7 +117,7 @@ function companyVisual(row, index) {
   const backgroundMatch = backgroundPath.match(CI_BACKGROUND_ATTR_RE);
   const fallbackIndex = ((ciHash(`${symbol}:${index}`) + Math.max(0, index)) % 25) + 1;
   const backgroundId = backgroundMatch ? backgroundMatch[1] : String(fallbackIndex).padStart(2, "0");
-  const revealSide = CI_REVEAL_SIDES[ciHash(`${symbol}:${backgroundId}:reveal`) % CI_REVEAL_SIDES.length];
+  const revealSide = randomRevealSide(`${symbol}:${backgroundId}:reveal`);
   return { backgroundId, backgroundPath, revealSide };
 }
 

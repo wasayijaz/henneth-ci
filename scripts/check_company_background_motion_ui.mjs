@@ -15,7 +15,7 @@ try {
   assert(index.includes('<script src="company_backgrounds.js"></script>') && index.indexOf("company_backgrounds.js") < index.indexOf("app.js"), "background registry loads before app.js");
   assert(app.includes("window.HENNETH_COMPANY_BACKGROUNDS") && app.includes("typeof registry.forSymbol === \"function\""), "app consumes registry global when supplied");
   assert(app.includes("CI_REVEAL_SIDES") && app.includes('"left"') && app.includes('"right"') && app.includes('"top"') && app.includes('"bottom"'), "all four reveal sides available");
-  assert(app.includes("function ciHash") && app.includes("Math.imul") && !app.includes("Math.random"), "motion selection is deterministic");
+  assert(app.includes("function randomRevealSide") && app.includes("crypto?.getRandomValues") && app.includes("new Uint32Array(1)") && app.includes("ciHash(fallbackSeed)") && !app.includes("Math.random"), "reveal side is securely randomized with a stable fallback");
   assert(app.includes("function companyVisual") && app.includes("registry?.forSymbol(symbol)") && app.includes("product-background-(\\d{2})"), "company visual resolver reads background IDs from registry paths");
   assert(app.includes("fallbackIndex") && app.includes("% 25") && app.includes('padStart(2, "0")'), "fallback covers the 25 background assets");
   assert(app.includes("const activeIndex = row ? Math.max") && app.includes("companyVisual(row, activeIndex)"), "active company row drives the visual contract");
