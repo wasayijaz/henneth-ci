@@ -686,6 +686,7 @@ def build():
     financial_coverage = load_json(STATE / "company_intel" / "financial_coverage.json", {"companies": {}})
     forecast_readiness = load_json(STATE / "company_intel" / "forecast_readiness.json", {"companies": {}})
     financial_evidence_reconciliation = load_json(STATE / "company_intel" / "financial_evidence_reconciliation.json", {"companies": {}})
+    earnings_bridges = load_json(STATE / "company_intel" / "earnings_bridges.json", {"companies": {}})
     signal_clusters = load_json(STATE / "company_intel" / "signal_clusters.json", {"companies": {}})
     thesis_monitoring = load_json(STATE / "company_intel" / "thesis_monitoring.json", {"companies": {}})
     intelligence_confidence = load_json(STATE / "company_intel" / "intelligence_confidence.json", {"companies": {}})
@@ -767,6 +768,7 @@ def build():
                 "reason": "financial_evidence_reconciliation_state_missing",
             },
         }
+        earnings_bridge_row = (earnings_bridges.get("companies") or {}).get(sym) or {"symbol": sym, "status": "state_missing", "bridge_count": 0, "bridges": [], "formal_engine_status": {"forecast": "not_activated", "valuation": "not_activated", "market_expectations": "not_activated"}}
         financial_coverage_row = financial_coverage.get("companies", {}).get(sym) or {
             "symbol": sym,
             "status": "blocked_no_candidate_documents",
@@ -896,6 +898,7 @@ def build():
             "causal_foundations": causal_foundations_row,
             "financial_model_inputs": model_inputs,
             "financial_evidence_reconciliation": financial_reconciliation_row,
+            "earnings_bridges": earnings_bridge_row,
             "financial_coverage": financial_coverage_row,
             "forecast_readiness": forecast_readiness_row,
             "signal_clusters": signal_cluster_row,

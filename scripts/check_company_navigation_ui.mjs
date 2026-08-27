@@ -71,7 +71,7 @@ try {
     assert(app.includes(`function renderCompany${name}`), `renderCompany${name} exists`);
   }
   const peersBody = extractFunctionBody("renderCompanyPeers", "renderCompanyOwnership");
-  assert(app.includes("blocked_insufficient_qualified_history") && app.includes("Earnings bridge blocked by readiness"), "earnings blocked state");
+  assert(app.includes("blocked_insufficient_qualified_history") && app.includes("Forward earnings remain source-gated") && app.includes("Historical earnings bridge"), "earnings formal-gate/history split");
   assert(app.includes("Formal CI valuation") && app.includes("Legacy fair-value screen, not formal CI valuation"), "formal valuation separate from legacy fair value");
   assert(app.includes("Formal pilot-sector cohort") && app.includes("pilot-sector cohort") && app.includes("International peer registry"), "peers registry view");
   assert(peersBody.includes("r.peer_registry || {}") && peersBody.includes("registry.formal_peer_details") && peersBody.includes("registry.member_details"), "peers read emitted registry details");

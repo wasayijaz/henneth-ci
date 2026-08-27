@@ -1393,9 +1393,13 @@ function renderCompanyEarnings(r) {
   const readiness = r.forecast_readiness || {};
   const coverage = r.financial_coverage || {};
   const model = r.financial_model_inputs || {};
+  const bridge = r.earnings_bridges || {};
+  const bridges = Array.isArray(bridge.bridges) ? bridge.bridges : [];
+  const historical = bridges.length ? `<section class="panel span9"><span class="kicker">Historical earnings bridge</span><h2>Reported annual changes</h2><p class="section-note">Historical, source-linked deltas only. This is not a forecast, valuation, or recommendation.</p><div class="reconciliation-list">${bridges.map(item => `<article class="reconciliation-row"><header><b>${esc(item.previous_period_end)} → ${esc(item.period_end)}</b><span>${esc(item.status)}</span></header><div class="reconciliation-meta">${["revenue", "profit_after_tax_attributable", "basic_eps"].map(metric => { const value = item.metrics?.[metric] || {}; return `<span>${esc(metric)} <b>${value.change_pct == null ? "Unknown" : esc(fmt(value.change_pct, 1)) + "%"}</b></span>`; }).join("")}</div><p>Source-linked reported annual change; formal engine status remains not activated.</p></article>`).join("")}</div></section>` : `<section class="panel span9 blocked-shell"><span class="kicker">Historical earnings bridge</span><h2>No conflict-free annual bridge emitted</h2><p class="section-note">${esc(bridge.status || "blocked_insufficient_conflict_free_aligned_history")}. No forecast or valuation is inferred.</p></section>`;
   return `<section class="company-route-stack">
+    ${historical}
     <section class="panel span9 blocked-shell" aria-labelledby="earningsTitle">
-      <span class="kicker">Earnings</span><h2 id="earningsTitle">Earnings bridge blocked by readiness</h2>
+      <span class="kicker">Formal earnings engines</span><h2 id="earningsTitle">Forward earnings remain source-gated</h2>
       <p class="section-note">Earnings analysis is not generated until qualified multi-period annual consolidated history exists. This page shows readiness state only; it does not infer earnings direction, bridge drivers, forecast EPS, or value the company.</p>
       <div class="blocked-grid">
         <span>Readiness <b>${esc(readiness.status || "blocked")}</b></span>
