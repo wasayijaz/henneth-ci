@@ -7,10 +7,12 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const APP_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "app.js");
 const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json");
 const STATE_PATH = path.join(ROOT, "state", "company_intel", "cement_operating_series.json");
+const RECON_PATH = path.join(ROOT, "state", "company_intel", "cement_historical_reconciliation.json");
 
 const app = fs.readFileSync(APP_PATH, "utf8");
 const slice = JSON.parse(fs.readFileSync(SLICE_PATH, "utf8"));
-const state = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
+  const state = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
+  const reconciliation = JSON.parse(fs.readFileSync(RECON_PATH, "utf8"));
 let checks = 0;
 
 function assert(condition, message) {
@@ -44,12 +46,14 @@ function main() {
   for (const row of rows) {
     assert(row && typeof row === "object", "slice row must be an object");
     assert(row.cement_operating_series && typeof row.cement_operating_series === "object", `${row.symbol} cement_operating_series missing`);
+    assert(row.cement_historical_reconciliation && typeof row.cement_historical_reconciliation === "object", `${row.symbol} cement historical reconciliation missing`);
   }
 
   for (const sym of ["DGKC", "MLCF", "LUCK"]) {
     const sliceRow = rows.find(row => row.symbol === sym)?.cement_operating_series;
     const stateRow = state.companies?.[sym];
     assert(JSON.stringify(sliceRow) === JSON.stringify(stateRow), `${sym} cement operating row must match state exactly`);
+    assert(JSON.stringify(rows.find(row => row.symbol === sym)?.cement_historical_reconciliation) === JSON.stringify(reconciliation.companies?.[sym]), `${sym} cement reconciliation row must match state exactly`);
   }
 
   const dgkc = rows.find(row => row.symbol === "DGKC")?.cement_operating_series;
@@ -71,6 +75,13 @@ function main() {
 
   assert(rows.find(row => row.symbol === "MLCF")?.cement_operating_series?.status === "insufficient_aligned_annual_operating_history", "MLCF missing-history status not exposed");
   assert(rows.find(row => row.symbol === "LUCK")?.cement_operating_series?.status === "missing_retained_cement_operating_history", "LUCK missing-history status not exposed");
+  for (const sym of ["DGKC", "MLCF"]) {
+    const row = rows.find(item => item.symbol === sym)?.cement_historical_reconciliation;
+    assert(row.status === "blocked_missing_model_loadable_operating_drivers", `${sym} must expose its missing model-loadable driver boundary`);
+    assert(row.qualified_financial_period_count === 3, `${sym} qualified actual-history count missing`);
+    assert(row.adapter_status === "unavailable", `${sym} must not activate a numerical adapter`);
+  }
+  assert(rows.find(item => item.symbol === "LUCK")?.cement_historical_reconciliation?.status === "blocked_insufficient_qualified_financial_history", "LUCK financial-history boundary missing");
   for (const row of rows.filter(item => !["DGKC", "MLCF", "LUCK"].includes(item.symbol))) {
     assert(row.cement_operating_series.status === "unknown", `${row.symbol} non-cement row should remain unknown`);
     assert(row.cement_operating_series.observation_count === 0, `${row.symbol} non-cement row must not fabricate observations`);
@@ -78,6 +89,7 @@ function main() {
   }
 
   assert(app.includes("function renderCementOperatingSeries(r)"), "cement operating renderer missing");
+  assert(app.includes("function renderCementHistoricalReconciliation(r)"), "cement historical reconciliation renderer missing");
   assert(app.includes("renderCementOperatingSeries(r)"), "Operating Intelligence view must render cement operating section");
   const block = sourceBlock(app, "function renderCementOperatingSeries", "const BENCHMARK_HORIZONS");
   assert(block.includes("r.cement_operating_series"), "renderer must read row.cement_operating_series");
@@ -88,6 +100,10 @@ function main() {
   assert(!/\b(?:forecast|valuation|market_expectations|financial_model_inputs)\s*=/.test(block), "renderer must not activate downstream products");
   const markupSafeBlock = block.replaceAll('target="_blank"', "");
   assert(!/\b(?:buy|sell|hold|upside|downside|fair value|recommend)\b/i.test(markupSafeBlock), "renderer contains advice language");
+  const reconBlock = sourceBlock(app, "function renderCementHistoricalReconciliation", "const BENCHMARK_HORIZONS");
+  assert(reconBlock.includes("r.cement_historical_reconciliation"), "reconciliation renderer must read its CI slice row");
+  assert(reconBlock.includes("adapter") && reconBlock.includes("Audit-only operating snippets are not promoted"), "reconciliation boundaries missing");
+  assert(!/\b(?:fair_value|target_price|forecast_value)\b/.test(reconBlock), "reconciliation renderer must not create numeric outputs");
 
   console.log(`cement_operating_series_ui: PASS (${checks} UI assertions, ${rows.length} company rows)`);
 }

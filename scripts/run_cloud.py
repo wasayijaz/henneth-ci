@@ -56,6 +56,7 @@ STEPS = [
     # Audit-only retained cement operating observations. This is evidence for review only:
     # it never activates financial_model_inputs, forecasts, valuations, or market expectations.
     "build_cement_operating_series.py",
+    "cement_historical_reconciliation.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.
@@ -147,6 +148,7 @@ STEPS = [
     "check_financial_evidence_reconciliation.py",
     "check_earnings_bridges.py",
     "check_cement_operating_series.py",
+    "check_cement_historical_reconciliation.py",
     "check_intelligence_confidence.py",
     "check_thesis_monitoring.py",
     "check_management_delivery.py",

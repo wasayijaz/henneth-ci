@@ -702,6 +702,31 @@ function renderCementOperatingSeries(r) {
   </section>`;
 }
 
+function renderCementHistoricalReconciliation(r) {
+  const row = r.cement_historical_reconciliation || {};
+  if (row.status === "not_in_cement_reconciliation_scope") return "";
+  const lanes = row.driver_lanes && typeof row.driver_lanes === "object" ? row.driver_lanes : {};
+  const periods = Array.isArray(row.qualified_financial_periods) ? row.qualified_financial_periods : [];
+  const missing = Array.isArray(row.missing_driver_lanes) ? row.missing_driver_lanes : [];
+  const factLinks = periods.map(period => {
+    const actuals = period.actuals || {};
+    const links = Object.entries(actuals).map(([metric, actual]) => {
+      const source = actual?.source || {};
+      const href = safeHref(source.source_url);
+      const page = Number(source.page) > 0 ? `page ${Number(source.page)}` : "page unknown";
+      return `<span>${esc(metric.replaceAll("_", " "))}: ${href ? `<a href="${href}" target="_blank" rel="noopener">${esc(page)}</a>` : esc(page)}</span>`;
+    }).join(" · ");
+    return `<li><b>${esc(period.period_end || "period unknown")}</b> — reported actuals only · ${links}</li>`;
+  }).join("");
+  const laneRows = Object.entries(lanes).map(([lane, value]) => `<span>${esc(lane.replaceAll("_", " "))}: <b>${esc(value?.status || "unknown")}</b></span>`).join("");
+  return `<section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Cement reconciliation</span><h3>Historical actuals and model-input gaps</h3></div><span class="pill">adapter ${esc(row.adapter_status || "unavailable")}</span></header>
+    <p class="section-note">Reported annual actuals are reconciled from qualified financial evidence only. Audit-only operating snippets are not promoted; no forecast, valuation or market-expectations output is created here.</p>
+    <div class="intel-status"><span>Status <b>${esc(row.status || "unknown")}</b></span><span>Qualified annual periods <b>${esc(row.qualified_financial_period_count ?? 0)}</b></span><span>Missing driver lanes <b>${esc(missing.length ? missing.join(", ").replaceAll("_", " ") : "none")}</b></span></div>
+    <div class="oi-facts">${laneRows || "<div><span>Driver lanes</span><b>Unknown — awaiting sourced inputs</b></div>"}</div>
+    ${factLinks ? `<ul class="oi-limitations">${factLinks}</ul>` : `<div class="oi-empty-note">No conflict-free qualified annual actuals are available for reconciliation.</div>`}
+  </section>`;
+}
+
 const BENCHMARK_HORIZONS = ["1Q", "2Q", "4Q", "8Q"];
 
 function benchmarkReason(reason) {
@@ -848,7 +873,7 @@ function renderOperatingIntelligence(r) {
     return `<section class="oi-scenario-group"><header><div><span class="kicker">Operating event</span><h3>${esc(short(event?.description || eventId, 140))}</h3></div><span class="pill">${esc(event?.event_id || eventId)}</span></header><div class="oi-scenarios">${cards.map(scenario => `<article class="oi-scenario oi-${esc(String(scenario.scenario || "scenario").toLowerCase())}"><header class="oi-card-head"><div><span class="oi-type oi-type-scenario">Scenario</span><h4>${esc(scenario.scenario || "Scenario")}</h4></div><b>${probabilityValue(scenario.probability)}</b></header><div class="oi-facts"><div><span>Affected drivers</span><b>${listValue(scenario.assumptions?.affected_drivers)}</b></div><div><span>Required inputs</span><b>${listValue(scenario.assumptions?.required_inputs)}</b></div><div><span>Missing inputs</span><b>${listValue(scenario.assumptions?.missing_inputs)}</b></div><div><span>Timing</span><b>${unknownValue(scenario.timing?.effective_date, "Unknown")} · lag ${unknownValue(scenario.timing?.expected_lag, "Unknown")}</b></div><div><span>Confidence</span><b>${confidenceValue(scenario.confidence)}</b></div><div><span>Impact status</span><b>${unknownValue(scenario.impact_status, "Unknown")}</b></div><div><span>Quality flags</span><b>${listValue(scenario.quality_flags, "None")}</b></div></div><div class="oi-impact-grid">${[["Revenue", scenario.revenue_impact], ["EBITDA", scenario.ebitda_impact], ["EPS", scenario.eps_impact], ["FCF", scenario.fcf_impact], ["Valuation", scenario.valuation_impact]].map(([label, value]) => `<div><span>${label} impact</span><b>${operatingImpact(value)}</b></div>`).join("")}</div>${operatingEvidence(scenario.evidence)}</article>`).join("")}</div></section>`;
   }).join("") : `<div class="empty oi-empty">No scenarios are available. Scenario synthesis remains paused until sourced inputs are sufficient.</div>`;
 
-  return `<section class="panel span9 oi-shell"><span class="kicker">Operating intelligence</span><h2>Observation → event → driver map → scenario</h2><p class="section-note">Observation/report becomes an operating event, then a declarative driver hypothesis, then Bear/Base/Bull scenarios. Research only — not advice. Null impacts remain unknown; no values are fabricated.</p>${renderCementOperatingSeries(r)}<section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Operating events</span><h3>Evidence-linked observations</h3></div><span class="pill">${esc(events.length)} event${events.length === 1 ? "" : "s"}</span></header><div class="oi-events">${eventCards}</div></section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Driver map</span><h3>Sector model and directed hypotheses</h3></div></header>${driverSection}</section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Impact scenarios</span><h3>Bear / Base / Bull by operating event</h3></div></header>${scenarioSection}</section>${renderHistoricalBenchmarks(r, events)}</section>`;
+  return `<section class="panel span9 oi-shell"><span class="kicker">Operating intelligence</span><h2>Observation → event → driver map → scenario</h2><p class="section-note">Observation/report becomes an operating event, then a declarative driver hypothesis, then Bear/Base/Bull scenarios. Research only — not advice. Null impacts remain unknown; no values are fabricated.</p>${renderCementOperatingSeries(r)}${renderCementHistoricalReconciliation(r)}<section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Operating events</span><h3>Evidence-linked observations</h3></div><span class="pill">${esc(events.length)} event${events.length === 1 ? "" : "s"}</span></header><div class="oi-events">${eventCards}</div></section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Driver map</span><h3>Sector model and directed hypotheses</h3></div></header>${driverSection}</section><section class="oi-section"><header class="oi-section-head"><div><span class="kicker">Impact scenarios</span><h3>Bear / Base / Bull by operating event</h3></div></header>${scenarioSection}</section>${renderHistoricalBenchmarks(r, events)}</section>`;
 }
 
 function conditionalText(value, label = "unknown") {

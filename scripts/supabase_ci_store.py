@@ -50,6 +50,7 @@ SELECTED_INTEL_PRODUCTS = (
     # state and must not masquerade as a source-grounded company snapshot.
     "causal_foundations.json",
     "cement_operating_series.json",
+    "cement_historical_reconciliation.json",
     "change_intelligence.json",
     "company_brains.json",
     "company_graph.json",

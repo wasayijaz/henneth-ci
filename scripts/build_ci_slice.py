@@ -618,6 +618,24 @@ def _cement_operating_series(cement_state, sym, sector):
     return dict(row) if isinstance(row, dict) else _empty_cement_operating_series(sym, sector)
 
 
+def _cement_historical_reconciliation(state, sym, sector):
+    row = (state.get("companies") or {}).get(sym)
+    if isinstance(row, dict):
+        return dict(row)
+    return {
+        "symbol": sym,
+        "status": "not_in_cement_reconciliation_scope" if str(sector or "").upper() != "CEMENT" else "state_missing",
+        "reconciliation_kind": "historical_actuals_only",
+        "qualified_financial_period_count": 0,
+        "qualified_financial_periods": [],
+        "driver_lanes": {},
+        "missing_driver_lanes": [],
+        "audit_operating_observation_count": 0,
+        "adapter_status": "unavailable",
+        "downstream_status": {"financial_model_inputs": "not_activated", "forecast": "not_activated", "valuation": "not_activated", "market_expectations": "not_activated"},
+    }
+
+
 def _company_brief(brief_state, document_state, sym):
     row = (brief_state.get("companies") or {}).get(sym) or {}
     current = row.get("current") or None
@@ -677,6 +695,7 @@ def build():
     company_briefs = load_json(STATE / "company_briefs.json", {"companies": {}})
     operating_events = load_json(STATE / "company_intel" / "operating_events.json", {"companies": {}})
     cement_operating_series = load_json(STATE / "company_intel" / "cement_operating_series.json", {"companies": {}})
+    cement_historical_reconciliation = load_json(STATE / "company_intel" / "cement_historical_reconciliation.json", {"companies": {}})
     driver_graphs = load_json(STATE / "company_intel" / "driver_graphs.json", {"companies": {}})
     impact_scenarios = load_json(STATE / "company_intel" / "impact_scenarios.json", {"companies": {}})
     event_studies = load_json(STATE / "company_intel" / "event_studies.json", {"studies": {}})
@@ -739,6 +758,7 @@ def build():
         brief = _company_brief(company_briefs, company_documents, sym)
         op_events = (operating_events.get("companies", {}).get(sym) or {}).get("events") or []
         cement_operating_row = _cement_operating_series(cement_operating_series, sym, sector)
+        cement_reconciliation_row = _cement_historical_reconciliation(cement_historical_reconciliation, sym, sector)
         dgraph = driver_graphs.get("companies", {}).get(sym) or {"sector": None, "drivers": [], "edges": [], "quality_flags": ["missing_driver_graph"]}
         scenarios = (impact_scenarios.get("companies", {}).get(sym) or {}).get("scenarios") or []
         studies = [v for v in (event_studies.get("studies") or {}).values() if v.get("symbol") == sym]
@@ -891,6 +911,7 @@ def build():
             "brief": brief,
             "operating_events": op_events,
             "cement_operating_series": cement_operating_row,
+            "cement_historical_reconciliation": cement_reconciliation_row,
             "driver_graph": dgraph,
             "impact_scenarios": scenarios,
             "event_studies": studies,
@@ -933,6 +954,7 @@ def build():
                 "source_quality_flags": len((_source_quality(source_qa, sym).get("quality_flags") or [])),
                 "operating_event_count": len(op_events),
                 "cement_operating_observation_count": cement_operating_row.get("observation_count", 0),
+                "cement_qualified_financial_period_count": cement_reconciliation_row.get("qualified_financial_period_count", 0),
                 "impact_scenario_count": len(scenarios),
                 "event_study_count": len(studies),
                 "conditional_benchmark_count": conditional_benchmark_row.get("benchmark_count", 0),
