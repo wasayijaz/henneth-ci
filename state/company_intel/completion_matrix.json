@@ -29,8 +29,8 @@
   "overall_status": "blocked",
   "requirement_count": 68,
   "counts": {
-   "complete": 56,
-   "partial": 8,
+   "complete": 57,
+   "partial": 7,
    "blocked": 4,
    "not_started": 0,
    "unknown": 0
@@ -70,6 +70,7 @@
    "causal_foundation_policy",
    "causal_foundation_checker",
    "financial_model_input_state",
+   "financial_parser_contract",
    "financial_coverage_queue",
    "financial_evidence_reconciliation",
    "formal_forecast_engine_code",
@@ -1014,7 +1015,7 @@
   {
    "id": "financial_parser_contract",
    "title": "Financial parser contract is fail-closed and fixture-backed",
-   "status": "partial",
+   "status": "complete",
    "evidence": [
     {
      "label": "financial model input checker",
@@ -1031,8 +1032,8 @@
     {
      "label": "current parser revision",
      "path": "scripts/check_financial_model_inputs.py",
-     "ok": false,
-     "detail": "missing markers: block_geometry_v4"
+     "ok": true,
+     "detail": "all expected markers present"
     }
    ],
    "blockers": [],
