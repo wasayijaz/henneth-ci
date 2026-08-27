@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "guidance_version": "guidance_contradictions_v2",
- "as_of": "2026-08-27T06:37:00+05:00",
+ "as_of": "2026-08-27T09:31:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -177,8 +177,8 @@
    "symbol": "CNERGY",
    "status": "available",
    "guidance_count": 2,
-   "risk_count": 3,
-   "object_count": 5,
+   "risk_count": 4,
+   "object_count": 6,
    "contradiction_count": 0,
    "objects": [
     {
@@ -313,6 +313,34 @@
       "content_sha256": "52f8c0e0ad384ba97e550e6b67234882951f44a286a0a831b01f78b8d869b455",
       "evidence_sha256": null,
       "text": "● Conclude on the appropriateness of management’s use of the going concern basis of accounting and, based on the audit evidence obtained, whether a material uncertainty exists related to events or conditions that may cast si"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    },
+    {
+     "guidance_id": "guidance_e1a8f8c75f0359f9cbbf",
+     "symbol": "CNERGY",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "issuer:4dd8b5c00b64c0f16c89cf82",
+      "source_url": "https://www.cnergyico.com/reports/Annual_Reports/fy2425/fy2425.pdf",
+      "source": "Issuer website",
+      "page": 46,
+      "available_on": "2026-08-27T09:31:00+05:00",
+      "content_sha256": "3a349814e943745921342eeed250daed634d1728f6db25b24b963dd2d7b6fed8",
+      "evidence_sha256": null,
+      "text": "tatements, management is responsible for assessing the Company’s ability to continue as a going concern, disclosing, as applicable, matters related to going concern and using the going concern basis of accounting unless management either i…"
      },
      "policy": {
       "same_company_official_evidence": true,

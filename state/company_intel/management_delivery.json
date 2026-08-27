@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "delivery_version": "management_delivery_v2",
- "as_of": "2026-08-27T06:37:00+05:00",
+ "as_of": "2026-08-27T09:31:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -267,8 +267,8 @@
    "active_thesis_count": 0,
    "delivery_record_count": 0,
    "guidance_status": "available",
-   "guidance_object_count": 5,
-   "guidance_record_count": 5,
+   "guidance_object_count": 6,
+   "guidance_record_count": 6,
    "records": [],
    "guidance_records": [
     {
@@ -317,8 +317,8 @@
       ]
      },
      "guidance_review": {
-      "reviewed_object_count": 5,
-      "candidate_object_count": 2,
+      "reviewed_object_count": 6,
+      "candidate_object_count": 3,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 2,
@@ -359,8 +359,8 @@
      },
      "matched_guidance": null,
      "guidance_review": {
-      "reviewed_object_count": 5,
-      "candidate_object_count": 2,
+      "reviewed_object_count": 6,
+      "candidate_object_count": 3,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 2,
@@ -403,8 +403,8 @@
      },
      "matched_guidance": null,
      "guidance_review": {
-      "reviewed_object_count": 5,
-      "candidate_object_count": 2,
+      "reviewed_object_count": 6,
+      "candidate_object_count": 3,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 2,
@@ -465,8 +465,8 @@
       ]
      },
      "guidance_review": {
-      "reviewed_object_count": 5,
-      "candidate_object_count": 1,
+      "reviewed_object_count": 6,
+      "candidate_object_count": 2,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 3,
@@ -485,7 +485,7 @@
      "guidance_id": "guidance_5bfd8dfe3668d92b95b0",
      "assertion_key": "risks:going_concern:risk_present",
      "conflict_key": "risks:going_concern",
-     "status": "not_observed",
+     "status": "confirmed",
      "scorecard_type": "categorical_status_only",
      "source_guidance": {
       "available_at": "2026-08-27T06:11:00+05:00",
@@ -505,13 +505,73 @@
        }
       ]
      },
-     "matched_guidance": null,
+     "matched_guidance": {
+      "guidance_id": "guidance_e1a8f8c75f0359f9cbbf",
+      "available_at": "2026-08-27T09:31:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_e1a8f8c75f0359f9cbbf",
+        "document_id": "issuer:4dd8b5c00b64c0f16c89cf82",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/fy2425/fy2425.pdf",
+        "page": 46,
+        "content_sha256": "3a349814e943745921342eeed250daed634d1728f6db25b24b963dd2d7b6fed8",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T09:31:00+05:00"
+       }
+      ]
+     },
      "guidance_review": {
-      "reviewed_object_count": 5,
-      "candidate_object_count": 0,
+      "reviewed_object_count": 6,
+      "candidate_object_count": 1,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 4,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_e4062ab71992d114f97b",
+     "symbol": "CNERGY",
+     "guidance_id": "guidance_e1a8f8c75f0359f9cbbf",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T09:31:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_e1a8f8c75f0359f9cbbf",
+        "document_id": "issuer:4dd8b5c00b64c0f16c89cf82",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/fy2425/fy2425.pdf",
+        "page": 46,
+        "content_sha256": "3a349814e943745921342eeed250daed634d1728f6db25b24b963dd2d7b6fed8",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T09:31:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 6,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 5,
        "self_confirming_source": 0
       },
       "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
