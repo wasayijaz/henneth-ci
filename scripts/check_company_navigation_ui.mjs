@@ -93,9 +93,13 @@ try {
   assert(index.includes("companyDrawerOpen") && index.includes("intelligenceDrawerOpen"), "mobile header drawer controls exist");
   assert(app.includes("mobile-left-open") && app.includes("mobile-right-open") && app.includes('event.target.closest?.("#companyDrawerOpen")'), "mobile drawer controls use stable delegated app-level state");
   assert(app.includes("closeMobileDrawers()") && app.includes("btn.onclick = () => pick(btn.dataset.symbol)") && app.includes("state.view = btn.dataset.view"), "company/tab selection closes mobile drawers");
+  assert(/class="drawer-backdrop company-backdrop"[^>]*hidden/.test(app) && /class="drawer-backdrop intelligence-backdrop"[^>]*hidden/.test(app), "drawer backdrops are hidden in markup before CSS/runtime enhancement");
+  assert(app.includes("function syncDrawerBackdrops") && app.includes('document.querySelectorAll(".drawer-backdrop")') && app.includes("backdrop.hidden =") && app.includes('event.target.closest?.("[data-drawer-close]")'), "drawer backdrop visibility is controlled by the app state and outside action closes drawers");
   assert(css.includes("scrollbar-color:transparent transparent") && css.includes(".detail:hover") && css.includes(".tree-panel:focus-within") && css.includes(".list:focus-within"), "panel scrollbars are hidden until hover or focus");
   assert(css.includes(".workspace.mobile-left-open .rail") && css.includes(".workspace.mobile-right-open .tree-panel") && css.includes(".drawer-backdrop"), "mobile drawers are app-state controlled");
-  assert(css.includes(".drawer-backdrop{display:none}"), "mobile drawer backdrops do not consume desktop workspace grid cells");
+  assert(css.includes(".drawer-backdrop{display:none}") && css.includes(".drawer-backdrop[hidden]{display:none!important}"), "mobile drawer backdrops do not consume desktop workspace grid cells");
+  assert(!css.includes(".workspace[data-company-bg]>*{position:relative;z-index:1}"), "company background layering does not override every direct workspace child");
+  assert(css.includes("@media (min-width:901px){.workspace[data-company-bg]>.icon-rail") && css.includes("@media (max-width:900px){.workspace[data-company-bg]>.detail{position:relative;z-index:1}"), "company background layering preserves fixed mobile drawers");
   assert(css.includes(".viewnav-shell") && css.includes(".research-tools") && css.includes(".company-domain-shell") && css.includes(".blocked-shell") && css.includes(".research-hub-grid"), "navigation/domain CSS");
   for (const row of slice.tickers) {
     assert(row.symbol && row.company_brain?.domains, `${row.symbol || "unknown"}: Company Brain available`);

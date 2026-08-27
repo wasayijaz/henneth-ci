@@ -199,6 +199,20 @@ def assert_emits_market_operands_and_reference_cases() -> None:
             fail("derived reference-case margin was accepted as an approved model input")
         if records.get("revenue_growth_pct", {}).get("source", {}).get("id") != "owner:revenue_growth_pct:2024-03-02":
             fail("owner-approved growth input was not kept distinct from generated reference case")
+        gaps = ((state.get("assumption_gaps") or {}).get("companies") or {}).get("MLCF") or {}
+        products = gaps.get("products") or {}
+        if gaps.get("status") != "input_ready_pending_approved_records":
+            fail("input-ready assumption gap row missing")
+        if gaps.get("reference_cases_can_satisfy_missing_records") is not False:
+            fail("reference cases can satisfy missing approved records")
+        if products.get("forecast", {}).get("missing_approved_records") != ["net_margin_pct"]:
+            fail("forecast assumption gap did not account for owner-approved growth and generated shares")
+        if products.get("valuation", {}).get("missing_approved_records") != ["net_margin_pct", "net_debt"]:
+            fail("valuation assumption gap mismatch")
+        if products.get("market_expectations", {}).get("missing_approved_records") != ["net_margin_pct"]:
+            fail("market expectations assumption gap mismatch")
+        if not gaps.get("historical_reference_cases"):
+            fail("gap manifest missing historical reference case refs")
 
 
 def assert_idempotent_and_replaces_generated() -> None:
@@ -272,6 +286,31 @@ def assert_real_state_builds() -> None:
                 fail("real-state generated record missing source gate fields")
             if record.get("record_type") == "derived_reference_case" and (record.get("approved") is not False or "value" in record):
                 fail("real-state reference case can enter approved value path")
+        gaps = state.get("assumption_gaps") or {}
+        companies = gaps.get("companies") or {}
+        for symbol in ("MLCF", "DGKC"):
+            row = companies.get(symbol) or {}
+            if row.get("status") != "input_ready_pending_approved_records":
+                fail(f"{symbol}: real-state assumption gap did not mark input-ready pending records")
+            if row.get("reference_cases_can_satisfy_missing_records") is not False:
+                fail(f"{symbol}: reference cases can satisfy missing records")
+            products = row.get("products") or {}
+            expected = {
+                "forecast": ["revenue_growth_pct", "net_margin_pct"],
+                "valuation": ["revenue_growth_pct", "net_margin_pct", "exit_pe", "net_debt"],
+                "market_expectations": ["exit_pe", "net_margin_pct", "revenue_growth_pct"],
+            }
+            for product, missing in expected.items():
+                observed = products.get(product, {}).get("missing_approved_records")
+                if observed != missing:
+                    fail(f"{symbol}: {product} gap mismatch {observed}")
+                accepted = [record.get("metric") for record in products.get(product, {}).get("accepted_records") or []]
+                required_market = ["shares_out"] if product != "market_expectations" else ["current_price", "shares_out"]
+                if accepted != required_market:
+                    fail(f"{symbol}: {product} accepted deterministic operands mismatch {accepted}")
+        summary = gaps.get("summary") or {}
+        if summary.get("input_ready_company_count") != 2 or summary.get("ready_product_count") != 0:
+            fail("real-state assumption gap summary mismatch")
 
 
 def assert_cli_runs_against_temp_fixture() -> None:

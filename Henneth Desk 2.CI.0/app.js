@@ -425,10 +425,22 @@ function syncMobileControls(available) {
   $("intelligenceDrawerOpen")?.setAttribute("aria-expanded", app?.classList.contains("mobile-right-open") ? "true" : "false");
 }
 
+function syncDrawerBackdrops() {
+  const app = $("app");
+  const mobile = window.matchMedia(CI_MOBILE_QUERY).matches;
+  const leftOpen = mobile && app?.classList.contains("mobile-left-open");
+  const rightOpen = mobile && app?.classList.contains("mobile-right-open");
+  document.querySelectorAll(".drawer-backdrop").forEach(backdrop => {
+    backdrop.hidden = !((backdrop.classList.contains("company-backdrop") && leftOpen)
+      || (backdrop.classList.contains("intelligence-backdrop") && rightOpen));
+  });
+}
+
 function closeMobileDrawers() {
   const app = $("app");
   app?.classList.remove("mobile-left-open", "mobile-right-open");
   document.body.classList.remove("company-drawer-open", "intelligence-drawer-open");
+  syncDrawerBackdrops();
   syncMobileControls(!!state.data);
 }
 
@@ -440,6 +452,7 @@ function openMobileDrawer(kind) {
   app.classList.toggle("mobile-right-open", kind === "intelligence");
   document.body.classList.toggle("company-drawer-open", kind === "company");
   document.body.classList.toggle("intelligence-drawer-open", kind === "intelligence");
+  syncDrawerBackdrops();
   syncMobileControls(!!state.data);
   requestAnimationFrame(() => {
     const selector = kind === "company" ? "#companyDirectory input, #companyDirectory button" : "#companyIntelligenceTree button";
@@ -467,8 +480,8 @@ function renderDesk(searchState) {
       <button class="icon-rail-link" type="button" id="railScheme" title="Change colour scheme"><iconify-icon icon="lucide:sun-moon" aria-hidden="true"></iconify-icon><span class="sr-only">Change colour scheme</span></button>
       <button class="icon-rail-link" type="button" id="railProfile" title="Sign out"><iconify-icon icon="lucide:user-round" aria-hidden="true"></iconify-icon><span class="sr-only">Sign out</span></button>
     </aside>
-    <div class="drawer-backdrop company-backdrop" data-drawer-close="company" aria-hidden="true"></div>
-    <div class="drawer-backdrop intelligence-backdrop" data-drawer-close="intelligence" aria-hidden="true"></div>
+    <div class="drawer-backdrop company-backdrop" data-drawer-close="company" aria-hidden="true" hidden></div>
+    <div class="drawer-backdrop intelligence-backdrop" data-drawer-close="intelligence" aria-hidden="true" hidden></div>
     <aside id="companyDirectory" class="rail" aria-label="Company directory">
       <div class="rail-head"><strong>Company directory</strong><span>${esc(list.length)} shown</span></div>
       <div class="toolbar">
@@ -488,6 +501,7 @@ function renderDesk(searchState) {
     <aside id="companyIntelligenceTree" class="tree-panel" aria-label="Company intelligence directory tree">${row ? renderViewNav(row) : `<div class="tree-empty">No directories available.</div>`}</aside>`;
   if ($("companyStatus")) $("companyStatus").textContent = row ? `${row.symbol} · company intelligence` : "Company Intelligence";
   syncMobileControls(true);
+  syncDrawerBackdrops();
   $("search").oninput = event => {
     const start = event.target.selectionStart;
     const end = event.target.selectionEnd;
@@ -3190,6 +3204,10 @@ $("signOut").onclick = () => {
 
 $("schemeToggle").onclick = () => applyDeskScheme(SCHEME_CYCLE[deskScheme()]);
 document.addEventListener("click", event => {
+  if (event.target.closest?.("[data-drawer-close]")) {
+    closeMobileDrawers();
+    return;
+  }
   const left = event.target.closest?.("#companyDrawerOpen");
   const right = event.target.closest?.("#intelligenceDrawerOpen");
   if (!left && !right) return;

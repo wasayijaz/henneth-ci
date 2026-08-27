@@ -16,6 +16,8 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from company_scenario_lab import parse_scaled
+from forecast_contract import FORMAL_ENGINE_REQUIRED_APPROVED_RECORDS
+from formal_financial_engines import approved_records
 from psx_data import STATE, load_json, save_json
 
 
@@ -380,6 +382,140 @@ def _reference_case_records(
     return records, []
 
 
+def _record_ref(metric: str, record: dict[str, Any]) -> dict[str, Any]:
+    source = record.get("source") or {}
+    return {
+        "metric": metric,
+        "record_type": record.get("record_type"),
+        "approval_scope": record.get("approval_scope"),
+        "available_on": record.get("available_on") or source.get("available_on"),
+        "source_id": source.get("id"),
+        "source_label": source.get("label"),
+        "source_path": source.get("path"),
+        "source_url": source.get("url"),
+    }
+
+
+def _reference_case_refs(records: list[dict[str, Any]], symbol: str) -> list[dict[str, Any]]:
+    refs = []
+    for record in records:
+        if record.get("symbol") != symbol or record.get("record_type") != "derived_reference_case":
+            continue
+        refs.append({
+            "metric": record.get("metric"),
+            "assumption_status": record.get("assumption_status"),
+            "case_type": record.get("case_type"),
+            "formula_version": record.get("formula_version"),
+            "available_on": record.get("available_on"),
+            "source_id": (record.get("source") or {}).get("id"),
+            "policy": {
+                "historical_baseline_only": True,
+                "not_owner_approved": True,
+                "not_accepted_by_formal_engine_approved_records": True,
+            },
+        })
+    return sorted(refs, key=lambda row: str(row.get("metric") or ""))
+
+
+def _assumption_gap_manifest(
+    pilot: list[str],
+    model_inputs: dict[str, Any],
+    readiness: dict[str, Any],
+    records: list[dict[str, Any]],
+    as_of: str | None,
+) -> dict[str, Any]:
+    companies: dict[str, Any] = {}
+    product_count = 0
+    blocked_product_count = 0
+    ready_product_count = 0
+    input_ready_count = 0
+    for symbol in pilot:
+        model_row = (model_inputs.get("companies") or {}).get(symbol) or {}
+        readiness_row = (readiness.get("companies") or {}).get(symbol) or {}
+        missing_prerequisites = []
+        if model_row.get("status") != "ready":
+            missing_prerequisites.append("financial_model_inputs_ready")
+        if readiness_row.get("status") != "input_ready":
+            missing_prerequisites.append("forecast_readiness_input_ready")
+        accepted = approved_records({"records": records}, symbol, as_of)
+        accepted_metrics = set(accepted)
+        reference_cases = _reference_case_refs(records, symbol)
+        products: dict[str, Any] = {}
+        if missing_prerequisites:
+            status = "not_evaluated_until_input_ready"
+        else:
+            status = "input_ready_pending_approved_records"
+            input_ready_count += 1
+        for product, required in FORMAL_ENGINE_REQUIRED_APPROVED_RECORDS.items():
+            product_count += 1
+            required_metrics = list(required)
+            missing = [metric for metric in required_metrics if metric not in accepted_metrics]
+            product_status = (
+                "not_evaluated_until_input_ready"
+                if missing_prerequisites
+                else "ready_for_formal_engine"
+                if not missing
+                else "blocked_missing_approved_records"
+            )
+            if product_status == "ready_for_formal_engine":
+                ready_product_count += 1
+            else:
+                blocked_product_count += 1
+            products[product] = {
+                "status": product_status,
+                "required_approved_records": required_metrics,
+                "accepted_records": [
+                    _record_ref(metric, accepted[metric])
+                    for metric in required_metrics
+                    if metric in accepted
+                ],
+                "missing_approved_records": [] if missing_prerequisites else missing,
+                "missing_prerequisites": list(missing_prerequisites),
+                "policy": {
+                    "no_formula_result": True,
+                    "owner_approved_forward_and_valuation_assumptions_required": True,
+                },
+            }
+        companies[symbol] = {
+            "symbol": symbol,
+            "status": status,
+            "forecast_readiness_status": readiness_row.get("status"),
+            "financial_model_inputs_status": model_row.get("status"),
+            "qualified_period_count": readiness_row.get("qualified_period_count"),
+            "products": products,
+            "historical_reference_cases": reference_cases,
+            "reference_cases_can_satisfy_missing_records": False,
+            "next_required_action": (
+                "owner_approve_source_labelled_forward_and_valuation_records"
+                if not missing_prerequisites
+                else "complete_qualified_financial_inputs_before_assumption_review"
+            ),
+        }
+    return {
+        "schema_version": 1,
+        "as_of": as_of,
+        "source": {
+            "financial_engine_assumptions": "state/company_intel/financial_engine_assumptions.json",
+            "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
+            "forecast_readiness": "state/company_intel/forecast_readiness.json",
+        },
+        "summary": {
+            "company_count": len(companies),
+            "input_ready_company_count": input_ready_count,
+            "product_count": product_count,
+            "ready_product_count": ready_product_count,
+            "blocked_product_count": blocked_product_count,
+        },
+        "policy": {
+            "gap_manifest_only": True,
+            "does_not_approve_assumptions": True,
+            "does_not_compute_formal_outputs": True,
+            "derived_reference_cases_are_not_approved_records": True,
+        },
+        "companies": companies,
+    }
+
+
 def build(state_dir: Path = STATE, output_path: Path | None = None) -> dict[str, Any]:
     state_dir = Path(state_dir)
     output_path = Path(output_path) if output_path is not None else state_dir / "company_intel" / "financial_engine_assumptions.json"
@@ -455,6 +591,7 @@ def build(state_dir: Path = STATE, output_path: Path | None = None) -> dict[str,
         "records": records,
         "blocked": sorted(blocked, key=lambda row: (row.get("symbol") or "", row.get("metric") or "")),
     }
+    state["assumption_gaps"] = _assumption_gap_manifest(_pilot_symbols(profiles), model_inputs, readiness, records, as_of)
     save_json(output_path, state)
     print(
         "financial_engine_assumptions: "

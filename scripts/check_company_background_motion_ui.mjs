@@ -32,6 +32,8 @@ try {
   assert(app.includes('window.matchMedia("(prefers-reduced-motion: reduce)").matches'), "reduced-motion users do not get the replayed transition");
   assert(app.includes('app.classList.remove("is-entering")') && app.includes('app.classList.add("is-entering")'), "render lifecycle retriggers one-shot processing transition");
   assert(css.includes(".workspace[data-company-bg]") && css.includes("background-image:var(--ci-company-bg)") && css.includes('[data-reveal-side="left"]') && css.includes('[data-reveal-side="right"]') && css.includes('[data-reveal-side="top"]') && css.includes('[data-reveal-side="bottom"]'), "stylesheet consumes the app-side attributes and runtime background variable");
+  assert(css.includes("opacity:.46") && css.includes(".detail{background:rgba(255,255,255,.44)") && css.includes(".hero,.panel,.metric,.empty{background:rgba(255,255,255,.7)"), "company texture remains visibly discernible through the frosted reading pane");
+  assert(!css.includes(".workspace[data-company-bg]>*{position:relative;z-index:1}") && css.includes("@media (max-width:900px){.workspace[data-company-bg]>.detail{position:relative;z-index:1}"), "background layering cannot force mobile drawer panels into the workspace grid");
   assert(registry?.assetCount === 25 && Object.keys(registry.pilot || {}).length === 20 && (registry.reserved || []).length === 5, "registry covers 20 pilot plus five reserved assets");
   for (let i = 1; i <= 25; i += 1) {
     const id = String(i).padStart(2, "0");
