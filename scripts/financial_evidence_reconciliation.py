@@ -7,11 +7,16 @@ values, select through conflicts, or activate forecasts/valuations.
 from __future__ import annotations
 
 import hashlib
-import re
 from datetime import date
 from typing import Any
 
-from forecast_contract import BLOCKED_OUTPUT_STATUS, REQUIRED_LINES, qualified_financial_fact_source, qualified_periods
+from forecast_contract import (
+    BLOCKED_OUTPUT_STATUS,
+    REQUIRED_LINES,
+    official_financial_fact_provenance,
+    qualified_financial_fact_source,
+    qualified_periods,
+)
 
 
 RECONCILIATION_VERSION = "financial_evidence_reconciliation_v1"
@@ -63,33 +68,26 @@ def _first_evidence(fact: dict[str, Any]) -> dict[str, Any]:
 
 def _evidence_row(fact: dict[str, Any]) -> dict[str, Any]:
     evidence = _first_evidence(fact)
-    return {
+    document_id = str(fact.get("document_id") or "")
+    row = {
         "document_id": fact.get("document_id"),
         "fact_id": fact.get("fact_id"),
         "content_sha256": fact.get("content_sha256"),
         "source_url": fact.get("source_url"),
-        "source": "PSX DPS" if str(fact.get("source_url") or "").startswith("https://dps.psx.com.pk/") else "unknown",
+        "source": "PSX DPS" if document_id.startswith("psx:") else "Issuer registry" if document_id.startswith("issuer:") else "unknown",
         "page": evidence.get("page"),
         "text": evidence.get("text"),
         "available_on": fact.get("available_on"),
         "published_at": fact.get("published_at"),
         "retrieved_at": fact.get("retrieved_at"),
     }
+    if document_id.startswith("issuer:"):
+        row["issuer_registry_binding"] = fact.get("issuer_registry_binding")
+    return row
 
 
 def _source_ok(fact: dict[str, Any]) -> bool:
-    evidence = _first_evidence(fact)
-    source_url = str(fact.get("source_url") or "")
-    return (
-        bool(re.fullmatch(r"psx:\d+", str(fact.get("document_id") or "")))
-        and str(fact.get("fact_id") or "")
-        and str(fact.get("content_sha256") or "")
-        and bool(re.fullmatch(r"https://dps\.psx\.com\.pk/download/document/\d+\.pdf", source_url))
-        and isinstance(evidence.get("page"), int)
-        and evidence.get("page") >= 1
-        and str(evidence.get("text") or "")
-        and evidence.get("source_url") == source_url
-    )
+    return official_financial_fact_provenance(fact)
 
 
 def classification_reasons(fact: dict[str, Any], as_of: str | None = None) -> list[str]:

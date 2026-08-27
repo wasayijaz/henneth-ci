@@ -9,6 +9,8 @@ const SLICE = JSON.parse(fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", 
 const STATE = JSON.parse(fs.readFileSync(path.join(ROOT, "state", "company_intel", "financial_evidence_reconciliation.json"), "utf8"));
 let checks = 0;
 const assert = (condition, message) => { checks += 1; if (!condition) throw new Error(message); };
+const PSX_PDF_RE = /^https:\/\/dps\.psx\.com\.pk\/download\/document\/\d+\.pdf$/;
+const HTTPS_PDF_RE = /^https:\/\/[^?#]+\.pdf$/i;
 
 function block(name, next) {
   const start = APP.indexOf(`function ${name}`);
@@ -41,7 +43,23 @@ try {
     assert(recon.readiness?.valuation === "blocked_insufficient_qualified_history", `${row.symbol} valuation must remain blocked`);
     for (const fact of recon.facts || []) {
       assert(["eligible", "audit_only", "quarantined"].includes(fact.status), `${row.symbol} invalid fact status`);
-      if (fact.status === "eligible") assert(/^https:\/\/dps\.psx\.com\.pk\/download\/document\/\d+\.pdf$/.test(String(fact.source?.source_url || "")), `${row.symbol} eligible fact lacks exact PSX source`);
+      if (fact.status === "eligible") {
+        const source = fact.source || {};
+        const binding = source.issuer_registry_binding || {};
+        const isPsx = String(source.document_id || "").startsWith("psx:") && source.source === "PSX DPS" && PSX_PDF_RE.test(String(source.source_url || ""));
+        const isIssuer = (
+          String(source.document_id || "").startsWith("issuer:")
+          && source.source === "Issuer registry"
+          && HTTPS_PDF_RE.test(String(source.source_url || ""))
+          && binding.status === "qualified"
+          && binding.document_id === source.document_id
+          && binding.link_id === source.document_id
+          && binding.source_url === source.source_url
+          && binding.content_sha256 === source.content_sha256
+          && binding.evidence_page === source.page
+        );
+        assert(isPsx || isIssuer, `${row.symbol} eligible fact lacks exact official source`);
+      }
     }
   }
   console.log(`financial_evidence_reconciliation_ui: PASS (${checks} UI/data assertions, ${symbols.length} company rows)`);

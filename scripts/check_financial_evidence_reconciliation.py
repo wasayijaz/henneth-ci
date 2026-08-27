@@ -23,6 +23,7 @@ from financial_evidence_reconciliation import (
     stable_id,
 )
 from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
+from forecast_contract import official_financial_fact_provenance
 from psx_data import load_json
 
 
@@ -109,6 +110,31 @@ def _ready_facts() -> list[dict]:
     return rows
 
 
+def _issuer_fact(line: str = "revenue", year: int = 2025, value: float = 100.0, **overrides) -> dict:
+    source_url = f"https://issuer.example/investors/annual-{year}.pdf"
+    source_page = "https://issuer.example/investors/"
+    document_id = f"issuer:{year}"
+    content_hash = ("abcdef0123456789" * 4)[:63] + str(year % 10)
+    row = _fact(line, year, value, source_url=source_url)
+    row.update({
+        "document_id": document_id,
+        "content_sha256": content_hash,
+        "evidence": [{"page": 1, "text": f"{line} {year}", "source_url": source_url}],
+        "issuer_registry_binding": {
+            "status": "qualified",
+            "document_id": document_id,
+            "link_id": document_id,
+            "source_url": source_url,
+            "source_page": source_page,
+            "root_domain": "issuer.example",
+            "content_sha256": content_hash,
+            "evidence_page": 1,
+        },
+    })
+    row.update(overrides)
+    return row
+
+
 def _coverage() -> dict:
     return {
         "required_annual_periods": [
@@ -155,10 +181,13 @@ def _assert_shape(data: dict, pilot: list[str]) -> None:
                 _fail(f"{symbol}: missing stable ids")
             source = record.get("source") or {}
             if record.get("status") == "eligible":
-                if not str(source.get("document_id") or "").startswith("psx:"):
+                if not (
+                    str(source.get("document_id") or "").startswith("psx:")
+                    or str(source.get("document_id") or "").startswith("issuer:")
+                ):
                     _fail(f"{symbol}: eligible fact missing official document")
-                if not str(source.get("source_url") or "").startswith("https://dps.psx.com.pk/"):
-                    _fail(f"{symbol}: eligible fact missing official URL")
+                if source.get("source") not in {"PSX DPS", "Issuer registry"}:
+                    _fail(f"{symbol}: eligible fact missing official source label")
                 if not isinstance(source.get("page"), int) or source.get("available_on") <= record.get("period_end"):
                     _fail(f"{symbol}: eligible fact violates provenance/no-lookahead")
             if record.get("status") == "audit_only" and not record.get("reasons"):
@@ -207,6 +236,21 @@ def _synthetic_assertions() -> None:
     for fact in _ready_facts():
         if fact_status(fact, "2026-08-26") != "eligible":
             _fail("clean official fact did not classify eligible")
+    issuer_fact = _issuer_fact()
+    if not official_financial_fact_provenance(issuer_fact):
+        _fail("qualified issuer fixture did not satisfy shared official provenance")
+    issuer_row = company_reconciliation("MLCF", [issuer_fact], _coverage(), {}, {"status": "blocked", "qualified_period_count": 0}, "2026-08-26")
+    issuer_records = issuer_row.get("facts") or []
+    if len(issuer_records) != 1 or issuer_records[0].get("status") != "eligible":
+        _fail("qualified issuer fact did not reconcile eligible")
+    issuer_source = issuer_records[0].get("source") or {}
+    if issuer_source.get("issuer_registry_binding") != issuer_fact.get("issuer_registry_binding"):
+        _fail("qualified issuer binding was not preserved in reconciliation source")
+    tampered = _issuer_fact(issuer_registry_binding={**issuer_fact["issuer_registry_binding"], "content_sha256": "tampered"})
+    if official_financial_fact_provenance(tampered):
+        _fail("tampered issuer binding satisfied shared official provenance")
+    if fact_status(tampered, "2026-08-26") == "eligible":
+        _fail("tampered issuer binding became eligible")
 
 
 def main() -> None:

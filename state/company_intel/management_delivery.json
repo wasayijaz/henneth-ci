@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "delivery_version": "management_delivery_v2",
- "as_of": "2026-08-27T06:01:00+05:00",
+ "as_of": "2026-08-27T06:15:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -267,8 +267,8 @@
    "active_thesis_count": 0,
    "delivery_record_count": 0,
    "guidance_status": "available",
-   "guidance_object_count": 4,
-   "guidance_record_count": 4,
+   "guidance_object_count": 5,
+   "guidance_record_count": 5,
    "records": [],
    "guidance_records": [
     {
@@ -317,8 +317,8 @@
       ]
      },
      "guidance_review": {
-      "reviewed_object_count": 4,
-      "candidate_object_count": 1,
+      "reviewed_object_count": 5,
+      "candidate_object_count": 2,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 2,
@@ -359,8 +359,8 @@
      },
      "matched_guidance": null,
      "guidance_review": {
-      "reviewed_object_count": 4,
-      "candidate_object_count": 1,
+      "reviewed_object_count": 5,
+      "candidate_object_count": 2,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 2,
@@ -403,8 +403,8 @@
      },
      "matched_guidance": null,
      "guidance_review": {
-      "reviewed_object_count": 4,
-      "candidate_object_count": 1,
+      "reviewed_object_count": 5,
+      "candidate_object_count": 2,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 2,
@@ -425,7 +425,7 @@
      "guidance_id": "guidance_97c12351535956f4956d",
      "assertion_key": "risks:going_concern:risk_present",
      "conflict_key": "risks:going_concern",
-     "status": "not_observed",
+     "status": "confirmed",
      "scorecard_type": "categorical_status_only",
      "source_guidance": {
       "available_at": "2026-08-27T06:01:00+05:00",
@@ -445,13 +445,73 @@
        }
       ]
      },
-     "matched_guidance": null,
+     "matched_guidance": {
+      "guidance_id": "guidance_5bfd8dfe3668d92b95b0",
+      "available_at": "2026-08-27T06:11:00+05:00",
+      "assertion_key": "risks:going_concern:risk_present",
+      "conflict_key": "risks:going_concern",
+      "match_rule": "same_company_exact_guidance_assertion_key_strictly_later",
+      "evidence": [
+       {
+        "guidance_id": "guidance_5bfd8dfe3668d92b95b0",
+        "document_id": "issuer:4dcb8d4eb90b45225deca1eb",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2020.pdf",
+        "page": 18,
+        "content_sha256": "52f8c0e0ad384ba97e550e6b67234882951f44a286a0a831b01f78b8d869b455",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:11:00+05:00"
+       }
+      ]
+     },
      "guidance_review": {
-      "reviewed_object_count": 4,
-      "candidate_object_count": 0,
+      "reviewed_object_count": 5,
+      "candidate_object_count": 1,
       "rejected_counts": {
        "not_first_class_guidance": 1,
        "not_strictly_later": 3,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "later first-class guidance exactly matched the normalized assertion key"
+     ],
+     "limitations": []
+    },
+    {
+     "guidance_record_id": "guidance_delivery_2a889b9a1773fc6a5ea2",
+     "symbol": "CNERGY",
+     "guidance_id": "guidance_5bfd8dfe3668d92b95b0",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T06:11:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_5bfd8dfe3668d92b95b0",
+        "document_id": "issuer:4dcb8d4eb90b45225deca1eb",
+        "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2020.pdf",
+        "page": 18,
+        "content_sha256": "52f8c0e0ad384ba97e550e6b67234882951f44a286a0a831b01f78b8d869b455",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:11:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 5,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 4,
        "self_confirming_source": 0
       },
       "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
@@ -1050,7 +1110,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_a8692686bbf72617be38",
+      "confidence_id": "confidence_091d86d24de7350da713",
       "source_cluster_id": "cluster_e193758d1914395b6b3bc13c",
       "band": "medium"
      },
@@ -1216,7 +1276,7 @@
      "status": "not_observed",
      "scorecard_type": "categorical_status_only",
      "source_guidance": {
-      "available_at": "2026-08-27T05:20:00+05:00",
+      "available_at": "2026-08-27T06:15:00+05:00",
       "statement": "default in payment of any obligation, as it has sufficient capacity of generating cash flows",
       "domain": "risks",
       "modality": "risk_present",
@@ -1229,7 +1289,7 @@
         "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
         "evidence_sha256": null,
         "source": "Issuer website",
-        "available_on": "2026-08-27T05:20:00+05:00"
+        "available_on": "2026-08-27T06:15:00+05:00"
        }
       ]
      },
@@ -1260,7 +1320,7 @@
      "status": "not_observed",
      "scorecard_type": "categorical_status_only",
      "source_guidance": {
-      "available_at": "2026-08-27T05:20:00+05:00",
+      "available_at": "2026-08-27T06:15:00+05:00",
       "statement": "default in payment of any obligation, as it has sufficient capacity of generating cash flows",
       "domain": "risks",
       "modality": "risk_present",
@@ -1273,7 +1333,7 @@
         "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
         "evidence_sha256": null,
         "source": "Issuer website",
-        "available_on": "2026-08-27T05:20:00+05:00"
+        "available_on": "2026-08-27T06:15:00+05:00"
        }
       ]
      },
@@ -1304,7 +1364,7 @@
      "status": "not_observed",
      "scorecard_type": "categorical_status_only",
      "source_guidance": {
-      "available_at": "2026-08-27T05:20:00+05:00",
+      "available_at": "2026-08-27T06:15:00+05:00",
       "statement": "default in payment of any obligation, as it has sufficient capacity of generating cash flows",
       "domain": "risks",
       "modality": "risk_present",
@@ -1317,7 +1377,7 @@
         "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
         "evidence_sha256": null,
         "source": "Issuer website",
-        "available_on": "2026-08-27T05:20:00+05:00"
+        "available_on": "2026-08-27T06:15:00+05:00"
        }
       ]
      },
@@ -1400,7 +1460,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_4cbb56ed35dcce9edd02",
+      "confidence_id": "confidence_d423728828ac43e8129a",
       "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
       "band": "medium"
      },
@@ -1529,7 +1589,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_b95d4fcd98a1b2fc0e09",
+      "confidence_id": "confidence_1b10bf9593364d87ff77",
       "source_cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
       "band": "medium"
      },
@@ -1602,7 +1662,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_5ef50d4d77861bc48146",
+      "confidence_id": "confidence_63c230cda6f2c982ca05",
       "source_cluster_id": "cluster_1817d30a6a5d6e0974e0e77f",
       "band": "medium"
      },
@@ -1641,7 +1701,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_04eeaa560a6fb180e159",
+      "confidence_id": "confidence_c0cb693e47ef86dd4737",
       "source_cluster_id": "cluster_2a04bcad22c357093bbd6280",
       "band": "medium"
      },
@@ -1680,7 +1740,7 @@
      },
      "matched_event": null,
      "confidence_link": {
-      "confidence_id": "confidence_7bf51bf84a64f7be67b3",
+      "confidence_id": "confidence_cdee3a4d82e631179c79",
       "source_cluster_id": "cluster_18be1f7964ed898c278741e9",
       "band": "medium"
      },

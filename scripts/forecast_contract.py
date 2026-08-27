@@ -99,7 +99,8 @@ def _has_quality_flags(fact: dict[str, Any]) -> bool:
     return False
 
 
-def _official_fact(fact: dict[str, Any]) -> bool:
+def official_financial_fact_provenance(fact: dict[str, Any]) -> bool:
+    """Accept direct PSX PDFs or exact qualified issuer-registry bindings."""
     evidence = fact.get("evidence") or []
     first_evidence = evidence[0] if evidence and isinstance(evidence[0], dict) else {}
     source_url = str(fact.get("source_url") or "")
@@ -143,6 +144,10 @@ def _official_fact(fact: dict[str, Any]) -> bool:
                  and (page_host == root_domain or page_host.endswith("." + root_domain)))
         and binding.get("evidence_page") == first_evidence.get("page")
     )
+
+
+def _official_fact(fact: dict[str, Any]) -> bool:
+    return official_financial_fact_provenance(fact)
 
 
 def _iso_date(value: Any) -> str | None:
