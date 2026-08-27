@@ -437,7 +437,7 @@ function syncMobileControls(available) {
 
 function bindPanelResize() {
   const workspace = $("app");
-  if (!workspace || window.matchMedia(CI_MOBILE_QUERY).matches) return;
+  if (!workspace) return;
   const saved = (key, fallback, min, max) => {
     let value = NaN;
     try { value = Number.parseInt(localStorage.getItem(key), 10); } catch {}
