@@ -113,13 +113,15 @@ same commit:
 - `.github/workflows/ci-production-release.yml` supplies the controlled
   preview-to-promotion route, with deployment credentials scoped through the
   `ci-production` environment on both Vercel-consuming jobs. The
-  preview job restamps the private CI slice to the release `github.sha` before
-  Vercel builds it, stamps the Vercel preview with `githubCommitSha`, verifies
-  that metadata through the Vercel deployment API, and after promotion verifies
-  the production domain resolves to that same deployment id and commit without
-  a rebuild. The workflow is code-complete but its Vercel Git-deploy setting,
-  protected environment secrets, and first live receipt remain external
-  evidence.
+  preview job restamps the private CI slice to the release `github.sha`, deploys
+  that source tree directly as the Vercel preview, stamps the Vercel preview
+  with `githubCommitSha`, verifies that metadata through the Vercel deployment
+  API, and after promotion verifies the production domain resolves to that same
+  deployment id and commit without a rebuild. The workflow intentionally avoids
+  `vercel pull`/prebuilt deployment because the CLI project-settings fetch can
+  fail under tightly scoped CI deployment tokens. The workflow is code-complete
+  but its Vercel Git-deploy setting, protected environment secrets, and first
+  live receipt remain external evidence.
 - **Production-path change applied (2026-08-28):** the `henneth-ci` Vercel
   project was on the Hobby plan with Git-triggered deployments enabled, while
   its Standard Protection excluded production custom domains. The owner
@@ -148,3 +150,4 @@ same commit:
 | 2026-08-28 | Created the `ci-production` GitHub Environment and disconnected the Vercel CI project from Git to prevent automatic production deployments. | Owner-approved live Vercel/GitHub configuration; workflow remains blocked only on its protected secrets and first release receipt. |
 | 2026-08-28 | Scoped the preview job to `ci-production` too, so GitHub can supply the Vercel credentials at the first provider action without making them repository-wide. | Release workflow structural self-test rejects both an unprotected preview and an unprotected promotion. |
 | 2026-08-28 | Replaced expiring static smoke-token inputs with protected owner/non-owner Supabase email/password secrets. The release smoke exchanges each pair for an in-memory password-grant access token using only the existing public URL and publishable key; no token is emitted or stored. | Offline smoke self-test covers the grant request and private-data gate; workflow checker requires all four credential names and rejects obsolete token inputs. |
+| 2026-08-28 | Removed the local `vercel pull` / prebuilt deploy leg from the protected release workflow after the first controlled preview failed on Vercel project-settings retrieval. The workflow now deploys the restamped source tree directly as the immutable preview and still promotes only that verified deployment. | Release workflow checker fails if `vercel pull` or `--prebuilt` returns to this path. |

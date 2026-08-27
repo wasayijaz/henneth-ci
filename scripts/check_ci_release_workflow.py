@@ -34,7 +34,7 @@ def validate(text: str) -> list[str]:
         "check_ci_vercel_deployment_commit.py --self-test",
         "check_ci_release_http_smoke.py --base-url \"$PREVIEW_URL\"",
         "check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated",
-        "vercel@39.1.0 deploy --prebuilt",
+        "vercel@39.1.0 deploy --yes",
         "--meta githubCommitSha=\"$GITHUB_SHA\"",
         "vercel@39.1.0 promote \"$PREVIEW_URL\"",
         "Verify preview is bound to this commit",
@@ -55,6 +55,10 @@ def validate(text: str) -> list[str]:
     errors = [f"missing release workflow contract: {needle}" for needle in required if needle not in text]
     if "SMOKE_TOKEN" in text:
         errors.append("obsolete static smoke-token input remains")
+    if "vercel@39.1.0 pull" in text or "vercel pull" in text:
+        errors.append("release workflow must not use vercel pull; project-scoped CI tokens cannot reliably read project settings")
+    if "--prebuilt" in text:
+        errors.append("release workflow must deploy the restamped source preview, not a prebuilt artifact that requires vercel pull")
 
     # GitHub only exposes environment-scoped secrets to jobs that explicitly
     # name the environment. The preview job consumes the Vercel credentials,
@@ -85,7 +89,7 @@ def self_test() -> int:
         "check_ci_vercel_deployment_commit.py --self-test",
         "check_ci_release_http_smoke.py --base-url \"$PREVIEW_URL\"",
         "check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated",
-        "vercel@39.1.0 deploy --prebuilt", "vercel@39.1.0 promote \"$PREVIEW_URL\"",
+        "vercel@39.1.0 deploy --yes", "vercel@39.1.0 promote \"$PREVIEW_URL\"",
         "--meta githubCommitSha=\"$GITHUB_SHA\"",
         "Verify preview is bound to this commit",
         "check_ci_vercel_deployment_commit.py --deployment-url \"$PREVIEW_URL\" --commit-sha \"$GITHUB_SHA\"",
