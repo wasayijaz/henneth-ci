@@ -66,6 +66,11 @@ DGKC_SPECS: tuple[ObservationSpec, ...] = (
     ObservationSpec("DGKC", "cement_sales_local", "2020-06-30", 5336680, "5,336,680", "tonnes", "issuer:5943c09923394ef40e90cc78", 74, ("Local 5,336,680 5,327,410",), ("fact_a9e8d8a145154fa49e1f",)),
     ObservationSpec("DGKC", "cement_sales_export", "2020-06-30", 158143, "158,143", "tonnes", "issuer:5943c09923394ef40e90cc78", 74, ("Export 158,143 270,232",), ("fact_a9e8d8a145154fa49e1f",)),
     ObservationSpec("DGKC", "cement_sales_total", "2020-06-30", 5494823, "5,494,823", "tonnes", "issuer:5943c09923394ef40e90cc78", 74, ("Cement sales: 5,494,823 5,597,642",), ("fact_a9e8d8a145154fa49e1f",)),
+    ObservationSpec("DGKC", "cement_production", "2025-06-30", 3753504, "3,753,504", "tonnes", "psx:260947", 119, ("Cement production 3,762,813", "3,753,504")),
+    ObservationSpec("DGKC", "cement_sales_total", "2025-06-30", 3710160, "3,710,160", "tonnes", "psx:260947", 119, ("Total Cement sales 3,770,701", "3,710,160")),
+    ObservationSpec("DGKC", "cement_sales_local", "2025-06-30", 3467321, "3,467,321", "tonnes", "psx:260947", 119, ("Local Cement sales 3,611,075", "3,467,321")),
+    ObservationSpec("DGKC", "cement_sales_export", "2025-06-30", 242839, "242,839", "tonnes", "psx:260947", 119, ("Export cement sales 159,626", "242,839")),
+    ObservationSpec("DGKC", "clinker_sales", "2025-06-30", 1576625, "1,576,625", "tonnes", "psx:260947", 119, ("Clinker sales 1,070,871", "1,576,625")),
 )
 
 
@@ -89,18 +94,50 @@ def _fact_ids(doc: dict[str, Any], spec: ObservationSpec) -> list[str]:
     return [fact_id for fact_id in spec.source_fact_ids if fact_id in available]
 
 
-def _evidence_text(doc: dict[str, Any], spec: ObservationSpec) -> str:
+def _retained_financial_evidence(
+    financial_series: dict[str, Any],
+    spec: ObservationSpec,
+    source_url: str | None,
+) -> list[str]:
     candidates: list[str] = []
+    if not source_url:
+        return candidates
+    facts = ((financial_series.get("tickers") or {}).get(spec.symbol) or {}).get("facts") or []
+    for fact in facts:
+        fact_source_url = fact.get("source_url")
+        for evidence in fact.get("evidence") or []:
+            if evidence.get("page") != spec.page or not evidence.get("text"):
+                continue
+            evidence_source_url = evidence.get("source_url")
+            if source_url in {fact_source_url, evidence_source_url}:
+                candidates.append(str(evidence["text"]))
+    return candidates
+
+
+def _evidence_text(
+    doc: dict[str, Any],
+    spec: ObservationSpec,
+    financial_series: dict[str, Any],
+) -> tuple[str, str]:
+    doc_candidates: list[str] = []
     for evidence in doc.get("evidence") or []:
         if evidence.get("page") == spec.page and evidence.get("text"):
-            candidates.append(str(evidence["text"]))
+            doc_candidates.append(str(evidence["text"]))
     for fact in doc.get("facts") or []:
         for evidence in fact.get("evidence") or []:
             if evidence.get("page") == spec.page and evidence.get("text"):
-                candidates.append(str(evidence["text"]))
-    for text in candidates:
+                doc_candidates.append(str(evidence["text"]))
+    financial_candidates = _retained_financial_evidence(financial_series, spec, doc.get("source_url"))
+    candidates = [
+        ("state/company_documents.json", text)
+        for text in doc_candidates
+    ] + [
+        ("state/company_financial_series.json", text)
+        for text in financial_candidates
+    ]
+    for source_state, text in candidates:
         if all(anchor in text for anchor in spec.anchors):
-            return text
+            return text, source_state
     # Some retained issuer excerpts begin mid-row.  The fallback remains exact:
     # the requested raw value and its declared row label must occur together on
     # the pinned document page.  It does not search other pages or documents.
@@ -110,11 +147,12 @@ def _evidence_text(doc: dict[str, Any], spec: ObservationSpec) -> str:
         "cement_sales_local": "Local",
         "cement_sales_export": "Export",
         "cement_sales_total": "Cement sales",
+        "clinker_sales": "Clinker sales",
     }
     label = labels.get(spec.metric)
-    for text in candidates:
+    for source_state, text in candidates:
         if label and label in text and spec.raw_value in text:
-            return text
+            return text, source_state
     raise ValueError(f"{spec.document_id} page {spec.page} missing retained anchors for {spec.metric} {spec.period_end}")
 
 
@@ -132,6 +170,7 @@ def observation_from_spec(
     spec: ObservationSpec,
     documents: dict[str, Any],
     source_links: dict[str, dict[str, Any]],
+    financial_series: dict[str, Any],
 ) -> dict[str, Any]:
     doc = documents.get(spec.document_id)
     if not isinstance(doc, dict):
@@ -139,7 +178,7 @@ def observation_from_spec(
     if spec.symbol not in (doc.get("tickers") or []):
         raise ValueError(f"{spec.document_id} is not retained for {spec.symbol}")
     source_link = source_links.get(spec.document_id)
-    evidence_text = _evidence_text(doc, spec)
+    evidence_text, anchor_source_state = _evidence_text(doc, spec, financial_series)
     fact_ids = _fact_ids(doc, spec)
     return {
         "observation_id": _stable_id(spec.symbol, spec.metric, spec.period_end, spec.raw_value, spec.document_id, spec.page),
@@ -162,6 +201,7 @@ def observation_from_spec(
             "source_registry_status": (source_link or {}).get("status"),
             "page": spec.page,
             "text": evidence_text,
+            "anchor_source_state": anchor_source_state,
             "content_sha256": doc.get("content_sha256"),
             "local_sha256": doc.get("local_sha256"),
             "published_at": doc.get("published_at"),
@@ -254,12 +294,17 @@ def _company_row(symbol: str, observations: list[dict[str, Any]]) -> dict[str, A
 def build_state(
     company_documents: dict[str, Any],
     source_registry: dict[str, Any],
+    financial_series: dict[str, Any] | None = None,
     specs: tuple[ObservationSpec, ...] = DGKC_SPECS,
     as_of: str | None = None,
 ) -> dict[str, Any]:
     documents = company_documents.get("documents") or {}
     source_links = _source_links_by_id(source_registry)
-    observations = [observation_from_spec(spec, documents, source_links) for spec in specs]
+    retained_financial_series = financial_series or {}
+    observations = [
+        observation_from_spec(spec, documents, source_links, retained_financial_series)
+        for spec in specs
+    ]
     companies = {
         symbol: _company_row(symbol, [obs for obs in observations if obs["symbol"] == symbol])
         for symbol in CEMENT_PILOT_SYMBOLS
@@ -274,6 +319,7 @@ def build_state(
         "source": {
             "company_documents": "state/company_documents.json",
             "source_registry": "state/company_intel/source_registry.json",
+            "retained_financial_series": "state/company_financial_series.json",
         },
         "policy": {
             "audit_only": True,
@@ -291,6 +337,7 @@ def build() -> dict[str, Any]:
     result = build_state(
         load_json(STATE / "company_documents.json", {"documents": {}}),
         load_json(STATE / "company_intel" / "source_registry.json", {"tickers": {}}),
+        load_json(STATE / "company_financial_series.json", {"tickers": {}}),
     )
     save_json(OUT, result)
     print(

@@ -65,6 +65,26 @@ def fixture_registry() -> dict:
     }
 
 
+def fixture_financial_series() -> dict:
+    return {
+        "tickers": {
+            "DGKC": {
+                "facts": [
+                    {
+                        "source_url": "https://example.com/dgkc.pdf",
+                        "evidence": [
+                            {
+                                "page": 8,
+                                "text": "FY25 FY24 Cement production 120 100 Total Cement sales 118 99",
+                            }
+                        ],
+                    }
+                ]
+            }
+        }
+    }
+
+
 def assert_fixture_contract() -> None:
     spec = ObservationSpec(
         "DGKC",
@@ -87,8 +107,30 @@ def assert_fixture_contract() -> None:
     assert obs["source"]["available_on"] == "2026-08-27T03:00:00+05:00"
     assert obs["source"]["status"] == "official_publication_date"
     assert obs["source"]["source_fact_ids"] == ["fact_fixture"]
+    assert obs["source"]["anchor_source_state"] == "state/company_documents.json"
     assert state["companies"]["MLCF"]["status"] == "insufficient_aligned_annual_operating_history"
     assert state["companies"]["LUCK"]["status"] == "missing_retained_cement_operating_history"
+    retained_spec = ObservationSpec(
+        "DGKC",
+        "cement_production",
+        "2025-06-30",
+        120,
+        "120",
+        "tonnes",
+        "issuer:fixture",
+        8,
+        ("Cement production 120",),
+    )
+    retained_state = build_state(
+        fixture_documents(),
+        fixture_registry(),
+        fixture_financial_series(),
+        specs=(retained_spec,),
+        as_of="2026-08-27",
+    )
+    retained_obs = retained_state["companies"]["DGKC"]["metrics"]["cement_production"][0]
+    assert retained_obs["source"]["anchor_source_state"] == "state/company_financial_series.json"
+    assert retained_obs["source"]["text"] == "FY25 FY24 Cement production 120 100 Total Cement sales 118 99"
     bad_spec = ObservationSpec("DGKC", "cement_sales_total", "2024-06-30", 101, "101", "tonnes", "issuer:fixture", 7, ("missing anchor",))
     try:
         build_state(fixture_documents(), fixture_registry(), specs=(bad_spec,), as_of="2026-08-27")
@@ -109,11 +151,18 @@ def assert_real_state() -> None:
     dgkc = state["companies"]["DGKC"]
     assert dgkc["status"] == "audit_only_series_available"
     assert dgkc["activation_status"] == "blocked_audit_only_no_model_adapter"
-    assert dgkc["observation_count"] >= 30
-    assert dgkc["annual_period_count"] >= 7
+    assert dgkc["observation_count"] >= 36
+    assert dgkc["annual_period_count"] >= 8
     assert dgkc["lane_assessment"]["pilot_peer_operating_lane"] == "blocked_insufficient_aligned_peer_history"
-    required_metrics = {"clinker_production", "cement_production", "cement_sales_local", "cement_sales_export", "cement_sales_total"}
+    required_metrics = {"clinker_production", "cement_production", "cement_sales_local", "cement_sales_export", "cement_sales_total", "clinker_sales"}
     assert required_metrics <= set(dgkc["metrics"])
+    expected_fy25 = {
+        "cement_production": ("3,753,504", 3753504, "Cement production 3,762,813"),
+        "cement_sales_total": ("3,710,160", 3710160, "Total Cement sales 3,770,701"),
+        "cement_sales_local": ("3,467,321", 3467321, "Local Cement sales 3,611,075"),
+        "cement_sales_export": ("242,839", 242839, "Export cement sales 159,626"),
+        "clinker_sales": ("1,576,625", 1576625, "Clinker sales 1,070,871"),
+    }
     seen_ids = set()
     for metric, observations in dgkc["metrics"].items():
         periods = [obs["period_end"] for obs in observations]
@@ -129,12 +178,31 @@ def assert_real_state() -> None:
                 assert source.get(field) not in (None, ""), f"{obs['observation_id']} missing {field}"
             assert str(source["source_url"]).startswith("https://")
             assert isinstance(source["page"], int) and source["page"] > 0
+            assert source["anchor_source_state"] in {"state/company_documents.json", "state/company_financial_series.json"}
             assert obs["raw_value"] in source["text"]
             if source["status"] == "official_publication_date":
                 assert source.get("available_on") not in (None, "")
             else:
                 assert source["status"] == "publication_date_not_retained_audit_only"
                 assert source.get("available_on") is None
+    for metric, (raw_value, value, anchor) in expected_fy25.items():
+        matches = [obs for obs in dgkc["metrics"][metric] if obs["period_end"] == "2025-06-30"]
+        assert len(matches) == 1, f"{metric} FY2025 observation missing/duplicated"
+        obs = matches[0]
+        source = obs["source"]
+        assert obs["raw_value"] == raw_value
+        assert obs["value"] == value
+        assert obs["readiness"] == "audit_only"
+        assert obs["model_eligibility"] == "not_model_loadable"
+        assert obs["approval_status"] == "not_owner_approved_forecast_input"
+        assert source["document_id"] == "psx:260947"
+        assert source["source_url"] == "https://dps.psx.com.pk/download/document/260947.pdf"
+        assert source["page"] == 119
+        assert source["published_at"] == "2025-10-03T11:05:00+05:00"
+        assert source["available_on"] == "2025-10-03T11:05:00+05:00"
+        assert source["anchor_source_state"] == "state/company_financial_series.json"
+        assert anchor in source["text"]
+        assert raw_value in source["text"]
     assert state["companies"]["MLCF"]["status"] == "insufficient_aligned_annual_operating_history"
     assert state["companies"]["MLCF"]["observation_count"] == 0
     assert state["companies"]["LUCK"]["status"] == "missing_retained_cement_operating_history"

@@ -11,7 +11,8 @@
  "scope": "exact_ci_pilot_cement_cohort",
  "source": {
   "company_documents": "state/company_documents.json",
-  "source_registry": "state/company_intel/source_registry.json"
+  "source_registry": "state/company_intel/source_registry.json",
+  "retained_financial_series": "state/company_financial_series.json"
  },
  "policy": {
   "audit_only": true,
@@ -65,8 +66,8 @@
    "symbol": "DGKC",
    "status": "audit_only_series_available",
    "activation_status": "blocked_audit_only_no_model_adapter",
-   "observation_count": 31,
-   "annual_period_count": 7,
+   "observation_count": 36,
+   "annual_period_count": 8,
    "metrics": {
     "cement_production": [
      {
@@ -90,6 +91,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -126,6 +128,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -162,6 +165,7 @@
        "source_registry_status": "discovered",
        "page": 63,
        "text": ",547,177 7,851,397 Taxation 1,922,497 1,885,899 Profit after Taxation 7,624,680 5,965,498 EPS 17.40 13.62 FY15 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "published_at": null,
@@ -198,6 +202,7 @@
        "source_registry_status": "discovered",
        "page": 82,
        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "published_at": null,
@@ -234,6 +239,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -271,6 +277,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -285,6 +292,43 @@
       "quality_flags": [
        "audit_only_not_forecast_input",
        "retained_official_evidence_seed"
+      ]
+     },
+     {
+      "observation_id": "cops_c1f80ea1c71d9b4fa29359e3",
+      "symbol": "DGKC",
+      "metric": "cement_production",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "value": 3753504,
+      "raw_value": "3,753,504",
+      "unit": "tonnes",
+      "unit_multiplier": 1,
+      "readiness": "audit_only",
+      "approval_status": "not_owner_approved_forecast_input",
+      "model_eligibility": "not_model_loadable",
+      "source": {
+       "document_id": "psx:260947",
+       "source": "PSX DPS",
+       "source_url": "https://dps.psx.com.pk/download/document/260947.pdf",
+       "source_page": null,
+       "source_registry_status": null,
+       "page": 119,
+       "text": "23 Cement production 3,762,813 748,803 1,085,877 1,024,638 894,186 3,753,504 Total Cement sales 3,770,701 760,968 1,104,280 956,047 888,865 3,710,160 Local Cement sales 3,611,075 745,381 1,027,741 896,661 797,538 3,467,321 Export cement sa…",
+       "anchor_source_state": "state/company_financial_series.json",
+       "content_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "local_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "published_at": "2025-10-03T11:05:00+05:00",
+       "retrieved_at": "2026-08-22 16:04",
+       "available_on": "2025-10-03T11:05:00+05:00",
+       "retained_on": "2026-08-22 16:04",
+       "status": "official_publication_date",
+       "source_fact_ids": []
+      },
+      "quality_flags": [
+       "audit_only_not_forecast_input",
+       "retained_official_evidence_seed",
+       "value_from_retained_evidence_snippet"
       ]
      }
     ],
@@ -310,6 +354,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -347,6 +392,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -384,6 +430,7 @@
        "source_registry_status": "discovered",
        "page": 63,
        "text": "5 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,196,103 2,954,943 Export Sales 661,967 1,021,328 FY15 FY14 MT PKR in thousands MT PKR in thousands Local 3,19…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "published_at": null,
@@ -420,6 +467,7 @@
        "source_registry_status": "discovered",
        "page": 82,
        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "published_at": null,
@@ -457,6 +505,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -494,6 +543,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -508,6 +558,43 @@
       "quality_flags": [
        "audit_only_not_forecast_input",
        "retained_official_evidence_seed"
+      ]
+     },
+     {
+      "observation_id": "cops_d78aee1472baf6dd626bd800",
+      "symbol": "DGKC",
+      "metric": "cement_sales_export",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "value": 242839,
+      "raw_value": "242,839",
+      "unit": "tonnes",
+      "unit_multiplier": 1,
+      "readiness": "audit_only",
+      "approval_status": "not_owner_approved_forecast_input",
+      "model_eligibility": "not_model_loadable",
+      "source": {
+       "document_id": "psx:260947",
+       "source": "PSX DPS",
+       "source_url": "https://dps.psx.com.pk/download/document/260947.pdf",
+       "source_page": null,
+       "source_registry_status": null,
+       "page": 119,
+       "text": "797,538 3,467,321 Export cement sales 159,626 15,587 76,539 59,386 91,327 242,839 Clinker sales 1,070,871 352,282 471,219 446,049 307,075 1,576,625 QUARTERLY ANALYSIS The Company delivered a strong performance across FY25, with revenue pea…",
+       "anchor_source_state": "state/company_financial_series.json",
+       "content_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "local_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "published_at": "2025-10-03T11:05:00+05:00",
+       "retrieved_at": "2026-08-22 16:04",
+       "available_on": "2025-10-03T11:05:00+05:00",
+       "retained_on": "2026-08-22 16:04",
+       "status": "official_publication_date",
+       "source_fact_ids": []
+      },
+      "quality_flags": [
+       "audit_only_not_forecast_input",
+       "retained_official_evidence_seed",
+       "value_from_retained_evidence_snippet"
       ]
      }
     ],
@@ -533,6 +620,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -570,6 +658,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -607,6 +696,7 @@
        "source_registry_status": "discovered",
        "page": 63,
        "text": "5 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,196,103 2,954,943 Export Sales 661,967 1,021,328 FY15 FY14 MT PKR in thousands MT PKR in thousands Local 3,19…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "published_at": null,
@@ -644,6 +734,7 @@
        "source_registry_status": "discovered",
        "page": 82,
        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "published_at": null,
@@ -681,6 +772,7 @@
        "source_registry_status": "discovered",
        "page": 61,
        "text": "00 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 4,908,593 3,877,296 Cement sales: 4,478,065 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 4,908,962 3,854,949 Local 3,895,042 3,710,393 3,196,103 2,954,943 2,887,…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
        "local_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
        "published_at": null,
@@ -718,6 +810,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -755,6 +848,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -769,6 +863,43 @@
       "quality_flags": [
        "audit_only_not_forecast_input",
        "retained_official_evidence_seed"
+      ]
+     },
+     {
+      "observation_id": "cops_a7e6b519b8e6dc5f2b150c8d",
+      "symbol": "DGKC",
+      "metric": "cement_sales_local",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "value": 3467321,
+      "raw_value": "3,467,321",
+      "unit": "tonnes",
+      "unit_multiplier": 1,
+      "readiness": "audit_only",
+      "approval_status": "not_owner_approved_forecast_input",
+      "model_eligibility": "not_model_loadable",
+      "source": {
+       "document_id": "psx:260947",
+       "source": "PSX DPS",
+       "source_url": "https://dps.psx.com.pk/download/document/260947.pdf",
+       "source_page": null,
+       "source_registry_status": null,
+       "page": 119,
+       "text": "504 Total Cement sales 3,770,701 760,968 1,104,280 956,047 888,865 3,710,160 Local Cement sales 3,611,075 745,381 1,027,741 896,661 797,538 3,467,321 Export cement sales 159,626 15,587 76,539 59,386 91,327 242,839 Clinker sales 1,070,871 3…",
+       "anchor_source_state": "state/company_financial_series.json",
+       "content_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "local_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "published_at": "2025-10-03T11:05:00+05:00",
+       "retrieved_at": "2026-08-22 16:04",
+       "available_on": "2025-10-03T11:05:00+05:00",
+       "retained_on": "2026-08-22 16:04",
+       "status": "official_publication_date",
+       "source_fact_ids": []
+      },
+      "quality_flags": [
+       "audit_only_not_forecast_input",
+       "retained_official_evidence_seed",
+       "value_from_retained_evidence_snippet"
       ]
      }
     ],
@@ -794,6 +925,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -831,6 +963,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -868,6 +1001,7 @@
        "source_registry_status": "discovered",
        "page": 63,
        "text": ",547,177 7,851,397 Taxation 1,922,497 1,885,899 Profit after Taxation 7,624,680 5,965,498 EPS 17.40 13.62 FY15 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "published_at": null,
@@ -905,6 +1039,7 @@
        "source_registry_status": "discovered",
        "page": 82,
        "text": "3,948 3,738,404 Cement 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 Cement sales: 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 Local 3,710,393 3,196,103 2,954,943 2,887,812 2,765,534 2,860,795 Export 712,298 6…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "local_sha256": "d4504b8213049a771b8127661a6f4b80d415ffcdd4e043fab9c42196c2c7e9ba",
        "published_at": null,
@@ -942,6 +1077,7 @@
        "source_registry_status": "discovered",
        "page": 61,
        "text": "00 4,426,631 3,849,672 3,988,512 4,031,801 4,004,458 4,176,733 4,908,593 3,877,296 Cement sales: 4,478,065 4,422,691 3,858,070 3,976,272 4,008,276 4,018,956 4,165,635 4,908,962 3,854,949 Local 3,895,042 3,710,393 3,196,103 2,954,943 2,887,…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
        "local_sha256": "128fcc1ccd6434bc94bfc088c210da66ffb9737cf94dce14bc7f028ab8424d30",
        "published_at": null,
@@ -979,6 +1115,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -1016,6 +1153,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -1030,6 +1168,43 @@
       "quality_flags": [
        "audit_only_not_forecast_input",
        "retained_official_evidence_seed"
+      ]
+     },
+     {
+      "observation_id": "cops_b4652a757f03c8290c2aecc6",
+      "symbol": "DGKC",
+      "metric": "cement_sales_total",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "value": 3710160,
+      "raw_value": "3,710,160",
+      "unit": "tonnes",
+      "unit_multiplier": 1,
+      "readiness": "audit_only",
+      "approval_status": "not_owner_approved_forecast_input",
+      "model_eligibility": "not_model_loadable",
+      "source": {
+       "document_id": "psx:260947",
+       "source": "PSX DPS",
+       "source_url": "https://dps.psx.com.pk/download/document/260947.pdf",
+       "source_page": null,
+       "source_registry_status": null,
+       "page": 119,
+       "text": "504 Total Cement sales 3,770,701 760,968 1,104,280 956,047 888,865 3,710,160 Local Cement sales 3,611,075 745,381 1,027,741 896,661 797,538 3,467,321 Export cement sales 159,626 15,587 76,539 59,386 91,327 242,839 Clinker sales 1,070,871 3…",
+       "anchor_source_state": "state/company_financial_series.json",
+       "content_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "local_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "published_at": "2025-10-03T11:05:00+05:00",
+       "retrieved_at": "2026-08-22 16:04",
+       "available_on": "2025-10-03T11:05:00+05:00",
+       "retained_on": "2026-08-22 16:04",
+       "status": "official_publication_date",
+       "source_fact_ids": []
+      },
+      "quality_flags": [
+       "audit_only_not_forecast_input",
+       "retained_official_evidence_seed",
+       "value_from_retained_evidence_snippet"
       ]
      }
     ],
@@ -1055,6 +1230,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -1091,6 +1267,7 @@
        "source_registry_status": "discovered",
        "page": 29,
        "text": "4 FY13 Clinker production 3,585,103 3,924,090 Cement production 3,988,512 4,031,801 Local Sales 2,954,943 2,892,266 Export Sales 1,021,329 1,126,174 Total Sales 3,976,272 4,018,440 “Figures in MT” 26 Annual Report 2014",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "local_sha256": "25460b628d9ef13045fcd41d85d0e5bd772c5d22661c8cc48e4fb4720caabc74",
        "published_at": null,
@@ -1127,6 +1304,7 @@
        "source_registry_status": "discovered",
        "page": 63,
        "text": ",547,177 7,851,397 Taxation 1,922,497 1,885,899 Profit after Taxation 7,624,680 5,965,498 EPS 17.40 13.62 FY15 FY14 Clinker Production 3,507,230 3,585,103 Cement Production 3,849,672 3,988,511 Total Sales 3,858,070 3,976,271 Local Sales 3,…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "local_sha256": "624f2146a513624e46e681a8b0bdb972031d32fc660674ed19bc692c4f620ea9",
        "published_at": null,
@@ -1163,6 +1341,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -1200,6 +1379,7 @@
        "source_registry_status": "discovered",
        "page": 74,
        "text": "linker 6,841,964 6,380,898 461,066 7.2% Cement 5,510,426 5,613,650 (103,224) -1.8% Cement sales: 5,494,823 5,597,642 (102,819) -1.8% Local 5,336,680 5,327,410 9,270 0.2% Export 158,143 270,232 (112,089) -41.5% Clinker Sale: Local 8,000 - 8…",
+       "anchor_source_state": "state/company_documents.json",
        "content_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "local_sha256": "ad6df065cc9ddc2bd5ed59a5a74e3a288b8590bf09c251eb32c0a0415a0625c5",
        "published_at": null,
@@ -1214,6 +1394,45 @@
       "quality_flags": [
        "audit_only_not_forecast_input",
        "retained_official_evidence_seed"
+      ]
+     }
+    ],
+    "clinker_sales": [
+     {
+      "observation_id": "cops_90836615bb5530ecdcb8db07",
+      "symbol": "DGKC",
+      "metric": "clinker_sales",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "value": 1576625,
+      "raw_value": "1,576,625",
+      "unit": "tonnes",
+      "unit_multiplier": 1,
+      "readiness": "audit_only",
+      "approval_status": "not_owner_approved_forecast_input",
+      "model_eligibility": "not_model_loadable",
+      "source": {
+       "document_id": "psx:260947",
+       "source": "PSX DPS",
+       "source_url": "https://dps.psx.com.pk/download/document/260947.pdf",
+       "source_page": null,
+       "source_registry_status": null,
+       "page": 119,
+       "text": "797,538 3,467,321 Export cement sales 159,626 15,587 76,539 59,386 91,327 242,839 Clinker sales 1,070,871 352,282 471,219 446,049 307,075 1,576,625 QUARTERLY ANALYSIS The Company delivered a strong performance across FY25, with revenue pea…",
+       "anchor_source_state": "state/company_financial_series.json",
+       "content_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "local_sha256": "1a10091295cf7a815f1910eb418215d501d42b52e39dcbd0b54a53fd1aceaa7d",
+       "published_at": "2025-10-03T11:05:00+05:00",
+       "retrieved_at": "2026-08-22 16:04",
+       "available_on": "2025-10-03T11:05:00+05:00",
+       "retained_on": "2026-08-22 16:04",
+       "status": "official_publication_date",
+       "source_fact_ids": []
+      },
+      "quality_flags": [
+       "audit_only_not_forecast_input",
+       "retained_official_evidence_seed",
+       "value_from_retained_evidence_snippet"
       ]
      }
     ]
