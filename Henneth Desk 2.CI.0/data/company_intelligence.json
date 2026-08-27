@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-08-27 22:49",
+  "built": "2026-08-28 01:06",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
@@ -27,13 +27,31 @@
    "node_count": 2995,
    "edge_count": 5133,
    "source_documents": 317,
-   "note": "Every factual edge carries source URL and cited page when available."
+   "note": "Every factual edge carries source URL and cited page when available.",
+   "generator_version": "ci_artifact_integrity_v1",
+   "source_commit_sha": "a20d85ed531b232bde60a4098c24130e7907fb0b",
+   "build_cutoff_at": "2026-08-27T20:05:44Z",
+   "generated_at": "2026-08-27T20:05:44Z",
+   "artifact_path": "state/company_intel/company_graph.json",
+   "timestamp_semantics": {
+    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
+    "generated_at": "artifact generation time only; not a source-effective or source-published time"
+   }
   },
   "change_intelligence": {
    "updated": "2026-08-27 21:10",
    "company_count": 22,
    "item_count": 359,
-   "note": "Deterministic official-source change digest. Research, not advice."
+   "note": "Deterministic official-source change digest. Research, not advice.",
+   "generator_version": "ci_artifact_integrity_v1",
+   "source_commit_sha": "a20d85ed531b232bde60a4098c24130e7907fb0b",
+   "build_cutoff_at": "2026-08-27T20:05:44Z",
+   "generated_at": "2026-08-27T20:05:44Z",
+   "artifact_path": "state/company_intel/change_intelligence.json",
+   "timestamp_semantics": {
+    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
+    "generated_at": "artifact generation time only; not a source-effective or source-published time"
+   }
   },
   "completion_matrix": {
    "artifact": "state/company_intel/completion_matrix.json",
@@ -6197,6 +6215,27 @@
        "latest_prior_candidate_date": "2025-10-27",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 1,
+       "mature_horizon_counts": {
+        "1Q": 1,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 2,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2025-10-27",
+       "next_required_evidence": "2 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 1,
@@ -6318,6 +6357,27 @@
        },
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+      },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
       },
       "horizon_aggregates": {
        "1Q": {
@@ -6441,6 +6501,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -6515,6 +6596,35 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 3,
+     "benchmarks_with_candidates": 1,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 3,
+     "total_strict_candidate_count": 1,
+     "minimum_missing_mature_outcomes_to_publish": 2,
+     "event_class_gaps": [
+      {
+       "event_type": "acquisition_divestment",
+       "event_subtype": "acquisition",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "contract_tender",
+       "event_subtype": "contract",
+       "benchmark_count": 2,
+       "candidate_history_present_count": 1,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 1,
+       "minimum_missing_mature_outcomes_to_publish": 2
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -16903,6 +17013,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -22396,6 +22516,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -22470,6 +22611,26 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 1,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 1,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [
+      {
+       "event_type": "management_change",
+       "event_subtype": "management_change",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -43449,6 +43610,27 @@
        "latest_prior_candidate_date": "2025-12-18",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 1,
+       "mature_horizon_counts": {
+        "1Q": 1,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 2,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2025-12-18",
+       "next_required_evidence": "2 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 1,
@@ -43570,6 +43752,27 @@
        },
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+      },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
       },
       "horizon_aggregates": {
        "1Q": {
@@ -43693,6 +43896,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -43767,6 +43991,44 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 3,
+     "benchmarks_with_candidates": 1,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 3,
+     "total_strict_candidate_count": 1,
+     "minimum_missing_mature_outcomes_to_publish": 2,
+     "event_class_gaps": [
+      {
+       "event_type": "acquisition_divestment",
+       "event_subtype": "acquisition",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 1,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 1,
+       "minimum_missing_mature_outcomes_to_publish": 2
+      },
+      {
+       "event_type": "debt_refinancing",
+       "event_subtype": "credit_event",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "regulatory_change",
+       "event_subtype": "regulatory_action",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -91448,6 +91710,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -99587,6 +99859,29 @@
        "latest_prior_candidate_date": "2026-04-15",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "aggregate_ready",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 3,
+       "mature_horizon_counts": {
+        "1Q": 3,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 0,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [
+        "1Q"
+       ],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2026-04-15",
+       "next_required_evidence": "No additional mature strict analogue sample is required for already-ready horizons; expand retained exact history before adding new horizons."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 3,
@@ -99839,6 +100134,27 @@
        "latest_prior_candidate_date": "2026-03-05",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 2,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2026-03-05",
+       "next_required_evidence": "3 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -99960,6 +100276,27 @@
        },
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+      },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
       },
       "horizon_aggregates": {
        "1Q": {
@@ -100083,6 +100420,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -100205,6 +100563,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -100279,6 +100658,44 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 5,
+     "benchmarks_with_candidates": 2,
+     "aggregate_ready_benchmark_count": 1,
+     "suppressed_benchmark_count": 4,
+     "total_strict_candidate_count": 5,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [
+      {
+       "event_type": "contract_tender",
+       "event_subtype": "contract",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "debt_refinancing",
+       "event_subtype": "credit_event",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "management_change",
+       "event_subtype": "management_change",
+       "benchmark_count": 3,
+       "candidate_history_present_count": 2,
+       "aggregate_ready_count": 1,
+       "total_strict_candidate_count": 5,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -107303,6 +107720,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -118278,6 +118705,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -149014,6 +149451,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -152494,6 +152941,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -160071,6 +160528,27 @@
        "latest_prior_candidate_date": "2026-03-04",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 1,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2026-03-04",
+       "next_required_evidence": "3 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -160257,6 +160735,27 @@
        },
        "latest_prior_candidate_date": "2026-03-04",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+      },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 1,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2026-03-04",
+       "next_required_evidence": "3 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
       },
       "horizon_aggregates": {
        "1Q": {
@@ -160445,6 +160944,27 @@
        "latest_prior_candidate_date": "2026-03-04",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 1,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2026-03-04",
+       "next_required_evidence": "3 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -160519,6 +161039,44 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 3,
+     "benchmarks_with_candidates": 3,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 3,
+     "total_strict_candidate_count": 3,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [
+      {
+       "event_type": "contract_tender",
+       "event_subtype": "contract",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 1,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 1,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "debt_refinancing",
+       "event_subtype": "credit_event",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 1,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 1,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "management_change",
+       "event_subtype": "management_change",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 1,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 1,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -168996,6 +169554,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -174200,6 +174768,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -181816,6 +182394,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -181937,6 +182536,27 @@
        },
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+      },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
       },
       "horizon_aggregates": {
        "1Q": {
@@ -182060,6 +182680,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -182134,6 +182775,44 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 3,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 3,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [
+      {
+       "event_type": "acquisition_divestment",
+       "event_subtype": "acquisition",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "debt_refinancing",
+       "event_subtype": "credit_event",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      },
+      {
+       "event_type": "management_change",
+       "event_subtype": "management_change",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -190041,6 +190720,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -197514,6 +198203,27 @@
        "latest_prior_candidate_date": "2025-09-30",
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_more_mature_outcomes",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 1,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": "2025-09-30",
+       "next_required_evidence": "3 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -197636,6 +198346,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -197710,6 +198441,26 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 2,
+     "benchmarks_with_candidates": 1,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 2,
+     "total_strict_candidate_count": 1,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [
+      {
+       "event_type": "acquisition_divestment",
+       "event_subtype": "acquisition",
+       "benchmark_count": 2,
+       "candidate_history_present_count": 1,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 1,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -204148,6 +204899,27 @@
        "latest_prior_candidate_date": null,
        "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
       },
+      "readiness_ledger": {
+       "status": "needs_prior_exact_analogues",
+       "minimum_mature_outcome_sample": 3,
+       "strict_candidate_count": 0,
+       "mature_horizon_counts": {
+        "1Q": 0,
+        "2Q": 0,
+        "4Q": 0,
+        "8Q": 0
+       },
+       "missing_mature_outcomes_to_minimum": {
+        "1Q": 3,
+        "2Q": 3,
+        "4Q": 3,
+        "8Q": 3
+       },
+       "aggregate_ready_horizons": [],
+       "nearest_ready_horizon": "1Q",
+       "latest_prior_candidate_date": null,
+       "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      },
       "horizon_aggregates": {
        "1Q": {
         "n": 0,
@@ -204222,6 +204994,26 @@
       }
      }
     ],
+    "readiness_summary": {
+     "dated_benchmark_count": 1,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 1,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [
+      {
+       "event_type": "acquisition_divestment",
+       "event_subtype": "acquisition",
+       "benchmark_count": 1,
+       "candidate_history_present_count": 0,
+       "aggregate_ready_count": 0,
+       "total_strict_candidate_count": 0,
+       "minimum_missing_mature_outcomes_to_publish": 3
+      }
+     ],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -207909,6 +208701,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -211404,6 +212206,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -221196,6 +222008,16 @@
     "status": "no_operating_events",
     "benchmark_count": 0,
     "benchmarks": [],
+    "readiness_summary": {
+     "dated_benchmark_count": 0,
+     "benchmarks_with_candidates": 0,
+     "aggregate_ready_benchmark_count": 0,
+     "suppressed_benchmark_count": 0,
+     "total_strict_candidate_count": 0,
+     "minimum_missing_mature_outcomes_to_publish": 3,
+     "event_class_gaps": [],
+     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
+    },
     "blocked_states": {
      "peer": {
       "status": "blocked",
@@ -228776,5 +229598,16 @@
     "retention_days": 90
    }
   }
- ]
+ ],
+ "_meta": {
+  "generator_version": "ci_artifact_integrity_v1",
+  "source_commit_sha": "49cece18e62ebc3d7e0aee9729c63c9b1e16b5e9",
+  "build_cutoff_at": "2026-08-27T20:06:37Z",
+  "generated_at": "2026-08-27T20:06:37Z",
+  "artifact_path": "Henneth Desk 2.CI.0/data/company_intelligence.json",
+  "timestamp_semantics": {
+   "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
+   "generated_at": "artifact generation time only; not a source-effective or source-published time"
+  }
+ }
 }

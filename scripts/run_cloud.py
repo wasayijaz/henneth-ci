@@ -137,9 +137,16 @@ STEPS = [
     # Deterministic low-token event metadata: known calendar items plus conservative
     # reporting windows derived only from retained past cadence.
     "build_event_review_windows.py",
+    # Policy route for CI work: deterministic roster-wide scans feed retained triggers;
+    # targeted owner/AI work may only be requested from material changes, post-baseline
+    # source changes or event review windows.
+    "build_ci_work_routing_policy.py",
     "build_ownership_source_manifest.py",  # review metadata only; never activates ownership facts
     "build_ci_completion_matrix.py",
     "build_ci_slice.py",
+    # Finalize the complete private CI release as one reproducible UTC-cutoff
+    # artifact set. This runs only after every CI producer and the slice.
+    "build_ci_artifact_integrity.py",
     # Server-only, append-only CI archive. It is intentionally a no-op until cloud secrets are
     # installed; archive failure must not interrupt the deterministic public research release.
     "supabase_ci_store.py",
@@ -169,6 +176,8 @@ STEPS = [
     "check_company_scenario_lab.py",
     "check_company_brains.py",
     "check_event_review_windows.py",
+    "check_ci_work_routing_policy.py",
+    "check_ci_artifact_integrity.py",
     "check_financial_model_inputs.py",
     "check_event_studies.py",
     "check_operating_intelligence.py",

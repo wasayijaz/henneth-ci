@@ -18,6 +18,10 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[1]
 CI_STATE_DIR = ROOT / "state" / "company_intel"
 CI_SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+# The release receipt is an operator-verification record, not a generated
+# investor-facing data artifact. Its timestamps describe verification activity,
+# never economic source timing; its dedicated checker owns its schema.
+NON_CONSUMER_ARTIFACT_NAMES = {"release_integrity_receipt.json"}
 
 DATE_FIELD_NAMES = {
     "approved_at",
@@ -59,6 +63,7 @@ DATE_FIELD_NAMES = {
 
 CUTOFF_FIELD_NAMES = {
     "as_of",
+    "build_cutoff_at",
     "built",
     "data_cutoff",
     "last_completed_at",
@@ -70,6 +75,11 @@ CUTOFF_FIELD_NAMES = {
 ROOT_METADATA_FIELD_NAMES = {"_meta", "meta"}
 
 IGNORED_DATE_FIELD_NAMES = {
+    # Finalizer timestamps describe when the generated artifact was built. They
+    # are deliberately not source-effective, source-published, or observed
+    # facts, so they must never become economic event timing or a local cutoff.
+    "build_cutoff_at",
+    "generated_at",
     "candidate_date",
     "date_basis",
     "expected_completion",
@@ -90,6 +100,7 @@ PROSPECTIVE_CALENDAR_CONTAINERS = {
     "review_windows",
     "expected_reporting_window",
     "expected_reporting_windows",
+    "targeted_triggers",
 }
 PROSPECTIVE_CALENDAR_DATE_KEYS = {"date"}
 
@@ -196,7 +207,7 @@ def date_key_kind(key: str) -> str | None:
     return None
 
 
-def is_prospective_calendar_date(artifact: str, path: str, key: str) -> bool:
+def is_prospective_calendar_date(artifact: str, path: str, key: str, container: dict[str, Any] | None = None) -> bool:
     """Return whether *key* is an explicitly forward-looking calendar date.
 
     The deterministic event-review artifact and the generated CI slice both
@@ -216,7 +227,13 @@ def is_prospective_calendar_date(artifact: str, path: str, key: str) -> bool:
     is_ci_slice_field = (
         is_ci_slice_artifact and ".event_review_windows." in f".{normalized_path}."
     )
-    if not (is_state_artifact or is_ci_slice_field):
+    is_work_routing_trigger = (
+        normalized_artifact.endswith("state/company_intel/work_routing_policy.json")
+        and ".targeted_triggers[" in f".{normalized_path}"
+        and isinstance(container, dict)
+        and container.get("trigger_type") == "active_event_review_window"
+    )
+    if not (is_state_artifact or is_ci_slice_field or is_work_routing_trigger):
         return False
     # A date is prospective only when it belongs to one of the declared
     # event-review containers. This excludes arbitrary nested future dates.
@@ -286,6 +303,7 @@ def compare_against_cutoff(
     key: str,
     value: Any,
     cutoff: DatePoint | None,
+    container: dict[str, Any] | None,
     stats: ScanStats,
 ) -> None:
     kind = date_key_kind(key)
@@ -295,7 +313,7 @@ def compare_against_cutoff(
     if kind == "ignored":
         stats.skipped_ignored += 1
         return
-    if is_prospective_calendar_date(artifact, path, key):
+    if is_prospective_calendar_date(artifact, path, key, container):
         # Forward-looking event dates are valid by contract; sibling
         # availability/provenance fields continue through this checker.
         return
@@ -360,6 +378,7 @@ def scan_node(
                     key=key,
                     value=item,
                     cutoff=comparison_cutoff,
+                    container=value,
                     stats=stats,
                 )
             scan_node(artifact, item, dotted(path, key), local_cutoff, stats)
@@ -371,7 +390,10 @@ def scan_node(
 def artifact_paths() -> list[Path]:
     if not CI_STATE_DIR.exists():
         raise FileNotFoundError(f"missing CI state directory: {CI_STATE_DIR}")
-    paths = sorted(CI_STATE_DIR.glob("*.json"))
+    paths = [
+        path for path in sorted(CI_STATE_DIR.glob("*.json"))
+        if path.name not in NON_CONSUMER_ARTIFACT_NAMES
+    ]
     if CI_SLICE.exists():
         paths.append(CI_SLICE)
     else:

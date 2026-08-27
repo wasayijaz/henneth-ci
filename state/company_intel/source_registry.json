@@ -1105,7 +1105,7 @@
    "issuer_url": "https://www.lucky-cement.com/",
    "root_domain": "lucky-cement.com",
    "discovered_from": "https://dps.psx.com.pk/company/LUCK",
-   "status": "ok",
+   "status": "degraded",
    "monitored_pages": [
     {
      "url": "https://www.lucky-cement.com/",
@@ -1336,7 +1336,8 @@
      "status": "discovered",
      "first_seen_at": "2026-08-27T03:47:04+05:00"
     }
-   ]
+   ],
+   "error": "ConnectionError:HTTPSConnectionPool(host='www.lucky-cement.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionErr"
   },
   "FFC": {
    "symbol": "FFC",
@@ -4335,8 +4336,19 @@
    ]
   }
  },
- "updated": "2026-08-27T03:47:04+05:00",
+ "updated": "2026-08-27T22:11:24+05:00",
  "source": "Issuer websites discovered from official PSX DPS company profiles",
  "pilot_count": 22,
- "degraded": true
+ "degraded": true,
+ "_meta": {
+  "generator_version": "ci_artifact_integrity_v1",
+  "source_commit_sha": "49cece18e62ebc3d7e0aee9729c63c9b1e16b5e9",
+  "build_cutoff_at": "2026-08-27T20:06:37Z",
+  "generated_at": "2026-08-27T20:06:37Z",
+  "artifact_path": "state/company_intel/source_registry.json",
+  "timestamp_semantics": {
+   "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
+   "generated_at": "artifact generation time only; not a source-effective or source-published time"
+  }
+ }
 }

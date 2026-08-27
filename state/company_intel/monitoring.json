@@ -1,9 +1,9 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-08-27T21:10:00+05:00",
+ "as_of": "2026-08-27T22:11:24+05:00",
  "source_as_of": {
-  "source_registry": "2026-08-27T03:47:04+05:00",
+  "source_registry": "2026-08-27T22:11:24+05:00",
   "source_qa": "2026-08-27 05:01",
   "change_intelligence": "2026-08-27 21:10",
   "event_ledger": "2026-08-27 09:32",
@@ -76,10 +76,10 @@
  },
  "summary": {
   "company_count": 20,
-  "alert_count": 150,
+  "alert_count": 151,
   "status_counts": {
-   "degraded": 8,
-   "healthy": 12,
+   "degraded": 9,
+   "healthy": 11,
    "stale": 0,
    "unknown": 0
   }
@@ -1544,13 +1544,13 @@
   },
   "LUCK": {
    "symbol": "LUCK",
-   "status": "healthy",
-   "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
+   "status": "degraded",
+   "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": "2026-08-27T03:47:04+05:00",
    "latest_change_at": "2026-08-27T06:15:00+05:00",
    "latest_event_at": "2026-08-27T06:15:00+05:00",
    "source_health": {
-    "registry_status": "ok",
+    "registry_status": "degraded",
     "monitored_page_count": 2,
     "document_link_count": 22,
     "quality_flags": [],
@@ -1705,9 +1705,29 @@
       "content_sha256": "5eb4ec8717a63b44829589debd0b3f0ca8b5f146c0e6fa1635a4585dcd7970ba",
       "previous_sha256": "d1c50bbe4adbf150ff7340e34d484c305abf39c334ac57daf6934f7516c239f9"
      }
+    },
+    {
+     "alert_id": "ci_alert_e9d9520be21eb3fd2203",
+     "symbol": "LUCK",
+     "type": "source_registry_degraded",
+     "status": "open",
+     "date": null,
+     "title": "issuer source registry degraded",
+     "reason": "ConnectionError:HTTPSConnectionPool(host='www.lucky-cement.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionErr",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/company/LUCK",
+      "document_id": null,
+      "source_id": null,
+      "source": "issuer_source_registry"
+     },
+     "evidence_identity": {
+      "registry_status": "degraded",
+      "quality_flags": [],
+      "missing_required_source": false
+     }
     }
    ],
-   "alert_count": 7,
+   "alert_count": 8,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -3924,6 +3944,17 @@
     "no_valuation",
     "no_advice"
    ]
+  }
+ },
+ "_meta": {
+  "generator_version": "ci_artifact_integrity_v1",
+  "source_commit_sha": "49cece18e62ebc3d7e0aee9729c63c9b1e16b5e9",
+  "build_cutoff_at": "2026-08-27T20:06:37Z",
+  "generated_at": "2026-08-27T20:06:37Z",
+  "artifact_path": "state/company_intel/monitoring.json",
+  "timestamp_semantics": {
+   "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
+   "generated_at": "artifact generation time only; not a source-effective or source-published time"
   }
  }
 }

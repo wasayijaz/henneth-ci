@@ -134,6 +134,14 @@ backend error is rendered.
     It never schedules an agent, fetches a provider, predicts a filing, or creates an investment
     conclusion. Forward calendar dates are explicitly prospective review metadata rather than
     observed facts, and remain distinguishable from dated source evidence.
+21b. `build_ci_work_routing_policy.py` makes the token boundary explicit. The roster-wide CI source
+    scan is deterministic: official PSX disclosure metadata (`fetch_company_documents.py`), issuer
+    freshness hashes (`fetch_issuer_sources.py`) and retained monitoring composition run across the
+    exact pilot without AI. Targeted owner/AI review is only eligible from retained material changes,
+    retained post-baseline source-change alerts or active event-review windows. One-time historical
+    issuer link-index imports remain deterministic review metadata: `first_seen_at` is not treated
+    as a document publication date or targeted-work trigger. The policy checker forbids 20-company
+    daily per-ticker AI schedules, roster-wide AI sweeps and prompt payloads in generated state.
 22. `build_financial_evidence_reconciliation.py` creates a separate financial evidence ledger from
     retained series, coverage, model-input and readiness state. It does not parse or fetch a filing,
     promote audit-only facts, choose through conflicts, or activate a forecast. Eligibility requires
@@ -192,6 +200,40 @@ Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.
 ES256 JWT carries the exact `sub` configured as `CI_OWNER_USER_ID`; a valid non-owner receives 403.
 There is no CI signup, service-role key, schema change or order path. Presentation changes must not
 alter `middleware.js`, the owner environment value, the project root, or the private no-store header.
+
+### 1b. Company Intelligence production release (Event-to-Value Alpha)
+
+`ci.henneth.app` must not receive a production deployment merely because a
+commit reaches `main`. The release path is
+`.github/workflows/ci-production-release.yml`: validate the repository,
+deploy one preview, run the public and protected smoke checks, then promote
+that exact preview without rebuilding. The `ci-production` GitHub Environment
+is the owner checkpoint immediately before promotion.
+
+Required one-time Vercel/GitHub configuration (external to this repository):
+
+1. Disable automatic Vercel Git production deployments for the CI project, or
+   configure deployment protection so they cannot reach `ci.henneth.app`
+   before the protected release workflow completes. This setting is not
+   expressible in `vercel.json`; do not claim the policy is active until it is
+   inspected in the Vercel project.
+2. Create the protected GitHub Environment `ci-production`, with owner
+   approval required, and add `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
+   `VERCEL_CI_PROJECT_ID`, `HENNETH_CI_OWNER_SMOKE_TOKEN`, and
+   `HENNETH_CI_NON_OWNER_SMOKE_TOKEN` as environment secrets. Tokens are only
+   supplied to the protected promotion job and must never be copied into
+   repository files, logs, or receipts.
+3. Run **Henneth CI controlled production release** from `main`. It uploads an
+   immutable, secret-free release receipt tied to the promoted commit. Retain
+   that Actions artifact as the production proof; the checked-in
+   `release_integrity_receipt.json` template is deliberately not a release
+   approval.
+
+The release receipt is green only with one matching commit across GitHub CI,
+preview, production, the public login shell, owner private-data `200`, and
+non-owner private-data `403`. The release HTTP smoke script never prints a
+token, authorization header, or response body.
+
 The root desk deployment also strips CI-owner-only source artifacts from `public/state/`:
 `company_documents.json`, `company_briefs.json`, `company_brief_receipts.json`,
 `document_synthesis_queue.json`, and the full `company_intel/` directory. Root `middleware.js`

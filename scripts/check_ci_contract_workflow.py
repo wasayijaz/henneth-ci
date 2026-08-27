@@ -189,6 +189,10 @@ def validate_workflow(workflow: dict[str, Any]) -> list[str]:
     syntax = named.get("Python syntax")
     if not syntax or "python -m compileall -q scripts" not in str(syntax.get("run", "")):
         errors.append("steps: missing Python compileall gate")
+    cutoff = named.get("Set CI build cutoff")
+    cutoff_run = str(cutoff.get("run", "")) if cutoff else ""
+    if not cutoff or "HENNETH_CI_BUILD_CUTOFF_AT" not in cutoff_run or "date -u" not in cutoff_run:
+        errors.append("steps: CI build must set one explicit UTC HENNETH_CI_BUILD_CUTOFF_AT")
     js = named.get("JavaScript syntax")
     js_run = str(js.get("run", "")) if js else ""
     if not js or "subprocess.run" not in js_run or '"node", "-c"' not in js_run:
@@ -196,12 +200,57 @@ def validate_workflow(workflow: dict[str, Any]) -> list[str]:
     preflight = named.get("Preflight gate")
     if not preflight or "python scripts/preflight.py" not in str(preflight.get("run", "")):
         errors.append("steps: missing preflight gate")
+    ci_build = named.get("Build generated Company Intelligence artifacts")
+    ci_build_run = str(ci_build.get("run", "")) if ci_build else ""
+    if not ci_build:
+        errors.append("steps: missing generated Company Intelligence artifact build")
+    else:
+        required_ci_builders = (
+            "python scripts/build_ci_completion_matrix.py",
+            "python scripts/build_ci_slice.py",
+            "python scripts/build_ci_artifact_integrity.py",
+        )
+        for command in required_ci_builders:
+            if command not in ci_build_run:
+                errors.append(f"steps: CI artifact build missing {command}")
+        if (
+            "python scripts/build_ci_completion_matrix.py" in ci_build_run
+            and "python scripts/build_ci_slice.py" in ci_build_run
+            and ci_build_run.rfind("python scripts/build_ci_completion_matrix.py")
+            > ci_build_run.rfind("python scripts/build_ci_slice.py")
+        ):
+            errors.append("steps: CI slice must be rebuilt after completion matrix")
+        if (
+            "python scripts/build_ci_slice.py" in ci_build_run
+            and "python scripts/build_ci_artifact_integrity.py" in ci_build_run
+            and ci_build_run.rfind("python scripts/build_ci_slice.py")
+            > ci_build_run.rfind("python scripts/build_ci_artifact_integrity.py")
+        ):
+            errors.append("steps: CI artifact integrity must run after the final CI slice build")
+    aggregate = named.get("Company Intelligence product contract aggregate")
+    if not aggregate or "python scripts/check_ci_product_contracts.py" not in str(aggregate.get("run", "")):
+        errors.append("steps: missing Company Intelligence product contract aggregate")
     if setup is not None:
         setup_index = steps.index(setup)
-        for label in ("Install Python requirements", "Python syntax", "JavaScript syntax", "Preflight gate"):
+        for label in (
+            "Install Python requirements",
+            "Python syntax",
+            "Set CI build cutoff",
+            "JavaScript syntax",
+            "Build generated Company Intelligence artifacts",
+            "Company Intelligence product contract aggregate",
+            "Preflight gate",
+        ):
             step = named.get(label)
             if step is not None and steps.index(step) < setup_index:
                 errors.append(f"steps: {label} runs before Python 3.12 setup")
+    ci_build_index = steps.index(ci_build) if ci_build in steps else None
+    aggregate_index = steps.index(aggregate) if aggregate in steps else None
+    preflight_index = steps.index(preflight) if preflight in steps else None
+    if ci_build_index is not None and aggregate_index is not None and aggregate_index < ci_build_index:
+        errors.append("steps: product contract aggregate runs before CI artifact build")
+    if aggregate_index is not None and preflight_index is not None and preflight_index < aggregate_index:
+        errors.append("steps: preflight runs before Company Intelligence product contract aggregate")
     return errors
 
 
@@ -225,9 +274,18 @@ jobs:
         run: python -m pip install -r requirements.txt
       - name: Python syntax
         run: python -m compileall -q scripts
+      - name: Set CI build cutoff
+        run: echo "HENNETH_CI_BUILD_CUTOFF_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: JavaScript syntax
         run: |
           subprocess.run([\"node\", \"-c\", str(path)], check=True)
+      - name: Build generated Company Intelligence artifacts
+        run: |
+          python scripts/build_ci_completion_matrix.py
+          python scripts/build_ci_slice.py
+          python scripts/build_ci_artifact_integrity.py
+      - name: Company Intelligence product contract aggregate
+        run: python scripts/check_ci_product_contracts.py
       - name: Preflight gate
         run: python scripts/preflight.py
 """
@@ -241,6 +299,14 @@ def self_test() -> int:
     errors = validate_workflow(parse_workflow(broken))
     if not any("python-version" in error for error in errors):
         print("self-test failed: invalid fixture was accepted")
+        return 1
+    missing_cutoff = VALID_FIXTURE.replace(
+        '      - name: Set CI build cutoff\n        run: echo "HENNETH_CI_BUILD_CUTOFF_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"\n',
+        "",
+    )
+    errors = validate_workflow(parse_workflow(missing_cutoff))
+    if not any("explicit UTC" in error for error in errors):
+        print("self-test failed: missing build cutoff was accepted")
         return 1
     print("self-test: ok")
     return 0

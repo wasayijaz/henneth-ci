@@ -886,6 +886,12 @@
      "path": "state/company_intel/conditional_benchmarks.json",
      "ok": true,
      "detail": "21/21 dated events; 47 undated events excluded by no-lookahead"
+    },
+    {
+     "label": "readiness ledger",
+     "path": "state/company_intel/conditional_benchmarks.json",
+     "ok": true,
+     "detail": "8 rows with candidates; 1 aggregate-ready; 20 suppressed"
     }
    ],
    "blockers": [],
@@ -909,6 +915,12 @@
      "path": "state/company_intel/conditional_benchmarks.json",
      "ok": true,
      "detail": "all expected markers present"
+    },
+    {
+     "label": "strict sample readiness",
+     "path": "state/company_intel/conditional_benchmarks.json",
+     "ok": true,
+     "detail": "11 retained strict candidates; nearest missing mature outcomes to publish: 2"
     },
     {
      "label": "conditional benchmark checker",
@@ -1883,5 +1895,16 @@
     "Builder/checker must be run whenever the completion registry changes."
    ]
   }
- ]
+ ],
+ "_meta": {
+  "generator_version": "ci_artifact_integrity_v1",
+  "source_commit_sha": "49cece18e62ebc3d7e0aee9729c63c9b1e16b5e9",
+  "build_cutoff_at": "2026-08-27T20:06:37Z",
+  "generated_at": "2026-08-27T20:06:37Z",
+  "artifact_path": "state/company_intel/completion_matrix.json",
+  "timestamp_semantics": {
+   "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
+   "generated_at": "artifact generation time only; not a source-effective or source-published time"
+  }
+ }
 }

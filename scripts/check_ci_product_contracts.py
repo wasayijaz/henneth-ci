@@ -45,6 +45,8 @@ FOCUSED_CHECKS: tuple[str, ...] = (
     "check_ci_global_no_lookahead.py",
     "check_evidence_watchlist.py",
     "check_ci_monitoring.py",
+    "check_ci_work_routing_policy.py",
+    "check_ci_release_workflow.py",
     "check_peer_registry.py",
     "check_ci_reprocess_manifest.py",
     "check_ownership_source_manifest.py",
@@ -107,8 +109,49 @@ def _tail(text: str) -> str:
     return clean[-OUTPUT_TAIL_CHARS:]
 
 
-def run_checks(root: Path = ROOT, checks: tuple[str, ...] = FOCUSED_CHECKS, timeout: int = 90) -> list[CheckResult]:
+def _run_command(root: Path, name: str, command: tuple[str, ...], timeout: int) -> CheckResult:
+    """Run one checker/finalizer and retain a concise failure tail."""
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return CheckResult(
+            name,
+            command,
+            "failed",
+            detail=f"timed out after {timeout}s: {_tail((exc.stdout or '') + (exc.stderr or ''))}",
+        )
+    except Exception as exc:  # noqa: BLE001 - checker failures must be reported, not crash this gate
+        return CheckResult(name, command, "failed", detail=f"could not run checker: {exc}")
+    if completed.returncode == 0:
+        return CheckResult(name, command, "passed", returncode=0)
+    detail = _tail(
+        (completed.stdout or "")
+        + ("\n" if completed.stdout and completed.stderr else "")
+        + (completed.stderr or "")
+    )
+    return CheckResult(name, command, "failed", returncode=completed.returncode, detail=detail or "no output")
+
+
+def run_checks(
+    root: Path = ROOT,
+    checks: tuple[str, ...] = FOCUSED_CHECKS,
+    timeout: int = 90,
+    *,
+    finalize_artifacts: bool | None = None,
+) -> list[CheckResult]:
     """Run each explicitly listed checker and return deterministic results."""
+    # Temporary fixture roots used by self-test have no CI artifacts. Real checkout runs
+    # finish with one finalizer + integrity check so checker side effects cannot invalidate
+    # the release envelope.
+    if finalize_artifacts is None:
+        finalize_artifacts = root.resolve() == ROOT.resolve()
     results: list[CheckResult] = []
     seen: set[str] = set()
     for name in checks:
@@ -135,26 +178,25 @@ def run_checks(root: Path = ROOT, checks: tuple[str, ...] = FOCUSED_CHECKS, time
         if not command:
             results.append(CheckResult(normalized, command, "failed", detail="unsupported checker extension"))
             continue
-        try:
-            completed = subprocess.run(
-                command,
-                cwd=root,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                check=False,
-            )
-        except subprocess.TimeoutExpired as exc:
-            results.append(CheckResult(normalized, command, "failed", detail=f"timed out after {timeout}s: {_tail((exc.stdout or '') + (exc.stderr or ''))}"))
-            continue
-        except Exception as exc:  # noqa: BLE001 - checker failures must be reported, not crash this gate
-            results.append(CheckResult(normalized, command, "failed", detail=f"could not run checker: {exc}"))
-            continue
-        if completed.returncode == 0:
-            results.append(CheckResult(normalized, command, "passed", returncode=0))
+        results.append(_run_command(root, normalized, command, timeout))
+
+    if finalize_artifacts:
+        finalizer_name = "build_ci_artifact_integrity.py"
+        finalizer_path = root / "scripts" / finalizer_name
+        finalizer_command = (sys.executable, str(finalizer_path))
+        if not finalizer_path.exists():
+            results.append(CheckResult(finalizer_name, finalizer_command, "missing", detail="final CI artifact finalizer is missing"))
         else:
-            detail = _tail((completed.stdout or "") + ("\n" if completed.stdout and completed.stderr else "") + (completed.stderr or ""))
-            results.append(CheckResult(normalized, command, "failed", returncode=completed.returncode, detail=detail or "no output"))
+            results.append(_run_command(root, finalizer_name, finalizer_command, timeout))
+
+        integrity_name = "check_ci_artifact_integrity.py"
+        integrity_path = root / "scripts" / integrity_name
+        integrity_command = (sys.executable, str(integrity_path))
+        if not integrity_path.exists():
+            results.append(CheckResult(integrity_name, integrity_command, "missing", detail="final CI artifact-integrity checker is missing"))
+        else:
+            # This must remain the final result: no later checker may rewrite generated state.
+            results.append(_run_command(root, integrity_name, integrity_command, timeout))
     return results
 
 
@@ -185,22 +227,22 @@ def self_test() -> int:
         _write_fixture(scripts / "pass_check.py", "print('fixture pass')\n")
         _write_fixture(scripts / "fail_check.py", "raise SystemExit('fixture failure')\n")
 
-        success = run_checks(root, ("pass_check.py",), timeout=5)
+        success = run_checks(root, ("pass_check.py",), timeout=5, finalize_artifacts=False)
         if len(success) != 1 or success[0].status != "passed":
             print("self-test failed: passing fixture did not pass")
             return 1
 
-        missing = run_checks(root, ("missing_check.py",), timeout=5)
+        missing = run_checks(root, ("missing_check.py",), timeout=5, finalize_artifacts=False)
         if len(missing) != 1 or missing[0].status != "missing":
             print("self-test failed: missing fixture was not reported")
             return 1
 
-        failed = run_checks(root, ("fail_check.py",), timeout=5)
+        failed = run_checks(root, ("fail_check.py",), timeout=5, finalize_artifacts=False)
         if len(failed) != 1 or failed[0].status != "failed" or "fixture failure" not in failed[0].detail:
             print("self-test failed: failing fixture did not propagate output")
             return 1
 
-        forbidden = run_checks(root, ("preflight.py",), timeout=5)
+        forbidden = run_checks(root, ("preflight.py",), timeout=5, finalize_artifacts=False)
         if len(forbidden) != 1 or forbidden[0].status != "failed" or "forbidden" not in forbidden[0].detail:
             print("self-test failed: forbidden recursion fixture was accepted")
             return 1

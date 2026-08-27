@@ -18,6 +18,7 @@ Exit codes: 0 = safe to deploy, 1 = do not deploy.
 """
 import argparse
 import ast
+from datetime import datetime, timezone
 import glob
 import json
 import math
@@ -716,6 +717,18 @@ def check_ci_monitoring():
     except Exception as e:
         fail(f"check_ci_monitoring.py did not run — {e}")
 
+def check_ci_work_routing_policy():
+    path = os.path.join(ROOT, "scripts", "check_ci_work_routing_policy.py")
+    if not os.path.exists(path):
+        fail("check_ci_work_routing_policy.py missing — CI work-routing contract cannot be verified")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("CI work-routing policy check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_work_routing_policy.py did not run — {e}")
+
 def check_peer_registry():
     path = os.path.join(ROOT, "scripts", "check_peer_registry.py")
     if not os.path.exists(path):
@@ -1187,6 +1200,36 @@ def check_ci_global_no_lookahead():
         fail(f"check_ci_global_no_lookahead.py did not run — {e}")
 
 
+def check_ci_artifact_integrity(build_cutoff_at=None):
+    """Stamp the completed CI state, then verify the envelope as the final gate."""
+    finalizer = os.path.join(ROOT, "scripts", "build_ci_artifact_integrity.py")
+    path = os.path.join(ROOT, "scripts", "check_ci_artifact_integrity.py")
+    if not os.path.exists(finalizer):
+        fail("build_ci_artifact_integrity.py missing — final CI envelope cannot be produced")
+        return
+    if not os.path.exists(path):
+        fail("check_ci_artifact_integrity.py missing")
+        return
+    try:
+        # A preflight invocation owns one UTC build boundary.  Pass that exact
+        # cutoff through to the finalizer so it cannot sample a later ``now``
+        # while the rest of the gate is still running.
+        finalizer_env = dict(os.environ)
+        if build_cutoff_at:
+            finalizer_env["HENNETH_CI_BUILD_CUTOFF_AT"] = str(build_cutoff_at)
+        built = subprocess.run(
+            [sys.executable, finalizer], capture_output=True, text=True, timeout=45, env=finalizer_env
+        )
+        if built.returncode != 0:
+            fail("CI artifact finalizer failed — " + ((built.stdout or built.stderr or "")[-500:].strip()))
+            return
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=45)
+        if result.returncode != 0:
+            fail("CI artifact-integrity check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_ci_artifact_integrity.py did not run — {e}")
+
+
 def check_company_navigation_ui():
     path = os.path.join(ROOT, "scripts", "check_company_navigation_ui.mjs")
     if not os.path.exists(path):
@@ -1295,6 +1338,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--strict", action="store_true", help="treat warnings as failures")
     args = ap.parse_args()
+    # Capture one explicit UTC cutoff at invocation start.  All generated CI
+    # artifacts finalized below share this boundary, regardless of gate duration.
+    build_cutoff_at = datetime.now(timezone.utc).replace(microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # --- Tier-1 code QA: instant, free, blocks a broken build before anything else runs ---
     check_code_syntax()
@@ -1359,6 +1405,7 @@ def main():
     check_guidance_contradictions()
     check_evidence_watchlist()
     check_ci_monitoring()
+    check_ci_work_routing_policy()
     check_peer_registry()
     check_evidence_watchlist_ui()
     check_ci_monitoring_ui()
@@ -1449,6 +1496,11 @@ def main():
     h, _ = load("health.json")
     if h and h.get("status") not in ("ok", "healthy", None):
         warn(f"health.json status = '{h.get('status')}' — desk is in degraded mode")
+
+    # Final CI release step. Ordinary checks above may rebuild state artifacts; stamp only after
+    # they all finish, and keep integrity verification immediately last so no checker can erase
+    # the envelope before the deploy decision is reported.
+    check_ci_artifact_integrity(build_cutoff_at)
 
     # --- report ---
     print("Henneth - preflight")
