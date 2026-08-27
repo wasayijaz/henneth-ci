@@ -71,6 +71,7 @@ CANONICAL_RELATIVE_PATHS = (
     Path("document_synthesis_queue.json"),
     Path("company_financial_series.json"),
     Path("company_intel") / "financial_model_inputs.json",
+    Path("company_intel") / "cement_operating_series.json",
 )
 CI_SLICE_PATH = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
 

@@ -51,6 +51,9 @@ STEPS = [
     # dated assumptions exist. Must precede the CI audit and generated private slice.
     "build_formal_financial_engines.py",
     "build_financial_evidence_reconciliation.py",
+    # Audit-only retained cement operating observations. This is evidence for review only:
+    # it never activates financial_model_inputs, forecasts, valuations, or market expectations.
+    "build_cement_operating_series.py",
     # Compact issuer-source health index and relationship graph for the private CI surface.
     "build_source_qa.py",
     # Compact CI knowledge graph over official documents, events, facts and issuer sources.
@@ -140,6 +143,7 @@ STEPS = [
     "check_financial_engine_assumptions.py",
     "check_formal_financial_engines.py",
     "check_financial_evidence_reconciliation.py",
+    "check_cement_operating_series.py",
     "check_intelligence_confidence.py",
     "check_thesis_monitoring.py",
     "check_management_delivery.py",

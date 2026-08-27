@@ -823,6 +823,15 @@ def check_financial_model_inputs():
     if result.returncode != 0:
         fail("financial model inputs check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
 
+def check_cement_operating_series():
+    path = os.path.join(ROOT, "scripts", "check_cement_operating_series.py")
+    if not os.path.exists(path):
+        fail("check_cement_operating_series.py missing")
+        return
+    result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+    if result.returncode != 0:
+        fail("cement operating series check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+
 def check_financial_coverage():
     path = os.path.join(ROOT, "scripts", "check_financial_coverage.py")
     if not os.path.exists(path):
@@ -1216,6 +1225,7 @@ def main():
     check_causal_foundations()
     check_causal_foundations_ui()
     check_financial_model_inputs()
+    check_cement_operating_series()
     check_financial_coverage()
     check_forecast_contract()
     check_owner_financial_assumptions()
