@@ -52,7 +52,16 @@ function main() {
     assert(readiness.model_registry.status === "covered", `${row.symbol} qualitative driver registry must be covered`);
     assert(readiness.model_registry.coverage_type === "qualitative_sector_driver_registry", `${row.symbol} registry coverage type missing`);
     assert(typeof readiness.registry_version === "string" && readiness.registry_version.length > 0, `${row.symbol} registry_version missing`);
-    assert(readiness.model_adapter && readiness.model_adapter.status === "unavailable", `${row.symbol} numerical adapter must remain unavailable`);
+    assert(readiness.model_adapter && typeof readiness.model_adapter === "object", `${row.symbol} numerical adapter metadata missing`);
+    if (readiness.status === "input_ready") {
+      assert(readiness.model_adapter.status === "available", `${row.symbol} input-ready row must expose an available adapter`);
+      assert(readiness.model_adapter.selected_sector === "CEMENT", `${row.symbol} available adapter must be cement-scoped`);
+      assert(readiness.model_adapter.source_owner, `${row.symbol} available adapter must name the formula source owner`);
+    } else if (readiness.model_adapter.status === "available") {
+      assert(readiness.model_adapter.selected_sector === "CEMENT", `${row.symbol} available adapter must be cement-scoped`);
+    } else {
+      assert(readiness.model_adapter.status === "unavailable", `${row.symbol} unavailable adapter status mismatch`);
+    }
     assert(Number.isInteger(readiness.qualified_period_count), `${row.symbol} qualified_period_count missing`);
     assert(Array.isArray(readiness.missing_requirements), `${row.symbol} missing_requirements missing`);
     assert(Array.isArray(candidateRefs(row)), `${row.symbol} qualification candidate document refs missing`);

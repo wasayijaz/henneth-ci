@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from forecast_contract import (
     CONTRACT_VERSION,
     POLICIES,
+    available_adapter_source_owners,
     available_adapter_versions,
     readiness_row,
     supported_registry_versions,
@@ -57,6 +58,7 @@ def build() -> dict:
         "pilot_symbols": pilot,
         "registry_versions": supported_registry_versions(),
         "adapter_versions": available_adapter_versions(),
+        "adapter_source_owners": available_adapter_source_owners(),
         "policies": dict(POLICIES),
         "source": {
             "company_profiles": "state/company_profiles.json",

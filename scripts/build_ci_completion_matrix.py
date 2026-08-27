@@ -390,6 +390,11 @@ def build(write: bool = True) -> dict[str, Any]:
     ready_count = int((forecast_readiness.get("summary") or {}).get("ready_company_count") or 0)
     history_qualified_company_count = int((forecast_readiness.get("summary") or {}).get("history_qualified_company_count") or 0)
     adapter_unavailable_company_count = int((forecast_readiness.get("summary") or {}).get("adapter_unavailable_company_count") or 0)
+    formal_output_blocked_count = sum(
+        1 for row in (forecast_readiness.get("companies") or {}).values()
+        if all(str((row.get("downstream_status") or {}).get(key) or "").startswith("blocked")
+               for key in ("forecast", "valuation", "market_expectations", "numeric_impact"))
+    )
     qualified_fact_company_count = int((forecast_readiness.get("summary") or {}).get("qualified_fact_company_count") or 0)
     event_count = sum(len(((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []) for symbol in pilot)
     dated_event_count = sum(1 for symbol in pilot for event in (((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []) if event.get("effective_date"))
@@ -792,23 +797,23 @@ def build(write: bool = True) -> dict[str, Any]:
         ),
         _row(
             "forecast_readiness_contract",
-            "Forecast readiness contract exists and blocks unavailable outputs",
+            "Forecast readiness contract exists and blocks formal outputs without approved assumptions",
             [
                 _state("readiness state", "state/company_intel/forecast_readiness.json", _exact_pilot(forecast_readiness, pilot), f"{_company_count(forecast_readiness)} company rows"),
-                _state("blocked output policy", "state/company_intel/forecast_readiness.json", _blocked_summary_count(forecast_readiness) == len(pilot), f"{_blocked_summary_count(forecast_readiness)} blocked companies"),
+                _state("blocked output policy", "state/company_intel/forecast_readiness.json", formal_output_blocked_count == len(pilot), f"{formal_output_blocked_count} companies with formal outputs blocked"),
                 _check("forecast readiness checker", "scripts/check_forecast_contract.py"),
             ],
-            ["Three qualified periods establish reported history; a separately registered executable adapter is also required before numeric forecasts can activate."],
+            ["Three qualified periods plus an executable adapter establish input readiness only; owner-approved assumptions remain required before numeric forecasts can compute."],
         ),
         _row(
             "forecast_readiness_live_inputs",
             "Live state has partially qualified financial history",
             [
                 _state("history-qualified company count", "state/company_intel/forecast_readiness.json", history_qualified_company_count > 0, f"{history_qualified_company_count} companies with qualified history"),
-                _state("adapter-unavailable company count", "state/company_intel/forecast_readiness.json", adapter_unavailable_company_count > 0, f"{adapter_unavailable_company_count} companies blocked on an executable adapter"),
+                _state("input-ready or adapter-unavailable company count", "state/company_intel/forecast_readiness.json", (ready_count + adapter_unavailable_company_count) > 0, f"{ready_count} input-ready; {adapter_unavailable_company_count} adapter-unavailable"),
                 _state("qualified fact company count", "state/company_intel/forecast_readiness.json", qualified_fact_company_count > 0, f"{qualified_fact_company_count} qualified-fact companies"),
             ],
-            ["More pilot companies need three aligned annual consolidated PKR periods, and numerical adapters must be implemented, before numeric outputs can become live."],
+            ["More pilot companies need three aligned annual consolidated PKR periods and sector adapters; all still need owner-approved assumptions before numeric outputs can become live."],
             [f"Real history-qualified company count is {history_qualified_company_count}; ready company count is {ready_count}; adapter-unavailable count is {adapter_unavailable_company_count}; formal numeric outputs remain blocked."],
         ),
         _row(

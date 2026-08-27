@@ -35,7 +35,21 @@
   "OMC": "omc_v1",
   "HOLDING_COMPANY": "holding_company_v1"
  },
- "adapter_versions": {},
+ "adapter_versions": {
+  "CEMENT": "cement_actuals_to_formal_engine_inputs_v1"
+ },
+ "adapter_source_owners": {
+  "CEMENT": {
+   "owner": "formal_financial_engines",
+   "module": "scripts/formal_financial_engines.py",
+   "engine_version": "formal_financial_engines_v1",
+   "formula_ids": {
+    "forecast": "formal_forecast.revenue_margin_eps.v1",
+    "valuation": "formal_valuation.pe_equity_ev.v1",
+    "market_expectations": "formal_market_expectations.reverse_growth.v1"
+   }
+  }
+ },
  "policies": {
   "research_only": true,
   "no_numeric_forecast": true,
@@ -53,11 +67,11 @@
  },
  "summary": {
   "company_count": 20,
-  "ready_company_count": 0,
+  "ready_company_count": 2,
   "history_qualified_company_count": 2,
-  "adapter_unavailable_company_count": 2,
+  "adapter_unavailable_company_count": 0,
   "insufficient_history_company_count": 18,
-  "blocked_company_count": 20,
+  "blocked_company_count": 18,
   "qualified_fact_company_count": 3
  },
  "companies": {
@@ -89,10 +103,48 @@
     "selected_sector": "REFINERY",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "refinery_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -174,14 +226,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -216,10 +269,48 @@
     "selected_sector": "BANKS",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "banks_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -301,14 +392,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -343,10 +435,48 @@
     "selected_sector": "REFINERY",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "refinery_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -413,14 +543,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -429,8 +560,8 @@
   },
   "DGKC": {
    "symbol": "DGKC",
-   "status": "blocked_model_adapter_unavailable",
-   "activation_status": "blocked_model_adapter_unavailable",
+   "status": "input_ready",
+   "activation_status": "input_ready",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
     "status": "covered",
@@ -450,15 +581,67 @@
     ]
    },
    "model_adapter": {
-    "status": "unavailable",
+    "status": "available",
     "availability_type": "executable_numerical_adapter",
     "selected_sector": "CEMENT",
-    "adapter_version": null,
-    "adapter_source": null,
-    "reason": "blocked_model_adapter_unavailable"
+    "adapter_version": "cement_actuals_to_formal_engine_inputs_v1",
+    "adapter_source": "scripts/formal_financial_engines.py",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "scope": "qualified_historical_actuals_adapter_only",
+    "does_not_generate_assumptions": [
+     "revenue_growth_pct",
+     "net_margin_pct",
+     "exit_pe",
+     "net_debt"
+    ],
+    "reason": null
    },
    "registry_version": "cement_v1",
-   "adapter_version": null,
+   "adapter_version": "cement_actuals_to_formal_engine_inputs_v1",
+   "formal_engine_gate": {
+    "status": "blocked_pending_owner_approved_assumptions",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 4,
    "qualified_periods": [
     {
@@ -540,9 +723,7 @@
      ]
     }
    ],
-   "missing_requirements": [
-    "executable_numerical_adapter"
-   ],
+   "missing_requirements": [],
    "coverage_candidate_document_ids": [
     "psx:275962",
     "psx:275807",
@@ -618,30 +799,29 @@
     }
    ],
    "blocked_outputs": {
-    "forecast": "blocked_model_adapter_unavailable",
-    "valuation": "blocked_model_adapter_unavailable",
-    "market_expectations": "blocked_model_adapter_unavailable"
+    "forecast": "blocked_pending_owner_approved_assumptions",
+    "valuation": "blocked_pending_owner_approved_assumptions",
+    "market_expectations": "blocked_pending_owner_approved_assumptions"
    },
    "downstream_status": {
-    "forecast": "blocked_model_adapter_unavailable",
-    "valuation": "blocked_model_adapter_unavailable",
-    "market_expectations": "blocked_model_adapter_unavailable",
-    "numeric_impact": "blocked_model_adapter_unavailable"
+    "forecast": "blocked_pending_owner_approved_assumptions",
+    "valuation": "blocked_pending_owner_approved_assumptions",
+    "market_expectations": "blocked_pending_owner_approved_assumptions",
+    "numeric_impact": "blocked_pending_owner_approved_assumptions"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
-   "quality_flags": [
-    "blocked_model_adapter_unavailable"
-   ]
+   "quality_flags": []
   },
   "ENGROH": {
    "symbol": "ENGROH",
@@ -671,10 +851,48 @@
     "selected_sector": "HOLDING_COMPANY",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "holding_company_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -766,14 +984,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -808,10 +1027,48 @@
     "selected_sector": "FERTILIZER",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "fertilizer_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -883,14 +1140,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -925,10 +1183,48 @@
     "selected_sector": "AUTO_ASSEMBLER",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "auto_assembler_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1020,14 +1316,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -1062,10 +1359,48 @@
     "selected_sector": "BANKS",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "banks_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1157,14 +1492,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -1199,10 +1535,48 @@
     "selected_sector": "POWER",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "power_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1294,14 +1668,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -1331,15 +1706,67 @@
     ]
    },
    "model_adapter": {
-    "status": "unavailable",
+    "status": "available",
     "availability_type": "executable_numerical_adapter",
     "selected_sector": "CEMENT",
-    "adapter_version": null,
-    "adapter_source": null,
-    "reason": "blocked_model_adapter_unavailable"
+    "adapter_version": "cement_actuals_to_formal_engine_inputs_v1",
+    "adapter_source": "scripts/formal_financial_engines.py",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "scope": "qualified_historical_actuals_adapter_only",
+    "does_not_generate_assumptions": [
+     "revenue_growth_pct",
+     "net_margin_pct",
+     "exit_pe",
+     "net_debt"
+    ],
+    "reason": null
    },
    "registry_version": "cement_v1",
-   "adapter_version": null,
+   "adapter_version": "cement_actuals_to_formal_engine_inputs_v1",
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 2,
    "qualified_periods": [
     {
@@ -1451,14 +1878,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -1493,10 +1921,48 @@
     "selected_sector": "E&P",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "e_and_p_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1583,14 +2049,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -1625,10 +2092,48 @@
     "selected_sector": "BANKS",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "banks_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -1720,14 +2225,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -1736,8 +2242,8 @@
   },
   "MLCF": {
    "symbol": "MLCF",
-   "status": "blocked_model_adapter_unavailable",
-   "activation_status": "blocked_model_adapter_unavailable",
+   "status": "input_ready",
+   "activation_status": "input_ready",
    "contract_version": "forecast_readiness_contract_v1",
    "model_registry": {
     "status": "covered",
@@ -1757,15 +2263,67 @@
     ]
    },
    "model_adapter": {
-    "status": "unavailable",
+    "status": "available",
     "availability_type": "executable_numerical_adapter",
     "selected_sector": "CEMENT",
-    "adapter_version": null,
-    "adapter_source": null,
-    "reason": "blocked_model_adapter_unavailable"
+    "adapter_version": "cement_actuals_to_formal_engine_inputs_v1",
+    "adapter_source": "scripts/formal_financial_engines.py",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "scope": "qualified_historical_actuals_adapter_only",
+    "does_not_generate_assumptions": [
+     "revenue_growth_pct",
+     "net_margin_pct",
+     "exit_pe",
+     "net_debt"
+    ],
+    "reason": null
    },
    "registry_version": "cement_v1",
-   "adapter_version": null,
+   "adapter_version": "cement_actuals_to_formal_engine_inputs_v1",
+   "formal_engine_gate": {
+    "status": "blocked_pending_owner_approved_assumptions",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 3,
    "qualified_periods": [
     {
@@ -1826,9 +2384,7 @@
      ]
     }
    ],
-   "missing_requirements": [
-    "executable_numerical_adapter"
-   ],
+   "missing_requirements": [],
    "coverage_candidate_document_ids": [
     "psx:280589",
     "psx:275425",
@@ -1904,30 +2460,29 @@
     }
    ],
    "blocked_outputs": {
-    "forecast": "blocked_model_adapter_unavailable",
-    "valuation": "blocked_model_adapter_unavailable",
-    "market_expectations": "blocked_model_adapter_unavailable"
+    "forecast": "blocked_pending_owner_approved_assumptions",
+    "valuation": "blocked_pending_owner_approved_assumptions",
+    "market_expectations": "blocked_pending_owner_approved_assumptions"
    },
    "downstream_status": {
-    "forecast": "blocked_model_adapter_unavailable",
-    "valuation": "blocked_model_adapter_unavailable",
-    "market_expectations": "blocked_model_adapter_unavailable",
-    "numeric_impact": "blocked_model_adapter_unavailable"
+    "forecast": "blocked_pending_owner_approved_assumptions",
+    "valuation": "blocked_pending_owner_approved_assumptions",
+    "market_expectations": "blocked_pending_owner_approved_assumptions",
+    "numeric_impact": "blocked_pending_owner_approved_assumptions"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
-   "quality_flags": [
-    "blocked_model_adapter_unavailable"
-   ]
+   "quality_flags": []
   },
   "NBP": {
    "symbol": "NBP",
@@ -1957,10 +2512,48 @@
     "selected_sector": "BANKS",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "banks_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2052,14 +2645,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -2094,10 +2688,48 @@
     "selected_sector": "REFINERY",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "refinery_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2189,14 +2821,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -2231,10 +2864,48 @@
     "selected_sector": "E&P",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "e_and_p_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2326,14 +2997,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -2368,10 +3040,48 @@
     "selected_sector": "E&P",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "e_and_p_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2438,14 +3148,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -2480,10 +3191,48 @@
     "selected_sector": "REFINERY",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "refinery_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2575,14 +3324,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -2617,10 +3367,48 @@
     "selected_sector": "OMC",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "omc_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2712,14 +3500,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [
@@ -2754,10 +3543,48 @@
     "selected_sector": "BANKS",
     "adapter_version": null,
     "adapter_source": null,
+    "source_owner": null,
+    "scope": null,
+    "does_not_generate_assumptions": [],
     "reason": "blocked_model_adapter_unavailable"
    },
    "registry_version": "banks_v1",
    "adapter_version": null,
+   "formal_engine_gate": {
+    "status": "not_evaluated_until_input_ready",
+    "source_owner": {
+     "owner": "formal_financial_engines",
+     "module": "scripts/formal_financial_engines.py",
+     "engine_version": "formal_financial_engines_v1",
+     "formula_ids": {
+      "forecast": "formal_forecast.revenue_margin_eps.v1",
+      "valuation": "formal_valuation.pe_equity_ev.v1",
+      "market_expectations": "formal_market_expectations.reverse_growth.v1"
+     }
+    },
+    "required_approved_records": {
+     "forecast": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out"
+     ],
+     "valuation": [
+      "revenue_growth_pct",
+      "net_margin_pct",
+      "shares_out",
+      "exit_pe",
+      "net_debt"
+     ],
+     "market_expectations": [
+      "current_price",
+      "exit_pe",
+      "net_margin_pct",
+      "revenue_growth_pct",
+      "shares_out"
+     ]
+    },
+    "historical_reference_cases_are_not_approved_assumptions": true
+   },
    "qualified_period_count": 0,
    "qualified_periods": [],
    "missing_requirements": [
@@ -2839,14 +3666,15 @@
     "numeric_impact": "blocked_insufficient_qualified_history"
    },
    "policy": {
-    "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-    "valuation": "blocked_until_qualified_history_and_executable_adapter",
-    "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-    "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+    "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+    "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
    },
    "limitations": [
     "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-    "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+    "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+    "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
     "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
    ],
    "quality_flags": [

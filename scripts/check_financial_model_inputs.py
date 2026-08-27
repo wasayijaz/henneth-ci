@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]; STATE=ROOT/'state'
 sys_path=str(ROOT/'scripts')
 import sys; sys.path.insert(0,sys_path)
 from financial_statement_facts import extract_facts, parse_number, stable_id, PARSER_VERSION, PARSER_REVISION
-from forecast_contract import qualified_financial_fact_source
+from forecast_contract import OWNER_ASSUMPTION_OUTPUT_STATUS, qualified_financial_fact_source
 from build_financial_series import _sanitize_row
 _raw_extract_facts = extract_facts
 def extract_facts(doc, pages, words=None, page_records=None):
@@ -36,9 +36,9 @@ def main():
   if registry:
    if registry.get('status') not in {'covered','unsupported_sector_model'}: raise AssertionError(sym+' registry status')
    if registry.get('status')=='covered' and not row.get('registry_version'): raise AssertionError(sym+' missing registry version')
-   if adapter.get('status')=='available' and not row.get('adapter_version'): raise AssertionError(sym+' missing adapter version')
+   if adapter.get('status')=='available' and (not row.get('adapter_version') or adapter.get('selected_sector')!='CEMENT'): raise AssertionError(sym+' available adapter boundary')
    if adapter.get('status')!='available' and row.get('adapter_version') is not None: raise AssertionError(sym+' unavailable adapter has version')
-   if row.get('downstream_status',{}).get('forecast') not in {'blocked_insufficient_qualified_history','blocked_model_adapter_unavailable'}: raise AssertionError(sym+' forecast gate')
+   if row.get('downstream_status',{}).get('forecast') not in {'blocked_insufficient_qualified_history','blocked_model_adapter_unavailable',OWNER_ASSUMPTION_OUTPUT_STATUS['forecast']}: raise AssertionError(sym+' forecast gate')
   if row.get('status')=='ready' and not all(len(row.get('observations',{}).get(x) or [])>=3 for x in ('revenue','profit_after_tax_attributable','basic_eps')): raise AssertionError(sym+' readiness')
  # Adversarial parser fixtures: ambiguous text fails closed; signs/dash and scope rules remain explicit.
  fixtures=[
@@ -234,7 +234,7 @@ def main():
  # Formula replay/readiness: only compatible aligned periods qualify and operands are explicit.
  periods={'revenue':{'2021','2022','2023'},'profit_after_tax_attributable':{'2021','2022','2023'},'basic_eps':{'2021','2022','2023'}}; assert len(set.intersection(*periods.values()))==3; checks += 1
  assert 'source_fact_ids' in (next(iter((d['companies'].values()))).get('derived',{}).get('pat_margin_pct',[{'source_fact_ids':[]}])[0] if any(v.get('derived',{}).get('pat_margin_pct') for v in d['companies'].values()) else {'source_fact_ids':[]}); checks += 1
- assert all(row.get('downstream_status',{}).get('valuation') in {'blocked_insufficient_qualified_history','blocked_model_adapter_unavailable'} for row in d['companies'].values() if row.get('model_registry')); checks += 1
+ assert all(row.get('downstream_status',{}).get('valuation') in {'blocked_insufficient_qualified_history','blocked_model_adapter_unavailable',OWNER_ASSUMPTION_OUTPUT_STATUS['valuation']} for row in d['companies'].values() if row.get('model_registry')); checks += 1
  # Legacy quarantine and idempotent shape checks.
  for row in (load(STATE/'company_financial_series.json').get('tickers') or {}).values():
   for fact in row.get('facts') or []:
@@ -256,10 +256,11 @@ def main():
   rows=[]
   for i,year in enumerate((2021,2022,2023)):
     for line,val,unit,mult in [('revenue',100+i*10,'PKR',1000000),('profit_after_tax_attributable',20+i*2,'PKR',1000000),('basic_eps',2+i*.2,'PKR/share',1),('gross_profit',40+i*4,'PKR',1000000),('operating_profit',30+i*3,'PKR',1000000)]:
-      rows.append({'fact_id':f'{line}-{year}','line':line,'parser_version':PARSER_VERSION,'readiness':'model_loadable','period_end':f'{year}-12-31','duration_months':12,'consolidation':'consolidated','currency':'PKR','statement_type':'income_statement','unit':unit,'unit_multiplier':mult,'normalized_value':val*mult,'available_on':f'{year+1}-02-01','source_url':'https://dps.psx.com.pk/x.pdf'})
+      source_url=f'https://dps.psx.com.pk/download/document/{year}.pdf'
+      rows.append({'fact_id':f'{line}-{year}','document_id':f'psx:{year}','line':line,'parser_version':PARSER_VERSION,'readiness':'model_loadable','period_end':f'{year}-12-31','period_type':'annual','duration_months':12,'consolidation':'consolidated','currency':'PKR','statement_type':'income_statement','unit':unit,'unit_multiplier':mult,'normalized_value':val if unit=='PKR/share' else val*mult,'available_on':f'{year+1}-02-01','source_url':source_url,'content_sha256':f'hash-{year}','evidence':[{'page':1,'text':f'{line} {year}','source_url':source_url}],'quality_flags':[]})
   rows=[{**r,'parser_revision':PARSER_REVISION} for r in rows]
   (root/'company_financial_series.json').write_text(json.dumps({'tickers':{'MLCF':{'facts':rows}}}),encoding='utf-8')
-  built=bfm.build(); built_again=bfm.build(); assert json.dumps(built,sort_keys=True,ensure_ascii=False,allow_nan=False)==json.dumps(built_again,sort_keys=True,ensure_ascii=False,allow_nan=False); mr=built['companies']['MLCF']; assert mr['status']=='blocked_model_adapter_unavailable' and mr['model_registry']['status']=='covered' and mr['model_adapter']['status']=='unavailable'; assert mr['downstream_status']['forecast']=='blocked_model_adapter_unavailable'; assert mr['derived']['revenue_growth_pct'] and mr['derived']['profit_after_tax_attributable_growth_pct'] and mr['derived']['gross_margin_pct'] and mr['derived']['operating_margin_pct']; assert all(x['formula_version'] and x['source_fact_ids'] and x['operand_provenance'] for x in mr['derived']['revenue_growth_pct']); assert mr['derived']['revenue_growth_pct'][0]['availability']=='2023-02-01'; checks += 6
+  built=bfm.build(); built_again=bfm.build(); assert json.dumps(built,sort_keys=True,ensure_ascii=False,allow_nan=False)==json.dumps(built_again,sort_keys=True,ensure_ascii=False,allow_nan=False); mr=built['companies']['MLCF']; assert mr['status']=='ready' and mr['model_registry']['status']=='covered' and mr['model_adapter']['status']=='available'; assert mr['downstream_status']['forecast']==OWNER_ASSUMPTION_OUTPUT_STATUS['forecast']; assert mr['derived']['revenue_growth_pct'] and mr['derived']['profit_after_tax_attributable_growth_pct'] and mr['derived']['gross_margin_pct'] and mr['derived']['operating_margin_pct']; assert all(x['formula_version'] and x['source_fact_ids'] and x['operand_provenance'] for x in mr['derived']['revenue_growth_pct']); assert mr['derived']['revenue_growth_pct'][0]['availability']=='2023-02-01'; checks += 6
   rows[-4]={**rows[-4],'unit_multiplier':1000,'normalized_value':rows[-4]['normalized_value']/1000}
   (root/'company_financial_series.json').write_text(json.dumps({'tickers':{'MLCF':{'facts':rows}}}),encoding='utf-8')
   partial=bfm.build()['companies']['MLCF']; assert partial['status']=='partial' and partial['downstream_status']['forecast']=='blocked_insufficient_qualified_history'; checks += 1

@@ -19,7 +19,15 @@ const short = (value, limit = 80) => {
   return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 };
 const CI_REVEAL_SIDES = Object.freeze(["left", "right", "top", "bottom"]);
-const CI_BACKGROUND_ATTR_RE = /product-background-(\d{2})\.png$/;
+const CI_BACKGROUND_ATTR_RE = /product-background-(\d{2})\.(?:png|webp)$/;
+const CI_BACKGROUND_ASSET_COUNT = 25;
+const CI_MOBILE_QUERY = "(max-width:900px)";
+const RAIL_LINKS = [
+  { href: "https://ci.henneth.app/", label: "Company Intelligence", icon: "lucide:building-2", active: true },
+  { href: "https://desk.henneth.app/today", label: "Signals", icon: "lucide:activity" },
+  { href: "https://desk.henneth.app/watchlist", label: "Watchlist", icon: "lucide:eye" },
+  { href: "https://desk.henneth.app/research", label: "Research", icon: "lucide:library" },
+];
 
 const ASK_MAX_QUESTION_BYTES = 4096;
 const THESIS_STATUSES = ["Strengthening", "Stable", "Weakening", "Broken"];
@@ -115,10 +123,18 @@ function companyVisual(row, index) {
   const registry = companyBackgroundRegistry();
   const backgroundPath = registry?.forSymbol(symbol) || "";
   const backgroundMatch = backgroundPath.match(CI_BACKGROUND_ATTR_RE);
-  const fallbackIndex = ((ciHash(`${symbol}:${index}`) + Math.max(0, index)) % 25) + 1;
+  const assetCount = Number(registry?.assetCount) || CI_BACKGROUND_ASSET_COUNT;
+  const fallbackIndex = ((ciHash(`${symbol}:${index}`) + Math.max(0, index)) % assetCount) + 1;
   const backgroundId = backgroundMatch ? backgroundMatch[1] : String(fallbackIndex).padStart(2, "0");
   const revealSide = randomRevealSide(`${symbol}:${backgroundId}:reveal`);
   return { backgroundId, backgroundPath, revealSide };
+}
+
+function safeBackgroundCssUrl(path) {
+  const text = String(path || "").trim();
+  return /^product backgrounds\/product-background-\d{2}\.(?:png|webp)$/i.test(text)
+    ? `url("${text}")`
+    : "";
 }
 
 function deskScheme() {
@@ -353,6 +369,7 @@ async function askCompany(question) {
 
 function renderGate(message) {
   $("signOut").hidden = true;
+  syncMobileControls(false);
   setAccessState("Signed out", "private file closed");
   if ($("companyStatus")) $("companyStatus").textContent = "Company Intelligence";
   const app = $("app");
@@ -361,6 +378,7 @@ function renderGate(message) {
   delete app.dataset.companyBg;
   delete app.dataset.revealSide;
   delete app.dataset.companyBackgroundSrc;
+  app.style.removeProperty("--ci-company-bg");
   app.innerHTML = `
     <section class="gate" aria-labelledby="gateTitle">
       <div>
@@ -391,7 +409,46 @@ function rows() {
 
 function pick(symbol) {
   state.selected = symbol;
+  closeMobileDrawers();
   renderDesk();
+}
+
+function syncMobileControls(available) {
+  const mobile = window.matchMedia(CI_MOBILE_QUERY).matches;
+  const app = $("app");
+  for (const id of ["companyDrawerOpen", "intelligenceDrawerOpen"]) {
+    const button = $(id);
+    if (!button) continue;
+    button.hidden = !(available && mobile);
+  }
+  $("companyDrawerOpen")?.setAttribute("aria-expanded", app?.classList.contains("mobile-left-open") ? "true" : "false");
+  $("intelligenceDrawerOpen")?.setAttribute("aria-expanded", app?.classList.contains("mobile-right-open") ? "true" : "false");
+}
+
+function closeMobileDrawers() {
+  const app = $("app");
+  app?.classList.remove("mobile-left-open", "mobile-right-open");
+  document.body.classList.remove("company-drawer-open", "intelligence-drawer-open");
+  syncMobileControls(!!state.data);
+}
+
+function openMobileDrawer(kind) {
+  if (!window.matchMedia(CI_MOBILE_QUERY).matches) return;
+  const app = $("app");
+  if (!app) return;
+  app.classList.toggle("mobile-left-open", kind === "company");
+  app.classList.toggle("mobile-right-open", kind === "intelligence");
+  document.body.classList.toggle("company-drawer-open", kind === "company");
+  document.body.classList.toggle("intelligence-drawer-open", kind === "intelligence");
+  syncMobileControls(!!state.data);
+  requestAnimationFrame(() => {
+    const selector = kind === "company" ? "#companyDirectory input, #companyDirectory button" : "#companyIntelligenceTree button";
+    document.querySelector(selector)?.focus({ preventScroll: true });
+  });
+}
+
+function railLinkMarkup(item) {
+  return `<a class="icon-rail-link ${item.active ? "is-active" : ""}" href="${esc(item.href)}" ${item.active ? 'aria-current="page"' : ""} title="${esc(item.label)}"><iconify-icon icon="${esc(item.icon)}" aria-hidden="true"></iconify-icon><span class="sr-only">${esc(item.label)}</span></a>`;
 }
 
 function renderDesk(searchState) {
@@ -403,22 +460,20 @@ function renderDesk(searchState) {
   const visual = row ? companyVisual(row, activeIndex) : null;
   $("app").innerHTML = `
     <aside class="icon-rail" aria-label="Primary desk navigation">
-      <a class="icon-rail-brand" href="https://desk.henneth.app/today" aria-label="Henneth Desk home"><img src="logo-terminal.svg" alt="" width="34" height="30"></a>
       <nav class="icon-rail-nav" aria-label="Desk sections">
-        <a class="icon-rail-link is-active" href="https://ci.henneth.app/" aria-current="page" title="Company Intelligence"><span aria-hidden="true">CI</span><span class="sr-only">Company Intelligence</span></a>
-        <a class="icon-rail-link" href="https://desk.henneth.app/today" title="Signals"><span aria-hidden="true">SIG</span><span class="sr-only">Signals</span></a>
-        <a class="icon-rail-link" href="https://desk.henneth.app/watchlist" title="Watchlist"><span aria-hidden="true">WAT</span><span class="sr-only">Watchlist</span></a>
-        <a class="icon-rail-link" href="https://desk.henneth.app/research" title="Research"><span aria-hidden="true">RES</span><span class="sr-only">Research</span></a>
+        ${RAIL_LINKS.map(railLinkMarkup).join("")}
       </nav>
       <div class="icon-rail-spacer"></div>
-      <button class="icon-rail-link" type="button" id="railScheme" title="Change colour scheme"><span aria-hidden="true">SET</span><span class="sr-only">Change colour scheme</span></button>
-      <button class="icon-rail-link" type="button" id="railProfile" title="Sign out"><span aria-hidden="true">USR</span><span class="sr-only">Sign out</span></button>
+      <button class="icon-rail-link" type="button" id="railScheme" title="Change colour scheme"><iconify-icon icon="lucide:sun-moon" aria-hidden="true"></iconify-icon><span class="sr-only">Change colour scheme</span></button>
+      <button class="icon-rail-link" type="button" id="railProfile" title="Sign out"><iconify-icon icon="lucide:user-round" aria-hidden="true"></iconify-icon><span class="sr-only">Sign out</span></button>
     </aside>
-    <aside class="rail" aria-label="Company directory">
+    <div class="drawer-backdrop company-backdrop" data-drawer-close="company" aria-hidden="true"></div>
+    <div class="drawer-backdrop intelligence-backdrop" data-drawer-close="intelligence" aria-hidden="true"></div>
+    <aside id="companyDirectory" class="rail" aria-label="Company directory">
       <div class="rail-head"><strong>Company directory</strong><span>${esc(list.length)} shown</span></div>
       <div class="toolbar">
         <input id="search" class="search" type="search" aria-label="Search companies" aria-controls="companyList" placeholder="Search symbol, company, sector" value="${esc(state.filter)}">
-        <button id="clearFilter" type="button" aria-label="Clear company search">Clear</button>
+        <button id="clearFilter" type="button" aria-label="Clear company search"><iconify-icon icon="lucide:x" aria-hidden="true"></iconify-icon><span class="sr-only">Clear</span></button>
         <span class="muted">${esc(state.data?.meta?.count || 0)} companies. Built ${esc(state.data?.meta?.built || "unknown")}.</span>
       </div>
       <div id="companyList" class="list" role="listbox" aria-label="Companies">${list.map(r => `
@@ -430,8 +485,9 @@ function renderDesk(searchState) {
       <span class="sr-only" role="status" aria-live="polite">${esc(list.length)} companies match.</span>
     </aside>
     <section id="companyDetail" class="detail" role="tabpanel" tabindex="-1" aria-label="${row ? `${esc(row.symbol)} company intelligence` : "Company intelligence"}">${row ? detail(row) : `<div class="empty">No company intelligence rows are available yet.</div>`}</section>
-    <aside class="tree-panel" aria-label="Company intelligence directory tree">${row ? renderViewNav(row) : `<div class="tree-empty">No directories available.</div>`}</aside>`;
+    <aside id="companyIntelligenceTree" class="tree-panel" aria-label="Company intelligence directory tree">${row ? renderViewNav(row) : `<div class="tree-empty">No directories available.</div>`}</aside>`;
   if ($("companyStatus")) $("companyStatus").textContent = row ? `${row.symbol} · company intelligence` : "Company Intelligence";
+  syncMobileControls(true);
   $("search").oninput = event => {
     const start = event.target.selectionStart;
     const end = event.target.selectionEnd;
@@ -451,6 +507,7 @@ function renderDesk(searchState) {
   document.querySelectorAll("[data-view]").forEach(btn => {
     btn.onclick = () => {
       state.view = btn.dataset.view;
+      closeMobileDrawers();
       renderDesk({ focusView: state.view });
     };
     btn.onkeydown = event => moveViewFocus(event, btn);
@@ -466,8 +523,12 @@ function renderDesk(searchState) {
   document.querySelectorAll("[data-research-route]").forEach(btn => {
     btn.onclick = () => {
       state.view = btn.dataset.researchRoute;
+      closeMobileDrawers();
       renderDesk({ focusView: state.view });
     };
+  });
+  document.querySelectorAll("[data-drawer-close]").forEach(backdrop => {
+    backdrop.onclick = closeMobileDrawers;
   });
   const askForm = $("askForm");
   if (askForm) {
@@ -631,15 +692,15 @@ function renderViewNav(r) {
   const routeGroup = key => PRIMARY_COMPANY_TABS.some(([route]) => route === key) ? "primary" : "advanced";
   const node = (key, label, depth = 0) => {
     const active = state.view === key;
-    return `<button type="button" aria-current="${active ? "page" : "false"}" aria-controls="companyDetail" class="tree-leaf ${active ? "active" : ""} depth-${depth}" data-view="${key}" data-view-group="${routeGroup(key)}"><span class="tree-file" aria-hidden="true">FILE</span><span>${esc(label)}</span></button>`;
+    return `<button type="button" aria-current="${active ? "page" : "false"}" aria-controls="companyDetail" class="tree-leaf ${active ? "active" : ""} depth-${depth}" data-view="${key}" data-view-group="${routeGroup(key)}"><iconify-icon class="tree-file" icon="lucide:file-text" aria-hidden="true"></iconify-icon><span>${esc(label)}</span></button>`;
   };
   const folder = ({ key, label, routes }) => {
     const expanded = state.tree.expanded[key] ?? true;
     const childNodes = routes.map(([route, routeLabel]) => node(route, toolLabels.get(route) || routeLabel, 1)).join("");
     return `<section class="tree-folder ${expanded ? "is-expanded" : ""}" data-tree-folder="${key}">
       <div class="tree-folder-row ${state.view === key ? "active" : ""}">
-        <button class="tree-expander" type="button" aria-label="${expanded ? "Collapse" : "Expand"} ${esc(label)}" aria-expanded="${expanded}" data-tree-toggle="${key}">${expanded ? "COLLAPSE" : "EXPAND"}</button>
-        <span class="tree-folder-label"><span class="tree-folder-icon" aria-hidden="true">DIR</span><span>${esc(label)}</span></span>
+        <button class="tree-expander" type="button" aria-label="${expanded ? "Collapse" : "Expand"} ${esc(label)}" aria-expanded="${expanded}" data-tree-toggle="${key}"><iconify-icon icon="${expanded ? "lucide:chevron-down" : "lucide:chevron-right"}" aria-hidden="true"></iconify-icon></button>
+        <span class="tree-folder-label"><iconify-icon class="tree-folder-icon" icon="${expanded ? "lucide:folder-open" : "lucide:folder"}" aria-hidden="true"></iconify-icon><span>${esc(label)}</span></span>
       </div>
       <div class="tree-children" role="group" ${expanded ? "" : "hidden"}>${childNodes}</div>
     </section>`;
@@ -3097,10 +3158,14 @@ function enhanceMotion({ visual, animate } = {}) {
     app.dataset.companyBg = visual.backgroundId;
     app.dataset.revealSide = visual.revealSide;
     app.dataset.companyBackgroundSrc = visual.backgroundPath || "";
+    const cssUrl = safeBackgroundCssUrl(visual.backgroundPath);
+    if (cssUrl) app.style.setProperty("--ci-company-bg", cssUrl);
+    else app.style.removeProperty("--ci-company-bg");
   } else {
     delete app.dataset.companyBg;
     delete app.dataset.revealSide;
     delete app.dataset.companyBackgroundSrc;
+    app.style.removeProperty("--ci-company-bg");
   }
   if (!animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   requestAnimationFrame(() => app.classList.add("is-entering"));
@@ -3116,6 +3181,20 @@ $("signOut").onclick = () => {
 };
 
 $("schemeToggle").onclick = () => applyDeskScheme(SCHEME_CYCLE[deskScheme()]);
+document.addEventListener("click", event => {
+  const left = event.target.closest?.("#companyDrawerOpen");
+  const right = event.target.closest?.("#intelligenceDrawerOpen");
+  if (!left && !right) return;
+  event.preventDefault();
+  openMobileDrawer(left ? "company" : "intelligence");
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeMobileDrawers();
+});
+window.addEventListener("resize", () => {
+  if (!window.matchMedia(CI_MOBILE_QUERY).matches) closeMobileDrawers();
+  else syncMobileControls(!!state.data);
+});
 applyDeskScheme(deskScheme());
 
 state.session = storedSession();

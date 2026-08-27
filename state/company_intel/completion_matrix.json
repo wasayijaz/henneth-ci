@@ -437,11 +437,11 @@
      "label": "forecast readiness contract",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "0 input-ready companies"
+     "detail": "2 input-ready companies"
     }
    ],
    "blockers": [
-    "Real input-ready company count is 0; forecast objects remain non-computed."
+    "Real input-ready company count is 2; forecast objects remain non-computed."
    ],
    "next_required_evidence": [
     "Three aligned annual consolidated PKR periods and approved assumptions before forecast objects can be computed."
@@ -1088,7 +1088,7 @@
      "label": "conflict/missing-slot summary",
      "path": "state/company_intel/financial_evidence_reconciliation.json",
      "ok": true,
-     "detail": "{'company_count': 20, 'eligible_fact_count': 41, 'audit_only_fact_count': 932, 'quarantined_fact_count': 575, 'missing_slot_count': 159, 'source_conflict_count': 64, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 0}"
+     "detail": "{'company_count': 20, 'eligible_fact_count': 41, 'audit_only_fact_count': 932, 'quarantined_fact_count': 575, 'missing_slot_count': 159, 'source_conflict_count': 64, 'withheld_future_source_fact_count': 18, 'forecast_ready_company_count': 2}"
     },
     {
      "label": "reconciliation checker",
@@ -1104,7 +1104,7 @@
   },
   {
    "id": "forecast_readiness_contract",
-   "title": "Forecast readiness contract exists and blocks unavailable outputs",
+   "title": "Forecast readiness contract exists and blocks formal outputs without approved assumptions",
    "status": "complete",
    "evidence": [
     {
@@ -1117,7 +1117,7 @@
      "label": "blocked output policy",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "20 blocked companies"
+     "detail": "20 companies with formal outputs blocked"
     },
     {
      "label": "forecast readiness checker",
@@ -1128,7 +1128,7 @@
    ],
    "blockers": [],
    "next_required_evidence": [
-    "Three qualified periods establish reported history; a separately registered executable adapter is also required before numeric forecasts can activate."
+    "Three qualified periods plus an executable adapter establish input readiness only; owner-approved assumptions remain required before numeric forecasts can compute."
    ]
   },
   {
@@ -1143,10 +1143,10 @@
      "detail": "2 companies with qualified history"
     },
     {
-     "label": "adapter-unavailable company count",
+     "label": "input-ready or adapter-unavailable company count",
      "path": "state/company_intel/forecast_readiness.json",
      "ok": true,
-     "detail": "2 companies blocked on an executable adapter"
+     "detail": "2 input-ready; 0 adapter-unavailable"
     },
     {
      "label": "qualified fact company count",
@@ -1156,10 +1156,10 @@
     }
    ],
    "blockers": [
-    "Real history-qualified company count is 2; ready company count is 0; adapter-unavailable count is 2; formal numeric outputs remain blocked."
+    "Real history-qualified company count is 2; ready company count is 2; adapter-unavailable count is 0; formal numeric outputs remain blocked."
    ],
    "next_required_evidence": [
-    "More pilot companies need three aligned annual consolidated PKR periods, and numerical adapters must be implemented, before numeric outputs can become live."
+    "More pilot companies need three aligned annual consolidated PKR periods and sector adapters; all still need owner-approved assumptions before numeric outputs can become live."
    ]
   },
   {

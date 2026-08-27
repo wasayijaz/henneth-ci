@@ -22,6 +22,7 @@ const READINESS_STATUSES = new Set([
   "blocked_model_adapter_unavailable",
   "blocked_insufficient_qualified_history",
   "blocked_unsupported_sector_model",
+  "blocked_pending_owner_approved_assumptions",
   "input_ready",
 ]);
 const BLOCKED_READINESS_STATUSES = new Set([

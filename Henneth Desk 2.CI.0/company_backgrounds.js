@@ -6,35 +6,35 @@
   // pilot in symbol order; five remain explicitly reserved for future issuers.
   const ASSET_DIRECTORY = "product backgrounds";
   const pilot = Object.freeze({
-    ATRL: "product-background-01.png",
-    BOP: "product-background-02.png",
-    CNERGY: "product-background-03.png",
-    DGKC: "product-background-04.png",
-    ENGROH: "product-background-05.png",
-    FFC: "product-background-06.png",
-    GAL: "product-background-07.png",
-    HBL: "product-background-08.png",
-    HUBC: "product-background-09.png",
-    LUCK: "product-background-10.png",
-    MARI: "product-background-11.png",
-    MEBL: "product-background-12.png",
-    MLCF: "product-background-13.png",
-    NBP: "product-background-14.png",
-    NRL: "product-background-15.png",
-    OGDC: "product-background-16.png",
-    PPL: "product-background-17.png",
-    PRL: "product-background-18.png",
-    PSO: "product-background-19.png",
-    UBL: "product-background-20.png"
+    ATRL: "product-background-01.webp",
+    BOP: "product-background-02.webp",
+    CNERGY: "product-background-03.webp",
+    DGKC: "product-background-04.webp",
+    ENGROH: "product-background-05.webp",
+    FFC: "product-background-06.webp",
+    GAL: "product-background-07.webp",
+    HBL: "product-background-08.webp",
+    HUBC: "product-background-09.webp",
+    LUCK: "product-background-10.webp",
+    MARI: "product-background-11.webp",
+    MEBL: "product-background-12.webp",
+    MLCF: "product-background-13.webp",
+    NBP: "product-background-14.webp",
+    NRL: "product-background-15.webp",
+    OGDC: "product-background-16.webp",
+    PPL: "product-background-17.webp",
+    PRL: "product-background-18.webp",
+    PSO: "product-background-19.webp",
+    UBL: "product-background-20.webp"
   });
-  // Reserved (unassigned) slots: product-background-21.png through
-  // product-background-25.png. Future companies must claim one explicitly.
+  // Reserved (unassigned) slots: product-background-21.webp through
+  // product-background-25.webp. Future companies must claim one explicitly.
   const reserved = Object.freeze([
-    "product-background-21.png",
-    "product-background-22.png",
-    "product-background-23.png",
-    "product-background-24.png",
-    "product-background-25.png"
+    "product-background-21.webp",
+    "product-background-22.webp",
+    "product-background-23.webp",
+    "product-background-24.webp",
+    "product-background-25.webp"
   ]);
   const pilotSymbols = Object.freeze(Object.keys(pilot).sort());
   const pathFor = (file) => `${ASSET_DIRECTORY}/${file}`;
@@ -46,6 +46,7 @@
   const registry = Object.freeze({
     version: "ci-pilot-v1",
     assetDirectory: ASSET_DIRECTORY,
+    assetCount: 25,
     pilotSymbols,
     pilot,
     reserved,

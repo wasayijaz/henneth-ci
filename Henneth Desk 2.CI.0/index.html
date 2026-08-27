@@ -15,15 +15,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>try{var s=localStorage.getItem("deskScheme");if(s==="dark"||s==="light")document.documentElement.setAttribute("data-scheme",s);}catch(e){}</script>
-  <title>Company Intelligence · Henneth Desk</title>
+  <title>Henneth Company Intelligence</title>
   <link rel="stylesheet" href="styles.css">
+  <script defer src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
 </head>
 <body>
   <div class="shell layout-reference">
     <header class="topbar">
-      <a class="brand" href="https://desk.henneth.app/today" aria-label="Henneth Desk home">
+      <button id="companyDrawerOpen" class="drawer-open drawer-open-left" type="button" aria-label="Open company directory" aria-controls="companyDirectory" aria-expanded="false" hidden>
+        <iconify-icon icon="lucide:folder-tree" aria-hidden="true"></iconify-icon>
+      </button>
+      <a class="brand" href="https://desk.henneth.app/today" aria-label="Henneth home">
         <img class="brand-mark" src="logo-terminal.svg" alt="" width="535" height="472">
-        <span class="brand-name">Henneth <em>Desk</em></span>
+        <span class="brand-name">Henneth <em>Company Intelligence</em></span>
       </a>
       <div class="desk-tab" aria-current="page">
         <span>Company Intelligence</span>
@@ -32,6 +36,9 @@
         <span id="authState" class="auth-state" role="status" aria-live="polite">Checking access</span>
         <button id="schemeToggle" class="chrome-btn" type="button" aria-label="Change colour scheme">Scheme: System</button>
         <button id="signOut" class="chrome-btn primary" type="button" aria-label="Sign out" hidden>Sign out</button>
+        <button id="intelligenceDrawerOpen" class="drawer-open drawer-open-right" type="button" aria-label="Open Company Intelligence directory" aria-controls="companyIntelligenceTree" aria-expanded="false" hidden>
+          <iconify-icon icon="lucide:panel-right-open" aria-hidden="true"></iconify-icon>
+        </button>
       </div>
     </header>
 

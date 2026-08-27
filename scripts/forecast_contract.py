@@ -11,6 +11,12 @@ from typing import Any
 from urllib.parse import urlparse
 
 from financial_statement_facts import PARSER_REVISION, PARSER_VERSION
+from formal_financial_engines import (
+    ENGINE_VERSION as FORMAL_ENGINE_VERSION,
+    EXPECTATIONS_FORMULA_ID,
+    FORECAST_FORMULA_ID,
+    VALUATION_FORMULA_ID,
+)
 from manual_financial_claims import is_qualified_manual_fact
 from sector_driver_models import COMPANY_OVERRIDES, SECTOR_MODELS, model_for_company
 
@@ -27,6 +33,16 @@ ADAPTER_UNAVAILABLE_OUTPUT_STATUS = {
     "forecast": "blocked_model_adapter_unavailable",
     "valuation": "blocked_model_adapter_unavailable",
     "market_expectations": "blocked_model_adapter_unavailable",
+}
+OWNER_ASSUMPTION_OUTPUT_STATUS = {
+    "forecast": "blocked_pending_owner_approved_assumptions",
+    "valuation": "blocked_pending_owner_approved_assumptions",
+    "market_expectations": "blocked_pending_owner_approved_assumptions",
+}
+FORMAL_ENGINE_REQUIRED_APPROVED_RECORDS = {
+    "forecast": ("revenue_growth_pct", "net_margin_pct", "shares_out"),
+    "valuation": ("revenue_growth_pct", "net_margin_pct", "shares_out", "exit_pe", "net_debt"),
+    "market_expectations": ("current_price", "exit_pe", "net_margin_pct", "revenue_growth_pct", "shares_out"),
 }
 REGISTRY_UNAVAILABLE_OUTPUT_STATUS = {
     "forecast": "blocked_unsupported_sector_model",
@@ -52,7 +68,22 @@ REGISTRY_VERSION_BY_SECTOR = {
     "OMC": "omc_v1",
     "HOLDING_COMPANY": "holding_company_v1",
 }
-EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR: dict[str, str] = {}
+FORMAL_ENGINE_SOURCE_OWNER = {
+    "owner": "formal_financial_engines",
+    "module": "scripts/formal_financial_engines.py",
+    "engine_version": FORMAL_ENGINE_VERSION,
+    "formula_ids": {
+        "forecast": FORECAST_FORMULA_ID,
+        "valuation": VALUATION_FORMULA_ID,
+        "market_expectations": EXPECTATIONS_FORMULA_ID,
+    },
+}
+EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR: dict[str, str] = {
+    "CEMENT": "cement_actuals_to_formal_engine_inputs_v1",
+}
+EXECUTABLE_NUMERIC_ADAPTER_SOURCE_OWNERS_BY_SECTOR: dict[str, dict[str, Any]] = {
+    "CEMENT": FORMAL_ENGINE_SOURCE_OWNER,
+}
 QUALITY_FLAG_FIELDS = ("quality_flags", "conflict_flags")
 
 
@@ -89,6 +120,7 @@ def registry_status(symbol: str, exchange_sector: str | None) -> dict[str, Any]:
 def adapter_status(symbol: str, exchange_sector: str | None) -> dict[str, Any]:
     sector = selected_sector(symbol, exchange_sector)
     adapter_version = EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR.get(sector or "")
+    source_owner = EXECUTABLE_NUMERIC_ADAPTER_SOURCE_OWNERS_BY_SECTOR.get(sector or "") if adapter_version else None
     if adapter_version:
         status = "available"
         reason = None
@@ -103,7 +135,15 @@ def adapter_status(symbol: str, exchange_sector: str | None) -> dict[str, Any]:
         "availability_type": "executable_numerical_adapter",
         "selected_sector": sector,
         "adapter_version": adapter_version,
-        "adapter_source": None,
+        "adapter_source": source_owner.get("module") if isinstance(source_owner, dict) else None,
+        "source_owner": source_owner,
+        "scope": "qualified_historical_actuals_adapter_only" if adapter_version else None,
+        "does_not_generate_assumptions": [
+            "revenue_growth_pct",
+            "net_margin_pct",
+            "exit_pe",
+            "net_debt",
+        ] if adapter_version else [],
         "reason": reason,
     }
 
@@ -114,6 +154,10 @@ def supported_registry_versions() -> dict[str, str]:
 
 def available_adapter_versions() -> dict[str, str]:
     return dict(EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR)
+
+
+def available_adapter_source_owners() -> dict[str, dict[str, Any]]:
+    return dict(EXECUTABLE_NUMERIC_ADAPTER_SOURCE_OWNERS_BY_SECTOR)
 
 
 def _num(value: Any) -> float | int | None:
@@ -325,7 +369,7 @@ def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str
     if history_ready and registry_ready and adapter["status"] == "available":
         status = "input_ready"
         activation_status = "input_ready"
-        downstream = {key: "input_ready" for key in ("forecast", "valuation", "market_expectations")}
+        downstream = dict(OWNER_ASSUMPTION_OUTPUT_STATUS)
     elif history_ready and registry_ready:
         missing.append("executable_numerical_adapter")
         status = "blocked_model_adapter_unavailable"
@@ -349,8 +393,18 @@ def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str
         "safe_period": row.get("safe_period"),
     } for row in candidates if row.get("document_id") and row.get("source_url")]
     downstream["numeric_impact"] = (
-        status if status.startswith("blocked_") else "blocked_model_adapter_unavailable"
+        status if status.startswith("blocked_") else "blocked_pending_owner_approved_assumptions"
     )
+    formal_engine_gate = {
+        "status": (
+            "blocked_pending_owner_approved_assumptions"
+            if status == "input_ready"
+            else "not_evaluated_until_input_ready"
+        ),
+        "source_owner": FORMAL_ENGINE_SOURCE_OWNER,
+        "required_approved_records": FORMAL_ENGINE_REQUIRED_APPROVED_RECORDS,
+        "historical_reference_cases_are_not_approved_assumptions": True,
+    }
     return {
         "symbol": symbol,
         "status": status,
@@ -360,6 +414,7 @@ def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str
         "model_adapter": adapter,
         "registry_version": registry.get("registry_version"),
         "adapter_version": adapter.get("adapter_version"),
+        "formal_engine_gate": formal_engine_gate,
         "qualified_period_count": len(periods),
         "qualified_periods": periods,
         "missing_requirements": missing,
@@ -368,14 +423,15 @@ def readiness_row(symbol: str, exchange_sector: str | None, facts: list[dict[str
         "blocked_outputs": {key: value for key, value in downstream.items() if key != "numeric_impact"},
         "downstream_status": downstream,
         "policy": {
-            "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-            "valuation": "blocked_until_qualified_history_and_executable_adapter",
-            "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-            "numeric_impact": "blocked_until_sourced_operands_and_implementation",
+            "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+            "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+            "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+            "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions",
         },
         "limitations": [
             "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-            "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+            "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+            "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
             "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate.",
         ],
         "quality_flags": [] if status == "input_ready" else [status],

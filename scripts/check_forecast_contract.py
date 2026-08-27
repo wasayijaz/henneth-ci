@@ -17,6 +17,7 @@ from forecast_contract import (
     EXECUTABLE_NUMERIC_ADAPTERS_BY_SECTOR,
     BLOCKED_OUTPUT_STATUS,
     CONTRACT_VERSION,
+    OWNER_ASSUMPTION_OUTPUT_STATUS,
     POLICIES,
     REGISTRY_VERSION_BY_SECTOR,
     REQUIRED_PERIOD_COUNT,
@@ -155,8 +156,18 @@ def _assert_shape(data: dict, pilot: list[str], *, require_exact_pilot: bool = T
         if registry.get("coverage_type") != "qualitative_sector_driver_registry":
             _fail(f"{symbol}: registry coverage type mismatch")
         if adapter.get("status") != "unavailable":
-            _fail(f"{symbol}: numeric adapter unexpectedly available")
-        if adapter.get("reason") != "blocked_model_adapter_unavailable":
+            if registry.get("selected_sector") != "CEMENT" or adapter.get("status") != "available":
+                _fail(f"{symbol}: numeric adapter status mismatch")
+        if adapter.get("status") == "available":
+            if registry.get("selected_sector") != "CEMENT":
+                _fail(f"{symbol}: non-cement adapter unexpectedly available")
+            if not adapter.get("adapter_version") or not adapter.get("source_owner"):
+                _fail(f"{symbol}: available adapter missing version/source owner")
+            if (adapter.get("source_owner") or {}).get("owner") != "formal_financial_engines":
+                _fail(f"{symbol}: available adapter source owner mismatch")
+            if adapter.get("does_not_generate_assumptions") != ["revenue_growth_pct", "net_margin_pct", "exit_pe", "net_debt"]:
+                _fail(f"{symbol}: adapter assumption boundary mismatch")
+        elif adapter.get("reason") != "blocked_model_adapter_unavailable":
             _fail(f"{symbol}: adapter unavailable reason mismatch")
         if symbol == "ENGROH" and (row.get("model_registry") or {}).get("selected_sector") != "HOLDING_COMPANY":
             _fail("ENGROH override did not select holding-company model")
@@ -164,7 +175,21 @@ def _assert_shape(data: dict, pilot: list[str], *, require_exact_pilot: bool = T
             _fail(f"{symbol}: invalid readiness status")
         if row.get("activation_status") != row.get("status"):
             _fail(f"{symbol}: activation status mismatch")
-        expected_outputs = ADAPTER_UNAVAILABLE_OUTPUT_STATUS if row.get("status") == "blocked_model_adapter_unavailable" else BLOCKED_OUTPUT_STATUS
+        if row.get("status") == "input_ready":
+            expected_outputs = OWNER_ASSUMPTION_OUTPUT_STATUS
+            if registry.get("selected_sector") != "CEMENT":
+                _fail(f"{symbol}: non-cement row became input-ready")
+            if row.get("qualified_period_count", 0) < REQUIRED_PERIOD_COUNT:
+                _fail(f"{symbol}: input-ready without three qualified periods")
+            gate = row.get("formal_engine_gate") or {}
+            if gate.get("status") != "blocked_pending_owner_approved_assumptions":
+                _fail(f"{symbol}: formal engine gate did not stay blocked on owner assumptions")
+            if not gate.get("historical_reference_cases_are_not_approved_assumptions"):
+                _fail(f"{symbol}: historical reference-case boundary missing")
+        elif row.get("status") == "blocked_model_adapter_unavailable":
+            expected_outputs = ADAPTER_UNAVAILABLE_OUTPUT_STATUS
+        else:
+            expected_outputs = BLOCKED_OUTPUT_STATUS
         if row.get("blocked_outputs") != expected_outputs:
             _fail(f"{symbol}: blocked outputs mismatch")
         if row.get("status") == "blocked_model_adapter_unavailable" and row.get("qualified_period_count") < REQUIRED_PERIOD_COUNT:
@@ -175,17 +200,19 @@ def _assert_shape(data: dict, pilot: list[str], *, require_exact_pilot: bool = T
 
 def _synthetic_contract_assertions() -> None:
     ready = readiness_row("MLCF", "Cement", _ready_facts(), {"qualification_queue": {"candidate_documents": []}})
-    if ready.get("status") != "blocked_model_adapter_unavailable" or ready.get("qualified_period_count") != 3:
-        _fail("synthetic history-qualified row did not block on adapter")
-    if ready.get("activation_status") != "blocked_model_adapter_unavailable":
-        _fail("synthetic history-qualified row activated numeric outputs")
+    if ready.get("status") != "input_ready" or ready.get("qualified_period_count") != 3:
+        _fail("synthetic history-qualified cement row did not become input-ready")
+    if ready.get("activation_status") != "input_ready":
+        _fail("synthetic history-qualified row did not activate input readiness")
+    if ready.get("blocked_outputs") != OWNER_ASSUMPTION_OUTPUT_STATUS:
+        _fail("synthetic input-ready row did not keep formal outputs blocked")
     if (ready.get("model_registry") or {}).get("registry_version") != "cement_v1":
         _fail("synthetic ready row selected wrong model")
-    if (ready.get("model_adapter") or {}).get("status") != "unavailable":
-        _fail("synthetic ready row did not expose unavailable adapter")
+    if (ready.get("model_adapter") or {}).get("status") != "available":
+        _fail("synthetic ready row did not expose the cement adapter")
     issuer_ready = readiness_row("MLCF", "Cement", _issuer_ready_facts(), {"qualification_queue": {"candidate_documents": []}})
-    if issuer_ready.get("status") != "blocked_model_adapter_unavailable" or issuer_ready.get("qualified_period_count") != 3:
-        _fail("qualified issuer binding did not become adapter-blocked")
+    if issuer_ready.get("status") != "input_ready" or issuer_ready.get("qualified_period_count") != 3:
+        _fail("qualified issuer binding did not become input-ready")
     tampered_issuer = _issuer_ready_facts()
     tampered_issuer[0] = {**tampered_issuer[0], "issuer_registry_binding": {
         **tampered_issuer[0]["issuer_registry_binding"], "content_sha256": "tampered",
@@ -208,7 +235,7 @@ def _synthetic_contract_assertions() -> None:
     for name, facts in cases.items():
         sector = "Technology & Communication" if name == "unsupported_sector" else "Cement"
         row = readiness_row("MLCF", sector, facts, {"qualification_queue": {"candidate_documents": []}})
-        if row.get("status") == "blocked_model_adapter_unavailable":
+        if row.get("status") == "input_ready":
             _fail(f"{name} did not fail closed")
 
 
@@ -231,16 +258,16 @@ def main() -> None:
             built_again = builder.build()
             if json.dumps(built, sort_keys=True, ensure_ascii=False, allow_nan=False) != json.dumps(built_again, sort_keys=True, ensure_ascii=False, allow_nan=False):
                 _fail("temp fixture builder output is not deterministic")
-            if built["as_of"] != "2026-01-02" or built["companies"]["MLCF"]["status"] != "blocked_model_adapter_unavailable":
-                _fail("temp fixture did not build adapter-blocked output")
+            if built["as_of"] != "2026-01-02" or built["companies"]["MLCF"]["status"] != "input_ready":
+                _fail("temp fixture did not build input-ready output")
             summary = built.get("summary") or {}
             if (
-                summary.get("ready_company_count") != 0
+                summary.get("ready_company_count") != 1
                 or summary.get("history_qualified_company_count") != 1
-                or summary.get("adapter_unavailable_company_count") != 1
-                or summary.get("blocked_company_count") != 1
+                or summary.get("adapter_unavailable_company_count") != 0
+                or summary.get("blocked_company_count") != 0
             ):
-                _fail("temp fixture summary did not count adapter-blocked output")
+                _fail("temp fixture summary did not count input-ready output")
             _assert_shape(built, ["MLCF"], require_exact_pilot=False)
         finally:
             builder.STATE, builder.OUT = original_state, original_out

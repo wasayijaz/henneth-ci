@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const index = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "index.html"), "utf8");
 const app = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "app.js"), "utf8");
 const css = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css"), "utf8");
 const slice = JSON.parse(fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json"), "utf8"));
@@ -13,6 +14,7 @@ const READINESS_STATUSES = new Set([
   "blocked_model_adapter_unavailable",
   "blocked_insufficient_qualified_history",
   "blocked_unsupported_sector_model",
+  "blocked_pending_owner_approved_assumptions",
   "input_ready",
 ]);
 const BLOCKED_READINESS_STATUSES = new Set([
@@ -84,6 +86,15 @@ try {
   assert(app.includes("unknown_no_authoritative_ownership_data") && app.includes("not ownership percentages"), "ownership unknown state");
   assert(app.includes("Company Brain domain") && app.includes("renderDomainRefs") && app.includes("brainObjectMap"), "Company Brain domain references");
   assert(app.includes("data-research-route") && app.includes("querySelectorAll(\"[data-research-route]\")"), "Research hub route binding");
+  assert(index.includes("iconify-icon") && index.includes("code.iconify.design") && app.includes("lucide:building-2") && app.includes("lucide:folder-open"), "utility rail and tree use external icon-library assets");
+  assert(!app.includes('aria-hidden="true">CI</span>') && !app.includes('aria-hidden="true">SIG</span>') && !app.includes('aria-hidden="true">WAT</span>') && !app.includes('aria-hidden="true">RES</span>'), "utility rail does not use letter labels as visible icons");
+  assert(!app.includes("icon-rail-brand"), "utility rail does not duplicate the header logo");
+  assert(index.includes("Henneth <em>Company Intelligence</em>") && !index.includes("Henneth <em>Desk</em>"), "header brand is Henneth Company Intelligence");
+  assert(index.includes("companyDrawerOpen") && index.includes("intelligenceDrawerOpen"), "mobile header drawer controls exist");
+  assert(app.includes("mobile-left-open") && app.includes("mobile-right-open") && app.includes('event.target.closest?.("#companyDrawerOpen")'), "mobile drawer controls use stable delegated app-level state");
+  assert(app.includes("closeMobileDrawers()") && app.includes("btn.onclick = () => pick(btn.dataset.symbol)") && app.includes("state.view = btn.dataset.view"), "company/tab selection closes mobile drawers");
+  assert(css.includes("scrollbar-color:transparent transparent") && css.includes(".detail:hover") && css.includes(".tree-panel:focus-within") && css.includes(".list:focus-within"), "panel scrollbars are hidden until hover or focus");
+  assert(css.includes(".workspace.mobile-left-open .rail") && css.includes(".workspace.mobile-right-open .tree-panel") && css.includes(".drawer-backdrop"), "mobile drawers are app-state controlled");
   assert(css.includes(".viewnav-shell") && css.includes(".research-tools") && css.includes(".company-domain-shell") && css.includes(".blocked-shell") && css.includes(".research-hub-grid"), "navigation/domain CSS");
   for (const row of slice.tickers) {
     assert(row.symbol && row.company_brain?.domains, `${row.symbol || "unknown"}: Company Brain available`);

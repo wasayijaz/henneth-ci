@@ -82,9 +82,10 @@ backend error is rendered.
     financial outcomes stay null with named missing inputs.
 14. `build_financial_model_inputs.py` builds offline v2 historical model inputs. Sector-driver
     registry coverage is qualitative routing coverage only; executable numerical adapters are tracked
-    separately and are currently unavailable for every sector. Companies with three aligned
-    consolidated annual observations report `blocked_model_adapter_unavailable`; truly incomplete
-    companies remain on the insufficient-history gate.
+    separately from that registry. The CEMENT adapter maps qualified reported actuals to the formal
+    engine input seam for input-ready companies; other sectors remain adapter-unavailable, and all
+    formal forecasts, valuations and market expectations still require explicit owner-approved
+    assumptions before computing.
 15. Document restaging is an explicit, owner-triggered two-batch workflow. The first batch is an
     allowlisted set of `psx:<digits>` IDs resolved from `research_index.json` and the exact pilot;
     transport uses a scoped run directory and metadata-only receipts. The owner-review manifest is
@@ -539,9 +540,10 @@ push refreshed data).
 - **Forecast readiness fails closed.** `build_forecast_readiness.py` accepts a financial period only
   when revenue, attributable PAT and basic EPS are aligned annual consolidated PKR facts from the
   current parser, have exact official provenance, no quality flags, and a publication date strictly
-  after period end. Three such periods qualify history only; they now report
-  `blocked_model_adapter_unavailable` until a separately registered executable numerical adapter
-  exists. The nine sector driver registries are qualitative routing coverage, not implemented models.
+  after period end. Three such periods plus the CEMENT adapter can mark the formal-engine input seam
+  ready; they do not approve revenue growth, net margin, exit P/E, net debt, forecasts, valuations or
+  market expectations. The nine sector driver registries are qualitative routing coverage, not
+  implemented numeric models.
 - **Causal foundations are an evidence resolver, not a causal model.**
   `build_causal_foundations.py` creates one categorical row for every existing driver edge and may
   attach only retained same-company official events and strict baseline-before-event study records.

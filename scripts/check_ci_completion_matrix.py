@@ -98,8 +98,14 @@ def _assert_conservative_statuses(matrix: dict) -> None:
         _fail("forecast readiness summary ready count mismatch")
     if history_qualified_count != len(history_qualified_symbols) or not history_qualified_symbols:
         _fail("forecast readiness summary must match at least one history-qualified company")
+    if any(
+        not all(str((row.get("downstream_status") or {}).get(key) or "").startswith("blocked")
+                for key in ("forecast", "valuation", "market_expectations", "numeric_impact"))
+        for row in companies.values()
+    ):
+        _fail("forecast readiness downstream outputs must remain blocked")
     if forecast_readiness.get("status") != "partial":
-        _fail("forecast readiness live-input row must be partial while adapters remain unavailable")
+        _fail("forecast readiness live-input row must be partial while formal outputs remain blocked")
     if not any(f"Real history-qualified company count is {history_qualified_count}" in blocker for blocker in forecast_readiness.get("blockers") or []):
         _fail("forecast readiness row did not record real readiness blocker")
     for row_id, row in (

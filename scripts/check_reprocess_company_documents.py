@@ -150,7 +150,7 @@ def _series_fact(doc_id: str, content_sha: str, line: str, period_end: str, raw:
         "fact_id": f"fact_{doc_id.replace(':', '_')}_{line}_{period_end}",
         "content_sha256": content_sha,
         "source_url": "https://dps.psx.com.pk/download/document/111.pdf",
-        "evidence": [{"page": 1, "text": f"{line} {raw}"}],
+        "evidence": [{"page": 1, "text": f"{line} {raw}", "source_url": "https://dps.psx.com.pk/download/document/111.pdf"}],
         "quality_flags": [],
     }
 
@@ -634,9 +634,12 @@ def main() -> int:
                                    and "legacy_extractor_not_model_eligible" in (f.get("quality_flags") or [])
                                    for f in legacy_rows)
         mlcf_model = model_payload["companies"]["MLCF"]
-        assert mlcf_model["status"] == "blocked_model_adapter_unavailable"
+        assert mlcf_model["status"] == "ready"
         assert (mlcf_model.get("model_registry") or {}).get("status") == "covered"
-        assert (mlcf_model.get("model_adapter") or {}).get("status") == "unavailable"
+        assert (mlcf_model.get("model_adapter") or {}).get("status") == "available"
+        assert (mlcf_model.get("model_adapter") or {}).get("selected_sector") == "CEMENT"
+        assert (mlcf_model.get("downstream_status") or {}).get("forecast") == "blocked_pending_owner_approved_assumptions"
+        assert (mlcf_model.get("downstream_status") or {}).get("valuation") == "blocked_pending_owner_approved_assumptions"
         assert {len(mlcf_model["observations"][line]) for line in
                 ("revenue", "profit_after_tax_attributable", "basic_eps")} == {3}
         assert mlcf_model["derived"]["revenue_growth_pct"]

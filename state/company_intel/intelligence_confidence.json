@@ -330,8 +330,8 @@
    "status": "assessed",
    "source_cluster_count": 1,
    "assessment_count": 1,
-   "aggregate_score": 43.5,
-   "aggregate_band": "low",
+   "aggregate_score": 57.0,
+   "aggregate_band": "medium",
    "aggregate_method": "mean_of_retained_cluster_assessments",
    "assessments": [
     {
@@ -340,8 +340,8 @@
      "source_cluster_id": "cluster_82b31911757fd2f836e1eaea",
      "assertion_key": "acquisition:pioneer cement limited:public_offer:2025-12-18",
      "cluster_assessment": "single_source",
-     "score": 43.5,
-     "band": "low",
+     "score": 57.0,
+     "band": "medium",
      "band_thresholds": {
       "low": {
        "min": 0,
@@ -398,16 +398,14 @@
       "financial_model_quality": {
        "weight": 15,
        "raw_facts": {
-        "status": "blocked_model_adapter_unavailable",
+        "status": "ready",
         "model_version": null,
         "observation_count": 9,
         "derived_count": 9,
-        "quality_flags": [
-         "blocked_model_adapter_unavailable"
-        ]
+        "quality_flags": []
        },
-       "normalized_score": 20,
-       "weighted_points": 3.0,
+       "normalized_score": 100,
+       "weighted_points": 15.0,
        "rationale": "Mapped from financial_model_inputs readiness; richer partial inputs can score 75, unsupported sectors score 35."
       },
       "peer_evidence": {
@@ -432,10 +430,10 @@
          "target",
          "modality"
         ],
-        "financial_model_status": "blocked_model_adapter_unavailable"
+        "financial_model_status": "ready"
        },
-       "normalized_score": 85,
-       "weighted_points": 8.5,
+       "normalized_score": 100,
+       "weighted_points": 10.0,
        "rationale": "Scores retained evidence, normalized proposition fields, and whether model inputs are at least partial."
       },
       "recency": {

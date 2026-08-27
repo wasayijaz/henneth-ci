@@ -468,10 +468,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -485,7 +485,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -1394,10 +1395,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -1411,7 +1412,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -2380,10 +2382,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -2397,7 +2399,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -2433,6 +2436,7 @@
       "missing_requirements": [
        "actual_basic_eps",
        "actual_profit_after_tax_attributable",
+       "actual_revenue",
        "approved_net_margin_pct",
        "approved_revenue_growth_pct",
        "financial_model_inputs_ready",
@@ -2478,6 +2482,7 @@
       "missing_requirements": [
        "actual_basic_eps",
        "actual_profit_after_tax_attributable",
+       "actual_revenue",
        "approved_exit_pe",
        "approved_net_debt",
        "approved_net_margin_pct",
@@ -2525,6 +2530,7 @@
       "missing_requirements": [
        "actual_basic_eps",
        "actual_profit_after_tax_attributable",
+       "actual_revenue",
        "approved_exit_pe",
        "approved_net_margin_pct",
        "approved_revenue_growth_pct",
@@ -2769,6 +2775,7 @@
      "missing_requirements": [
       "actual_basic_eps",
       "actual_profit_after_tax_attributable",
+      "actual_revenue",
       "approved_net_margin_pct",
       "approved_revenue_growth_pct",
       "financial_model_inputs_ready",
@@ -2796,6 +2803,7 @@
      "missing_requirements": [
       "actual_basic_eps",
       "actual_profit_after_tax_attributable",
+      "actual_revenue",
       "approved_exit_pe",
       "approved_net_debt",
       "approved_net_margin_pct",
@@ -2825,6 +2833,7 @@
      "missing_requirements": [
       "actual_basic_eps",
       "actual_profit_after_tax_attributable",
+      "actual_revenue",
       "approved_exit_pe",
       "approved_net_margin_pct",
       "approved_revenue_growth_pct",
@@ -4345,16 +4354,14 @@
      },
      "row_metadata": {
       "symbol": "DGKC",
-      "status": "blocked_model_adapter_unavailable",
+      "status": "ready",
       "downstream_status": {
-       "forecast": "blocked_model_adapter_unavailable",
-       "valuation": "blocked_model_adapter_unavailable",
-       "market_expectations": "blocked_model_adapter_unavailable",
-       "scenario_lab": "blocked_model_adapter_unavailable"
+       "forecast": "blocked_pending_owner_approved_assumptions",
+       "valuation": "blocked_pending_owner_approved_assumptions",
+       "market_expectations": "blocked_pending_owner_approved_assumptions",
+       "scenario_lab": "blocked_pending_owner_approved_assumptions"
       },
-      "quality_flags": [
-       "blocked_model_adapter_unavailable"
-      ]
+      "quality_flags": []
      }
     },
     "financial_evidence_reconciliation": {
@@ -4449,30 +4456,27 @@
      },
      "row_metadata": {
       "symbol": "DGKC",
-      "status": "blocked_model_adapter_unavailable",
-      "activation_status": "blocked_model_adapter_unavailable",
-      "missing_requirements": [
-       "executable_numerical_adapter"
-      ],
+      "status": "input_ready",
+      "activation_status": "input_ready",
+      "missing_requirements": [],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
-       "forecast": "blocked_model_adapter_unavailable",
-       "valuation": "blocked_model_adapter_unavailable",
-       "market_expectations": "blocked_model_adapter_unavailable",
-       "numeric_impact": "blocked_model_adapter_unavailable"
+       "forecast": "blocked_pending_owner_approved_assumptions",
+       "valuation": "blocked_pending_owner_approved_assumptions",
+       "market_expectations": "blocked_pending_owner_approved_assumptions",
+       "numeric_impact": "blocked_pending_owner_approved_assumptions"
       },
-      "quality_flags": [
-       "blocked_model_adapter_unavailable"
-      ],
+      "quality_flags": [],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -4507,9 +4511,7 @@
       "reason": "missing_source_gated_inputs",
       "missing_requirements": [
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct",
-       "financial_model_inputs_ready",
-       "forecast_readiness_input_ready"
+       "approved_revenue_growth_pct"
       ],
       "result": null,
       "provenance": [],
@@ -4552,9 +4554,7 @@
        "approved_exit_pe",
        "approved_net_debt",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct",
-       "financial_model_inputs_ready",
-       "forecast_readiness_input_ready"
+       "approved_revenue_growth_pct"
       ],
       "result": null,
       "provenance": [],
@@ -4596,9 +4596,7 @@
       "missing_requirements": [
        "approved_exit_pe",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct",
-       "financial_model_inputs_ready",
-       "forecast_readiness_input_ready"
+       "approved_revenue_growth_pct"
       ],
       "result": null,
       "provenance": [],
@@ -4837,9 +4835,7 @@
      "brain_path": "companies/DGKC/domains/forecasts",
      "missing_requirements": [
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct",
-      "financial_model_inputs_ready",
-      "forecast_readiness_input_ready"
+      "approved_revenue_growth_pct"
      ]
     },
     "formal_valuations": {
@@ -4864,9 +4860,7 @@
       "approved_exit_pe",
       "approved_net_debt",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct",
-      "financial_model_inputs_ready",
-      "forecast_readiness_input_ready"
+      "approved_revenue_growth_pct"
      ]
     },
     "market_expectations": {
@@ -4890,9 +4884,7 @@
      "missing_requirements": [
       "approved_exit_pe",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct",
-      "financial_model_inputs_ready",
-      "forecast_readiness_input_ready"
+      "approved_revenue_growth_pct"
      ]
     }
    },
@@ -5629,10 +5621,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -5646,7 +5638,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -6368,10 +6361,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -6385,7 +6378,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -7070,10 +7064,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -7087,7 +7081,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -7772,10 +7767,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -7789,7 +7784,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -8573,10 +8569,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -8590,7 +8586,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -9605,15 +9602,15 @@
      },
      "row_metadata": {
       "symbol": "LUCK",
-      "status": "blocked_model_adapter_unavailable",
+      "status": "partial",
       "downstream_status": {
-       "forecast": "blocked_model_adapter_unavailable",
-       "valuation": "blocked_model_adapter_unavailable",
-       "market_expectations": "blocked_model_adapter_unavailable",
-       "scenario_lab": "blocked_model_adapter_unavailable"
+       "forecast": "blocked_insufficient_qualified_history",
+       "valuation": "blocked_insufficient_qualified_history",
+       "market_expectations": "blocked_insufficient_qualified_history",
+       "scenario_lab": "blocked_insufficient_qualified_history"
       },
       "quality_flags": [
-       "blocked_model_adapter_unavailable"
+       "insufficient_three_year_consolidated_v2_history"
       ]
      }
     },
@@ -9715,10 +9712,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -9732,7 +9729,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -10607,10 +10605,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -10624,7 +10622,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -11334,10 +11333,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -11351,7 +11350,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -12287,16 +12287,14 @@
      },
      "row_metadata": {
       "symbol": "MLCF",
-      "status": "blocked_model_adapter_unavailable",
+      "status": "ready",
       "downstream_status": {
-       "forecast": "blocked_model_adapter_unavailable",
-       "valuation": "blocked_model_adapter_unavailable",
-       "market_expectations": "blocked_model_adapter_unavailable",
-       "scenario_lab": "blocked_model_adapter_unavailable"
+       "forecast": "blocked_pending_owner_approved_assumptions",
+       "valuation": "blocked_pending_owner_approved_assumptions",
+       "market_expectations": "blocked_pending_owner_approved_assumptions",
+       "scenario_lab": "blocked_pending_owner_approved_assumptions"
       },
-      "quality_flags": [
-       "blocked_model_adapter_unavailable"
-      ]
+      "quality_flags": []
      }
     },
     "financial_evidence_reconciliation": {
@@ -12391,30 +12389,27 @@
      },
      "row_metadata": {
       "symbol": "MLCF",
-      "status": "blocked_model_adapter_unavailable",
-      "activation_status": "blocked_model_adapter_unavailable",
-      "missing_requirements": [
-       "executable_numerical_adapter"
-      ],
+      "status": "input_ready",
+      "activation_status": "input_ready",
+      "missing_requirements": [],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
-       "forecast": "blocked_model_adapter_unavailable",
-       "valuation": "blocked_model_adapter_unavailable",
-       "market_expectations": "blocked_model_adapter_unavailable",
-       "numeric_impact": "blocked_model_adapter_unavailable"
+       "forecast": "blocked_pending_owner_approved_assumptions",
+       "valuation": "blocked_pending_owner_approved_assumptions",
+       "market_expectations": "blocked_pending_owner_approved_assumptions",
+       "numeric_impact": "blocked_pending_owner_approved_assumptions"
       },
-      "quality_flags": [
-       "blocked_model_adapter_unavailable"
-      ],
+      "quality_flags": [],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -12449,9 +12444,7 @@
       "reason": "missing_source_gated_inputs",
       "missing_requirements": [
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct",
-       "financial_model_inputs_ready",
-       "forecast_readiness_input_ready"
+       "approved_revenue_growth_pct"
       ],
       "result": null,
       "provenance": [],
@@ -12494,9 +12487,7 @@
        "approved_exit_pe",
        "approved_net_debt",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct",
-       "financial_model_inputs_ready",
-       "forecast_readiness_input_ready"
+       "approved_revenue_growth_pct"
       ],
       "result": null,
       "provenance": [],
@@ -12538,9 +12529,7 @@
       "missing_requirements": [
        "approved_exit_pe",
        "approved_net_margin_pct",
-       "approved_revenue_growth_pct",
-       "financial_model_inputs_ready",
-       "forecast_readiness_input_ready"
+       "approved_revenue_growth_pct"
       ],
       "result": null,
       "provenance": [],
@@ -12700,8 +12689,8 @@
       "status": "assessed",
       "source_cluster_count": 1,
       "assessment_count": 1,
-      "aggregate_score": 43.5,
-      "aggregate_band": "low"
+      "aggregate_score": 57.0,
+      "aggregate_band": "medium"
      }
     },
     "scenario_lab": {
@@ -12779,9 +12768,7 @@
      "brain_path": "companies/MLCF/domains/forecasts",
      "missing_requirements": [
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct",
-      "financial_model_inputs_ready",
-      "forecast_readiness_input_ready"
+      "approved_revenue_growth_pct"
      ]
     },
     "formal_valuations": {
@@ -12806,9 +12793,7 @@
       "approved_exit_pe",
       "approved_net_debt",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct",
-      "financial_model_inputs_ready",
-      "forecast_readiness_input_ready"
+      "approved_revenue_growth_pct"
      ]
     },
     "market_expectations": {
@@ -12832,9 +12817,7 @@
      "missing_requirements": [
       "approved_exit_pe",
       "approved_net_margin_pct",
-      "approved_revenue_growth_pct",
-      "financial_model_inputs_ready",
-      "forecast_readiness_input_ready"
+      "approved_revenue_growth_pct"
      ]
     }
    },
@@ -13178,10 +13161,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -13195,7 +13178,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -13880,10 +13864,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -13897,7 +13881,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -14582,10 +14567,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -14599,7 +14584,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -15330,10 +15316,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -15347,7 +15333,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -16045,10 +16032,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -16062,7 +16049,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -16747,10 +16735,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -16764,7 +16752,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
@@ -17678,10 +17667,10 @@
        "three_aligned_annual_revenue_pat_eps_periods"
       ],
       "policy": {
-       "forecasts": "blocked_until_qualified_history_and_executable_adapter",
-       "valuation": "blocked_until_qualified_history_and_executable_adapter",
-       "market_expectations": "blocked_until_qualified_history_and_executable_adapter",
-       "numeric_impact": "blocked_until_sourced_operands_and_implementation"
+       "forecasts": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "valuation": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "market_expectations": "blocked_until_qualified_history_executable_adapter_and_owner_approved_assumptions",
+       "numeric_impact": "blocked_until_owner_approved_forward_valuation_assumptions"
       },
       "contract_version": "forecast_readiness_contract_v1",
       "downstream_status": {
@@ -17695,7 +17684,8 @@
       ],
       "limitations": [
        "Sector driver coverage is qualitative registry coverage, not an implemented forecast or valuation model.",
-       "Executable numerical adapter availability is tracked separately and is currently unavailable for every registry.",
+       "The Cement executable adapter maps qualified historical actuals to the formal-engine input seam only.",
+       "Input readiness never generates or approves revenue growth, net margin, exit P/E, net debt, forecasts, valuations, or market expectations.",
        "Audit-only, conflicting, non-annual, non-consolidated, or weak-provenance facts cannot activate the gate."
       ]
      }
