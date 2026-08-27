@@ -112,6 +112,11 @@ STEPS = [
     "sector_macro.py",   # which macro drivers actually move each sector — measured, weekly cadence
     "sector_dossier.py", # deterministic evidence pack the weekly sector debate argues from
     "tv_crosscheck.py", "data_health.py", "compute_fairvalue.py", "build_signals.py",
+    # Decides whether the token-spending local AI checkpoint has anything material to do.
+    # Runs after its two inputs are current this cycle: build_ci_monitoring.py (the CI alerts)
+    # and data_health.py (state/health.json). Reads state only, writes
+    # state/checkpoint_trigger.json, never networks.
+    "build_checkpoint_trigger.py",
     # Desk Room deterministic layer (free): compile dossiers, rank the coverage queue,
     # resolve/score any due persona+broker calls. Agents read these; they never fetch.
     "fetch_research.py", "build_explainer.py",  # explainability layer (plain-English "at a glance")
