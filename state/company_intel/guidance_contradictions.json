@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "guidance_version": "guidance_contradictions_v2",
- "as_of": "2026-08-27T06:15:00+05:00",
+ "as_of": "2026-08-27T06:37:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -835,16 +835,43 @@
   },
   "MARI": {
    "symbol": "MARI",
-   "status": "no_guidance_objects",
+   "status": "available",
    "guidance_count": 0,
-   "risk_count": 0,
-   "object_count": 0,
+   "risk_count": 1,
+   "object_count": 1,
    "contradiction_count": 0,
-   "objects": [],
+   "objects": [
+    {
+     "guidance_id": "guidance_dd7a7c7ffa2d1a8ade05",
+     "symbol": "MARI",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "issuer:6735e9d35ffb61088d139964",
+      "source_url": "https://www.marienergies.com.pk/wp-content/uploads/2025/09/Annual-Report-2024.pdf",
+      "source": "Issuer website",
+      "page": 130,
+      "available_on": "2026-08-27T06:37:00+05:00",
+      "content_sha256": "68655d9042f601b17d8d14ef2061006a0a6268364c2504730c83f94420622818",
+      "evidence_sha256": null,
+      "text": "tained. d) There are no significant doubts regarding the company’s ability to continue as going concern. Mari Petroleum Company Limited Annual Integrated Report 2024 256 257"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    }
+   ],
    "contradictions": [],
-   "unknowns": [
-    "no_retained_official_evidence_with_strict_guidance_assertion_shape"
-   ]
+   "unknowns": []
   },
   "MEBL": {
    "symbol": "MEBL",

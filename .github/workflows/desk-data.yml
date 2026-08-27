@@ -44,6 +44,7 @@ jobs:
           # explicit no-op mode; neither value is available to the browser or committed state.
           HENNETH_CI_SUPABASE_URL: ${{ secrets.HENNETH_CI_SUPABASE_URL }}
           HENNETH_CI_SUPABASE_SERVICE_KEY: ${{ secrets.HENNETH_CI_SUPABASE_SERVICE_KEY }}
+          HENNETH_CI_OWNER_USER_ID: ${{ secrets.HENNETH_CI_OWNER_USER_ID }}
         run: python scripts/run_cloud.py
       - name: Publish if the data passes preflight (race-safe)
         run: |

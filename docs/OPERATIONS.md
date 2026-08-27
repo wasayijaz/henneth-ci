@@ -473,8 +473,8 @@ push refreshed data).
   never a direct client upsert — `saveProfile()` cannot touch them). New table
   `lifecycle_email_log` (service-role only, RLS on with zero policies) tracks per-user/per-key sends
   and is the idempotency guard for the cron.
-- **Dedicated CI archive and private theses.** The Henneth CI Supabase project is provisioned with
-  `company_theses`, five append-only archive tables, and a nonpublic PDF bucket; its receipt is
+- **Dedicated CI archive, private theses and formal-owner inputs.** The Henneth CI Supabase project is provisioned with
+  `company_theses`, `company_financial_assumptions`, five append-only archive tables, and a nonpublic PDF bucket; its receipt is
   `state/company_intel/supabase_archive_receipt.json` and its reviewable contract is
   `docs/henneth_ci_archive.sql`. Archive tables have RLS enabled with no browser grants or policies;
   only the cloud-held service credential may write. The browser CI deployment is deliberately not
@@ -483,7 +483,11 @@ push refreshed data).
   deletion requires confirmation. The free cloud pipeline runs `supabase_ci_store.py` after the
   private CI slice, retaining metadata, facts, snapshots and ready current-run official PDFs. It
   dry-runs without its two cloud secrets and treats unavailable transient PDF bytes as a safe skip.
-  Any fair value is private user input, never Henneth output.
+  Any fair value is private user input, never Henneth output. The formal-assumption table is an
+  append-only owner input ledger for growth, margin, exit P/E, and net debt. Its server-only
+  importer reads only approved rows for `HENNETH_CI_OWNER_USER_ID`, uses approval date as the
+  earliest eligible date, and does nothing until that ID plus the CI URL and service-key secrets
+  are configured in the cloud.
 - **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
   after guidance, thesis and confidence state and before the CI slice. Its original thesis records
   remain limited to retained same-symbol official events that are strictly later than the latest

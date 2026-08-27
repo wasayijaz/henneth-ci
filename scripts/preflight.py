@@ -859,6 +859,18 @@ def check_financial_engine_assumptions():
     except Exception as e:
         fail(f"check_financial_engine_assumptions.py did not run — {e}")
 
+def check_owner_financial_assumptions():
+    path = os.path.join(ROOT, "scripts", "check_owner_financial_assumptions.py")
+    if not os.path.exists(path):
+        fail("check_owner_financial_assumptions.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("owner financial assumptions check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_owner_financial_assumptions.py did not run — {e}")
+
 def check_formal_financial_engines():
     path = os.path.join(ROOT, "scripts", "check_formal_financial_engines.py")
     if not os.path.exists(path):
@@ -1206,6 +1218,7 @@ def main():
     check_financial_model_inputs()
     check_financial_coverage()
     check_forecast_contract()
+    check_owner_financial_assumptions()
     check_financial_engine_assumptions()
     check_formal_financial_engines()
     check_ci_reference_cases()

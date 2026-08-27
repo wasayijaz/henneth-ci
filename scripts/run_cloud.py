@@ -40,6 +40,10 @@ STEPS = [
     "build_financial_model_inputs.py",
     "build_financial_coverage.py",
     "build_forecast_readiness.py",
+    # Server-only owner-approved formal engine assumptions from the private Henneth CI
+    # Supabase table. Inert without CI Supabase secrets; generated/historical inputs below
+    # preserve these imported rows but never approve them themselves.
+    "import_owner_financial_assumptions.py",
     # Deterministic market operands for the formal engines. Emits only objective current_price
     # and shares_out records from retained dated state; forward assumptions remain owner-approved.
     "build_financial_engine_assumptions.py",
@@ -132,6 +136,7 @@ STEPS = [
     "check_ci_reprocess_manifest.py",
     "check_ownership_source_manifest.py",
     "check_forecast_contract.py",
+    "check_owner_financial_assumptions.py",
     "check_financial_engine_assumptions.py",
     "check_formal_financial_engines.py",
     "check_financial_evidence_reconciliation.py",

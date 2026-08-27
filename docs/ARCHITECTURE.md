@@ -233,6 +233,10 @@ Applied to the dedicated Henneth CI project:
   It grants authenticated CRUD only behind four owner predicates, revokes public/anonymous access,
   bounds every input and labels any fair-value assumption as private user input. The CI browser is
   not cut over until its owner account and owner-id deployment configuration have been migrated.
+- `docs/company_financial_assumptions.sql` — append-only private owner input for the four explicit
+  formal financial-engine operands. The server-only importer filters to the configured CI owner,
+  accepts only approved/source-labelled/dated rows, and makes approval date the first eligible
+  date; reference cases and browser entries cannot activate a formal engine by themselves.
 - `docs/henneth_ci_archive.sql` — durable document, fact, snapshot and PDF-object archive. Archive
   tables have no anon/authenticated grants and no RLS policies; a server-only sync credential is the
   sole writer. This preserves the `state/` seam as the publish source of truth while retaining a

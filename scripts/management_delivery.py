@@ -76,6 +76,17 @@ def _iso_time(value: Any) -> str | None:
     return parsed.isoformat() if parsed else None
 
 
+def _latest_as_of(*states: dict[str, Any]) -> str:
+    """Return the newest explicit source cutoff used by this product."""
+    candidates = []
+    for state in states:
+        raw = state.get("as_of") if isinstance(state, dict) else None
+        parsed = _parse_time(raw)
+        if parsed and isinstance(raw, str):
+            candidates.append((parsed, raw))
+    return max(candidates, key=lambda item: item[0])[1] if candidates else "unknown"
+
+
 def _event_available_at(event: dict[str, Any]) -> str | None:
     for evidence in event.get("evidence") or []:
         if isinstance(evidence, dict):
@@ -426,7 +437,9 @@ def build_management_delivery(
     return {
         "schema_version": SCHEMA_VERSION,
         "delivery_version": DELIVERY_VERSION,
-        "as_of": thesis_state.get("as_of") or signal_state.get("as_of") or confidence_state.get("as_of") or "unknown",
+        "as_of": _latest_as_of(
+            thesis_state, signal_state, operating_events, confidence_state, guidance_state
+        ),
         "pilot_symbols": symbols,
         "source": {
             "thesis_monitoring": "state/company_intel/thesis_monitoring.json",

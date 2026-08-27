@@ -207,6 +207,7 @@ def _minimal_fixture():
     }
     confidence = {"companies": {"TST": {"assessments": [{"confidence_id": "confidence_1", "source_cluster_id": "cluster_1", "band": "medium"}]}}}
     guidance = {
+        "as_of": "2026-08-26T00:00:00+05:00",
         "guidance_version": "guidance_contradictions_v1",
         "companies": {
             "TST": {
@@ -276,6 +277,8 @@ def _adversarial(thesis_state: dict, signal_state: dict, operating_events: dict,
 
     thesis, signal, confidence, guidance = _minimal_fixture()
     fixture = build_management_delivery(thesis, signal, {"companies": {"TST": {"events": []}}}, confidence, guidance)
+    if fixture.get("as_of") != guidance["as_of"]:
+        _fail("newer guidance cutoff was not promoted to the management-delivery cutoff")
     if fixture["companies"]["TST"]["guidance_records"][0]["status"] != "not_observed":
         _fail("single guidance object should not confirm itself")
     contradicted_guidance = copy.deepcopy(guidance)

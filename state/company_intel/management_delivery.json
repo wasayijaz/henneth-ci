@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "delivery_version": "management_delivery_v2",
- "as_of": "2026-08-27T06:15:00+05:00",
+ "as_of": "2026-08-27T06:37:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -1406,11 +1406,56 @@
    "status": "no_active_thesis",
    "active_thesis_count": 0,
    "delivery_record_count": 0,
-   "guidance_status": "blocked_no_guidance_objects",
-   "guidance_object_count": 0,
-   "guidance_record_count": 0,
+   "guidance_status": "available",
+   "guidance_object_count": 1,
+   "guidance_record_count": 1,
    "records": [],
-   "guidance_records": []
+   "guidance_records": [
+    {
+     "guidance_record_id": "guidance_delivery_238e8c5d19b7b8d3d3cf",
+     "symbol": "MARI",
+     "guidance_id": "guidance_dd7a7c7ffa2d1a8ade05",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "status": "not_observed",
+     "scorecard_type": "categorical_status_only",
+     "source_guidance": {
+      "available_at": "2026-08-27T06:37:00+05:00",
+      "statement": "going concern",
+      "domain": "risks",
+      "modality": "risk_present",
+      "evidence": [
+       {
+        "guidance_id": "guidance_dd7a7c7ffa2d1a8ade05",
+        "document_id": "issuer:6735e9d35ffb61088d139964",
+        "source_url": "https://www.marienergies.com.pk/wp-content/uploads/2025/09/Annual-Report-2024.pdf",
+        "page": 130,
+        "content_sha256": "68655d9042f601b17d8d14ef2061006a0a6268364c2504730c83f94420622818",
+        "evidence_sha256": null,
+        "source": "Issuer website",
+        "available_on": "2026-08-27T06:37:00+05:00"
+       }
+      ]
+     },
+     "matched_guidance": null,
+     "guidance_review": {
+      "reviewed_object_count": 1,
+      "candidate_object_count": 0,
+      "rejected_counts": {
+       "not_first_class_guidance": 1,
+       "not_strictly_later": 0,
+       "self_confirming_source": 0
+      },
+      "match_rule": "same_company_first_class_guidance_strictly_later_non_self_source"
+     },
+     "reasons": [
+      "no later first-class guidance object matched the exact assertion or conflict key"
+     ],
+     "limitations": [
+      "Loose same-company guidance proximity is deliberately ignored."
+     ]
+    }
+   ]
   },
   "MEBL": {
    "symbol": "MEBL",
