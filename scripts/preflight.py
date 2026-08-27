@@ -916,6 +916,18 @@ def check_financial_evidence_reconciliation():
     except Exception as e:
         fail(f"check_financial_evidence_reconciliation.py did not run — {e}")
 
+def check_earnings_bridges():
+    path = os.path.join(ROOT, "scripts", "check_earnings_bridges.py")
+    if not os.path.exists(path):
+        fail("check_earnings_bridges.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("earnings bridges check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_earnings_bridges.py did not run — {e}")
+
 def check_forecast_readiness_ui():
     path = os.path.join(ROOT, "scripts", "check_forecast_readiness_ui.mjs")
     if not os.path.exists(path):
@@ -1246,6 +1258,7 @@ def main():
     check_formal_financial_engines()
     check_ci_reference_cases()
     check_financial_evidence_reconciliation()
+    check_earnings_bridges()
     check_forecast_readiness_ui()
     check_financial_coverage_ui()
     check_historical_reference_cases_ui()

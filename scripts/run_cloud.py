@@ -51,6 +51,8 @@ STEPS = [
     # dated assumptions exist. Must precede the CI audit and generated private slice.
     "build_formal_financial_engines.py",
     "build_financial_evidence_reconciliation.py",
+    # Historical reported deltas only; this does not enter the formal-engine path.
+    "build_earnings_bridges.py",
     # Audit-only retained cement operating observations. This is evidence for review only:
     # it never activates financial_model_inputs, forecasts, valuations, or market expectations.
     "build_cement_operating_series.py",
@@ -143,6 +145,7 @@ STEPS = [
     "check_financial_engine_assumptions.py",
     "check_formal_financial_engines.py",
     "check_financial_evidence_reconciliation.py",
+    "check_earnings_bridges.py",
     "check_cement_operating_series.py",
     "check_intelligence_confidence.py",
     "check_thesis_monitoring.py",
