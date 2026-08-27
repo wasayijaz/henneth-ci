@@ -29,8 +29,8 @@
   "overall_status": "blocked",
   "requirement_count": 68,
   "counts": {
-   "complete": 58,
-   "partial": 6,
+   "complete": 59,
+   "partial": 5,
    "blocked": 4,
    "not_started": 0,
    "unknown": 0
@@ -66,6 +66,7 @@
    "event_study_horizons",
    "event_study_analogues",
    "event_study_checker",
+   "conditional_benchmark_state",
    "causal_foundation_state",
    "causal_foundation_policy",
    "causal_foundation_checker",
@@ -870,7 +871,7 @@
   {
    "id": "conditional_benchmark_state",
    "title": "Conditional benchmark state exists for every pilot company",
-   "status": "partial",
+   "status": "complete",
    "evidence": [
     {
      "label": "conditional benchmarks",
@@ -879,15 +880,15 @@
      "detail": "20 company rows"
     },
     {
-     "label": "benchmark count",
+     "label": "dated benchmark count",
      "path": "state/company_intel/conditional_benchmarks.json",
-     "ok": false,
-     "detail": "21 benchmarks"
+     "ok": true,
+     "detail": "21/21 dated events; 42 undated events excluded by no-lookahead"
     }
    ],
    "blockers": [],
    "next_required_evidence": [
-    "Keep benchmark rows aligned one-for-one to retained operating events."
+    "Keep benchmark rows aligned one-for-one to dated retained operating events; undated evidence stays excluded."
    ]
   },
   {

@@ -391,6 +391,8 @@ def build(write: bool = True) -> dict[str, Any]:
     adapter_unavailable_company_count = int((forecast_readiness.get("summary") or {}).get("adapter_unavailable_company_count") or 0)
     qualified_fact_company_count = int((forecast_readiness.get("summary") or {}).get("qualified_fact_company_count") or 0)
     event_count = sum(len(((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []) for symbol in pilot)
+    dated_event_count = sum(1 for symbol in pilot for event in (((operating_events.get("companies") or {}).get(symbol) or {}).get("events") or []) if event.get("effective_date"))
+    benchmark_count = sum(int(((conditional_benchmarks.get("companies") or {}).get(symbol) or {}).get("benchmark_count") or 0) for symbol in pilot)
     causal_row_count = sum(len(((causal_foundations.get("companies") or {}).get(symbol) or {}).get("causal_rows") or []) for symbol in pilot)
     guidance_object_count = sum(int(((guidance.get("companies") or {}).get(symbol) or {}).get("object_count") or 0) for symbol in pilot)
     active_thesis_count = int((management_delivery.get("summary") or {}).get("active_thesis_count") or 0)
@@ -698,9 +700,9 @@ def build(write: bool = True) -> dict[str, Any]:
             "Conditional benchmark state exists for every pilot company",
             [
                 _state("conditional benchmarks", "state/company_intel/conditional_benchmarks.json", _exact_pilot(conditional_benchmarks, pilot), f"{_company_count(conditional_benchmarks)} company rows"),
-                _state("benchmark count", "state/company_intel/conditional_benchmarks.json", sum(int(((conditional_benchmarks.get('companies') or {}).get(s) or {}).get('benchmark_count') or 0) for s in pilot) == event_count, f"{sum(int(((conditional_benchmarks.get('companies') or {}).get(s) or {}).get('benchmark_count') or 0) for s in pilot)} benchmarks"),
+                _state("dated benchmark count", "state/company_intel/conditional_benchmarks.json", benchmark_count == dated_event_count, f"{benchmark_count}/{dated_event_count} dated events; {event_count - dated_event_count} undated events excluded by no-lookahead"),
             ],
-            ["Keep benchmark rows aligned one-for-one to retained operating events."],
+            ["Keep benchmark rows aligned one-for-one to dated retained operating events; undated evidence stays excluded."],
         ),
         _row(
             "conditional_benchmark_strict_candidates",
