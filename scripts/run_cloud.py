@@ -44,6 +44,7 @@ STEPS = [
     # restages or changes an execution allowlist.
     "build_financial_statement_v2_candidate_queue.py",
     "build_forecast_readiness.py",
+    "build_financial_reprocess_blockers.py",
     # Server-only owner-approved formal engine assumptions from the private Henneth CI
     # Supabase table. Inert without CI Supabase secrets; generated/historical inputs below
     # preserve these imported rows but never approve them themselves.
@@ -148,6 +149,7 @@ STEPS = [
     "check_financial_coverage.py",
     "check_financial_statement_v2_candidate_queue.py",
     "check_ci_reprocess_manifest.py",
+    "check_financial_reprocess_blockers.py",
     "check_ownership_source_manifest.py",
     "check_forecast_contract.py",
     "check_owner_financial_assumptions.py",

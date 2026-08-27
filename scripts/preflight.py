@@ -892,6 +892,18 @@ def check_financial_statement_v2_candidate_queue():
     except Exception as e:
         fail(f"check_financial_statement_v2_candidate_queue.py did not run — {e}")
 
+def check_financial_reprocess_blockers():
+    path = os.path.join(ROOT, "scripts", "check_financial_reprocess_blockers.py")
+    if not os.path.exists(path):
+        fail("check_financial_reprocess_blockers.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("financial reprocess blockers check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_financial_reprocess_blockers.py did not run — {e}")
+
 def check_forecast_contract():
     path = os.path.join(ROOT, "scripts", "check_forecast_contract.py")
     if not os.path.exists(path):
@@ -1316,6 +1328,7 @@ def main():
     check_cement_operating_series_ui()
     check_financial_coverage()
     check_financial_statement_v2_candidate_queue()
+    check_financial_reprocess_blockers()
     check_forecast_contract()
     check_owner_financial_assumptions()
     check_financial_engine_assumptions()
