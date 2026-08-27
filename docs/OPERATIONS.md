@@ -123,6 +123,12 @@ backend error is rendered.
     categorical healthy/degraded/stale/unknown status and source-linked alerts. A page needs a prior
     retained hash before it is called changed; degraded sources are never treated as fresh; missing
     change activity does not turn an old source healthy.
+21a. `build_event_review_windows.py` adds a read-only priority layer to that monitoring path. It
+    retains known calendar rows with their supplied confirmation status, derives an expected results
+    window only from a stable, retained past earnings cadence, and emits a five-day review range.
+    It never schedules an agent, fetches a provider, predicts a filing, or creates an investment
+    conclusion. Forward calendar dates are explicitly prospective review metadata rather than
+    observed facts, and remain distinguishable from dated source evidence.
 22. `build_financial_evidence_reconciliation.py` creates a separate financial evidence ledger from
     retained series, coverage, model-input and readiness state. It does not parse or fetch a filing,
     promote audit-only facts, choose through conflicts, or activate a forecast. Eligibility requires

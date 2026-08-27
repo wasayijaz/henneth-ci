@@ -827,6 +827,7 @@ def build():
     peer_registry = load_json(STATE / "company_intel" / "peer_registry.json", {"companies": {}})
     scenario_lab = load_json(STATE / "company_intel" / "scenario_lab.json", {"companies": {}})
     company_brains = load_json(STATE / "company_intel" / "company_brains.json", {"companies": {}})
+    event_review_windows = load_json(STATE / "company_intel" / "event_review_windows.json", {"companies": {}})
     completion_matrix = load_json(STATE / "company_intel" / "completion_matrix.json", {})
     financial_forecasts = load_json(STATE / "company_intel" / "financial_forecasts.json", {"companies": {}})
     formal_valuations = load_json(STATE / "company_intel" / "formal_valuations.json", {"companies": {}})
@@ -967,6 +968,11 @@ def build():
             "identity": {"symbol": sym}, "domains": {}, "intelligence_objects": [],
             "timeline": [], "coverage": {"object_count": 0},
         }
+        event_review = event_review_windows.get("companies", {}).get(sym) or {
+            "symbol": sym, "as_of": None, "known_events": [],
+            "expected_reporting_window": {"status": "unknown", "reason": "event_review_windows_state_missing", "historical_dates": []},
+            "review_windows": [],
+        }
         financial_forecast_row = _formal_engine_product(financial_forecasts, sym, "financial_forecasts")
         formal_valuation_row = _formal_engine_product(formal_valuations, sym, "formal_valuations")
         market_expectation_row = _formal_engine_product(market_expectations, sym, "market_expectations")
@@ -1045,6 +1051,7 @@ def build():
             "peer_registry": peer_registry_row,
             "scenario_lab": scenario_lab_row,
             "company_brain": company_brain,
+            "event_review_windows": event_review,
             "financial_forecasts": financial_forecast_row,
             "formal_valuations": formal_valuation_row,
             "market_expectations": market_expectation_row,
@@ -1117,6 +1124,7 @@ def build():
             "formal_valuations": _formal_engine_meta(formal_valuations),
             "market_expectations": _formal_engine_meta(market_expectations),
             "historical_reference_cases": _reference_case_meta(financial_engine_assumptions, source_cutoff, rows),
+            "event_review_windows": event_review_windows.get("meta") or {"count": len(rows), "status": "unknown"},
             "financial_engine_assumption_gaps": _assumption_gap_meta(financial_engine_assumptions),
             "private_thesis_storage": _private_thesis_storage_meta(private_thesis_receipt),
             "note": "Private company-intelligence slice. Research, not advice. No execution or order path.",

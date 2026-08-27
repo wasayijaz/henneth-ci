@@ -14,7 +14,7 @@ import uuid
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_owner_financial_assumption_handoff import KIND, OUT, TARGET_SYMBOLS, build
-from import_owner_financial_assumptions import ALLOWED_METRICS
+from import_owner_financial_assumptions import ALLOWED_METRICS, STRICT_MINIMUM_METRICS
 from psx_data import load_json
 
 
@@ -162,7 +162,7 @@ def validate_draft(row: dict[str, Any], manifest: dict[str, Any]) -> str | None:
     if value is None:
         return "non_finite_value"
     unit, minimum, maximum = ALLOWED_METRICS[metric]
-    if metric == "exit_pe":
+    if metric in STRICT_MINIMUM_METRICS:
         in_range = minimum < value <= maximum
     else:
         in_range = minimum <= value <= maximum

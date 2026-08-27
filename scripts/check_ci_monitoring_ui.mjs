@@ -27,6 +27,18 @@ try {
   for (const token of ["r.monitoring", "status_reason", "latest_source_at", "latest_change_at", "latest_event_at", "source_health", "activity", "alerts", "Unavailable: the CI slice has not emitted", "does not calculate status"]) {
     assert(block.includes(token), `monitoring renderer missing ${token}`);
   }
+  assert(APP.includes("${renderCiEventWindows(r)}"), "CI monitoring view must include event-window extension");
+  const windowBlock = renderer("renderCiEventWindows", "renderCiMonitoring");
+  for (const token of ["r.event_review_windows", "row.event_review_windows", "known_events", "confirmed_events", "expected_reporting_windows", "review_windows", "does not schedule AI tasks", "infer a filing", "Known retained calendar events", "Conservative expected reporting windows", "3-5-day intensified deterministic review window"]) {
+    assert(windowBlock.includes(token), `event-window renderer missing ${token}`);
+  }
+  assert(windowBlock.includes("Unavailable: the CI slice has not emitted row.event_review_windows"), "event-window renderer must expose unknown missing state");
+  assert(windowBlock.includes("No event-window object was emitted"), "event-window renderer must show emitted-object absence");
+  const cardBlock = renderer("renderEventWindowCard", "renderEventWindowGroup");
+  assert(cardBlock.includes("Event date") && cardBlock.includes("Window start") && cardBlock.includes("Window end"), "event-window cards must display emitted event/review dates");
+  const sourceBlock = renderer("renderEventWindowSource", "renderEventWindowCard");
+  assert(sourceBlock.includes("safeHref"), "event-window sources must use safe source links");
+  assert(!/new Date|Date\.now|setTimeout|setInterval|fetch\(|\.sort\(|\.filter\(|\.find\(|\.reduce\(|\.match\(/.test(windowBlock), "event-window renderer must not infer dates, schedule work, fetch, or transform emitted state");
   const alertBlock = renderer("renderCiMonitoringAlert", "renderThesisCard");
   assert(alertBlock.includes("safeHref") && alertBlock.includes("source.source_url"), "monitoring alert renderer must use safe source links");
   assert(!/filter\(|find\(|reduce\(|match\(/.test(block), "monitoring renderer must not infer, filter, or match backend monitoring state");

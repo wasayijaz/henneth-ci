@@ -22,6 +22,7 @@ from formal_financial_engines import approved_records
 
 SQL = ROOT / "docs" / "company_financial_assumptions.sql"
 HARDENING_SQL = ROOT / "docs" / "company_financial_assumptions_insert_hardening.sql"
+MARGIN_HARDENING_SQL = ROOT / "docs" / "company_financial_assumptions_margin_hardening.sql"
 
 
 def fail(message: str) -> None:
@@ -39,6 +40,10 @@ def sql_text() -> str:
 
 def hardening_sql_text() -> str:
     return HARDENING_SQL.read_text(encoding="utf-8")
+
+
+def margin_hardening_sql_text() -> str:
+    return MARGIN_HARDENING_SQL.read_text(encoding="utf-8")
 
 
 def assert_sql_contract() -> None:
@@ -87,6 +92,26 @@ def assert_sql_hardening_contract() -> None:
     for forbidden in ("security definer", "grant update", "grant delete", "to anon", "approved is true"):
         if forbidden in lower:
             fail(f"SQL hardening contains forbidden marker: {forbidden}")
+
+
+def assert_sql_margin_hardening_contract() -> None:
+    text = margin_hardening_sql_text()
+    lower = " ".join(text.lower().split())
+    required = [
+        "reference-only sql: this file is not applied by the desk",
+        "alter table public.company_financial_assumptions",
+        "drop constraint if exists company_financial_assumptions_value_check",
+        "metric = 'revenue_growth_pct' and value > -100 and value <= 500",
+        "metric = 'net_margin_pct' and value > 0 and value <= 100",
+        "metric = 'exit_pe' and value > 0 and value <= 200",
+        "metric = 'net_debt' and value >= -10000000000000 and value <= 10000000000000",
+    ]
+    for marker in required:
+        if marker not in lower:
+            fail(f"SQL margin hardening marker missing: {marker}")
+    for forbidden in ("security definer", "grant update", "grant delete", "to anon"):
+        if forbidden in lower:
+            fail(f"SQL margin hardening contains forbidden marker: {forbidden}")
 
 
 def sample_state(root: Path, existing: list[dict] | None = None) -> Path:
@@ -164,6 +189,7 @@ def assert_importer_contract() -> None:
             "source": {"id": "manual:close", "label": "manual close", "path": "state/history/MLCF.json", "available_on": "2024-03-01"},
         }
         out = sample_state(root, [stale, owner_manual])
+        bad_margin = row("bad-margin", "net_margin_pct", -1.0)
         rows = [
             row("growth-old", "revenue_growth_pct", 5.0, available_on="2024-02-01"),
             row("growth-new", "revenue_growth_pct", 7.0, available_on="2024-03-01"),
@@ -172,6 +198,7 @@ def assert_importer_contract() -> None:
             row("debt", "net_debt", -100.0),
             row("unapproved", "exit_pe", 8.0, approved=False),
             row("future", "net_margin_pct", 14.0, available_on="2024-03-03"),
+            bad_margin,
             {**row("bad-url", "exit_pe", 9.0), "source_url": "javascript:alert(1)"},
             row("bad-symbol", "exit_pe", 9.0, symbol="ZZZZ"),
         ]
@@ -203,6 +230,8 @@ def assert_importer_contract() -> None:
             fail("unapproved row entered imported state")
         if result["rejected"].get("not_approved") != 1 or result["rejected"].get("available_on_after_state_cutoff") != 1:
             fail(f"expected rejection counters missing: {result['rejected']}")
+        if result["rejected"].get("value_or_unit_out_of_contract") != 1:
+            fail(f"non-positive net margin was not rejected: {result['rejected']}")
 
 
 def assert_missing_config_noop() -> None:
@@ -241,10 +270,12 @@ def assert_approval_handoff_contract() -> None:
         good_id = "22222222-2222-4222-8222-222222222222"
         already_approved_id = "33333333-3333-4333-8333-333333333333"
         wrong_owner_id = "44444444-4444-4444-8444-444444444444"
+        bad_margin_id = "55555555-5555-4555-8555-555555555555"
         remote = {
             good_id: draft(good_id, "exit_pe", 6.5),
             already_approved_id: {**draft(already_approved_id, "net_margin_pct", 11.0), "approved": True},
-            wrong_owner_id: draft(wrong_owner_id, "net_debt", 100.0, user_id="55555555-5555-4555-8555-555555555555"),
+            wrong_owner_id: draft(wrong_owner_id, "net_debt", 100.0, user_id="66666666-6666-4666-8666-666666666666"),
+            bad_margin_id: draft(bad_margin_id, "net_margin_pct", -1.0),
         }
         inserted: list[dict] = []
 
@@ -259,7 +290,7 @@ def assert_approval_handoff_contract() -> None:
         stdout = io.StringIO()
         with contextlib.redirect_stdout(stdout):
             result = approver.run(
-                [good_id, already_approved_id, wrong_owner_id, "not-a-uuid"],
+                [good_id, already_approved_id, wrong_owner_id, bad_margin_id, "not-a-uuid"],
                 state_dir=root,
                 env={
                     importer.ENV_URL: "https://example.supabase.co",
@@ -287,6 +318,8 @@ def assert_approval_handoff_contract() -> None:
             fail(f"already-approved draft was not rejected: {result['rejected']}")
         if result["rejected"].get("row_not_owned_by_configured_owner") != 1:
             fail(f"wrong-owner draft was not rejected: {result['rejected']}")
+        if result["rejected"].get("value_or_unit_out_of_contract") != 1:
+            fail(f"non-positive margin draft was not rejected before approval: {result['rejected']}")
         if result["rejected"].get("invalid_row_id") != 1:
             fail(f"invalid row id was not rejected: {result['rejected']}")
 
@@ -335,6 +368,7 @@ def assert_approval_not_automated() -> None:
 def main() -> None:
     assert_sql_contract()
     assert_sql_hardening_contract()
+    assert_sql_margin_hardening_contract()
     assert_importer_contract()
     assert_approval_handoff_contract()
     assert_approval_missing_config_noop_and_dry_run()

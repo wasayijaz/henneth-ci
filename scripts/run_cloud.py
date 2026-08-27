@@ -133,6 +133,9 @@ STEPS = [
     "build_causal_foundations.py",
     "build_company_scenario_lab.py",
     "build_company_brains.py",
+    # Deterministic low-token event metadata: known calendar items plus conservative
+    # reporting windows derived only from retained past cadence.
+    "build_event_review_windows.py",
     "build_ownership_source_manifest.py",  # review metadata only; never activates ownership facts
     "build_ci_completion_matrix.py",
     "build_ci_slice.py",
@@ -163,6 +166,7 @@ STEPS = [
     "check_peer_registry.py",
     "check_company_scenario_lab.py",
     "check_company_brains.py",
+    "check_event_review_windows.py",
     "check_financial_model_inputs.py",
     "check_event_studies.py",
     "check_operating_intelligence.py",

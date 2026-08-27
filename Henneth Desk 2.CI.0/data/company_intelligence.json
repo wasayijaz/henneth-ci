@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-08-27 22:28",
+  "built": "2026-08-27 22:49",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
@@ -136,6 +136,13 @@
     "company_with_reference_cases_count": 2,
     "reference_case_count": 4
    }
+  },
+  "event_review_windows": {
+   "schema_version": 1,
+   "as_of": "2026-08-27",
+   "count": 20,
+   "source": "state/earnings_calendar.json + state/company_event_ledger.json",
+   "policy": "Deterministic review metadata only; no scheduled tasks, external calls, AI prompts, forecasts, advice, or auto actions."
   },
   "financial_engine_assumption_gaps": {
    "schema_version": 1,
@@ -14184,6 +14191,26 @@
      "object_count": 16
     }
    },
+   "event_review_windows": {
+    "symbol": "MLCF",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "past_earnings_cadence_not_stable",
+     "historical_dates": [
+      "2025-10-27",
+      "2025-12-18",
+      "2026-03-02",
+      "2026-04-28"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "past_earnings_cadence_not_stable"
+   },
    "financial_forecasts": {
     "symbol": "MLCF",
     "status": "blocked",
@@ -19381,6 +19408,54 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "OGDC",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:a0bae68f0d6f2617",
+      "event_type": "results",
+      "date": "2026-10-28",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/OGDC/",
+      "window": {
+       "start": "2026-10-26",
+       "end": "2026-10-30",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2025-09-23",
+      "2025-10-29",
+      "2026-04-29"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-10-26",
+      "end": "2026-10-30",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-10-28",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/OGDC/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
    },
    "financial_forecasts": {
     "symbol": "OGDC",
@@ -25157,6 +25232,53 @@
      "blocked_domains": 2,
      "object_count": 2
     }
+   },
+   "event_review_windows": {
+    "symbol": "PPL",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:a14636fd9306b2fc",
+      "event_type": "results",
+      "date": "2026-09-18",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/PPL/",
+      "window": {
+       "start": "2026-09-16",
+       "end": "2026-09-20",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2026-02-13",
+      "2026-04-29"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-09-16",
+      "end": "2026-09-20",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-09-18",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/PPL/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
    },
    "financial_forecasts": {
     "symbol": "PPL",
@@ -88614,6 +88736,53 @@
      "object_count": 58
     }
    },
+   "event_review_windows": {
+    "symbol": "DGKC",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:28928df434bdcbae",
+      "event_type": "results",
+      "date": "2026-08-27",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/DGKC/",
+      "window": {
+       "start": "2026-08-25",
+       "end": "2026-08-29",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2025-10-03",
+      "2026-04-30"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-08-25",
+      "end": "2026-08-29",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-08-27",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/DGKC/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
+   },
    "financial_forecasts": {
     "symbol": "DGKC",
     "status": "blocked",
@@ -93445,6 +93614,26 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "PSO",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "past_earnings_cadence_not_stable",
+     "historical_dates": [
+      "2026-02-17",
+      "2026-03-26",
+      "2026-04-10",
+      "2026-04-29"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "past_earnings_cadence_not_stable"
    },
    "financial_forecasts": {
     "symbol": "PSO",
@@ -105076,6 +105265,58 @@
      "object_count": 10
     }
    },
+   "event_review_windows": {
+    "symbol": "UBL",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:e4d02d3edee253fa",
+      "event_type": "results",
+      "date": "2026-10-21",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/UBL/",
+      "window": {
+       "start": "2026-10-19",
+       "end": "2026-10-23",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2025-10-15",
+      "2025-12-10",
+      "2026-03-04",
+      "2026-03-18",
+      "2026-03-26",
+      "2026-04-15",
+      "2026-07-22"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-10-19",
+      "end": "2026-10-23",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-10-21",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/UBL/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
+   },
    "financial_forecasts": {
     "symbol": "UBL",
     "status": "blocked",
@@ -109309,6 +109550,23 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "FFC",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
+     "historical_dates": [
+      "2026-04-29"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
    },
    "financial_forecasts": {
     "symbol": "FFC",
@@ -145291,6 +145549,21 @@
      "object_count": 18
     }
    },
+   "event_review_windows": {
+    "symbol": "LUCK",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
+     "historical_dates": []
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
+   },
    "financial_forecasts": {
     "symbol": "LUCK",
     "status": "blocked",
@@ -151159,6 +151432,50 @@
      "object_count": 4
     }
    },
+   "event_review_windows": {
+    "symbol": "HUBC",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:87c3e4c479f4a23e",
+      "event_type": "results",
+      "date": "2026-08-27",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/HUBC/",
+      "window": {
+       "start": "2026-08-25",
+       "end": "2026-08-29",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": []
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-08-25",
+      "end": "2026-08-29",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-08-27",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/HUBC/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
+   },
    "financial_forecasts": {
     "symbol": "HUBC",
     "status": "blocked",
@@ -154202,6 +154519,21 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "PRL",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
+     "historical_dates": []
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
    },
    "financial_forecasts": {
     "symbol": "PRL",
@@ -165260,6 +165592,55 @@
      "object_count": 8
     }
    },
+   "event_review_windows": {
+    "symbol": "BOP",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:110cc4f1d96c9018",
+      "event_type": "results",
+      "date": "2026-08-28",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/BOP/",
+      "window": {
+       "start": "2026-08-26",
+       "end": "2026-08-30",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2026-03-05",
+      "2026-04-30",
+      "2026-06-05",
+      "2026-08-19"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-08-26",
+      "end": "2026-08-30",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-08-28",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/BOP/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
+   },
    "financial_forecasts": {
     "symbol": "BOP",
     "status": "blocked",
@@ -171154,6 +171535,54 @@
      "object_count": 0
     }
    },
+   "event_review_windows": {
+    "symbol": "NBP",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:2b9752d1647b2c9e",
+      "event_type": "results",
+      "date": "2026-08-27",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/NBP/",
+      "window": {
+       "start": "2026-08-25",
+       "end": "2026-08-29",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2025-08-29",
+      "2025-10-29",
+      "2026-03-09"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-08-25",
+      "end": "2026-08-29",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-08-27",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/NBP/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
+   },
    "financial_forecasts": {
     "symbol": "NBP",
     "status": "blocked",
@@ -175981,6 +176410,63 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "MEBL",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "derived_from_past_cadence",
+     "event_type": "results",
+     "date": "2026-11-06",
+     "window": {
+      "start": "2026-11-04",
+      "end": "2026-11-08",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "retained_past_cadence",
+      "rationale": "Five-day review window centered on the median 70-120 day gap in retained dated earnings events; not a confirmed date."
+     },
+     "anchor_date": "2026-02-09",
+     "interval_days": 90,
+     "historical_dates": [
+      "2025-08-13",
+      "2025-10-24",
+      "2026-02-09"
+     ],
+     "rationale": "Conservative cadence baseline only; no forecast, task, or market expectation."
+    },
+    "expected_reporting_windows": [
+     {
+      "event_type": "results",
+      "date": "2026-11-06",
+      "confirmed": false,
+      "status": "derived_from_past_cadence",
+      "source_kind": "retained_past_cadence",
+      "rationale": "Five-day review window centered on the median 70-120 day gap in retained dated earnings events; not a confirmed date.",
+      "start": "2026-11-04",
+      "end": "2026-11-08",
+      "days": 5,
+      "intensity": "intensified"
+     }
+    ],
+    "review_windows": [
+     {
+      "event_type": "results",
+      "date": "2026-11-06",
+      "confirmed": false,
+      "status": "derived_from_past_cadence",
+      "source_kind": "retained_past_cadence",
+      "rationale": "Five-day review window centered on the median 70-120 day gap in retained dated earnings events; not a confirmed date.",
+      "start": "2026-11-04",
+      "end": "2026-11-08",
+      "days": 5,
+      "intensity": "intensified"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
    },
    "financial_forecasts": {
     "symbol": "MEBL",
@@ -187393,6 +187879,25 @@
      "object_count": 6
     }
    },
+   "event_review_windows": {
+    "symbol": "ATRL",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "past_earnings_cadence_not_stable",
+     "historical_dates": [
+      "2025-10-03",
+      "2025-10-31",
+      "2026-04-30"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "past_earnings_cadence_not_stable"
+   },
    "financial_forecasts": {
     "symbol": "ATRL",
     "status": "blocked",
@@ -191715,6 +192220,21 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "HBL",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
+     "historical_dates": []
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
    },
    "financial_forecasts": {
     "symbol": "HBL",
@@ -201110,6 +201630,21 @@
      "object_count": 8
     }
    },
+   "event_review_windows": {
+    "symbol": "MARI",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
+     "historical_dates": []
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
+   },
    "financial_forecasts": {
     "symbol": "MARI",
     "status": "blocked",
@@ -206423,6 +206958,27 @@
      "object_count": 6
     }
    },
+   "event_review_windows": {
+    "symbol": "ENGROH",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "past_earnings_cadence_not_stable",
+     "historical_dates": [
+      "2026-03-24",
+      "2026-04-27",
+      "2026-08-11",
+      "2026-08-19",
+      "2026-08-21"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "past_earnings_cadence_not_stable"
+   },
    "financial_forecasts": {
     "symbol": "ENGROH",
     "status": "blocked",
@@ -209306,6 +209862,50 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "GAL",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:e6b8ace924029812",
+      "event_type": "results",
+      "date": "2026-09-29",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/GAL/",
+      "window": {
+       "start": "2026-09-27",
+       "end": "2026-10-01",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": []
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-09-27",
+      "end": "2026-10-01",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-09-29",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/GAL/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
    },
    "financial_forecasts": {
     "symbol": "GAL",
@@ -212803,6 +213403,23 @@
      "blocked_domains": 2,
      "object_count": 0
     }
+   },
+   "event_review_windows": {
+    "symbol": "NRL",
+    "as_of": "2026-08-27",
+    "known_events": [],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
+     "historical_dates": [
+      "2026-04-29"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
    },
    "financial_forecasts": {
     "symbol": "NRL",
@@ -227836,6 +228453,52 @@
      "blocked_domains": 2,
      "object_count": 16
     }
+   },
+   "event_review_windows": {
+    "symbol": "CNERGY",
+    "as_of": "2026-08-27",
+    "known_events": [
+     {
+      "event_id": "calendar:472994b57ff64373",
+      "event_type": "results",
+      "date": "2026-09-18",
+      "confirmed": false,
+      "source": "https://stockanalysis.com/quote/psx/CNERGY/",
+      "window": {
+       "start": "2026-09-16",
+       "end": "2026-09-20",
+       "days": 5,
+       "intensity": "intensified",
+       "source_kind": "earnings_calendar",
+       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+      }
+     }
+    ],
+    "confirmed_events": [],
+    "expected_reporting_window": {
+     "status": "suppressed_known_event",
+     "reason": "known_results_event_present",
+     "historical_dates": [
+      "2026-04-28"
+     ]
+    },
+    "expected_reporting_windows": [],
+    "review_windows": [
+     {
+      "start": "2026-09-16",
+      "end": "2026-09-20",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+      "event_type": "results",
+      "date": "2026-09-18",
+      "confirmed": false,
+      "source_url": "https://stockanalysis.com/quote/psx/CNERGY/"
+     }
+    ],
+    "status": "available",
+    "status_reason": "retained_calendar_or_cadence_available"
    },
    "financial_forecasts": {
     "symbol": "CNERGY",

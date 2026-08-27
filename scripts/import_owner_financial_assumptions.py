@@ -33,10 +33,11 @@ IMPORTED_BY = "import_owner_financial_assumptions.py"
 SOURCE_PREFIX = "supabase_owner_assumption:"
 ALLOWED_METRICS = {
     "revenue_growth_pct": ("pct", -100.0, 500.0),
-    "net_margin_pct": ("pct", -100.0, 100.0),
+    "net_margin_pct": ("pct", 0.0, 100.0),
     "exit_pe": ("x", 0.0, 200.0),
     "net_debt": ("PKR", -10_000_000_000_000.0, 10_000_000_000_000.0),
 }
+STRICT_MINIMUM_METRICS = {"revenue_growth_pct", "net_margin_pct", "exit_pe"}
 
 
 def iso_date(value: Any) -> str | None:
@@ -145,10 +146,10 @@ def _valid_record(row: dict[str, Any], pilot: set[str], cutoff: str, owner_id: s
     if value is None:
         return None, "non_finite_value"
     unit, minimum, maximum = ALLOWED_METRICS[metric]
-    if metric in ("revenue_growth_pct", "net_margin_pct", "net_debt"):
-        in_range = minimum <= value <= maximum
-    else:
+    if metric in STRICT_MINIMUM_METRICS:
         in_range = minimum < value <= maximum
+    else:
+        in_range = minimum <= value <= maximum
     if not in_range or row.get("unit") != unit:
         return None, "value_or_unit_out_of_contract"
     available_on = iso_date(row.get("available_on"))

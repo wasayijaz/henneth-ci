@@ -2476,6 +2476,109 @@ function renderEvidenceWatchLink(item) {
   return `<div>${link}${reason ? `<small>${esc(reason)}</small>` : ""}</div>`;
 }
 
+function eventWindowRows(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function eventWindowText(item, keys, fallback = "unknown") {
+  for (const key of keys) {
+    const value = item?.[key];
+    if (value !== undefined && value !== null && String(value).trim() !== "") return value;
+  }
+  return fallback;
+}
+
+function renderEventWindowSource(item) {
+  const source = item?.source && typeof item.source === "object" && !Array.isArray(item.source) ? item.source : {};
+  const href = safeHref(item?.source_url || (typeof item?.source === "string" ? item.source : null) || source.source_url || source.url);
+  const label = item?.source_title || source.title || item?.document_id || source.document_id || source.source_id || "retained source";
+  const pageValue = item?.page ?? source.page;
+  const page = Number(pageValue) > 0 ? `page ${Number(pageValue)}` : "page unknown";
+  return href
+    ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)} · ${esc(page)}</a>`
+    : `<span>${esc(label)} · ${esc(page)}</span>`;
+}
+
+function renderEventWindowCard(item, kind) {
+  const title = eventWindowText(item, ["title", "event_title", "label", "type", "event_type"], `${kind.label} row`);
+  const status = eventWindowText(item, ["status", "state", "evidence_state", "confidence_state"]);
+  const date = eventWindowText(item, ["date", "event_date", "filing_date", "retained_event_date", "expected_date"]);
+  const window = item?.window && typeof item.window === "object" && !Array.isArray(item.window) ? item.window : item;
+  const start = eventWindowText(window, ["window_start", "start", "expected_start", "review_start"]);
+  const end = eventWindowText(window, ["window_end", "end", "expected_end", "review_end"]);
+  const basis = eventWindowText(item, ["basis", "reason", "status_reason", "source_basis", "method"], "No emitted basis supplied.");
+  return `<article class="event-window-row ${esc(kind.className)}">
+    <header><div><span class="pill">${esc(kind.label)}</span><h3>${esc(title)}</h3></div><b>${esc(status)}</b></header>
+    <div class="event-window-meta">
+      <span>Event date <b>${esc(date)}</b></span>
+      <span>Window start <b>${esc(start)}</b></span>
+      <span>Window end <b>${esc(end)}</b></span>
+    </div>
+    <p>${esc(basis)}</p>
+    <footer>${renderEventWindowSource(item)}</footer>
+  </article>`;
+}
+
+function renderEventWindowGroup(title, note, rows, kind, emptyText) {
+  return `<section class="event-window-group">
+    <header><div><span class="kicker">${esc(title)}</span><p>${esc(note)}</p></div><span class="pill">${esc(rows.length)} row${rows.length === 1 ? "" : "s"}</span></header>
+    ${rows.length ? `<div class="event-window-list">${rows.map(item => renderEventWindowCard(item, kind)).join("")}</div>` : `<div class="monitoring-empty">${esc(emptyText)}</div>`}
+  </section>`;
+}
+
+function renderCiEventWindows(r) {
+  const eventWindows = r.event_review_windows && typeof r.event_review_windows === "object" && !Array.isArray(r.event_review_windows)
+    ? r.event_review_windows
+    : null;
+  if (!eventWindows) {
+    return `<section class="event-window-panel" aria-label="Deterministic event windows">
+      <header><div><span class="kicker">Event windows</span><h3>Deterministic operating calendar</h3></div><span class="pill">unknown</span></header>
+      <p class="section-note">Unavailable: the CI slice has not emitted row.event_review_windows for this company. The browser will not invent dates, schedule AI tasks, infer a filing, or treat silence as an event.</p>
+      <div class="monitoring-empty">No event-window object was emitted for ${esc(r.symbol)}.</div>
+    </section>`;
+  }
+  const confirmed = eventWindowRows(eventWindows.confirmed_events);
+  const retainedCalendar = eventWindowRows(eventWindows.known_events);
+  const expected = eventWindowRows(eventWindows.expected_reporting_windows);
+  const reviews = eventWindowRows(eventWindows.review_windows);
+  return `<section class="event-window-panel status-${esc(eventWindows.status || "unknown")}" aria-label="Deterministic event windows">
+    <header>
+      <div><span class="kicker">Event windows</span><h3>Deterministic operating calendar</h3></div>
+      <span class="pill">${esc(eventWindows.status || "unknown")}</span>
+    </header>
+    <p class="section-note">Read-only backend output from row.event_review_windows. It does not schedule AI tasks or infer a filing; confirmed rows are retained events, expected rows are conservative reporting windows, and review rows show the intended 3-5-day intensified deterministic review window only when emitted.</p>
+    <div class="event-window-summary" aria-label="Event window state">
+      <div><span>As of</span><b>${esc(eventWindows.as_of || eventWindows.generated_at || "unknown")}</b></div>
+      <div><span>State reason</span><b>${esc(eventWindows.status_reason || "not emitted")}</b></div>
+      <div><span>Confirmed retained</span><b>${esc(confirmed.length)}</b></div>
+      <div><span>Retained calendar</span><b>${esc(retainedCalendar.length)}</b></div>
+      <div><span>Expected windows</span><b>${esc(expected.length)}</b></div>
+      <div><span>Review windows</span><b>${esc(reviews.length)}</b></div>
+    </div>
+    ${renderEventWindowGroup(
+      "Known retained calendar events",
+      "Retained calendar rows, with their emitted confirmation state; no browser-side event discovery.",
+      retainedCalendar,
+      { label: "Retained calendar event", className: "confirmed" },
+      "No retained calendar event row was emitted; state remains explicitly unknown or empty as supplied."
+    )}
+    ${renderEventWindowGroup(
+      "Conservative expected reporting windows",
+      "Expected reporting windows are emitted estimates, not filings and not confirmations.",
+      expected,
+      { label: "Conservative expected reporting window", className: "expected" },
+      "No conservative expected reporting window row was emitted."
+    )}
+    ${renderEventWindowGroup(
+      "Intensified deterministic review windows",
+      "The intended 3-5-day review window is displayed only from emitted start/end fields.",
+      reviews,
+      { label: "Intensified deterministic review window", className: "review" },
+      "No intensified deterministic review window row was emitted."
+    )}
+  </section>`;
+}
+
 function renderCiMonitoring(r) {
   const monitoring = r.monitoring && typeof r.monitoring === "object" && !Array.isArray(r.monitoring)
     ? r.monitoring
@@ -2485,6 +2588,7 @@ function renderCiMonitoring(r) {
       <span class="kicker">CI monitoring</span><h2 id="ciMonitoringTitle">Freshness and alert state</h2>
       <p class="section-note">Unavailable: the CI slice has not emitted row.monitoring for this company. The browser will not infer freshness, source health, alert state, forecasts, valuation, or advice.</p>
       <div class="monitoring-empty">No monitoring object was emitted for ${esc(r.symbol)}.</div>
+      ${renderCiEventWindows(r)}
     </section>`;
   }
   const sourceHealth = monitoring.source_health && typeof monitoring.source_health === "object" && !Array.isArray(monitoring.source_health)
@@ -2516,6 +2620,7 @@ function renderCiMonitoring(r) {
       <div><span>Guidance contradictions</span><b>${esc(activity.guidance_contradiction_count ?? "unknown")}</b></div>
       <div><span>Monitored pages</span><b>${esc(sourceHealth.monitored_page_count ?? "unknown")}</b></div>
     </div>
+    ${renderCiEventWindows(r)}
     ${alerts.length ? `<div class="monitoring-alerts">${alerts.map(renderCiMonitoringAlert).join("")}</div>` : `<div class="monitoring-empty">No backend alert row is active for ${esc(r.symbol)}.</div>`}
   </section>`;
 }

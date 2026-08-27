@@ -13,7 +13,7 @@ from typing import Any
 
 from forecast_contract import FORMAL_ENGINE_REQUIRED_APPROVED_RECORDS
 from formal_financial_engines import approved_records
-from import_owner_financial_assumptions import ALLOWED_METRICS
+from import_owner_financial_assumptions import ALLOWED_METRICS, STRICT_MINIMUM_METRICS
 from psx_data import ROOT, STATE, load_json, save_json
 
 
@@ -29,7 +29,7 @@ def _metric_contract(metric: str) -> dict[str, Any]:
         "unit": unit,
         "minimum": minimum,
         "maximum": maximum,
-        "minimum_inclusive": metric != "exit_pe",
+        "minimum_inclusive": metric not in STRICT_MINIMUM_METRICS,
         "maximum_inclusive": True,
     }
 

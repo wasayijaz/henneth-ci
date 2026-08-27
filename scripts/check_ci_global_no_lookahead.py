@@ -80,6 +80,19 @@ IGNORED_DATE_FIELD_NAMES = {
     "target_date",
 }
 
+# Event-review metadata deliberately carries dates in the future: these are
+# retained calendar entries or a cadence-derived review window, not observed
+# facts. Keep the exemption artifact-aware and path-specific so every other
+# date (including source/provenance timestamps in the same artifact) remains
+# subject to the normal cutoff check.
+PROSPECTIVE_CALENDAR_CONTAINERS = {
+    "known_events",
+    "review_windows",
+    "expected_reporting_window",
+    "expected_reporting_windows",
+}
+PROSPECTIVE_CALENDAR_DATE_KEYS = {"date"}
+
 OPAQUE_EXAMPLE_LIMIT = 12
 
 
@@ -183,6 +196,34 @@ def date_key_kind(key: str) -> str | None:
     return None
 
 
+def is_prospective_calendar_date(artifact: str, path: str, key: str) -> bool:
+    """Return whether *key* is an explicitly forward-looking calendar date.
+
+    The deterministic event-review artifact and the generated CI slice both
+    expose retained/derived future event dates. Their availability cutoff,
+    source timestamps, and all unrelated fields must still be checked.
+    """
+    if key.lower() not in PROSPECTIVE_CALENDAR_DATE_KEYS:
+        return False
+    normalized_artifact = artifact.replace("\\", "/")
+    normalized_path = path.replace("\\", "/")
+    is_state_artifact = normalized_artifact.endswith(
+        "state/company_intel/event_review_windows.json"
+    )
+    is_ci_slice_artifact = normalized_artifact.endswith(
+        "Henneth Desk 2.CI.0/data/company_intelligence.json"
+    )
+    is_ci_slice_field = (
+        is_ci_slice_artifact and ".event_review_windows." in f".{normalized_path}."
+    )
+    if not (is_state_artifact or is_ci_slice_field):
+        return False
+    # A date is prospective only when it belongs to one of the declared
+    # event-review containers. This excludes arbitrary nested future dates.
+    segments = normalized_path.replace("]", "").replace("[", ".").split(".")
+    return any(segment in PROSPECTIVE_CALENDAR_CONTAINERS for segment in segments)
+
+
 def cutoff_points_from(value: Any) -> list[DatePoint]:
     points: list[DatePoint] = []
     if isinstance(value, dict):
@@ -253,6 +294,10 @@ def compare_against_cutoff(
     field_path = dotted(path, key)
     if kind == "ignored":
         stats.skipped_ignored += 1
+        return
+    if is_prospective_calendar_date(artifact, path, key):
+        # Forward-looking event dates are valid by contract; sibling
+        # availability/provenance fields continue through this checker.
         return
     point = parse_date_point(value)
     if point is None:
@@ -375,6 +420,76 @@ def run_self_tests() -> None:
         raise AssertionError(f"passing fixture failed: {stats.failures}")
     if stats.compared < 4:
         raise AssertionError("passing fixture did not exercise date comparisons")
+
+    prospective_calendar = {
+        "as_of": "2026-01-10",
+        "event_review_windows": {
+            "known_events": [{"event_id": "evt_future", "date": "2026-02-10"}],
+            "expected_reporting_window": {"date": "2026-02-20"},
+            "review_windows": [{"event_type": "results", "date": "2026-02-10"}],
+        },
+    }
+    stats = ScanStats()
+    scan_node(
+        "state/company_intel/event_review_windows.json",
+        prospective_calendar,
+        "",
+        node_cutoff(prospective_calendar),
+        stats,
+    )
+    if stats.failures:
+        raise AssertionError(f"prospective calendar fixture failed: {stats.failures}")
+
+    ci_slice_calendar = {
+        "as_of": "2026-01-10",
+        "tickers": [
+            {
+                "event_review_windows": {
+                    "known_events": [{"event_id": "evt_slice_future", "date": "2026-02-10"}],
+                    "expected_reporting_window": {"date": "2026-02-20"},
+                    "review_windows": [{"event_type": "results", "date": "2026-02-10"}],
+                }
+            }
+        ],
+    }
+    stats = ScanStats()
+    scan_node(
+        "Henneth Desk 2.CI.0/data/company_intelligence.json",
+        ci_slice_calendar,
+        "",
+        node_cutoff(ci_slice_calendar),
+        stats,
+    )
+    if stats.failures:
+        raise AssertionError(f"CI slice prospective calendar fixture failed: {stats.failures}")
+
+    # The exemption is not a blanket allowance for dates in this artifact:
+    # source/provenance timestamps and undeclared date fields must still fail.
+    prospective_with_bad_provenance = {
+        "as_of": "2026-01-10",
+        "event_review_windows": {
+            "known_events": [
+                {
+                    "event_id": "evt_bad_source",
+                    "date": "2026-02-10",
+                    "source_as_of": "2026-01-11",
+                }
+            ],
+            "audit": {"date": "2026-02-11"},
+        },
+    }
+    stats = ScanStats()
+    scan_node(
+        "state/company_intel/event_review_windows.json",
+        prospective_with_bad_provenance,
+        "",
+        node_cutoff(prospective_with_bad_provenance),
+        stats,
+    )
+    if len(stats.failures) != 2:
+        raise AssertionError(
+            "prospective calendar exemption weakened provenance/un-declared date checks"
+        )
 
     failing = {"as_of": "2026-01-10", "alerts": [{"alert_id": "alert_fail", "date": "2026-01-11"}]}
     stats = ScanStats()

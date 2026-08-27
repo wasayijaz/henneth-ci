@@ -28,6 +28,7 @@ from import_owner_financial_assumptions import (
     ENV_KEY,
     ENV_OWNER_ID,
     ENV_URL,
+    STRICT_MINIMUM_METRICS,
     TABLE,
     finite,
     iso_date,
@@ -146,10 +147,10 @@ def _validate_draft(
     if value is None:
         return None, "non_finite_value"
     unit, minimum, maximum = ALLOWED_METRICS[metric]
-    if metric in ("revenue_growth_pct", "net_margin_pct", "net_debt"):
-        in_range = minimum <= value <= maximum
-    else:
+    if metric in STRICT_MINIMUM_METRICS:
         in_range = minimum < value <= maximum
+    else:
+        in_range = minimum <= value <= maximum
     if not in_range or row.get("unit") != unit:
         return None, "value_or_unit_out_of_contract"
 
