@@ -157,11 +157,11 @@ def assert_real_state() -> None:
     required_metrics = {"clinker_production", "cement_production", "cement_sales_local", "cement_sales_export", "cement_sales_total", "clinker_sales"}
     assert required_metrics <= set(dgkc["metrics"])
     expected_fy25 = {
-        "cement_production": ("3,753,504", 3753504, "Cement production 3,762,813"),
-        "cement_sales_total": ("3,710,160", 3710160, "Total Cement sales 3,770,701"),
-        "cement_sales_local": ("3,467,321", 3467321, "Local Cement sales 3,611,075"),
-        "cement_sales_export": ("242,839", 242839, "Export cement sales 159,626"),
-        "clinker_sales": ("1,576,625", 1576625, "Clinker sales 1,070,871"),
+        "cement_production": ("3,762,813", 3762813, "Cement production 3,762,813"),
+        "cement_sales_total": ("3,770,701", 3770701, "Total Cement sales 3,770,701"),
+        "cement_sales_local": ("3,611,075", 3611075, "Local Cement sales 3,611,075"),
+        "cement_sales_export": ("159,626", 159626, "Export cement sales 159,626"),
+        "clinker_sales": ("1,070,871", 1070871, "Clinker sales 1,070,871"),
     }
     seen_ids = set()
     for metric, observations in dgkc["metrics"].items():

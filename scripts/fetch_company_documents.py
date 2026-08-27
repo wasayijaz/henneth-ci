@@ -53,6 +53,7 @@ _EXACT_DOC_ID_RE = re.compile(r"^psx:(\d+)$")
 _SPACE_RE = re.compile(r"\s+")
 _SAFE_ID_RE = re.compile(r"[^A-Za-z0-9_.-]+")
 _DOC_TYPE_RE = re.compile(r"^[a-z][a-z0-9_]{2,60}$")
+_HISTORICAL_ANNUAL_TITLE_RE = re.compile(r"\bannual\s+report\b", re.I)
 _ALLOWED_SEED_KEYS = {
     "id", "official_document_id", "ticker", "company_name", "title", "type",
     "doc_type", "period", "published_at", "url",
@@ -270,6 +271,12 @@ def _validate_historical_seed_row(row: object, pilot: dict[str, str]) -> dict:
     if not _DOC_TYPE_RE.match(doc_type):
         raise ValueError(f"{raw_id}: type must be a snake_case document type")
     period = _validate_seed_period(row.get("period"))
+    if period["period_type"] != "annual":
+        raise ValueError(f"{raw_id}: historical seed documents must be annual reports")
+    if not _HISTORICAL_ANNUAL_TITLE_RE.search(title):
+        raise ValueError(f"{raw_id}: title must identify an annual report")
+    if period["period_end"][:4] not in title:
+        raise ValueError(f"{raw_id}: title must contain the declared reporting year")
     published_at = _validate_seed_published_at(row.get("published_at"))
     published_date = datetime.fromisoformat(published_at).date()
     if published_date > _now().date():

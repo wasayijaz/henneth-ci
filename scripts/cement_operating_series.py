@@ -66,11 +66,14 @@ DGKC_SPECS: tuple[ObservationSpec, ...] = (
     ObservationSpec("DGKC", "cement_sales_local", "2020-06-30", 5336680, "5,336,680", "tonnes", "issuer:5943c09923394ef40e90cc78", 74, ("Local 5,336,680 5,327,410",), ("fact_a9e8d8a145154fa49e1f",)),
     ObservationSpec("DGKC", "cement_sales_export", "2020-06-30", 158143, "158,143", "tonnes", "issuer:5943c09923394ef40e90cc78", 74, ("Export 158,143 270,232",), ("fact_a9e8d8a145154fa49e1f",)),
     ObservationSpec("DGKC", "cement_sales_total", "2020-06-30", 5494823, "5,494,823", "tonnes", "issuer:5943c09923394ef40e90cc78", 74, ("Cement sales: 5,494,823 5,597,642",), ("fact_a9e8d8a145154fa49e1f",)),
-    ObservationSpec("DGKC", "cement_production", "2025-06-30", 3753504, "3,753,504", "tonnes", "psx:260947", 119, ("Cement production 3,762,813", "3,753,504")),
-    ObservationSpec("DGKC", "cement_sales_total", "2025-06-30", 3710160, "3,710,160", "tonnes", "psx:260947", 119, ("Total Cement sales 3,770,701", "3,710,160")),
-    ObservationSpec("DGKC", "cement_sales_local", "2025-06-30", 3467321, "3,467,321", "tonnes", "psx:260947", 119, ("Local Cement sales 3,611,075", "3,467,321")),
-    ObservationSpec("DGKC", "cement_sales_export", "2025-06-30", 242839, "242,839", "tonnes", "psx:260947", 119, ("Export cement sales 159,626", "242,839")),
-    ObservationSpec("DGKC", "clinker_sales", "2025-06-30", 1576625, "1,576,625", "tonnes", "psx:260947", 119, ("Clinker sales 1,070,871", "1,576,625")),
+    # The page is a FY2025/FY2024 comparison table.  The first annual value in
+    # each labelled row is FY2025; later values are comparatives and must not
+    # be attached to the FY2025 period.
+    ObservationSpec("DGKC", "cement_production", "2025-06-30", 3762813, "3,762,813", "tonnes", "psx:260947", 119, ("Cement production 3,762,813",)),
+    ObservationSpec("DGKC", "cement_sales_total", "2025-06-30", 3770701, "3,770,701", "tonnes", "psx:260947", 119, ("Total Cement sales 3,770,701",)),
+    ObservationSpec("DGKC", "cement_sales_local", "2025-06-30", 3611075, "3,611,075", "tonnes", "psx:260947", 119, ("Local Cement sales 3,611,075",)),
+    ObservationSpec("DGKC", "cement_sales_export", "2025-06-30", 159626, "159,626", "tonnes", "psx:260947", 119, ("Export cement sales 159,626",)),
+    ObservationSpec("DGKC", "clinker_sales", "2025-06-30", 1070871, "1,070,871", "tonnes", "psx:260947", 119, ("Clinker sales 1,070,871",)),
 )
 
 
