@@ -364,7 +364,7 @@ def check_ci_slice():
     # Wave 1 CI seam: the generated slice must exactly reflect the three authoritative
     # state products. This catches a stale slice even when its legacy fields still look valid.
     wave1 = {}
-    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_evidence_reconciliation", "financial_coverage", "forecast_readiness", "financial_forecasts", "formal_valuations", "market_expectations", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
+    for name in ("operating_events", "driver_graphs", "impact_scenarios", "event_studies", "conditional_benchmarks", "causal_foundations", "financial_model_inputs", "financial_evidence_reconciliation", "earnings_bridges", "financial_coverage", "forecast_readiness", "financial_forecasts", "formal_valuations", "market_expectations", "scenario_lab", "company_brains", "thesis_monitoring", "intelligence_confidence", "management_delivery", "guidance_contradictions", "evidence_watchlist", "monitoring", "peer_registry"):
         wave_path = os.path.join(STATE, "company_intel", f"{name}.json")
         try:
             with open(wave_path, encoding="utf-8") as f:
@@ -422,6 +422,7 @@ def check_ci_slice():
         causal_foundations_state = (wave1.get("causal_foundations", {}).get("companies", {}).get(sym) or {})
         model_state = (wave1.get("financial_model_inputs", {}).get("companies", {}).get(sym) or {})
         financial_reconciliation_state = (wave1.get("financial_evidence_reconciliation", {}).get("companies", {}).get(sym) or {})
+        earnings_bridge_state = (wave1.get("earnings_bridges", {}).get("companies", {}).get(sym) or {})
         financial_coverage_state = (wave1.get("financial_coverage", {}).get("companies", {}).get(sym) or {})
         forecast_readiness_state = (wave1.get("forecast_readiness", {}).get("companies", {}).get(sym) or {})
         financial_forecast_state = (wave1.get("financial_forecasts", {}).get("companies", {}).get(sym) or {})
@@ -466,6 +467,10 @@ def check_ci_slice():
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_evidence_reconciliation stale/mismatch")
         if not isinstance(row.get("financial_evidence_reconciliation"), dict):
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_evidence_reconciliation missing/not object")
+        if row.get("earnings_bridges") != earnings_bridge_state:
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} earnings_bridges stale/mismatch")
+        if not isinstance(row.get("earnings_bridges"), dict):
+            fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} earnings_bridges missing/not object")
         if row.get("financial_coverage") != financial_coverage_state:
             fail(f"Henneth Desk 2.CI.0/data/company_intelligence.json: {sym} financial_coverage stale/mismatch")
         if not isinstance(row.get("financial_coverage"), dict):
@@ -959,6 +964,18 @@ def check_earnings_bridges():
     except Exception as e:
         fail(f"check_earnings_bridges.py did not run — {e}")
 
+def check_earnings_bridges_ui():
+    path = os.path.join(ROOT, "scripts", "check_earnings_bridges_ui.mjs")
+    if not os.path.exists(path):
+        fail("check_earnings_bridges_ui.mjs missing")
+        return
+    try:
+        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        if result.returncode != 0:
+            fail("earnings bridges UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_earnings_bridges_ui.mjs did not run — {e}")
+
 def check_forecast_readiness_ui():
     path = os.path.join(ROOT, "scripts", "check_forecast_readiness_ui.mjs")
     if not os.path.exists(path):
@@ -1293,6 +1310,7 @@ def main():
     check_ci_reference_cases()
     check_financial_evidence_reconciliation()
     check_earnings_bridges()
+    check_earnings_bridges_ui()
     check_forecast_readiness_ui()
     check_financial_coverage_ui()
     check_historical_reference_cases_ui()

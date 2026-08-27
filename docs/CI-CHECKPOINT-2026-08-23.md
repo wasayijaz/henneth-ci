@@ -449,3 +449,24 @@ or impact value was created. The source caps, no-OCR policy and audit-only quara
 The two-document review manifest and exact execution allowlist now record this completed approved
 batch. `check_ci_reprocess_manifest.py` and the full preflight gate passed, with only the existing
 101-ticker non-gating history-backfill warning.
+
+## Resume update — evidence, archival, and Earnings Bridge hardening
+
+DGKC FY2023 basic EPS now correctly recognises accounting-parenthesis negatives, adding a fourth
+qualified annual period without weakening the financial evidence gate. LUCK FY2026 `psx:280930`
+was then inspected through the existing exact-ID diagnostic route and was rejected before download
+because PSX declared it above the unchanged 12 MiB cap. It created no receipt, fact or canonical
+state mutation; no cap increase, cropping or OCR route is permitted.
+
+The dedicated Henneth CI Supabase project is active with the private thesis and owner-assumption
+tables RLS-enabled, while CI archive tables have no browser-readable grants. The schema/code
+contract is therefore configured, but private-thesis live completion remains blocked until an owner
+browser session completes CRUD and an independent authenticated account is denied access. Admin
+inspection is not a substitute for that proof.
+
+Historical Earnings Bridge v1 is now part of the CI slice freshness gate and renders each emitted
+annual revenue, attributable PAT and EPS delta with its prior/current official PSX document link,
+page and availability date. It remains descriptive history only: no driver inference, forecast,
+valuation, market-expectations activation or advice. The 20-company UI/data contract verifies the
+emitted state and all provenance fields; the current state has two historical bridges and preserves
+explicit blocked rows elsewhere.
