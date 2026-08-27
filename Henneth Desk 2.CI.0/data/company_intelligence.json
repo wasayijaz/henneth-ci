@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-08-27 21:58",
+  "built": "2026-08-27 22:28",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
@@ -162,6 +162,8 @@
   "private_thesis_storage": {
    "schema_status": "configured",
    "live_verification_status": "not_verified",
+   "live_verification_receipt_count": 0,
+   "live_verification_latest_outcome": "none",
    "completion_boundary": "Schema configuration is evidence for the code-ready storage contract only. Live private thesis storage remains incomplete until an owner-token CRUD and cross-user RLS smoke test is recorded.",
    "live_verification_required": [
     "Confirm CI_OWNER_USER_ID is configured on the CI deployment for the owner account.",
@@ -114371,8 +114373,8 @@
     ]
    },
    "sources": {
-    "status": "ok",
-    "error": null,
+    "status": "degraded",
+    "error": "ConnectionError:HTTPSConnectionPool(host='www.lucky-cement.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionErr",
     "issuer_url": "https://www.lucky-cement.com/",
     "sources": [
      {
@@ -143778,13 +143780,13 @@
    },
    "monitoring": {
     "symbol": "LUCK",
-    "status": "healthy",
-    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
+    "status": "degraded",
+    "status_reason": "source registry or monitored source quality is degraded",
     "latest_source_at": "2026-08-27T03:47:04+05:00",
     "latest_change_at": "2026-08-27T06:15:00+05:00",
     "latest_event_at": "2026-08-27T06:15:00+05:00",
     "source_health": {
-     "registry_status": "ok",
+     "registry_status": "degraded",
      "monitored_page_count": 2,
      "document_link_count": 22,
      "quality_flags": [],
@@ -143939,9 +143941,29 @@
        "content_sha256": "5eb4ec8717a63b44829589debd0b3f0ca8b5f146c0e6fa1635a4585dcd7970ba",
        "previous_sha256": "d1c50bbe4adbf150ff7340e34d484c305abf39c334ac57daf6934f7516c239f9"
       }
+     },
+     {
+      "alert_id": "ci_alert_e9d9520be21eb3fd2203",
+      "symbol": "LUCK",
+      "type": "source_registry_degraded",
+      "status": "open",
+      "date": null,
+      "title": "issuer source registry degraded",
+      "reason": "ConnectionError:HTTPSConnectionPool(host='www.lucky-cement.com', port=443): Max retries exceeded with url: / (Caused by NewConnectionErr",
+      "source": {
+       "source_url": "https://dps.psx.com.pk/company/LUCK",
+       "document_id": null,
+       "source_id": null,
+       "source": "issuer_source_registry"
+      },
+      "evidence_identity": {
+       "registry_status": "degraded",
+       "quality_flags": [],
+       "missing_required_source": false
+      }
      }
     ],
-    "alert_count": 7,
+    "alert_count": 8,
     "limitations": [
      "research_only",
      "retained_state_only",
@@ -145474,7 +145496,7 @@
     "brief_status": "training_only",
     "pending_synthesis": 9,
     "last_event_at": null,
-    "source_status": "ok",
+    "source_status": "degraded",
     "source_quality_flags": 0,
     "operating_event_count": 9,
     "cement_operating_observation_count": 0,
@@ -145499,8 +145521,8 @@
     "guidance_object_count": 4,
     "guidance_contradiction_count": 0,
     "evidence_watchlist_status": "no_active_watch",
-    "monitoring_status": "healthy",
-    "monitoring_alert_count": 7,
+    "monitoring_status": "degraded",
+    "monitoring_alert_count": 8,
     "financial_forecast_status": "blocked",
     "formal_valuation_status": "blocked",
     "formal_market_expectations_status": "blocked",

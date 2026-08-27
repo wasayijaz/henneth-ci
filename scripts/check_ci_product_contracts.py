@@ -26,7 +26,9 @@ FOCUSED_CHECKS: tuple[str, ...] = (
     "check_conditional_benchmarks.py",
     "check_causal_foundations.py",
     "check_financial_model_inputs.py",
+    "check_financial_statement_v2_candidate_queue.py",
     "check_financial_evidence_reconciliation.py",
+    "check_owner_financial_assumption_handoff.py",
     "check_earnings_bridges.py",
     "check_forecast_contract.py",
     "check_formal_financial_engines.py",
@@ -49,6 +51,7 @@ FOCUSED_CHECKS: tuple[str, ...] = (
     "check_supabase_ci_store.py",
     "check_supabase_archive_receipt.py",
     "check_private_thesis_storage_receipt.py",
+    "record_private_thesis_storage_verification.py",
     "provenance_lint.py",
     "check_generated_url_safety.py",
     "check_root_state_publication.py",
@@ -110,7 +113,9 @@ def run_checks(root: Path = ROOT, checks: tuple[str, ...] = FOCUSED_CHECKS, time
     for name in checks:
         normalized = Path(name).name
         path = root / "scripts" / normalized
-        if normalized.endswith(".py"):
+        if normalized == "record_private_thesis_storage_verification.py":
+            command = (sys.executable, str(path), "--self-test")
+        elif normalized.endswith(".py"):
             command = (sys.executable, str(path))
         elif normalized.endswith(".mjs"):
             command = ("node", str(path))

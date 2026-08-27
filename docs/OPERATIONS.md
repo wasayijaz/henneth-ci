@@ -492,7 +492,8 @@ push refreshed data).
   `docs/henneth_ci_archive.sql`. Archive tables have RLS enabled with no browser grants or policies;
   only the cloud-held service credential may write. The private-thesis receipt proves schema
   configuration only; it does not complete live storage until owner-token create/read/update/archive/
-  restore/delete and cross-user RLS smoke tests are recorded without secrets. The
+  restore/delete and cross-user RLS smoke tests are appended through
+  `scripts/record_private_thesis_storage_verification.py` without secrets. The
   browser uses only a publishable key plus its bearer token. Archive/restore is normal; permanent
   deletion requires confirmation. The free cloud pipeline runs `supabase_ci_store.py` after the
   private CI slice, retaining metadata, facts, snapshots for every generated per-company CI research
@@ -537,6 +538,10 @@ push refreshed data).
   document IDs and explicit annual-period wording for the exact pilot. Unknown periods stay unknown;
   half-year notices never become annual history; audit-only facts stay quarantined. Its candidate
   queue requires a later owner-approved bounded restage and does not authorize parsing or publishing.
+- **Retained v2-candidate queue is review-only.**
+  `build_financial_statement_v2_candidate_queue.py` lists only already retained annual PDFs whose
+  source, content hash, file/page limits and pilot binding are intact but which lack v2 parsing.
+  It cannot download, restage, parse, OCR, alter an allowlist, emit facts or activate a model.
 - **Forecast readiness fails closed.** `build_forecast_readiness.py` accepts a financial period only
   when revenue, attributable PAT and basic EPS are aligned annual consolidated PKR facts from the
   current parser, have exact official provenance, no quality flags, and a publication date strictly
@@ -667,7 +672,9 @@ worst case the backfill just continues on the next scheduled run.
 - **Private CI thesis storage** has a configured-schema receipt in
   `state/company_intel/private_thesis_storage_receipt.json`, but live completion remains blocked until
   an owner browser session proves CRUD/archive/restore/delete and a separate authenticated identity
-  proves the row cannot be read, changed, archived, restored or deleted across users.
+  proves the row cannot be read, changed, archived, restored or deleted across users. Record only the
+  pass/fail outcome with `scripts/record_private_thesis_storage_verification.py`; do not record account
+  identifiers, credentials, endpoints or thesis contents.
 - **Legal pages** (`state/legal.json`, `/legal/*`) are DRAFTS — a Pakistani lawyer must review before
   charging (flagged in the file's `review_status`). Discoverable from: page footer, the sidebar bottom
   (`.side-legal`), the sign-in/sign-up modal (`.auth-legal`), and the Settings page.

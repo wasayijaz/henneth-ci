@@ -18,6 +18,9 @@ from psx_data import ROOT, load_json
 RECEIPT = ROOT / "state" / "company_intel" / "private_thesis_storage_receipt.json"
 PROJECT_REF = re.compile(r"^[a-z0-9]{20}$")
 ISO_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+RECEIPT_ID = re.compile(r"^private_thesis_live_[0-9a-f]{20}$")
+OWNER_CRUD_KEYS = ("create", "read", "update", "archive", "restore", "delete")
+CROSS_USER_RLS_KEYS = ("read_blocked", "update_blocked", "delete_blocked")
 FORBIDDEN_PATTERNS = (
     re.compile(r"https?://", re.I),
     re.compile(r"\.supabase\.co", re.I),
@@ -58,6 +61,54 @@ def _assert_no_secrets(receipt: dict[str, Any]) -> None:
                 fail("private thesis receipt contains forbidden secret-like or endpoint-like text")
 
 
+def _assert_live_receipt(record: Any) -> bool:
+    if not isinstance(record, dict):
+        fail("live verification receipt entry is not an object")
+    expected = {
+        "schema_version",
+        "receipt_id",
+        "recorded_at",
+        "verified_at",
+        "verification_scope",
+        "outcome",
+        "owner_crud_smoke_test",
+        "cross_user_rls_smoke_test",
+        "security_advisors_reviewed",
+        "stored_evidence",
+    }
+    if set(record) != expected:
+        fail("live verification receipt fields drifted")
+    if record.get("schema_version") != 1:
+        fail("live verification receipt schema_version must be 1")
+    if not isinstance(record.get("receipt_id"), str) or not RECEIPT_ID.fullmatch(record["receipt_id"]):
+        fail("live verification receipt_id is invalid")
+    for key in ("recorded_at", "verified_at"):
+        if not isinstance(record.get(key), str) or not ISO_UTC.fullmatch(record[key]):
+            fail(f"live verification {key} must be UTC")
+    if record.get("verification_scope") != "manual_owner_browser_and_cross_user_rls_smoke_test":
+        fail("live verification scope drifted")
+    if record.get("outcome") not in {"passed", "failed"}:
+        fail("live verification outcome is invalid")
+    owner = record.get("owner_crud_smoke_test")
+    if not isinstance(owner, dict) or tuple(owner.keys()) != OWNER_CRUD_KEYS:
+        fail("owner CRUD smoke-test fields drifted")
+    cross_user = record.get("cross_user_rls_smoke_test")
+    if not isinstance(cross_user, dict) or tuple(cross_user.keys()) != CROSS_USER_RLS_KEYS:
+        fail("cross-user RLS smoke-test fields drifted")
+    if any(type(value) is not bool for value in owner.values()):
+        fail("owner CRUD smoke-test values must be booleans")
+    if any(type(value) is not bool for value in cross_user.values()):
+        fail("cross-user RLS smoke-test values must be booleans")
+    if type(record.get("security_advisors_reviewed")) is not bool:
+        fail("security advisor review result must be boolean")
+    passed = all(owner.values()) and all(cross_user.values()) and record["security_advisors_reviewed"]
+    if (record.get("outcome") == "passed") != passed:
+        fail("live verification outcome does not match recorded smoke-test results")
+    if record.get("stored_evidence") != "pass_fail_only_no_identifiers_credentials_or_thesis_contents":
+        fail("live verification receipt must store pass/fail evidence only")
+    return passed
+
+
 def main() -> None:
     receipt = load_json(RECEIPT, {})
     if not isinstance(receipt, dict):
@@ -79,6 +130,7 @@ def main() -> None:
     contracts = receipt.get("offline_contracts")
     if contracts != [
         "docs/company_theses.sql",
+        "scripts/record_private_thesis_storage_verification.py",
         "scripts/check_company_theses_security.mjs",
         "scripts/check_company_theses_ui.mjs",
     ]:
@@ -100,29 +152,30 @@ def main() -> None:
     boundary = receipt.get("completion_boundary")
     if not isinstance(boundary, str) or "remains incomplete" not in boundary or "owner-token CRUD" not in boundary:
         fail("completion boundary must keep live storage incomplete until smoke-tested")
-    if receipt.get("live_verification_status") == "verified":
-        proof = receipt.get("live_verification_receipt")
-        if not isinstance(proof, dict):
-            fail("verified live storage requires a live_verification_receipt object")
-        required_fields = {
-            "verified_at",
-            "owner_crud_smoke_test",
-            "cross_user_rls_smoke_test",
-            "security_advisors_reviewed",
-        }
-        if set(proof) != required_fields:
-            fail("live_verification_receipt fields drifted")
-        if not isinstance(proof.get("verified_at"), str) or not ISO_UTC.fullmatch(proof["verified_at"]):
-            fail("live verification timestamp must be UTC")
-        if proof.get("owner_crud_smoke_test") is not True:
-            fail("owner CRUD smoke test was not confirmed")
-        if proof.get("cross_user_rls_smoke_test") is not True:
-            fail("cross-user RLS smoke test was not confirmed")
-        if proof.get("security_advisors_reviewed") is not True:
-            fail("Supabase security advisors must be reviewed before live verification")
-    else:
-        if "live_verification_receipt" in receipt:
-            fail("unverified live storage cannot include a live_verification_receipt")
+    if "live_verification_receipt" in receipt:
+        fail("live verification proof must use the append-only live_verification_receipts array")
+    receipts = receipt.get("live_verification_receipts")
+    if not isinstance(receipts, list):
+        fail("live_verification_receipts must be an append-only array")
+    seen_ids: set[str] = set()
+    latest_passed = False
+    latest_id = None
+    for record in receipts:
+        passed = _assert_live_receipt(record)
+        receipt_id = record["receipt_id"]
+        if receipt_id in seen_ids:
+            fail("duplicate live verification receipt_id")
+        seen_ids.add(receipt_id)
+        latest_passed = passed
+        latest_id = receipt_id
+    if receipts:
+        if receipt.get("live_verification_latest_receipt_id") != latest_id:
+            fail("latest live verification receipt id drifted")
+    elif "live_verification_latest_receipt_id" in receipt:
+        fail("empty live verification receipt history cannot name a latest receipt")
+    expected_live_status = "verified" if latest_passed else "not_verified"
+    if receipt.get("live_verification_status") != expected_live_status:
+        fail("live_verification_status must match the latest append-only receipt outcome")
     _assert_no_secrets(receipt)
     print(f"private thesis storage receipt: PASS ({receipt['schema_status']}, live {receipt['live_verification_status']})")
 

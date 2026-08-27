@@ -39,6 +39,10 @@ STEPS = [
     "build_financial_series.py",
     "build_financial_model_inputs.py",
     "build_financial_coverage.py",
+    # Review-only audit of retained annual documents that are inside existing transport and
+    # provenance limits but have not reached the v2 financial parser. It never downloads,
+    # restages or changes an execution allowlist.
+    "build_financial_statement_v2_candidate_queue.py",
     "build_forecast_readiness.py",
     # Server-only owner-approved formal engine assumptions from the private Henneth CI
     # Supabase table. Inert without CI Supabase secrets; generated/historical inputs below
@@ -139,6 +143,7 @@ STEPS = [
     "check_causal_foundations.py",
     "check_conditional_benchmarks.py",
     "check_financial_coverage.py",
+    "check_financial_statement_v2_candidate_queue.py",
     "check_ci_reprocess_manifest.py",
     "check_ownership_source_manifest.py",
     "check_forecast_contract.py",

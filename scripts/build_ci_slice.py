@@ -218,9 +218,13 @@ def _reference_case_meta(assumptions_state, cutoff, rows):
 def _private_thesis_storage_meta(receipt):
     if not isinstance(receipt, dict):
         receipt = {}
+    receipts = receipt.get("live_verification_receipts") or []
+    latest = receipts[-1] if receipts and isinstance(receipts[-1], dict) else {}
     return {
         "schema_status": receipt.get("schema_status") or "unknown",
         "live_verification_status": receipt.get("live_verification_status") or "unknown",
+        "live_verification_receipt_count": len(receipts) if isinstance(receipts, list) else 0,
+        "live_verification_latest_outcome": latest.get("outcome") or "none",
         "completion_boundary": receipt.get("completion_boundary"),
         "live_verification_required": receipt.get("live_verification_required") or [],
     }

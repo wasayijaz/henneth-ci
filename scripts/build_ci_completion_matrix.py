@@ -953,19 +953,22 @@ def build(write: bool = True) -> dict[str, Any]:
         ),
         _row(
             "private_thesis_live_storage",
-            "Private thesis storage has not been live-verified",
+            "Private thesis storage live verification",
             [
                 _ok("private thesis SQL contract", "docs/company_theses.sql"),
                 _state(
                     "private thesis live verification receipt",
                     "state/company_intel/private_thesis_storage_receipt.json",
                     private_thesis_receipt.get("live_verification_status") == "verified",
-                    f"live verification {private_thesis_receipt.get('live_verification_status') or 'unknown'}",
+                    f"live verification {private_thesis_receipt.get('live_verification_status') or 'unknown'}; "
+                    f"{len(private_thesis_receipt.get('live_verification_receipts') or [])} local receipt(s)",
                 ),
             ],
             ["A live owner-token storage smoke test and receipt proving SQL/RLS is applied."],
-            ["Repo evidence proves schema configuration only; it does not prove owner-token CRUD or cross-user RLS isolation."],
-            hard_blocked=True,
+            []
+            if private_thesis_receipt.get("live_verification_status") == "verified"
+            else ["Repo evidence proves schema configuration only; it does not prove owner-token CRUD or cross-user RLS isolation."],
+            hard_blocked=private_thesis_receipt.get("live_verification_status") != "verified",
         ),
         _row(
             "training_batch_handoff",

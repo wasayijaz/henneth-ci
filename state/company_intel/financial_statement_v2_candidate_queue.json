@@ -1,0 +1,227 @@
+{
+ "schema_version": 1,
+ "queue_version": "financial_statement_v2_candidate_queue_v1",
+ "pilot_symbols": [
+  "MLCF",
+  "OGDC",
+  "PPL",
+  "DGKC",
+  "PSO",
+  "UBL",
+  "FFC",
+  "LUCK",
+  "HUBC",
+  "PRL",
+  "BOP",
+  "NBP",
+  "MEBL",
+  "ATRL",
+  "HBL",
+  "MARI",
+  "ENGROH",
+  "GAL",
+  "NRL",
+  "CNERGY"
+ ],
+ "source": {
+  "company_documents": "state/company_documents.json",
+  "source_registry": "state/company_intel/source_registry.json",
+  "reprocess_receipts": "state/company_intel/reprocess_receipts.json"
+ },
+ "policy": {
+  "review_only": true,
+  "metadata_only": true,
+  "no_download": true,
+  "no_restage": true,
+  "no_pdf_parsing": true,
+  "no_ocr_or_cropping": true,
+  "no_numeric_facts": true,
+  "no_forecasts": true,
+  "no_allowlist_change": true
+ },
+ "limits": {
+  "psx_file_bytes": 12582912,
+  "psx_page_count": 120,
+  "issuer_file_bytes": 52428800
+ },
+ "summary": {
+  "company_count": 20,
+  "candidate_count": 1,
+  "candidate_company_count": 1
+ },
+ "companies": {
+  "MLCF": {
+   "ticker": "MLCF",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "OGDC": {
+   "ticker": "OGDC",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "PPL": {
+   "ticker": "PPL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "DGKC": {
+   "ticker": "DGKC",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "PSO": {
+   "ticker": "PSO",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "UBL": {
+   "ticker": "UBL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "FFC": {
+   "ticker": "FFC",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "LUCK": {
+   "ticker": "LUCK",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "HUBC": {
+   "ticker": "HUBC",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "PRL": {
+   "ticker": "PRL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "BOP": {
+   "ticker": "BOP",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "NBP": {
+   "ticker": "NBP",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "MEBL": {
+   "ticker": "MEBL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "ATRL": {
+   "ticker": "ATRL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "HBL": {
+   "ticker": "HBL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "MARI": {
+   "ticker": "MARI",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "ENGROH": {
+   "ticker": "ENGROH",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "GAL": {
+   "ticker": "GAL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "NRL": {
+   "ticker": "NRL",
+   "candidate_count": 0,
+   "candidates": []
+  },
+  "CNERGY": {
+   "ticker": "CNERGY",
+   "candidate_count": 1,
+   "candidates": [
+    {
+     "candidate_id": "finv2cand_969d796c0b25b7d8fbdc",
+     "document_id": "issuer:d4529333539b04c18f5553ba",
+     "ticker": "CNERGY",
+     "title": "Annual Report for Fiscal Year 2022-2023",
+     "source": "Issuer website",
+     "provenance": "retained_issuer_registry",
+     "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2023.pdf",
+     "content_sha256": "75fbedd169b1bfd612884d590af9cf33ef9a03f85985bff51c706a261747265c",
+     "content_length": 4339372,
+     "page_count": 164,
+     "media_type": "application/pdf",
+     "published_at": null,
+     "annual_evidence": "metadata",
+     "safe_period": {
+      "period_end": null,
+      "period_type": "annual",
+      "source": "metadata",
+      "matched_text": "annual_report"
+     },
+     "limits": {
+      "file_bytes": 52428800,
+      "page_count": null
+     },
+     "reason": "retained annual official/issuer document is within current file/page/provenance constraints and is not parsed as financial_statement_v2",
+     "reasons": [
+      "retained_ready_document",
+      "annual_title_evidence",
+      "not_parsed_as_financial_statement_v2",
+      "issuer_registry_link_exact",
+      "within_issuer_file_cap",
+      "retained_page_count"
+     ],
+     "review_status": "owner_review_required"
+    }
+   ]
+  }
+ },
+ "candidates": [
+  {
+   "candidate_id": "finv2cand_969d796c0b25b7d8fbdc",
+   "document_id": "issuer:d4529333539b04c18f5553ba",
+   "ticker": "CNERGY",
+   "title": "Annual Report for Fiscal Year 2022-2023",
+   "source": "Issuer website",
+   "provenance": "retained_issuer_registry",
+   "source_url": "https://www.cnergyico.com/reports/Annual_Reports/2023.pdf",
+   "content_sha256": "75fbedd169b1bfd612884d590af9cf33ef9a03f85985bff51c706a261747265c",
+   "content_length": 4339372,
+   "page_count": 164,
+   "media_type": "application/pdf",
+   "published_at": null,
+   "annual_evidence": "metadata",
+   "safe_period": {
+    "period_end": null,
+    "period_type": "annual",
+    "source": "metadata",
+    "matched_text": "annual_report"
+   },
+   "limits": {
+    "file_bytes": 52428800,
+    "page_count": null
+   },
+   "reason": "retained annual official/issuer document is within current file/page/provenance constraints and is not parsed as financial_statement_v2",
+   "reasons": [
+    "retained_ready_document",
+    "annual_title_evidence",
+    "not_parsed_as_financial_statement_v2",
+    "issuer_registry_link_exact",
+    "within_issuer_file_cap",
+    "retained_page_count"
+   ],
+   "review_status": "owner_review_required"
+  }
+ ]
+}
