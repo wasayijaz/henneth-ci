@@ -136,7 +136,8 @@ backend error is rendered.
     source facts and a `not_owner_approved_forecast_input` status; they never expose the formal
     engine's accepted `value` field. Net debt and P/E assumptions remain owner-approved inputs, so
     formal forecast, valuation and market-expectations products stay blocked until all required
-    approvals exist.
+    approvals exist. Private CI assumption drafts are approved only through the manual server-side
+    `approve_owner_financial_assumptions.py` append-copy handoff; it is not part of the cloud run.
 26. `build_formal_financial_engines.py` runs after forecast readiness and before the CI completion
     matrix and private slice. It emits deterministic forecast, valuation and market-expectations
     products only from qualified actuals plus approved, source-labelled and dated operands;
@@ -496,7 +497,14 @@ push refreshed data).
   append-only owner input ledger for growth, margin, exit P/E, and net debt. Its server-only
   importer reads only approved rows for `HENNETH_CI_OWNER_USER_ID`, uses approval date as the
   earliest eligible date, and does nothing until that ID plus the CI URL and service-key secrets
-  are configured in the cloud.
+  are configured in the cloud. Draft approval is a separate manual server-only action:
+  `approve_owner_financial_assumptions.py --row-id <uuid>` validates the owner, metric bounds,
+  source label, optional HTTPS URL and rationale, then appends a new approved copy with the current
+  timestamp. Missing secrets, failed fetches or invalid drafts are safe no-ops/degraded outcomes
+  and must not print key material. The optional hardening contract in
+  `docs/company_financial_assumptions_insert_hardening.sql` is reference-only until the owner
+  applies it; it narrows authenticated inserts to unapproved drafts while leaving backend approval
+  to the private credential path.
 - **Management Delivery is deterministic and conservative.** `build_management_delivery.py` runs
   after guidance, thesis and confidence state and before the CI slice. Its original thesis records
   remain limited to retained same-symbol official events that are strictly later than the latest
