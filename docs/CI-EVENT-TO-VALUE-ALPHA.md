@@ -119,20 +119,18 @@ same commit:
   a rebuild. The workflow is code-complete but its Vercel Git-deploy setting,
   protected environment secrets, and first live receipt remain external
   evidence.
-- **Observed external blocker (2026-08-28):** the `henneth-ci` Vercel project
-  is on the Hobby plan with its Git repository connected, so each pushed
-  commit can create a deployment. Its enabled Standard Protection explicitly
-  protects every domain *except* production custom domains; it therefore does
-  not protect `ci.henneth.app`. The available all-deployments protection
-  requires an upgrade. Disconnecting the repository is the available
-  reversible way to stop automatic Git deployments, but it must be an
-  owner-approved operational change because it stops the current deployment
-  path.
-- **Not evidenced yet:** the owner-approved choice of a safe production gate,
-  followed by a GitHub Actions green run, a preview deployment and production
-  deployment of that exact commit, a public-login runtime smoke, and live
-  owner/non-owner access checks against `ci.henneth.app`. These need deployed
-  credentials and cannot be substituted with an offline contract.
+- **Production-path change applied (2026-08-28):** the `henneth-ci` Vercel
+  project was on the Hobby plan with Git-triggered deployments enabled, while
+  its Standard Protection excluded production custom domains. The owner
+  approved disconnecting `wasayijaz/henneth-desk` from that Vercel project;
+  Vercel now confirms the project is not connected to a Git repository, so a
+  push cannot bypass the protected release workflow. The workflow's Vercel
+  CLI deployment path remains available through its protected credentials.
+- **Not evidenced yet:** the `ci-production` GitHub environment has been
+  created, but it has no release secrets yet. After its required credentials
+  are added, the remaining proof is a GitHub Actions green run, matching
+  preview/production deployment, public-login runtime smoke, and live
+  owner/non-owner access checks against `ci.henneth.app`.
 
 ## Change log
 
@@ -142,3 +140,4 @@ same commit:
 | 2026-08-27 | Completed retained-state candidate audit without promoting weak evidence. | E&P: `company_event_ledger.json` OGDC `evt_2564e46943e475e1c5dd`; industrial: DGKC `evt_c66c444c35780cf5951e`; sales-led: PSO `evt_2f3bfdf4a586999e66b6` / `evt_30027cd832df431a70a9`. All three case slots remain unselected until the strict financial/event gates are met. |
 | 2026-08-28 | Implemented and locally verified the Part 0 integrity envelope and finalizer ordering. | 37 sealed artifacts; source-commit binding; workflow structural check; 43-artifact no-lookahead scan; focused metadata-safe deterministic checks. Live deployment/auth evidence remains open. |
 | 2026-08-28 | Repaired the artifact source-commit model so static checked-in JSON does not falsely fail after commit, while CI and release jobs restamp and verify against the exact `GITHUB_SHA`. | `check_ci_artifact_integrity.py --self-test`; CI contract exact-commit verification step; release preview restamp before Vercel build. |
+| 2026-08-28 | Created the `ci-production` GitHub Environment and disconnected the Vercel CI project from Git to prevent automatic production deployments. | Owner-approved live Vercel/GitHub configuration; workflow remains blocked only on its protected secrets and first release receipt. |
