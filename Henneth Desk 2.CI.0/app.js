@@ -394,6 +394,18 @@ function pick(symbol) {
   renderDesk();
 }
 
+function railIcon(name) {
+  const paths = {
+    intelligence: '<path d="M12 3 4 7v6c0 4.5 3.4 7.1 8 8 4.6-.9 8-3.5 8-8V7z"/><path d="m8 12 2.3 2.3L16 8.7"/>',
+    signals: '<path d="M4 18V9M10 18V5M16 18v-7M22 18H2"/>',
+    watchlist: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/>',
+    research: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+    scheme: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    profile: '<circle cx="12" cy="8" r="3"/><path d="M5 21c.8-4 3.1-6 7-6s6.2 2 7 6"/>',
+  };
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths[name] || paths.intelligence}</svg>`;
+}
+
 function renderDesk(searchState) {
   const list = rows();
   if (!state.selected && list.length) state.selected = list[0].symbol;
@@ -403,16 +415,15 @@ function renderDesk(searchState) {
   const visual = row ? companyVisual(row, activeIndex) : null;
   $("app").innerHTML = `
     <aside class="icon-rail" aria-label="Primary desk navigation">
-      <a class="icon-rail-brand" href="https://desk.henneth.app/today" aria-label="Henneth Desk home"><img src="logo-terminal.svg" alt="" width="34" height="30"></a>
       <nav class="icon-rail-nav" aria-label="Desk sections">
-        <a class="icon-rail-link is-active" href="https://ci.henneth.app/" aria-current="page" title="Company Intelligence"><span aria-hidden="true">CI</span><span class="sr-only">Company Intelligence</span></a>
-        <a class="icon-rail-link" href="https://desk.henneth.app/today" title="Signals"><span aria-hidden="true">SIG</span><span class="sr-only">Signals</span></a>
-        <a class="icon-rail-link" href="https://desk.henneth.app/watchlist" title="Watchlist"><span aria-hidden="true">WAT</span><span class="sr-only">Watchlist</span></a>
-        <a class="icon-rail-link" href="https://desk.henneth.app/research" title="Research"><span aria-hidden="true">RES</span><span class="sr-only">Research</span></a>
+        <a class="icon-rail-link is-active" href="https://ci.henneth.app/" aria-current="page" title="Company Intelligence">${railIcon("intelligence")}<span class="sr-only">Company Intelligence</span></a>
+        <a class="icon-rail-link" href="https://desk.henneth.app/today" title="Signals">${railIcon("signals")}<span class="sr-only">Signals</span></a>
+        <a class="icon-rail-link" href="https://desk.henneth.app/watchlist" title="Watchlist">${railIcon("watchlist")}<span class="sr-only">Watchlist</span></a>
+        <a class="icon-rail-link" href="https://desk.henneth.app/research" title="Research">${railIcon("research")}<span class="sr-only">Research</span></a>
       </nav>
       <div class="icon-rail-spacer"></div>
-      <button class="icon-rail-link" type="button" id="railScheme" title="Change colour scheme"><span aria-hidden="true">SET</span><span class="sr-only">Change colour scheme</span></button>
-      <button class="icon-rail-link" type="button" id="railProfile" title="Sign out"><span aria-hidden="true">USR</span><span class="sr-only">Sign out</span></button>
+      <button class="icon-rail-link" type="button" id="railScheme" title="Change colour scheme">${railIcon("scheme")}<span class="sr-only">Change colour scheme</span></button>
+      <button class="icon-rail-link" type="button" id="railProfile" title="Sign out">${railIcon("profile")}<span class="sr-only">Sign out</span></button>
     </aside>
     <aside class="rail" aria-label="Company directory">
       <div class="rail-head"><strong>Company directory</strong><span>${esc(list.length)} shown</span></div>
@@ -444,6 +455,14 @@ function renderDesk(searchState) {
   };
   $("railScheme")?.addEventListener("click", () => $("schemeToggle")?.click());
   $("railProfile")?.addEventListener("click", () => $("signOut")?.click());
+  const setMobilePanel = (side, open) => {
+    const workspace = $("app");
+    workspace?.classList.toggle(`mobile-${side}-open`, open);
+    const button = side === "left" ? $("ciLeftToggle") : $("ciRightToggle");
+    button?.setAttribute("aria-expanded", String(open));
+  };
+  $("ciLeftToggle")?.addEventListener("click", () => setMobilePanel("left", !$("app")?.classList.contains("mobile-left-open")));
+  $("ciRightToggle")?.addEventListener("click", () => setMobilePanel("right", !$("app")?.classList.contains("mobile-right-open")));
   document.querySelectorAll("[data-symbol]").forEach(btn => {
     btn.onclick = () => pick(btn.dataset.symbol);
     btn.onkeydown = event => moveCompanyFocus(event, btn);

@@ -15,15 +15,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>try{var s=localStorage.getItem("deskScheme");if(s==="dark"||s==="light")document.documentElement.setAttribute("data-scheme",s);}catch(e){}</script>
-  <title>Company Intelligence · Henneth Desk</title>
+  <title>Henneth Company Intelligence</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="shell layout-reference">
     <header class="topbar">
-      <a class="brand" href="https://desk.henneth.app/today" aria-label="Henneth Desk home">
+      <button id="ciLeftToggle" class="mobile-panel-toggle" type="button" aria-label="Open Company Directory" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16M9 9v10"/></svg></button>
+      <a class="brand" href="https://desk.henneth.app/today" aria-label="Henneth Company Intelligence home">
         <img class="brand-mark" src="logo-terminal.svg" alt="" width="535" height="472">
-        <span class="brand-name">Henneth <em>Desk</em></span>
+        <span class="brand-name">Henneth <em>Company Intelligence</em></span>
       </a>
       <div class="desk-tab" aria-current="page">
         <span>Company Intelligence</span>
@@ -33,6 +34,7 @@
         <button id="schemeToggle" class="chrome-btn" type="button" aria-label="Change colour scheme">Scheme: System</button>
         <button id="signOut" class="chrome-btn primary" type="button" aria-label="Sign out" hidden>Sign out</button>
       </div>
+      <button id="ciRightToggle" class="mobile-panel-toggle" type="button" aria-label="Open Company Intelligence directory" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4"/></svg></button>
     </header>
 
     <main id="app" class="workspace">
