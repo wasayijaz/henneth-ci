@@ -388,6 +388,7 @@ function renderGate(message) {
   app.style.removeProperty("--ci-company-bg");
   app.innerHTML = `
     <section class="gate" aria-labelledby="gateTitle">
+      <img class="gate-background" src="/login-background.webp" alt="" aria-hidden="true" width="1672" height="942" loading="eager" decoding="async">
       <div class="gate-copy">
         <p class="eyebrow">Private research workspace</p>
         <h1 id="gateTitle">Company context,<br>one layer deeper.</h1>
