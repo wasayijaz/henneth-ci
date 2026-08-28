@@ -68,6 +68,7 @@ jobs:
           python scripts/check_ci_artifact_integrity.py
       - name: Deploy immutable CI preview
         id: deploy
+        working-directory: Henneth Desk 2.CI.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
@@ -85,6 +86,7 @@ jobs:
       - name: Preview anonymous smoke
         env:
           PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: python scripts/check_ci_release_http_smoke.py --base-url "$PREVIEW_URL"
 
   promote:
@@ -105,6 +107,7 @@ jobs:
       - name: Install Python requirements
         run: python -m pip install -r requirements.txt
       - name: Promote the tested preview without rebuilding
+        working-directory: Henneth Desk 2.CI.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
@@ -123,6 +126,7 @@ jobs:
           HENNETH_CI_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD }}
           HENNETH_CI_NON_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL }}
           HENNETH_CI_NON_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: python scripts/check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated
       - name: Create immutable release evidence artifact
         run: |

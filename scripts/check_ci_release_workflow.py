@@ -13,8 +13,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "ci-production-release.yml"
-PROJECT_LINK = ROOT / ".vercel" / "project.json"
-SUBDIR_PROJECT_LINK = ROOT / "Henneth Desk 2.CI.0" / ".vercel" / "project.json"
+PROJECT_LINK = ROOT / "Henneth Desk 2.CI.0" / ".vercel" / "project.json"
+ROOT_PROJECT_LINK = ROOT / ".vercel" / "project.json"
 VERCEL_CLI_VERSION = "59.9.1"
 
 
@@ -55,6 +55,7 @@ def validate(text: str) -> list[str]:
         "secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD",
         "secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL",
         "secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
+        "secrets.VERCEL_AUTOMATION_BYPASS_SECRET",
     )
     errors = [f"missing release workflow contract: {needle}" for needle in required if needle not in text]
     if "SMOKE_TOKEN" in text:
@@ -63,8 +64,8 @@ def validate(text: str) -> list[str]:
         errors.append("release workflow must not use vercel pull; project-scoped CI tokens cannot reliably read project settings")
     if "--prebuilt" in text:
         errors.append("release workflow must deploy the restamped source preview, not a prebuilt artifact that requires vercel pull")
-    if "working-directory: Henneth Desk 2.CI.0" in text:
-        errors.append("release workflow must invoke Vercel from the repository root; the Vercel project root already points at Henneth Desk 2.CI.0")
+    if text.count("working-directory: Henneth Desk 2.CI.0") != 2:
+        errors.append("release workflow must invoke preview and promotion from the CI application directory")
 
     # GitHub only exposes environment-scoped secrets to jobs that explicitly
     # name the environment. The preview job consumes the Vercel credentials,
@@ -85,9 +86,9 @@ def validate(text: str) -> list[str]:
 def validate_project_link(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     project_link = root / PROJECT_LINK.relative_to(ROOT)
-    subdir_project_link = root / SUBDIR_PROJECT_LINK.relative_to(ROOT)
+    root_project_link = root / ROOT_PROJECT_LINK.relative_to(ROOT)
     if not project_link.exists():
-        errors.append("release workflow requires .vercel/project.json at the repository root")
+        errors.append("release workflow requires Henneth Desk 2.CI.0/.vercel/project.json")
     else:
         try:
             project = json.loads(project_link.read_text(encoding="utf-8"))
@@ -98,8 +99,8 @@ def validate_project_link(root: Path = ROOT) -> list[str]:
                 errors.append("release Vercel project link has the wrong orgId")
             if project.get("projectId") != "prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh":
                 errors.append("release Vercel project link has the wrong projectId")
-    if subdir_project_link.exists():
-        errors.append("release workflow must not keep a nested Henneth Desk 2.CI.0/.vercel/project.json link")
+    if root_project_link.exists():
+        errors.append("release workflow must not keep a repository-root .vercel/project.json link")
     return errors
 
 
@@ -107,6 +108,7 @@ def self_test() -> int:
     passing = "\n".join((
         "workflow_dispatch:", "validate:", "preview:", "promote:", "needs: validate", "needs: preview",
         "environment: ci-production", "check_ci_product_contracts.py", "scripts/preflight.py",
+        "working-directory: Henneth Desk 2.CI.0", "working-directory: Henneth Desk 2.CI.0",
         "Set release artifact cutoff",
         "HENNETH_CI_BUILD_CUTOFF_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)",
         "Finalize CI artifacts for this release commit",
@@ -128,6 +130,7 @@ def self_test() -> int:
         "VERCEL_PROJECT_ID: prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh",
         "secrets.HENNETH_CI_OWNER_SMOKE_EMAIL", "secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD",
         "secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL", "secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
+        "secrets.VERCEL_AUTOMATION_BYPASS_SECRET",
     ))
     if validate(passing):
         print("self-test failed: complete fixture rejected")

@@ -24,6 +24,7 @@ TIMEOUT_SECONDS = 20
 # client in Henneth Desk 2.CI.0/app.js; it is deliberately not a secret.
 SUPABASE_URL = "https://qteoncckohuoatbjjykb.supabase.co"
 SUPABASE_PUBLISHABLE_KEY = "sb_publishable_aQu8P4yrAY7l8Y0AcLth5g_Z3VceUnw"
+VERCEL_BYPASS_SECRET_ENV = "VERCEL_AUTOMATION_BYPASS_SECRET"
 
 
 def fail(message: str) -> None:
@@ -32,6 +33,10 @@ def fail(message: str) -> None:
 
 def request(url: str, token: str | None = None) -> tuple[int, dict[str, Any] | None, str]:
     headers = {"User-Agent": "henneth-ci-release-smoke/1.0"}
+    bypass_secret = str(os.environ.get(VERCEL_BYPASS_SECRET_ENV) or "").strip()
+    if bypass_secret:
+        headers["x-vercel-protection-bypass"] = bypass_secret
+        headers["x-vercel-set-bypass-cookie"] = "true"
     if token:
         headers["Authorization"] = f"Bearer {token}"
     try:
@@ -89,6 +94,8 @@ def shell_smoke(base_url: str) -> None:
     status, _payload, body = request(base_url.rstrip("/") + "/")
     if status != 200:
         fail(f"public login shell returned HTTP {status}")
+    if "vercel.com/sso-api" in body or "Authentication Required" in body:
+        fail(f"public login shell hit Vercel deployment protection; set {VERCEL_BYPASS_SECRET_ENV}")
     if "id=\"loginForm\"" not in body or "Owner access" not in body:
         fail("public login shell does not expose the expected owner login surface")
 
@@ -162,6 +169,20 @@ def self_test() -> int:
         private_smoke("https://ci.example.test", None, 401, "owner_required")
         globals()["request"] = original_request
 
+        os.environ[VERCEL_BYPASS_SECRET_ENV] = "offline-bypass-secret"
+        captured_request: dict[str, Any] = {}
+
+        def fake_request_urlopen(req, timeout):
+            captured_request["headers"] = {key.lower(): value for key, value in req.header_items()}
+            return FakeResponse({"ok": True})
+
+        urllib.request.urlopen = fake_request_urlopen
+        request("https://ci.example.test/")
+        if captured_request.get("headers", {}).get("x-vercel-protection-bypass") != "offline-bypass-secret":
+            print("self-test failed: Vercel protection bypass header was not sent")
+            return 1
+        os.environ.pop(VERCEL_BYPASS_SECRET_ENV, None)
+
         authenticated_calls: list[tuple[str | None, int, str | None]] = []
         globals()["shell_smoke"] = lambda _base_url: None
         globals()["fetch_access_token"] = lambda email, _password: f"token-for-{email}"
@@ -169,6 +190,7 @@ def self_test() -> int:
         prior_env = {name: os.environ.get(name) for name in (
             "HENNETH_CI_OWNER_SMOKE_EMAIL", "HENNETH_CI_OWNER_SMOKE_PASSWORD",
             "HENNETH_CI_NON_OWNER_SMOKE_EMAIL", "HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
+            VERCEL_BYPASS_SECRET_ENV,
         )}
         os.environ.update({
             "HENNETH_CI_OWNER_SMOKE_EMAIL": "owner@example.test",
