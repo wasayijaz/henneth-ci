@@ -7,11 +7,14 @@ preview-to-promotion path, not that Vercel project settings or secrets are live.
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "ci-production-release.yml"
+PROJECT_LINK = ROOT / ".vercel" / "project.json"
+SUBDIR_PROJECT_LINK = ROOT / "Henneth Desk 2.CI.0" / ".vercel" / "project.json"
 VERCEL_CLI_VERSION = "59.9.1"
 
 
@@ -60,6 +63,8 @@ def validate(text: str) -> list[str]:
         errors.append("release workflow must not use vercel pull; project-scoped CI tokens cannot reliably read project settings")
     if "--prebuilt" in text:
         errors.append("release workflow must deploy the restamped source preview, not a prebuilt artifact that requires vercel pull")
+    if "working-directory: Henneth Desk 2.CI.0" in text:
+        errors.append("release workflow must invoke Vercel from the repository root; the Vercel project root already points at Henneth Desk 2.CI.0")
 
     # GitHub only exposes environment-scoped secrets to jobs that explicitly
     # name the environment. The preview job consumes the Vercel credentials,
@@ -74,6 +79,27 @@ def validate(text: str) -> list[str]:
         errors.append("preview job consumes protected Vercel secrets without ci-production environment")
     if "environment: ci-production" not in promote_job:
         errors.append("promote job must retain ci-production environment")
+    return errors
+
+
+def validate_project_link(root: Path = ROOT) -> list[str]:
+    errors: list[str] = []
+    project_link = root / PROJECT_LINK.relative_to(ROOT)
+    subdir_project_link = root / SUBDIR_PROJECT_LINK.relative_to(ROOT)
+    if not project_link.exists():
+        errors.append("release workflow requires .vercel/project.json at the repository root")
+    else:
+        try:
+            project = json.loads(project_link.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            errors.append(f"release Vercel project link is invalid JSON: {exc}")
+        else:
+            if project.get("orgId") != "team_pAWpYAOOLZPwDFoqUeBguGIr":
+                errors.append("release Vercel project link has the wrong orgId")
+            if project.get("projectId") != "prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh":
+                errors.append("release Vercel project link has the wrong projectId")
+    if subdir_project_link.exists():
+        errors.append("release workflow must not keep a nested Henneth Desk 2.CI.0/.vercel/project.json link")
     return errors
 
 
@@ -125,6 +151,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.self_test:
         return self_test()
     errors = validate(WORKFLOW.read_text(encoding="utf-8")) if WORKFLOW.exists() else ["release workflow is missing"]
+    errors.extend(validate_project_link())
     if errors:
         print("ci release workflow: FAIL")
         for error in errors:
