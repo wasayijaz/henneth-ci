@@ -74,7 +74,7 @@ jobs:
           VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
           VERCEL_PROJECT_ID: prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh
         run: |
-          url="$(npx --yes vercel@39.1.0 deploy --yes --token="$VERCEL_TOKEN" --meta githubCommitSha="$GITHUB_SHA" --meta githubCommitRef="$GITHUB_REF_NAME" --meta githubCommitRepo="$GITHUB_REPOSITORY")"
+          url="$(npx --yes vercel@39.1.0 deploy --yes --scope mwasayiq --token="$VERCEL_TOKEN" --meta githubCommitSha="$GITHUB_SHA" --meta githubCommitRef="$GITHUB_REF_NAME" --meta githubCommitRepo="$GITHUB_REPOSITORY")"
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - name: Verify preview is bound to this commit
         id: verify-preview
@@ -112,7 +112,7 @@ jobs:
           VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
           VERCEL_PROJECT_ID: prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh
           PREVIEW_URL: ${{ needs.preview.outputs.url }}
-        run: npx --yes vercel@39.1.0 promote "$PREVIEW_URL" --yes --token="$VERCEL_TOKEN"
+        run: npx --yes vercel@39.1.0 promote "$PREVIEW_URL" --yes --scope mwasayiq --token="$VERCEL_TOKEN"
       - name: Verify production is the promoted preview
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
