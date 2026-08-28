@@ -1,6 +1,6 @@
 """Build the deterministic company scenario lab state snapshot."""
 from __future__ import annotations
-import argparse, json
+import json
 from pathlib import Path
 from company_scenario_lab import parse_scaled
 
@@ -91,12 +91,9 @@ def build(profile_path: Path = PILOT, fundamentals_path: Path = FUND,
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--output", type=Path, default=OUT)
-    args = ap.parse_args()
     data = build()
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

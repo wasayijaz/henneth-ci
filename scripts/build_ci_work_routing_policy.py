@@ -246,5 +246,9 @@ def build(output_path: Path = OUT, write: bool = True) -> dict[str, Any]:
     return output
 
 
-if __name__ == "__main__":
+def main() -> None:
     build()
+
+
+if __name__ == "__main__":
+    main()
