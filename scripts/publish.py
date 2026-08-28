@@ -216,7 +216,7 @@ def main():
             _run(["git", "fetch", "origin", "main"])
             rb = _run(["git", "rebase", "origin/main"])
             if rb.returncode != 0:
-                conflicted = _run(["git", "diff", "--name-only", "--diff-filter=U"]).stdout.split()
+                conflicted = _run(["git", "diff", "--name-only", "--diff-filter=U"]).stdout.splitlines()
                 hand_authored = [f for f in conflicted if not _is_auto(f)]
                 if hand_authored or not conflicted:
                     _run(["git", "rebase", "--abort"])
