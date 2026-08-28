@@ -71,8 +71,8 @@ jobs:
         working-directory: Henneth Desk 2.CI.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_CI_PROJECT_ID }}
+          VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
+          VERCEL_PROJECT_ID: prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh
         run: |
           url="$(npx --yes vercel@39.1.0 deploy --yes --token="$VERCEL_TOKEN" --meta githubCommitSha="$GITHUB_SHA" --meta githubCommitRef="$GITHUB_REF_NAME" --meta githubCommitRepo="$GITHUB_REPOSITORY")"
           echo "url=$url" >> "$GITHUB_OUTPUT"
@@ -80,7 +80,7 @@ jobs:
         id: verify-preview
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
           PREVIEW_URL: ${{ steps.deploy.outputs.url }}
         run: python scripts/check_ci_vercel_deployment_commit.py --deployment-url "$PREVIEW_URL" --commit-sha "$GITHUB_SHA"
       - name: Preview anonymous smoke
@@ -109,14 +109,14 @@ jobs:
         working-directory: Henneth Desk 2.CI.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_CI_PROJECT_ID }}
+          VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
+          VERCEL_PROJECT_ID: prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh
           PREVIEW_URL: ${{ needs.preview.outputs.url }}
         run: npx --yes vercel@39.1.0 promote "$PREVIEW_URL" --yes --token="$VERCEL_TOKEN"
       - name: Verify production is the promoted preview
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
           PREVIEW_DEPLOYMENT_ID: ${{ needs.preview.outputs.deployment_id }}
         run: python scripts/check_ci_vercel_deployment_commit.py --deployment-url https://ci.henneth.app --commit-sha "$GITHUB_SHA" --expected-deployment-id "$PREVIEW_DEPLOYMENT_ID"
       - name: Production owner and non-owner smoke

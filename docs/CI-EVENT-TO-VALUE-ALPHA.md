@@ -121,7 +121,9 @@ same commit:
   `vercel pull`/prebuilt deployment because the CLI project-settings fetch can
   fail under tightly scoped CI deployment tokens. The workflow is code-complete
   but its Vercel Git-deploy setting, protected environment secrets, and first
-  live receipt remain external evidence.
+  live receipt remain external evidence. The CI Vercel project and team IDs are
+  non-secret, versioned release bindings; only the deployment token remains a
+  protected environment secret.
 - **Production-path change applied (2026-08-28):** the `henneth-ci` Vercel
   project was on the Hobby plan with Git-triggered deployments enabled, while
   its Standard Protection excluded production custom domains. The owner
