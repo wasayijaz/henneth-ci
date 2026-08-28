@@ -940,7 +940,12 @@
    "broker_challenge": null,
    "worst_case": "A repeat of the July pattern — Brent reversing sharply after a spike (the dossier logged a 7,200-point KSE-100 swing in one session on easing tensions) — combined with post-overhaul management disruption could stall the 20-day uptrend and drag price back toward the 229.28 support/50-day SMA area, erasing the +6.64% 20-day gain the constructive read is built on."
   },
-  "reaffirmed": false
+  "reaffirmed": false,
+  "qa": {
+   "verdict": "clean_partial",
+   "checked": "2026-08-28",
+   "note": "Deterministic room_verify.py: low-severity fairvalue.spread only (methods disagree 4.0x, a known screen limitation not a factual error). Agent-based adversarial QA (room-verifier) could not complete this cycle: subagent session limit hit before PPL check finished. No content errors found on manual spot check against dossier."
+  }
  },
  "NBP": {
   "built": "2026-08-24 18:28",
@@ -2943,7 +2948,7 @@
    "technical_stance": "cautious"
   },
   "fa_memo": {
-   "read": "POL is a highly profitable E&P name — a ~48% net margin on 56.42B revenue and a trailing P/E of 7.51 that sits in the cheapest third of PSX names, with forward P/E slightly lower (7.40) implying modest earnings growth. But the desk's composite fair-value model puts fair value at 540.89 against a 747.47 price, a 27.6% overvaluation — driven by wide disagreement across methods (relative-PE says 827.76, roughly fair, while Graham/earnings-power/DDM cluster much lower at 392-587). So 'cheap on peer P/E' and 'rich vs intrinsic-value methods' are both true here depending on lens. The 10.45% yield with a 78.42% payout looks funded by real earnings rather than borrowing, but leaves limited cushion if oil/gas realizations soften.",
+   "read": "POL is a highly profitable E&P name — a ~48% net margin on 56.42B revenue and a trailing P/E of 7.51 that sits in the cheapest third of PSX names, with forward P/E slightly lower (7.40) implying modest earnings growth. But the desk's composite fair-value model puts fair value at 540.89 against a 747.47 price, a 27.6% overvaluation — driven by wide disagreement across methods (relative-PE says 827.76, roughly fair, while Graham/earnings-power/DDM cluster much lower at 392-587). So 'cheap on peer P/E' and 'rich vs intrinsic-value methods' are both true here depending on lens. The 6.69% trailing-dividend-implied yield with a 78.42% payout looks funded by real earnings rather than borrowing, but leaves limited cushion if oil/gas realizations soften.",
    "valuation_stance": "rich_vs_fair",
    "earnings_quality": "Strong ~48% net margin (27.15B net income on 56.42B revenue), positive EPS of 95.64, no loss or negative-EPS flags in the data.",
    "dividend_safety": "Payout ratio 78.42% against a high-margin earnings base and a recent run of dividends (up to Rs72.5 final, plus interims) suggests the distribution is earnings-covered, though the payout level leaves little room if earnings compress.",
@@ -2962,7 +2967,7 @@
     "Trailing P/E 7.51 sits in the cheapest third of PSX names, and forward P/E 7.40 is lower than trailing, implying earnings growth ahead",
     "48% net margin (27.15B net income on 56.42B revenue) shows real, high-quality profitability, not accounting-driven",
     "Price is above both SMA20 (705.72) and SMA50 (693.53) with a 4.08x volume surge confirming the move; 'Trend strength turning up' has a 0.67 hit rate over 45 occurrences and 'Quiet new high' 0.83 over 12",
-    "10.45% dividend yield backed by a 78.42% payout ratio that the fundamental memo reads as earnings-covered, not debt-funded"
+    "6.69% trailing-dividend-implied yield (Rs 50.00/share over the last completed payout at the 747.47 session price) backed by a 78.42% payout ratio that the fundamental memo reads as earnings-covered, not debt-funded"
    ],
    "best_evidence": "The 67% YoY earnings jump and record PKR100/share dividend is a confirmed, impact-4 material filing fact, not sentiment.",
    "what_would_break_it": "RSI14 at 80 is deeply overbought after a 9.25% 20-day run; a stall or reversal toward the SMA20 support at 705.72, or toward the composite fair value of 540.89 (27.6% below spot), would invalidate the momentum case."
@@ -2980,7 +2985,12 @@
    "broker_challenge": "The only supporting document is a filing-derived news headline, not an independent broker note — the fa_memo explicitly says it 'carries no track-record annotation' and 'should be read as a headline filing fact rather than an analytical call.' It omits the driver of the beat (e.g., whether the Aug 13 vessel-attack/Oman-spill oil price spike inflated this quarter's realized prices) and gives no view on sustainability — a single strong quarter reported via a news wire is not evidence of a repeatable earnings trend.",
    "worst_case": "A reversion toward the composite fair value of 540.89 would represent roughly a 27.6% decline from the 747.47 price, plausible given the RSI14-80 overbought condition, the already-narrow 3.09% gap to the 20-day high, and a volatility_rank of 4.5."
   },
-  "reaffirmed": false
+  "reaffirmed": false,
+  "qa": {
+   "verdict": "fixed",
+   "checked": "2026-08-28",
+   "note": "bull_case pillar and fa_memo cited stated div_yield 10.45% (computed off pending Rs72.5 declared dividend, not yet ex-dated) as a realized trailing yield; corrected to 6.69% trailing-implied yield (Rs50.00 last completed payout / 747.47 price), matching state/verify.json medium-severity flag."
+  }
  },
  "BAFL": {
   "built": "2026-08-05 17:50",
