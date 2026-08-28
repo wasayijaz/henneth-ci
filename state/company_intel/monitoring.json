@@ -1,10 +1,10 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-08-27T22:11:24+05:00",
+ "as_of": "2026-08-28T15:20:00+05:00",
  "source_as_of": {
   "source_registry": "2026-08-27T22:11:24+05:00",
-  "source_qa": "2026-08-27 05:01",
+  "source_qa": "2026-08-28 15:20",
   "change_intelligence": "2026-08-27 21:10",
   "event_ledger": "2026-08-27 09:32",
   "operating_events": "2026-08-27",
@@ -1553,7 +1553,9 @@
     "registry_status": "degraded",
     "monitored_page_count": 2,
     "document_link_count": 22,
-    "quality_flags": [],
+    "quality_flags": [
+     "registry_degraded"
+    ],
     "missing_required_source": false
    },
    "activity": {
@@ -1707,7 +1709,7 @@
      }
     },
     {
-     "alert_id": "ci_alert_e9d9520be21eb3fd2203",
+     "alert_id": "ci_alert_d5eeda3ed3230b63c6a9",
      "symbol": "LUCK",
      "type": "source_registry_degraded",
      "status": "open",
@@ -1722,7 +1724,9 @@
      },
      "evidence_identity": {
       "registry_status": "degraded",
-      "quality_flags": [],
+      "quality_flags": [
+       "registry_degraded"
+      ],
       "missing_required_source": false
      }
     }
@@ -3948,9 +3952,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "5cb7d070a4813b3e4f71c8aff4ec971db2004f24",
-  "build_cutoff_at": "2026-08-28T18:30:17Z",
-  "generated_at": "2026-08-28T18:30:17Z",
+  "source_commit_sha": "d3cc2041422f6ecbe0ffdd5be0bc74d89fc0bc9a",
+  "build_cutoff_at": "2026-08-28T18:55:43Z",
+  "generated_at": "2026-08-28T18:55:43Z",
   "artifact_path": "state/company_intel/monitoring.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
