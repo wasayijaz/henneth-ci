@@ -1,13 +1,13 @@
 {
- "updated": "2026-08-27 21:49",
+ "updated": "2026-08-28 15:30",
  "regime": "neutral",
  "geo_risk": {
-  "score": 54,
+  "score": 55,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260827-BML-obv_divergence_up",
+   "id": "20260828-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260827-TPLT-donchian55_break",
+   "id": "20260828-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,7 +43,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260827-GAL-trend_momo_combo",
+   "id": "20260828-GAL-trend_momo_combo",
    "ticker": "GAL",
    "strategy": "trend_momo_combo",
    "template": "Trend + momentum combo",
@@ -52,7 +52,7 @@
    "hold_sessions": 12,
    "backtest": {
     "hit_rate": 0.579,
-    "net_expectancy_pct": 1.3,
+    "net_expectancy_pct": 1.27,
     "n": 38,
     "oos_hit": 0.6
    },
@@ -61,7 +61,7 @@
    "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 58% over 38 trades (+1.3% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260827-NICL-roc60_leader_pullback",
+   "id": "20260828-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -83,11 +83,11 @@
  "top_predictable": [
   {
    "ticker": "DCR",
-   "score": 76.8
+   "score": 77.0
   },
   {
    "ticker": "XLI",
-   "score": 73.0
+   "score": 72.2
   },
   {
    "ticker": "GLD",
@@ -357,18 +357,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-25T17:47:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-25T20:05:00+05:00",
-   "outcome": "2 full (CNERGY, UBL), 0 delta, 0 reaffirm. Both QA-verified w/ fixes applied (CNERGY: mislabeled quarter; UBL: stale-price P/E). Translated (20 fields ur). room_score: 143 resolved (0 new this run). NOT PUSHED: preflight FAILED pre-existing (ask_contract context_too_large; evidence_watchlist authoritative vs pure-builder mismatch) unrelated to this batch."
-  },
-  {
-   "started": "2026-08-26T11:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-26T11:35:00+05:00",
-   "outcome": "AM checkpoint. FINDING: PSX/SBP closed today 2026-08-26 for Eid Milad-un-Nabi (federal holiday) per news-sentinel's web sweep, but state/calendar.json's holidays array does NOT list 2026-08-26 -- the step-2 holiday gate as coded missed it and the cycle ran anyway; owner should add this date to calendar.json (news-sentinel lacks write permission there). run_cloud.py exited 1: internal preflight.py FAIL, same pre-existing check_ask_henneth.mjs ask-contract check that blocked 2026-08-25's two cycles (unrelated to this run). news-sentinel appended 2 items (230 total) -- Pakistan $1-2bn capital-markets return plan detail (impact 3), holiday notice (impact 1); max impact 3, no escalation. No open positions, monitor skipped. build_dashboard/publish NOT run (already failed via run_cloud.py's internal calls) -- nothing committed/pushed, live site unchanged from prior cycle. Watchdog not run (nothing published)."
-  },
-  {
    "started": "2026-08-26T17:33:00+05:00",
    "mode": "light",
    "ended": "2026-08-26T17:40:00+05:00",
@@ -385,6 +373,18 @@
    "mode": "room",
    "ended": "2026-08-26T18:08:00+05:00",
    "outcome": "Follow-up to prior blocked cycle: fixed CI peer_registry preflight failures (state/company_intel/peer_registry.json was stale, missing member_details/formal_peer_details vs current build_peer_registry.py output -> regenerated). preflight now green (1 non-gating WARN: 101 tickers backfilling history). PUBLISHED: room cycle (MARI+OGDC full debate + QA fixes + i18n + peer_registry fix). watchdog OK."
+  },
+  {
+   "started": "2026-08-27T21:15:00+05:00",
+   "mode": "full",
+   "ended": "2026-08-27T21:57:41+05:00",
+   "outcome": "regime=neutral geo-risk=54/moderate | headline: Three energy-sector dividend blowouts (APL, POL, HUBC) couldn't stop the KSE-100 from giving back 1,279 points and closing flat | watchdog=OK (app shell + public files serve, account gate intact) | pushed=yes (after clearing a stale .git/index.lock that had silently blocked the first publish attempt)"
+  },
+  {
+   "started": "2026-08-27T21:40:00+05:00",
+   "mode": "light-escalated",
+   "ended": "2026-08-27T21:58:00+05:00",
+   "outcome": "PM checkpoint (delayed, ~21:55 PKT). health ok. news-sentinel appended 4 items (237 total) -- APL FY26 +63% YoY w/ PKR40 dividend (impact 4), POL 4QFY26 +67% YoY w/ record PKR100 dividend (impact 4, later corrected to +47% by market-analyst), HUBC 4QFY26 +39% YoY w/ PKR5 dividend (impact 4, flagged premature -- actual results due 2026-08-31); escalation fired -> macro-agent (regime neutral, geo-risk 54/moderate) + market-analyst (daily_read: index -1,279pts/flat close despite dividend beats, tone neutral) ran. No open positions, monitor skipped. build_dashboard+preflight OK. Publish: state changes absorbed into concurrent 'Daily desk refresh 2026-08-27' commit (1e8418e6, 21:55:54 PKT) from the once-daily full-pipeline task racing on the same checkout -- verified live via git show/content check, no separate checkpoint commit needed. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
   }
  ]
 }
