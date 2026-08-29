@@ -37,6 +37,13 @@ def _run(cmd, **kw):
 
 
 def _git_running() -> bool:
+    # `tasklist` exists only on Windows, but .github/workflows/desk-data.yml runs this same
+    # script on ubuntu — there an unguarded call raises FileNotFoundError and takes the whole
+    # cloud publish down whenever a stale .git/index.lock happens to exist. The cloud runner is
+    # a fresh single-process checkout with no competing git, so "nothing is holding the lock"
+    # is the correct answer there and the caller clears it.
+    if not sys.platform.startswith("win"):
+        return False
     r = _run(["tasklist", "/FI", "IMAGENAME eq git.exe"])
     # a real match adds a data row containing "git.exe"; no match prints "INFO: No tasks..."
     return "git.exe" in r.stdout

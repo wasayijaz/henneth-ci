@@ -3,6 +3,7 @@ import http.server
 import os
 import re
 import sys
+import urllib.parse
 from pathlib import Path
 
 os.chdir(Path(__file__).resolve().parent.parent)
@@ -16,14 +17,25 @@ class NoCache(http.server.SimpleHTTPRequestHandler):
         # Keep local preview behaviour aligned with the production shell rewrites:
         # clean dashboard routes are served by dashboard/index.html, while real
         # assets and state files continue through SimpleHTTPRequestHandler.
-        clean = path.split("?", 1)[0].strip("/")
+        # Decode and normalise BEFORE anything below inspects the path. The parent
+        # SimpleHTTPRequestHandler unquotes and drops "."/".." segments itself, so a guard
+        # that reads the raw wire path is checking a different string from the one that
+        # eventually gets opened: "/%63onfig/desk.json", "/Config/desk.json" (NTFS is
+        # case-insensitive) and "/../config/desk.json" all walked straight past the deny.
+        raw = path.split("?", 1)[0].split("#", 1)[0]
+        segments = [
+            part
+            for part in urllib.parse.unquote(raw).replace("\\", "/").split("/")
+            if part and part not in (".", "..")
+        ]
+        clean = "/".join(segments)
         # AGENTS.md guardrail 9: config/desk.json holds the owner's real capital and the
         # Telegram bot token and must never be served. This handler chdirs to the repo root,
         # so without this deny the whole config/ tree (and .env) is readable by any local
         # client at http://127.0.0.1:<port>/config/desk.json.
         # Point at a path that cannot exist so the normal 404 flow (the branded page below)
         # handles it, rather than emitting a second response from inside translate_path.
-        if clean == ".env" or clean.split("/", 1)[0] in {"config", ".git"}:
+        if clean.casefold() == ".env" or (segments and segments[0].casefold() in {"config", ".git"}):
             return str(Path(".not-served").resolve())
         if not clean.startswith("dashboard/"):
             dashboard_asset = Path("dashboard", clean)

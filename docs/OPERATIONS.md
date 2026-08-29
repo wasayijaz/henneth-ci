@@ -1106,6 +1106,35 @@ numerically against the shared versions over a 300-bar random series (`np.array_
 
 ---
 
+## 9i. Fixed bug class — a guard that reads the RAW request path the framework decodes later (2026-08-29)
+
+`scripts/serve.py` gained a deny-list so `config/desk.json` (real trading capital + the Telegram bot
+token, AGENTS.md guardrail 9) and `.env` could never be served by the local dev server. The check ran
+inside `translate_path()` on the **raw wire path** — still percent-encoded, still containing `..`, and
+compared case-sensitively — while `super().translate_path()` unquotes and drops `.`/`..` segments
+*afterwards*. The guard and the open() were therefore inspecting two different strings. Confirmed
+empirically against the pre-fix file (`curl --path-as-is`, dev server on a scratch port):
+
+```
+/config/desk.json    -> 404      (the only case the deny-list actually caught)
+/%63onfig/desk.json  -> 200      secrets served
+/Config/desk.json    -> 200      secrets served (NTFS is case-insensitive)
+/../config/desk.json -> 200      secrets served
+```
+
+The same raw string also fed `Path("dashboard", clean)`, so `..` walked straight out of `dashboard/`.
+
+**Rule: normalise once, at the top, and let every downstream check read the normalised value.** Decode
+(`urllib.parse.unquote`), strip the query/fragment, split on both separators, drop `.`/`..` segments,
+and compare with `.casefold()` — before any deny-list, route regex or path join looks at it. A guard
+placed *upstream* of the framework's own decoding step is not a guard.
+
+Detection, whenever a path/URL/identifier deny-list is added or touched: issue the four probes above as
+real requests against a scratch port and read the status codes. Reading the code is not enough — this
+bug looks correct on the page.
+
+---
+
 ## 10. If the live site looks wrong — triage order
 
 1. `python scripts/watchdog.py` — is it stale, degraded, or serving empty? It tells you which.
