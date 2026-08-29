@@ -281,21 +281,42 @@ function addIsoDateVariants(set, iso) {
   }
 }
 
-function dateToIso(value) {
+function isoFrom(year, month, day) {
+  const y = String(year).length === 2 ? `20${year}` : String(year);
+  return `${y}-${String(Number(month)).padStart(2, '0')}-${String(Number(day)).padStart(2, '0')}`;
+}
+
+// Every ISO date a written date could plausibly mean. Returns a LIST because a numeric date such as
+// "20/08/2026" is genuinely ambiguous — day-first here, month-first in US-flavoured model output.
+// Offering both readings is safe: a candidate still only clears the gate if CONTEXT actually holds
+// that date. Before this, SLASH_DATE_RE matched such dates but nothing could ever ground them
+// (facts.dates holds ISO and named forms only), so ANY slash-formatted date failed the whole answer.
+function dateCandidates(value) {
   const text = normalizeDateText(value);
-  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
-  if (iso) return text;
-  let match = new RegExp(`^(\\d{1,2})\\s+(${MONTH_PATTERN})\\s+(\\d{2,4})$`, 'i').exec(text);
-  if (!match) {
-    const monthFirst = new RegExp(`^(${MONTH_PATTERN})\\s+(\\d{1,2})\\s+(\\d{2,4})$`, 'i').exec(text);
-    if (!monthFirst) return null;
-    const month = MONTH_LOOKUP.get(monthFirst[1].toLowerCase());
-    const year = monthFirst[3].length === 2 ? `20${monthFirst[3]}` : monthFirst[3];
-    return `${year}-${String(month).padStart(2, '0')}-${String(Number(monthFirst[2])).padStart(2, '0')}`;
-  }
-  const month = MONTH_LOOKUP.get(match[2].toLowerCase());
-  const year = match[3].length === 2 ? `20${match[3]}` : match[3];
-  return `${year}-${String(month).padStart(2, '0')}-${String(Number(match[1])).padStart(2, '0')}`;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return [text];
+  const dayFirst = new RegExp(`^(\\d{1,2})\\s+(${MONTH_PATTERN})\\s+(\\d{2,4})$`, 'i').exec(text);
+  if (dayFirst) return [isoFrom(dayFirst[3], MONTH_LOOKUP.get(dayFirst[2].toLowerCase()), dayFirst[1])];
+  const monthFirst = new RegExp(`^(${MONTH_PATTERN})\\s+(\\d{1,2})\\s+(\\d{2,4})$`, 'i').exec(text);
+  if (monthFirst) return [isoFrom(monthFirst[3], MONTH_LOOKUP.get(monthFirst[1].toLowerCase()), monthFirst[2])];
+  const numeric = /^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$/.exec(text);
+  if (!numeric) return [];
+  return [[numeric[1], numeric[2]], [numeric[2], numeric[1]]]
+    .filter(([day, month]) => Number(month) >= 1 && Number(month) <= 12 && Number(day) >= 1 && Number(day) <= 31)
+    .map(([day, month]) => isoFrom(numeric[3], month, day));
+}
+
+// A bare integer carrying no financial marker — no Rs, no %, no decimal point, no thousands comma —
+// is prose, not a claim: a list ordinal ("1.") or a count of things visible in CONTEXT ("2 tickers").
+// Such counts are derived at answer time and can never appear in facts.numbers, so the strict
+// grounding check used to reject the entire answer over them. The allowlist is deliberately narrow:
+// anything that could be a figure (a price, a ratio, index points) stays strictly grounded.
+const COUNTING_NOUN_RE = /^\s+(?:tickers?|stocks?|companies|company|sectors?|names?|days?|sessions?|weeks?|months?|years?|items?|rows?|entries|entry|results?|positions?|setups?|holdings?|announcements?|events?)\b/i;
+
+function isProseInteger(answer, index, token) {
+  if (!/^\d{1,3}$/.test(token)) return false;
+  const after = answer.slice(index + token.length);
+  if (COUNTING_NOUN_RE.test(after)) return true;
+  return /^[.)]\s/.test(after) && /(?:^|\n)[ \t]*$/.test(answer.slice(0, index));
 }
 
 function collectSupportedFacts(context) {
@@ -326,8 +347,7 @@ function markDateSpans(answer, facts) {
     for (const match of answer.matchAll(regex)) {
       const raw = match[0];
       const normalized = normalizeDateText(raw);
-      const iso = dateToIso(raw);
-      if (!facts.dates.has(normalized) && !(iso && facts.dates.has(iso))) throw new Error('ungrounded_date');
+      if (!facts.dates.has(normalized) && !dateCandidates(raw).some((iso) => facts.dates.has(iso))) throw new Error('ungrounded_date');
       spans.push([match.index, match.index + raw.length]);
     }
   };
@@ -351,6 +371,7 @@ export function validateAnswer(answer, context) {
   const dateSpans = markDateSpans(answer, facts);
   for (const match of answer.matchAll(NUMBER_RE)) {
     if (inSpan(match.index, dateSpans)) continue;
+    if (isProseInteger(answer, match.index, match[0])) continue;
     const normalized = normalizeNumberToken(match[0]);
     if (normalized && !facts.numbers.has(normalized)) throw new Error('ungrounded_number');
   }

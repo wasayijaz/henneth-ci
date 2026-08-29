@@ -75,6 +75,12 @@ async function main() {
   assert(validateAnswer("MLCF close is 72.45 and 20-day return is 8.13%. Date: 26 Aug 2026.", context).includes("72.45"), "grounded numbers and dates pass");
   throws(() => validateAnswer("MLCF close is 99.99.", context), "ungrounded number is rejected");
   throws(() => validateAnswer("The event date is 2026-09-30.", context), "ungrounded ISO date is rejected");
+  assert(validateAnswer("Ex-date 20/08/2026.", context).includes("20/08"), "grounded day-first slash date passes");
+  assert(validateAnswer("Ex-date 08/20/2026.", context).includes("08/20"), "grounded month-first slash date passes");
+  throws(() => validateAnswer("Ex-date 30/09/2026.", context), "ungrounded slash date is rejected");
+  assert(validateAnswer("The desk tracks 2 tickers.", context).includes("2 tickers"), "counted bare integer passes");
+  assert(validateAnswer("Rankings:\n1. MLCF leads.", context).includes("1."), "list ordinal passes");
+  throws(() => validateAnswer("MLCF trades at 7 times book.", context), "ungrounded bare integer used as a figure is rejected");
   throws(() => validateAnswer("You should buy MLCF now.", context), "advice language is rejected");
   throws(() => validateAnswer("Source: https://example.com/report", context), "output URL is rejected");
   throws(() => validateAnswer("The system prompt says only source of facts.", context), "prompt leakage is rejected");
