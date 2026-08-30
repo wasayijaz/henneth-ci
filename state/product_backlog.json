@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-23",
+ "updated": "2026-08-30",
  "note": "Ranked improvement backlog for the PSX Trade Desk. Written weekly by the psx-desk-product-scout task (proposes + ranks only, never builds). The owner picks items to implement. score = impact(high3/med2/low1) / effort(high3/med2/low1); higher = do sooner.",
  "categories": "accuracy | clarity | feature",
  "items": [
@@ -85,6 +85,28 @@
    "resolved_note": "Fixed 2026-08-23 — scripts/room_dossier.py's recent_dividends entries now carry a normalized type (interim/final/unknown) derived from fetch_dividends.py's already-parsed period code (I/II/III/IV/F) instead of free-text guessing; dashboard/app.js's Dividends table shows the same mapping as a badge next to each payout row."
   },
   {
+   "id": "quant-snapshot-staleness-invisible",
+   "category": "clarity",
+   "title": "quant.json staleness (84% of universe >6 days stale per verify.json's own flag) is buried in a raw date, never flagged",
+   "why": "verify.json's quant.date check (scripts/room_verify.py:85-92, sev medium, threshold >6 days) fires on 343 of 407 tickers this cycle — e.g. PIAHCLA's quant snapshot is 43 days stale — but nothing in the dashboard reads that field. The ticker page shows only the raw date ('quant as of {q.date} close', app.js:~3475 and ~3577) with no staleness callout, unlike the structurally identical room.price_staleness flag which already gets an explicit stale-pct pill (app.js:~3515). The Screener page (app.js:~5484) has no date or staleness column at all, so a user screening across the universe has no way to tell a fresh snapshot from a 6-week-old one for any given row.",
+   "existing_check": "grepped dashboard/app.js for quant.date/staleness handling — only two hits, both a plain date string with no comparison logic (app.js:~3475, ~3577); grepped pageScreener (app.js:~5484-5560) for date/staleness — zero hits. Confirmed verify.json already computes and stores this exact flag every cycle (scripts/room_verify.py:85-92) with the same shape as room.price_staleness, which already has a working render pattern (app.js:~3515) to copy. Distinct from the done verify-json-unsurfaced-qa item, which wired up room.price_staleness/div_yield/claim.price but left quant.date (the single most common flag in the file, 343 occurrences) unsurfaced.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
+   "id": "public-roadmap-from-backlog",
+   "category": "feature",
+   "title": "pageShipped shows the past (changelog.json); nothing shows what's queued (product_backlog.json)",
+   "why": "pageShipped (app.js:6125-6136) reads changelog.json and is explicitly retrospective ('What actually changed... most recent first'). There is no forward-looking counterpart: state/product_backlog.json already holds a curated, ranked list of upcoming improvements but nothing in dashboard/app.js reads it. A read-only 'what's next' page mirroring pageShipped's structure — title + category + why only, no score/effort/existing_check (that metadata is internal scouting detail, not reader-facing) — would close the loop on the self-improvement narrative docs/OPERATIONS.md §3c already documents, for the cost of one more static-JSON page in the pattern pageShipped already validates. Pricing-independent, no live agent runs, no recurring cost.",
+   "existing_check": "`rg -n \"product_backlog\" dashboard/app.js` returns zero hits — confirmed no consumer exists anywhere in the dashboard today. Read pageShipped (app.js:6125-6136) in full as the direct structural precedent: same page family (a page reading one already-produced state JSON file, reader-facing subset only), different source file and time direction, so this is a new page alongside it, not a rebuild of it.",
+   "impact": "med",
+   "effort": "low",
+   "score": 2.0,
+   "status": "proposed"
+  },
+  {
    "id": "fairvalue-card-hide-method-spread",
    "category": "clarity",
    "title": "Fair-value card headlines one blended number while methods disagree 3-4x",
@@ -141,6 +163,17 @@
    "score": 1.5,
    "status": "done",
    "resolved_note": "Fixed 2026-08-23 — scripts/room_verify.py adds a fundamentals.div_yield crossfoot check (new _num() parser, DIV_YIELD_TOLERANCE_PCT=15.0, trailing-365-day dividend window) that flags a mismatch as sev medium with escalate:true when the vendor div_yield is >15% off the desk's own recomputed figure; dashboard/app.js shows a 'crossfoot flag' tag on the Div yield fact row."
+  },
+  {
+   "id": "room-qa-badge-stale-after-reaffirm",
+   "category": "accuracy",
+   "title": "QA 'checked'/verdict badge still shows on 21 of 48 Room sessions whose case text was rewritten after that check",
+   "why": "Compared qa.checked vs reaffirmed across all 48 built rooms.json entries: 21 (44%) have reaffirmed dated AFTER qa.checked — e.g. TBL built 2026-07-20, qa.checked 2026-07-20 (verdict clean), but reaffirmed 2026-07-26 rewrote the bull/bear case content 6 days later. Same pattern on UBL, OGDC, MARI, MCB, LUCK, PSO, CNERGY and 14 others. The Verifier's clean/flagged verdict was true of a version of the case that is no longer on screen, yet renderTranscript's QA turn (app.js:~2930) and the reveal-card badge (app.js:~4006) both render it as if it still applies — neither compares room.reaffirmed against room.qa.checked. The badge is the desk's core trust signal ('QA checked' = fact-checked); showing it against stale content misrepresents what was actually verified.",
+   "existing_check": "read renderTranscript's QA turn (app.js:~2930-2931, renders qa.checked date + verdict with no reaffirmed comparison), the blocked-verdict gate (app.js:~2950, `room.qa.verdict === \"blocked\"`, no date logic), and the reveal-card badge (app.js:~4006, `s.qa ? qabadge ok \"QA checked\" : qabadge warn \"Not yet verified\"` — pure truthy/falsy check). Confirmed this is distinct from the done room-qa-verified-badge-missing item, which only added the 'Not yet verified' state for qa=null — it did not add any reaffirmed-vs-checked date comparison, so a verified-then-rewritten room still reads as fully verified today. Cross-checked against state/rooms.json directly for all 48 tickers to get the 21/48 count.",
+   "impact": "high",
+   "effort": "med",
+   "score": 1.5,
+   "status": "proposed"
   },
   {
    "id": "dossier-recent-announcements-window-gap",
