@@ -24,7 +24,12 @@ def main() -> None:
         fail("ownership source review manifest is missing")
     manifest = load_json(OUT, {})
     rebuilt = build(write=False)
-    if dump(manifest) != dump(rebuilt):
+    # built_at is a freshness stamp (today's date), not a data field: it is
+    # expected to differ from the committed manifest on any day after it was
+    # generated. Compare everything else for determinism.
+    manifest_data = {k: v for k, v in manifest.items() if k != "built_at"}
+    rebuilt_data = {k: v for k, v in rebuilt.items() if k != "built_at"}
+    if dump(manifest_data) != dump(rebuilt_data):
         fail("ownership source review manifest is stale or non-deterministic")
     pilot = list(((load_json(STATE / "company_profiles.json", {}).get("pilot") or {}).get("symbols") or []))
     if len(pilot) != 20 or len(set(pilot)) != 20 or manifest.get("pilot_symbols") != pilot:
