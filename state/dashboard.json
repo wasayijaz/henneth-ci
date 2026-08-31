@@ -1,8 +1,8 @@
 {
- "updated": "2026-08-31 11:49",
+ "updated": "2026-08-31 09:53",
  "regime": "neutral",
  "geo_risk": {
-  "score": 55,
+  "score": 56,
   "band": "moderate"
  },
  "signals": [
@@ -91,15 +91,15 @@
   },
   {
    "ticker": "GLD",
-   "score": 72.0
-  },
-  {
-   "ticker": "USRUT",
-   "score": 66.8
+   "score": 69.8
   },
   {
    "ticker": "FFC",
-   "score": 66.3
+   "score": 65.9
+  },
+  {
+   "ticker": "USRUT",
+   "score": 65.9
   },
   {
    "ticker": "INDU",
@@ -111,7 +111,7 @@
   },
   {
    "ticker": "USDJI",
-   "score": 64.7
+   "score": 65.2
   },
   {
    "ticker": "FHAM",
@@ -367,12 +367,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-26T17:40:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-26T17:58:00+05:00",
-   "outcome": "2 full (MARI, OGDC) + 0 delta + 2 reaffirm (UBL, CNERGY). QA: both flagged/blocked by room-verifier, both fixed in place (MARI div_yield 5.54%->4.49% + payout_ratio 51.69%->41.46%; OGDC div_yield 4.71%->4.89%). i18n: 21 fields translated to Urdu. room_score: 143 claims resolved (0 new this batch). NOT PUSHED — preflight FAILED on pre-existing Company Intelligence peer_registry mismatch (22 fails, unrelated to Room work, predates this cycle)."
-  },
-  {
    "started": "2026-08-26T18:05:00+05:00",
    "mode": "room",
    "ended": "2026-08-26T18:08:00+05:00",
@@ -395,6 +389,12 @@
    "mode": "light-escalated",
    "ended": "2026-08-28T13:25:33+05:00",
    "outcome": "AM checkpoint (delayed fire, ~11:00 slot). Gate required=true (first checkpoint of day). health ok. news-sentinel appended 5 items (KSE-100 +0.21%, FESCO privatisation shortlist, BOP +44% profit, BML Rs4.68bn loss, PAKT +30% profit) - 3 impact=4 items triggered escalation. Ran macro-agent (regime unchanged: neutral) and market-analyst (daily_read.json updated) per escalation. No open positions, monitor skipped. build_dashboard.py PREFLIGHT FAILED on unrelated pre-existing issue (ownership source manifest stale/non-deterministic, scripts/check_ownership_source_manifest.py) - NOT published, last-good site unchanged. Gate acked (checkpoint-am)."
+  },
+  {
+   "started": "2026-08-31T11:00:00+05:00",
+   "mode": "light",
+   "ended": "2026-08-31T11:05:00+05:00",
+   "outcome": "AM checkpoint. Gate required (first of day). health ok. news-sentinel: 1 item appended (macro intraday KSE-100 swing, impact 3, no escalation). No open positions, monitor skipped. build_dashboard preflight OK (WARN only, non-gating). Published (data-only) and pushed to main -> Vercel deploying. Gate acked checkpoint-am."
   }
  ]
 }

@@ -24,7 +24,7 @@
   "NRL",
   "CNERGY"
  ],
- "as_of": "2026-08-27 18:17",
+ "as_of": "2026-08-28 15:26",
  "source": {
   "company_financial_series": "state/company_financial_series.json",
   "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -46,12 +46,12 @@
  },
  "summary": {
   "company_count": 20,
-  "eligible_fact_count": 41,
-  "audit_only_fact_count": 932,
-  "quarantined_fact_count": 575,
+  "eligible_fact_count": 35,
+  "audit_only_fact_count": 944,
+  "quarantined_fact_count": 587,
   "missing_slot_count": 159,
-  "source_conflict_count": 64,
-  "withheld_future_source_fact_count": 18,
+  "source_conflict_count": 68,
+  "withheld_future_source_fact_count": 0,
   "forecast_ready_company_count": 2
  },
  "companies": {
@@ -46355,12 +46355,12 @@
   "LUCK": {
    "symbol": "LUCK",
    "status": "blocked",
-   "eligible_fact_count": 14,
-   "audit_only_fact_count": 211,
-   "quarantined_fact_count": 217,
+   "eligible_fact_count": 8,
+   "audit_only_fact_count": 223,
+   "quarantined_fact_count": 229,
    "missing_slot_count": 6,
-   "source_conflict_count": 21,
-   "withheld_future_source_fact_count": 18,
+   "source_conflict_count": 25,
+   "withheld_future_source_fact_count": 0,
    "facts": [
     {
      "reconciliation_id": "finrec_8c392e54ef3a4e3a623c",
@@ -57661,8 +57661,10 @@
      "unit_multiplier": 1000,
      "raw_value": "29,497,340",
      "normalized_value": 29497340000.0,
-     "status": "eligible",
-     "reasons": [],
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection"
+     ],
      "source": {
       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
       "fact_id": "fact_4d8a7d4dd5a135ad941e2350",
@@ -57691,8 +57693,8 @@
       "version": "financial_statement_v2",
       "revision": "block_geometry_v5"
      },
-     "evidence_label": "fact_source_reported",
-     "confidence": "high"
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
     },
     {
      "reconciliation_id": "finrec_1cf4e5935578a57cf745",
@@ -57745,6 +57747,110 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_babc3a794b328eeb1ace",
+     "evidence_id": "finev_b020c2368702b101e77a",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2022-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "35,617,581",
+     "normalized_value": 35617581000.0,
+     "status": "quarantined",
+     "reasons": [
+      "conflict",
+      "conflicting_values_retained_no_silent_selection",
+      "readiness_is_audit_only"
+     ],
+     "source": {
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "fact_id": "fact_94787c0ff3233673de9d4f0e",
+      "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "source": "Issuer registry",
+      "page": 282,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:47",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "evidence_page": 282,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_b06c792f8e9e9b87e242",
+     "evidence_id": "finev_a2a18cf7d5b622805533",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "49,445,167",
+     "normalized_value": 49445167000.0,
+     "status": "quarantined",
+     "reasons": [
+      "conflict",
+      "conflicting_values_retained_no_silent_selection",
+      "readiness_is_audit_only"
+     ],
+     "source": {
+      "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+      "fact_id": "fact_4adddd3530470c96f255a598",
+      "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+      "source": "Issuer registry",
+      "page": 288,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:47",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "evidence_page": 288,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_c56c6533850b2ff7460c",
      "evidence_id": "finev_75323c68a1da35a5cb0a",
      "symbol": "LUCK",
@@ -57759,8 +57865,10 @@
      "unit_multiplier": 1000,
      "raw_value": "48,758,341",
      "normalized_value": 48758341000.0,
-     "status": "eligible",
-     "reasons": [],
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection"
+     ],
      "source": {
       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
       "fact_id": "fact_759b1a513bea563885696560",
@@ -57789,8 +57897,8 @@
       "version": "financial_statement_v2",
       "revision": "block_geometry_v5"
      },
-     "evidence_label": "fact_source_reported",
-     "confidence": "high"
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
     },
     {
      "reconciliation_id": "finrec_df8af71a2c586a37e06b",
@@ -57857,8 +57965,10 @@
      "unit_multiplier": 1000,
      "raw_value": "48,758,341",
      "normalized_value": 48758341000.0,
-     "status": "eligible",
-     "reasons": [],
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection"
+     ],
      "source": {
       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
       "fact_id": "fact_03ae0eda943899345365e11e",
@@ -57887,8 +57997,8 @@
       "version": "financial_statement_v2",
       "revision": "block_geometry_v5"
      },
-     "evidence_label": "fact_source_reported",
-     "confidence": "high"
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
     },
     {
      "reconciliation_id": "finrec_d7a569c5f93f464fe9db",
@@ -57938,6 +58048,58 @@
       "revision": "block_geometry_v5"
      },
      "evidence_label": "unknown",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_bc87cbb2dbe8c604a852",
+     "evidence_id": "finev_213d8fcf3441cc916721",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "49,445,167",
+     "normalized_value": 49445167000.0,
+     "status": "quarantined",
+     "reasons": [
+      "conflict",
+      "conflicting_values_retained_no_silent_selection",
+      "readiness_is_audit_only"
+     ],
+     "source": {
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "fact_id": "fact_d25f2a987be07a0afbbe4831",
+      "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "source": "Issuer registry",
+      "page": 282,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:47",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "evidence_page": 282,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "contradicted_source",
      "confidence": "low"
     },
     {
@@ -57991,6 +58153,58 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_1bfb541632f952a0a978",
+     "evidence_id": "finev_7bb32db5a3cf027e368e",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2024-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "72,336,747",
+     "normalized_value": 72336747000.0,
+     "status": "quarantined",
+     "reasons": [
+      "conflict",
+      "conflicting_values_retained_no_silent_selection",
+      "readiness_is_audit_only"
+     ],
+     "source": {
+      "document_id": "issuer:814f586f0a7a9fb56900185d",
+      "fact_id": "fact_879a9e38e62e9bc3c5d5a4ba",
+      "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+      "source": "Issuer registry",
+      "page": 292,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:47",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "link_id": "issuer:814f586f0a7a9fb56900185d",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "evidence_page": 292,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_4c16096e647bbf27d987",
      "evidence_id": "finev_62a082412b92c3a1d114",
      "symbol": "LUCK",
@@ -58005,8 +58219,10 @@
      "unit_multiplier": 1000,
      "raw_value": "65,555,505",
      "normalized_value": 65555505000.0,
-     "status": "eligible",
-     "reasons": [],
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection"
+     ],
      "source": {
       "document_id": "issuer:814f586f0a7a9fb56900185d",
       "fact_id": "fact_bf8c2ccfb8ccbda482593e9f",
@@ -58035,8 +58251,8 @@
       "version": "financial_statement_v2",
       "revision": "block_geometry_v5"
      },
-     "evidence_label": "fact_source_reported",
-     "confidence": "high"
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
     },
     {
      "reconciliation_id": "finrec_1912998189446e4e10e7",
@@ -58053,8 +58269,10 @@
      "unit_multiplier": 1000,
      "raw_value": "65,555,505",
      "normalized_value": 65555505000.0,
-     "status": "eligible",
-     "reasons": [],
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection"
+     ],
      "source": {
       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
       "fact_id": "fact_8a1290edd8af69a086e66181",
@@ -58083,8 +58301,60 @@
       "version": "financial_statement_v2",
       "revision": "block_geometry_v5"
      },
-     "evidence_label": "fact_source_reported",
-     "confidence": "high"
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_9af018386fe5bbb92e63",
+     "evidence_id": "finev_0ab72e25a0b108462b62",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2024-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "72,336,747",
+     "normalized_value": 72336747000.0,
+     "status": "quarantined",
+     "reasons": [
+      "conflict",
+      "conflicting_values_retained_no_silent_selection",
+      "readiness_is_audit_only"
+     ],
+     "source": {
+      "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+      "fact_id": "fact_c0e6abfeaedd7874ef3e88d4",
+      "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+      "source": "Issuer registry",
+      "page": 288,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:47",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "evidence_page": 288,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
     },
     {
      "reconciliation_id": "finrec_a8e213922ffe51b9d4eb",
@@ -58187,6 +58457,58 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_22dadf9839c9ec7e5ff4",
+     "evidence_id": "finev_c7231be13320ac94b4b0",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2025-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "84,498,377",
+     "normalized_value": 84498377000.0,
+     "status": "quarantined",
+     "reasons": [
+      "conflict",
+      "conflicting_values_retained_no_silent_selection",
+      "readiness_is_audit_only"
+     ],
+     "source": {
+      "document_id": "issuer:814f586f0a7a9fb56900185d",
+      "fact_id": "fact_838107bde707cc9125319b82",
+      "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+      "source": "Issuer registry",
+      "page": 292,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:47",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "link_id": "issuer:814f586f0a7a9fb56900185d",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "evidence_page": 292,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_6c7c0c301005eda0fc0e",
      "evidence_id": "finev_5294148ec7d02eee69f9",
      "symbol": "LUCK",
@@ -58201,8 +58523,10 @@
      "unit_multiplier": 1000,
      "raw_value": "76,956,147",
      "normalized_value": 76956147000.0,
-     "status": "eligible",
-     "reasons": [],
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection"
+     ],
      "source": {
       "document_id": "issuer:814f586f0a7a9fb56900185d",
       "fact_id": "fact_c36f5d4807f30d47432d2f0c",
@@ -58231,8 +58555,8 @@
       "version": "financial_statement_v2",
       "revision": "block_geometry_v5"
      },
-     "evidence_label": "fact_source_reported",
-     "confidence": "high"
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
     },
     {
      "reconciliation_id": "finrec_36a97a659fc78f42dc35",
@@ -68086,6 +68410,612 @@
      },
      "evidence_label": "contradicted_source",
      "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_717906fb2e77703f8133",
+     "evidence_id": "finev_6a2efce958bfb80c9993",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2022-06-30",
+     "period_type": "unknown",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "35,617,581",
+     "normalized_value": 35617581000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_annual_period",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "fact_id": "fact_71c5714c58ee9c79b72f6505",
+      "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "source": "Issuer registry",
+      "page": 283,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "evidence_page": 283,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_28effcd859c66bd70f81",
+     "evidence_id": "finev_434abf23c0be67e064d3",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2022-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": null,
+     "raw_value": "15,298,618",
+     "normalized_value": 15298618000.0,
+     "status": "audit_only",
+     "reasons": [
+      "issuer_registry_binding_required",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "missing_unit_scale",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "fact_id": "fact_95ee6d954ddb248803412fd3",
+      "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "source": "Issuer registry",
+      "page": 236,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_12da8a5b274154016d5e",
+     "evidence_id": "finev_00ca4b0b2e03ae22a793",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2023-06-30",
+     "period_type": "unknown",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "49,445,167",
+     "normalized_value": 49445167000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_annual_period",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+      "fact_id": "fact_942031e8d5e71864a5cc5fca",
+      "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+      "source": "Issuer registry",
+      "page": 289,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "evidence_page": 289,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_d31bf775f7a6d21583b3",
+     "evidence_id": "finev_cc6180b1578f2170eade",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": null,
+     "raw_value": "13,725,814",
+     "normalized_value": 13725814000.0,
+     "status": "audit_only",
+     "reasons": [
+      "issuer_registry_binding_required",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "missing_unit_scale",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+      "fact_id": "fact_b59dcaa5e6cc01df397256e7",
+      "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+      "source": "Issuer registry",
+      "page": 240,
+      "text": "Profit after Taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_e57ccb0f6697a0367d86",
+     "evidence_id": "finev_dab29a3e0fb984db1c01",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": null,
+     "raw_value": "13,725,814",
+     "normalized_value": 13725814000.0,
+     "status": "audit_only",
+     "reasons": [
+      "issuer_registry_binding_required",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "missing_unit_scale",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "fact_id": "fact_1da3d9b63239f4845d240ed4",
+      "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "source": "Issuer registry",
+      "page": 236,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_6c18a776654a268fddd5",
+     "evidence_id": "finev_206fb199301a1db396c5",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2023-06-30",
+     "period_type": "unknown",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "49,445,167",
+     "normalized_value": 49445167000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_annual_period",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+      "fact_id": "fact_5fbad7dd84d291bb5bcc69a8",
+      "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+      "source": "Issuer registry",
+      "page": 283,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "evidence_page": 283,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_5d3a0c7e59ebcbed08be",
+     "evidence_id": "finev_bb33c421a370d4379a7c",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2024-06-30",
+     "period_type": "unknown",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "72,336,747",
+     "normalized_value": 72336747000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_annual_period",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:814f586f0a7a9fb56900185d",
+      "fact_id": "fact_42d58f41af959b100409b1c9",
+      "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+      "source": "Issuer registry",
+      "page": 293,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "link_id": "issuer:814f586f0a7a9fb56900185d",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "evidence_page": 293,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_d7f854b9dc5aba10bad3",
+     "evidence_id": "finev_a69a9a4a52195d5b9d59",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2024-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": null,
+     "raw_value": "28,106,539",
+     "normalized_value": 28106539000.0,
+     "status": "audit_only",
+     "reasons": [
+      "issuer_registry_binding_required",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "missing_unit_scale",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:814f586f0a7a9fb56900185d",
+      "fact_id": "fact_57bb3c610c26fde5b0042030",
+      "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+      "source": "Issuer registry",
+      "page": 242,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_73d1f234bc65d76040a1",
+     "evidence_id": "finev_74fae55360766856ffea",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2024-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": null,
+     "raw_value": "28,106,539",
+     "normalized_value": 28106539000.0,
+     "status": "audit_only",
+     "reasons": [
+      "issuer_registry_binding_required",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "missing_unit_scale",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+      "fact_id": "fact_be39f6e343fd66f61b6d7beb",
+      "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+      "source": "Issuer registry",
+      "page": 240,
+      "text": "Profit after Taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_5209b4a7aa8b1c525ebe",
+     "evidence_id": "finev_0d4ad92ed1243d3a0d84",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2024-06-30",
+     "period_type": "unknown",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "72,336,747",
+     "normalized_value": 72336747000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_annual_period",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+      "fact_id": "fact_f7a761119c8315083df6e8f7",
+      "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+      "source": "Issuer registry",
+      "page": 289,
+      "text": "Profit after taxation from continuing operations",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "evidence_page": 289,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_e40098c197f9217dec88",
+     "evidence_id": "finev_711421485b00538ccbf3",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2025-06-30",
+     "period_type": "unknown",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "84,498,377",
+     "normalized_value": 84498377000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_annual_period",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:814f586f0a7a9fb56900185d",
+      "fact_id": "fact_7c314602c7b06b124357db48",
+      "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+      "source": "Issuer registry",
+      "page": 293,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "link_id": "issuer:814f586f0a7a9fb56900185d",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+       "root_domain": "lucky-cement.com",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "evidence_page": 293,
+       "ticker": "LUCK",
+       "registry_source": "state/company_intel/source_registry.json"
+      }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_a6b3ed6664a1a827386d",
+     "evidence_id": "finev_9569e0e6545da7b9014c",
+     "symbol": "LUCK",
+     "metric": "tax_expense",
+     "period_end": "2025-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "statement_type": "income_statement",
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": null,
+     "raw_value": "33,092,162",
+     "normalized_value": 33092162000.0,
+     "status": "audit_only",
+     "reasons": [
+      "issuer_registry_binding_required",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "missing_unit_scale",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:814f586f0a7a9fb56900185d",
+      "fact_id": "fact_a328538466c57b0b7e4dba2b",
+      "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+      "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+      "source": "Issuer registry",
+      "page": 242,
+      "text": "Profit after taxation",
+      "available_on": "2026-08-28",
+      "published_at": null,
+      "retrieved_at": "2026-08-27 04:23",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v4"
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
     }
    ],
    "conflicts": [
@@ -68117,6 +69047,158 @@
        "normalized_value": 18.91,
        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
        "page": 241
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_c0f6fc28979006534e84",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2022-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_4d8a7d4dd5a135ad941e2350",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "normalized_value": 29497340000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "page": 282
+      },
+      {
+       "fact_id": "fact_94787c0ff3233673de9d4f0e",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "normalized_value": 35617581000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "page": 282
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_4218418167bcc3a341c7",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_03ae0eda943899345365e11e",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "normalized_value": 48758341000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "page": 282
+      },
+      {
+       "fact_id": "fact_4adddd3530470c96f255a598",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "normalized_value": 49445167000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "page": 288
+      },
+      {
+       "fact_id": "fact_759b1a513bea563885696560",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "normalized_value": 48758341000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "page": 288
+      },
+      {
+       "fact_id": "fact_d25f2a987be07a0afbbe4831",
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "normalized_value": 49445167000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "page": 282
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_354aea20e46d53f447b7",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2024-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_879a9e38e62e9bc3c5d5a4ba",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "normalized_value": 72336747000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "page": 292
+      },
+      {
+       "fact_id": "fact_8a1290edd8af69a086e66181",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "normalized_value": 65555505000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "page": 288
+      },
+      {
+       "fact_id": "fact_bf8c2ccfb8ccbda482593e9f",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "normalized_value": 65555505000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "page": 292
+      },
+      {
+       "fact_id": "fact_c0e6abfeaedd7874ef3e88d4",
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "normalized_value": 72336747000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "page": 288
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_a409521453cfa7d618e6",
+     "symbol": "LUCK",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2025-06-30",
+     "period_type": "annual",
+     "duration_months": 12,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": "income_statement",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_838107bde707cc9125319b82",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "normalized_value": 84498377000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "page": 292
+      },
+      {
+       "fact_id": "fact_c36f5d4807f30d47432d2f0c",
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "normalized_value": 76956147000.0,
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "page": 292
       }
      ]
     },
@@ -84402,9 +85484,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0654f685a5e184037f86d913533b8a21d40f7f43",
-  "build_cutoff_at": "2026-08-31T06:51:13Z",
-  "generated_at": "2026-08-31T06:51:13Z",
+  "source_commit_sha": "8893473a9796c248a7c440444becb1325e93d478",
+  "build_cutoff_at": "2026-08-31T09:54:19Z",
+  "generated_at": "2026-08-31T09:54:19Z",
   "artifact_path": "state/company_intel/financial_evidence_reconciliation.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

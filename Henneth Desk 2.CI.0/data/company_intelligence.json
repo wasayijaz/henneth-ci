@@ -1,6 +1,6 @@
 {
  "meta": {
-  "built": "2026-08-31 11:51",
+  "built": "2026-08-31 09:54",
   "source": "Henneth state layer",
   "profile_source": "https://dps.psx.com.pk/company/{symbol}",
   "profile_updated": "2026-08-24 18:30",
@@ -23,15 +23,15 @@
    }
   },
   "graph": {
-   "updated": "2026-08-27 21:10",
+   "updated": "2026-08-31 09:43",
    "node_count": 2995,
    "edge_count": 5133,
    "source_documents": 317,
    "note": "Every factual edge carries source URL and cited page when available.",
    "generator_version": "ci_artifact_integrity_v1",
-   "source_commit_sha": "9ca391b44433176d40bec0082ad91b2e995278e0",
-   "build_cutoff_at": "2026-08-31T06:50:09Z",
-   "generated_at": "2026-08-31T06:50:09Z",
+   "source_commit_sha": "8893473a9796c248a7c440444becb1325e93d478",
+   "build_cutoff_at": "2026-08-31T09:53:54Z",
+   "generated_at": "2026-08-31T09:53:54Z",
    "artifact_path": "state/company_intel/company_graph.json",
    "timestamp_semantics": {
     "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
@@ -44,9 +44,9 @@
    "item_count": 359,
    "note": "Deterministic official-source change digest. Research, not advice.",
    "generator_version": "ci_artifact_integrity_v1",
-   "source_commit_sha": "9ca391b44433176d40bec0082ad91b2e995278e0",
-   "build_cutoff_at": "2026-08-31T06:50:09Z",
-   "generated_at": "2026-08-31T06:50:09Z",
+   "source_commit_sha": "8893473a9796c248a7c440444becb1325e93d478",
+   "build_cutoff_at": "2026-08-31T09:53:54Z",
+   "generated_at": "2026-08-31T09:53:54Z",
    "artifact_path": "state/company_intel/change_intelligence.json",
    "timestamp_semantics": {
     "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
@@ -55,7 +55,7 @@
   },
   "completion_matrix": {
    "artifact": "state/company_intel/completion_matrix.json",
-   "as_of": "2026-08-27 18:17",
+   "as_of": "2026-08-28 15:26",
    "overall_status": "blocked",
    "requirement_count": 69,
    "complete": 61,
@@ -66,7 +66,7 @@
    "schema_version": 1,
    "engine_version": "formal_financial_engines_v1",
    "kind": "financial_forecasts",
-   "as_of": "2026-08-27",
+   "as_of": "2026-08-31",
    "formula_id": "formal_forecast.revenue_margin_eps.v1",
    "source": {
     "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
@@ -89,7 +89,7 @@
    "schema_version": 1,
    "engine_version": "formal_financial_engines_v1",
    "kind": "formal_valuations",
-   "as_of": "2026-08-27",
+   "as_of": "2026-08-31",
    "formula_id": "formal_valuation.pe_equity_ev.v1",
    "source": {
     "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
@@ -112,7 +112,7 @@
    "schema_version": 1,
    "engine_version": "formal_financial_engines_v1",
    "kind": "market_expectations",
-   "as_of": "2026-08-27",
+   "as_of": "2026-08-31",
    "formula_id": "formal_market_expectations.reverse_growth.v1",
    "source": {
     "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
@@ -133,8 +133,8 @@
   },
   "historical_reference_cases": {
    "schema_version": 1,
-   "as_of": "2026-08-27",
-   "source_cutoff": "2026-08-27",
+   "as_of": "2026-08-31",
+   "source_cutoff": "2026-08-31",
    "source": {
     "company_profiles": "state/company_profiles.json",
     "history": "state/history/{symbol}.json",
@@ -157,14 +157,14 @@
   },
   "event_review_windows": {
    "schema_version": 1,
-   "as_of": "2026-08-27",
+   "as_of": "2026-08-31",
    "count": 20,
    "source": "state/earnings_calendar.json + state/company_event_ledger.json",
    "policy": "Deterministic review metadata only; no scheduled tasks, external calls, AI prompts, forecasts, advice, or auto actions."
   },
   "financial_engine_assumption_gaps": {
    "schema_version": 1,
-   "as_of": "2026-08-27",
+   "as_of": "2026-08-31",
    "source": {
     "financial_engine_assumptions": "state/company_intel/financial_engine_assumptions.json",
     "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
@@ -13679,7 +13679,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -13751,7 +13751,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -13796,7 +13796,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -13837,7 +13837,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -13880,7 +13880,7 @@
       "symbol": "MLCF",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -14138,7 +14138,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MLCF/domains/forecasts",
       "missing_requirements": [
        "approved_net_margin_pct",
@@ -14161,7 +14161,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MLCF/domains/valuation",
       "missing_requirements": [
        "approved_exit_pe",
@@ -14186,7 +14186,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MLCF/domains/forecasts",
       "missing_requirements": [
        "approved_exit_pe",
@@ -14303,7 +14303,7 @@
    },
    "event_review_windows": {
     "symbol": "MLCF",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -14376,7 +14376,7 @@
     "status": "available",
     "case_count": 2,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -14755,8 +14755,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:MLCF:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:MLCF:2026-08-28:close",
         "source_label": "MLCF retained PSX DPS daily close",
         "source_path": "state/history/MLCF.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/MLCF"
@@ -18970,7 +18970,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -19042,7 +19042,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -19091,7 +19091,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -19137,7 +19137,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -19185,7 +19185,7 @@
       "symbol": "OGDC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -19448,7 +19448,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/OGDC/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -19476,7 +19476,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/OGDC/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -19506,7 +19506,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/OGDC/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -19531,7 +19531,7 @@
    },
    "event_review_windows": {
     "symbol": "OGDC",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [
      {
       "event_id": "calendar:a0bae68f0d6f2617",
@@ -19647,7 +19647,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -19737,8 +19737,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:OGDC:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:OGDC:2026-08-28:close",
         "source_label": "OGDC retained PSX DPS daily close",
         "source_path": "state/history/OGDC.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/OGDC"
@@ -24822,7 +24822,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -24894,7 +24894,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -24943,7 +24943,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -24989,7 +24989,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -25037,7 +25037,7 @@
       "symbol": "PPL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -25300,7 +25300,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PPL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -25328,7 +25328,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PPL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -25358,7 +25358,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PPL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -25396,7 +25396,7 @@
    },
    "event_review_windows": {
     "symbol": "PPL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [
      {
       "event_id": "calendar:a14636fd9306b2fc",
@@ -25511,7 +25511,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -25601,8 +25601,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:PPL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:PPL:2026-08-28:close",
         "source_label": "PPL retained PSX DPS daily close",
         "source_path": "state/history/PPL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/PPL"
@@ -88124,7 +88124,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -88196,7 +88196,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -88241,7 +88241,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -88282,7 +88282,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -88325,7 +88325,7 @@
       "symbol": "DGKC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -88583,7 +88583,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/DGKC/domains/forecasts",
       "missing_requirements": [
        "approved_net_margin_pct",
@@ -88606,7 +88606,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/DGKC/domains/valuation",
       "missing_requirements": [
        "approved_exit_pe",
@@ -88631,7 +88631,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/DGKC/domains/forecasts",
       "missing_requirements": [
        "approved_exit_pe",
@@ -89000,50 +89000,21 @@
    },
    "event_review_windows": {
     "symbol": "DGKC",
-    "as_of": "2026-08-27",
-    "known_events": [
-     {
-      "event_id": "calendar:28928df434bdcbae",
-      "event_type": "results",
-      "date": "2026-08-27",
-      "confirmed": false,
-      "source": "https://stockanalysis.com/quote/psx/DGKC/",
-      "window": {
-       "start": "2026-08-25",
-       "end": "2026-08-29",
-       "days": 5,
-       "intensity": "intensified",
-       "source_kind": "earnings_calendar",
-       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
-      }
-     }
-    ],
+    "as_of": "2026-08-31",
+    "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
-     "status": "suppressed_known_event",
-     "reason": "known_results_event_present",
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
      "historical_dates": [
       "2025-10-03",
       "2026-04-30"
      ]
     },
     "expected_reporting_windows": [],
-    "review_windows": [
-     {
-      "start": "2026-08-25",
-      "end": "2026-08-29",
-      "days": 5,
-      "intensity": "intensified",
-      "source_kind": "earnings_calendar",
-      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
-      "event_type": "results",
-      "date": "2026-08-27",
-      "confirmed": false,
-      "source_url": "https://stockanalysis.com/quote/psx/DGKC/"
-     }
-    ],
-    "status": "available",
-    "status_reason": "retained_calendar_or_cadence_available"
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
    },
    "financial_forecasts": {
     "symbol": "DGKC",
@@ -89100,7 +89071,7 @@
     "status": "available",
     "case_count": 2,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -89479,8 +89450,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:DGKC:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:DGKC:2026-08-28:close",
         "source_label": "DGKC retained PSX DPS daily close",
         "source_path": "state/history/DGKC.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/DGKC"
@@ -93328,7 +93299,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -93400,7 +93371,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -93449,7 +93420,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -93495,7 +93466,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -93543,7 +93514,7 @@
       "symbol": "PSO",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -93806,7 +93777,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PSO/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -93834,7 +93805,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PSO/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -93864,7 +93835,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PSO/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -93889,7 +93860,7 @@
    },
    "event_review_windows": {
     "symbol": "PSO",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -93977,7 +93948,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -94067,8 +94038,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:PSO:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:PSO:2026-08-28:close",
         "source_label": "PSO retained PSX DPS daily close",
         "source_path": "state/history/PSO.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/PSO"
@@ -102656,10 +102627,10 @@
     ],
     "coverage_candidate_document_ids": [
      "psx:280213",
-     "psx:276395",
      "psx:274158",
      "psx:271999",
-     "psx:271010"
+     "psx:271010",
+     "psx:271004"
     ],
     "qualification_candidate_document_refs": [
      {
@@ -102669,19 +102640,6 @@
       "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
       "reason": "official financial document candidate for future owner-approved bounded restage",
       "safe_period": null
-     },
-     {
-      "document_id": "psx:276395",
-      "published_at": "2026-04-30T15:04:00+05:00",
-      "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
-      "source_url": "https://dps.psx.com.pk/download/document/276395.pdf",
-      "reason": "official financial document candidate for future owner-approved bounded restage",
-      "safe_period": {
-       "period_end": "2026-03-31",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "Period Ended March 31, 2026"
-      }
      },
      {
       "document_id": "psx:274158",
@@ -102714,6 +102672,14 @@
       "published_at": "2026-02-25T11:04:00+05:00",
       "title": "Financial Results for the Year Ended 31 December 2025",
       "source_url": "https://dps.psx.com.pk/download/document/271010.pdf",
+      "reason": "official financial document candidate for future owner-approved bounded restage",
+      "safe_period": null
+     },
+     {
+      "document_id": "psx:271004",
+      "published_at": "2026-02-25T10:52:00+05:00",
+      "title": "Financial Results for the Year Ended 31 December 2025 REVOKED",
+      "source_url": "https://dps.psx.com.pk/download/document/271004.pdf",
       "reason": "official financial document candidate for future owner-approved bounded restage",
       "safe_period": null
      }
@@ -105022,7 +104988,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -105094,7 +105060,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -105143,7 +105109,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -105189,7 +105155,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -105237,7 +105203,7 @@
       "symbol": "UBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -105500,7 +105466,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/UBL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -105528,7 +105494,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/UBL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -105558,7 +105524,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/UBL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -105644,7 +105610,7 @@
    },
    "event_review_windows": {
     "symbol": "UBL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [
      {
       "event_id": "calendar:e4d02d3edee253fa",
@@ -105764,7 +105730,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -105854,8 +105820,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:UBL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:UBL:2026-08-28:close",
         "source_label": "UBL retained PSX DPS daily close",
         "source_path": "state/history/UBL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/UBL"
@@ -108670,9 +108636,7 @@
     ],
     "coverage_candidate_document_ids": [
      "psx:280460",
-     "psx:276333",
      "psx:275721",
-     "psx:270829",
      "psx:269389"
     ],
     "qualification_candidate_document_refs": [
@@ -108685,33 +108649,12 @@
       "safe_period": null
      },
      {
-      "document_id": "psx:276333",
-      "published_at": "2026-04-30T14:41:00+05:00",
-      "title": "Transmission of Quarterly Report for the Period Ended 31 Mar 2026",
-      "source_url": "https://dps.psx.com.pk/download/document/276333.pdf",
-      "reason": "official financial document candidate for future owner-approved bounded restage",
-      "safe_period": null
-     },
-     {
       "document_id": "psx:275721",
       "published_at": "2026-04-29T12:42:00+05:00",
       "title": "Financial Results for the Quarter Ended March 31. 2026",
       "source_url": "https://dps.psx.com.pk/download/document/275721.pdf",
       "reason": "official financial document candidate for future owner-approved bounded restage",
       "safe_period": null
-     },
-     {
-      "document_id": "psx:270829",
-      "published_at": "2026-02-23T09:46:00+05:00",
-      "title": "Transmission of Annual Report for the Year Ended 31 December 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/270829.pdf",
-      "reason": "official financial document candidate for future owner-approved bounded restage",
-      "safe_period": {
-       "period_end": null,
-       "period_type": "annual",
-       "source": "metadata",
-       "matched_text": "annual_report"
-      }
      },
      {
       "document_id": "psx:269389",
@@ -109249,7 +109192,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -109321,7 +109264,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -109370,7 +109313,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -109416,7 +109359,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -109464,7 +109407,7 @@
       "symbol": "FFC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -109727,7 +109670,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/FFC/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -109755,7 +109698,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/FFC/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -109785,7 +109728,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/FFC/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -109810,7 +109753,7 @@
    },
    "event_review_windows": {
     "symbol": "FFC",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -109895,7 +109838,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -109985,8 +109928,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:FFC:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:FFC:2026-08-28:close",
         "source_label": "FFC retained PSX DPS daily close",
         "source_path": "state/history/FFC.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/FFC"
@@ -113235,7 +113178,9 @@
       "url": "https://assets.lucky-cement.com/Half_yearly_Report_December_31_2024_524e4c26c9.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_6158d3eebc4c18c4e6444c5a",
@@ -113246,7 +113191,9 @@
       "url": "https://assets.lucky-cement.com/Half_Yearly_Report_for_the_Period_Ended_December_31_2025_08732c6dcc.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_640901d0382909d2136ed862",
@@ -113257,7 +113204,9 @@
       "url": "https://assets.lucky-cement.com/Third_Quarter_Report_31st_March_2023_a34115fe7f.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_658df21e88b1cf942267e9e4",
@@ -113268,7 +113217,9 @@
       "url": "https://assets.lucky-cement.com/Third_Quarter_Report_March_31_2026_57af6aafbb.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_6eacf42cd5d81f6ff5179db4",
@@ -113279,7 +113230,9 @@
       "url": "https://assets.lucky-cement.com/First_Quarter_Report_September_30_2020_c7506b2367.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_7c27ec486e4febe270b9d8fd",
@@ -113290,7 +113243,9 @@
       "url": "https://assets.lucky-cement.com/Third_Quarter_Report_March_31_2024_8b87dd9342.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_814f586f0a7a9fb56900185d",
@@ -113301,7 +113256,9 @@
       "url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
       "kind": "annual_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_85779343ee8d28ceabb6d9d1",
@@ -113312,7 +113269,9 @@
       "url": "https://assets.lucky-cement.com/First_Quarter_Report_September_30_2021_25cbfb94e7.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_8ae507f34c750051ad7ce280",
@@ -113323,7 +113282,9 @@
       "url": "https://www.lucky-cement.com/",
       "kind": "issuer_home",
       "status": "ok",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_8c7b16b6cb0cff96f339b801",
@@ -113334,7 +113295,9 @@
       "url": "https://assets.lucky-cement.com/First_Quarter_Report_30th_September_2022_ae41f6196e.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_9eaee8de519404ee83297a83",
@@ -113345,7 +113308,9 @@
       "url": "https://assets.lucky-cement.com/First_Quarterly_Report_as_on_September_30_2024_ba5614cb75.pdf",
       "kind": "financial_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "source:src_a4ad80e1b79ef02784142ce8",
@@ -113356,7 +113321,9 @@
       "url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
       "kind": "annual_report",
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      }
     ],
     "edges": [
@@ -113390,7 +113357,9 @@
        "source_url": "https://assets.lucky-cement.com/Third_Quarter_Report_March_31_2026_57af6aafbb.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_106f8c9896e84cdaf5694cd5",
@@ -113727,7 +113696,9 @@
        "source_url": "https://www.lucky-cement.com/"
       },
       "status": "ok",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_5225d33b1f6c8e3cdb483e14",
@@ -113760,7 +113731,9 @@
        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_5d1a614a7efcf10fbef60178",
@@ -113880,7 +113853,9 @@
        "source_url": "https://assets.lucky-cement.com/Half_yearly_Report_December_31_2024_524e4c26c9.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_7778164955e29e1352289ae5",
@@ -113902,7 +113877,9 @@
        "source_url": "https://assets.lucky-cement.com/First_Quarter_Report_September_30_2020_c7506b2367.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_79fd4bfd00e9c96c0167dc25",
@@ -113935,7 +113912,9 @@
        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_83e1f7b67cc7fe14201045f7",
@@ -114012,7 +113991,9 @@
        "source_url": "https://assets.lucky-cement.com/Third_Quarter_Report_31st_March_2023_a34115fe7f.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_a99146ab9400fd7ba44006de",
@@ -114100,7 +114081,9 @@
        "source_url": "https://assets.lucky-cement.com/First_Quarter_Report_September_30_2021_25cbfb94e7.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_b942165b560c5214324719f1",
@@ -114111,7 +114094,9 @@
        "source_url": "https://assets.lucky-cement.com/Half_Yearly_Report_for_the_Period_Ended_December_31_2025_08732c6dcc.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_bae8051b1875fa4e5d1b7f10",
@@ -114133,7 +114118,9 @@
        "source_url": "https://assets.lucky-cement.com/First_Quarterly_Report_as_on_September_30_2024_ba5614cb75.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_bfe73baf7945aac66a9c32f1",
@@ -114221,7 +114208,9 @@
        "source_url": "https://assets.lucky-cement.com/Third_Quarter_Report_March_31_2024_8b87dd9342.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_d02220bc25d9fcfbadce1166",
@@ -114308,7 +114297,9 @@
        "source_url": "https://assets.lucky-cement.com/First_Quarter_Report_30th_September_2022_ae41f6196e.pdf"
       },
       "status": "discovered",
-      "quality_flags": []
+      "quality_flags": [
+       "registry_degraded"
+      ]
      },
      {
       "id": "edge_def519e99c114afa68144845",
@@ -115473,193 +115464,8 @@
     "symbol": "LUCK",
     "status": "blocked_insufficient_qualified_financial_history",
     "reconciliation_kind": "historical_actuals_only",
-    "qualified_financial_period_count": 2,
-    "qualified_financial_periods": [
-     {
-      "period_end": "2024-06-30",
-      "actuals": {
-       "revenue": {
-        "value": 489363447000.0,
-        "unit": "PKR",
-        "unit_multiplier": 1000,
-        "source": {
-         "document_id": "issuer:814f586f0a7a9fb56900185d",
-         "fact_id": "fact_887b900f06e64e3f60d52c27",
-         "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-         "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-         "source": "Issuer registry",
-         "page": 292,
-         "text": "Gross Revenue",
-         "available_on": "2026-08-27",
-         "published_at": null,
-         "retrieved_at": "2026-08-27 06:15",
-         "issuer_registry_binding": {
-          "status": "qualified",
-          "document_id": "issuer:814f586f0a7a9fb56900185d",
-          "link_id": "issuer:814f586f0a7a9fb56900185d",
-          "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-          "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
-          "root_domain": "lucky-cement.com",
-          "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-          "evidence_page": 292,
-          "ticker": "LUCK",
-          "registry_source": "state/company_intel/source_registry.json"
-         }
-        }
-       },
-       "profit_after_tax_attributable": {
-        "value": 65555505000.0,
-        "unit": "PKR",
-        "unit_multiplier": 1000,
-        "source": {
-         "document_id": "issuer:a4ad80e1b79ef02784142ce8",
-         "fact_id": "fact_8a1290edd8af69a086e66181",
-         "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
-         "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
-         "source": "Issuer registry",
-         "page": 288,
-         "text": "Owners of the Holding Company",
-         "available_on": "2026-08-27",
-         "published_at": null,
-         "retrieved_at": "2026-08-27 06:15",
-         "issuer_registry_binding": {
-          "status": "qualified",
-          "document_id": "issuer:a4ad80e1b79ef02784142ce8",
-          "link_id": "issuer:a4ad80e1b79ef02784142ce8",
-          "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
-          "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
-          "root_domain": "lucky-cement.com",
-          "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
-          "evidence_page": 288,
-          "ticker": "LUCK",
-          "registry_source": "state/company_intel/source_registry.json"
-         }
-        }
-       },
-       "basic_eps": {
-        "value": 44.1,
-        "unit": "PKR/share",
-        "unit_multiplier": 1,
-        "source": {
-         "document_id": "issuer:814f586f0a7a9fb56900185d",
-         "fact_id": "fact_bd8c45a2ab01920ae8c5094c",
-         "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-         "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-         "source": "Issuer registry",
-         "page": 292,
-         "text": "Earnings per share - basic and diluted",
-         "available_on": "2026-08-27",
-         "published_at": null,
-         "retrieved_at": "2026-08-27 06:15",
-         "issuer_registry_binding": {
-          "status": "qualified",
-          "document_id": "issuer:814f586f0a7a9fb56900185d",
-          "link_id": "issuer:814f586f0a7a9fb56900185d",
-          "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-          "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
-          "root_domain": "lucky-cement.com",
-          "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-          "evidence_page": 292,
-          "ticker": "LUCK",
-          "registry_source": "state/company_intel/source_registry.json"
-         }
-        }
-       }
-      }
-     },
-     {
-      "period_end": "2025-06-30",
-      "actuals": {
-       "revenue": {
-        "value": 559204434000.0,
-        "unit": "PKR",
-        "unit_multiplier": 1000,
-        "source": {
-         "document_id": "issuer:814f586f0a7a9fb56900185d",
-         "fact_id": "fact_0d1e26cd6ab3d94ceb02b69d",
-         "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-         "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-         "source": "Issuer registry",
-         "page": 292,
-         "text": "Gross Revenue",
-         "available_on": "2026-08-27",
-         "published_at": null,
-         "retrieved_at": "2026-08-27 06:15",
-         "issuer_registry_binding": {
-          "status": "qualified",
-          "document_id": "issuer:814f586f0a7a9fb56900185d",
-          "link_id": "issuer:814f586f0a7a9fb56900185d",
-          "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-          "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
-          "root_domain": "lucky-cement.com",
-          "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-          "evidence_page": 292,
-          "ticker": "LUCK",
-          "registry_source": "state/company_intel/source_registry.json"
-         }
-        }
-       },
-       "profit_after_tax_attributable": {
-        "value": 76956147000.0,
-        "unit": "PKR",
-        "unit_multiplier": 1000,
-        "source": {
-         "document_id": "issuer:814f586f0a7a9fb56900185d",
-         "fact_id": "fact_c36f5d4807f30d47432d2f0c",
-         "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-         "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-         "source": "Issuer registry",
-         "page": 292,
-         "text": "Owners of the Holding Company",
-         "available_on": "2026-08-27",
-         "published_at": null,
-         "retrieved_at": "2026-08-27 06:15",
-         "issuer_registry_binding": {
-          "status": "qualified",
-          "document_id": "issuer:814f586f0a7a9fb56900185d",
-          "link_id": "issuer:814f586f0a7a9fb56900185d",
-          "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-          "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
-          "root_domain": "lucky-cement.com",
-          "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-          "evidence_page": 292,
-          "ticker": "LUCK",
-          "registry_source": "state/company_intel/source_registry.json"
-         }
-        }
-       },
-       "basic_eps": {
-        "value": 52.53,
-        "unit": "PKR/share",
-        "unit_multiplier": 1,
-        "source": {
-         "document_id": "issuer:814f586f0a7a9fb56900185d",
-         "fact_id": "fact_f93d0864506a39f18933426d",
-         "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-         "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-         "source": "Issuer registry",
-         "page": 292,
-         "text": "Earnings per share - basic and diluted",
-         "available_on": "2026-08-27",
-         "published_at": null,
-         "retrieved_at": "2026-08-27 06:15",
-         "issuer_registry_binding": {
-          "status": "qualified",
-          "document_id": "issuer:814f586f0a7a9fb56900185d",
-          "link_id": "issuer:814f586f0a7a9fb56900185d",
-          "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
-          "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
-          "root_domain": "lucky-cement.com",
-          "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
-          "evidence_page": 292,
-          "ticker": "LUCK",
-          "registry_source": "state/company_intel/source_registry.json"
-         }
-        }
-       }
-      }
-     }
-    ],
+    "qualified_financial_period_count": 0,
+    "qualified_financial_periods": [],
     "driver_lanes": {
      "dispatch_volume": {
       "status": "missing",
@@ -119820,12 +119626,12 @@
    "financial_evidence_reconciliation": {
     "symbol": "LUCK",
     "status": "blocked",
-    "eligible_fact_count": 14,
-    "audit_only_fact_count": 211,
-    "quarantined_fact_count": 217,
+    "eligible_fact_count": 8,
+    "audit_only_fact_count": 223,
+    "quarantined_fact_count": 229,
     "missing_slot_count": 6,
-    "source_conflict_count": 21,
-    "withheld_future_source_fact_count": 18,
+    "source_conflict_count": 25,
+    "withheld_future_source_fact_count": 0,
     "facts": [
      {
       "reconciliation_id": "finrec_8c392e54ef3a4e3a623c",
@@ -131126,8 +130932,10 @@
       "unit_multiplier": 1000,
       "raw_value": "29,497,340",
       "normalized_value": 29497340000.0,
-      "status": "eligible",
-      "reasons": [],
+      "status": "quarantined",
+      "reasons": [
+       "conflicting_values_retained_no_silent_selection"
+      ],
       "source": {
        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
        "fact_id": "fact_4d8a7d4dd5a135ad941e2350",
@@ -131156,8 +130964,8 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "fact_source_reported",
-      "confidence": "high"
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
      },
      {
       "reconciliation_id": "finrec_1cf4e5935578a57cf745",
@@ -131210,6 +131018,110 @@
       "confidence": "low"
      },
      {
+      "reconciliation_id": "finrec_babc3a794b328eeb1ace",
+      "evidence_id": "finev_b020c2368702b101e77a",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2022-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "35,617,581",
+      "normalized_value": 35617581000.0,
+      "status": "quarantined",
+      "reasons": [
+       "conflict",
+       "conflicting_values_retained_no_silent_selection",
+       "readiness_is_audit_only"
+      ],
+      "source": {
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "fact_id": "fact_94787c0ff3233673de9d4f0e",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source": "Issuer registry",
+       "page": 282,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:47",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+        "evidence_page": 282,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v5"
+      },
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_b06c792f8e9e9b87e242",
+      "evidence_id": "finev_a2a18cf7d5b622805533",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2023-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "49,445,167",
+      "normalized_value": 49445167000.0,
+      "status": "quarantined",
+      "reasons": [
+       "conflict",
+       "conflicting_values_retained_no_silent_selection",
+       "readiness_is_audit_only"
+      ],
+      "source": {
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "fact_id": "fact_4adddd3530470c96f255a598",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source": "Issuer registry",
+       "page": 288,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:47",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+        "evidence_page": 288,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v5"
+      },
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
+     },
+     {
       "reconciliation_id": "finrec_c56c6533850b2ff7460c",
       "evidence_id": "finev_75323c68a1da35a5cb0a",
       "symbol": "LUCK",
@@ -131224,8 +131136,10 @@
       "unit_multiplier": 1000,
       "raw_value": "48,758,341",
       "normalized_value": 48758341000.0,
-      "status": "eligible",
-      "reasons": [],
+      "status": "quarantined",
+      "reasons": [
+       "conflicting_values_retained_no_silent_selection"
+      ],
       "source": {
        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
        "fact_id": "fact_759b1a513bea563885696560",
@@ -131254,8 +131168,8 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "fact_source_reported",
-      "confidence": "high"
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
      },
      {
       "reconciliation_id": "finrec_df8af71a2c586a37e06b",
@@ -131322,8 +131236,10 @@
       "unit_multiplier": 1000,
       "raw_value": "48,758,341",
       "normalized_value": 48758341000.0,
-      "status": "eligible",
-      "reasons": [],
+      "status": "quarantined",
+      "reasons": [
+       "conflicting_values_retained_no_silent_selection"
+      ],
       "source": {
        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
        "fact_id": "fact_03ae0eda943899345365e11e",
@@ -131352,8 +131268,8 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "fact_source_reported",
-      "confidence": "high"
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
      },
      {
       "reconciliation_id": "finrec_d7a569c5f93f464fe9db",
@@ -131403,6 +131319,58 @@
        "revision": "block_geometry_v5"
       },
       "evidence_label": "unknown",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_bc87cbb2dbe8c604a852",
+      "evidence_id": "finev_213d8fcf3441cc916721",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2023-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "49,445,167",
+      "normalized_value": 49445167000.0,
+      "status": "quarantined",
+      "reasons": [
+       "conflict",
+       "conflicting_values_retained_no_silent_selection",
+       "readiness_is_audit_only"
+      ],
+      "source": {
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "fact_id": "fact_d25f2a987be07a0afbbe4831",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source": "Issuer registry",
+       "page": 282,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:47",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+        "evidence_page": 282,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v5"
+      },
+      "evidence_label": "contradicted_source",
       "confidence": "low"
      },
      {
@@ -131456,6 +131424,58 @@
       "confidence": "low"
      },
      {
+      "reconciliation_id": "finrec_1bfb541632f952a0a978",
+      "evidence_id": "finev_7bb32db5a3cf027e368e",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "72,336,747",
+      "normalized_value": 72336747000.0,
+      "status": "quarantined",
+      "reasons": [
+       "conflict",
+       "conflicting_values_retained_no_silent_selection",
+       "readiness_is_audit_only"
+      ],
+      "source": {
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "fact_id": "fact_879a9e38e62e9bc3c5d5a4ba",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source": "Issuer registry",
+       "page": 292,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:47",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "link_id": "issuer:814f586f0a7a9fb56900185d",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+        "evidence_page": 292,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v5"
+      },
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
+     },
+     {
       "reconciliation_id": "finrec_4c16096e647bbf27d987",
       "evidence_id": "finev_62a082412b92c3a1d114",
       "symbol": "LUCK",
@@ -131470,8 +131490,10 @@
       "unit_multiplier": 1000,
       "raw_value": "65,555,505",
       "normalized_value": 65555505000.0,
-      "status": "eligible",
-      "reasons": [],
+      "status": "quarantined",
+      "reasons": [
+       "conflicting_values_retained_no_silent_selection"
+      ],
       "source": {
        "document_id": "issuer:814f586f0a7a9fb56900185d",
        "fact_id": "fact_bf8c2ccfb8ccbda482593e9f",
@@ -131500,8 +131522,8 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "fact_source_reported",
-      "confidence": "high"
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
      },
      {
       "reconciliation_id": "finrec_1912998189446e4e10e7",
@@ -131518,8 +131540,10 @@
       "unit_multiplier": 1000,
       "raw_value": "65,555,505",
       "normalized_value": 65555505000.0,
-      "status": "eligible",
-      "reasons": [],
+      "status": "quarantined",
+      "reasons": [
+       "conflicting_values_retained_no_silent_selection"
+      ],
       "source": {
        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
        "fact_id": "fact_8a1290edd8af69a086e66181",
@@ -131548,8 +131572,60 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "fact_source_reported",
-      "confidence": "high"
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_9af018386fe5bbb92e63",
+      "evidence_id": "finev_0ab72e25a0b108462b62",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "72,336,747",
+      "normalized_value": 72336747000.0,
+      "status": "quarantined",
+      "reasons": [
+       "conflict",
+       "conflicting_values_retained_no_silent_selection",
+       "readiness_is_audit_only"
+      ],
+      "source": {
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "fact_id": "fact_c0e6abfeaedd7874ef3e88d4",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source": "Issuer registry",
+       "page": 288,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:47",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+        "evidence_page": 288,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v5"
+      },
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
      },
      {
       "reconciliation_id": "finrec_a8e213922ffe51b9d4eb",
@@ -131652,6 +131728,58 @@
       "confidence": "low"
      },
      {
+      "reconciliation_id": "finrec_22dadf9839c9ec7e5ff4",
+      "evidence_id": "finev_c7231be13320ac94b4b0",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "84,498,377",
+      "normalized_value": 84498377000.0,
+      "status": "quarantined",
+      "reasons": [
+       "conflict",
+       "conflicting_values_retained_no_silent_selection",
+       "readiness_is_audit_only"
+      ],
+      "source": {
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "fact_id": "fact_838107bde707cc9125319b82",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source": "Issuer registry",
+       "page": 292,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:47",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "link_id": "issuer:814f586f0a7a9fb56900185d",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+        "evidence_page": 292,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v5"
+      },
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
+     },
+     {
       "reconciliation_id": "finrec_6c7c0c301005eda0fc0e",
       "evidence_id": "finev_5294148ec7d02eee69f9",
       "symbol": "LUCK",
@@ -131666,8 +131794,10 @@
       "unit_multiplier": 1000,
       "raw_value": "76,956,147",
       "normalized_value": 76956147000.0,
-      "status": "eligible",
-      "reasons": [],
+      "status": "quarantined",
+      "reasons": [
+       "conflicting_values_retained_no_silent_selection"
+      ],
       "source": {
        "document_id": "issuer:814f586f0a7a9fb56900185d",
        "fact_id": "fact_c36f5d4807f30d47432d2f0c",
@@ -131696,8 +131826,8 @@
        "version": "financial_statement_v2",
        "revision": "block_geometry_v5"
       },
-      "evidence_label": "fact_source_reported",
-      "confidence": "high"
+      "evidence_label": "contradicted_source",
+      "confidence": "low"
      },
      {
       "reconciliation_id": "finrec_36a97a659fc78f42dc35",
@@ -141551,6 +141681,612 @@
       },
       "evidence_label": "contradicted_source",
       "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_717906fb2e77703f8133",
+      "evidence_id": "finev_6a2efce958bfb80c9993",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2022-06-30",
+      "period_type": "unknown",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "35,617,581",
+      "normalized_value": 35617581000.0,
+      "status": "audit_only",
+      "reasons": [
+       "legacy_parser_revision_quarantine",
+       "missing_required_provenance",
+       "not_annual_period",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "fact_id": "fact_71c5714c58ee9c79b72f6505",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source": "Issuer registry",
+       "page": 283,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+        "evidence_page": 283,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_28effcd859c66bd70f81",
+      "evidence_id": "finev_434abf23c0be67e064d3",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2022-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "unconsolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": null,
+      "raw_value": "15,298,618",
+      "normalized_value": 15298618000.0,
+      "status": "audit_only",
+      "reasons": [
+       "issuer_registry_binding_required",
+       "legacy_parser_revision_quarantine",
+       "missing_or_nonconsolidated_basis",
+       "missing_required_provenance",
+       "missing_unit_scale",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "fact_id": "fact_95ee6d954ddb248803412fd3",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source": "Issuer registry",
+       "page": 236,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": null
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_12da8a5b274154016d5e",
+      "evidence_id": "finev_00ca4b0b2e03ae22a793",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2023-06-30",
+      "period_type": "unknown",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "49,445,167",
+      "normalized_value": 49445167000.0,
+      "status": "audit_only",
+      "reasons": [
+       "legacy_parser_revision_quarantine",
+       "missing_required_provenance",
+       "not_annual_period",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "fact_id": "fact_942031e8d5e71864a5cc5fca",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source": "Issuer registry",
+       "page": 289,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+        "evidence_page": 289,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_d31bf775f7a6d21583b3",
+      "evidence_id": "finev_cc6180b1578f2170eade",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2023-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "unconsolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": null,
+      "raw_value": "13,725,814",
+      "normalized_value": 13725814000.0,
+      "status": "audit_only",
+      "reasons": [
+       "issuer_registry_binding_required",
+       "legacy_parser_revision_quarantine",
+       "missing_or_nonconsolidated_basis",
+       "missing_required_provenance",
+       "missing_unit_scale",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "fact_id": "fact_b59dcaa5e6cc01df397256e7",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source": "Issuer registry",
+       "page": 240,
+       "text": "Profit after Taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": null
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_e57ccb0f6697a0367d86",
+      "evidence_id": "finev_dab29a3e0fb984db1c01",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2023-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "unconsolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": null,
+      "raw_value": "13,725,814",
+      "normalized_value": 13725814000.0,
+      "status": "audit_only",
+      "reasons": [
+       "issuer_registry_binding_required",
+       "legacy_parser_revision_quarantine",
+       "missing_or_nonconsolidated_basis",
+       "missing_required_provenance",
+       "missing_unit_scale",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "fact_id": "fact_1da3d9b63239f4845d240ed4",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source": "Issuer registry",
+       "page": 236,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": null
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_6c18a776654a268fddd5",
+      "evidence_id": "finev_206fb199301a1db396c5",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2023-06-30",
+      "period_type": "unknown",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "49,445,167",
+      "normalized_value": 49445167000.0,
+      "status": "audit_only",
+      "reasons": [
+       "legacy_parser_revision_quarantine",
+       "missing_required_provenance",
+       "not_annual_period",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+       "fact_id": "fact_5fbad7dd84d291bb5bcc69a8",
+       "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+       "source": "Issuer registry",
+       "page": 283,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "link_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "3bd69fae7ad4cfbfb92984c8b5adde1440769e0c46ccdbf8e59ef32fd6990d2e",
+        "evidence_page": 283,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_5d3a0c7e59ebcbed08be",
+      "evidence_id": "finev_bb33c421a370d4379a7c",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2024-06-30",
+      "period_type": "unknown",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "72,336,747",
+      "normalized_value": 72336747000.0,
+      "status": "audit_only",
+      "reasons": [
+       "legacy_parser_revision_quarantine",
+       "missing_required_provenance",
+       "not_annual_period",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "fact_id": "fact_42d58f41af959b100409b1c9",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source": "Issuer registry",
+       "page": 293,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "link_id": "issuer:814f586f0a7a9fb56900185d",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+        "evidence_page": 293,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_d7f854b9dc5aba10bad3",
+      "evidence_id": "finev_a69a9a4a52195d5b9d59",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "unconsolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": null,
+      "raw_value": "28,106,539",
+      "normalized_value": 28106539000.0,
+      "status": "audit_only",
+      "reasons": [
+       "issuer_registry_binding_required",
+       "legacy_parser_revision_quarantine",
+       "missing_or_nonconsolidated_basis",
+       "missing_required_provenance",
+       "missing_unit_scale",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "fact_id": "fact_57bb3c610c26fde5b0042030",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source": "Issuer registry",
+       "page": 242,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": null
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_73d1f234bc65d76040a1",
+      "evidence_id": "finev_74fae55360766856ffea",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "unconsolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": null,
+      "raw_value": "28,106,539",
+      "normalized_value": 28106539000.0,
+      "status": "audit_only",
+      "reasons": [
+       "issuer_registry_binding_required",
+       "legacy_parser_revision_quarantine",
+       "missing_or_nonconsolidated_basis",
+       "missing_required_provenance",
+       "missing_unit_scale",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "fact_id": "fact_be39f6e343fd66f61b6d7beb",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source": "Issuer registry",
+       "page": 240,
+       "text": "Profit after Taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": null
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_5209b4a7aa8b1c525ebe",
+      "evidence_id": "finev_0d4ad92ed1243d3a0d84",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2024-06-30",
+      "period_type": "unknown",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "72,336,747",
+      "normalized_value": 72336747000.0,
+      "status": "audit_only",
+      "reasons": [
+       "legacy_parser_revision_quarantine",
+       "missing_required_provenance",
+       "not_annual_period",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+       "fact_id": "fact_f7a761119c8315083df6e8f7",
+       "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+       "source": "Issuer registry",
+       "page": 289,
+       "text": "Profit after taxation from continuing operations",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "link_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "167740e80ab234b1e04e9fd425bb9e784b644a03a8133d5e769a172de36359ec",
+        "evidence_page": 289,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_e40098c197f9217dec88",
+      "evidence_id": "finev_711421485b00538ccbf3",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2025-06-30",
+      "period_type": "unknown",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "raw_value": "84,498,377",
+      "normalized_value": 84498377000.0,
+      "status": "audit_only",
+      "reasons": [
+       "legacy_parser_revision_quarantine",
+       "missing_required_provenance",
+       "not_annual_period",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "fact_id": "fact_7c314602c7b06b124357db48",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source": "Issuer registry",
+       "page": 293,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": {
+        "status": "qualified",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "link_id": "issuer:814f586f0a7a9fb56900185d",
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "source_page": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+        "root_domain": "lucky-cement.com",
+        "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+        "evidence_page": 293,
+        "ticker": "LUCK",
+        "registry_source": "state/company_intel/source_registry.json"
+       }
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
+     },
+     {
+      "reconciliation_id": "finrec_a6b3ed6664a1a827386d",
+      "evidence_id": "finev_9569e0e6545da7b9014c",
+      "symbol": "LUCK",
+      "metric": "tax_expense",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "statement_type": "income_statement",
+      "consolidation": "unconsolidated",
+      "currency": "PKR",
+      "unit": "PKR",
+      "unit_multiplier": null,
+      "raw_value": "33,092,162",
+      "normalized_value": 33092162000.0,
+      "status": "audit_only",
+      "reasons": [
+       "issuer_registry_binding_required",
+       "legacy_parser_revision_quarantine",
+       "missing_or_nonconsolidated_basis",
+       "missing_required_provenance",
+       "missing_unit_scale",
+       "outside_required_earnings_bridge_metric_set",
+       "readiness_is_audit_only",
+       "unqualified_financial_fact_source"
+      ],
+      "source": {
+       "document_id": "issuer:814f586f0a7a9fb56900185d",
+       "fact_id": "fact_a328538466c57b0b7e4dba2b",
+       "content_sha256": "86536c063b7fbcd0374a25e82dc1577e4d868591016e58439491d3b6ab880e11",
+       "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+       "source": "Issuer registry",
+       "page": 242,
+       "text": "Profit after taxation",
+       "available_on": "2026-08-28",
+       "published_at": null,
+       "retrieved_at": "2026-08-27 04:23",
+       "issuer_registry_binding": null
+      },
+      "parser": {
+       "version": "financial_statement_v2",
+       "revision": "block_geometry_v4"
+      },
+      "evidence_label": "missing_required_source",
+      "confidence": "low"
      }
     ],
     "conflicts": [
@@ -141582,6 +142318,158 @@
         "normalized_value": 18.91,
         "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
         "page": 241
+       }
+      ]
+     },
+     {
+      "conflict_id": "finconflict_c0f6fc28979006534e84",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2022-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "statement_type": "income_statement",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "status": "quarantined",
+      "reason": "conflicting_values_retained_no_silent_selection",
+      "values": [
+       {
+        "fact_id": "fact_4d8a7d4dd5a135ad941e2350",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "normalized_value": 29497340000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "page": 282
+       },
+       {
+        "fact_id": "fact_94787c0ff3233673de9d4f0e",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "normalized_value": 35617581000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "page": 282
+       }
+      ]
+     },
+     {
+      "conflict_id": "finconflict_4218418167bcc3a341c7",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2023-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "statement_type": "income_statement",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "status": "quarantined",
+      "reason": "conflicting_values_retained_no_silent_selection",
+      "values": [
+       {
+        "fact_id": "fact_03ae0eda943899345365e11e",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "normalized_value": 48758341000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "page": 282
+       },
+       {
+        "fact_id": "fact_4adddd3530470c96f255a598",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "normalized_value": 49445167000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "page": 288
+       },
+       {
+        "fact_id": "fact_759b1a513bea563885696560",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "normalized_value": 48758341000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "page": 288
+       },
+       {
+        "fact_id": "fact_d25f2a987be07a0afbbe4831",
+        "document_id": "issuer:a4e067f83e17c5ea85d8f654",
+        "normalized_value": 49445167000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2023_b9910394cf.pdf",
+        "page": 282
+       }
+      ]
+     },
+     {
+      "conflict_id": "finconflict_354aea20e46d53f447b7",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "statement_type": "income_statement",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "status": "quarantined",
+      "reason": "conflicting_values_retained_no_silent_selection",
+      "values": [
+       {
+        "fact_id": "fact_879a9e38e62e9bc3c5d5a4ba",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "normalized_value": 72336747000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "page": 292
+       },
+       {
+        "fact_id": "fact_8a1290edd8af69a086e66181",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "normalized_value": 65555505000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "page": 288
+       },
+       {
+        "fact_id": "fact_bf8c2ccfb8ccbda482593e9f",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "normalized_value": 65555505000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "page": 292
+       },
+       {
+        "fact_id": "fact_c0e6abfeaedd7874ef3e88d4",
+        "document_id": "issuer:a4ad80e1b79ef02784142ce8",
+        "normalized_value": 72336747000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2024_1b79aefdee.pdf",
+        "page": 288
+       }
+      ]
+     },
+     {
+      "conflict_id": "finconflict_a409521453cfa7d618e6",
+      "symbol": "LUCK",
+      "metric": "profit_after_tax_attributable",
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "duration_months": 12,
+      "consolidation": "consolidated",
+      "currency": "PKR",
+      "statement_type": "income_statement",
+      "unit": "PKR",
+      "unit_multiplier": 1000,
+      "status": "quarantined",
+      "reason": "conflicting_values_retained_no_silent_selection",
+      "values": [
+       {
+        "fact_id": "fact_838107bde707cc9125319b82",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "normalized_value": 84498377000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "page": 292
+       },
+       {
+        "fact_id": "fact_c36f5d4807f30d47432d2f0c",
+        "document_id": "issuer:814f586f0a7a9fb56900185d",
+        "normalized_value": 76956147000.0,
+        "source_url": "https://assets.lucky-cement.com/Annual_Report_2025_7c9f8f1249.pdf",
+        "page": 292
        }
       ]
      },
@@ -143389,11 +144277,12 @@
     "symbol": "LUCK",
     "status": "blocked_insufficient_conflict_free_aligned_history",
     "bridge_count": 0,
-    "qualified_period_count": 1,
+    "qualified_period_count": 0,
     "blocked_periods": [
      "2022-06-30",
      "2023-06-30",
-     "2024-06-30"
+     "2024-06-30",
+     "2025-06-30"
     ],
     "bridges": [],
     "formal_engine_status": {
@@ -145172,7 +146061,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -145244,7 +146133,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -145293,7 +146182,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -145336,7 +146225,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -145381,7 +146270,7 @@
       "symbol": "LUCK",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -145641,7 +146530,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/LUCK/domains/forecasts",
       "missing_requirements": [
        "approved_net_margin_pct",
@@ -145666,7 +146555,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/LUCK/domains/valuation",
       "missing_requirements": [
        "approved_exit_pe",
@@ -145693,7 +146582,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/LUCK/domains/forecasts",
       "missing_requirements": [
        "approved_exit_pe",
@@ -145824,7 +146713,7 @@
    },
    "event_review_windows": {
     "symbol": "LUCK",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -145898,7 +146787,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -145988,8 +146877,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:LUCK:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:LUCK:2026-08-28:close",
         "source_label": "LUCK retained PSX DPS daily close",
         "source_path": "state/history/LUCK.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/LUCK"
@@ -146046,16 +146935,16 @@
     "source_quality_flags": 1,
     "operating_event_count": 9,
     "cement_operating_observation_count": 0,
-    "cement_qualified_financial_period_count": 2,
+    "cement_qualified_financial_period_count": 0,
     "impact_scenario_count": 27,
     "event_study_count": 9,
     "conditional_benchmark_count": 0,
     "causal_row_count": 8,
     "financial_model_status": "partial",
     "financial_reconciliation_status": "blocked",
-    "financial_reconciliation_eligible_facts": 14,
+    "financial_reconciliation_eligible_facts": 8,
     "financial_reconciliation_missing_slots": 6,
-    "financial_reconciliation_conflicts": 21,
+    "financial_reconciliation_conflicts": 25,
     "financial_coverage_status": "queued_for_qualification",
     "financial_coverage_candidates": 5,
     "forecast_readiness_status": "blocked_insufficient_qualified_history",
@@ -151131,7 +152020,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -151203,7 +152092,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -151252,7 +152141,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -151298,7 +152187,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -151346,7 +152235,7 @@
       "symbol": "HUBC",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -151609,7 +152498,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/HUBC/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -151637,7 +152526,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/HUBC/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -151667,7 +152556,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/HUBC/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -151717,47 +152606,18 @@
    },
    "event_review_windows": {
     "symbol": "HUBC",
-    "as_of": "2026-08-27",
-    "known_events": [
-     {
-      "event_id": "calendar:87c3e4c479f4a23e",
-      "event_type": "results",
-      "date": "2026-08-27",
-      "confirmed": false,
-      "source": "https://stockanalysis.com/quote/psx/HUBC/",
-      "window": {
-       "start": "2026-08-25",
-       "end": "2026-08-29",
-       "days": 5,
-       "intensity": "intensified",
-       "source_kind": "earnings_calendar",
-       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
-      }
-     }
-    ],
+    "as_of": "2026-08-31",
+    "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
-     "status": "suppressed_known_event",
-     "reason": "known_results_event_present",
+     "status": "unknown",
+     "reason": "insufficient_dated_past_earnings_cadence",
      "historical_dates": []
     },
     "expected_reporting_windows": [],
-    "review_windows": [
-     {
-      "start": "2026-08-25",
-      "end": "2026-08-29",
-      "days": 5,
-      "intensity": "intensified",
-      "source_kind": "earnings_calendar",
-      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
-      "event_type": "results",
-      "date": "2026-08-27",
-      "confirmed": false,
-      "source_url": "https://stockanalysis.com/quote/psx/HUBC/"
-     }
-    ],
-    "status": "available",
-    "status_reason": "retained_calendar_or_cadence_available"
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "insufficient_dated_past_earnings_cadence"
    },
    "financial_forecasts": {
     "symbol": "HUBC",
@@ -151829,7 +152689,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -151919,8 +152779,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:HUBC:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:HUBC:2026-08-28:close",
         "source_label": "HUBC retained PSX DPS daily close",
         "source_path": "state/history/HUBC.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/HUBC"
@@ -154254,7 +155114,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -154326,7 +155186,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -154375,7 +155235,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -154421,7 +155281,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -154469,7 +155329,7 @@
       "symbol": "PRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -154732,7 +155592,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PRL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -154760,7 +155620,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PRL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -154790,7 +155650,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/PRL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -154815,7 +155675,7 @@
    },
    "event_review_windows": {
     "symbol": "PRL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -154898,7 +155758,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -154988,8 +155848,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:PRL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:PRL:2026-08-28:close",
         "source_label": "PRL retained PSX DPS daily close",
         "source_path": "state/history/PRL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/PRL"
@@ -165378,7 +166238,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -165450,7 +166310,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -165499,7 +166359,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -165545,7 +166405,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -165593,7 +166453,7 @@
       "symbol": "BOP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -165856,7 +166716,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/BOP/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -165884,7 +166744,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/BOP/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -165914,7 +166774,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/BOP/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -165988,28 +166848,12 @@
    },
    "event_review_windows": {
     "symbol": "BOP",
-    "as_of": "2026-08-27",
-    "known_events": [
-     {
-      "event_id": "calendar:110cc4f1d96c9018",
-      "event_type": "results",
-      "date": "2026-08-28",
-      "confirmed": false,
-      "source": "https://stockanalysis.com/quote/psx/BOP/",
-      "window": {
-       "start": "2026-08-26",
-       "end": "2026-08-30",
-       "days": 5,
-       "intensity": "intensified",
-       "source_kind": "earnings_calendar",
-       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
-      }
-     }
-    ],
+    "as_of": "2026-08-31",
+    "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
-     "status": "suppressed_known_event",
-     "reason": "known_results_event_present",
+     "status": "unknown",
+     "reason": "past_earnings_cadence_not_stable",
      "historical_dates": [
       "2026-03-05",
       "2026-04-30",
@@ -166018,22 +166862,9 @@
      ]
     },
     "expected_reporting_windows": [],
-    "review_windows": [
-     {
-      "start": "2026-08-26",
-      "end": "2026-08-30",
-      "days": 5,
-      "intensity": "intensified",
-      "source_kind": "earnings_calendar",
-      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
-      "event_type": "results",
-      "date": "2026-08-28",
-      "confirmed": false,
-      "source_url": "https://stockanalysis.com/quote/psx/BOP/"
-     }
-    ],
-    "status": "available",
-    "status_reason": "retained_calendar_or_cadence_available"
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "past_earnings_cadence_not_stable"
    },
    "financial_forecasts": {
     "symbol": "BOP",
@@ -166105,7 +166936,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -166195,8 +167026,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:BOP:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:BOP:2026-08-28:close",
         "source_label": "BOP retained PSX DPS daily close",
         "source_path": "state/history/BOP.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/BOP"
@@ -171387,7 +172218,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -171459,7 +172290,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -171508,7 +172339,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -171554,7 +172385,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -171602,7 +172433,7 @@
       "symbol": "NBP",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -171865,7 +172696,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/NBP/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -171893,7 +172724,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/NBP/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -171923,7 +172754,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/NBP/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -171948,28 +172779,12 @@
    },
    "event_review_windows": {
     "symbol": "NBP",
-    "as_of": "2026-08-27",
-    "known_events": [
-     {
-      "event_id": "calendar:2b9752d1647b2c9e",
-      "event_type": "results",
-      "date": "2026-08-27",
-      "confirmed": false,
-      "source": "https://stockanalysis.com/quote/psx/NBP/",
-      "window": {
-       "start": "2026-08-25",
-       "end": "2026-08-29",
-       "days": 5,
-       "intensity": "intensified",
-       "source_kind": "earnings_calendar",
-       "rationale": "Known retained calendar event; confirmation is preserved as supplied."
-      }
-     }
-    ],
+    "as_of": "2026-08-31",
+    "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
-     "status": "suppressed_known_event",
-     "reason": "known_results_event_present",
+     "status": "unknown",
+     "reason": "past_earnings_cadence_not_stable",
      "historical_dates": [
       "2025-08-29",
       "2025-10-29",
@@ -171977,22 +172792,9 @@
      ]
     },
     "expected_reporting_windows": [],
-    "review_windows": [
-     {
-      "start": "2026-08-25",
-      "end": "2026-08-29",
-      "days": 5,
-      "intensity": "intensified",
-      "source_kind": "earnings_calendar",
-      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
-      "event_type": "results",
-      "date": "2026-08-27",
-      "confirmed": false,
-      "source_url": "https://stockanalysis.com/quote/psx/NBP/"
-     }
-    ],
-    "status": "available",
-    "status_reason": "retained_calendar_or_cadence_available"
+    "review_windows": [],
+    "status": "unknown",
+    "status_reason": "past_earnings_cadence_not_stable"
    },
    "financial_forecasts": {
     "symbol": "NBP",
@@ -172064,7 +172866,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -172154,8 +172956,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:NBP:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:NBP:2026-08-28:close",
         "source_label": "NBP retained PSX DPS daily close",
         "source_path": "state/history/NBP.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/NBP"
@@ -176273,7 +177075,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -176345,7 +177147,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -176394,7 +177196,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -176440,7 +177242,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -176488,7 +177290,7 @@
       "symbol": "MEBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -176751,7 +177553,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MEBL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -176779,7 +177581,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MEBL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -176809,7 +177611,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MEBL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -176834,7 +177636,7 @@
    },
    "event_review_windows": {
     "symbol": "MEBL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -176959,7 +177761,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -177049,8 +177851,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:MEBL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:MEBL:2026-08-28:close",
         "source_label": "MEBL retained PSX DPS daily close",
         "source_path": "state/history/MEBL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/MEBL"
@@ -187805,7 +188607,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -187877,7 +188679,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -187926,7 +188728,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -187972,7 +188774,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -188020,7 +188822,7 @@
       "symbol": "ATRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -188283,7 +189085,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/ATRL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -188311,7 +189113,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/ATRL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -188341,7 +189143,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/ATRL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -188403,7 +189205,7 @@
    },
    "event_review_windows": {
     "symbol": "ATRL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -188490,7 +189292,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -188580,8 +189382,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:ATRL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:ATRL:2026-08-28:close",
         "source_label": "ATRL retained PSX DPS daily close",
         "source_path": "state/history/ATRL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/ATRL"
@@ -192194,7 +192996,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -192266,7 +193068,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -192315,7 +193117,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -192361,7 +193163,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -192409,7 +193211,7 @@
       "symbol": "HBL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -192672,7 +193474,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/HBL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -192700,7 +193502,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/HBL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -192730,7 +193532,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/HBL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -192755,7 +193557,7 @@
    },
    "event_review_windows": {
     "symbol": "HBL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -192838,7 +193640,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -192928,8 +193730,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:HBL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:HBL:2026-08-28:close",
         "source_label": "HBL retained PSX DPS daily close",
         "source_path": "state/history/HBL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/HBL"
@@ -201616,7 +202418,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -201688,7 +202490,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -201737,7 +202539,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -201783,7 +202585,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -201831,7 +202633,7 @@
       "symbol": "MARI",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -202094,7 +202896,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MARI/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -202122,7 +202924,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MARI/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -202152,7 +202954,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/MARI/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -202226,7 +203028,7 @@
    },
    "event_review_windows": {
     "symbol": "MARI",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -202309,7 +203111,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -202399,8 +203201,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:MARI:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:MARI:2026-08-28:close",
         "source_label": "MARI retained PSX DPS daily close",
         "source_path": "state/history/MARI.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/MARI"
@@ -206997,7 +207799,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -207069,7 +207871,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -207118,7 +207920,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -207164,7 +207966,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -207212,7 +208014,7 @@
       "symbol": "ENGROH",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -207475,7 +208277,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/ENGROH/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -207503,7 +208305,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/ENGROH/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -207533,7 +208335,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/ENGROH/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -207595,7 +208397,7 @@
    },
    "event_review_windows": {
     "symbol": "ENGROH",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -207684,7 +208486,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -207774,8 +208576,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:ENGROH:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:ENGROH:2026-08-28:close",
         "source_label": "ENGROH retained PSX DPS daily close",
         "source_path": "state/history/ENGROH.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/ENGROH"
@@ -209949,7 +210751,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -210021,7 +210823,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -210070,7 +210872,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -210116,7 +210918,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -210164,7 +210966,7 @@
       "symbol": "GAL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -210427,7 +211229,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/GAL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -210455,7 +211257,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/GAL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -210485,7 +211287,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/GAL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -210510,7 +211312,7 @@
    },
    "event_review_windows": {
     "symbol": "GAL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [
      {
       "event_id": "calendar:e6b8ace924029812",
@@ -210622,7 +211424,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -210712,8 +211514,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:GAL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:GAL:2026-08-28:close",
         "source_label": "GAL retained PSX DPS daily close",
         "source_path": "state/history/GAL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/GAL"
@@ -213500,7 +214302,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -213572,7 +214374,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -213621,7 +214423,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -213667,7 +214469,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -213715,7 +214517,7 @@
       "symbol": "NRL",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -213978,7 +214780,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/NRL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -214006,7 +214808,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/NRL/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -214036,7 +214838,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/NRL/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -214061,7 +214863,7 @@
    },
    "event_review_windows": {
     "symbol": "NRL",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [],
     "confirmed_events": [],
     "expected_reporting_window": {
@@ -214146,7 +214948,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -214236,8 +215038,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:NRL:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:NRL:2026-08-28:close",
         "source_label": "NRL retained PSX DPS daily close",
         "source_path": "state/history/NRL.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/NRL"
@@ -228463,7 +229265,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_financial_series": "state/company_financial_series.json",
         "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -228535,7 +229337,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27 18:17",
+       "as_of": "2026-08-28 15:26",
        "source": {
         "company_profiles": "state/company_profiles.json",
         "sectors": "state/sectors.json",
@@ -228584,7 +229386,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -228630,7 +229432,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -228678,7 +229480,7 @@
       "symbol": "CNERGY",
       "state_metadata": {
        "schema_version": 1,
-       "as_of": "2026-08-27",
+       "as_of": "2026-08-31",
        "source": {
         "financial_model_inputs": "state/company_intel/financial_model_inputs.json",
         "forecast_readiness": "state/company_intel/forecast_readiness.json",
@@ -228941,7 +229743,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/CNERGY/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -228969,7 +229771,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/CNERGY/domains/valuation",
       "missing_requirements": [
        "actual_basic_eps",
@@ -228999,7 +229801,7 @@
        "research_only": true,
        "no_advice": true
       },
-      "as_of": "2026-08-27",
+      "as_of": "2026-08-31",
       "brain_path": "companies/CNERGY/domains/forecasts",
       "missing_requirements": [
        "actual_basic_eps",
@@ -229121,7 +229923,7 @@
    },
    "event_review_windows": {
     "symbol": "CNERGY",
-    "as_of": "2026-08-27",
+    "as_of": "2026-08-31",
     "known_events": [
      {
       "event_id": "calendar:472994b57ff64373",
@@ -229235,7 +230037,7 @@
     "status": "none",
     "case_count": 0,
     "rejected_record_count": 0,
-    "source_cutoff": "2026-08-27",
+    "source_cutoff": "2026-08-31",
     "policy": {
      "historical_baselines_only": true,
      "not_owner_approved_assumptions": true,
@@ -229325,8 +230127,8 @@
         "metric": "current_price",
         "record_type": "approved_market_operand",
         "approval_scope": "deterministic_market_operand_only",
-        "available_on": "2026-08-27",
-        "source_id": "henneth_state:history:CNERGY:2026-08-27:close",
+        "available_on": "2026-08-28",
+        "source_id": "henneth_state:history:CNERGY:2026-08-28:close",
         "source_label": "CNERGY retained PSX DPS daily close",
         "source_path": "state/history/CNERGY.json",
         "source_url": "https://dps.psx.com.pk/timeseries/eod/CNERGY"
@@ -229444,9 +230246,9 @@
  ],
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0654f685a5e184037f86d913533b8a21d40f7f43",
-  "build_cutoff_at": "2026-08-31T06:51:13Z",
-  "generated_at": "2026-08-31T06:51:13Z",
+  "source_commit_sha": "8893473a9796c248a7c440444becb1325e93d478",
+  "build_cutoff_at": "2026-08-31T09:54:19Z",
+  "generated_at": "2026-08-31T09:54:19Z",
   "artifact_path": "Henneth Desk 2.CI.0/data/company_intelligence.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
