@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-01 17:37",
+ "updated": "2026-09-01 20:42",
  "regime": "risk-off",
  "geo_risk": {
   "score": 62,
@@ -357,12 +357,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-27T21:40:00+05:00",
-   "mode": "light-escalated",
-   "ended": "2026-08-27T21:58:00+05:00",
-   "outcome": "PM checkpoint (delayed, ~21:55 PKT). health ok. news-sentinel appended 4 items (237 total) -- APL FY26 +63% YoY w/ PKR40 dividend (impact 4), POL 4QFY26 +67% YoY w/ record PKR100 dividend (impact 4, later corrected to +47% by market-analyst), HUBC 4QFY26 +39% YoY w/ PKR5 dividend (impact 4, flagged premature -- actual results due 2026-08-31); escalation fired -> macro-agent (regime neutral, geo-risk 54/moderate) + market-analyst (daily_read: index -1,279pts/flat close despite dividend beats, tone neutral) ran. No open positions, monitor skipped. build_dashboard+preflight OK. Publish: state changes absorbed into concurrent 'Daily desk refresh 2026-08-27' commit (1e8418e6, 21:55:54 PKT) from the once-daily full-pipeline task racing on the same checkout -- verified live via git show/content check, no separate checkpoint commit needed. Watchdog OK (app shell, public files serve, account gate intact on rooms/dashboard/quant/health)."
-  },
-  {
    "started": "2026-08-28T13:18:00+05:00",
    "mode": "light-escalated",
    "ended": "2026-08-28T13:25:33+05:00",
@@ -385,6 +379,12 @@
    "mode": "light",
    "ended": "2026-09-01T17:03:00+05:00",
    "outcome": "PM checkpoint: health ok, gate required (3 pending items), news-sentinel found 2 new items (KSE-100 afternoon update impact 3, PKR/USD impact 1), no impact>=4 so no escalation, no open positions so monitor skipped, preflight OK, published (data-only), gate acked checkpoint-pm."
+  },
+  {
+   "started": "2026-09-01T17:22:00+05:00",
+   "mode": "full",
+   "ended": "2026-09-01T17:35:00+05:00",
+   "outcome": "Daily desk refresh: regime risk-off (CPI 11.1% shock, oil+geo-risk 62 moderate), news-sentinel appended 1 item (confirmed close, impact 3), daily-read headline cautious tone / watchlist BAFL BAHL BOP POL TPLT, preflight OK, published (data-only, state-only)."
   }
  ]
 }
