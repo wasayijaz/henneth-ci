@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema_version": 1,
-  "as_of": "2026-08-31",
+  "as_of": "2026-09-01",
   "count": 20,
   "source": "state/earnings_calendar.json + state/company_event_ledger.json",
   "policy": "Deterministic review metadata only; no scheduled tasks, external calls, AI prompts, forecasts, advice, or auto actions."
@@ -9,12 +9,28 @@
  "companies": {
   "MLCF": {
    "symbol": "MLCF",
-   "as_of": "2026-08-31",
-   "known_events": [],
+   "as_of": "2026-09-01",
+   "known_events": [
+    {
+     "event_id": "calendar:5e0ca034678bfb1f",
+     "event_type": "results",
+     "date": "2026-09-14",
+     "confirmed": false,
+     "source": "https://stockanalysis.com/quote/psx/MLCF/",
+     "window": {
+      "start": "2026-09-12",
+      "end": "2026-09-16",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+     }
+    }
+   ],
    "confirmed_events": [],
    "expected_reporting_window": {
-    "status": "unknown",
-    "reason": "past_earnings_cadence_not_stable",
+    "status": "suppressed_known_event",
+    "reason": "known_results_event_present",
     "historical_dates": [
      "2025-10-27",
      "2025-12-18",
@@ -23,23 +39,36 @@
     ]
    },
    "expected_reporting_windows": [],
-   "review_windows": [],
-   "status": "unknown",
-   "status_reason": "past_earnings_cadence_not_stable"
+   "review_windows": [
+    {
+     "start": "2026-09-12",
+     "end": "2026-09-16",
+     "days": 5,
+     "intensity": "intensified",
+     "source_kind": "earnings_calendar",
+     "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+     "event_type": "results",
+     "date": "2026-09-14",
+     "confirmed": false,
+     "source_url": "https://stockanalysis.com/quote/psx/MLCF/"
+    }
+   ],
+   "status": "available",
+   "status_reason": "retained_calendar_or_cadence_available"
   },
   "OGDC": {
    "symbol": "OGDC",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [
     {
-     "event_id": "calendar:a0bae68f0d6f2617",
+     "event_id": "calendar:fa739d7e75e7f895",
      "event_type": "results",
-     "date": "2026-10-28",
+     "date": "2026-09-04",
      "confirmed": false,
      "source": "https://stockanalysis.com/quote/psx/OGDC/",
      "window": {
-      "start": "2026-10-26",
-      "end": "2026-10-30",
+      "start": "2026-09-02",
+      "end": "2026-09-06",
       "days": 5,
       "intensity": "intensified",
       "source_kind": "earnings_calendar",
@@ -60,14 +89,14 @@
    "expected_reporting_windows": [],
    "review_windows": [
     {
-     "start": "2026-10-26",
-     "end": "2026-10-30",
+     "start": "2026-09-02",
+     "end": "2026-09-06",
      "days": 5,
      "intensity": "intensified",
      "source_kind": "earnings_calendar",
      "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
      "event_type": "results",
-     "date": "2026-10-28",
+     "date": "2026-09-04",
      "confirmed": false,
      "source_url": "https://stockanalysis.com/quote/psx/OGDC/"
     }
@@ -77,7 +106,7 @@
   },
   "PPL": {
    "symbol": "PPL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [
     {
      "event_id": "calendar:a14636fd9306b2fc",
@@ -124,7 +153,7 @@
   },
   "DGKC": {
    "symbol": "DGKC",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -142,12 +171,28 @@
   },
   "PSO": {
    "symbol": "PSO",
-   "as_of": "2026-08-31",
-   "known_events": [],
+   "as_of": "2026-09-01",
+   "known_events": [
+    {
+     "event_id": "calendar:0f40b65667f71774",
+     "event_type": "results",
+     "date": "2026-09-04",
+     "confirmed": false,
+     "source": "https://stockanalysis.com/quote/psx/PSO/",
+     "window": {
+      "start": "2026-09-02",
+      "end": "2026-09-06",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+     }
+    }
+   ],
    "confirmed_events": [],
    "expected_reporting_window": {
-    "status": "unknown",
-    "reason": "past_earnings_cadence_not_stable",
+    "status": "suppressed_known_event",
+    "reason": "known_results_event_present",
     "historical_dates": [
      "2026-02-17",
      "2026-03-26",
@@ -156,13 +201,26 @@
     ]
    },
    "expected_reporting_windows": [],
-   "review_windows": [],
-   "status": "unknown",
-   "status_reason": "past_earnings_cadence_not_stable"
+   "review_windows": [
+    {
+     "start": "2026-09-02",
+     "end": "2026-09-06",
+     "days": 5,
+     "intensity": "intensified",
+     "source_kind": "earnings_calendar",
+     "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+     "event_type": "results",
+     "date": "2026-09-04",
+     "confirmed": false,
+     "source_url": "https://stockanalysis.com/quote/psx/PSO/"
+    }
+   ],
+   "status": "available",
+   "status_reason": "retained_calendar_or_cadence_available"
   },
   "UBL": {
    "symbol": "UBL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [
     {
      "event_id": "calendar:e4d02d3edee253fa",
@@ -214,24 +272,53 @@
   },
   "FFC": {
    "symbol": "FFC",
-   "as_of": "2026-08-31",
-   "known_events": [],
+   "as_of": "2026-09-01",
+   "known_events": [
+    {
+     "event_id": "calendar:22bde1024a5a27da",
+     "event_type": "results",
+     "date": "2026-10-27",
+     "confirmed": false,
+     "source": "https://stockanalysis.com/quote/psx/FFC/",
+     "window": {
+      "start": "2026-10-25",
+      "end": "2026-10-29",
+      "days": 5,
+      "intensity": "intensified",
+      "source_kind": "earnings_calendar",
+      "rationale": "Known retained calendar event; confirmation is preserved as supplied."
+     }
+    }
+   ],
    "confirmed_events": [],
    "expected_reporting_window": {
-    "status": "unknown",
-    "reason": "insufficient_dated_past_earnings_cadence",
+    "status": "suppressed_known_event",
+    "reason": "known_results_event_present",
     "historical_dates": [
      "2026-04-29"
     ]
    },
    "expected_reporting_windows": [],
-   "review_windows": [],
-   "status": "unknown",
-   "status_reason": "insufficient_dated_past_earnings_cadence"
+   "review_windows": [
+    {
+     "start": "2026-10-25",
+     "end": "2026-10-29",
+     "days": 5,
+     "intensity": "intensified",
+     "source_kind": "earnings_calendar",
+     "rationale": "Known retained calendar event; confirmation is preserved as supplied.",
+     "event_type": "results",
+     "date": "2026-10-27",
+     "confirmed": false,
+     "source_url": "https://stockanalysis.com/quote/psx/FFC/"
+    }
+   ],
+   "status": "available",
+   "status_reason": "retained_calendar_or_cadence_available"
   },
   "LUCK": {
    "symbol": "LUCK",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -246,7 +333,7 @@
   },
   "HUBC": {
    "symbol": "HUBC",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -261,7 +348,7 @@
   },
   "PRL": {
    "symbol": "PRL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -276,7 +363,7 @@
   },
   "BOP": {
    "symbol": "BOP",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -296,7 +383,7 @@
   },
   "NBP": {
    "symbol": "NBP",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -315,7 +402,7 @@
   },
   "MEBL": {
    "symbol": "MEBL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -372,7 +459,7 @@
   },
   "ATRL": {
    "symbol": "ATRL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -391,7 +478,7 @@
   },
   "HBL": {
    "symbol": "HBL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -406,7 +493,7 @@
   },
   "MARI": {
    "symbol": "MARI",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -421,7 +508,7 @@
   },
   "ENGROH": {
    "symbol": "ENGROH",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -442,7 +529,7 @@
   },
   "GAL": {
    "symbol": "GAL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [
     {
      "event_id": "calendar:e6b8ace924029812",
@@ -486,7 +573,7 @@
   },
   "NRL": {
    "symbol": "NRL",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [],
    "confirmed_events": [],
    "expected_reporting_window": {
@@ -503,7 +590,7 @@
   },
   "CNERGY": {
    "symbol": "CNERGY",
-   "as_of": "2026-08-31",
+   "as_of": "2026-09-01",
    "known_events": [
     {
      "event_id": "calendar:472994b57ff64373",
@@ -550,9 +637,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "e25e650113e97cd69082449e34c8dbecc7a36b51",
-  "build_cutoff_at": "2026-08-31T17:48:10Z",
-  "generated_at": "2026-08-31T17:48:10Z",
+  "source_commit_sha": "227dc2102442b46e587ea017b215dadbf2d07dcd",
+  "build_cutoff_at": "2026-09-01T08:51:04Z",
+  "generated_at": "2026-09-01T08:51:04Z",
   "artifact_path": "state/company_intel/event_review_windows.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
