@@ -1,93 +1,64 @@
 {
-  "date": "2026-08-28",
-  "headline": "KSE-100 edges up to 177,696.50 (+0.21%) on strong bank earnings, but rising bond yields and a due double-digit CPI print keep the desk in caution-favour-quality mode.",
-  "tone": "cautious",
-  "summary": "KSE-100 closed at 177,696.50, up 373.73 points (+0.21%), lifted by bank earnings: Bank of Punjab's profit jumped 44% and Pakistan Tobacco's rose 30%, though Bank Makramah swung to a Rs4.68bn loss — a reminder the banking rally favours large, well-capitalized names, not distressed ones. SBP held its policy rate at 11.5%, but T-bill and PIB yields keep climbing into the September 14 rate decision, and August CPI (due ~September 1) is forecast to jump back into double digits. Geo-risk sits at a 'moderate' 54/100 — the desk's read is normal caution, favour quality, no green light to chase risk broadly.",
+  "date": "2026-09-01",
+  "headline": "US strikes on Iran spiked oil and knocked 721 points off the KSE-100 - the desk has flipped to risk-off, and only refiners and the strongest banks look worth watching today.",
+  "tone": "defensive",
+  "summary": "US strikes on Iranian positions and Tehran's retaliation pushed Brent to $92 and knocked the KSE-100 down 721 points yesterday; the desk's macro read has flipped to risk-off. Global markets are cautious too - the S&P and Dow dipped, VIX ticked up, and gold's safe-haven bid keeps building. On PSX the reaction split cleanly: refiners rallied on wider crack spreads while autos, cement, OMCs and power all sold off. Reserves are thin (about $17bn, near 2.6 months of imports) and a hot August CPI print is still due, so the desk leans toward refiners and well-capitalized banks holding government paper, and away from anything leveraged to fuel costs or hoped-for rate relief.",
   "sectors": [
     {
-      "name": "Banks / Financials",
+      "name": "Refineries",
       "stance": "favoured",
-      "why": "Elevated T-bill/PIB yields (6-month 11.80%, 10-year PIB 12.30%) are a genuine carry tailwind for banks holding government paper, and Bank of Punjab's 1HCY26 profit beat (+44%) is today's proof point — but it's a large-bank story: Bank Makramah's swing to a Rs4.68bn loss and its prior Rs10bn sponsor-injection need show the same tailwind doesn't reach every name in the sector."
+      "why": "ATRL/NRL/PRL were the only sector to actually gain on yesterday's selloff, because a higher crude price widens their crack-spread economics even as it squeezes almost everyone else."
     },
     {
-      "name": "E&P (Oil & Gas Exploration)",
+      "name": "Large, well-capitalized banks",
       "stance": "favoured",
-      "why": "Brent sits at a still-elevated $87.53, keeping upstream economics attractive, and Pakistan Oilfields' 1HCY26 profit jumped 67% YoY with a record Rs100/share dividend announced this week — the clearest proof point in the sector."
+      "why": "T-bill and PIB cutoffs keep grinding up (6M 11.80%, 10Y PIB 12.30%), a genuine carry tailwind for banks holding government paper into the Sept 14 rate decision - this is the large-cap end of the sector, not every bank ticker."
     },
     {
-      "name": "OMC (Oil Marketing)",
-      "stance": "favoured",
-      "why": "Softer oil (Brent -0.94% over the month) is benign for OMC input costs, and Attock Petroleum's +63% YoY earnings beat plus a confirmed Rs40/share dividend show the tailwind already showing up in results."
-    },
-    {
-      "name": "Exporters / Textiles",
-      "stance": "favoured",
-      "why": "July's export rebound to a 19-month high and a current account deficit that narrowed to $328mn are a genuine external-balance tailwind, though the desk wants an August print before calling the trend durable rather than a one-month bounce."
-    },
-    {
-      "name": "Power / IPP",
+      "name": "OMCs",
       "stance": "avoid",
-      "why": "Pakistan missed its FY26 circular-debt reduction target (Rs1.835tn actual vs Rs1.614tn commitment), and the IMF's September review mission has tariff pass-through and circular-debt reform as the key unresolved sticking point — a sector-level overhang that sits awkwardly next to strong single-company numbers like HUBC's."
+      "why": "OMCs are squeezed between a near-daily-reset pump price and a rising import bill for the fuel itself, and sold off with the broader market yesterday despite the same oil move that lifted refiners."
     },
     {
-      "name": "Rate-sensitive / high-leverage & broad cyclicals",
+      "name": "Autos, cement, power/IPPs",
       "stance": "avoid",
-      "why": "August CPI is forecast to jump back into double digits (10.75-11.4% YoY) ahead of the September 14 MPC, arguing against pricing in rate cuts, while geo-risk stays 'moderate' (54) not 'low' — not a backdrop for chasing leveraged names or the index broadly."
+      "why": "All three were named among yesterday's broad sellers, and power/IPPs carry the extra overhang of unresolved circular debt heading into the IMF's expected September review."
+    },
+    {
+      "name": "Small/thinly-capitalized banks",
+      "stance": "avoid",
+      "why": "The pending August CPI print is forecast at 10.75-11.4% YoY even before this oil shock, arguing against pricing in the near-term rate relief that smaller, more rate-sensitive banks would need."
     }
   ],
   "watchlist": [
     {
+      "ticker": "BAFL",
+      "angle": "Two backtested strategies are currently constructive here - sma_golden_cross (4.81% net expectancy, out-of-sample hit rate 1.0 on a small sample) and triple_screen_long (1.19% net expectancy, out-of-sample hit rate 0.73) - and the fundamental card reads attractive: P/E near 5.5x, 17.4% net margin, a 10.29% dividend yield covered by a 56% payout ratio. It sits inside the large-bank sector the desk is favouring for the government-paper carry tailwind.",
+      "risk": "It's still a commercial bank heading into a hot pending August CPI print - if that number lands hawkish enough, rate-sensitive banks broadly could give back ground regardless of BAFL's individual quality."
+    },
+    {
+      "ticker": "ATRL",
+      "angle": "It's the clearest live expression of the sector tilt itself - ATRL was among the lone gainers on yesterday's 721-point selloff on wider crack-spread expectations as Brent pushed to $92. Fundamentals are cheap (P/E 4.9x, forward 3.45x, improving) and there's a confirmed dividend catalyst on the calendar: Rs15/share, ex-dividend and book closure 2026-10-13.",
+      "risk": "RSI14 is already at 74.3 - overbought after the recent surge - and net margins are thin at 7.6%. A lot of the good news may already be priced in, and any pullback in Brent undercuts the whole crack-spread argument."
+    },
+    {
       "ticker": "BOP",
-      "angle": "Bank of Punjab posted 1HCY26 profit up 44% — the earnings item macro.json names as the concrete data point behind today's banks/financials favoured tilt (elevated T-bill/PIB yields are a real carry tailwind for banks holding government paper). Fundamentals back it up: 'attractive' rating, P/E 5.85, forward P/E improving to 4.56, 17.4% net margin, and an 8.94% dividend yield on a 53% payout ('generous & covered'). Results were due today (2026-08-28) per the earnings calendar.",
-      "risk": "The same day's news shows real dispersion within the sector — Bank Makramah, a similarly-sized bank, swung to a Rs4.68bn loss — so a strong headline print doesn't guarantee how the market reads BOP's own results once fully digested."
-    },
-    {
-      "ticker": "POL",
-      "angle": "Pakistan Oilfields' 1HCY26 profit rose 67% YoY with a record Rs100/share dividend announced Aug 27 — one of the clearest earnings beats on the tape this week. Fundamentals are 'attractive': P/E 7.51 (cheapest third), 48% net margin, forward P/E improving to 7.4, and it sits in the E&P sector macro.json explicitly favours. A confirmed book closure on 2026-10-13 carries a 10.03% yield.",
-      "risk": "Oil is a two-way street — Brent is down 0.94% over the past month, and further softening would compress the revenue base and dividend cover the stock is benefiting from right now."
-    },
-    {
-      "ticker": "APL",
-      "angle": "Attock Petroleum's 1HCY26 EPS rose 63% YoY with a Rs40/share dividend announced Aug 27, and it sits in the OMC sector macro.json favours on benign oil costs. A confirmed 2026-10-13 book closure carries a 7.09% yield, and valuation is cheap (P/E 4.0, cheapest third).",
-      "risk": "Fundamentals are only 'mixed', not 'attractive' — net margin is thin at 3.5%, so the earnings beat needs to prove it isn't a one-off before the story strengthens further."
-    },
-    {
-      "ticker": "HUBC",
-      "angle": "Hub Power's 1HCY26 profit rose 39% YoY with a Rs5/share dividend announced Aug 27, and fundamentals screen 'attractive' across the board: P/E 6.11 (cheapest third), forward P/E improving to 5.43, a 65% net margin, and a 7.34% dividend yield on a 43% payout ('generous & covered'). A confirmed book closure lands 2026-10-13 at a 2.41% yield.",
-      "risk": "HUBC sits in Power Generation & Distribution, a sector macro.json explicitly flags to avoid — Pakistan missed its FY26 circular-debt reduction target and the IMF's September review has tariff pass-through as an unresolved sticking point, so the company-level strength runs directly against a sector-level overhang."
+      "angle": "Fundamentals read attractive - cheap P/E (6.26x, forward 4.49x, improving), 17.1% net margin, an 8.58% dividend yield covered by a 54% payout - on top of a recent 44% profit jump and a confirmed, near-dated catalyst: ex-dividend 2026-09-10, book closure 2026-09-11, paying Rs1.6/share.",
+      "risk": "Beta of 1.2 means it swings more than the market in both directions, which cuts against you in a risk-off tape, and it's the same commercial-banking sector as BAFL above."
     }
   ],
   "catalysts": [
-    {
-      "date": "2026-08-28",
-      "event": "BOP and BML 1HCY26 results (today's trigger) — BOP posted +44% profit growth, BML swung to a Rs4.68bn loss",
-      "which_tickers": ["BOP", "BML"]
-    },
-    {
-      "date": "2026-09-01",
-      "event": "PBS August CPI release, independently forecast at 10.75-11.4% YoY (up from July's 9.2%) — key input into the Sept 14 MPC",
-      "which_tickers": []
-    },
-    {
-      "date": "2026-09-14",
-      "event": "SBP Monetary Policy Committee decision — policy rate currently held at 11.5%",
-      "which_tickers": []
-    },
-    {
-      "date": "2026-09",
-      "event": "IMF 4th EFF / 3rd RSF review mission, targeting ~$1.2bn combined disbursement; circular-debt reform is the key sticking point",
-      "which_tickers": ["HUBC"]
-    },
-    {
-      "date": "2026-10-13",
-      "event": "Book closures / dividends: POL (Rs72.5/share, 10.03% yield), APL (Rs40/share, 7.09% yield), HUBC (Rs5/share, 2.41% yield), ATRL (Rs15/share, 1.37% yield)",
-      "which_tickers": ["POL", "APL", "HUBC", "ATRL"]
-    }
+    {"date": "2026-09-01", "event": "BAHL book closure (dividend Rs3.5/share, confirmed)", "which_tickers": ["BAHL"]},
+    {"date": "~2026-09-01/02", "event": "PBS August 2026 CPI release - not yet out; independently forecast 10.75-11.4% YoY even before this oil shock", "which_tickers": []},
+    {"date": "2026-09-04", "event": "SCBPL book closure (confirmed); OGDC and PSO results due (unconfirmed)", "which_tickers": ["SCBPL", "OGDC", "PSO"]},
+    {"date": "2026-09 (2nd week, unconfirmed)", "event": "IMF 4th EFF / 3rd RSF review mission expected - ~$1.2bn potential disbursement, circular debt the key sticking point", "which_tickers": []},
+    {"date": "2026-09-11", "event": "BOP book closure (dividend Rs1.6/share, confirmed)", "which_tickers": ["BOP"]},
+    {"date": "2026-09-14", "event": "SBP MPC - next rate decision, now with a fresh oil-driven inflation upside risk in the mix", "which_tickers": []}
   ],
   "risks": [
-    "August CPI (due ~Sept 1) is forecast to jump back into double digits (10.75-11.4% YoY), which would argue against near-term rate cuts and keep T-bill/PIB yields — already rising auction-over-auction despite the held policy rate — as a valuation headwind into the Sept 14 MPC.",
-    "Geo-risk sits at 54/100, 'moderate' not 'low' — gold is still bid (+14.4% over the month), a lingering safe-haven signal that keeps the backdrop short of a clean risk-on read.",
-    "Power-sector circular debt remains unresolved (Rs1.835tn actual vs Rs1.614tn FY26 commitment) heading into the IMF's September review — a sector-level overhang for any power/IPP exposure, including HUBC on today's watchlist."
+    "Brent holding above $90 - if the conflict widens further, the import bill grows against reserves of only about $17.1bn (roughly 2.6 months of cover), the classic setup for PKR and reserve stress even though the rupee has held flat for 12 straight sessions so far.",
+    "The pending August CPI print, forecast at 10.75-11.4% YoY, lands right before the Sept 14 SBP decision - a hot number would undercut the 'large banks as defensive carry play' half of today's read.",
+    "The conflict is genuinely live - fresh strikes and retaliation this cycle, six months running - so today's 'moderate' 62/100 geo-risk score could re-rate higher fast on any further escalation."
   ],
   "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."
 }

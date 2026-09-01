@@ -1,0 +1,27 @@
+{
+  "verdict": "flags",
+  "findings": [
+    {
+      "severity": "low",
+      "claim": "verify.json: 'methods disagree 4.0x — treat composite as a rough screen'",
+      "issue": "Confirmed, not refuted: Graham (1504.79) / earnings-power (376.75) = 3.995x ≈ 4.0x. The Room's fa_memo, bull_case, and bear_case all correctly treat the composite fair value (989.02) as unreliable rather than precise — fa_memo calls the spread 'wide, unreconciled', bear_case leads with the same critique and explicitly attacks the bull's headline number for resting on the 30% growth assumption baked into Graham/DDM. Composite_fair (989.02) also independently verifies as the median of the four methods ((550.54+1427.51)/2), so the arithmetic is internally consistent even though the inputs disagree.",
+      "evidence": "state/dossiers.json FFC.valuation.methods {relative_pe:550.54, earnings_power:376.75, graham:1504.79, ddm:1427.51}, composite_fair:989.02; state/rooms.json FFC.fa_memo/bull_case/bear_case",
+      "fix": "None required — the low-severity flag is already correctly reflected as a caveat in every memo, not overstated as precision."
+    },
+    {
+      "severity": "low",
+      "claim": "fa_memo.read and bull_case pillar 3: net margin '~17%'",
+      "issue": "Minor internal rounding inconsistency: 87.88B / 531.64B = 16.53%, which fa_memo's own earnings_quality field correctly states as '~16.5%', while the read/bull_case round it up to '~17%'. Not material and not a wrong figure, just inconsistent rounding within the same session.",
+      "evidence": "state/dossiers.json FFC.fundamental.net_income=87.88B, revenue=531.64B (87.88/531.64=16.53%); state/rooms.json FFC.fa_memo.earnings_quality vs fa_memo.read / bull_case.pillars[2]",
+      "fix": "Standardize to '~16.5%' throughout (matches earnings_quality field) if the session is regenerated; no correction to rooms.json required now given the gap is under 1pt and non-material."
+    },
+    {
+      "severity": "low",
+      "claim": "dossier fundamental.pe = 8.86 (quoted verbatim in fa_memo/bull_case/bear_case as 'trailing P/E of 8.86')",
+      "issue": "Recomputing trailing P/E from the same dossier's own price and EPS gives 550.03 / 61.41 = 8.96 (and market_cap/net_income gives 783.17B/87.88B = 8.91), both ~1-1.5% above the stated 8.86 — likely an EPS-vintage or fetch-timing mismatch upstream (eps_basis is separately flagged 'unknown' in the same record). The Room passes the dossier figure through faithfully and does not fabricate it, so this is a data-layer note, not a Room-authored error.",
+      "evidence": "state/dossiers.json FFC.fundamental.pe=8.86 vs FFC.price=550.03 / FFC.fundamental.eps=61.41 = 8.96",
+      "fix": "No Room-side fix needed (correctly sourced from dossier). Data-layer: reconcile the pe field against price/eps at the same asof timestamp, or drop pe in favor of a computed value once eps_basis is confirmed."
+    }
+  ],
+  "summary": "The verify.json 4.0x spread flag is confirmed real (Graham 1504.79 vs earnings-power 376.75) and the Room already treats the 989.02 composite as an unreliable screen rather than a precise fair value in every memo; all other cited numbers (prices, SMA/RSI, P/E, dividend history, dividend filing date, proven-strategy stats, news impact tags) trace cleanly to state/dossiers.json — only trivial rounding/data-vintage nits found, none blocking."
+}
