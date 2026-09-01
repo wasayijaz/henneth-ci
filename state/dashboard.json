@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-01 17:10",
+ "updated": "2026-09-01 17:37",
  "regime": "risk-off",
  "geo_risk": {
   "score": 62,
@@ -179,17 +179,6 @@
  "news": [
   {
    "ts": "2026-08-27",
-   "source": "The Express Tribune",
-   "headline": "Hub Power Company 4QFY26 earnings up 39% YoY, PKR 5/share quarterly dividend",
-   "tickers": [
-    "HUBC"
-   ],
-   "impact": 4,
-   "summary": "The Hub Power Company Limited (PSX: HUBC) reported 4QFY26 earnings up 39% year-on-year and declared a PKR 5/share quarterly dividend, per The Express Tribune's PSX market-recap coverage of the Aug 27, 2026 session. No absolute profit/EPS figure captured this cycle. Logged as impact 4 (material earnings surprise plus dividend, per desk criteria Rule 10); escalation flagged.",
-   "url": "https://tribune.com.pk/story/2626025/psx-up-800-points-after-holiday-reopen"
-  },
-  {
-   "ts": "2026-08-27",
    "source": "Business Recorder (BR Research)",
    "headline": "IT exports eye the next leap",
    "tickers": [
@@ -352,16 +341,21 @@
    "impact": 1,
    "summary": "The Pakistani rupee appreciated 3 paisas against the US dollar in interbank trading on Tuesday Sept 1, 2026, closing at Rs277.47 versus the previous day's close of Rs277.50; open-market dollar buying/selling rates were Rs277.60/Rs278.55. Negligible single-day FX move; logged as impact 1 (routine), consistent with prior similarly small FX moves in this newslog.",
    "url": "https://www.nation.com.pk/01-Sep-2026/rupee-gains-3-paisas-dollar"
+  },
+  {
+   "ts": "2026-09-01",
+   "source": "Mettis Global (PSX Closing Bell)",
+   "headline": "PSX Closing Bell: Bulls Miss by a Whisker",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Supersedes the already-logged Sept 1, 2026 3:50pm DPS intraday checkpoint (176,466.99, -508.68pts/-0.29%, MACRO only). KSE-100 confirmed close Tue Sept 1, 2026 at 176,466.99, down 508.69 points (-0.29%) from Monday Aug 31's confirmed close of 176,975.68 (already logged), per Mettis Global's 'PSX Closing Bell: Bulls Miss by a Whisker' (published Sept 1, 2026 4:14 PM PKT on the PSX Roundup feed) - confirms the same closing level as the prior intraday checkpoint (rounding-level difference only, 508.69 vs 508.68). Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries. Tagged to the union of the superseded item's tickers (MACRO only); no company-specific driver captured this cycle.",
+   "url": "https://mettisglobal.news/PSXRoundup"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-08-27T21:15:00+05:00",
-   "mode": "full",
-   "ended": "2026-08-27T21:57:41+05:00",
-   "outcome": "regime=neutral geo-risk=54/moderate | headline: Three energy-sector dividend blowouts (APL, POL, HUBC) couldn't stop the KSE-100 from giving back 1,279 points and closing flat | watchdog=OK (app shell + public files serve, account gate intact) | pushed=yes (after clearing a stale .git/index.lock that had silently blocked the first publish attempt)"
-  },
   {
    "started": "2026-08-27T21:40:00+05:00",
    "mode": "light-escalated",
@@ -385,6 +379,12 @@
    "mode": "light-escalated",
    "ended": "2026-09-01T15:36:00+05:00",
    "outcome": "AM checkpoint (delayed run, ~15:36 not 11:00). Gate required=true (first-of-day + 3 pending impact-4 items: BOP, BML, PAKT). Git pull/autostash left 19 files conflicted -- resolved via scoped git checkout HEAD (no content changes, stash preserved). health ok. news-sentinel: 3 new items appended (248 total), incl. impact-5 US-Iran conflict item -> escalation.json fired (escalate=true, tickers=[MACRO]). Ran macro-agent (regime neutral->risk-off, geo-risk 62/moderate, Brent ~$91-92, PSX -720.83pts, defensive tilt: favour refineries+large banks, avoid OMCs/autos/cement/power-IPPs) and market-analyst (daily_read.json rewritten out-of-cycle, watchlist BAFL/ATRL/BOP). No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 103 backfilling tickers). Published data-only (95 pre-existing untracked dirs held back, not this session's), pushed to main -> Vercel deploying. Gate acked checkpoint-am."
+  },
+  {
+   "started": "2026-09-01T17:00:00+05:00",
+   "mode": "light",
+   "ended": "2026-09-01T17:03:00+05:00",
+   "outcome": "PM checkpoint: health ok, gate required (3 pending items), news-sentinel found 2 new items (KSE-100 afternoon update impact 3, PKR/USD impact 1), no impact>=4 so no escalation, no open positions so monitor skipped, preflight OK, published (data-only), gate acked checkpoint-pm."
   }
  ]
 }

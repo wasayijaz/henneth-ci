@@ -1,64 +1,81 @@
 {
-  "date": "2026-09-01",
-  "headline": "US strikes on Iran spiked oil and knocked 721 points off the KSE-100 - the desk has flipped to risk-off, and only refiners and the strongest banks look worth watching today.",
-  "tone": "defensive",
-  "summary": "US strikes on Iranian positions and Tehran's retaliation pushed Brent to $92 and knocked the KSE-100 down 721 points yesterday; the desk's macro read has flipped to risk-off. Global markets are cautious too - the S&P and Dow dipped, VIX ticked up, and gold's safe-haven bid keeps building. On PSX the reaction split cleanly: refiners rallied on wider crack spreads while autos, cement, OMCs and power all sold off. Reserves are thin (about $17bn, near 2.6 months of imports) and a hot August CPI print is still due, so the desk leans toward refiners and well-capitalized banks holding government paper, and away from anything leveraged to fuel costs or hoped-for rate relief.",
-  "sectors": [
-    {
-      "name": "Refineries",
-      "stance": "favoured",
-      "why": "ATRL/NRL/PRL were the only sector to actually gain on yesterday's selloff, because a higher crude price widens their crack-spread economics even as it squeezes almost everyone else."
-    },
-    {
-      "name": "Large, well-capitalized banks",
-      "stance": "favoured",
-      "why": "T-bill and PIB cutoffs keep grinding up (6M 11.80%, 10Y PIB 12.30%), a genuine carry tailwind for banks holding government paper into the Sept 14 rate decision - this is the large-cap end of the sector, not every bank ticker."
-    },
-    {
-      "name": "OMCs",
-      "stance": "avoid",
-      "why": "OMCs are squeezed between a near-daily-reset pump price and a rising import bill for the fuel itself, and sold off with the broader market yesterday despite the same oil move that lifted refiners."
-    },
-    {
-      "name": "Autos, cement, power/IPPs",
-      "stance": "avoid",
-      "why": "All three were named among yesterday's broad sellers, and power/IPPs carry the extra overhang of unresolved circular debt heading into the IMF's expected September review."
-    },
-    {
-      "name": "Small/thinly-capitalized banks",
-      "stance": "avoid",
-      "why": "The pending August CPI print is forecast at 10.75-11.4% YoY even before this oil shock, arguing against pricing in the near-term rate relief that smaller, more rate-sensitive banks would need."
-    }
-  ],
-  "watchlist": [
-    {
-      "ticker": "BAFL",
-      "angle": "Two backtested strategies are currently constructive here - sma_golden_cross (4.81% net expectancy, out-of-sample hit rate 1.0 on a small sample) and triple_screen_long (1.19% net expectancy, out-of-sample hit rate 0.73) - and the fundamental card reads attractive: P/E near 5.5x, 17.4% net margin, a 10.29% dividend yield covered by a 56% payout ratio. It sits inside the large-bank sector the desk is favouring for the government-paper carry tailwind.",
-      "risk": "It's still a commercial bank heading into a hot pending August CPI print - if that number lands hawkish enough, rate-sensitive banks broadly could give back ground regardless of BAFL's individual quality."
-    },
-    {
-      "ticker": "ATRL",
-      "angle": "It's the clearest live expression of the sector tilt itself - ATRL was among the lone gainers on yesterday's 721-point selloff on wider crack-spread expectations as Brent pushed to $92. Fundamentals are cheap (P/E 4.9x, forward 3.45x, improving) and there's a confirmed dividend catalyst on the calendar: Rs15/share, ex-dividend and book closure 2026-10-13.",
-      "risk": "RSI14 is already at 74.3 - overbought after the recent surge - and net margins are thin at 7.6%. A lot of the good news may already be priced in, and any pullback in Brent undercuts the whole crack-spread argument."
-    },
-    {
-      "ticker": "BOP",
-      "angle": "Fundamentals read attractive - cheap P/E (6.26x, forward 4.49x, improving), 17.1% net margin, an 8.58% dividend yield covered by a 54% payout - on top of a recent 44% profit jump and a confirmed, near-dated catalyst: ex-dividend 2026-09-10, book closure 2026-09-11, paying Rs1.6/share.",
-      "risk": "Beta of 1.2 means it swings more than the market in both directions, which cuts against you in a risk-off tape, and it's the same commercial-banking sector as BAFL above."
-    }
-  ],
-  "catalysts": [
-    {"date": "2026-09-01", "event": "BAHL book closure (dividend Rs3.5/share, confirmed)", "which_tickers": ["BAHL"]},
-    {"date": "~2026-09-01/02", "event": "PBS August 2026 CPI release - not yet out; independently forecast 10.75-11.4% YoY even before this oil shock", "which_tickers": []},
-    {"date": "2026-09-04", "event": "SCBPL book closure (confirmed); OGDC and PSO results due (unconfirmed)", "which_tickers": ["SCBPL", "OGDC", "PSO"]},
-    {"date": "2026-09 (2nd week, unconfirmed)", "event": "IMF 4th EFF / 3rd RSF review mission expected - ~$1.2bn potential disbursement, circular debt the key sticking point", "which_tickers": []},
-    {"date": "2026-09-11", "event": "BOP book closure (dividend Rs1.6/share, confirmed)", "which_tickers": ["BOP"]},
-    {"date": "2026-09-14", "event": "SBP MPC - next rate decision, now with a fresh oil-driven inflation upside risk in the mix", "which_tickers": []}
-  ],
-  "risks": [
-    "Brent holding above $90 - if the conflict widens further, the import bill grows against reserves of only about $17.1bn (roughly 2.6 months of cover), the classic setup for PKR and reserve stress even though the rupee has held flat for 12 straight sessions so far.",
-    "The pending August CPI print, forecast at 10.75-11.4% YoY, lands right before the Sept 14 SBP decision - a hot number would undercut the 'large banks as defensive carry play' half of today's read.",
-    "The conflict is genuinely live - fresh strikes and retaliation this cycle, six months running - so today's 'moderate' 62/100 geo-risk score could re-rate higher fast on any further escalation."
-  ],
-  "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."
+ "date": "2026-09-01",
+ "headline": "A domestic inflation shock lands on top of the Iran oil scare — PSX limps through a second choppy session while large banks and refiners hold up better than the rest of the tape.",
+ "tone": "cautious",
+ "summary": "Pakistan's August inflation just shocked higher — 11.1% year-on-year, up from 9.2% in July — landing right as global oil stays elevated on the US-Iran standoff (Brent near $92, up 10% this month). That combination pushes any SBP rate cut off the table for the September 14 meeting and argues for a longer hawkish hold. PSX's last confirmed close was down 0.41% on August 31, and today's session has been choppy and unconfirmed as of this checkpoint. The desk is leaning cautious: sheltering in large banks riding high government-bond yields and refiners that actually gained on the oil move, and staying away from cement, autos, power and thinly-capitalized banks.",
+ "sectors": [
+  {
+   "name": "Banks (large-cap, government-paper holders)",
+   "stance": "favoured",
+   "why": "The CPI shock kills near-term rate-cut hopes into the Sept 14 SBP meeting — bullish for the T-bill/PIB carry income these banks collect (6M T-bill 11.8%, 10Y PIB 12.3%), and most of the big names (BAFL, BAHL, BOP, HBL, MCB, NBP) screen 'attractive' on fundamentals."
+  },
+  {
+   "name": "Refineries (ATRL/PRL/NRL)",
+   "stance": "favoured",
+   "why": "The one sector that actually gained on the Aug-31 sell-off — a higher Brent price widens refining crack spreads even though the same oil move hurts everyone else's import bill."
+  },
+  {
+   "name": "E&P (POL standout; OGDC/PPL/MARI broadly)",
+   "stance": "favoured",
+   "why": "Higher crude directly lifts E&P revenue and georisk.json flags OGDC/PPL/MARI as beneficiaries, but their fundamentals only rate 'mixed' — POL's cheap valuation and near-10% dividend yield make it the cleaner expression of the same idea."
+  },
+  {
+   "name": "OMCs (PSO etc.)",
+   "stance": "avoid",
+   "why": "Squeezed both ways — pump prices reset almost daily while the cost of the imported product itself is rising — and PSO's own net margin is thin, around 1%."
+  },
+  {
+   "name": "Cement, autos, power/IPPs",
+   "stance": "avoid",
+   "why": "All three were named among the broad sellers on Aug-31, and power/IPPs carry the extra overhang of an unresolved circular-debt sticking point heading into the IMF's September review."
+  },
+  {
+   "name": "Small / thinly-capitalized banks",
+   "stance": "avoid",
+   "why": "The CPI shock removes any near-term rate-relief story these names needed, and they lack the government-paper carry cushion the large banks have."
+  }
+ ],
+ "watchlist": [
+  {
+   "ticker": "BAFL",
+   "angle": "A golden-cross trend strategy is live on this name — a proven, backtested signal (strategy_map.json: 75% historical hit rate, 100% out-of-sample hit rate, net expectancy ~4.8%). Fundamentals back it up: PSX rates BAFL 'attractive', and it's a large bank riding the carry tailwind now that the CPI shock has pushed a near-term SBP cut off the table.",
+   "risk": "The run is already extended technically — a stall or reversal in the golden-cross setup would flip this from trend-following to chasing; also watch for a hawkish SBP surprise on Sept 14 that hits banks broadly."
+  },
+  {
+   "ticker": "BAHL",
+   "angle": "Rated 'attractive' on fundamentals — a large, well-capitalized bank that fits the favoured sector tilt. It also has a live, dated catalyst right now: book closure running 2026-09-01 to 09-03 for a confirmed Rs3.5/share dividend.",
+   "risk": "No live technical trigger is backing this one — it's a fundamentals-and-catalyst case, not a chart-confirmed setup, so it can lag or chop even if the thesis holds."
+  },
+  {
+   "ticker": "BOP",
+   "angle": "Fresh 1HCY26 results just landed — profit up 44% YoY to about Rs9.37bn (impact-4 news, 2026-08-28). Fundamentals rate 'attractive' with a generous, covered dividend, and there's a dated catalyst: confirmed ex-dividend/book-closure on 2026-09-10/11 (Rs1.6/share, ~4.6% yield).",
+   "risk": "Higher beta than most banks (around 1.2 per the fundamental read) means it swings harder than the index both ways — a risk-off wobble hits BOP disproportionately."
+  },
+  {
+   "ticker": "POL",
+   "angle": "Rated 'attractive' — cheap valuation (P/E ~6.2), a very strong profit margin, and one of the highest dividend yields on the board (~13.5%, payout ~84%). Sits in the E&P bucket that georisk.json flags as a direct beneficiary of the ongoing oil-price shock, plus a confirmed dated catalyst: ex-dividend/book-closure on 2026-10-12/13 (Rs72.5/share, ~9.9% yield).",
+   "risk": "No proven technical strategy is currently triggering on POL — this is a fundamentals-plus-catalyst case, not a chart-confirmed one — and a sharp Brent pullback, if the Iran standoff cools, would remove the sector tailwind fast."
+  },
+  {
+   "ticker": "TPLT",
+   "angle": "The only name with two independently-matching technical confirmations: the desk's live signal feed and the strategy backtest file both show a Donchian-55 breakout ('turtle' style) triggering, net expectancy roughly 3.6-4.9% depending on the exact template, hit rate 61-70%.",
+   "risk": "Confidence tier is rated 'low' by the desk's own framework — small sample (13 trades) and no fundamental rating on file to back the story, so this is a pure technical, unconfirmed-by-fundamentals bet."
+  }
+ ],
+ "catalysts": [
+  {"date": "2026-09-01", "event": "BAHL book closure begins (runs to 09-03) — confirmed Rs3.5/share dividend", "which_tickers": ["BAHL"]},
+  {"date": "2026-09-04", "event": "OGDC and PSO results due (unconfirmed date)", "which_tickers": ["OGDC", "PSO"]},
+  {"date": "2026-09-10", "event": "BOP ex-dividend / book-closure begins (09-11) — confirmed Rs1.6/share", "which_tickers": ["BOP"]},
+  {"date": "2026-09-14", "event": "SBP MPC — CPI now at 11.1%, near-term rate-cut odds effectively off the table", "which_tickers": []},
+  {"date": "2026-09-17", "event": "LUCK ex-dividend / book-closure begins (09-18) — confirmed Rs5.0/share", "which_tickers": ["LUCK"]},
+  {"date": "2026-09-21", "event": "MARI ex-dividend/book-closure and INDU ex-dividend/book-closure both begin (09-22)", "which_tickers": ["MARI", "INDU"]},
+  {"date": "2026-10-12", "event": "ATRL, APL, HUBC and POL ex-dividend/book-closure all begin (10-13)", "which_tickers": ["ATRL", "APL", "HUBC", "POL"]},
+  {"date": "2026-09 (2nd week, unconfirmed)", "event": "IMF 4th EFF / 3rd RSF review mission expected — circular debt the key sticking point", "which_tickers": []}
+ ],
+ "risks": [
+  "Inflation proves stickier than one print, or SBP surprises hawkish beyond a hold on Sept 14 — that breaks the bank-carry thesis this desk is leaning on today.",
+  "Further Strait of Hormuz escalation pushes Brent higher still, widening the import bill against a thin ~2.6-month reserve cushion ($17.1bn) and testing the PKR/DXY calm that has held so far.",
+  "The IMF's September review stalls on the circular-debt sticking point — a disappointment there would hit power/IPP-linked names hardest and sour sentiment across the board."
+ ],
+ "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."
 }
