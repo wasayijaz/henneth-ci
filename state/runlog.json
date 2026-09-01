@@ -304,5 +304,11 @@
   "mode": "light",
   "ended": "2026-08-31T11:05:00+05:00",
   "outcome": "AM checkpoint. Gate required (first of day). health ok. news-sentinel: 1 item appended (macro intraday KSE-100 swing, impact 3, no escalation). No open positions, monitor skipped. build_dashboard preflight OK (WARN only, non-gating). Published (data-only) and pushed to main -> Vercel deploying. Gate acked checkpoint-am."
+ },
+ {
+  "started": "2026-09-01T11:00:00+05:00",
+  "mode": "light-escalated",
+  "ended": "2026-09-01T15:36:00+05:00",
+  "outcome": "AM checkpoint (delayed run, ~15:36 not 11:00). Gate required=true (first-of-day + 3 pending impact-4 items: BOP, BML, PAKT). Git pull/autostash left 19 files conflicted -- resolved via scoped git checkout HEAD (no content changes, stash preserved). health ok. news-sentinel: 3 new items appended (248 total), incl. impact-5 US-Iran conflict item -> escalation.json fired (escalate=true, tickers=[MACRO]). Ran macro-agent (regime neutral->risk-off, geo-risk 62/moderate, Brent ~$91-92, PSX -720.83pts, defensive tilt: favour refineries+large banks, avoid OMCs/autos/cement/power-IPPs) and market-analyst (daily_read.json rewritten out-of-cycle, watchlist BAFL/ATRL/BOP). No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 103 backfilling tickers). Published data-only (95 pre-existing untracked dirs held back, not this session's), pushed to main -> Vercel deploying. Gate acked checkpoint-am."
  }
 ]

@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-01 15:31",
+ "updated": "2026-09-01 17:10",
  "regime": "risk-off",
  "geo_risk": {
   "score": 62,
@@ -180,28 +180,6 @@
   {
    "ts": "2026-08-27",
    "source": "The Express Tribune",
-   "headline": "Attock Petroleum Limited FY26 earnings up 63% YoY, PKR 40/share final dividend",
-   "tickers": [
-    "APL"
-   ],
-   "impact": 4,
-   "summary": "Attock Petroleum Limited (PSX: APL) reported FY26 earnings up 63% year-on-year and declared a PKR 40/share final dividend, per The Express Tribune's PSX market-recap coverage of the Aug 27, 2026 session. No absolute profit/EPS figure captured this cycle. Logged as impact 4 (material earnings surprise plus dividend declaration, per desk criteria Rule 10); escalation flagged.",
-   "url": "https://tribune.com.pk/story/2626025/psx-up-800-points-after-holiday-reopen"
-  },
-  {
-   "ts": "2026-08-27",
-   "source": "The Express Tribune",
-   "headline": "Pakistan Oilfields Limited 4QFY26 earnings up 67% YoY, record PKR 100/share annual dividend",
-   "tickers": [
-    "POL"
-   ],
-   "impact": 4,
-   "summary": "Pakistan Oilfields Limited (PSX: POL) reported 4QFY26 earnings up 67% year-on-year and announced a record PKR 100/share annual dividend, per The Express Tribune's PSX market-recap coverage of the Aug 27, 2026 session. No absolute profit/EPS figure captured this cycle. Logged as impact 4 (material earnings surprise plus record dividend, per desk criteria Rule 10); escalation flagged.",
-   "url": "https://tribune.com.pk/story/2626025/psx-up-800-points-after-holiday-reopen"
-  },
-  {
-   "ts": "2026-08-27",
-   "source": "The Express Tribune",
    "headline": "Hub Power Company 4QFY26 earnings up 39% YoY, PKR 5/share quarterly dividend",
    "tickers": [
     "HUBC"
@@ -352,16 +330,32 @@
    "impact": 3,
    "summary": "Per dps.psx.com.pk/indices, page timestamped Sept 1, 2026 3:15 PM: KSE-100 176,540.70, down 434.97 points (-0.25%); KSE-30 52,658.85, down 43.87 (-0.08%); KMI-30 251,952.79, up 295.96 (+0.12%); All Share 107,239.56, down 192.30 (-0.18%). This reverses the earlier Sept 1 9:45am gain of +468.65pts (already logged this cycle) versus Monday Aug 31's confirmed close of 176,975.68 (already logged) - a roughly 900-point intraday swing. Not yet a confirmed close. Sub-1% net move; logged as impact 3 (notable), consistent with prior similar-magnitude intraday entries in this newslog. Tagged MACRO only; no company-specific driver named in the source.",
    "url": "https://dps.psx.com.pk/indices"
+  },
+  {
+   "ts": "2026-09-01",
+   "source": "PSX Data Portal (DPS) indices",
+   "headline": "KSE-100 extends afternoon slide, down over 500 points by late session",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Per dps.psx.com.pk/indices, page timestamped Sept 1, 2026 3:50 PM: KSE-100 176,466.99, down 508.68 points (-0.29%); KSE-30 52,632.42, down 70.30 (-0.13%); KMI-30 251,849.49, up 192.66 (+0.08%); All Share 107,178.50, down 253.36 (-0.24%). Supersedes the already-logged Sept 1 3:15pm DPS checkpoint (176,540.70, -434.97pts/-0.25%, MACRO only) versus Monday Aug 31's confirmed close of 176,975.68 (already logged). No confirmed-close article located yet as of this 17:00 PKT checkpoint. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude intraday entries. Tagged to the union of the superseded item's tickers (MACRO only); no company-specific driver named in the source.",
+   "url": "https://dps.psx.com.pk/indices"
+  },
+  {
+   "ts": "2026-09-01",
+   "source": "The Nation / Pakistan Observer",
+   "headline": "Rupee gains 3 paisas against dollar",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 1,
+   "summary": "The Pakistani rupee appreciated 3 paisas against the US dollar in interbank trading on Tuesday Sept 1, 2026, closing at Rs277.47 versus the previous day's close of Rs277.50; open-market dollar buying/selling rates were Rs277.60/Rs278.55. Negligible single-day FX move; logged as impact 1 (routine), consistent with prior similarly small FX moves in this newslog.",
+   "url": "https://www.nation.com.pk/01-Sep-2026/rupee-gains-3-paisas-dollar"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-08-26T18:05:00+05:00",
-   "mode": "room",
-   "ended": "2026-08-26T18:08:00+05:00",
-   "outcome": "Follow-up to prior blocked cycle: fixed CI peer_registry preflight failures (state/company_intel/peer_registry.json was stale, missing member_details/formal_peer_details vs current build_peer_registry.py output -> regenerated). preflight now green (1 non-gating WARN: 101 tickers backfilling history). PUBLISHED: room cycle (MARI+OGDC full debate + QA fixes + i18n + peer_registry fix). watchdog OK."
-  },
   {
    "started": "2026-08-27T21:15:00+05:00",
    "mode": "full",
@@ -385,6 +379,12 @@
    "mode": "light",
    "ended": "2026-08-31T11:05:00+05:00",
    "outcome": "AM checkpoint. Gate required (first of day). health ok. news-sentinel: 1 item appended (macro intraday KSE-100 swing, impact 3, no escalation). No open positions, monitor skipped. build_dashboard preflight OK (WARN only, non-gating). Published (data-only) and pushed to main -> Vercel deploying. Gate acked checkpoint-am."
+  },
+  {
+   "started": "2026-09-01T11:00:00+05:00",
+   "mode": "light-escalated",
+   "ended": "2026-09-01T15:36:00+05:00",
+   "outcome": "AM checkpoint (delayed run, ~15:36 not 11:00). Gate required=true (first-of-day + 3 pending impact-4 items: BOP, BML, PAKT). Git pull/autostash left 19 files conflicted -- resolved via scoped git checkout HEAD (no content changes, stash preserved). health ok. news-sentinel: 3 new items appended (248 total), incl. impact-5 US-Iran conflict item -> escalation.json fired (escalate=true, tickers=[MACRO]). Ran macro-agent (regime neutral->risk-off, geo-risk 62/moderate, Brent ~$91-92, PSX -720.83pts, defensive tilt: favour refineries+large banks, avoid OMCs/autos/cement/power-IPPs) and market-analyst (daily_read.json rewritten out-of-cycle, watchlist BAFL/ATRL/BOP). No open positions, monitor skipped. build_dashboard+preflight OK (1 non-gating WARN: 103 backfilling tickers). Published data-only (95 pre-existing untracked dirs held back, not this session's), pushed to main -> Vercel deploying. Gate acked checkpoint-am."
   }
  ]
 }
