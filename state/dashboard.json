@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-02 18:26",
+ "updated": "2026-09-02 18:28",
  "regime": "risk-off",
  "geo_risk": {
   "score": 61,
@@ -365,12 +365,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-31T11:00:00+05:00",
-   "mode": "light",
-   "ended": "2026-08-31T11:05:00+05:00",
-   "outcome": "AM checkpoint. Gate required (first of day). health ok. news-sentinel: 1 item appended (macro intraday KSE-100 swing, impact 3, no escalation). No open positions, monitor skipped. build_dashboard preflight OK (WARN only, non-gating). Published (data-only) and pushed to main -> Vercel deploying. Gate acked checkpoint-am."
-  },
-  {
    "started": "2026-09-01T11:00:00+05:00",
    "mode": "light-escalated",
    "ended": "2026-09-01T15:36:00+05:00",
@@ -393,6 +387,12 @@
    "mode": "room",
    "ended": "2026-09-01T17:30:00+05:00",
    "outcome": "2 full (BOP flagged div-yield fix applied, FFC flagged SMA dup caveat applied) / 0 delta / 2 reaffirm; 0 persona/broker calls newly resolved; pushed"
+  },
+  {
+   "started": "2026-09-02T17:56:00+05:00",
+   "mode": "light",
+   "ended": "2026-09-02T18:02:00+05:00",
+   "outcome": "PM checkpoint: health ok, gate required (1 material pending item: impact-5 KSE-100/US-Iran headline, plus first_of_day standing). news-sentinel re-verified that item plus a related impact-4 confirmed close and a separate impact-5 Unity Foods/SECP item were already logged by an earlier cycle today; appended 1 genuinely new item this run (PKR close, impact 1). No new item >=4 in this run's own step 4, so per SKILL.md step 6 no fresh macro-agent/market-analyst trigger (state/macro.json already dated today 13:30 and reflects the shock; state/daily_read.json remains dated 2026-09-01, stale, left for the daily full cycle to own). No open positions, monitor skipped. Preflight OK, published (data-only), gate acked checkpoint-pm."
   }
  ]
 }
