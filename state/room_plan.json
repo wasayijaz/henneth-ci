@@ -1,18 +1,12 @@
 {
  "reaffirm": [
+  "FFC",
   "MARI",
-  "PPL"
+  "PPL",
+  "BOP"
  ],
  "delta": [],
  "full": [
-  {
-   "symbol": "BOP",
-   "why": "never covered"
-  },
-  {
-   "symbol": "FFC",
-   "why": "material change since last Room"
-  },
   {
    "symbol": "HBL",
    "why": "material change since last Room"
@@ -28,10 +22,6 @@
   {
    "symbol": "GLAXO",
    "why": "never covered"
-  },
-  {
-   "symbol": "BAHL",
-   "why": "material change since last Room"
   },
   {
    "symbol": "PSO",
@@ -50,11 +40,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "KOHC",
+   "symbol": "NATF",
    "why": "never covered"
   },
   {
-   "symbol": "NATF",
+   "symbol": "KOHC",
    "why": "never covered"
   },
   {
@@ -71,10 +61,6 @@
   },
   {
    "symbol": "NCPL",
-   "why": "never covered"
-  },
-  {
-   "symbol": "MACFL",
    "why": "never covered"
   },
   {
@@ -99,6 +85,10 @@
   },
   {
    "symbol": "DGKC",
+   "why": "material change since last Room"
+  },
+  {
+   "symbol": "BAHL",
    "why": "material change since last Room"
   },
   {
@@ -218,11 +208,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "PIBTL",
+   "symbol": "TPLRF1",
    "why": "never covered"
   },
   {
-   "symbol": "TPLRF1",
+   "symbol": "PIBTL",
    "why": "never covered"
   },
   {
@@ -266,11 +256,11 @@
    "why": "never covered"
   },
   {
-   "symbol": "NETSOL",
+   "symbol": "UNITY",
    "why": "never covered"
   },
   {
-   "symbol": "UNITY",
+   "symbol": "NETSOL",
    "why": "never covered"
   },
   {
@@ -294,10 +284,6 @@
    "why": "never covered"
   },
   {
-   "symbol": "AGHA",
-   "why": "never covered"
-  },
-  {
    "symbol": "DCL",
    "why": "never covered"
   },
@@ -310,7 +296,15 @@
    "why": "never covered"
   },
   {
+   "symbol": "AGHA",
+   "why": "never covered"
+  },
+  {
    "symbol": "LOADS",
+   "why": "never covered"
+  },
+  {
+   "symbol": "MACFL",
    "why": "never covered"
   },
   {
@@ -391,35 +385,32 @@
   }
  ],
  "_meta": {
-  "built": "2026-09-01 17:47",
+  "built": "2026-09-02 08:04",
   "full_budget": 2,
   "run_full_now": [
-   "BOP",
-   "FFC"
+   "HBL",
+   "MEBL"
   ],
   "deferred_full": [
-   "HBL",
-   "MEBL",
    "HUBC",
    "GLAXO",
-   "BAHL",
    "PSO",
    "OGDC",
    "ILP",
    "JVDC",
-   "KOHC",
    "NATF",
+   "KOHC",
    "AGP",
    "IGIHL",
    "THCCL",
    "NCPL",
-   "MACFL",
    "AICL",
    "AIRLINK",
    "GAL",
    "ITANZ",
    "MLCF",
    "DGKC",
+   "BAHL",
    "PAEL",
    "LOTCHEM",
    "FFL",
@@ -449,8 +440,8 @@
    "NML",
    "TRG",
    "ISL",
-   "PIBTL",
    "TPLRF1",
+   "PIBTL",
    "NPL",
    "AHCL",
    "CPHL",
@@ -461,18 +452,19 @@
    "MUGHAL",
    "SGF",
    "GCIL",
-   "NETSOL",
    "UNITY",
+   "NETSOL",
    "ZAL",
    "CSAP",
    "PREMA",
    "TOMCL",
    "TPLP",
-   "AGHA",
    "DCL",
    "TPL",
    "WTL",
+   "AGHA",
    "LOADS",
+   "MACFL",
    "PACE",
    "DFSM",
    "KOHTM",
@@ -494,10 +486,10 @@
    "SSGC"
   ],
   "counts": {
-   "full_due": 96,
+   "full_due": 94,
    "full_now": 2,
    "delta": 0,
-   "reaffirm": 2
+   "reaffirm": 4
   },
   "est_tokens_today": 44000,
   "note": "Tiered plan. Only run_full_now get the 5-persona debate; delta get a cheap TA refresh; reaffirm cost nothing. Full universe stays current at a fraction of naive cost (naive = every ticker debated every run)."

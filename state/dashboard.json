@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-01 20:42",
+ "updated": "2026-09-02 08:05",
  "regime": "risk-off",
  "geo_risk": {
   "score": 62,
@@ -7,7 +7,7 @@
  },
  "signals": [
   {
-   "id": "20260901-BML-obv_divergence_up",
+   "id": "20260902-BML-obv_divergence_up",
    "ticker": "BML",
    "strategy": "obv_divergence_up",
    "template": "Volume leads price",
@@ -25,7 +25,7 @@
    "thesis": "Volume leads price is triggering now; on BML's own history it won 97% over 89 trades (+5.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260901-TPLT-donchian55_break",
+   "id": "20260902-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,25 +43,25 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260901-GAL-trend_momo_combo",
+   "id": "20260902-GAL-atr_quiet_breakout",
    "ticker": "GAL",
-   "strategy": "trend_momo_combo",
-   "template": "Trend + momentum combo",
-   "category": "momentum",
+   "strategy": "atr_quiet_breakout",
+   "template": "Quiet base, upside break",
+   "category": "volatility",
    "sector": "Automobile Assembler",
-   "hold_sessions": 12,
+   "hold_sessions": 16,
    "backtest": {
-    "hit_rate": 0.579,
-    "net_expectancy_pct": 1.3,
-    "n": 38,
-    "oos_hit": 0.6
+    "hit_rate": 0.7,
+    "net_expectancy_pct": 2.73,
+    "n": 10,
+    "oos_hit": 0.75
    },
-   "confidence": "medium",
+   "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 58% over 38 trades (+1.3% net/trade), still profitable out-of-sample."
+   "thesis": "Quiet base, upside break is triggering now; on GAL's own history it won 70% over 10 trades (+2.7% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260901-NICL-roc60_leader_pullback",
+   "id": "20260902-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -99,7 +99,7 @@
   },
   {
    "ticker": "FFC",
-   "score": 65.9
+   "score": 66.0
   },
   {
    "ticker": "XLV",
@@ -107,7 +107,7 @@
   },
   {
    "ticker": "USRUT",
-   "score": 65.5
+   "score": 65.1
   },
   {
    "ticker": "USDJI",
@@ -124,11 +124,6 @@
  ],
  "movers_up": [
   {
-   "ticker": "PRL",
-   "ret_1d": 10.0,
-   "close": 104.42
-  },
-  {
    "ticker": "BAFS",
    "ret_1d": 10.0,
    "close": 418.56
@@ -139,14 +134,19 @@
    "close": 272.2
   },
   {
+   "ticker": "SHCM",
+   "ret_1d": 10.0,
+   "close": 50.61
+  },
+  {
    "ticker": "CCM",
    "ret_1d": 10.0,
    "close": 53.68
   },
   {
-   "ticker": "SHCM",
-   "ret_1d": 10.0,
-   "close": 50.61
+   "ticker": "ASIC",
+   "ret_1d": 9.99,
+   "close": 34.45
   }
  ],
  "movers_down": [
@@ -357,12 +357,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-08-28T13:18:00+05:00",
-   "mode": "light-escalated",
-   "ended": "2026-08-28T13:25:33+05:00",
-   "outcome": "AM checkpoint (delayed fire, ~11:00 slot). Gate required=true (first checkpoint of day). health ok. news-sentinel appended 5 items (KSE-100 +0.21%, FESCO privatisation shortlist, BOP +44% profit, BML Rs4.68bn loss, PAKT +30% profit) - 3 impact=4 items triggered escalation. Ran macro-agent (regime unchanged: neutral) and market-analyst (daily_read.json updated) per escalation. No open positions, monitor skipped. build_dashboard.py PREFLIGHT FAILED on unrelated pre-existing issue (ownership source manifest stale/non-deterministic, scripts/check_ownership_source_manifest.py) - NOT published, last-good site unchanged. Gate acked (checkpoint-am)."
-  },
-  {
    "started": "2026-08-31T11:00:00+05:00",
    "mode": "light",
    "ended": "2026-08-31T11:05:00+05:00",
@@ -385,6 +379,12 @@
    "mode": "full",
    "ended": "2026-09-01T17:35:00+05:00",
    "outcome": "Daily desk refresh: regime risk-off (CPI 11.1% shock, oil+geo-risk 62 moderate), news-sentinel appended 1 item (confirmed close, impact 3), daily-read headline cautious tone / watchlist BAFL BAHL BOP POL TPLT, preflight OK, published (data-only, state-only)."
+  },
+  {
+   "started": "2026-09-01T08:45:00+05:00",
+   "mode": "room",
+   "ended": "2026-09-01T17:30:00+05:00",
+   "outcome": "2 full (BOP flagged div-yield fix applied, FFC flagged SMA dup caveat applied) / 0 delta / 2 reaffirm; 0 persona/broker calls newly resolved; pushed"
   }
  ]
 }

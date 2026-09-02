@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "kind": "ci_work_routing_policy",
- "as_of": "2026-09-01",
+ "as_of": "2026-09-02",
  "pilot_symbols": [
   "MLCF",
   "OGDC",
@@ -78,6 +78,7 @@
   "request_scope": "single_company_or_explicit_trigger_batch_only",
   "candidate_symbols": [
    "MLCF",
+   "OGDC",
    "DGKC",
    "PSO",
    "UBL",
@@ -91,7 +92,7 @@
    "MARI",
    "NRL"
   ],
-  "candidate_count": 13,
+  "candidate_count": 14,
   "max_untriggered_company_requests": 0,
   "daily_per_ticker_ai_schedule_allowed": false,
   "issuer_document_first_seen_import_is_not_a_trigger": true
@@ -135,10 +136,24 @@
   "OGDC": {
    "symbol": "OGDC",
    "deterministic_scan_status": "degraded",
-   "targeted_work_status": "no_targeted_work_request",
-   "targeted_triggers": [],
-   "targeted_trigger_count": 0,
-   "allowed_targeted_work": [],
+   "targeted_work_status": "eligible_for_owner_review_request",
+   "targeted_triggers": [
+    {
+     "trigger_type": "active_event_review_window",
+     "event_type": "results",
+     "date": "2026-09-04",
+     "window_start": "2026-09-02",
+     "window_end": "2026-09-06",
+     "confirmed": false,
+     "source_kind": "earnings_calendar",
+     "source_url": "https://stockanalysis.com/quote/psx/OGDC/"
+    }
+   ],
+   "targeted_trigger_count": 1,
+   "allowed_targeted_work": [
+    "owner_review",
+    "single_company_ai_analysis"
+   ],
    "prohibited_work": [
     "daily_per_ticker_ai_schedule",
     "roster_wide_ai_sweep",
@@ -206,9 +221,19 @@
      "source_url": "https://psopk.com/en/cards/corporate-cards",
      "source": "issuer_source_registry",
      "previous_sha256": "aa908cc802d9ca370b0cb941c996f6ab6e25ec23ad486352bcf72af209aab26e"
+    },
+    {
+     "trigger_type": "active_event_review_window",
+     "event_type": "results",
+     "date": "2026-09-04",
+     "window_start": "2026-09-02",
+     "window_end": "2026-09-06",
+     "confirmed": false,
+     "source_kind": "earnings_calendar",
+     "source_url": "https://stockanalysis.com/quote/psx/PSO/"
     }
    ],
-   "targeted_trigger_count": 2,
+   "targeted_trigger_count": 3,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -732,15 +757,15 @@
  },
  "summary": {
   "company_count": 20,
-  "targeted_candidate_count": 13,
-  "targeted_trigger_count": 32,
+  "targeted_candidate_count": 14,
+  "targeted_trigger_count": 34,
   "scheduled_ai_task_count": 0
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "a8c9aff24a459f9d8fa01eb87f330fc7ca181bd3",
-  "build_cutoff_at": "2026-09-01T15:44:07Z",
-  "generated_at": "2026-09-01T15:44:07Z",
+  "source_commit_sha": "ec5f34777b538c6e41ca9e169affecba4a415144",
+  "build_cutoff_at": "2026-09-02T08:06:06Z",
+  "generated_at": "2026-09-02T08:06:06Z",
   "artifact_path": "state/company_intel/work_routing_policy.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
