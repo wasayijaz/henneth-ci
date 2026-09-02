@@ -74,6 +74,25 @@ lives inside the auth terminal's own `.nav` rather than the shared topbar.
 - Screenshots at mobile viewport render at devicePixelRatio scaling and can *look* horizontally
   cropped when nothing overflows. Trust `documentElement.scrollWidth` vs `clientWidth`, not the image.
 
+## Concept D marketing homepage
+
+The shared marketing canvas is `--maxw: 1180px`. Below the homepage hero, direct post-hero chapters
+use 24 px desktop/tablet and 18 px mobile gutters while their section backgrounds remain full width.
+Do not target arbitrary inline values such as `[style*="44px"]` to create those gutters: that also
+matches visualization heights, offsets and SVG transform origins. Target direct padded `.hn-rv`
+chapters instead.
+
+`Header.astro` owns navigation on every marketing route. Its immersive presentation only applies when
+`Base.astro` explicitly receives `navMode="immersive"`; the homepage currently uses the shared default
+bar. The mobile drawer breakpoint is 760 px, while compact post-hero rails start at 920 px and reach
+their smallest cards at 620 px. Keep the fixed drawer overlay as a sibling outside the transformed or
+filtered header so it can cover and blur the full viewport.
+
+The Astro markup's `data-*` hooks and the selectors in `home-concept-d-posthero.ts` are one interface;
+changing either side without the other silently disables a chapter. The two WebGL fields use a 120 px
+visibility margin and cap DPR at 1.5. Verify both `prefers-reduced-motion` and `scripting: none` paths
+before release, and remember that the hero video layer is deliberately absent at 620 px and below.
+
 ## Windows / encoding
 
 The console is cp1252. Any script that reads or prints state JSON containing Urdu or em-dashes will
@@ -87,7 +106,25 @@ Unstaged hand-authored files are left behind on purpose — they may belong to a
 That is correct behaviour, not a failure.
 
 Preflight emits a standing benign WARN: newly-added universe tickers still backfilling history
-(109 at last count). It never gates publish.
+(103 at last count). It never gates publish.
+
+## The ~103 permanently-empty board counters
+
+The KSE All Share constituent list carries PSX board artifacts that are **not companies** — `…NC`
+(non-compliant), `…XD` (ex-dividend), `…XB` (ex-bonus), and rights counters. DPS returns zero bars
+for them forever. They never gain a `state/history/{SYM}.json`, so they never leave
+`fetch_history._pick()`'s never-fetched set, and they are excluded from `coverage.json` (so the
+dashboard does not surface them and `data_health.py` does not count them as missing history).
+
+This is inert as long as they stay off the refresh budget. It was **not** inert once: their count
+used to be subtracted from `LISTED_PER_RUN`, driving the rotation slice to `max(0, 90 - 103) = 0`.
+No listed symbol with an existing series was refreshed on any run for 47 sessions, and
+`health.json` stayed green throughout because its freshness test was a `max()` over all symbols.
+That is how a July close reached the live site in September.
+
+**Trigger to revisit:** if `state/history_meta.json` `failed` grows past ~150 entries, or if
+`attempted` per run climbs near the 25-minute Actions timeout, split the probe out of the per-run
+loop entirely (a weekly sweep) rather than widening the budget.
 
 `CHANGELOG.md` uses CalVer: `## YYYY-MM-DD — vYYYY.MM.DD — Title`, with `.2` / `.3` suffixes for extra
 same-day releases. `scripts/build_changelog.py` extracts **only** the `<!--public … -->` blocks into

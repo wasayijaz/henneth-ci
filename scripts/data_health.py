@@ -1,7 +1,8 @@
 """Data health gate. Writes state/health.json. If status != ok, the desk
 generates NO new signals this cycle (monitoring continues). Checks:
 - universe exists and is fresh enough
-- history covers >= 90% of universe and last date is recent (allowing weekends/holidays)
+- history covers >= 90% of universe and the freshest last date is recent (weekends/holidays allowed)
+- the FLEET is fresh, not just the freshest symbol — see STALE_FLEET_DAYS
 - a live spot-check price is sane vs cached close (catches decimal/parse breakage)."""
 import sys
 import time
@@ -10,6 +11,20 @@ from datetime import date, datetime, timedelta
 from psx_data import STATE, intraday_last, load_json, save_json
 
 MAX_STALE_SESSIONS_DAYS = 5  # last EOD date may lag this many calendar days
+
+# FLEET staleness, as opposed to the single freshest date above. These two constants exist
+# because the `latest` test alone is structurally blind: it is a max() over every history file,
+# so ONE current core ticker reports "ok" while the entire long tail is frozen. That is not
+# hypothetical — fetch_history's rotation budget collapsed to zero and 352 of 352 listed symbols
+# sat 47 sessions stale behind a green health.json, which is how a wrong close reached the site.
+#
+# The thresholds are deliberately loose, because under CLAUDE.md Rule 6 a degraded status halts
+# every new signal and a FALSE degradation is worse than none. A full listed-tier rotation now
+# completes in ~4 cron runs (about two hours), so 12 calendar days is ~40x the headroom rotation
+# needs; and 10% of the fleet cannot be tripped by the handful of genuinely suspended counters
+# that legitimately stop printing new bars. Anything past both is a broken fetcher, not lag.
+STALE_FLEET_DAYS = 12
+STALE_FLEET_FRACTION = 0.10
 
 
 def main():
@@ -42,19 +57,30 @@ def main():
         if (date.today() - upd).days > 10:
             problems.append(f"universe stale ({universe['updated']})")
 
-    have, latest = 0, None
+    # `latest` answers "is ANY price current". `stale_fleet` answers "are the prices we SHOW
+    # current" — the question that went unasked while 352 tickers published a July close.
+    fleet_cutoff = (date.today() - timedelta(days=STALE_FLEET_DAYS)).isoformat()
+    have, latest, stale_fleet, oldest = 0, None, [], None
     for s in syms:
         h = load_json(STATE / "history" / f"{s}.json", None)
         if h:
             have += 1
             d = h[-1]["date"]
             latest = max(latest, d) if latest else d
+            oldest = min(oldest, d) if oldest else d
+            if d < fleet_cutoff:
+                stale_fleet.append(s)
     if syms:
         cov = have / len(syms)
         if cov < 0.9:
             problems.append(f"history coverage {cov:.0%}")
         if latest and (date.today() - datetime.strptime(latest, "%Y-%m-%d").date()).days > MAX_STALE_SESSIONS_DAYS:
             problems.append(f"history stale (latest {latest})")
+        if have and len(stale_fleet) / have > STALE_FLEET_FRACTION:
+            problems.append(
+                f"{len(stale_fleet)} of {have} tradeable symbols have no bar since {fleet_cutoff} "
+                f"(oldest {oldest}) — the refresh rotation is not reaching them; "
+                f"e.g. {', '.join(sorted(stale_fleet)[:5])}")
 
     # live sanity spot-check on a heavyweight
     spot = None
@@ -69,7 +95,10 @@ def main():
                         "deviation_pct": round(dev * 100, 2)}
                 if dev > 0.15:
                     problems.append(f"{probe} live {tick['price']} vs cached {ref} deviates {dev:.0%}")
-            break
+                break   # a comparison was actually made — that is what ends the loop
+            # No exception, but no usable pair either (intraday_last returned nothing, or the
+            # history file is missing). The `break` used to sit out here, so the fallbacks after
+            # HUBC were unreachable and a silent None left spot_check null with no problem logged.
         except Exception:  # noqa: BLE001
             continue
 
@@ -112,6 +141,11 @@ def main():
         "foreign_symbols": len(foreign),
         "foreign_with_history": f_have,
         "latest_eod": latest,
+        # Reported even when under threshold: `latest_eod` alone reads green during a total
+        # rotation failure, so the fleet numbers are what make that failure visible at a glance.
+        "oldest_eod": oldest,
+        "stale_fleet": len(stale_fleet),
+        "stale_fleet_cutoff": fleet_cutoff,
         "spot_check": spot,
     })
     print(f"health: {status}" + (f" — {'; '.join(problems)}" if problems else ""))

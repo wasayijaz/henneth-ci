@@ -2,15 +2,17 @@
 
 Full history cached per symbol in state/history/{SYM}.json. Trims to config history_years.
 
-BOUNDED BY DESIGN. The universe went from ~103 (KSE100+KMI30) to 554 (every KSE All Share
+BOUNDED BY DESIGN. The universe went from ~103 (KSE100+KMI30) to 581 (every KSE All Share
 constituent), and this script used to re-pull EVERY symbol on EVERY run. At ~1.9s per symbol that
 is ~17 minutes — but the cloud cron fires every 30 minutes, so a naive full sweep would run almost
 continuously and risk overlapping runs.
 
 So each run refreshes:
   * every `core` symbol (KSE100 + KMI30) — these drive signals and must be current;
-  * any symbol with NO history file yet — first backfill has priority;
-  * plus the STALEST `listed` symbols, up to LISTED_PER_RUN.
+  * the STALEST `listed` symbols that already have a series, up to LISTED_PER_RUN;
+  * plus a small round-robin probe of listed symbols with NO history file yet (NEW_PROBE_PER_RUN).
+
+Those last two budgets are SEPARATE and must stay separate — see the note on _pick().
 
 The long tail therefore refreshes on a rotation over a few cycles, which is entirely adequate for
 names the desk shows prices and basic quant for but does not trade or backtest.
@@ -24,6 +26,7 @@ from psx_data import (STATE, eod_history, load_config, load_json, market_of, sav
                       yahoo_symbol)
 
 LISTED_PER_RUN = 90        # long-tail refresh budget per run (~3 min at 1.9s each)
+NEW_PROBE_PER_RUN = 12     # separate, round-robin budget for symbols with no history file yet
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 
 
@@ -62,8 +65,22 @@ def _yahoo_daily(symbol: str, universe: dict, years: int) -> list[dict]:
     return out
 
 
-def _pick(universe):
-    """core + never-fetched first, then the stalest listed symbols up to the budget."""
+def _pick(universe, cursor):
+    """core + a bounded probe of never-fetched symbols + the stalest listed symbols.
+
+    THE TWO LONG-TAIL BUDGETS ARE SEPARATE, AND THAT SEPARATION IS THE WHOLE POINT.
+    They used to be one: never-fetched symbols were prepended UNCAPPED and their count was
+    subtracted from LISTED_PER_RUN. But the All Share constituent list carries ~103 PSX board
+    counters (…NC non-compliant, …XD ex-dividend, …XB ex-bonus, rights) that are not companies
+    and permanently return zero bars, so they never gain a history file and never left the
+    never-fetched set. That made the rotation budget max(0, 90 - 103) = 0, and rest[:0] empty:
+    not one listed symbol that already had a series was refreshed on ANY run, for 47 sessions,
+    while health stayed green. The probe now has its own small budget and its own round-robin
+    cursor, so a permanently-dead counter can delay a genuinely new listing by a few runs and
+    can never again starve the refresh of companies the desk actually prices.
+
+    Returns (todo, n_listed, next_cursor). The cursor is persisted in history_meta.json.
+    """
     syms = universe["symbols"]
     core, listed = [], []
     for s, m in syms.items():
@@ -74,11 +91,17 @@ def _pick(universe):
         try:
             return p.stat().st_mtime
         except OSError:
-            return 0.0        # missing file sorts first — needs its initial backfill
-    missing = [s for s in listed if age(s) == 0.0]
-    rest = sorted((s for s in listed if age(s) > 0.0), key=age)
-    budget = max(0, LISTED_PER_RUN - len(missing))
-    return core + missing + rest[:budget], len(listed)
+            return 0.0        # no file yet — needs its initial backfill
+    # Sorted, not universe-ordered, so the cursor addresses a stable list across runs.
+    never = sorted(s for s in listed if age(s) == 0.0)
+    have = sorted((s for s in listed if age(s) > 0.0), key=age)
+    probe, nxt = [], 0
+    if never:
+        start = cursor % len(never)
+        n = min(NEW_PROBE_PER_RUN, len(never))
+        probe = [never[(start + i) % len(never)] for i in range(n)]
+        nxt = (start + n) % len(never)
+    return core + probe + have[:LISTED_PER_RUN], len(listed), nxt
 
 
 def main():
@@ -90,8 +113,21 @@ def main():
 
     years = cfg["backtest"]["history_years"]
     cutoff = time.strftime("%Y-%m-%d", time.gmtime(time.time() - years * 365.25 * 86400))
-    todo, n_listed = _pick(universe)
+    prior = load_json(STATE / "history_meta.json", {}) or {}
+    todo, n_listed, next_cursor = _pick(universe, int(prior.get("probe_cursor") or 0))
     ok, failed = 0, []
+    def fail(sym, err):
+        """Record the failure AND mark the symbol as attempted.
+
+        The mtime is the rotation clock, not a freshness claim (freshness is the last bar's date,
+        which data_health.py checks). Without this bump a symbol that fails every run keeps the
+        oldest mtime in the universe and re-books the same slot forever — the same starvation the
+        probe budget above exists to prevent, one queue down."""
+        failed.append((sym, err))
+        p = STATE / "history" / f"{sym}.json"
+        if p.exists():
+            p.touch()
+
     for sym in todo:
         mkt = market_of(sym, universe)
         try:
@@ -105,12 +141,12 @@ def main():
             tier = ((universe["symbols"].get(sym) or {}).get("tier", "core"))
             floor = 100 if tier == "core" else 20
             if len(hist) < floor:
-                failed.append((sym, f"only {len(hist)} rows (tier {tier})"))
+                fail(sym, f"only {len(hist)} rows (tier {tier})")
                 continue
             save_json(STATE / "history" / f"{sym}.json", hist)
             ok += 1
         except Exception as e:  # noqa: BLE001 — degrade, don't crash the cycle
-            failed.append((sym, str(e)[:80]))
+            fail(sym, str(e)[:80])
         time.sleep(0.4)  # be polite to the upstream feed
 
     # Coverage map: which symbols actually have a usable price series. The All Share constituent
@@ -144,8 +180,13 @@ def main():
         "with_history": len(cov),
         "listed_total": n_listed,
         "listed_per_run": LISTED_PER_RUN,
-        "note": ("Core symbols refresh every run; the listed long tail rotates on a stalest-first "
-                 "budget so a 554-symbol universe cannot outrun the 30-minute cron."),
+        "new_probe_per_run": NEW_PROBE_PER_RUN,
+        "probe_cursor": next_cursor,
+        "note": ("Core symbols refresh every run. The listed symbols that HAVE a series rotate "
+                 "stalest-first, LISTED_PER_RUN each run. Symbols with no series yet get a "
+                 "separate round-robin probe (NEW_PROBE_PER_RUN, resumed from probe_cursor) so "
+                 "the ~100 permanently-empty PSX board counters can never consume the refresh "
+                 "budget. Failures bump the file's mtime so nothing can pin the queue."),
         "failed": [{"symbol": s, "err": e} for s, e in failed],
     })
     print(f"history: {ok} ok, {len(failed)} failed (attempted {len(todo)} of "

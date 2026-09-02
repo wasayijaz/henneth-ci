@@ -244,9 +244,14 @@ function showBanner(id, html) {
   if (!b) {
     b = document.createElement("div");
     b.id = id;
-    b.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9998;background:var(--dn);color:#fff;"
+    /* IN FLOW, NOT FIXED, AND FIRST IN THE BODY — deliberate. It used to be
+       `position:fixed;top:0` appended to the end of body, which floated it over the topbar and hid
+       the nav exactly when the user most needs it (offline / signed out). In flow at the top it
+       pushes the whole page down instead, so nothing is ever covered and no element needs to know
+       the banner's height. */
+    b.style.cssText = "position:relative;z-index:9998;background:var(--dn);color:#fff;"
       + "font:13px/1.4 system-ui,sans-serif;padding:8px 14px;text-align:center;border-radius:0";
-    document.body.appendChild(b);
+    document.body.prepend(b);
   }
   b.innerHTML = html;
 }
