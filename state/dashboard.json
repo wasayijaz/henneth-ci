@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-03 18:40",
+ "updated": "2026-09-03 19:26",
  "regime": "risk-off",
  "geo_risk": {
   "score": 63,
@@ -363,12 +363,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-09-01T08:45:00+05:00",
-   "mode": "room",
-   "ended": "2026-09-01T17:30:00+05:00",
-   "outcome": "2 full (BOP flagged div-yield fix applied, FFC flagged SMA dup caveat applied) / 0 delta / 2 reaffirm; 0 persona/broker calls newly resolved; pushed"
-  },
-  {
    "started": "2026-09-02T17:56:00+05:00",
    "mode": "light",
    "ended": "2026-09-02T18:02:00+05:00",
@@ -391,6 +385,12 @@
    "mode": "light-skipped",
    "ended": "2026-09-03T17:05:00+05:00",
    "outcome": "PM checkpoint ABORTED at step 1: local .git repo corrupted (git fsck: bad tree object 8d7b1d8c82fb814fa1bf287d1c48806bd9c8b027; git repack -a -d fails same; git fetch from origin AND from a known-good fresh bare clone both fail with 'fatal: pack has N unresolved deltas / invalid index-pack output', confirming corruption is local not network -- a fresh clone of https://github.com/wasayijaz/henneth-desk.git succeeded cleanly). No pull done, no agents run, no publish, gate not acked -- state untouched apart from this log line. Repair needs replacing D:\\PSX Trader X Claude\\.git (mv/rm), which this non-interactive session's sandbox classifier blocked as an irreversible action with no user present to confirm. Needs a human to run `git fsck` and reclone/repair .git before the next checkpoint can pull or publish."
+  },
+  {
+   "started": "2026-09-03T17:15:00+05:00",
+   "mode": "full",
+   "ended": "2026-09-03T18:42:20+05:00",
+   "outcome": "news-sentinel+macro-agent+market-analyst ran; regime risk-off geo 63; impact-4 Eurobond news (escalation flagged, not acted per scope); dashboard build OK; published to Vercel"
   }
  ]
 }
