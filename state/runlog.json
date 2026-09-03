@@ -358,5 +358,11 @@
   "mode": "full",
   "ended": "2026-09-03T18:42:20+05:00",
   "outcome": "news-sentinel+macro-agent+market-analyst ran; regime risk-off geo 63; impact-4 Eurobond news (escalation flagged, not acted per scope); dashboard build OK; published to Vercel"
+ },
+ {
+  "started": "2026-09-03T18:56:00+05:00",
+  "mode": "light",
+  "ended": "2026-09-03T19:05:00+05:00",
+  "outcome": "PM checkpoint RESUMED (after the 17:00 abort logged above -- local .git had healed itself/been repaired by 18:56, confirmed via clean git fsck + git fetch, no repro of the earlier bad-tree-object error). Gate required: 2 material pending (impact-4 US-Iran/KSE-100 headline, impact-5 Unity Foods SECP probe) + 1 standing (first_of_day) + 1 health-degraded flag. news-sentinel scan: both pending headlines already logged 2026-09-02 (recurring wire republish, not fresh) -- 0 new newslog items, no new impact>=4 item this cycle so no additional escalation triggered here (the 17:15 full run already covered today's escalation separately). No open positions, monitor skipped. build_dashboard.py preflight OK (2 non-blocking WARNs: 103 backfilling tickers, health.json degraded). Published via scripts/publish.py (data-only, 109 unrelated hand-authored/untracked files correctly left unstaged). Gate acked as checkpoint-pm."
  }
 ]
