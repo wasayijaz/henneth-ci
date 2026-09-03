@@ -1,54 +1,93 @@
 {
- "date": "2026-09-02",
- "headline": "KSE-100 slides 0.96% as US-Iran tensions and a hot CPI print box in the SBP — refineries and cash-rich banks stay the desk's shelter of choice.",
+ "date": "2026-09-03",
+ "headline": "KSE-100 holds flat at 174,929.68 as a hot CPI print and a stingy T-bill auction keep the SBP boxed in — refineries, E&P and cash-rich banks stay the desk's picks into the Sept 14 MPC.",
  "tone": "cautious",
- "summary": "KSE-100 closed at 174,776.60 today, down 0.96% — its second straight sharp down day — as US-Iran tensions keep Brent near $94. Layered on top: August CPI hit 11.1%, more than triple last year's rate, which all but kills hopes of an SBP rate cut at the September 14 meeting. The desk is reading this as risk-off: favouring refineries riding the crude move and large, well-capitalized banks locking in high T-bill/PIB yields, while avoiding OMCs, autos, cement and power names squeezed by costs and the unresolved circular-debt problem. Stick with cheap valuations and dated catalysts; skip broad index-chasing.",
+ "summary": "KSE-100 closed basically flat today (174,929.68, +0.09%) after two rough sessions — a pause, not a turnaround. The macro backdrop stays risk-off: August CPI came in hot at 11.1% YoY, SBP looks locked into an extended hold into its Sept 14 meeting, and today's T-bill auction saw the government raise less than it wanted (Rs680bn vs an Rs800bn target) while yields on the belly of the curve crept higher. Globally, Brent crude keeps climbing (+15% this month) and gold just jumped nearly 4% in a day — a safe-haven signal that undercuts the calmer VIX. The desk stays selective: refineries and large, well-funded banks over broad-market exposure.",
  "sectors": [
-  {"name": "Refineries", "stance": "favoured", "why": "Brent at $94.28 lifts crack-spread expectations, and a pending refinery-upgrade policy tailwind makes this a narrower, more defensible way to play the oil move than OMCs or broad E&P (per macro.json sector_tilt)."},
-  {"name": "Banks (large-cap)", "stance": "favoured", "why": "The confirmed 11.1% August CPI print removes near-term rate-cut risk into the Sept 14 MPC, which reinforces rather than undercuts the T-bill/PIB carry income large, well-capitalized banks are earning (6M bills at 11.80%, 10Y PIBs at 12.30%)."},
-  {"name": "Oil & Gas E&P", "stance": "neutral", "why": "Elevated crude is a real tailwind (georisk.json flags OGDC/PPL/MARI as beneficiaries of the energy shock), but that same shock is stress-scored 74/100 on the desk's own geo-risk radar and is what's dragging the index down today — a tailwind wrapped in real conflict risk, not a clean call."},
-  {"name": "OMCs", "stance": "avoid", "why": "Squeezed between a near-daily-reset pump price and the rising import cost of the fuel itself (macro.json sector_tilt)."},
-  {"name": "Autos", "stance": "avoid", "why": "Rate-sensitive and import-cost exposed just as the CPI shock pushes any SBP relief further out."},
-  {"name": "Cement & Power/IPPs", "stance": "avoid", "why": "Same rate-sensitivity as autos, plus power/IPPs carry the added overhang of unresolved circular debt heading into the IMF's September review."}
+  {
+   "name": "Refineries",
+   "stance": "favoured",
+   "why": "Brent at $96.40/bbl (+15% this month per global.json) keeps refining margins wide, and both ATRL and NRL are showing live technical strength — NRL even carries a proven-strategy breakout trigger."
+  },
+  {
+   "name": "Banks (large-cap)",
+   "stance": "favoured",
+   "why": "Today's T-bill auction saw yields on the belly of the curve rise even as the short end eased — a carry tailwind for big banks sitting on government paper; small, thinly-capitalized banks don't get the same benefit."
+  },
+  {
+   "name": "Oil & Gas E&P",
+   "stance": "neutral",
+   "why": "POL and OGDC ride the same Brent rally as the refiners with cheap-to-fair valuations and firm technicals, but macro.json's own sector tilt doesn't name E&P as favoured — it's a crude-price bet, not a structural pick."
+  },
+  {
+   "name": "OMCs",
+   "stance": "avoid",
+   "why": "Squeezed between a near-daily-reset pump price and the rising import cost of the fuel itself as Brent keeps climbing — explicitly on the desk's avoid list."
+  },
+  {
+   "name": "Autos, cement & power/IPPs",
+   "stance": "avoid",
+   "why": "Rate-sensitive and import-cost exposed, with power/IPPs also carrying the unresolved circular-debt overhang ahead of the IMF's September review."
+  }
  ],
  "watchlist": [
   {
    "ticker": "NRL",
-   "angle": "A live donchian55_break trigger is firing on NRL today (dashboard.json, medium confidence: 55% historical hit rate, +2.08% net expectancy over 60 trades, 57% out-of-sample hit rate) — and it sits in the one energy sub-sector the desk is actively favouring: refineries. Fundamentals price it cheap too (P/E 7.13, cheapest third of PSX).",
-   "risk": "No dividend and a thin 1.4% net margin — this is a valuation-and-momentum case, not an income one, and refining margins can compress fast if crude eases."
-  },
-  {
-   "ticker": "BOP",
-   "angle": "Rated attractive on fundamentals (P/E 6.26, an 8.58% dividend yield covered at a 54% payout) and just posted a real beat — 1HCY26 profit up 44% YoY to Rs9.37bn (reported 2026-08-28). A confirmed, near-term catalyst follows: ex-dividend 2026-09-10, book closure 2026-09-11.",
-   "risk": "Mid-cap with a beta of 1.2 — moves more than the market, which cuts both ways in a risk-off tape. No live technical trigger is firing today; this is a fundamentals-and-catalyst case, not a momentum one."
+   "angle": "Refinery play with a live signal: dashboard.json shows a medium-confidence donchian55_break trigger (55.5% historical hit rate, +2.08% average net edge over 60 backtested trades) — sits inside the desk's favoured refinery sector as Brent pushes to $96.40/bbl. Fundamentals are cheap on P/E (7.13, cheapest third of PSX) but thin on margin (1.4%) and pay no dividend, so this reads as a momentum/sector-tailwind case, not a value one.",
+   "risk": "No dividend cushion and a thin margin mean the stock has little to fall back on if the technical breakout fails or crude reverses."
   },
   {
    "ticker": "ATRL",
-   "angle": "Sits in the desk's favoured refinery trade (crack-spread tailwind from Brent near $94) and the chart backs it up — close near 1,167.52, above both the 20- and 50-day averages, RSI 67.7, only 2.6% off its 20-day high, with a 1.39x volume surge. Cheap on paper (P/E 4.9, forward P/E 3.45) with a confirmed dividend landing 2026-10-12.",
-   "risk": "Net margin is thin at 7.6% — refiners live and die on crack spreads, so a sharp reversal in crude or the rupee erases the edge quickly."
+   "angle": "Refinery name stacking three things at once: RSI 63.2 and price above both moving averages (up 18.4% over the last 20 sessions per quant.json), a cheap-and-improving fundamentals card (P/E 4.9, forward P/E 3.45), and a confirmed Rs15/share dividend going ex on 2026-10-12.",
+   "risk": "Already run hard (+18% in a month) — a lot of the refining-margin optimism may be priced in, and net margin is still thin at 7.6%."
+  },
+  {
+   "ticker": "BOP",
+   "angle": "Attractive-rated bank (P/E 6.26, forward P/E 4.49, 17.1% net margin, an 8.58% dividend yield covered at a 54% payout) with a dated near-term catalyst: shares go ex-dividend 2026-09-10 (book closure 09-11, Rs1.6/share). Fits the desk's favoured large-bank theme as the T-bill curve's belly firms.",
+   "risk": "Beta 1.2 means it moves more than the market — in a risk-off tape that cuts both ways."
   },
   {
    "ticker": "POL",
-   "angle": "Rated attractive: cheap P/E 6.17, a 53% net margin, and a confirmed Rs72.5/share dividend (9.93% yield) landing 2026-10-12. The chart is constructive too — above both moving averages, RSI 62.7, only 2.5% off its 20-day high. E&P benefits directly from Brent near $94; georisk.json names E&P peers OGDC/PPL/MARI as beneficiaries of the same energy shock.",
-   "risk": "The same energy shock driving today's -0.96% KSE-100 close is what's lifting POL's thesis — a US-Iran de-escalation that sends Brent back down would remove the tailwind just as fast as it arrived."
+   "angle": "Cheapest-on-paper E&P name on the board: P/E 6.17 (cheapest third of PSX), a 53% net margin, and a confirmed Rs72.5/share dividend (9.94% yield) going ex 2026-10-12. Technicals are constructive too — RSI 63.9, above both moving averages, +6.33% over 20 sessions — riding the same Brent rally driving the desk's energy tilt.",
+   "risk": "Forward P/E (7.4) is actually higher than trailing (6.17) — the market isn't pricing further earnings growth here, so this is a mature story, not a re-rating one; a crude pullback removes the tailwind fast."
   },
   {
    "ticker": "OGDC",
-   "angle": "Has a dated catalyst two sessions out — results expected 2026-09-04 (unconfirmed estimate) — and georisk.json flags E&P as one of the few sectors actually benefiting from the energy shock. Holding up well technically: only 0.99% off its 20-day high despite today's -0.98% dip, RSI a neutral 55.6, above both moving averages.",
-   "risk": "Fundamentals are only 'mixed' (fair P/E 9.09); the results date is a stockanalysis estimate, not yet confirmed by the desk's own fundamentals agent, so it could slip."
+   "angle": "Large-cap E&P with a mixed-but-improving fundamentals card (P/E 9.09, forward 7.32, 39.8% net margin, a 4.71% covered dividend) and firming technicals (RSI 53.9, above both moving averages). Results are expected around 2026-09-04 per the earnings calendar — a near-term catalyst worth watching, though the exact date isn't fully confirmed.",
+   "risk": "Sits outside the desk's explicitly favoured sector list (only refineries and large banks are named) — this is a macro-oil bet more than a value pick, and its own forward multiple already assumes higher profits."
   }
  ],
  "catalysts": [
-  {"date": "2026-09-04", "event": "OGDC quarterly results (date unconfirmed, stockanalysis estimate)", "which_tickers": ["OGDC"]},
-  {"date": "2026-09-10", "event": "BOP ex-dividend Rs1.6/share, confirmed (book closure 2026-09-11)", "which_tickers": ["BOP"]},
-  {"date": "2026-09-14", "event": "SBP Monetary Policy Committee decision — hot August CPI (11.1%) makes a cut unlikely", "which_tickers": []},
-  {"date": "2026-09-30", "event": "TPLT quarterly results (date unconfirmed)", "which_tickers": ["TPLT"]},
-  {"date": "2026-10-12", "event": "ATRL and POL ex-dividend book closures, confirmed — POL's Rs72.5/share payout is a 9.93% yield", "which_tickers": ["ATRL", "POL"]}
+  {
+   "date": "2026-09-04",
+   "event": "OGDC, PSO and SHFA results expected (date unconfirmed) — first read on the oil majors since the Brent rally accelerated",
+   "which_tickers": ["OGDC", "PSO", "SHFA"]
+  },
+  {
+   "date": "2026-09-10",
+   "event": "BOP goes ex-dividend, Rs1.6/share (16%)",
+   "which_tickers": ["BOP"]
+  },
+  {
+   "date": "2026-09-14",
+   "event": "SBP Monetary Policy Committee decision — an extended hawkish hold is the base case after the confirmed 11.1% CPI print",
+   "which_tickers": []
+  },
+  {
+   "date": "2026-09-21",
+   "event": "MARI goes ex-dividend",
+   "which_tickers": ["MARI"]
+  },
+  {
+   "date": "2026-10-12",
+   "event": "POL, ATRL, APL and HUBC all go ex-dividend the same day — POL Rs72.5/share (9.94% yield), ATRL Rs15/share",
+   "which_tickers": ["POL", "ATRL", "APL", "HUBC"]
+  }
  ],
  "risks": [
-  "Geopolitical: the US-Iran/Strait of Hormuz standoff is the direct driver of today's -0.96% close and the prior day's -0.29%; a further strike or retaliation would push Brent higher still and deepen the risk-off tone across the board.",
-  "Inflation/rates: August CPI at 11.1% (vs 9.2% in July, more than triple last year) has all but killed near-term SBP rate-cut hopes into the September 14 MPC — a hotter print or a hawkish surprise would hit rate-sensitive names (autos, cement, small banks) hardest.",
-  "Governance: SECP issued final notices in its Unity Foods (UNITY) unusual/insider-trading probe on 2026-09-02, tied to a separate FIA case alleging large-scale irregularities — a reminder that name-specific governance blow-ups can hit fast and hard, independent of the macro tape."
+  "Brent crude is up 15% in a month and the desk's geo-risk composite rose to 63/100 — a big chunk of today's favoured refinery/E&P thesis rests on oil staying elevated; a ceasefire or supply resolution would hit ATRL, NRL, POL and OGDC together.",
+  "August CPI printed 11.1% YoY and today's T-bill auction fell short of its raise target (Rs680bn vs Rs800bn) even as yields on the belly of the curve rose — a sign the state is paying up for funding, which pressures broader equity valuations and locks the SBP into an extended hold.",
+  "Data-coverage caveat: state/health.json flags 262 of 455 tracked symbols with no fresh bar since 2026-08-22 (a refresh-rotation gap); every name on tonight's watchlist checked fresh as of 2026-09-03, but it's a live gap in the desk's broader data breadth."
  ],
  "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."
 }
