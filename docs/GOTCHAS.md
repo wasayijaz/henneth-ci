@@ -82,16 +82,21 @@ Do not target arbitrary inline values such as `[style*="44px"]` to create those 
 matches visualization heights, offsets and SVG transform origins. Target direct padded `.hn-rv`
 chapters instead.
 
-`Header.astro` owns navigation on every marketing route. Its immersive presentation only applies when
-`Base.astro` explicitly receives `navMode="immersive"`; the homepage currently uses the shared default
-bar. The mobile drawer breakpoint is 760 px, while compact post-hero rails start at 920 px and reach
+`Header.astro` owns navigation on every marketing route, and `Base.astro` mounts the same shared glass
+bar on the homepage and every interior page. The mobile drawer breakpoint is 760 px, while compact
+post-hero rails start at 920 px and reach
 their smallest cards at 620 px. Keep the fixed drawer overlay as a sibling outside the transformed or
 filtered header so it can cover and blur the full viewport.
 
-The Astro markup's `data-*` hooks and the selectors in `home-concept-d-posthero.ts` are one interface;
-changing either side without the other silently disables a chapter. The two WebGL fields use a 120 px
-visibility margin and cap DPR at 1.5. Verify both `prefers-reduced-motion` and `scripting: none` paths
-before release, and remember that the hero video layer is deliberately absent at 620 px and below.
+The Astro markup's `data-*` hooks and the selectors in `home-concept-d-posthero.ts` are one
+interface; changing either side without the other silently disables a chapter. Do not rearrange
+chapters with CSS `order`: source/DOM order must match visual order so keyboard and assistive
+technology encounter the same sequence. The two WebGL fields use a 120 px visibility margin and cap
+DPR at 1.5. Verify `prefers-reduced-motion` and `scripting: none` before release. The hero video
+remains enabled at 620 px and below; keep it muted and `playsinline`, and preserve readable foreground
+content because mobile autoplay may still be refused. Illustrative ticker, case and scorecard panels
+must retain a persistent sample label; do not reintroduce dates or returns that could be mistaken for
+a live record.
 
 ## Windows / encoding
 

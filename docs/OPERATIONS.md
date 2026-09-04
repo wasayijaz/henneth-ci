@@ -301,6 +301,23 @@ edits hand-authored files. Every other task is state-only and unaffected.
 
 ---
 
+### 2b. Shipping the marketing homepage
+
+The Concept D homepage is static Astro code owned by `site/src/pages/index.astro`,
+`site/src/components/home/ConceptDPostHero.astro`, its isolated CSS and TypeScript, and the two
+hero media files under `site/public/concept-d/`. Include `Header.astro`, `Base.astro` or
+`global.css` only when the release actually changes them. This release belongs to the marketing
+site only; do not copy or stage it under `dashboard/`, `extension/`, the repository-root
+`public/`, or `Henneth Desk 2.CI.0/`.
+
+From a clean checkout, run `cd site && npm run build`, `python scripts/preflight.py` and
+`python scripts/design_lint.py`. Smoke-test 1440, 1024, 768, 620, 390 and 320 px, including
+navigation, video fallback, reduced motion, horizontal rails, CTA destinations, About, Plans and
+404. Confirm there is no document-level horizontal overflow. Stage authored paths individually and
+publish with `python scripts/publish.py "<message>" --code`, then verify `https://henneth.app/`.
+Never ship the standalone reference HTML, expose `config/desk.json`, or let homepage client code
+write to `state/`.
+
 ## 3. The safety gates (why the live site doesn't break)
 
 Layered, so a bad cycle can't reach users and a transient glitch can't blank a page:

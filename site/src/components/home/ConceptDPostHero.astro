@@ -1,0 +1,1046 @@
+---
+import '../../styles/home-concept-d-posthero.css';
+interface Props { appUrl?: string; globalCount?: number; faqs?: { q: string; a: string }[]; plans?: { name?: string; href?: string; featured?: boolean; soon?: boolean }[] }
+const { appUrl = '/research/', globalCount = 23, faqs = [], plans = [] } = Astro.props;
+const faqDefaults = [{"q":"Does the desk tell me what to buy?","a":"No — and it never will. Henneth Desk publishes research, not advice: no buy or sell calls, no price targets, no stop levels on named stocks. It shows the valuation working, the historical behaviour, and both sides of the argument. The decision, and the order, are always yours."},{"q":"Is this regulated investment advice?","a":"No. Henneth Desk publishes general market and sector commentary, statistical summaries of reported financials, education, and tools you run yourself — the category set out in Regulation 2(h) of the SECP Research Analyst Regulations 2015. It is not personalised advice, we are not registered as a research analyst or adviser, and we are not affiliated with the Pakistan Stock Exchange or the SECP."},{"q":"Why is astrology in a research product?","a":"Because it is testable, and almost nobody tests it. The desk computes sidereal positions to the degree, writes down what tradition claims each one governs, then backtests it against nineteen years of PSX prices on the same bar as every other strategy. So far 2,589 hypotheses, none survived correction — and the desk publishes that result rather than burying it."},{"q":"What does it actually cost?","a":"Nothing right now. The whole desk is open in early access — no card, no trial timer. When billing switches on the free tier stays, and we will tell you before anything changes."},{"q":"How current is the data?","a":"The desk is daily-timeframe and end-of-day driven, re-read every cycle. Data comes from third parties and can be delayed or wrong, so check any number against your broker before acting on it. Nothing is quoted from memory: if the data layer does not have a number, the copy says unknown rather than guessing."}];
+const faqList = faqs.length ? faqs.slice(0, 5) : faqDefaults;
+const planName = (i: number, fallback: string) => plans[i]?.name ?? fallback;
+const planPrice = (i: number) => (plans[i]?.soon ? '—' : 'Free');
+const planHref = (i: number) => (!plans[i] || plans[i].soon ? undefined : (plans[i].href || appUrl));
+---
+<div class="cd-posthero" data-cd-posthero style="display:flex;flex-direction:column">
+    <!-- STATEMENT -->
+    <div class="hn-rv hn-rv-l" style="padding:64px 44px 56px;border-top:1px solid var(--hair)">
+      <h2 data-statement-heading style="font-size:42px;line-height:1.32;font-weight:700;margin:0 0 40px;letter-spacing:-0.02em;max-width:860px;text-wrap:pretty"><span class="hn-hword" style="color:var(--ink1);transition:color .4s ease">Honest work</span> <span class="hn-hword" style="color:var(--ink3);transition:color .4s ease">on every covered name,</span><br><span class="hn-hword" style="color:var(--ink3);transition:color .4s ease">with the working shown</span> <span class="hn-hword" style="color:var(--ink3);transition:color .4s ease">and the losses left in</span></h2>
+      <div style="display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:end">
+        <div style="position:relative;height:250px;width:300px;background:var(--panel);border:1.5px solid var(--line);overflow:hidden">
+          <div style="position:absolute;top:10px;left:14px;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">The argument, built</div>
+          <div style="position:absolute;left:0;right:0;top:34px;bottom:14px;display:flex;flex-direction:column;align-items:center;justify-content:space-between">
+            <div class="hn-eng-stage" style="font-size:8px;letter-spacing:.06em;color:var(--ink1);border:1px solid var(--line);padding:4px 10px;animation:hnEngPulse 7s ease-in-out infinite;animation-delay:0s">MARKET DATA</div>
+            <div class="hn-eng-stage" style="font-size:8px;letter-spacing:.06em;color:var(--ink1);border:1px solid var(--line);padding:4px 10px;animation:hnEngPulse 7s ease-in-out infinite;animation-delay:.9s">VALUATION</div>
+            <div class="hn-eng-stage" style="font-size:8px;letter-spacing:.06em;color:var(--ink1);border:1px solid var(--line);padding:4px 10px;animation:hnEngPulse 7s ease-in-out infinite;animation-delay:1.8s">TECHNICAL + FUNDAMENTAL</div>
+            <div class="hn-eng-stage" style="font-size:8px;letter-spacing:.06em;color:var(--accent);border:1px solid rgba(184,134,11,.5);padding:4px 10px;animation:hnEngPulse 7s ease-in-out infinite;animation-delay:2.7s">ASTROLOGY</div>
+            <div class="hn-eng-stage" style="font-size:8px;letter-spacing:.06em;color:var(--ink1);border:1px solid var(--line);padding:4px 10px;animation:hnEngPulse 7s ease-in-out infinite;animation-delay:3.6s">DEBATE</div>
+            <div class="hn-eng-stage" style="font-size:8px;letter-spacing:.06em;color:#f4f4f0;background:var(--ink1);padding:5px 12px;font-weight:700;animation:hnEngPulse 7s ease-in-out infinite;animation-delay:4.5s">PUBLISHED</div>
+          </div>
+          <div style="position:absolute;left:50%;top:34px;bottom:14px;width:1px;background:var(--hair);transform:translateX(-50%)"></div>
+          <div style="position:absolute;left:50%;top:34px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#b8860b;box-shadow:0 0 6px rgba(184,134,11,.6);animation:hnEngTravel 7s linear infinite"></div>
+        </div>
+        <div style="padding-bottom:14px">
+          <div style="font-size:13.5px;line-height:1.8;color:var(--ink3);max-width:520px"><span style="color:var(--ink1);font-weight:700">No tips, just published research.</span> Covered PSX names are valued four ways, tested on long histories, and debated in the open. The desk does the homework and leaves the argument on the record.</div>
+        </div>
+      </div>
+    </div>
+    <!-- WHO IT'S FOR -->
+    <div data-who-section class="hn-rv hn-rv-r" style="padding:0 44px 56px">
+      <div style="background:var(--dark);color:#f2f2ee;border:1.5px solid var(--line);padding:52px 44px 44px">
+        <div style="display:flex;align-items:end;justify-content:space-between;margin-bottom:36px;gap:40px">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:11px;height:11px;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center"><div style="width:3px;height:3px;background:var(--accent)"></div></div><span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,242,238,.6)">Where do you start</span></div>
+             <h2 style="font-size:34px;line-height:1.15;font-weight:700;margin:0;letter-spacing:-0.015em">Choose your starting point</h2>
+          </div>
+           <div style="font-size:11.5px;line-height:1.7;color:rgba(242,242,238,.5);max-width:270px;text-align:right">Four ways into the same publication — begin with what you need today.</div>
+        </div>
+        <div class="hn-who-row" style="border-bottom:1px solid rgba(242,242,238,.14);background:rgba(242,242,238,.055);transition:background .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="border-bottom:1px solid rgba(242,242,238,.14);background:&#123;&#123; whoRowBg0 &#125;&#125;;transition:background .45s cubic-bezier(.22,1,.36,1)">
+          <button type="button" class="hn-as-btn" data-who-row="0" aria-expanded="true" style="display:grid;grid-template-columns:70px 1fr 30px;gap:20px;align-items:center;padding:22px 4px;cursor:pointer;margin:0 -4px;transition:padding .3s cubic-bezier(.22,1,.36,1)">
+            <span style="font-size:10px;letter-spacing:.08em;color:rgba(242,242,238,.4);transition:color .3s ease">(001)</span>
+             <span style="font-size:19px;font-weight:700;letter-spacing:-0.01em">New</span>
+            <span style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(135deg)" data-tpl-style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(&#123;&#123; whoRot0 &#125;&#125;deg)">+</span>
+          </button>
+          <div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="display:grid;grid-template-rows:&#123;&#123; whoRows0 &#125;&#125;;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)">
+            <div style="overflow:hidden;min-height:0">
+              <div style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:1;transform:translateY(0px);transition:opacity .35s ease .12s,transform .4s cubic-bezier(.22,1,.36,1) .12s" data-tpl-style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:&#123;&#123; whoOpacity0 &#125;&#125;;transform:translateY(&#123;&#123; whoTranslate0 &#125;&#125;px);transition:opacity .35s ease &#123;&#123; whoDelay0 &#125;&#125;,transform .4s cubic-bezier(.22,1,.36,1) &#123;&#123; whoDelay0 &#125;&#125;">
+                <div></div>
+                 <div style="font-size:12.5px;line-height:1.8;color:rgba(242,242,238,.62);max-width:560px">Start with Today and the 14-lesson Learn path: plain-English macro, what moved and why, and questions worth asking before making a decision.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-who-row" style="border-bottom:1px solid rgba(242,242,238,.14);background:transparent;transition:background .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="border-bottom:1px solid rgba(242,242,238,.14);background:&#123;&#123; whoRowBg1 &#125;&#125;;transition:background .45s cubic-bezier(.22,1,.36,1)">
+          <button type="button" class="hn-as-btn" data-who-row="1" aria-expanded="false" style="display:grid;grid-template-columns:70px 1fr 30px;gap:20px;align-items:center;padding:22px 4px;cursor:pointer;margin:0 -4px;transition:padding .3s cubic-bezier(.22,1,.36,1)">
+            <span style="font-size:10px;letter-spacing:.08em;color:rgba(242,242,238,.4);transition:color .3s ease">(002)</span>
+             <span style="font-size:19px;font-weight:700;letter-spacing:-0.01em">Active</span>
+            <span style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(0deg)" data-tpl-style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(&#123;&#123; whoRot1 &#125;&#125;deg)">+</span>
+          </button>
+          <div style="display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="display:grid;grid-template-rows:&#123;&#123; whoRows1 &#125;&#125;;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)">
+            <div style="overflow:hidden;min-height:0">
+              <div style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:0;transform:translateY(-6px);transition:opacity .35s ease 0s,transform .4s cubic-bezier(.22,1,.36,1) 0s" data-tpl-style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:&#123;&#123; whoOpacity1 &#125;&#125;;transform:translateY(&#123;&#123; whoTranslate1 &#125;&#125;px);transition:opacity .35s ease &#123;&#123; whoDelay1 &#125;&#125;,transform .4s cubic-bezier(.22,1,.36,1) &#123;&#123; whoDelay1 &#125;&#125;">
+                <div></div>
+                 <div style="font-size:12.5px;line-height:1.8;color:rgba(242,242,238,.62);max-width:560px">Use the screener and backtester on names you already follow. About 52 rule-based strategies, long histories and a position-size calculator you drive. The desk shows behaviour; you decide what to do.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-who-row" style="border-bottom:1px solid rgba(242,242,238,.14);background:transparent;transition:background .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="border-bottom:1px solid rgba(242,242,238,.14);background:&#123;&#123; whoRowBg2 &#125;&#125;;transition:background .45s cubic-bezier(.22,1,.36,1)">
+          <button type="button" class="hn-as-btn" data-who-row="2" aria-expanded="false" style="display:grid;grid-template-columns:70px 1fr 30px;gap:20px;align-items:center;padding:22px 4px;cursor:pointer;margin:0 -4px;transition:padding .3s cubic-bezier(.22,1,.36,1)">
+            <span style="font-size:10px;letter-spacing:.08em;color:rgba(242,242,238,.4);transition:color .3s ease">(003)</span>
+             <span style="font-size:19px;font-weight:700;letter-spacing:-0.01em">Long-term</span>
+            <span style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(0deg)" data-tpl-style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(&#123;&#123; whoRot2 &#125;&#125;deg)">+</span>
+          </button>
+          <div style="display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="display:grid;grid-template-rows:&#123;&#123; whoRows2 &#125;&#125;;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)">
+            <div style="overflow:hidden;min-height:0">
+              <div style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:0;transform:translateY(-6px);transition:opacity .35s ease 0s,transform .4s cubic-bezier(.22,1,.36,1) 0s" data-tpl-style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:&#123;&#123; whoOpacity2 &#125;&#125;;transform:translateY(&#123;&#123; whoTranslate2 &#125;&#125;px);transition:opacity .35s ease &#123;&#123; whoDelay2 &#125;&#125;,transform .4s cubic-bezier(.22,1,.36,1) &#123;&#123; whoDelay2 &#125;&#125;">
+                <div></div>
+                 <div style="font-size:12.5px;line-height:1.8;color:rgba(242,242,238,.62);max-width:560px">Open Value and the dividend calendar. Four valuation methods per name with the working expandable, ex-dates tracked, and a portfolio X-ray that works from what you already hold.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-who-row" style="border-bottom:1px solid rgba(242,242,238,.14);background:transparent;transition:background .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="border-bottom:1px solid rgba(242,242,238,.14);background:&#123;&#123; whoRowBg3 &#125;&#125;;transition:background .45s cubic-bezier(.22,1,.36,1)">
+          <button type="button" class="hn-as-btn" data-who-row="3" aria-expanded="false" style="display:grid;grid-template-columns:70px 1fr 30px;gap:20px;align-items:center;padding:22px 4px;cursor:pointer;margin:0 -4px;transition:padding .3s cubic-bezier(.22,1,.36,1)">
+            <span style="font-size:10px;letter-spacing:.08em;color:rgba(242,242,238,.4);transition:color .3s ease">(004)</span>
+             <span style="font-size:19px;font-weight:700;letter-spacing:-0.01em">Astro</span>
+            <span style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(0deg)" data-tpl-style="font-size:17px;text-align:right;color:rgba(242,242,238,.6);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease;transform:rotate(&#123;&#123; whoRot3 &#125;&#125;deg)">+</span>
+          </button>
+          <div style="display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)" data-tpl-style="display:grid;grid-template-rows:&#123;&#123; whoRows3 &#125;&#125;;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)">
+            <div style="overflow:hidden;min-height:0">
+              <div style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:0;transform:translateY(-6px);transition:opacity .35s ease 0s,transform .4s cubic-bezier(.22,1,.36,1) 0s" data-tpl-style="display:grid;grid-template-columns:70px 1fr;gap:20px;padding-bottom:24px;opacity:&#123;&#123; whoOpacity3 &#125;&#125;;transform:translateY(&#123;&#123; whoTranslate3 &#125;&#125;px);transition:opacity .35s ease &#123;&#123; whoDelay3 &#125;&#125;,transform .4s cubic-bezier(.22,1,.36,1) &#123;&#123; whoDelay3 &#125;&#125;">
+                <div></div>
+                 <div style="font-size:12.5px;line-height:1.8;color:rgba(242,242,238,.62);max-width:560px">Optional and educational. The sidereal lens is computed and backtested like every other rule; 2,589 tested hypotheses produced zero survivors after correction. Cast a chart for context, never a forecast or instruction.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- THE ENGINE: inputs feeding one production line -->
+    <div class="hn-rv hn-rv-r" style="padding:0 44px 56px">
+      <div style="display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:26px">
+        <div style="font-size:30px;font-weight:700;letter-spacing:-0.015em;max-width:640px;line-height:1.15">One desk. One published edition.</div>
+        <div style="min-width:210px;text-align:right">
+          <div style="font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Next edition</div>
+          <div style="height:5px;background:var(--hair);position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;background:var(--accent);animation:hnEditionProgress 6s linear infinite"></div></div>
+          <div style="font-size:8px;letter-spacing:.06em;color:var(--ink3);margin-top:6px;animation:hnEditionLabel 6s steps(1) infinite">Preparing…</div>
+        </div>
+      </div>
+
+      <div style="font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Inputs feeding the line</div>
+      <div style="font-size:11.5px;line-height:1.7;color:var(--ink3);margin:-2px 0 18px;max-width:640px">Before the market opens, the desk reads covered PSX names, global index and sector context, the macro calendar and the optional astro lens. Intraday cycles monitor; the Desk Room publishes on a weekly rotation. <span style="color:var(--ink1);font-weight:700">23 global index/sector-ETF markets for context — no US stock picks or signals.</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:0">
+        <div style="border:1.5px solid var(--line);background:var(--panel);padding:18px 16px;position:relative;overflow:hidden">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);opacity:.9;animation:hnFeedPulse 6s ease-in-out infinite;animation-delay:0s"></div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1;margin-bottom:6px">550+</div>
+          <div style="font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)">PSX names covered</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);padding:18px 16px;position:relative;overflow:hidden">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);opacity:.9;animation:hnFeedPulse 6s ease-in-out infinite;animation-delay:1.5s"></div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1;margin-bottom:6px">{globalCount}</div>
+          <div style="font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)">Global markets tracked</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);padding:18px 16px;position:relative;overflow:hidden">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);opacity:.9;animation:hnFeedPulse 6s ease-in-out infinite;animation-delay:3s"></div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1;margin-bottom:6px">19yrs</div>
+          <div style="font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)">Of price history tested</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);padding:18px 16px;position:relative;overflow:hidden">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);opacity:.9;animation:hnFeedPulse 6s ease-in-out infinite;animation-delay:4.5s"></div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1;margin-bottom:6px">2,589</div>
+          <div style="font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)">Astro hypotheses tested</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+        <div style="display:flex;justify-content:center"><div style="width:1px;height:26px;background:var(--hair)"></div></div>
+        <div style="display:flex;justify-content:center"><div style="width:1px;height:26px;background:var(--hair)"></div></div>
+        <div style="display:flex;justify-content:center"><div style="width:1px;height:26px;background:var(--hair)"></div></div>
+        <div style="display:flex;justify-content:center"><div style="width:1px;height:26px;background:var(--hair)"></div></div>
+      </div>
+      <div style="height:1px;background:var(--line);margin-bottom:26px;position:relative">
+        <div style="position:absolute;top:-2px;width:6px;height:5px;background:var(--accent);animation:hnSpinePulse 6s linear infinite"></div>
+      </div>
+
+      <div class="hn-stage-row" role="region" aria-label="Pipeline stages" tabindex="0" style="display:flex;align-items:stretch;gap:8px">
+        <div class="hn-stage" style="flex:1.35;border:1.5px solid var(--line);background:var(--panel);color:var(--ink1);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,134,11,.16),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:0s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:var(--ink3)">01</span>
+              <span style="width:4px;height:4px;background:var(--hair);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:0s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Universe</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:var(--ink3);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:0s">+23 in · 14 out</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-stage" style="flex:.9;border:1.5px solid var(--line);background:var(--panel);color:var(--ink1);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,134,11,.16),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:.8s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:var(--ink3)">02</span>
+              <span style="width:4px;height:4px;background:var(--hair);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:.8s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Liquidity</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:var(--ink3);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:.8s">Passed · Rejected</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-stage" style="flex:1.15;border:1.5px solid var(--line);background:var(--panel);color:var(--ink1);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,134,11,.16),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:1.6s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:var(--ink3)">03</span>
+              <span style="width:4px;height:4px;background:var(--hair);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:1.6s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Macro</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:var(--ink3);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:1.6s">Oil · Dollar · Rates</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-stage" style="flex:1.5;border:1.5px solid var(--line);background:var(--panel);color:var(--ink1);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,134,11,.16),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:2.4s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:var(--ink3)">04</span>
+              <span style="width:4px;height:4px;background:var(--hair);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:2.4s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Valuation</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:var(--ink3);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:2.4s">DCF · EPV · DDM · Median</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-stage" style="flex:1.05;border:1.5px solid var(--accent);background:var(--panel);color:var(--ink1);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,134,11,.16),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:3.2s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:var(--ink3)">05</span>
+              <span style="width:4px;height:4px;background:var(--accent);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:3.2s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Astrology</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:var(--ink3);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:3.2s">Moon · Aspect · Cycle</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-stage" style="flex:.85;border:1.5px solid var(--line);background:var(--panel);color:var(--ink1);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(184,134,11,.16),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:4s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:var(--ink3)">06</span>
+              <span style="width:4px;height:4px;background:var(--hair);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:4s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Risk</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:var(--ink3);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:4s">Sizing · Exposure</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-stage" style="flex:1.3;border:1.5px solid var(--ink1);background:var(--ink1);color:var(--panel);padding:16px 12px;position:relative;overflow:hidden;transition:background .3s ease">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(242,242,238,.14),transparent);animation:hnStageSweep 6s linear infinite;animation-delay:4.8s"></div>
+          <div style="position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:8px;letter-spacing:.08em;color:rgba(242,242,238,.5)">07</span>
+              <span style="width:4px;height:4px;background:var(--accent);animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:4.8s"></span>
+            </div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap">Publication</div>
+            <div style="font-size:7.5px;letter-spacing:.04em;color:rgba(242,242,238,.55);height:10px;overflow:hidden">
+              <div style="animation:hnMicroRoll 6s steps(1) infinite;animation-delay:4.8s">Printing · Archived</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- PRICING -->
+    <div class="hn-rv hn-rv-l" style="padding:36px 44px 60px">
+      <div style="display:flex;align-items:end;justify-content:space-between;margin-bottom:28px">
+        <div>
+          <div style="font-size:30px;font-weight:700;letter-spacing:-0.015em;line-height:1.15">Free while we get it right</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink3);max-width:280px;text-align:right;line-height:1.6">Early access: the full desk, no card, no trial timer. Paid tiers come later — the free tier stays.</div>
+      </div>
+      <div class="cd-rail cd-rail-plans" role="region" aria-label="Pricing plans" tabindex="0" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch">
+        <div class="hn-plan" style="border:1.5px solid var(--line);background:var(--panel);padding:30px;transition:transform .2s;display:flex;flex-direction:column">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">{planName(0, 'Investor')}</div>
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:18px">For finding your feet</div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:30px;margin-bottom:22px">{planPrice(0)}</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:11.5px;color:var(--ink3);line-height:1.5;margin-bottom:24px;flex:1">
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>Daily read &amp; macro</div>
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>Board &amp; universe heatmap</div>
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>Public scorecard</div>
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>Optional astro lens</div>
+          </div>
+          <a class="hn-cta-link" href={planHref(0)} style="border:1.5px solid var(--line);text-align:center;padding:12px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .3s cubic-bezier(.22,1,.36,1)" data-hover="background:var(--panel2)">Create free account</a>
+        </div>
+        <div class="hn-plan" style="border:1.5px solid var(--accent);background:var(--panel2);padding:30px;box-shadow:6px 6px 0 rgba(184,134,11,.14);transition:transform .2s;display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">{planName(1, 'Pro')}</span></div>
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:18px">For running your own book</div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:30px;margin-bottom:22px">{planPrice(1)}</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:11.5px;color:var(--ink1);line-height:1.5;margin-bottom:24px;flex:1">
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>Everything in Investor</div>
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>Value — four models, full working</div>
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>The Desk Room debate</div>
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="color:var(--up);flex-shrink:0">✓</span>User-run screener &amp; backtests</div>
+          </div>
+          <a class="hn-cta-link" href={planHref(1)} style="background:var(--ink1);color:var(--panel);text-align:center;padding:12px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:transform .35s cubic-bezier(.22,1,.36,1)" data-hover="transform:scale(1.03)">Create a free account</a>
+        </div>
+        <div style="border:1.5px solid var(--hair);background:var(--panel2);padding:30px;opacity:.5;display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)">{planName(2, 'Broker')}</span><span style="font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--hair);color:var(--ink3);padding:3px 7px">Coming soon</span></div>
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:18px">For desks and institutions. Details on request.</div>
+          <div style="font-family:'Pixelify Sans',monospace;font-size:30px;margin-bottom:22px;color:var(--ink3)">—</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:11.5px;color:var(--ink3);line-height:1.5;margin-bottom:24px;flex:1">
+            <div style="display:flex;align-items:flex-start;gap:8px"><span style="flex-shrink:0">—</span>Details on request</div>
+          </div>
+          <div style="border:1.5px solid var(--hair);color:var(--ink3);text-align:center;padding:12px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:not-allowed">Coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORIES GRID -->
+    <div class="hn-rv hn-rv-u" style="padding:0 44px 40px">
+      <div class="cd-toolbar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:6px;height:6px;background:var(--ink1)"></div><span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">What the desk does</span></div>
+        <div class="cd-filter-row" style="display:flex;gap:8px">
+          <button type="button" class="hn-as-btn" data-filter-btn="all" aria-pressed="true" style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:#0a0a0a;color:#f4f4f0" data-tpl-style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:&#123;&#123; allBg &#125;&#125;;color:&#123;&#123; allFg &#125;&#125;">All</button>
+          <button type="button" class="hn-as-btn" data-filter-btn="research" aria-pressed="false" style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:#fff;color:#0a0a0a" data-tpl-style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:&#123;&#123; resBg &#125;&#125;;color:&#123;&#123; resFg &#125;&#125;">Research</button>
+          <button type="button" class="hn-as-btn" data-filter-btn="astro" aria-pressed="false" style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:#fff;color:#0a0a0a" data-tpl-style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:&#123;&#123; astBg &#125;&#125;;color:&#123;&#123; astFg &#125;&#125;">Astro</button>
+          <button type="button" class="hn-as-btn" data-filter-btn="tools" aria-pressed="false" style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:#fff;color:#0a0a0a" data-tpl-style="border:1.5px solid var(--line);padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .32s cubic-bezier(.22,1,.36,1);background:&#123;&#123; toolBg &#125;&#125;;color:&#123;&#123; toolFg &#125;&#125;">Tools</button>
+        </div>
+      </div>
+
+      <div class="cd-rail cd-rail-stories" role="region" aria-label="What the desk does" tabindex="0" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dBoard &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Board · universe heatmap</div><div style="position:absolute;left:16px;right:16px;top:40px;bottom:20px;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(4,1fr);gap:3px">
+<div style="background:rgba(11,122,95,0.9);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:0.29s"></div><div style="background:rgba(11,122,95,0.82);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:0.58s"></div><div style="background:rgba(11,122,95,0.74);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:0.87s"></div><div style="background:rgba(11,122,95,0.66);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:1.16s"></div><div style="background:rgba(11,122,95,0.58);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:1.45s"></div><div style="background:rgba(11,122,95,0.5);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:1.74s"></div><div style="background:rgba(11,122,95,0.44);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:2.03s"></div><div style="background:rgba(11,122,95,0.38);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:2.32s"></div><div style="background:rgba(11,122,95,0.32);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:2.61s"></div><div style="background:rgba(11,122,95,0.27);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:2.90s"></div><div style="background:rgba(11,122,95,0.22);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:3.19s"></div><div style="background:rgba(11,122,95,0.18);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:0.28s"></div><div style="background:rgba(11,122,95,0.14);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:0.57s"></div><div style="background:rgba(11,122,95,0.1);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:0.86s"></div>
+<div style="background:rgba(242,242,238,.07);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:1.15s"></div><div style="background:rgba(242,242,238,.07);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:1.44s"></div>
+<div style="background:rgba(190,65,38,0.13999999999999999);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:1.73s"></div><div style="background:rgba(190,65,38,0.21);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:2.02s"></div><div style="background:rgba(190,65,38,0.27999999999999997);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:2.31s"></div><div style="background:rgba(190,65,38,0.35);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:2.60s"></div><div style="background:rgba(190,65,38,0.42);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:2.89s"></div><div style="background:rgba(190,65,38,0.48999999999999994);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:3.18s"></div><div style="background:rgba(190,65,38,0.5599999999999999);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:0.27s"></div><div style="background:rgba(190,65,38,0.616);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:0.56s"></div><div style="background:rgba(190,65,38,0.6579999999999999);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:0.85s"></div><div style="background:rgba(190,65,38,0.7);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:1.14s"></div><div style="background:rgba(190,65,38,0.7);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:1.43s"></div><div style="background:rgba(190,65,38,0.7);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:1.72s"></div>
+            </div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">The whole market on one screen</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">550+</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">names ranked each cycle</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Research</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dValue &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Value · four methods</div><div style="position:absolute;left:16px;right:16px;top:44px;bottom:22px;display:flex;flex-direction:column;justify-content:space-between">
+              <div style="position:relative;display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:52px;font-size:7px;letter-spacing:.06em;color:rgba(242,242,238,.5);text-align:right">PEER P/E</div><div style="flex:1;height:9px;background:rgba(242,242,238,.09);overflow:hidden"><div style="width:72%;height:9px;background:rgba(242,242,238,.5);animation:hnValBar1 5.2s ease-in-out infinite"></div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:52px;font-size:7px;letter-spacing:.06em;color:rgba(242,242,238,.5);text-align:right">EPV</div><div style="flex:1;height:9px;background:rgba(242,242,238,.09);overflow:hidden"><div style="width:58%;height:9px;background:rgba(242,242,238,.38);animation:hnValBar2 4.4s ease-in-out infinite"></div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:52px;font-size:7px;letter-spacing:.06em;color:rgba(242,242,238,.5);text-align:right">GRAHAM</div><div style="flex:1;height:9px;background:rgba(242,242,238,.09);overflow:hidden"><div style="width:64%;height:9px;background:rgba(242,242,238,.44);animation:hnValBar3 6.1s ease-in-out infinite"></div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:52px;font-size:7px;letter-spacing:.06em;color:rgba(242,242,238,.5);text-align:right">DDM</div><div style="flex:1;height:9px;background:rgba(242,242,238,.09);overflow:hidden"><div style="width:49%;height:9px;background:rgba(242,242,238,.3);animation:hnValBar4 5.6s ease-in-out infinite"></div></div></div>
+                <div style="position:absolute;left:calc(60px + 60% * 0.86);top:-6px;bottom:-6px;width:1px;background:rgba(184,134,11,.85);animation:hnMedianGlide 6s ease-in-out infinite"></div>
+                <div style="position:absolute;left:60px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,rgba(184,134,11,.4),transparent);animation:hnCalcSweep 3.8s linear infinite"></div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;gap:6px;align-items:center"><div style="width:14px;height:1px;background:rgba(184,134,11,.85)"></div><div style="font-size:7px;letter-spacing:.1em;color:rgba(184,134,11,.9)">MEDIAN OF THE WORKING</div></div>
+            </div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">Four valuations, all the working shown</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">4</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">methods per stock</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Research</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dDesk &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Desk Room · the debate</div><div style="position:absolute;left:16px;right:16px;top:42px;bottom:20px">
+              <div style="position:absolute;left:5px;top:6px;bottom:26px;width:1px;background:rgba(242,242,238,.18)"></div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:11px;height:11px;background:rgba(34,201,155,.85);flex-shrink:0;animation:hnLedBlink 1.9s ease-in-out infinite"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><div style="height:4px;width:88%;background:rgba(242,242,238,.34);animation:hnConfFluct 3.6s ease-in-out infinite;transform-origin:left"></div><div style="height:4px;width:56%;background:rgba(242,242,238,.16)"></div></div></div>
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:11px;height:11px;background:rgba(34,201,155,.6);flex-shrink:0;animation:hnLedBlink 2.4s ease-in-out infinite;animation-delay:.4s"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><div style="height:4px;width:76%;background:rgba(242,242,238,.34);animation:hnConfFluct 4.3s ease-in-out infinite;transform-origin:left"></div><div style="height:4px;width:44%;background:rgba(242,242,238,.16)"></div></div></div>
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:11px;height:11px;background:rgba(239,107,72,.8);flex-shrink:0;animation:hnLedBlink 2.1s ease-in-out infinite;animation-delay:.9s"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><div style="height:4px;width:82%;background:rgba(242,242,238,.34);animation:hnConfFluct 3.9s ease-in-out infinite;transform-origin:left"></div><div style="height:4px;width:50%;background:rgba(242,242,238,.16)"></div></div></div>
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:11px;height:11px;border:1px solid rgba(184,134,11,.9);flex-shrink:0"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><div style="height:4px;width:68%;background:rgba(184,134,11,.5);animation:hnConfFluct 5.2s ease-in-out infinite;transform-origin:left"></div><div style="height:4px;width:38%;background:rgba(184,134,11,.28)"></div></div></div>
+                <div style="position:absolute;left:16px;top:2px;width:6px;height:6px;background:#22c99b;border-radius:50%;animation:hnArgTravel 3s ease-in infinite"></div>
+                <div style="position:absolute;left:16px;top:56px;width:6px;height:6px;background:#ef6b48;border-radius:50%;animation:hnArgTravel 3.6s ease-in infinite;animation-delay:1.2s"></div>
+              </div>
+              <div style="position:absolute;left:0;right:0;bottom:0;border-top:1px dotted rgba(242,242,238,.2);padding-top:8px;display:flex;justify-content:space-between;font-size:7px;letter-spacing:.1em;color:rgba(242,242,238,.45)"><span style="animation:hnLedBlink 4s ease-in-out infinite">CHAIR SYNTHESISES</span><span style="color:rgba(184,134,11,.9)">NO VERDICT</span></div>
+            </div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">Both sides argued, then synthesised</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">5</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">personas debate</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Research</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dGlobal &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Global · 23 markets read</div><svg viewBox="0 0 340 89" style="position:absolute;left:16px;right:16px;top:38px;width:calc(100% - 32px);height:132px">
+              <g fill="none" stroke="rgba(242,242,238,.28)" stroke-width="1" stroke-dasharray="3 3">
+                <path d="M34 10 C120 10 150 44 236 44"></path>
+                <path d="M34 27 C120 27 150 44 236 44"></path>
+                <path d="M34 44 C120 44 150 44 236 44"></path>
+                <path d="M34 61 C120 61 150 44 236 44"></path>
+                <path d="M34 78 C120 78 150 44 236 44"></path>
+              </g>
+              <path d="M34 44 C120 44 150 44 236 44" fill="none" stroke="#b8860b" stroke-width="1.4" stroke-dasharray="3 4" style="animation:hnDashFlow .9s linear infinite"></path>
+              <circle r="2.1" fill="#f2f2ee"><animateMotion dur="2.6s" repeatCount="indefinite" path="M34 10 C120 10 150 44 236 44"></animateMotion></circle>
+              <circle r="1.7" fill="#22c99b"><animateMotion dur="3.4s" begin="0.6s" repeatCount="indefinite" path="M34 27 C120 27 150 44 236 44"></animateMotion></circle>
+              <circle r="2.3" fill="#b8860b"><animateMotion dur="2.1s" begin="1.1s" repeatCount="indefinite" path="M34 44 C120 44 150 44 236 44"></animateMotion></circle>
+              <circle r="1.6" fill="#f2f2ee"><animateMotion dur="3.9s" begin="1.7s" repeatCount="indefinite" path="M34 61 C120 61 150 44 236 44"></animateMotion></circle>
+              <circle r="2.0" fill="#22c99b"><animateMotion dur="2.9s" begin="0.3s" repeatCount="indefinite" path="M34 78 C120 78 150 44 236 44"></animateMotion></circle>
+              <g fill="rgba(242,242,238,.55)">
+                <rect x="25" y="5" width="10" height="10"></rect><rect x="25" y="22" width="10" height="10"></rect>
+                <rect x="25" y="39" width="10" height="10" fill="#b8860b"></rect><rect x="25" y="56" width="10" height="10"></rect><rect x="25" y="73" width="10" height="10"></rect>
+              </g>
+              <rect x="236" y="26" width="84" height="36" fill="none" stroke="rgba(242,242,238,.5)" stroke-width="1.2"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="1.8s" repeatCount="indefinite"></animate></rect>
+              <text x="278" y="43" fill="#f2f2ee" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" text-anchor="middle">PSX</text>
+              <text x="278" y="55" fill="rgba(242,242,238,.5)" font-family="JetBrains Mono, monospace" font-size="6.5" letter-spacing="1" text-anchor="middle">READ AGAINST</text>
+            </svg>
+            <div style="position:absolute;left:16px;bottom:14px;font-size:7px;letter-spacing:.1em;color:rgba(242,242,238,.4)">INDICES · SECTOR ETFS · RATES · GOLD · OIL</div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">Index and sector-ETF context; no US signals</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">23</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">global markets read</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Research</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dAstro &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Astro · optional lens</div><svg viewBox="0 0 340 168" style="position:absolute;left:0;top:34px;width:100%;height:140px">
+              <g fill="none" stroke="rgba(242,242,238,.16)" stroke-width="1">
+                <ellipse cx="170" cy="80" rx="128" ry="46"></ellipse>
+                <ellipse cx="170" cy="80" rx="100" ry="35"></ellipse>
+                <ellipse cx="170" cy="80" rx="72" ry="25"></ellipse>
+                <ellipse cx="170" cy="80" rx="44" ry="15"></ellipse>
+              </g>
+              <g stroke="rgba(242,242,238,.1)" stroke-width="1"><line x1="42" y1="80" x2="298" y2="80"></line><line x1="170" y1="34" x2="170" y2="126"></line></g>
+              <line x1="170" y1="80" x2="298" y2="80" stroke="#b8860b" stroke-width=".6" opacity=".45" style="transform-origin:170px 80px;animation:hnOrbitSlow 16s linear infinite"></line>
+              <g fill="rgba(242,242,238,.8)" style="transform-origin:170px 80px;animation:hnOrbitSlow 90s linear infinite">
+                <rect x="294" y="77" width="6" height="6"></rect><rect x="234" y="52" width="6" height="6"></rect>
+                <rect x="167" y="42" width="6" height="6"></rect><rect x="104" y="55" width="6" height="6"></rect>
+                <rect x="41" y="77" width="6" height="6"></rect><rect x="106" y="104" width="6" height="6"></rect>
+                <rect x="167" y="115" width="6" height="6"></rect><rect x="231" y="103" width="6" height="6"></rect>
+              </g>
+              <rect x="196" y="66" width="7" height="7" fill="#b8860b" style="transform-origin:170px 80px;animation:hnOrbitSlow 48s linear infinite reverse"></rect>
+              <circle cx="170" cy="80" r="3" fill="#f2f2ee"><animate attributeName="r" values="2.4;3.4;2.4" dur="4s" repeatCount="indefinite"></animate></circle>
+            </svg>
+            <div style="position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-between;font-size:7px;letter-spacing:.1em;color:rgba(242,242,238,.45)"><span>19 YEARS BACKTESTED</span><span style="color:#ef6b48">0 SURVIVED</span></div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">An optional, educational lens — tested, never predictive</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">2,589</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">hypotheses tested</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Astro</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dCast &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Your chart · optional, free</div><svg viewBox="0 0 340 168" style="position:absolute;left:0;top:32px;width:100%;height:142px">
+              <g fill="none" stroke="rgba(242,242,238,.18)" stroke-width="1">
+                <circle cx="170" cy="76" r="62" stroke-dasharray="400" style="animation:hnChartGrow 3s ease-out both"></circle>
+                <circle cx="170" cy="76" r="46" stroke-dasharray="290" style="animation:hnChartGrow 3s ease-out .2s both"></circle>
+                <circle cx="170" cy="76" r="24" stroke-dasharray="150" style="animation:hnChartGrow 3s ease-out .4s both"></circle>
+              </g>
+              <g stroke="rgba(242,242,238,.12)" stroke-width="1">
+                <line x1="108" y1="76" x2="232" y2="76"></line><line x1="170" y1="14" x2="170" y2="138"></line>
+                <line x1="126" y1="32" x2="214" y2="120"></line><line x1="214" y1="32" x2="126" y2="120"></line>
+              </g>
+              <g fill="rgba(242,242,238,.85)">
+                <rect x="197" y="41" width="6" height="6" style="transform-origin:200px 44px;animation:hnEphemDrift 5s ease-in-out infinite"></rect><rect x="140" y="35" width="6" height="6" style="transform-origin:143px 38px;animation:hnEphemDrift 6.2s ease-in-out infinite;animation-delay:.6s"></rect>
+                <rect x="126" y="88" width="6" height="6" style="transform-origin:129px 91px;animation:hnEphemDrift 4.6s ease-in-out infinite;animation-delay:1.1s"></rect><rect x="186" y="106" width="6" height="6" style="transform-origin:189px 109px;animation:hnEphemDrift 5.6s ease-in-out infinite;animation-delay:.3s"></rect>
+              </g>
+              <rect x="167" y="50" width="7" height="7" fill="#b8860b" style="transform-origin:170px 53px;animation:hnEphemDrift 4s ease-in-out infinite"></rect>
+              <circle cx="170" cy="76" r="2.5" fill="#f2f2ee"><animate attributeName="r" values="2;2.9;2" dur="3.4s" repeatCount="indefinite"></animate></circle>
+              <g font-family="JetBrains Mono, monospace" font-size="7" fill="rgba(242,242,238,.45)" letter-spacing="1">
+                <text x="170" y="8" text-anchor="middle">CAN</text><text x="248" y="79">ARI</text><text x="170" y="152" text-anchor="middle">CAP</text><text x="72" y="79">LIB</text>
+              </g>
+            </svg>
+            <div style="position:absolute;left:16px;bottom:12px;font-size:7px;letter-spacing:.1em;color:rgba(242,242,238,.45)">MOON SIGN · SECTORS TRADITION ATTACHES</div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">Cast your own chart, free and optional. Not investment guidance.</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">Free</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">sidereal chart cast</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Astro</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dSizer &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Position sizer · you drive it</div><div style="position:absolute;left:16px;right:16px;top:42px;bottom:18px;display:flex;flex-direction:column;gap:8px;overflow:hidden">
+              <div style="position:absolute;top:0;bottom:0;left:-8%;width:8%;background:linear-gradient(90deg,transparent,rgba(184,134,11,.12),transparent);animation:hnRippleFlow 4.5s linear infinite"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(242,242,238,.18);padding:7px 10px"><span style="font-size:7.5px;letter-spacing:.08em;color:rgba(242,242,238,.5)">YOUR CAPITAL</span><span style="font-size:9px;color:#f2f2ee">1,000,000</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(242,242,238,.18);padding:7px 10px"><span style="font-size:7.5px;letter-spacing:.08em;color:rgba(242,242,238,.5)">RISK PER TRADE</span><span style="font-size:9px;color:#f2f2ee;animation:hnNumRoll 4.5s ease-in-out infinite">1.0%</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(242,242,238,.18);padding:7px 10px"><span style="font-size:7.5px;letter-spacing:.08em;color:rgba(242,242,238,.5)">YOUR STOP DISTANCE</span><span style="font-size:9px;color:#f2f2ee;animation:hnNumRoll 4.5s ease-in-out infinite;animation-delay:.15s">4.2%</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(184,134,11,.85);background:rgba(184,134,11,.12);padding:8px 10px;margin-top:2px;animation:hnLedBlink 4.5s ease-in-out infinite"><span style="font-size:7.5px;letter-spacing:.08em;color:rgba(184,134,11,.95)">YOUR SIZE</span><span style="font-size:11px;font-weight:700;color:#f2f2ee;animation:hnNumRoll 4.5s ease-in-out infinite;animation-delay:.3s">238,095</span></div>
+              <div style="font-size:7px;letter-spacing:.09em;color:rgba(242,242,238,.35);margin-top:2px">THE DESK NEVER PRINTS A SHARE COUNT</div>
+            </div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">Size a position on your own risk</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">Free</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">position calculator</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Tools</div>
+            </div>
+          </div>
+        </div>
+        <div class="hn-story" style="display:block;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer" data-tpl-style="display:&#123;&#123; dScores &#125;&#125;;border:1.5px solid var(--line);background:var(--panel);transition:border-color .35s cubic-bezier(.22,1,.36,1);cursor:pointer">
+          <div style="position:relative;height:210px;background:var(--dark);overflow:hidden">
+            <div class="hn-shot" style="position:absolute;inset:0;transition:transform .4s ease"><div style="position:absolute;top:14px;left:16px;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,242,238,.42);white-space:nowrap">Scorecard · graded in public</div><div style="position:absolute;left:16px;right:16px;top:42px;bottom:18px;display:flex;flex-direction:column;gap:7px">
+              <div style="display:flex;align-items:center;gap:10px;border-bottom:1px dotted rgba(242,242,238,.16);padding-bottom:6px;animation:hnRowResolve 7s ease-in-out infinite"><span style="font-size:7.5px;color:rgba(242,242,238,.45);width:36px">SAMPLE A</span><div style="flex:1;height:4px;background:rgba(242,242,238,.2);position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:100%;background:#22c99b;opacity:.5"></div></div><span style="font-size:7.5px;font-weight:700;color:#22c99b;width:32px;text-align:right">HIT</span></div>
+              <div style="display:flex;align-items:center;gap:10px;border-bottom:1px dotted rgba(242,242,238,.16);padding-bottom:6px;animation:hnRowResolve 7s ease-in-out infinite;animation-delay:1.6s"><span style="font-size:7.5px;color:rgba(242,242,238,.45);width:36px">SAMPLE B</span><div style="flex:1;height:4px;background:rgba(242,242,238,.2);position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:100%;background:#22c99b;opacity:.5"></div></div><span style="font-size:7.5px;font-weight:700;color:#22c99b;width:32px;text-align:right">HIT</span></div>
+              <div style="display:flex;align-items:center;gap:10px;border-bottom:1px dotted rgba(242,242,238,.16);padding-bottom:6px;animation:hnRowResolve 7s ease-in-out infinite;animation-delay:3.2s"><span style="font-size:7.5px;color:rgba(242,242,238,.45);width:36px">SAMPLE C</span><div style="flex:1;height:4px;background:rgba(239,107,72,.4);position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:100%;background:#ef6b48;opacity:.6"></div></div><span style="font-size:7.5px;font-weight:700;color:#ef6b48;width:32px;text-align:right">MISS</span></div>
+              <div style="display:flex;align-items:center;gap:10px;border-bottom:1px dotted rgba(242,242,238,.16);padding-bottom:6px"><span style="font-size:7.5px;color:rgba(242,242,238,.45);width:36px">SAMPLE D</span><div style="flex:1;height:4px;background:rgba(242,242,238,.12);position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;--sw:34%;width:var(--sw);background:#b8860b;animation:hnScoreAdvance 4.2s ease-in-out infinite"></div></div><span style="font-size:7.5px;font-weight:700;color:rgba(242,242,238,.5);width:32px;text-align:right">OPEN</span></div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:7.5px;color:rgba(242,242,238,.45);width:36px">SAMPLE E</span><div style="flex:1;height:4px;background:rgba(242,242,238,.12);position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;--sw:14%;width:var(--sw);background:#b8860b;animation:hnScoreAdvance 5.1s ease-in-out infinite;animation-delay:.8s"></div></div><span style="font-size:7.5px;font-weight:700;color:rgba(242,242,238,.5);width:32px;text-align:right">OPEN</span></div>
+              <div style="font-size:7px;letter-spacing:.09em;color:rgba(242,242,238,.35);margin-top:2px">LOSSES SHOWN, NEVER DROPPED</div>
+            </div></div>
+          </div>
+          <div style="padding:24px 22px 22px">
+            <div style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:22px;min-height:44px">Every dated read graded in public</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-family:'Pixelify Sans',monospace;font-size:26px;line-height:1">Dated editions</div>
+                <div style="font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:6px">editions archived</div>
+              </div>
+              <div style="border:1px solid var(--hair);padding:5px 11px;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)">Tools</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSIDE AN EDITION -->
+    <div data-desk-visibility class="hn-rv hn-rv-s" style="padding:56px 44px 56px;border-top:1px solid var(--hair)">
+      <div style="display:flex;align-items:end;justify-content:space-between;gap:48px;margin-bottom:40px">
+        <h2 style="font-size:58px;line-height:1;font-weight:700;margin:0;letter-spacing:-0.03em">The desk, surface by surface.</h2>
+        <div style="font-size:12px;line-height:1.75;color:var(--ink3);max-width:260px;padding-bottom:8px">Each trading day’s publication follows the same structure. Read the surface that is useful today.</div>
+      </div>
+      <div class="cd-rail cd-rail-surfaces" role="region" aria-label="Inside an edition" tabindex="0" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <div style="border:1.5px solid var(--line);background:var(--panel);transition:transform .38s cubic-bezier(.22,1,.36,1);cursor:pointer" data-hover="transform:translateY(-4px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--hair)">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.04em">Today</span>
+            <span style="font-size:9px;letter-spacing:.08em;color:var(--ink3)">01</span>
+          </div>
+          <div style="position:relative;height:150px;background:var(--panel2);border-bottom:1px solid var(--hair);overflow:hidden"><svg viewBox="0 0 300 150" style="position:absolute;inset:0;width:100%;height:100%">
+  <circle cx="272" cy="20" r="3" fill="#0b7a5f" style="animation:hnLedBlink 2.1s ease-in-out infinite"></circle>
+  <text x="20" y="26" fill="#6b6b64" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">THE DESK'S TONE</text>
+  <text x="20" y="42" fill="#be4126" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" style="animation:hnToneFlicker 7s ease-in-out infinite">CAUTIOUS</text>
+  <rect x="20" y="60" width="120" height="16" fill="none" stroke="#0b7a5f" stroke-width="1"></rect>
+  <text x="26" y="71" fill="#0b7a5f" font-family="JetBrains Mono, monospace" font-size="7.5" letter-spacing=".5">FAVOURED · BANKS</text>
+  <rect x="139" y="61.5" width="0" height="13" fill="#0b7a5f" opacity=".22" style="animation:hnMeterFillW 4.5s ease-in-out infinite"></rect>
+  <rect x="20" y="84" width="150" height="16" fill="none" stroke="#be4126" stroke-width="1"></rect>
+  <text x="26" y="95" fill="#be4126" font-family="JetBrains Mono, monospace" font-size="7.5" letter-spacing=".5">AVOIDING · CEMENT</text>
+  <line x1="20" y1="112" x2="280" y2="112" stroke="#d9d9d2" stroke-width="1"></line>
+  <text x="20" y="128" fill="#0a0a0a" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700">NEXT CATALYST · SAMPLE WINDOW</text>
+  <circle r="2.4" fill="#b8860b" cy="128"><animate attributeName="cx" values="196;280" dur="1.4s" repeatCount="indefinite"></animate><animate attributeName="opacity" values="0;1;1;0" dur="1.4s" repeatCount="indefinite"></animate></circle>
+</svg></div>
+          <div style="padding:18px;font-size:11.5px;line-height:1.7;color:var(--ink3)">The daily read — macro tone, favoured and avoided sectors, the next catalyst on the calendar.</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);transition:transform .38s cubic-bezier(.22,1,.36,1);cursor:pointer" data-hover="transform:translateY(-4px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--hair)">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.04em">Board</span>
+            <span style="font-size:9px;letter-spacing:.08em;color:var(--ink3)">02</span>
+          </div>
+          <div style="position:relative;height:150px;background:var(--panel2);border-bottom:1px solid var(--hair);overflow:hidden"><div style="position:absolute;left:20px;right:20px;top:20px;bottom:20px;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(4,1fr);gap:3px">
+  <div style="background:rgba(11,122,95,0.95);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:2.01s"></div><div style="background:rgba(11,122,95,0.85);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:2.30s"></div><div style="background:rgba(11,122,95,0.75);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:2.59s"></div><div style="background:rgba(11,122,95,0.65);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:2.88s"></div><div style="background:rgba(11,122,95,0.55);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:3.17s"></div><div style="background:rgba(11,122,95,0.45);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:0.26s"></div><div style="background:rgba(11,122,95,0.35);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:0.55s"></div><div style="background:rgba(11,122,95,0.25);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:0.84s"></div>
+  <div style="background:rgba(11,122,95,0.9);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:1.13s"></div><div style="background:rgba(11,122,95,0.8);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:1.42s"></div><div style="background:rgba(11,122,95,0.68);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:1.71s"></div><div style="background:rgba(11,122,95,0.55);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:2.00s"></div><div style="background:rgba(11,122,95,0.4);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:2.29s"></div><div style="background:rgba(11,122,95,0.28);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:2.58s"></div><div style="background:rgba(11,122,95,0.16);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:2.87s"></div><div style="background:rgba(11,122,95,0.06);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:3.16s"></div>
+  <div style="background:rgba(107,107,100,.08)"></div><div style="background:rgba(107,107,100,.08)"></div>
+  <div style="background:rgba(190,65,38,0.15);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:0.25s"></div><div style="background:rgba(190,65,38,0.3);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:0.54s"></div><div style="background:rgba(190,65,38,0.45);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:0.83s"></div><div style="background:rgba(190,65,38,0.6);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:1.12s"></div><div style="background:rgba(190,65,38,0.75);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:1.41s"></div><div style="background:rgba(190,65,38,0.9);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:1.70s"></div>
+  <div style="background:rgba(190,65,38,0.2);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:1.99s"></div><div style="background:rgba(190,65,38,0.4);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:2.28s"></div><div style="background:rgba(190,65,38,0.6);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:2.57s"></div><div style="background:rgba(190,65,38,0.8);animation:hnCellPulse 3.6s ease-in-out infinite;animation-delay:2.86s"></div><div style="background:rgba(190,65,38,0.95);animation:hnCellPulse 2.2s ease-in-out infinite;animation-delay:3.15s"></div><div style="background:rgba(190,65,38,0.5);animation:hnCellPulse 2.6s ease-in-out infinite;animation-delay:0.24s"></div><div style="background:rgba(190,65,38,0.3);animation:hnCellPulse 2.9s ease-in-out infinite;animation-delay:0.53s"></div><div style="background:rgba(190,65,38,0.7);animation:hnCellPulse 3.3s ease-in-out infinite;animation-delay:0.82s"></div>
+</div></div>
+           <div style="padding:18px;font-size:11.5px;line-height:1.7;color:var(--ink3)">Names ranked each cycle; the universe heatmap, statistical predictability ranks and rolling news wire on one screen.</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);transition:transform .38s cubic-bezier(.22,1,.36,1);cursor:pointer" data-hover="transform:translateY(-4px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--hair)">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.04em">Value</span>
+            <span style="font-size:9px;letter-spacing:.08em;color:var(--ink3)">03</span>
+          </div>
+          <div style="position:relative;height:150px;background:var(--panel2);border-bottom:1px solid var(--hair);overflow:hidden"><div style="position:absolute;left:22px;right:22px;top:22px;bottom:22px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+  <div style="display:flex;align-items:center;gap:8px"><div style="width:56px;font-size:7px;letter-spacing:.05em;color:#6b6b64;text-align:right">PEER P/E</div><div style="flex:1;height:8px;background:#e9e8e1"><div style="width:72%;height:8px;background:#0a0a0a;animation:hnValBar1 5.2s ease-in-out infinite"></div></div></div>
+  <div style="display:flex;align-items:center;gap:8px"><div style="width:56px;font-size:7px;letter-spacing:.05em;color:#6b6b64;text-align:right">EPV</div><div style="flex:1;height:8px;background:#e9e8e1"><div style="width:58%;height:8px;background:#6b6b64;animation:hnValBar2 4.4s ease-in-out infinite"></div></div></div>
+  <div style="display:flex;align-items:center;gap:8px"><div style="width:56px;font-size:7px;letter-spacing:.05em;color:#6b6b64;text-align:right">GRAHAM</div><div style="flex:1;height:8px;background:#e9e8e1"><div style="width:64%;height:8px;background:#6b6b64;animation:hnValBar3 6.1s ease-in-out infinite"></div></div></div>
+  <div style="display:flex;align-items:center;gap:8px"><div style="width:56px;font-size:7px;letter-spacing:.05em;color:#6b6b64;text-align:right">DDM</div><div style="flex:1;height:8px;background:#e9e8e1"><div style="width:49%;height:8px;background:#b8860b;animation:hnValBar4 5.6s ease-in-out infinite"></div></div></div>
+  <div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,rgba(184,134,11,.5),transparent);animation:hnCalcSweep 3.6s linear infinite"></div>
+</div></div>
+          <div style="padding:18px;font-size:11.5px;line-height:1.7;color:var(--ink3)">Four valuations per name with every step of the working expandable.</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);transition:transform .38s cubic-bezier(.22,1,.36,1);cursor:pointer" data-hover="transform:translateY(-4px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--hair)">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.04em">Desk Room</span>
+            <span style="font-size:9px;letter-spacing:.08em;color:var(--ink3)">04</span>
+          </div>
+          <div style="position:relative;height:150px;background:var(--panel2);border-bottom:1px solid var(--hair);overflow:hidden"><div style="position:absolute;left:22px;right:22px;top:24px;bottom:24px;display:flex;flex-direction:column;gap:9px;justify-content:center">
+  <div style="display:flex;align-items:center;gap:9px"><div style="width:10px;height:10px;background:#0b7a5f;animation:hnLedBlink 1.8s ease-in-out infinite"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;transform-origin:left"><div style="height:4px;width:82%;background:#0a0a0a;opacity:.7;animation:hnConfFluct 3.4s ease-in-out infinite;transform-origin:left"></div><div style="height:4px;width:54%;background:#d9d9d2"></div></div></div>
+  <div style="display:flex;align-items:center;gap:9px"><div style="width:10px;height:10px;background:#be4126;animation:hnLedBlink 2.3s ease-in-out infinite;animation-delay:.6s"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><div style="height:4px;width:74%;background:#0a0a0a;opacity:.7;animation:hnConfFluct 4.1s ease-in-out infinite;transform-origin:left"></div><div style="height:4px;width:46%;background:#d9d9d2"></div></div></div>
+  <div style="display:flex;align-items:center;gap:9px"><div style="width:10px;height:10px;border:1.5px solid #b8860b"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><div style="height:4px;width:64%;background:#b8860b;animation:hnConfFluct 5s ease-in-out infinite;transform-origin:left"></div></div></div>
+  <div style="position:absolute;left:14px;top:14px;width:6px;height:6px;background:#0b7a5f;border-radius:50%;animation:hnArgTravel 3s ease-in infinite"></div>
+  <div style="position:absolute;left:14px;top:38px;width:6px;height:6px;background:#be4126;border-radius:50%;animation:hnArgTravel 3.6s ease-in infinite;animation-delay:1.1s"></div>
+</div></div>
+          <div style="padding:18px;font-size:11.5px;line-height:1.7;color:var(--ink3)">The persona debate and the Chair’s synthesis — argument, never a verdict.</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);transition:transform .38s cubic-bezier(.22,1,.36,1);cursor:pointer" data-hover="transform:translateY(-4px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--hair)">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.04em">Astro</span>
+            <span style="font-size:9px;letter-spacing:.08em;color:var(--ink3)">05</span>
+          </div>
+          <div style="position:relative;height:150px;background:var(--panel2);border-bottom:1px solid var(--hair);overflow:hidden"><svg viewBox="0 0 300 150" style="position:absolute;inset:0;width:100%;height:100%">
+  <g fill="none" stroke="#d9d9d2" stroke-width="1"><ellipse cx="150" cy="75" rx="112" ry="40"></ellipse><ellipse cx="150" cy="75" rx="86" ry="30"></ellipse><ellipse cx="150" cy="75" rx="60" ry="20"></ellipse></g>
+  <line x1="150" y1="75" x2="262" y2="75" stroke="#b8860b" stroke-width=".7" opacity=".5" style="transform-origin:150px 75px;animation:hnOrbitSlow 14s linear infinite"></line>
+  <g fill="#0a0a0a" style="transform-origin:150px 75px;animation:hnOrbitSlow 90s linear infinite"><rect x="256" y="72" width="6" height="6"></rect><rect x="204" y="48" width="6" height="6"></rect><rect x="147" y="38" width="6" height="6"></rect><rect x="90" y="50" width="6" height="6"></rect><rect x="38" y="72" width="6" height="6"></rect><rect x="92" y="98" width="6" height="6"></rect></g>
+  <rect x="172" y="60" width="7" height="7" fill="#b8860b" style="transform-origin:150px 75px;animation:hnOrbitSlow 48s linear infinite reverse"></rect>
+  <circle cx="150" cy="75" r="3" fill="#0a0a0a"><animate attributeName="r" values="2.4;3.4;2.4" dur="4s" repeatCount="indefinite"></animate></circle>
+</svg></div>
+          <div style="padding:18px;font-size:11.5px;line-height:1.7;color:var(--ink3)">Optional — the sidereal lens, computed ninety days ahead and backtested like any other rule.</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);transition:transform .38s cubic-bezier(.22,1,.36,1);cursor:pointer" data-hover="transform:translateY(-4px)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--hair)">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.04em">Scores</span>
+            <span style="font-size:9px;letter-spacing:.08em;color:var(--ink3)">06</span>
+          </div>
+          <div style="position:relative;height:150px;background:var(--panel2);border-bottom:1px solid var(--hair);overflow:hidden"><div style="position:absolute;left:22px;right:22px;top:22px;bottom:22px;display:flex;flex-direction:column;gap:7px;justify-content:center">
+  <div style="display:flex;align-items:center;gap:8px;animation:hnRowResolve 6s ease-in-out infinite"><span style="font-size:7px;color:#6b6b64;width:34px">SAMPLE A</span><div style="flex:1;height:3px;background:#0b7a5f"></div><span style="font-size:7.5px;font-weight:700;color:#0b7a5f">HIT</span></div>
+  <div style="display:flex;align-items:center;gap:8px;animation:hnRowResolve 6s ease-in-out infinite;animation-delay:1.4s"><span style="font-size:7px;color:#6b6b64;width:34px">SAMPLE B</span><div style="flex:1;height:3px;background:#0b7a5f"></div><span style="font-size:7.5px;font-weight:700;color:#0b7a5f">HIT</span></div>
+  <div style="display:flex;align-items:center;gap:8px;animation:hnRowResolve 6s ease-in-out infinite;animation-delay:2.8s"><span style="font-size:7px;color:#6b6b64;width:34px">SAMPLE C</span><div style="flex:1;height:3px;background:#be4126"></div><span style="font-size:7.5px;font-weight:700;color:#be4126">MISS</span></div>
+  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:7px;color:#6b6b64;width:34px">SAMPLE D</span><div style="flex:1;height:3px;background:#d9d9d2;position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#b8860b;animation:hnOpenGrow 5s ease-in-out infinite"></div></div><span style="font-size:7.5px;font-weight:700;color:#6b6b64">OPEN</span></div>
+</div></div>
+          <div style="padding:18px;font-size:11.5px;line-height:1.7;color:var(--ink3)">Every dated read graded — the desk’s own dated reads and broker expectations alike.</div>
+        </div>
+      </div>
+    </div>
+    <!-- DESK ROOM (dark) -->
+    <div class="hn-rv hn-rv-u" style="background:var(--dark);color:#f2f2ee;padding:64px 44px;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 85% 15%, rgba(184,134,11,.12), transparent 55%)"></div>
+      <div style="position:relative;display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><div style="width:6px;height:6px;background:var(--accent)"></div><span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,242,238,.6)">The Desk Room</span></div>
+          <h2 style="font-size:34px;line-height:1.15;font-weight:700;margin:0 0 16px;letter-spacing:-0.015em">Read the Desk Room debate</h2>
+          <div style="font-size:13px;line-height:1.75;color:rgba(242,242,238,.65);margin-bottom:24px">A technical desk, fundamental desk, bull and bear set out their cases; the Chair synthesises the disagreement with dissent visible. It is published on the desk’s weekly rotation — no target price, no instruction.</div>
+        </div>
+        <div style="background:#17171a;border:1.5px solid rgba(242,242,238,.18);box-shadow:8px 8px 0 rgba(184,134,11,.18);opacity:1;transition:opacity .5s ease" data-tpl-style="background:#17171a;border:1.5px solid rgba(242,242,238,.18);box-shadow:8px 8px 0 rgba(184,134,11,.18);opacity:&#123;&#123; drCardOp &#125;&#125;;transition:opacity .5s ease">
+          <div style="display:flex;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(242,242,238,.12);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(242,242,238,.55)"><span>Desk Room · <span data-dyn="drTicker">OGDC</span></span><span style="font-variant-numeric:tabular-nums" data-dyn="drTimer">2 min 44 sec</span></div>
+          <div style="padding:5px 20px;border-bottom:1px solid rgba(242,242,238,.08);font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:rgba(184,134,11,.9)">Illustrative demo · not current research</div>
+          <div style="padding:5px 20px;border-bottom:1px solid rgba(242,242,238,.08);height:22px;display:flex;align-items:center;overflow:hidden">
+            <span style="font-size:9px;letter-spacing:.05em;color:rgba(184,134,11,.8);opacity:1;transition:opacity .4s ease;white-space:nowrap" data-tpl-style="font-size:9px;letter-spacing:.05em;color:rgba(184,134,11,.8);opacity:&#123;&#123; drActivityOp &#125;&#125;;transition:opacity .4s ease;white-space:nowrap">▸ <span data-dyn="drActivity">Refreshing macro…</span></span>
+          </div>
+          <div style="padding:6px 20px 16px">
+            <div style="padding:14px 0;border-bottom:1px dotted rgba(242,242,238,.14);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <div style="width:29px;height:29px;background:transparent;border:1px solid rgba(242,242,238,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;" data-tpl-style="width:29px;height:29px;background:transparent;border:1px solid rgba(242,242,238,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;&#123;&#123; drIconGlow0 &#125;&#125;"><svg viewBox="0 0 8 8" width="15" height="15" style="display:block;color:#22c99b"><g fill="currentColor"><rect x="1" y="2" width="1" height="1"></rect><rect x="2" y="2" width="1" height="1"></rect><rect x="3" y="2" width="1" height="1"></rect><rect x="4" y="2" width="1" height="1"></rect><rect x="5" y="2" width="1" height="1"></rect><rect x="6" y="2" width="1" height="1"></rect><rect x="1" y="3" width="1" height="1"></rect><rect x="2" y="3" width="1" height="1"></rect><rect x="3" y="3" width="1" height="1"></rect><rect x="4" y="3" width="1" height="1"></rect><rect x="5" y="3" width="1" height="1"></rect><rect x="6" y="3" width="1" height="1"></rect><rect x="1" y="4" width="1" height="1"></rect><rect x="3" y="4" width="1" height="1"></rect><rect x="4" y="4" width="1" height="1"></rect><rect x="6" y="4" width="1" height="1"></rect><rect x="1" y="5" width="1" height="1"></rect><rect x="2" y="5" width="1" height="1"></rect><rect x="3" y="5" width="1" height="1"></rect><rect x="4" y="5" width="1" height="1"></rect><rect x="5" y="5" width="1" height="1"></rect><rect x="6" y="5" width="1" height="1"></rect><rect x="1" y="6" width="1" height="1"></rect><rect x="2" y="6" width="1" height="1"></rect><rect x="3" y="6" width="1" height="1"></rect><rect x="4" y="6" width="1" height="1"></rect><rect x="5" y="6" width="1" height="1"></rect><rect x="6" y="6" width="1" height="1"></rect><rect x="0" y="7" width="1" height="1"></rect><rect x="1" y="7" width="1" height="1"></rect><rect x="2" y="7" width="1" height="1"></rect><rect x="3" y="7" width="1" height="1"></rect><rect x="4" y="7" width="1" height="1"></rect><rect x="5" y="7" width="1" height="1"></rect><rect x="6" y="7" width="1" height="1"></rect><rect x="7" y="7" width="1" height="1"></rect><rect x="4" y="0" width="1" height="1"></rect><rect x="3" y="1" width="1" height="1"></rect><rect x="4" y="1" width="1" height="1"></rect><rect x="5" y="1" width="1" height="1"></rect></g></svg></div>
+                <span style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#22c99b">Technical desk</span>
+                <span style="margin-left:auto;font-size:8px;font-style:italic;color:rgba(242,242,238,.4);white-space:nowrap" data-dyn="drStatus0">Idle…</span>
+              </div>
+              <div style="min-height:20px;padding-left:37px">
+                <div style="display:flex;gap:4px;padding:5px 0;opacity:0;height:0px;overflow:hidden;transition:opacity .25s ease" data-tpl-style="display:flex;gap:4px;padding:5px 0;opacity:&#123;&#123; drTypingOp0 &#125;&#125;;height:&#123;&#123; drTypingH0 &#125;&#125;;overflow:hidden;transition:opacity .25s ease">
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .15s"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .3s"></span>
+                </div>
+                <div style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease" data-tpl-style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:&#123;&#123; drOpacity0 &#125;&#125;;transform:translateY(&#123;&#123; drTranslate0 &#125;&#125;px);transition:opacity .45s ease,transform .45s ease" data-dyn="drText0"></div>
+                <div style="display:flex;flex-direction:column;gap:3px;margin-top:8px;opacity:0;transition:opacity .5s ease .1s" data-tpl-style="display:flex;flex-direction:column;gap:3px;margin-top:8px;opacity:&#123;&#123; drEvidenceOp &#125;&#125;;transition:opacity .5s ease .1s">
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-size:7px;color:rgba(242,242,238,.4);width:52px">MOMENTUM</span><div style="flex:1;height:3px;background:rgba(242,242,238,.12)"><div style="height:3px;width:0%;background:#22c99b;transition:width 1.1s ease" data-tpl-style="height:3px;width:&#123;&#123; drBar0 &#125;&#125;%;background:#22c99b;transition:width 1.1s ease"></div></div></div>
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-size:7px;color:rgba(242,242,238,.4);width:52px">BREADTH</span><div style="flex:1;height:3px;background:rgba(242,242,238,.12)"><div style="height:3px;width:0%;background:#22c99b;transition:width 1.3s ease" data-tpl-style="height:3px;width:&#123;&#123; drBar1 &#125;&#125;%;background:#22c99b;transition:width 1.3s ease"></div></div></div>
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-size:7px;color:rgba(242,242,238,.4);width:52px">VOLUME</span><div style="flex:1;height:3px;background:rgba(242,242,238,.12)"><div style="height:3px;width:0%;background:#22c99b;transition:width 1.5s ease" data-tpl-style="height:3px;width:&#123;&#123; drBar2 &#125;&#125;%;background:#22c99b;transition:width 1.5s ease"></div></div></div>
+                </div>
+              </div>
+            </div>
+            <div style="padding:14px 0;border-bottom:1px dotted rgba(242,242,238,.14);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <div style="width:29px;height:29px;background:transparent;border:1px solid rgba(242,242,238,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;" data-tpl-style="width:29px;height:29px;background:transparent;border:1px solid rgba(242,242,238,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;&#123;&#123; drIconGlow1 &#125;&#125;"><svg viewBox="0 0 8 8" width="15" height="15" style="display:block;color:#22c99b"><g fill="currentColor"><rect x="1" y="2" width="1" height="1"></rect><rect x="2" y="2" width="1" height="1"></rect><rect x="3" y="2" width="1" height="1"></rect><rect x="4" y="2" width="1" height="1"></rect><rect x="5" y="2" width="1" height="1"></rect><rect x="6" y="2" width="1" height="1"></rect><rect x="1" y="3" width="1" height="1"></rect><rect x="2" y="3" width="1" height="1"></rect><rect x="3" y="3" width="1" height="1"></rect><rect x="4" y="3" width="1" height="1"></rect><rect x="5" y="3" width="1" height="1"></rect><rect x="6" y="3" width="1" height="1"></rect><rect x="1" y="4" width="1" height="1"></rect><rect x="3" y="4" width="1" height="1"></rect><rect x="4" y="4" width="1" height="1"></rect><rect x="6" y="4" width="1" height="1"></rect><rect x="1" y="5" width="1" height="1"></rect><rect x="2" y="5" width="1" height="1"></rect><rect x="3" y="5" width="1" height="1"></rect><rect x="4" y="5" width="1" height="1"></rect><rect x="5" y="5" width="1" height="1"></rect><rect x="6" y="5" width="1" height="1"></rect><rect x="1" y="6" width="1" height="1"></rect><rect x="2" y="6" width="1" height="1"></rect><rect x="3" y="6" width="1" height="1"></rect><rect x="4" y="6" width="1" height="1"></rect><rect x="5" y="6" width="1" height="1"></rect><rect x="6" y="6" width="1" height="1"></rect><rect x="0" y="7" width="1" height="1"></rect><rect x="1" y="7" width="1" height="1"></rect><rect x="2" y="7" width="1" height="1"></rect><rect x="3" y="7" width="1" height="1"></rect><rect x="4" y="7" width="1" height="1"></rect><rect x="5" y="7" width="1" height="1"></rect><rect x="6" y="7" width="1" height="1"></rect><rect x="7" y="7" width="1" height="1"></rect><rect x="1" y="0" width="1" height="1"></rect><rect x="2" y="0" width="1" height="1"></rect><rect x="3" y="0" width="1" height="1"></rect></g></svg></div>
+                <span style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#22c99b">Fundamental desk</span>
+                <span style="margin-left:auto;font-size:8px;font-style:italic;color:rgba(242,242,238,.4);white-space:nowrap" data-dyn="drStatus1">Idle…</span>
+              </div>
+              <div style="min-height:20px;padding-left:37px">
+                <div style="display:flex;gap:4px;padding:5px 0;opacity:0;height:0px;overflow:hidden;transition:opacity .25s ease" data-tpl-style="display:flex;gap:4px;padding:5px 0;opacity:&#123;&#123; drTypingOp1 &#125;&#125;;height:&#123;&#123; drTypingH1 &#125;&#125;;overflow:hidden;transition:opacity .25s ease">
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .15s"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .3s"></span>
+                </div>
+                <div style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease" data-tpl-style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:&#123;&#123; drOpacity1 &#125;&#125;;transform:translateY(&#123;&#123; drTranslate1 &#125;&#125;px);transition:opacity .45s ease,transform .45s ease" data-dyn="drText1"></div>
+
+              </div>
+            </div>
+            <div style="padding:14px 0;border-bottom:1px dotted rgba(242,242,238,.14);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <div style="width:29px;height:29px;background:transparent;border:1px solid rgba(242,242,238,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;" data-tpl-style="width:29px;height:29px;background:transparent;border:1px solid rgba(242,242,238,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;&#123;&#123; drIconGlow2 &#125;&#125;"><svg viewBox="0 0 8 8" width="15" height="15" style="display:block;color:#ef6b48"><g fill="currentColor"><rect x="1" y="2" width="1" height="1"></rect><rect x="2" y="2" width="1" height="1"></rect><rect x="3" y="2" width="1" height="1"></rect><rect x="4" y="2" width="1" height="1"></rect><rect x="5" y="2" width="1" height="1"></rect><rect x="6" y="2" width="1" height="1"></rect><rect x="1" y="3" width="1" height="1"></rect><rect x="2" y="3" width="1" height="1"></rect><rect x="3" y="3" width="1" height="1"></rect><rect x="4" y="3" width="1" height="1"></rect><rect x="5" y="3" width="1" height="1"></rect><rect x="6" y="3" width="1" height="1"></rect><rect x="1" y="4" width="1" height="1"></rect><rect x="3" y="4" width="1" height="1"></rect><rect x="4" y="4" width="1" height="1"></rect><rect x="6" y="4" width="1" height="1"></rect><rect x="1" y="5" width="1" height="1"></rect><rect x="2" y="5" width="1" height="1"></rect><rect x="3" y="5" width="1" height="1"></rect><rect x="4" y="5" width="1" height="1"></rect><rect x="5" y="5" width="1" height="1"></rect><rect x="6" y="5" width="1" height="1"></rect><rect x="1" y="6" width="1" height="1"></rect><rect x="2" y="6" width="1" height="1"></rect><rect x="3" y="6" width="1" height="1"></rect><rect x="4" y="6" width="1" height="1"></rect><rect x="5" y="6" width="1" height="1"></rect><rect x="6" y="6" width="1" height="1"></rect><rect x="0" y="7" width="1" height="1"></rect><rect x="1" y="7" width="1" height="1"></rect><rect x="2" y="7" width="1" height="1"></rect><rect x="3" y="7" width="1" height="1"></rect><rect x="4" y="7" width="1" height="1"></rect><rect x="5" y="7" width="1" height="1"></rect><rect x="6" y="7" width="1" height="1"></rect><rect x="7" y="7" width="1" height="1"></rect><rect x="0" y="0" width="1" height="1"></rect><rect x="1" y="1" width="1" height="1"></rect><rect x="6" y="1" width="1" height="1"></rect></g></svg></div>
+                <span style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#ef6b48">Bear</span>
+                <span style="margin-left:auto;font-size:8px;font-style:italic;color:rgba(242,242,238,.4);white-space:nowrap" data-dyn="drStatus2">Idle…</span>
+              </div>
+              <div style="min-height:20px;padding-left:37px">
+                <div style="display:flex;gap:4px;padding:5px 0;opacity:0;height:0px;overflow:hidden;transition:opacity .25s ease" data-tpl-style="display:flex;gap:4px;padding:5px 0;opacity:&#123;&#123; drTypingOp2 &#125;&#125;;height:&#123;&#123; drTypingH2 &#125;&#125;;overflow:hidden;transition:opacity .25s ease">
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .15s"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(242,242,238,.5);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .3s"></span>
+                </div>
+                <div style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease" data-tpl-style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:&#123;&#123; drOpacity2 &#125;&#125;;transform:translateY(&#123;&#123; drTranslate2 &#125;&#125;px);transition:opacity .45s ease,transform .45s ease" data-dyn="drText2"></div>
+
+              </div>
+            </div>
+            <div style="padding:14px 0;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <div style="width:29px;height:29px;background:transparent;border:1px solid rgba(184,134,11,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;" data-tpl-style="width:29px;height:29px;background:transparent;border:1px solid rgba(184,134,11,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow .3s ease;&#123;&#123; drIconGlow3 &#125;&#125;"><svg viewBox="0 0 8 8" width="15" height="15" style="display:block;color:#e8862e"><g fill="currentColor"><rect x="1" y="2" width="1" height="1"></rect><rect x="2" y="2" width="1" height="1"></rect><rect x="3" y="2" width="1" height="1"></rect><rect x="4" y="2" width="1" height="1"></rect><rect x="5" y="2" width="1" height="1"></rect><rect x="6" y="2" width="1" height="1"></rect><rect x="1" y="3" width="1" height="1"></rect><rect x="2" y="3" width="1" height="1"></rect><rect x="3" y="3" width="1" height="1"></rect><rect x="4" y="3" width="1" height="1"></rect><rect x="5" y="3" width="1" height="1"></rect><rect x="6" y="3" width="1" height="1"></rect><rect x="1" y="4" width="1" height="1"></rect><rect x="3" y="4" width="1" height="1"></rect><rect x="4" y="4" width="1" height="1"></rect><rect x="6" y="4" width="1" height="1"></rect><rect x="1" y="5" width="1" height="1"></rect><rect x="2" y="5" width="1" height="1"></rect><rect x="3" y="5" width="1" height="1"></rect><rect x="4" y="5" width="1" height="1"></rect><rect x="5" y="5" width="1" height="1"></rect><rect x="6" y="5" width="1" height="1"></rect><rect x="1" y="6" width="1" height="1"></rect><rect x="2" y="6" width="1" height="1"></rect><rect x="3" y="6" width="1" height="1"></rect><rect x="4" y="6" width="1" height="1"></rect><rect x="5" y="6" width="1" height="1"></rect><rect x="6" y="6" width="1" height="1"></rect><rect x="0" y="7" width="1" height="1"></rect><rect x="1" y="7" width="1" height="1"></rect><rect x="2" y="7" width="1" height="1"></rect><rect x="3" y="7" width="1" height="1"></rect><rect x="4" y="7" width="1" height="1"></rect><rect x="5" y="7" width="1" height="1"></rect><rect x="6" y="7" width="1" height="1"></rect><rect x="7" y="7" width="1" height="1"></rect><rect x="1" y="0" width="1" height="1"></rect><rect x="3" y="0" width="1" height="1"></rect><rect x="5" y="0" width="1" height="1"></rect><rect x="7" y="0" width="1" height="1"></rect></g></svg></div>
+                <span style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#e8862e">The chair</span>
+                <span style="margin-left:auto;font-size:8px;font-style:italic;color:rgba(242,242,238,.4);white-space:nowrap" data-dyn="drStatus3">Idle…</span>
+              </div>
+              <div style="min-height:20px;padding-left:37px">
+                <div style="display:flex;gap:4px;padding:5px 0;opacity:0;height:0px;overflow:hidden;transition:opacity .25s ease" data-tpl-style="display:flex;gap:4px;padding:5px 0;opacity:&#123;&#123; drTypingOp3 &#125;&#125;;height:&#123;&#123; drTypingH3 &#125;&#125;;overflow:hidden;transition:opacity .25s ease">
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(184,134,11,.7);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(184,134,11,.7);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .15s"></span>
+                  <span style="width:5px;height:5px;border-radius:50%;background:rgba(184,134,11,.7);display:inline-block;animation:hnDotBounce 1.1s ease-in-out infinite .3s"></span>
+                </div>
+                <div style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease" data-tpl-style="font-size:12.5px;line-height:1.6;color:#f2f2ee;opacity:&#123;&#123; drOpacity3 &#125;&#125;;transform:translateY(&#123;&#123; drTranslate3 &#125;&#125;px);transition:opacity .45s ease,transform .45s ease" data-dyn="drText3"></div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMMERSIVE BAND -->
+    <div class="hn-rv hn-rv-s" style="position:relative;background:var(--dark);border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);min-height:420px;display:flex;align-items:flex-end;overflow:hidden">
+      <div data-parallax="-26" style="position:absolute;inset:-40px 0;background:#17171a;transition:transform .1s linear"><canvas data-gl="immersive" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(15,15,13,.92) 0%, rgba(15,15,13,.5) 45%, rgba(15,15,13,.15) 100%)"></div>
+      <div style="position:relative;padding:44px;width:100%">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:end">
+          <div>
+            <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:16px">One tape, read every cycle</div>
+            <h2 style="font-size:38px;line-height:1.12;font-weight:700;margin:0;color:#f2f2ee;letter-spacing:-0.02em;max-width:640px">The desk runs whether or not you are watching</h2>
+          </div>
+          <div style="font-size:12.5px;line-height:1.8;color:rgba(242,242,238,.62);padding-bottom:6px">Every cycle it re-reads 550+ names, 23 global markets, the macro calendar and the sky — then publishes one edition. You open it when you have five minutes.</div>
+        </div>
+      </div>
+    </div>
+    <!-- CASE: A READ, RESOLVED -->
+    <div data-case-visibility class="hn-rv hn-rv-r" style="padding:56px 44px 56px">
+      <h2 style="font-size:32px;line-height:1.15;font-weight:700;margin:0 0 14px;letter-spacing:-0.015em;max-width:620px">Published, resolved, scored.</h2>
+      <div style="font-size:12.5px;color:var(--ink3);margin-bottom:32px;max-width:560px">Every dated read carries an expectation set in advance. When its window closes, the result is checked and archived — hit, miss or still open. The examples below show the format, not a performance record.</div>
+      <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:-18px 0 24px">Illustrative format — not a live track record</div>
+      <div style="position:relative">
+        <div style="position:absolute;top:-14px;left:16.6%;right:16.6%;height:1px;background:var(--hair);z-index:0"></div>
+        <div style="position:absolute;top:-15.5px;width:5px;height:5px;border-radius:50%;background:#b8860b;box-shadow:0 0 5px rgba(184,134,11,.7);animation:hnCaseFlow 6s linear infinite;z-index:1"></div>
+      <div style="display:grid;grid-template-columns:1.25fr .85fr .9fr;gap:16px;align-items:stretch;position:relative;z-index:1">
+        <div style="position:relative;background:var(--dark);border:1.5px solid var(--line);min-height:340px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between">
+          <div data-parallax="20" style="position:absolute;inset:-24px 0;background:#17171a;transition:transform .1s linear"><canvas data-gl="breadth" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+          <div style="position:absolute;top:64px;left:22px;right:22px;display:flex;justify-content:space-between;align-items:center;pointer-events:none">
+            <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,242,238,.5)">Illustrative sample · interface demo</div>
+            <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:'Pixelify Sans',monospace;font-size:18px;color:#22c99b">SAMPLE</span><span style="font-size:8px;color:rgba(242,242,238,.45)">UI FLOW</span></div>
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(15,15,13,.9), rgba(15,15,13,.25))"></div>
+          <div style="position:relative;padding:22px">
+            <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(242,242,238,.5)">1 · Prediction</div>
+            <div style="font-size:9px;letter-spacing:.06em;color:rgba(242,242,238,.4);margin-top:4px;font-variant-numeric:tabular-nums">Sample edition <span style="animation:hnBlink 1.1s step-end infinite">▌</span></div>
+          </div>
+          <div style="position:relative;padding:22px">
+            <div style="font-size:26px;font-weight:700;color:#f2f2ee;line-height:1.2;margin-bottom:10px">Illustrative<br>sector read</div>
+            <div style="font-size:11px;color:rgba(242,242,238,.55);line-height:1.6">Example expectation defined before its review window.</div>
+          </div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel);padding:26px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
+          <div style="position:absolute;top:12px;right:12px;font-size:8px;letter-spacing:.08em;color:var(--up);opacity:0;transition:opacity .4s ease" data-tpl-style="position:absolute;top:12px;right:12px;font-size:8px;letter-spacing:.08em;color:var(--up);opacity:&#123;&#123; caseVerifiedOp &#125;&#125;;transition:opacity .4s ease">✓ SAMPLE RESOLVED</div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">2 · Resolution</div>
+            <div style="font-size:19px;font-weight:700;line-height:1.35;margin-bottom:22px">Illustrative evidence is checked against the example expectation</div>
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px">What prices did</div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:20px;font-weight:700"><span style="color:var(--ink3)">BASELINE</span><span style="color:var(--ink3);font-size:14px">→</span><span style="color:var(--up)">REVIEWED<span data-dyn="caseResultPct" hidden aria-hidden="true"></span></span></div>
+          </div>
+          <div style="border-top:1px dotted var(--hair);padding-top:16px;margin-top:20px">
+            <div style="font-size:11px;line-height:1.7;color:var(--ink3)">The desk published the expectation before the move, not after. That is the whole point.</div>
+            <div style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:10px">3 · Archived below</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="border:1.5px solid var(--line);background:var(--panel);padding:24px;text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
+            <div style="position:relative;width:96px;height:96px;margin-bottom:16px">
+              <svg viewBox="0 0 100 100" style="width:96px;height:96px;transform:rotate(-90deg)">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#d9d9d2" stroke-width="6"></circle>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#0b7a5f" stroke-width="6" stroke-dasharray="264" stroke-dashoffset="6" data-dyn-attr="caseRingOffset:stroke-dashoffset" style="transition:stroke-dashoffset 1.4s ease"></circle>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Pixelify Sans',monospace;font-size:15px;letter-spacing:.08em">SAMPLE<span data-dyn="caseHitRate" hidden aria-hidden="true"></span></div>
+            </div>
+            <div style="font-size:12px;font-weight:700;margin-bottom:6px">Example outcome resolved and filed</div>
+            <div style="font-size:10px;line-height:1.6;color:var(--ink3)">Every dated read is checked when its window closes. <span style="background:transparent;transition:background .3s ease" data-tpl-style="background:&#123;&#123; caseMissBg &#125;&#125;;transition:background .3s ease">Misses</span> published the same way.</div>
+          </div>
+          <div style="border:1.5px solid var(--line);background:var(--panel);padding:22px;overflow:hidden">
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px"><div style="font-family:'Pixelify Sans',monospace;font-size:24px;font-variant-numeric:tabular-nums" data-dyn="caseAstroCount">2,589</div><div style="font-size:10px;color:var(--dn)" data-dyn="caseEdge">0 edge</div></div>
+            <div style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px">Astro hypotheses tested</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;height:44px;transition:transform 1.2s ease;transform:translateX(0px)" data-tpl-style="display:flex;align-items:flex-end;gap:4px;height:44px;transition:transform 1.2s ease;transform:translateX(&#123;&#123; caseArchiveShift &#125;&#125;px)">
+              <div style="flex:1;height:38%;background:var(--hair);flex-shrink:0"></div><div style="flex:1;height:52%;background:var(--hair);flex-shrink:0"></div><div style="flex:1;height:44%;background:var(--hair);flex-shrink:0"></div><div style="flex:1;height:66%;background:var(--hair);flex-shrink:0"></div><div style="flex:1;height:58%;background:var(--hair);flex-shrink:0"></div><div style="flex:1;height:100%;background:var(--ink1);flex-shrink:0"></div><div style="flex:1;height:70%;background:var(--hair);flex-shrink:0;transition:background .5s ease" data-tpl-style="flex:1;height:70%;background:&#123;&#123; caseNewBlockBg &#125;&#125;;flex-shrink:0;transition:background .5s ease"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <!-- SCORECARD -->
+    <div class="hn-rv hn-rv-l" style="padding:64px 44px;border-top:1px solid var(--hair)">
+      <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:48px;align-items:start">
+        <div>
+          <div style="font-size:13px;line-height:1.75;color:var(--ink3)">Every dated read carries an expectation set in advance. When its window closes, the result is checked and archived — hit, miss or still open. The desk’s own dated reads and broker expectations alike are shown; losses are not quietly dropped. The rows below illustrate the format, not a performance record.</div>
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-top:16px">Illustrative format — not a live track record</div>
+        </div>
+        <div style="border:1.5px solid var(--line);background:var(--panel)">
+          <div style="display:grid;grid-template-columns:82px 1.4fr 1fr 74px;padding:12px 18px;border-bottom:1.5px solid var(--line);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><span>Sample</span><span>Illustrative read</span><span>Example window</span><span style="text-align:right">Outcome</span></div>
+          <div class="hn-scorerow" style="display:grid;grid-template-columns:82px 1.4fr 1fr 74px;padding:14px 18px;border-bottom:1px dotted var(--hair);font-size:11px;align-items:center;transition:background .15s"><span style="color:var(--ink3);font-variant-numeric:tabular-nums">DEMO A</span><span>Illustrative thesis</span><span style="color:var(--ink3)">example review</span><span style="text-align:right;color:var(--up);font-weight:700">EXAMPLE HIT</span></div>
+          <div class="hn-scorerow" style="display:grid;grid-template-columns:82px 1.4fr 1fr 74px;padding:14px 18px;border-bottom:1px dotted var(--hair);font-size:11px;align-items:center;transition:background .15s"><span style="color:var(--ink3);font-variant-numeric:tabular-nums">DEMO B</span><span>Illustrative thesis</span><span style="color:var(--ink3)">example review</span><span style="text-align:right;color:var(--up);font-weight:700">EXAMPLE HIT</span></div>
+          <div class="hn-scorerow" style="display:grid;grid-template-columns:82px 1.4fr 1fr 74px;padding:14px 18px;border-bottom:1px dotted var(--hair);font-size:11px;align-items:center;transition:background .15s"><span style="color:var(--ink3);font-variant-numeric:tabular-nums">DEMO C</span><span>Illustrative thesis</span><span style="color:var(--ink3)">example review</span><span style="text-align:right;color:var(--dn);font-weight:700">EXAMPLE MISS</span></div>
+          <div class="hn-scorerow" style="display:grid;grid-template-columns:82px 1.4fr 1fr 74px;padding:14px 18px;font-size:11px;align-items:center;transition:background .15s"><span style="color:var(--ink3);font-variant-numeric:tabular-nums">DEMO D</span><span>Illustrative thesis</span><span style="color:var(--ink3)">example review</span><span style="text-align:right;color:var(--ink3);font-weight:700">EXAMPLE OPEN</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRINCIPLES -->
+    <div class="hn-rv hn-rv-u" style="padding:0 44px 64px">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-0.015em;margin-bottom:8px;max-width:640px;line-height:1.15">Research, not advice</div>
+      <div style="font-size:12px;color:var(--ink3);margin-bottom:8px;max-width:560px">Not features. Operating principles the desk cannot override — each one verified, then locked.</div>
+
+      <div class="cd-rail cd-rail-rules" role="region" aria-label="Operating rules" tabindex="0" style="border-top:1.5px solid var(--line);margin-top:24px">
+        <div class="hn-rule-row" data-rule="0" style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease" data-tpl-style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:&#123;&#123; rule0Op &#125;&#125;;transform:translateY(&#123;&#123; rule0Y &#125;&#125;px);transition:opacity .6s ease,transform .6s ease">
+          <div style="font-family:'Pixelify Sans',monospace;font-size:24px;color:var(--hair);position:relative">
+            <span style="position:relative;z-index:1">01</span>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Article 01</div>
+            <div style="font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em">Research, not advice</div>
+            <div style="font-size:12.5px;line-height:1.75;color:var(--ink3);max-width:540px">No "buy", no "you should", no promised returns. Copy stays in the research register — this is what screens well, not a recommendation.</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;white-space:nowrap" data-tpl-style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:&#123;&#123; rule0StatusColor &#125;&#125;;margin-bottom:10px;white-space:nowrap" data-dyn="rule0Status"></div>
+            <div style="width:15px;height:15px;position:relative;margin-left:auto">
+  <div style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;" data-tpl-style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;&#123;&#123; rule0BorderColor &#125;&#125;"></div>
+  <div style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;" data-tpl-style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;&#123;&#123; rule0BgColor &#125;&#125;"></div>
+</div>
+          </div>
+        </div>
+        <div class="hn-rule-row" data-rule="1" style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease" data-tpl-style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:&#123;&#123; rule1Op &#125;&#125;;transform:translateY(&#123;&#123; rule1Y &#125;&#125;px);transition:opacity .6s ease,transform .6s ease">
+          <div style="font-family:'Pixelify Sans',monospace;font-size:24px;color:var(--hair);position:relative">
+            <span style="position:relative;z-index:1">02</span>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Article 02</div>
+            <div style="font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em">Every number is sourced</div>
+            <div style="font-size:12.5px;line-height:1.75;color:var(--ink3);max-width:540px">Nothing is quoted from memory. If the data layer says "unknown", the copy says "unknown" too — never a guess.</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;white-space:nowrap" data-tpl-style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:&#123;&#123; rule1StatusColor &#125;&#125;;margin-bottom:10px;white-space:nowrap" data-dyn="rule1Status"></div>
+            <div style="width:15px;height:15px;position:relative;margin-left:auto">
+  <div style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;" data-tpl-style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;&#123;&#123; rule1BorderColor &#125;&#125;"></div>
+  <div style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;" data-tpl-style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;&#123;&#123; rule1BgColor &#125;&#125;"></div>
+</div>
+          </div>
+        </div>
+        <div class="hn-rule-row" data-rule="2" style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease" data-tpl-style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:&#123;&#123; rule2Op &#125;&#125;;transform:translateY(&#123;&#123; rule2Y &#125;&#125;px);transition:opacity .6s ease,transform .6s ease">
+          <div style="font-family:'Pixelify Sans',monospace;font-size:24px;color:var(--hair);position:relative">
+            <span style="position:relative;z-index:1">03</span>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Article 03</div>
+            <div style="font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em">Every dated read is published and scored</div>
+            <div style="font-size:12.5px;line-height:1.75;color:var(--ink3);max-width:540px">Wins and misses stay together; nothing is quietly dropped.</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;white-space:nowrap" data-tpl-style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:&#123;&#123; rule2StatusColor &#125;&#125;;margin-bottom:10px;white-space:nowrap" data-dyn="rule2Status"></div>
+            <div style="width:15px;height:15px;position:relative;margin-left:auto">
+  <div style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;" data-tpl-style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;&#123;&#123; rule2BorderColor &#125;&#125;"></div>
+  <div style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;" data-tpl-style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;&#123;&#123; rule2BgColor &#125;&#125;"></div>
+</div>
+          </div>
+        </div>
+        <div class="hn-rule-row" data-rule="3" style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease" data-tpl-style="display:grid;grid-template-columns:64px 1fr 120px;gap:24px;padding:30px 0;border-bottom:1px solid var(--hair);align-items:start;opacity:&#123;&#123; rule3Op &#125;&#125;;transform:translateY(&#123;&#123; rule3Y &#125;&#125;px);transition:opacity .6s ease,transform .6s ease">
+          <div style="font-family:'Pixelify Sans',monospace;font-size:24px;color:var(--hair);position:relative">
+            <span style="position:relative;z-index:1">04</span>
+          </div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Article 04</div>
+            <div style="font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em">You size your own position</div>
+            <div style="font-size:12.5px;line-height:1.75;color:var(--ink3);max-width:540px">The desk never prints a share count against your capital. It shows the setup; the sizing is yours to run.</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;white-space:nowrap" data-tpl-style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:&#123;&#123; rule3StatusColor &#125;&#125;;margin-bottom:10px;white-space:nowrap" data-dyn="rule3Status"></div>
+            <div style="width:15px;height:15px;position:relative;margin-left:auto">
+  <div style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;" data-tpl-style="position:absolute;top:0;left:3px;width:9px;height:7px;border:1.5px solid var(--ink3);border-bottom:none;border-radius:5px 5px 0 0;transition:border-color .4s ease;&#123;&#123; rule3BorderColor &#125;&#125;"></div>
+  <div style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;" data-tpl-style="position:absolute;bottom:0;left:0;width:15px;height:8px;background:var(--ink3);transition:background .4s ease;&#123;&#123; rule3BgColor &#125;&#125;"></div>
+</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border:1.5px solid var(--line);background:var(--dark);padding:48px 44px;margin-top:16px;position:relative;overflow:hidden">
+        <div style="font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:16px">Article 04, demonstrated</div>
+        <div style="font-size:30px;font-weight:700;color:#f2f2ee;line-height:1.15;letter-spacing:-0.015em;margin-bottom:28px;max-width:600px">We deleted our own share count</div>
+        <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center">
+          <div style="font-size:12.5px;line-height:1.8;color:rgba(242,242,238,.65);max-width:480px">The strategy screens used to print a share count next to a ticker — arithmetic on our capital and our risk that read like an instruction. So it was cut. The rule survives as a standalone calculator you drive: your size, your risk, not the desk's number.</div>
+          <div data-share-demo style="border:1.5px solid rgba(242,242,238,.18);background:#17171a;padding:22px">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(242,242,238,.4);margin-bottom:14px"><span>Illustrative old format</span><span>Archived example</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dotted rgba(242,242,238,.14)">
+              <span style="font-size:11px;color:rgba(242,242,238,.55)">Share count</span>
+              <span style="font-family:'Pixelify Sans',monospace;font-size:16px;color:#f2f2ee;text-decoration:none;transition:color .5s ease" data-tpl-style="font-family:'Pixelify Sans',monospace;font-size:16px;color:&#123;&#123; shareTextColor &#125;&#125;;text-decoration:&#123;&#123; shareStrike &#125;&#125;;transition:color .5s ease" data-dyn="shareValue">12,843</span>
+            </div>
+            <div style="display:flex;justify-content:center;padding:12px 0;opacity:0;transition:opacity .4s ease" data-tpl-style="display:flex;justify-content:center;padding:12px 0;opacity:&#123;&#123; shareArrowOp &#125;&#125;;transition:opacity .4s ease"><span style="font-size:12px;color:var(--accent)">↓</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;opacity:0;transition:opacity .5s ease" data-tpl-style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;opacity:&#123;&#123; shareCalcOp &#125;&#125;;transition:opacity .5s ease">
+              <span style="font-size:11px;color:rgba(242,242,238,.55)">Position sizer</span>
+              <span style="font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--up)">Live, yours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON -->
+    <div class="hn-rv hn-rv-s" style="padding:56px 44px 64px;border-top:1px solid var(--hair)">
+      <div style="display:flex;align-items:end;justify-content:space-between;margin-bottom:8px;gap:40px">
+        <div>
+          <h2 style="font-size:32px;line-height:1.15;font-weight:700;margin:0;letter-spacing:-0.015em;max-width:560px">The difference between a stock mention and research</h2>
+        </div>
+        <div style="font-size:11.5px;line-height:1.7;color:var(--ink3);max-width:280px;text-align:right;padding-bottom:6px">A tip points at a stock and vanishes. Research shows the work and stays on the record.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;margin:36px 0 0">
+        <div style="border:1.5px solid var(--line);background:var(--ink1);color:var(--panel);padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:.1em">YOU</div>
+        <div style="width:1px;height:28px;background:var(--line)"></div>
+        <div style="width:60%;max-width:520px;height:1px;background:var(--line)"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:0">
+        <div style="display:flex;justify-content:center"><div style="width:1px;height:20px;background:var(--line)"></div></div>
+        <div style="display:flex;justify-content:center"><div style="width:1px;height:20px;background:var(--line)"></div></div>
+
+        <div style="border:1.5px solid var(--hair);background:var(--panel2)">
+          <div style="padding:16px 22px;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">Unattributed feed</span>
+            <span style="font-size:9px;color:var(--ink3)">No record</span>
+          </div>
+          <div style="padding:26px 22px;display:flex;flex-direction:column;align-items:center;gap:0">
+            <div class="hn-tip-stage" style="border:1px solid var(--hair);background:var(--panel);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;animation:hnTipFade 6s ease-in-out infinite">NO SOURCES SHOWN</div>
+            <div style="width:1px;height:18px;background:var(--hair);opacity:.7"></div>
+            <div class="hn-tip-stage" style="border:1px solid var(--hair);background:var(--panel);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;color:var(--ink3);animation:hnTipFade 6s ease-in-out infinite;animation-delay:.3s">NO METHOD SHOWN</div>
+            <div style="width:1px;height:18px;background:var(--hair);opacity:.7"></div>
+            <div class="hn-tip-stage" style="border:1px dashed var(--hair);background:var(--panel);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;color:var(--ink3);animation:hnTipFade 6s ease-in-out infinite;animation-delay:.6s">???</div>
+            <div style="width:1px;height:18px;background:var(--hair);opacity:.7"></div>
+            <div class="hn-tip-stage" style="border:1px dashed var(--hair);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;color:var(--ink3);opacity:.5;animation:hnTipFade 6s ease-in-out infinite;animation-delay:.9s">FORGOTTEN</div>
+          </div>
+        </div>
+
+        <div style="border:1.5px solid var(--line);background:var(--panel)">
+          <div style="padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700">Research desk</span>
+            <span style="font-size:9px;color:var(--up)">recorded forever</span>
+          </div>
+          <div style="position:relative;padding:26px 22px;display:flex;flex-direction:column;align-items:center;gap:0">
+            <div style="position:absolute;left:50%;top:26px;bottom:26px;width:1px;background:var(--hair);transform:translateX(-50%)"></div>
+            <div style="position:absolute;left:50%;top:26px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#b8860b;box-shadow:0 0 6px rgba(184,134,11,.6);animation:hnResearchTravel 6s linear infinite"></div>
+            <div style="border:1px solid var(--line);background:var(--panel2);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;position:relative;z-index:1">TECHNICAL + FUNDAMENTAL</div>
+            <div style="width:1px;height:18px;background:var(--hair)"></div>
+            <div style="border:1px solid var(--line);background:var(--panel2);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;position:relative;z-index:1">VALUATION, FOUR WAYS</div>
+            <div style="width:1px;height:18px;background:var(--hair)"></div>
+            <div style="border:1px solid var(--line);background:var(--panel2);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;position:relative;z-index:1">DEBATED IN THE OPEN</div>
+            <div style="width:1px;height:18px;background:var(--hair)"></div>
+            <div style="border:1px solid var(--line);background:var(--ink1);color:var(--panel);padding:9px 16px;font-size:11px;font-weight:700;width:100%;max-width:260px;text-align:center;position:relative;z-index:1">PUBLISHED &amp; ARCHIVED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TESTIMONIALS -->
+    <section class="hn-testimonials" aria-labelledby="hn-testimonials-heading">
+      <div class="hn-testimonials-intro">
+        <div class="hn-testimonials-kicker">THE DESK, IN THEIR WORDS</div>
+        <h2 id="hn-testimonials-heading">What early readers noticed</h2>
+      </div>
+      <div class="hn-testimonials-stream">
+        <figure class="hn-testimonial-row hn-rv">
+          <div class="hn-testimonial-meta"><span>01</span><span>EARLY READER</span></div>
+          <blockquote>
+            <p>“First of all Thank you Colossal bhai. Made an account”</p>
+          </blockquote>
+          <figcaption><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.9 2.1h3.2l-7 8.1L23.4 22h-6.5l-5.1-6.7L5.9 22H2.7l7.5-8.6L1.6 2.1h6.6l4.6 6.1zm-1.1 18h1.8L6.3 4h-1.9z"/></svg><span>@KhudMukhtaar88</span></figcaption>
+        </figure>
+        <figure class="hn-testimonial-row hn-rv">
+          <div class="hn-testimonial-meta"><span>02</span><span>EARLY READER</span></div>
+          <blockquote><p>“Just created an account.. the info is great”</p></blockquote>
+          <figcaption><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.9 2.1h3.2l-7 8.1L23.4 22h-6.5l-5.1-6.7L5.9 22H2.7l7.5-8.6L1.6 2.1h6.6l4.6 6.1zm-1.1 18h1.8L6.3 4h-1.9z"/></svg><span>@ShoaibAlamKhat2</span></figcaption>
+        </figure>
+        <figure class="hn-testimonial-row hn-rv">
+          <div class="hn-testimonial-meta"><span>03</span><span>EARLY READER</span></div>
+          <blockquote><p>“Its a good tool though.”</p></blockquote>
+          <figcaption><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.9 2.1h3.2l-7 8.1L23.4 22h-6.5l-5.1-6.7L5.9 22H2.7l7.5-8.6L1.6 2.1h6.6l4.6 6.1zm-1.1 18h1.8L6.3 4h-1.9z"/></svg><span>@muhahmadj</span></figcaption>
+        </figure>
+        <figure class="hn-testimonial-row hn-rv">
+          <div class="hn-testimonial-meta"><span>04</span><span>EARLY READER</span></div>
+          <blockquote>
+            <p>“That's a solid feature set.”</p>
+            <p>“That's a smart separation, keeping the mechanical valuation honest instead of forcing policy risk into a number that can’t hold it. The discipline of not overfitting one fair value figure is probably more valuable than the figure itself.”</p>
+          </blockquote>
+          <figcaption><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.9 2.1h3.2l-7 8.1L23.4 22h-6.5l-5.1-6.7L5.9 22H2.7l7.5-8.6L1.6 2.1h6.6l4.6 6.1zm-1.1 18h1.8L6.3 4h-1.9z"/></svg><span>@KhAneeqlftikhar</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <div class="hn-rv hn-rv-l" style="padding:0 44px 56px">
+      <div style="display:grid;grid-template-columns:340px 1fr;gap:56px;align-items:start">
+        <div>
+          <h2 style="font-size:32px;line-height:1.15;font-weight:700;margin:0 0 16px;letter-spacing:-0.015em">Questions worth<br>asking first</h2>
+          <div style="font-size:11.5px;line-height:1.7;color:var(--ink3)">If something here is not answered, the methodology page shows every rule the desk runs on.</div>
+        </div>
+        <div style="border-top:1px solid var(--hair)">
+                {faqList.map((f, i) => (
+          <div class="hn-who-row" style="border-bottom:1px solid var(--hair);transition:background .3s cubic-bezier(.22,1,.36,1)">
+            <button type="button" class="hn-as-btn" data-faq={String(i)} aria-expanded={i === 0 ? 'true' : 'false'} style="display:grid;grid-template-columns:1fr 26px;gap:16px;align-items:center;padding:20px 4px;cursor:pointer;margin:0 -4px">
+              <span style="font-size:15px;font-weight:700;line-height:1.4">{f.q}</span>
+              <span style={'font-size:16px;text-align:right;color:var(--ink3);display:inline-block;transition:transform .4s cubic-bezier(.22,1,.36,1);transform:rotate(' + (i === 0 ? 135 : 0) + 'deg)'} data-tpl-style={'transform:rotate({{faqRot' + i + '}}deg)'}>+</span>
+            </button>
+            <div style={'display:grid;grid-template-rows:' + (i === 0 ? '1fr' : '0fr') + ';transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)'} data-tpl-style={'grid-template-rows:{{faqRows' + i + '}}'}>
+              <div style="overflow:hidden;min-height:0">
+                <div style={'font-size:12.5px;line-height:1.8;color:var(--ink3);max-width:640px;padding-bottom:22px;opacity:' + (i === 0 ? 1 : 0) + ';transform:translateY(' + (i === 0 ? 0 : -6) + 'px);transition:opacity .35s ease ' + (i === 0 ? '.12s' : '0s') + ',transform .4s cubic-bezier(.22,1,.36,1) ' + (i === 0 ? '.12s' : '0s')} data-tpl-style={'opacity:{{faqOpacity' + i + '}};transform:translateY({{faqTranslate' + i + '}}px);transition:opacity .35s ease {{faqDelay' + i + '}},transform .4s cubic-bezier(.22,1,.36,1) {{faqDelay' + i + '}}'}>{f.a}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+        </div>
+      </div>
+    </div>
+        <!-- DAILY READ SIGNUP -->
+    <div class="hn-rv hn-rv-r" style="padding:56px 44px 56px;border-top:1px solid var(--hair)">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:64px;align-items:start">
+        <div style="font-size:26px;line-height:1.4;color:var(--ink3);max-width:520px;text-wrap:pretty">Whether you are learning the market or running a book, the daily publication is written for the same reader.</div>
+        <div>
+          <div style="font-size:22px;font-weight:700;margin-bottom:24px;letter-spacing:-0.01em">Get the daily read</div>
+          <div style="display:flex;flex-direction:column;gap:16px;max-width:320px">
+            <div style="font-size:10.5px;line-height:1.75;color:var(--ink3)">One pre-market edition each trading day. Intraday monitoring continues; Desk Room debates publish weekly. No tips and no upsells.</div>
+            <a class="hn-cta-link" href={appUrl} style="background:var(--ink1);color:var(--panel);padding:13px 22px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:transform .2s;margin-top:6px" data-hover="transform:scale(1.03)"><span>Create a free account</span><span>›</span></a>
+            <div style="font-size:9.5px;line-height:1.7;color:var(--ink3)">Free in early access. No card required.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- DISCLAIMER + CTA -->
+    <div class="hn-rv hn-rv-u" style="padding:36px 44px 56px;border-top:1px solid var(--hair)">
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center">
+        <div>
+          <h2 style="font-size:32px;line-height:1.15;font-weight:700;margin:0 0 14px;letter-spacing:-0.015em">Open the desk and read for yourself</h2>
+          <div style="font-size:12.5px;line-height:1.7;color:var(--ink3)">The desk does the homework and keeps its own score. No calls or target prices. Read the published work and decide what it means for you. Free in early access, no card required.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a class="hn-cta-link" href={appUrl} style="background:var(--ink1);color:var(--panel);padding:14px 22px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;cursor:pointer;transition:transform .2s" data-hover="transform:scale(1.03)">Create a free account ›</a>
+          <a class="hn-cta-link" href="/about/" style="border:1.5px solid var(--line);padding:14px 22px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;cursor:pointer;transition:background .18s" data-hover="background:var(--panel2)">Read the methodology</a>
+        </div>
+      </div>
+    </div>
+
+
+</div>
+<script src="../../scripts/home-concept-d-posthero.ts"></script>

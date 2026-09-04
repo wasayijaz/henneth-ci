@@ -1,1053 +1,358 @@
 ---
-import ctx from '../data/public/context.json';
 import coverage from '../data/public/coverage.json';
-import changelogData from '../data/public/changelog.json';
 import Base from '../layouts/Base.astro';
-import Icon from '../components/Icon.astro';
+import ConceptDPostHero from '../components/home/ConceptDPostHero.astro';
 import { site } from '../site.config.ts';
 
-/* Global coverage is COUNTED, never typed. Same reasoning as global-markets.astro: the number comes
-   from config/markets.json via the generated slice, so adding a symbol to the desk updates the
-   homepage claim in the same commit. A hard-coded "23" would be a factual claim with no owner. */
-const usGroups: Record<string, { symbol: string; name: string }[]> =
-  (coverage as any)?.markets?.US?.groups ?? {};
-const globalCount = Object.values(usGroups).reduce((n, g) => n + g.length, 0);
-const globalGroups: [string, string][] = [
-  ['Indices', 'indices'],
-  ['US sector ETFs', 'sectors'],
-  ['Global & EM baskets', 'global'],
-  ['Rates & commodities', 'rates_commodity'],
+const usGroups: Record<string, unknown[]> = (coverage as any)?.markets?.US?.groups ?? {};
+const globalCount = Object.values(usGroups).reduce((n, group) => n + group.length, 0);
+
+const faqs = [
+  { q: 'Does the desk tell me what to buy?', a: 'No. Henneth publishes research, not advice: no buy or sell calls, no price targets, no stop levels on named stocks. It shows the valuation working, historical behaviour and separate arguments. The decision and order stay with you.' },
+  { q: 'Is this regulated investment advice?', a: 'No. Henneth publishes general market and sector commentary, statistical summaries of reported financials, education and tools you run yourself. It is not personalised advice, and Henneth is not affiliated with the Pakistan Stock Exchange or the SECP.' },
+  { q: 'Why is astrology in a research product?', a: 'Because it is testable. The desk computes the optional lens, writes down the traditional claim, and backtests it against the same history as every other idea. Null results stay published.' },
+  { q: 'What does it cost during early access?', a: 'Nothing right now. The whole desk is open in early access with no card or trial timer. If billing changes, the free tier stays and the change will be stated before it happens.' },
+  { q: 'How current is the data?', a: 'The desk uses a daily timeframe and dated end-of-day cycles. Third-party data can be delayed or wrong, so check any number before acting. If the data layer is silent, Henneth says “unknown” rather than guessing.' },
 ];
 
-/* THE HERO BOARD IS REAL DATA — from the committed public extract.
+const homepagePlans = site.plans.map(({ name, href, featured, soon }) => ({
+  name,
+  href: href || undefined,
+  featured,
+  soon,
+}));
 
-   It used to be a hand-written illustration with no figures, carrying this note: "symbols are
-   real listed codes, but NO figures are shown, because inventing price moves next to a real
-   company is a false claim." That constraint was right and still binds — CLAUDE.md Rule 2 says
-   no price may ever come from memory. The resolution is not to relax it but to satisfy it: the
-   panel shows a genuine snapshot of the same data layer the product runs on, stamped with the
-   session date it came from. That makes the hero the site's first proof-point — the "every
-   number is sourced" claim demonstrated rather than asserted.
-
-   NO LONGER READS `../state/`  (changed 2026-07-21)
-   This used to walk up out of `site/` with fs.readFileSync, which forced Vercel's "Include source
-   files outside the Root Directory" on for the marketing project — pulling the whole 93 MB data
-   layer into the marketing build, one careless route away from being served. It now imports the
-   narrow allow-listed extract written by `scripts/build_public_slice.py`, so the Astro build
-   reads nothing above its own root.
-
-   Refreshes on each deploy, not live. The date stamp in the panel is therefore load-bearing: it
-   is what keeps a stale build honest instead of quietly implying real-time prices.
-
-   Still degrades to the figure-free illustration if the extract is absent or short — a fresh
-   checkout without the generated file must build, not fail. */
-const board: { sym: string; pct: number }[] = (ctx as any)?.board ?? [];
-const breadth: number | null = (ctx as any)?.breadth_pct ?? null;
-const regime: string = (ctx as any)?.macro?.regime ?? '';
-const asOf: string = (ctx as any)?.as_of ?? '';
-
-/* Signals: names that currently carry a setup which cleared the desk's bar.
-   Ordered by index weight, NOT by the backtest's own ranking — see the note in
-   build_public_slice.py. The generic category stays; the strategy name, its win rate and its
-   expectancy never leave the gate. */
-const signals: { sym: string; name: string; tag: string; close: number; pct: number }[] =
-  (ctx as any)?.signals ?? [];
-
-// Degraded mode: no state/ available, so fall back to the original figure-free illustration
-// rather than rendering an empty panel or, worse, zeros that look like real flat prices.
-const haveLiveBoard = board.length >= 15 && signals.length === 4;
-const fallbackHeat: [string, number][] = [
-  ['OGDC', 1], ['PPL', 1], ['HUBC', 0], ['FFC', 1], ['LUCK', -1],
-  ['MCB', 1], ['UBL', 1], ['MEBL', 0], ['ENGRO', -1], ['PSO', 1],
-  ['SYS', -1], ['TRG', -1], ['MLCF', 1], ['NBP', 1], ['HBL', 0],
-];
-const dir = (p: number) => (p > 0 ? 1 : p < 0 ? -1 : 0);
-const fmtPct = (p: number) => `${p > 0 ? '+' : ''}${p.toFixed(1)}%`;
-
-/* Six, not four. The global row had to appear here — the trust bar is the first place a visitor
-   checks the scale of the thing, and coverage that only shows up three sections down reads as an
-   afterthought. Six divides cleanly by the 3-column desktop grid AND the 2-column tablet one, so
-   no orphan cell is left showing the grid's line colour. */
-const stats = [
-  ['550+', 'PSX names covered'],
-  [String(globalCount), 'Global symbols for context'],
-  ['70', 'Backtested strategies'],
-  ['19 yrs', 'Of price history'],
-  ['4', 'Valuation models'],
-  ['2,589', 'Astro hypotheses tested'],
+const featureCells = [
+  { value: '+10%', background: 'rgba(11,122,95,.85)' },
+  { value: '+9.8', background: 'rgba(11,122,95,.8)', duration: '3s', delay: '.37s' },
+  { value: '+9.6', background: 'rgba(11,122,95,.72)', duration: '3.4s', delay: '.74s' },
+  { value: '+8.6', background: 'rgba(11,122,95,.6)', duration: '3.8s', delay: '1.11s' },
+  { value: '+7.9', background: 'rgba(11,122,95,.5)', duration: '2.6s', delay: '1.48s' },
+  { value: '+6.7', background: 'rgba(11,122,95,.44)', duration: '3s', delay: '1.85s' },
+  { value: '+5.9', background: 'rgba(11,122,95,.36)', duration: '3.4s', delay: '2.22s' },
+  { value: '+4.7', background: 'rgba(11,122,95,.3)', duration: '3.8s', delay: '2.59s' },
+  { value: '+3.3', background: 'rgba(11,122,95,.22)', duration: '2.6s', delay: '2.96s' },
+  { value: '+2.6', background: 'rgba(11,122,95,.16)', duration: '3s', delay: '3.33s' },
+  { value: '+0.4', background: 'rgba(242,242,238,.07)', color: 'rgba(242,242,238,.45)' },
+  { value: '−1.2', background: 'rgba(190,65,38,.3)', color: '#ffd9cf', duration: '2.9s', delay: '.7s' },
+  { value: '−2.4', background: 'rgba(190,65,38,.45)', color: '#ffd9cf', duration: '3.4s', delay: '1.11s' },
+  { value: '−3.6', background: 'rgba(190,65,38,.6)', color: '#ffd9cf', duration: '2.4s', delay: '1.52s' },
+  { value: '−4.8', background: 'rgba(190,65,38,.75)', color: '#ffd9cf', duration: '2.9s', delay: '1.93s' },
 ];
 
-/* Fourth element on each row is the sprite id — see IconSprite.astro. */
-const steps = [
-  ['01', 'Pick any listed name', 'Search the whole exchange. Land on a page built to answer your first three questions before you scroll.', 'screener'],
-  ['02', 'The desk does the homework', 'Valued four ways, scored for quality and risk, tested against 19 years of history, and debated by the analyst desk.', 'deskroom'],
-  ['03', 'You decide', 'The desk never places orders and never tells you to buy. You get the read; the decision stays yours.', 'longonly'],
+type FeatureIcon = 'technical' | 'fundamental' | 'chair';
+const featureIconBody: [number, number][] = [
+  [1,2],[2,2],[3,2],[4,2],[5,2],[6,2],
+  [1,3],[2,3],[3,3],[4,3],[5,3],[6,3],
+  [1,4],[3,4],[4,4],[6,4],
+  [1,5],[2,5],[3,5],[4,5],[5,5],[6,5],
+  [1,6],[2,6],[3,6],[4,6],[5,6],[6,6],
+  [0,7],[1,7],[2,7],[3,7],[4,7],[5,7],[6,7],[7,7],
 ];
-
-/* Latest updates — mirrors state/changelog.json via the allow-listed marketing slice (Rule 2:
-   nothing published reads state/ directly). One release exists today, so this is a single
-   spotlight card, not a forced 3-tile grid — the "older releases" strip is ready for when more
-   dated entries accumulate, rather than something built and then hidden. */
-const releases: { date: string; version: string; title: string; notes: string[] }[] =
-  (changelogData as any)?.releases ?? [];
-const latestRelease = releases[0];
-const olderReleases = releases.slice(1, 4);
-
-const principles = [
-  ['Research, not advice', 'No “buy”, no “strong buy”, no promises. Every page says so, because the distinction is the product.', 'nofabricate'],
-  ['Every number is sourced', 'Nothing is quoted from memory. If the data layer doesn’t hold it, the desk says “unknown” rather than guessing.', 'datalayer'],
-  ['Losses are shown', 'The scorecard grades the desk’s own calls, misses included. A record you can check is the only kind worth having.', 'scores'],
+const featureIconTops: Record<FeatureIcon, [number, number][]> = {
+  technical: [[4,0],[3,1],[4,1],[5,1]],
+  fundamental: [[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[1,3],[2,3],[5,3],[6,3]],
+  chair: [[1,0],[3,0],[5,0],[7,0],[2,1],[4,1],[6,1]],
+};
+const featureRoles: { ticker: string; quote: string; speaker: string; role: string; tone: 'up' | 'amber'; icon: FeatureIcon }[] = [
+  {
+    ticker: 'OGDC',
+    quote: '"Trend intact — reclaiming the 50-day on rising volume. Momentum is with the buyers into the print."',
+    speaker: 'Technical desk',
+    role: 'READS THE CHART',
+    tone: 'up',
+    icon: 'technical',
+  },
+  {
+    ticker: 'MCB',
+    quote: '"Cheap on earnings power against the bond yield. The dividend covers the wait — this is the working, not a call."',
+    speaker: 'Fundamental desk',
+    role: 'READS THE FILINGS',
+    tone: 'up',
+    icon: 'fundamental',
+  },
+  {
+    ticker: 'MARI',
+    quote: '"Fair value carries an aggressive growth input. Here\'s the argument, both sides — you decide what to do with it."',
+    speaker: 'The Chair',
+    role: 'SYNTHESISES THE DEBATE',
+    tone: 'amber',
+    icon: 'chair',
+  },
 ];
 ---
 
-<Base path="/" active="">
-  <!-- ================= HERO ================= -->
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="kicker">PSX Research Terminal · Global context · Now in early access</p>
-        {/* The astro line is IN the headline, not buried in the lead — it is the thing no other
-            PSX desk does. The claim is deliberately about testing, never about predicting. */}
-        <h1>
-          A whole research desk<br />for every PSX stock<span class="h1-dot">.</span><br />
-          <span class="h1-sky">And the sky above it<span class="h1-dot">.</span></span>
-        </h1>
-        <p class="hero-astro">
-          <span class="ha-dot" aria-hidden="true"></span>
-          Vedic astro lens — computed, tested against 19 years, and published even when it fails
-        </p>
-        <p class="lead hero-lead">
-          Every PSX-listed name — researched, valued four ways, and debated by an AI analyst desk,
-          read against the global tape that moves Karachi second-hand. We even compute the sky and
-          test what tradition claims it governs. Then every dated call, astrological ones included,
-          is graded against what prices actually did.
-        </p>
-        <p class="hero-sub muted">
-          The desk does the homework in public and keeps its own scorecard — including the tests
-          that failed. It never places orders.
-        </p>
-        <div class="hero-cta">
-          <a href="/plans" class="btn btn-solid btn-lg">Get started</a>
-          <a href="/research" class="btn btn-lg">See the track record</a>
-          <a href="https://chromewebstore.google.com/detail/henneth-desk-companion/jclcndmmhcaheafpijahmdlhljoadjnb" class="hero-ext-cta" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 01-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 00.657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 005.427-.63 48.05 48.05 0 00.582-4.717.532.532 0 00-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 00.658-.663 48.422 48.422 0 00-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 01-.61-.58v0z" />
-            </svg>
-            Get the Chrome extension
-          </a>
-        </div>
-        <div class="hero-fine">
-          <span>Free in early access</span><span>·</span>
-          <span>No card required</span><span>·</span>
-          <span>Research, not advice</span>
-        </div>
+<Base path="/" active="" faq={faqs}>
+  <div class="concept-home">
+    <div class="concept-film" aria-hidden="true">
+      <div class="concept-film-media-wrap" data-film-media-wrap>
+        <video class="concept-film-media" data-film-forward src="/concept-d/hero-loop.mp4" muted playsinline preload="metadata"></video>
+        <video class="concept-film-media concept-film-reverse" data-film-reverse data-src="/concept-d/hero-loop-reverse.webm" muted playsinline preload="none"></video>
       </div>
-
-      <!-- The board panel. Real desk data when state/ is readable at build time, the original
-           figure-free illustration when it is not. -->
-      <div class="mock hero-mock">
-        <div class="mock-bar">
-          <span class="label">Board · Live universe</span>
-          <span class="mock-pills">
-            {haveLiveBoard && regime && <span class="pill-chip">Regime: {regime}</span>}
-            {haveLiveBoard && breadth != null && <span class="pill-chip">Breadth {breadth}%</span>}
-            {!haveLiveBoard && <span class="mock-tag">Illustration</span>}
-          </span>
-        </div>
-
-        {/* MOTION CLASS IS LOAD-BEARING, not decoration:
-            --live        real session figures -> tints FIXED, only the refresh wash animates
-            --illustrative no figures at all   -> tints free to cycle
-            Swapping the first for the second would animate a real company's cell from green to
-            red while its printed percentage says otherwise. See the motion block in global.css. */}
-        {haveLiveBoard ? (
-          <div class="heat heat--live">
-            {/* slice(0,15), not map over the whole board: .heat is repeat(5,1fr) drawing its rules
-                with the gap, so any count that is not a multiple of 5 leaves the final row painting
-                the line colour as solid blocks. The gate is >= 15, so the slice can never starve. */}
-            {board.slice(0, 15).map((b) => (
-              <div class="heat-cell" data-dir={dir(b.pct)}>
-                <span class="hc-sym">{b.sym}</span>
-                <span class="hc-pct">{fmtPct(b.pct)}</span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div class="heat heat--illustrative">
-            {fallbackHeat.map(([sym, d]) => (
-              <div class="heat-cell" data-dir={d}><span class="hc-sym">{sym}</span></div>
-            ))}
-          </div>
-        )}
-
-        <div class="mock-sec">
-          <div class="label">Backtested-strategy signals</div>
-          {haveLiveBoard ? (
-            signals.map((s) => (
-              <div class="sig sig-row">
-                <span class="sig-id">
-                  <b>{s.sym}</b>
-                  <em>{s.name}</em>
-                </span>
-                <span class="sig-tag">{s.tag}</span>
-                <span class="sig-px" data-dir={dir(s.pct)}>
-                  {s.close.toFixed(2)}
-                  <i>{fmtPct(s.pct)}</i>
-                </span>
-              </div>
-            ))
-          ) : (
-            <>
-              <div class="sig"><span>Golden cross</span><span class="muted">trend</span></div>
-              <div class="sig"><span>52-week high break</span><span class="muted">breakout</span></div>
-              <div class="sig"><span>50-day reclaim</span><span class="muted">momentum</span></div>
-            </>
-          )}
-        </div>
-
-        {/* The date stamp is the honesty guard: this rebuilds on deploy, not live, and without
-            it a stale build would quietly imply real-time prices. */}
-        {haveLiveBoard && asOf && (
-          <div class="mock-foot">
-            <span>Real desk data · session {asOf}</span>
-            <span class="mock-foot-r">Rebuilt each deploy · not live</span>
-          </div>
-        )}
-      </div>
+      <div class="concept-film-veil" data-film-veil></div>
     </div>
-  </section>
 
-  <!-- ================= TRUST BAR ================= -->
-  <section class="band-panel trust">
-    <div class="wrap">
-      <div class="tilegrid trust-grid">
-        {stats.map(([n, l]) => (
-          <div>
-            <div class="pixel trust-n">{n}</div>
-            <div class="label muted trust-l">{l}</div>
-          </div>
-        ))}
+    <section class="concept-hero">
+      <div class="concept-hero-copy">
+        <p class="kicker">PSX research publication · global context · early access</p>
+        <h1>A clearer way to read the PSX</h1>
+        <div class="hero-side-copy"><p>Henneth publishes scheduled research on covered PSX names, with global index and sector context. Every read shows the working, the disagreement and what later happened. It never tells you what to buy.</p><a href="/plans/" class="btn btn-solid">Create a free account ›</a></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ================= HOW IT WORKS ================= -->
-  <section class="section">
-    <div class="wrap">
-      <p class="kicker">How the desk works</p>
-      <h2>Pick a stock. The desk does the homework. You decide.</h2>
-      <div class="tilegrid steps">
-        {steps.map(([n, t, d, ic]) => (
-          <div class="tile">
-            <span class="tile-i"><Icon name={ic} size={20} /></span>
-            <div class="step-n label">{n}</div>
-            <h3>{t}</h3>
-            <p class="muted step-d">{d}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 01 BOARD ================= -->
-  <section class="section band-panel">
-    <div class="wrap two-col">
-      <div>
-        <p class="kicker">01 · Board</p>
-        <h2>The whole market on one screen</h2>
-        <p class="lead">
-          A live universe heatmap, backtested rule-based signals, predictability ranks, and a rolling
-          news wire. See where breadth is, which sectors are favoured, and what screens well today —
-          before you open a single chart.
-        </p>
-        <a href="/features" class="btn">Explore the board</a>
-      </div>
-      <div class="mock">
-        <div class="mock-bar">
-          <span class="label">Predictability ranks</span>
-          <span class="mock-tag">19 yrs backtested</span>
-        </div>
-        <div class="mock-body">
-          {[82, 71, 64, 55, 47].map((w, i) => (
-            <div class="rank">
-              <span class="rank-k">RANK {i + 1}</span>
-              <div class="rank-bar"><span style={`width:${w}%`}></span></div>
-            </div>
-          ))}
-          <p class="mock-note muted">Illustration of the ranking layout.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 02 VALUE ================= -->
-  <section class="section">
-    <div class="wrap two-col rev">
-      <div class="mock">
-        <div class="mock-bar">
-          <span class="label">Valued four ways</span>
-          <span class="mock-tag">Illustration</span>
-        </div>
-        <div class="mock-body">
-          {['Peer P/E', 'Earnings power vs bond yield', 'Graham', 'Dividend discount'].map((m) => (
-            <div class="vrow"><span>{m}</span><span class="muted">model</span></div>
-          ))}
-          <hr class="hair" />
-          <div class="vband">
-            <div class="label muted">Consensus fair value</div>
-            <div class="pixel vband-v">— · —</div>
-            <p class="mock-note muted">Real figures appear in the desk, computed per stock.</p>
+    <section class="concept-feature" aria-label="Animated Henneth Desk preview">
+      <div class="feature-canvas-wrap"><canvas data-gl="hero" aria-hidden="true"></canvas><div class="feature-radial-glow"></div></div>
+      <div class="feature-topline"></div>
+      <div class="feature-demo-label">ILLUSTRATIVE DEMO · NOT CURRENT RESEARCH</div>
+      <div class="feature-hud">
+        <aside class="feature-rail">
+          <strong>HENNETH DESK</strong>
+          <div class="feature-rail-row"><i></i><b></b></div>
+          <div class="feature-rail-row active"><i></i><b></b></div>
+          <div class="feature-rail-row"><i></i><b></b></div>
+          <div class="feature-rail-row"><i></i><b></b></div>
+          <div class="feature-rail-row accent"><i></i><b></b></div>
+          <div class="feature-rail-row"><i></i><b></b></div>
+        </aside>
+        <div class="feature-hud-main">
+          <div class="feature-header"><span>CRUDE <b class="dn" style="--flicker-duration:4.2s;--flicker-delay:.2s">91.88</b></span><span>S&amp;P <b class="dn" style="--flicker-duration:5.1s;--flicker-delay:1.4s">7,408</b></span><span>GOLD <b class="up" style="--flicker-duration:3.6s;--flicker-delay:2.3s">4,061</b></span><span>USD/PKR <b style="--flicker-duration:6s;--flicker-delay:.7s">277.67</b></span></div>
+          <div class="feature-panels">
+            <div class="feature-grid-wrap"><div class="feature-label">UNIVERSE · DAY MOVE</div><div class="feature-grid">{featureCells.map((cell) => <span class:list={{ 'is-static': !cell.duration }} style={`--cell-bg:${cell.background};--cell-color:${cell.color ?? '#eafff8'};--cell-duration:${cell.duration ?? '0s'};--cell-delay:${cell.delay ?? '0s'}`}>{cell.value}</span>)}</div></div>
+            <div class="feature-wire"><div class="feature-label">NEWS WIRE</div>{[
+              ['4.1s', '.5s', '70%'],
+              ['4.7s', '1s', '55%'],
+              ['5.3s', '1.5s', '82%'],
+              ['5.9s', '2s', '64%'],
+            ].map(([duration, delay, width]) => <div class="wire-row" style={`--wire-duration:${duration};--wire-delay:${delay};--wire-width:${width}`}><i></i><span><b></b><em></em></span></div>)}</div>
           </div>
         </div>
       </div>
-      <div>
-        <p class="kicker">02 · Value</p>
-        <h2>Four valuations. All the working.</h2>
-        <p class="lead">
-          Every stock valued by peer P/E, earnings-power vs the bond yield, Graham, and a
-          dividend-discount model — with each model’s full working expandable, so you can check the
-          maths, not just trust a number.
-        </p>
-        <a href="/features" class="btn">See the models</a>
-      </div>
-    </div>
-  </section>
+      <div class="feature-veil"></div>
+      <div class="feature-role-track"><div class="feature-role-slides">
+        {featureRoles.map(({ ticker, quote, speaker, role, tone, icon }) => <div class="feature-role-slide"><strong class="feature-ticker">{ticker}</strong><p>{quote}</p><div class="feature-speaker"><span class="speaker-icon" data-tone={tone}><svg viewBox="0 0 8 8" width="20" height="20" aria-hidden="true"><g fill="currentColor">{[...featureIconBody, ...featureIconTops[icon]].map(([x, y]) => <rect x={x} y={y} width="1" height="1" />)}</g></svg></span><span><b>{speaker}</b><small>{role}</small></span></div></div>)}
+      </div></div>
+      <div class="feature-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </section>
 
-  <!-- ================= 03 DESK ROOM ================= -->
-  <section class="section band-dark deskroom">
-    <div class="wrap two-col">
-      <div>
-        <p class="kicker dr-kicker">03 · The Desk Room</p>
-        <h2>Watch an AI analyst desk argue it out</h2>
-        <p class="lead dr-lead">
-          On every ticker, named analyst personas — a technical desk, a fundamental desk, a bull and
-          a bear — debate the stock, hard. No verdict, no house view, no target: nothing is hidden,
-          you see who argued what and call it yourself.
-        </p>
-        <button class="btn" id="drPlay">▶ Watch the desk analyse</button>
-        <p class="dr-hint muted" id="drHint">Replay stages the debate in sequence — hit play</p>
-      </div>
+    <div class="concept-marquee" data-film-end aria-label="Sectors covered"><div class="marquee-caption">Major PSX sectors, read the same way</div><div class="concept-marquee-track">{['Banks', 'Cement', 'E&P', 'Fertilizer', 'Power', 'Technology', 'Textiles', 'Autos', 'Refineries', 'Insurance', 'Banks', 'Cement', 'E&P', 'Fertilizer', 'Power', 'Technology', 'Textiles', 'Autos', 'Refineries', 'Insurance'].map((sector) => <span>{sector}</span>)}</div></div>
 
-      <div class="dr-card">
-        <div class="dr-bar">
-          <span class="label">Desk Room<span class="dr-live" id="drLive"></span></span>
-          <span class="muted">4 desks · no verdict</span>
-        </div>
-        <div class="dr-body" id="drBody">
-          <div class="dr-block" data-i="0">
-            <div class="label">Technical desk</div>
-            <p>Trend intact; reclaiming the 50-day on rising volume.</p>
-          </div>
-          <div class="dr-block" data-i="1">
-            <div class="label">Fundamental desk</div>
-            <p>Cheap on earnings power. Growth is the open question.</p>
-          </div>
-          <div class="dr-block" data-i="2">
-            <div class="label up">Bull</div>
-            <p>Value plus dividend cover carries it through the cycle.</p>
-          </div>
-          <div class="dr-block" data-i="3">
-            <div class="label dn">Bear</div>
-            <p>Fair value leans on an aggressive growth input.</p>
-          </div>
-        </div>
-        <p class="mock-note muted dr-illus">Illustration of a session. Real debates run per stock.</p>
-      </div>
-    </div>
-  </section>
-
-  {/* ================= 04 THE WORLD =================
-      The counts come from coverage.json, so this block cannot drift from what the pipeline covers.
-      It states the limit in the same breath as the claim: index and sector level, context only, no
-      signals. config/markets.json sets signals_enabled:false for the US book and this section is
-      the public face of that flag — describing it as a track record would be false. */}
-  <section class="section">
-    <div class="wrap two-col rev">
-      <div class="mock">
-        <div class="mock-bar">
-          <span class="label">Global coverage</span>
-          <span class="mock-tag">{globalCount} symbols · end of day</span>
-        </div>
-        <div class="mock-body">
-          {globalGroups.map(([label, key]) => (
-            <div class="vrow">
-              <span>{label}</span>
-              <span class="muted">{(usGroups[key] ?? []).length}</span>
-            </div>
-          ))}
-          <hr class="hair" />
-          <div class="vrow gw-row">
-            <span>Signals generated on these</span>
-            <span class="pixel gw-zero">0</span>
-          </div>
-          <p class="mock-note muted">
-            Context for the PSX book. The desk’s risk rules are calibrated on PSX behaviour, so a
-            global symbol never produces a setup.
-          </p>
-        </div>
-      </div>
-      <div>
-        <p class="kicker"><Icon name="global" size={14} /> 04 · The world</p>
-        <h2>Karachi does not trade in isolation</h2>
-        <p class="lead">
-          The tape that moves PSX is not listed on it. The desk tracks {globalCount} global symbols —
-          the broad indices, the eleven US sector ETFs, the EM and developed baskets a foreign
-          allocator rotates between, and the rates, credit, gold and oil that set Pakistan’s import
-          bill — and reads them against its own PSX sector work.
-        </p>
-        <a href="/global-markets/" class="btn" data-ev="home_section_link" data-ev-section="global">
-          What the desk covers ›
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 05 SCORES (method, not numbers) ================= -->
-  <section class="section band-panel">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="kicker">05 · Scores</p>
-        <h2>The desk grades itself in public</h2>
-        <p class="lead">
-          Every call carries a date and a falsifiable expectation. When the outcome window closes,
-          it’s scored against what prices actually did — the desk’s calls and the brokers’ alike. No
-          cherry-picking, no quiet deletions.
-        </p>
-      </div>
-      <div class="tilegrid score-how">
-        <div>
-          <div class="label">1 · Dated</div>
-          <p class="muted">Every view is stamped with the date it was made and the window it must play out in.</p>
-        </div>
-        <div>
-          <div class="label">2 · Falsifiable</div>
-          <p class="muted">It states what would prove it wrong — so it can actually be graded, not argued about.</p>
-        </div>
-        <div>
-          <div class="label">3 · Scored</div>
-          <p class="muted">When the window closes it’s marked against real prices, and the misses stay on the record.</p>
-        </div>
-        <div>
-          <div class="label">4 · Brokers too</div>
-          <p class="muted">Public broker calls are captured and graded on the same bar. Audited, never trusted.</p>
-        </div>
-      </div>
-      <p class="score-note muted">
-        The public scorecard opens once enough calls have resolved to mean something. Until then we
-        show the method, not a number — a track record you can’t check isn’t a track record.
-      </p>
-    </div>
-  </section>
-
-  {/* ================= THE SKY =================
-      Figures read from state/astro.json and state/astro_backtest.json. The null result IS the
-      pitch — no edge is claimed anywhere in this block, per astro_map.json's own discipline
-      ("a lens the desk reports and scores, nothing more"). */}
-  <section class="section band-dark sky">
-    <div class="wrap two-col">
-      <div>
-        <p class="kicker dr-kicker">06 · The sky</p>
-        <h2>The only desk that tests its own astrology</h2>
-        <p class="lead dr-lead">
-          Sidereal positions, Lahiri ayanamsa, the nine classical grahas — computed to the degree,
-          ninety days ahead. What tradition claims each one governs is written down <em>first</em>,
-          then tested against nineteen years of PSX prices on the same bar as every other strategy
-          here.
-        </p>
-        <p class="sky-verdict">
-          So far: <b>2,589 hypotheses tested, none survived correction.</b> We publish that, because
-          a lens you refuse to test isn’t research — it’s a horoscope with a Bloomberg terminal.
-        </p>
-        <div class="sky-cta">
-          {/* Points at the dedicated page, not /features. That page carries the full method, the
-              multiplicity correction and the null result — and it is the one the homepage should
-              pass authority to, since it is what an "is astrology real for markets" search lands on. */}
-          <a href="/financial-astrology/" class="btn" data-ev="home_section_link" data-ev-section="astro">
-            Read the tested lens ›
-          </a>
-          <a href={site.appUrl} class="btn btn-ghost" rel="noopener">Cast your chart free</a>
-        </div>
-      </div>
-
-      <div class="sky-card">
-        <div class="dr-bar">
-          <span class="label">Astro · computed</span>
-          <span class="muted">sidereal · Lahiri</span>
-        </div>
-        <div class="sky-body">
-          <div class="sky-row"><span class="muted">Zodiac</span><span>Sidereal (Lahiri)</span></div>
-          <div class="sky-row"><span class="muted">Bodies</span><span>9 classical grahas</span></div>
-          <div class="sky-row"><span class="muted">Horizon</span><span>90 days ahead</span></div>
-          <div class="sky-row"><span class="muted">Granularity</span><span>Nakshatra &amp; pada</span></div>
-          <div class="sky-rule"></div>
-          <div class="sky-row sky-null"><span>Conditions with a proven edge</span><span class="pixel">0</span></div>
-          <p class="sky-fine muted">
-            Published, not buried. The lens never generates or gates a trade setup.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ================= 07 LATEST =================
-      Real release data, not copy — see changelogData above. Single spotlight card because the
-      changelog holds one dated release today; a forced 3-up grid would invent structure the data
-      doesn't have. */}
-  <section class="section updates">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="kicker">07 · Latest</p>
-        <h2>The desk ships in the open</h2>
-        <p class="lead">Every dated release, in plain language — what changed, and why, no changelog jargon.</p>
-      </div>
-
-      {latestRelease && (
-        <div class="upd-card">
-          <div class="upd-bar">
-            <span class="upd-v">{latestRelease.version}</span>
-            <span class="muted">{latestRelease.date}</span>
-          </div>
-          <div class="upd-body">
-            <h3>{latestRelease.title}</h3>
-            <ul class="upd-notes">
-              {latestRelease.notes.slice(0, 5).map((n) => <li>{n}</li>)}
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {olderReleases.length > 0 && (
-        <div class="upd-older">
-          {olderReleases.map((r) => (
-            <div class="upd-old-row">
-              <span class="upd-old-v">{r.version}</span>
-              <span class="upd-old-t">{r.title}</span>
-              <span class="muted">{r.date}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <a
-        href={site.appUrl}
-        class="seg-2 upd-link"
-        rel="noopener"
-        data-ev="home_section_link"
-        data-ev-section="updates"
-      >See what shipped, inside the desk <Icon name="arrow" size={12} /></a>
-    </div>
-  </section>
-
-  <!-- ================= PRINCIPLES ================= -->
-  <section class="section band-panel">
-    <div class="wrap">
-      {/* Headed, because a bare tile strip floating between two banded sections reads as leftover
-          layout rather than as a section with something to say. */}
-      <div class="sec-head">
-        <p class="kicker"><Icon name="risk" size={14} /> How the desk works</p>
-        <h2>Rules it cannot talk itself out of</h2>
-      </div>
-      <div class="tilegrid principles">
-        {principles.map(([t, d, ic]) => (
-          <div class="tile">
-            <span class="tile-i"><Icon name={ic} size={20} /></span>
-            <h3>{t}</h3>
-            <p class="muted">{d}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  {/* ================= THE SIZING PROOF =================
-      "Research, not advice" is a claim every desk makes. This is the one place it cost something,
-      so it is the one worth showing: the share count came out of the published setup and went into
-      a free calculator the reader drives. The formula shown here is CLAUDE.md Rule 4 verbatim —
-      if that rule ever changes, this block and the calculator must change with it. */}
-  <section class="section">
-    <div class="wrap two-col">
-      <div>
-        <p class="kicker"><Icon name="risk" size={14} /> Research, not advice</p>
-        <h2>We deleted our own share count</h2>
-        <p class="lead">
-          Setups used to carry a number of shares. It was honest arithmetic — and it was arithmetic
-          on <em>our</em> capital and <em>our</em> risk budget, printed next to a ticker where it read
-          like an instruction. So it came out.
-        </p>
-        <p class="psz-body muted">
-          The formula stayed, in the open. It is now a calculator you drive: your capital, your risk
-          per trade, your stop. Same rule the desk sizes by, no account needed, nothing sent anywhere.
-        </p>
-        <a
-          href="/tools/position-size-calculator/"
-          class="btn btn-solid"
-          data-ev="home_section_link"
-          data-ev-section="position_size"
-        >Size a position free ›</a>
-      </div>
-
-      <div class="mock">
-        <div class="mock-bar">
-          <span class="label">Rule 4 · position sizing</span>
-          <span class="mock-tag">The whole formula</span>
-        </div>
-        <div class="mock-body">
-          <div class="psz-step">
-            <span class="label muted">Risk budget</span>
-            <code>capital × risk per trade</code>
-          </div>
-          <div class="psz-step">
-            <span class="label muted">Risk per share</span>
-            <code>entry − stop</code>
-          </div>
-          <div class="psz-step">
-            <span class="label muted">Shares</span>
-            <code>floor( min( budget ÷ risk per share, 8% of capital ÷ entry ) )</code>
-          </div>
-          <hr class="hair" />
-          <p class="mock-note muted">
-            Size by stop distance, then cap the position’s value at 8%. A setup where the stop sits
-            above the entry, or where the maths returns zero shares, is invalid — not rounded up.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= PRICING TEASER ================= -->
-  <section class="section band-panel">
-    <div class="wrap two-col">
-      <div>
-        <p class="kicker">Plans</p>
-        <h2>{site.earlyAccess ? 'Free while we get it right' : 'One desk. Two ways in.'}</h2>
-        <p class="lead">
-          {site.earlyAccess
-            ? 'The whole desk is open during early access — no card, no trial timer. Use it properly and tell us what needs fixing.'
-            : `Investor and Pro, each with a ${site.trialDays}-day trial — plus a Broker tier for desks and institutions.`}
-        </p>
-        <a href="/plans" class="btn btn-solid">{site.earlyAccess ? 'Why it’s free ›' : 'See full pricing ›'}</a>
-      </div>
-      <div class="tease">
-        {site.plans.map((p) => (
-          <a href={p.href || '/plans'} class="tease-row">
-            <span class="tease-n">{p.name}{p.featured && <em> · most popular</em>}</span>
-            <span class="tease-p">
-              {p.soon
-                ? <>Coming soon</>
-                : site.earlyAccess
-                  ? <>Free</>
-                  : <>{site.billing.currency} {p.priceMonthly.toLocaleString('en-PK')}<i>/mo</i></>}
-            </span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= FINAL CTA ================= -->
-  <section class="section band-dark final">
-    <div class="wrap center">
-      <h2>Put the whole desk<br />behind your next trade</h2>
-      <p class="lead dr-lead final-lead">
-        The desk does the homework and keeps its own score — you decide what to do with it.
-      </p>
-      <div class="final-cta">
-        <a href="/plans" class="btn">Get started</a>
-        <a href="/contact" class="btn btn-ghost">Talk to us about brokers</a>
-      </div>
-      <p class="final-fine muted">Research · not advice · The desk never places orders</p>
-    </div>
-  </section>
+    <ConceptDPostHero
+      appUrl={`${site.appUrl}/?auth=signup`}
+      globalCount={globalCount}
+      faqs={faqs}
+      plans={homepagePlans}
+    />
+  </div>
 </Base>
 
 <style>
-  .hero { padding: clamp(40px, 6vw, 72px) 0 clamp(40px, 5vw, 64px); }
-  /* The accent full stop — the one spot of brand green in the headline. */
-  .h1-dot { color: var(--up); }
-  /* The sky line reads as a coda, not a third equal claim — lighter weight, same scale. */
-  .h1-sky { color: var(--ink-2); font-weight: 500; }
+  /* Homepage uses the shared site header; keep the shell width in sync with the rest of the site. */
+  .concept-home { position: relative; width: 100%; min-height: 100svh; margin: 0 0 60px; background: var(--panel); color: var(--ink-1); overflow: hidden; }
+  .concept-home :global(a), .concept-home :global(button), .concept-home :global(summary) { min-height: 44px; }
+  .concept-home :global(h1), .concept-home :global(h2), .concept-home :global(h3), .concept-home :global(p) { letter-spacing: 0; }
+  /* Film ends at the marquee (measured below) rather than reserving a fixed 960px canvas. */
+  .concept-film { position: absolute; z-index: 0; top: 0; left: 0; right: 0; height: 0; overflow: hidden; pointer-events: none; background: var(--bg); }
+  .concept-film-media-wrap { position: absolute; inset: -7%; transform-origin: 50% 30%; will-change: filter, transform; }
+  .concept-film-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; filter: none; }
+  .concept-film-reverse { opacity: 0; }
+  .concept-film-veil { position: absolute; inset: 0; background: rgba(255,255,255,0); }
+  .concept-hero { position: relative; z-index: 1; display: block; min-height: 0; padding: 64px 0 20px; isolation: auto; }
+  .concept-hero::before { display: none; }
+  .concept-hero-copy { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: start; }
+  .concept-hero-copy > .kicker { display: none; }
+  .concept-hero h1 { margin: 0; max-width: 10.5ch; font-size: clamp(54px, 4.75vw, 70px); line-height: .98; letter-spacing: -.035em; font-weight: 700; text-wrap: balance; }
+  .hero-side-copy { padding-top: 8px; color: var(--ink-2); font-size: 13px; line-height: 1.7; }
+  .hero-side-copy p { margin: 0 0 20px; }
+  .hero-side-copy .btn { display: inline-flex; }
+  .concept-feature { position: relative; z-index: 1; width: calc(100% - 88px); max-width: calc(var(--maxw) - 88px); margin: 16px auto 40px; min-height: 420px; overflow: hidden; background: #0f0f0d; border: 1.5px solid #111; color: #f2f2ee; animation: hnFadeUp .7s ease .1s both; }
+  .feature-topline { height: 3px; background: var(--up); animation: hnAccentCycle 13.5s ease-in-out infinite; }
+  .feature-demo-label { position: absolute; right: 12px; bottom: 10px; z-index: 6; padding: 5px 7px; border: 1px solid rgba(242,242,238,.22); background: rgba(15,15,13,.84); color: rgba(242,242,238,.7); font: 700 7.5px/1.2 var(--font-mono); letter-spacing: .07em; white-space: nowrap; pointer-events: none; }
+  .feature-header { display: grid; grid-template-columns: 1.2fr repeat(4, 1fr); gap: 0; margin: 10px 14px 12px; border: 1px solid rgba(242,242,238,.16); font: 700 8px var(--font-mono); letter-spacing: .04em; color: rgba(242,242,238,.52); }
+  .feature-header > span { padding: 6px 9px; border-right: 1px solid rgba(242,242,238,.12); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .feature-header > span:last-child { border-right: 0; }
+  .feature-header > span:first-child { border-right-color: rgba(242,242,238,.2); color: rgba(242,242,238,.78); letter-spacing: .14em; }
+  .feature-header b { font-weight: 700; color: var(--bg); animation: hnFlicker var(--flicker-duration) ease-in-out infinite; animation-delay: var(--flicker-delay); }
+  .feature-header .up { color: #22c99b; } .feature-header .dn { color: #ef6b48; }
+  .feature-workspace { display: grid; grid-template-columns: 120px 1.5fr 1fr; min-height: 150px; }
+  .feature-rail { border-right: 1px solid rgba(242,242,238,.14); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .feature-rail-row { display: flex; align-items: center; gap: 7px; }
+  .feature-rail-row i { display: block; width: 7px; height: 7px; flex: 0 0 7px; border: 1px solid rgba(242,242,238,.4); }
+  .feature-rail-row b { display: block; width: 38px; height: 5px; background: rgba(242,242,238,.28); }
+  .feature-rail-row.active { margin: 0 -12px; padding: 4px 12px; background: rgba(242,242,238,.09); }
+  .feature-rail-row.active i { border-color: rgba(242,242,238,.7); background: rgba(242,242,238,.7); }
+  .feature-rail-row.active b { width: 30px; background: rgba(242,242,238,.6); }
+  .feature-rail-row:nth-of-type(3) b { width: 44px; }
+  .feature-rail-row:nth-of-type(4) b { width: 26px; }
+  .feature-rail-row.accent i { border-color: rgba(184,134,11,.8); }
+  .feature-rail-row.accent b { width: 34px; background: rgba(184,134,11,.55); }
+  .feature-rail-row:nth-of-type(6) b { width: 40px; }
+  .feature-grid-wrap { padding: 0 14px; border-right: 1px solid rgba(242,242,238,.1); }
+  .feature-label { margin-bottom: 8px; font: 700 7.5px var(--font-mono); letter-spacing: .14em; color: rgba(242,242,238,.4); }
+  .feature-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
+  .feature-grid span { padding: 6px 3px; text-align: center; font: 700 7px var(--font-mono); color: var(--cell-color); background: var(--cell-bg); animation: hnCellPulse var(--cell-duration) ease-in-out infinite; animation-delay: var(--cell-delay); }
+  .feature-grid span.is-static { animation: none; }
+  .feature-wire { padding: 0 14px; }
+  .feature-wire > span { display: block; height: 5px; margin: 9px 0; background: rgba(242,242,238,.22); animation: hnWire 4.8s ease-in-out infinite; animation-delay: calc(var(--i) * .35s); transform-origin: left; }
+  .feature-wire > span:nth-child(odd) { width: 80%; } .feature-wire > span:nth-child(even) { width: 58%; }
+  .feature-quote { position: relative; min-height: 210px; padding: 32px 44px 24px; background: rgba(8,8,7,.42); border-top: 1px solid rgba(242,242,238,.1); }
+  .feature-ticker { position: absolute; right: 28px; top: 24px; font: 700 12px var(--font-mono); color: rgba(242,242,238,.68); animation: hnFlicker 4.6s ease-in-out infinite; }
+  .feature-quote p { max-width: 650px; margin: 0 0 20px; font: 700 22px/1.4 var(--font-mono); color: var(--bg); transition: opacity .28s ease, transform .28s ease; }
+  .feature-quote.is-changing p, .feature-quote.is-changing .feature-speaker { opacity: 0; transform: translateY(6px); }
+  .feature-dots { position: absolute; right: 26px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .feature-dots span { width: 4px; height: 6px; background: rgba(242,242,238,.4); animation: hnDot 13.5s ease-in-out infinite; }
+  .feature-dots span:first-child { height: 22px; background: var(--bg); } .feature-dots span:nth-child(2) { animation-delay: 4.5s; } .feature-dots span:nth-child(3) { animation-delay: 9s; }
+  .feature-speaker { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+  .speaker-icon { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; background: #2a2a26; border: 1px solid rgba(242,242,238,.2); color: #22c99b; font-size: 20px; }
+  .feature-speaker b, .feature-speaker small { display: block; } .feature-speaker small { margin-top: 4px; color: rgba(242,242,238,.5); font-size: 9px; letter-spacing: .06em; }
+  .concept-marquee { position: relative; z-index: 1; padding: 8px 0 8px; overflow: hidden; border: 0; background: rgba(255,255,255,.54); backdrop-filter: blur(16px) saturate(140%); }
+  .marquee-caption { margin-bottom: 22px; text-align: center; font: 500 9.5px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+  .concept-marquee-track { display: flex; width: max-content; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); padding: 18px 0; animation: hnMarquee 26s linear infinite; }
+  .concept-marquee span { display: inline-flex; align-items: center; min-height: 30px; padding: 0 26px; border-right: 0; color: var(--ink-3); font: 700 15px var(--font-mono); letter-spacing: .04em; text-transform: none; white-space: nowrap; }
+  @keyframes hnFadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes hnMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes hnCellPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.28); } }
+  @keyframes hnAccentCycle { 0%,28% { background: #22c99b; } 33%,61% { background: #22c99b; } 66%,94% { background: #b8860b; } 100% { background: #22c99b; } }
+  @keyframes hnFlicker { 0%,88%,100% { opacity: 1; } 90% { opacity: .45; } 92% { opacity: 1; } 95% { opacity: .6; } }
+  @keyframes hnWire { 0%,100% { opacity: .28; transform: scaleX(1); } 50% { opacity: .72; transform: scaleX(.82); } }
+  @keyframes hnQuoteIn { 0%,28%,100% { opacity: 1; transform: translateY(0); } 33%,61% { opacity: .4; transform: translateY(4px); } 66%,94% { opacity: 1; transform: translateY(0); } }
+  @keyframes hnDot { 0%,28%,100% { height: 6px; background: rgba(242,242,238,.4); } 33%,61% { height: 22px; background: var(--bg); } 66%,94% { height: 6px; background: rgba(242,242,238,.4); } }
+  .concept-home > section, .concept-home > .concept-marquee { position: relative; z-index: 1; }
+  :global(.cd-posthero > .hn-rv[style*="padding:"]) { padding-inline: max(24px, calc((100% - var(--maxw)) / 2 + 24px)) !important; }
+  .concept-marquee { -webkit-backdrop-filter: blur(16px) saturate(140%); }
+  @media (max-width: 920px) { .concept-hero-copy { grid-template-columns: 1fr; gap: 20px; } .concept-hero h1 { max-width: 13ch; font-size: clamp(42px, 7.5vw, 58px); } }
+  @media (max-width: 620px) { .concept-home { margin-bottom: 32px; } .concept-hero { padding: 38px 0 18px; } .concept-hero-copy { padding-inline: 18px; } .concept-hero h1 { font-size: 28px; line-height: 1.12; } .hero-side-copy { padding-top: 0; font-size: 13px; } .concept-feature { width: calc(100% - 36px); max-width: none; margin: 16px auto 32px; min-height: 420px; } .feature-header { grid-template-columns: 1.4fr repeat(2, 1fr); } .feature-header > span:nth-child(4), .feature-header > span:nth-child(5) { display: none; } .feature-workspace { grid-template-columns: 74px 1fr; } .feature-wire { display: none; } .feature-grid-wrap { border-right: 0; } .feature-quote { padding: 28px 18px 22px; min-height: 210px; } .feature-quote p { font-size: 17px; } .concept-marquee-track { padding-block: 18px; } .concept-marquee span { padding-inline: 18px; font-size: 15px; } :global(.cd-posthero > .hn-rv[style*="padding:"]) { padding-inline: 18px !important; } }
+  @media (prefers-reduced-motion: reduce) { .concept-feature, .feature-topline, .feature-header b, .feature-grid span, .wire-row b, .feature-role-slides, .feature-dots span, .feature-ticker, .feature-quote p, .concept-marquee-track { animation: none !important; transition: none !important; } }
 
-  .hero-astro {
-    display: inline-flex; align-items: center; gap: 8px;
-    margin: 16px 0 0; padding: 7px 12px;
-    border: 1px solid var(--hair); background: var(--panel);
-    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-2); line-height: 1.5;
-  }
-  .ha-dot {
-    width: 6px; height: 6px; background: var(--up); flex: none;
-    animation: henneth-dot-pulse 2.6s ease-in-out infinite;
-  }
-  /* Was shrinking to 9px here, which is backwards: the pill is a real sentence sitting above the
-     fold on the site's most-landed-on page, and it is the only place the astro lens is introduced.
-     It is inline-flex, so a longer line wraps inside the pill rather than forcing width. */
-  @media (max-width: 560px) { .hero-astro { letter-spacing: 0.06em; } }
-  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 44px; align-items: center; }
-  .hero-lead { max-width: 520px; }
-  .hero-sub { font-size: 11.5px; max-width: 480px; }
-  .hero-cta { display: flex; gap: 10px; margin: 22px 0 14px; flex-wrap: wrap; }
-  .hero-ext-cta {
-    display: inline-flex; align-items: center; align-self: center; gap: 6px;
-    font-size: 12px; font-weight: 600; color: var(--ink-2);
-    text-decoration: underline; text-underline-offset: 3px;
-    padding: 0 2px;
-  }
-  .hero-ext-cta:hover { color: var(--ink-1); }
-  .hero-ext-cta svg { flex-shrink: 0; }
-  .hero-fine {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
-  }
-
-  .mock-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px; border-bottom: var(--rule); background: var(--panel-2);
-  }
-  .mock-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
-  .mock-body { padding: 14px; }
-  .mock-note { font-size: 9.5px; margin: 10px 0 0; }
-
-  .mock-pills { display: flex; gap: 6px; align-items: center; }
-  .pill-chip {
-    font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
-    border: 1px solid var(--hair); padding: 3px 7px; color: var(--ink-2); white-space: nowrap;
-  }
-
-  /* Cells are left-aligned with the ticker over its move — the reference's layout, and the one
-     that survives real data: centred text made the varying-width percentages jitter column to
-     column. `tabular-nums` holds the decimal points in a straight line down the grid. */
-  .heat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5px; background: var(--line); }
-  .heat-cell {
-    background: var(--panel); padding: 10px 9px; display: flex; flex-direction: column; gap: 3px;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
-  }
-  .hc-sym { font-size: 9.5px; letter-spacing: 0.08em; }
-  .hc-pct { font-size: 10.5px; font-variant-numeric: tabular-nums; letter-spacing: 0; }
-  .heat-cell[data-dir='1'] { background: var(--up-soft); color: var(--up); }
-  .heat-cell[data-dir='-1'] { background: var(--dn-soft); color: var(--dn); }
-  .heat-cell[data-dir='0'] { color: var(--ink-2); }
-
-  .mock-sec { padding: 14px; border-top: var(--rule); }
-  .sig {
-    display: flex; justify-content: space-between; font-size: 11px;
-    padding: 8px 0; border-bottom: 1px dotted var(--hair);
-  }
-  /* Three columns: identity grows, tag and price stay put, so a long company name truncates
-     instead of shoving the price out of the panel. */
-  .sig-row { align-items: center; gap: 10px; }
-  .sig-id { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-  .sig-id b { font-size: 11px; letter-spacing: 0.06em; }
-  .sig-id em {
-    font-style: normal; font-size: 8.5px; letter-spacing: 0.08em; color: var(--ink-3);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .sig-tag {
-    font-size: 8.5px; letter-spacing: 0.1em; font-weight: 700; color: var(--ink-2);
-    border: 1px solid var(--hair); padding: 3px 6px; white-space: nowrap; flex: none;
-  }
-  .sig-px {
-    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
-    text-align: right; flex: none; white-space: nowrap;
-  }
-  .sig-px[data-dir='1'] { color: var(--up); }
-  .sig-px[data-dir='-1'] { color: var(--dn); }
-  /* Inline with the price, as in the reference — stacked, the move read as a second data point
-     instead of a qualifier on the number above it. */
-  .sig-px i { font-style: normal; font-size: 9px; font-weight: 500; margin-left: 5px; }
-
-  .mock-foot {
-    display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px;
-    border-top: var(--rule); background: var(--panel-2);
-    font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);
-  }
-  .mock-foot-r { text-align: right; }
-
-  .trust { padding: 0; }
-  /* Three, because there are six stats. Four columns would leave a two-cell orphan row showing the
-     grid's line colour through the gap — the tilegrid draws its rules with background, so an
-     incomplete final row is a visible defect, not just loose spacing. */
-  .trust-grid { grid-template-columns: repeat(3, 1fr); border-left: 0; border-right: 0; }
-  .trust-n { font-size: 32px; font-variant-numeric: tabular-nums; }
-  .trust-l { margin-top: 8px; }
-
-  .steps { grid-template-columns: repeat(3, 1fr); margin-top: 28px; }
-  .step-n { color: var(--ink-3); margin-bottom: 10px; }
-  .step-d { font-size: 11.5px; margin: 0; }
-
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
-  /* .sec-head moved to global.css — <Faq> uses it too, and a scoped rule cannot reach it. */
-
-  .rank { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
-  .rank-k { font-size: 9px; letter-spacing: 0.1em; color: var(--ink-3); min-width: 58px; }
-  .rank-bar { flex: 1; height: 9px; border: 1px solid var(--ink-1); }
-  .rank-bar span { display: block; height: 100%; background: var(--ink-1); }
-
-  .vrow { display: flex; justify-content: space-between; font-size: 11px; padding: 9px 0; border-bottom: 1px dotted var(--hair); }
-  .vband { text-align: center; padding: 6px 0 2px; }
-  .vband-v { font-size: 26px; margin: 8px 0; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
-
-  /* The global panel's closing row. The zero is the point of the section, so it gets the pixel face
-     the desk reserves for figures that carry weight — and it stays --ink-1, never --dn: it is a
-     deliberate design limit, not a bad reading. */
-  .gw-row { border-bottom: 0; align-items: center; padding-bottom: 0; }
-  .gw-zero { font-size: 22px; line-height: 1; letter-spacing: 0.04em; }
-
-  .psz-body { font-size: 11.5px; max-width: 52ch; margin: 0 0 20px; }
-  .psz-step { padding: 10px 0; border-bottom: 1px dotted var(--hair); }
-  .psz-step:last-of-type { border-bottom: 0; }
-  .psz-step code {
-    display: block; margin-top: 6px;
-    font-family: var(--font-mono); font-size: 11.5px; line-height: 1.6;
-    color: var(--ink-1); word-break: break-word;
-  }
-
-  .deskroom .lead, .dr-lead { color: #c8c8c0; }
-  .dr-kicker { color: #8f8f88; }
-  .dr-hint { font-size: 9.5px; margin-top: 12px; color: #8f8f88; }
-  /* ---- The sky band ---- */
-  .sky { position: relative; overflow: hidden; }
-  .sky > * { position: relative; z-index: 1; }
-  .sky-verdict { font-size: 12px; line-height: 1.8; color: #c8c8c0; margin: 18px 0 22px; max-width: 560px; }
-  .sky-verdict b { color: var(--bg); }
-  .sky-cta { display: flex; gap: 10px; flex-wrap: wrap; }
-  .sky-card { border: 1.5px solid #3a3a37; background: #101314; }
-  .sky-body { padding: 14px; }
-  .sky-row { display: flex; justify-content: space-between; gap: 12px; font-size: 11px; padding: 9px 0; color: #c8c8c0; }
-  .sky-rule { height: 1px; background: #2c2f30; margin: 8px 0; }
-  .sky-null { align-items: center; color: var(--bg); font-weight: 700; }
-  .sky-null .pixel { font-size: 26px; color: #55a16b; line-height: 1; }
-  .sky-fine { font-size: 9.5px; margin: 10px 0 0; color: #8f8f88; }
-
-  /* Drifting starfield behind the band. `inset` overshoots so the drift never exposes an edge. */
-  .sky::before {
-    content: ''; position: absolute; inset: -40% -12% auto -12%; height: 180%;
-    pointer-events: none; opacity: 0.45; z-index: 0;
-    background-image:
-      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
-      radial-gradient(circle, #6f6f88 1px, transparent 1.6px),
-      radial-gradient(circle, #55a16b 1px, transparent 1.6px),
-      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
-      radial-gradient(circle, #5a5a55 1px, transparent 1.6px),
-      radial-gradient(circle, #6f6f88 1px, transparent 1.6px);
-    background-repeat: no-repeat;
-    background-position: 6% 14%, 74% 9%, 33% 58%, 90% 68%, 18% 82%, 55% 34%;
-    animation: skyDrift 90s linear infinite;
-  }
-  @keyframes skyDrift { to { transform: translate3d(5%, -3%, 0); } }
-  @media (prefers-reduced-motion: reduce) { .sky::before { animation: none; } }
-
-  .dr-card { border: 1.5px solid #3a3a37; background: #101314; }
-  .dr-bar { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #3a3a37; font-size: 9.5px; }
-  .dr-body { padding: 14px; }
-  .dr-block { border: 1px solid #2c2f30; padding: 12px; margin-bottom: 10px; opacity: 1; }
-  .dr-block p { font-size: 11px; margin: 6px 0 0; color: #c8c8c0; }
-  .dr-block.is-hidden { opacity: 0; transform: translateY(10px); }
-  .dr-block.is-in { animation: rpUp 0.42s ease both; }
-
-  /* REPLAY MODE — a spotlight, not just a reveal.
-     While a session runs, every desk that has already spoken dims back to 45% and only the one
-     currently speaking is at full strength with a lit border. That is what makes it read as a
-     debate unfolding rather than a list appearing.
-     `animation: none` here is load-bearing: the ambient henneth-speak loop in global.css is also
-     walking these blocks, and without this the two would fight for border-colour mid-replay. */
-  .dr-body.is-replaying .dr-block { animation: none; opacity: 0.45; transition: opacity 0.3s ease, border-color 0.3s ease; }
-  .dr-body.is-replaying .dr-block.is-speaking { opacity: 1; border-color: #55a16b; }
-  .dr-body.is-replaying .dr-block.is-hidden { opacity: 0; }
-
-  /* The "recording" tell in the panel header, only present while a session is running. */
-  .dr-live { display: none; margin-left: 8px; color: #55a16b; letter-spacing: 0.08em; }
-  /* Keyed off .dr-card, not .dr-body: .dr-live sits inside .dr-bar, which is a sibling of
-     .dr-body, so no combinator from .dr-body can reach it. Only the shared ancestor can. */
-  .dr-card.is-live .dr-live { display: inline; }
-  .dr-card.is-live .dr-live::before {
-    content: '●'; margin-right: 5px; display: inline-block;
-    animation: henneth-dot-pulse 1.1s ease-in-out infinite;
-  }
-  .dr-chair { border-color: var(--bg); }
-  .dr-chair-h { display: flex; justify-content: space-between; }
-  .dr-dissent { color: #9a9a92 !important; }
-  .dr-illus { padding: 0 14px 12px; color: #8f8f88; }
-  @keyframes rpUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
-  .score-how { grid-template-columns: repeat(4, 1fr); }
-  .score-how p { font-size: 11px; margin: 8px 0 0; }
-  .score-note { font-size: 10.5px; margin-top: 18px; max-width: 720px; }
-
-  /* ---- 07 Latest ---- */
-  .updates .sec-head { margin-bottom: 24px; }
-  .upd-card { border: var(--rule); background: var(--panel); max-width: 680px; }
-  .upd-bar {
-    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
-    border-bottom: var(--rule); background: var(--panel-2);
-  }
-  .upd-v {
-    font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
-  }
-  .upd-body { padding: 18px 16px; }
-  .upd-body h3 { margin: 0 0 12px; }
-  .upd-notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
-  .upd-notes li {
-    position: relative; padding-left: 16px; font-size: 12px; line-height: 1.6; color: var(--ink-2);
-  }
-  /* Flat square marker, not a bullet dot — every other list mark on the site (.ha-dot, sky-null)
-     is a rule-weight square, never a round glyph, per the no-round-corners rule. */
-  .upd-notes li::before {
-    content: ''; position: absolute; left: 0; top: 6px; width: 6px; height: 6px; background: var(--up);
-  }
-  .upd-older { max-width: 680px; margin-top: 2px; border-top: var(--rule); }
-  .upd-old-row {
-    display: flex; align-items: center; gap: 12px; padding: 12px 2px;
-    border-bottom: 1px dotted var(--hair); font-size: 11px;
-  }
-  .upd-old-v { font-family: var(--font-mono); font-weight: 700; flex: none; }
-  .upd-old-t { flex: 1; color: var(--ink-2); }
-  .upd-link { margin-top: 20px; }
-
-  /* .seg-2 — the site's secondary-CTA link, first established on /solutions. */
-  .seg-2 {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em;
-    text-transform: uppercase; font-weight: 700;
-    color: var(--ink-3); text-decoration: none; border-bottom: 0;
-  }
-  .seg-2 :global(.icn) { transition: transform 0.18s ease; }
-  @media (hover: hover) {
-    .seg-2:hover { color: var(--ink-1); }
-    .seg-2:hover :global(.icn) { transform: translateX(3px); }
-  }
-  /* The 9.5px mono type makes this link ~16px tall — well under the 44px minimum tap
-     target. Pad the hit area on touch screens without changing the desktop metrics. */
-  @media (pointer: coarse) {
-    .seg-2 { min-height: 44px; }
-  }
-
-  .principles { grid-template-columns: repeat(3, 1fr); }
-  .principles p { font-size: 11.5px; margin: 8px 0 0; }
-
-  .tease { border: var(--rule); background: var(--panel); }
-  .tease-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 18px; text-decoration: none; border-bottom: 1px dotted var(--hair);
-  }
-  .tease-row:last-child { border-bottom: 0; }
-  /* Gated: ungated, a tap on a phone leaves the row stuck in its hover state until the next tap
-     lands elsewhere, which reads as "this row is selected" on a row that selects nothing. */
-  @media (hover: hover) {
-    .tease-row { transition: background 0.16s ease, transform 0.16s ease; }
-    .tease-row:hover { background: var(--panel-2); transform: translateY(-2px); }
-  }
-  .tease-n { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-  .tease-n em { font-style: normal; color: var(--ink-3); font-weight: 400; }
-  .tease-p { font-family: var(--font-mono); font-size: 20px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-  .tease-p i { font-style: normal; font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); }
-
-  .center { text-align: center; }
-  .final-lead { max-width: 560px; margin: 0 auto 22px; }
-  .final-cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  /* #8f8f88 is the site's dark-surface muted value and clears 4.5:1; #7a7a72 did not. */
-  .final-fine { font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 20px; color: #8f8f88; }
-
-  @media (max-width: 920px) {
-    .hero-grid, .two-col { grid-template-columns: 1fr; gap: 32px; }
-    .two-col.rev > :first-child { order: 2; }
-    .trust-grid, .score-how { grid-template-columns: repeat(2, 1fr); }
-    .steps, .principles { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 520px) {
-    .heat { grid-template-columns: repeat(3, 1fr); }
-  }
-  /* The home page is where most phones land first, and almost every explanatory line on it was
-     11.5px or under. Everything that carries an argument goes up; the mock chrome (.mock-tag,
-     .hc-sym, .hc-pct, .sig-*, .rank-k, .dr-bar) deliberately does not — those are labels drawn
-     inside fixed-size illustrations of a screen, and growing them breaks the boxes. */
-  @media (max-width: 720px) {
-    .hero-sub { font-size: 13px; }
-    .hero-astro { font-size: 10.5px; }
-    /* "Free in early access · No card required · Research, not advice" — the three objections a
-       stranger has, answered directly under the button. Not fine print. */
-    .hero-fine { font-size: 11px; letter-spacing: 0.08em; }
-    .mock-note { font-size: 11.5px; }
-    .step-d, .psz-body, .principles p { font-size: 13px; }
-    .vrow, .sky-row, .dr-block p, .score-how p { font-size: 12.5px; }
-    .score-note { font-size: 12px; }
-    .sky-fine, .dr-hint { font-size: 11px; }
-    .final-fine { font-size: 11px; letter-spacing: 0.09em; }
-    /* The rest of the mock stays decorative on purpose, but this strip is not decoration — it is
-       the line that says the numbers above are real closes and that the panel is not live. At
-       8.5px on one row it was the smallest text on the page saying the most load-bearing thing.
-       Stacked rather than shrunk: two 30-odd-character lines fit 375px at 10.5px, side by side
-       they do not. */
-    .mock-foot { flex-direction: column; gap: 4px; font-size: 10.5px; }
-    .mock-foot-r { text-align: left; }
-    .upd-body h3 { font-size: 15px; }
-    .upd-old-row { flex-wrap: wrap; row-gap: 4px; }
-    .upd-old-t { flex-basis: 100%; order: 3; }
+  /* Source-accurate Concept D desk showcase geometry and motion. */
+  .concept-feature { height: 420px; min-height: 420px; background: #0f0f0d; border: 1.5px solid #111; }
+  .feature-canvas-wrap, .feature-canvas-wrap canvas, .feature-radial-glow { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .feature-canvas-wrap { z-index: 0; }
+  .feature-canvas-wrap canvas { display: block; opacity: .34; }
+  .feature-radial-glow { background: radial-gradient(circle at 70% 25%, rgba(184,134,11,.12), transparent 55%); }
+  .feature-topline { position: absolute; top: 0; left: 0; right: 0; z-index: 2; height: 3px; }
+  .feature-hud { position: absolute; top: 0; left: 0; right: 0; height: 196px; display: flex; z-index: 1; overflow: hidden; }
+  .feature-rail { width: 120px; flex: 0 0 120px; padding: 14px 12px; border-right: 1px solid rgba(242,242,238,.14); display: flex; flex-direction: column; gap: 9px; }
+  .feature-rail strong { font-size: 8.5px; letter-spacing: .14em; color: rgba(242,242,238,.75); margin-bottom: 4px; }
+  .feature-hud-main { flex: 1; min-width: 0; padding: 12px 14px; }
+  .feature-header { display: flex; gap: 0; margin: 0 0 12px; border: 1px solid rgba(242,242,238,.16); }
+  .feature-header > span { flex: 1; padding: 6px 9px; border-right: 1px solid rgba(242,242,238,.12); font-size: 8px; letter-spacing: .04em; color: rgba(242,242,238,.5); }
+  .feature-header > span:last-child { border-right: 0; }
+  .feature-header > span:first-child { border-right-color: rgba(242,242,238,.12); color: rgba(242,242,238,.5); }
+  .feature-header b { color: #f2f2ee; }
+  .feature-panels { display: flex; gap: 12px; }
+  .feature-grid-wrap { flex: 1.5; padding: 0; border-right: 0; }
+  .feature-grid { gap: 3px; }
+  .feature-grid span { padding: 5px 3px; font-size: 6.5px; }
+  .feature-wire { flex: 1; padding: 0; }
+  .wire-row { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 7px; }
+  .wire-row > i { width: 9px; height: 9px; border: 1px solid rgba(242,242,238,.3); flex: 0 0 9px; }
+  .wire-row > span { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .wire-row b, .wire-row em { display: block; height: 4px; background-size: 300% 100%; background-image: linear-gradient(90deg,rgba(242,242,238,.3) 0 40%,rgba(242,242,238,.65) 50%,rgba(242,242,238,.3) 60%); animation: hnShimmer var(--wire-duration) linear infinite; animation-delay: var(--wire-delay); }
+  .wire-row em { width: var(--wire-width); background: rgba(242,242,238,.16); animation: none; }
+  .feature-veil { position: absolute; left: 0; right: 0; top: 140px; height: 56px; z-index: 2; background: linear-gradient(to bottom, rgba(15,15,13,0), #0f0f0d); }
+  .feature-role-track { position: absolute; left: 0; right: 60px; bottom: 36px; height: 200px; overflow: hidden; z-index: 2; }
+  .feature-role-slides { animation: hnRotate3 13.5s ease-in-out infinite; }
+  .feature-role-slide { height: 200px; padding: 0 44px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+  .feature-role-slide .feature-ticker { position: absolute; top: 0; right: 44px; font-size: 13px; letter-spacing: .08em; color: #f2f2ee; opacity: .7; }
+  .feature-role-slide p { max-width: 600px; margin: 0 0 20px; color: #f2f2ee; font-size: 21px; line-height: 1.4; }
+  .feature-speaker { display: flex; align-items: center; gap: 12px; }
+  .speaker-icon { width: 34px; height: 34px; flex-shrink: 0; }
+  .speaker-icon[data-tone='amber'] { color: #e8862e; }
+  .feature-speaker b { color: #f2f2ee; font-size: 12px; }
+  .feature-speaker small { color: rgba(242,242,238,.55); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .feature-dots { z-index: 3; }
+  .feature-dots span:first-child { animation: hnDot0 13.5s ease-in-out infinite; }
+  .feature-dots span:nth-child(2) { animation: hnDot1 13.5s ease-in-out infinite; }
+  .feature-dots span:nth-child(3) { animation: hnDot2 13.5s ease-in-out infinite; }
+  @keyframes hnRotate3 { 0%,28% { transform: translateY(0); } 33%,61% { transform: translateY(-200px); } 66%,94% { transform: translateY(-400px); } 100% { transform: translateY(0); } }
+  @keyframes hnDot0 { 0%,28%,100% { height: 22px; background:#f2f2ee; } 33%,94% { height: 6px; background:rgba(242,242,238,.4); } }
+  @keyframes hnDot1 { 0%,28% { height: 6px; background:rgba(242,242,238,.4); } 33%,61% { height: 22px; background:#f2f2ee; } 66%,100% { height: 6px; background:rgba(242,242,238,.4); } }
+  @keyframes hnDot2 { 0%,61% { height: 6px; background:rgba(242,242,238,.4); } 66%,94% { height: 22px; background:#f2f2ee; } 100% { height: 6px; background:rgba(242,242,238,.4); } }
+  @keyframes hnShimmer { 0% { background-position:-120% 0; } 100% { background-position:220% 0; } }
+  @media (max-width: 620px) {
+    .concept-feature { height: 420px; min-height: 420px; width: calc(100% - 36px); }
+    .feature-hud { height: 170px; }
+    .feature-rail { width: 120px; flex-basis: 120px; }
+    .feature-header > span:nth-child(3), .feature-header > span:nth-child(4) { display:none; }
+    .feature-panels { gap: 8px; }
+    .feature-wire { display:none; }
+    .feature-role-track { right: 28px; }
+    .feature-role-slide { padding: 0 18px; }
+    .feature-role-slide p { font-size: 17px; }
+    .feature-demo-label { right: 8px; bottom: 8px; font-size: 6.5px; }
   }
 </style>
 
-<script>
-  /* THE DESK ROOM SESSION.
-     The old version just faded five blocks in on a timer. This runs it as a debate: each desk
-     takes the spotlight while the others dim, the panel header shows a live counter, and the
-     button reports state instead of sitting there re-clickable mid-run.
-
-     Timers are tracked and cleared on re-entry — without that, a second click part-way through
-     leaves the first run's callbacks firing into the second, and the spotlight jumps around. */
-  const play = document.getElementById('drPlay');
-  const hint = document.getElementById('drHint');
-  const live = document.getElementById('drLive');
-  const card = document.querySelector('.dr-card') as HTMLElement | null;
-  const body = document.getElementById('drBody');
-  const blocks = Array.from(document.querySelectorAll('.dr-block')) as HTMLElement[];
-  const NAMES = ['Technical desk', 'Fundamental desk', 'Bull', 'Bear'];
-  const BEAT = 900;                       // slow enough to actually read a line before the next
-  let timers: number[] = [];
-
-  function endSession() {
-    body?.classList.remove('is-replaying');
-    card?.classList.remove('is-live');
-    blocks.forEach((b) => b.classList.remove('is-speaking'));
-    if (play) { play.textContent = '▶ Replay the session'; (play as HTMLButtonElement).disabled = false; }
-    if (hint) hint.textContent = 'That is one session. The desk runs this on every ticker.';
-  }
-
-  play?.addEventListener('click', () => {
-    (window as any).posthog?.capture('desk_room_demo_played');
-    timers.forEach(clearTimeout);
-    timers = [];
-    body?.classList.add('is-replaying');
-    card?.classList.add('is-live');
-    (play as HTMLButtonElement).disabled = true;
-    play.textContent = 'Session running…';
-    blocks.forEach((b) => { b.classList.add('is-hidden'); b.classList.remove('is-in', 'is-speaking'); });
-
-    blocks.forEach((b, i) => {
-      timers.push(
-        window.setTimeout(() => {
-          blocks.forEach((x) => x.classList.remove('is-speaking'));
-          b.classList.remove('is-hidden');
-          b.classList.add('is-in', 'is-speaking');
-          if (live) live.textContent = `${NAMES[i]} — ${i + 1} of ${blocks.length}`;
-          if (hint) hint.textContent = i === blocks.length - 1
-            ? 'That is the debate — no verdict handed down.'
-            : `${NAMES[i]} is making its case…`;
-        }, i * BEAT)
-      );
-    });
-    // Bear's block is the last word, so the session holds on it before releasing the spotlight.
-    timers.push(window.setTimeout(endSession, blocks.length * BEAT + 1400));
-  });
-</script>
-
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.hero-cta a').forEach(function (el) {
-      el.addEventListener('click', function () {
-        window.posthog?.capture('hero_cta_clicked', {
-          cta_label: el.textContent.trim(),
-          cta_destination: el.getAttribute('href')
-        });
-      });
-    });
-  });
+  const film = document.querySelector('[data-film-forward]');
+  const reverseFilm = document.querySelector('[data-film-reverse]');
+  const veil = document.querySelector('[data-film-veil]');
+  const filmMedia = document.querySelector('[data-film-media-wrap]');
+  const filmLayer = document.querySelector('.concept-film');
+  if (film && reverseFilm && veil && filmLayer && filmMedia) {
+    const filmEnd = document.querySelector('[data-film-end]');
+    const syncFilmHeight = () => {
+      if (!filmEnd) return;
+      const home = filmLayer.parentElement;
+      if (!home) return;
+      const homeBox = home.getBoundingClientRect();
+      const endBox = filmEnd.getBoundingClientRect();
+      filmLayer.style.height = `${Math.max(0, endBox.bottom - homeBox.top)}px`;
+    };
+    syncFilmHeight();
+    window.requestAnimationFrame(syncFilmHeight);
+    document.fonts?.ready.then(syncFilmHeight);
+    window.addEventListener('resize', syncFilmHeight, { passive: true });
+    film.muted = true;
+    reverseFilm.muted = true;
+    const swap = (active, hidden) => { active.style.opacity = '1'; hidden.style.opacity = '0'; };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      film.pause();
+      reverseFilm.pause();
+      film.currentTime = 0;
+      swap(film, reverseFilm);
+    } else {
+      const primeReverse = () => {
+        if (reverseFilm.getAttribute('src')) return;
+        reverseFilm.src = reverseFilm.dataset.src || '';
+        reverseFilm.preload = 'auto';
+        reverseFilm.load();
+      };
+      let filmVisible = true;
+      const syncPlayback = () => {
+        const active = film.style.opacity === '0' ? reverseFilm : film;
+        if (document.hidden || !filmVisible) {
+          film.pause();
+          reverseFilm.pause();
+          return;
+        }
+        active.play().catch(() => {});
+      };
+      film.addEventListener('playing', () => window.setTimeout(primeReverse, 1200), { once: true });
+      film.addEventListener('ended', () => { primeReverse(); reverseFilm.currentTime = 0; swap(reverseFilm, film); syncPlayback(); });
+      reverseFilm.addEventListener('ended', () => { film.currentTime = 0; swap(film, reverseFilm); syncPlayback(); });
+      const filmObserver = new IntersectionObserver(([entry]) => {
+        filmVisible = entry?.isIntersecting ?? true;
+        syncPlayback();
+      }, { rootMargin: '120px' });
+      filmObserver.observe(filmLayer);
+      document.addEventListener('visibilitychange', syncPlayback);
+      window.addEventListener('pageshow', syncPlayback);
+      window.addEventListener('focus', syncPlayback);
+      syncPlayback();
+      let filmFrame = 0;
+      const updateFilm = () => {
+        filmFrame = 0;
+        const progress = Math.max(0, Math.min(1, (window.scrollY || 0) / 620));
+        filmMedia.style.filter = `blur(${(progress * 26).toFixed(1)}px) saturate(${(1 - progress * .4).toFixed(3)}) contrast(${(1 - progress * .05).toFixed(3)})`;
+        filmMedia.style.transform = `scale(${(1 + progress * .06).toFixed(3)})`;
+        veil.style.background = `rgba(255,255,255,${progress.toFixed(3)})`;
+      };
+      const queueFilmUpdate = () => {
+        if (!filmFrame) filmFrame = requestAnimationFrame(updateFilm);
+      };
+      window.addEventListener('scroll', queueFilmUpdate, { passive: true });
+      queueFilmUpdate();
+    }
+  }
 </script>

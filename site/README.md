@@ -53,6 +53,35 @@ npm run dev      # http://localhost:4321
 npm run build    # -> dist/
 ```
 
+## Homepage visual layer
+
+The homepage is a native Astro implementation of the approved Concept D direction. The hero lives in
+`src/pages/index.astro`; sixteen post-hero chapters live in
+`src/components/home/ConceptDPostHero.astro`, with isolated CSS and TypeScript in
+`src/styles/home-concept-d-posthero.css` and `src/scripts/home-concept-d-posthero.ts`. Their DOM order
+matches their visual and reading order. Customer actions use the existing configured plan/account
+routes; the homepage does not create another signup workflow. Product-like ticker, case and scorecard
+panels are persistently labelled as illustrative rather than current research.
+
+The standalone download is not shipped. Its design and behavior are implemented as native Astro,
+CSS and TypeScript. The two decorative hero videos are served from `public/concept-d/` at desktop,
+tablet and mobile widths, muted and `playsinline`; foreground content remains complete if media or
+autoplay fails.
+
+Post-hero motion starts only when its chapter is relevant. Reveal, rule and share observers are
+one-shot; Desk Room and case loops begin on first visibility. The two WebGL layers are
+visibility-gated and cap device pixel ratio at 1.5. Reduced-motion handling pauses the hero video,
+skips its scroll loop, and settles post-hero movement while preserving content and controls. On
+compact screens, plans, stories, surfaces, principles and other long collections use touch-friendly
+horizontal snap rails.
+
+Navigation is owned once in `src/components/Header.astro` and mounted by `Base.astro` on every
+marketing route. Home and interior pages use the same glass bar, spacing and scroll behavior. At
+760 px and below it becomes a fixed mobile bar with a left-edge drawer over a dimmed, blurred,
+non-interactive backdrop. Escape, outside-tap and link dismissal, focus containment/restoration and
+scroll locking are shared across routes. The shared `--maxw` canvas is 1180 px, with 24 px
+desktop/tablet and 18 px mobile gutters below the homepage hero.
+
 ## Everything brand-shaped lives in one file
 
 `src/site.config.ts` holds the name, tagline, URLs, contact address, GA4 id and

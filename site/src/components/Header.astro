@@ -1,197 +1,70 @@
 ---
 import { site } from '../site.config.ts';
-interface Props { active?: string }
-const { active = '' } = Astro.props;
-
+interface Props { active?: string; mode?: 'default' | 'immersive' }
+const { active = '', mode = 'default' } = Astro.props;
 const links = [
   { k: 'features', label: 'Features', href: '/features/' },
   { k: 'solutions', label: 'Solutions', href: '/solutions/' },
   { k: 'research', label: 'Research', href: '/research/' },
-  /* The astro lens is the differentiator, so it gets a top-level slot rather than being buried:
-     it is the one thing on this site nobody else offers, and the meta description already
-     promises it. */
   { k: 'astro', label: 'Astro', href: '/financial-astrology/' },
   { k: 'tools', label: 'Tools', href: '/tools/' },
   { k: 'plans', label: 'Plans', href: '/plans/' },
   { k: 'blog', label: 'Blog', href: '/blog/' },
 ];
+const current = (key: string) => key === active ? 'page' : undefined;
 ---
 
-<header class="nav">
+<header class:list={['nav', { 'nav--immersive': mode === 'immersive' }]} data-nav-root>
   <div class="nav-in">
-    <a href="/" class="wordmark" aria-label={`${site.name} home`}>
-      {/* Inlined rather than <img src="/logo.svg"> on purpose: the header inverts to a dark bar,
-          and only an inline SVG can inherit currentColor. An <img> would need a second, light
-          copy of the file kept in sync with the first. aria-hidden because the anchor already
-          carries the accessible name — otherwise a screen reader announces the brand twice. */}
-      <svg class="wm-mark" viewBox="0 0 512 353" aria-hidden="true" focusable="false">
-        <path fill="currentColor" d="M446.573 0.355469C462.334 0.310732 480.506 -2.13 494.124 6.42676C515.224 19.6807 511.024 45.4941 511.024 66.7852L511.006 142.461L511.018 260.86L511.012 298.175C511.012 304.311 511.232 313.267 510.785 319.226C510.283 325.342 508.171 331.219 504.675 336.26C498.405 345.475 489.783 350.251 479.068 352.388C470.472 353.024 458.954 352.688 450.131 352.682L400.289 352.657L242.442 352.651H102.525L57.7666 352.712C43.5759 352.73 30.1047 354.672 17.5703 346.933C-3.9062 333.67 0.339434 308.3 0.34375 286.578L0.333984 213.933L0.326172 95.8223C0.326171 75.6603 -0.0841016 55.2226 0.603516 35.1035C1.25022 16.1744 14.9868 4.61197 32.3105 0.597656C38.706 0.0416886 49.539 0.340435 56.2842 0.344727L97.9756 0.37793L231.101 0.369141L395.721 0.389648L446.573 0.355469ZM92.1426 20.5342C76.2281 20.5317 49.3452 19.7353 34.1748 20.7842C23.4972 24.4972 19.8398 30.1121 19.7559 41.2998C19.6328 57.6813 19.842 74.0674 19.8652 90.4502L19.79 182.468L19.7979 265.617C19.7636 281.348 19.1673 297.307 19.79 313.015C19.9076 315.981 20.1934 318.934 21.2998 321.716C23.1998 326.495 27.0734 330.059 31.8633 331.859C38.3989 334.313 143.303 332.901 157.877 332.899L386.721 332.881L446.824 332.919C453.511 332.931 471.929 333.364 477.52 332.366C486.673 329.006 491.155 323.81 491.29 313.722C491.498 297.837 491.401 281.941 491.395 266.054L491.382 175.863L491.327 83.8887C491.321 75.0501 492.392 37.9815 490.139 32.0557C488.418 27.6461 485.05 24.0785 480.752 22.1094C477.458 20.637 474.292 20.6141 470.717 20.6006C440.61 20.4861 410.423 20.5281 380.316 20.5293L205.364 20.5371L92.1426 20.5342ZM367.838 247.697C367.856 252.087 368.156 266.172 367.458 269.656C333.671 269.233 297.343 269.345 263.617 269.694L263.679 247.67L367.838 247.697ZM211.999 90.3945C212.582 128.764 212.047 168.85 212.05 207.324L212.007 244.719C211.988 248.62 212.133 258.941 211.614 262.192L210.447 262.653L189.397 262.713L189.38 185.877C166.304 185.513 142.355 185.847 119.209 185.851L119.167 262.646C111.817 262.61 104.348 262.728 96.9883 262.78L96.9375 90.3994L119.216 90.3984L119.124 163.954L189.371 163.976C189.12 139.678 189.222 114.718 189.397 90.4189L211.999 90.3945Z"/>
-      </svg>
-      <span class="wm-1">HENNETH</span>
-    </a>
-
-    <nav class="nav-links" aria-label="Primary">
-      {links.map((l) => (
-        <a href={l.href} class:list={['nav-link', { on: l.k === active }]}>{l.label}</a>
-      ))}
-    </nav>
-
-    <div class="nav-right">
-      <span class="badge"><span class="dot"></span>Research · not advice</span>
-      <a href={site.appUrl} class="nav-signin" rel="noopener">Sign in</a>
-      <a href="/plans" class="btn nav-cta">Get started</a>
-    </div>
-
-    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-
-  <div class="nav-drawer" id="navDrawer" hidden>
-    {links.map((l) => <a href={l.href}>{l.label}</a>)}
-    <a href={site.appUrl} rel="noopener">Sign in</a>
-    <a href="/plans" class="drawer-cta">Get started →</a>
+    <button class="nav-burger" type="button" data-nav-toggle aria-controls="navDrawer" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <a href="/" class="wordmark" aria-label={`${site.name} home`}><img src="/logo.svg" class="wm-mark" alt="" /><span class="wm-1">HENNETH</span></a>
+    <nav class="nav-links" aria-label="Primary navigation">{links.map((l) => <a href={l.href} class:list={['nav-link', { on: l.k === active }]} aria-current={current(l.k)}>{l.label}</a>)}</nav>
+    <div class="nav-right"><a href={site.appUrl} class="nav-signin" data-nav-cta="Log in" rel="noopener">Log in</a><a href="/plans/" class="btn nav-cta" data-nav-cta="Sign up free">Sign up free ›</a></div>
+    <div class="nav-mobile-auth" aria-label="Account links"><a href={site.appUrl} class="nav-signin" data-nav-cta="Log in" rel="noopener">Log in</a><a href="/plans/" class="btn nav-cta" data-nav-cta="Sign up free">Sign up free</a></div>
   </div>
 </header>
+<div class="nav-drawer" id="navDrawer" data-state="closed" hidden inert aria-hidden="true" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <button class="nav-scrim" type="button" data-nav-close tabindex="-1" aria-label="Close menu"></button>
+  <div class="nav-drawer-panel"><div class="nav-drawer-head"><span class="drawer-wordmark"><img src="/logo.svg" class="drawer-mark" alt="" />HENNETH</span><button class="nav-close" type="button" data-nav-close aria-label="Close menu">×</button></div><nav aria-label="Mobile navigation">{links.map((l) => <a href={l.href} class:list={{ on: l.k === active }} aria-current={current(l.k)}>{l.label}</a>)}</nav><div class="drawer-actions"><a href="/plans/" class="drawer-main" data-nav-cta="Get started">Get started →</a><a href={site.appUrl} class="drawer-login" data-nav-cta="Sign in" rel="noopener">Sign in</a></div></div>
+</div>
+<div class="nav-pill" data-nav-pill inert aria-hidden="true"><a href="/" class="pill-wordmark" aria-label={`${site.name} home`}><img src="/logo.svg" class="pill-mark" alt="" /><span>HENNETH</span></a><nav aria-label="Quick navigation">{links.map((l) => <a href={l.href} class:list={{ on: l.k === active }} aria-current={current(l.k)}>{l.label}</a>)}</nav><a href="/plans/" class="pill-cta" data-nav-cta="Sign up free">Sign up free ›</a></div>
+<div class="nav-mobile-spacer" aria-hidden="true"></div>
 
 <style>
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    background: var(--ink-1);
-    color: var(--bg);
-    border-bottom: var(--rule);
-  }
-  .nav-in {
-    max-width: var(--maxw);
-    margin: 0 auto;
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-  .wordmark {
-    display: flex;
-    /* center, not baseline: an inline SVG's baseline sits on its bottom edge, so `baseline`
-       hangs the mark below the cap-height of HENNETH instead of aligning with it. */
-    align-items: center;
-    gap: 9px;
-    color: var(--bg);
-    text-decoration: none;
-  }
-  /* Width follows from the 512:353 viewBox — set height only so the aspect can never skew. */
-  .wm-mark { height: 17px; width: auto; display: block; flex: none; }
-  .wm-1 { font-weight: 800; font-size: 15px; letter-spacing: 0.14em; }
-
-  .nav-links {
-    display: flex;
-    gap: 22px;
-    margin-left: 14px;
-    font-size: 11px;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-  }
-  .nav-link { color: #cfcfc8; text-decoration: none; }
-  .nav-link:hover { color: #fff; }
-  .nav-link.on { color: #fff; font-weight: 700; }
-
-  .nav-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-  .nav-signin {
-    color: #cfcfc8;
-    text-decoration: none;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .nav-signin:hover { color: #fff; }
-  .nav-cta {
-    background: var(--bg);
-    color: var(--ink-1);
-    border-color: var(--bg);
-    padding: 9px 15px;
-    font-size: 11px;
-  }
-  .nav-cta:hover { background: #fff; color: var(--ink-1); }
-
-  /* 44x44 is the whole point of this rule. The three bars are 20x14 and used to carry only 8px of
-     padding, giving a 36x30 hit area for the ONE control that opens navigation on a phone. The box
-     is now square and thumb-sized; the negative right margin pulls the bars back to the optical
-     edge they sat on before, so nothing moved visually. */
-  .nav-burger {
-    display: none;
-    margin-left: auto;
-    margin-right: -4px;
-    background: none;
-    border: 0;
-    width: 44px;
-    height: 44px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    padding: 0;
-  }
-  .nav-burger span { width: 20px; height: 2px; background: var(--bg); }
-
-  .nav-drawer {
-    display: none;
-    flex-direction: column;
-    background: var(--ink-1);
-    border-top: 1px solid #2a2a27;
-    padding: 8px 24px 18px;
-  }
-  .nav-drawer a {
-    color: #cfcfc8;
-    text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    /* Flex + min-height rather than padding alone: the row is the tap target, and stating 46px
-       makes that a guarantee instead of an arithmetic accident of font size and line-height. */
-    display: flex;
-    align-items: center;
-    min-height: 46px;
-    padding: 0;
-    border-bottom: 1px dotted #2f2f2c;
-  }
-  .nav-drawer a:hover { color: #fff; }
-  .nav-drawer .drawer-cta { color: #fff; font-weight: 700; border-bottom: 0; }
-
-  @media (max-width: 900px) {
-    .nav-links, .nav-right { display: none; }
-    .nav-burger { display: flex; }
-    .nav-drawer:not([hidden]) { display: flex; }
-    /* Once the links collapse into the burger this is the only other target in the bar, and it is
-       the way back to the home page from anywhere on the site. At 25px it was a thin strip inside
-       a 56px bar; the bar has the room, so the link claims it. Nothing moves — the flex box is
-       already centering its contents. */
-    .wordmark { min-height: 44px; }
-  }
+  .nav { position: relative; z-index: 45; background: rgba(255,255,255,.84); color: var(--ink-1); border-bottom: 1px solid var(--line); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
+  .nav--immersive { position: absolute; top: 34px; left: 50%; width: min(100%, var(--maxw)); transform: translateX(-50%); background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .nav--immersive .nav-in { min-height: 0; padding: 18px 44px; }
+  .nav--immersive .wm-mark { height: 22px; }
+  .nav--immersive .nav-cta { line-height: 1.1; }
+  .nav-in { max-width: var(--maxw); min-height: 64px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; }
+  .wordmark, .pill-wordmark { display: flex; align-items: center; gap: 9px; color: var(--ink-1); text-decoration: none; white-space: nowrap; }
+  .wm-mark { width: auto; height: 17px; display: block; flex: none; } .wm-1 { font-weight: 800; font-size: 15px; letter-spacing: .14em; }
+  .nav-links { display: flex; gap: 22px; margin-left: 14px; font: 500 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .nav-link { color: var(--ink-3); text-decoration: none; transition: color .25s ease; } .nav-link:hover, .nav-link.on { color: var(--ink-1); } .nav-link.on { font-weight: 700; }
+  .nav-right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+  .nav-signin { color: var(--ink-3); text-decoration: none; font: 500 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; } .nav-signin:hover { color: var(--ink-1); }
+  .nav-cta { background: var(--ink-1); color: var(--bg); border-color: var(--ink-1); padding: 9px 15px; font-size: 11px; } .nav-cta:hover { background: var(--panel); color: var(--ink-1); } .nav-mobile-auth, .nav-burger { display: none; }
+  .nav-pill { position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-90px); z-index: 50; opacity: 0; display: flex; align-items: center; gap: 26px; pointer-events: none; background: rgba(255,255,255,.62); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(17,17,17,.1); box-shadow: 0 10px 34px rgba(10,10,10,.14); padding: 9px 12px 9px 20px; transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s ease, box-shadow .35s ease; } .nav-pill.is-visible { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+  .nav-mobile-spacer { display: none; }
+  .pill-wordmark { gap: 8px; font: 700 13px var(--font-mono); letter-spacing: .12em; } .pill-mark { width: 16px; height: 16px; display: block; object-fit: contain; } .nav-pill nav { display: flex; gap: 14px; font: 500 10px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; } .nav-pill nav a { color: var(--ink-3); text-decoration: none; white-space: nowrap; } .nav-pill nav a:hover, .nav-pill nav a.on { color: var(--ink-1); } .pill-cta { display: inline-flex; align-items: center; background: var(--ink-1); color: var(--panel); padding: 8px 16px; font: 700 10px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+  .nav-drawer { position: fixed; inset: 0; z-index: 80; pointer-events: none; } .nav-drawer[data-state='open'] { pointer-events: auto; } .nav-scrim { position: absolute; inset: 0 0 0 min(300px, 84vw); width: auto; height: auto; border: 0; background: rgba(10,10,10,.48); opacity: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: opacity .22s cubic-bezier(.23,1,.32,1); } .nav-drawer[data-state='open'] .nav-scrim { opacity: 1; } .nav-drawer-panel { position: absolute; top: 0; bottom: 0; left: 0; width: min(300px, 84vw); display: flex; flex-direction: column; padding: 22px 22px max(30px, env(safe-area-inset-bottom)); background: var(--ink-1); color: var(--bg); box-shadow: 16px 0 40px rgba(0,0,0,.35); overflow-y: auto; overscroll-behavior: contain; opacity: .98; transform: translateX(-100%); transition: transform .26s cubic-bezier(.32,.72,0,1), opacity .2s cubic-bezier(.23,1,.32,1); will-change: transform; } .nav-drawer[data-state='open'] .nav-drawer-panel { opacity: 1; transform: translateX(0); } .nav-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; } .drawer-wordmark { display: inline-flex; align-items: center; gap: 8px; font: 700 12px var(--font-mono); letter-spacing: .12em; } .drawer-mark { width: 18px; height: 18px; object-fit: contain; filter: invert(1); } .nav-close { width: 44px; height: 44px; margin: -10px -10px 0 0; border: 0; background: none; color: rgba(242,242,238,.7); font-size: 26px; line-height: 1; cursor: pointer; }
+  .nav-drawer-panel nav { display: flex; flex-direction: column; gap: 2px; } .nav-drawer-panel nav a { display: flex; align-items: center; min-height: 46px; color: var(--bg); border-bottom: 1px solid rgba(242,242,238,.12); text-decoration: none; font: 700 15px var(--font-mono); } .nav-drawer-panel nav a:hover, .nav-drawer-panel nav a.on { color: #fff; } .nav-drawer-panel nav a.on { border-left: 2px solid var(--accent); padding-left: 10px; } .drawer-actions { display: flex; flex-direction: column; gap: 9px; margin-top: auto; padding-top: 22px; } .drawer-main, .drawer-login { min-height: 46px; display: flex; align-items: center; justify-content: center; text-decoration: none; font: 700 10px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; } .drawer-main { background: var(--bg); color: var(--ink-1); } .drawer-login { border: 1.5px solid rgba(242,242,238,.28); color: var(--bg); }
+  :where(a, button):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (max-width: 1100px) { .nav-links { gap: 10px; margin-left: 4px; font-size: 10px; } .nav-in { gap: 14px; } .nav-right { gap: 8px; } .nav-cta { padding-inline: 11px; } }
+  @media (max-width: 900px) { .nav-pill { gap: 12px; padding: 8px 10px; } .nav-pill nav { gap: 8px; font-size: 9px; } .pill-cta { padding-inline: 11px; font-size: 9px; } }
+  @media (min-width: 761px) and (max-width: 920px) { .nav--immersive { top: 0; } }
+  @media (max-width: 760px) { .nav, .nav--immersive { position: fixed; inset: 0 0 auto; width: 100%; transform: none; background: rgba(255,255,255,.7); border-bottom: 1px solid var(--line); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); transition: box-shadow .28s cubic-bezier(.23,1,.32,1), background .28s cubic-bezier(.23,1,.32,1); } .nav.is-compact { background: rgba(255,255,255,.5); box-shadow: 0 10px 30px rgba(10,10,10,.18); } .nav-in, .nav--immersive .nav-in { min-height: 58px; padding: 14px 18px; gap: 12px; } .nav-mobile-spacer { display: block; height: 73px; } .nav-links, .nav-right { display: none; } .nav-burger { display: flex; flex: none; width: 44px; height: 44px; align-items: center; justify-content: center; flex-direction: column; gap: 4px; margin-left: -8px; padding: 0; border: 0; background: none; color: var(--ink-1); cursor: pointer; } .nav-burger span { width: 20px; height: 2px; background: currentColor; transition: transform .28s cubic-bezier(.23,1,.32,1), opacity .2s cubic-bezier(.23,1,.32,1); } .nav-burger[aria-expanded='true'] span:first-child { transform: translateY(6px) rotate(45deg); } .nav-burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; } .nav-burger[aria-expanded='true'] span:last-child { transform: translateY(-6px) rotate(-45deg); } .wordmark { gap: 7px; } .wm-mark, .nav--immersive .wm-mark { height: 18px; } .wm-1 { font-size: 13px; letter-spacing: .1em; } .nav-mobile-auth { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; } .nav-mobile-auth .nav-signin { padding: 7px 10px; border: 1.5px solid var(--ink-1); color: var(--ink-1); font-size: 9px; } .nav-mobile-auth .nav-cta { padding: 8px 11px; font-size: 9px; } .nav-pill { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .nav, .nav-in, .nav-pill, .nav-burger span { transition: none !important; } .nav-scrim { transition-duration: .12s !important; } .nav-drawer-panel { transform: none; transition: opacity .12s cubic-bezier(.23,1,.32,1) !important; } }
 </style>
 
-<script>
-  const b = document.getElementById('navBurger');
-  const d = document.getElementById('navDrawer');
-  b?.addEventListener('click', () => {
-    const willOpen = d?.hasAttribute('hidden');
-    if (willOpen) d?.removeAttribute('hidden');
-    else d?.setAttribute('hidden', '');
-    b.setAttribute('aria-expanded', String(!!willOpen));
-    if (willOpen) (window as any).posthog?.capture('mobile_nav_opened');
-  });
-</script>
-
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.nav-signin, .nav-cta').forEach(function (el) {
-      el.addEventListener('click', function () {
-        window.posthog?.capture('nav_cta_clicked', {
-          cta_label: el.textContent.trim()
-        });
-      });
-    });
-  });
+  (() => {
+    const root = document.querySelector('[data-nav-root]'); const toggle = root?.querySelector('[data-nav-toggle]'); const drawer = document.querySelector('#navDrawer'); const pill = document.querySelector('[data-nav-pill]');
+    if (!root || !toggle || !drawer) return; let isOpen = false; let scrollLocked = false; let closeTimer = 0; let openFrame = 0; let restoreFocus = null; let restoreHtmlOverflow = ''; let restoreBodyOverflow = ''; const mobile = () => window.matchMedia('(max-width: 760px)').matches; const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finishClose = () => { if (isOpen) return; drawer.setAttribute('hidden', ''); if (scrollLocked) { document.documentElement.style.overflow = restoreHtmlOverflow; document.body.style.overflow = restoreBodyOverflow; scrollLocked = false; } };
+    const setOpen = (open) => { if (open === isOpen) return; isOpen = open; window.clearTimeout(closeTimer); window.cancelAnimationFrame(openFrame); toggle.setAttribute('aria-expanded', String(open)); toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); if (open) { restoreFocus = document.activeElement; if (!scrollLocked) { restoreHtmlOverflow = document.documentElement.style.overflow; restoreBodyOverflow = document.body.style.overflow; scrollLocked = true; } document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; drawer.removeAttribute('hidden'); drawer.removeAttribute('inert'); drawer.setAttribute('aria-hidden', 'false'); drawer.dataset.state = 'closed'; openFrame = window.requestAnimationFrame(() => { if (!isOpen) return; drawer.dataset.state = 'open'; drawer.querySelector('.nav-close, a')?.focus(); }); window.posthog?.capture('mobile_nav_opened'); } else { drawer.dataset.state = 'closed'; drawer.setAttribute('aria-hidden', 'true'); drawer.setAttribute('inert', ''); if (restoreFocus instanceof HTMLElement) restoreFocus.focus(); closeTimer = window.setTimeout(finishClose, reduceMotion() ? 120 : 260); } };
+    toggle.addEventListener('click', () => setOpen(!isOpen)); drawer.addEventListener('click', (event) => { const source = event.target; if (source instanceof Element && (source.closest('[data-nav-close]') || source.closest('a'))) setOpen(false); }); document.addEventListener('keydown', (event) => { if (!isOpen) return; if (event.key === 'Escape') { setOpen(false); return; } if (event.key !== 'Tab') return; const focusable = Array.from(drawer.querySelectorAll('.nav-drawer-panel a, .nav-drawer-panel button')).filter((el) => !el.hasAttribute('disabled')); if (!focusable.length) return; const first = focusable[0]; const last = focusable[focusable.length - 1]; if (!drawer.contains(document.activeElement)) { event.preventDefault(); first.focus(); } else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }); window.addEventListener('resize', () => { if (!mobile() && isOpen) setOpen(false); }, { passive: true });
+    const onScroll = () => { const y = window.scrollY || 0; root.classList.toggle('is-compact', mobile() && y > 24); if (pill && !mobile()) { const visible = y > 320; pill.classList.toggle('is-visible', visible); pill.toggleAttribute('inert', !visible); pill.setAttribute('aria-hidden', String(!visible)); } }; window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    document.addEventListener('click', (event) => { const source = event.target; const target = source instanceof Element ? source.closest('[data-nav-cta]') : null; if (target) window.posthog?.capture('nav_cta_clicked', { cta_label: target.dataset.navCta || target.textContent.trim() }); });
+  })();
 </script>
