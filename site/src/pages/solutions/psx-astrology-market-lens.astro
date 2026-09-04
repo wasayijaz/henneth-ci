@@ -1,0 +1,73 @@
+---
+import SolutionPage from '../../components/SolutionPage.astro';
+---
+
+<SolutionPage
+  title="PSX Astrology Market Lens — Scored Per Ticker, Not Sector Folklore"
+  h1="Your chart, held against every PSX name — and scored"
+  description="Vedic transits mapped to sectors is folklore until it's tested. The desk ran 2,589 hypotheses across 101 subjects and 19 years of PSX prices, then held the daily gochara against your own list — with the null result published, not hidden."
+  path="/solutions/psx-astrology-market-lens/"
+  kicker="For traders who already read their chart and want it checked"
+  icon="astro"
+  lead="Sector correspondences are easy to state and almost never tested. This lens is — stock by stock, against nineteen years of PSX prices, with the result published either way."
+  problem="You know your Moon sign, you've read that Mars rules steel and Venus rules textiles, and you've watched a transit line up with a move often enough to wonder. What's missing isn't more folklore — it's someone running the actual numbers on your actual list of names instead of a sector generality, and being honest in public when a claim doesn't survive contact with the data."
+  appPlan="pro"
+  features={[
+    {
+      icon: 'astro',
+      title: 'Every name tested, not averaged into a sector',
+      body: 'Each PSX stock was scored on its own — not folded into a sector bucket that would hide a stock-specific effect — across roughly 19 years of daily prices, on 2,589 traditional claims. The published verdict: after correcting for how many claims were tried, none held up. That result sits on the ticker-level read exactly as it does on the public page — nothing here is presented as if it found an edge it did not.',
+    },
+    {
+      icon: 'clock',
+      title: 'Daily gochara, held against your list',
+      body: 'The computed sky — sidereal, Lahiri ayanamsa, nine grahas, nakshatra and pada — refreshes daily and is checked against the names on your watchlist, not just a generic sector mapping. You see which traditional claims are in effect for your names today, and, plainly, that none of them have a demonstrated edge.',
+    },
+    {
+      icon: 'strategies',
+      title: 'It never gates a setup',
+      body: 'The Strategist does not read the astro layer, and no trade setup is generated or blocked by a transit. The lens is a scored overlay you can look at, kept structurally separate from the desk’s actual signal pipeline — the same separation that let the null result get published instead of quietly folded in.',
+    },
+  ]}
+  faqs={[
+    {
+      q: 'Isn’t this the same as the free astrology page?',
+      a: 'No — that page (financial-astrology) gives you your Moon sign, element and the general sector/commodity correspondences tradition ties to it, free, computed in your browser, with nothing stored. This is the ticker-level version: the same tested claims held against every name on your own list, refreshed daily, which is what the account is for.',
+    },
+    {
+      q: 'Does any of this actually predict PSX moves?',
+      a: 'On the desk’s own testing, no. 2,589 astrological hypotheses were tested across 101 subjects and 4,893 trading days of PSX history, stock by stock. After correcting for the number of claims tried, zero conditions showed a real edge. That is the published result, and it is why the lens is offered as a scored overlay to look at, never as a reason to enter or exit anything.',
+    },
+    {
+      q: 'What kind of astrology is this — Western or Vedic?',
+      a: 'Vedic, sidereal, using the Lahiri ayanamsa. The sky position is computed from an ephemeris, not looked up from a table, and every traditional claim mapped from it (graha rulership of a sector, a nakshatra’s commodity association, and so on) is tested the same way the desk tests any other rule — including reporting when a claim does not survive.',
+    },
+    {
+      q: 'Is a transit ever going to trigger a buy or sell signal?',
+      a: 'No. The Strategist, which drafts every setup on the desk, does not read the astro layer at all — it is not wired into signal generation. This is a research overlay, not a trading rule, and it stays that way regardless of what any individual transit does.',
+    },
+  ]}
+>
+  <h2 class="mid-h">Read the tested lens before you commit to it</h2>
+  <p class="mid-p">
+    The full methodology and the null result — 2,589 hypotheses, 101 subjects, both Bonferroni
+    and Benjamini-Hochberg corrections applied, zero survivors — is published on
+    <a href="/financial-astrology/">the financial astrology page</a>, along with the free,
+    browser-only birth chart tool. Start there if you want to see the evidence before the
+    per-ticker read is worth an account to you.
+  </p>
+  <p class="mid-p">
+    The per-ticker view sits alongside the desk’s other reads for the same names — the
+    <a href="/solutions/psx-company-fair-value/">fair value</a> and
+    <a href="/solutions/psx-screener-and-strategies/">screener</a> pages cover the fundamental and
+    technical layers for every listed company on the <a href="/psx/">PSX coverage hub</a>, and
+    the <a href="/blog/">writing</a> covers the market mechanics that actually move a price,
+    independent of any transit.
+  </p>
+</SolutionPage>
+
+<style>
+  .mid-h { font-size: 16px; margin: 0 0 12px; }
+  .mid-p { font-size: 13px; line-height: 1.75; color: var(--ink-2); max-width: 68ch; margin: 0 0 14px; }
+  .mid-p a { text-decoration: underline; text-underline-offset: 2px; }
+</style>

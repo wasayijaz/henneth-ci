@@ -5,18 +5,19 @@ import { site } from '../site.config.ts';
 
 const enter = (p: string) => `${site.appUrl}/?plan=${p}`;
 
-/* Three of these now point at REAL URLs rather than anchors on this page. An anchor cannot rank:
-   four audiences sharing one URL means one title and one description competing across four
+/* Every entry now points at a REAL URL rather than an anchor on this page. An anchor cannot rank:
+   audiences sharing one URL means one title and one description competing across several
    different searches, so the page ranks for none of them well. Each use-case page targets its own
    commercial-intent query, and this page becomes the hub that links them.
 
-   The astrology segment stays an anchor for now — it has no separate page yet, and shipping a thin
-   fourth variant purely for symmetry is the doorway pattern the others are built to avoid. */
+   The astrology entry links to the per-ticker, pro-tier landing page (psx-astrology-market-lens) —
+   distinct from the free chart-casting segment below, which stays an in-page anchor and links out
+   to /financial-astrology/ for the tested lens itself. */
 const jump = [
   { tag: '01', title: 'New investors', href: '/solutions/psx-research-for-new-investors', icon: 'learn' },
   { tag: '02', title: 'Screener & strategies', href: '/solutions/psx-screener-and-strategies', icon: 'strategies' },
   { tag: '03', title: 'Dividend calendar & yields', href: '/solutions/psx-dividend-calendar-and-yields', icon: 'dividends' },
-  { tag: '04', title: 'The astrology-curious', href: '#astro', icon: 'astro' },
+  { tag: '04', title: 'The astrology-curious', href: '/solutions/psx-astrology-market-lens', icon: 'astro' },
   { tag: '05', title: 'Brokers & institutions', href: '/solutions/psx-broker-research-scorecard', icon: 'portfolio' },
   { tag: '06', title: 'Company fair value', href: '/solutions/psx-company-fair-value', icon: 'value' },
   { tag: '07', title: 'Market today', href: '/solutions/psx-market-today', icon: 'clock' },
