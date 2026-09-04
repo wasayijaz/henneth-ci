@@ -411,7 +411,7 @@ function isProseInteger(answer, index, token) {
 
   // A bold markdown label may put the ordinal after a word, e.g. `**Section 1:**`.
   // Only allow that shape when the line starts with markdown markers and the
-  // number immediately introduces label punctuation; figures in prose remain strict.
+  // number immediately introduces label punctuation; numeric prose remains strict.
   const lineStart = answer.lastIndexOf('\n', index - 1) + 1;
   const lineEnd = answer.indexOf('\n', index + token.length);
   const line = answer.slice(lineStart, lineEnd < 0 ? answer.length : lineEnd);
