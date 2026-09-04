@@ -9,7 +9,8 @@ continuously and risk overlapping runs.
 
 So each run refreshes:
   * every `core` symbol (KSE100 + KMI30) — these drive signals and must be current;
-  * the STALEST `listed` symbols that already have a series, up to LISTED_PER_RUN;
+  * the least-recently-attempted `listed` symbols that already have a series, up to LISTED_PER_RUN
+    (the attempt clock lives in state/history_meta.json — see _pick());
   * plus a small round-robin probe of listed symbols with NO history file yet (NEW_PROBE_PER_RUN).
 
 Those last two budgets are SEPARATE and must stay separate — see the note on _pick().
@@ -65,8 +66,8 @@ def _yahoo_daily(symbol: str, universe: dict, years: int) -> list[dict]:
     return out
 
 
-def _pick(universe, cursor):
-    """core + a bounded probe of never-fetched symbols + the stalest listed symbols.
+def _pick(universe, cursor, attempts):
+    """core + a bounded probe of never-fetched symbols + the least-recently-refreshed listed ones.
 
     THE TWO LONG-TAIL BUDGETS ARE SEPARATE, AND THAT SEPARATION IS THE WHOLE POINT.
     They used to be one: never-fetched symbols were prepended UNCAPPED and their count was
@@ -79,6 +80,14 @@ def _pick(universe, cursor):
     cursor, so a permanently-dead counter can delay a genuinely new listing by a few runs and
     can never again starve the refresh of companies the desk actually prices.
 
+    THE ROTATION CLOCK IS PERSISTED STATE, NOT THE FILESYSTEM. It used to be the history file's
+    st_mtime. That works locally and is meaningless in the cloud: every run starts with
+    actions/checkout, which writes all 581 files fresh in git index order — alphabetical. So
+    "stalest first" silently became "alphabetically first", the SAME 90 symbols were re-picked on
+    every run forever, and everything from roughly the letter H onward (TATM among them) was never
+    repriced again. The attempt timestamps below live in state/history_meta.json, which is committed
+    by the cycle, so the clock survives checkout and the rotation actually rotates.
+
     Returns (todo, n_listed, next_cursor). The cursor is persisted in history_meta.json.
     """
     syms = universe["symbols"]
@@ -86,15 +95,14 @@ def _pick(universe, cursor):
     for s, m in syms.items():
         (core if (m or {}).get("tier", "core") == "core" else listed).append(s)
 
-    def age(s):
-        p = STATE / "history" / f"{s}.json"
-        try:
-            return p.stat().st_mtime
-        except OSError:
-            return 0.0        # no file yet — needs its initial backfill
+    def has_file(s):
+        return (STATE / "history" / f"{s}.json").exists()
     # Sorted, not universe-ordered, so the cursor addresses a stable list across runs.
-    never = sorted(s for s in listed if age(s) == 0.0)
-    have = sorted((s for s in listed if age(s) > 0.0), key=age)
+    never = sorted(s for s in listed if not has_file(s))
+    # Least-recently-attempted first; a symbol absent from the map has never been attempted under
+    # the current clock and goes to the front. Alphabetical only as a tiebreak, so a cold start
+    # converges over a few runs instead of standing still.
+    have = sorted((s for s in listed if has_file(s)), key=lambda s: (attempts.get(s, ""), s))
     probe, nxt = [], 0
     if never:
         start = cursor % len(never)
@@ -114,21 +122,17 @@ def main():
     years = cfg["backtest"]["history_years"]
     cutoff = time.strftime("%Y-%m-%d", time.gmtime(time.time() - years * 365.25 * 86400))
     prior = load_json(STATE / "history_meta.json", {}) or {}
-    todo, n_listed, next_cursor = _pick(universe, int(prior.get("probe_cursor") or 0))
+    attempts = dict(prior.get("last_attempt") or {})
+    todo, n_listed, next_cursor = _pick(universe, int(prior.get("probe_cursor") or 0), attempts)
+    stamp = time.strftime("%Y-%m-%d %H:%M")
     ok, failed = 0, []
     def fail(sym, err):
-        """Record the failure AND mark the symbol as attempted.
-
-        The mtime is the rotation clock, not a freshness claim (freshness is the last bar's date,
-        which data_health.py checks). Without this bump a symbol that fails every run keeps the
-        oldest mtime in the universe and re-books the same slot forever — the same starvation the
-        probe budget above exists to prevent, one queue down."""
         failed.append((sym, err))
-        p = STATE / "history" / f"{sym}.json"
-        if p.exists():
-            p.touch()
 
     for sym in todo:
+        # Stamped before the fetch, not after, so a symbol that fails every run still moves to the
+        # back of the queue instead of re-booking the same slot forever.
+        attempts[sym] = stamp
         mkt = market_of(sym, universe)
         try:
             # DPS is authoritative for PSX (CLAUDE.md: prices come from the data layer). Every
@@ -183,10 +187,13 @@ def main():
         "new_probe_per_run": NEW_PROBE_PER_RUN,
         "probe_cursor": next_cursor,
         "note": ("Core symbols refresh every run. The listed symbols that HAVE a series rotate "
-                 "stalest-first, LISTED_PER_RUN each run. Symbols with no series yet get a "
+                 "least-recently-attempted first (see last_attempt), LISTED_PER_RUN each run, so "
+                 "the whole tail is repriced every ~4 runs. Symbols with no series yet get a "
                  "separate round-robin probe (NEW_PROBE_PER_RUN, resumed from probe_cursor) so "
                  "the ~100 permanently-empty PSX board counters can never consume the refresh "
-                 "budget. Failures bump the file's mtime so nothing can pin the queue."),
+                 "budget. last_attempt is the rotation clock and MUST be persisted state — file "
+                 "mtimes are rewritten by actions/checkout on every cloud run."),
+        "last_attempt": {s: t for s, t in sorted(attempts.items()) if s in universe["symbols"]},
         "failed": [{"symbol": s, "err": e} for s, e in failed],
     })
     print(f"history: {ok} ok, {len(failed)} failed (attempted {len(todo)} of "

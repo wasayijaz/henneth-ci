@@ -47,7 +47,8 @@ The product is a hybrid of five parts:
 | Concern | Owner (change this, not a copy) | Consumers |
 |---|---|---|
 | Prices, calendars, dividends, history | `scripts/psx_data.py` + the fetchers | every later script, the terminal |
-| EOD refresh rotation (which symbols get repriced this run) | `scripts/fetch_history.py` `_pick()` — core tier every run; `LISTED_PER_RUN` stalest-first for listed symbols that already have a series; a SEPARATE `NEW_PROBE_PER_RUN` round-robin for symbols with no series yet | every price consumer; reported in `state/history_meta.json` |
+| EOD refresh rotation (which symbols get repriced this run) | `scripts/fetch_history.py` `_pick()` — core tier every run; `LISTED_PER_RUN` least-recently-attempted first for listed symbols that already have a series; a SEPARATE `NEW_PROBE_PER_RUN` round-robin for symbols with no series yet | every price consumer; reported in `state/history_meta.json` |
+| Rotation clock (how "least recently attempted" is decided) | `state/history_meta.json` `last_attempt` — a persisted symbol→timestamp map, stamped before each fetch attempt so a permanently failing symbol still advances. **Never** a filesystem mtime: `actions/checkout` rewrites every file alphabetically on each cloud run | `fetch_history.py` `_pick()`; audited by `preflight.py`'s rotation-stuck WARN |
 | Canonical PSX identity | `psx_data.canonical_symbol` / `split_board_state` — temporary XD/XB/XR board suffixes collapse to the ordinary ticker at universe intake | `update_universe.py`, `snapshot.py`, public extract |
 | Universe + market mapping | `scripts/update_universe.py`, `config/markets.json`, `psx_data.yahoo_symbol` / `market_symbols` / `research_symbols` | every per-ticker script |
 | Research vs signal eligibility | `scripts/liquidity.py` -> `state/liquidity.json`; `psx_data.research_symbols()` | backtest, fundamentals, predictability, fair value, signals |

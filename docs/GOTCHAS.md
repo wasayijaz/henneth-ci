@@ -126,6 +126,22 @@ That is how a July close reached the live site in September.
 `attempted` per run climbs near the 25-minute Actions timeout, split the probe out of the per-run
 loop entirely (a weekly sweep) rather than widening the budget.
 
+## File mtimes are meaningless in the cloud
+
+`actions/checkout` writes the entire repo fresh at the start of every workflow run, in git index
+order — **alphabetical**. Every `state/` file therefore has an mtime that says nothing about when
+its contents were produced, and mtime *ordering* degenerates to alphabetical ordering.
+
+This cost a second month of stale prices. After the board-counter starvation above was fixed, the
+long-tail rotation still ordered its queue by `st_mtime` ("stalest first"). In the cloud that meant
+"alphabetically first", so the same 90 symbols were repriced on every run forever and everything
+past roughly the letter H — TATM among them — was never reached at all. Locally the ordering looked
+fine, because a local checkout preserves the mtimes of files you didn't touch.
+
+**Rule:** any clock that must survive a run is persisted state, committed with `state/`. The refresh
+rotation's clock is `state/history_meta.json` `last_attempt`. `preflight.py` WARNs when a large share
+of covered symbols has not been attempted in 3 days, which is the shape both bugs had.
+
 `CHANGELOG.md` uses CalVer: `## YYYY-MM-DD — vYYYY.MM.DD — Title`, with `.2` / `.3` suffixes for extra
 same-day releases. `scripts/build_changelog.py` extracts **only** the `<!--public … -->` blocks into
 `state/changelog.json` and fails closed — an entry with no public block publishes nothing. That is

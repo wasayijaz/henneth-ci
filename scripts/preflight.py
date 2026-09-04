@@ -18,7 +18,7 @@ Exit codes: 0 = safe to deploy, 1 = do not deploy.
 """
 import argparse
 import ast
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import glob
 import json
 import math
@@ -1483,6 +1483,28 @@ def main():
             if new_backfilling:
                 warn(f"history/: {len(new_backfilling)} newly-added universe ticker(s) still backfilling "
                      f"history (never gates publish): {', '.join(new_backfilling[:12])}")
+
+    # The refresh rotation must actually ROTATE. This is the check that would have caught the
+    # bug where the long-tail queue was ordered by file mtime: actions/checkout rewrites every
+    # file alphabetically on each cloud run, so the same 90 symbols were re-picked forever and
+    # everything past ~"H" (TATM among them) went 47 sessions without a reprice while health
+    # stayed green. history_meta.json's last_attempt map is the persisted clock; if a large
+    # share of covered symbols has not been ATTEMPTED in days, the rotation is stuck again.
+    # WARN, never FAIL — publishing a stale-tail site still beats publishing nothing, and
+    # data_health.py's stale-fleet gate is what actually halts new signals.
+    hmeta, _ = load("history_meta.json")
+    cov, _ = load("coverage.json")
+    if hmeta and cov:
+        seen = hmeta.get("last_attempt") or {}
+        covered = list(cov.get("bars") or {})
+        # 3 days, so a weekend of no cron runs can never trip it. Same clock the stamps are
+        # written on (fetch_history.py uses local time; both run on the same runner).
+        cutoff = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d %H:%M")
+        unvisited = [s for s in covered if seen.get(s, "") < cutoff]
+        if covered and len(unvisited) > 0.10 * len(covered):
+            warn(f"history_meta.json: {len(unvisited)}/{len(covered)} covered symbols not "
+                 f"attempted since {cutoff} — the refresh rotation is stuck, prices will drift "
+                 f"stale. e.g. {', '.join(sorted(unvisited)[:8])}")
 
     # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
     # dossier can't block the core desk from deploying)
