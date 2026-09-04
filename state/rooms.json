@@ -79,7 +79,7 @@
    "attack_on_bull_ur": "بیل کا سب سے زیادہ درست نقطہ نظر — 'Rs965.01 fair value, 74.6% undervalued' — جانچ کے تحت کمزور ترین ہے۔ یہ چار طریقوں کی سیدھی اوسط ہے جو 4x سے اختلاف رکھتے ہیں (Rs376.75 سے Rs1504.79)۔ earnings-power طریقہ، بحثیت سب سے زیادہ grounded چاروں میں سے، fair value کو موجودہ قیمت کے نیچے رکھتا ہے۔ اس کو Rs1504.79 (قریب تقریباً 3x قیمت) کی Graham output کے خلاف اوسط کرنا ایک قابل اعتماد فیصلہ تیار نہیں کرتا — یہ ایک نمبر تیار کرتا ہے جو جو بھی growth assumption (30% growth_est_pct) ماڈل میں حکمرانی کرتا ہے اس کو تعریف کرتا ہے۔",
    "attack_on_bull_ur_hash": "298c4c9cc396"
   },
-  "reaffirmed": "2026-09-02 18:35",
+  "reaffirmed": "2026-09-04 18:02",
   "qa": {
    "verdict": "flagged",
    "checked": "2026-09-01",
@@ -90,7 +90,7 @@
   "built": "2026-08-02 15:48",
   "sessions": 44,
   "note": "Desk Room sessions per ticker; rendered on the ticker page.",
-  "updated": "2026-09-02 18:36",
+  "updated": "2026-09-04 18:05",
   "covered": 50
  },
  "UBL": {
@@ -447,7 +447,7 @@
    "attack_on_bull_ur": "بیل کا تشخیص ستون (مشترکہ منصفانہ قیمت 450.56، 37.2% کم قدر والا) سب سے کمزور ہے: یہ 3x سے زیادہ اختلاف رکھنے والے طریقوں کی اوسط ہے (222 سے 736)، اور سب سے قدامت پسند طریقہ (کمائی کی طاقت، 221.9) اصل میں مطلب ہے OGDC آج کی قیمت پر زیادہ قدر والا ہے، کم قدر والا نہیں۔ تیزی سے اختلاف کرنے والے طریقوں کی اوسط سے ملنا ہنگامی نہیں، یہ ایک نمبر کے طور پر ملبوس شور ہے۔",
    "attack_on_bull_ur_hash": "6a7eb72c8e07"
   },
-  "reaffirmed": false,
+  "reaffirmed": "2026-09-04 18:02",
   "qa": {
    "verdict": "flags",
    "checked": "2026-09-02",
@@ -455,87 +455,93 @@
   }
  },
  "MCB": {
-  "built": "2026-08-03 17:50",
-  "dossier_asof": "2026-08-03",
-  "price_at_session": 407.85,
-  "material_hash": "ad25fd1ff8cd",
+  "built": "2026-09-04 18:05",
+  "dossier_asof": "2026-09-03",
+  "price_at_session": 398.24,
+  "material_hash": "6a663371633b",
   "ta_memo": {
-   "read": "MCB sits essentially on top of both its 20-day (408.12) and 50-day (408.20) simple moving averages at a last price of 407.85 — a tight cluster with no clear MA slope. RSI14 at 50.1 is neutral, 20-day return is -5.72%, and price is 6.07% below its 20-day high. Momentum has stalled rather than reversed.",
+   "read": "MCB sits below both its SMA20 (409.6) and SMA50 (409.68), which are essentially flat and converging, with price at 398.24 roughly 6.3% off its 20-day high. RSI14 at 38.5 shows soft momentum without being oversold. The 20-day return is -1.94% and 5-day -1.18%, though the latest session ticked up 0.08%, suggesting the slide is stalling rather than accelerating.",
    "structure": "range",
-   "momentum": "flat",
-   "liquidity_note": "Avg daily traded value of PKR 126.9M supports clean entry/exit for typical desk position sizes.",
+   "momentum": "down",
+   "liquidity_note": "avg_daily_traded_value_m of 93.1 indicates ample liquidity for clean entry/exit sizing.",
    "proven_now": [
     "Bollinger squeeze breakout"
    ],
    "levels": {
     "support": null,
-    "resistance": 408.12
+    "resistance": null
    },
-   "technical_stance": "neutral",
-   "read_ur": "MCB بنیادی طور پر اپنے 20 روزہ (408.12) اور 50 روزہ (408.20) سادہ حرکی اوسط کے اوپر آخری قیمت 407.85 پر — ایک تنگ جھرمٹ بغیر واضح MA ڈھلوان کے۔ RSI14 50.1 پر neutral ہے، 20 روزہ منافع -5.72% ہے، اور قیمت 20 روزہ اعلیٰ سے 6.07% نیچے ہے۔ رفتار سمت بدلنے کی بجائے ٹھہر گئی ہے۔",
-   "read_ur_hash": "38eb90c8b408",
-   "liquidity_note_ur": "اوسط روزانہ کی تجارت کی قیمت PKR 126.9M typical desk position sizes کے لیے صاف داخلے اور نکلنے کو سہارا دیتی ہے۔",
-   "liquidity_note_ur_hash": "218e93c5e45a"
+   "technical_stance": "cautious",
+   "read_ur": "MCB اپنی SMA20 (409.6) اور SMA50 (409.68) دونوں سے نیچے بیٹھا ہے، جو بنیادی طور پر مسطح ہیں اور قریب آ رہی ہیں۔ قیمت 398.24 پر ہے، اپنی 20 روزہ اعلیٰ سے تقریباً 6.3% دور۔ RSI14 38.5 پر نرم رفتار ظاہر کرتی ہے بغیر oversold کے۔ 20 روزہ منافع -1.94% اور 5 روزہ -1.18% ہے، اگرچہ آخری سیشن 0.08% اوپر اٹھا، جو ظاہر کرتا ہے کہ گراوٹ رک رہی ہے بجائے تیز ہونے کے۔",
+   "read_ur_hash": "9fb0ea42137b",
+   "liquidity_note_ur": "avg_daily_traded_value_m میں 93.1 صاف ستھرے entry/exit سائزنگ کے لیے کافی لیکویڈٹی ظاہر کرتا ہے۔",
+   "liquidity_note_ur_hash": "c34a74207e95"
   },
   "fa_memo": {
-   "read": "MCB shows strong core profitability (net income ~27.6% of revenue on 206.30B revenue / 56.88B net income) and a peer-mid trailing P/E of 8.51, but the desk's composite fair-value model — blending relative P/E, earnings power, Graham, and DDM methods (284.37 vs price 407.85) — reads -30.3% mispriced and flags 'overvalued', a notable divergence from the peer-relative view. Growth estimate is modest at 3.0% and forward P/E (8.26) is only slightly below trailing, so little acceleration is priced in. The dividend has been a steady Rs 9.0/share across each of the last four closures, yielding 8.81% at a 75.01% payout ratio, which looks sustainable against current profitability levels. Bank-specific balance-sheet detail (capital adequacy, NPLs, leverage) is not in this feed.",
+   "read": "MCB is a large, highly profitable bank keeping roughly 27% of revenue as net income, with a trailing P/E of 8.4 (forward 7.86) that the desk's scorecard calls fair versus PSX peers. Against the model's own composite fair value of 333.92, however, the current price of 398.24 screens overvalued by about 16%, with three of four component methods (relative P/E, earnings power, DDM) well below price. The dividend looks well covered on a 74.64% payout ratio and a steady quarterly Rs9 cash payment. Net: a sound, stable business trading above what the desk's own fair-value model says it is worth.",
    "valuation_stance": "rich_vs_fair",
-   "earnings_quality": "Net margin ~27.6% (56.88B net income / 206.30B revenue), EPS 47.99 positive, no loss flag.",
-   "dividend_safety": "8.81% yield on a 75.01% payout ratio; last four dividend closures each paid a consistent Rs 9.0/share.",
+   "earnings_quality": "27% net margin on 208.53B revenue (57.16B net income); no loss/negative-EPS flag in the data.",
+   "dividend_safety": "Payout ratio 74.64% against consistent Rs9/quarter interim dividends and an 8.88% yield — covered, not stretched, per the feed.",
    "balance_sheet_flags": [
-    "capital adequacy ratio not in the data",
-    "NPL/asset quality not in the data",
-    "leverage/debt metrics not in the data"
+    "No capital adequacy ratio, NPL ratio, or debt figures in the feed",
+    "company_profile is null — no qualitative business description available",
+    "eps_basis marked 'unknown' in both fundamental and valuation blocks"
    ],
-   "broker_view": null,
+   "broker_view": "Topline Securities (2026-07-07) names MCB as among banks best positioned to benefit from SBP's MDR-floor removal — a single sector-tailwind claim with no track-record annotation attached in this digest, so it should be weighted as one analyst's view, not a verified signal; it also says nothing about the current valuation gap.",
    "fundamental_stance": "cautious",
-   "read_ur": "MCB مضبوط بنیادی منافع دکھاتا ہے (خالص آمدنی راجسوہ کا ~27.6% 206.30B راجسوہ / 56.88B خالص آمدنی پر) اور ہم جماعت کے درمیانے trailing P/E 8.51 پر، لیکن ڈیسک کا مرکب منصفانہ قیمت ماڈل — relative P/E، کمائی کی طاقت، Graham، اور DDM طریقوں کو ملانا (284.37 بمقابلہ قیمت 407.85) — -30.3% غلط بھاؤ کے طور پر پڑھتا ہے اور 'overvalued' کا جھنڈا لگاتا ہے، ہم جماعت کے رشتہ دار نقطہ نظر سے ایک قابلِ غور پھیرا۔ نمو کا تخمینہ 3.0% پر سادہ ہے اور forward P/E (8.26) صرف trailing سے کم ہے، تو کم رفتار قیمت میں ہے۔ منافع 20 دن کے آخری چار اختتام میں ہر ایک پر Rs 9.0/شیئر مستحکم رہی ہے، ایک 75.01% payout تناسب پر 8.81% yield دے رہی ہے، جو موجودہ منافع کی سطح کے خلاف قابلِ برقرار لگتا ہے۔ بینک مخصوص بیلنس شیٹ کی تفصیل (سرمائے کی تقابلیت، NPLs، leverage) اس فیڈ میں نہیں ہے۔",
-   "read_ur_hash": "f2e279dd4c80",
-   "earnings_quality_ur": "خالص حاشیہ ~27.6% (56.88B خالص آمدنی / 206.30B راجسوہ)، مثبت EPS 47.99، نقصان کا کوئی نشان نہیں۔",
-   "earnings_quality_ur_hash": "1128f43094fe",
-   "dividend_safety_ur": "8.81% yield 75.01% payout تناسب پر؛ آخری چار منافع کی تقفیل میں ہر ایک نے ایک مستحکم Rs 9.0/شیئر ادا کیا۔",
-   "dividend_safety_ur_hash": "52f92f55fd6c"
+   "read_ur": "MCB ایک بڑا، انتہائی منافع بخش بینک ہے جو تقریباً 27% آمدنی کو خالص آمدنی کے طور پر رکھتا ہے، trailing P/E 8.4 (forward 7.86) کے ساتھ جس کو ڈیسک کا scorecard PSX ہم مرتبہ کے مقابل منصفانہ کہتا ہے۔ ماڈل کی اپنی مرکب منصفانہ قیمت 333.92 کے مقابل، تاہم، موجودہ قیمت 398.24 تقریباً 16% زیادہ مقدار میں نظر آتی ہے، چار میں سے تین اہم طریقوں کے ساتھ (relative P/E, earnings power, DDM) قیمت سے بہت نیچے۔ ڈیویڈنڈ 74.64% payout ratio اور مستقل سہ ماہی Rs9 نقد ادائیگی پر اچھی طرح محفوظ لگتا ہے۔ خلاصہ: ایک مضبوط، مستحکم کاروبار جو ڈیسک کے اپنے fair-value ماڈل کہتے ہیں اس سے اوپر سودے میں ہے۔",
+   "read_ur_hash": "0c51d7c48253",
+   "earnings_quality_ur": "27% خالص margin 208.53B آمدنی پر (57.16B خالص آمدنی)؛ ڈیٹا میں کوئی خسارہ/منفی EPS flag نہیں۔",
+   "earnings_quality_ur_hash": "19ab52417be2",
+   "dividend_safety_ur": "Payout ratio 74.64% مستقل سہ ماہی Rs9 interim ڈیویڈنڈز کے خلاف اور 8.88% yield — محفوظ، دبی ہوئی نہیں، feed کے مطابق۔",
+   "dividend_safety_ur_hash": "0d1eb402dc0f",
+   "broker_view_ur": "Topline Securities (2026-07-07) MCB کو ایسے بینکوں میں نام دیتے ہیں جو SBP کے MDR-floor ہٹانے سے فائدہ اٹھانے کے لیے سب سے بہتر پوزیشن میں ہیں — ایک واحد sector-tailwind دعویٰ جس کے ساتھ کوئی track-record تشریح اس digest میں منسلک نہیں ہے، تو یہ ایک تجزیہ کار کے نقطہ نظر کے طور پر وزن دیا جانا چاہیے، تحقیق شدہ signal نہیں؛ یہ موجودہ valuation gap کے بارے میں کچھ نہیں کہتا۔",
+   "broker_view_ur_hash": "3c0e37229991"
   },
   "bull_case": {
-   "thesis": "MCB combines high core profitability with a steady, well-covered dividend and a large-cap defensive profile, while the tape has simply gone quiet rather than broken down. For a name held into coming weeks/months, the income and stability case is well documented in the dossier.",
+   "thesis": "MCB is a large, highly profitable bank trading at a mid-pack multiple with a well-covered, high dividend yield, and the near-term slide in price looks to be stalling rather than accelerating. The setup rewards patience through a defensive, income-generating large-cap while the broader tape absorbs macro shocks.",
    "pillars": [
-    "Net margin ~27.6% (56.88B net income / 206.30B revenue) shows a highly profitable core business (fa_memo earnings_quality).",
-    "Dividend has paid a consistent Rs 9.0/share across each of the last four closures, an 8.81% yield on a 75.01% payout that the fa_memo calls sustainable against current profitability.",
-    "Forward P/E of 8.26 sits below trailing 8.51, implying modest expected earnings growth rather than deterioration.",
-    "Beta 0.44 and 484.30B market cap mark it as large, liquid and lower-volatility (fundamental scorecard), with avg daily traded value of PKR 126.9M supporting clean entry/exit (ta_memo liquidity_note).",
-    "ta_memo flags an active 'Bollinger squeeze breakout' as a currently proven strategy (62% hit rate, n=16) with RSI14 neutral at 50.1 — no technical breakdown, just consolidation."
+    "Valuation screens fair for the sector: trailing P/E 8.4, forward P/E 7.86 (forward below trailing signals expected earnings growth per the scorecard).",
+    "Dividend is generous and covered: 8.88% yield on a 74.64% payout ratio, with four consecutive Rs9 interim payouts logged since 2025.",
+    "Highly profitable core business: 57.16B net income on 208.53B revenue, a 27% net margin the scorecard calls 'strong'.",
+    "Defensive size/liquidity profile: 480.27B market cap, beta 0.45 (low market sensitivity), and 93.1M avg daily traded value for clean sizing.",
+    "Technical slide is stalling: latest session +0.08% after -1.94% over 20 days, and the Bollinger squeeze breakout strategy shows a 0.62 hit rate over 16 signals."
    ],
-   "best_evidence": "Four consecutive Rs 9.0/share dividend closures at 8.81% yield, backed by a 75.01% payout against a ~27.6% net margin.",
-   "what_would_break_it": "The desk's own composite fair-value model reads -30.3% mispriced ('overvalued', fair 284.37 vs price 407.85) across all four methods (relative P/E, earnings power, Graham, DDM) — if that gap closes, the income cushion may not offset price reversion.",
-   "thesis_ur": "MCB اعلیٰ بنیادی منافع کو ایک مستحکم، اچھی طریقے سے محفوظ منافع اور ایک بڑے سرمائے والے دفاعی مشخص کے ساتھ یکجا کرتا ہے، جبکہ ٹیپ سادہ خاموش ہو گیا ہے نہ کہ نیچے ٹوٹا ہے۔ ایک نام کے لیے آنے والے ہفتوں/مہینوں میں منعقد، آمدنی اور استحکام کا معاملہ دوسیہ میں اچھی طریقے سے دستاویز ہے۔",
-   "thesis_ur_hash": "f750844c2e5b",
-   "best_evidence_ur": "چار مسلسل Rs 9.0/شیئر منافع کے بند 8.81% yield پر، ~27.6% خالص حاشیہ کے خلاف 75.01% payout سے سہارا پانا۔",
-   "best_evidence_ur_hash": "6a3bd1c5e01f",
-   "what_would_break_it_ur": "ڈیسک کا اپنا مرکب منصفانہ قیمت ماڈل -30.3% غلط بھاؤ کے طور پر پڑھتا ہے ('overvalued'، منصفانہ 284.37 بمقابلہ قیمت 407.85) تمام چار طریقوں کے ساتھ (relative P/E، کمائی کی طاقت، Graham، DDM) — اگر یہ خلاء بند ہوتی ہے، آمدنی کا تکیہ قیمت کے reversion کو آفسیٹ نہیں کر سکتا۔",
-   "what_would_break_it_ur_hash": "bc1eeb6421aa"
+   "best_evidence": "8.88% dividend yield on a 74.64% payout ratio, backed by a 27% net margin and 57.16B in net income — a covered, cash-generative income profile rather than a stretched one.",
+   "what_would_break_it": "If price continues grinding toward the model's own composite fair value of 333.92 (roughly 16% below the current 398.24) with momentum staying 'down' per the TA memo, or if the payout ratio drifts materially above 75% without earnings growth to support it, the income-and-value case unravels.",
+   "thesis_ur": "MCB ایک بڑا، انتہائی منافع بخش بینک ہے جو mid-pack multiple پر سودے میں ہے ایک اچھی طرح محفوظ، اعلیٰ ڈیویڈنڈ yield کے ساتھ، اور قریبی مدت میں قیمت میں گراوٹ رک رہی ہے بجائے تیز ہونے کے۔ یہ سیٹ اپ صبر کو ایک defensive، income-generating large-cap کے ذریعے reward دیتا ہے جبکہ بہتر tape macro shocks کو جذب کرتا ہے۔",
+   "thesis_ur_hash": "2ff3d2898cf2",
+   "best_evidence_ur": "8.88% ڈیویڈنڈ yield 74.64% payout ratio پر، 27% خالص margin اور 57.16B خالص آمدنی کے ذریعے تھامی ہوئی — ایک محفوظ، نقد پیدا کرنے والا income profile بجائے سخت کے۔",
+   "best_evidence_ur_hash": "1f6f61166de4",
+   "what_would_break_it_ur": "اگر قیمت ماڈل کی اپنی مرکب fair value 333.92 (موجودہ 398.24 سے تقریباً 16% نیچے) کی طرف پیسہ کاٹنا جاری رکھے TA memo کے مطابق momentum 'down' کے ساتھ، یا اگر payout ratio بغیر کسی earnings growth کے 75% سے اوپر خاص طور پر تبدیل ہو، income-and-value case بکھر جاتا ہے۔",
+   "what_would_break_it_ur_hash": "ea1c127eb375"
   },
   "bear_case": {
-   "thesis": "The composite fair-value model — not a single method, but relative P/E, earnings power, Graham and DDM together — reads MCB -30.3% overvalued, while the tape shows stalled momentum sitting exactly on its moving averages with no identified support. Growth priced in is thin.",
+   "thesis": "The desk's own valuation model flags MCB as overvalued by roughly 16%, with three of four component methods sitting well below the current price, while the technical picture shows price below both its SMA20 and SMA50 with momentum still down. The apparent stabilization is one day of data against a 20-day downtrend, and key balance-sheet data a bank thesis needs is simply absent from the feed.",
    "pillars": [
-    "Composite fair value 284.37 vs price 407.85, a -30.3% mispricing verdict of 'overvalued' spanning four independent valuation methods (fa_memo valuation).",
-    "Growth estimate is only 3.0%, and forward P/E (8.26) is barely below trailing (8.51) — little acceleration is actually priced in despite the 'improving' scorecard label.",
-    "20-day return is -5.72%, price sits below both SMA20 (408.12) and SMA50 (408.20), structure is 'range' and momentum 'flat' (ta_memo), with no support level identified (levels.support: null).",
-    "Bank-specific balance-sheet detail — capital adequacy, NPL/asset quality, leverage — is explicitly absent from the data (fa_memo balance_sheet_flags), leaving a core banking risk unverified.",
-    "Volume surge is only 0.59 (below-average), suggesting weak conviction behind recent price action either way."
+    "Composite fair value is 333.92 versus a 398.24 price — a 16.2% mispricing verdict of 'overvalued', with relative-P/E (312.29), earnings-power (295.89) and DDM (355.54) all below price.",
+    "Technical structure is negative: price sits below both SMA20 (409.6) and SMA50 (409.68), 20-day return is -1.94%, and the TA memo tags momentum 'down' and structure 'range' with stance 'cautious'.",
+    "Macro exposure is unhedged: the dossier logs multiple impact-5 headlines in July (Strait-of-Hormuz escalation, naval blockade) plus an impact-4 item on 2026-09-02 — sector-wide shocks a single-name dividend thesis can't offset.",
+    "Balance-sheet blind spots for a bank name: no capital-adequacy ratio, NPL ratio, or debt figures in the feed, and eps_basis is marked 'unknown' in both the fundamental and valuation blocks — the earnings quality underneath the multiple can't be fully verified.",
+    "The one broker note in the file (Topline, 2026-07-07) is a single sector-tailwind call with no track-record annotation and says nothing about the valuation gap."
    ],
-   "attack_on_bull": "The bull's 'forward P/E improving = growth' pillar is the weakest: an 8.26 vs 8.51 forward P/E is a marginal 3% shift consistent with a flat 3.0% growth estimate, not real acceleration — and it sits in direct tension with the same fa_memo's composite model, where relative P/E (311.46), earnings power (305.86), Graham (262.88) and DDM (255.77) all independently land well below the 407.85 price. A single 'mid-pack' peer multiple doesn't offset four convergent fair-value methods pointing the other way.",
-   "broker_challenge": null,
-   "worst_case": "A reversion toward the composite fair value of 284.37 would represent roughly -30.3% from the current 407.85, compounding on an already-negative 20-day return of -5.72% and a technical structure with no defined support level (support: null) below the 408 SMA cluster — a scenario the dossier's own model, not sentiment, flags as the base mispricing gap.",
-   "thesis_ur": "مرکب منصفانہ قیمت ماڈل — نہ ایک واحد طریقہ، بلکہ relative P/E، کمائی کی طاقت، Graham اور DDM اکٹھے — MCB کو -30.3% overvalued پڑھتا ہے، جبکہ ٹیپ رفتار کو بالکل اپنی حرکی اوسط پر ٹھہرتے ہوئے دکھاتا ہے کوئی شناخت شدہ سہارے کے ساتھ۔ قیمت میں نمو سادہ ہے۔",
-   "thesis_ur_hash": "162af5330acd",
-   "attack_on_bull_ur": "Bull کا 'forward P/E بہتر = نمو' ستون سب سے کمزور ہے: ایک 8.26 بمقابلہ 8.51 forward P/E ایک 3% shift ہے 3.0% فلیٹ نمو کے تخمینے کے ساتھ مطابقت رکھتے ہوئے، حقیقی تیزی نہیں — اور یہ براہ راست تناؤ میں ہے ایک ہی fa_memo کے ساتھ، جہاں relative P/E (311.46)، کمائی کی طاقت (305.86)، Graham (262.88) اور DDM (255.77) سب آزادانہ طور پر 407.85 قیمت سے بہت نیچے آتے ہیں۔ ایک واحد 'mid-pack' ہم جماعت کے ضارب چار convergent منصفانہ قیمت طریقوں کو دوسری طرف offset نہیں کر سکتے۔",
-   "attack_on_bull_ur_hash": "7d781754918c"
+   "attack_on_bull": "The bull's technical-stabilization pillar is the weakest: it leans on one session's +0.08% print to argue the slide is 'stalling,' but that sits against a -1.94% 20-day return, price below both moving averages, momentum tagged 'down,' and RSI14 at 38.5 (soft, not oversold — no confirmed reversal signal). The cited Bollinger squeeze edge (0.62 hit rate, +0.77% net) is drawn from only 16 signals, too small a sample to outweigh a 16.2% fair-value gap and a memo stance explicitly labeled 'cautious'.",
+   "broker_challenge": "The Topline note names MCB as a beneficiary of SBP's MDR-floor removal, but it is one broker's single dated call with no hit-rate or track-record data attached in this digest — it cannot be weighted as verified. It also predates and never engages the desk's own -16.2% mispricing verdict, and it says nothing about the missing capital-adequacy/NPL data a bank thesis actually needs; a sector-tailwind call is not a valuation call.",
+   "worst_case": "Price reverts toward the lower cluster of the model's own valuation methods (295.89–333.92), a decline on the order of roughly 16-26% from the current 398.24, compounding with the kind of impact-5 macro shock already logged twice in July and again (impact-4) on 2026-09-02, while the TA memo's 'down' momentum and sub-SMA structure persist without a confirmed reversal.",
+   "thesis_ur": "ڈیسک کا اپنا valuation ماڈل MCB کو تقریباً 16% زیادہ مقدار میں flag کرتا ہے، چار میں سے تین اہم طریقوں کے ساتھ موجودہ قیمت سے بہت نیچے بیٹھے ہیں، جبکہ technical picture قیمت کو اپنی SMA20 اور SMA50 دونوں سے نیچے دکھاتا ہے momentum ابھی بھی down کے ساتھ۔ ظاہری استحکام ایک سے زیادہ 20-day downtrend کے خلاف ڈیٹا ہے، اور اہم balance-sheet ڈیٹا ایک بینک thesis کی ضرورت ہے یہ صرف feed میں absent ہے۔",
+   "thesis_ur_hash": "a021cee09737",
+   "attack_on_bull_ur": "بل کے technical-stabilization ستون سب سے کمزور ہے: یہ 0.08% print کے ایک سیشن پر عمل کرتا ہے یہ argument دینے کے لیے کہ گراوٹ 'stalling' ہے، لیکن یہ -1.94% 20-day return، دونوں moving averages سے نیچے قیمت، momentum 'down' میں tagged، اور RSI14 38.5 پر (نرم، oversold نہیں — کوئی تصدیق شدہ reversal signal نہیں) کے خلاف ہے۔ حوالہ شدہ Bollinger squeeze edge (0.62 hit rate, +0.77% net) صرف 16 signals سے نکالی گئی ہے، ایک 16.2% fair-value gap اور ایک memo stance explicitly labeled 'cautious' کو outweigh کرنے کے لیے بہت چھوٹا sample۔",
+   "attack_on_bull_ur_hash": "b0acdcbdacbc",
+   "broker_challenge_ur": "Topline note MCB کو SBP کے MDR-floor ہٹانے کا فائدہ نام دیتا ہے، لیکن یہ ایک broker کی ایک ہی dated call ہے جس کے ساتھ کوئی hit-rate یا track-record data اس digest میں منسلک نہیں ہے — یہ تصدیق شدہ کے طور پر وزن نہیں کیا جا سکتا۔ یہ ڈیسک کے اپنے -16.2% mispricing verdict سے پہلے آتا ہے اور اس میں کبھی engage نہیں کرتا، اور یہ missing capital-adequacy/NPL ڈیٹا کے بارے میں کچھ نہیں کہتا جو ایک بینک thesis واقعی ضرورت ہے؛ sector-tailwind call ایک valuation call نہیں ہے۔",
+   "broker_challenge_ur_hash": "61c6536a72f2",
+   "worst_case_ur": "قیمت ماڈل کے اپنے valuation طریقوں کے نچلے cluster کی طرف متوجہ ہوتا ہے (295.89–333.92)، موجودہ 398.24 سے تقریباً 16-26% کی گراوٹ، impact-5 macro shock کی طرح ملاپ کے ساتھ پہلے سے جولائی میں دو بار اور دوبارہ (impact-4) 2026-09-02 پر، جب TA memo کی 'down' momentum اور sub-SMA ڈھانچہ بغیر کسی تصدیق شدہ reversal کے برقرار رہتے ہیں۔",
+   "worst_case_ur_hash": "2513713668bb"
   },
-  "reaffirmed": "2026-08-06 17:48",
+  "reaffirmed": false,
   "qa": {
-   "verdict": "flags",
-   "checked": "2026-08-03",
-   "note": "Composite FV, TA/FA figures trace exactly to dossier. Medium flag: dossier next_earnings date (Aug 6) may be stale vs web (Aug 25) - unused in session text, data-layer fix needed."
+   "verdict": "flagged",
+   "checked": "2026-09-04",
+   "note": "Two medium issues: 8.88% div yield is rolling-4Q, not strict trailing-365d (6.78%); fa_memo/bear_case said 3-of-4 fair-value methods below price when all 4 (incl. Graham 383.71) are below."
   }
  },
  "MARI": {
@@ -798,89 +804,94 @@
   }
  },
  "HBL": {
-  "built": "2026-08-10 17:53",
-  "dossier_asof": "2026-08-10",
-  "price_at_session": 326.2,
-  "material_hash": "bf86e929ccc5",
+  "built": "2026-09-04 18:05",
+  "dossier_asof": "2026-09-03",
+  "price_at_session": 314.17,
+  "material_hash": "5f7be55f4c0e",
   "ta_memo": {
-   "read": "HBL sits in an established uptrend, trading above both its 20-day (307.25) and 50-day (301.16) averages, just 0.18% off its 20-day high. RSI14 at 65.5 shows firm but not extreme momentum, with 5-day and 20-day returns of +5.48% and +4.91% confirming the move. Volume on the advance is running below average (vol_surge 0.71), so the push toward highs isn't being confirmed by heavy participation.",
-   "structure": "uptrend",
-   "momentum": "up",
-   "liquidity_note": "Average daily traded value of PKR 746.2m is high, supporting clean entry/exit for typical desk position sizes.",
+   "read": "HBL trades at 314.17, sitting below its SMA20 (322.73) but still above its SMA50 (311.28) — a shallow pullback within a broader base rather than a breakdown. RSI14 at 47.4 is neutral, 20-day return is mildly positive (+2.34%) while the 5-day return has turned negative (-2.16%), and price sits 7.64% off its 20-day high. Volume surge is subdued (0.36) and volatility rank is low (23.6), consistent with a compressed, range-bound structure.",
+   "structure": "transition",
+   "momentum": "flat",
+   "liquidity_note": "Average daily traded value of PKR 728.3m is substantial for PSX, supporting clean entry/exit without material market impact.",
    "proven_now": [
-    "ADX rising trend entry",
-    "Stochastic reclaim 50",
-    "Squeeze release, upside"
+    "Squeeze release, upside",
+    "Stochastic reclaim 50"
    ],
    "levels": {
-    "support": 307.25,
-    "resistance": 326.8
+    "support": 311.28,
+    "resistance": 322.73
    },
-   "technical_stance": "constructive",
-   "read_ur": "HBL ایک مقرر اپٹریند میں بیٹھا ہے، اپنے 20 دن (307.25) اور 50 دن (301.16) اوسطوں دونوں کے اوپر کاروبار کرتا ہے، اپنے 20 دن کی اعلیٰ ترین سطح سے صرف 0.18% آف۔ RSI14 65.5 پر مضبوط لیکن انتہائی رفتار نہیں ہے، 5 دن اور 20 دن کی واپسی +5.48% اور +4.91% حرکت کی تصدیق کر رہی ہے۔ پیش رفت میں حجم اوسط سے کم چل رہا ہے (vol_surge 0.71)، اس لیے اعلیٰ کی طرف دھکا بھاری شرکت کی تصدیق نہیں ہو رہی ہے۔",
-   "read_ur_hash": "8bc5a0e8b9d1",
-   "liquidity_note_ur": "PKR 746.2m کی اوسط روز مرہ کی کاری قیمت اعلیٰ ہے، ڈیسک کی عام حالت کے سائز کے لیے صفائی سے داخلہ/باہری نکالنے کو سپورٹ کرتا ہے۔",
-   "liquidity_note_ur_hash": "74214ec46d76"
+   "technical_stance": "neutral",
+   "read_ur": "HBL 314.17 پر سودے میں ہے، اپنی SMA20 (322.73) سے نیچے بیٹھا ہے لیکن ابھی بھی اپنی SMA50 (311.28) سے اوپر — ایک وسیع base کے اندر ایک سطحی pullback بجائے breakdown کے۔ RSI14 47.4 پر neutral ہے، 20-day return معمولی طور پر positive (+2.34%) ہے جبکہ 5-day return منفی (-2.16%) میں بدل گیا ہے، اور قیمت اپنی 20-day high سے 7.64% دور بیٹھا ہے۔ Volume surge subdued ہے (0.36) اور volatility rank کم ہے (23.6)، compressed، range-bound ڈھانچے کے ساتھ مطابقت رکھتے ہوئے۔",
+   "read_ur_hash": "b3a9e0918db8",
+   "liquidity_note_ur": "PKR میں اوسط روزانہ traded value 728.3m PSX کے لیے substantial ہے، بغیر کسی material market impact کے صاف ستھرے entry/exit کو support کرتے ہوئے۔",
+   "liquidity_note_ur_hash": "25dc01417dae"
   },
   "fa_memo": {
-   "read": "HBL is a large, profitable bank with a ~19% net margin, a trailing P/E of 7.13 (cheap vs the broader market) and forward P/E below trailing, implying earnings growth. But the composite fair-value model (283.79) sits about 13% below the current price of 326.2, so the 'cheap' P/E read and the fair-value model disagree - the DDM component (191.99) pulls the composite down hard versus relative-PE (305.64) and Graham (285.36). The dividend, at a 7.39% yield and 52.69% payout, looks well covered and per-share payouts have been rising across recent closures. Net: sound, dividend-paying franchise, but the price tag looks closer to fair-to-full than outright cheap once the fair-value composite is weighed alongside the peer-relative P/E. Caveat: the underlying dossier's recent_dividends/recent_news may lag the latest corporate announcements by several sessions - confirm against the most recent PSX notice before treating the dividend/earnings figures above as fully current.",
+   "read": "HBL is a large, D-SIB-designated commercial bank trading at a trailing P/E of 6.98 against a composite fair value of Rs287.19 versus a price of Rs314.17 — roughly 8-9% above the model's blended estimate, so not the bargain the headline P/E suggests once earnings power/DDM methods are weighted in. Profitability is solid (net margin ~19%, net income Rs66.82B on revenue Rs356.29B) but H1CY26 consolidated profit grew only 0.26% YoY per the filing digest, a much slower pace than the 'improving' forward-PE narrative implies. The dividend looks well covered at a 52.69% payout ratio against a 7.58% yield, with a steady quarterly cadence.",
    "valuation_stance": "near_fair",
-   "earnings_quality": "Net margin ~18.7% (66.82B net income / 356.29B revenue), consistently profitable; no loss or negative-EPS flag in the data",
-   "dividend_safety": "Yield 7.39% on a 52.69% payout ratio - covered, and per-share dividends have stepped up across the last four closures (4.5, 5.0, 6.0, 6.0). Note: dossier dividend feed may not yet reflect the most recent corporate action - re-verify before relying on this as the latest declared dividend.",
+   "earnings_quality": "Net margin ~19%, profitable and no loss flag, but H1CY26 profit growth was essentially flat (+0.26% YoY) despite a scorecard tag of 'improving'.",
+   "dividend_safety": "Payout ratio 52.69% against a 7.58% yield with four consistent recent payouts — looks covered, not stretched.",
    "balance_sheet_flags": [
-    "Capital adequacy ratio (CAR), NPL/infection ratio, and leverage/debt detail not in the data feed - material gaps for assessing a bank's balance-sheet resilience"
+    "debt/leverage and capital-adequacy metrics not in the data",
+    "asset quality (NPLs, provisioning) not in the data",
+    "recently designated a D-SIB by SBP (Aug 2026), a systemic-importance flag with regulatory capital implications not quantified in this feed"
    ],
-   "broker_view": "AKD (Dec-2026 target 483) and Topline (FY26 top pick) are both bullish, but neither digest carries a track-record annotation here, so their calls should be weighted as unverified claims, not evidence - and both omit the fair-value model's more cautious read",
+   "broker_view": "Filing digest reports 1HCY26 consolidated profit up just 0.26% to Rs34.54bn — a near-flat print that sits awkwardly against the scorecard's 'forward view: improving' framing (forward P/E 6.45 < trailing 6.98); no track-record annotation accompanies this source, so the growth read should be treated as unconfirmed rather than taken at face value.",
    "fundamental_stance": "neutral",
-   "read_ur": "HBL ایک بڑا، منافع بخش بینک ہے ~19% خالص مارجن کے ساتھ، 7.13 کے سٹیل P/E (وسیع تر بازار کے مقابل سستا) اور آگے P/E ٹریل سے نیچے، آمدنی کی بڑھتی ہوئی کا مطلب۔ لیکن جامع منصفانہ قیمت ماڈل (283.79) موجودہ قیمت 326.2 سے تقریباً 13% نیچے بیٹھا ہے، اس لیے 'سستے' P/E کی پڑھائی اور منصفانہ قیمت ماڈل اختلاف کرتے ہیں - DDM اجزاء (191.99) متعلقہ-PE (305.64) اور Graham (285.36) کے مقابل جامع کو سخت نیچے کھینچتا ہے۔ منافع 7.39% پیداوار پر ہے اور 52.69% ادائیگی ہے، اچھی کور شدہ دکھتا ہے اور فی شیئر ادائیگیں حالیہ بندیوں میں بڑھی ہیں۔ خالص: درست، منافع ادا کرنے والا فرنچائز، لیکن قیمت کی ٹیگ منصفانہ سے دیکھنے میں سستا ہے ایک بار جامع منصفانہ قیمت وزنی ہو جب ہمسری متعلقہ P/E کے ساتھ۔ محفوظی: بنیادی دستاویز کے حالیہ منافع/حالیہ خبریں سب سے حالیہ PSX نوٹس سے کئی سیشن پیچھے ہو سکتے ہیں - تصدیق کریں منافع/آمدنی کے اعداد و شمار کو مکمل طور پر موجودہ سمجھنے سے پہلے۔",
-   "read_ur_hash": "d2d52eb92edc",
-   "earnings_quality_ur": "خالص مارجن ~18.7% (66.82B خالص آمدنی / 356.29B آمدنی)، مسلسل منافع بخش؛ ڈیٹا میں کوئی نقصان یا منفی-EPS جھنڈا نہیں",
-   "earnings_quality_ur_hash": "ac22efbb39d5",
-   "dividend_safety_ur": "پیداوار 7.39% 52.69% ادائیگی تناسب پر - سپورٹ شدہ، اور فی شیئر منافع آخری چار بندیوں میں اوپر کی طرف بڑھے ہیں (4.5, 5.0, 6.0, 6.0)۔ نوٹ: دستاویز منافع فیڈ ابھی سب سے حالیہ کمپنی کی کارروائی کی عکاسی نہیں کر سکتی ہے - سب سے حالیہ اعلان شدہ منافع پر انحصار سے پہلے دوبارہ تصدیق کریں۔",
-   "dividend_safety_ur_hash": "5c72d2ee5eba",
-   "broker_view_ur": "AKD (Dec-2026 ہدف 483) اور Topline (FY26 ٹاپ پک) دونوں بھاری ہیں، لیکن نہ ہی ہضم یہاں ٹریک ریکارڈ تشریح رکھتے ہیں، تو ان کی کالیں غیر تصدیق شدہ دعویٰ کے طور پر وزن کی جانی چاہیں، نہ ثبوت - اور دونوں منصفانہ قیمت ماڈل کے محتاط تر پڑھائی کو چھوڑتے ہیں۔",
-   "broker_view_ur_hash": "a003b020d373"
+   "read_ur": "HBL ایک بڑا، D-SIB-designated commercial bank ہے جو trailing P/E 6.98 پر سودے میں ہے ایک مرکب fair value Rs287.19 کے مقابل موجودہ قیمت Rs314.17 — تقریباً 8-9% اوپر ماڈل کے blended estimate سے، تو یہ bargain نہیں ہے جو headline P/E تجویز کرتا ہے ایک بار earnings power/DDM طریقوں کو وزن دیا جائے۔ منافع خوری مضبوط ہے (خالص margin ~19%، خالص آمدنی Rs66.82B revenue Rs356.29B پر) لیکن H1CY26 consolidated profit صرف 0.26% YoY کے ذریعے grow کیا جو 'improving' forward-PE narrative کو مراعات دیتا ہے اس سے بہت سست رفتار۔ ڈیویڈنڈ 52.69% payout ratio پر اچھی طرح محفوظ لگتا ہے 7.58% yield کے خلاف، ایک مستقل سہ ماہی cadence کے ساتھ۔",
+   "read_ur_hash": "5d803ff7c9c4",
+   "earnings_quality_ur": "خالص margin ~19%، منافع بخش اور کوئی loss flag نہیں، لیکن H1CY26 profit growth بنیادی طور پر flat تھی (+0.26% YoY) 'improving' scorecard tag کے باوجود۔",
+   "earnings_quality_ur_hash": "c014ca45062b",
+   "dividend_safety_ur": "Payout ratio 52.69% 7.58% yield کے خلاف چار مستقل حالیہ payouts کے ساتھ — محفوظ، stretched نہیں لگتا۔",
+   "dividend_safety_ur_hash": "5881249f1225",
+   "broker_view_ur": "Filing digest رپورٹ کرتا ہے 1HCY26 consolidated profit محض 0.26% تک Rs34.54bn کو — ایک near-flat print جو scorecard کے 'forward view: improving' framing کے ساتھ awkwardly بیٹھا ہے (forward P/E 6.45 < trailing 6.98)؛ کوئی track-record تشریح اس source کو accompany نہیں کرتی، تو growth read unconfirmed کے طور پر سلوک کی جانی چاہیے بجائے face value پر لی جانے کے۔",
+   "broker_view_ur_hash": "cd1ff67e9331"
   },
   "bull_case": {
-   "thesis": "HBL combines a cheap earnings multiple with a confirmed price uptrend and a growing, covered dividend, giving the setup both a value anchor and momentum backing. The desk's own proven-strategy stats show trend and reclaim signals working on this name with positive net hit rates.",
+   "thesis": "HBL is a large, D-SIB-designated bank offering a well-covered 7.58% dividend yield at a trailing P/E of 6.98, with the technical structure holding above its 50-day support after a shallow pullback. The setup favors a name that pays to hold while a base develops.",
    "pillars": [
-    "Trailing P/E 7.13 and forward P/E 6.83 (forward below trailing) signal cheap valuation with earnings expected to grow (fa_memo).",
-    "Price is above both the 20-day SMA (307.25) and 50-day SMA (301.16), just 0.18% off the 20-day high, with RSI14 at 65.5 confirming firm momentum (ta_memo).",
-    "Dividend yield 7.39% on a 52.69% payout is covered, and per-share dividend has stepped up across the last four closures (4.5 -> 5.0 -> 6.0 -> 6.0 Rs).",
-    "Proven strategies on this ticker post positive net returns: ADX rising trend entry (55% hit, +0.95% net, n=29) and Stochastic reclaim 50 (59% hit, +0.81% net, n=32).",
-    "High liquidity at PKR 746.2m average daily traded value supports clean entry/exit at typical desk position sizes."
+    "P/E 6.98 sits in the cheapest third of PSX names, with forward P/E 6.45 below trailing, per the fundamental scorecard.",
+    "Dividend yield 7.58% on a payout ratio of just 52.69%, backed by four consecutive recent payouts (Rs6, Rs6, Rs5, Rs4.5) — covered, not stretched.",
+    "Net margin ~19% on net income Rs66.82B against revenue Rs356.29B — solidly profitable at scale.",
+    "Price (314.17) holds above SMA50 (311.28) despite sitting below SMA20 (322.73); two proven strategies are currently active — 'Squeeze release, upside' (60% hit rate, +1.79% net, n=10) and 'Stochastic reclaim 50' (59% hit, n=32).",
+    "Average daily traded value of Rs728.3m and beta 0.89 support clean entry/exit with below-market volatility, per the TA memo's liquidity note."
    ],
-   "best_evidence": "Forward P/E (6.83) below trailing (7.13) paired with a 7.39% covered, rising dividend gives a valuation and income cushion underneath the confirmed technical uptrend.",
-   "what_would_break_it": "The rally is running on below-average volume (vol_surge 0.71) right at resistance (326.8); a failure to hold above the 20/50-day SMAs on continued light participation would undercut the technical case, and the fair-value composite (283.79, -13% vs price) implies the 'cheap' framing is not universally supported by the desk's own models.",
-   "thesis_ur": "HBL ایک سستے کمائی کے متعدد کو شامل کرتا ہے تصدیق شدہ قیمت اپٹریند اور ایک بڑھتا ہوا، سپورٹ شدہ منافع کے ساتھ، سیٹ اپ کو ایک قیمت کے لنگر اور رفتار کے ساتھ دونوں دے۔ ڈیسک کے اپنے ثابت حکمت عملی کے اعدادوشمار اس نام پر کام کرنے والی رفتار اور دعویٰ سگنلز کو مثبت خالص ہٹ کی شرح کے ساتھ دکھاتے ہیں۔",
-   "thesis_ur_hash": "5ee629a2772e",
-   "best_evidence_ur": "آگے P/E (6.83) ٹریل سے نیچے (7.13) 7.39% سپورٹ شدہ، بڑھتے ہوئے منافع کے ساتھ جوڑا جاتا ہے تصدیق شدہ تکنیکی اپٹریند کے نیچے تشخیص اور آمدنی کے کشن دیتا ہے۔",
-   "best_evidence_ur_hash": "f133050e8f4b",
-   "what_would_break_it_ur": "مہم اوسط حجم (vol_surge 0.71) کے دوران چل رہی ہے براہ راست سپورٹ میں (326.8)؛ 20/50 دن SMAs کے اوپر رکھنے میں ناکامی جاری ہلکے شرکت پر تکنیکی کیس کو قطع کرے گی، اور منصفانہ قیمت جامع (283.79، -13% بمقابلہ قیمت) یہ ظاہر کرتا ہے کہ 'سستے' فریمنگ ڈیسک کے اپنے ماڈلز کے لیے عالمی سطح پر سپورٹ نہیں ہے۔",
-   "what_would_break_it_ur_hash": "cbe9f06c4a13"
+   "best_evidence": "A 7.58% yield covered at a 52.69% payout ratio, evidenced by four consecutive stable recent dividend payments.",
+   "what_would_break_it": "A confirmed break below SMA50 (311.28) on rising volume, or profit growth staying stuck near the H1CY26 pace of +0.26% YoY, would undercut both the technical base and the 'improving' earnings narrative the valuation partly leans on.",
+   "thesis_ur": "HBL ایک بڑا، D-SIB-designated bank ہے ایک well-covered 7.58% ڈیویڈنڈ yield فراہم کرتے ہوئے trailing P/E 6.98 پر، technical structure اپنی 50-day support کے اوپر رکھے ہوئے ایک سطحی pullback کے بعد۔ یہ سیٹ اپ ایک نام میں favor کرتا ہے جو ایک base develop کرتے ہوئے پکڑ رکھنے کے لیے ادا کرتا ہے۔",
+   "thesis_ur_hash": "da90e91823ec",
+   "best_evidence_ur": "7.58% yield 52.69% payout ratio پر محفوظ، چار consecutive مستقل recent dividend payments کے ذریعے ثبوت کے ساتھ۔",
+   "best_evidence_ur_hash": "7dff49387607",
+   "what_would_break_it_ur": "SMA50 (311.28) کے نیچے ایک تصدیق شدہ break rising volume پر، یا profit growth H1CY26 pace کے 0.26% YoY میں stuck رہنا، دونوں technical base اور 'improving' earnings narrative کو undercut کرے گا جو valuation partly پر lean کرتا ہے۔",
+   "what_would_break_it_ur_hash": "1e1ae746a1d6"
   },
   "bear_case": {
-   "thesis": "The desk's own composite fair-value model puts HBL 13% above what a blended methodology justifies, driven by a dividend-discount value (191.99) far below the market price, and the current advance lacks volume confirmation. Balance-sheet resilience data a bank needs most - capital adequacy, NPL ratio, leverage - is simply absent from the feed.",
+   "thesis": "HBL's headline cheapness is an artifact of the trailing P/E method — the composite fair value (Rs287.19) sits 8.6% below the current price, and H1CY26 consolidated profit grew just 0.26% YoY, flat against a scorecard that still labels the forward view 'improving.' Technically the stock is in a stalled, sub-SMA20 range with fresh D-SIB regulatory scrutiny layered on top.",
    "pillars": [
-    "Composite fair value is 283.79 versus a 326.2 price, a -13.0% mispricing_pct, with the DDM component alone at just 191.99 (fa_memo, dossier valuation block).",
-    "Volume surge on the advance is 0.71 - below average - so the push toward the 20-day high (only 0.18% away) is not backed by heavy participation (ta_memo).",
-    "RSI14 at 65.5 is approaching overbought territory with price already testing resistance at 326.8, leaving limited technical room before a stall or pullback.",
-    "Balance-sheet flags explicitly missing from the data: capital adequacy ratio, NPL/infection ratio, and leverage detail - material gaps for judging a bank's resilience (fa_memo).",
-    "Both cited broker targets (AKD 483, Topline top pick) omit the fair-value model's more cautious read entirely."
+    "Composite fair value Rs287.19 vs price Rs314.17 is a -8.6% mispricing; DDM (277.62) and earnings-power (279.45) methods — not the trailing P/E — sit well below the current price.",
+    "H1CY26 consolidated profit rose only 0.26% YoY to Rs34.54bn per the filing digest, a near-flat print that clashes with the 'improving' forward-view tag.",
+    "Price is below SMA20 (322.73), 5-day return is -2.16%, and the TA memo classifies structure as 'transition' with 'flat' momentum — not a confirmed uptrend.",
+    "SBP designated HBL a D-SIB in August 2026 (impact-4 news), a systemic-importance flag with capital implications the dossier does not quantify; balance-sheet items (leverage, capital adequacy, NPLs/provisioning) are explicitly absent from the data.",
+    "Recent impact-4/5 news flow (Hormuz tensions, Sept 2 US-Iran escalation, index down ~1%) shows the tape's sensitivity to macro shocks that hit banks broadly."
    ],
-   "attack_on_bull": "The bull's 'cheap P/E' pillar is the weak link: a 7.13 trailing multiple looks cheap only against peer-relative pricing (305.64), but the earnings-power (282.22), Graham (285.36), and especially DDM (191.99) methods - arguably more appropriate for a dividend-paying bank - land well under the current 326.2 price, producing the desk's own -13% composite mispricing. 'Cheap on P/E' and 'above fair value on a blended model' are not compatible, and the bull case leans on the flattering half.",
-   "broker_challenge": "AKD's Dec-2026 target of 483 and Topline's FY26 top-pick call carry no track-record annotation in this feed, so per the fa_memo they are unverified claims, not evidence. Both omit the composite fair-value read (283.79) and the DDM's markedly lower value (191.99); sell-side targets in this sector routinely run ahead of dividend-discount-based valuation, and neither call addresses the missing CAR/NPL data that would substantiate a large upside re-rating.",
-   "worst_case": "A reversion toward the composite fair value of 283.79 - roughly 13% below the current 326.2 - would be consistent with the DDM read (191.99) reasserting itself if the unconfirmed-volume rally stalls at resistance (326.8) and broker targets prove unsupported by the balance-sheet detail the feed lacks.",
-   "thesis_ur": "ڈیسک کا اپنا جامع منصفانہ قیمت ماڈل HBL کو ڈال دیتا ہے جو ایک ملی ہوئی طریقہ کار کو منصفانہ ہے سے اوپر، ایک منافع رعایت قیمت (191.99) کی طرف سے چلایا جاتا ہے بازار کی قیمت سے بہت نیچے، اور موجودہ پیش رفت حجم کی تصدیق سے محروم ہے۔ توازن شیٹ کے لچک کے ڈیٹا بینک کو سب سے زیادہ ضرورت ہے - سرمایہ کاری کی مناسبیت، NPL تناسب، لیورج - بس فیڈ سے گایب ہے۔",
-   "thesis_ur_hash": "9c03326762fa",
-   "attack_on_bull_ur": "سانڈ کا 'سستے P/E' ستون کمزور لنک ہے: 7.13 ٹیل کا متعدد صرف ہمسری قیمت (305.64) کے مقابل سستا لگتا ہے، لیکن کمائی کی طاقت (282.22)، Graham (285.36)، اور خاص طور پر DDM (191.99) طریقے - شاید منافع ادا کرنے والے بینک کے لیے زیادہ موزوں — موجودہ 326.2 قیمت سے اچھی طرح نیچے بیٹھتے ہیں، ڈیسک کے اپنے -13% جامع غلط قیمت کی پیداوار۔ 'P/E پر سستے' اور 'ایک ملی ہوئی ماڈل پر منصفانہ قیمت سے اوپر' موافق نہیں ہیں، اور سانڈ کیس خوشنما نصف پر لین ہے۔",
-   "attack_on_bull_ur_hash": "264908058b69"
+   "attack_on_bull": "The bull's 'cheap P/E, improving forward view' pillar is the weakest: the FA memo's own valuation composite (which weights DDM and earnings-power, not just trailing P/E) puts fair value 8.6% below the current price, and the actual H1CY26 profit growth behind that 'improving' tag was just 0.26% YoY — essentially flat, not improving.",
+   "broker_challenge": "The fa_memo's own broker_view flags this directly: the 0.26% profit-growth figure comes from a filing digest with 'no track-record annotation,' so the growth read 'should be treated as unconfirmed rather than taken at face value' — the scorecard's 'improving' label is riding on that same unverified growth number.",
+   "worst_case": "Profit growth stays near the H1CY26 pace of +0.26% YoY while price mean-reverts toward the composite fair value of Rs287.19 (roughly 8.6% below the 314.17 close), with the SMA20/SMA50 band (322.73/311.28) offering no clean floor if a macro shock (of the kind that produced the impact-4/5 events in July and September 2026) hits banks broadly.",
+   "thesis_ur": "HBL کی headline سستی ایک artifact ہے trailing P/E method کی — مرکب fair value (Rs287.19) موجودہ قیمت سے 8.6% نیچے بیٹھا ہے، اور H1CY26 consolidated profit صرف 0.26% YoY کے ذریعے grow کیا، ایک scorecard کے ساتھ flat جو ابھی بھی forward view 'improving' لیبل کرتا ہے۔ تکنیکی طور پر stock ایک stalled، sub-SMA20 range میں ہے fresh D-SIB regulatory scrutiny کے ساتھ layered on top۔",
+   "thesis_ur_hash": "4f9b1ea8749e",
+   "attack_on_bull_ur": "بل کے 'cheap P/E, improving forward view' ستون سب سے کمزور ہے: FA memo کا اپنا valuation composite (جو DDM اور earnings-power وزن کرتا ہے، trailing P/E نہیں تنہا) fair value کو 8.6% موجودہ قیمت سے نیچے رکھتا ہے، اور actual H1CY26 profit growth اس 'improving' tag کے پیچھے تھا محض 0.26% YoY — بنیادی طور پر flat، improving نہیں۔",
+   "attack_on_bull_ur_hash": "7d3024e4124b",
+   "broker_challenge_ur": "fa_memo کے اپنے broker_view یہ براہ راست flag کرتے ہیں: 0.26% profit-growth figure ایک filing digest سے آتا ہے 'no track-record تشریح' کے ساتھ، تو growth read 'unconfirmed کے طور پر سلوک کی جانی چاہیے بجائے face value پر لی جانے کے' — scorecard کا 'improving' لیبل اسی unverified growth number پر سوار ہے۔",
+   "broker_challenge_ur_hash": "f5026fd9da06",
+   "worst_case_ur": "Profit growth H1CY26 pace کے 0.26% YoY کے قریب رہے جبکہ قیمت Rs287.19 کے مرکب fair value کی طرف mean-revert کرے (314.17 close سے تقریباً 8.6% نیچے)، SMA20/SMA50 band (322.73/311.28) کوئی صاف floor فراہم نہ کرتے ہوئے اگر ایک macro shock (جس نے July اور September 2026 میں impact-4/5 events پیدا کیے) banks کو broadly ضرب دے۔",
+   "worst_case_ur_hash": "949b7dbf0998"
   },
   "reaffirmed": false,
   "qa": {
-   "verdict": "flags",
-   "checked": "2026-08-10",
-   "note": "Verifier found the dossier's recent_dividends/recent_news dated 2026-08-10 does not include the 2026-08-04 interim dividend/H1'26 results announcement window - a data-feed staleness gap in the upstream dossier, not a fabricated or wrong number in this session. Caveated in fa_memo.read and dividend_safety rather than hand-editing dossier data outside the deterministic scraper pipeline (desk rule: no agent quotes a dividend/date from memory). Also corrected an internal wording inconsistency (fa_memo said 'about 13-15%' vs the -13.0% used elsewhere in the same session; now reads '13%' throughout). Flagged for the scraper/news-sentinel to backfill on the next data-layer refresh."
+   "verdict": "flagged",
+   "checked": "2026-09-04",
+   "note": "One medium issue: stated 7.58% div yield is ~29% above the 5.41% trailing-365d realized yield (Rs17.00/share at 314.17 close), used as bull case best_evidence."
   }
  },
  "PPL": {
@@ -1753,7 +1764,7 @@
    "attack_on_bull_ur": "بل کا سب سے مضبوط ستون — تین ویلیویشن طریقے 16.87 پر جمع ہوتے ہیں — تین آزاد تصدیقیں نہیں ہیں؛ رشتہ دار P/E، ارنِنگز پاور، اور گراہم تمام اسی EPS کے اعداد و شمار کو چاہی کرتے ہیں جو fa_memo واضح طور پر بنیاد 'نامعلوم' کے طور پر لیبل کرتا ہے۔ اگر وہ EPS ریفائنر-عام ایک بار کے آئے ہوئے انوینٹری یا FX منافع میں شامل ہے بجائے پائیدار ارنِنگز کے، 'سستا' 5.25 P/E اور مکمل 18.2% کم قدری فاصلہ ایک ساتھ گرے گی، آزادانہ نہیں — یہ تین لباس میں ایک ناکامی کا نقطہ ہے۔",
    "attack_on_bull_ur_hash": "a2f70f31f658"
   },
-  "reaffirmed": "2026-09-02 18:35",
+  "reaffirmed": "2026-09-04 18:02",
   "qa": {
    "verdict": "flags_fixed",
    "checked": "2026-08-25",
@@ -3939,7 +3950,7 @@
    "attack_on_bull_ur": "بیل کا سستی قیمت کا ستون 75.39 کی مشترکہ منصفانہ قیمت پر منحصر ہے، لیکن fa_memo خود کہتا ہے کہ یہ تغیر 'should discount confidence in the composite number'۔ چار میں سے دو طریقے پہلے سے آج کی قیمت کے قریب بیٹھے ہیں؛ 115.5% 'undervalued' سرخی تقریباً مکمل طور پر graham اور ddm کے باہمی نقطوں سے چلائی جا رہی ہے، جو 30% forward growth کے نقطہ نظر کو شامل کرتے ہیں۔ ان دونوں کو نکالیں اور قیمت سے بڑے فاصلے کے لیے valuation کا کیس نمایاں طور پر کمزور ہو جاتا ہے۔",
    "attack_on_bull_ur_hash": "78ecc59b3a54"
   },
-  "reaffirmed": "2026-09-02 18:35",
+  "reaffirmed": "2026-09-04 18:02",
   "qa": {
    "verdict": "flagged",
    "checked": "2026-09-01",
@@ -4022,7 +4033,7 @@
    "attack_on_bull_ur": "بیل کا 'قریب منصفانہ قیمت' ستون سب سے کمزور ہے: منصفانہ قیمت کا مشترکہ (10.32) 2026-07-17 کی قیمت کے فوٹو گراف میں ہے اور 2026-09-02 اثر-5 SECP/FIA خبریں کی عکاسی نہیں کر سکتا — شماریاتی طور پر سستی P/E ایک نام پر جو فی الوقت فوجی سے منسلک جانچ کا سامنا کر رہا ہے درسی قدر پھندا ہے، رعایت نہیں۔ fa_memo خود تین تشخیص کے طریقوں کو 2x سے زیادہ (9.57 سے 20.36) کے لیے پرچم لگاتا ہے، تو 'منصفانہ' جانچ کی خبریں آنے سے پہلے پہلے سے کم اعتماد والی پڑھ تھی۔",
    "attack_on_bull_ur_hash": "0bc28091bfbd"
   },
-  "reaffirmed": false,
+  "reaffirmed": "2026-09-04 18:02",
   "qa": {
    "verdict": "flags",
    "checked": "2026-09-02",
