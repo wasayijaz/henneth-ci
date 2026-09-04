@@ -74,6 +74,8 @@
 <link rel="stylesheet" href="board.css">
 <link rel="stylesheet" href="pages.css">
 <link rel="stylesheet" href="pages-workspace.css">
+<link rel="stylesheet" href="today.css">
+<link rel="stylesheet" href="today-info.css">
 <link rel="stylesheet" href="pages-research.css">
 <link rel="stylesheet" href="pages-markets.css">
 <link rel="stylesheet" href="pages-tools.css">
@@ -458,6 +460,9 @@ if (location.hostname.indexOf('henneth.app') !== -1) {
      tile icons on that paint stayed bare. icons.js only defines functions — no observer, no
      exports, no dependency on app.js — so it is safe this early. See icons.js's own header. -->
 <script src="icons.js"></script>
+<script src="today-charts.js"></script>
+<script src="today-info.js"></script>
+<script src="today.js"></script>
 <script src="app.js"></script>
 <!-- First-failure capture, armed before the shell scripts below. A panel that fails
      leaves its placeholder on screen and the reason only in the console, which is no

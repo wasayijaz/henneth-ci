@@ -390,6 +390,7 @@ One repo, two Vercel projects, one publish choke point.
 **Terminal**
 
 - Root `vercel.json`: `installCommand` is a no-op, `buildCommand` is `sh scripts/vercel_build.sh`, `outputDirectory` is `public`.
+- The Today surface is a mounted, read-only renderer: `index.html` loads `today.css`, `today-info.css`, `today-charts.js`, `today-info.js`, and `today.js` before `app.js`; the existing `PAGES` router delegates `/today` to `HennethTodayRenderer` with `pageToday` as the load-failure fallback. `today.js` reads only retained `state/` JSON (including `newslog.json` for the external-article preview), and optional news/history/chart failures degrade their own panel rather than replacing the daily read. The three offline Today checks are wired into `preflight.py`.
 - `vercel_build.sh` copies all of `dashboard/` into `public/`, deletes `app.html`, copies `state/` to `public/state/`, then removes the CI-owner-only artifacts (`company_documents.json`, `company_briefs.json`, `company_brief_receipts.json`, `document_synthesis_queue.json`, and `company_intel/`). The dashboard copy remains a deny-list because an allow-list already 404'd `auth-terminal.js` in production; the CI state exclusion is the opposite boundary and is checked by `scripts/check_root_state_publication.py`.
 - The terminal's Vercel configuration falls back only clean dashboard paths to the SPA shell, so a
   refresh or shared link such as `/today`, `/ticker/LUCK`, or `/legal/privacy/` reaches the same

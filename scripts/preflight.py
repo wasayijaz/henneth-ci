@@ -809,6 +809,19 @@ def check_root_ask_hardening():
         except Exception as e:
             fail(f"{name} did not run — {e}")
 
+def check_today_ui():
+    for name in ("check_today_chart_data.mjs", "check_today_info.mjs", "check_today_article.mjs"):
+        path = os.path.join(ROOT, "scripts", name)
+        if not os.path.exists(path):
+            fail(f"{name} missing")
+            continue
+        try:
+            result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+            if result.returncode != 0:
+                fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        except Exception as e:
+            fail(f"{name} did not run — {e}")
+
 def check_ask_henneth_endpoint():
     path = os.path.join(ROOT, "scripts", "check_ask_henneth_endpoint.mjs")
     if not os.path.exists(path):
@@ -1362,6 +1375,7 @@ def main():
     check_conditional_benchmarks_ui()
     check_signal_clusters()
     check_root_ask_hardening()
+    check_today_ui()
     check_ask_henneth()
     check_ask_henneth_endpoint()
     check_ask_henneth_ui()

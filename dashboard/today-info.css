@@ -1,0 +1,47 @@
+.today-page .today-info-trigger {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-inline-start: 6px;
+  padding: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink2, #55584e);
+  font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  vertical-align: middle;
+  cursor: help;
+}
+.today-page .today-info-trigger:hover,
+.today-page .today-info-trigger:focus-visible,
+.today-page .today-info-trigger[aria-expanded="true"] {
+  color: var(--ink1, #1f211d);
+  background: var(--panel, #f7f4ea);
+  outline: 2px solid color-mix(in srgb, currentColor 22%, transparent);
+  outline-offset: 2px;
+}
+.today-page .today-info-chart-guide { margin: 0 0 8px; }
+.today-page .hn-chart-heading { display: flex; align-items: center; gap: 8px; }
+.today-page .hn-chart-heading .today-info-chart-guide { margin: 0 0 0 auto; }
+.today-page .today-info-metrics-guide { width: auto; height: auto; margin: 0 0 8px auto; padding: 0; border: 0; border-radius: 0; display: inline-flex; gap: 5px; font-size: 9px; cursor: pointer; }
+.today-page .today-info-glyph { display: inline-grid; place-items: center; width: 16px; height: 16px; border: 1px solid currentColor; border-radius: 50%; font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.today-page .today-info-disclosure-wrap { min-width: 0; position: relative; }
+.today-page .today-info-disclosure-wrap > .today-disclosure { width: 100%; }
+.today-page .today-info-disclosure-wrap > .today-info-trigger { position: absolute; top: 8px; right: 8px; z-index: 1; margin: 0; }
+.today-info-popover {
+  position: fixed;
+  z-index: 1000;
+  width: min(300px, calc(100vw - 16px));
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--ink2, #55584e);
+  background: var(--panel, #f7f4ea);
+  color: var(--ink1, #1f211d);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--ink2, #55584e) 20%, transparent);
+  font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.today-info-popover p { margin: 0; white-space: pre-line; }
+@media (prefers-reduced-motion: reduce) {
+  .today-page .today-info-trigger { transition: none; }
+}
