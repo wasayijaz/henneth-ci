@@ -45,6 +45,59 @@ const HISTORY_CONTENT_LIMIT = 500;
 const MODEL_OUTPUT_TOKENS = 700;
 const GENERIC_MODEL_ERROR = 'No answer came back. Try rephrasing.';
 
+// Hard stage budgets.  The client uses a slightly longer overall timeout so a response can
+// still be delivered after the server's final stage completes.
+const DEFAULT_DEADLINES = Object.freeze({ request: 2_000, jwks: 4_000, state: 6_000, provider: 18_000 });
+let askDeadlines = { ...DEFAULT_DEADLINES };
+// Test-only injection; production callers should never need to override these values.
+export function __setAskDeadlinesForTest(overrides = {}) {
+  askDeadlines = { ...DEFAULT_DEADLINES, ...overrides };
+}
+
+const ERROR_MESSAGES = Object.freeze({
+  account_required: 'account_required',
+  config_missing: 'chat_not_configured',
+  bad_json: 'bad json',
+  empty_question: 'empty question',
+  body_too_large: 'body_too_large',
+  request_timeout: 'request_timeout',
+  desk_data_unavailable: 'desk_data_unavailable',
+  desk_data_too_large: 'desk_data_too_large',
+  provider_busy: 'The desk’s assistant is busy — try again shortly.',
+  provider_unavailable: 'Could not reach the model provider. Try again in a moment.',
+  provider_error: 'The model provider returned an error.',
+  provider_invalid_response: GENERIC_MODEL_ERROR,
+  model_truncated: 'The assistant response was cut short. Try a narrower question.',
+});
+
+function errorJson(status, code) {
+  return json(status, { ok: false, error: ERROR_MESSAGES[code] || 'request_failed', error_code: code });
+}
+
+async function fetchJsonWithDeadline(url, init, timeoutMs, limit, timeoutCode) {
+  const controller = new AbortController();
+  let timer;
+  const operation = (async () => {
+    try {
+      const response = await fetch(url, { ...init, signal: controller.signal });
+      if (!response.ok) return { response, payload: null };
+      return { response, payload: await responseJsonBounded(response, limit) };
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error(timeoutCode);
+      throw error;
+    }
+  })();
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => { controller.abort(); reject(new Error(timeoutCode)); }, timeoutMs);
+  });
+  try {
+    return await Promise.race([operation, timeout]);
+  } finally {
+    clearTimeout(timer);
+    operation.catch(() => {});
+  }
+}
+
 export function byteLength(value) {
   return new TextEncoder().encode(String(value)).byteLength;
 }
@@ -53,14 +106,18 @@ export async function readBoundedBody(request, limit = BODY_LIMIT) {
   const declared = Number(request.headers.get('content-length'));
   if (Number.isFinite(declared) && declared > limit) throw new Error('body_too_large');
   if (!request.body) {
-    const text = await request.text();
+    let timer;
+    const timeout = new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('request_timeout')), askDeadlines.request); });
+    const text = await Promise.race([request.text(), timeout]);
+    clearTimeout(timer);
     if (byteLength(text) > limit) throw new Error('body_too_large');
     return text;
   }
   const reader = request.body.getReader();
   const chunks = [];
   let total = 0;
-  try {
+  let timer;
+  const readOperation = (async () => {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -68,7 +125,17 @@ export async function readBoundedBody(request, limit = BODY_LIMIT) {
       if (total > limit) throw new Error('body_too_large');
       chunks.push(value);
     }
-  } finally { reader.releaseLock(); }
+  })();
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => { reader.cancel().catch(() => {}); reject(new Error('request_timeout')); }, askDeadlines.request);
+  });
+  try {
+    await Promise.race([readOperation, timeout]);
+  } finally {
+    clearTimeout(timer);
+    readOperation.catch(() => {});
+    reader.releaseLock();
+  }
   const bytes = new Uint8Array(total);
   let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
@@ -118,9 +185,14 @@ const KEY_TTL_MS = 60 * 60 * 1000;
 async function getKeys() {
   const now = Date.now();
   if (keyCache && now - keyCacheAt < KEY_TTL_MS) return keyCache;
-  const res = await fetch(JWKS_URL, { cf: { cacheTtl: 3600 } });
-  if (!res.ok) throw new Error('jwks ' + res.status);
-  const jwks = await res.json();
+  const { response: res, payload: jwks } = await fetchJsonWithDeadline(
+    JWKS_URL,
+    { cf: { cacheTtl: 3600 } },
+    askDeadlines.jwks,
+    512 * 1024,
+    'jwks_timeout',
+  );
+  if (!res.ok) throw new Error('jwks_' + res.status);
   const map = new Map();
   for (const k of jwks.keys || []) {
     if (k.kty !== 'EC' || k.crv !== 'P-256') continue;
@@ -154,11 +226,26 @@ async function fetchState(origin, token) {
   const out = {};
   await Promise.all(STATE_FILES.map(async f => {
     try {
-      const r = await fetch(origin + '/state/' + f, { headers: { Authorization: 'Bearer ' + token } });
-      out[f] = r.ok ? await responseJsonBounded(r) : null;
+      const result = await fetchJsonWithDeadline(
+        origin + '/state/' + f,
+        { headers: { Authorization: 'Bearer ' + token } },
+        askDeadlines.state,
+        STATE_FILE_LIMIT,
+        'state_timeout',
+      );
+      out[f] = result.response.ok ? result.payload : null;
     } catch { out[f] = null; } // a degraded fetch loses that file's grounding, not the whole answer
   }));
   return out;
+}
+
+function hasUsableUniverseQuant(data) {
+  const symbols = data?.['universe.json']?.symbols;
+  const tickers = data?.['quant.json']?.tickers;
+  return !!(
+    symbols && typeof symbols === 'object' && !Array.isArray(symbols) && Object.keys(symbols).length > 0 &&
+    tickers && typeof tickers === 'object' && !Array.isArray(tickers) && Object.keys(tickers).length > 0
+  );
 }
 
 function findSyms(text, universe) {
@@ -406,17 +493,18 @@ export default async function handler(request) {
 
   const auth = request.headers.get('authorization') || '';
   if (!auth.startsWith('Bearer ') || !(await verify(auth.slice(7).trim())))
-    return json(401, { ok: false, error: 'account_required' });
+    return errorJson(401, 'account_required');
 
   if (!process.env.GROQ_API_KEY)
-    return json(500, { ok: false, error: 'Chat isn’t configured yet — GROQ_API_KEY is missing on the deployment.' });
+    return errorJson(500, 'config_missing');
 
   let cleanRequest;
   try {
     cleanRequest = validateRequestBody(JSON.parse(await readBoundedBody(request)));
   } catch (error) {
-    if (error.message === 'body_too_large') return json(413, { ok: false, error: 'body_too_large' });
-    return json(400, { ok: false, error: error.message === 'empty_question' ? 'empty question' : 'bad json' });
+    if (error.message === 'body_too_large') return errorJson(413, 'body_too_large');
+    if (error.message === 'request_timeout') return errorJson(408, 'request_timeout');
+    return errorJson(400, error.message === 'empty_question' ? 'empty_question' : 'bad_json');
   }
   const { question } = cleanRequest;
   const prevTurn = cleanRequest.history.slice(-2); // last exchange only — enough for a natural follow-up, small enough to stay light
@@ -424,9 +512,10 @@ export default async function handler(request) {
 
   const origin = new URL(request.url).origin;
   const data = await fetchState(origin, auth.slice(7).trim());
+  if (!hasUsableUniverseQuant(data)) return errorJson(503, 'desk_data_unavailable');
   const context = buildContext(question, prevQuestion, data);
   const contextJson = JSON.stringify(context);
-  if (byteLength(contextJson) > CONTEXT_LIMIT) return json(502, { ok: false, error: 'The desk data slice is too large to answer safely. Try asking about a specific ticker or sector.' });
+  if (byteLength(contextJson) > CONTEXT_LIMIT) return errorJson(502, 'desk_data_too_large');
 
   const messages = [
     { role: 'system', content: SYSTEM_PROMPT },
@@ -436,25 +525,38 @@ export default async function handler(request) {
   ];
 
   let groqRes;
+  let groqPayload;
   try {
-    groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: 'Bearer ' + process.env.GROQ_API_KEY },
-      body: JSON.stringify({ model: process.env.GROQ_MODEL || GROQ_MODEL, messages, temperature: 0.2, max_tokens: MODEL_OUTPUT_TOKENS }),
-    });
-  } catch {
-    return json(502, { ok: false, error: 'Could not reach the model provider. Try again in a moment.' });
+    const result = await fetchJsonWithDeadline(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + process.env.GROQ_API_KEY },
+        body: JSON.stringify({ model: process.env.GROQ_MODEL || GROQ_MODEL, messages, temperature: 0.2, max_tokens: MODEL_OUTPUT_TOKENS }),
+      },
+      askDeadlines.provider,
+      512 * 1024,
+      'provider_timeout',
+    );
+    groqRes = result.response;
+    groqPayload = result.payload;
+  } catch (error) {
+    return errorJson(502, error.message === 'provider_timeout' ? 'provider_unavailable' : 'provider_invalid_response');
   }
   if (!groqRes.ok) {
     const status = groqRes.status === 429 ? 429 : 502;
-    return json(status, { ok: false, error: status === 429 ? 'The desk’s assistant is busy — try again shortly.' : 'The model provider returned an error.' });
+    return errorJson(status, status === 429 ? 'provider_busy' : 'provider_error');
   }
-  const payload = await groqRes.json();
   let answer;
   try {
-    answer = validateAnswer(payload?.choices?.[0]?.message?.content, context);
-  } catch {
-    return json(502, { ok: false, error: GENERIC_MODEL_ERROR });
+    const choice = groqPayload?.choices?.[0];
+    if (!choice || choice.finish_reason === 'length') throw new Error(choice?.finish_reason === 'length' ? 'model_truncated' : 'provider_invalid_response');
+    answer = validateAnswer(choice.message?.content, context);
+  } catch (error) {
+    const code = groqPayload?.choices?.[0]?.finish_reason === 'length' || error.message === 'answer_too_large' ? 'model_truncated' : 'provider_invalid_response';
+    const logCode = ['empty_answer', 'answer_too_large', 'output_url', 'prompt_leak', 'advice_language', 'ungrounded_date', 'ungrounded_number', 'model_truncated', 'provider_invalid_response'].includes(error.message) ? error.message : code;
+    console.warn('[ask] answer rejected:', logCode);
+    return errorJson(502, code);
   }
 
   return json(200, { ok: true, answer, grounded_on: Object.keys(context).filter(k => k !== 'pkt_today') });

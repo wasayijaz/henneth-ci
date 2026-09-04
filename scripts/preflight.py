@@ -797,16 +797,17 @@ def check_ask_henneth():
     except Exception as e: fail(f"ask contract check did not run — {e}")
 
 def check_root_ask_hardening():
-    path = os.path.join(ROOT, "scripts", "check_root_ask_hardening.mjs")
-    if not os.path.exists(path):
-        fail("check_root_ask_hardening.mjs missing")
-        return
-    try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
-        if result.returncode != 0:
-            fail("root ask hardening check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
-    except Exception as e:
-        fail(f"root ask hardening check did not run — {e}")
+    for name in ("check_root_ask_hardening.mjs", "check_root_ask_ui.mjs"):
+        path = os.path.join(ROOT, "scripts", name)
+        if not os.path.exists(path):
+            fail(f"{name} missing")
+            continue
+        try:
+            result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+            if result.returncode != 0:
+                fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        except Exception as e:
+            fail(f"{name} did not run — {e}")
 
 def check_ask_henneth_endpoint():
     path = os.path.join(ROOT, "scripts", "check_ask_henneth_endpoint.mjs")

@@ -5639,9 +5639,92 @@ function alignmentCard(a) {
    conversation instead of the old fixed-template engine, and why the UI below says "grounded in",
    not "cannot invent".
    ========================================================================================== */
-let _ask = { history: [], busy: false }; // history: [{role:"user"|"assistant", content, error?}]
+let _ask = { history: [], busy: false, retry: null }; // history: [{role:"user"|"assistant", content, error?}]
 const ASK_SAMPLES = ["Why is MEBL moving?", "Is FFC cheap?", "Tell me about LUCK", "FFC vs MCB",
   "Best dividend stocks", "What's happening in cement?", "What changed today?"];
+const ASK_DEADLINE_MS = 35_000;
+const ASK_HISTORY_LIMIT = 4;
+const ASK_HISTORY_CONTENT_LIMIT = 500;
+const ASK_ERROR_TEXT = Object.freeze({
+  account_required: "Your session expired. Sign in again, then try the question once more.",
+  owner_required: "This desk account cannot use Ask. Sign in with the owner account to continue.",
+  service_unavailable: "The desk's assistant is not available right now. Try again shortly.",
+  chat_not_configured: "The desk's assistant is not configured on this deployment yet.",
+  provider_busy: "The desk's assistant is busy. Try again shortly.",
+  provider_unavailable: "The desk could not reach its assistant. Try again shortly.",
+  provider_error: "The desk's assistant had a provider error. Try again shortly.",
+  model_unavailable: "The desk's assistant could not produce a validated answer. Try again shortly.",
+  provider_invalid_response: "The desk's assistant could not produce a validated answer. Try again shortly.",
+  model_truncated: "The assistant response was cut short. Try a narrower question.",
+  data_unavailable: "The desk's data could not be read right now. Try again shortly.",
+  desk_data_unavailable: "The desk's data could not be read right now. Try again shortly.",
+  desk_data_too_large: "That data slice is too large to answer safely. Ask about a specific ticker or sector.",
+  body_too_large: "That question is too large to send. Shorten it and try again.",
+  bad_request: "That question could not be validated. Try rephrasing it.",
+});
+
+function askDeadlineError() { const e = new Error("ask_timeout"); e.code = "timeout"; return e; }
+function askWithDeadline(work, deadline) {
+  const remaining = deadline - Date.now();
+  if (remaining <= 0) return Promise.reject(askDeadlineError());
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const timer = setTimeout(() => { if (!settled) { settled = true; reject(askDeadlineError()); } }, remaining);
+    Promise.resolve().then(work).then(v => { if (!settled) { settled = true; clearTimeout(timer); resolve(v); } }, e => {
+      if (!settled) { settled = true; clearTimeout(timer); reject(e); }
+    });
+  });
+}
+function askHistoryPayload(history) {
+  const clean = [];
+  for (let i = 0; i < history.length - 1; i++) {
+    const user = history[i], answer = history[i + 1];
+    if (user?.role !== "user" || user.error || answer?.role !== "assistant" || answer.error) continue;
+    const q = String(user.content || "").trim(), a = String(answer.content || "").trim();
+    if (!q || !a) continue;
+    clean.push({ role: "user", content: q.slice(0, ASK_HISTORY_CONTENT_LIMIT) });
+    clean.push({ role: "assistant", content: a.slice(0, ASK_HISTORY_CONTENT_LIMIT) });
+    i++;
+  }
+  return clean.slice(-ASK_HISTORY_LIMIT);
+}
+function askFriendlyError(body, status) {
+  const key = body && typeof (body.error_code || body.error) === "string" ? (body.error_code || body.error) : "";
+  if (ASK_ERROR_TEXT[key]) return ASK_ERROR_TEXT[key];
+  if (status === 401 || status === 403) return ASK_ERROR_TEXT.account_required;
+  if (status === 429) return ASK_ERROR_TEXT.provider_busy;
+  if (status >= 500) return ASK_ERROR_TEXT.provider_error;
+  return "The desk could not return an answer. Try again shortly.";
+}
+async function askRequest(question, history) {
+  const deadline = Date.now() + ASK_DEADLINE_MS;
+  let token = await askWithDeadline(() => authToken(), deadline);
+  let refreshed = false;
+  while (true) {
+    const controller = new AbortController();
+    let response;
+    try {
+      response = await askWithDeadline(() => fetch("/api/ask", {
+        method: "POST", signal: controller.signal,
+        headers: { "content-type": "application/json", Authorization: "Bearer " + (token || "") },
+        body: JSON.stringify({ question, history }),
+      }), deadline);
+      const body = await askWithDeadline(() => response.json().catch(() => null), deadline);
+      if (response.status === 401 && !refreshed) {
+        refreshed = true;
+        const fresh = await askWithDeadline(() => refreshSession(), deadline);
+        if (fresh) { token = fresh; continue; }
+      }
+      if (!response.ok) return { ok: false, error: askFriendlyError(body, response.status) };
+      if (!body || body.ok !== true || typeof body.answer !== "string" || !body.answer.trim())
+        return { ok: false, error: "No answer came back. Try rephrasing or try again shortly." };
+      return { ok: true, answer: body.answer };
+    } catch (error) {
+      if (error?.code === "timeout" || error?.name === "AbortError") throw askDeadlineError();
+      throw error;
+    } finally { controller.abort(); }
+  }
+}
 
 /* The model writes plain-text markdown (a bare **Heading** line for a section, "- " for bullets,
    inline **bold** for emphasis) — that's its natural style, not something we asked it to stop doing.
@@ -5665,9 +5748,10 @@ function mdLite(raw) {
 }
 
 function askThreadHtml() {
+  const latest = _ask.history.at(-1);
   const turns = _ask.history.map(m => m.role === "user"
     ? `<div class="ans-q">${esc(m.content)}</div>`
-    : `<div class="ans-block"${m.error ? ' style="border-inline-start:3px solid var(--dn)"' : ""}>${m.error ? `<p style="white-space:pre-wrap">${esc(m.content)}</p>` : mdLite(m.content)}</div>`
+    : `<div class="ans-block"${m.error ? ' style="border-inline-start:3px solid var(--dn)"' : ""}>${m.error ? `<p style="white-space:pre-wrap">${esc(m.content)}</p>${m === latest && m.retry && _ask.retry && !_ask.busy ? '<button type="button" class="quiet-btn ask-retry" onclick="askRetry()">Try again</button>' : ""}` : mdLite(m.content)}</div>`
   ).join("");
   const busy = _ask.busy ? `<div class="ans-block"><p class="sub">Reading the desk's data and thinking…</p></div>` : "";
   const foot = _ask.history.length ? `<div class="ans-foot">Answered by a model grounded in the desk's own data — it's instructed to say "unknown" rather than invent a figure, but it is a live model, not a fixed template. Verify anything important on the ticker page. Research and education, never advice.</div>` : "";
@@ -5679,13 +5763,21 @@ function renderAsk() {
     out.innerHTML = askThreadHtml();
     out.scrollTop = out.scrollHeight;
   }
+  const busy = !!_ask.busy;
+  const input = $("ask-in");
+  // Keep the input editable while a request is in flight so a draft for the next
+  // question survives the repaint; only actions that would submit are disabled.
+  if (input) input.setAttribute?.("aria-busy", busy ? "true" : "false");
+  document.querySelectorAll("[data-ask-send], [data-ask-sample]").forEach(el => { el.disabled = busy; });
   window.renderRailAsk?.();
 }
 
-async function askSend(qtext) {
+async function askSend(qtext, opts = {}) {
   const inputEl = $("ask-in");
   const text = (qtext ?? inputEl?.value ?? "").trim().slice(0, 500);
   if (!text || _ask.busy) return;
+  _ask.history.forEach(m => { if (m.retry) m.retry = false; });
+  _ask.retry = null;
   // Only clear the page's own box when the question CAME from it. A rail send
   // or a sample chip passes qtext, and wiping #ask-in then erased a draft the
   // user was writing on the Ask page.
@@ -5698,34 +5790,36 @@ async function askSend(qtext) {
     return;
   }
 
-  const priorHistory = _ask.history.slice(-4).map(m => ({ role: m.role, content: m.content }));
+  const priorHistory = opts.history || askHistoryPayload(_ask.history);
   _ask.history.push({ role: "user", content: text });
   _ask.busy = true;
   renderAsk();
-
-  let tok = await authToken(), body = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const res = await fetch("/api/ask", {
-        method: "POST",
-        headers: { "content-type": "application/json", Authorization: "Bearer " + (tok || "") },
-        body: JSON.stringify({ question: text, history: priorHistory }),
-      });
-      if (res.status === 401 && attempt === 0) {
-        const fresh = await refreshSession();
-        if (fresh) { tok = fresh; continue; }
-      }
-      body = await res.json().catch(() => null);
-      break;
-    } catch { body = null; break; }
+  try {
+    const body = await askRequest(text, priorHistory);
+    if (body.ok) { _ask.retry = null; _ask.history.push({ role: "assistant", content: body.answer }); }
+    else {
+      _ask.retry = { question: text, history: priorHistory };
+      _ask.history.push({ role: "assistant", content: body.error, error: true, retry: true });
+    }
+  } catch (error) {
+    const message = error?.code === "timeout"
+      ? "The desk took too long to answer. Try again shortly."
+      : "The desk could not be reached. Check your connection and try again.";
+    _ask.retry = { question: text, history: priorHistory };
+    _ask.history.push({ role: "assistant", content: message, error: true, retry: true });
+  } finally {
+    _ask.busy = false;
+    _ask.history = _ask.history.slice(-12);
+    renderAsk();
   }
-
-  _ask.busy = false;
-  _ask.history.push(body?.ok
-    ? { role: "assistant", content: body.answer }
-    : { role: "assistant", content: body?.error || "Couldn't reach the desk's assistant. Try again in a moment.", error: true });
-  _ask.history = _ask.history.slice(-12); // keep the thread and its resend payload bounded
-  renderAsk();
+}
+async function askRetry() {
+  if (_ask.busy || !_ask.retry) return;
+  const retry = _ask.retry;
+  if (_ask.history.at(-1)?.error) _ask.history.pop();
+  if (_ask.history.at(-1)?.role === "user") _ask.history.pop();
+  _ask.retry = null;
+  await askSend(retry.question, { history: retry.history });
 }
 
 async function pageAsk() {
@@ -5740,9 +5834,10 @@ async function pageAsk() {
     <div id="ask-out" style="max-height:60vh;overflow-y:auto"></div>
     <div class="scr-row" style="${_ask.history.length ? "margin-top:12px" : ""}"><input id="ask-in" class="ph-in" aria-label="Ask the desk a question" style="flex:1" placeholder="Why is MEBL moving?"
       onkeydown="if(event.key==='Enter')askSend()">
-      <button class="note-save" onclick="askSend()">Ask</button></div>
-    ${!_ask.history.length ? `<div class="scr-samples">${ASK_SAMPLES.map(x => `<button class="scr-sample" onclick="askSend('${esc(x)}')">${esc(x)}</button>`).join("")}</div>` : ""}
+      <button class="note-save" data-ask-send onclick="askSend()">Ask</button></div>
+    ${!_ask.history.length ? `<div class="scr-samples">${ASK_SAMPLES.map(x => `<button type="button" class="scr-sample" data-ask-sample="${esc(x)}">${esc(x)}</button>`).join("")}</div>` : ""}
   </div>`}`;
+  $("view").querySelectorAll("[data-ask-sample]").forEach(btn => btn.addEventListener("click", () => askSend(btn.getAttribute("data-ask-sample"))));
   renderAsk();
 }
 
