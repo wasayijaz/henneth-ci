@@ -193,3 +193,6 @@ python scripts/publish.py "message" --code   # plus pre-staged hand-authored fil
 Race-safe and preflight-gated. `--code` ships only what is already staged; it never runs `git add -A`.
 Files under `state/` are committed automatically. Full detail in `docs/OPERATIONS.md`; the failure
 modes are in `docs/GOTCHAS.md`.
+
+Desk typography (all current and future redesigned pages): Latin UI text, chart labels/values,
+and tooltips use JetBrains Mono; retain existing Urdu glyph-font and icon-font exceptions.

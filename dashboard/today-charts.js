@@ -6,6 +6,8 @@
   const STYLE_ID = "hn-today-charts-style";
   const DEFAULT_SPARK_POINTS = 32;
   const FLAT_BAND = 0.05;
+  const MONO_STACK = '\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+  const monoFont = size => `${size}px ${MONO_STACK}`;
 
   const isFiniteNumber = v => typeof v === "number" && Number.isFinite(v);
   const toNumber = v => {
@@ -43,6 +45,14 @@
     return raw ? `Source ${String(raw).replace(/\s+/g, " ")}` : "Source UNKNOWN";
   }
 
+  function redrawAfterFontLoad(canvas, redraw) {
+    if (!canvas || canvas._hnFontsReadyBound || typeof document === "undefined" || !document.fonts?.ready?.then) return;
+    canvas._hnFontsReadyBound = true;
+    document.fonts.ready.then(() => {
+      if (canvas.isConnected !== false) redraw(canvas);
+    }, () => {});
+  }
+
   function ensureStyles() {
     if (typeof document === "undefined" || document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -67,14 +77,14 @@
 .hn-desk-radar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
 .hn-desk-radar-head b{display:block}
 .hn-desk-radar-canvas{width:100%;display:block;cursor:crosshair}
-.hn-desk-radar-tip{position:absolute;z-index:4;width:min(310px,calc(100% - 24px));padding:11px 12px;border:1px solid var(--ink2);background:var(--panel);box-shadow:3px 3px 0 color-mix(in srgb,var(--ink2) 22%,transparent);pointer-events:none;transform:translate(10px,10px)}
+.hn-desk-radar-tip{position:absolute;z-index:4;width:min(310px,calc(100% - 24px));padding:11px 12px;border:1px solid var(--ink2);background:var(--panel);box-shadow:3px 3px 0 color-mix(in srgb,var(--ink2) 22%,transparent);pointer-events:none;transform:translate(10px,10px);font-family:${MONO_STACK}}
 .hn-desk-radar-tip[hidden]{display:none}
 .hn-desk-radar-tip-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:7px}
 .hn-desk-radar-tip-head b{font-size:14px}
 .hn-desk-radar-tip-head span,.hn-desk-radar-tip-meta{color:var(--ink2);font-size:9px}
 .hn-desk-radar-tip p{margin:6px 0 0;font-size:9px;line-height:1.45}
 .hn-desk-radar-tip-risk{color:var(--dn)}
-.hn-desk-radar-canvas:focus,.hn-sector-matrix-canvas:focus{outline:1px solid var(--ink2);outline-offset:3px}.hn-sector-tip{position:absolute;z-index:4;max-width:min(360px,calc(100% - 24px));max-height:220px;overflow:auto;padding:8px 10px;border:1px solid var(--ink2);background:var(--panel);box-shadow:3px 3px 0 color-mix(in srgb,var(--ink2) 20%,transparent);pointer-events:auto;font-size:9px;line-height:1.45}.hn-sector-tip[hidden]{display:none}.hn-sector-tip b,.hn-sector-tip>span{display:block}.hn-sector-tip>span{color:var(--ink2)}.hn-sector-members{display:grid;grid-template-columns:repeat(2,minmax(90px,1fr));gap:2px 10px;margin-top:7px;border-top:1px solid var(--line);padding-top:6px}.hn-sector-member{display:flex;justify-content:space-between;gap:8px;color:var(--ink1);text-decoration:none;padding:2px 0}.hn-sector-member:hover,.hn-sector-member:focus-visible{outline:1px solid var(--ink2);outline-offset:1px}.hn-sector-member.up span{color:var(--up)}.hn-sector-member.dn span{color:var(--dn)}.hn-sector-member.flat span{color:var(--ink2)}
+.hn-desk-radar-canvas:focus,.hn-sector-matrix-canvas:focus{outline:1px solid var(--ink2);outline-offset:3px}.hn-sector-tip{position:absolute;z-index:4;max-width:min(360px,calc(100% - 24px));max-height:220px;overflow:auto;padding:8px 10px;border:1px solid var(--ink2);background:var(--panel);box-shadow:3px 3px 0 color-mix(in srgb,var(--ink2) 20%,transparent);pointer-events:auto;font-size:9px;line-height:1.45;font-family:${MONO_STACK}}.hn-sector-tip[hidden]{display:none}.hn-sector-tip b,.hn-sector-tip>span{display:block}.hn-sector-tip>span{color:var(--ink2)}.hn-sector-members{display:grid;grid-template-columns:repeat(2,minmax(90px,1fr));gap:2px 10px;margin-top:7px;border-top:1px solid var(--line);padding-top:6px}.hn-sector-member{display:flex;justify-content:space-between;gap:8px;color:var(--ink1);text-decoration:none;padding:2px 0}.hn-sector-member:hover,.hn-sector-member:focus-visible{outline:1px solid var(--ink2);outline-offset:1px}.hn-sector-member.up span{color:var(--up)}.hn-sector-member.dn span{color:var(--dn)}.hn-sector-member.flat span{color:var(--ink2)}
 .hn-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .hn-catalyst-row{display:grid;grid-template-columns:102px 1fr auto;gap:10px;align-items:start;background:var(--panel);padding:10px 12px}
 .hn-catalyst-date{text-align:center}
@@ -251,7 +261,7 @@
     if (points.length < 2) {
       ctx.globalAlpha = 0.75;
       ctx.fillStyle = c.ink2;
-      ctx.font = "11px sans-serif";
+      ctx.font = monoFont(11);
       ctx.fillText("no provided index line", pad.l, mid - 8);
       ctx.globalAlpha = 1;
       return false;
@@ -279,7 +289,7 @@
     ctx.fillRect(Math.round(x(points.length - 1)) - 2, Math.round(y(points[points.length - 1])) - 2, 4, 4);
     ctx.fillStyle = c.ink2;
     ctx.globalAlpha = 0.65;
-    ctx.font = "10px sans-serif";
+    ctx.font = monoFont(10);
     ctx.fillText(String(Math.round(hi).toLocaleString("en")), pad.l, 10);
     ctx.fillText(String(Math.round(lo).toLocaleString("en")), pad.l, h - 4);
     ctx.globalAlpha = 1;
@@ -294,6 +304,7 @@
         .map(toNumber)
         .filter(isFiniteNumber);
       drawIndexTrend(canvas, values);
+      redrawAfterFontLoad(canvas, current => drawIndexTrend(current, values));
     });
   }
 
@@ -418,7 +429,7 @@
 
     ctx.globalAlpha = 1;
     ctx.fillStyle = c.ink2;
-    ctx.font = "10px sans-serif";
+    ctx.font = monoFont(10);
     ctx.fillText("net expectancy %", pad.l, h - 9);
     ctx.save();
     ctx.translate(10, h - pad.b);
@@ -450,7 +461,7 @@
         ctx.strokeRect(cx - size / 2 - 3.5, cy - size / 2 - 3.5, size + 7, size + 7);
       }
       ctx.fillStyle = c.ink;
-      ctx.font = "11px sans-serif";
+      ctx.font = monoFont(11);
       const labelWidth = ctx.measureText(row.ticker).width;
       const gap = 5, plotLeft = pad.l + 2, plotRight = w - pad.r - 2;
       const rightX = cx + size / 2 + gap, leftX = cx - size / 2 - gap - labelWidth;
@@ -472,7 +483,7 @@
 
     if (hasOos) {
       ctx.fillStyle = c.ink2;
-      ctx.font = "10px sans-serif";
+      ctx.font = monoFont(10);
       ctx.fillText("OOS outline: solid ≥50%, dashed <50%", pad.l, 10);
     }
     ctx.globalAlpha = 1;
@@ -527,6 +538,7 @@
         canvas._hnResize = new ResizeObserver(() => drawDeskRadar(canvas));
         canvas._hnResize.observe(canvas);
       }
+      redrawAfterFontLoad(canvas, current => drawDeskRadar(current));
     });
   }
 
@@ -580,7 +592,7 @@
     if (points.length < 2) {
       ctx.globalAlpha = 0.75;
       ctx.fillStyle = c.ink2;
-      ctx.font = "10px sans-serif";
+      ctx.font = monoFont(10);
       ctx.fillText("no line", 2, h - 7);
       ctx.globalAlpha = 1;
       return false;
@@ -607,6 +619,7 @@
         .map(toNumber)
         .filter(isFiniteNumber);
       drawSparkline(canvas, values);
+      redrawAfterFontLoad(canvas, current => drawSparkline(current, values));
     });
   }
 
@@ -728,7 +741,7 @@
     canvas._hnSectorHits = [];
 
     ctx.fillStyle = c.ink2;
-    ctx.font = "10px sans-serif";
+    ctx.font = monoFont(10);
     ctx.textBaseline = "middle";
     ctx.fillText("SECTOR", 0, 12);
     cols.forEach((col, i) => ctx.fillText(col.label, sectorW + gap + i * (cellW + gap), 12));
@@ -745,7 +758,7 @@
       canvas._hnSectorHits.push({ y, h: rowH, row });
       ctx.globalAlpha = 1;
       ctx.fillStyle = c.ink;
-      ctx.font = compact ? "10px sans-serif" : "11px sans-serif";
+      ctx.font = compact ? monoFont(10) : monoFont(11);
       const label = row.name.length > (compact ? 14 : 24) ? row.name.slice(0, compact ? 13 : 23) + "." : row.name;
       ctx.fillText(label, 0, y + rowH / 2);
 
@@ -761,7 +774,7 @@
         ctx.lineWidth = 1;
         ctx.strokeRect(x + 0.5, y + 3.5, cellW - 1, rowH - 7);
         ctx.fillStyle = col.key === "flat" ? c.ink : col.color;
-        ctx.font = "12px sans-serif";
+        ctx.font = monoFont(12);
         ctx.textAlign = "center";
         ctx.fillText(String(n), x + cellW / 2, y + rowH / 2);
         ctx.textAlign = "start";
@@ -773,7 +786,7 @@
       ctx.globalAlpha = 1;
       ctx.fillStyle = avg > FLAT_BAND ? c.up : avg < -FLAT_BAND ? c.dn : c.ink2;
       ctx.fillRect(avgX, y + rowH - 9, markerW, 3);
-      ctx.font = "11px sans-serif";
+      ctx.font = monoFont(11);
       ctx.fillText(pct(row.avgRet), avgX, y + rowH / 2 - 2);
       if (canvas._hnSectorActive === row.name) {
         ctx.strokeStyle = c.ink;
@@ -843,6 +856,7 @@
         canvas._hnResize = new ResizeObserver(() => drawSectorBreadthMatrix(canvas));
         canvas._hnResize.observe(canvas);
       }
+      redrawAfterFontLoad(canvas, current => drawSectorBreadthMatrix(current));
     });
   }
 
