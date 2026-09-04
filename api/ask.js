@@ -407,7 +407,16 @@ function isProseInteger(answer, index, token) {
   // The ordinal is still prose when the only characters before it on the line
   // are markdown line-prefix markers; all other integers remain strict.
   const linePrefix = answer.slice(answer.lastIndexOf('\n', index - 1) + 1, index);
-  return /^[.)]\s/.test(after) && /^[ \t]*(?:[*_#>-]+[ \t]*)*$/.test(linePrefix);
+  if (/^[.)]\s/.test(after) && /^[ \t]*(?:[*_#>-]+[ \t]*)*$/.test(linePrefix)) return true;
+
+  // A bold markdown label may put the ordinal after a word, e.g. `**Section 1:**`.
+  // Only allow that shape when the line starts with markdown markers and the
+  // number immediately introduces label punctuation; figures in prose remain strict.
+  const lineStart = answer.lastIndexOf('\n', index - 1) + 1;
+  const lineEnd = answer.indexOf('\n', index + token.length);
+  const line = answer.slice(lineStart, lineEnd < 0 ? answer.length : lineEnd);
+  return /^[ \t]*(?:[*_#>-]+)[^0-9\n]*\d{1,3}[:.)](?:\s|$)/.test(line)
+    && line.indexOf(token, linePrefix.length) === linePrefix.length;
 }
 
 function collectSupportedFacts(context) {

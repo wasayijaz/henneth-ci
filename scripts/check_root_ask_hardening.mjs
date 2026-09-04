@@ -95,6 +95,7 @@ async function main() {
   assert(validateAnswer("Rankings:\n1. MLCF leads.", context).includes("1."), "list ordinal passes");
   assert(validateAnswer("**1. Technical read**\n- MLCF close is 72.45.", context).includes("Technical read"), "markdown numbered heading passes");
   assert(validateAnswer("# 2. Fundamentals\n- MLCF close is 72.45.", context).includes("Fundamentals"), "markdown hash heading passes");
+  assert(validateAnswer("**Section 1: Technical read**\n- MLCF close is 72.45.", context).includes("Technical read"), "bold section ordinal passes");
   throws(() => validateAnswer("MLCF trades at 7 times book.", context), "ungrounded bare integer used as figure rejected");
   throws(() => validateAnswer("You should buy MLCF now.", context), "advice language rejected");
   throws(() => validateAnswer("Source: https://example.com/report", context), "output URL rejected");
