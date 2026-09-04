@@ -405,7 +405,7 @@ function isProseInteger(answer, index, token) {
   if (COUNTING_NOUN_RE.test(after)) return true;
   // Models often number markdown sections as `**1. Label**` or `# 1. Label`.
   // The ordinal is still prose when the only characters before it on the line
-  // are markdown line-prefix markers; financial integers remain strict.
+  // are markdown line-prefix markers; all other integers remain strict.
   const linePrefix = answer.slice(answer.lastIndexOf('\n', index - 1) + 1, index);
   return /^[.)]\s/.test(after) && /^[ \t]*(?:[*_#>-]+[ \t]*)*$/.test(linePrefix);
 }
