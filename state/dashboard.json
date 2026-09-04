@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-04 17:50",
+ "updated": "2026-09-04 17:58",
  "regime": "risk-off",
  "geo_risk": {
   "score": 62,
@@ -364,12 +364,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-09-02T17:15:00+05:00",
-   "mode": "full",
-   "ended": "2026-09-02T17:30:00+05:00",
-   "outcome": "regime risk-off, geo-risk 61/100 moderate, daily-read: KSE-100 slides 0.96% as US-Iran tensions and hot CPI box in SBP, refineries/banks favoured; pushed"
-  },
-  {
    "started": "2026-09-02T18:34:00+05:00",
    "mode": "room",
    "ended": "2026-09-02T19:05:00+05:00",
@@ -392,6 +386,12 @@
    "mode": "light",
    "ended": "2026-09-03T19:05:00+05:00",
    "outcome": "PM checkpoint RESUMED (after the 17:00 abort logged above -- local .git had healed itself/been repaired by 18:56, confirmed via clean git fsck + git fetch, no repro of the earlier bad-tree-object error). Gate required: 2 material pending (impact-4 US-Iran/KSE-100 headline, impact-5 Unity Foods SECP probe) + 1 standing (first_of_day) + 1 health-degraded flag. news-sentinel scan: both pending headlines already logged 2026-09-02 (recurring wire republish, not fresh) -- 0 new newslog items, no new impact>=4 item this cycle so no additional escalation triggered here (the 17:15 full run already covered today's escalation separately). No open positions, monitor skipped. build_dashboard.py preflight OK (2 non-blocking WARNs: 103 backfilling tickers, health.json degraded). Published via scripts/publish.py (data-only, 109 unrelated hand-authored/untracked files correctly left unstaged). Gate acked as checkpoint-pm."
+  },
+  {
+   "started": "2026-09-04T17:00:00+05:00",
+   "mode": "light",
+   "ended": "2026-09-04T17:10:00+05:00",
+   "outcome": "PM checkpoint (also today's first checkpoint - no AM run logged today): health degraded (262/456 symbols stale, non-gating), gate required (1 impact-4 Eurobond item - confirmed duplicate of 2026-09-03 log, not re-logged - plus first_of_day standing). news-sentinel appended 2 genuinely new items: PSX close flat +0.23% impact 2, Pakistan Cables/CECL stake buy-back impact 2. No new item >=4 this run, no escalation. No open positions, monitor skipped. build_dashboard.py preflight OK (2 non-blocking WARNs: 102 backfilling tickers, health.json degraded). Published data-only (110 unrelated hand-authored/untracked files correctly held back), pushed to main -> Vercel. Gate acked checkpoint-pm."
   }
  ]
 }
