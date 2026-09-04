@@ -403,7 +403,11 @@ function isProseInteger(answer, index, token) {
   if (!/^\d{1,3}$/.test(token)) return false;
   const after = answer.slice(index + token.length);
   if (COUNTING_NOUN_RE.test(after)) return true;
-  return /^[.)]\s/.test(after) && /(?:^|\n)[ \t]*$/.test(answer.slice(0, index));
+  // Models often number markdown sections as `**1. Label**` or `# 1. Label`.
+  // The ordinal is still prose when the only characters before it on the line
+  // are markdown line-prefix markers; financial integers remain strict.
+  const linePrefix = answer.slice(answer.lastIndexOf('\n', index - 1) + 1, index);
+  return /^[.)]\s/.test(after) && /^[ \t]*(?:[*_#>-]+[ \t]*)*$/.test(linePrefix);
 }
 
 function collectSupportedFacts(context) {

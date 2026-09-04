@@ -93,6 +93,8 @@ async function main() {
   throws(() => validateAnswer("Ex-date 30/09/2026.", context), "ungrounded slash date rejected");
   assert(validateAnswer("The desk tracks 2 tickers.", context).includes("2 tickers"), "counted bare integer passes");
   assert(validateAnswer("Rankings:\n1. MLCF leads.", context).includes("1."), "list ordinal passes");
+  assert(validateAnswer("**1. Technical read**\n- MLCF close is 72.45.", context).includes("Technical read"), "markdown numbered heading passes");
+  assert(validateAnswer("# 2. Fundamentals\n- MLCF close is 72.45.", context).includes("Fundamentals"), "markdown hash heading passes");
   throws(() => validateAnswer("MLCF trades at 7 times book.", context), "ungrounded bare integer used as figure rejected");
   throws(() => validateAnswer("You should buy MLCF now.", context), "advice language rejected");
   throws(() => validateAnswer("Source: https://example.com/report", context), "output URL rejected");
