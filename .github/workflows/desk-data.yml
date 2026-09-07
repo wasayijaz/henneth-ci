@@ -24,7 +24,10 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # The full-universe reprice (threaded sweep of every ticker) plus preflight + publish
+    # runs ~20-21min on a good day; Yahoo-latency variance pushed a real run past the old
+    # 25min cap and GitHub killed it mid-sweep before it could commit. 40 gives headroom.
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,11 +51,22 @@ jobs:
         run: python scripts/run_cloud.py
       - name: Publish if the data passes preflight (race-safe)
         run: |
+          # publish.py exits 0 both when it ships AND when nothing changed (quiet cycle),
+          # and exits non-zero only on a real failure (preflight FAIL, commit/push error).
+          # The old loop ended on `sleep 5`, so the STEP exited 0 even when all 3 tries
+          # failed — masking preflight failures behind a green run. Track success and fail
+          # the step loudly if publish never succeeded, so a stuck cycle is visible.
+          published=0
           for i in 1 2 3; do
             git pull --rebase origin main || true
-            python scripts/publish.py "Cloud data refresh (deterministic) $(date -u +%Y-%m-%d\ %H:%MZ)" && break
-            echo "publish attempt $i failed (likely a concurrent push) — retrying"; sleep 5
+            if python scripts/publish.py "Cloud data refresh (deterministic) $(date -u +%Y-%m-%d\ %H:%MZ)"; then
+              published=1; break
+            fi
+            echo "publish attempt $i failed — retrying"; sleep 5
           done
+          if [ "$published" -ne 1 ]; then
+            echo "PUBLISH FAILED after 3 attempts — data NOT shipped this cycle"; exit 1
+          fi
       - name: Watchdog — verify the live site (non-fatal)
         run: |
           sleep 60
