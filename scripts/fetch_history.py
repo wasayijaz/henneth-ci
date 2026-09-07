@@ -2,31 +2,34 @@
 
 Full history cached per symbol in state/history/{SYM}.json. Trims to config history_years.
 
-BOUNDED BY DESIGN. The universe went from ~103 (KSE100+KMI30) to 581 (every KSE All Share
-constituent), and this script used to re-pull EVERY symbol on EVERY run. At ~1.9s per symbol that
-is ~17 minutes — but the cloud cron fires every 30 minutes, so a naive full sweep would run almost
-continuously and risk overlapping runs.
+EVERY SYMBOL, EVERY RUN. This script used to refresh only a rotating slice (LISTED_PER_RUN) of the
+long tail each run, on the assumption that the 30-minute cron fires ~18 times a weekday so the whole
+universe gets covered over a few cycles. That assumption is false in the cloud: GitHub's scheduled-
+workflow queue is best-effort and load-sheds ticks — since 2026-08-27 the cron that DECLARES 18
+runs/weekday has actually fired 1-2 times/day. A rotation that needs ~4 runs to sweep the tail
+simply never completes when only one run honours per day, and 263 symbols drifted weeks stale while
+health stayed green. See docs/GOTCHAS.md "The cron is a wish, not a schedule".
 
-So each run refreshes:
-  * every `core` symbol (KSE100 + KMI30) — these drive signals and must be current;
-  * the least-recently-attempted `listed` symbols that already have a series, up to LISTED_PER_RUN
-    (the attempt clock lives in state/history_meta.json — see _pick());
-  * plus a small round-robin probe of listed symbols with NO history file yet (NEW_PROBE_PER_RUN).
+The fix is to stop depending on run COUNT. One run now reprices the ENTIRE universe (~490 symbols)
+by fetching concurrently with a small ThreadPoolExecutor (WORKERS). At ~1.3 req/s that is ~6 min,
+well inside the job cap — so even a single honoured cron tick per day keeps every price ≤1 day old.
+DEADLINE_S bounds the wall clock as a guard: symbols not reached before the deadline are NOT stamped
+in the attempt clock, so they lead the next run (rare — the full sweep finishes long before it).
 
-Those last two budgets are SEPARATE and must stay separate — see the note on _pick().
-
-The long tail therefore refreshes on a rotation over a few cycles, which is entirely adequate for
-names the desk shows prices and basic quant for but does not trade or backtest.
+Symbols with NO history file yet still get their own bounded round-robin probe (NEW_PROBE_PER_RUN)
+so the ~100 permanently-empty PSX board counters can never crowd the run — see the note on _pick().
 """
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 
 from psx_data import (STATE, eod_history, load_config, load_json, market_of, save_json,
                       yahoo_symbol)
 
-LISTED_PER_RUN = 90        # long-tail refresh budget per run (~3 min at 1.9s each)
+WORKERS = 3                # concurrent fetchers; ~1.3 req/s total, polite to DPS/Yahoo
+DEADLINE_S = 780           # 13 min wall-clock guard, inside the 25-min job cap
 NEW_PROBE_PER_RUN = 12     # separate, round-robin budget for symbols with no history file yet
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 
@@ -67,26 +70,25 @@ def _yahoo_daily(symbol: str, universe: dict, years: int) -> list[dict]:
 
 
 def _pick(universe, cursor, attempts):
-    """core + a bounded probe of never-fetched symbols + the least-recently-refreshed listed ones.
+    """core + a bounded probe of never-fetched symbols + EVERY listed symbol that has a series.
 
-    THE TWO LONG-TAIL BUDGETS ARE SEPARATE, AND THAT SEPARATION IS THE WHOLE POINT.
-    They used to be one: never-fetched symbols were prepended UNCAPPED and their count was
-    subtracted from LISTED_PER_RUN. But the All Share constituent list carries ~103 PSX board
-    counters (…NC non-compliant, …XD ex-dividend, …XB ex-bonus, rights) that are not companies
-    and permanently return zero bars, so they never gain a history file and never left the
-    never-fetched set. That made the rotation budget max(0, 90 - 103) = 0, and rest[:0] empty:
-    not one listed symbol that already had a series was refreshed on ANY run, for 47 sessions,
-    while health stayed green. The probe now has its own small budget and its own round-robin
-    cursor, so a permanently-dead counter can delay a genuinely new listing by a few runs and
-    can never again starve the refresh of companies the desk actually prices.
+    Every symbol with a history file is refreshed every run — the long tail is no longer rationed
+    (see the module docstring: run count is unreliable in the cloud, so we cannot rely on covering
+    the tail over several runs). The tail is still ORDERED least-recently-attempted first so that
+    if a run is cut short by DEADLINE_S, the symbols that got skipped are exactly the ones already
+    freshest, and the stalest lead the next run.
 
-    THE ROTATION CLOCK IS PERSISTED STATE, NOT THE FILESYSTEM. It used to be the history file's
-    st_mtime. That works locally and is meaningless in the cloud: every run starts with
-    actions/checkout, which writes all 581 files fresh in git index order — alphabetical. So
-    "stalest first" silently became "alphabetically first", the SAME 90 symbols were re-picked on
-    every run forever, and everything from roughly the letter H onward (TATM among them) was never
-    repriced again. The attempt timestamps below live in state/history_meta.json, which is committed
-    by the cycle, so the clock survives checkout and the rotation actually rotates.
+    THE PROBE BUDGET STAYS SEPARATE, AND THAT SEPARATION IS THE WHOLE POINT. The All Share
+    constituent list carries ~103 PSX board counters (…NC non-compliant, …XD ex-dividend,
+    …XB ex-bonus, rights) that are not companies and permanently return zero bars, so they never
+    gain a history file. Fetching all of them every run would waste minutes on dead counters; the
+    probe visits only NEW_PROBE_PER_RUN of them per run on a round-robin cursor, enough to onboard a
+    genuinely new listing within a few runs without ever crowding the real refresh.
+
+    THE ATTEMPT CLOCK IS PERSISTED STATE, NOT THE FILESYSTEM. It used to be the history file's
+    st_mtime, which is meaningless in the cloud: every run starts with actions/checkout, which
+    writes all files fresh in git index order — alphabetical. The attempt timestamps live in
+    state/history_meta.json, committed by the cycle, so the ordering survives checkout.
 
     Returns (todo, n_listed, next_cursor). The cursor is persisted in history_meta.json.
     """
@@ -100,8 +102,8 @@ def _pick(universe, cursor, attempts):
     # Sorted, not universe-ordered, so the cursor addresses a stable list across runs.
     never = sorted(s for s in listed if not has_file(s))
     # Least-recently-attempted first; a symbol absent from the map has never been attempted under
-    # the current clock and goes to the front. Alphabetical only as a tiebreak, so a cold start
-    # converges over a few runs instead of standing still.
+    # the current clock and goes to the front. Alphabetical only as a tiebreak. This ordering only
+    # matters if DEADLINE_S cuts a run short — otherwise the whole list is fetched anyway.
     have = sorted((s for s in listed if has_file(s)), key=lambda s: (attempts.get(s, ""), s))
     probe, nxt = [], 0
     if never:
@@ -109,7 +111,33 @@ def _pick(universe, cursor, attempts):
         n = min(NEW_PROBE_PER_RUN, len(never))
         probe = [never[(start + i) % len(never)] for i in range(n)]
         nxt = (start + n) % len(never)
-    return core + probe + have[:LISTED_PER_RUN], len(listed), nxt
+    return core + probe + have, len(listed), nxt
+
+
+def _fetch_one(sym, universe, years, cutoff):
+    """Fetch and cache one symbol. Runs on a worker thread, so it takes only immutable args and
+    touches no shared mutable state — save_json writes a per-symbol temp file then os.replace, which
+    is safe across distinct symbols. Returns ('ok', None) or ('fail', reason); never raises, so one
+    bad symbol never takes down the pool."""
+    try:
+        mkt = market_of(sym, universe)
+        # DPS is authoritative for PSX (CLAUDE.md: prices come from the data layer). Every other
+        # market has no DPS entry, so it routes to Yahoo — same output shape.
+        src = eod_history(sym) if mkt == "PSX" else _yahoo_daily(sym, universe, years)
+        hist = [d for d in src if d["date"] >= cutoff]
+        # A recent listing legitimately has few bars — not a failure, and dropping it would make the
+        # company invisible again. Keep anything with a usable series; only the core tier needs the
+        # long history that signals and backtests depend on.
+        tier = ((universe["symbols"].get(sym) or {}).get("tier", "core"))
+        floor = 100 if tier == "core" else 20
+        if len(hist) < floor:
+            return ("fail", f"only {len(hist)} rows (tier {tier})")
+        save_json(STATE / "history" / f"{sym}.json", hist)
+        return ("ok", None)
+    except Exception as e:  # noqa: BLE001 — degrade, don't crash the cycle
+        return ("fail", str(e)[:80])
+    finally:
+        time.sleep(0.4)  # be polite to the upstream feed (per worker)
 
 
 def main():
@@ -125,33 +153,29 @@ def main():
     attempts = dict(prior.get("last_attempt") or {})
     todo, n_listed, next_cursor = _pick(universe, int(prior.get("probe_cursor") or 0), attempts)
     stamp = time.strftime("%Y-%m-%d %H:%M")
-    ok, failed = 0, []
-    def fail(sym, err):
-        failed.append((sym, err))
+    ok, failed, processed = 0, [], 0
 
-    for sym in todo:
-        # Stamped before the fetch, not after, so a symbol that fails every run still moves to the
-        # back of the queue instead of re-booking the same slot forever.
-        attempts[sym] = stamp
-        mkt = market_of(sym, universe)
-        try:
-            # DPS is authoritative for PSX (CLAUDE.md: prices come from the data layer). Every
-            # other market has no DPS entry at all, so it routes to Yahoo — same output shape.
-            src = eod_history(sym) if mkt == "PSX" else _yahoo_daily(sym, universe, years)
-            hist = [d for d in src if d["date"] >= cutoff]
-            # A recent listing legitimately has few bars — that is not a failure, and dropping it
-            # would make the company invisible again. Keep anything with a usable series; only the
-            # core tier needs the long history that signals and backtests depend on.
-            tier = ((universe["symbols"].get(sym) or {}).get("tier", "core"))
-            floor = 100 if tier == "core" else 20
-            if len(hist) < floor:
-                fail(sym, f"only {len(hist)} rows (tier {tier})")
-                continue
-            save_json(STATE / "history" / f"{sym}.json", hist)
-            ok += 1
-        except Exception as e:  # noqa: BLE001 — degrade, don't crash the cycle
-            fail(sym, str(e)[:80])
-        time.sleep(0.4)  # be polite to the upstream feed
+    # Fetch the whole run concurrently. A symbol is stamped in the attempt clock ONLY once its
+    # result is in hand, so anything cut off by DEADLINE_S stays unstamped and leads the next run.
+    deadline = time.time() + DEADLINE_S
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        fut_to_sym = {pool.submit(_fetch_one, s, universe, years, cutoff): s for s in todo}
+        for fut in as_completed(fut_to_sym):
+            if time.time() > deadline:
+                break
+            sym = fut_to_sym[fut]
+            status, err = fut.result()
+            attempts[sym] = stamp
+            processed += 1
+            if status == "ok":
+                ok += 1
+            else:
+                failed.append((sym, err))
+        # Anything not yet started is cancelled so the pool shuts down promptly; the ≤WORKERS still
+        # in flight finish during the `with` exit. Neither group was stamped, so both lead next run.
+        for fut in fut_to_sym:
+            fut.cancel()
+    skipped_deadline = len(todo) - processed
 
     # Coverage map: which symbols actually have a usable price series. The All Share constituent
     # list includes PSX board artifacts that are not tradeable companies — ex-dividend (…XD) and
@@ -181,23 +205,31 @@ def main():
         "updated": time.strftime("%Y-%m-%d %H:%M"),
         "ok": ok,
         "attempted": len(todo),
+        "processed": processed,
+        "skipped_deadline": skipped_deadline,
         "with_history": len(cov),
         "listed_total": n_listed,
-        "listed_per_run": LISTED_PER_RUN,
+        "workers": WORKERS,
+        "deadline_s": DEADLINE_S,
         "new_probe_per_run": NEW_PROBE_PER_RUN,
         "probe_cursor": next_cursor,
-        "note": ("Core symbols refresh every run. The listed symbols that HAVE a series rotate "
-                 "least-recently-attempted first (see last_attempt), LISTED_PER_RUN each run, so "
-                 "the whole tail is repriced every ~4 runs. Symbols with no series yet get a "
-                 "separate round-robin probe (NEW_PROBE_PER_RUN, resumed from probe_cursor) so "
-                 "the ~100 permanently-empty PSX board counters can never consume the refresh "
-                 "budget. last_attempt is the rotation clock and MUST be persisted state — file "
-                 "mtimes are rewritten by actions/checkout on every cloud run."),
+        "note": ("EVERY symbol with a series is repriced EVERY run — one honoured cron tick keeps "
+                 "the whole universe ≤1 day old, so cloud cron load-shedding no longer strands "
+                 "prices (see docs/GOTCHAS.md 'The cron is a wish, not a schedule'). Fetch runs "
+                 "concurrently (workers). skipped_deadline counts symbols not reached before "
+                 "deadline_s cut the run short — normally 0; a non-zero value is expected to be "
+                 "rare and preflight WARNs on it. Symbols with no series yet get a separate "
+                 "round-robin probe (new_probe_per_run, resumed from probe_cursor) so the ~100 "
+                 "permanently-empty PSX board counters never consume the refresh budget. "
+                 "last_attempt is the ordering clock and MUST be persisted state — file mtimes are "
+                 "rewritten by actions/checkout on every cloud run. It orders the run so that if "
+                 "deadline_s does cut it short, the freshest symbols are the ones skipped and the "
+                 "stalest lead the next run."),
         "last_attempt": {s: t for s, t in sorted(attempts.items()) if s in universe["symbols"]},
         "failed": [{"symbol": s, "err": e} for s, e in failed],
     })
-    print(f"history: {ok} ok, {len(failed)} failed (attempted {len(todo)} of "
-          f"{len(universe['symbols'])}; {n_listed} listed on rotation)")
+    print(f"history: {ok} ok, {len(failed)} failed, {skipped_deadline} skipped "
+          f"(attempted {len(todo)} of {len(universe['symbols'])}; {n_listed} listed)")
     if failed:
         for s, e in failed[:10]:
             print(f"  {s}: {e}")

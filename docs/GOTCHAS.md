@@ -127,9 +127,10 @@ No listed symbol with an existing series was refreshed on any run for 47 session
 `health.json` stayed green throughout because its freshness test was a `max()` over all symbols.
 That is how a July close reached the live site in September.
 
-**Trigger to revisit:** if `state/history_meta.json` `failed` grows past ~150 entries, or if
-`attempted` per run climbs near the 25-minute Actions timeout, split the probe out of the per-run
-loop entirely (a weekly sweep) rather than widening the budget.
+**Trigger to revisit:** the full-universe sweep now attempts ~every covered symbol every run, so
+`attempted` near the whole universe is normal, not a warning sign. Revisit only if wall time creeps
+toward the 25-minute Actions cap (persistent non-zero `skipped_deadline`) — raise `WORKERS` a little
+or move the never-fetched probe to a separate weekly job before widening anything else.
 
 ## File mtimes are meaningless in the cloud
 
@@ -144,8 +145,26 @@ past roughly the letter H — TATM among them — was never reached at all. Loca
 fine, because a local checkout preserves the mtimes of files you didn't touch.
 
 **Rule:** any clock that must survive a run is persisted state, committed with `state/`. The refresh
-rotation's clock is `state/history_meta.json` `last_attempt`. `preflight.py` WARNs when a large share
-of covered symbols has not been attempted in 3 days, which is the shape both bugs had.
+clock is `state/history_meta.json` `last_attempt`. `preflight.py` WARNs when a large share
+of covered symbols has not been attempted in 3 days, which is the shape all three stale-price bugs had.
+
+## The cron is a wish, not a schedule
+
+The third and deepest stale-price bug. `desk-data.yml` **declares** ~18 runs a weekday
+(`"7,37 3-11 * * 1-5"`). GitHub's scheduled-workflow queue is best-effort and load-sheds ticks under
+load: since 2026-08-27 the schedule actually fired **1–2 times a day**, not 18. Any refresh design
+that needs several runs to cover the universe — as the old least-recently-attempted rotation did
+(`LISTED_PER_RUN` symbols per run, ~4 runs to sweep the tail) — simply never completes when only one
+run honours per day. 263 of 456 symbols drifted weeks stale while `health.json` stayed green, because
+the rotation was "working" — it just wasn't being run often enough to finish a lap.
+
+**Rule:** never depend on how MANY times the cron fires. `fetch_history.py` now reprices the ENTIRE
+universe in a SINGLE run — concurrently, with a `ThreadPoolExecutor` (`WORKERS`), ~6 minutes for
+~490 symbols, well inside the 25-minute job cap. One honoured tick a day keeps every price ≤1 day
+old. `DEADLINE_S` bounds the wall clock as a guard; symbols not reached before it are left unstamped
+so they lead the next run, and `preflight.py` WARNs on any non-zero `skipped_deadline`. `last_attempt`
+survives only as the ORDERING key for that rare cut-short case — it is no longer a rotation ration.
+Do not reintroduce a per-run slice; it silently reinstates this bug the moment the cron degrades.
 
 `CHANGELOG.md` uses CalVer: `## YYYY-MM-DD — vYYYY.MM.DD — Title`, with `.2` / `.3` suffixes for extra
 same-day releases. `scripts/build_changelog.py` extracts **only** the `<!--public … -->` blocks into

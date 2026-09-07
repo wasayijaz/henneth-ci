@@ -8,6 +8,7 @@ Endpoints (unofficial, verified live 2026-07-12):
 """
 import json
 import re
+import threading
 import time
 from pathlib import Path
 
@@ -18,15 +19,27 @@ ROOT = Path(__file__).resolve().parent.parent
 STATE = ROOT / "state"
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-trade-desk/1.0"}
 
-_session = requests.Session()
-_session.headers.update(HEADERS)
+# One requests.Session PER THREAD. fetch_history.py now refreshes the whole universe in one run
+# with a ThreadPoolExecutor, and a single shared Session is not safe under concurrent use (its
+# connection pool and cookie jar are mutated without locking). threading.local() gives each worker
+# its own Session — connection reuse within a thread, no sharing across threads.
+_local = threading.local()
+
+
+def _sess() -> requests.Session:
+    s = getattr(_local, "session", None)
+    if s is None:
+        s = requests.Session()
+        s.headers.update(HEADERS)
+        _local.session = s
+    return s
 
 
 def _get(path: str, retries: int = 3, timeout: int = 20) -> requests.Response:
     last = None
     for i in range(retries):
         try:
-            r = _session.get(f"{BASE}{path}", timeout=timeout)
+            r = _sess().get(f"{BASE}{path}", timeout=timeout)
             if r.status_code == 200:
                 return r
             last = RuntimeError(f"HTTP {r.status_code} on {path}")

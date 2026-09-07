@@ -1546,6 +1546,22 @@ def main():
             warn(f"history_meta.json: {len(unvisited)}/{len(covered)} covered symbols not "
                  f"attempted since {cutoff} — the refresh rotation is stuck, prices will drift "
                  f"stale. e.g. {', '.join(sorted(unvisited)[:8])}")
+        # Under the full-sweep model ONE run reprices the whole universe, so a run should reach
+        # essentially everything. skipped_deadline > 0 means DEADLINE_S cut a run short — a single
+        # cut is caught here immediately, before the 3-day stuck-rotation check above would. WARN,
+        # never FAIL: the freshest symbols are the ones skipped and the next run leads with the
+        # stalest, so one cut is self-healing; a persistent non-zero means the sweep no longer fits
+        # the job cap (raise WORKERS or lower the universe) and prices will creep stale.
+        skipped = hmeta.get("skipped_deadline")
+        if skipped:
+            warn(f"history_meta.json: {skipped} symbol(s) not reached before the fetch deadline "
+                 f"— the full-universe sweep did not finish this run.")
+        # A run that ATTEMPTED far fewer than it covers means the sweep isn't sweeping (a rotation
+        # regression, or the pick list collapsed). Full-sweep should attempt ~every covered symbol.
+        attempted = hmeta.get("attempted")
+        if attempted is not None and covered and attempted < 0.90 * len(covered):
+            warn(f"history_meta.json: last run attempted only {attempted} of {len(covered)} "
+                 f"covered symbols (<90%) — the full-universe sweep may have regressed.")
 
     # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
     # dossier can't block the core desk from deploying)
