@@ -13,6 +13,15 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 def main():
+    # deterministic derived layers (free, no LLM) — run via build_dashboard so the
+    # already-deployed workflow picks them up without a workflow edit.
+    for mod in ("compute_fairvalue", "build_signals", "build_ownership_source_manifest",
+                "build_company_scenario_lab", "build_ci_work_routing_policy"):
+        try:
+            __import__(mod).main()
+        except Exception as e:  # noqa: BLE001 — never let a derived layer break the board
+            print(f"{mod} skipped: {str(e)[:80]}")
+
     quant = load_json(STATE / "quant.json", {"tickers": {}})["tickers"]
     macro = load_json(STATE / "macro.json", {})
     geo = load_json(STATE / "georisk.json", {})

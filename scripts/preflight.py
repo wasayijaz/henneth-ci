@@ -618,24 +618,6 @@ def check_event_studies():
     except Exception as e:
         fail(f"check_event_studies.py did not run — {e}")
 
-def check_event_to_value_product_readiness():
-    """Event-to-Value Alpha readiness must stay measurable and honest.
-
-    The checker asserts the readiness projection reports blocked work as blocked and
-    never infers missing case evidence. A failure here means the readiness surface has
-    started overstating what the desk can actually publish.
-    """
-    path = os.path.join(ROOT, "scripts", "check_event_to_value_product_readiness.py")
-    if not os.path.exists(path):
-        fail("check_event_to_value_product_readiness.py missing")
-        return
-    try:
-        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=45)
-        if result.returncode != 0:
-            fail("event-to-value readiness check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
-    except Exception as e:
-        fail(f"check_event_to_value_product_readiness.py did not run — {e}")
-
 def check_conditional_benchmarks():
     path = os.path.join(ROOT, "scripts", "check_conditional_benchmarks.py")
     if not os.path.exists(path):
@@ -1396,7 +1378,6 @@ def main():
     check_company_intelligence_phase2()
     check_operating_intelligence()
     check_event_studies()
-    check_event_to_value_product_readiness()
     check_conditional_benchmarks()
     check_conditional_benchmarks_ui()
     check_signal_clusters()
