@@ -239,7 +239,17 @@ async function refreshSession() {
    at a time — session-expired is the more urgent of the two and replaces an offline banner if both
    fire, since there is no point telling someone to check their connection when the real problem is
    their sign-in. */
+const BANNER_PRIORITY = { sessionBanner: 2, offlineBanner: 1 };
 function showBanner(id, html) {
+  const myRank = BANNER_PRIORITY[id] || 0;
+  // Enforce the one-banner invariant documented above: a more urgent banner already
+  // showing keeps its slot (this call is a no-op); showing a more urgent banner evicts
+  // any less-urgent one first.
+  for (const other in BANNER_PRIORITY) {
+    if (other === id) continue;
+    if (BANNER_PRIORITY[other] > myRank) return;
+    if (BANNER_PRIORITY[other] < myRank) hideBanner(other);
+  }
   let b = document.getElementById(id);
   if (!b) {
     b = document.createElement("div");
@@ -329,7 +339,11 @@ async function j(p, ttl) {
           })
         : await xhrJson(url(), tok); // last attempt: bypass a fetch() an extension may have broken
       cache[p] = { t: Date.now(), v: p === "backtests.json" ? rehydrateBacktests(v) : v };
+      // A successful fetch clears BOTH conditions the banner slot tracks: we're back online,
+      // and the token just worked, so a stale "session expired" banner from an earlier 401
+      // no longer applies — leaving it pinned would strand a recovered user forever.
       hideBanner("offlineBanner");
+      hideBanner("sessionBanner");
       return cache[p].v;
     } catch (e) { lastErr = e; /* fall through to retry */ }
     if (attempt < 2) await new Promise(res => setTimeout(res, 300));

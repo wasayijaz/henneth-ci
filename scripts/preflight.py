@@ -89,6 +89,13 @@ def check(name, required=True, min_tickers=0, ticker_fields=(), top_keys=()):
     return data
 
 
+def run_node_check(path):
+    """The one shape shared by every Node-based UI/contract checker below: run a .mjs
+    check script with `node`, 30s timeout, capturing output. Callers keep their own
+    try/except and fail() message — this only centralizes the identical subprocess.run call."""
+    return subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+
+
 def check_code_syntax():
     """Tier-1 code QA: a free, instant syntax gate on every publish (cloud + local + app
     tasks all route through this file). Catches "someone broke the build" before it ever
@@ -611,6 +618,24 @@ def check_event_studies():
     except Exception as e:
         fail(f"check_event_studies.py did not run — {e}")
 
+def check_event_to_value_product_readiness():
+    """Event-to-Value Alpha readiness must stay measurable and honest.
+
+    The checker asserts the readiness projection reports blocked work as blocked and
+    never infers missing case evidence. A failure here means the readiness surface has
+    started overstating what the desk can actually publish.
+    """
+    path = os.path.join(ROOT, "scripts", "check_event_to_value_product_readiness.py")
+    if not os.path.exists(path):
+        fail("check_event_to_value_product_readiness.py missing")
+        return
+    try:
+        result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=45)
+        if result.returncode != 0:
+            fail("event-to-value readiness check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+    except Exception as e:
+        fail(f"check_event_to_value_product_readiness.py did not run — {e}")
+
 def check_conditional_benchmarks():
     path = os.path.join(ROOT, "scripts", "check_conditional_benchmarks.py")
     if not os.path.exists(path):
@@ -629,7 +654,7 @@ def check_conditional_benchmarks_ui():
         fail("check_conditional_benchmarks_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("conditional benchmarks UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -747,7 +772,7 @@ def check_evidence_watchlist_ui():
         fail("check_evidence_watchlist_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("evidence watchlist UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -759,7 +784,7 @@ def check_ci_monitoring_ui():
         fail("check_ci_monitoring_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("CI monitoring UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -771,7 +796,7 @@ def check_management_delivery_ui():
         fail("check_management_delivery_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("management delivery UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -783,7 +808,7 @@ def check_guidance_contradictions_ui():
         fail("check_guidance_contradictions_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("guidance contradictions UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -792,7 +817,7 @@ def check_guidance_contradictions_ui():
 def check_ask_henneth():
     path = os.path.join(ROOT, "scripts", "check_ask_henneth.mjs")
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0: fail(f"ask contract check failed — {result.stdout[-400:] or result.stderr[-400:]}")
     except Exception as e: fail(f"ask contract check did not run — {e}")
 
@@ -803,7 +828,7 @@ def check_root_ask_hardening():
             fail(f"{name} missing")
             continue
         try:
-            result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+            result = run_node_check(path)
             if result.returncode != 0:
                 fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
         except Exception as e:
@@ -816,7 +841,7 @@ def check_today_ui():
             fail(f"{name} missing")
             continue
         try:
-            result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+            result = run_node_check(path)
             if result.returncode != 0:
                 fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
         except Exception as e:
@@ -828,7 +853,7 @@ def check_ask_henneth_endpoint():
         fail("check_ask_henneth_endpoint.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail(f"ask endpoint check failed — {result.stdout[-400:] or result.stderr[-400:]}")
     except Exception as e:
@@ -840,7 +865,7 @@ def check_ask_henneth_ui():
         fail("check_ask_henneth_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail(f"ask UI check failed — {result.stdout[-400:] or result.stderr[-400:]}")
     except Exception as e:
@@ -1021,7 +1046,7 @@ def check_earnings_bridges_ui():
         fail("check_earnings_bridges_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("earnings bridges UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1033,7 +1058,7 @@ def check_forecast_readiness_ui():
         fail("check_forecast_readiness_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("forecast readiness UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1045,7 +1070,7 @@ def check_cement_operating_series_ui():
         fail("check_cement_operating_series_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("cement operating series UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1069,7 +1094,7 @@ def check_causal_foundations_ui():
         fail("check_causal_foundations_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("causal foundations UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1081,7 +1106,7 @@ def check_financial_coverage_ui():
         fail("check_financial_coverage_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("financial coverage UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1093,7 +1118,7 @@ def check_historical_reference_cases_ui():
         fail("check_historical_reference_cases_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("historical reference cases UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1105,7 +1130,7 @@ def check_financial_evidence_reconciliation_ui():
         fail("check_financial_evidence_reconciliation_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("financial evidence reconciliation UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1129,7 +1154,7 @@ def check_company_scenario_lab_ui():
         fail("check_company_scenario_lab_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("company scenario lab UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1177,7 +1202,7 @@ def check_company_brain_ui():
         fail("check_company_brain_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("company brain UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1250,7 +1275,7 @@ def check_company_navigation_ui():
         fail("check_company_navigation_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("company navigation UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1262,7 +1287,7 @@ def check_thesis_monitoring_ui():
         fail("check_thesis_monitoring_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("thesis monitoring UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1274,7 +1299,7 @@ def check_intelligence_confidence_ui():
         fail("check_intelligence_confidence_ui.mjs missing")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("intelligence confidence UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1286,7 +1311,7 @@ def check_company_theses_security():
         fail("check_company_theses_security.mjs missing — private thesis RLS contract cannot be verified")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("company theses security check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1298,7 +1323,7 @@ def check_company_theses_ui():
         fail("check_company_theses_ui.mjs missing — private thesis UI contract cannot be verified")
         return
     try:
-        result = subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
+        result = run_node_check(path)
         if result.returncode != 0:
             fail("company theses UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
     except Exception as e:
@@ -1371,6 +1396,7 @@ def main():
     check_company_intelligence_phase2()
     check_operating_intelligence()
     check_event_studies()
+    check_event_to_value_product_readiness()
     check_conditional_benchmarks()
     check_conditional_benchmarks_ui()
     check_signal_clusters()
