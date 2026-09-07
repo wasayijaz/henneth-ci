@@ -39,6 +39,41 @@ which file changed.
 
 ---
 
+## 2026-09-07 — v2026.09.07 — Prices stay current: whole-universe refresh
+
+<!--public
+Prices across the whole desk now stay current — every close is refreshed daily, not just a rotating
+handful. If you saw a stock stuck on an old price, that's fixed: the desk reprices its entire universe
+on every update.
+-->
+
+### What changed
+
+Three stacked bugs had let 263 of 456 symbols drift weeks stale while `health.json` stayed green — a
+July close was still live in September. All three shared the same shape: a refresh design that needed
+the cron to fire *many* times to finish one lap.
+
+1. **Board-counter starvation.** ~103 KSE All Share entries are PSX board artifacts (`…NC`, `…XD`,
+   `…XB`, rights counters), not companies; DPS returns zero bars for them forever. Their count was
+   subtracted from the per-run rotation slice, driving it to `max(0, 90 − 103) = 0` — no listed symbol
+   with an existing series was refreshed for 47 sessions.
+2. **mtime ordering in the cloud.** `actions/checkout` rewrites the repo alphabetically each run, so the
+   "stalest first" queue ordered by `st_mtime` degenerated to alphabetical — everything past ~letter H
+   (TATM among them) was never reached. The refresh clock now lives in persisted state
+   (`state/history_meta.json` `last_attempt`), committed with `state/`, not in file mtimes.
+3. **The cron is a wish.** `desk-data.yml` declares ~18 runs/weekday but GitHub load-sheds scheduled
+   ticks; since 2026-08-27 it fired 1–2/day. Any design needing several runs per lap never completes.
+
+**Fix:** `fetch_history.py` now reprices the ENTIRE universe in a SINGLE run — concurrently via a
+`ThreadPoolExecutor` (`WORKERS`), ~6 min for ~490 symbols, well inside the 25-min Actions cap. One
+honoured tick a day keeps every price ≤ 1 day old. `DEADLINE_S` bounds wall time as a guard; symbols
+not reached lead the next run, and `preflight.py` WARNs on any non-zero `skipped_deadline` or on a large
+share of covered symbols not attempted in 3 days — a check that would have caught all three bugs. The
+per-run slice (`LISTED_PER_RUN`) is gone; do not reintroduce it — it silently reinstates this bug the
+moment the cron degrades. Full detail in [`docs/GOTCHAS.md`](docs/GOTCHAS.md).
+
+---
+
 ## 2026-08-18 — v2026.08.18 — Desk clean URLs
 
 <!--public

@@ -367,6 +367,11 @@ static site + committed `state/` data). The refresh loops push fresh data → Ve
 
 - **Prices:** PSX DPS portal (EOD `[ts, close, volume, open]` — no high/low, so ATR is a close-to-close
   proxy); **Yahoo Finance `.KA`** for ~19-year adjusted history (auto de-glitched) used on charts + long-run stats.
+  `fetch_history.py` reprices the **entire universe in one run** (concurrent, ~6 min for ~490 symbols), so a
+  single honoured cron tick keeps every close ≤ 1 day old — refresh no longer depends on how *many* times the
+  cron fires. GitHub's scheduled queue is best-effort and had degraded to 1–2 runs/day; the old design needed
+  ~4 runs to finish a lap, which is how a July close reached the live site in September. `preflight.py` WARNs
+  if a large share of covered symbols has not been attempted in 3 days — the shape every stale-price bug had.
 - **Fundamentals:** stockanalysis.com (P/E, EPS, margins, dividends, earnings dates).
 - **Sectors:** parsed from PSX's own screener (`fetch_sectors.py`), verified against 19 anchor tickers and
   kept at last-good on mismatch. This fixed two live bugs: Rule 4's same-sector limit and peer P/E, which
