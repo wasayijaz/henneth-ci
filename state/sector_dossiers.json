@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-04 08:08",
+ "updated": "2026-09-07 08:25",
  "note": "Deterministic evidence pack per PSX sector. Every figure is computed from the desk's own state files - agents debating a sector must cite THIS, never memory. macro_drivers lists only correction-survived relationships; an empty list means no global factor has a demonstrated effect on the sector, which is a finding.",
  "min_members": 3,
  "n_sectors": 32,
@@ -115,18 +115,18 @@
    "n_members": 10,
    "breadth": {
     "above_sma50": 4,
-    "advancing_1d": 4
+    "advancing_1d": 7
    },
    "returns": {
-    "median_1d_pct": -0.12,
-    "median_20d_pct": -1.81,
+    "median_1d_pct": 0.95,
+    "median_20d_pct": -1.65,
     "best_20d": {
      "sym": "GAL",
-     "pct": 7.14
+     "pct": 6.32
     },
     "worst_20d": {
      "sym": "AGTL",
-     "pct": -9.59
+     "pct": -7.69
     }
    },
    "valuation": {
@@ -203,18 +203,34 @@
     {
      "sym": "GAL",
      "name": "Ghandhara Automobiles Limited",
-     "close": 637.48,
-     "ret_1d": 0.24,
-     "ret_20d": 7.14,
-     "rsi14": 57.0,
+     "close": 646.57,
+     "ret_1d": 1.43,
+     "ret_20d": 6.32,
+     "rsi14": 59.8,
      "above_sma50": true,
-     "liquidity_rs_m": 457.9,
+     "liquidity_rs_m": 438.6,
      "pe": 5.47,
      "div_yield_pct": 1.58,
      "payout_pct": 8.53,
      "fair_gap_pct": 17.3,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "GHNI",
+     "name": "Ghandhara Industries Limited",
+     "close": 1292.08,
+     "ret_1d": 0.87,
+     "ret_20d": 6.25,
+     "rsi14": 58.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 207.7,
+     "pe": 7.95,
+     "div_yield_pct": 0.76,
+     "payout_pct": 6.16,
+     "fair_gap_pct": -14.8,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": 10.0
     },
     {
      "sym": "HINO",
@@ -233,62 +249,14 @@
      "ttm_dividend_rs": 10.91
     },
     {
-     "sym": "GHNI",
-     "name": "Ghandhara Industries Limited",
-     "close": 1280.99,
-     "ret_1d": 0.26,
-     "ret_20d": 5.86,
-     "rsi14": 56.7,
-     "above_sma50": true,
-     "liquidity_rs_m": 212.5,
-     "pe": 7.95,
-     "div_yield_pct": 0.76,
-     "payout_pct": 6.16,
-     "fair_gap_pct": -14.8,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 10.0
-    },
-    {
-     "sym": "MTL",
-     "name": "Millat Tractors Limited",
-     "close": 304.29,
-     "ret_1d": 0.77,
-     "ret_20d": 0.69,
-     "rsi14": 56.7,
-     "above_sma50": true,
-     "liquidity_rs_m": 66.7,
-     "pe": 16.17,
-     "div_yield_pct": 10.06,
-     "payout_pct": 160.94,
-     "fair_gap_pct": -57.4,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 17.5
-    },
-    {
-     "sym": "INDU",
-     "name": "Indus Motor Company Limited",
-     "close": 1908.79,
-     "ret_1d": -0.49,
-     "ret_20d": -1.15,
-     "rsi14": 32.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 195.1,
-     "pe": 5.94,
-     "div_yield_pct": 9.12,
-     "payout_pct": 54.24,
-     "fair_gap_pct": -20.0,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 198.0
-    },
-    {
      "sym": "ATLH",
      "name": "Atlas Honda Limited",
-     "close": 1583.11,
-     "ret_1d": -0.07,
-     "ret_20d": -2.48,
-     "rsi14": 28.4,
+     "close": 1600.14,
+     "ret_1d": 1.08,
+     "ret_20d": -1.54,
+     "rsi14": 41.9,
      "above_sma50": false,
-     "liquidity_rs_m": 4.3,
+     "liquidity_rs_m": 6.5,
      "pe": 8.85,
      "div_yield_pct": 6.99,
      "payout_pct": 62.24,
@@ -297,14 +265,46 @@
      "ttm_dividend_rs": 102.0
     },
     {
+     "sym": "INDU",
+     "name": "Indus Motor Company Limited",
+     "close": 1898.91,
+     "ret_1d": -0.52,
+     "ret_20d": -1.56,
+     "rsi14": 30.0,
+     "above_sma50": false,
+     "liquidity_rs_m": 202.9,
+     "pe": 5.94,
+     "div_yield_pct": 9.12,
+     "payout_pct": 54.24,
+     "fair_gap_pct": -20.0,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 198.0
+    },
+    {
+     "sym": "MTL",
+     "name": "Millat Tractors Limited",
+     "close": 305.05,
+     "ret_1d": 0.25,
+     "ret_20d": -1.74,
+     "rsi14": 58.0,
+     "above_sma50": true,
+     "liquidity_rs_m": 55.6,
+     "pe": 16.17,
+     "div_yield_pct": 10.06,
+     "payout_pct": 160.94,
+     "fair_gap_pct": -57.4,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 17.5
+    },
+    {
      "sym": "HCAR",
      "name": "Honda Atlas Cars (Pakistan) Limited",
-     "close": 232.0,
-     "ret_1d": -0.18,
-     "ret_20d": -2.85,
-     "rsi14": 45.0,
+     "close": 235.35,
+     "ret_1d": 1.44,
+     "ret_20d": -3.6,
+     "rsi14": 48.5,
      "above_sma50": false,
-     "liquidity_rs_m": 107.3,
+     "liquidity_rs_m": 104.4,
      "pe": 7.21,
      "div_yield_pct": 3.9,
      "payout_pct": 26.28,
@@ -315,12 +315,12 @@
     {
      "sym": "SAZEW",
      "name": "Sazgar Engineering Works Limited",
-     "close": 1862.06,
-     "ret_1d": -0.5,
-     "ret_20d": -3.05,
-     "rsi14": 44.2,
+     "close": 1850.13,
+     "ret_1d": -0.64,
+     "ret_20d": -3.69,
+     "rsi14": 42.4,
      "above_sma50": false,
-     "liquidity_rs_m": 276.6,
+     "liquidity_rs_m": 270.2,
      "pe": 4.82,
      "div_yield_pct": 3.72,
      "payout_pct": 17.93,
@@ -331,12 +331,12 @@
     {
      "sym": "DFML",
      "name": "Dewan Farooque Motors Limited",
-     "close": 16.42,
-     "ret_1d": -0.24,
-     "ret_20d": -9.03,
-     "rsi14": 25.4,
+     "close": 16.98,
+     "ret_1d": 3.41,
+     "ret_20d": -6.24,
+     "rsi14": 38.8,
      "above_sma50": false,
-     "liquidity_rs_m": 8.5,
+     "liquidity_rs_m": 11.3,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -347,12 +347,12 @@
     {
      "sym": "AGTL",
      "name": "Al-Ghazi Tractors Limited",
-     "close": 348.28,
-     "ret_1d": -0.61,
-     "ret_20d": -9.59,
-     "rsi14": 32.1,
+     "close": 348.01,
+     "ret_1d": -0.08,
+     "ret_20d": -7.69,
+     "rsi14": 32.0,
      "above_sma50": false,
-     "liquidity_rs_m": 9.1,
+     "liquidity_rs_m": 7.0,
      "pe": 7.4,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -365,19 +365,19 @@
   "Automobile Parts & Accessories": {
    "n_members": 9,
    "breadth": {
-    "above_sma50": 4,
-    "advancing_1d": 2
+    "above_sma50": 5,
+    "advancing_1d": 1
    },
    "returns": {
-    "median_1d_pct": -0.64,
-    "median_20d_pct": -0.99,
+    "median_1d_pct": -0.44,
+    "median_20d_pct": -1.4,
     "best_20d": {
-     "sym": "AGIL",
-     "pct": 7.99
+     "sym": "PTL",
+     "pct": 5.31
     },
     "worst_20d": {
      "sym": "ATBA",
-     "pct": -11.35
+     "pct": -12.7
     }
    },
    "valuation": {
@@ -397,11 +397,6 @@
    "recent_news": [],
    "upcoming_events": [
     {
-     "ticker": "THALL",
-     "date": "2026-09-04",
-     "type": "results"
-    },
-    {
      "ticker": "LOADS",
      "date": "2026-09-18",
      "type": "results"
@@ -413,22 +408,6 @@
     }
    ],
    "members": [
-    {
-     "sym": "AGIL",
-     "name": "Agriauto Industries Limited",
-     "close": 164.15,
-     "ret_1d": 0.03,
-     "ret_20d": 7.99,
-     "rsi14": 64.1,
-     "above_sma50": true,
-     "liquidity_rs_m": 13.8,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 1.75
-    },
     {
      "sym": "PTL",
      "name": "Panther Tyres Ltd.",
@@ -444,6 +423,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 4.0
+    },
+    {
+     "sym": "AGIL",
+     "name": "Agriauto Industries Limited",
+     "close": 160.35,
+     "ret_1d": -2.31,
+     "ret_20d": 4.81,
+     "rsi14": 56.9,
+     "above_sma50": true,
+     "liquidity_rs_m": 14.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.75
     },
     {
      "sym": "GTYR",
@@ -464,12 +459,12 @@
     {
      "sym": "THALL",
      "name": "Thal Limited",
-     "close": 571.66,
-     "ret_1d": -0.93,
-     "ret_20d": 0.29,
-     "rsi14": 50.5,
-     "above_sma50": false,
-     "liquidity_rs_m": 9.6,
+     "close": 591.11,
+     "ret_1d": 3.4,
+     "ret_20d": 1.82,
+     "rsi14": 57.9,
+     "above_sma50": true,
+     "liquidity_rs_m": 9.8,
      "pe": 4.95,
      "div_yield_pct": 1.81,
      "payout_pct": 8.67,
@@ -480,12 +475,12 @@
     {
      "sym": "BWHL",
      "name": "Baluchistan Wheels Limited",
-     "close": 229.86,
-     "ret_1d": 1.34,
-     "ret_20d": -0.99,
-     "rsi14": 50.8,
+     "close": 229.67,
+     "ret_1d": -0.08,
+     "ret_20d": -1.4,
+     "rsi14": 50.5,
      "above_sma50": true,
-     "liquidity_rs_m": 4.6,
+     "liquidity_rs_m": 4.7,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -544,10 +539,10 @@
     {
      "sym": "ATBA",
      "name": "Atlas Battery Limited",
-     "close": 178.19,
-     "ret_1d": -0.64,
-     "ret_20d": -11.35,
-     "rsi14": 18.0,
+     "close": 177.76,
+     "ret_1d": -0.24,
+     "ret_20d": -12.7,
+     "rsi14": 17.7,
      "above_sma50": false,
      "liquidity_rs_m": 2.7,
      "pe": null,
@@ -563,18 +558,18 @@
    "n_members": 7,
    "breadth": {
     "above_sma50": 5,
-    "advancing_1d": 3
+    "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": 0.0,
+    "median_1d_pct": -0.47,
     "median_20d_pct": -3.42,
     "best_20d": {
      "sym": "EMCO",
      "pct": 4.72
     },
     "worst_20d": {
-     "sym": "WAVESAPP",
-     "pct": -6.3
+     "sym": "PAEL",
+     "pct": -8.18
     }
    },
    "valuation": {
@@ -591,7 +586,16 @@
    },
    "macro_drivers": [],
    "macro_joint_r2_pct": null,
-   "recent_news": [],
+   "recent_news": [
+    {
+     "ts": "2026-09-04",
+     "impact": 2,
+     "tickers": [
+      "PCAL"
+     ],
+     "headline": "Pakistan Cables approves CECL's buy-back on entire stake for Rs350mn"
+    }
+   ],
    "upcoming_events": [
     {
      "ticker": "FCL",
@@ -681,22 +685,6 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "PAEL",
-     "name": "Pak Elektron Limited",
-     "close": 39.34,
-     "ret_1d": 3.55,
-     "ret_20d": -6.15,
-     "rsi14": 38.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 212.4,
-     "pe": 8.88,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -2.3,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "WAVESAPP",
      "name": "Waves Home Appliances Limited",
      "close": 8.77,
@@ -711,21 +699,37 @@
      "fair_gap_pct": -44.9,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "PAEL",
+     "name": "Pak Elektron Limited",
+     "close": 38.84,
+     "ret_1d": -1.27,
+     "ret_20d": -8.18,
+     "rsi14": 36.7,
+     "above_sma50": false,
+     "liquidity_rs_m": 209.9,
+     "pe": 8.88,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -2.3,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": null
     }
    ]
   },
   "Cement": {
    "n_members": 18,
    "breadth": {
-    "above_sma50": 4,
-    "advancing_1d": 12
+    "above_sma50": 5,
+    "advancing_1d": 9
    },
    "returns": {
-    "median_1d_pct": 0.32,
-    "median_20d_pct": -4.18,
+    "median_1d_pct": 0.18,
+    "median_20d_pct": -4.83,
     "best_20d": {
-     "sym": "POWER",
-     "pct": 3.68
+     "sym": "MLCF",
+     "pct": 3.59
     },
     "worst_20d": {
      "sym": "POWERPS",
@@ -820,30 +824,14 @@
    ],
    "members": [
     {
-     "sym": "POWER",
-     "name": "Power Cement Limited",
-     "close": 22.54,
-     "ret_1d": 1.9,
-     "ret_20d": 3.68,
-     "rsi14": 51.8,
-     "above_sma50": true,
-     "liquidity_rs_m": 43.7,
-     "pe": 8.42,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -20.1,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "MLCF",
      "name": "Maple Leaf Cement Factory Limited",
-     "close": 99.06,
-     "ret_1d": 1.66,
-     "ret_20d": 3.26,
-     "rsi14": 49.4,
-     "above_sma50": false,
-     "liquidity_rs_m": 1201.4,
+     "close": 101.46,
+     "ret_1d": 2.42,
+     "ret_20d": 3.59,
+     "rsi14": 54.4,
+     "above_sma50": true,
+     "liquidity_rs_m": 1185.5,
      "pe": 8.78,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -852,20 +840,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ACPL",
-     "name": "Attock Cement Pakistan Limited",
-     "close": 232.13,
-     "ret_1d": 0.05,
-     "ret_20d": -0.28,
-     "rsi14": 52.7,
+     "sym": "POWER",
+     "name": "Power Cement Limited",
+     "close": 22.49,
+     "ret_1d": -0.22,
+     "ret_20d": -0.04,
+     "rsi14": 51.3,
      "above_sma50": true,
-     "liquidity_rs_m": 21.2,
-     "pe": 9.37,
-     "div_yield_pct": 0.22,
-     "payout_pct": 2.01,
-     "fair_gap_pct": -22.1,
+     "liquidity_rs_m": 39.9,
+     "pe": 8.42,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -20.1,
      "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 8.5
+     "ttm_dividend_rs": null
     },
     {
      "sym": "THCCL",
@@ -884,14 +872,30 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ACPL",
+     "name": "Attock Cement Pakistan Limited",
+     "close": 232.02,
+     "ret_1d": -0.05,
+     "ret_20d": -0.91,
+     "rsi14": 52.5,
+     "above_sma50": true,
+     "liquidity_rs_m": 20.9,
+     "pe": 9.37,
+     "div_yield_pct": 0.22,
+     "payout_pct": 2.01,
+     "fair_gap_pct": -22.1,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 8.5
+    },
+    {
      "sym": "FCCL",
      "name": "Fauji Cement Company Limited",
-     "close": 54.08,
-     "ret_1d": 1.5,
-     "ret_20d": -1.92,
-     "rsi14": 43.1,
+     "close": 54.48,
+     "ret_1d": 0.74,
+     "ret_20d": -3.44,
+     "rsi14": 45.1,
      "above_sma50": false,
-     "liquidity_rs_m": 351.3,
+     "liquidity_rs_m": 331.1,
      "pe": 8.38,
      "div_yield_pct": 2.71,
      "payout_pct": 22.73,
@@ -900,46 +904,14 @@
      "ttm_dividend_rs": 1.25
     },
     {
-     "sym": "LUCK",
-     "name": "Lucky Cement Limited",
-     "close": 431.32,
-     "ret_1d": 0.76,
-     "ret_20d": -2.72,
-     "rsi14": 39.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 563.4,
-     "pe": 7.2,
-     "div_yield_pct": 1.14,
-     "payout_pct": 8.23,
-     "fair_gap_pct": 2.6,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 4.0
-    },
-    {
-     "sym": "KOHC",
-     "name": "Kohat Cement Company Limited",
-     "close": 93.23,
-     "ret_1d": 1.76,
-     "ret_20d": -3.59,
-     "rsi14": 40.5,
-     "above_sma50": false,
-     "liquidity_rs_m": 34.4,
-     "pe": 9.04,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -4.4,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "PIOC",
      "name": "Pioneer Cement Limited",
-     "close": 257.02,
-     "ret_1d": 0.62,
-     "ret_20d": -3.8,
-     "rsi14": 36.9,
+     "close": 258.7,
+     "ret_1d": 0.65,
+     "ret_20d": -3.96,
+     "rsi14": 39.4,
      "above_sma50": false,
-     "liquidity_rs_m": 38.8,
+     "liquidity_rs_m": 37.9,
      "pe": 8.9,
      "div_yield_pct": 1.91,
      "payout_pct": 17.22,
@@ -948,36 +920,20 @@
      "ttm_dividend_rs": 5.0
     },
     {
-     "sym": "DGKC",
-     "name": "D.G. Khan Cement Company Limited",
-     "close": 203.43,
-     "ret_1d": 0.46,
-     "ret_20d": -4.06,
-     "rsi14": 40.5,
+     "sym": "LUCK",
+     "name": "Lucky Cement Limited",
+     "close": 433.12,
+     "ret_1d": 0.42,
+     "ret_20d": -4.17,
+     "rsi14": 41.9,
      "above_sma50": false,
-     "liquidity_rs_m": 841.2,
-     "pe": 7.77,
-     "div_yield_pct": 0.47,
-     "payout_pct": 3.71,
-     "fair_gap_pct": -3.5,
+     "liquidity_rs_m": 511.0,
+     "pe": 7.2,
+     "div_yield_pct": 1.14,
+     "payout_pct": 8.23,
+     "fair_gap_pct": 2.6,
      "fair_verdict": "fair",
-     "ttm_dividend_rs": 2.0
-    },
-    {
-     "sym": "BWCL",
-     "name": "Bestway Cement Limited",
-     "close": 477.16,
-     "ret_1d": -0.51,
-     "ret_20d": -4.31,
-     "rsi14": 28.3,
-     "above_sma50": false,
-     "liquidity_rs_m": 8.4,
-     "pe": 11.29,
-     "div_yield_pct": 7.96,
-     "payout_pct": 93.28,
-     "fair_gap_pct": -36.8,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 40.0
+     "ttm_dividend_rs": 4.0
     },
     {
      "sym": "FLYNG",
@@ -996,14 +952,62 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "DGKC",
+     "name": "D.G. Khan Cement Company Limited",
+     "close": 206.53,
+     "ret_1d": 1.52,
+     "ret_20d": -4.82,
+     "rsi14": 44.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 791.3,
+     "pe": 7.77,
+     "div_yield_pct": 0.47,
+     "payout_pct": 3.71,
+     "fair_gap_pct": -3.5,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": 2.0
+    },
+    {
+     "sym": "BWCL",
+     "name": "Bestway Cement Limited",
+     "close": 475.79,
+     "ret_1d": -0.29,
+     "ret_20d": -4.83,
+     "rsi14": 27.1,
+     "above_sma50": false,
+     "liquidity_rs_m": 7.8,
+     "pe": 11.29,
+     "div_yield_pct": 7.96,
+     "payout_pct": 93.28,
+     "fair_gap_pct": -36.8,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 40.0
+    },
+    {
      "sym": "DNCC",
      "name": "Dandot Cement Company Limited",
-     "close": 16.02,
-     "ret_1d": 0.12,
-     "ret_20d": -6.15,
-     "rsi14": 36.4,
+     "close": 16.23,
+     "ret_1d": 1.31,
+     "ret_20d": -5.58,
+     "rsi14": 39.5,
      "above_sma50": false,
-     "liquidity_rs_m": 2.3,
+     "liquidity_rs_m": 2.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "DCL",
+     "name": "Dewan Cement Limited",
+     "close": 10.34,
+     "ret_1d": 5.08,
+     "ret_20d": -6.0,
+     "rsi14": 45.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 14.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -1044,36 +1048,36 @@
      "ttm_dividend_rs": 1.0
     },
     {
+     "sym": "KOHC",
+     "name": "Kohat Cement Company Limited",
+     "close": 92.69,
+     "ret_1d": -0.58,
+     "ret_20d": -8.2,
+     "rsi14": 39.4,
+     "above_sma50": false,
+     "liquidity_rs_m": 30.4,
+     "pe": 9.04,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -4.4,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "CHCC",
      "name": "Cherat Cement Company Limited",
-     "close": 298.66,
-     "ret_1d": 0.18,
-     "ret_20d": -8.64,
-     "rsi14": 36.3,
+     "close": 299.85,
+     "ret_1d": 0.4,
+     "ret_20d": -9.93,
+     "rsi14": 37.8,
      "above_sma50": false,
-     "liquidity_rs_m": 67.7,
+     "liquidity_rs_m": 56.2,
      "pe": 8.1,
      "div_yield_pct": 1.79,
      "payout_pct": 14.73,
      "fair_gap_pct": -9.0,
      "fair_verdict": "fair",
      "ttm_dividend_rs": 5.5
-    },
-    {
-     "sym": "DCL",
-     "name": "Dewan Cement Limited",
-     "close": 9.84,
-     "ret_1d": 0.72,
-     "ret_20d": -10.05,
-     "rsi14": 30.8,
-     "above_sma50": false,
-     "liquidity_rs_m": 13.1,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
     },
     {
      "sym": "FECTC",
@@ -1110,17 +1114,17 @@
    ]
   },
   "Chemical": {
-   "n_members": 22,
+   "n_members": 23,
    "breadth": {
-    "above_sma50": 13,
+    "above_sma50": 14,
     "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -1.5,
-    "median_20d_pct": -0.5,
+    "median_1d_pct": -1.32,
+    "median_20d_pct": -0.22,
     "best_20d": {
      "sym": "BUXL",
-     "pct": 385.1
+     "pct": 421.48
     },
     "worst_20d": {
      "sym": "ICL",
@@ -1196,12 +1200,12 @@
     {
      "sym": "BUXL",
      "name": "Buxly Paints Limited",
-     "close": 917.51,
-     "ret_1d": -10.0,
-     "ret_20d": 385.1,
-     "rsi14": 82.6,
+     "close": 989.14,
+     "ret_1d": 7.81,
+     "ret_20d": 421.48,
+     "rsi14": 84.4,
      "above_sma50": true,
-     "liquidity_rs_m": 40.9,
+     "liquidity_rs_m": 48.6,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -1228,12 +1232,12 @@
     {
      "sym": "BERG",
      "name": "Berger Paints Pakistan Limited",
-     "close": 141.02,
-     "ret_1d": -10.0,
-     "ret_20d": 34.36,
-     "rsi14": 51.4,
+     "close": 134.83,
+     "ret_1d": -4.39,
+     "ret_20d": 26.25,
+     "rsi14": 48.5,
      "above_sma50": true,
-     "liquidity_rs_m": 244.9,
+     "liquidity_rs_m": 253.1,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -1244,12 +1248,12 @@
     {
      "sym": "DAAG",
      "name": "Data Agro Limited",
-     "close": 102.13,
-     "ret_1d": -7.42,
-     "ret_20d": 33.43,
-     "rsi14": 64.6,
+     "close": 96.83,
+     "ret_1d": -5.19,
+     "ret_20d": 25.95,
+     "rsi14": 58.2,
      "above_sma50": true,
-     "liquidity_rs_m": 2.7,
+     "liquidity_rs_m": 2.9,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -1260,12 +1264,12 @@
     {
      "sym": "BAPL",
      "name": "Bawany Air Products Limited",
-     "close": 38.59,
-     "ret_1d": 2.99,
-     "ret_20d": 20.03,
-     "rsi14": 74.4,
+     "close": 37.96,
+     "ret_1d": -1.63,
+     "ret_20d": 20.51,
+     "rsi14": 70.9,
      "above_sma50": true,
-     "liquidity_rs_m": 14.9,
+     "liquidity_rs_m": 15.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -1290,6 +1294,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "DYNO",
+     "name": "Dynea Pakistan Limited",
+     "close": 349.99,
+     "ret_1d": -0.46,
+     "ret_20d": 4.82,
+     "rsi14": 62.6,
+     "above_sma50": true,
+     "liquidity_rs_m": 4.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 16.25
+    },
+    {
      "sym": "PAKOXY",
      "name": "Pakistan Oxygen Limited",
      "close": 287.11,
@@ -1306,22 +1326,6 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ARPL",
-     "name": "Archroma Pakistan Limited",
-     "close": 432.32,
-     "ret_1d": 0.88,
-     "ret_20d": 2.37,
-     "rsi14": 60.9,
-     "above_sma50": true,
-     "liquidity_rs_m": 3.7,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 10.0
-    },
-    {
      "sym": "GGL",
      "name": "Ghani Global Holdings Limited",
      "close": 23.57,
@@ -1336,6 +1340,22 @@
      "fair_gap_pct": 174.9,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "ARPL",
+     "name": "Archroma Pakistan Limited",
+     "close": 429.77,
+     "ret_1d": -0.59,
+     "ret_20d": 1.78,
+     "rsi14": 57.7,
+     "above_sma50": true,
+     "liquidity_rs_m": 3.7,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 10.0
     },
     {
      "sym": "EPCLPS",
@@ -1372,12 +1392,12 @@
     {
      "sym": "LOTCHEM",
      "name": "Lotte Chemical Pakistan Limited",
-     "close": 26.7,
-     "ret_1d": -0.6,
-     "ret_20d": -0.78,
-     "rsi14": 38.8,
+     "close": 26.71,
+     "ret_1d": 0.04,
+     "ret_20d": -1.51,
+     "rsi14": 39.0,
      "above_sma50": false,
-     "liquidity_rs_m": 170.1,
+     "liquidity_rs_m": 169.3,
      "pe": 8.86,
      "div_yield_pct": 18.31,
      "payout_pct": 161.29,
@@ -1484,12 +1504,12 @@
     {
      "sym": "LCI",
      "name": "Lucky Core Industries Limited",
-     "close": 218.11,
-     "ret_1d": -0.01,
-     "ret_20d": -4.48,
-     "rsi14": 32.6,
+     "close": 217.1,
+     "ret_1d": -0.46,
+     "ret_20d": -4.5,
+     "rsi14": 30.9,
      "above_sma50": false,
-     "liquidity_rs_m": 16.2,
+     "liquidity_rs_m": 15.5,
      "pe": 10.45,
      "div_yield_pct": 4.71,
      "payout_pct": 49.74,
@@ -1516,12 +1536,12 @@
     {
      "sym": "BIFO",
      "name": "Biafo Industries Limited",
-     "close": 121.18,
-     "ret_1d": 0.02,
-     "ret_20d": -8.83,
-     "rsi14": 36.5,
+     "close": 121.53,
+     "ret_1d": 0.29,
+     "ret_20d": -8.22,
+     "rsi14": 37.5,
      "above_sma50": false,
-     "liquidity_rs_m": 23.5,
+     "liquidity_rs_m": 21.6,
      "pe": 13.39,
      "div_yield_pct": 3.87,
      "payout_pct": 53.13,
@@ -1554,8 +1574,8 @@
     "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": 0.42,
-    "median_20d_pct": 1.2,
+    "median_1d_pct": 0.91,
+    "median_20d_pct": 0.14,
     "best_20d": {
      "sym": "HIFA",
      "pct": 3.81
@@ -1601,10 +1621,10 @@
     {
      "sym": "HGFA",
      "name": "HBL Growth Fund",
-     "close": 14.28,
-     "ret_1d": 0.42,
-     "ret_20d": 1.2,
-     "rsi14": 40.9,
+     "close": 14.41,
+     "ret_1d": 0.91,
+     "ret_20d": 0.14,
+     "rsi14": 43.0,
      "above_sma50": false,
      "liquidity_rs_m": 2.8,
      "pe": null,
@@ -1635,19 +1655,19 @@
   "Commercial Banks": {
    "n_members": 19,
    "breadth": {
-    "above_sma50": 5,
-    "advancing_1d": 9
+    "above_sma50": 7,
+    "advancing_1d": 10
    },
    "returns": {
-    "median_1d_pct": -0.01,
-    "median_20d_pct": -2.46,
+    "median_1d_pct": 0.24,
+    "median_20d_pct": -4.21,
     "best_20d": {
      "sym": "SBL",
      "pct": 39.58
     },
     "worst_20d": {
      "sym": "HMB",
-     "pct": -10.87
+     "pct": -11.64
     }
    },
    "valuation": {
@@ -1743,11 +1763,6 @@
    ],
    "upcoming_events": [
     {
-     "ticker": "SCBPL",
-     "date": "2026-09-04",
-     "type": "book_closure"
-    },
-    {
      "ticker": "BOP",
      "date": "2026-09-10",
      "type": "ex_dividend"
@@ -1823,30 +1838,14 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "HBL",
-     "name": "Habib Bank Limited",
-     "close": 314.17,
-     "ret_1d": 0.47,
-     "ret_20d": 2.34,
-     "rsi14": 47.4,
-     "above_sma50": true,
-     "liquidity_rs_m": 728.3,
-     "pe": 6.98,
-     "div_yield_pct": 7.58,
-     "payout_pct": 52.69,
-     "fair_gap_pct": -8.6,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 23.0
-    },
-    {
      "sym": "BOP",
      "name": "The Bank of Punjab",
-     "close": 34.39,
-     "ret_1d": 0.91,
-     "ret_20d": 2.05,
-     "rsi14": 51.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 1002.6,
+     "close": 34.88,
+     "ret_1d": 1.42,
+     "ret_20d": 0.37,
+     "rsi14": 55.1,
+     "above_sma50": true,
+     "liquidity_rs_m": 955.1,
      "pe": 6.26,
      "div_yield_pct": 8.58,
      "payout_pct": 53.67,
@@ -1857,12 +1856,12 @@
     {
      "sym": "AKBL",
      "name": "Askari Bank Limited",
-     "close": 106.09,
-     "ret_1d": 1.07,
-     "ret_20d": 1.27,
-     "rsi14": 51.7,
-     "above_sma50": false,
-     "liquidity_rs_m": 283.4,
+     "close": 108.66,
+     "ret_1d": 2.42,
+     "ret_20d": 0.34,
+     "rsi14": 57.9,
+     "above_sma50": true,
+     "liquidity_rs_m": 276.7,
      "pe": 6.04,
      "div_yield_pct": 4.81,
      "payout_pct": 28.41,
@@ -1871,14 +1870,46 @@
      "ttm_dividend_rs": 7.0
     },
     {
+     "sym": "HBL",
+     "name": "Habib Bank Limited",
+     "close": 313.68,
+     "ret_1d": -0.16,
+     "ret_20d": -2.6,
+     "rsi14": 47.0,
+     "above_sma50": true,
+     "liquidity_rs_m": 562.7,
+     "pe": 6.98,
+     "div_yield_pct": 7.58,
+     "payout_pct": 52.69,
+     "fair_gap_pct": -8.6,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": 23.0
+    },
+    {
+     "sym": "SCBPL",
+     "name": "Standard Chartered Bank (Pak) Ltd",
+     "close": 63.01,
+     "ret_1d": -0.54,
+     "ret_20d": -3.06,
+     "rsi14": 34.7,
+     "above_sma50": false,
+     "liquidity_rs_m": 1.8,
+     "pe": 10.94,
+     "div_yield_pct": 9.8,
+     "payout_pct": 105.01,
+     "fair_gap_pct": -36.0,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 6.0
+    },
+    {
      "sym": "BML",
      "name": "Bank Makramah Limited",
-     "close": 56.87,
-     "ret_1d": -0.33,
-     "ret_20d": 0.23,
-     "rsi14": 47.9,
+     "close": 55.41,
+     "ret_1d": -2.57,
+     "ret_20d": -3.23,
+     "rsi14": 43.0,
      "above_sma50": false,
-     "liquidity_rs_m": 33.7,
+     "liquidity_rs_m": 34.5,
      "pe": 16.48,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -1887,14 +1918,30 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "BIPL",
+     "name": "BankIslami Pakistan Limited",
+     "close": 25.99,
+     "ret_1d": -0.57,
+     "ret_20d": -3.95,
+     "rsi14": 33.4,
+     "above_sma50": false,
+     "liquidity_rs_m": 22.7,
+     "pe": 8.65,
+     "div_yield_pct": 9.91,
+     "payout_pct": 84.1,
+     "fair_gap_pct": -18.1,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 1.25
+    },
+    {
      "sym": "MCB",
      "name": "MCB Bank Limited",
-     "close": 398.24,
-     "ret_1d": 0.08,
-     "ret_20d": -1.94,
-     "rsi14": 38.5,
+     "close": 399.58,
+     "ret_1d": 0.34,
+     "ret_20d": -4.21,
+     "rsi14": 40.7,
      "above_sma50": false,
-     "liquidity_rs_m": 93.1,
+     "liquidity_rs_m": 88.9,
      "pe": 8.4,
      "div_yield_pct": 8.88,
      "payout_pct": 74.64,
@@ -1905,12 +1952,12 @@
     {
      "sym": "MEBL",
      "name": "Meezan Bank Limited",
-     "close": 561.0,
-     "ret_1d": -0.31,
-     "ret_20d": -2.21,
-     "rsi14": 45.8,
+     "close": 565.46,
+     "ret_1d": 0.8,
+     "ret_20d": -4.26,
+     "rsi14": 48.8,
      "above_sma50": true,
-     "liquidity_rs_m": 639.1,
+     "liquidity_rs_m": 575.4,
      "pe": 11.36,
      "div_yield_pct": 5.54,
      "payout_pct": 62.89,
@@ -1919,30 +1966,14 @@
      "ttm_dividend_rs": 29.5
     },
     {
-     "sym": "SCBPL",
-     "name": "Standard Chartered Bank (Pak) Ltd",
-     "close": 63.35,
-     "ret_1d": -5.93,
-     "ret_20d": -2.46,
-     "rsi14": 35.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 1.8,
-     "pe": 10.94,
-     "div_yield_pct": 9.8,
-     "payout_pct": 105.01,
-     "fair_gap_pct": -36.0,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 9.5
-    },
-    {
      "sym": "ABL",
      "name": "Allied Bank Limited",
-     "close": 170.76,
-     "ret_1d": 0.11,
-     "ret_20d": -3.14,
-     "rsi14": 32.6,
+     "close": 171.21,
+     "ret_1d": 0.26,
+     "ret_20d": -4.38,
+     "rsi14": 34.9,
      "above_sma50": false,
-     "liquidity_rs_m": 34.4,
+     "liquidity_rs_m": 34.3,
      "pe": 5.66,
      "div_yield_pct": 9.44,
      "payout_pct": 53.39,
@@ -1951,30 +1982,14 @@
      "ttm_dividend_rs": 16.0
     },
     {
-     "sym": "BIPL",
-     "name": "BankIslami Pakistan Limited",
-     "close": 26.14,
-     "ret_1d": 0.23,
-     "ret_20d": -3.19,
-     "rsi14": 34.8,
-     "above_sma50": false,
-     "liquidity_rs_m": 22.8,
-     "pe": 8.65,
-     "div_yield_pct": 9.91,
-     "payout_pct": 84.1,
-     "fair_gap_pct": -18.1,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 1.25
-    },
-    {
      "sym": "BAFL",
      "name": "Bank Alfalah Limited",
-     "close": 56.4,
-     "ret_1d": -0.02,
-     "ret_20d": -3.9,
-     "rsi14": 40.9,
+     "close": 56.24,
+     "ret_1d": -0.28,
+     "ret_20d": -4.63,
+     "rsi14": 40.0,
      "above_sma50": false,
-     "liquidity_rs_m": 177.9,
+     "liquidity_rs_m": 149.7,
      "pe": 5.46,
      "div_yield_pct": 10.29,
      "payout_pct": 55.87,
@@ -1983,14 +1998,30 @@
      "ttm_dividend_rs": 5.75
     },
     {
+     "sym": "BOK",
+     "name": "The Bank of Khyber",
+     "close": 30.73,
+     "ret_1d": 0.59,
+     "ret_20d": -5.62,
+     "rsi14": 40.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.5,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.7
+    },
+    {
      "sym": "UBL",
      "name": "United Bank Limited",
-     "close": 443.21,
-     "ret_1d": -0.32,
-     "ret_20d": -4.21,
-     "rsi14": 39.0,
+     "close": 440.83,
+     "ret_1d": -0.54,
+     "ret_20d": -6.49,
+     "rsi14": 37.6,
      "above_sma50": false,
-     "liquidity_rs_m": 593.0,
+     "liquidity_rs_m": 550.9,
      "pe": 7.47,
      "div_yield_pct": 7.17,
      "payout_pct": 53.02,
@@ -2001,12 +2032,12 @@
     {
      "sym": "FABL",
      "name": "Faysal Bank Limited",
-     "close": 94.25,
-     "ret_1d": 0.04,
-     "ret_20d": -5.88,
-     "rsi14": 33.0,
+     "close": 94.48,
+     "ret_1d": 0.24,
+     "ret_20d": -7.68,
+     "rsi14": 34.6,
      "above_sma50": false,
-     "liquidity_rs_m": 72.0,
+     "liquidity_rs_m": 65.8,
      "pe": 6.51,
      "div_yield_pct": 6.77,
      "payout_pct": 44.04,
@@ -2015,30 +2046,14 @@
      "ttm_dividend_rs": 8.0
     },
     {
-     "sym": "BOK",
-     "name": "The Bank of Khyber",
-     "close": 30.55,
-     "ret_1d": 0.96,
-     "ret_20d": -6.75,
-     "rsi14": 37.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.5,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 3.2
-    },
-    {
      "sym": "BAHL",
      "name": "Bank AL Habib Limited",
-     "close": 158.26,
-     "ret_1d": -0.99,
-     "ret_20d": -7.65,
-     "rsi14": 22.9,
+     "close": 159.87,
+     "ret_1d": 1.02,
+     "ret_20d": -8.12,
+     "rsi14": 28.7,
      "above_sma50": false,
-     "liquidity_rs_m": 80.8,
+     "liquidity_rs_m": 82.9,
      "pe": 6.44,
      "div_yield_pct": 8.81,
      "payout_pct": 59.43,
@@ -2049,12 +2064,12 @@
     {
      "sym": "NBP",
      "name": "National Bank of Pakistan",
-     "close": 185.4,
-     "ret_1d": 1.33,
-     "ret_20d": -8.8,
-     "rsi14": 32.0,
+     "close": 186.77,
+     "ret_1d": 0.74,
+     "ret_20d": -9.72,
+     "rsi14": 34.7,
      "above_sma50": false,
-     "liquidity_rs_m": 538.0,
+     "liquidity_rs_m": 510.9,
      "pe": 5.32,
      "div_yield_pct": 17.14,
      "payout_pct": 99.49,
@@ -2065,12 +2080,12 @@
     {
      "sym": "HMB",
      "name": "Habib Metropolitan Bank Limited",
-     "close": 100.02,
-     "ret_1d": -0.01,
-     "ret_20d": -10.87,
-     "rsi14": 17.3,
+     "close": 100.73,
+     "ret_1d": 0.71,
+     "ret_20d": -11.64,
+     "rsi14": 21.9,
      "above_sma50": false,
-     "liquidity_rs_m": 41.7,
+     "liquidity_rs_m": 41.0,
      "pe": 5.23,
      "div_yield_pct": 11.85,
      "payout_pct": 62.02,
@@ -2081,21 +2096,21 @@
    ]
   },
   "Engineering": {
-   "n_members": 16,
+   "n_members": 15,
    "breadth": {
     "above_sma50": 9,
-    "advancing_1d": 9
+    "advancing_1d": 3
    },
    "returns": {
-    "median_1d_pct": 0.74,
-    "median_20d_pct": 1.29,
+    "median_1d_pct": -0.93,
+    "median_20d_pct": 3.75,
     "best_20d": {
      "sym": "ASLCPS",
-     "pct": 45.86
+     "pct": 34.29
     },
     "worst_20d": {
-     "sym": "ASLPS",
-     "pct": -18.83
+     "sym": "MSCL",
+     "pct": -14.87
     }
    },
    "valuation": {
@@ -2166,10 +2181,10 @@
     {
      "sym": "ASLCPS",
      "name": "Aisha Steel Convt (Pref) Right",
-     "close": 104.0,
-     "ret_1d": 2.36,
-     "ret_20d": 45.86,
-     "rsi14": 45.8,
+     "close": 95.75,
+     "ret_1d": -7.93,
+     "ret_20d": 34.29,
+     "rsi14": 42.4,
      "above_sma50": true,
      "liquidity_rs_m": 0.3,
      "pe": null,
@@ -2180,19 +2195,35 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "BCL",
-     "name": "Bolan Castings Limited",
-     "close": 85.73,
-     "ret_1d": 4.28,
-     "ret_20d": 20.56,
-     "rsi14": 72.7,
+     "sym": "DADX",
+     "name": "Dadex Eternit Limited",
+     "close": 116.32,
+     "ret_1d": 8.12,
+     "ret_20d": 27.67,
+     "rsi14": 68.6,
      "above_sma50": true,
-     "liquidity_rs_m": 9.3,
+     "liquidity_rs_m": 1.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "ASL",
+     "name": "Aisha Steel Mills Limited",
+     "close": 16.59,
+     "ret_1d": 3.24,
+     "ret_20d": 21.99,
+     "rsi14": 73.6,
+     "above_sma50": true,
+     "liquidity_rs_m": 117.8,
+     "pe": 14.51,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -60.0,
+     "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
     {
@@ -2212,14 +2243,14 @@
      "ttm_dividend_rs": 1.0
     },
     {
-     "sym": "DADX",
-     "name": "Dadex Eternit Limited",
-     "close": 107.58,
-     "ret_1d": 10.0,
-     "ret_20d": 18.08,
-     "rsi14": 62.1,
+     "sym": "BCL",
+     "name": "Bolan Castings Limited",
+     "close": 84.85,
+     "ret_1d": -1.03,
+     "ret_20d": 17.39,
+     "rsi14": 70.2,
      "above_sma50": true,
-     "liquidity_rs_m": 1.2,
+     "liquidity_rs_m": 10.3,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -2228,52 +2259,36 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ASL",
-     "name": "Aisha Steel Mills Limited",
-     "close": 16.07,
-     "ret_1d": 9.92,
-     "ret_20d": 17.82,
-     "rsi14": 70.5,
-     "above_sma50": true,
-     "liquidity_rs_m": 89.8,
-     "pe": 14.51,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -60.0,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "ISL",
-     "name": "International Steels Limited",
-     "close": 91.96,
-     "ret_1d": 2.75,
-     "ret_20d": 7.47,
-     "rsi14": 54.3,
-     "above_sma50": true,
-     "liquidity_rs_m": 71.8,
-     "pe": 10.9,
-     "div_yield_pct": 6.34,
-     "payout_pct": 71.09,
-     "fair_gap_pct": 15.3,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 4.5
-    },
-    {
      "sym": "INIL",
      "name": "International Industries Limited",
-     "close": 167.21,
-     "ret_1d": -0.76,
-     "ret_20d": 6.39,
-     "rsi14": 48.6,
+     "close": 166.15,
+     "ret_1d": -0.63,
+     "ret_20d": 4.52,
+     "rsi14": 47.1,
      "above_sma50": false,
-     "liquidity_rs_m": 46.6,
+     "liquidity_rs_m": 47.7,
      "pe": 7.76,
      "div_yield_pct": 4.05,
      "payout_pct": 31.93,
      "fair_gap_pct": -16.4,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 6.0
+    },
+    {
+     "sym": "ISL",
+     "name": "International Steels Limited",
+     "close": 89.75,
+     "ret_1d": -2.4,
+     "ret_20d": 4.14,
+     "rsi14": 49.6,
+     "above_sma50": true,
+     "liquidity_rs_m": 72.6,
+     "pe": 10.9,
+     "div_yield_pct": 6.34,
+     "payout_pct": 71.09,
+     "fair_gap_pct": 15.3,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 4.5
     },
     {
      "sym": "ITTEFAQ",
@@ -2294,28 +2309,12 @@
     {
      "sym": "ASTL",
      "name": "Amreli Steels Limited",
-     "close": 15.23,
-     "ret_1d": 0.66,
-     "ret_20d": -1.17,
-     "rsi14": 43.2,
+     "close": 15.13,
+     "ret_1d": -0.66,
+     "ret_20d": -2.83,
+     "rsi14": 41.5,
      "above_sma50": false,
-     "liquidity_rs_m": 13.6,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "MUGHALC",
-     "name": "Mughal Iron & Steel Industries Ltd(C)",
-     "close": 63.0,
-     "ret_1d": -9.97,
-     "ret_20d": -2.04,
-     "rsi14": 48.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.9,
+     "liquidity_rs_m": 13.3,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -2342,12 +2341,12 @@
     {
      "sym": "AGHA",
      "name": "Agha Steel Ind.Ltd",
-     "close": 7.08,
-     "ret_1d": 5.04,
-     "ret_20d": -4.97,
-     "rsi14": 41.2,
+     "close": 7.0,
+     "ret_1d": -1.13,
+     "ret_20d": -6.17,
+     "rsi14": 38.8,
      "above_sma50": false,
-     "liquidity_rs_m": 16.9,
+     "liquidity_rs_m": 17.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -2358,10 +2357,10 @@
     {
      "sym": "CSAP",
      "name": "Crescent Steel & Allied Products Limited",
-     "close": 99.12,
-     "ret_1d": 0.81,
-     "ret_20d": -6.58,
-     "rsi14": 36.5,
+     "close": 98.2,
+     "ret_1d": -0.93,
+     "ret_20d": -7.9,
+     "rsi14": 34.6,
      "above_sma50": false,
      "liquidity_rs_m": 38.7,
      "pe": 5.69,
@@ -2372,14 +2371,30 @@
      "ttm_dividend_rs": 4.5
     },
     {
+     "sym": "ASLPS",
+     "name": "Aisha Steel Convertible (Pref)",
+     "close": 26.07,
+     "ret_1d": 1.8,
+     "ret_20d": -8.3,
+     "rsi14": 47.3,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "BECO",
      "name": "Beco Steel Limited",
-     "close": 4.78,
-     "ret_1d": 5.29,
-     "ret_20d": -8.78,
-     "rsi14": 40.3,
+     "close": 4.69,
+     "ret_1d": -1.88,
+     "ret_20d": -11.01,
+     "rsi14": 37.3,
      "above_sma50": false,
-     "liquidity_rs_m": 66.4,
+     "liquidity_rs_m": 67.0,
      "pe": 26.74,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -2402,22 +2417,6 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
-    },
-    {
-     "sym": "ASLPS",
-     "name": "Aisha Steel Convertible (Pref)",
-     "close": 25.61,
-     "ret_1d": 0.0,
-     "ret_20d": -18.83,
-     "rsi14": 45.1,
-     "above_sma50": true,
-     "liquidity_rs_m": 0.1,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
     }
    ]
   },
@@ -2425,18 +2424,18 @@
    "n_members": 5,
    "breadth": {
     "above_sma50": 2,
-    "advancing_1d": 4
+    "advancing_1d": 1
    },
    "returns": {
-    "median_1d_pct": 0.55,
-    "median_20d_pct": 1.58,
+    "median_1d_pct": -0.25,
+    "median_20d_pct": -1.3,
     "best_20d": {
      "sym": "EFERT",
-     "pct": 2.31
+     "pct": 0.52
     },
     "worst_20d": {
-     "sym": "FFC",
-     "pct": -3.93
+     "sym": "FATIMA",
+     "pct": -7.29
     }
    },
    "valuation": {
@@ -2491,12 +2490,12 @@
     {
      "sym": "EFERT",
      "name": "Engro Fertilizers Limited",
-     "close": 191.4,
-     "ret_1d": 0.55,
-     "ret_20d": 2.31,
-     "rsi14": 58.2,
+     "close": 190.93,
+     "ret_1d": -0.25,
+     "ret_20d": 0.52,
+     "rsi14": 57.1,
      "above_sma50": true,
-     "liquidity_rs_m": 202.0,
+     "liquidity_rs_m": 183.3,
      "pe": 11.38,
      "div_yield_pct": 8.15,
      "payout_pct": 94.1,
@@ -2507,12 +2506,12 @@
     {
      "sym": "AHCL",
      "name": "Arif Habib Corporation Limited",
-     "close": 16.04,
-     "ret_1d": 1.26,
-     "ret_20d": 1.97,
-     "rsi14": 51.3,
+     "close": 15.85,
+     "ret_1d": -1.18,
+     "ret_20d": -1.12,
+     "rsi14": 47.0,
      "above_sma50": true,
-     "liquidity_rs_m": 40.7,
+     "liquidity_rs_m": 40.1,
      "pe": 5.61,
      "div_yield_pct": 6.09,
      "payout_pct": 34.6,
@@ -2523,10 +2522,10 @@
     {
      "sym": "AGL",
      "name": "Agritech Limited",
-     "close": 45.0,
-     "ret_1d": 0.78,
-     "ret_20d": 1.58,
-     "rsi14": 42.6,
+     "close": 43.94,
+     "ret_1d": -2.36,
+     "ret_20d": -1.3,
+     "rsi14": 37.3,
      "above_sma50": false,
      "liquidity_rs_m": 4.5,
      "pe": null,
@@ -2537,36 +2536,36 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "FATIMA",
-     "name": "Fatima Fertilizer Company Limited",
-     "close": 152.78,
-     "ret_1d": 0.3,
-     "ret_20d": -2.97,
-     "rsi14": 39.6,
-     "above_sma50": false,
-     "liquidity_rs_m": 173.4,
-     "pe": 7.14,
-     "div_yield_pct": 3.84,
-     "payout_pct": 27.65,
-     "fair_gap_pct": 0.2,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 6.0
-    },
-    {
      "sym": "FFC",
      "name": "Fauji Fertilizer Company Limited",
-     "close": 548.67,
-     "ret_1d": -0.01,
-     "ret_20d": -3.93,
-     "rsi14": 45.0,
+     "close": 548.11,
+     "ret_1d": -0.1,
+     "ret_20d": -5.25,
+     "rsi14": 44.4,
      "above_sma50": false,
-     "liquidity_rs_m": 441.6,
+     "liquidity_rs_m": 405.3,
      "pe": 9.0,
      "div_yield_pct": 6.8,
      "payout_pct": 60.25,
      "fair_gap_pct": 74.9,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 41.0
+    },
+    {
+     "sym": "FATIMA",
+     "name": "Fatima Fertilizer Company Limited",
+     "close": 153.55,
+     "ret_1d": 0.5,
+     "ret_20d": -7.29,
+     "rsi14": 41.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 158.9,
+     "pe": 7.14,
+     "div_yield_pct": 3.84,
+     "payout_pct": 27.65,
+     "fair_gap_pct": 0.2,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": 2.5
     }
    ]
   },
@@ -2574,18 +2573,18 @@
    "n_members": 23,
    "breadth": {
     "above_sma50": 7,
-    "advancing_1d": 10
+    "advancing_1d": 7
    },
    "returns": {
-    "median_1d_pct": -0.09,
-    "median_20d_pct": -3.56,
+    "median_1d_pct": -0.34,
+    "median_20d_pct": -3.67,
     "best_20d": {
      "sym": "MFFL",
      "pct": 3.85
     },
     "worst_20d": {
      "sym": "CLOV",
-     "pct": -22.79
+     "pct": -21.9
     }
    },
    "valuation": {
@@ -2627,11 +2626,6 @@
    ],
    "upcoming_events": [
     {
-     "ticker": "NATF",
-     "date": "2026-09-04",
-     "type": "results"
-    },
-    {
      "ticker": "UPFL",
      "date": "2026-09-07",
      "type": "ex_dividend"
@@ -2665,6 +2659,11 @@
      "ticker": "TREET",
      "date": "2026-09-30",
      "type": "results"
+    },
+    {
+     "ticker": "CLOV",
+     "date": "2026-10-01",
+     "type": "results"
     }
    ],
    "members": [
@@ -2687,12 +2686,12 @@
     {
      "sym": "MUREB",
      "name": "Murree Brewery Company Limited",
-     "close": 924.03,
-     "ret_1d": -0.64,
-     "ret_20d": 3.22,
-     "rsi14": 54.1,
+     "close": 925.0,
+     "ret_1d": 0.1,
+     "ret_20d": 2.14,
+     "rsi14": 54.6,
      "above_sma50": true,
-     "liquidity_rs_m": 19.0,
+     "liquidity_rs_m": 19.2,
      "pe": 7.42,
      "div_yield_pct": 4.56,
      "payout_pct": 32.91,
@@ -2703,12 +2702,12 @@
     {
      "sym": "UPFL",
      "name": "Unilever Pakistan Foods Limited",
-     "close": 25649.0,
-     "ret_1d": 0.13,
-     "ret_20d": 1.04,
-     "rsi14": 56.1,
+     "close": 25557.25,
+     "ret_1d": -0.36,
+     "ret_20d": 1.02,
+     "rsi14": 53.3,
      "above_sma50": true,
-     "liquidity_rs_m": 1.5,
+     "liquidity_rs_m": 1.6,
      "pe": 22.73,
      "div_yield_pct": 6.47,
      "payout_pct": 146.17,
@@ -2717,28 +2716,12 @@
      "ttm_dividend_rs": 1013.0
     },
     {
-     "sym": "BBFL",
-     "name": "Big Bird Foods Limited",
-     "close": 42.33,
-     "ret_1d": 0.79,
-     "ret_20d": 0.43,
-     "rsi14": 46.1,
-     "above_sma50": false,
-     "liquidity_rs_m": 63.5,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "RMPL",
      "name": "Rafhan Maize Products Company Limited",
-     "close": 9318.33,
-     "ret_1d": 0.38,
-     "ret_20d": 0.18,
-     "rsi14": 51.1,
+     "close": 9275.01,
+     "ret_1d": -0.46,
+     "ret_20d": -0.2,
+     "rsi14": 47.9,
      "above_sma50": false,
      "liquidity_rs_m": 0.4,
      "pe": 12.6,
@@ -2746,7 +2729,7 @@
      "payout_pct": 81.7,
      "fair_gap_pct": -46.8,
      "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 534.0
+     "ttm_dividend_rs": 434.0
     },
     {
      "sym": "TOMCL",
@@ -2781,30 +2764,14 @@
      "ttm_dividend_rs": 5.0
     },
     {
-     "sym": "TREET",
-     "name": "Treet Corporation Limited",
-     "close": 22.87,
-     "ret_1d": 1.33,
-     "ret_20d": -0.87,
-     "rsi14": 41.6,
-     "above_sma50": false,
-     "liquidity_rs_m": 47.9,
-     "pe": 20.89,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -35.5,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "NESTLE",
      "name": "Nestle Pakistan Limited",
-     "close": 7513.37,
-     "ret_1d": -0.35,
-     "ret_20d": -1.01,
-     "rsi14": 43.7,
+     "close": 7505.33,
+     "ret_1d": -0.11,
+     "ret_20d": -0.95,
+     "rsi14": 42.9,
      "above_sma50": false,
-     "liquidity_rs_m": 2.4,
+     "liquidity_rs_m": 2.3,
      "pe": 20.18,
      "div_yield_pct": 7.41,
      "payout_pct": 150.38,
@@ -2829,14 +2796,46 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "BBFL",
+     "name": "Big Bird Foods Limited",
+     "close": 41.83,
+     "ret_1d": -1.18,
+     "ret_20d": -1.81,
+     "rsi14": 42.1,
+     "above_sma50": false,
+     "liquidity_rs_m": 63.8,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "TREET",
+     "name": "Treet Corporation Limited",
+     "close": 22.87,
+     "ret_1d": 0.0,
+     "ret_20d": -2.26,
+     "rsi14": 41.6,
+     "above_sma50": false,
+     "liquidity_rs_m": 47.0,
+     "pe": 20.89,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -35.5,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "COLG",
      "name": "Colgate-Palmolive (Pakistan) Limited",
-     "close": 1194.5,
-     "ret_1d": 0.82,
-     "ret_20d": -3.27,
-     "rsi14": 36.8,
+     "close": 1194.78,
+     "ret_1d": 0.02,
+     "ret_20d": -3.13,
+     "rsi14": 37.0,
      "above_sma50": false,
-     "liquidity_rs_m": 10.3,
+     "liquidity_rs_m": 9.3,
      "pe": 15.61,
      "div_yield_pct": 5.25,
      "payout_pct": 83.4,
@@ -2847,34 +2846,18 @@
     {
      "sym": "NATF",
      "name": "National Foods Limited",
-     "close": 370.53,
-     "ret_1d": 0.32,
-     "ret_20d": -3.56,
-     "rsi14": 40.9,
+     "close": 370.96,
+     "ret_1d": 0.12,
+     "ret_20d": -3.67,
+     "rsi14": 41.5,
      "above_sma50": false,
-     "liquidity_rs_m": 46.8,
+     "liquidity_rs_m": 45.9,
      "pe": 11.79,
      "div_yield_pct": 6.77,
      "payout_pct": 22.52,
      "fair_gap_pct": 224.6,
      "fair_verdict": "undervalued",
      "ttm_dividend_rs": 30.0
-    },
-    {
-     "sym": "BNL",
-     "name": "Bunnys Limited",
-     "close": 6.15,
-     "ret_1d": -0.16,
-     "ret_20d": -3.61,
-     "rsi14": 34.3,
-     "above_sma50": false,
-     "liquidity_rs_m": 15.5,
-     "pe": 9.32,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -28.0,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": null
     },
     {
      "sym": "FCEPL",
@@ -2895,10 +2878,10 @@
     {
      "sym": "BFAGRO",
      "name": "Barkat Frisian Agro Limited",
-     "close": 32.4,
-     "ret_1d": -0.09,
-     "ret_20d": -4.62,
-     "rsi14": 34.7,
+     "close": 32.29,
+     "ret_1d": -0.34,
+     "ret_20d": -4.95,
+     "rsi14": 33.7,
      "above_sma50": false,
      "liquidity_rs_m": 3.5,
      "pe": null,
@@ -2906,22 +2889,6 @@
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "FFL",
-     "name": "Fauji Foods Limited",
-     "close": 15.31,
-     "ret_1d": 0.86,
-     "ret_20d": -4.91,
-     "rsi14": 31.8,
-     "above_sma50": false,
-     "liquidity_rs_m": 42.7,
-     "pe": 40.26,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -83.1,
-     "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
     {
@@ -2939,6 +2906,38 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 7.0
+    },
+    {
+     "sym": "FFL",
+     "name": "Fauji Foods Limited",
+     "close": 15.29,
+     "ret_1d": -0.13,
+     "ret_20d": -6.83,
+     "rsi14": 31.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 40.4,
+     "pe": 40.26,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -83.1,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "BNL",
+     "name": "Bunnys Limited",
+     "close": 6.15,
+     "ret_1d": 0.0,
+     "ret_20d": -8.48,
+     "rsi14": 34.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 12.5,
+     "pe": 9.32,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -28.0,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": null
     },
     {
      "sym": "QUICE",
@@ -3023,12 +3022,12 @@
     {
      "sym": "CLOV",
      "name": "Clover Pakistan Limited",
-     "close": 6.47,
-     "ret_1d": 0.0,
-     "ret_20d": -22.79,
-     "rsi14": 21.3,
+     "close": 6.49,
+     "ret_1d": 0.31,
+     "ret_20d": -21.9,
+     "rsi14": 22.5,
      "above_sma50": false,
-     "liquidity_rs_m": 22.1,
+     "liquidity_rs_m": 21.8,
      "pe": 11.04,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -3045,7 +3044,7 @@
     "advancing_1d": 3
    },
    "returns": {
-    "median_1d_pct": -1.23,
+    "median_1d_pct": 0.0,
     "median_20d_pct": -2.94,
     "best_20d": {
      "sym": "FRCL",
@@ -3053,7 +3052,7 @@
     },
     "worst_20d": {
      "sym": "BGL",
-     "pct": -9.07
+     "pct": -9.73
     }
    },
    "valuation": {
@@ -3085,11 +3084,6 @@
    "macro_joint_r2_pct": 0.37,
    "recent_news": [],
    "upcoming_events": [
-    {
-     "ticker": "STCL",
-     "date": "2026-09-04",
-     "type": "results"
-    },
     {
      "ticker": "TGL",
      "date": "2026-09-21",
@@ -3131,12 +3125,12 @@
     {
      "sym": "GHGL",
      "name": "Ghani Glass Limited",
-     "close": 41.57,
-     "ret_1d": 0.75,
-     "ret_20d": 3.9,
-     "rsi14": 53.5,
+     "close": 41.71,
+     "ret_1d": 0.34,
+     "ret_20d": 3.99,
+     "rsi14": 54.3,
      "above_sma50": true,
-     "liquidity_rs_m": 28.7,
+     "liquidity_rs_m": 28.4,
      "pe": 5.78,
      "div_yield_pct": 8.18,
      "payout_pct": 48.41,
@@ -3195,12 +3189,12 @@
     {
      "sym": "TGL",
      "name": "Tariq Glass Industries Limited",
-     "close": 177.83,
-     "ret_1d": 1.33,
-     "ret_20d": -6.87,
-     "rsi14": 39.4,
+     "close": 178.04,
+     "ret_1d": 0.12,
+     "ret_20d": -7.33,
+     "rsi14": 39.8,
      "above_sma50": false,
-     "liquidity_rs_m": 22.8,
+     "liquidity_rs_m": 21.6,
      "pe": 7.39,
      "div_yield_pct": 2.76,
      "payout_pct": 20.42,
@@ -3212,11 +3206,11 @@
      "sym": "BGL",
      "name": "Baluchistan Glass Limited",
      "close": 10.02,
-     "ret_1d": -1.28,
-     "ret_20d": -9.07,
+     "ret_1d": 0.0,
+     "ret_20d": -9.73,
      "rsi14": 25.4,
      "above_sma50": false,
-     "liquidity_rs_m": 4.0,
+     "liquidity_rs_m": 3.5,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -3227,14 +3221,14 @@
    ]
   },
   "Insurance": {
-   "n_members": 23,
+   "n_members": 27,
    "breadth": {
     "above_sma50": 15,
-    "advancing_1d": 10
+    "advancing_1d": 11
    },
    "returns": {
     "median_1d_pct": 0.0,
-    "median_20d_pct": -0.19,
+    "median_20d_pct": -1.19,
     "best_20d": {
      "sym": "TPLI",
      "pct": 132.26
@@ -3260,11 +3254,6 @@
    "macro_joint_r2_pct": null,
    "recent_news": [],
    "upcoming_events": [
-    {
-     "ticker": "IGIHL",
-     "date": "2026-09-04",
-     "type": "ex_dividend"
-    },
     {
      "ticker": "AICL",
      "date": "2026-09-08",
@@ -3406,20 +3395,20 @@
      "ttm_dividend_rs": 0.62
     },
     {
-     "sym": "ATIL",
-     "name": "Atlas Insurance Limited",
-     "close": 79.69,
-     "ret_1d": 1.36,
-     "ret_20d": 2.25,
-     "rsi14": 62.6,
+     "sym": "AICL",
+     "name": "Adamjee Insurance Company Limited",
+     "close": 93.91,
+     "ret_1d": 2.23,
+     "ret_20d": 2.03,
+     "rsi14": 60.7,
      "above_sma50": true,
-     "liquidity_rs_m": 1.6,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 8.5
+     "liquidity_rs_m": 116.7,
+     "pe": 5.69,
+     "div_yield_pct": 6.38,
+     "payout_pct": 36.3,
+     "fair_gap_pct": 2.6,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": 4.0
     },
     {
      "sym": "JGICL",
@@ -3438,36 +3427,20 @@
      "ttm_dividend_rs": 6.0
     },
     {
-     "sym": "AICL",
-     "name": "Adamjee Insurance Company Limited",
-     "close": 91.86,
-     "ret_1d": -0.48,
-     "ret_20d": -0.07,
-     "rsi14": 56.9,
+     "sym": "EFUL",
+     "name": "EFU Life Assurance Limited",
+     "close": 156.0,
+     "ret_1d": 0.48,
+     "ret_20d": -0.01,
+     "rsi14": 52.0,
      "above_sma50": true,
-     "liquidity_rs_m": 110.1,
-     "pe": 5.69,
-     "div_yield_pct": 6.38,
-     "payout_pct": 36.3,
-     "fair_gap_pct": 2.6,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 4.0
-    },
-    {
-     "sym": "CENI",
-     "name": "Century Insurance Company Limited",
-     "close": 53.89,
-     "ret_1d": -0.94,
-     "ret_20d": -0.19,
-     "rsi14": 40.1,
-     "above_sma50": false,
-     "liquidity_rs_m": 5.1,
+     "liquidity_rs_m": 0.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
-     "ttm_dividend_rs": 14.0
+     "ttm_dividend_rs": 15.0
     },
     {
      "sym": "PAKQATAR",
@@ -3500,22 +3473,6 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 10.0
-    },
-    {
-     "sym": "ALIFE",
-     "name": "Adamjee Life Assurance Company Limited",
-     "close": 32.0,
-     "ret_1d": -1.23,
-     "ret_20d": -0.99,
-     "rsi14": 46.0,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.9,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 1.5
     },
     {
      "sym": "JLICL",
@@ -3552,18 +3509,50 @@
     {
      "sym": "CSIL",
      "name": "Crescent Star Insurance Limited",
-     "close": 5.75,
-     "ret_1d": 3.98,
-     "ret_20d": -1.88,
-     "rsi14": 47.6,
+     "close": 5.74,
+     "ret_1d": -0.17,
+     "ret_20d": -1.54,
+     "rsi14": 47.3,
      "above_sma50": false,
-     "liquidity_rs_m": 32.0,
+     "liquidity_rs_m": 31.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "CENI",
+     "name": "Century Insurance Company Limited",
+     "close": 52.85,
+     "ret_1d": -1.93,
+     "ret_20d": -1.88,
+     "rsi14": 38.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 5.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 14.0
+    },
+    {
+     "sym": "ALIFE",
+     "name": "Adamjee Life Assurance Company Limited",
+     "close": 31.37,
+     "ret_1d": -1.97,
+     "ret_20d": -2.94,
+     "rsi14": 42.6,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.9,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.5
     },
     {
      "sym": "PQGTL",
@@ -3574,6 +3563,54 @@
      "rsi14": 43.5,
      "above_sma50": false,
      "liquidity_rs_m": 14.8,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "ATIL",
+     "name": "Atlas Insurance Limited",
+     "close": 75.18,
+     "ret_1d": -5.66,
+     "ret_20d": -3.55,
+     "rsi14": 37.0,
+     "above_sma50": false,
+     "liquidity_rs_m": 1.7,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 8.5
+    },
+    {
+     "sym": "ALAC",
+     "name": "Askari Life Assurance Company Limited",
+     "close": 20.23,
+     "ret_1d": 2.43,
+     "ret_20d": -3.9,
+     "rsi14": 43.7,
+     "above_sma50": false,
+     "liquidity_rs_m": 3.3,
+     "pe": 23.45,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -73.6,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "IGIL",
+     "name": "IGI Life Insurance Limited",
+     "close": 18.92,
+     "ret_1d": -0.94,
+     "ret_20d": -5.45,
+     "rsi14": 42.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.3,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -3595,22 +3632,22 @@
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
-     "ttm_dividend_rs": 4.78
+     "ttm_dividend_rs": 2.5
     },
     {
-     "sym": "ALAC",
-     "name": "Askari Life Assurance Company Limited",
-     "close": 19.75,
-     "ret_1d": -0.65,
-     "ret_20d": -6.0,
-     "rsi14": 36.7,
+     "sym": "EWIC",
+     "name": "East West Insurance Company Limited",
+     "close": 48.54,
+     "ret_1d": 0.0,
+     "ret_20d": -7.19,
+     "rsi14": 25.7,
      "above_sma50": false,
-     "liquidity_rs_m": 3.0,
-     "pe": 23.45,
+     "liquidity_rs_m": 0.0,
+     "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": -73.6,
-     "fair_verdict": "overvalued",
+     "fair_gap_pct": null,
+     "fair_verdict": null,
      "ttm_dividend_rs": null
     },
     {
@@ -3622,6 +3659,22 @@
      "rsi14": 43.0,
      "above_sma50": false,
      "liquidity_rs_m": 2.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "ASIC",
+     "name": "Asia Insurance Company Limited",
+     "close": 36.58,
+     "ret_1d": 0.0,
+     "ret_20d": -14.43,
+     "rsi14": 40.9,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.1,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -3643,26 +3696,26 @@
      "payout_pct": 15.1,
      "fair_gap_pct": 20.3,
      "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 8.0
+     "ttm_dividend_rs": 5.5
     }
    ]
   },
   "Inv. Banks / Inv. Cos. / Securities Cos.": {
-   "n_members": 27,
+   "n_members": 28,
    "breadth": {
-    "above_sma50": 13,
-    "advancing_1d": 7
+    "above_sma50": 14,
+    "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -0.99,
-    "median_20d_pct": -1.19,
+    "median_1d_pct": -1.01,
+    "median_20d_pct": -1.55,
     "best_20d": {
      "sym": "ICIBL",
      "pct": 354.0
     },
     "worst_20d": {
-     "sym": "LSEFSL",
-     "pct": -18.58
+     "sym": "786",
+     "pct": -21.56
     }
    },
    "valuation": {
@@ -3687,6 +3740,14 @@
       "ENGROH"
      ],
      "headline": "PSX: KSE-100 ends flat amid late selling"
+    },
+    {
+     "ts": "2026-09-04",
+     "impact": 3,
+     "tickers": [
+      "PSX"
+     ],
+     "headline": "PSX partners with UK's MOBILIST programme for climate/sustainable investment"
     }
    ],
    "upcoming_events": [
@@ -3847,12 +3908,12 @@
     {
      "sym": "AHL",
      "name": "Arif Habib Limited",
-     "close": 135.79,
-     "ret_1d": 0.7,
-     "ret_20d": 9.51,
-     "rsi14": 73.3,
+     "close": 135.0,
+     "ret_1d": -0.58,
+     "ret_20d": 8.51,
+     "rsi14": 69.3,
      "above_sma50": true,
-     "liquidity_rs_m": 18.3,
+     "liquidity_rs_m": 18.7,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -3909,20 +3970,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "AKDSL",
-     "name": "AKD Securities Limited",
-     "close": 37.33,
-     "ret_1d": -0.03,
-     "ret_20d": 0.89,
-     "rsi14": 50.4,
-     "above_sma50": false,
-     "liquidity_rs_m": 14.4,
-     "pe": 6.49,
-     "div_yield_pct": 2.7,
-     "payout_pct": 17.45,
-     "fair_gap_pct": -2.1,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 1.0
+     "sym": "PIAHCLB",
+     "name": "PIA Holding Company LimitedB",
+     "close": 18102.66,
+     "ret_1d": 1.85,
+     "ret_20d": 0.36,
+     "rsi14": 51.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.3,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     },
     {
      "sym": "OLPL",
@@ -3941,20 +4002,20 @@
      "ttm_dividend_rs": 5.5
     },
     {
-     "sym": "ENGROH",
-     "name": "Engro Holdings Limited",
-     "close": 270.12,
-     "ret_1d": 0.84,
-     "ret_20d": -1.19,
-     "rsi14": 48.9,
+     "sym": "AKDSL",
+     "name": "AKD Securities Limited",
+     "close": 37.22,
+     "ret_1d": -0.29,
+     "ret_20d": -0.75,
+     "rsi14": 49.5,
      "above_sma50": false,
-     "liquidity_rs_m": 386.7,
-     "pe": 7.47,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -2.0,
+     "liquidity_rs_m": 14.4,
+     "pe": 6.49,
+     "div_yield_pct": 2.7,
+     "payout_pct": 17.45,
+     "fair_gap_pct": -2.1,
      "fair_verdict": "fair",
-     "ttm_dividend_rs": null
+     "ttm_dividend_rs": 1.0
     },
     {
      "sym": "FDPL",
@@ -3989,14 +4050,30 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ENGROH",
+     "name": "Engro Holdings Limited",
+     "close": 270.82,
+     "ret_1d": 0.26,
+     "ret_20d": -3.6,
+     "rsi14": 49.9,
+     "above_sma50": false,
+     "liquidity_rs_m": 385.7,
+     "pe": 7.47,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -2.0,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "PSX",
      "name": "Pakistan Stock Exchange Limited",
-     "close": 49.27,
-     "ret_1d": 0.24,
-     "ret_20d": -4.72,
-     "rsi14": 41.2,
+     "close": 49.37,
+     "ret_1d": 0.2,
+     "ret_20d": -6.44,
+     "rsi14": 41.9,
      "above_sma50": false,
-     "liquidity_rs_m": 138.3,
+     "liquidity_rs_m": 126.1,
      "pe": 17.75,
      "div_yield_pct": 2.01,
      "payout_pct": 35.71,
@@ -4007,12 +4084,12 @@
     {
      "sym": "DEL",
      "name": "Dawood Equities Limited",
-     "close": 19.01,
-     "ret_1d": -3.5,
-     "ret_20d": -4.95,
-     "rsi14": 39.5,
+     "close": 18.64,
+     "ret_1d": -1.95,
+     "ret_20d": -7.45,
+     "rsi14": 37.4,
      "above_sma50": false,
-     "liquidity_rs_m": 8.3,
+     "liquidity_rs_m": 8.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4055,12 +4132,12 @@
     {
      "sym": "DLL",
      "name": "Dawood Lawrencepur Limited",
-     "close": 48.5,
-     "ret_1d": 1.0,
-     "ret_20d": -8.44,
-     "rsi14": 29.2,
+     "close": 48.0,
+     "ret_1d": -1.03,
+     "ret_20d": -9.47,
+     "rsi14": 27.9,
      "above_sma50": false,
-     "liquidity_rs_m": 2.5,
+     "liquidity_rs_m": 2.7,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4085,14 +4162,14 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "786",
-     "name": "786 Investments Limited",
-     "close": 22.76,
-     "ret_1d": 0.13,
-     "ret_20d": -12.36,
-     "rsi14": 39.7,
+     "sym": "ARMG",
+     "name": "ARM Green Industries Limited",
+     "close": 53.77,
+     "ret_1d": 0.0,
+     "ret_20d": -12.07,
+     "rsi14": 36.0,
      "above_sma50": false,
-     "liquidity_rs_m": 4.8,
+     "liquidity_rs_m": 0.1,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4105,10 +4182,10 @@
      "name": "Apna Microfinance Bank Limited",
      "close": 19.22,
      "ret_1d": 0.0,
-     "ret_20d": -15.03,
+     "ret_20d": -14.58,
      "rsi14": 33.8,
      "above_sma50": false,
-     "liquidity_rs_m": 0.4,
+     "liquidity_rs_m": 0.3,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4133,22 +4210,6 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ARMG",
-     "name": "ARM Green Industries Limited",
-     "close": 53.77,
-     "ret_1d": -8.23,
-     "ret_20d": -18.53,
-     "rsi14": 36.0,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.1,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "LSEFSL",
      "name": "LSE Financial Services Limited.",
      "close": 19.54,
@@ -4163,6 +4224,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "786",
+     "name": "786 Investments Limited",
+     "close": 22.41,
+     "ret_1d": -1.54,
+     "ret_20d": -21.56,
+     "rsi14": 37.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 4.3,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     }
    ]
   },
@@ -4170,10 +4247,10 @@
    "n_members": 5,
    "breadth": {
     "above_sma50": 2,
-    "advancing_1d": 0
+    "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -2.23,
+    "median_1d_pct": -0.39,
     "median_20d_pct": -6.2,
     "best_20d": {
      "sym": "PAKL",
@@ -4220,12 +4297,12 @@
     {
      "sym": "BATA",
      "name": "Bata Pakistan Limited",
-     "close": 879.8,
-     "ret_1d": -0.15,
-     "ret_20d": -4.58,
-     "rsi14": 23.8,
+     "close": 883.6,
+     "ret_1d": 0.43,
+     "ret_20d": -4.15,
+     "rsi14": 28.7,
      "above_sma50": false,
-     "liquidity_rs_m": 1.7,
+     "liquidity_rs_m": 1.6,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4252,12 +4329,12 @@
     {
      "sym": "SRVI",
      "name": "Service Industries Limited",
-     "close": 185.75,
-     "ret_1d": -2.23,
-     "ret_20d": -11.02,
-     "rsi14": 27.2,
+     "close": 189.64,
+     "ret_1d": 2.09,
+     "ret_20d": -9.18,
+     "rsi14": 32.7,
      "above_sma50": false,
-     "liquidity_rs_m": 25.3,
+     "liquidity_rs_m": 26.5,
      "pe": 9.87,
      "div_yield_pct": 0.81,
      "payout_pct": 8.23,
@@ -4284,14 +4361,14 @@
    ]
   },
   "Miscellaneous": {
-   "n_members": 16,
+   "n_members": 17,
    "breadth": {
-    "above_sma50": 7,
-    "advancing_1d": 4
+    "above_sma50": 8,
+    "advancing_1d": 6
    },
    "returns": {
-    "median_1d_pct": -1.44,
-    "median_20d_pct": -3.9,
+    "median_1d_pct": -0.19,
+    "median_20d_pct": -4.34,
     "best_20d": {
      "sym": "OML",
      "pct": 226.0
@@ -4317,11 +4394,6 @@
    "macro_joint_r2_pct": 0.12,
    "recent_news": [],
    "upcoming_events": [
-    {
-     "ticker": "SHFA",
-     "date": "2026-09-04",
-     "type": "results"
-    },
     {
      "ticker": "PSEL",
      "date": "2026-10-02",
@@ -4369,12 +4441,12 @@
     {
      "sym": "DIIL",
      "name": "Diamond Industries Limited",
-     "close": 70.12,
-     "ret_1d": -4.49,
-     "ret_20d": 16.83,
-     "rsi14": 61.5,
+     "close": 77.06,
+     "ret_1d": 9.9,
+     "ret_20d": 19.47,
+     "rsi14": 69.1,
      "above_sma50": true,
-     "liquidity_rs_m": 2.8,
+     "liquidity_rs_m": 3.7,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4385,12 +4457,28 @@
     {
      "sym": "AKGL",
      "name": "Al-Khair Gadoon Limited",
-     "close": 59.81,
-     "ret_1d": 0.0,
-     "ret_20d": 10.11,
-     "rsi14": 47.0,
+     "close": 63.65,
+     "ret_1d": 6.42,
+     "ret_20d": 17.18,
+     "rsi14": 51.5,
      "above_sma50": true,
-     "liquidity_rs_m": 1.0,
+     "liquidity_rs_m": 1.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "GEMPACRA",
+     "name": "The Pakistan Credit Rating Agency Ltd",
+     "close": 39.61,
+     "ret_1d": 0.0,
+     "ret_20d": 13.99,
+     "rsi14": 52.8,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4417,33 +4505,17 @@
     {
      "sym": "ARPAK",
      "name": "Arpak International Investments Ltd.",
-     "close": 145.12,
-     "ret_1d": -10.0,
-     "ret_20d": 0.18,
-     "rsi14": 44.3,
+     "close": 144.88,
+     "ret_1d": -0.17,
+     "ret_20d": 0.01,
+     "rsi14": 44.2,
      "above_sma50": false,
-     "liquidity_rs_m": 3.6,
+     "liquidity_rs_m": 3.8,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "PSEL",
-     "name": "Pakistan Services Limited",
-     "close": 861.58,
-     "ret_1d": -2.08,
-     "ret_20d": -2.97,
-     "rsi14": 33.4,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.4,
-     "pe": 131.92,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -95.7,
-     "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
     {
@@ -4455,6 +4527,22 @@
      "rsi14": 41.1,
      "above_sma50": false,
      "liquidity_rs_m": 3.5,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "AKDHL",
+     "name": "AKD Hospitality Limited",
+     "close": 153.04,
+     "ret_1d": 2.24,
+     "ret_20d": -4.34,
+     "rsi14": 46.9,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4481,10 +4569,10 @@
     {
      "sym": "PABC",
      "name": "Pakistan Aluminium Beverage Cans Limited",
-     "close": 99.45,
-     "ret_1d": 1.6,
-     "ret_20d": -5.13,
-     "rsi14": 36.9,
+     "close": 99.03,
+     "ret_1d": -0.42,
+     "ret_20d": -5.3,
+     "rsi14": 35.9,
      "above_sma50": false,
      "liquidity_rs_m": 4.1,
      "pe": 8.64,
@@ -4495,19 +4583,19 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "AKDHL",
-     "name": "AKD Hospitality Limited",
-     "close": 149.69,
-     "ret_1d": -1.96,
+     "sym": "PSEL",
+     "name": "Pakistan Services Limited",
+     "close": 828.6,
+     "ret_1d": -3.83,
      "ret_20d": -5.39,
-     "rsi14": 40.0,
+     "rsi14": 25.5,
      "above_sma50": false,
-     "liquidity_rs_m": 0.2,
-     "pe": null,
+     "liquidity_rs_m": 0.5,
+     "pe": 131.92,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
+     "fair_gap_pct": -95.7,
+     "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
     },
     {
@@ -4527,22 +4615,6 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "SHFA",
-     "name": "Shifa International Hospitals Limited",
-     "close": 477.99,
-     "ret_1d": -0.5,
-     "ret_20d": -6.89,
-     "rsi14": 33.4,
-     "above_sma50": false,
-     "liquidity_rs_m": 16.6,
-     "pe": 11.8,
-     "div_yield_pct": 1.04,
-     "payout_pct": 12.18,
-     "fair_gap_pct": -45.2,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 5.0
-    },
-    {
      "sym": "STPL",
      "name": "Siddiqsons Tin Plate Limited",
      "close": 8.07,
@@ -4557,6 +4629,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "SHFA",
+     "name": "Shifa International Hospitals Limited",
+     "close": 477.06,
+     "ret_1d": -0.19,
+     "ret_20d": -7.63,
+     "rsi14": 32.8,
+     "above_sma50": false,
+     "liquidity_rs_m": 15.1,
+     "pe": 11.8,
+     "div_yield_pct": 1.04,
+     "payout_pct": 12.18,
+     "fair_gap_pct": -45.2,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 5.0
     },
     {
      "sym": "UBDL",
@@ -4593,14 +4681,14 @@
    ]
   },
   "Modarabas": {
-   "n_members": 18,
+   "n_members": 19,
    "breadth": {
-    "above_sma50": 13,
+    "above_sma50": 14,
     "advancing_1d": 4
    },
    "returns": {
-    "median_1d_pct": -1.21,
-    "median_20d_pct": 0.91,
+    "median_1d_pct": -1.26,
+    "median_20d_pct": 0.82,
     "best_20d": {
      "sym": "FPJM",
      "pct": 37.14
@@ -4626,11 +4714,6 @@
    "macro_joint_r2_pct": null,
    "recent_news": [],
    "upcoming_events": [
-    {
-     "ticker": "TRSM",
-     "date": "2026-09-04",
-     "type": "results"
-    },
     {
      "ticker": "FHAM",
      "date": "2026-09-30",
@@ -4689,6 +4772,22 @@
      "rsi14": 64.3,
      "above_sma50": true,
      "liquidity_rs_m": 3.3,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "GEMBCEM",
+     "name": "Burj Clean Energy Modaraba(GEM)",
+     "close": 12.0,
+     "ret_1d": -8.05,
+     "ret_20d": 9.09,
+     "rsi14": 49.3,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.1,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -4779,10 +4878,10 @@
     {
      "sym": "BFMOD",
      "name": "B.F. Modaraba",
-     "close": 23.57,
-     "ret_1d": -1.17,
-     "ret_20d": 1.07,
-     "rsi14": 53.8,
+     "close": 23.32,
+     "ret_1d": -1.06,
+     "ret_20d": 0.82,
+     "rsi14": 51.9,
      "above_sma50": true,
      "liquidity_rs_m": 1.7,
      "pe": null,
@@ -4876,11 +4975,11 @@
      "sym": "FHAM",
      "name": "First Habib Modaraba",
      "close": 32.5,
-     "ret_1d": -0.46,
-     "ret_20d": -4.27,
+     "ret_1d": 0.0,
+     "ret_20d": -4.02,
      "rsi14": 44.0,
      "above_sma50": false,
-     "liquidity_rs_m": 1.3,
+     "liquidity_rs_m": 1.4,
      "pe": 4.83,
      "div_yield_pct": 6.9,
      "payout_pct": 33.33,
@@ -4942,18 +5041,18 @@
    "n_members": 4,
    "breadth": {
     "above_sma50": 2,
-    "advancing_1d": 1
+    "advancing_1d": 3
    },
    "returns": {
-    "median_1d_pct": -0.28,
-    "median_20d_pct": 3.82,
+    "median_1d_pct": 0.68,
+    "median_20d_pct": 3.47,
     "best_20d": {
      "sym": "POL",
-     "pct": 6.33
+     "pct": 6.09
     },
     "worst_20d": {
      "sym": "MARI",
-     "pct": 1.43
+     "pct": 1.06
     }
    },
    "valuation": {
@@ -5048,11 +5147,6 @@
    ],
    "upcoming_events": [
     {
-     "ticker": "OGDC",
-     "date": "2026-09-04",
-     "type": "results"
-    },
-    {
      "ticker": "PPL",
      "date": "2026-09-18",
      "type": "results"
@@ -5082,12 +5176,12 @@
     {
      "sym": "POL",
      "name": "Pakistan Oilfields Limited",
-     "close": 731.57,
-     "ret_1d": 0.31,
-     "ret_20d": 6.33,
-     "rsi14": 63.9,
+     "close": 730.21,
+     "ret_1d": -0.19,
+     "ret_20d": 6.09,
+     "rsi14": 62.6,
      "above_sma50": true,
-     "liquidity_rs_m": 275.8,
+     "liquidity_rs_m": 272.1,
      "pe": 6.17,
      "div_yield_pct": 13.52,
      "payout_pct": 83.98,
@@ -5098,12 +5192,12 @@
     {
      "sym": "OGDC",
      "name": "Oil & Gas Development Company Limited",
-     "close": 327.02,
-     "ret_1d": -0.43,
-     "ret_20d": 4.11,
-     "rsi14": 53.9,
+     "close": 328.8,
+     "ret_1d": 0.54,
+     "ret_20d": 3.95,
+     "rsi14": 55.7,
      "above_sma50": true,
-     "liquidity_rs_m": 1371.0,
+     "liquidity_rs_m": 1455.4,
      "pe": 9.09,
      "div_yield_pct": 4.71,
      "payout_pct": 41.61,
@@ -5114,12 +5208,12 @@
     {
      "sym": "PPL",
      "name": "Pakistan Petroleum Limited",
-     "close": 225.4,
-     "ret_1d": -0.69,
-     "ret_20d": 3.53,
-     "rsi14": 42.8,
+     "close": 227.29,
+     "ret_1d": 0.84,
+     "ret_20d": 2.99,
+     "rsi14": 45.3,
      "above_sma50": false,
-     "liquidity_rs_m": 1763.3,
+     "liquidity_rs_m": 1813.2,
      "pe": 8.09,
      "div_yield_pct": 3.15,
      "payout_pct": 25.87,
@@ -5130,12 +5224,12 @@
     {
      "sym": "MARI",
      "name": "Mari Energies Limited",
-     "close": 659.08,
-     "ret_1d": -0.13,
-     "ret_20d": 1.43,
-     "rsi14": 45.6,
+     "close": 664.49,
+     "ret_1d": 0.82,
+     "ret_20d": 1.06,
+     "rsi14": 50.0,
      "above_sma50": false,
-     "liquidity_rs_m": 573.0,
+     "liquidity_rs_m": 557.7,
      "pe": 9.17,
      "div_yield_pct": 5.54,
      "payout_pct": 51.69,
@@ -5149,14 +5243,14 @@
    "n_members": 8,
    "breadth": {
     "above_sma50": 3,
-    "advancing_1d": 3
+    "advancing_1d": 5
    },
    "returns": {
-    "median_1d_pct": -1.35,
-    "median_20d_pct": -6.99,
+    "median_1d_pct": 0.19,
+    "median_20d_pct": -4.86,
     "best_20d": {
      "sym": "APL",
-     "pct": 6.84
+     "pct": 7.06
     },
     "worst_20d": {
      "sym": "OBOY",
@@ -5230,11 +5324,6 @@
    ],
    "upcoming_events": [
     {
-     "ticker": "PSO",
-     "date": "2026-09-04",
-     "type": "results"
-    },
-    {
      "ticker": "HTL",
      "date": "2026-09-22",
      "type": "results"
@@ -5274,12 +5363,12 @@
     {
      "sym": "APL",
      "name": "Attock Petroleum Limited",
-     "close": 584.39,
-     "ret_1d": 0.4,
-     "ret_20d": 6.84,
-     "rsi14": 65.1,
+     "close": 584.99,
+     "ret_1d": 0.1,
+     "ret_20d": 7.06,
+     "rsi14": 65.4,
      "above_sma50": true,
-     "liquidity_rs_m": 47.3,
+     "liquidity_rs_m": 48.5,
      "pe": 4.29,
      "div_yield_pct": 10.27,
      "payout_pct": 44.02,
@@ -5290,12 +5379,12 @@
     {
      "sym": "PSO",
      "name": "Pakistan State Oil Company Limited",
-     "close": 359.68,
-     "ret_1d": 0.01,
-     "ret_20d": 1.72,
-     "rsi14": 49.3,
+     "close": 360.7,
+     "ret_1d": 0.28,
+     "ret_20d": 2.09,
+     "rsi14": 50.3,
      "above_sma50": true,
-     "liquidity_rs_m": 1740.8,
+     "liquidity_rs_m": 1712.5,
      "pe": 3.92,
      "div_yield_pct": 2.66,
      "payout_pct": 10.78,
@@ -5306,18 +5395,50 @@
     {
      "sym": "SSGC",
      "name": "Sui Southern Gas Company Limited",
-     "close": 27.0,
-     "ret_1d": -1.1,
-     "ret_20d": 0.97,
-     "rsi14": 44.6,
+     "close": 27.45,
+     "ret_1d": 1.67,
+     "ret_20d": 1.37,
+     "rsi14": 48.4,
      "above_sma50": false,
-     "liquidity_rs_m": 321.7,
+     "liquidity_rs_m": 305.9,
      "pe": null,
      "div_yield_pct": 1.81,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 0.5
+    },
+    {
+     "sym": "BPL",
+     "name": "Burshane LPG (Pakistan) Limited",
+     "close": 54.07,
+     "ret_1d": 2.06,
+     "ret_20d": -3.52,
+     "rsi14": 53.2,
+     "above_sma50": false,
+     "liquidity_rs_m": 1.8,
+     "pe": 5.98,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": -1.9,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "SNGP",
+     "name": "Sui Northern Gas Pipelines Limited",
+     "close": 99.65,
+     "ret_1d": 1.52,
+     "ret_20d": -6.2,
+     "rsi14": 41.6,
+     "above_sma50": false,
+     "liquidity_rs_m": 297.4,
+     "pe": 4.44,
+     "div_yield_pct": 2.94,
+     "payout_pct": 13.07,
+     "fair_gap_pct": 32.6,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 3.0
     },
     {
      "sym": "WAFI",
@@ -5334,38 +5455,6 @@
      "fair_gap_pct": -45.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
-    },
-    {
-     "sym": "BPL",
-     "name": "Burshane LPG (Pakistan) Limited",
-     "close": 52.98,
-     "ret_1d": 0.74,
-     "ret_20d": -7.49,
-     "rsi14": 48.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.9,
-     "pe": 5.98,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": -1.9,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "SNGP",
-     "name": "Sui Northern Gas Pipelines Limited",
-     "close": 98.16,
-     "ret_1d": -1.59,
-     "ret_20d": -8.09,
-     "rsi14": 37.0,
-     "above_sma50": false,
-     "liquidity_rs_m": 307.1,
-     "pe": 4.44,
-     "div_yield_pct": 2.94,
-     "payout_pct": 13.07,
-     "fair_gap_pct": 32.6,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 3.0
     },
     {
      "sym": "HTL",
@@ -5404,15 +5493,15 @@
   "Paper, Board & Packaging": {
    "n_members": 10,
    "breadth": {
-    "above_sma50": 6,
-    "advancing_1d": 5
+    "above_sma50": 5,
+    "advancing_1d": 3
    },
    "returns": {
-    "median_1d_pct": -0.32,
-    "median_20d_pct": -3.33,
+    "median_1d_pct": -0.48,
+    "median_20d_pct": -3.62,
     "best_20d": {
-     "sym": "CPPL",
-     "pct": 7.09
+     "sym": "IPAK",
+     "pct": 4.54
     },
     "worst_20d": {
      "sym": "SPEL",
@@ -5448,22 +5537,6 @@
    ],
    "members": [
     {
-     "sym": "CPPL",
-     "name": "Cherat Packaging Limited",
-     "close": 106.0,
-     "ret_1d": -0.92,
-     "ret_20d": 7.09,
-     "rsi14": 50.3,
-     "above_sma50": true,
-     "liquidity_rs_m": 47.8,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 3.0
-    },
-    {
      "sym": "IPAK",
      "name": "International Packaging Films Limited",
      "close": 37.32,
@@ -5478,6 +5551,22 @@
      "fair_gap_pct": -37.5,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "CPPL",
+     "name": "Cherat Packaging Limited",
+     "close": 103.03,
+     "ret_1d": -2.8,
+     "ret_20d": 3.8,
+     "rsi14": 44.9,
+     "above_sma50": false,
+     "liquidity_rs_m": 48.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 3.0
     },
     {
      "sym": "RPL",
@@ -5512,22 +5601,6 @@
      "ttm_dividend_rs": 5.0
     },
     {
-     "sym": "PKGS",
-     "name": "Packages Limited",
-     "close": 771.39,
-     "ret_1d": 0.28,
-     "ret_20d": -3.11,
-     "rsi14": 40.1,
-     "above_sma50": false,
-     "liquidity_rs_m": 7.0,
-     "pe": 22.52,
-     "div_yield_pct": 2.04,
-     "payout_pct": 45.56,
-     "fair_gap_pct": -71.0,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 16.0
-    },
-    {
      "sym": "SEPL",
      "name": "Security Papers Limited",
      "close": 144.68,
@@ -5542,6 +5615,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 9.0
+    },
+    {
+     "sym": "PKGS",
+     "name": "Packages Limited",
+     "close": 771.42,
+     "ret_1d": 0.0,
+     "ret_20d": -3.7,
+     "rsi14": 40.1,
+     "above_sma50": false,
+     "liquidity_rs_m": 7.0,
+     "pe": 22.52,
+     "div_yield_pct": 2.04,
+     "payout_pct": 45.56,
+     "fair_gap_pct": -71.0,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 16.0
     },
     {
      "sym": "MERIT",
@@ -5562,12 +5651,12 @@
     {
      "sym": "CEPB",
      "name": "Century Paper & Board Mills Limited",
-     "close": 27.27,
-     "ret_1d": 0.48,
-     "ret_20d": -6.39,
-     "rsi14": 39.8,
+     "close": 27.26,
+     "ret_1d": -0.04,
+     "ret_20d": -9.28,
+     "rsi14": 39.7,
      "above_sma50": false,
-     "liquidity_rs_m": 32.2,
+     "liquidity_rs_m": 31.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -5613,18 +5702,18 @@
    "n_members": 14,
    "breadth": {
     "above_sma50": 4,
-    "advancing_1d": 9
+    "advancing_1d": 6
    },
    "returns": {
-    "median_1d_pct": 0.24,
-    "median_20d_pct": -4.87,
+    "median_1d_pct": -0.26,
+    "median_20d_pct": -4.91,
     "best_20d": {
      "sym": "OTSU",
      "pct": 36.03
     },
     "worst_20d": {
      "sym": "AGP",
-     "pct": -14.8
+     "pct": -14.57
     }
    },
    "valuation": {
@@ -5720,46 +5809,14 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "CPHL",
-     "name": "Citi Pharma Ltd.",
-     "close": 75.56,
-     "ret_1d": 1.75,
-     "ret_20d": 1.87,
-     "rsi14": 54.0,
-     "above_sma50": false,
-     "liquidity_rs_m": 132.6,
-     "pe": 15.66,
-     "div_yield_pct": 4.86,
-     "payout_pct": 72.92,
-     "fair_gap_pct": -58.6,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 3.5
-    },
-    {
-     "sym": "BFBIO",
-     "name": "BF Biosciences Limited",
-     "close": 130.62,
-     "ret_1d": 0.03,
-     "ret_20d": 1.37,
-     "rsi14": 41.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 38.1,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "ABOT",
      "name": "Abbott Laboratories (Pakistan) Limited",
-     "close": 935.86,
-     "ret_1d": 0.59,
-     "ret_20d": 1.15,
-     "rsi14": 51.7,
+     "close": 940.73,
+     "ret_1d": 0.52,
+     "ret_20d": 1.61,
+     "rsi14": 53.4,
      "above_sma50": false,
-     "liquidity_rs_m": 50.8,
+     "liquidity_rs_m": 51.3,
      "pe": 10.75,
      "div_yield_pct": 4.44,
      "payout_pct": 45.73,
@@ -5784,6 +5841,38 @@
      "ttm_dividend_rs": 190.0
     },
     {
+     "sym": "CPHL",
+     "name": "Citi Pharma Ltd.",
+     "close": 75.18,
+     "ret_1d": -0.5,
+     "ret_20d": 0.67,
+     "rsi14": 52.1,
+     "above_sma50": false,
+     "liquidity_rs_m": 125.2,
+     "pe": 15.66,
+     "div_yield_pct": 4.86,
+     "payout_pct": 72.92,
+     "fair_gap_pct": -58.6,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 3.5
+    },
+    {
+     "sym": "BFBIO",
+     "name": "BF Biosciences Limited",
+     "close": 129.68,
+     "ret_1d": -0.72,
+     "ret_20d": -0.15,
+     "rsi14": 39.7,
+     "above_sma50": false,
+     "liquidity_rs_m": 38.2,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "MACTER",
      "name": "Macter International Limited",
      "close": 282.64,
@@ -5800,20 +5889,20 @@
      "ttm_dividend_rs": 2.0
     },
     {
-     "sym": "HINOON",
-     "name": "Highnoon Laboratories Limited",
-     "close": 937.18,
-     "ret_1d": 1.24,
-     "ret_20d": -4.17,
-     "rsi14": 35.9,
+     "sym": "HALEON",
+     "name": "Haleon Pakistan Limited",
+     "close": 728.11,
+     "ret_1d": 2.09,
+     "ret_20d": -4.25,
+     "rsi14": 44.3,
      "above_sma50": false,
-     "liquidity_rs_m": 18.0,
-     "pe": 11.86,
-     "div_yield_pct": 5.09,
-     "payout_pct": 63.44,
-     "fair_gap_pct": -47.1,
+     "liquidity_rs_m": 26.0,
+     "pe": 12.67,
+     "div_yield_pct": 4.18,
+     "payout_pct": 53.17,
+     "fair_gap_pct": -43.1,
      "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 50.0
+     "ttm_dividend_rs": 20.0
     },
     {
      "sym": "FEROZ",
@@ -5832,52 +5921,36 @@
      "ttm_dividend_rs": 4.0
     },
     {
+     "sym": "HINOON",
+     "name": "Highnoon Laboratories Limited",
+     "close": 930.78,
+     "ret_1d": -0.68,
+     "ret_20d": -6.2,
+     "rsi14": 34.0,
+     "above_sma50": false,
+     "liquidity_rs_m": 18.2,
+     "pe": 11.86,
+     "div_yield_pct": 5.09,
+     "payout_pct": 63.44,
+     "fair_gap_pct": -47.1,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 50.0
+    },
+    {
      "sym": "SEARL",
      "name": "The Searle Company Limited",
-     "close": 84.83,
-     "ret_1d": 0.82,
-     "ret_20d": -5.82,
-     "rsi14": 33.1,
+     "close": 84.4,
+     "ret_1d": -0.51,
+     "ret_20d": -7.27,
+     "rsi14": 32.0,
      "above_sma50": false,
-     "liquidity_rs_m": 147.4,
+     "liquidity_rs_m": 143.2,
      "pe": 23.67,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": -83.9,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": null
-    },
-    {
-     "sym": "HALEON",
-     "name": "Haleon Pakistan Limited",
-     "close": 713.21,
-     "ret_1d": -0.69,
-     "ret_20d": -6.31,
-     "rsi14": 30.3,
-     "above_sma50": false,
-     "liquidity_rs_m": 25.9,
-     "pe": 12.67,
-     "div_yield_pct": 4.18,
-     "payout_pct": 53.17,
-     "fair_gap_pct": -43.1,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 20.0
-    },
-    {
-     "sym": "GLAXO",
-     "name": "GlaxoSmithKline Pakistan Limited",
-     "close": 323.08,
-     "ret_1d": -0.8,
-     "ret_20d": -7.92,
-     "rsi14": 26.6,
-     "above_sma50": false,
-     "liquidity_rs_m": 78.9,
-     "pe": 10.25,
-     "div_yield_pct": 4.96,
-     "payout_pct": 52.0,
-     "fair_gap_pct": -29.1,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 17.0
     },
     {
      "sym": "LIVEN",
@@ -5894,6 +5967,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "GLAXO",
+     "name": "GlaxoSmithKline Pakistan Limited",
+     "close": 323.01,
+     "ret_1d": -0.02,
+     "ret_20d": -8.53,
+     "rsi14": 26.6,
+     "above_sma50": false,
+     "liquidity_rs_m": 78.4,
+     "pe": 10.25,
+     "div_yield_pct": 4.96,
+     "payout_pct": 52.0,
+     "fair_gap_pct": -29.1,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 12.0
     },
     {
      "sym": "IBLHL",
@@ -5914,12 +6003,12 @@
     {
      "sym": "AGP",
      "name": "AGP Limited",
-     "close": 163.37,
-     "ret_1d": 0.22,
-     "ret_20d": -14.8,
-     "rsi14": 24.1,
+     "close": 163.83,
+     "ret_1d": 0.28,
+     "ret_20d": -14.57,
+     "rsi14": 25.2,
      "above_sma50": false,
-     "liquidity_rs_m": 76.4,
+     "liquidity_rs_m": 76.1,
      "pe": 12.29,
      "div_yield_pct": 4.7,
      "payout_pct": 60.15,
@@ -5933,11 +6022,11 @@
    "n_members": 16,
    "breadth": {
     "above_sma50": 5,
-    "advancing_1d": 2
+    "advancing_1d": 4
    },
    "returns": {
-    "median_1d_pct": -0.54,
-    "median_20d_pct": 0.15,
+    "median_1d_pct": -0.49,
+    "median_20d_pct": -0.19,
     "best_20d": {
      "sym": "SGPL",
      "pct": 94.17
@@ -6017,11 +6106,6 @@
     }
    ],
    "upcoming_events": [
-    {
-     "ticker": "NCPL",
-     "date": "2026-09-04",
-     "type": "results"
-    },
     {
      "ticker": "KAPCO",
      "date": "2026-09-09",
@@ -6156,22 +6240,6 @@
      "ttm_dividend_rs": 2.75
     },
     {
-     "sym": "NPL",
-     "name": "Nishat Power Limited",
-     "close": 65.87,
-     "ret_1d": -0.26,
-     "ret_20d": 1.26,
-     "rsi14": 42.7,
-     "above_sma50": false,
-     "liquidity_rs_m": 198.1,
-     "pe": 7.98,
-     "div_yield_pct": 4.4,
-     "payout_pct": 35.09,
-     "fair_gap_pct": -37.5,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 7.5
-    },
-    {
      "sym": "KOHE",
      "name": "Kohinoor Energy Limited",
      "close": 15.56,
@@ -6186,6 +6254,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "NPL",
+     "name": "Nishat Power Limited",
+     "close": 65.7,
+     "ret_1d": -0.26,
+     "ret_20d": -0.11,
+     "rsi14": 42.1,
+     "above_sma50": false,
+     "liquidity_rs_m": 199.4,
+     "pe": 7.98,
+     "div_yield_pct": 4.4,
+     "payout_pct": 35.09,
+     "fair_gap_pct": -37.5,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 7.5
     },
     {
      "sym": "PKGP",
@@ -6206,33 +6290,17 @@
     {
      "sym": "KEL",
      "name": "K-Electric Limited",
-     "close": 7.11,
-     "ret_1d": -0.14,
-     "ret_20d": -2.07,
-     "rsi14": 39.8,
+     "close": 7.12,
+     "ret_1d": 0.14,
+     "ret_20d": -2.73,
+     "rsi14": 40.5,
      "above_sma50": false,
-     "liquidity_rs_m": 135.8,
+     "liquidity_rs_m": 131.0,
      "pe": 48.27,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": -86.1,
      "fair_verdict": "overvalued",
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "ALTN",
-     "name": "Altern Energy Limited",
-     "close": 7.24,
-     "ret_1d": -1.5,
-     "ret_20d": -2.16,
-     "rsi14": 37.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 3.8,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
      "ttm_dividend_rs": null
     },
     {
@@ -6252,20 +6320,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "HUBC",
-     "name": "The Hub Power Company Limited",
-     "close": 206.71,
-     "ret_1d": -0.34,
-     "ret_20d": -5.39,
-     "rsi14": 38.6,
+     "sym": "KAPCO",
+     "name": "Kot Addu Power Company Limited",
+     "close": 27.0,
+     "ret_1d": -0.22,
+     "ret_20d": -5.36,
+     "rsi14": 32.7,
      "above_sma50": false,
-     "liquidity_rs_m": 1184.2,
-     "pe": 5.48,
-     "div_yield_pct": 9.49,
-     "payout_pct": 52.27,
-     "fair_gap_pct": -15.1,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 25.0
+     "liquidity_rs_m": 20.0,
+     "pe": 14.69,
+     "div_yield_pct": 25.09,
+     "payout_pct": 374.33,
+     "fair_gap_pct": 29.3,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 4.0
     },
     {
      "sym": "SEL",
@@ -6284,20 +6352,36 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "KAPCO",
-     "name": "Kot Addu Power Company Limited",
-     "close": 27.06,
-     "ret_1d": -0.44,
-     "ret_20d": -7.04,
-     "rsi14": 33.6,
+     "sym": "HUBC",
+     "name": "The Hub Power Company Limited",
+     "close": 207.44,
+     "ret_1d": 0.35,
+     "ret_20d": -6.36,
+     "rsi14": 40.3,
      "above_sma50": false,
-     "liquidity_rs_m": 21.8,
-     "pe": 14.69,
-     "div_yield_pct": 25.09,
-     "payout_pct": 374.33,
-     "fair_gap_pct": 29.3,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 4.0
+     "liquidity_rs_m": 1161.3,
+     "pe": 5.48,
+     "div_yield_pct": 9.49,
+     "payout_pct": 52.27,
+     "fair_gap_pct": -15.1,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 25.0
+    },
+    {
+     "sym": "ALTN",
+     "name": "Altern Energy Limited",
+     "close": 7.09,
+     "ret_1d": -2.07,
+     "ret_20d": -7.8,
+     "rsi14": 34.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 3.6,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     },
     {
      "sym": "NCPL",
@@ -6318,21 +6402,21 @@
    ]
   },
   "Property": {
-   "n_members": 5,
+   "n_members": 6,
    "breadth": {
     "above_sma50": 2,
-    "advancing_1d": 1
+    "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -3.25,
-    "median_20d_pct": 1.72,
+    "median_1d_pct": -3.37,
+    "median_20d_pct": -5.18,
     "best_20d": {
      "sym": "HUSI",
      "pct": 39.47
     },
     "worst_20d": {
-     "sym": "BRRG",
-     "pct": -9.64
+     "sym": "JVDCPS",
+     "pct": -12.84
     }
    },
    "valuation": {
@@ -6403,12 +6487,12 @@
     {
      "sym": "JVDC",
      "name": "Javedan Corporation Limited",
-     "close": 145.11,
-     "ret_1d": 2.49,
-     "ret_20d": 1.72,
-     "rsi14": 50.1,
+     "close": 145.28,
+     "ret_1d": 0.12,
+     "ret_20d": -2.13,
+     "rsi14": 50.4,
      "above_sma50": false,
-     "liquidity_rs_m": 97.7,
+     "liquidity_rs_m": 75.3,
      "pe": 13.5,
      "div_yield_pct": 3.49,
      "payout_pct": 46.86,
@@ -6435,9 +6519,9 @@
     {
      "sym": "BRRG",
      "name": "B.R.R Guardian Limited",
-     "close": 44.5,
-     "ret_1d": -3.05,
-     "ret_20d": -9.64,
+     "close": 44.51,
+     "ret_1d": 0.02,
+     "ret_20d": -10.57,
      "rsi14": 41.5,
      "above_sma50": false,
      "liquidity_rs_m": 2.1,
@@ -6447,6 +6531,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "JVDCPS",
+     "name": "Javedan Corporation (Pref)",
+     "close": 60.0,
+     "ret_1d": -6.32,
+     "ret_20d": -12.84,
+     "rsi14": 36.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 1.2
     }
    ]
   },
@@ -6454,10 +6554,10 @@
    "n_members": 5,
    "breadth": {
     "above_sma50": 3,
-    "advancing_1d": 4
+    "advancing_1d": 3
    },
    "returns": {
-    "median_1d_pct": 0.62,
+    "median_1d_pct": 0.75,
     "median_20d_pct": 0.74,
     "best_20d": {
      "sym": "GRR",
@@ -6465,7 +6565,7 @@
     },
     "worst_20d": {
      "sym": "TPLRF1",
-     "pct": -5.01
+     "pct": -2.69
     }
    },
    "valuation": {
@@ -6510,12 +6610,12 @@
     {
      "sym": "DCR",
      "name": "Dolmen City REIT",
-     "close": 40.72,
-     "ret_1d": 0.47,
-     "ret_20d": 5.79,
-     "rsi14": 67.5,
+     "close": 40.42,
+     "ret_1d": -0.74,
+     "ret_20d": 4.72,
+     "rsi14": 62.6,
      "above_sma50": true,
-     "liquidity_rs_m": 21.4,
+     "liquidity_rs_m": 20.1,
      "pe": 17.39,
      "div_yield_pct": 6.74,
      "payout_pct": 114.29,
@@ -6558,12 +6658,12 @@
     {
      "sym": "TPLRF1",
      "name": "TPL REIT Fund I",
-     "close": 9.67,
-     "ret_1d": 0.62,
-     "ret_20d": -5.01,
-     "rsi14": 45.6,
+     "close": 9.75,
+     "ret_1d": 0.83,
+     "ret_20d": -2.69,
+     "rsi14": 48.1,
      "above_sma50": false,
-     "liquidity_rs_m": 37.1,
+     "liquidity_rs_m": 34.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -6580,15 +6680,15 @@
     "advancing_1d": 0
    },
    "returns": {
-    "median_1d_pct": -1.35,
-    "median_20d_pct": 24.86,
+    "median_1d_pct": -3.58,
+    "median_20d_pct": 20.07,
     "best_20d": {
      "sym": "PRL",
-     "pct": 67.48
+     "pct": 55.08
     },
     "worst_20d": {
-     "sym": "NRL",
-     "pct": 16.9
+     "sym": "ATRL",
+     "pct": 14.24
     }
    },
    "valuation": {
@@ -6649,12 +6749,12 @@
     {
      "sym": "PRL",
      "name": "Pakistan Refinery Limited",
-     "close": 105.01,
-     "ret_1d": -0.36,
-     "ret_20d": 67.48,
-     "rsi14": 85.7,
+     "close": 98.71,
+     "ret_1d": -6.0,
+     "ret_20d": 55.08,
+     "rsi14": 72.3,
      "above_sma50": true,
-     "liquidity_rs_m": 2599.8,
+     "liquidity_rs_m": 2818.5,
      "pe": 4.17,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -6665,12 +6765,12 @@
     {
      "sym": "CNERGY",
      "name": "Cnergyico PK  Limited",
-     "close": 14.46,
-     "ret_1d": -1.36,
-     "ret_20d": 31.34,
-     "rsi14": 61.1,
+     "close": 13.92,
+     "ret_1d": -3.73,
+     "ret_20d": 25.86,
+     "rsi14": 56.0,
      "above_sma50": true,
-     "liquidity_rs_m": 2341.7,
+     "liquidity_rs_m": 2423.4,
      "pe": 5.61,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -6679,48 +6779,48 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ATRL",
-     "name": "Attock Refinery Limited",
-     "close": 1145.97,
-     "ret_1d": -1.85,
-     "ret_20d": 18.38,
-     "rsi14": 63.2,
-     "above_sma50": true,
-     "liquidity_rs_m": 1161.5,
-     "pe": 4.9,
-     "div_yield_pct": 1.59,
-     "payout_pct": 7.16,
-     "fair_gap_pct": 21.5,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 7.5
-    },
-    {
      "sym": "NRL",
      "name": "National Refinery Limited",
-     "close": 517.58,
-     "ret_1d": -1.33,
-     "ret_20d": 16.9,
-     "rsi14": 57.0,
+     "close": 507.38,
+     "ret_1d": -1.97,
+     "ret_20d": 14.29,
+     "rsi14": 54.6,
      "above_sma50": true,
-     "liquidity_rs_m": 2227.2,
+     "liquidity_rs_m": 2323.5,
      "pe": 7.13,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": -8.6,
      "fair_verdict": "fair",
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "ATRL",
+     "name": "Attock Refinery Limited",
+     "close": 1106.52,
+     "ret_1d": -3.44,
+     "ret_20d": 14.24,
+     "rsi14": 55.9,
+     "above_sma50": true,
+     "liquidity_rs_m": 1222.2,
+     "pe": 4.9,
+     "div_yield_pct": 1.59,
+     "payout_pct": 7.16,
+     "fair_gap_pct": 21.5,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 7.5
     }
    ]
   },
   "Sugar & Allied Industries": {
-   "n_members": 22,
+   "n_members": 24,
    "breadth": {
     "above_sma50": 10,
     "advancing_1d": 10
    },
    "returns": {
     "median_1d_pct": -0.3,
-    "median_20d_pct": 0.38,
+    "median_20d_pct": 0.16,
     "best_20d": {
      "sym": "TSML",
      "pct": 34.46
@@ -6744,16 +6844,7 @@
    },
    "macro_drivers": [],
    "macro_joint_r2_pct": null,
-   "recent_news": [
-    {
-     "ts": "2026-08-22",
-     "impact": 3,
-     "tickers": [
-      "JDWS"
-     ],
-     "headline": "Cabinet Committee on Privatisation approves restructuring plan for FESCO, GEPCO, IESCO"
-    }
-   ],
+   "recent_news": [],
    "upcoming_events": [
     {
      "ticker": "JDWS",
@@ -6832,6 +6923,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "PMRS",
+     "name": "The Premier Sugar Mills",
+     "close": 529.82,
+     "ret_1d": -3.26,
+     "ret_20d": 10.02,
+     "rsi14": 40.8,
+     "above_sma50": false,
+     "liquidity_rs_m": 5.5,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "HABSM",
      "name": "Habib Sugar Mills Limited",
      "close": 80.7,
@@ -6866,12 +6973,12 @@
     {
      "sym": "ADAMS",
      "name": "Adam Sugar Mills Limited",
-     "close": 68.03,
-     "ret_1d": 3.69,
-     "ret_20d": 5.15,
-     "rsi14": 55.4,
-     "above_sma50": true,
-     "liquidity_rs_m": 0.5,
+     "close": 65.98,
+     "ret_1d": -3.01,
+     "ret_20d": 3.77,
+     "rsi14": 48.4,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -6886,6 +6993,22 @@
      "ret_1d": 2.64,
      "ret_20d": 3.55,
      "rsi14": 54.8,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.6,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "AGSML",
+     "name": "Abdullah Shah Ghazi Sugar Mills Limited",
+     "close": 8.89,
+     "ret_1d": 0.57,
+     "ret_20d": 3.01,
+     "rsi14": 50.8,
      "above_sma50": false,
      "liquidity_rs_m": 0.6,
      "pe": null,
@@ -6912,36 +7035,20 @@
      "ttm_dividend_rs": 5.0
     },
     {
-     "sym": "SANSM",
-     "name": "Sanghar Sugar Mills Limited",
-     "close": 121.59,
-     "ret_1d": -7.16,
-     "ret_20d": 1.32,
-     "rsi14": 39.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.1,
+     "sym": "SHSML",
+     "name": "Shahmurad Sugar Mills Limited",
+     "close": 385.0,
+     "ret_1d": -1.78,
+     "ret_20d": 0.83,
+     "rsi14": 48.9,
+     "above_sma50": true,
+     "liquidity_rs_m": 5.9,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
      "fair_gap_pct": null,
      "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "AGSML",
-     "name": "Abdullah Shah Ghazi Sugar Mills Limited",
-     "close": 8.84,
-     "ret_1d": 1.03,
-     "ret_20d": 1.26,
-     "rsi14": 49.0,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.6,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
+     "ttm_dividend_rs": 6.0
     },
     {
      "sym": "SASML",
@@ -7008,6 +7115,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ANSM",
+     "name": "Ansari Sugar Mills Limited",
+     "close": 26.04,
+     "ret_1d": 2.4,
+     "ret_20d": -4.05,
+     "rsi14": 45.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 2.6,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "HRPL",
      "name": "Habib Rice Product Limited.",
      "close": 20.05,
@@ -7024,12 +7147,28 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ALNRS",
+     "name": "Al-Noor Sugar Mills Limited",
+     "close": 122.01,
+     "ret_1d": 0.0,
+     "ret_20d": -5.4,
+     "rsi14": 35.2,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 4.0
+    },
+    {
      "sym": "AABS",
      "name": "Al-Abbas Sugar Mills Limited",
-     "close": 819.44,
-     "ret_1d": 0.36,
-     "ret_20d": -6.39,
-     "rsi14": 35.9,
+     "close": 821.85,
+     "ret_1d": 0.29,
+     "ret_20d": -6.21,
+     "rsi14": 37.8,
      "above_sma50": false,
      "liquidity_rs_m": 0.3,
      "pe": null,
@@ -7040,28 +7179,12 @@
      "ttm_dividend_rs": 20.5
     },
     {
-     "sym": "ANSM",
-     "name": "Ansari Sugar Mills Limited",
-     "close": 25.43,
-     "ret_1d": -2.08,
-     "ret_20d": -8.72,
-     "rsi14": 41.3,
-     "above_sma50": false,
-     "liquidity_rs_m": 2.5,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "CHAS",
      "name": "Chashma Sugar Mills Limited",
-     "close": 82.46,
-     "ret_1d": 0.39,
-     "ret_20d": -12.15,
-     "rsi14": 34.9,
+     "close": 84.26,
+     "ret_1d": 2.18,
+     "ret_20d": -11.62,
+     "rsi14": 39.2,
      "above_sma50": false,
      "liquidity_rs_m": 0.9,
      "pe": null,
@@ -7090,12 +7213,12 @@
     {
      "sym": "BAFS",
      "name": "Baba Farid Sugar Mills Limited",
-     "close": 482.26,
-     "ret_1d": -3.02,
-     "ret_20d": -19.13,
-     "rsi14": 42.4,
+     "close": 475.8,
+     "ret_1d": -1.34,
+     "ret_20d": -18.44,
+     "rsi14": 41.1,
      "above_sma50": true,
-     "liquidity_rs_m": 0.7,
+     "liquidity_rs_m": 0.6,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -7125,10 +7248,10 @@
    "n_members": 5,
    "breadth": {
     "above_sma50": 3,
-    "advancing_1d": 3
+    "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": 0.24,
+    "median_1d_pct": 0.0,
     "median_20d_pct": 7.93,
     "best_20d": {
      "sym": "NSRM",
@@ -7136,7 +7259,7 @@
     },
     "worst_20d": {
      "sym": "IBFL",
-     "pct": -7.56
+     "pct": -6.76
     }
    },
    "valuation": {
@@ -7223,10 +7346,10 @@
     {
      "sym": "IBFL",
      "name": "Ibrahim Fibres Limited",
-     "close": 265.02,
-     "ret_1d": 0.24,
-     "ret_20d": -7.56,
-     "rsi14": 43.8,
+     "close": 263.67,
+     "ret_1d": -0.51,
+     "ret_20d": -6.76,
+     "rsi14": 42.8,
      "above_sma50": false,
      "liquidity_rs_m": 0.4,
      "pe": null,
@@ -7242,11 +7365,11 @@
    "n_members": 20,
    "breadth": {
     "above_sma50": 7,
-    "advancing_1d": 6
+    "advancing_1d": 7
    },
    "returns": {
     "median_1d_pct": -1.06,
-    "median_20d_pct": -5.86,
+    "median_20d_pct": -5.88,
     "best_20d": {
      "sym": "QTECH",
      "pct": 31.52
@@ -7295,11 +7418,6 @@
    ],
    "upcoming_events": [
     {
-     "ticker": "SYM",
-     "date": "2026-09-04",
-     "type": "results"
-    },
-    {
      "ticker": "NETSOL",
      "date": "2026-09-22",
      "type": "results"
@@ -7332,6 +7450,11 @@
     {
      "ticker": "STL",
      "date": "2026-10-06",
+     "type": "results"
+    },
+    {
+     "ticker": "TELE",
+     "date": "2026-10-07",
      "type": "results"
     }
    ],
@@ -7401,22 +7524,6 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "AIRLINK",
-     "name": "Air Link Communication Limited",
-     "close": 131.46,
-     "ret_1d": -0.21,
-     "ret_20d": -2.14,
-     "rsi14": 39.7,
-     "above_sma50": false,
-     "liquidity_rs_m": 75.2,
-     "pe": 9.55,
-     "div_yield_pct": 6.72,
-     "payout_pct": 64.19,
-     "fair_gap_pct": 57.8,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 6.5
-    },
-    {
      "sym": "TPL",
      "name": "TPL Corp Limited",
      "close": 16.45,
@@ -7449,20 +7556,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "SYS",
-     "name": "Systems Limited",
-     "close": 126.96,
-     "ret_1d": 0.38,
-     "ret_20d": -4.22,
-     "rsi14": 43.0,
+     "sym": "AIRLINK",
+     "name": "Air Link Communication Limited",
+     "close": 132.63,
+     "ret_1d": 0.89,
+     "ret_20d": -3.69,
+     "rsi14": 43.3,
      "above_sma50": false,
-     "liquidity_rs_m": 247.0,
-     "pe": 15.91,
-     "div_yield_pct": 1.55,
-     "payout_pct": 25.54,
-     "fair_gap_pct": -31.3,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 2.0
+     "liquidity_rs_m": 72.0,
+     "pe": 9.55,
+     "div_yield_pct": 6.72,
+     "payout_pct": 64.19,
+     "fair_gap_pct": 57.8,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 6.5
     },
     {
      "sym": "WTL",
@@ -7479,6 +7586,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "HUMNL",
+     "name": "Hum Network Limited",
+     "close": 10.21,
+     "ret_1d": 1.79,
+     "ret_20d": -4.93,
+     "rsi14": 44.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 14.2,
+     "pe": 106.18,
+     "div_yield_pct": 4.78,
+     "payout_pct": 500.0,
+     "fair_gap_pct": -90.3,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 0.5
     },
     {
      "sym": "MDTL",
@@ -7499,12 +7622,12 @@
     {
      "sym": "PTC",
      "name": "Pakistan Telecommunication Company Ltd",
-     "close": 67.01,
-     "ret_1d": -0.37,
-     "ret_20d": -6.21,
-     "rsi14": 35.8,
+     "close": 67.31,
+     "ret_1d": 0.45,
+     "ret_20d": -6.27,
+     "rsi14": 37.7,
      "above_sma50": false,
-     "liquidity_rs_m": 169.6,
+     "liquidity_rs_m": 166.7,
      "pe": 73.25,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -7513,36 +7636,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "HUMNL",
-     "name": "Hum Network Limited",
-     "close": 10.03,
-     "ret_1d": 0.3,
-     "ret_20d": -6.26,
-     "rsi14": 38.5,
+     "sym": "SYS",
+     "name": "Systems Limited",
+     "close": 126.98,
+     "ret_1d": 0.02,
+     "ret_20d": -6.78,
+     "rsi14": 43.0,
      "above_sma50": false,
-     "liquidity_rs_m": 14.0,
-     "pe": 106.18,
-     "div_yield_pct": 4.78,
-     "payout_pct": 500.0,
-     "fair_gap_pct": -90.3,
+     "liquidity_rs_m": 236.6,
+     "pe": 15.91,
+     "div_yield_pct": 1.55,
+     "payout_pct": 25.54,
+     "fair_gap_pct": -31.3,
      "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 0.5
-    },
-    {
-     "sym": "AVN",
-     "name": "Avanceon Limited",
-     "close": 29.18,
-     "ret_1d": 0.27,
-     "ret_20d": -7.19,
-     "rsi14": 30.5,
-     "above_sma50": false,
-     "liquidity_rs_m": 22.4,
-     "pe": 57.44,
-     "div_yield_pct": 3.05,
-     "payout_pct": 192.31,
-     "fair_gap_pct": -82.8,
-     "fair_verdict": "overvalued",
-     "ttm_dividend_rs": 1.0
+     "ttm_dividend_rs": 2.0
     },
     {
      "sym": "TELE",
@@ -7577,14 +7684,30 @@
      "ttm_dividend_rs": 6.0
     },
     {
+     "sym": "AVN",
+     "name": "Avanceon Limited",
+     "close": 29.01,
+     "ret_1d": -0.58,
+     "ret_20d": -10.71,
+     "rsi14": 29.7,
+     "above_sma50": false,
+     "liquidity_rs_m": 21.4,
+     "pe": 57.44,
+     "div_yield_pct": 3.05,
+     "payout_pct": 192.31,
+     "fair_gap_pct": -82.8,
+     "fair_verdict": "overvalued",
+     "ttm_dividend_rs": 1.0
+    },
+    {
      "sym": "TRG",
      "name": "TRG Pakistan Limited",
-     "close": 54.4,
-     "ret_1d": 0.83,
-     "ret_20d": -10.33,
-     "rsi14": 36.1,
+     "close": 54.61,
+     "ret_1d": 0.39,
+     "ret_20d": -11.07,
+     "rsi14": 37.0,
      "above_sma50": false,
-     "liquidity_rs_m": 210.9,
+     "liquidity_rs_m": 205.6,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -7659,21 +7782,21 @@
    ]
   },
   "Textile Composite": {
-   "n_members": 27,
+   "n_members": 26,
    "breadth": {
-    "above_sma50": 14,
+    "above_sma50": 12,
     "advancing_1d": 8
    },
    "returns": {
-    "median_1d_pct": -1.13,
-    "median_20d_pct": -1.49,
+    "median_1d_pct": -1.17,
+    "median_20d_pct": -2.29,
     "best_20d": {
      "sym": "ANTM",
-     "pct": 51.42
+     "pct": 51.86
     },
     "worst_20d": {
-     "sym": "MEHT",
-     "pct": -19.39
+     "sym": "CHBL",
+     "pct": -12.54
     }
    },
    "valuation": {
@@ -7767,12 +7890,12 @@
     {
      "sym": "ANTM",
      "name": "AN Textile Mills Limited",
-     "close": 77.98,
-     "ret_1d": -4.17,
-     "ret_20d": 51.42,
-     "rsi14": 71.6,
+     "close": 82.66,
+     "ret_1d": 6.0,
+     "ret_20d": 51.86,
+     "rsi14": 74.9,
      "above_sma50": true,
-     "liquidity_rs_m": 1.5,
+     "liquidity_rs_m": 1.7,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -7861,36 +7984,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ADMM",
-     "name": "Artistic Denim Mills Limited",
-     "close": 60.17,
-     "ret_1d": 1.36,
-     "ret_20d": 5.78,
-     "rsi14": 62.5,
+     "sym": "ILP",
+     "name": "Interloop Limited",
+     "close": 107.29,
+     "ret_1d": 0.89,
+     "ret_20d": 2.52,
+     "rsi14": 60.4,
      "above_sma50": true,
-     "liquidity_rs_m": 7.7,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "ANLNV",
-     "name": "Azgard Nine Non-Voting Ordinary Shares",
-     "close": 7.75,
-     "ret_1d": 0.0,
-     "ret_20d": 3.61,
-     "rsi14": 44.3,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.0,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
+     "liquidity_rs_m": 67.7,
+     "pe": 13.46,
+     "div_yield_pct": 4.01,
+     "payout_pct": 49.57,
+     "fair_gap_pct": 5.8,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": 3.0
     },
     {
      "sym": "REDCO",
@@ -7909,54 +8016,6 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ILP",
-     "name": "Interloop Limited",
-     "close": 106.34,
-     "ret_1d": 2.14,
-     "ret_20d": 2.37,
-     "rsi14": 58.6,
-     "above_sma50": true,
-     "liquidity_rs_m": 67.5,
-     "pe": 13.46,
-     "div_yield_pct": 4.01,
-     "payout_pct": 49.57,
-     "fair_gap_pct": 5.8,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": 3.0
-    },
-    {
-     "sym": "KTML",
-     "name": "Kohinoor Textile Mills Limited",
-     "close": 43.01,
-     "ret_1d": 0.63,
-     "ret_20d": 0.02,
-     "rsi14": 47.3,
-     "above_sma50": false,
-     "liquidity_rs_m": 30.2,
-     "pe": 2.91,
-     "div_yield_pct": 0.93,
-     "payout_pct": 2.71,
-     "fair_gap_pct": 119.0,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 2.0
-    },
-    {
-     "sym": "SAPT",
-     "name": "Sapphire Textile Mills Limited",
-     "close": 1485.8,
-     "ret_1d": 0.0,
-     "ret_20d": -0.21,
-     "rsi14": 52.6,
-     "above_sma50": true,
-     "liquidity_rs_m": 0.3,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": 10.0
-    },
-    {
      "sym": "GATM",
      "name": "Gul Ahmed Textile Mills Limited",
      "close": 27.02,
@@ -7973,20 +8032,20 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "ANL",
-     "name": "Azgard Nine Limited",
-     "close": 9.94,
-     "ret_1d": 0.61,
-     "ret_20d": -1.49,
-     "rsi14": 42.0,
+     "sym": "KTML",
+     "name": "Kohinoor Textile Mills Limited",
+     "close": 42.85,
+     "ret_1d": -0.37,
+     "ret_20d": -1.56,
+     "rsi14": 46.6,
      "above_sma50": false,
-     "liquidity_rs_m": 3.1,
-     "pe": 6.21,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": 7.1,
-     "fair_verdict": "fair",
-     "ttm_dividend_rs": null
+     "liquidity_rs_m": 29.6,
+     "pe": 2.91,
+     "div_yield_pct": 0.93,
+     "payout_pct": 2.71,
+     "fair_gap_pct": 119.0,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 2.0
     },
     {
      "sym": "SFL",
@@ -8005,20 +8064,52 @@
      "ttm_dividend_rs": 10.0
     },
     {
-     "sym": "NML",
-     "name": "Nishat Mills Limited",
-     "close": 140.69,
-     "ret_1d": -0.33,
-     "ret_20d": -2.56,
-     "rsi14": 36.8,
+     "sym": "GFIL",
+     "name": "Ghazi Fabrics International Limited",
+     "close": 30.81,
+     "ret_1d": -2.16,
+     "ret_20d": -2.22,
+     "rsi14": 48.9,
      "above_sma50": false,
-     "liquidity_rs_m": 226.7,
-     "pe": 4.31,
-     "div_yield_pct": 1.38,
-     "payout_pct": 5.99,
-     "fair_gap_pct": 51.4,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": 2.0
+     "liquidity_rs_m": 3.4,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "ANL",
+     "name": "Azgard Nine Limited",
+     "close": 9.82,
+     "ret_1d": -1.21,
+     "ret_20d": -2.29,
+     "rsi14": 37.8,
+     "above_sma50": false,
+     "liquidity_rs_m": 3.0,
+     "pe": 6.21,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": 7.1,
+     "fair_verdict": "fair",
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "FASM",
+     "name": "Faisal Spinning Mills Limited",
+     "close": 331.12,
+     "ret_1d": 1.27,
+     "ret_20d": -2.3,
+     "rsi14": 49.3,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     },
     {
      "sym": "SURC",
@@ -8053,12 +8144,28 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "ADMM",
+     "name": "Artistic Denim Mills Limited",
+     "close": 55.81,
+     "ret_1d": -7.25,
+     "ret_20d": -3.74,
+     "rsi14": 49.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 8.3,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "CRTM",
      "name": "The Crescent Textile Mills Limited",
-     "close": 68.94,
-     "ret_1d": -2.83,
-     "ret_20d": -4.25,
-     "rsi14": 35.2,
+     "close": 69.16,
+     "ret_1d": 0.32,
+     "ret_20d": -4.62,
+     "rsi14": 36.4,
      "above_sma50": false,
      "liquidity_rs_m": 0.4,
      "pe": null,
@@ -8067,6 +8174,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "NML",
+     "name": "Nishat Mills Limited",
+     "close": 140.18,
+     "ret_1d": -0.36,
+     "ret_20d": -4.81,
+     "rsi14": 35.9,
+     "above_sma50": false,
+     "liquidity_rs_m": 223.2,
+     "pe": 4.31,
+     "div_yield_pct": 1.38,
+     "payout_pct": 5.99,
+     "fair_gap_pct": 51.4,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": 2.0
     },
     {
      "sym": "FZCM",
@@ -8085,26 +8208,10 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "BTL",
-     "name": "Blessed Textiles Limited",
-     "close": 900.6,
-     "ret_1d": 0.0,
-     "ret_20d": -5.48,
-     "rsi14": 34.5,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.1,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "AHTM",
      "name": "Ahmad Hassan Textile Mills Limited",
      "close": 92.37,
-     "ret_1d": -9.0,
+     "ret_1d": 0.0,
      "ret_20d": -5.74,
      "rsi14": 41.1,
      "above_sma50": false,
@@ -8115,22 +8222,6 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 1.5
-    },
-    {
-     "sym": "CHBL",
-     "name": "Chenab Limited",
-     "close": 9.3,
-     "ret_1d": 4.97,
-     "ret_20d": -7.09,
-     "rsi14": 44.9,
-     "above_sma50": false,
-     "liquidity_rs_m": 2.3,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
     },
     {
      "sym": "KOIL",
@@ -8147,6 +8238,22 @@
      "fair_gap_pct": -76.3,
      "fair_verdict": "overvalued",
      "ttm_dividend_rs": 0.75
+    },
+    {
+     "sym": "MEHT",
+     "name": "Mehmood Textile Mills Limited",
+     "close": 139.63,
+     "ret_1d": 1.9,
+     "ret_20d": -8.72,
+     "rsi14": 28.6,
+     "above_sma50": false,
+     "liquidity_rs_m": 41.0,
+     "pe": 3.56,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": 91.9,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": null
     },
     {
      "sym": "NCL",
@@ -8167,10 +8274,10 @@
     {
      "sym": "CLCPS",
      "name": "Chenab Limited (Pref)",
-     "close": 3.48,
-     "ret_1d": 1.75,
-     "ret_20d": -13.0,
-     "rsi14": 41.1,
+     "close": 3.51,
+     "ret_1d": 0.86,
+     "ret_20d": -12.47,
+     "rsi14": 42.3,
      "above_sma50": false,
      "liquidity_rs_m": 0.3,
      "pe": null,
@@ -8181,35 +8288,35 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "MEHT",
-     "name": "Mehmood Textile Mills Limited",
-     "close": 137.02,
-     "ret_1d": -1.53,
-     "ret_20d": -19.39,
-     "rsi14": 23.5,
+     "sym": "CHBL",
+     "name": "Chenab Limited",
+     "close": 9.0,
+     "ret_1d": -3.23,
+     "ret_20d": -12.54,
+     "rsi14": 39.1,
      "above_sma50": false,
-     "liquidity_rs_m": 47.0,
-     "pe": 3.56,
+     "liquidity_rs_m": 2.0,
+     "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
-     "fair_gap_pct": 91.9,
-     "fair_verdict": "undervalued",
+     "fair_gap_pct": null,
+     "fair_verdict": null,
      "ttm_dividend_rs": null
     }
    ]
   },
   "Textile Spinning": {
-   "n_members": 29,
+   "n_members": 30,
    "breadth": {
     "above_sma50": 18,
-    "advancing_1d": 9
+    "advancing_1d": 10
    },
    "returns": {
-    "median_1d_pct": -1.23,
-    "median_20d_pct": 1.4,
+    "median_1d_pct": -0.52,
+    "median_20d_pct": 1.79,
     "best_20d": {
      "sym": "ASTM",
-     "pct": 183.07
+     "pct": 131.62
     },
     "worst_20d": {
      "sym": "IDEAL",
@@ -8277,12 +8384,12 @@
     {
      "sym": "ASTM",
      "name": "Asim Textile Mills Limited",
-     "close": 131.46,
+     "close": 118.31,
      "ret_1d": -10.0,
-     "ret_20d": 183.07,
-     "rsi14": 62.5,
+     "ret_20d": 131.62,
+     "rsi14": 55.9,
      "above_sma50": true,
-     "liquidity_rs_m": 39.7,
+     "liquidity_rs_m": 39.9,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8403,13 +8510,29 @@
      "ttm_dividend_rs": 2.0
     },
     {
+     "sym": "ELSM",
+     "name": "Ellcot Spinning Mills Limited",
+     "close": 122.59,
+     "ret_1d": 0.0,
+     "ret_20d": 11.42,
+     "rsi14": 53.0,
+     "above_sma50": true,
+     "liquidity_rs_m": 0.0,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": 4.0
+    },
+    {
      "sym": "AATM",
      "name": "Ali Asghar Textile Mills Limited",
-     "close": 60.94,
-     "ret_1d": 2.3,
-     "ret_20d": 14.44,
-     "rsi14": 48.3,
-     "above_sma50": true,
+     "close": 59.96,
+     "ret_1d": -1.61,
+     "ret_20d": 10.24,
+     "rsi14": 46.9,
+     "above_sma50": false,
      "liquidity_rs_m": 1.9,
      "pe": null,
      "div_yield_pct": null,
@@ -8421,12 +8544,12 @@
     {
      "sym": "ARCTM",
      "name": "Arctic Textile Mills Limited",
-     "close": 44.18,
-     "ret_1d": -2.41,
-     "ret_20d": 4.03,
-     "rsi14": 48.8,
+     "close": 44.54,
+     "ret_1d": 0.81,
+     "ret_20d": 8.11,
+     "rsi14": 49.4,
      "above_sma50": true,
-     "liquidity_rs_m": 9.5,
+     "liquidity_rs_m": 9.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8449,22 +8572,6 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": 2.0
-    },
-    {
-     "sym": "GADT",
-     "name": "Gadoon Textile Mills Limited",
-     "close": 318.45,
-     "ret_1d": 0.58,
-     "ret_20d": 3.03,
-     "rsi14": 50.6,
-     "above_sma50": true,
-     "liquidity_rs_m": 25.9,
-     "pe": 3.51,
-     "div_yield_pct": 1.57,
-     "payout_pct": 5.33,
-     "fair_gap_pct": 42.7,
-     "fair_verdict": "undervalued",
-     "ttm_dividend_rs": null
     },
     {
      "sym": "KOHTM",
@@ -8491,6 +8598,22 @@
      "rsi14": 56.3,
      "above_sma50": true,
      "liquidity_rs_m": 1.1,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
+    },
+    {
+     "sym": "DMC",
+     "name": "D.M. Corporation Limited.",
+     "close": 176.67,
+     "ret_1d": 0.0,
+     "ret_20d": 2.19,
+     "rsi14": 41.1,
+     "above_sma50": false,
+     "liquidity_rs_m": 0.0,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8547,28 +8670,12 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "DMC",
-     "name": "D.M. Corporation Limited.",
-     "close": 176.67,
-     "ret_1d": 0.0,
-     "ret_20d": -4.31,
-     "rsi14": 41.1,
-     "above_sma50": false,
-     "liquidity_rs_m": 0.0,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
      "sym": "CTM",
      "name": "Colony Textile Mills Limited",
-     "close": 6.52,
-     "ret_1d": -3.98,
-     "ret_20d": -5.09,
-     "rsi14": 43.6,
+     "close": 6.67,
+     "ret_1d": 2.3,
+     "ret_20d": -2.34,
+     "rsi14": 47.9,
      "above_sma50": false,
      "liquidity_rs_m": 2.6,
      "pe": null,
@@ -8611,6 +8718,22 @@
      "ttm_dividend_rs": null
     },
     {
+     "sym": "GADT",
+     "name": "Gadoon Textile Mills Limited",
+     "close": 315.18,
+     "ret_1d": -1.03,
+     "ret_20d": -7.3,
+     "rsi14": 48.6,
+     "above_sma50": true,
+     "liquidity_rs_m": 21.8,
+     "pe": 3.51,
+     "div_yield_pct": 1.57,
+     "payout_pct": 5.33,
+     "fair_gap_pct": 42.7,
+     "fair_verdict": "undervalued",
+     "ttm_dividend_rs": null
+    },
+    {
      "sym": "SNAI",
      "name": "Sana Industries Limited",
      "close": 37.04,
@@ -8629,10 +8752,10 @@
     {
      "sym": "DINT",
      "name": "Din Textile Mills Limited",
-     "close": 58.8,
-     "ret_1d": -0.54,
-     "ret_20d": -12.45,
-     "rsi14": 36.8,
+     "close": 59.55,
+     "ret_1d": 1.28,
+     "ret_20d": -11.86,
+     "rsi14": 38.9,
      "above_sma50": false,
      "liquidity_rs_m": 2.9,
      "pe": null,
@@ -8662,8 +8785,8 @@
      "sym": "CCM",
      "name": "Crescent Cotton Mills Limited",
      "close": 44.97,
-     "ret_1d": 2.37,
-     "ret_20d": -13.82,
+     "ret_1d": 0.0,
+     "ret_20d": -13.8,
      "rsi14": 39.5,
      "above_sma50": false,
      "liquidity_rs_m": 0.4,
@@ -8691,14 +8814,14 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "IDRT",
-     "name": "Idrees Textile Mills Limited",
-     "close": 36.46,
-     "ret_1d": -3.95,
-     "ret_20d": -21.2,
-     "rsi14": 32.8,
+     "sym": "DFSM",
+     "name": "Dewan Farooque Spinning Mills Limited",
+     "close": 13.63,
+     "ret_1d": 2.79,
+     "ret_20d": -20.89,
+     "rsi14": 34.6,
      "above_sma50": false,
-     "liquidity_rs_m": 2.6,
+     "liquidity_rs_m": 7.0,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8707,14 +8830,14 @@
      "ttm_dividend_rs": null
     },
     {
-     "sym": "DFSM",
-     "name": "Dewan Farooque Spinning Mills Limited",
-     "close": 13.26,
-     "ret_1d": -3.63,
-     "ret_20d": -22.5,
-     "rsi14": 31.0,
+     "sym": "IDRT",
+     "name": "Idrees Textile Mills Limited",
+     "close": 36.46,
+     "ret_1d": -3.95,
+     "ret_20d": -21.2,
+     "rsi14": 32.8,
      "above_sma50": false,
-     "liquidity_rs_m": 7.8,
+     "liquidity_rs_m": 2.6,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8744,18 +8867,18 @@
    "n_members": 6,
    "breadth": {
     "above_sma50": 4,
-    "advancing_1d": 2
+    "advancing_1d": 1
    },
    "returns": {
-    "median_1d_pct": -2.17,
-    "median_20d_pct": -2.42,
+    "median_1d_pct": -1.5,
+    "median_20d_pct": -2.68,
     "best_20d": {
      "sym": "PRWM",
      "pct": 13.66
     },
     "worst_20d": {
-     "sym": "ICCI",
-     "pct": -4.92
+     "sym": "YOUW",
+     "pct": -4.99
     }
    },
    "valuation": {
@@ -8805,10 +8928,10 @@
     {
      "sym": "ASHT",
      "name": "Ashfaq Textile Mills Limited",
-     "close": 37.9,
-     "ret_1d": -1.94,
-     "ret_20d": 10.17,
-     "rsi14": 47.9,
+     "close": 37.79,
+     "ret_1d": -0.29,
+     "ret_20d": 7.69,
+     "rsi14": 47.7,
      "above_sma50": true,
      "liquidity_rs_m": 1.9,
      "pe": null,
@@ -8827,22 +8950,6 @@
      "rsi14": 51.4,
      "above_sma50": true,
      "liquidity_rs_m": 13.8,
-     "pe": null,
-     "div_yield_pct": null,
-     "payout_pct": null,
-     "fair_gap_pct": null,
-     "fair_verdict": null,
-     "ttm_dividend_rs": null
-    },
-    {
-     "sym": "YOUW",
-     "name": "Yousaf Weaving Mills Limited",
-     "close": 5.17,
-     "ret_1d": 1.97,
-     "ret_20d": -3.18,
-     "rsi14": 42.2,
-     "above_sma50": false,
-     "liquidity_rs_m": 5.4,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8881,6 +8988,22 @@
      "fair_gap_pct": null,
      "fair_verdict": null,
      "ttm_dividend_rs": null
+    },
+    {
+     "sym": "YOUW",
+     "name": "Yousaf Weaving Mills Limited",
+     "close": 5.14,
+     "ret_1d": -0.58,
+     "ret_20d": -4.99,
+     "rsi14": 40.5,
+     "above_sma50": false,
+     "liquidity_rs_m": 5.4,
+     "pe": null,
+     "div_yield_pct": null,
+     "payout_pct": null,
+     "fair_gap_pct": null,
+     "fair_verdict": null,
+     "ttm_dividend_rs": null
     }
    ]
   },
@@ -8888,18 +9011,18 @@
    "n_members": 6,
    "breadth": {
     "above_sma50": 4,
-    "advancing_1d": 3
+    "advancing_1d": 2
    },
    "returns": {
-    "median_1d_pct": -0.27,
-    "median_20d_pct": -1.68,
+    "median_1d_pct": -0.77,
+    "median_20d_pct": -1.11,
     "best_20d": {
      "sym": "CLVL",
-     "pct": 142.53
+     "pct": 148.64
     },
     "worst_20d": {
      "sym": "BLUEX",
-     "pct": -3.18
+     "pct": -3.33
     }
    },
    "valuation": {
@@ -8933,12 +9056,12 @@
     {
      "sym": "CLVL",
      "name": "Cordoba Logistics & Ventures Limited",
-     "close": 44.94,
-     "ret_1d": 10.01,
-     "ret_20d": 142.53,
-     "rsi14": 78.7,
+     "close": 49.43,
+     "ret_1d": 9.99,
+     "ret_20d": 148.64,
+     "rsi14": 81.5,
      "above_sma50": true,
-     "liquidity_rs_m": 58.4,
+     "liquidity_rs_m": 60.2,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -8981,12 +9104,12 @@
     {
      "sym": "PIBTL",
      "name": "Pakistan International Bulk Terminal",
-     "close": 16.26,
-     "ret_1d": 0.56,
-     "ret_20d": -2.81,
-     "rsi14": 42.5,
+     "close": 16.5,
+     "ret_1d": 1.48,
+     "ret_20d": -1.67,
+     "rsi14": 48.5,
      "above_sma50": false,
-     "liquidity_rs_m": 184.1,
+     "liquidity_rs_m": 173.1,
      "pe": 15.47,
      "div_yield_pct": null,
      "payout_pct": null,
@@ -9013,12 +9136,12 @@
     {
      "sym": "BLUEX",
      "name": "Blue-Ex Limited",
-     "close": 6.7,
-     "ret_1d": 1.82,
-     "ret_20d": -3.18,
-     "rsi14": 44.2,
+     "close": 6.67,
+     "ret_1d": -0.45,
+     "ret_20d": -3.33,
+     "rsi14": 43.5,
      "above_sma50": false,
-     "liquidity_rs_m": 23.4,
+     "liquidity_rs_m": 22.9,
      "pe": null,
      "div_yield_pct": null,
      "payout_pct": null,

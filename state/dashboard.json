@@ -1,13 +1,13 @@
 {
- "updated": "2026-09-04 18:17",
+ "updated": "2026-09-07 08:27",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 62,
+  "score": 60,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260904-TPLT-donchian55_break",
+   "id": "20260907-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -25,7 +25,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260904-NRL-donchian55_break",
+   "id": "20260907-NRL-donchian55_break",
    "ticker": "NRL",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -43,40 +43,40 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on NRL's own history it won 55% over 60 trades (+2.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260904-ASL-macd_hist_rising",
-   "ticker": "ASL",
-   "strategy": "macd_hist_rising",
-   "template": "MACD histogram turning up",
-   "category": "momentum",
-   "sector": "Engineering",
-   "hold_sessions": 10,
-   "backtest": {
-    "hit_rate": 0.643,
-    "net_expectancy_pct": 1.46,
-    "n": 14,
-    "oos_hit": 0.4
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "MACD histogram turning up is triggering now; on ASL's own history it won 64% over 14 trades (+1.5% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260904-ADMM-trend_momo_combo",
-   "ticker": "ADMM",
+   "id": "20260907-GAL-trend_momo_combo",
+   "ticker": "GAL",
    "strategy": "trend_momo_combo",
    "template": "Trend + momentum combo",
    "category": "momentum",
-   "sector": "Textile Composite",
+   "sector": "Automobile Assembler",
    "hold_sessions": 12,
    "backtest": {
     "hit_rate": 0.579,
-    "net_expectancy_pct": 1.34,
-    "n": 19,
+    "net_expectancy_pct": 1.32,
+    "n": 38,
     "oos_hit": 0.6
    },
    "confidence": "medium",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on ADMM's own history it won 58% over 19 trades (+1.3% net/trade), still profitable out-of-sample."
+   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 58% over 38 trades (+1.3% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260907-NICL-roc60_leader_pullback",
+   "ticker": "NICL",
+   "strategy": "roc60_leader_pullback",
+   "template": "Long-run leader, short pullback",
+   "category": "momentum",
+   "sector": "Chemical",
+   "hold_sessions": 18,
+   "backtest": {
+    "hit_rate": 0.615,
+    "net_expectancy_pct": 1.12,
+    "n": 13,
+    "oos_hit": 0.667
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -91,15 +91,15 @@
   },
   {
    "ticker": "GLD",
-   "score": 69.8
+   "score": 69.4
   },
   {
    "ticker": "INDU",
-   "score": 67.3
+   "score": 67.1
   },
   {
    "ticker": "FFC",
-   "score": 66.0
+   "score": 65.9
   },
   {
    "ticker": "XLV",
@@ -107,7 +107,7 @@
   },
   {
    "ticker": "USRUT",
-   "score": 65.1
+   "score": 65.5
   },
   {
    "ticker": "USDJI",
@@ -124,19 +124,9 @@
  ],
  "movers_up": [
   {
-   "ticker": "CLVL",
-   "ret_1d": 10.01,
-   "close": 44.94
-  },
-  {
    "ticker": "NSRM",
    "ret_1d": 10.0,
    "close": 272.2
-  },
-  {
-   "ticker": "DADX",
-   "ret_1d": 10.0,
-   "close": 107.58
   },
   {
    "ticker": "SHCM",
@@ -144,21 +134,31 @@
    "close": 50.61
   },
   {
-   "ticker": "PGLC",
+   "ticker": "CLVL",
    "ret_1d": 9.99,
-   "close": 19.82
+   "close": 49.43
+  },
+  {
+   "ticker": "DIIL",
+   "ret_1d": 9.9,
+   "close": 77.06
+  },
+  {
+   "ticker": "OML",
+   "ret_1d": 9.85,
+   "close": 107.58
   }
  ],
  "movers_down": [
   {
-   "ticker": "BUXL",
+   "ticker": "KPUS",
    "ret_1d": -10.0,
-   "close": 917.51
+   "close": 1871.47
   },
   {
-   "ticker": "ARPAK",
+   "ticker": "ASTM",
    "ret_1d": -10.0,
-   "close": 145.12
+   "close": 118.31
   },
   {
    "ticker": "SERT",
@@ -364,12 +364,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-09-03T17:00:00+05:00",
-   "mode": "light-skipped",
-   "ended": "2026-09-03T17:05:00+05:00",
-   "outcome": "PM checkpoint ABORTED at step 1: local .git repo corrupted (git fsck: bad tree object 8d7b1d8c82fb814fa1bf287d1c48806bd9c8b027; git repack -a -d fails same; git fetch from origin AND from a known-good fresh bare clone both fail with 'fatal: pack has N unresolved deltas / invalid index-pack output', confirming corruption is local not network -- a fresh clone of https://github.com/wasayijaz/henneth-desk.git succeeded cleanly). No pull done, no agents run, no publish, gate not acked -- state untouched apart from this log line. Repair needs replacing D:\\PSX Trader X Claude\\.git (mv/rm), which this non-interactive session's sandbox classifier blocked as an irreversible action with no user present to confirm. Needs a human to run `git fsck` and reclone/repair .git before the next checkpoint can pull or publish."
-  },
-  {
    "started": "2026-09-03T17:15:00+05:00",
    "mode": "full",
    "ended": "2026-09-03T18:42:20+05:00",
@@ -392,6 +386,12 @@
    "mode": "full",
    "ended": "2026-09-04T17:38:00+05:00",
    "outcome": "regime risk-off (unchanged), geo-risk 62/100 moderate, daily-read: 'PSX strings together a second green session as global fear eases, but hot inflation keeps SBP on hold and today's live breakout signals sit in small, fundamentally shaky names' (tone cautious), pushed"
+  },
+  {
+   "started": "2026-09-04T18:00:00+05:00",
+   "mode": "room",
+   "ended": "2026-09-04T19:05:00+05:00",
+   "outcome": "Desk Room: 2 full debates (MCB, HBL) via gate run_full_now, 0 delta, 5 reaffirm (FFC/OGDC/BOP/CNERGY/UNITY); QA gate both flagged/medium (MCB: div-yield rolling-4Q vs trailing-365d, 3-of-4 vs 4-of-4 valuation methods; HBL: div-yield 7.58% vs 5.41% trailing-365d realized), no content fix applied per medium-severity rule; room_score 693 claims/149 resolved, 0 new persona/broker hits; i18n merged 26/26 Urdu fields (pillars arrays skipped, token discipline); preflight OK (WARN: degraded health, 102 backfilling tickers); published, pushed to main"
   }
  ]
 }
