@@ -167,13 +167,18 @@ def parse_date_point(value: Any) -> DatePoint | None:
 
 
 def is_after(left: DatePoint, right: DatePoint) -> bool:
+    # When both carry a real timestamp, compare the actual instants (normalised to
+    # UTC). Comparing the naive local *dates* first is wrong across timezones: a
+    # PKT-midnight stamp (2026-09-08T00:00:00+05:00 = 2026-09-07T19:00Z) is BEFORE a
+    # UTC cutoff of 2026-09-07T21:59Z, yet its local date (09-08) is nominally after
+    # the cutoff's UTC date (09-07). Instant comparison never hides a genuine
+    # lookahead (a truly future instant is still after in UTC) — it only drops that
+    # timezone-boundary false positive.
+    if left.parsed_datetime is not None and right.parsed_datetime is not None:
+        return comparable_datetime(left.parsed_datetime) > comparable_datetime(right.parsed_datetime)
     if left.parsed_date != right.parsed_date:
         return left.parsed_date > right.parsed_date
-    if left.parsed_datetime is None or right.parsed_datetime is None:
-        return False
-    left_dt = comparable_datetime(left.parsed_datetime)
-    right_dt = comparable_datetime(right.parsed_datetime)
-    return left_dt > right_dt
+    return False
 
 
 def comparable_datetime(value: datetime) -> datetime:
