@@ -55,6 +55,13 @@ STEPS = [
     # Source-gated algebra only: stays blocked until qualified actuals and approved,
     # dated assumptions exist. Must precede the CI audit and generated private slice.
     "build_formal_financial_engines.py",
+    # Owner-review handoff manifest: a derived checklist of the missing owner-approved records,
+    # rebuilt from THIS cycle's formal-engine gap state. Must regenerate in-cycle — preflight's
+    # check_owner_financial_assumption_handoff.py rebuilds it from live state and demands exact
+    # equality, so a hand-committed copy goes stale the moment MLCF/DGKC source refs drift and
+    # FAILs preflight, which gates ALL publishing (prices included). Regenerating here makes the
+    # check a determinism guard that self-heals. Writes only config/owner_financial_assumption_handoff.json.
+    "build_owner_financial_assumption_handoff.py",
     "build_financial_evidence_reconciliation.py",
     # Historical reported deltas only; this does not enter the formal-engine path.
     "build_earnings_bridges.py",
