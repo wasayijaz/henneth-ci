@@ -28,7 +28,9 @@ import requests
 from psx_data import (STATE, eod_history, load_config, load_json, market_of, save_json,
                       yahoo_symbol)
 
-WORKERS = 6                # concurrent fetchers; ~2.6 req/s total, still polite to DPS/Yahoo
+WORKERS = 6                # concurrent fetchers — a LATENCY-hiding knob only. The aggregate request
+                           # rate is capped centrally by psx_data._throttle, so raising this hides
+                           # network latency without raising the DPS request rate (no 429 storm).
 DEADLINE_S = 1200          # 20 min wall-clock guard, inside the 40-min job cap (desk-data.yml)
 NEW_PROBE_PER_RUN = 12     # separate, round-robin budget for symbols with no history file yet
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
@@ -136,8 +138,10 @@ def _fetch_one(sym, universe, years, cutoff):
         return ("ok", None)
     except Exception as e:  # noqa: BLE001 — degrade, don't crash the cycle
         return ("fail", str(e)[:80])
-    finally:
-        time.sleep(0.4)  # be polite to the upstream feed (per worker)
+    # Politeness is enforced GLOBALLY by psx_data._throttle (a shared rate gate across all
+    # workers), not by a per-worker sleep here. A per-worker sleep scales politeness with 1/WORKERS
+    # — the opposite of what's needed — so raising WORKERS silently raised the request rate and
+    # tripped DPS 429s. The gate makes worker count purely a latency-hiding knob.
 
 
 def main():

@@ -25,6 +25,29 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-trade-de
 # its own Session — connection reuse within a thread, no sharing across threads.
 _local = threading.local()
 
+# GLOBAL request-rate gate, shared across every worker thread. DPS rate-limits by AGGREGATE
+# request rate, not by connection count: a full-universe sweep at 6 workers with no gate burst
+# past its limit and got HTTP 429 on 372 of 491 symbols in one cloud run (fetch marks 429 a
+# fail and does NOT overwrite the file, so 258 symbols silently froze at their last good bar).
+# This gate spaces ALL DPS requests >= _MIN_INTERVAL apart regardless of worker count, so the
+# thread pool only hides network latency and never sets the request rate. ~2.8 req/s is inside
+# the rate DPS tolerates across a whole sweep; a 491-symbol sweep still finishes in a few minutes,
+# well under the job's DEADLINE_S. Slot reservation is done under the lock; the sleep is not, so
+# threads don't queue on a held lock.
+_MIN_INTERVAL = 0.35
+_rate_lock = threading.Lock()
+_next_slot = [0.0]
+
+
+def _throttle() -> None:
+    with _rate_lock:
+        now = time.monotonic()
+        slot = max(now, _next_slot[0])
+        _next_slot[0] = slot + _MIN_INTERVAL
+    wait = slot - time.monotonic()
+    if wait > 0:
+        time.sleep(wait)
+
 
 def _sess() -> requests.Session:
     s = getattr(_local, "session", None)
@@ -35,13 +58,23 @@ def _sess() -> requests.Session:
     return s
 
 
-def _get(path: str, retries: int = 3, timeout: int = 20) -> requests.Response:
+def _get(path: str, retries: int = 4, timeout: int = 20) -> requests.Response:
     last = None
     for i in range(retries):
+        _throttle()  # global rate gate — keeps the aggregate DPS request rate under its 429 limit
         try:
             r = _sess().get(f"{BASE}{path}", timeout=timeout)
             if r.status_code == 200:
                 return r
+            if r.status_code == 429:
+                # Rate-limited despite the gate: honour Retry-After when DPS sends it, else back
+                # off exponentially. Distinct from other errors so a transient 429 doesn't strand
+                # a symbol at its last good bar (the freeze this whole path exists to prevent).
+                last = RuntimeError(f"HTTP 429 on {path}")
+                ra = r.headers.get("Retry-After", "")
+                delay = float(ra) if ra.isdigit() else 2.0 * (2 ** i)
+                time.sleep(min(delay, 30.0))
+                continue
             last = RuntimeError(f"HTTP {r.status_code} on {path}")
         except requests.RequestException as e:
             last = e

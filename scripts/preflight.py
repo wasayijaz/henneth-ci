@@ -18,6 +18,7 @@ Exit codes: 0 = safe to deploy, 1 = do not deploy.
 """
 import argparse
 import ast
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 import glob
 import json
@@ -1557,6 +1558,29 @@ def main():
         if attempted is not None and covered and attempted < 0.90 * len(covered):
             warn(f"history_meta.json: last run attempted only {attempted} of {len(covered)} "
                  f"covered symbols (<90%) — the full-universe sweep may have regressed.")
+        # A run can ATTEMPT nearly everything yet WRITE almost nothing when the provider rate-limits:
+        # a failed fetch leaves the old file in place (last good bars), so coverage/bar-count both
+        # stay green while every price silently freezes. This is exactly what happened when WORKERS
+        # was raised without an aggregate rate cap — 372/491 fetches came back HTTP 429 and 258 files
+        # stuck at one date for weeks. Watch the FAILURE RATIO, not just attempt count, and name the
+        # dominant error so the cause (usually "HTTP 429") is legible. WARN, never FAIL: a stale-tail
+        # site still beats no site, and data_health.py's stale gate is what halts new signals.
+        failed = hmeta.get("failed")
+        ok = hmeta.get("ok")
+        n_fail = len(failed) if isinstance(failed, list) else (failed or 0)
+        base = attempted or ((ok or 0) + n_fail)
+        if base and n_fail > 0.10 * base:
+            reasons = Counter()
+            if isinstance(failed, list):
+                for f in failed:
+                    err = (f.get("err") if isinstance(f, dict) else str(f)) or ""
+                    # collapse "HTTP 429 on /timeseries/eod/BNWM" → "HTTP 429"
+                    key = err.split(" on ")[0].strip() or "unknown"
+                    reasons[key] += 1
+            top = ", ".join(f"{k}×{v}" for k, v in reasons.most_common(3)) or "unknown"
+            warn(f"history_meta.json: {n_fail}/{base} fetches FAILED (>10%) — prices for the failed "
+                 f"symbols kept their last good bars and are frozen. Dominant error: {top}. If it is "
+                 f"HTTP 429 the provider is rate-limiting; lower WORKERS or raise psx_data._MIN_INTERVAL.")
 
     # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
     # dossier can't block the core desk from deploying)
