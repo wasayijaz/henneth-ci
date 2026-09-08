@@ -30,11 +30,13 @@ _local = threading.local()
 # past its limit and got HTTP 429 on 372 of 491 symbols in one cloud run (fetch marks 429 a
 # fail and does NOT overwrite the file, so 258 symbols silently froze at their last good bar).
 # This gate spaces ALL DPS requests >= _MIN_INTERVAL apart regardless of worker count, so the
-# thread pool only hides network latency and never sets the request rate. ~2.8 req/s is inside
-# the rate DPS tolerates across a whole sweep; a 491-symbol sweep still finishes in a few minutes,
-# well under the job's DEADLINE_S. Slot reservation is done under the lock; the sleep is not, so
-# threads don't queue on a held lock.
-_MIN_INTERVAL = 0.35
+# thread pool only hides network latency and never sets the request rate. ~1.25 req/s is inside
+# the rate DPS tolerates across a whole sweep: at 0.35s a stable ~24-symbol cluster (the stalest
+# tickers, which lead the queue) still 429'd on every run absorbing the provider's cold-start
+# burst penalty; 0.8s clears it. A 491-symbol sweep still finishes in ~7 min, well under the
+# job's DEADLINE_S (1200s) and the 40-min cloud cap. Slot reservation is done under the lock; the
+# sleep is not, so threads don't queue on a held lock.
+_MIN_INTERVAL = 0.8
 _rate_lock = threading.Lock()
 _next_slot = [0.0]
 
@@ -58,7 +60,7 @@ def _sess() -> requests.Session:
     return s
 
 
-def _get(path: str, retries: int = 4, timeout: int = 20) -> requests.Response:
+def _get(path: str, retries: int = 6, timeout: int = 20) -> requests.Response:
     last = None
     for i in range(retries):
         _throttle()  # global rate gate — keeps the aggregate DPS request rate under its 429 limit
@@ -73,7 +75,7 @@ def _get(path: str, retries: int = 4, timeout: int = 20) -> requests.Response:
                 last = RuntimeError(f"HTTP 429 on {path}")
                 ra = r.headers.get("Retry-After", "")
                 delay = float(ra) if ra.isdigit() else 2.0 * (2 ** i)
-                time.sleep(min(delay, 30.0))
+                time.sleep(min(delay, 60.0))
                 continue
             last = RuntimeError(f"HTTP {r.status_code} on {path}")
         except requests.RequestException as e:
