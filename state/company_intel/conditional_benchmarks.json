@@ -631,8 +631,216 @@
   "PPL": {
    "symbol": "PPL",
    "status": "benchmarks_available",
-   "benchmark_count": 1,
+   "benchmark_count": 2,
    "benchmarks": [
+    {
+     "benchmark_id": "conditional_e71b82f5cdcda41bb6a4",
+     "target_event": {
+      "event_id": "evt_0266947d0391e30074d8",
+      "study_id": "study_0266947d0391e30074d8",
+      "symbol": "PPL",
+      "event_type": "management_change",
+      "event_subtype": "management_change",
+      "effective_date": "2026-08-11",
+      "sector": "Oil & Gas Exploration Companies",
+      "description": "Stock Exchange Limited Stock Exchange Building Stock Exchange Road Karachi Dear Sir, Re: Appointment of a Director – Mr. Syed Zakria Ali Shah Pursuant to Rule 5.6.1(a) of the Stock Exchange Rules, we would like to inform that the Board of…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=management_change",
+       "event_subtype=management_change",
+       "sector=Oil & Gas Exploration Companies"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "candidate_history_present",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [
+       {
+        "event_id": "evt_2c3f64926b9d385c3c13",
+        "study_id": "study_2c3f64926b9d385c3c13",
+        "symbol": "PPL",
+        "effective_date": "2026-01-09",
+        "classification": "same_company",
+        "event_type": "management_change",
+        "event_subtype": "management_change",
+        "sector": "Oil & Gas Exploration Companies",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": "2026-04-09",
+          "return_pct": -7.427603585739662,
+          "status": "mature",
+          "reason": null,
+          "provenance": {
+           "history_file": "state/history/PPL.json",
+           "baseline_date": "2026-01-08",
+           "target_date": "2026-04-09",
+           "endpoint_date": "2026-04-09"
+          }
+         },
+         "2Q": {
+          "endpoint_date": "2026-07-09",
+          "return_pct": -2.6645185276985894,
+          "status": "mature",
+          "reason": null,
+          "provenance": {
+           "history_file": "state/history/PPL.json",
+           "baseline_date": "2026-01-08",
+           "target_date": "2026-07-09",
+           "endpoint_date": "2026-07-09"
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/PPL.json",
+           "baseline_date": "2026-01-08",
+           "target_date": "2027-01-09",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/PPL.json",
+           "baseline_date": "2026-01-08",
+           "target_date": "2028-01-09",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_0266947d0391e30074d8",
+         "target_event_id": "evt_0266947d0391e30074d8"
+        }
+       }
+      ],
+      "same_sector_exact": []
+     },
+     "candidate_evidence_summary": {
+      "evidence_status": "thin_history_present",
+      "candidate_counts": {
+       "same_company_exact": 1,
+       "same_sector_exact": 0
+      },
+      "mature_horizon_counts": {
+       "1Q": 1,
+       "2Q": 1,
+       "4Q": 0,
+       "8Q": 0
+      },
+      "latest_prior_candidate_date": "2026-01-09",
+      "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+     },
+     "readiness_ledger": {
+      "status": "needs_more_mature_outcomes",
+      "minimum_mature_outcome_sample": 3,
+      "strict_candidate_count": 1,
+      "mature_horizon_counts": {
+       "1Q": 1,
+       "2Q": 1,
+       "4Q": 0,
+       "8Q": 0
+      },
+      "missing_mature_outcomes_to_minimum": {
+       "1Q": 2,
+       "2Q": 2,
+       "4Q": 3,
+       "8Q": 3
+      },
+      "aggregate_ready_horizons": [],
+      "nearest_ready_horizon": "1Q",
+      "latest_prior_candidate_date": "2026-01-09",
+      "next_required_evidence": "2 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 1,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 1,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
     {
      "benchmark_id": "conditional_a528c9f26b5f66fcfc74",
      "target_event": {
@@ -778,21 +986,21 @@
     }
    ],
    "readiness_summary": {
-    "dated_benchmark_count": 1,
-    "benchmarks_with_candidates": 0,
+    "dated_benchmark_count": 2,
+    "benchmarks_with_candidates": 1,
     "aggregate_ready_benchmark_count": 0,
-    "suppressed_benchmark_count": 1,
-    "total_strict_candidate_count": 0,
-    "minimum_missing_mature_outcomes_to_publish": 3,
+    "suppressed_benchmark_count": 2,
+    "total_strict_candidate_count": 1,
+    "minimum_missing_mature_outcomes_to_publish": 2,
     "event_class_gaps": [
      {
       "event_type": "management_change",
       "event_subtype": "management_change",
-      "benchmark_count": 1,
-      "candidate_history_present_count": 0,
+      "benchmark_count": 2,
+      "candidate_history_present_count": 1,
       "aggregate_ready_count": 0,
-      "total_strict_candidate_count": 0,
-      "minimum_missing_mature_outcomes_to_publish": 3
+      "total_strict_candidate_count": 1,
+      "minimum_missing_mature_outcomes_to_publish": 2
      }
     ],
     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
@@ -2692,17 +2900,323 @@
   },
   "PRL": {
    "symbol": "PRL",
-   "status": "no_operating_events",
-   "benchmark_count": 0,
-   "benchmarks": [],
+   "status": "benchmarks_available",
+   "benchmark_count": 2,
+   "benchmarks": [
+    {
+     "benchmark_id": "conditional_4677f8413587ea16f16d",
+     "target_event": {
+      "event_id": "evt_2cec6e102538a5263908",
+      "study_id": "study_2cec6e102538a5263908",
+      "symbol": "PRL",
+      "event_type": "contract_tender",
+      "event_subtype": "contract",
+      "effective_date": "2025-09-08",
+      "sector": "Refinery",
+      "description": "work started at the Reﬁnery site. 1960 PRL was incorporated as a public limited company. Contract awarded for construction of Refinery to M/s Kellogg Group of Companies. 1962 Earlier that year, the foundation stone was laid by the then Min…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=contract_tender",
+       "event_subtype=contract",
+       "sector=Refinery"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "candidate_evidence_summary": {
+      "evidence_status": "no_prior_exact_analogues",
+      "candidate_counts": {
+       "same_company_exact": 0,
+       "same_sector_exact": 0
+      },
+      "mature_horizon_counts": {
+       "1Q": 0,
+       "2Q": 0,
+       "4Q": 0,
+       "8Q": 0
+      },
+      "latest_prior_candidate_date": null,
+      "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+     },
+     "readiness_ledger": {
+      "status": "needs_prior_exact_analogues",
+      "minimum_mature_outcome_sample": 3,
+      "strict_candidate_count": 0,
+      "mature_horizon_counts": {
+       "1Q": 0,
+       "2Q": 0,
+       "4Q": 0,
+       "8Q": 0
+      },
+      "missing_mature_outcomes_to_minimum": {
+       "1Q": 3,
+       "2Q": 3,
+       "4Q": 3,
+       "8Q": 3
+      },
+      "aggregate_ready_horizons": [],
+      "nearest_ready_horizon": "1Q",
+      "latest_prior_candidate_date": null,
+      "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    },
+    {
+     "benchmark_id": "conditional_cbbd8e8192ff010ddcab",
+     "target_event": {
+      "event_id": "evt_25bd9fbb3c8f47ecb8c8",
+      "study_id": "study_25bd9fbb3c8f47ecb8c8",
+      "symbol": "PRL",
+      "event_type": "debt_refinancing",
+      "event_subtype": "credit_event",
+      "effective_date": "2025-09-08",
+      "sector": "Refinery",
+      "description": "on: (i) major judgmental areas (ii) signiﬁcant adjustments resulting from the audit (iii) going concern assumption (iv) any changes in accounting policies and practices (v) compliance with applicable accounting standards (vi) compliance wi…"
+     },
+     "context": {
+      "conditions": [
+       "event_type=debt_refinancing",
+       "event_subtype=credit_event",
+       "sector=Refinery"
+      ],
+      "summary": "Exact event class and retained current-sector context."
+     },
+     "status": "no_prior_exact_analogues",
+     "matching_policy": {
+      "event_type": "exact",
+      "event_subtype": "exact",
+      "candidate_date": "strictly_before_target",
+      "same_company": "same_symbol",
+      "same_sector": "same_current_sector_other_symbol",
+      "returns": "reuse_target_event_study_analogue_outcomes",
+      "minimum_aggregate_sample": 3
+     },
+     "candidates": {
+      "same_company_exact": [],
+      "same_sector_exact": []
+     },
+     "candidate_evidence_summary": {
+      "evidence_status": "no_prior_exact_analogues",
+      "candidate_counts": {
+       "same_company_exact": 0,
+       "same_sector_exact": 0
+      },
+      "mature_horizon_counts": {
+       "1Q": 0,
+       "2Q": 0,
+       "4Q": 0,
+       "8Q": 0
+      },
+      "latest_prior_candidate_date": null,
+      "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
+     },
+     "readiness_ledger": {
+      "status": "needs_prior_exact_analogues",
+      "minimum_mature_outcome_sample": 3,
+      "strict_candidate_count": 0,
+      "mature_horizon_counts": {
+       "1Q": 0,
+       "2Q": 0,
+       "4Q": 0,
+       "8Q": 0
+      },
+      "missing_mature_outcomes_to_minimum": {
+       "1Q": 3,
+       "2Q": 3,
+       "4Q": 3,
+       "8Q": 3
+      },
+      "aggregate_ready_horizons": [],
+      "nearest_ready_horizon": "1Q",
+      "latest_prior_candidate_date": null,
+      "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+     },
+     "horizon_aggregates": {
+      "1Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "2Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "4Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      },
+      "8Q": {
+       "n": 0,
+       "status": "suppressed",
+       "reason": "n_lt_3",
+       "stats": {
+        "mean_return_pct": null,
+        "median_return_pct": null,
+        "min_return_pct": null,
+        "max_return_pct": null
+       }
+      }
+     },
+     "blocked_states": {
+      "peer": {
+       "status": "blocked",
+       "reason": "no_peer_registry"
+      },
+      "international": {
+       "status": "blocked",
+       "reason": "no_international_registry"
+      },
+      "financial": {
+       "status": "blocked",
+       "reason": "no_period_aligned_financials"
+      },
+      "causal": {
+       "status": "blocked",
+       "reason": "descriptive_not_causal"
+      },
+      "forecast": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      },
+      "valuation": {
+       "status": "blocked",
+       "reason": "not_implemented"
+      }
+     }
+    }
+   ],
    "readiness_summary": {
-    "dated_benchmark_count": 0,
+    "dated_benchmark_count": 2,
     "benchmarks_with_candidates": 0,
     "aggregate_ready_benchmark_count": 0,
-    "suppressed_benchmark_count": 0,
+    "suppressed_benchmark_count": 2,
     "total_strict_candidate_count": 0,
     "minimum_missing_mature_outcomes_to_publish": 3,
-    "event_class_gaps": [],
+    "event_class_gaps": [
+     {
+      "event_type": "contract_tender",
+      "event_subtype": "contract",
+      "benchmark_count": 1,
+      "candidate_history_present_count": 0,
+      "aggregate_ready_count": 0,
+      "total_strict_candidate_count": 0,
+      "minimum_missing_mature_outcomes_to_publish": 3
+     },
+     {
+      "event_type": "debt_refinancing",
+      "event_subtype": "credit_event",
+      "benchmark_count": 1,
+      "candidate_history_present_count": 0,
+      "aggregate_ready_count": 0,
+      "total_strict_candidate_count": 0,
+      "minimum_missing_mature_outcomes_to_publish": 3
+     }
+    ],
     "policy": "Metadata-only readiness; counts are recomputed from strict retained candidates and do not relax no-lookahead or minimum-sample rules."
    },
    "blocked_states": {
@@ -4107,7 +4621,7 @@
       ],
       "summary": "Exact event class and retained current-sector context."
      },
-     "status": "no_prior_exact_analogues",
+     "status": "candidate_history_present",
      "matching_policy": {
       "event_type": "exact",
       "event_subtype": "exact",
@@ -4119,13 +4633,78 @@
      },
      "candidates": {
       "same_company_exact": [],
-      "same_sector_exact": []
+      "same_sector_exact": [
+       {
+        "event_id": "evt_25bd9fbb3c8f47ecb8c8",
+        "study_id": "study_25bd9fbb3c8f47ecb8c8",
+        "symbol": "PRL",
+        "effective_date": "2025-09-08",
+        "classification": "same_sector",
+        "event_type": "debt_refinancing",
+        "event_subtype": "credit_event",
+        "sector": "Refinery",
+        "outcomes": {
+         "1Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/PRL.json",
+           "baseline_date": "2025-09-05",
+           "target_date": "2025-12-08",
+           "endpoint_date": null
+          }
+         },
+         "2Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/PRL.json",
+           "baseline_date": "2025-09-05",
+           "target_date": "2026-03-08",
+           "endpoint_date": null
+          }
+         },
+         "4Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/PRL.json",
+           "baseline_date": "2025-09-05",
+           "target_date": "2026-09-08",
+           "endpoint_date": null
+          }
+         },
+         "8Q": {
+          "endpoint_date": null,
+          "return_pct": null,
+          "status": "unavailable",
+          "reason": "no_ex_ante_endpoint",
+          "provenance": {
+           "history_file": "state/history/PRL.json",
+           "baseline_date": "2025-09-05",
+           "target_date": "2027-09-08",
+           "endpoint_date": null
+          }
+         }
+        },
+        "outcome_source": {
+         "target_study_id": "study_2faadfd3dc7f2e8a5262",
+         "target_event_id": "evt_2faadfd3dc7f2e8a5262"
+        }
+       }
+      ]
      },
      "candidate_evidence_summary": {
-      "evidence_status": "no_prior_exact_analogues",
+      "evidence_status": "thin_history_present",
       "candidate_counts": {
        "same_company_exact": 0,
-       "same_sector_exact": 0
+       "same_sector_exact": 1
       },
       "mature_horizon_counts": {
        "1Q": 0,
@@ -4133,13 +4712,13 @@
        "4Q": 0,
        "8Q": 0
       },
-      "latest_prior_candidate_date": null,
+      "latest_prior_candidate_date": "2025-09-08",
       "limitation": "Descriptive prior-event evidence only; it is not causal, a forecast, valuation or advice."
      },
      "readiness_ledger": {
-      "status": "needs_prior_exact_analogues",
+      "status": "needs_more_mature_outcomes",
       "minimum_mature_outcome_sample": 3,
-      "strict_candidate_count": 0,
+      "strict_candidate_count": 1,
       "mature_horizon_counts": {
        "1Q": 0,
        "2Q": 0,
@@ -4154,8 +4733,8 @@
       },
       "aggregate_ready_horizons": [],
       "nearest_ready_horizon": "1Q",
-      "latest_prior_candidate_date": null,
-      "next_required_evidence": "3 mature strict prior exact analogue outcome(s) for one horizon before publishing aggregate statistics."
+      "latest_prior_candidate_date": "2025-09-08",
+      "next_required_evidence": "3 additional mature strict prior exact analogue outcome(s) for 1Q before publishing aggregate statistics."
      },
      "horizon_aggregates": {
       "1Q": {
@@ -4233,10 +4812,10 @@
    ],
    "readiness_summary": {
     "dated_benchmark_count": 3,
-    "benchmarks_with_candidates": 0,
+    "benchmarks_with_candidates": 1,
     "aggregate_ready_benchmark_count": 0,
     "suppressed_benchmark_count": 3,
-    "total_strict_candidate_count": 0,
+    "total_strict_candidate_count": 1,
     "minimum_missing_mature_outcomes_to_publish": 3,
     "event_class_gaps": [
      {
@@ -4252,9 +4831,9 @@
       "event_type": "debt_refinancing",
       "event_subtype": "credit_event",
       "benchmark_count": 1,
-      "candidate_history_present_count": 0,
+      "candidate_history_present_count": 1,
       "aggregate_ready_count": 0,
-      "total_strict_candidate_count": 0,
+      "total_strict_candidate_count": 1,
       "minimum_missing_mature_outcomes_to_publish": 3
      },
      {
@@ -5087,11 +5666,11 @@
   }
  },
  "readiness_summary": {
-  "dated_benchmark_count": 22,
-  "benchmarks_with_candidates": 9,
+  "dated_benchmark_count": 25,
+  "benchmarks_with_candidates": 11,
   "aggregate_ready_benchmark_count": 1,
-  "suppressed_benchmark_count": 21,
-  "total_strict_candidate_count": 13,
+  "suppressed_benchmark_count": 24,
+  "total_strict_candidate_count": 15,
   "minimum_missing_mature_outcomes_to_publish": 1,
   "event_class_gaps": [
    {
@@ -5106,7 +5685,7 @@
    {
     "event_type": "contract_tender",
     "event_subtype": "contract",
-    "benchmark_count": 4,
+    "benchmark_count": 5,
     "candidate_history_present_count": 2,
     "aggregate_ready_count": 0,
     "total_strict_candidate_count": 2,
@@ -5115,20 +5694,20 @@
    {
     "event_type": "debt_refinancing",
     "event_subtype": "credit_event",
-    "benchmark_count": 5,
-    "candidate_history_present_count": 2,
+    "benchmark_count": 6,
+    "candidate_history_present_count": 3,
     "aggregate_ready_count": 0,
-    "total_strict_candidate_count": 3,
+    "total_strict_candidate_count": 4,
     "minimum_missing_mature_outcomes_to_publish": 1
    },
    {
     "event_type": "management_change",
     "event_subtype": "management_change",
-    "benchmark_count": 6,
-    "candidate_history_present_count": 3,
+    "benchmark_count": 7,
+    "candidate_history_present_count": 4,
     "aggregate_ready_count": 1,
-    "total_strict_candidate_count": 6,
-    "minimum_missing_mature_outcomes_to_publish": 3
+    "total_strict_candidate_count": 7,
+    "minimum_missing_mature_outcomes_to_publish": 2
    },
    {
     "event_type": "regulatory_change",
@@ -5156,9 +5735,9 @@
  "as_of": "2026-09-07",
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/conditional_benchmarks.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

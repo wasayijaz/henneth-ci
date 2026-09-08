@@ -78,6 +78,7 @@
   "request_scope": "single_company_or_explicit_trigger_batch_only",
   "candidate_symbols": [
    "MLCF",
+   "PPL",
    "DGKC",
    "PSO",
    "UBL",
@@ -91,7 +92,7 @@
    "MARI",
    "NRL"
   ],
-  "candidate_count": 13,
+  "candidate_count": 14,
   "max_untriggered_company_requests": 0,
   "daily_per_ticker_ai_schedule_allowed": false,
   "issuer_document_first_seen_import_is_not_a_trigger": true
@@ -148,10 +149,25 @@
   "PPL": {
    "symbol": "PPL",
    "deterministic_scan_status": "degraded",
-   "targeted_work_status": "no_targeted_work_request",
-   "targeted_triggers": [],
-   "targeted_trigger_count": 0,
-   "allowed_targeted_work": [],
+   "targeted_work_status": "eligible_for_owner_review_request",
+   "targeted_triggers": [
+    {
+     "trigger_type": "retained_material_change",
+     "change_id": "chg_c6096ca399a55b97bb30f33f",
+     "kind": "event",
+     "severity": "material",
+     "date": "2026-08-11",
+     "date_basis": null,
+     "title": "management change",
+     "source_url": "https://dps.psx.com.pk/download/document/281006.pdf",
+     "document_id": "psx:281006"
+    }
+   ],
+   "targeted_trigger_count": 1,
+   "allowed_targeted_work": [
+    "owner_review",
+    "single_company_ai_analysis"
+   ],
    "prohibited_work": [
     "daily_per_ticker_ai_schedule",
     "roster_wide_ai_sweep",
@@ -200,12 +216,12 @@
     },
     {
      "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_b183d230c6266470d0be",
+     "alert_id": "ci_alert_9162bfeb4ab1892a9e87",
      "date": "2026-09-08",
      "title": "Financials",
      "source_url": "https://psopk.com/en/investors/financial",
      "source": "issuer_source_registry",
-     "previous_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2"
+     "previous_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4"
     }
    ],
    "targeted_trigger_count": 2,
@@ -221,7 +237,7 @@
   },
   "UBL": {
    "symbol": "UBL",
-   "deterministic_scan_status": "healthy",
+   "deterministic_scan_status": "degraded",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
@@ -666,15 +682,15 @@
  },
  "summary": {
   "company_count": 20,
-  "targeted_candidate_count": 13,
-  "targeted_trigger_count": 26,
+  "targeted_candidate_count": 14,
+  "targeted_trigger_count": 27,
   "scheduled_ai_task_count": 0
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/work_routing_policy.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

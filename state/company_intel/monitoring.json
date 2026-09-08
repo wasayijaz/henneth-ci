@@ -1,15 +1,15 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-09-08T08:45:08+05:00",
+ "as_of": "2026-09-08T09:07:28+05:00",
  "source_as_of": {
-  "source_registry": "2026-09-08T08:45:08+05:00",
-  "source_qa": "2026-09-08 03:45",
-  "change_intelligence": "2026-09-08 03:45",
-  "event_ledger": "2026-09-08 03:45",
+  "source_registry": "2026-09-08T09:07:28+05:00",
+  "source_qa": "2026-09-08 04:08",
+  "change_intelligence": "2026-09-08 04:08",
+  "event_ledger": "2026-09-08 04:07",
   "operating_events": "2026-09-08",
-  "evidence_watchlist": "2026-09-08T03:45:00+05:00",
-  "guidance_contradictions": "2026-09-08T03:45:00+05:00"
+  "evidence_watchlist": "2026-09-08T04:07:00+05:00",
+  "guidance_contradictions": "2026-09-08T04:07:00+05:00"
  },
  "pilot_symbols": [
   "MLCF",
@@ -76,10 +76,10 @@
  },
  "summary": {
   "company_count": 20,
-  "alert_count": 151,
+  "alert_count": 152,
   "status_counts": {
-   "degraded": 9,
-   "healthy": 11,
+   "degraded": 10,
+   "healthy": 10,
    "stale": 0,
    "unknown": 0
   }
@@ -501,7 +501,7 @@
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": null,
    "latest_change_at": "2026-08-18T00:00:00+05:00",
-   "latest_event_at": "2026-05-25T11:00:00+05:00",
+   "latest_event_at": "2026-08-11T11:58:00+05:00",
    "source_health": {
     "registry_status": "degraded",
     "monitored_page_count": 0,
@@ -516,8 +516,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 7,
-     "event": 11
+     "document": 8,
+     "event": 10
     },
     "watch_status": "active_watch",
     "active_watch_count": 1,
@@ -564,6 +564,47 @@
      },
      "evidence_identity": {
       "change_id": "chg_afdfc39f65eb939a6bb356c0",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_d0918717457267ad9ed1",
+     "symbol": "PPL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-11T00:00:00+05:00",
+     "title": "management change",
+     "reason": "Official document language matched the desk's event classifier.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281006.pdf",
+      "document_id": "psx:281006",
+      "source_id": null,
+      "source": "change_intelligence",
+      "page": 1
+     },
+     "evidence_identity": {
+      "change_id": "chg_c6096ca399a55b97bb30f33f",
+      "kind": "event",
+      "date_basis": null
+     }
+    },
+    {
+     "alert_id": "ci_alert_81e473969a81f9fdf6cf",
+     "symbol": "PPL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-11T00:00:00+05:00",
+     "title": "Appointment of a Director - Mr Syed Zakria Ali Shah",
+     "reason": "Official PSX DPS document retained as board_meeting.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281006.pdf",
+      "document_id": "psx:281006",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_892d9868e1fd9f8e8793832c",
       "kind": "document",
       "date_basis": "published_at"
      }
@@ -627,48 +668,6 @@
       "change_id": "chg_1c265bac60978494236f99c6",
       "kind": "document",
       "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_ea3a58f4f9555193e49b",
-     "symbol": "PPL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-04-29T00:00:00+05:00",
-     "title": "dividend",
-     "reason": "Official document language matched the desk's event classifier.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/275641.pdf",
-      "document_id": "psx:275641",
-      "source_id": null,
-      "source": "change_intelligence",
-      "page": 1
-     },
-     "evidence_identity": {
-      "change_id": "chg_8a79ac18dcde06c4971f2f20",
-      "kind": "event",
-      "date_basis": null
-     }
-    },
-    {
-     "alert_id": "ci_alert_d6ec57e4698ba85ba0f8",
-     "symbol": "PPL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-04-29T00:00:00+05:00",
-     "title": "dividend",
-     "reason": "Official document language matched the desk's event classifier.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/275826.pdf",
-      "document_id": "psx:275826",
-      "source_id": null,
-      "source": "change_intelligence",
-      "page": 1
-     },
-     "evidence_identity": {
-      "change_id": "chg_38050f3e45a30db1b780f908",
-      "kind": "event",
-      "date_basis": null
      }
     },
     {
@@ -887,7 +886,7 @@
    "symbol": "PSO",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T08:44:13+05:00",
+   "latest_source_at": "2026-09-08T09:06:34+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
    "latest_event_at": "2026-04-29T11:43:00+05:00",
    "source_health": {
@@ -900,7 +899,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 18
+     "issuer_document": 17,
+     "source": 1
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -909,11 +909,11 @@
    },
    "alerts": [
     {
-     "alert_id": "ci_alert_b183d230c6266470d0be",
+     "alert_id": "ci_alert_9162bfeb4ab1892a9e87",
      "symbol": "PSO",
      "type": "source_page_changed",
      "status": "observed",
-     "date": "2026-09-08T08:44:13+05:00",
+     "date": "2026-09-08T09:06:34+05:00",
      "title": "Financials",
      "reason": "monitored issuer page changed after a prior retained hash",
      "source": {
@@ -923,8 +923,8 @@
       "source": "issuer_source_registry"
      },
      "evidence_identity": {
-      "content_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4",
-      "previous_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2"
+      "content_sha256": "1d33072e586e037b4670903c72db68c669f1ea466da978a06ad562ca147e0162",
+      "previous_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4"
      }
     },
     {
@@ -987,6 +987,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_adfa4f54fcaee4b3edae",
+     "symbol": "PSO",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Financials",
+     "reason": "Same-domain issuer page hash changed since the previous retained check.",
+     "source": {
+      "source_url": "https://psopk.com/en/investors/financial",
+      "document_id": null,
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_fe8ef592eaac8af287276906",
+      "kind": "source",
+      "date_basis": "last_changed_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_ad7bea47f396a1c22900",
      "symbol": "PSO",
      "type": "retained_change",
@@ -1045,26 +1065,6 @@
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_a76c65e74759583002e8",
-     "symbol": "PSO",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Annual Report 2020",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://psopk.com/files/financial-reports/pdf/pso_ar_2020.pdf",
-      "document_id": "issuer:4738cb3909251adcf35fb36b",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_b23c54fa625fd814fcbc9d73",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 8,
@@ -1080,16 +1080,19 @@
   },
   "UBL": {
    "symbol": "UBL",
-   "status": "healthy",
-   "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
+   "status": "degraded",
+   "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": "2026-09-08T08:05:18+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
-   "latest_event_at": "2026-07-22T11:38:00+05:00",
+   "latest_event_at": "2026-08-07T16:23:00+05:00",
    "source_health": {
-    "registry_status": "ok",
+    "registry_status": "degraded",
     "monitored_page_count": 2,
     "document_link_count": 20,
-    "quality_flags": [],
+    "quality_flags": [
+     "page_degraded",
+     "registry_degraded"
+    ],
     "missing_required_source": false
    },
    "activity": {
@@ -1310,9 +1313,32 @@
       "delivery_id": "delivery_038f8cc90a9ebe5c7a91",
       "matched_event_id": null
      }
+    },
+    {
+     "alert_id": "ci_alert_3decf7f2cdc49cfe074d",
+     "symbol": "UBL",
+     "type": "source_registry_degraded",
+     "status": "open",
+     "date": null,
+     "title": "issuer source registry degraded",
+     "reason": "page_degraded, registry_degraded",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/company/UBL",
+      "document_id": null,
+      "source_id": null,
+      "source": "issuer_source_registry"
+     },
+     "evidence_identity": {
+      "registry_status": "degraded",
+      "quality_flags": [
+       "page_degraded",
+       "registry_degraded"
+      ],
+      "missing_required_source": false
+     }
     }
    ],
-   "alert_count": 10,
+   "alert_count": 11,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -1343,7 +1369,7 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 10,
+     "document": 11,
      "event": 3
     },
     "watch_status": "no_active_watch",
@@ -1794,6 +1820,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_0d129f5ed4e4daaa3d73",
+     "symbol": "HUBC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+     "reason": "Official PSX DPS document retained as results.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281728.pdf",
+      "document_id": "psx:281728",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_1f3e55bfd58f05f7caffc024",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_c62edeee6ca5a7cd4332",
      "symbol": "HUBC",
      "type": "retained_change",
@@ -1871,26 +1917,6 @@
       "content_sha256": "eb4843119287488b559255376170644d42fd0dcc0a6411c579fdc887bad12336",
       "previous_sha256": "cc0a05f1443634d5863232c39a3178512e57dc8ada0c23258ae081160822f078"
      }
-    },
-    {
-     "alert_id": "ci_alert_ec88f1143ab49b5bd11c",
-     "symbol": "HUBC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Download Press Release",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://hubpower.com/wp-content/uploads/2022/12/Successful-Synchronization-of-330MW-Thar-Coal-Power-Plant-ThalNova-with-the-National-Grid.pdf",
-      "document_id": "issuer:925a106f4e3c74c0250ad132",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_82d7d90fa708c0a0ef19fefc",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 8,
@@ -1910,7 +1936,7 @@
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:44:34+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
-   "latest_event_at": null,
+   "latest_event_at": "2025-09-08T09:09:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -1925,7 +1951,7 @@
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
-    "guidance_status": "no_guidance_objects",
+    "guidance_status": "available",
     "guidance_contradiction_count": 0
    },
    "alerts": [
@@ -2149,6 +2175,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_be829ca65f019cfe6e5a",
+     "symbol": "BOP",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Notice of Corporate Briefing Session - 2026",
+     "reason": "Official Issuer website document retained as corporate_briefing.",
+     "source": {
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Notice of Corporate Briefing Session - 2026.pdf",
+      "document_id": "issuer:e9ff06d8c3f6897b9747f053",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_522123bc082da009feb8814f",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_bb8643c905064ea29ef0",
      "symbol": "BOP",
      "type": "retained_change",
@@ -2207,26 +2253,6 @@
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_6501f22b9bf55c8acbab",
-     "symbol": "BOP",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Presentation of Corporate Briefing Session 2026",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
-      "document_id": "issuer:4e2eb7e439eed49809baebf1",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_d93d8479061bccca22c27606",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 7,
@@ -2245,7 +2271,7 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": "2026-08-18T03:20:48+05:00",
-   "latest_change_at": "2026-08-27T00:00:00+05:00",
+   "latest_change_at": "2026-09-03T00:00:00+05:00",
    "latest_event_at": "2026-03-09T11:56:00+05:00",
    "source_health": {
     "registry_status": "degraded",
@@ -2259,8 +2285,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 16,
-     "issuer_document": 2
+     "document": 17,
+     "issuer_document": 1
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2268,6 +2294,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_e368063e06610c61df7c",
+     "symbol": "NBP",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-03T00:00:00+05:00",
+     "title": "Appointment of President/CEO- National Bank of Pakistan",
+     "reason": "Official PSX DPS document retained as appointment.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282190.pdf",
+      "document_id": "psx:282190",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_4fdb08d6d89c9d8c8997e985",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_a75082880edf50c5861f",
      "symbol": "NBP",
@@ -2364,26 +2410,6 @@
      },
      "evidence_identity": {
       "change_id": "chg_e15e3a4c24d17f396609fdce",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_7b12c33f8aecf463a939",
-     "symbol": "NBP",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-22T00:00:00+05:00",
-     "title": "PIA Sukuk [Advertisement ]",
-     "reason": "Official Issuer website document retained as results.",
-     "source": {
-      "source_url": "https://www.nbp.com.pk/News/PIA_Sukuk/PIA Sukuk Advertisement.pdf",
-      "document_id": "issuer:c42f82962006718641cc8b89",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_f2798d09fa74d27f5e093764",
       "kind": "document",
       "date_basis": "retrieved_at"
      }
@@ -2647,8 +2673,8 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:05:40+05:00",
-   "latest_change_at": "2026-09-08T03:45:00+05:00",
-   "latest_event_at": "2026-09-08T03:45:00+05:00",
+   "latest_change_at": "2026-09-08T04:07:00+05:00",
+   "latest_event_at": "2026-09-08T04:07:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -2770,13 +2796,13 @@
      }
     },
     {
-     "alert_id": "ci_alert_00ef0f85ab4e9e62570d",
+     "alert_id": "ci_alert_1df43da7d6ab29f547f7",
      "symbol": "ATRL",
      "type": "retained_change",
      "status": "observed",
      "date": "2026-09-08T00:00:00+05:00",
      "title": "Download",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "reason": "Official Issuer website document retained as results.",
      "source": {
       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
       "document_id": "issuer:7b937551821bd3c157c7e6ff",
@@ -2784,9 +2810,9 @@
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_6b6de449f4742d74f7d065c5",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
+      "change_id": "chg_25ca547295c0e9b2f1d2bb15",
+      "kind": "document",
+      "date_basis": "retrieved_at"
      }
     },
     {
@@ -3939,9 +3965,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/monitoring.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

@@ -810,7 +810,7 @@
    "issuer_url": "https://www.ubldigital.com/",
    "root_domain": "ubldigital.com",
    "discovered_from": "https://dps.psx.com.pk/company/UBL",
-   "status": "ok",
+   "status": "degraded",
    "monitored_pages": [
     {
      "url": "https://www.ubldigital.com/",
@@ -831,8 +831,8 @@
      "url": "https://ubldigital.com/Banking/National-Financial-Literacy-Program",
      "kind": "financial_reports",
      "label": "National Financial Literacy Program",
-     "status": "ok",
-     "error": null,
+     "status": "degraded",
+     "error": "ConnectionError:('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
      "content_sha256": "f8f0eef1c2e2bb20f72bbcaf998c82cc999bb848667c42f98cd7c7f207f98b67",
      "content_length": 221514,
      "content_type": "text/html",
@@ -1054,14 +1054,14 @@
      "label": "Financials",
      "status": "ok",
      "error": null,
-     "content_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4",
+     "content_sha256": "1d33072e586e037b4670903c72db68c669f1ea466da978a06ad562ca147e0162",
      "content_length": 368769,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-09-08T08:05:12+05:00",
-     "last_changed_at": "2026-09-08T08:44:13+05:00",
-     "previous_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2"
+     "last_changed_at": "2026-09-08T09:06:34+05:00",
+     "previous_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4"
     }
    ],
    "document_links": [
@@ -5584,15 +5584,15 @@
    ]
   }
  },
- "updated": "2026-09-08T08:45:08+05:00",
+ "updated": "2026-09-08T09:07:28+05:00",
  "source": "Issuer websites discovered from official PSX DPS company profiles",
  "pilot_count": 22,
  "degraded": true,
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/source_registry.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

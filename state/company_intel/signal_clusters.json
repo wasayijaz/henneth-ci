@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "registry_version": "signal_cluster_registry_v1",
- "as_of": "2026-09-08T03:45:00+05:00",
+ "as_of": "2026-09-08T04:07:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -26,19 +26,19 @@
  ],
  "companies": {
   "ATRL": {
-   "candidate_count": 8,
+   "candidate_count": 11,
    "eligible_count": 0,
    "clusterable_count": 0,
    "coverage_status": "rejected",
    "rejection_reasons": {
-    "blocking_quality_flags": 5,
-    "event_type_not_in_registry": 3,
-    "invalid_source_quality_level": 5,
-    "missing_effective_date": 5,
-    "not_explicit_acquisition_stage_target": 2,
-    "not_named_management_change": 3
+    "blocking_quality_flags": 8,
+    "event_type_not_in_registry": 4,
+    "invalid_source_quality_level": 8,
+    "missing_effective_date": 8,
+    "not_explicit_acquisition_stage_target": 3,
+    "not_named_management_change": 4
    },
-   "latest_detected_at": "2026-09-08T03:45:00+05:00",
+   "latest_detected_at": "2026-09-08T04:07:00+05:00",
    "freshness": "recent",
    "clusters": [],
    "registry_version": "signal_cluster_registry_v1"
@@ -388,13 +388,15 @@
    "registry_version": "signal_cluster_registry_v1"
   },
   "PPL": {
-   "candidate_count": 1,
+   "candidate_count": 2,
    "eligible_count": 1,
    "clusterable_count": 1,
    "coverage_status": "clusterable",
-   "rejection_reasons": {},
-   "latest_detected_at": "2026-01-09T10:41:00+05:00",
-   "freshness": "older",
+   "rejection_reasons": {
+    "not_named_management_change": 1
+   },
+   "latest_detected_at": "2026-08-11T11:58:00+05:00",
+   "freshness": "recent",
    "clusters": [
     {
      "cluster_id": "cluster_9560db56928d2cba2eeb7bfc",
@@ -471,13 +473,15 @@
    "registry_version": "signal_cluster_registry_v1"
   },
   "PRL": {
-   "candidate_count": 0,
+   "candidate_count": 2,
    "eligible_count": 0,
    "clusterable_count": 0,
-   "coverage_status": "no_candidates",
-   "rejection_reasons": {},
-   "latest_detected_at": null,
-   "freshness": "unknown",
+   "coverage_status": "rejected",
+   "rejection_reasons": {
+    "event_type_not_in_registry": 2
+   },
+   "latest_detected_at": "2025-09-08T09:09:00+05:00",
+   "freshness": "older",
    "clusters": [],
    "registry_version": "signal_cluster_registry_v1"
   },
@@ -822,9 +826,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/signal_clusters.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

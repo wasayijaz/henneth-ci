@@ -1789,8 +1789,19 @@
    "symbol": "UBL",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 8,
+   "indexed_official_financial_doc_count": 9,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:280914",
+     "title": "Credit of Second Interim Cash Dividend (D-66)",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-07T16:23:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/280914.pdf",
+     "status": "ready",
+     "content_sha256": "9e7452d470f1ce16edd23a9e5609cea1d5a9ccbc36f94ce38de6a422fef6b889",
+     "safe_period": null
+    },
     {
      "document_id": "psx:280213",
      "title": "Financial Results for the Quarter ended 30 June 2026",
@@ -2025,6 +2036,14 @@
     "queue_id": "finqual_534d1a01d5fbf881cec8",
     "candidate_documents": [
      {
+      "document_id": "psx:280914",
+      "published_at": "2026-08-07T16:23:00+05:00",
+      "title": "Credit of Second Interim Cash Dividend (D-66)",
+      "source_url": "https://dps.psx.com.pk/download/document/280914.pdf",
+      "safe_period": null,
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:280213",
       "published_at": "2026-07-22T11:38:00+05:00",
       "title": "Financial Results for the Quarter ended 30 June 2026",
@@ -2069,14 +2088,6 @@
        "source": "title",
        "matched_text": "Year Ended December 31, 2025"
       },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:271010",
-      "published_at": "2026-02-25T11:04:00+05:00",
-      "title": "Financial Results for the Year Ended 31 December 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/271010.pdf",
-      "safe_period": null,
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
@@ -2751,12 +2762,12 @@
     {
      "document_id": "psx:281728",
      "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
-     "doc_type": "financial_results",
+     "doc_type": "results",
      "classification": "financial_results",
      "published_at": "2026-08-27T10:55:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/281728.pdf",
-     "status": null,
-     "content_sha256": null,
+     "status": "ready",
+     "content_sha256": "8ee9d3c86141efe8cd604051f2015c6cac8f3d626b1bf538b3c71ae3f037daf5",
      "safe_period": {
       "period_end": "2026-06-30",
       "period_type": "annual",
@@ -3200,12 +3211,12 @@
     {
      "document_id": "psx:258964",
      "title": "Transmission of Annual Report for the year ended June 30, 2025",
-     "doc_type": "financial_statement",
-     "classification": "financial_statement",
+     "doc_type": "results",
+     "classification": "financial_results",
      "published_at": "2025-09-08T09:09:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/258964.pdf",
-     "status": null,
-     "content_sha256": null,
+     "status": "ready",
+     "content_sha256": "002b28155f149f044cf9fac751ba6f512a8b1ec8f0e905fdbcc6bc685c824933",
      "safe_period": {
       "period_end": "2025-06-30",
       "period_type": "annual",
@@ -3325,8 +3336,25 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 0,
-    "audit_only_metrics": [],
+    "audit_only_fact_count": 15,
+    "audit_only_metrics": [
+     {
+      "metric": "change_pct",
+      "fact_count": 4
+     },
+     {
+      "metric": "dividend",
+      "fact_count": 1
+     },
+     {
+      "metric": "profit",
+      "fact_count": 4
+     },
+     {
+      "metric": "revenue",
+      "fact_count": 6
+     }
+    ],
     "model_loadable_count": 0,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
@@ -4736,26 +4764,30 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 159,
+    "audit_only_fact_count": 203,
     "audit_only_metrics": [
      {
       "metric": "change_pct",
-      "fact_count": 30
+      "fact_count": 37
      },
      {
       "metric": "dividend",
-      "fact_count": 13
+      "fact_count": 17
+     },
+     {
+      "metric": "gross_profit",
+      "fact_count": 2
      },
      {
       "metric": "profit",
-      "fact_count": 53
+      "fact_count": 66
      },
      {
       "metric": "revenue",
-      "fact_count": 63
+      "fact_count": 81
      }
     ],
-    "model_loadable_count": 0,
+    "model_loadable_count": 4,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {
@@ -4931,12 +4963,12 @@
     {
      "document_id": "psx:270444",
      "title": "Announcement of Financial Results for the Year Ended December 31, 2025",
-     "doc_type": "financial_results",
+     "doc_type": "results",
      "classification": "financial_results",
      "published_at": "2026-02-18T12:57:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/270444.pdf",
-     "status": null,
-     "content_sha256": null,
+     "status": "ready",
+     "content_sha256": "384536a1fc201a7331ef6e15e623129ed6f9773bc9e70e9fa870aebd3a4f6bde",
      "safe_period": {
       "period_end": "2025-12-31",
       "period_type": "annual",
@@ -6659,12 +6691,12 @@
     {
      "document_id": "psx:270985",
      "title": "Financial Results for the Quarter Ended 31st December 2025",
-     "doc_type": "financial_results",
+     "doc_type": "results",
      "classification": "financial_results",
      "published_at": "2026-02-25T09:05:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/270985.pdf",
-     "status": null,
-     "content_sha256": null,
+     "status": "ready",
+     "content_sha256": "490fcfc2b9dde488c5bc1bab63086089e45747967954c44afbd4833eaab43b98",
      "safe_period": null
     },
     {
@@ -6803,7 +6835,7 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 60,
+    "audit_only_fact_count": 62,
     "audit_only_metrics": [
      {
       "metric": "change_pct",
@@ -6811,7 +6843,7 @@
      },
      {
       "metric": "profit",
-      "fact_count": 21
+      "fact_count": 23
      },
      {
       "metric": "revenue",
@@ -6822,7 +6854,7 @@
       "fact_count": 2
      }
     ],
-    "model_loadable_count": 18,
+    "model_loadable_count": 32,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {
@@ -6881,9 +6913,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/financial_coverage.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

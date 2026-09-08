@@ -60,10 +60,144 @@
     "revenue": [],
     "profit_after_tax_attributable": [],
     "basic_eps": [],
-    "gross_profit": [],
+    "gross_profit": [
+     {
+      "series_id": "series_209cdbf38a204e5b373e6f49",
+      "ticker": "ATRL",
+      "metric": "gross_profit",
+      "parser_version": "financial_statement_v2",
+      "line": "gross_profit",
+      "parser_revision": "block_geometry_v5",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 04:07",
+      "statement_type": "income_statement",
+      "reported_label": "Gross profit",
+      "duration_months": 12,
+      "column_role": "comparative_prior_period",
+      "comparative_to_period_end": "2025-06-30",
+      "period_end": "2024-06-30",
+      "period_type": "annual",
+      "consolidation": "consolidated",
+      "currency": null,
+      "unit": "PKR",
+      "unit_multiplier": 1,
+      "raw_value": "28,945,707",
+      "normalized_value": 28945707.0,
+      "document_id": "issuer:7b937551821bd3c157c7e6ff",
+      "fact_id": "fact_3904cb94b2789146e0539ed6",
+      "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+      "evidence": [
+       {
+        "page": 226,
+        "text": "Gross profit",
+        "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf"
+       }
+      ],
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:7b937551821bd3c157c7e6ff",
+       "link_id": "issuer:7b937551821bd3c157c7e6ff",
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+       "source_page": "https://www.arl.com.pk/financial-annual/",
+       "root_domain": "arl.com.pk",
+       "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+       "evidence_page": 226,
+       "ticker": "ATRL",
+       "registry_source": "state/company_intel/source_registry.json"
+      },
+      "quality_flags": [
+       "missing_currency_evidence",
+       "missing_structured_currency",
+       "missing_table_scale",
+       "invalid_structured_currency"
+      ],
+      "readiness": "model_loadable"
+     },
+     {
+      "series_id": "series_3dc5a0ca090e0ed52527780b",
+      "ticker": "ATRL",
+      "metric": "gross_profit",
+      "parser_version": "financial_statement_v2",
+      "line": "gross_profit",
+      "parser_revision": "block_geometry_v5",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 04:07",
+      "statement_type": "income_statement",
+      "reported_label": "Gross profit",
+      "duration_months": 12,
+      "column_role": "current_period",
+      "comparative_to_period_end": null,
+      "period_end": "2025-06-30",
+      "period_type": "annual",
+      "consolidation": "consolidated",
+      "currency": null,
+      "unit": "PKR",
+      "unit_multiplier": 1,
+      "raw_value": "9,927,840",
+      "normalized_value": 9927840.0,
+      "document_id": "issuer:7b937551821bd3c157c7e6ff",
+      "fact_id": "fact_4159785d6aebf37a19e77eb3",
+      "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+      "evidence": [
+       {
+        "page": 226,
+        "text": "Gross profit",
+        "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf"
+       }
+      ],
+      "issuer_registry_binding": {
+       "status": "qualified",
+       "document_id": "issuer:7b937551821bd3c157c7e6ff",
+       "link_id": "issuer:7b937551821bd3c157c7e6ff",
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+       "source_page": "https://www.arl.com.pk/financial-annual/",
+       "root_domain": "arl.com.pk",
+       "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+       "evidence_page": 226,
+       "ticker": "ATRL",
+       "registry_source": "state/company_intel/source_registry.json"
+      },
+      "quality_flags": [
+       "missing_currency_evidence",
+       "missing_structured_currency",
+       "missing_table_scale",
+       "invalid_structured_currency"
+      ],
+      "readiness": "model_loadable"
+     }
+    ],
     "operating_profit": []
    },
-   "derived": {},
+   "derived": {
+    "gross_profit_growth_pct": [
+     {
+      "period_end": "2025-06-30",
+      "value": -65.70185692821391,
+      "availability": "2026-09-08",
+      "formula_version": "financial_model_inputs_v1",
+      "source_fact_ids": [
+       "fact_3904cb94b2789146e0539ed6",
+       "fact_4159785d6aebf37a19e77eb3"
+      ],
+      "operand_provenance": [
+       {
+        "fact_id": "fact_3904cb94b2789146e0539ed6",
+        "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+        "period_end": "2024-06-30"
+       },
+       {
+        "fact_id": "fact_4159785d6aebf37a19e77eb3",
+        "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+        "period_end": "2025-06-30"
+       }
+      ]
+     }
+    ]
+   },
    "downstream_status": {
     "forecast": "blocked_insufficient_qualified_history",
     "valuation": "blocked_insufficient_qualified_history",
@@ -4735,9 +4869,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/financial_model_inputs.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

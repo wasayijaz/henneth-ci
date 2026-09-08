@@ -133,6 +133,7 @@
      "status": "available",
      "object_refs": [
       "bio_46565ec57d77f31e8ce0",
+      "bio_76669dda93ee13ba9009",
       "bio_a9fb046aae93cbc7cab1",
       "bio_ae0fd3bd48f020c3ec13"
      ]
@@ -145,6 +146,7 @@
      "status": "available",
      "object_refs": [
       "bio_0205f79542d7a9c947f8",
+      "bio_3aead2ef3bd26fc961f4",
       "bio_de824b57e4a58d4412b9"
      ]
     },
@@ -164,9 +166,11 @@
      "status": "available",
      "object_refs": [
       "bio_0205f79542d7a9c947f8",
+      "bio_3aead2ef3bd26fc961f4",
       "bio_6d7f3b661fe96aaaf53c",
       "bio_77a281ce34a8ee17ccf8",
       "bio_7ad9285b8bb207d8546e",
+      "bio_d4e767fb92bab3f9dd83",
       "bio_de824b57e4a58d4412b9"
      ]
     },
@@ -183,13 +187,15 @@
      "object_refs": [
       "bio_6d7f3b661fe96aaaf53c",
       "bio_77a281ce34a8ee17ccf8",
-      "bio_7ad9285b8bb207d8546e"
+      "bio_7ad9285b8bb207d8546e",
+      "bio_d4e767fb92bab3f9dd83"
      ]
     },
     "catalysts": {
      "status": "available",
      "object_refs": [
       "bio_0205f79542d7a9c947f8",
+      "bio_3aead2ef3bd26fc961f4",
       "bio_de824b57e4a58d4412b9"
      ]
     },
@@ -199,18 +205,24 @@
       "bio_012af4c96b11acc2c630",
       "bio_0205f79542d7a9c947f8",
       "bio_0868e39948902a1d5fb0",
+      "bio_322598342b184bb4321b",
+      "bio_3aead2ef3bd26fc961f4",
       "bio_46565ec57d77f31e8ce0",
       "bio_5d21c24220b563a810f0",
       "bio_6d7f3b661fe96aaaf53c",
+      "bio_76669dda93ee13ba9009",
       "bio_77a281ce34a8ee17ccf8",
       "bio_7ad9285b8bb207d8546e",
       "bio_91f98280fc42163adbfd",
+      "bio_92c0063258130ff367a8",
       "bio_9817f1b480bcba13951c",
       "bio_a9fb046aae93cbc7cab1",
       "bio_ae0fd3bd48f020c3ec13",
       "bio_cc6484d7cc976d211db3",
+      "bio_d4e767fb92bab3f9dd83",
       "bio_de824b57e4a58d4412b9",
       "bio_e5c8da58c850ebc78ed1",
+      "bio_e98dd3af56edec70b611",
       "bio_fc7a757721ec884aa154"
      ]
     },
@@ -331,6 +343,25 @@
      ]
     },
     {
+     "id": "bio_322598342b184bb4321b",
+     "type": "derived_fact",
+     "source_product": "event_studies",
+     "source_id": "evt_893a6b5895aa7973ea29",
+     "available_on": "2026-09-07",
+     "evidence_refs": [
+      {
+       "source_path": "state/company_intel/event_studies.json#/studies/evt_893a6b5895aa7973ea29"
+      }
+     ],
+     "confidence": null,
+     "brain_paths": [
+      "companies/ATRL/domains/historical_events"
+     ],
+     "input_refs": [
+      "evt_893a6b5895aa7973ea29"
+     ]
+    },
+    {
      "id": "bio_5d21c24220b563a810f0",
      "type": "derived_fact",
      "source_product": "event_studies",
@@ -366,6 +397,25 @@
      ],
      "input_refs": [
       "evt_2faadfd3dc7f2e8a5262"
+     ]
+    },
+    {
+     "id": "bio_92c0063258130ff367a8",
+     "type": "derived_fact",
+     "source_product": "event_studies",
+     "source_id": "evt_295c77f70e0fa11e8d89",
+     "available_on": "2026-09-07",
+     "evidence_refs": [
+      {
+       "source_path": "state/company_intel/event_studies.json#/studies/evt_295c77f70e0fa11e8d89"
+      }
+     ],
+     "confidence": null,
+     "brain_paths": [
+      "companies/ATRL/domains/historical_events"
+     ],
+     "input_refs": [
+      "evt_295c77f70e0fa11e8d89"
      ]
     },
     {
@@ -426,6 +476,25 @@
      ]
     },
     {
+     "id": "bio_e98dd3af56edec70b611",
+     "type": "derived_fact",
+     "source_product": "event_studies",
+     "source_id": "evt_70611418715013fba016",
+     "available_on": "2026-09-07",
+     "evidence_refs": [
+      {
+       "source_path": "state/company_intel/event_studies.json#/studies/evt_70611418715013fba016"
+      }
+     ],
+     "confidence": null,
+     "brain_paths": [
+      "companies/ATRL/domains/historical_events"
+     ],
+     "input_refs": [
+      "evt_70611418715013fba016"
+     ]
+    },
+    {
      "id": "bio_fc7a757721ec884aa154",
      "type": "derived_fact",
      "source_product": "event_studies",
@@ -468,6 +537,29 @@
      ]
     },
     {
+     "id": "bio_3aead2ef3bd26fc961f4",
+     "type": "reported_fact",
+     "source_product": "operating_events",
+     "source_id": "evt_893a6b5895aa7973ea29",
+     "available_on": "2026-09-08",
+     "evidence_refs": [
+      {
+       "document_id": "issuer:7b937551821bd3c157c7e6ff",
+       "page": 42,
+       "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+       "evidence_sha256": "888d044e59b30539cb5b00ae870e1cf8215a78e950359ed7579fc5395a5102a1",
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf"
+      }
+     ],
+     "confidence": 20,
+     "brain_paths": [
+      "companies/ATRL/domains/subsidiaries",
+      "companies/ATRL/domains/capital_allocation",
+      "companies/ATRL/domains/catalysts",
+      "companies/ATRL/domains/historical_events"
+     ]
+    },
+    {
      "id": "bio_6d7f3b661fe96aaaf53c",
      "type": "reported_fact",
      "source_product": "operating_events",
@@ -486,6 +578,27 @@
      "brain_paths": [
       "companies/ATRL/domains/capital_allocation",
       "companies/ATRL/domains/risks",
+      "companies/ATRL/domains/historical_events"
+     ]
+    },
+    {
+     "id": "bio_76669dda93ee13ba9009",
+     "type": "reported_fact",
+     "source_product": "operating_events",
+     "source_id": "evt_295c77f70e0fa11e8d89",
+     "available_on": "2026-09-08",
+     "evidence_refs": [
+      {
+       "document_id": "issuer:7b937551821bd3c157c7e6ff",
+       "page": 39,
+       "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+       "evidence_sha256": "e6a9504f045a32d404e7a63a53845acd3c95fbd22473445285996d1e3a949dc1",
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf"
+      }
+     ],
+     "confidence": 20,
+     "brain_paths": [
+      "companies/ATRL/domains/management",
       "companies/ATRL/domains/historical_events"
      ]
     },
@@ -552,6 +665,28 @@
       "companies/ATRL/domains/management",
       "companies/ATRL/domains/historical_events"
      ]
+    },
+    {
+     "id": "bio_d4e767fb92bab3f9dd83",
+     "type": "reported_fact",
+     "source_product": "operating_events",
+     "source_id": "evt_70611418715013fba016",
+     "available_on": "2026-09-08",
+     "evidence_refs": [
+      {
+       "document_id": "issuer:7b937551821bd3c157c7e6ff",
+       "page": 69,
+       "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+       "evidence_sha256": "e35bce1e478140f137c9de6fe16eb0c1244f36a9eda75a4f58b31606db173b73",
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf"
+      }
+     ],
+     "confidence": 20,
+     "brain_paths": [
+      "companies/ATRL/domains/capital_allocation",
+      "companies/ATRL/domains/risks",
+      "companies/ATRL/domains/historical_events"
+     ]
     }
    ],
    "source_index": {
@@ -601,7 +736,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -673,7 +808,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -863,14 +998,14 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
      "row_metadata": {
       "coverage_status": "rejected",
       "freshness": "recent",
-      "candidate_count": 8,
+      "candidate_count": 11,
       "eligible_count": 0,
       "clusterable_count": 0
      }
@@ -883,7 +1018,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -911,7 +1046,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -930,8 +1065,8 @@
       "symbol": "ATRL",
       "status": "available",
       "guidance_count": 0,
-      "risk_count": 3,
-      "object_count": 3,
+      "risk_count": 4,
+      "object_count": 4,
       "contradiction_count": 0
      }
     },
@@ -943,7 +1078,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -971,8 +1106,8 @@
       "guidance_status": "available",
       "active_thesis_count": 0,
       "delivery_record_count": 0,
-      "guidance_object_count": 3,
-      "guidance_record_count": 3
+      "guidance_object_count": 4,
+      "guidance_record_count": 4
      }
     },
     "intelligence_confidence": {
@@ -983,7 +1118,7 @@
      "symbol": "ATRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -1184,6 +1319,12 @@
     },
     {
      "date": "2026-09-07",
+     "object_ref": "bio_322598342b184bb4321b",
+     "type": "derived_fact",
+     "source_product": "event_studies"
+    },
+    {
+     "date": "2026-09-07",
      "object_ref": "bio_5d21c24220b563a810f0",
      "type": "derived_fact",
      "source_product": "event_studies"
@@ -1191,6 +1332,12 @@
     {
      "date": "2026-09-07",
      "object_ref": "bio_91f98280fc42163adbfd",
+     "type": "derived_fact",
+     "source_product": "event_studies"
+    },
+    {
+     "date": "2026-09-07",
+     "object_ref": "bio_92c0063258130ff367a8",
      "type": "derived_fact",
      "source_product": "event_studies"
     },
@@ -1214,6 +1361,12 @@
     },
     {
      "date": "2026-09-07",
+     "object_ref": "bio_e98dd3af56edec70b611",
+     "type": "derived_fact",
+     "source_product": "event_studies"
+    },
+    {
+     "date": "2026-09-07",
      "object_ref": "bio_fc7a757721ec884aa154",
      "type": "derived_fact",
      "source_product": "event_studies"
@@ -1226,7 +1379,19 @@
     },
     {
      "date": "2026-09-08",
+     "object_ref": "bio_3aead2ef3bd26fc961f4",
+     "type": "reported_fact",
+     "source_product": "operating_events"
+    },
+    {
+     "date": "2026-09-08",
      "object_ref": "bio_6d7f3b661fe96aaaf53c",
+     "type": "reported_fact",
+     "source_product": "operating_events"
+    },
+    {
+     "date": "2026-09-08",
+     "object_ref": "bio_76669dda93ee13ba9009",
      "type": "reported_fact",
      "source_product": "operating_events"
     },
@@ -1247,6 +1412,12 @@
      "object_ref": "bio_ae0fd3bd48f020c3ec13",
      "type": "reported_fact",
      "source_product": "operating_events"
+    },
+    {
+     "date": "2026-09-08",
+     "object_ref": "bio_d4e767fb92bab3f9dd83",
+     "type": "reported_fact",
+     "source_product": "operating_events"
     }
    ],
    "coverage": {
@@ -1254,7 +1425,7 @@
     "partial_domains": 0,
     "unknown_domains": 13,
     "blocked_domains": 2,
-    "object_count": 16
+    "object_count": 22
    }
   },
   "BOP": {
@@ -1633,7 +1804,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -1705,7 +1876,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -1895,7 +2066,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -1915,7 +2086,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -1943,7 +2114,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -1975,7 +2146,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -2015,7 +2186,7 @@
      "symbol": "BOP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -2765,7 +2936,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -2837,7 +3008,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -3027,7 +3198,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -3047,7 +3218,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -3075,7 +3246,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -3107,7 +3278,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -3147,7 +3318,7 @@
      "symbol": "CNERGY",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -4881,7 +5052,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -4953,7 +5124,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -5124,7 +5295,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -5144,7 +5315,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -5172,7 +5343,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -5204,7 +5375,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -5244,7 +5415,7 @@
      "symbol": "DGKC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -6040,7 +6211,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -6112,7 +6283,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -6302,7 +6473,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -6322,7 +6493,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -6350,7 +6521,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -6382,7 +6553,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -6422,7 +6593,7 @@
      "symbol": "ENGROH",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -6780,7 +6951,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -6852,7 +7023,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -7042,7 +7213,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -7062,7 +7233,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -7090,7 +7261,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -7122,7 +7293,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -7162,7 +7333,7 @@
      "symbol": "FFC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -7483,7 +7654,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -7555,7 +7726,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -7745,7 +7916,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -7765,7 +7936,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -7793,7 +7964,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -7825,7 +7996,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -7865,7 +8036,7 @@
      "symbol": "GAL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -8186,7 +8357,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -8258,7 +8429,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -8448,7 +8619,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -8468,7 +8639,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -8496,7 +8667,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -8528,7 +8699,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -8568,7 +8739,7 @@
      "symbol": "HBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -8988,7 +9159,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -9060,7 +9231,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -9250,7 +9421,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -9270,7 +9441,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -9298,7 +9469,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -9330,7 +9501,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -9370,7 +9541,7 @@
      "symbol": "HUBC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -10131,7 +10302,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -10203,7 +10374,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -10384,7 +10555,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -10404,7 +10575,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -10432,7 +10603,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -10464,7 +10635,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -10504,7 +10675,7 @@
      "symbol": "LUCK",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -11114,7 +11285,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -11186,7 +11357,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -11376,7 +11547,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -11396,7 +11567,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -11424,7 +11595,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -11456,7 +11627,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -11496,7 +11667,7 @@
      "symbol": "MARI",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -11866,7 +12037,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -11938,7 +12109,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -12128,7 +12299,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -12148,7 +12319,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -12176,7 +12347,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -12208,7 +12379,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -12248,7 +12419,7 @@
      "symbol": "MEBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -12928,7 +13099,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -13000,7 +13171,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -13171,7 +13342,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -13191,7 +13362,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -13219,7 +13390,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -13251,7 +13422,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -13291,7 +13462,7 @@
      "symbol": "MLCF",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -13694,7 +13865,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -13766,7 +13937,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -13956,7 +14127,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -13976,7 +14147,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -14004,7 +14175,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -14036,7 +14207,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -14076,7 +14247,7 @@
      "symbol": "NBP",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -14397,7 +14568,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -14469,7 +14640,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -14659,7 +14830,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -14679,7 +14850,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -14707,7 +14878,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -14739,7 +14910,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -14779,7 +14950,7 @@
      "symbol": "NRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -15100,7 +15271,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -15172,7 +15343,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -15362,7 +15533,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -15382,7 +15553,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -15410,7 +15581,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -15442,7 +15613,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -15482,7 +15653,7 @@
      "symbol": "OGDC",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -15699,7 +15870,8 @@
     "management": {
      "status": "available",
      "object_refs": [
-      "bio_3831f408878023508a40"
+      "bio_3831f408878023508a40",
+      "bio_5a757caf00e2c5ee4f86"
      ]
     },
     "geography": {
@@ -15746,7 +15918,9 @@
      "status": "available",
      "object_refs": [
       "bio_3831f408878023508a40",
-      "bio_4fb02d8dcf2b2e9928f1"
+      "bio_4fb02d8dcf2b2e9928f1",
+      "bio_5a757caf00e2c5ee4f86",
+      "bio_b55667e5a29fd2bcd9d5"
      ]
     },
     "forecasts": {
@@ -15783,6 +15957,27 @@
      ]
     },
     {
+     "id": "bio_5a757caf00e2c5ee4f86",
+     "type": "reported_fact",
+     "source_product": "operating_events",
+     "source_id": "evt_0266947d0391e30074d8",
+     "available_on": "2026-08-11",
+     "evidence_refs": [
+      {
+       "document_id": "psx:281006",
+       "page": 1,
+       "content_sha256": "66040c03c0913f2e49b6b78e0e6efc82c198c9849e7b362da616ffe613a384d4",
+       "evidence_sha256": "bd65b3062865b866a046b9a37404faba2fb76c398ad1be25c11010e45f68adc1",
+       "source_url": "https://dps.psx.com.pk/download/document/281006.pdf"
+      }
+     ],
+     "confidence": 82,
+     "brain_paths": [
+      "companies/PPL/domains/management",
+      "companies/PPL/domains/historical_events"
+     ]
+    },
+    {
      "id": "bio_4fb02d8dcf2b2e9928f1",
      "type": "derived_fact",
      "source_product": "event_studies",
@@ -15799,6 +15994,25 @@
      ],
      "input_refs": [
       "evt_2c3f64926b9d385c3c13"
+     ]
+    },
+    {
+     "id": "bio_b55667e5a29fd2bcd9d5",
+     "type": "derived_fact",
+     "source_product": "event_studies",
+     "source_id": "evt_0266947d0391e30074d8",
+     "available_on": "2026-09-07",
+     "evidence_refs": [
+      {
+       "source_path": "state/company_intel/event_studies.json#/studies/evt_0266947d0391e30074d8"
+      }
+     ],
+     "confidence": null,
+     "brain_paths": [
+      "companies/PPL/domains/historical_events"
+     ],
+     "input_refs": [
+      "evt_0266947d0391e30074d8"
      ]
     }
    ],
@@ -15849,7 +16063,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -15921,7 +16135,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -16111,14 +16325,14 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
      "row_metadata": {
       "coverage_status": "clusterable",
-      "freshness": "older",
-      "candidate_count": 1,
+      "freshness": "recent",
+      "candidate_count": 2,
       "eligible_count": 1,
       "clusterable_count": 1
      }
@@ -16131,7 +16345,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -16159,7 +16373,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -16191,7 +16405,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -16231,7 +16445,7 @@
      "symbol": "PPL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -16407,8 +16621,20 @@
      "source_product": "operating_events"
     },
     {
+     "date": "2026-08-11",
+     "object_ref": "bio_5a757caf00e2c5ee4f86",
+     "type": "reported_fact",
+     "source_product": "operating_events"
+    },
+    {
      "date": "2026-09-07",
      "object_ref": "bio_4fb02d8dcf2b2e9928f1",
+     "type": "derived_fact",
+     "source_product": "event_studies"
+    },
+    {
+     "date": "2026-09-07",
+     "object_ref": "bio_b55667e5a29fd2bcd9d5",
      "type": "derived_fact",
      "source_product": "event_studies"
     }
@@ -16418,7 +16644,7 @@
     "partial_domains": 0,
     "unknown_domains": 17,
     "blocked_domains": 2,
-    "object_count": 2
+    "object_count": 4
    }
   },
   "PRL": {
@@ -16447,8 +16673,10 @@
      "object_refs": []
     },
     "customers": {
-     "status": "unknown",
-     "object_refs": []
+     "status": "available",
+     "object_refs": [
+      "bio_84f081c053d66af3eb29"
+     ]
     },
     "suppliers": {
      "status": "unknown",
@@ -16483,28 +16711,41 @@
      "object_refs": []
     },
     "capital_allocation": {
-     "status": "unknown",
-     "object_refs": []
+     "status": "available",
+     "object_refs": [
+      "bio_69f0f50ecb3f15085d1b"
+     ]
     },
     "projects": {
-     "status": "unknown",
-     "object_refs": []
+     "status": "available",
+     "object_refs": [
+      "bio_84f081c053d66af3eb29"
+     ]
     },
     "guidance": {
      "status": "unknown",
      "object_refs": []
     },
     "risks": {
-     "status": "unknown",
-     "object_refs": []
+     "status": "available",
+     "object_refs": [
+      "bio_69f0f50ecb3f15085d1b"
+     ]
     },
     "catalysts": {
-     "status": "unknown",
-     "object_refs": []
+     "status": "available",
+     "object_refs": [
+      "bio_84f081c053d66af3eb29"
+     ]
     },
     "historical_events": {
-     "status": "unknown",
-     "object_refs": []
+     "status": "available",
+     "object_refs": [
+      "bio_0bad989971ce74a94b6b",
+      "bio_28ff77ff57a8dd53fe0c",
+      "bio_69f0f50ecb3f15085d1b",
+      "bio_84f081c053d66af3eb29"
+     ]
     },
     "forecasts": {
      "status": "blocked",
@@ -16517,7 +16758,91 @@
      "reason": "valuation_objects_not_permitted"
     }
    },
-   "intelligence_objects": [],
+   "intelligence_objects": [
+    {
+     "id": "bio_69f0f50ecb3f15085d1b",
+     "type": "reported_fact",
+     "source_product": "operating_events",
+     "source_id": "evt_25bd9fbb3c8f47ecb8c8",
+     "available_on": "2025-09-08",
+     "evidence_refs": [
+      {
+       "document_id": "psx:258964",
+       "page": 16,
+       "content_sha256": "002b28155f149f044cf9fac751ba6f512a8b1ec8f0e905fdbcc6bc685c824933",
+       "evidence_sha256": "80a784f72b0461dc290ed34b11ecd913bb0523ffbf43d11c1c56ab531be9d6d9",
+       "source_url": "https://dps.psx.com.pk/download/document/258964.pdf"
+      }
+     ],
+     "confidence": 82,
+     "brain_paths": [
+      "companies/PRL/domains/capital_allocation",
+      "companies/PRL/domains/risks",
+      "companies/PRL/domains/historical_events"
+     ]
+    },
+    {
+     "id": "bio_84f081c053d66af3eb29",
+     "type": "reported_fact",
+     "source_product": "operating_events",
+     "source_id": "evt_2cec6e102538a5263908",
+     "available_on": "2025-09-08",
+     "evidence_refs": [
+      {
+       "document_id": "psx:258964",
+       "page": 10,
+       "content_sha256": "002b28155f149f044cf9fac751ba6f512a8b1ec8f0e905fdbcc6bc685c824933",
+       "evidence_sha256": "5011dffe2cf1175ff630e7bf6cb134615912562a66f25ab6f02c8bb15d66475a",
+       "source_url": "https://dps.psx.com.pk/download/document/258964.pdf"
+      }
+     ],
+     "confidence": 82,
+     "brain_paths": [
+      "companies/PRL/domains/customers",
+      "companies/PRL/domains/projects",
+      "companies/PRL/domains/catalysts",
+      "companies/PRL/domains/historical_events"
+     ]
+    },
+    {
+     "id": "bio_0bad989971ce74a94b6b",
+     "type": "derived_fact",
+     "source_product": "event_studies",
+     "source_id": "evt_25bd9fbb3c8f47ecb8c8",
+     "available_on": "2026-09-04",
+     "evidence_refs": [
+      {
+       "source_path": "state/company_intel/event_studies.json#/studies/evt_25bd9fbb3c8f47ecb8c8"
+      }
+     ],
+     "confidence": null,
+     "brain_paths": [
+      "companies/PRL/domains/historical_events"
+     ],
+     "input_refs": [
+      "evt_25bd9fbb3c8f47ecb8c8"
+     ]
+    },
+    {
+     "id": "bio_28ff77ff57a8dd53fe0c",
+     "type": "derived_fact",
+     "source_product": "event_studies",
+     "source_id": "evt_2cec6e102538a5263908",
+     "available_on": "2026-09-04",
+     "evidence_refs": [
+      {
+       "source_path": "state/company_intel/event_studies.json#/studies/evt_2cec6e102538a5263908"
+      }
+     ],
+     "confidence": null,
+     "brain_paths": [
+      "companies/PRL/domains/historical_events"
+     ],
+     "input_refs": [
+      "evt_2cec6e102538a5263908"
+     ]
+    }
+   ],
    "source_index": {
     "operating_events": {
      "source_product": "operating_events",
@@ -16565,7 +16890,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -16637,7 +16962,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -16827,14 +17152,14 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
      "row_metadata": {
-      "coverage_status": "no_candidates",
-      "freshness": "unknown",
-      "candidate_count": 0,
+      "coverage_status": "rejected",
+      "freshness": "older",
+      "candidate_count": 2,
       "eligible_count": 0,
       "clusterable_count": 0
      }
@@ -16847,7 +17172,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -16875,7 +17200,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -16892,10 +17217,10 @@
      },
      "row_metadata": {
       "symbol": "PRL",
-      "status": "no_guidance_objects",
+      "status": "available",
       "guidance_count": 0,
-      "risk_count": 0,
-      "object_count": 0,
+      "risk_count": 1,
+      "object_count": 1,
       "contradiction_count": 0
      }
     },
@@ -16907,7 +17232,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -16932,11 +17257,11 @@
      "row_metadata": {
       "symbol": "PRL",
       "status": "no_active_thesis",
-      "guidance_status": "blocked_no_guidance_objects",
+      "guidance_status": "available",
       "active_thesis_count": 0,
       "delivery_record_count": 0,
-      "guidance_object_count": 0,
-      "guidance_record_count": 0
+      "guidance_object_count": 1,
+      "guidance_record_count": 1
      }
     },
     "intelligence_confidence": {
@@ -16947,7 +17272,7 @@
      "symbol": "PRL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -17115,13 +17440,38 @@
      ]
     }
    },
-   "timeline": [],
+   "timeline": [
+    {
+     "date": "2025-09-08",
+     "object_ref": "bio_69f0f50ecb3f15085d1b",
+     "type": "reported_fact",
+     "source_product": "operating_events"
+    },
+    {
+     "date": "2025-09-08",
+     "object_ref": "bio_84f081c053d66af3eb29",
+     "type": "reported_fact",
+     "source_product": "operating_events"
+    },
+    {
+     "date": "2026-09-04",
+     "object_ref": "bio_0bad989971ce74a94b6b",
+     "type": "derived_fact",
+     "source_product": "event_studies"
+    },
+    {
+     "date": "2026-09-04",
+     "object_ref": "bio_28ff77ff57a8dd53fe0c",
+     "type": "derived_fact",
+     "source_product": "event_studies"
+    }
+   ],
    "coverage": {
-    "available_domains": 0,
+    "available_domains": 6,
     "partial_domains": 0,
-    "unknown_domains": 19,
+    "unknown_domains": 13,
     "blocked_domains": 2,
-    "object_count": 0
+    "object_count": 4
    }
   },
   "PSO": {
@@ -17268,7 +17618,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -17340,7 +17690,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -17530,7 +17880,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -17550,7 +17900,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -17578,7 +17928,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -17610,7 +17960,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -17650,7 +18000,7 @@
      "symbol": "PSO",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -18200,7 +18550,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_financial_series": "state/company_financial_series.json",
        "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -18272,7 +18622,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08 03:45",
+      "as_of": "2026-09-08 04:07",
       "source": {
        "company_profiles": "state/company_profiles.json",
        "sectors": "state/sectors.json",
@@ -18462,7 +18812,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": "state/company_intel/operating_events.json",
       "registry_version": "signal_cluster_registry_v1"
      },
@@ -18482,7 +18832,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "financial_model_inputs": "state/company_intel/financial_model_inputs.json"
@@ -18510,7 +18860,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "company_documents": "state/company_documents.json"
       },
@@ -18542,7 +18892,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "thesis_monitoring": "state/company_intel/thesis_monitoring.json",
        "signal_clusters": "state/company_intel/signal_clusters.json",
@@ -18582,7 +18932,7 @@
      "symbol": "UBL",
      "state_metadata": {
       "schema_version": 1,
-      "as_of": "2026-09-08T03:45:00+05:00",
+      "as_of": "2026-09-08T04:07:00+05:00",
       "source": {
        "signal_clusters": "state/company_intel/signal_clusters.json",
        "operating_events": "state/company_intel/operating_events.json",
@@ -18823,9 +19173,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/company_brains.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

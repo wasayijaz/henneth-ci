@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "guidance_version": "guidance_contradictions_v2",
- "as_of": "2026-09-08T03:45:00+05:00",
+ "as_of": "2026-09-08T04:07:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -41,8 +41,8 @@
    "symbol": "ATRL",
    "status": "available",
    "guidance_count": 0,
-   "risk_count": 3,
-   "object_count": 3,
+   "risk_count": 4,
+   "object_count": 4,
    "contradiction_count": 0,
    "objects": [
     {
@@ -121,6 +121,34 @@
       "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
       "evidence_sha256": null,
       "text": "onitored. vi. There are no significant doubts upon the Company’s ability to continue as a going concern. vii. There is no reported instance of any material departure from the best practices of Corporate Governance. viii. Significant deviat…"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    },
+    {
+     "guidance_id": "guidance_35c1469795a81e8d2f07",
+     "symbol": "ATRL",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "issuer:7b937551821bd3c157c7e6ff",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
+      "source": "Issuer website",
+      "page": 69,
+      "available_on": "2026-09-08T04:07:00+05:00",
+      "content_sha256": "61b0777f0b82e5af6a558239f19aeb24f2fe44665daacd54363536b95191c8cf",
+      "evidence_sha256": null,
+      "text": "onitored. vi. There are no significant doubts upon the Company’s ability to continue as a going concern. vii. There has been no material departure from the best practices of Corporate Governance, as detailed in the Code of Corporate Govern…"
      },
      "policy": {
       "same_company_official_evidence": true,
@@ -1120,16 +1148,43 @@
   },
   "PRL": {
    "symbol": "PRL",
-   "status": "no_guidance_objects",
+   "status": "available",
    "guidance_count": 0,
-   "risk_count": 0,
-   "object_count": 0,
+   "risk_count": 1,
+   "object_count": 1,
    "contradiction_count": 0,
-   "objects": [],
+   "objects": [
+    {
+     "guidance_id": "guidance_91481e7764ef3baaee86",
+     "symbol": "PRL",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "psx:258964",
+      "source_url": "https://dps.psx.com.pk/download/document/258964.pdf",
+      "source": "PSX DPS",
+      "page": 16,
+      "available_on": "2026-09-08T04:06:00+05:00",
+      "content_sha256": "002b28155f149f044cf9fac751ba6f512a8b1ec8f0e905fdbcc6bc685c824933",
+      "evidence_sha256": null,
+      "text": "on: (i) major judgmental areas (ii) signiﬁcant adjustments resulting from the audit (iii) going concern assumption (iv) any changes in accounting policies and practices (v) compliance with applicable accounting standards (vi) compliance wi…"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    }
+   ],
    "contradictions": [],
-   "unknowns": [
-    "no_retained_official_evidence_with_strict_guidance_assertion_shape"
-   ]
+   "unknowns": []
   },
   "PSO": {
    "symbol": "PSO",
@@ -1187,9 +1242,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
-  "build_cutoff_at": "2026-09-08T03:55:21Z",
-  "generated_at": "2026-09-08T03:55:21Z",
+  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
+  "build_cutoff_at": "2026-09-08T04:18:54Z",
+  "generated_at": "2026-09-08T04:18:54Z",
   "artifact_path": "state/company_intel/guidance_contradictions.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
