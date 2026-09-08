@@ -40,6 +40,20 @@ def warn(msg):
     warns.append(msg)
 
 
+def _detail(result, limit=500):
+    """Failure detail from a subprocess result, STDERR first.
+
+    Child checks print their progress to STDOUT and their REAL error to STDERR.
+    The old `(result.stdout or result.stderr or "")` form returned STDOUT whenever
+    the child printed ANY progress line — silently dropping the STDERR error and
+    leaving cloud preflight FAILs illegible (opaque progress text instead of the
+    real cause). Prefer STDERR; append STDOUT only as extra context; tail to `limit`."""
+    err = (result.stderr or "").strip()
+    out = (result.stdout or "").strip()
+    combined = err + ("\n" + out if out else "") if err else out
+    return combined[-limit:].strip()
+
+
 def load(name):
     """Load a state file; None if missing/unparseable (recorded as FAIL by caller)."""
     p = os.path.join(STATE, name)
@@ -139,7 +153,7 @@ def check_ci_contract_workflow():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
         if result.returncode != 0:
-            detail = (result.stdout or result.stderr or "").strip().splitlines()
+            detail = _detail(result).splitlines()
             fail("CI contract workflow check failed — " + (detail[-1] if detail else "no details"))
     except Exception as e:  # noqa: BLE001 — never let the checker itself crash the gate
         fail(f"check_ci_contract_workflow.py did not run — {e}")
@@ -179,7 +193,7 @@ def check_rule4():
                 if line.strip().startswith("x "):
                     fail("rule4: " + line.strip()[2:])
             if not any(f.startswith("rule4:") for f in fails):
-                fail("check_rule4.py failed — " + ((r.stdout or r.stderr or "")[-200:]))
+                fail("check_rule4.py failed — " + _detail(r, 200))
     except Exception as e:  # noqa: BLE001
         fail(f"check_rule4.py did not run — {e}")
 
@@ -193,7 +207,7 @@ def check_root_state_publication():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
         if result.returncode != 0:
-            fail("root state publication check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("root state publication check failed — " + _detail(result))
     except Exception as e:  # noqa: BLE001
         fail(f"check_root_state_publication.py did not run — {e}")
 
@@ -207,7 +221,7 @@ def check_generated_url_safety():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=15)
         if result.returncode != 0:
-            fail("generated URL safety check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("generated URL safety check failed — " + _detail(result))
     except Exception as e:  # noqa: BLE001
         fail(f"check_generated_url_safety.py did not run — {e}")
 
@@ -221,7 +235,7 @@ def check_document_intelligence():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            detail = (result.stdout or result.stderr or "")[-500:].strip()
+            detail = _detail(result)
             fail("document intelligence check failed — " + detail)
     except Exception as e:  # noqa: BLE001
         fail(f"check_document_intelligence.py did not run — {e}")
@@ -245,7 +259,7 @@ def check_company_intelligence_phase2():
         try:
             result = subprocess.run([sys.executable, path, *args], capture_output=True, text=True, timeout=30)
             if result.returncode != 0:
-                fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+                fail(f"{name} failed — " + _detail(result))
         except Exception as e:  # noqa: BLE001
             fail(f"{name} did not run — {e}")
 
@@ -602,7 +616,7 @@ def check_operating_intelligence():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("operating intelligence check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("operating intelligence check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_operating_intelligence.py did not run — {e}")
 
@@ -614,7 +628,7 @@ def check_event_studies():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("event studies check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("event studies check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_event_studies.py did not run — {e}")
 
@@ -626,7 +640,7 @@ def check_conditional_benchmarks():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("conditional benchmarks check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("conditional benchmarks check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_conditional_benchmarks.py did not run — {e}")
 
@@ -638,7 +652,7 @@ def check_conditional_benchmarks_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("conditional benchmarks UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("conditional benchmarks UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_conditional_benchmarks_ui.mjs did not run — {e}")
 
@@ -660,7 +674,7 @@ def check_thesis_monitoring():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("thesis monitoring check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("thesis monitoring check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_thesis_monitoring.py did not run — {e}")
 
@@ -672,7 +686,7 @@ def check_intelligence_confidence():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("intelligence confidence check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("intelligence confidence check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_intelligence_confidence.py did not run — {e}")
 
@@ -684,7 +698,7 @@ def check_management_delivery():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("management delivery check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("management delivery check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_management_delivery.py did not run — {e}")
 
@@ -696,7 +710,7 @@ def check_guidance_contradictions():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("guidance contradictions check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("guidance contradictions check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_guidance_contradictions.py did not run — {e}")
 
@@ -708,7 +722,7 @@ def check_evidence_watchlist():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("evidence watchlist check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("evidence watchlist check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_evidence_watchlist.py did not run — {e}")
 
@@ -720,7 +734,7 @@ def check_ci_monitoring():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("CI monitoring check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI monitoring check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_monitoring.py did not run — {e}")
 
@@ -732,7 +746,7 @@ def check_ci_work_routing_policy():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("CI work-routing policy check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI work-routing policy check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_work_routing_policy.py did not run — {e}")
 
@@ -744,7 +758,7 @@ def check_peer_registry():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("peer registry check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("peer registry check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_peer_registry.py did not run — {e}")
 
@@ -756,7 +770,7 @@ def check_evidence_watchlist_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("evidence watchlist UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("evidence watchlist UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_evidence_watchlist_ui.mjs did not run — {e}")
 
@@ -768,7 +782,7 @@ def check_ci_monitoring_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("CI monitoring UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI monitoring UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_monitoring_ui.mjs did not run — {e}")
 
@@ -780,7 +794,7 @@ def check_management_delivery_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("management delivery UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("management delivery UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_management_delivery_ui.mjs did not run — {e}")
 
@@ -792,7 +806,7 @@ def check_guidance_contradictions_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("guidance contradictions UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("guidance contradictions UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_guidance_contradictions_ui.mjs did not run — {e}")
 
@@ -812,7 +826,7 @@ def check_root_ask_hardening():
         try:
             result = run_node_check(path)
             if result.returncode != 0:
-                fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+                fail(f"{name} failed — " + _detail(result))
         except Exception as e:
             fail(f"{name} did not run — {e}")
 
@@ -825,7 +839,7 @@ def check_today_ui():
         try:
             result = run_node_check(path)
             if result.returncode != 0:
-                fail(f"{name} failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+                fail(f"{name} failed — " + _detail(result))
         except Exception as e:
             fail(f"{name} did not run — {e}")
 
@@ -860,7 +874,7 @@ def check_financial_model_inputs():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("financial model inputs check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("financial model inputs check failed — " + _detail(result))
 
 def check_cement_operating_series():
     path = os.path.join(ROOT, "scripts", "check_cement_operating_series.py")
@@ -869,7 +883,7 @@ def check_cement_operating_series():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("cement operating series check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("cement operating series check failed — " + _detail(result))
 
 
 def check_cement_historical_reconciliation():
@@ -879,7 +893,7 @@ def check_cement_historical_reconciliation():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("cement historical reconciliation check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("cement historical reconciliation check failed — " + _detail(result))
 
 
 def check_supabase_archive_receipt():
@@ -889,7 +903,7 @@ def check_supabase_archive_receipt():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("Supabase archive receipt check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("Supabase archive receipt check failed — " + _detail(result))
 
 
 def check_private_thesis_storage_receipt():
@@ -899,7 +913,7 @@ def check_private_thesis_storage_receipt():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("private thesis storage receipt check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("private thesis storage receipt check failed — " + _detail(result))
 
 
 def check_financial_coverage():
@@ -910,7 +924,7 @@ def check_financial_coverage():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("financial coverage check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial coverage check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_coverage.py did not run — {e}")
 
@@ -922,7 +936,7 @@ def check_financial_statement_v2_candidate_queue():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("financial statement v2 candidate queue check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial statement v2 candidate queue check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_statement_v2_candidate_queue.py did not run — {e}")
 
@@ -934,7 +948,7 @@ def check_financial_reprocess_blockers():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("financial reprocess blockers check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial reprocess blockers check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_reprocess_blockers.py did not run — {e}")
 
@@ -946,7 +960,7 @@ def check_forecast_contract():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("forecast readiness contract check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("forecast readiness contract check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_forecast_contract.py did not run — {e}")
 
@@ -958,7 +972,7 @@ def check_financial_engine_assumptions():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("financial engine assumptions check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial engine assumptions check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_engine_assumptions.py did not run — {e}")
 
@@ -970,7 +984,7 @@ def check_owner_financial_assumptions():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("owner financial assumptions check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("owner financial assumptions check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_owner_financial_assumptions.py did not run — {e}")
 
@@ -982,7 +996,7 @@ def check_formal_financial_engines():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("formal financial engines check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("formal financial engines check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_formal_financial_engines.py did not run — {e}")
 
@@ -994,7 +1008,7 @@ def check_ci_reference_cases():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("CI reference-case check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI reference-case check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_reference_cases.py did not run — {e}")
 
@@ -1006,7 +1020,7 @@ def check_financial_evidence_reconciliation():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("financial evidence reconciliation check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial evidence reconciliation check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_evidence_reconciliation.py did not run — {e}")
 
@@ -1018,7 +1032,7 @@ def check_earnings_bridges():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("earnings bridges check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("earnings bridges check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_earnings_bridges.py did not run — {e}")
 
@@ -1030,7 +1044,7 @@ def check_earnings_bridges_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("earnings bridges UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("earnings bridges UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_earnings_bridges_ui.mjs did not run — {e}")
 
@@ -1042,7 +1056,7 @@ def check_forecast_readiness_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("forecast readiness UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("forecast readiness UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_forecast_readiness_ui.mjs did not run — {e}")
 
@@ -1054,7 +1068,7 @@ def check_cement_operating_series_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("cement operating series UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("cement operating series UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_cement_operating_series_ui.mjs did not run — {e}")
 
@@ -1066,7 +1080,7 @@ def check_causal_foundations():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("causal foundations check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("causal foundations check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_causal_foundations.py did not run — {e}")
 
@@ -1078,7 +1092,7 @@ def check_causal_foundations_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("causal foundations UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("causal foundations UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_causal_foundations_ui.mjs did not run — {e}")
 
@@ -1090,7 +1104,7 @@ def check_financial_coverage_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("financial coverage UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial coverage UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_coverage_ui.mjs did not run — {e}")
 
@@ -1102,7 +1116,7 @@ def check_historical_reference_cases_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("historical reference cases UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("historical reference cases UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_historical_reference_cases_ui.mjs did not run — {e}")
 
@@ -1114,7 +1128,7 @@ def check_financial_evidence_reconciliation_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("financial evidence reconciliation UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("financial evidence reconciliation UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_financial_evidence_reconciliation_ui.mjs did not run — {e}")
 
@@ -1126,7 +1140,7 @@ def check_company_scenario_lab():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("company scenario lab check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company scenario lab check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_scenario_lab.py did not run — {e}")
 
@@ -1138,7 +1152,7 @@ def check_company_scenario_lab_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("company scenario lab UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company scenario lab UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_scenario_lab_ui.mjs did not run — {e}")
 
@@ -1150,7 +1164,7 @@ def check_company_brains():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("company brain check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company brain check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_brains.py did not run — {e}")
 
@@ -1162,7 +1176,7 @@ def check_company_brain_formal_engines():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("Company Brain formal engine check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("Company Brain formal engine check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_brain_formal_engines.py did not run — {e}")
 
@@ -1174,7 +1188,7 @@ def check_company_brain_source_index():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
         if result.returncode != 0:
-            fail("Company Brain source-index check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("Company Brain source-index check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_brain_source_index.py did not run — {e}")
 
@@ -1186,7 +1200,7 @@ def check_company_brain_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("company brain UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company brain UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_brain_ui.mjs did not run — {e}")
 
@@ -1202,7 +1216,7 @@ def check_ci_completion_matrix():
         matrix_env["HENNETH_CI_PRODUCT_CONTRACTS_VERIFIED_BY_PREFLIGHT"] = "1"
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30, env=matrix_env)
         if result.returncode != 0:
-            fail("CI completion matrix check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI completion matrix check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_completion_matrix.py did not run — {e}")
 
@@ -1216,7 +1230,7 @@ def check_ci_global_no_lookahead():
     try:
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=45)
         if result.returncode != 0:
-            fail("CI global no-lookahead check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI global no-lookahead check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_global_no_lookahead.py did not run — {e}")
 
@@ -1242,11 +1256,11 @@ def check_ci_artifact_integrity(build_cutoff_at=None):
             [sys.executable, finalizer], capture_output=True, text=True, timeout=45, env=finalizer_env
         )
         if built.returncode != 0:
-            fail("CI artifact finalizer failed — " + ((built.stdout or built.stderr or "")[-500:].strip()))
+            fail("CI artifact finalizer failed — " + _detail(built))
             return
         result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=45)
         if result.returncode != 0:
-            fail("CI artifact-integrity check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("CI artifact-integrity check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_ci_artifact_integrity.py did not run — {e}")
 
@@ -1259,7 +1273,7 @@ def check_company_navigation_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("company navigation UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company navigation UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_navigation_ui.mjs did not run — {e}")
 
@@ -1271,7 +1285,7 @@ def check_thesis_monitoring_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("thesis monitoring UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("thesis monitoring UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_thesis_monitoring_ui.mjs did not run — {e}")
 
@@ -1283,7 +1297,7 @@ def check_intelligence_confidence_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("intelligence confidence UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("intelligence confidence UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_intelligence_confidence_ui.mjs did not run — {e}")
 
@@ -1295,7 +1309,7 @@ def check_company_theses_security():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("company theses security check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company theses security check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_theses_security.mjs did not run — {e}")
 
@@ -1307,7 +1321,7 @@ def check_company_theses_ui():
     try:
         result = run_node_check(path)
         if result.returncode != 0:
-            fail("company theses UI check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+            fail("company theses UI check failed — " + _detail(result))
     except Exception as e:
         fail(f"check_company_theses_ui.mjs did not run — {e}")
 
@@ -1321,7 +1335,7 @@ def check_reprocess_documents():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=60)
     if result.returncode != 0:
-        fail("reprocess document check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("reprocess document check failed — " + _detail(result))
 
 def check_ci_reprocess_manifest():
     path = os.path.join(ROOT, "scripts", "check_ci_reprocess_manifest.py")
@@ -1330,7 +1344,7 @@ def check_ci_reprocess_manifest():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("CI reprocess manifest check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("CI reprocess manifest check failed — " + _detail(result))
 
 def check_ownership_source_manifest():
     path = os.path.join(ROOT, "scripts", "check_ownership_source_manifest.py")
@@ -1339,7 +1353,7 @@ def check_ownership_source_manifest():
         return
     result = subprocess.run([sys.executable, path], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
-        fail("ownership source manifest check failed — " + ((result.stdout or result.stderr or "")[-500:].strip()))
+        fail("ownership source manifest check failed — " + _detail(result))
 
 def check_no_raw_artifacts():
     for root in (os.path.join(ROOT, "Henneth Desk 2.CI.0"), os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "site", "public"), os.path.join(ROOT, "site", "dist")):
