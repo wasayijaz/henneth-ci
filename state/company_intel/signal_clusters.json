@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "registry_version": "signal_cluster_registry_v1",
- "as_of": "2026-08-27T09:31:00+05:00",
+ "as_of": "2026-09-08T03:06:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -26,17 +26,20 @@
  ],
  "companies": {
   "ATRL": {
-   "candidate_count": 3,
+   "candidate_count": 6,
    "eligible_count": 0,
    "clusterable_count": 0,
    "coverage_status": "rejected",
    "rejection_reasons": {
-    "event_type_not_in_registry": 1,
-    "not_explicit_acquisition_stage_target": 1,
-    "not_named_management_change": 1
+    "blocking_quality_flags": 3,
+    "event_type_not_in_registry": 2,
+    "invalid_source_quality_level": 3,
+    "missing_effective_date": 3,
+    "not_explicit_acquisition_stage_target": 2,
+    "not_named_management_change": 2
    },
-   "latest_detected_at": "2025-10-03T09:21:00+05:00",
-   "freshness": "older",
+   "latest_detected_at": "2026-09-08T03:06:00+05:00",
+   "freshness": "recent",
    "clusters": [],
    "registry_version": "signal_cluster_registry_v1"
   },
@@ -276,7 +279,7 @@
     "event_type_not_in_registry": 2
    },
    "latest_detected_at": "2026-03-02T08:46:00+05:00",
-   "freshness": "recent",
+   "freshness": "older",
    "clusters": [
     {
      "cluster_id": "cluster_82b31911757fd2f836e1eaea",
@@ -819,9 +822,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "e0826cb6ec2dfb7a318d64a63b3ad02afbe183b5",
-  "build_cutoff_at": "2026-09-07T16:56:33Z",
-  "generated_at": "2026-09-07T16:56:33Z",
+  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
+  "build_cutoff_at": "2026-09-08T03:16:29Z",
+  "generated_at": "2026-09-08T03:16:29Z",
   "artifact_path": "state/company_intel/signal_clusters.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

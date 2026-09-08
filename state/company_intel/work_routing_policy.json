@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "kind": "ci_work_routing_policy",
- "as_of": "2026-09-07",
+ "as_of": "2026-09-08",
  "pilot_symbols": [
   "MLCF",
   "OGDC",
@@ -104,12 +104,12 @@
    "targeted_triggers": [
     {
      "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_655dda4f86c59325975d",
-     "date": "2026-08-18",
+     "alert_id": "ci_alert_9000fb016461acfbbb68",
+     "date": "2026-09-08",
      "title": "/mlcfl/investor-relation/",
      "source_url": "https://www.kmlg.com/mlcfl/investor-relation/",
      "source": "issuer_source_registry",
-     "previous_sha256": "2d1382aeff2279b3bc4d04e8764f092c462c4a616bfc967f9532e72b7cec0423"
+     "previous_sha256": "2f8bafd4f110f2b460a82812e3115635771e34a39b43374ea7edd095a6251aca"
     },
     {
      "trigger_type": "post_baseline_source_change",
@@ -191,24 +191,15 @@
    "targeted_triggers": [
     {
      "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_736e97e78ec2822ac4be",
-     "date": "2026-08-18",
+     "alert_id": "ci_alert_f05e4dc81989c84e9b16",
+     "date": "2026-09-08",
      "title": "Issuer website",
      "source_url": "https://www.psopk.com/",
      "source": "issuer_source_registry",
-     "previous_sha256": "13cf27a33654b24e0ec13da2a7529d805d2cbb852e0697182c030968f2e8b194"
-    },
-    {
-     "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_5d7e93087de7a03b4e99",
-     "date": "2026-08-18",
-     "title": "Corporate Cards",
-     "source_url": "https://psopk.com/en/cards/corporate-cards",
-     "source": "issuer_source_registry",
-     "previous_sha256": "aa908cc802d9ca370b0cb941c996f6ab6e25ec23ad486352bcf72af209aab26e"
+     "previous_sha256": "e5790bb1e5ae8f7ab34fb64e1ebcc56d0f8fc3d8a3176cba35d110b363625c01"
     }
    ],
-   "targeted_trigger_count": 2,
+   "targeted_trigger_count": 1,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -221,53 +212,9 @@
   },
   "UBL": {
    "symbol": "UBL",
-   "deterministic_scan_status": "degraded",
+   "deterministic_scan_status": "healthy",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_ad3138c942d7b09731e012fd",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-07-22",
-     "date_basis": null,
-     "title": "management change",
-     "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
-     "document_id": "psx:280213"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_5361040ac9b1c22922c1553a",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-07-22",
-     "date_basis": null,
-     "title": "acquisition",
-     "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
-     "document_id": "psx:280213"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_a36f018f8f1a248a501dd4be",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-04-15",
-     "date_basis": null,
-     "title": "management change",
-     "source_url": "https://dps.psx.com.pk/download/document/274158.pdf",
-     "document_id": "psx:274158"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_9b3f273adbe3948cd35f1572",
-     "kind": "event",
-     "severity": "critical",
-     "date": "2026-03-04",
-     "date_basis": null,
-     "title": "credit event",
-     "source_url": "https://dps.psx.com.pk/download/document/271999.pdf",
-     "document_id": "psx:271999"
-    },
     {
      "trigger_type": "post_baseline_source_change",
      "alert_id": "ci_alert_5f0c421b713e6f6e7486",
@@ -278,7 +225,7 @@
      "previous_sha256": "0a4d93fc2fee45e5ee2fc07d7eae7a0af0e87876d2f8394cc976a877d42584c1"
     }
    ],
-   "targeted_trigger_count": 5,
+   "targeted_trigger_count": 1,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -319,9 +266,18 @@
   },
   "LUCK": {
    "symbol": "LUCK",
-   "deterministic_scan_status": "degraded",
+   "deterministic_scan_status": "healthy",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
+    {
+     "trigger_type": "post_baseline_source_change",
+     "alert_id": "ci_alert_cd669eb16f102a84eebd",
+     "date": "2026-09-08",
+     "title": "Financial Reports",
+     "source_url": "https://lucky-cement.com/en/corporate/investor-relations/financial-reports",
+     "source": "issuer_source_registry",
+     "previous_sha256": "c2408670500cb9078305bab60d619a7d8957333834ea9d3be6b44bb8cfec0867"
+    },
     {
      "trigger_type": "post_baseline_source_change",
      "alert_id": "ci_alert_785c4bd20ad4891ed4ba",
@@ -332,7 +288,7 @@
      "previous_sha256": "d1c50bbe4adbf150ff7340e34d484c305abf39c334ac57daf6934f7516c239f9"
     }
    ],
-   "targeted_trigger_count": 1,
+   "targeted_trigger_count": 2,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -350,12 +306,12 @@
    "targeted_triggers": [
     {
      "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_fd15c44abccf343ccc2f",
-     "date": "2026-08-22",
+     "alert_id": "ci_alert_8ff076ee01ad128149ab",
+     "date": "2026-09-08",
      "title": "Media",
      "source_url": "https://hubpower.com/media/",
      "source": "issuer_source_registry",
-     "previous_sha256": "07e57aa453058f605de7e65b233db6b6beb457601a660e060fb8b1368521eb7f"
+     "previous_sha256": "0f82157fd7d6d56655903592645da5045915f6b43195de132986f6ce40c69132"
     },
     {
      "trigger_type": "post_baseline_source_change",
@@ -393,64 +349,20 @@
   },
   "BOP": {
    "symbol": "BOP",
-   "deterministic_scan_status": "degraded",
+   "deterministic_scan_status": "healthy",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_e36de1dc1d82984f2f1daa5c",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-04-30",
-     "date_basis": null,
-     "title": "acquisition",
-     "source_url": "https://dps.psx.com.pk/download/document/276095.pdf",
-     "document_id": "psx:276095"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_4c025f720fc82de26a0a26dc",
-     "kind": "event",
-     "severity": "critical",
-     "date": "2026-04-30",
-     "date_basis": null,
-     "title": "credit event",
-     "source_url": "https://dps.psx.com.pk/download/document/276095.pdf",
-     "document_id": "psx:276095"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_3b1faa55d416542400b8c958",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-04-30",
-     "date_basis": null,
-     "title": "regulatory action",
-     "source_url": "https://dps.psx.com.pk/download/document/276095.pdf",
-     "document_id": "psx:276095"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_269bd334a2f80e6f3b4d8af9",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-04-30",
-     "date_basis": null,
-     "title": "rating change",
-     "source_url": "https://dps.psx.com.pk/download/document/276095.pdf",
-     "document_id": "psx:276095"
-    },
-    {
      "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_6fe09df3f7f9b5611d0b",
-     "date": "2026-08-22",
+     "alert_id": "ci_alert_002d8e39cd06d1b09808",
+     "date": "2026-09-08",
      "title": "Issuer website",
      "source_url": "https://www.bop.com.pk/",
      "source": "issuer_source_registry",
-     "previous_sha256": "db11df0094971c45515dbf4462bcf80d03f425dcd8d992d727818ea18149f4f9"
+     "previous_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
    ],
-   "targeted_trigger_count": 5,
+   "targeted_trigger_count": 1,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -463,7 +375,7 @@
   },
   "NBP": {
    "symbol": "NBP",
-   "deterministic_scan_status": "healthy",
+   "deterministic_scan_status": "degraded",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
@@ -498,7 +410,7 @@
   },
   "MEBL": {
    "symbol": "MEBL",
-   "deterministic_scan_status": "healthy",
+   "deterministic_scan_status": "degraded",
    "targeted_work_status": "no_targeted_work_request",
    "targeted_triggers": [],
    "targeted_trigger_count": 0,
@@ -515,28 +427,6 @@
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_aa51c5d307e660f400f5a76b",
-     "kind": "event",
-     "severity": "critical",
-     "date": "2026-04-30",
-     "date_basis": null,
-     "title": "credit event",
-     "source_url": "https://dps.psx.com.pk/download/document/276353.pdf",
-     "document_id": "psx:276353"
-    },
-    {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_61811f3bd242e6d24803fd4a",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-04-30",
-     "date_basis": null,
-     "title": "regulatory action",
-     "source_url": "https://dps.psx.com.pk/download/document/276353.pdf",
-     "document_id": "psx:276353"
-    },
-    {
      "trigger_type": "post_baseline_source_change",
      "alert_id": "ci_alert_608c3a9f8fff129cd979",
      "date": "2026-08-18",
@@ -546,7 +436,7 @@
      "previous_sha256": "4988633a231f309efe2999f00a30f3d6a213994524f4f750371e19d08d449783"
     }
    ],
-   "targeted_trigger_count": 3,
+   "targeted_trigger_count": 1,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -570,18 +460,9 @@
      "source_url": "https://www.hbl.com/",
      "source": "issuer_source_registry",
      "previous_sha256": "07d96b7eca02a2147fa6b40d77b65f5e27260d55fd0f0345330889185daa9fc3"
-    },
-    {
-     "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_142bffbb5e012f07ca83",
-     "date": "2026-08-18",
-     "title": "Corporate Information",
-     "source_url": "https://www.hbl.com/about-us/corporate-information",
-     "source": "issuer_source_registry",
-     "previous_sha256": "bb15d246ab6dd9f23c36210973896d7511255579f25ea11eba4d3ea94d52e494"
     }
    ],
-   "targeted_trigger_count": 2,
+   "targeted_trigger_count": 1,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -594,7 +475,7 @@
   },
   "MARI": {
    "symbol": "MARI",
-   "deterministic_scan_status": "healthy",
+   "deterministic_scan_status": "degraded",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
@@ -681,7 +562,7 @@
   },
   "NRL": {
    "symbol": "NRL",
-   "deterministic_scan_status": "healthy",
+   "deterministic_scan_status": "degraded",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
@@ -733,14 +614,14 @@
  "summary": {
   "company_count": 20,
   "targeted_candidate_count": 13,
-  "targeted_trigger_count": 32,
+  "targeted_trigger_count": 21,
   "scheduled_ai_task_count": 0
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "e0826cb6ec2dfb7a318d64a63b3ad02afbe183b5",
-  "build_cutoff_at": "2026-09-07T16:56:33Z",
-  "generated_at": "2026-09-07T16:56:33Z",
+  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
+  "build_cutoff_at": "2026-09-08T03:16:29Z",
+  "generated_at": "2026-09-08T03:16:29Z",
   "artifact_path": "state/company_intel/work_routing_policy.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

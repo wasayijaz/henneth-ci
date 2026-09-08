@@ -1,291 +1,2009 @@
 {
- "updated": "2026-09-07 08:17",
- "ok": 216,
- "attempted": 228,
+ "updated": "2026-09-08 03:04",
+ "ok": 119,
+ "attempted": 491,
+ "processed": 491,
+ "skipped_deadline": 0,
  "with_history": 479,
  "listed_total": 455,
- "listed_per_run": 90,
+ "workers": 6,
+ "deadline_s": 1200,
  "new_probe_per_run": 12,
- "probe_cursor": 48,
- "note": "Core symbols refresh every run. The listed symbols that HAVE a series rotate least-recently-attempted first (see last_attempt), LISTED_PER_RUN each run, so the whole tail is repriced every ~4 runs. Symbols with no series yet get a separate round-robin probe (NEW_PROBE_PER_RUN, resumed from probe_cursor) so the ~100 permanently-empty PSX board counters can never consume the refresh budget. last_attempt is the rotation clock and MUST be persisted state — file mtimes are rewritten by actions/checkout on every cloud run.",
+ "probe_cursor": 60,
+ "note": "EVERY symbol with a series is repriced EVERY run — one honoured cron tick keeps the whole universe ≤1 day old, so cloud cron load-shedding no longer strands prices (see docs/GOTCHAS.md 'The cron is a wish, not a schedule'). Fetch runs concurrently (workers). skipped_deadline counts symbols not reached before deadline_s cut the run short — normally 0; a non-zero value is expected to be rare and preflight WARNs on it. Symbols with no series yet get a separate round-robin probe (new_probe_per_run, resumed from probe_cursor) so the ~100 permanently-empty PSX board counters never consume the refresh budget. last_attempt is the ordering clock and MUST be persisted state — file mtimes are rewritten by actions/checkout on every cloud run. It orders the run so that if deadline_s does cut it short, the freshest symbols are the ones skipped and the stalest lead the next run.",
  "last_attempt": {
-  "786": "2026-09-07 08:12",
-  "AABS": "2026-09-07 08:12",
-  "AATM": "2026-09-07 08:12",
-  "ABL": "2026-09-07 08:12",
-  "ABOT": "2026-09-07 08:12",
-  "ACPL": "2026-09-07 08:12",
-  "ACWI": "2026-09-07 08:12",
-  "ADAMS": "2026-09-07 08:12",
-  "ADMM": "2026-09-07 08:12",
-  "AGHA": "2026-09-07 08:12",
-  "AGIC": "2026-09-07 08:12",
-  "AGIL": "2026-09-07 08:12",
-  "AGL": "2026-09-07 08:12",
-  "AGLNCPS": "2026-09-07 08:12",
-  "AGP": "2026-09-07 08:12",
-  "AGSML": "2026-09-07 08:12",
-  "AGTL": "2026-09-07 08:12",
-  "AHCL": "2026-09-07 08:12",
-  "AHL": "2026-09-07 08:12",
-  "AHTM": "2026-09-07 08:12",
-  "AICL": "2026-09-07 08:12",
-  "AIRLINK": "2026-09-07 08:12",
-  "AKBL": "2026-09-07 08:12",
-  "AKDHL": "2026-09-07 08:12",
-  "AKDSL": "2026-09-07 08:12",
-  "AKGL": "2026-09-07 08:12",
-  "ALAC": "2026-09-07 08:12",
-  "ALIFE": "2026-09-07 08:12",
-  "ALNRS": "2026-09-07 08:12",
-  "ALTN": "2026-09-07 08:12",
-  "AMBL": "2026-09-07 08:12",
-  "ANL": "2026-09-07 08:12",
-  "ANLNV": "2026-09-07 08:12",
-  "ANSM": "2026-09-07 08:12",
-  "ANTM": "2026-09-07 08:12",
-  "APL": "2026-09-07 08:12",
-  "ARCTM": "2026-09-07 08:12",
-  "ARMG": "2026-09-07 08:12",
-  "ARPAK": "2026-09-07 08:12",
-  "ARPL": "2026-09-07 08:12",
-  "ASHT": "2026-09-07 08:12",
-  "ASIC": "2026-09-07 08:12",
-  "ASL": "2026-09-07 08:12",
-  "ASLCPS": "2026-09-07 08:12",
-  "ASLPS": "2026-09-07 08:12",
-  "ASTL": "2026-09-07 08:12",
-  "ASTM": "2026-09-07 08:12",
-  "ATBA": "2026-09-07 08:12",
-  "ATIL": "2026-09-07 08:12",
-  "ATLH": "2026-09-07 08:12",
-  "ATRL": "2026-09-07 08:12",
-  "AVN": "2026-09-07 08:12",
-  "AWTX": "2026-09-07 08:12",
-  "BAFL": "2026-09-07 08:12",
-  "BAFS": "2026-09-07 08:12",
-  "BAHL": "2026-09-07 08:12",
-  "BAPL": "2026-09-07 08:12",
-  "BATA": "2026-09-07 08:12",
-  "BBFL": "2026-09-07 08:12",
-  "BCL": "2026-09-07 08:12",
-  "BECO": "2026-09-07 08:12",
-  "BERG": "2026-09-07 08:12",
-  "BFAGRO": "2026-09-07 08:12",
-  "BFBIO": "2026-09-07 08:12",
-  "BFMOD": "2026-09-07 08:12",
-  "BGL": "2026-09-07 08:12",
-  "BHAT": "2026-09-07 08:12",
-  "BIFO": "2026-09-07 08:12",
-  "BIPL": "2026-09-07 08:12",
-  "BLUEX": "2026-09-07 08:12",
-  "BML": "2026-09-07 08:12",
-  "BNL": "2026-09-07 08:12",
-  "BNWM": "2026-09-07 08:12",
-  "BOK": "2026-09-07 08:12",
-  "BOP": "2026-09-07 08:12",
-  "BPL": "2026-09-07 08:12",
-  "BRRG": "2026-09-07 08:12",
-  "BTL": "2026-09-07 08:12",
-  "BUXL": "2026-09-07 08:12",
-  "BWCL": "2026-09-07 08:12",
-  "BWHL": "2026-09-07 08:12",
-  "CCM": "2026-09-07 08:12",
-  "CENI": "2026-09-07 08:12",
-  "CEPB": "2026-09-07 08:12",
-  "CFL": "2026-09-07 08:12",
-  "CHAS": "2026-09-07 08:12",
-  "CHBL": "2026-09-07 08:12",
-  "CHCC": "2026-09-07 08:12",
-  "CLCPS": "2026-09-07 08:12",
-  "CLOV": "2026-09-07 08:12",
-  "CLVL": "2026-09-07 08:12",
-  "CNERGY": "2026-09-07 08:12",
-  "COLG": "2026-09-07 08:12",
-  "CPHL": "2026-09-07 08:12",
-  "CPPL": "2026-09-07 08:12",
-  "CRTM": "2026-09-07 08:12",
-  "CSAP": "2026-09-07 08:12",
-  "CSIL": "2026-09-07 08:12",
-  "CTM": "2026-09-07 08:12",
-  "DAAG": "2026-09-07 08:12",
-  "DADX": "2026-09-07 08:12",
-  "DCL": "2026-09-07 08:12",
-  "DCR": "2026-09-07 08:12",
-  "DEL": "2026-09-07 08:12",
-  "DFML": "2026-09-07 08:12",
-  "DFSM": "2026-09-07 08:12",
-  "DGKC": "2026-09-07 08:12",
-  "DIIL": "2026-09-07 08:12",
-  "DINT": "2026-09-07 08:12",
-  "DLL": "2026-09-07 08:12",
-  "DMC": "2026-09-07 08:12",
-  "DNCC": "2026-09-07 08:12",
-  "EEM": "2026-09-07 08:12",
-  "EFA": "2026-09-07 08:12",
-  "EFERT": "2026-09-07 08:12",
-  "ENGROH": "2026-09-07 08:12",
-  "FABL": "2026-09-07 08:12",
-  "FATIMA": "2026-09-07 08:12",
-  "FCCL": "2026-09-07 08:12",
-  "FFC": "2026-09-07 08:12",
-  "FFL": "2026-09-07 08:12",
-  "FHAM": "2026-09-07 08:12",
-  "GADT": "2026-09-07 08:12",
-  "GAL": "2026-09-07 08:12",
+  "786": "2026-09-08 02:51",
+  "AABS": "2026-09-08 02:51",
+  "AATM": "2026-09-08 02:51",
+  "ABL": "2026-09-08 02:51",
+  "ABOT": "2026-09-08 02:51",
+  "ACPL": "2026-09-08 02:51",
+  "ACWI": "2026-09-08 02:51",
+  "ADAMS": "2026-09-08 02:51",
+  "ADMM": "2026-09-08 02:51",
+  "AGHA": "2026-09-08 02:51",
+  "AGIC": "2026-09-08 02:51",
+  "AGIL": "2026-09-08 02:51",
+  "AGL": "2026-09-08 02:51",
+  "AGLNCPS": "2026-09-08 02:51",
+  "AGP": "2026-09-08 02:51",
+  "AGSML": "2026-09-08 02:51",
+  "AGTL": "2026-09-08 02:51",
+  "AHCL": "2026-09-08 02:51",
+  "AHL": "2026-09-08 02:51",
+  "AHTM": "2026-09-08 02:51",
+  "AICL": "2026-09-08 02:51",
+  "AIRLINK": "2026-09-08 02:51",
+  "AKBL": "2026-09-08 02:51",
+  "AKDHL": "2026-09-08 02:51",
+  "AKDSL": "2026-09-08 02:51",
+  "AKGL": "2026-09-08 02:51",
+  "ALAC": "2026-09-08 02:51",
+  "ALIFE": "2026-09-08 02:51",
+  "ALNRS": "2026-09-08 02:51",
+  "ALTN": "2026-09-08 02:51",
+  "AMBL": "2026-09-08 02:51",
+  "ANL": "2026-09-08 02:51",
+  "ANLNV": "2026-09-08 02:51",
+  "ANSM": "2026-09-08 02:51",
+  "ANTM": "2026-09-08 02:51",
+  "APL": "2026-09-08 02:51",
+  "ARCTM": "2026-09-08 02:51",
+  "ARMG": "2026-09-08 02:51",
+  "ARPAK": "2026-09-08 02:51",
+  "ARPL": "2026-09-08 02:51",
+  "ASHT": "2026-09-08 02:51",
+  "ASIC": "2026-09-08 02:51",
+  "ASL": "2026-09-08 02:51",
+  "ASLCPS": "2026-09-08 02:51",
+  "ASLPS": "2026-09-08 02:51",
+  "ASTL": "2026-09-08 02:51",
+  "ASTM": "2026-09-08 02:51",
+  "ATBA": "2026-09-08 02:51",
+  "ATIL": "2026-09-08 02:51",
+  "ATLH": "2026-09-08 02:51",
+  "ATRL": "2026-09-08 02:51",
+  "AVN": "2026-09-08 02:51",
+  "AWTX": "2026-09-08 02:51",
+  "BAFL": "2026-09-08 02:51",
+  "BAFS": "2026-09-08 02:51",
+  "BAHL": "2026-09-08 02:51",
+  "BAPL": "2026-09-08 02:51",
+  "BATA": "2026-09-08 02:51",
+  "BBFL": "2026-09-08 02:51",
+  "BCL": "2026-09-08 02:51",
+  "BECO": "2026-09-08 02:51",
+  "BERG": "2026-09-08 02:51",
+  "BFAGRO": "2026-09-08 02:51",
+  "BFBIO": "2026-09-08 02:51",
+  "BFMOD": "2026-09-08 02:51",
+  "BGL": "2026-09-08 02:51",
+  "BHAT": "2026-09-08 02:51",
+  "BIFO": "2026-09-08 02:51",
+  "BIPL": "2026-09-08 02:51",
+  "BLUEX": "2026-09-08 02:51",
+  "BML": "2026-09-08 02:51",
+  "BNL": "2026-09-08 02:51",
+  "BNWM": "2026-09-08 02:51",
+  "BOK": "2026-09-08 02:51",
+  "BOP": "2026-09-08 02:51",
+  "BPL": "2026-09-08 02:51",
+  "BRRG": "2026-09-08 02:51",
+  "BTL": "2026-09-08 02:51",
+  "BUXL": "2026-09-08 02:51",
+  "BWCL": "2026-09-08 02:51",
+  "BWHL": "2026-09-08 02:51",
+  "CCM": "2026-09-08 02:51",
+  "CENI": "2026-09-08 02:51",
+  "CEPB": "2026-09-08 02:51",
+  "CFL": "2026-09-08 02:51",
+  "CHAS": "2026-09-08 02:51",
+  "CHBL": "2026-09-08 02:51",
+  "CHCC": "2026-09-08 02:51",
+  "CLCPS": "2026-09-08 02:51",
+  "CLOV": "2026-09-08 02:51",
+  "CLVL": "2026-09-08 02:51",
+  "CNERGY": "2026-09-08 02:51",
+  "COLG": "2026-09-08 02:51",
+  "CPHL": "2026-09-08 02:51",
+  "CPPL": "2026-09-08 02:51",
+  "CRTM": "2026-09-08 02:51",
+  "CSAP": "2026-09-08 02:51",
+  "CSIL": "2026-09-08 02:51",
+  "CTM": "2026-09-08 02:51",
+  "DAAG": "2026-09-08 02:51",
+  "DADX": "2026-09-08 02:51",
+  "DCL": "2026-09-08 02:51",
+  "DCR": "2026-09-08 02:51",
+  "DEL": "2026-09-08 02:51",
+  "DFML": "2026-09-08 02:51",
+  "DFSM": "2026-09-08 02:51",
+  "DGKC": "2026-09-08 02:51",
+  "DIIL": "2026-09-08 02:51",
+  "DINT": "2026-09-08 02:51",
+  "DLL": "2026-09-08 02:51",
+  "DMC": "2026-09-08 02:51",
+  "DNCC": "2026-09-08 02:51",
+  "DOL": "2026-09-08 02:51",
+  "DSIL": "2026-09-08 02:51",
+  "DYNO": "2026-09-08 02:51",
+  "ECOP": "2026-09-08 02:51",
+  "EEM": "2026-09-08 02:51",
+  "EFA": "2026-09-08 02:51",
+  "EFERT": "2026-09-08 02:51",
+  "EFUG": "2026-09-08 02:51",
+  "EFUL": "2026-09-08 02:51",
+  "ELCM": "2026-09-08 02:51",
+  "ELSM": "2026-09-08 02:51",
+  "EMCO": "2026-09-08 02:51",
+  "ENGROH": "2026-09-08 02:51",
+  "EPCL": "2026-09-08 02:51",
+  "EPCLPS": "2026-09-08 02:51",
+  "EPQL": "2026-09-08 02:51",
+  "EWIC": "2026-09-08 02:51",
+  "EXIDE": "2026-09-08 02:51",
+  "FABL": "2026-09-08 02:51",
+  "FANM": "2026-09-08 02:51",
+  "FASM": "2026-09-08 02:51",
+  "FATIMA": "2026-09-08 02:51",
+  "FCCL": "2026-09-08 02:51",
+  "FCEPL": "2026-09-08 02:51",
+  "FCIBL": "2026-09-08 02:51",
+  "FCL": "2026-09-08 02:51",
+  "FCSC": "2026-09-08 02:51",
+  "FDPL": "2026-09-08 02:51",
+  "FECM": "2026-09-08 02:51",
+  "FECTC": "2026-09-08 02:51",
+  "FEM": "2026-09-08 02:51",
+  "FEROZ": "2026-09-08 02:51",
+  "FFC": "2026-09-08 02:51",
+  "FFL": "2026-09-08 02:51",
+  "FFLM": "2026-09-08 02:51",
+  "FHAM": "2026-09-08 02:51",
+  "FIBLM": "2026-09-08 02:51",
+  "FIMM": "2026-09-08 02:51",
+  "FLYNG": "2026-09-08 02:51",
+  "FML": "2026-09-08 02:51",
+  "FNEL": "2026-09-08 02:51",
+  "FPJM": "2026-09-08 02:51",
+  "FPRM": "2026-09-08 02:51",
+  "FRCL": "2026-09-08 02:51",
+  "FRSM": "2026-09-08 02:51",
+  "FTMM": "2026-09-08 02:51",
+  "FTSM": "2026-09-08 02:51",
+  "FZCM": "2026-09-08 02:51",
+  "GADT": "2026-09-08 02:51",
+  "GAL": "2026-09-08 02:51",
+  "GATI": "2026-09-08 02:51",
+  "GATM": "2026-09-08 02:51",
+  "GCIL": "2026-09-08 02:51",
+  "GCWL": "2026-09-08 02:51",
   "GCWLPRS": "2026-09-07 08:12",
-  "GHGL": "2026-09-07 08:12",
-  "GHNI": "2026-09-07 08:12",
+  "GDL": "2026-09-08 02:51",
+  "GEMBCEM": "2026-09-08 02:51",
+  "GEMMEL": "2026-09-08 02:51",
+  "GEMNETS": "2026-09-08 02:51",
+  "GEMPACRA": "2026-09-08 02:51",
+  "GEMPAPL": "2026-09-08 02:51",
+  "GFIL": "2026-09-08 02:51",
+  "GGGL": "2026-09-08 02:51",
+  "GGL": "2026-09-08 02:51",
+  "GHGL": "2026-09-08 02:51",
+  "GHNI": "2026-09-08 02:51",
   "GIL": "2026-09-07 08:12",
-  "GLAXO": "2026-09-07 08:12",
-  "GLD": "2026-09-07 08:12",
+  "GLAXO": "2026-09-08 02:51",
+  "GLD": "2026-09-08 02:51",
   "GLOTNC": "2026-09-07 08:12",
+  "GOC": "2026-09-08 02:51",
+  "GRR": "2026-09-08 02:51",
+  "GRYL": "2026-09-08 02:51",
   "GSPMNC": "2026-09-07 08:12",
+  "GTYR": "2026-09-08 02:51",
   "GUSMNC": "2026-09-07 08:12",
   "GUTMNC": "2026-09-07 08:12",
+  "GVGL": "2026-09-08 02:51",
+  "GWLC": "2026-09-08 02:51",
+  "HABSM": "2026-09-08 02:51",
   "HADCNC": "2026-09-07 08:12",
+  "HAEL": "2026-09-08 02:51",
+  "HAFL": "2026-09-08 02:51",
   "HAJTNC": "2026-09-07 08:12",
-  "HALEON": "2026-09-07 08:12",
+  "HALEON": "2026-09-08 02:51",
   "HASCOLNC": "2026-09-07 08:12",
   "HATMNC": "2026-09-07 08:12",
-  "HBL": "2026-09-07 08:12",
-  "HCAR": "2026-09-07 08:12",
-  "HGFA": "2026-09-07 08:12",
-  "HINOON": "2026-09-07 08:12",
+  "HBL": "2026-09-08 02:51",
+  "HCAR": "2026-09-08 02:51",
+  "HGFA": "2026-09-08 02:51",
+  "HICL": "2026-09-08 02:51",
+  "HIFA": "2026-09-08 02:51",
+  "HINO": "2026-09-08 02:51",
+  "HINOON": "2026-09-08 02:51",
   "HIRATNC": "2026-09-07 08:12",
   "HKKTNC": "2026-09-07 08:12",
-  "HMB": "2026-09-07 08:12",
-  "HUBC": "2026-09-07 08:12",
-  "HUMNL": "2026-09-07 08:12",
-  "HYG": "2026-09-07 08:12",
-  "IBFL": "2026-09-07 08:12",
-  "ILP": "2026-09-07 08:12",
-  "INDU": "2026-09-07 08:12",
-  "INIL": "2026-09-07 08:12",
-  "ISL": "2026-09-07 08:12",
-  "JDWS": "2026-09-07 08:12",
-  "JVDC": "2026-09-07 08:12",
-  "KAPCO": "2026-09-07 08:12",
-  "KEL": "2026-09-07 08:12",
-  "KOHC": "2026-09-07 08:12",
-  "KTML": "2026-09-07 08:12",
-  "LCI": "2026-09-07 08:12",
-  "LOTCHEM": "2026-09-07 08:12",
-  "LUCK": "2026-09-07 08:12",
-  "MARI": "2026-09-07 08:12",
-  "MCB": "2026-09-07 08:12",
-  "MEBL": "2026-09-07 08:12",
-  "MEHT": "2026-09-07 08:12",
-  "MLCF": "2026-09-07 08:12",
-  "MTL": "2026-09-07 08:12",
-  "MUREB": "2026-09-07 08:12",
-  "NATF": "2026-09-07 08:12",
-  "NBP": "2026-09-07 08:12",
-  "NESTLE": "2026-09-07 08:12",
-  "NML": "2026-09-07 08:12",
-  "NPL": "2026-09-07 08:12",
-  "NRL": "2026-09-07 08:12",
-  "OGDC": "2026-09-07 08:12",
-  "PABC": "2026-09-07 08:12",
-  "PAEL": "2026-09-07 08:12",
-  "PAKT": "2026-09-07 08:12",
-  "PGLC": "2026-09-07 08:12",
-  "PIBTL": "2026-09-07 08:12",
-  "PIOC": "2026-09-07 08:12",
-  "PKGS": "2026-09-07 08:12",
-  "POL": "2026-09-07 08:12",
-  "POWER": "2026-09-07 08:12",
-  "PPL": "2026-09-07 08:12",
-  "PRL": "2026-09-07 08:12",
-  "PSEL": "2026-09-07 08:12",
-  "PSO": "2026-09-07 08:12",
-  "PSX": "2026-09-07 08:12",
-  "PTC": "2026-09-07 08:12",
-  "RMPL": "2026-09-07 08:12",
-  "SAZEW": "2026-09-07 08:12",
-  "SCBPL": "2026-09-07 08:12",
-  "SEARL": "2026-09-07 08:12",
-  "SHFA": "2026-09-07 08:12",
-  "SNGP": "2026-09-07 08:12",
-  "SRVI": "2026-09-07 08:12",
-  "SSGC": "2026-09-07 08:12",
-  "SSOM": "2026-09-07 08:12",
-  "SYS": "2026-09-07 08:12",
-  "TGL": "2026-09-07 08:12",
-  "THALL": "2026-09-07 08:12",
-  "TLT": "2026-09-07 08:12",
-  "TPLRF1": "2026-09-07 08:12",
-  "TREET": "2026-09-07 08:12",
-  "TRG": "2026-09-07 08:12",
-  "UBL": "2026-09-07 08:12",
-  "UPFL": "2026-09-07 08:12",
-  "US500": "2026-09-07 08:12",
-  "USDJI": "2026-09-07 08:12",
-  "USNDX": "2026-09-07 08:12",
-  "USO": "2026-09-07 08:12",
-  "USRUT": "2026-09-07 08:12",
-  "USVIX": "2026-09-07 08:12",
-  "XLB": "2026-09-07 08:12",
-  "XLC": "2026-09-07 08:12",
-  "XLE": "2026-09-07 08:12",
-  "XLF": "2026-09-07 08:12",
-  "XLI": "2026-09-07 08:12",
-  "XLK": "2026-09-07 08:12",
-  "XLP": "2026-09-07 08:12",
-  "XLRE": "2026-09-07 08:12",
-  "XLU": "2026-09-07 08:12",
-  "XLV": "2026-09-07 08:12",
-  "XLY": "2026-09-07 08:12",
-  "YOUW": "2026-09-07 08:12"
+  "HMB": "2026-09-08 02:51",
+  "HMIMNC": "2026-09-08 02:51",
+  "HPL": "2026-09-08 02:51",
+  "HRPL": "2026-09-08 02:51",
+  "HSPINC": "2026-09-08 02:51",
+  "HTL": "2026-09-08 02:51",
+  "HUBC": "2026-09-08 02:51",
+  "HUMNL": "2026-09-08 02:51",
+  "HUSI": "2026-09-08 02:51",
+  "HWQSNC": "2026-09-08 02:51",
+  "HYG": "2026-09-08 02:51",
+  "IBFL": "2026-09-08 02:51",
+  "IBLHL": "2026-09-08 02:51",
+  "ICCI": "2026-09-08 02:51",
+  "ICIBL": "2026-09-08 02:51",
+  "ICL": "2026-09-08 02:51",
+  "IDEAL": "2026-09-08 02:51",
+  "IDRT": "2026-09-08 02:51",
+  "IDYM": "2026-09-08 02:51",
+  "IGIHL": "2026-09-08 02:51",
+  "IGIL": "2026-09-08 02:51",
+  "ILP": "2026-09-08 02:51",
+  "IMAGE": "2026-09-08 02:51",
+  "IMLNC": "2026-09-08 02:51",
+  "IMS": "2026-09-08 02:51",
+  "INDU": "2026-09-08 02:51",
+  "INIL": "2026-09-08 02:51",
+  "INKL": "2026-09-08 02:51",
+  "INMFNC": "2026-09-08 02:51",
+  "IPAK": "2026-09-08 02:51",
+  "IREIT": "2026-09-08 02:51",
+  "ISIL": "2026-09-08 02:51",
+  "ISL": "2026-09-08 02:51",
+  "ITANZ": "2026-09-08 02:51",
+  "ITTEFAQ": "2026-09-08 02:51",
+  "JATM": "2026-09-08 02:51",
+  "JDMT": "2026-09-08 02:51",
+  "JDWS": "2026-09-08 02:51",
+  "JGICL": "2026-09-08 02:51",
+  "JKSM": "2026-09-08 02:51",
+  "JLICL": "2026-09-08 02:51",
+  "JSBL": "2026-09-08 02:51",
+  "JSCL": "2026-09-08 02:51",
+  "JSGCL": "2026-09-08 02:51",
+  "JSIL": "2026-09-08 02:51",
+  "JSML": "2026-09-08 02:51",
+  "JSRR": "2026-09-08 02:51",
+  "JUBSNC": "2026-09-08 02:51",
+  "JVDC": "2026-09-08 02:51",
+  "JVDCPS": "2026-09-08 02:51",
+  "KAKLNC": "2026-09-08 02:51",
+  "KAPCO": "2026-09-08 02:51",
+  "KCL": "2026-09-08 02:51",
+  "KEL": "2026-09-08 02:51",
+  "KHTC": "2026-09-08 02:51",
+  "KHYT": "2026-09-08 02:51",
+  "KML": "2026-09-08 02:51",
+  "KOHC": "2026-09-08 02:51",
+  "KOHE": "2026-09-08 02:51",
+  "KOHP": "2026-09-08 02:51",
+  "KOHTM": "2026-09-08 02:51",
+  "KOIL": "2026-09-08 02:51",
+  "KOSM": "2026-09-08 02:51",
+  "KPUS": "2026-09-08 02:51",
+  "KSBP": "2026-09-08 02:51",
+  "KSTMNC": "2026-09-08 02:51",
+  "KTML": "2026-09-08 02:51",
+  "LCI": "2026-09-08 02:51",
+  "LEUL": "2026-09-08 02:51",
+  "LIVEN": "2026-09-08 02:51",
+  "LOADS": "2026-09-08 02:51",
+  "LOTCHEM": "2026-09-08 02:51",
+  "LPGL": "2026-09-08 02:51",
+  "LPL": "2026-09-08 02:51",
+  "LSECL": "2026-09-08 02:51",
+  "LSEFSL": "2026-09-08 02:51",
+  "LSEVL": "2026-09-08 02:51",
+  "LUCK": "2026-09-08 02:51",
+  "MACFL": "2026-09-08 02:51",
+  "MACTER": "2026-09-08 02:51",
+  "MARI": "2026-09-08 02:51",
+  "MCB": "2026-09-08 02:51",
+  "MCBIM": "2026-09-08 02:51",
+  "MDTL": "2026-09-08 02:51",
+  "MEBL": "2026-09-08 02:51",
+  "MEHT": "2026-09-08 02:51",
+  "MERIT": "2026-09-08 02:51",
+  "MFFL": "2026-09-08 02:51",
+  "MFL": "2026-09-08 02:51",
+  "MFTMNC": "2026-09-08 02:51",
+  "MIRKS": "2026-09-08 02:51",
+  "MLCF": "2026-09-08 02:51",
+  "MOHENC": "2026-09-08 02:51",
+  "MQTM": "2026-09-08 02:51",
+  "MRNS": "2026-09-08 02:51",
+  "MSCL": "2026-09-08 02:51",
+  "MSOT": "2026-09-08 02:51",
+  "MSOTPS": "2026-09-08 02:51",
+  "MTL": "2026-09-08 02:51",
+  "MUBTNC": "2026-09-08 02:51",
+  "MUGHAL": "2026-09-08 02:51",
+  "MUGHALC": "2026-09-08 02:51",
+  "MUREB": "2026-09-08 02:51",
+  "MWMP": "2026-09-08 02:51",
+  "NAFLNC": "2026-09-08 02:51",
+  "NAGC": "2026-09-08 02:51",
+  "NATF": "2026-09-08 02:51",
+  "NATM": "2026-09-08 02:51",
+  "NBP": "2026-09-08 02:51",
+  "NCL": "2026-09-08 02:51",
+  "NCPL": "2026-09-08 02:51",
+  "NESTLE": "2026-09-08 02:51",
+  "NETSOL": "2026-09-08 02:51",
+  "NEXT": "2026-09-08 02:51",
+  "NICL": "2026-09-08 02:51",
+  "NML": "2026-09-08 02:51",
+  "NONS": "2026-09-08 02:51",
+  "NPL": "2026-09-08 02:51",
+  "NRL": "2026-09-08 02:51",
+  "NRSL": "2026-09-08 02:51",
+  "NSRM": "2026-09-08 02:51",
+  "OBOY": "2026-09-08 02:51",
+  "OCTOPUS": "2026-09-08 02:51",
+  "OGDC": "2026-09-08 02:51",
+  "OLPL": "2026-09-08 02:51",
+  "OLPM": "2026-09-08 02:51",
+  "OML": "2026-09-08 02:51",
+  "ORM": "2026-09-08 02:51",
+  "OTSU": "2026-09-08 02:51",
+  "PABC": "2026-09-08 02:51",
+  "PACE": "2026-09-08 02:51",
+  "PAEL": "2026-09-08 02:51",
+  "PAKD": "2026-09-08 02:51",
+  "PAKL": "2026-09-08 02:51",
+  "PAKOXY": "2026-09-08 02:51",
+  "PAKQATAR": "2026-09-08 02:51",
+  "PAKRI": "2026-09-08 02:51",
+  "PAKT": "2026-09-08 02:51",
+  "PCAL": "2026-09-08 02:51",
+  "PGLC": "2026-09-08 02:51",
+  "PIAHCLA": "2026-09-08 02:51",
+  "PIAHCLB": "2026-09-08 02:51",
+  "PIBTL": "2026-09-08 02:51",
+  "PICT": "2026-09-08 02:51",
+  "PIM": "2026-09-08 02:51",
+  "PINL": "2026-09-08 02:51",
+  "PIOC": "2026-09-08 02:51",
+  "PKGI": "2026-09-08 02:51",
+  "PKGP": "2026-09-08 02:51",
+  "PKGS": "2026-09-08 02:51",
+  "PMRS": "2026-09-08 02:51",
+  "PNSC": "2026-09-08 02:51",
+  "POL": "2026-09-08 02:51",
+  "POML": "2026-09-08 02:51",
+  "POWER": "2026-09-08 02:51",
+  "POWERPS": "2026-09-08 02:51",
+  "PPL": "2026-09-08 02:51",
+  "PPP": "2026-09-08 02:51",
+  "PQGTL": "2026-09-08 02:51",
+  "PREMA": "2026-09-08 02:51",
+  "PRET": "2026-09-08 02:51",
+  "PRL": "2026-09-08 02:51",
+  "PRWM": "2026-09-08 02:51",
+  "PSEL": "2026-09-08 02:51",
+  "PSO": "2026-09-08 02:51",
+  "PSX": "2026-09-08 02:51",
+  "PSYL": "2026-09-08 02:51",
+  "PTC": "2026-09-08 02:51",
+  "PTL": "2026-09-08 02:51",
+  "QTECH": "2026-09-08 02:51",
+  "QUICE": "2026-09-08 02:51",
+  "REDCO": "2026-09-08 02:51",
+  "REWM": "2026-09-08 02:51",
+  "RICL": "2026-09-08 02:51",
+  "RMPL": "2026-09-08 02:51",
+  "RPL": "2026-09-08 02:51",
+  "RUPL": "2026-09-08 02:51",
+  "SAIF": "2026-09-08 02:51",
+  "SANSM": "2026-09-08 02:51",
+  "SAPT": "2026-09-08 02:51",
+  "SARC": "2026-09-08 02:51",
+  "SASML": "2026-09-08 02:51",
+  "SAZEW": "2026-09-08 02:51",
+  "SBL": "2026-09-08 02:51",
+  "SCBPL": "2026-09-08 02:51",
+  "SEARL": "2026-09-08 02:51",
+  "SEL": "2026-09-08 02:51",
+  "SELECT": "2026-09-08 02:51",
+  "SEPL": "2026-09-08 02:51",
+  "SERT": "2026-09-08 02:51",
+  "SFL": "2026-09-08 02:51",
+  "SGF": "2026-09-08 02:51",
+  "SGPL": "2026-09-08 02:51",
+  "SHCM": "2026-09-08 02:51",
+  "SHDT": "2026-09-08 02:51",
+  "SHEZ": "2026-09-08 02:51",
+  "SHFA": "2026-09-08 02:51",
+  "SHJS": "2026-09-08 02:51",
+  "SHNI": "2026-09-08 02:51",
+  "SHSML": "2026-09-08 02:51",
+  "SIBL": "2026-09-08 02:51",
+  "SIEM": "2026-09-08 02:51",
+  "SINDM": "2026-09-08 02:51",
+  "SITC": "2026-09-08 02:51",
+  "SLGL": "2026-09-08 02:51",
+  "SLM": "2026-09-08 02:51",
+  "SMCPL": "2026-09-08 02:51",
+  "SNAI": "2026-09-08 02:51",
+  "SNBL": "2026-09-08 02:51",
+  "SNGP": "2026-09-08 02:51",
+  "SPAC1": "2026-09-08 02:51",
+  "SPAC2": "2026-09-08 02:51",
+  "SPEL": "2026-09-08 02:51",
+  "SPSL": "2026-09-08 02:51",
+  "SPWL": "2026-09-08 02:51",
+  "SRR": "2026-09-08 02:51",
+  "SRVI": "2026-09-08 02:51",
+  "SSGC": "2026-09-08 02:51",
+  "SSOM": "2026-09-08 02:51",
+  "STCL": "2026-09-08 02:51",
+  "STJT": "2026-09-08 02:51",
+  "STL": "2026-09-08 02:51",
+  "STML": "2026-09-08 02:51",
+  "STPL": "2026-09-08 02:51",
+  "STYLERS": "2026-09-08 02:51",
+  "SURC": "2026-09-08 02:51",
+  "SUTM": "2026-09-08 02:51",
+  "SYM": "2026-09-08 02:51",
+  "SYS": "2026-09-08 02:51",
+  "SZTM": "2026-09-08 02:51",
+  "TATM": "2026-09-08 02:51",
+  "TBL": "2026-09-08 02:51",
+  "TCORP": "2026-09-08 02:51",
+  "TCORPCPS": "2026-09-08 02:51",
+  "TELE": "2026-09-08 02:51",
+  "TGL": "2026-09-08 02:51",
+  "THALL": "2026-09-08 02:51",
+  "THCCL": "2026-09-08 02:51",
+  "TICL": "2026-09-08 02:51",
+  "TLT": "2026-09-08 02:51",
+  "TOMCL": "2026-09-08 02:51",
+  "TOWL": "2026-09-08 02:51",
+  "TPL": "2026-09-08 02:51",
+  "TPLI": "2026-09-08 02:51",
+  "TPLL": "2026-09-08 02:51",
+  "TPLP": "2026-09-08 02:51",
+  "TPLRF1": "2026-09-08 02:51",
+  "TPLT": "2026-09-08 02:51",
+  "TREET": "2026-09-08 02:51",
+  "TRG": "2026-09-08 02:51",
+  "TRIPF": "2026-09-08 02:51",
+  "TRSM": "2026-09-08 02:51",
+  "TSBL": "2026-09-08 02:51",
+  "TSMF": "2026-09-08 02:51",
+  "TSML": "2026-09-08 02:51",
+  "TSPL": "2026-09-08 02:51",
+  "UBDL": "2026-09-08 02:51",
+  "UBL": "2026-09-08 02:51",
+  "UCAPM": "2026-09-08 02:51",
+  "UDLI": "2026-09-08 02:51",
+  "UDPL": "2026-09-08 02:51",
+  "UNIC": "2026-09-08 02:51",
+  "UNITY": "2026-09-08 02:51",
+  "UPFL": "2026-09-08 02:51",
+  "US500": "2026-09-08 02:51",
+  "USDJI": "2026-09-08 02:51",
+  "USNDX": "2026-09-08 02:51",
+  "USO": "2026-09-08 02:51",
+  "USRUT": "2026-09-08 02:51",
+  "USVIX": "2026-09-08 02:51",
+  "UVIC": "2026-09-08 02:51",
+  "WAFI": "2026-09-08 02:51",
+  "WAHDAT": "2026-09-08 02:51",
+  "WAHN": "2026-09-08 02:51",
+  "WASL": "2026-09-08 02:51",
+  "WAVES": "2026-09-08 02:51",
+  "WAVESAPP": "2026-09-08 02:51",
+  "WTL": "2026-09-08 02:51",
+  "XLB": "2026-09-08 02:51",
+  "XLC": "2026-09-08 02:51",
+  "XLE": "2026-09-08 02:51",
+  "XLF": "2026-09-08 02:51",
+  "XLI": "2026-09-08 02:51",
+  "XLK": "2026-09-08 02:51",
+  "XLP": "2026-09-08 02:51",
+  "XLRE": "2026-09-08 02:51",
+  "XLU": "2026-09-08 02:51",
+  "XLV": "2026-09-08 02:51",
+  "XLY": "2026-09-08 02:51",
+  "YOUW": "2026-09-08 02:51",
+  "ZAHID": "2026-09-08 02:51",
+  "ZAL": "2026-09-08 02:51",
+  "ZIL": "2026-09-08 02:51",
+  "ZTL": "2026-09-08 02:51",
+  "ZUMA": "2026-09-08 02:51"
  },
  "failed": [
   {
-   "symbol": "GCWLPRS",
-   "err": "only 9 rows (tier listed)"
+   "symbol": "BNWM",
+   "err": "HTTP 429 on /timeseries/eod/BNWM"
   },
   {
-   "symbol": "GIL",
-   "err": "only 19 rows (tier listed)"
+   "symbol": "SSOM",
+   "err": "HTTP 429 on /timeseries/eod/SSOM"
   },
   {
-   "symbol": "GLOTNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "PGLC",
+   "err": "HTTP 429 on /timeseries/eod/PGLC"
   },
   {
-   "symbol": "GSPMNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "YOUW",
+   "err": "HTTP 429 on /timeseries/eod/YOUW"
   },
   {
-   "symbol": "GUSMNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "PRL",
+   "err": "HTTP 429 on /timeseries/eod/PRL"
   },
   {
-   "symbol": "GUTMNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "NRL",
+   "err": "HTTP 429 on /timeseries/eod/NRL"
   },
   {
-   "symbol": "HADCNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "TREET",
+   "err": "HTTP 429 on /timeseries/eod/TREET"
   },
   {
-   "symbol": "HAJTNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "HMIMNC",
+   "err": "HTTP 429 on /timeseries/eod/HMIMNC"
   },
   {
-   "symbol": "HASCOLNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "HSPINC",
+   "err": "HTTP 429 on /timeseries/eod/HSPINC"
   },
   {
-   "symbol": "HATMNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "HWQSNC",
+   "err": "HTTP 429 on /timeseries/eod/HWQSNC"
   },
   {
-   "symbol": "HIRATNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "IMLNC",
+   "err": "HTTP 429 on /timeseries/eod/IMLNC"
   },
   {
-   "symbol": "HKKTNC",
-   "err": "only 0 rows (tier listed)"
+   "symbol": "INMFNC",
+   "err": "HTTP 429 on /timeseries/eod/INMFNC"
+  },
+  {
+   "symbol": "JUBSNC",
+   "err": "HTTP 429 on /timeseries/eod/JUBSNC"
+  },
+  {
+   "symbol": "KAKLNC",
+   "err": "HTTP 429 on /timeseries/eod/KAKLNC"
+  },
+  {
+   "symbol": "KSTMNC",
+   "err": "HTTP 403 on /timeseries/eod/KSTMNC"
+  },
+  {
+   "symbol": "MFTMNC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MOHENC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MUBTNC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NAFLNC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DSIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DOL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EFUG",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ECOP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DYNO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EFUL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ELCM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ELSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EPCLPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EPCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EMCO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EPQL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EWIC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "EXIDE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FANM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FCEPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FASM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FCIBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FCSC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FDPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FECM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FECTC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FEM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FFLM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FEROZ",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FIBLM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FIMM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FLYNG",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FPJM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FNEL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FPRM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FRSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FRCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FTMM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FZCM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "FTSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GATI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GCIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GATM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GCWL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GEMBCEM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GDL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GEMMEL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GEMPACRA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GEMNETS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GEMPAPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GGGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GFIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GOC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GRR",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GRYL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GTYR",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GWLC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "GVGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HAEL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HABSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HAFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HINO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HIFA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HRPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "HUSI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ICCI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IBLHL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ICIBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IDEAL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IDRT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IDYM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IGIHL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IMAGE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IGIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IMS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "INKL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IPAK",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "IREIT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ISIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ITANZ",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ITTEFAQ",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JATM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JGICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JDMT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JLICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JKSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JSBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JSCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JSIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JSGCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JSRR",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JSML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "JVDCPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KHYT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KHTC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KOHE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KOHP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KOHTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KOSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KOIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KPUS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "KSBP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LEUL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LPGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LOADS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LIVEN",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LSECL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LSEFSL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "LSEVL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MACFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MACTER",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MDTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MCBIM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MERIT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MFFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MIRKS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MQTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MRNS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MSCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MSOT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MSOTPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MUGHAL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MWMP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "MUGHALC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NAGC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NATM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NCPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NEXT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NETSOL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NONS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NRSL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "NSRM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "OCTOPUS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "OBOY",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "OLPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "OLPM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "OML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ORM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PACE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "OTSU",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PAKD",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PAKL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PAKOXY",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PAKQATAR",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PAKRI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PCAL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PIAHCLA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PIAHCLB",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PICT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PIM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PINL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PKGI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PKGP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PMRS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PNSC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "POML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "POWERPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PPP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PQGTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PREMA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PRET",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PRWM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "PSYL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "QTECH",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "QUICE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "REDCO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "REWM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "RICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "RPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "RUPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SAIF",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SANSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SAPT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SARC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SASML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SEL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SELECT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SEPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SERT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SGF",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SGPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SHCM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SHDT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SHEZ",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SHJS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SHNI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SHSML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SIBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SIEM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SITC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SINDM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SLGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SLM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SMCPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SNAI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SPAC1",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SNBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SPAC2",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SPEL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SPSL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SPWL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SRR",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "STCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "STJT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "STL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "STML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "STPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "STYLERS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SURC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SUTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SYM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "SZTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TATM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TCORP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TCORPCPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TELE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "THCCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TICL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TOMCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TOWL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TPLI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TPLP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TPLL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TRIPF",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TPLT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TRSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TSBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TSML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TSMF",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "TSPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UBDL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UCAPM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UDLI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UDPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UNIC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UNITY",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "UVIC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WAFI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WAHDAT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WAHN",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WASL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WAVES",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WAVESAPP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "WTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ZAHID",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ZAL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ZIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ZUMA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ZTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "786",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AABS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AATM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ACPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ADAMS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ADMM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGHA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGIC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGLNCPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGSML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AGTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AHL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AHTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AKDHL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AKDSL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AKGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ALAC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ALIFE",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ALNRS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ALTN",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AMBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ANL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ANLNV",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ANSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ANTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ARCTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ARMG",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ARPAK",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ARPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASHT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASIC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASLCPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASLPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ASTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ATBA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "ATIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AVN",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "AWTX",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BAFS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BAPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BATA",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BBFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BECO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BERG",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BFAGRO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BFBIO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BFMOD",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BGL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BHAT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BIFO",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BIPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BLUEX",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BNL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BOK",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BRRG",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BTL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BWHL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "BUXL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CCM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CENI",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CEPB",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CFL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CHAS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CLCPS",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CHBL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CLOV",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CLVL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CPPL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CRTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CSAP",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CSIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "CTM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DAAG",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DADX",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DCL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DEL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DFML",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DFSM",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DIIL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DINT",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DLL",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DMC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
+  },
+  {
+   "symbol": "DNCC",
+   "err": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without"
   }
  ]
 }

@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "guidance_version": "guidance_contradictions_v2",
- "as_of": "2026-08-27T09:31:00+05:00",
+ "as_of": "2026-09-08T03:06:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -41,8 +41,8 @@
    "symbol": "ATRL",
    "status": "available",
    "guidance_count": 0,
-   "risk_count": 1,
-   "object_count": 1,
+   "risk_count": 2,
+   "object_count": 2,
    "contradiction_count": 0,
    "objects": [
     {
@@ -65,6 +65,34 @@
       "content_sha256": "e13383bba7a68c3490fc51d0b59f05aee8ac3413272b8530ea9025ae4c0035e3",
       "evidence_sha256": null,
       "text": "onitored. vi. There are no significant doubts upon the Company’s ability to continue as a going concern. vii. There has been no material departure from the best practices of Corporate Governance, as detailed in the Code of Corporate Govern…"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    },
+    {
+     "guidance_id": "guidance_c8a899557bb8d075e037",
+     "symbol": "ATRL",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "issuer:369460cb9aebb04bf9672966",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2024.pdf",
+      "source": "Issuer website",
+      "page": 56,
+      "available_on": "2026-09-08T03:06:00+05:00",
+      "content_sha256": "fe6fd5a5788054792278059ae377194232dbd7b0644c5065c055f7ee383053fb",
+      "evidence_sha256": null,
+      "text": "onitored. vi. There are no significant doubts upon the Company’s ability to continue as a going concern. vii. There has been no material departure from the best practices of Corporate Governance, as detailed in the regulations of Rule Book…"
      },
      "policy": {
       "same_company_official_evidence": true,
@@ -1075,9 +1103,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "e0826cb6ec2dfb7a318d64a63b3ad02afbe183b5",
-  "build_cutoff_at": "2026-09-07T16:56:33Z",
-  "generated_at": "2026-09-07T16:56:33Z",
+  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
+  "build_cutoff_at": "2026-09-08T03:16:29Z",
+  "generated_at": "2026-09-08T03:16:29Z",
   "artifact_path": "state/company_intel/guidance_contradictions.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

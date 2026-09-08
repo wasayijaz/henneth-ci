@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-07 08:27",
+ "updated": "2026-09-08 03:15",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
-   "id": "20260907-TPLT-donchian55_break",
+   "id": "20260908-TPLT-donchian55_break",
    "ticker": "TPLT",
    "strategy": "donchian55_break",
    "template": "Donchian 55 breakout (turtle)",
@@ -21,43 +21,7 @@
    "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260907-NRL-donchian55_break",
-   "ticker": "NRL",
-   "strategy": "donchian55_break",
-   "template": "Donchian 55 breakout (turtle)",
-   "category": "breakout",
-   "sector": "Refinery",
-   "hold_sessions": 25,
-   "backtest": {
-    "hit_rate": 0.55,
-    "net_expectancy_pct": 2.08,
-    "n": 60,
-    "oos_hit": 0.571
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Donchian 55 breakout (turtle) is triggering now; on NRL's own history it won 55% over 60 trades (+2.1% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260907-GAL-trend_momo_combo",
-   "ticker": "GAL",
-   "strategy": "trend_momo_combo",
-   "template": "Trend + momentum combo",
-   "category": "momentum",
-   "sector": "Automobile Assembler",
-   "hold_sessions": 12,
-   "backtest": {
-    "hit_rate": 0.579,
-    "net_expectancy_pct": 1.32,
-    "n": 38,
-    "oos_hit": 0.6
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Trend + momentum combo is triggering now; on GAL's own history it won 58% over 38 trades (+1.3% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260907-NICL-roc60_leader_pullback",
+   "id": "20260908-NICL-roc60_leader_pullback",
    "ticker": "NICL",
    "strategy": "roc60_leader_pullback",
    "template": "Long-run leader, short pullback",
@@ -73,7 +37,25 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260908-FCL-obv_divergence_up",
+   "ticker": "FCL",
+   "strategy": "obv_divergence_up",
+   "template": "Volume leads price",
+   "category": "volume",
+   "sector": "Cable & Electrical Goods",
+   "hold_sessions": 15,
+   "backtest": {
+    "hit_rate": 0.556,
+    "net_expectancy_pct": 0.68,
+    "n": 27,
+    "oos_hit": 0.625
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
- "n_candidates": 8
+ "n_candidates": 5
 }
