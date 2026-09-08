@@ -40,15 +40,31 @@
  },
  "summary": {
   "company_count": 20,
-  "queued_company_count": 18
+  "queued_company_count": 19
  },
  "companies": {
   "MLCF": {
    "symbol": "MLCF",
    "status": "complete",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 24,
+   "indexed_official_financial_doc_count": 25,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281787",
+     "title": "MLCF Transmission of Annual Report for the Year Ended 30.06.2026",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2026-08-27T14:53:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281787.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "Year Ended 30.06.2026"
+     }
+    },
     {
      "document_id": "psx:280589",
      "title": "MLCF-Financial Results for the year ended June 30, 2026",
@@ -342,22 +358,6 @@
       "source": "title",
       "matched_text": "31.03.2024"
      }
-    },
-    {
-     "document_id": "psx:229941",
-     "title": "MLCF-Financial Results 31.03.2024",
-     "doc_type": "results",
-     "classification": "financial_results",
-     "published_at": "2024-04-25T12:56:00+05:00",
-     "source_url": "https://dps.psx.com.pk/download/document/229941.pdf",
-     "status": "ready",
-     "content_sha256": "9de20cf7a12f2e049ca2cf437be2089f300e7fc8aed8adae4d0be97492374030",
-     "safe_period": {
-      "period_end": "2024-03-31",
-      "period_type": "unknown",
-      "source": "title",
-      "matched_text": "31.03.2024"
-     }
     }
    ],
    "required_annual_periods": [
@@ -482,6 +482,19 @@
     "queue_id": "finqual_b245b7ffeace99bc407b",
     "candidate_documents": [
      {
+      "document_id": "psx:281787",
+      "published_at": "2026-08-27T14:53:00+05:00",
+      "title": "MLCF Transmission of Annual Report for the Year Ended 30.06.2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281787.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "Year Ended 30.06.2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:280589",
       "published_at": "2026-07-31T08:51:00+05:00",
       "title": "MLCF-Financial Results for the year ended June 30, 2026",
@@ -532,19 +545,6 @@
        "matched_text": "31.12.2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:270983",
-      "published_at": "2026-02-25T08:41:00+05:00",
-      "title": "MLCF-Financial Results as on 31.12.2025",
-      "source_url": "https://dps.psx.com.pk/download/document/270983.pdf",
-      "safe_period": {
-       "period_end": "2025-12-31",
-       "period_type": "unknown",
-       "source": "title",
-       "matched_text": "31.12.2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
    },
@@ -559,8 +559,24 @@
    "symbol": "OGDC",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 7,
+   "indexed_official_financial_doc_count": 8,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:282260",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-09-04T12:02:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/282260.pdf",
+     "status": "ready",
+     "content_sha256": "3156c5938659f6efda6d6841490c3385c106af09d38d9e3d46ae41fc23fed7a5",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
     {
      "document_id": "psx:276351",
      "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
@@ -671,20 +687,22 @@
    ],
    "required_annual_periods": [
     {
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "source": "title",
+     "matched_text": "YEAR ENDED JUNE 30, 2026",
+     "document_id": "psx:282260",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "slot": "annual_period_1"
+    },
+    {
      "period_end": "2025-06-30",
      "period_type": "annual",
      "source": "title",
      "matched_text": "Year Ended June 30 2025",
      "document_id": "psx:259805",
      "title": "Financial Results for the Year Ended June 30 2025",
-     "slot": "annual_period_1"
-    },
-    {
-     "period_end": null,
-     "period_type": "annual",
-     "source": "unknown",
-     "slot": "annual_period_2",
-     "evidence_status": "missing_explicit_annual_period_evidence"
+     "slot": "annual_period_2"
     },
     {
      "period_end": null,
@@ -697,7 +715,7 @@
    "missing_revenue_pat_eps_by_annual_period": [
     {
      "slot": "annual_period_1",
-     "period_end": "2025-06-30",
+     "period_end": "2026-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -715,7 +733,7 @@
     },
     {
      "slot": "annual_period_2",
-     "period_end": null,
+     "period_end": "2025-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -728,7 +746,7 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
+     "period_evidence_status": "explicit",
      "status": "missing_required_metrics"
     },
     {
@@ -778,8 +796,21 @@
    },
    "qualification_queue": {
     "status": "needs_owner_approved_bounded_restage",
-    "queue_id": "finqual_b5ad45ca587c5d972162",
+    "queue_id": "finqual_62369c85396cf7024757",
     "candidate_documents": [
+     {
+      "document_id": "psx:282260",
+      "published_at": "2026-09-04T12:02:00+05:00",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/282260.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "YEAR ENDED JUNE 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
      {
       "document_id": "psx:276351",
       "published_at": "2026-04-30T14:48:00+05:00",
@@ -829,19 +860,6 @@
        "period_type": "interim",
        "source": "title",
        "matched_text": "Quarter Ended September 30 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:261312",
-      "published_at": "2025-10-06T13:47:00+05:00",
-      "title": "Transmission of Annual Report for the Year Ended June 30, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/261312.pdf",
-      "safe_period": {
-       "period_end": "2025-06-30",
-       "period_type": "annual",
-       "source": "title",
-       "matched_text": "Year Ended June 30, 2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -1083,10 +1101,26 @@
   },
   "DGKC": {
    "symbol": "DGKC",
-   "status": "complete",
+   "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 10,
+   "indexed_official_financial_doc_count": 11,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281780",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-27T14:38:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281780.pdf",
+     "status": "ready",
+     "content_sha256": "a82b3165a22bc39a3d3e418154f1c3008563c5afbf5831708c8b55281a32e5e8",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
     {
      "document_id": "psx:275962",
      "title": "TRANSMISSION OF QUARTERLY REPOR TFOR THE PERIOD ENDED MARCH 31, 2026",
@@ -1250,13 +1284,22 @@
    ],
    "required_annual_periods": [
     {
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "source": "title",
+     "matched_text": "YEAR ENDED JUNE 30, 2026",
+     "document_id": "psx:281780",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "slot": "annual_period_1"
+    },
+    {
      "period_end": "2025-06-30",
      "period_type": "annual",
      "source": "title",
      "matched_text": "YEAR ENDED JUNE 30, 2025",
      "document_id": "psx:258454",
      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2025",
-     "slot": "annual_period_1"
+     "slot": "annual_period_2"
     },
     {
      "period_end": "2024-06-30",
@@ -1265,40 +1308,31 @@
      "matched_text": "YEAR ENDED JUNE 30, 2024",
      "document_id": "psx:237525",
      "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2024",
-     "slot": "annual_period_2"
-    },
-    {
-     "period_end": "2023-06-30",
-     "period_type": "annual",
-     "source": "title",
-     "matched_text": "YEAR ENDED JUNE 30, 2023",
-     "document_id": "psx:216733",
-     "title": "TRANSMISSION OF ANNUAL REPORT FOR THE YEAR ENDED JUNE 30, 2023",
      "slot": "annual_period_3"
     }
    ],
    "missing_revenue_pat_eps_by_annual_period": [
     {
      "slot": "annual_period_1",
-     "period_end": "2025-06-30",
+     "period_end": "2026-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "present_model_ready_metrics": [
+     "present_model_ready_metrics": [],
+     "missing_metrics": [
       "revenue",
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "missing_metrics": [],
      "period_evidence_status": "explicit",
-     "status": "complete"
+     "status": "missing_required_metrics"
     },
     {
      "slot": "annual_period_2",
-     "period_end": "2024-06-30",
+     "period_end": "2025-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -1316,7 +1350,7 @@
     },
     {
      "slot": "annual_period_3",
-     "period_end": "2023-06-30",
+     "period_end": "2024-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -1371,8 +1405,21 @@
    },
    "qualification_queue": {
     "status": "needs_owner_approved_bounded_restage",
-    "queue_id": "finqual_bd726e6b4b5e7d38a776",
+    "queue_id": "finqual_e64898f2afba6e433ea0",
     "candidate_documents": [
+     {
+      "document_id": "psx:281780",
+      "published_at": "2026-08-27T14:38:00+05:00",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281780.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "YEAR ENDED JUNE 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
      {
       "document_id": "psx:275962",
       "published_at": "2026-04-30T09:53:00+05:00",
@@ -1422,19 +1469,6 @@
        "period_type": "interim",
        "source": "title",
        "matched_text": "Half Year Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:264230",
-      "published_at": "2025-10-30T10:37:00+05:00",
-      "title": "TRANSMISSION OF QUARTERLY REPORT FOR THE PERIOD ENDED SEPTEMBER 30, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/264230.pdf",
-      "safe_period": {
-       "period_end": "2025-09-30",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "PERIOD ENDED SEPTEMBER 30, 2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -1755,7 +1789,7 @@
    "symbol": "UBL",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 6,
+   "indexed_official_financial_doc_count": 8,
    "indexed_official_financial_docs": [
     {
      "document_id": "psx:280213",
@@ -1765,7 +1799,24 @@
      "published_at": "2026-07-22T11:38:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/280213.pdf",
      "status": "ready",
-     "content_sha256": "5c78033e3b10d669b1d6b902d1137e54a45a067227792f43db99bfcf00d25eab"
+     "content_sha256": "5c78033e3b10d669b1d6b902d1137e54a45a067227792f43db99bfcf00d25eab",
+     "safe_period": null
+    },
+    {
+     "document_id": "psx:276395",
+     "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2026-04-30T15:04:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/276395.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-03-31",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended March 31, 2026"
+     }
     },
     {
      "document_id": "psx:274158",
@@ -1807,7 +1858,8 @@
      "published_at": "2026-02-25T11:04:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/271010.pdf",
      "status": "ready",
-     "content_sha256": "56f19812ea0a089c10ac0e2e1acf1f50efdb928141d0bfe69cc46ecb8c18abe0"
+     "content_sha256": "56f19812ea0a089c10ac0e2e1acf1f50efdb928141d0bfe69cc46ecb8c18abe0",
+     "safe_period": null
     },
     {
      "document_id": "psx:271004",
@@ -1817,7 +1869,24 @@
      "published_at": "2026-02-25T10:52:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/271004.pdf",
      "status": "ready",
-     "content_sha256": "56f19812ea0a089c10ac0e2e1acf1f50efdb928141d0bfe69cc46ecb8c18abe0"
+     "content_sha256": "56f19812ea0a089c10ac0e2e1acf1f50efdb928141d0bfe69cc46ecb8c18abe0",
+     "safe_period": null
+    },
+    {
+     "document_id": "psx:264343",
+     "title": "Transmission of Quarterly Report for the Period Ended September 30, 2025",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2025-10-30T12:17:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/264343.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2025-09-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended September 30, 2025"
+     }
     },
     {
      "document_id": "psx:262254",
@@ -1964,6 +2033,19 @@
       "reason": "official financial document candidate for future owner-approved bounded restage"
      },
      {
+      "document_id": "psx:276395",
+      "published_at": "2026-04-30T15:04:00+05:00",
+      "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/276395.pdf",
+      "safe_period": {
+       "period_end": "2026-03-31",
+       "period_type": "interim",
+       "source": "title",
+       "matched_text": "Period Ended March 31, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:274158",
       "published_at": "2026-04-15T11:03:00+05:00",
       "title": "Financial Results for the Quarter ended March 31, 2026",
@@ -1996,14 +2078,6 @@
       "source_url": "https://dps.psx.com.pk/download/document/271010.pdf",
       "safe_period": null,
       "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:271004",
-      "published_at": "2026-02-25T10:52:00+05:00",
-      "title": "Financial Results for the Year Ended 31 December 2025 REVOKED",
-      "source_url": "https://dps.psx.com.pk/download/document/271004.pdf",
-      "safe_period": null,
-      "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
    },
@@ -2018,8 +2092,19 @@
    "symbol": "FFC",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 3,
+   "indexed_official_financial_doc_count": 11,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281738",
+     "title": "Transmission of Quarterly Report for the Period Ended 30 June 2026",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2026-08-27T12:28:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281738.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": null
+    },
     {
      "document_id": "psx:280460",
      "title": "Financial Results for the Quarter Ended 30 Jun 2026",
@@ -2032,6 +2117,17 @@
      "safe_period": null
     },
     {
+     "document_id": "psx:276333",
+     "title": "Transmission of Quarterly Report for the Period Ended 31 Mar 2026",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2026-04-30T14:41:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/276333.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": null
+    },
+    {
      "document_id": "psx:275721",
      "title": "Financial Results for the Quarter Ended March 31. 2026",
      "doc_type": "results",
@@ -2039,7 +2135,24 @@
      "published_at": "2026-04-29T12:42:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/275721.pdf",
      "status": "ready",
-     "content_sha256": "23968996f2d04f8a73b4f1788bdd4b422f80084b5585860a569e3e7585d961ca"
+     "content_sha256": "23968996f2d04f8a73b4f1788bdd4b422f80084b5585860a569e3e7585d961ca",
+     "safe_period": null
+    },
+    {
+     "document_id": "psx:270829",
+     "title": "Transmission of Annual Report for the Year Ended 31 December 2025",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2026-02-23T09:46:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/270829.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": null,
+      "period_type": "annual",
+      "source": "metadata",
+      "matched_text": "annual_report"
+     }
     },
     {
      "document_id": "psx:269389",
@@ -2049,7 +2162,88 @@
      "published_at": "2026-01-29T13:20:00+05:00",
      "source_url": "https://dps.psx.com.pk/download/document/269389.pdf",
      "status": "ready",
-     "content_sha256": "a8962695859abc2e27bb780b0919a533f8e7dc6ae0652818d0735ce94cb41e2e"
+     "content_sha256": "a8962695859abc2e27bb780b0919a533f8e7dc6ae0652818d0735ce94cb41e2e",
+     "safe_period": null
+    },
+    {
+     "document_id": "psx:264632",
+     "title": "Transmission of Quarterly Report - Quarter Ended September 30, 2025",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2025-10-31T08:04:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/264632.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2025-09-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Quarter Ended September 30, 2025"
+     }
+    },
+    {
+     "document_id": "psx:264355",
+     "title": "Transmission of Quarterly Report for the Period Ended September 30, 2025 REVOKED",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2025-10-30T12:28:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/264355.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2025-09-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended September 30, 2025"
+     }
+    },
+    {
+     "document_id": "psx:263095",
+     "title": "Financial Results for the Quarter Ended September 30, 2025 - FFC 236th BOD Meeting",
+     "doc_type": "financial_results",
+     "classification": "financial_results",
+     "published_at": "2025-10-23T11:46:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/263095.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2025-09-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Quarter Ended September 30, 2025"
+     }
+    },
+    {
+     "document_id": "psx:258110",
+     "title": "Transmission of Half Yearly Financial Statements for the Period Ended June 30, 2025",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2025-08-22T08:16:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/258110.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2025-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended June 30, 2025"
+     }
+    },
+    {
+     "document_id": "psx:257078",
+     "title": "Financial Results for the Quarter Ended June 30, 2025",
+     "doc_type": "financial_results",
+     "classification": "financial_results",
+     "published_at": "2025-07-29T12:48:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/257078.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2025-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Quarter Ended June 30, 2025"
+     }
     }
    ],
    "required_annual_periods": [
@@ -2162,10 +2356,26 @@
     "queue_id": "finqual_7a5a7091ae44f12d2dc3",
     "candidate_documents": [
      {
+      "document_id": "psx:281738",
+      "published_at": "2026-08-27T12:28:00+05:00",
+      "title": "Transmission of Quarterly Report for the Period Ended 30 June 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281738.pdf",
+      "safe_period": null,
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:280460",
       "published_at": "2026-07-29T12:18:00+05:00",
       "title": "Financial Results for the Quarter Ended 30 Jun 2026",
       "source_url": "https://dps.psx.com.pk/download/document/280460.pdf",
+      "safe_period": null,
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
+      "document_id": "psx:276333",
+      "published_at": "2026-04-30T14:41:00+05:00",
+      "title": "Transmission of Quarterly Report for the Period Ended 31 Mar 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/276333.pdf",
       "safe_period": null,
       "reason": "official financial document candidate for future owner-approved bounded restage"
      },
@@ -2178,11 +2388,16 @@
       "reason": "official financial document candidate for future owner-approved bounded restage"
      },
      {
-      "document_id": "psx:269389",
-      "published_at": "2026-01-29T13:20:00+05:00",
-      "title": "Financial Results for the Year Ended 31 Dec 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/269389.pdf",
-      "safe_period": null,
+      "document_id": "psx:270829",
+      "published_at": "2026-02-23T09:46:00+05:00",
+      "title": "Transmission of Annual Report for the Year Ended 31 December 2025",
+      "source_url": "https://dps.psx.com.pk/download/document/270829.pdf",
+      "safe_period": {
+       "period_end": null,
+       "period_type": "annual",
+       "source": "metadata",
+       "matched_text": "annual_report"
+      },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
@@ -2198,8 +2413,24 @@
    "symbol": "LUCK",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 9,
+   "indexed_official_financial_doc_count": 10,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:282262",
+     "title": "Transmission of Annual Report for the year ended - June 30, 2026",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2026-09-04T12:30:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/282262.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "year ended - June 30, 2026"
+     }
+    },
     {
      "document_id": "psx:280930",
      "title": "Financial Results for the year ended June 30, 2026",
@@ -2453,6 +2684,19 @@
     "queue_id": "finqual_2e206513467afce830af",
     "candidate_documents": [
      {
+      "document_id": "psx:282262",
+      "published_at": "2026-09-04T12:30:00+05:00",
+      "title": "Transmission of Annual Report for the year ended - June 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/282262.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "year ended - June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:280930",
       "published_at": "2026-08-10T08:00:00+05:00",
       "title": "Financial Results for the year ended June 30, 2026",
@@ -2488,14 +2732,6 @@
       "source_url": "https://dps.psx.com.pk/download/document/271222.pdf",
       "safe_period": null,
       "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:269281",
-      "published_at": "2026-01-28T08:00:00+05:00",
-      "title": "Financial Results for the Quarter Ended - December 31, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/269281.pdf",
-      "safe_period": null,
-      "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
    },
@@ -2510,8 +2746,24 @@
    "symbol": "HUBC",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 8,
+   "indexed_official_financial_doc_count": 9,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281728",
+     "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+     "doc_type": "financial_results",
+     "classification": "financial_results",
+     "published_at": "2026-08-27T10:55:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281728.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
     {
      "document_id": "psx:275244",
      "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
@@ -2638,20 +2890,22 @@
    ],
    "required_annual_periods": [
     {
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "source": "title",
+     "matched_text": "Year Ended June 30, 2026",
+     "document_id": "psx:281728",
+     "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+     "slot": "annual_period_1"
+    },
+    {
      "period_end": "2025-06-30",
      "period_type": "annual",
      "source": "title",
      "matched_text": "Year Ended June 30, 2025",
      "document_id": "psx:259628",
      "title": "Transmission of Annual Report for the Year Ended June 30, 2025",
-     "slot": "annual_period_1"
-    },
-    {
-     "period_end": null,
-     "period_type": "annual",
-     "source": "unknown",
-     "slot": "annual_period_2",
-     "evidence_status": "missing_explicit_annual_period_evidence"
+     "slot": "annual_period_2"
     },
     {
      "period_end": null,
@@ -2664,7 +2918,7 @@
    "missing_revenue_pat_eps_by_annual_period": [
     {
      "slot": "annual_period_1",
-     "period_end": "2025-06-30",
+     "period_end": "2026-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -2682,7 +2936,7 @@
     },
     {
      "slot": "annual_period_2",
-     "period_end": null,
+     "period_end": "2025-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -2695,7 +2949,7 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
+     "period_evidence_status": "explicit",
      "status": "missing_required_metrics"
     },
     {
@@ -2749,8 +3003,21 @@
    },
    "qualification_queue": {
     "status": "needs_owner_approved_bounded_restage",
-    "queue_id": "finqual_77d67d29394e7bd9f275",
+    "queue_id": "finqual_8e236bc7d110c634c54c",
     "candidate_documents": [
+     {
+      "document_id": "psx:281728",
+      "published_at": "2026-08-27T10:55:00+05:00",
+      "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+      "source_url": "https://dps.psx.com.pk/download/document/281728.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "Year Ended June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
      {
       "document_id": "psx:275244",
       "published_at": "2026-04-27T11:56:00+05:00",
@@ -2800,19 +3067,6 @@
        "period_type": "interim",
        "source": "title",
        "matched_text": "Half Year Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:264482",
-      "published_at": "2025-10-30T14:46:00+05:00",
-      "title": "Transmission of Quarterly Report for the Period Ended September 30, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/264482.pdf",
-      "safe_period": {
-       "period_end": "2025-09-30",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "Period Ended September 30, 2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -3158,8 +3412,40 @@
    "symbol": "BOP",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 11,
+   "indexed_official_financial_doc_count": 13,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281937",
+     "title": "Transmission of Quarterly Financial Statements for the Period Ended 2026-06-30",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-28T15:38:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+     "status": "ready",
+     "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended 2026-06-30"
+     }
+    },
+    {
+     "document_id": "psx:281916",
+     "title": "FINANCIAL RESULTS FOR THE QUARTER ENDED 2026-06-30",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-28T15:17:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281916.pdf",
+     "status": "ready",
+     "content_sha256": "e243e08cf98165568171bab805750296bd6f5ade9bae14a938b39f2dea5cf2e7",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "QUARTER ENDED 2026-06-30"
+     }
+    },
     {
      "document_id": "psx:281339",
      "title": "Ballot Paper of Extraordinary General Meeting-2026",
@@ -3420,15 +3706,15 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 52,
+    "audit_only_fact_count": 66,
     "audit_only_metrics": [
      {
       "metric": "change_pct",
-      "fact_count": 23
+      "fact_count": 28
      },
      {
       "metric": "dividend",
-      "fact_count": 6
+      "fact_count": 9
      },
      {
       "metric": "eps",
@@ -3436,7 +3722,7 @@
      },
      {
       "metric": "profit",
-      "fact_count": 21
+      "fact_count": 27
      },
      {
       "metric": "revenue",
@@ -3450,6 +3736,32 @@
     "status": "needs_owner_approved_bounded_restage",
     "queue_id": "finqual_ef7d3b6af0f427dbf220",
     "candidate_documents": [
+     {
+      "document_id": "psx:281937",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "title": "Transmission of Quarterly Financial Statements for the Period Ended 2026-06-30",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "interim",
+       "source": "title",
+       "matched_text": "Period Ended 2026-06-30"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
+      "document_id": "psx:281916",
+      "published_at": "2026-08-28T15:17:00+05:00",
+      "title": "FINANCIAL RESULTS FOR THE QUARTER ENDED 2026-06-30",
+      "source_url": "https://dps.psx.com.pk/download/document/281916.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "interim",
+       "source": "title",
+       "matched_text": "QUARTER ENDED 2026-06-30"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
      {
       "document_id": "psx:281339",
       "published_at": "2026-08-19T11:15:00+05:00",
@@ -3478,32 +3790,6 @@
        "matched_text": "Period Ended March 31, 2026"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:275329",
-      "published_at": "2026-04-27T14:46:00+05:00",
-      "title": "FINANCIAL RESULTS FOR THE 1ST QUARTER ENDED MARCH 31, 2026",
-      "source_url": "https://dps.psx.com.pk/download/document/275329.pdf",
-      "safe_period": {
-       "period_end": "2026-03-31",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "QUARTER ENDED MARCH 31, 2026"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:272102",
-      "published_at": "2026-03-05T12:29:00+05:00",
-      "title": "Transmission of Annual Report for the Year Ended 12/31/2025",
-      "source_url": "https://dps.psx.com.pk/download/document/272102.pdf",
-      "safe_period": {
-       "period_end": null,
-       "period_type": "annual",
-       "source": "metadata",
-       "matched_text": "annual_report"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
    },
@@ -3518,8 +3804,40 @@
    "symbol": "NBP",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 8,
+   "indexed_official_financial_doc_count": 10,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281869",
+     "title": "Transmission of Quarterly Report for the Period Ended June 30, 2026",
+     "doc_type": "company_announcement",
+     "classification": "financial_statement",
+     "published_at": "2026-08-28T12:16:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281869.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended June 30, 2026"
+     }
+    },
+    {
+     "document_id": "psx:281753",
+     "title": "Financial Results for the half year ended June 30, 2026",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-27T13:18:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281753.pdf",
+     "status": "ready",
+     "content_sha256": "56feeac94bd0ebbb68a7a68b1742adc2ab13cf5a01f399898a2d858dbb0c8b83",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "half year ended June 30, 2026"
+     }
+    },
     {
      "document_id": "psx:275835",
      "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
@@ -3761,6 +4079,32 @@
     "queue_id": "finqual_47b067da9bf58e62e185",
     "candidate_documents": [
      {
+      "document_id": "psx:281869",
+      "published_at": "2026-08-28T12:16:00+05:00",
+      "title": "Transmission of Quarterly Report for the Period Ended June 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281869.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "interim",
+       "source": "title",
+       "matched_text": "Period Ended June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
+      "document_id": "psx:281753",
+      "published_at": "2026-08-27T13:18:00+05:00",
+      "title": "Financial Results for the half year ended June 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281753.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "interim",
+       "source": "title",
+       "matched_text": "half year ended June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:275835",
       "published_at": "2026-04-29T14:54:00+05:00",
       "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
@@ -3796,32 +4140,6 @@
        "period_type": "annual",
        "source": "title",
        "matched_text": "Year Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:270984",
-      "published_at": "2026-02-25T08:48:00+05:00",
-      "title": "Financial Results For the Year Ended December 31, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/270984.pdf",
-      "safe_period": {
-       "period_end": "2025-12-31",
-       "period_type": "annual",
-       "source": "title",
-       "matched_text": "Year Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:263895",
-      "published_at": "2025-10-29T10:06:00+05:00",
-      "title": "Transmission of Quarterly Report for the Period Ended September 30, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/263895.pdf",
-      "safe_period": {
-       "period_end": "2025-09-30",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "Period Ended September 30, 2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -4186,8 +4504,24 @@
    "symbol": "ATRL",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 8,
+   "indexed_official_financial_doc_count": 9,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281722",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-27T09:01:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281722.pdf",
+     "status": "ready",
+     "content_sha256": "d48122e70c384d6375081d514b62a8949a901d2428c855340a855ca075cb9190",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
     {
      "document_id": "psx:276353",
      "title": "TRANSMISSION OF QUARTERLY FINANCIAL STATEMENTS",
@@ -4309,20 +4643,22 @@
    ],
    "required_annual_periods": [
     {
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "source": "title",
+     "matched_text": "YEAR ENDED JUNE 30, 2026",
+     "document_id": "psx:281722",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "slot": "annual_period_1"
+    },
+    {
      "period_end": "2025-06-30",
      "period_type": "annual",
      "source": "title",
      "matched_text": "YEAR ENDED JUNE 30, 2025",
      "document_id": "psx:257596",
      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2025",
-     "slot": "annual_period_1"
-    },
-    {
-     "period_end": null,
-     "period_type": "annual",
-     "source": "unknown",
-     "slot": "annual_period_2",
-     "evidence_status": "missing_explicit_annual_period_evidence"
+     "slot": "annual_period_2"
     },
     {
      "period_end": null,
@@ -4335,7 +4671,7 @@
    "missing_revenue_pat_eps_by_annual_period": [
     {
      "slot": "annual_period_1",
-     "period_end": "2025-06-30",
+     "period_end": "2026-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -4353,7 +4689,7 @@
     },
     {
      "slot": "annual_period_2",
-     "period_end": null,
+     "period_end": "2025-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -4366,7 +4702,7 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
+     "period_evidence_status": "explicit",
      "status": "missing_required_metrics"
     },
     {
@@ -4400,23 +4736,23 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 115,
+    "audit_only_fact_count": 159,
     "audit_only_metrics": [
      {
       "metric": "change_pct",
-      "fact_count": 18
+      "fact_count": 30
      },
      {
       "metric": "dividend",
-      "fact_count": 10
+      "fact_count": 13
      },
      {
       "metric": "profit",
-      "fact_count": 41
+      "fact_count": 53
      },
      {
       "metric": "revenue",
-      "fact_count": 46
+      "fact_count": 63
      }
     ],
     "model_loadable_count": 0,
@@ -4424,8 +4760,21 @@
    },
    "qualification_queue": {
     "status": "needs_owner_approved_bounded_restage",
-    "queue_id": "finqual_ea4be64ed2491b8a0f45",
+    "queue_id": "finqual_c3a0d4a5a520abdf90c3",
     "candidate_documents": [
+     {
+      "document_id": "psx:281722",
+      "published_at": "2026-08-27T09:01:00+05:00",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281722.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "YEAR ENDED JUNE 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
      {
       "document_id": "psx:276353",
       "published_at": "2026-04-30T14:48:00+05:00",
@@ -4466,19 +4815,6 @@
       "title": "FINANCIAL RESULTS FOR THE SECOND QUATER ENDED DECEMBER 31, 2025",
       "source_url": "https://dps.psx.com.pk/download/document/270910.pdf",
       "safe_period": null,
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:264643",
-      "published_at": "2025-10-31T08:26:00+05:00",
-      "title": "Transmission of Quarterly Financial Statements for the period ended September 30, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/264643.pdf",
-      "safe_period": {
-       "period_end": "2025-09-30",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "period ended September 30, 2025"
-      },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
@@ -4885,8 +5221,24 @@
    "symbol": "MARI",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 9,
+   "indexed_official_financial_doc_count": 10,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:282238",
+     "title": "Transmission of Annual Financial Statements for the Year Ended 2026-06-30",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2026-09-04T09:08:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/282238.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "Year Ended 2026-06-30"
+     }
+    },
     {
      "document_id": "psx:280901",
      "title": "Financial Results for the Year Ended 30-06-2026",
@@ -5139,6 +5491,19 @@
     "queue_id": "finqual_26eeddb82e1a6dec5b1e",
     "candidate_documents": [
      {
+      "document_id": "psx:282238",
+      "published_at": "2026-09-04T09:08:00+05:00",
+      "title": "Transmission of Annual Financial Statements for the Year Ended 2026-06-30",
+      "source_url": "https://dps.psx.com.pk/download/document/282238.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "Year Ended 2026-06-30"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:280901",
       "published_at": "2026-08-07T14:36:00+05:00",
       "title": "Financial Results for the Year Ended 30-06-2026",
@@ -5184,19 +5549,6 @@
        "matched_text": "Period Ended 2025-12-31"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:269182",
-      "published_at": "2026-01-26T13:25:00+05:00",
-      "title": "Financial Results for the Six Months Ended December 31, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/269182.pdf",
-      "safe_period": {
-       "period_end": "2025-12-31",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "Six Months Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
      }
     ]
    },
@@ -5211,8 +5563,24 @@
    "symbol": "ENGROH",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 15,
+   "indexed_official_financial_doc_count": 16,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281897",
+     "title": "Transmission of Quarterly Financial Statements for the Period Ended June 30, 2026",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2026-08-28T14:45:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281897.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "interim",
+      "source": "title",
+      "matched_text": "Period Ended June 30, 2026"
+     }
+    },
     {
      "document_id": "psx:281548",
      "title": "ANNOUNCEMENT OF FINANCIAL RESULTS FOR THE HALF YEAR ENDED JUNE 30, 2026 (CONSOLIDATED AND STANDALONE)",
@@ -5552,6 +5920,19 @@
     "queue_id": "finqual_c046af5801c4b2981ea9",
     "candidate_documents": [
      {
+      "document_id": "psx:281897",
+      "published_at": "2026-08-28T14:45:00+05:00",
+      "title": "Transmission of Quarterly Financial Statements for the Period Ended June 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281897.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "interim",
+       "source": "title",
+       "matched_text": "Period Ended June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:281548",
       "published_at": "2026-08-21T16:16:00+05:00",
       "title": "ANNOUNCEMENT OF FINANCIAL RESULTS FOR THE HALF YEAR ENDED JUNE 30, 2026 (CONSOLIDATED AND STANDALONE)",
@@ -5600,19 +5981,6 @@
        "period_type": "interim",
        "source": "title",
        "matched_text": "Period Ended March 31, 2026"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:275279",
-      "published_at": "2026-04-27T13:22:00+05:00",
-      "title": "FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31, 2026 (CONSOLIDATED AND STANDALONE)",
-      "source_url": "https://dps.psx.com.pk/download/document/275279.pdf",
-      "safe_period": {
-       "period_end": "2026-03-31",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "PERIOD ENDED MARCH 31, 2026"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -5924,8 +6292,24 @@
    "symbol": "NRL",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 8,
+   "indexed_official_financial_doc_count": 9,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:281715",
+     "title": "Financial Results for the Year Ended June 30, 2026",
+     "doc_type": "results",
+     "classification": "financial_results",
+     "published_at": "2026-08-27T08:00:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/281715.pdf",
+     "status": "ready",
+     "content_sha256": "d667793a68cd553f4c450b63da636146f4bbe6b57a53377e499e1490b854a4a3",
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
     {
      "document_id": "psx:276407",
      "title": "Transmission of Quarterly Report for the Period Ended March 31, 2026",
@@ -6057,20 +6441,22 @@
    ],
    "required_annual_periods": [
     {
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "source": "title",
+     "matched_text": "Year Ended June 30, 2026",
+     "document_id": "psx:281715",
+     "title": "Financial Results for the Year Ended June 30, 2026",
+     "slot": "annual_period_1"
+    },
+    {
      "period_end": "2025-06-30",
      "period_type": "annual",
      "source": "title",
      "matched_text": "Year Ended June 30, 2025",
      "document_id": "psx:257579",
      "title": "Financial Results for the Year Ended June 30, 2025",
-     "slot": "annual_period_1"
-    },
-    {
-     "period_end": null,
-     "period_type": "annual",
-     "source": "unknown",
-     "slot": "annual_period_2",
-     "evidence_status": "missing_explicit_annual_period_evidence"
+     "slot": "annual_period_2"
     },
     {
      "period_end": null,
@@ -6083,7 +6469,7 @@
    "missing_revenue_pat_eps_by_annual_period": [
     {
      "slot": "annual_period_1",
-     "period_end": "2025-06-30",
+     "period_end": "2026-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -6101,7 +6487,7 @@
     },
     {
      "slot": "annual_period_2",
-     "period_end": null,
+     "period_end": "2025-06-30",
      "period_type": "annual",
      "required_metrics": [
       "revenue",
@@ -6114,7 +6500,7 @@
       "profit_after_tax_attributable",
       "basic_eps"
      ],
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
+     "period_evidence_status": "explicit",
      "status": "missing_required_metrics"
     },
     {
@@ -6155,8 +6541,21 @@
    },
    "qualification_queue": {
     "status": "needs_owner_approved_bounded_restage",
-    "queue_id": "finqual_c8ac11cdc10a6cba473c",
+    "queue_id": "finqual_41ce8e658790be2a4113",
     "candidate_documents": [
+     {
+      "document_id": "psx:281715",
+      "published_at": "2026-08-27T08:00:00+05:00",
+      "title": "Financial Results for the Year Ended June 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/281715.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "Year Ended June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
      {
       "document_id": "psx:276407",
       "published_at": "2026-04-30T15:11:00+05:00",
@@ -6206,19 +6605,6 @@
        "period_type": "interim",
        "source": "title",
        "matched_text": "Half Year Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:264606",
-      "published_at": "2025-10-30T15:25:00+05:00",
-      "title": "Transmission of Quarterly Report for the Period Ended September 30, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/264606.pdf",
-      "safe_period": {
-       "period_end": "2025-09-30",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "Period Ended September 30, 2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -6436,7 +6822,7 @@
       "fact_count": 2
      }
     ],
-    "model_loadable_count": 16,
+    "model_loadable_count": 18,
     "note": "Audit-only facts are retained as coverage signals only and are not promoted into required values."
    },
    "qualification_queue": {
@@ -6495,9 +6881,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/financial_coverage.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

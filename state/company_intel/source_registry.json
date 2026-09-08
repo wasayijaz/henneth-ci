@@ -1054,13 +1054,14 @@
      "label": "Financials",
      "status": "ok",
      "error": null,
-     "content_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2",
+     "content_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4",
      "content_length": 368769,
      "content_type": "text/html",
      "etag": null,
      "last_modified": null,
      "first_seen_at": "2026-09-08T08:05:12+05:00",
-     "last_changed_at": "2026-09-08T08:05:12+05:00"
+     "last_changed_at": "2026-09-08T08:44:13+05:00",
+     "previous_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2"
     }
    ],
    "document_links": [
@@ -3525,11 +3526,222 @@
   "PRL": {
    "symbol": "PRL",
    "dps_company_url": "https://dps.psx.com.pk/company/PRL",
+   "issuer_url": "https://www.prl.com.pk/",
+   "root_domain": "prl.com.pk",
    "discovered_from": "https://dps.psx.com.pk/company/PRL",
-   "issuer_url": null,
-   "root_domain": null,
-   "status": "degraded",
-   "error": "ConnectionError:('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+   "status": "ok",
+   "monitored_pages": [
+    {
+     "url": "https://www.prl.com.pk/",
+     "kind": "issuer_home",
+     "label": "Issuer website",
+     "status": "ok",
+     "error": null,
+     "content_sha256": "c1189781084ac9894904135ce065d2968e7ba2940390c56f0c2feb8a22355124",
+     "content_length": 277866,
+     "content_type": "text/html",
+     "etag": null,
+     "last_modified": null,
+     "first_seen_at": "2026-09-08T08:44:32+05:00",
+     "last_changed_at": "2026-09-08T08:44:32+05:00"
+    },
+    {
+     "url": "https://www.prl.com.pk/financial-reports/",
+     "kind": "financial_reports",
+     "label": "Financial Reports",
+     "status": "ok",
+     "error": null,
+     "content_sha256": "7b02983f98b990c7eee35feccdf7d766e2e87d07ebdf699af2aea5a8f1fe2b3d",
+     "content_length": 229260,
+     "content_type": "text/html",
+     "etag": null,
+     "last_modified": null,
+     "first_seen_at": "2026-09-08T08:44:34+05:00",
+     "last_changed_at": "2026-09-08T08:44:34+05:00"
+    }
+   ],
+   "document_links": [
+    {
+     "id": "issuer:131a2da7e22c0ed7531b82f2",
+     "url": "http://www.prl.com.pk/downloads/PRL_annual_report_2023.pdf",
+     "label": "Download",
+     "document_type": "annual_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:1d33c077ac5d7b6ab6e91fac",
+     "url": "http://www.prl.com.pk/downloads/3rdquarterlyreport2023.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:1dc67b84882b50a8280329cc",
+     "url": "https://www.prl.com.pk/wp-content/uploads/2026/02/PRL-Half-Yearly-Report-Dec-25.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:3955bdb1a2f2301db515429c",
+     "url": "http://www.prl.com.pk/downloads/3rd_quarter_report_march_25.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:52cd2583f98e1d2a57c13823",
+     "url": "http://www.prl.com.pk/downloads/halfyearlyreportdec2021.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:5534254df726c765ab0b2469",
+     "url": "http://www.prl.com.pk/downloads/prl_half_yearly_report.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:8068de90535029179f492ed1",
+     "url": "http://www.prl.com.pk/downloads/PRLannualreport2025.pdf",
+     "label": "Download",
+     "document_type": "annual_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:86b9ff67578492273837a31b",
+     "url": "https://www.prl.com.pk/wp-content/uploads/2026/04/Third-Quarter-March-2026.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:8d413aac2c4a69e4527a5eaa",
+     "url": "https://www.prl.com.pk/wp-content/uploads/2026/01/Pattern-of-Shareholding-of-PRL-as-at-June-30-2025.pdf",
+     "label": "Pattern of Shareholding",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:9bc66d33f17e161a78fa9a0e",
+     "url": "http://www.prl.com.pk/downloads/PRLannualreport2024.pdf",
+     "label": "Download",
+     "document_type": "annual_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:9c2f83b2915d39d640a5b6f1",
+     "url": "http://www.prl.com.pk/downloads/3rdquarterlyreport2024.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:a5d3f56f376f04729d5df604",
+     "url": "https://www.prl.com.pk/wp-content/uploads/2026/01/PRL-1st-Quarterly-Report-copy.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:ab92c98d346e53a68a05e3c4",
+     "url": "http://www.prl.com.pk/downloads/1stquarterreport2021.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:b52236597597a93ebab4d7cb",
+     "url": "http://www.prl.com.pk/downloads/PRL_AR_2022.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:b57155832984c75b2adb2437",
+     "url": "http://www.prl.com.pk/downloads/qtrreportsep2024.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:ba83229c8a4d6af056bc2ce2",
+     "url": "http://www.prl.com.pk/downloads/Half_yearly_report_Dec_22.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:c680a5b6d24776a5b9e3471c",
+     "url": "http://www.prl.com.pk/downloads/quarterlyreportseptember2023.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:de81875819b424ce2aac9537",
+     "url": "http://www.prl.com.pk/downloads/3rdquarterlyreport2022.pdf",
+     "label": "Download",
+     "document_type": "financial_report",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:ec107cacb7458ae41f349d06",
+     "url": "http://www.prl.com.pk/downloads/1qr29oct22.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    },
+    {
+     "id": "issuer:eef81ffb40dd9773e5963470",
+     "url": "http://www.prl.com.pk/downloads/half_yearly_report_dec31_2024.pdf",
+     "label": "Download",
+     "document_type": "issuer_document",
+     "source_page": "https://www.prl.com.pk/financial-reports/",
+     "status": "discovered",
+     "first_seen_at": "2026-09-08T08:44:34+05:00"
+    }
+   ]
   },
   "CNERGY": {
    "symbol": "CNERGY",
@@ -5372,15 +5584,15 @@
    ]
   }
  },
- "updated": "2026-09-08T08:05:59+05:00",
+ "updated": "2026-09-08T08:45:08+05:00",
  "source": "Issuer websites discovered from official PSX DPS company profiles",
  "pilot_count": 22,
  "degraded": true,
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/source_registry.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

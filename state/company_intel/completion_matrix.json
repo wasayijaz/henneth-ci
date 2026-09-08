@@ -1,6 +1,6 @@
 {
  "schema_version": 2,
- "as_of": "2026-09-08 03:06",
+ "as_of": "2026-09-08 03:45",
  "scope": "Company Intelligence product completion audit",
  "source_policy": "retained repo/state evidence only; no fetching, model calls, SQL, publish, deploy, or source mutation",
  "pilot_symbols": [
@@ -492,7 +492,7 @@
      "label": "canonical event rows",
      "path": "state/company_intel/operating_events.json",
      "ok": true,
-     "detail": "71 events"
+     "detail": "74 events"
     }
    ],
    "blockers": [],
@@ -739,7 +739,7 @@
      "label": "explicit blocked numeric-impact contract",
      "path": "state/company_intel/impact_scenarios.json",
      "ok": true,
-     "detail": "213 retained shells with null numeric impacts and explicit missing inputs"
+     "detail": "222 retained shells with null numeric impacts and explicit missing inputs"
     }
    ],
    "blockers": [
@@ -758,7 +758,7 @@
      "label": "event-study state",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "71 studies for 71 events"
+     "detail": "74 studies for 74 events"
     },
     {
      "label": "pilot boundary",
@@ -781,7 +781,7 @@
      "label": "strict baseline derivation",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "21/21 baseline-available studies have baseline.selected_date before effective_date; 71 total studies"
+     "detail": "22/22 baseline-available studies have baseline.selected_date before effective_date; 74 total studies"
     },
     {
      "label": "event study checker",
@@ -804,7 +804,7 @@
      "label": "1Q/2Q/4Q/8Q horizons",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "71/71 studies"
+     "detail": "74/74 studies"
     },
     {
      "label": "raw return limitations",
@@ -827,7 +827,7 @@
      "label": "analogue contract",
      "path": "state/company_intel/event_studies.json",
      "ok": true,
-     "detail": "71/71 studies"
+     "detail": "74/74 studies"
     },
     {
      "label": "thin sample suppression",
@@ -885,13 +885,13 @@
      "label": "dated benchmark count",
      "path": "state/company_intel/conditional_benchmarks.json",
      "ok": true,
-     "detail": "21/21 dated events; 50 undated events excluded by no-lookahead"
+     "detail": "22/22 dated events; 52 undated events excluded by no-lookahead"
     },
     {
      "label": "readiness ledger",
      "path": "state/company_intel/conditional_benchmarks.json",
      "ok": true,
-     "detail": "8 rows with candidates; 1 aggregate-ready; 20 suppressed"
+     "detail": "9 rows with candidates; 1 aggregate-ready; 21 suppressed"
     }
    ],
    "blockers": [],
@@ -920,7 +920,7 @@
      "label": "strict sample readiness",
      "path": "state/company_intel/conditional_benchmarks.json",
      "ok": true,
-     "detail": "11 retained strict candidates; nearest missing mature outcomes to publish: 2"
+     "detail": "13 retained strict candidates; nearest missing mature outcomes to publish: 1"
     },
     {
      "label": "conditional benchmark checker",
@@ -1072,7 +1072,7 @@
      "label": "covered companies",
      "path": "state/company_intel/financial_coverage.json",
      "ok": true,
-     "detail": "18 queued + 2 qualified"
+     "detail": "19 queued + 1 qualified"
     },
     {
      "label": "financial coverage UI checker",
@@ -1101,7 +1101,7 @@
      "label": "conflict/missing-slot summary",
      "path": "state/company_intel/financial_evidence_reconciliation.json",
      "ok": true,
-     "detail": "{'company_count': 20, 'eligible_fact_count': 35, 'audit_only_fact_count': 978, 'quarantined_fact_count': 602, 'missing_slot_count': 159, 'source_conflict_count': 70, 'withheld_future_source_fact_count': 0, 'forecast_ready_company_count': 2}"
+     "detail": "{'company_count': 20, 'eligible_fact_count': 35, 'audit_only_fact_count': 1018, 'quarantined_fact_count': 622, 'missing_slot_count': 162, 'source_conflict_count': 73, 'withheld_future_source_fact_count': 0, 'forecast_ready_company_count': 2}"
     },
     {
      "label": "reconciliation checker",
@@ -1765,7 +1765,7 @@
      "label": "review candidate manifest",
      "path": "config/ownership_source_review_manifest.json",
      "ok": true,
-     "detail": "134 candidates; 0 activated companies"
+     "detail": "135 candidates; 0 activated companies"
     },
     {
      "label": "review-only ownership policy",
@@ -1898,9 +1898,9 @@
  ],
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/completion_matrix.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

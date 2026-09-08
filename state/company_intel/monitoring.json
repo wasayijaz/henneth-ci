@@ -1,15 +1,15 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-09-08T08:05:59+05:00",
+ "as_of": "2026-09-08T08:45:08+05:00",
  "source_as_of": {
-  "source_registry": "2026-09-08T08:05:59+05:00",
-  "source_qa": "2026-09-08 03:06",
-  "change_intelligence": "2026-09-08 03:06",
-  "event_ledger": "2026-09-08 03:06",
+  "source_registry": "2026-09-08T08:45:08+05:00",
+  "source_qa": "2026-09-08 03:45",
+  "change_intelligence": "2026-09-08 03:45",
+  "event_ledger": "2026-09-08 03:45",
   "operating_events": "2026-09-08",
-  "evidence_watchlist": "2026-09-08T03:06:00+05:00",
-  "guidance_contradictions": "2026-09-08T03:06:00+05:00"
+  "evidence_watchlist": "2026-09-08T03:45:00+05:00",
+  "guidance_contradictions": "2026-09-08T03:45:00+05:00"
  },
  "pilot_symbols": [
   "MLCF",
@@ -78,8 +78,8 @@
   "company_count": 20,
   "alert_count": 151,
   "status_counts": {
-   "degraded": 10,
-   "healthy": 10,
+   "degraded": 9,
+   "healthy": 11,
    "stale": 0,
    "unknown": 0
   }
@@ -192,6 +192,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_fdb2bc10094b6a2304a5",
+     "symbol": "MLCF",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-02T00:00:00+05:00",
+     "title": "MLCF-Material Information",
+     "reason": "Official PSX DPS document retained as other.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282166.pdf",
+      "document_id": "psx:282166",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_fc32b552eb30ee973973c679",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_1b901a27d799044425e8",
      "symbol": "MLCF",
      "type": "retained_change",
@@ -272,26 +292,6 @@
       "kind": "document",
       "date_basis": "retrieved_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_f8238d522d18aa73927c",
-     "symbol": "MLCF",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Download PDF",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.kmlg.com/mlcfl/wp-content/uploads/2025/09/MLCF-Ballot-Paper-for-AGM-16.10.2025-English.pdf",
-      "document_id": "issuer:6d5543e25ed6b24f2e9f84e6",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_fbdddd36ccf4c3c166552597",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 9,
@@ -310,8 +310,8 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": null,
-   "latest_change_at": "2026-04-29T14:51:00+05:00",
-   "latest_event_at": "2026-04-29T14:51:00+05:00",
+   "latest_change_at": "2026-09-04T12:02:00+05:00",
+   "latest_event_at": "2026-09-04T12:02:00+05:00",
    "source_health": {
     "registry_status": "degraded",
     "monitored_page_count": 0,
@@ -326,8 +326,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "event": 7,
-     "document": 6
+     "event": 10,
+     "document": 7
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -335,6 +335,89 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_fd116f5ef28948872212",
+     "symbol": "OGDC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-04T00:00:00+05:00",
+     "title": "dividend",
+     "reason": "Official document language matched the desk's event classifier.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282260.pdf",
+      "document_id": "psx:282260",
+      "source_id": null,
+      "source": "change_intelligence",
+      "page": 1
+     },
+     "evidence_identity": {
+      "change_id": "chg_ba27dead41227b531c95022c",
+      "kind": "event",
+      "date_basis": null
+     }
+    },
+    {
+     "alert_id": "ci_alert_b2569eb7d91b5f630079",
+     "symbol": "OGDC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-04T00:00:00+05:00",
+     "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+     "reason": "Official PSX DPS document retained as results.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282260.pdf",
+      "document_id": "psx:282260",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_c7371c6a7dab6838abbcefab",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_95332d00c81b82be7d9b",
+     "symbol": "OGDC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-04T00:00:00+05:00",
+     "title": "agm",
+     "reason": "Official document language matched the desk's event classifier.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282260.pdf",
+      "document_id": "psx:282260",
+      "source_id": null,
+      "source": "change_intelligence",
+      "page": 1
+     },
+     "evidence_identity": {
+      "change_id": "chg_8cf92e803776c9bfffb54180",
+      "kind": "event",
+      "date_basis": null
+     }
+    },
+    {
+     "alert_id": "ci_alert_2315b87c75df07262ea0",
+     "symbol": "OGDC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-04T00:00:00+05:00",
+     "title": "earnings",
+     "reason": "Official document language matched the desk's event classifier.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282260.pdf",
+      "document_id": "psx:282260",
+      "source_id": null,
+      "source": "change_intelligence",
+      "page": 1
+     },
+     "evidence_identity": {
+      "change_id": "chg_cd6161e1b77e56e3699403f2",
+      "kind": "event",
+      "date_basis": null
+     }
+    },
     {
      "alert_id": "ci_alert_bd0e434bdb7058a96a7b",
      "symbol": "OGDC",
@@ -374,88 +457,6 @@
       "change_id": "chg_a40884493973df3a00e05e92",
       "kind": "document",
       "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_6d85d1b412fb3a533123",
-     "symbol": "OGDC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-04-29T00:00:00+05:00",
-     "title": "earnings",
-     "reason": "Official document language matched the desk's event classifier.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
-      "document_id": "psx:275829",
-      "source_id": null,
-      "source": "change_intelligence",
-      "page": 1
-     },
-     "evidence_identity": {
-      "change_id": "chg_39a8a91c4d181413050d503b",
-      "kind": "event",
-      "date_basis": null
-     }
-    },
-    {
-     "alert_id": "ci_alert_7986dc5caa4e318df081",
-     "symbol": "OGDC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-04-01T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/273347.pdf",
-      "document_id": "psx:273347",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_413eb45c2056e75ec8bb2b73",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_4b35c0bfb8666c80ca02",
-     "symbol": "OGDC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-01-02T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as regulatory.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/268175.pdf",
-      "document_id": "psx:268175",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_4e3bcc8823af23dc384dae69",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_5bd32da4211a42287fa1",
-     "symbol": "OGDC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2025-10-29T00:00:00+05:00",
-     "title": "earnings",
-     "reason": "Official document language matched the desk's event classifier.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/264119.pdf",
-      "document_id": "psx:264119",
-      "source_id": null,
-      "source": "change_intelligence",
-      "page": 1
-     },
-     "evidence_identity": {
-      "change_id": "chg_8827cf2817d441e0067b4fb4",
-      "kind": "event",
-      "date_basis": null
      }
     },
     {
@@ -886,7 +887,7 @@
    "symbol": "PSO",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T08:05:12+05:00",
+   "latest_source_at": "2026-09-08T08:44:13+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
    "latest_event_at": "2026-04-29T11:43:00+05:00",
    "source_health": {
@@ -907,6 +908,25 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_b183d230c6266470d0be",
+     "symbol": "PSO",
+     "type": "source_page_changed",
+     "status": "observed",
+     "date": "2026-09-08T08:44:13+05:00",
+     "title": "Financials",
+     "reason": "monitored issuer page changed after a prior retained hash",
+     "source": {
+      "source_url": "https://psopk.com/en/investors/financial",
+      "document_id": null,
+      "source_id": "src_423b34a452700fa74db6f529",
+      "source": "issuer_source_registry"
+     },
+     "evidence_identity": {
+      "content_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4",
+      "previous_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2"
+     }
+    },
     {
      "alert_id": "ci_alert_f05e4dc81989c84e9b16",
      "symbol": "PSO",
@@ -1047,7 +1067,7 @@
      }
     }
    ],
-   "alert_count": 7,
+   "alert_count": 8,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -1507,8 +1527,9 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 17,
-     "source": 1
+     "issuer_document": 16,
+     "source": 1,
+     "document": 1
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -1576,6 +1597,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_6bef506b3e8dc768fe37",
+     "symbol": "LUCK",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-28T00:00:00+05:00",
+     "title": "Material Information",
+     "reason": "Official PSX DPS document retained as other.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281942.pdf",
+      "document_id": "psx:281942",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_d345197c217e2b52daff1d82",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_e5f94b1c7d0d0bfb634f",
      "symbol": "LUCK",
      "type": "retained_change",
@@ -1591,26 +1632,6 @@
      },
      "evidence_identity": {
       "change_id": "chg_cb0ca29729e1dbbb9228ea7f",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_df367cfa630da64004c1",
-     "symbol": "LUCK",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-27T00:00:00+05:00",
-     "title": "Half Yearly Report – December 31, 2021",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://assets.lucky-cement.com/Half_Yearly_Report_December_31_2021_8c81e81f16.pdf",
-      "document_id": "issuer:e6546184f97187c5da694b09",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_5949f74c2945fbe0f8a8f882",
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
@@ -1753,6 +1774,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_8f2596931fee76c3f596",
+     "symbol": "HUBC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-28T00:00:00+05:00",
+     "title": "Disclosure of Material Information",
+     "reason": "Official PSX DPS document retained as other.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281954.pdf",
+      "document_id": "psx:281954",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_ef7ecdde3686373a4aecc666",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_c62edeee6ca5a7cd4332",
      "symbol": "HUBC",
      "type": "retained_change",
@@ -1850,26 +1891,6 @@
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_dc0e953635d6e3942686",
-     "symbol": "HUBC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Download Press Release",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://hubpower.com/wp-content/uploads/2022/08/Press-release.pdf",
-      "document_id": "issuer:a397cbbea481fb7a8003c1b1",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_eecc754c48e95675c1c15e54",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 8,
@@ -1885,27 +1906,22 @@
   },
   "PRL": {
    "symbol": "PRL",
-   "status": "degraded",
-   "status_reason": "source registry or monitored source quality is degraded",
-   "latest_source_at": null,
-   "latest_change_at": "2026-08-13T00:00:00+05:00",
+   "status": "healthy",
+   "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
+   "latest_source_at": "2026-09-08T08:44:34+05:00",
+   "latest_change_at": "2026-09-08T00:00:00+05:00",
    "latest_event_at": null,
    "source_health": {
-    "registry_status": "degraded",
-    "monitored_page_count": 0,
-    "document_link_count": 0,
-    "quality_flags": [
-     "missing_issuer_url",
-     "missing_monitored_page",
-     "no_document_links",
-     "registry_degraded"
-    ],
-    "missing_required_source": true
+    "registry_status": "ok",
+    "monitored_page_count": 2,
+    "document_link_count": 20,
+    "quality_flags": [],
+    "missing_required_source": false
    },
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 8
+     "issuer_document": 18
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -1914,152 +1930,127 @@
    },
    "alerts": [
     {
-     "alert_id": "ci_alert_09a80e12338c94616bd7",
+     "alert_id": "ci_alert_f43c27e94c8b8011663f",
      "symbol": "PRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2026-08-13T00:00:00+05:00",
-     "title": "Financial Results for the Year Ended June 30, 2026",
-     "reason": "Official PSX DPS document retained as results.",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Download",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281136.pdf",
-      "document_id": "psx:281136",
+      "source_url": "http://www.prl.com.pk/downloads/1qr29oct22.pdf",
+      "document_id": "issuer:ec107cacb7458ae41f349d06",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_85b4abfbb90a1759c969c4fe",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_d62c7dea64e7f0f914b9b39f",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
-     "alert_id": "ci_alert_5dc49a1f1545c23e1ff6",
+     "alert_id": "ci_alert_eda176e5a04ecf6d119c",
      "symbol": "PRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2026-04-21T00:00:00+05:00",
-     "title": "Financial Results for the Quarter Ended March 31, 2026",
-     "reason": "Official PSX DPS document retained as results.",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Pattern of Shareholding",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/274659.pdf",
-      "document_id": "psx:274659",
+      "source_url": "https://www.prl.com.pk/wp-content/uploads/2026/01/Pattern-of-Shareholding-of-PRL-as-at-June-30-2025.pdf",
+      "document_id": "issuer:8d413aac2c4a69e4527a5eaa",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_9a2d926cf2a78d6035aaa865",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_f44410a5a56a23244666dc52",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
-     "alert_id": "ci_alert_2c9fc40077f3297b1f57",
+     "alert_id": "ci_alert_e9c903005dd1144131d3",
      "symbol": "PRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2026-02-02T00:00:00+05:00",
-     "title": "Financial Results for the Half Year ended December 31, 2025",
-     "reason": "Official PSX DPS document retained as results.",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Download",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/269565.pdf",
-      "document_id": "psx:269565",
+      "source_url": "http://www.prl.com.pk/downloads/3rd_quarter_report_march_25.pdf",
+      "document_id": "issuer:3955bdb1a2f2301db515429c",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_ea9dbe40e35e5cf247c75bb5",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_9878bf00b8b685bfd59ff9ba",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
-     "alert_id": "ci_alert_fc499197e379419aa427",
+     "alert_id": "ci_alert_d5e0f3c37152a8d72f6b",
      "symbol": "PRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2025-12-23T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Download",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/267671.pdf",
-      "document_id": "psx:267671",
+      "source_url": "https://www.prl.com.pk/wp-content/uploads/2026/01/PRL-1st-Quarterly-Report-copy.pdf",
+      "document_id": "issuer:a5d3f56f376f04729d5df604",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_3fb1ca9c6ec253589b6229fd",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_fcaaa21cfc1f471567adfd92",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
-     "alert_id": "ci_alert_f0a809831e5775f3d8ff",
+     "alert_id": "ci_alert_d5781806b601462a4e1d",
      "symbol": "PRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2025-10-20T00:00:00+05:00",
-     "title": "Financial Results for the Quarter Ended September 30, 2025",
-     "reason": "Official PSX DPS document retained as results.",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Download",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/262625.pdf",
-      "document_id": "psx:262625",
+      "source_url": "http://www.prl.com.pk/downloads/Half_yearly_report_Dec_22.pdf",
+      "document_id": "issuer:ba83229c8a4d6af056bc2ce2",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_bf7cf94c850bfcf8e5f5e21f",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_6a12c904b15ba4f00031405e",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
-     "alert_id": "ci_alert_0d37098d459d6062939e",
+     "alert_id": "ci_alert_d45a5ddd8daa6eaa74b0",
      "symbol": "PRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2025-09-11T00:00:00+05:00",
-     "title": "Material Information",
-     "reason": "Official PSX DPS document retained as other.",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Download",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/259170.pdf",
-      "document_id": "psx:259170",
+      "source_url": "http://www.prl.com.pk/downloads/3rdquarterlyreport2023.pdf",
+      "document_id": "issuer:1d33c077ac5d7b6ab6e91fac",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_0f8c80ed3c59df41694bebd4",
-      "kind": "document",
-      "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_83ffd6547e25a2b9436f",
-     "symbol": "PRL",
-     "type": "source_registry_degraded",
-     "status": "open",
-     "date": null,
-     "title": "issuer source registry degraded",
-     "reason": "ConnectionError:('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/company/PRL",
-      "document_id": null,
-      "source_id": null,
-      "source": "issuer_source_registry"
-     },
-     "evidence_identity": {
-      "registry_status": "degraded",
-      "quality_flags": [
-       "missing_issuer_url",
-       "missing_monitored_page",
-       "no_document_links",
-       "registry_degraded"
-      ],
-      "missing_required_source": true
+      "change_id": "chg_79e441a44c32f603ea413b5a",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     }
    ],
-   "alert_count": 7,
+   "alert_count": 6,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -2076,7 +2067,7 @@
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:05:29+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
-   "latest_event_at": "2026-08-19T11:15:00+05:00",
+   "latest_event_at": "2026-08-28T15:38:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -2088,9 +2079,9 @@
     "change_status": "active",
     "change_counts": {
      "issuer_document": 10,
-     "document": 6,
+     "document": 3,
      "source": 1,
-     "event": 1
+     "event": 4
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2178,6 +2169,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_8c38dd3cf9a48019e5e0",
+     "symbol": "BOP",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Presentation of Corporate Briefing Session 2026",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_dc6eb5a91253156c94d422e4",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_6cd6f56753ba26fd67ed",
      "symbol": "BOP",
      "type": "retained_change",
@@ -2216,26 +2227,6 @@
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_62d148a420d8f9ff7bf0",
-     "symbol": "BOP",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Categories of Shareholders",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.bop.com.pk/Documents/Financials/Investor Realtions/Catogories of Shareholder - 31.12.2025.pdf",
-      "document_id": "issuer:9e52104278839599a6cad4c5",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_68925405a4b2f20610fe3220",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 7,
@@ -2254,7 +2245,7 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": "2026-08-18T03:20:48+05:00",
-   "latest_change_at": "2026-08-22T00:00:00+05:00",
+   "latest_change_at": "2026-08-27T00:00:00+05:00",
    "latest_event_at": "2026-03-09T11:56:00+05:00",
    "source_health": {
     "registry_status": "degraded",
@@ -2268,8 +2259,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 15,
-     "issuer_document": 3
+     "document": 16,
+     "issuer_document": 2
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2277,6 +2268,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_a75082880edf50c5861f",
+     "symbol": "NBP",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Financial Results for the half year ended June 30, 2026",
+     "reason": "Official PSX DPS document retained as results.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281753.pdf",
+      "document_id": "psx:281753",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_35306850d895de01a685cb39",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_f687920d9418ef639512",
      "symbol": "NBP",
@@ -2373,26 +2384,6 @@
      },
      "evidence_identity": {
       "change_id": "chg_f2798d09fa74d27f5e093764",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_7745cd91b69a045b66c3",
-     "symbol": "NBP",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-22T00:00:00+05:00",
-     "title": "Protecting your Payment Cards - Urdu",
-     "reason": "Official Issuer website document retained as other.",
-     "source": {
-      "source_url": "https://www.nbp.com.pk/News/C1-Annex-PYPC(Urdu).pdf",
-      "document_id": "issuer:8c7c43442330a960d0b0086c",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_ffcf4b57e1f7f6283cb9ebe7",
       "kind": "document",
       "date_basis": "retrieved_at"
      }
@@ -2656,8 +2647,8 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:05:40+05:00",
-   "latest_change_at": "2026-09-08T03:06:00+05:00",
-   "latest_event_at": "2026-09-08T03:06:00+05:00",
+   "latest_change_at": "2026-09-08T03:45:00+05:00",
+   "latest_event_at": "2026-09-08T03:45:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -2759,6 +2750,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_548fa8b914a5d00170cd",
+     "symbol": "ATRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Download",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_f22a933236b51a8de1351c6a",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_00ef0f85ab4e9e62570d",
      "symbol": "ATRL",
      "type": "retained_change",
@@ -2776,26 +2787,6 @@
       "change_id": "chg_6b6de449f4742d74f7d065c5",
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_8787bf262157d9128cfd",
-     "symbol": "ATRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-24T00:00:00+05:00",
-     "title": "ARL Board Meeting Rescheduled",
-     "reason": "Official PSX DPS document retained as board_meeting.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281624.pdf",
-      "document_id": "psx:281624",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_7f12e622ccfb480923fb9a13",
-      "kind": "document",
-      "date_basis": "published_at"
      }
     },
     {
@@ -3195,7 +3186,7 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": null,
-   "latest_change_at": "2026-08-21T16:16:00+05:00",
+   "latest_change_at": "2026-09-01T00:00:00+05:00",
    "latest_event_at": "2026-08-21T16:16:00+05:00",
    "source_health": {
     "registry_status": "degraded",
@@ -3211,8 +3202,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "event": 12,
-     "document": 6
+     "document": 7,
+     "event": 11
     },
     "watch_status": "active_watch",
     "active_watch_count": 1,
@@ -3220,6 +3211,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_3a1484d84acbfb24f3ec",
+     "symbol": "ENGROH",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-01T00:00:00+05:00",
+     "title": "DISCLOSURE OF MATERIAL INFORMATION",
+     "reason": "Official PSX DPS document retained as other.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282058.pdf",
+      "document_id": "psx:282058",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_f7ca35aaaa0638d6cf874dcc",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_d406a9566ff5a15d2e51",
      "symbol": "ENGROH",
@@ -3321,27 +3332,6 @@
       "change_id": "chg_27e32945064b3b8a02b48db0",
       "kind": "document",
       "date_basis": "published_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_912f48470c5faa48accd",
-     "symbol": "ENGROH",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-19T00:00:00+05:00",
-     "title": "earnings",
-     "reason": "Official document language matched the desk's event classifier.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281377.pdf",
-      "document_id": "psx:281377",
-      "source_id": null,
-      "source": "change_intelligence",
-      "page": 1
-     },
-     "evidence_identity": {
-      "change_id": "chg_bb955fb15dc8d1de7620b4e2",
-      "kind": "event",
-      "date_basis": null
      }
     },
     {
@@ -3589,7 +3579,7 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": "2026-08-18T03:21:20+05:00",
-   "latest_change_at": "2026-08-18T00:00:00+05:00",
+   "latest_change_at": "2026-08-27T00:00:00+05:00",
    "latest_event_at": "2026-04-29T12:04:00+05:00",
    "source_health": {
     "registry_status": "degraded",
@@ -3604,9 +3594,9 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
+     "document": 9,
      "issuer_document": 2,
      "source": 1,
-     "document": 8,
      "event": 4
     },
     "watch_status": "no_active_watch",
@@ -3615,6 +3605,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_05f0a0877032d221d179",
+     "symbol": "NRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-08-27T00:00:00+05:00",
+     "title": "Financial Results for the Year Ended June 30, 2026",
+     "reason": "Official PSX DPS document retained as results.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/281715.pdf",
+      "document_id": "psx:281715",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_e1464fecbd169186a197f8af",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_14b8bee4631f69a4bddf",
      "symbol": "NRL",
@@ -3732,26 +3742,6 @@
       "change_id": "chg_a4a614df9471b973413e438a",
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_f0c10be285fe4115bc5d",
-     "symbol": "NRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-07-30T00:00:00+05:00",
-     "title": "Material Information - Issuance of Sukuk - PKR 10,000,000,000/-",
-     "reason": "Official PSX DPS document retained as other.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/280546.pdf",
-      "document_id": "psx:280546",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_c4e381b9b96460490b93b2f2",
-      "kind": "document",
-      "date_basis": "published_at"
      }
     },
     {
@@ -3949,9 +3939,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/monitoring.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

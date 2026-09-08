@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "guidance_version": "guidance_contradictions_v2",
- "as_of": "2026-09-08T03:06:00+05:00",
+ "as_of": "2026-09-08T03:45:00+05:00",
  "pilot_symbols": [
   "ATRL",
   "BOP",
@@ -41,8 +41,8 @@
    "symbol": "ATRL",
    "status": "available",
    "guidance_count": 0,
-   "risk_count": 2,
-   "object_count": 2,
+   "risk_count": 3,
+   "object_count": 3,
    "contradiction_count": 0,
    "objects": [
     {
@@ -100,6 +100,34 @@
       "valuation": false,
       "advice": false
      }
+    },
+    {
+     "guidance_id": "guidance_1b694914d2b65aabcfe3",
+     "symbol": "ATRL",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer website",
+      "page": 52,
+      "available_on": "2026-09-08T03:45:00+05:00",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "evidence_sha256": null,
+      "text": "onitored. vi. There are no significant doubts upon the Company’s ability to continue as a going concern. vii. There is no reported instance of any material departure from the best practices of Corporate Governance. viii. Significant deviat…"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
     }
    ],
    "contradictions": [],
@@ -109,8 +137,8 @@
    "symbol": "BOP",
    "status": "available",
    "guidance_count": 0,
-   "risk_count": 3,
-   "object_count": 3,
+   "risk_count": 5,
+   "object_count": 5,
    "contradiction_count": 0,
    "objects": [
     {
@@ -189,6 +217,62 @@
       "content_sha256": "06dc5a3d6ef2af3b3195dba9130d76b3cbfff51d8b5e7884e611d8efba9048d1",
       "evidence_sha256": null,
       "text": "nnot be withdrawn at the discretion of the Bank without the risk of incurring significant penalty or expense. In addition, the Bank makes revocable commitments that do not attract any significant penalty or expense if the facility is unila…"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    },
+    {
+     "guidance_id": "guidance_97ac1f2d836fa2290136",
+     "symbol": "BOP",
+     "domain": "risks",
+     "assertion_type": "stated_risk",
+     "status": "eligible",
+     "statement": "incurring significant penalty or expense",
+     "modality": "risk_present",
+     "topic_key": "incurring_significant_penalty_expense",
+     "assertion_key": "risks:incurring_significant_penalty_expense:risk_present",
+     "conflict_key": "risks:incurring_significant_penalty_expense",
+     "evidence": {
+      "document_id": "psx:281937",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 32,
+      "available_on": "2026-09-08T03:44:00+05:00",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "evidence_sha256": null,
+      "text": "nnot be withdrawn at the discretion of the Bank without the risk of incurring significant penalty or expense. In addition, the Bank makes revocable commitments that do not attract any significant penalty or expense if the facility is unila…"
+     },
+     "policy": {
+      "same_company_official_evidence": true,
+      "numeric_forecast": false,
+      "valuation": false,
+      "advice": false
+     }
+    },
+    {
+     "guidance_id": "guidance_c83e61923cfa96c6b49b",
+     "symbol": "BOP",
+     "domain": "risks",
+     "assertion_type": "operating_constraint",
+     "status": "eligible",
+     "statement": "going concern",
+     "modality": "risk_present",
+     "topic_key": "going_concern",
+     "assertion_key": "risks:going_concern:risk_present",
+     "conflict_key": "risks:going_concern",
+     "evidence": {
+      "document_id": "psx:281937",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 55,
+      "available_on": "2026-09-08T03:44:00+05:00",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "evidence_sha256": null,
+      "text": "e of the Company. The financial statements of PMSL, however, have been prepared under the going concern assumption due to the reason that with continued support of the Bank, the Modaraba management company is expected to show better perfor…"
      },
      "policy": {
       "same_company_official_evidence": true,
@@ -1103,9 +1187,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/guidance_contradictions.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

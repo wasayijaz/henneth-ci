@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-08 03:15",
+ "updated": "2026-09-08 03:54",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
@@ -11,50 +11,50 @@
    "sector": "Technology & Communication",
    "hold_sessions": 25,
    "backtest": {
-    "hit_rate": 0.615,
-    "net_expectancy_pct": 3.62,
-    "n": 13,
-    "oos_hit": 0.75
+    "hit_rate": 0.714,
+    "net_expectancy_pct": 4.83,
+    "n": 14,
+    "oos_hit": 0.8
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 62% over 13 trades (+3.6% net/trade), still profitable out-of-sample."
+   "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 71% over 14 trades (+4.8% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260908-NICL-roc60_leader_pullback",
-   "ticker": "NICL",
-   "strategy": "roc60_leader_pullback",
-   "template": "Long-run leader, short pullback",
-   "category": "momentum",
-   "sector": "Chemical",
-   "hold_sessions": 18,
+   "id": "20260908-MUREB-lowvol_pullback",
+   "ticker": "MUREB",
+   "strategy": "lowvol_pullback",
+   "template": "Low-volatility pullback",
+   "category": "volatility",
+   "sector": "Food & Personal Care Products",
+   "hold_sessions": 10,
    "backtest": {
-    "hit_rate": 0.615,
-    "net_expectancy_pct": 1.12,
-    "n": 13,
-    "oos_hit": 0.667
+    "hit_rate": 0.667,
+    "net_expectancy_pct": 0.77,
+    "n": 18,
+    "oos_hit": 0.6
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Long-run leader, short pullback is triggering now; on NICL's own history it won 62% over 13 trades (+1.1% net/trade), still profitable out-of-sample."
+   "thesis": "Low-volatility pullback is triggering now; on MUREB's own history it won 67% over 18 trades (+0.8% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260908-FCL-obv_divergence_up",
-   "ticker": "FCL",
-   "strategy": "obv_divergence_up",
-   "template": "Volume leads price",
-   "category": "volume",
-   "sector": "Cable & Electrical Goods",
-   "hold_sessions": 15,
+   "id": "20260908-BGL-oversold_bounce",
+   "ticker": "BGL",
+   "strategy": "oversold_bounce",
+   "template": "RSI oversold bounce",
+   "category": "mean_reversion",
+   "sector": "Glass & Ceramics",
+   "hold_sessions": 8,
    "backtest": {
-    "hit_rate": 0.556,
-    "net_expectancy_pct": 0.68,
-    "n": 27,
-    "oos_hit": 0.625
+    "hit_rate": 0.571,
+    "net_expectancy_pct": 0.59,
+    "n": 14,
+    "oos_hit": 0.6
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
+   "thesis": "RSI oversold bounce is triggering now; on BGL's own history it won 57% over 14 trades (+0.6% net/trade), still profitable out-of-sample."
   }
  ],
  "n_candidates": 5

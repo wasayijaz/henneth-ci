@@ -24,7 +24,7 @@
   "NRL",
   "CNERGY"
  ],
- "as_of": "2026-09-08 03:06",
+ "as_of": "2026-09-08 03:45",
  "source": {
   "company_financial_series": "state/company_financial_series.json",
   "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -47,10 +47,10 @@
  "summary": {
   "company_count": 20,
   "eligible_fact_count": 35,
-  "audit_only_fact_count": 978,
-  "quarantined_fact_count": 602,
-  "missing_slot_count": 159,
-  "source_conflict_count": 70,
+  "audit_only_fact_count": 1018,
+  "quarantined_fact_count": 622,
+  "missing_slot_count": 162,
+  "source_conflict_count": 73,
   "withheld_future_source_fact_count": 0,
   "forecast_ready_company_count": 2
  },
@@ -4493,6 +4493,54 @@
    "conflicts": [],
    "missing_slots": [
     {
+     "reconciliation_id": "finmissing_ebb492125a07ea45be67",
+     "symbol": "OGDC",
+     "metric": "revenue",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:282260",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_583adf1071c064258b52",
+     "symbol": "OGDC",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:282260",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_6cb92a79a9bc9aa8ead6",
+     "symbol": "OGDC",
+     "metric": "basic_eps",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:282260",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
      "reconciliation_id": "finmissing_47df085f18049ddbcf1b",
      "symbol": "OGDC",
      "metric": "revenue",
@@ -4500,7 +4548,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:259805",
@@ -4516,7 +4564,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:259805",
@@ -4532,60 +4580,12 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:259805",
       "title": "Financial Results for the Year Ended June 30 2025",
       "matched_text": "Year Ended June 30 2025"
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_fe767b966c3c6a5edb41",
-     "symbol": "OGDC",
-     "metric": "revenue",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_a746df0e367a024665c0",
-     "symbol": "OGDC",
-     "metric": "profit_after_tax_attributable",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_ededd19ef5e87ce05079",
-     "symbol": "OGDC",
-     "metric": "basic_eps",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
      }
     },
     {
@@ -4772,7 +4772,6 @@
      "reasons": [
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_consolidation_basis",
       "missing_or_nonconsolidated_basis",
       "missing_period_end",
@@ -4791,7 +4790,7 @@
       "source": "PSX DPS",
       "page": 2,
       "text": "he Board of Directors at their meeting held on 13th February 2026 has approved an interim cash dividend of Rs. 2.00 per share (20%) on Ordinary Shares and Rs. 1.00 per share (10%) on Convertible Preference Shares, for the quarter ended 31s…",
-      "available_on": null,
+      "available_on": "2026-02-13",
       "published_at": "2026-02-13T12:29:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -5164,7 +5163,7 @@
    "eligible_fact_count": 16,
    "audit_only_fact_count": 444,
    "quarantined_fact_count": 272,
-   "missing_slot_count": 0,
+   "missing_slot_count": 3,
    "source_conflict_count": 25,
    "withheld_future_source_fact_count": 0,
    "facts": [
@@ -44083,7 +44082,56 @@
      ]
     }
    ],
-   "missing_slots": [],
+   "missing_slots": [
+    {
+     "reconciliation_id": "finmissing_030bd05c704a8f66ad9e",
+     "symbol": "DGKC",
+     "metric": "revenue",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281780",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_5ca7b9792053c4aa42ef",
+     "symbol": "DGKC",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281780",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_77ea1270a006d215bf9f",
+     "symbol": "DGKC",
+     "metric": "basic_eps",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281780",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    }
+   ],
    "qualified_periods": [
     {
      "period_end": "2022-06-30",
@@ -44558,12 +44606,9 @@
      "normalized_value": 17,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44578,7 +44623,7 @@
       "source": "PSX DPS",
       "page": 132,
       "text": "cipal actuarial assumptions 2025 2024 Discount rate 11.00% 12.25% Expected rate of salary increase 17.00% 20.00% 41.15.2 2025 2024 Present value of obligations (159,891) (133,424) Fair value of plan assets 211,243 181,636 Receivable / (pay…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44586,7 +44631,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44608,10 +44653,8 @@
      "reasons": [
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44626,7 +44669,7 @@
       "source": "PSX DPS",
       "page": 71,
       "text": "cipal actuarial assumptions 2025 2024 Discount rate 11.00% 12.25% Expected rate of salary increase 11.00% 10.25% Expected rate of increase in pension 5.00% 5.00% Expected rate of increase in medical benefit 5.00% 6.25% Expected rate of ret…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44634,7 +44677,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44654,12 +44697,9 @@
      "normalized_value": 61,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44674,7 +44714,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "cial Performance The Bank’s gross revenues were Rs. 419.6 billion in 2025, a year-on-year growth of 61%. Net mark-up income was recorded at Rs. 361.6 billion, a 108% increase over the previous year. This was led by the expansion in UBL’s c…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44682,7 +44722,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44702,12 +44742,9 @@
      "normalized_value": 11,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44722,7 +44759,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "rker remittances which came in at a record $38 billion in FY ’25 and have shown continued growth of 11% year on year in the period July to December 2025. Pakistan undertook policy efforts to rebuild confidence while operating under a chall…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44730,7 +44767,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44750,12 +44787,9 @@
      "normalized_value": 36,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44770,7 +44804,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "enses were up 36% at Rs. 16.2 billion, while IT expenses stood at Rs 12.0 billion with an increase of 36% as the Bank continues to invest in its core systems infrastructure, digital offerings, and cyber security posture. UBL recorded a net…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44778,7 +44812,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44798,12 +44832,9 @@
      "normalized_value": 24,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44818,7 +44849,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "f Rs. 28.0 billion was earned in 2025, an overall growth of 48%. This was led by a strong growth of 24% in trade and guarantee income to Rs. 5.6 billion, a 65% increase in income from debit and credit card fees to Rs. 6.3 billion and UBL’s…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44826,7 +44857,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44846,12 +44877,9 @@
      "normalized_value": 92,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44866,7 +44894,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "Before Tax (PBT) of Rs. 288.3 billion for the year ended December 31, 2025, with a robust growth of 92% year on year. Profit After Tax (PAT) stood at Rs. 128.0 billion for 2025 as compared to Rs. 80.5 billion for 2024 with Earnings per sha…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44874,7 +44902,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44894,12 +44922,9 @@
      "normalized_value": 48,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_non_pkr_currency",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44914,7 +44939,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "e revenues. Fees and commission income of Rs. 28.0 billion was earned in 2025, an overall growth of 48%. This was led by a strong growth of 24% in trade and guarantee income to Rs. 5.6 billion, a 65% increase in income from debit and credi…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44922,7 +44947,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -44934,7 +44959,7 @@
      "period_type": "annual",
      "duration_months": null,
      "statement_type": null,
-     "consolidation": "unknown",
+     "consolidation": "consolidated",
      "currency": "PKR",
      "unit": "PKR/share",
      "unit_multiplier": 1,
@@ -44944,9 +44969,6 @@
      "reasons": [
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_consolidation_basis",
-      "missing_or_nonconsolidated_basis",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -44961,7 +44983,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "ce in both domestic and international operations. The Board of Directors declared a final cash dividend of Rs. 8 per share in their meeting held in Islamabad on February 25, 2026, bringing the total cash dividend to Rs. 29.5 per share for…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -44981,7 +45003,7 @@
      "period_type": "annual",
      "duration_months": null,
      "statement_type": null,
-     "consolidation": "unknown",
+     "consolidation": "consolidated",
      "currency": "PKR",
      "unit": "PKR/share",
      "unit_multiplier": 1,
@@ -44991,9 +45013,6 @@
      "reasons": [
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_consolidation_basis",
-      "missing_or_nonconsolidated_basis",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45008,7 +45027,7 @@
       "source": "PSX DPS",
       "page": 147,
       "text": "nk. The Board of Directors, in its meeting held on February 25, 2026 has proposed a final cash dividend of Rs. 8.0 per share for the year 2025. This is in addition to Rs. 27.0 already paid during the year bringing the total dividend for th…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45038,7 +45057,6 @@
      "reasons": [
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45053,7 +45071,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": "d basis, UBL reported PAT of Rs. 130.0 billion (2024: Rs. 75.8 billion) with consolidated EPS of Rs. 52.13 (2024: Rs. 30.70). The overall growth in 2025 was supported by strong performance in both domestic and international operations. The…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45081,11 +45099,8 @@
      "normalized_value": 116472051,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45100,7 +45115,7 @@
       "source": "PSX DPS",
       "page": 144,
       "text": "2,241,797 Reserves 114,734,831 Surplus on revaluation of assets 77,309,424 Unappropriated profit 116,472,051 Non-controlling interest 49,910 320,808,013 2024 ---------------------------------------------------------------------------------…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45108,7 +45123,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45128,12 +45143,9 @@
      "normalized_value": 16233125,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45148,7 +45160,7 @@
       "source": "PSX DPS",
       "page": 76,
       "text": "Segment details with respect to business activities Profit & Loss Net mark-up / return / profit 16,233,125 373,537,989 (108,987,822) 43,254,109 37,258,778 265,281 361,561,460 Inter segment (expense) / revenue - net (1,038,109) (203,448,038…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45156,7 +45168,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45179,9 +45191,7 @@
       "conflicting_consolidation_labels",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45196,7 +45206,7 @@
       "source": "PSX DPS",
       "page": 94,
       "text": "2,181,000 Reserves - - Surplus on revaluation of assets 1,894,506 572,058 Unappropriated profit 7 79,457,716 62,049,181 83,533,222 64,802,239 CONTINGENCIES AND COMMITMENTS 8 PROFIT AND LOSS ACCOUNT Profit / return earned 9 60,915,271 68,03…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45204,7 +45214,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45224,11 +45234,8 @@
      "normalized_value": 646782,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45243,7 +45250,7 @@
       "source": "PSX DPS",
       "page": 147,
       "text": "ves 494,489 409,587 Surplus on revaluation of assets - net 617,600 275,984 Unappropriated profit 646,782 415,789 Total equity attributable to the equity holders of the Bank 1,803,569 1,145,061 Non-controlling interest 252 178 1,803,821 1,1…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45251,7 +45258,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45271,11 +45278,8 @@
      "normalized_value": 181178532,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45290,7 +45294,7 @@
       "source": "PSX DPS",
       "page": 99,
       "text": "4,734,831 Surplus on revaluation of assets - net 23 173,003,893 77,309,424 Unappropriated profit 181,178,532 116,472,051 Total equity attributable to the equity holders of the Bank 505,221,362 320,758,103 Non-controlling interest 24 70,451…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45298,7 +45302,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45318,11 +45322,8 @@
      "normalized_value": 324293313,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45337,7 +45338,7 @@
       "source": "PSX DPS",
       "page": 135,
       "text": "10 1,801,574,684 45.2. Geographical segment analysis Profit & Loss Net mark-up / return / profit 324,293,313 36,544,668 714,110 361,552,091 Non mark-up / return / interest income 57,349,889 6,282,676 37,626 63,670,191 Total Income 381,643,…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45345,7 +45346,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45367,7 +45368,6 @@
      "reasons": [
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45382,7 +45382,7 @@
       "source": "PSX DPS",
       "page": 13,
       "text": ") of Rs. 51.33 compared to Rs. 32.89 for last year. On a consolidated basis, UBL reported PAT of Rs. 130.0 billion (2024: Rs. 75.8 billion) with consolidated EPS of Rs. 52.13 (2024: Rs. 30.70). The overall growth in 2025 was supported by s…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45410,12 +45410,9 @@
      "normalized_value": 152139722,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45430,7 +45427,7 @@
       "source": "PSX DPS",
       "page": 77,
       "text": "s 1,746,675,810 831,081,672 79,746 2,577,837,228 ` Profit and Loss Net mark-up / return / profit 152,139,722 20,361,920 913,183 173,414,825 Non mark-up / return / interest income 75,603,450 12,274,293 (383,620) 87,494,123 Total Income 227,…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45438,7 +45435,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45458,11 +45455,8 @@
      "normalized_value": 152272778,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45477,7 +45471,7 @@
       "source": "PSX DPS",
       "page": 136,
       "text": "NDED DECEMBER 31, 2025 Geographical segment analysis Profit & Loss Net mark-up / return / profit 152,272,778 20,361,920 913,183 173,547,881 Non mark-up / return / interest income 72,699,042 12,274,293 (383,620) 84,589,715 Total Income 224,…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45485,7 +45479,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45505,12 +45499,9 @@
      "normalized_value": 111955818,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45525,7 +45516,7 @@
       "source": "PSX DPS",
       "page": 86,
       "text": "2,241,797 Reserves 114,734,831 Surplus on revaluation of assets 77,289,805 Unappropriated profit 111,955,818 316,222,251 2024 -----------------------------------------------------------------------------------------------------------------…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45533,7 +45524,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45553,12 +45544,9 @@
      "normalized_value": 61540701,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45573,7 +45561,7 @@
       "source": "PSX DPS",
       "page": 76,
       "text": "6,592 41,126,448 831,161,418 8,997,145 2,577,837,228 Profit & Loss Net mark-up / return / profit 61,540,701 200,057,676 (146,184,327) 38,235,548 21,275,103 (1,509,876) 173,414,825 Inter segment (expense) / revenue - net (50,874,024) (247,1…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45581,7 +45569,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45601,12 +45589,9 @@
      "normalized_value": 324302682,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45621,7 +45606,7 @@
       "source": "PSX DPS",
       "page": 77,
       "text": "0 1,801,574,684 43.2 Geographical segment analysis Profit and Loss Net mark-up / return / profit 324,302,682 36,544,668 714,110 361,561,460 Non mark-up / return / interest income 51,678,435 6,282,676 37,626 57,998,737 Total Income 375,981,…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45629,7 +45614,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -45649,12 +45634,9 @@
      "normalized_value": 174666915,
      "status": "audit_only",
      "reasons": [
-      "conflict",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
-      "missing_available_on",
       "missing_or_nonconsolidated_basis",
-      "missing_required_provenance",
       "not_income_statement",
       "not_twelve_month_annual",
       "outside_required_earnings_bridge_metric_set",
@@ -45669,7 +45651,7 @@
       "source": "PSX DPS",
       "page": 43,
       "text": "4,734,831 Surplus on revaluation of assets - net 23 173,025,714 77,289,805 Unappropriated profit 174,666,915 111,955,818 498,731,566 316,222,251 CONTINGENCIES AND COMMITMENTS 24 The annexed notes 1 to 51 and annexures I, II and III form an…",
-      "available_on": null,
+      "available_on": "2026-03-04",
       "published_at": "2026-03-04T11:51:00+05:00",
       "retrieved_at": "2026-08-25 17:22"
      },
@@ -45677,7 +45659,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -71310,6 +71292,54 @@
    "conflicts": [],
    "missing_slots": [
     {
+     "reconciliation_id": "finmissing_6dd62078476b540d4d38",
+     "symbol": "HUBC",
+     "metric": "revenue",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281728",
+      "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_83585c32e865d7837458",
+     "symbol": "HUBC",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281728",
+      "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_eeb1219240ee09b59e3f",
+     "symbol": "HUBC",
+     "metric": "basic_eps",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281728",
+      "title": "Financial Results for the Year Ended June 30, 2026 - The Hub Power Company Limited",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
+    {
      "reconciliation_id": "finmissing_f11057fa508ae5368d86",
      "symbol": "HUBC",
      "metric": "revenue",
@@ -71317,7 +71347,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:259628",
@@ -71333,7 +71363,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:259628",
@@ -71349,60 +71379,12 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:259628",
       "title": "Transmission of Annual Report for the Year Ended June 30, 2025",
       "matched_text": "Year Ended June 30, 2025"
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_a08b6308c8cd5d4fda92",
-     "symbol": "HUBC",
-     "metric": "revenue",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_61c3c574dd1615b20b53",
-     "symbol": "HUBC",
-     "metric": "profit_after_tax_attributable",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_940a2cdd5718096f1534",
-     "symbol": "HUBC",
-     "metric": "basic_eps",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
      }
     },
     {
@@ -71639,7 +71621,7 @@
    "symbol": "BOP",
    "status": "blocked",
    "eligible_fact_count": 0,
-   "audit_only_fact_count": 52,
+   "audit_only_fact_count": 66,
    "quarantined_fact_count": 0,
    "missing_slot_count": 9,
    "source_conflict_count": 0,
@@ -71782,6 +71764,207 @@
       "available_on": null,
       "published_at": null,
       "retrieved_at": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_5bf12bbd04835c2e69bf",
+     "evidence_id": "finev_ba2714f4117f0a8b32fe",
+     "symbol": "BOP",
+     "metric": "change_pct",
+     "period_end": "2026-06-30",
+     "period_type": "half_year",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "3.7",
+     "normalized_value": 3.7,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_4cf0aec0ebb70bfbbb8f",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 3,
+      "text": "nsolidation and prudent expenditure management continued to yield results, supporting GDP growth of 3.7% in FY2026, an improvement over the preceding year, alongside a third consecutive primary surplus. Average inflation for FY2026 stood a…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_54b0876835ae0fa1cb61",
+     "evidence_id": "finev_779d92865874fe3271e6",
+     "symbol": "BOP",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "46",
+     "normalized_value": 46,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "fact_id": "fact_2204d8ce1125935f4ec9",
+      "content_sha256": "7ded23031e8b3c0421cc87202d796823e526a1b82ab2d7cbf38a16d61ac96c02",
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "source": "Issuer registry",
+      "page": 5,
+      "text": "nt Deposits. Islamic Deposits Net Interest Income Highest Ever Profit Before Tax with YoY Growth of 46%. Highest ever Cash Dividend 25% Highest Growth in Operating Profit Before Provisions – 99%. Operating Profit Highest Growth in Net Inte…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_0c250ccdc812fbf162eb",
+     "evidence_id": "finev_73cefc9f8c03ea23d67e",
+     "symbol": "BOP",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "34",
+     "normalized_value": 34,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "fact_id": "fact_dafbfff495bb67457b06",
+      "content_sha256": "7ded23031e8b3c0421cc87202d796823e526a1b82ab2d7cbf38a16d61ac96c02",
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "source": "Issuer registry",
+      "page": 5,
+      "text": "Deposits Crossed Rs. 2 Trillion with Highest Growth of 34% in Avg. Current Deposits Deposits Significant Reduction – Down to 59.65%. Cost to Income Ratio Highest Ever Growth of 58% in Islamic Deposits with 12",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_9bc86ffc28e494f8989e",
+     "evidence_id": "finev_8a14db20e2691d507db0",
+     "symbol": "BOP",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "58",
+     "normalized_value": 58,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "fact_id": "fact_eaeee41df3677ad79a05",
+      "content_sha256": "7ded23031e8b3c0421cc87202d796823e526a1b82ab2d7cbf38a16d61ac96c02",
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "source": "Issuer registry",
+      "page": 5,
+      "text": "posits Deposits Significant Reduction – Down to 59.65%. Cost to Income Ratio Highest Ever Growth of 58% in Islamic Deposits with 121% Growth in Current Deposits. Islamic Deposits Net Interest Income Highest Ever Profit Before Tax with YoY…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
      },
      "parser": {
       "version": null,
@@ -72790,6 +72973,101 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_f3b9e26f015464803cf1",
+     "evidence_id": "finev_5aa2f387b83ac0426811",
+     "symbol": "BOP",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "4",
+     "normalized_value": 4,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_e2e52d94154c59b4cd5a",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 4,
+      "text": "into FY2027, the outlook remains cautiously optimistic, with the government targeting GDP growth of 4% and projecting average inflation of 8.2%. Price pressures are expected to persist in food, housing and services, primarily on account of…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_8f38663c059211c06b87",
+     "evidence_id": "finev_3a7d8cbac6ab352b997a",
+     "symbol": "BOP",
+     "metric": "dividend",
+     "period_end": "2025-06-30",
+     "period_type": "half_year",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unconsolidated",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "16",
+     "normalized_value": 16,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_or_nonconsolidated_basis",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_3dcaf63ccbcf0be9a89a",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 47,
+      "text": "ation and comparability. +r ChiefFinancialofrlcer President C hairm a n Director Director Cash Dividend 16",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_d1bb069104bee90af250",
      "evidence_id": "finev_201bab04f88b2dad8adf",
      "symbol": "BOP",
@@ -72828,6 +73106,56 @@
       "available_on": null,
       "published_at": null,
       "retrieved_at": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_b7da57043a4bd4a7beed",
+     "evidence_id": "finev_881162a362f998686c6a",
+     "symbol": "BOP",
+     "metric": "dividend",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "25",
+     "normalized_value": 25,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "fact_id": "fact_a0e8d275153643ba1d53",
+      "content_sha256": "7ded23031e8b3c0421cc87202d796823e526a1b82ab2d7cbf38a16d61ac96c02",
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "source": "Issuer registry",
+      "page": 5,
+      "text": "s Net Interest Income Highest Ever Profit Before Tax with YoY Growth of 46%. Highest ever Cash Dividend 25% Highest Growth in Operating Profit Before Provisions – 99%. Operating Profit Highest Growth in Net Interest Income – 84%. Profit Be…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
      },
      "parser": {
       "version": null,
@@ -73073,6 +73401,54 @@
       "available_on": null,
       "published_at": "2026-03-05T12:29:00+05:00",
       "retrieved_at": "2026-08-22 16:10"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_40f1087493a41f7690e5",
+     "evidence_id": "finev_9c388dca0edbe5c0db69",
+     "symbol": "BOP",
+     "metric": "dividend",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "16",
+     "normalized_value": 16,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_6ae70b3f7b909a7cc3a5",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 4,
+      "text": "value to shareholders, the Board of Directors has also declared the highest-ever interim cash dividend of 16%. The enhanced dividend reflects continued confidence in the Bank’s earnings trajectory, while reinforcing its commitment to creat…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
      },
      "parser": {
       "version": null,
@@ -73550,6 +73926,106 @@
       "available_on": null,
       "published_at": null,
       "retrieved_at": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_74956a1d6df6571583de",
+     "evidence_id": "finev_6f8abe6b5d9910b66efc",
+     "symbol": "BOP",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "6,944",
+     "normalized_value": 6944,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "fact_id": "fact_4535220ccedb28af6494",
+      "content_sha256": "7ded23031e8b3c0421cc87202d796823e526a1b82ab2d7cbf38a16d61ac96c02",
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "source": "Issuer registry",
+      "page": 18,
+      "text": "218 24,565 35,795 10,240 4,008 Taxation 5,046 5,968 7,673 9,879 11,189 19,857 5,466 2,210 Profit After Tax 6,944 12,440 10,834 11,339 13,375 15,938 4,774 1,798 EPS (Rs.) 2.63 4.18 3.31 3.47 4.09 4.87 1.46 0.55 *Dividend Payout %: Cash 10.0…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_7fad8f91af2de582c6a4",
+     "evidence_id": "finev_ede5ea1fe91a1f7205e2",
+     "symbol": "BOP",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "12,103",
+     "normalized_value": 12103,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:4e2eb7e439eed49809baebf1",
+      "fact_id": "fact_5e87d2bfa7df24702393",
+      "content_sha256": "7ded23031e8b3c0421cc87202d796823e526a1b82ab2d7cbf38a16d61ac96c02",
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
+      "source": "Issuer registry",
+      "page": 17,
+      "text": "valuation Surplus/(Deficit) 5,955 (1,369) (2,323) 1,829 7,954 10,693 2,679 Unappropriated profit 12,103 19,511 25,213 31,522 34,497 40,180 40,510 Total Equity 52,262 54,833 65,052 80,755 92,531 104,139 97,410 Key Financials – (2020-2026)",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
      },
      "parser": {
       "version": null,
@@ -74139,6 +74615,192 @@
       "revision": null
      },
      "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_37e09d50618bf522d8fc",
+     "evidence_id": "finev_d91d32ad8bb6938ad522",
+     "symbol": "BOP",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "20,061,474",
+     "normalized_value": 20061474,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_period_end",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_5db8d8a7f9ce75d9e668",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 78,
+      "text": "umer banking group Treasury Islamic Others including Head Office Total Mark-up / return / profit 20,061,474 7,463,898 16,979,695 70,336,344 14,518,516 1,208,564 130,568,491 Inter segment (cost) / revenue - net (8,703,978) 41,397,411 19,939…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_812b050568d56c1954d2",
+     "evidence_id": "finev_e665643b7819fcab4e31",
+     "symbol": "BOP",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "41.5",
+     "normalized_value": 41.5,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_77284da5f546d4c9bab5",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 83,
+      "text": "422 14,001 (Deficit) / surplus on revaluation of assets (250,099) 312,447 Unappropriated profit 41.5 24,591,724 22,102,765 26,342,047 24,429,213 CONTINGENCIES AND COMMITMENTS 41.6 The Bank has started Islamic banking operations in the year…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_3a8d52f71306f875e4a2",
+     "evidence_id": "finev_437c5b03de2e56ebc96b",
+     "symbol": "BOP",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "29,868,765",
+     "normalized_value": 29868765,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_period_end",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_971c1bedbaae476c1fbe",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 79,
+      "text": "umer banking group Treasury Islamic Others including Head Office Total Mark-up / return / profit 29,868,765 2,574,860 10,534,571 81,188,949 9,326,939 1,520,574 135,014,658 Inter segment revenue - net (12,933,366) 48,732,002 23,288,940 (59,…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_f3fbd06ead969398bcd4",
+     "evidence_id": "finev_6c124e57dee6b859be69",
+     "symbol": "BOP",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "42,184,842",
+     "normalized_value": 42184842,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_period_end",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "psx:281937",
+      "fact_id": "fact_e05013c14f7337cccf6b",
+      "content_sha256": "d5e51bf5fc9f8e12f58580a632ddc0674c02143238ada499976509fb56945fef",
+      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+      "source": "PSX DPS",
+      "page": 49,
+      "text": "f tax 23 5,532,554 10,695,407 Non controlling interest 1,087,850 1,090,389 Unappropriated profit 42,184,842 38,184,968 104,061,393 103,321,032 CONTINGENCIES AND COMMITMENTS 24 Rupees in '000' The annexed notes 1 to 44 form an integral part…",
+      "available_on": "2026-08-28",
+      "published_at": "2026-08-28T15:38:00+05:00",
+      "retrieved_at": "2026-09-08 03:44"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "stale_source",
      "confidence": "low"
     },
     {
@@ -75307,10 +75969,10 @@
    "symbol": "ATRL",
    "status": "blocked",
    "eligible_fact_count": 0,
-   "audit_only_fact_count": 77,
-   "quarantined_fact_count": 38,
+   "audit_only_fact_count": 103,
+   "quarantined_fact_count": 56,
    "missing_slot_count": 9,
-   "source_conflict_count": 8,
+   "source_conflict_count": 11,
    "withheld_future_source_fact_count": 0,
    "facts": [
     {
@@ -75351,6 +76013,102 @@
       "available_on": "2026-09-08",
       "published_at": null,
       "retrieved_at": "2026-09-08 03:06",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_d88d0084ae39e1b4e1c3",
+     "evidence_id": "finev_b450a05bf334d937ab79",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "5.52",
+     "normalized_value": 5.52,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_039e5df9e26020a916da",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 158,
+      "text": "n assessed on discounted cash flow based valuation methodology which assumes gross profit margin of 5.52% (2022: 5.74%), a terminal growth rate of 4.00% (2022: 4.00%) and weighted average cost of capital of 30.20% (2022: 17.51%). Notes to…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_2bade1646acad7506db3",
+     "evidence_id": "finev_a8cb9cca210586c97462",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "48",
+     "normalized_value": 48,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_or_non_pkr_currency",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_b596626c37e5c06b42c5",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 56,
+      "text": "lion as compared to Rs 32.42 million earned during the last year reflecting a significant increase of 48%. This resulted in earning per share of Rs 239.22 (June 30, 2022: Rs 162.09 per share). The financial results of AHL are summarized be…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
       "issuer_registry_binding": null
      },
      "parser": {
@@ -75912,6 +76670,514 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_04d01cc618923c743f48",
+     "evidence_id": "finev_2e2f804842c35063c6a4",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "4.92",
+     "normalized_value": 4.92,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_or_non_pkr_currency",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_0785d8376fd8c02c7698",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 223,
+      "text": "on discounted cash flow based valuation methodology which assumes an average gross profit margin of 4.92% (2022: 5.83%), a terminal growth rate of 4.00% (2022: 4.00%) and a capital asset pricing model based discount rate of 23.10% (2022: 2…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_a8288c640daf057a1f06",
+     "evidence_id": "finev_1becbf6e6cd9beac7c5f",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "23.66",
+     "normalized_value": 23.66,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_3003c551d0aed6381e29",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 86,
+      "text": "shareholder of the Company, controlling an equity stake of 61.06%, unappropriated profit increased by 23.66% to Rs 13,152 million due to high profitability during the year. During the year the Company has repaid entire outstanding amount o…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_87d317ae4ac4291b3a7f",
+     "evidence_id": "finev_8a8d2c2b6cc0aef44305",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "33",
+     "normalized_value": 33,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_59118288fe89586c1b33",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 106,
+      "text": "se of Pak Rupee devaluation. Cost of Sales: During the period under review, cost of sales increased by 33% from Rs 243,306 million to Rs 324,173 million. This increase reflects upwards trend in prices of crude oil by 31% mainly because of…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_5f2494412531615f99fe",
+     "evidence_id": "finev_54c0e758b8ad0cfbeeb8",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "24",
+     "normalized_value": 24,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_7d112dca1b1e5ea107b7",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 106,
+      "text": "Statement of Financial Position (June 30, 2022: 28%). Current assets: Current assets have increased by 24% during the financial year, mainly due to increase in stock of crude and refined products, increase in trade debtors and cash and cas…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_5973d0f38eb9069a6602",
+     "evidence_id": "finev_9f07681e10d764e3b766",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "74",
+     "normalized_value": 74,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_808d6313d02dd2ca5be1",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 116,
+      "text": "1,038,426) (326,268) Free Cash Flow 3,895,357 14,930,829 In the year 2023, Free cash flow decrease by 74% as compared to 2022 mainly due to settlement of trade creditors overdue payments resulting from circular debt. Composition of Cash Fl…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_3e28a0e2f2bde3a62194",
+     "evidence_id": "finev_53e0d381aab5ec942981",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "194",
+     "normalized_value": 194,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_87a99492c7dfe12bd79f",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 101,
+      "text": "improved substantially, since the Company achieved its highest ever profit registering a growth of 194% due to high refiner’s margin. Other income also contributed to this profit mainly on account of increase in bank balances and interest…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_8ce67e3e66338965526f",
+     "evidence_id": "finev_09bdd94d74f2770b0fab",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "125",
+     "normalized_value": 125,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_8fbfb4eb8bc369ebbabb",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 106,
+      "text": "Administration, distribution & other charges: Administration, distribution and other cost increased by 125% from Rs 2,135 million to Rs 4,809 million mainly on account of increase in other cost (WPPF & WWF) due to higher profit during the…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_b591f0f724f3bb0d8db0",
+     "evidence_id": "finev_8dae3520cacef8b09848",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "30",
+     "normalized_value": 30,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_bb173f33d31d819b45b4",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 106,
+      "text": "as mainly attributed to increase in income from bank deposits. Finance cost: Finance cost decreased by 30% mainly on account of decrease in interest cost due to repayment of entire outstanding amount of loans. Analysis of Financial Stateme…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_eef82d29758efc2833df",
+     "evidence_id": "finev_ed1ed1817723d5276c95",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "316",
+     "normalized_value": 316,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_c474fb0c13036b6fb604",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 106,
+      "text": "to higher profit during the year as compared to previous year. Other Income: Other income increased by 316% from Rs 2,003 million to Rs 8,323 million, which was mainly attributed to increase in income from bank deposits. Finance cost: Fina…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_18dd3ed1b0313b5f1970",
+     "evidence_id": "finev_4cc762148cd01c3eb9c9",
+     "symbol": "ATRL",
+     "metric": "change_pct",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": null,
+     "unit": "percent",
+     "unit_multiplier": 1,
+     "raw_value": "41",
+     "normalized_value": 41,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_non_pkr_currency",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_fe205cc04a0a5a513057",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 106,
+      "text": "ofits. Analysis of Profit or Loss Revenue: During the current year, net sales revenue has increased by 41% from Rs 261,984 million to Rs 369,222 million. This increase reflects upward trend in prices of petroleum products by 44% mainly bec…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_801083c5c8b00191e696",
      "evidence_id": "finev_b01288e34997b92fdc42",
      "symbol": "ATRL",
@@ -76209,6 +77475,100 @@
       "available_on": null,
       "published_at": "2025-10-03T09:21:00+05:00",
       "retrieved_at": "2026-08-24 19:17"
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_99f5ec24324ab9542b0d",
+     "evidence_id": "finev_96b31578e205eac3d5dc",
+     "symbol": "ATRL",
+     "metric": "dividend",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "503",
+     "normalized_value": 503,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_7093321cd08210d862ca",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 178,
+      "text": "‘000 At June 30, 2023 Trade and other payables 37,547,174 37,547,174 37,547,174 - Unpaid dividend 503,762 503,762 503,762 - Unclaimed dividends 11,800 11,800 11,800 - At June 30, 2022 Long term financing 4,875,880 5,550,926 2,816,414 2,734…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_c7a1568c14f3bbdf0051",
+     "evidence_id": "finev_e2267d3251a052994eb8",
+     "symbol": "ATRL",
+     "metric": "dividend",
+     "period_end": "2023-10-09",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "125",
+     "normalized_value": 125,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_6d886e6fdc03e8fd2c1c",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 249,
+      "text": "ts for the year ended June 30, 2023. 2. To consider and if thought fit, approve the final cash dividend of 125% (Rs 12.50 per share) as recommended by the Board of Directors for the year ended June 30, 2023. 3. To appoint auditors for the…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
      },
      "parser": {
       "version": null,
@@ -76600,6 +77960,56 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_07a17172bc763ffea550",
+     "evidence_id": "finev_789d4f4e9d3e92b6c0f3",
+     "symbol": "ATRL",
+     "metric": "dividend",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "PKR/share",
+     "unit_multiplier": 1,
+     "raw_value": "1",
+     "normalized_value": 1,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_8684b55ffb67869e9603",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 100,
+      "text": "02.93) Profit/(loss) after tax 29,225.23 9,930.71 (2,145.06) (2,824.93) (5,385.24) 578.98 Dividend 1,332.70 1,066.16 - - - - Bonus shares - - - - - 213.23 STATEMENT OF FINANCIAL POSITION SUMMARY Paid-up Capital 1,066.16 1,066.16 1,066.16 1…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_9c7f5ddb7810341dc29b",
      "evidence_id": "finev_430ae3c7c5567dc90527",
      "symbol": "ATRL",
@@ -76872,6 +78282,428 @@
       "available_on": "2026-09-08",
       "published_at": null,
       "retrieved_at": "2026-09-08 03:06",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_fe905b04c4be5ccbb291",
+     "evidence_id": "finev_223ae77532f0aae182b3",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "47.84 m",
+     "normalized_value": 47840000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_26460a1aa6944e5f73ac",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 56,
+      "text": "hospital operations continued smoothly throughout the year. The current year ended with a profit of Rs 47.84 million after tax. The current year figure Directors’ Report Attock Refinery Limited 54",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_ffb78b516299ab5ad51e",
+     "evidence_id": "finev_c257078880b5ed6b187b",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "48,578,429",
+     "normalized_value": 48578429,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_4c7d8fbf36c1a2179cb7",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 194,
+      "text": "7,926 Impairment (loss)/reversal on financial asset - note 23.3 (52,158) 35,551 Operating profit 48,578,429 18,627,468 Finance costs 33 (2,315,630) (3,294,017) Profit before taxation from refinery operations 46,262,799 15,333,451 Taxation…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_e6ba49eec734a1245f69",
+     "evidence_id": "finev_dd0b836fbe8e6fd7a708",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "112 m",
+     "normalized_value": 112000000,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_5025129b7c61c899a342",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 179,
+      "text": "iables held constant, profit after tax for the year would have been Rs 148 million (2022: profit Rs 112 million) higher/lower, mainly as a result of higher/lower interest income/expense from these financial assets and liabilities. iii) Pri…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_679ebb1387ae3b51a310",
+     "evidence_id": "finev_9a20054439c8d86380c5",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "47.84 m",
+     "normalized_value": 47840000.0,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_7e5c9f9f23619d16bb6d",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 56,
+      "text": "ng the financial year 2022-23 is as under: During the financial year 2022-23 AHL earned a profit after tax of Rs 47.84 million as compared to Rs 32.42 million earned during the last year reflecting a significant increase of 48%. This resul…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_eb6e04200cd501f7ae07",
+     "evidence_id": "finev_656f599566e847fd0d22",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "45,048,673",
+     "normalized_value": 45048673,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_88a4b46723cd6d623f79",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 132,
+      "text": "589) Net sales 369,221,549 261,983,815 Cost of sales 27 (324,172,876) (243,305,567) Gross profit 45,048,673 18,678,248 Administration expenses 28 1,241,089 866,868 Distribution costs 29 97,063 76,835 Other charges 30 3,470,359 1,191,639 (4…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_390a84dd6876d8e41917",
+     "evidence_id": "finev_7f06b5fa0e5306938aa8",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "30,670 m",
+     "normalized_value": 30670000000,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_8d6d0b619461500327a0",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 45,
+      "text": "per share of of Rs 10/- each 1,333 11,819 During the year the Company earned consolidated profit after tax of Rs 30,670 million (June 30, 2022: Rs 12,952 million) which translates into consolidated earnings per share of Rs 287.67 (June 30,…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_d70599ad527cff6df139",
+     "evidence_id": "finev_98ad2add7bb1faca7f46",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "48,510,803",
+     "normalized_value": 48510803,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_aa5b25436302c12f2e36",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 132,
+      "text": "2,941 Impairment (loss)/reversal on financial asset - note 22.3 (52,158) 35,551 Operating profit 48,510,803 18,581,398 Finance costs 32 (2,315,614) (3,294,001) Profit before taxation from refinery operations 46,195,189 15,287,397 Taxation…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_2739723387354e37b801",
+     "evidence_id": "finev_71d90b293223e9e100eb",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "28,010 m",
+     "normalized_value": 28010000000,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_c84f64e91ad681849a27",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 44,
+      "text": "Report thereon for the year ended June 30, 2023. 1 Financial Results The Company posted a profit after tax of Rs 28,010 million from refinery operations (June 30, 2022: Rs 9,097 million) during the current year while non-refinery income du…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_820405d13cf95ffd861b",
+     "evidence_id": "finev_d2fab6546d967bc94145",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "45,200,217",
+     "normalized_value": 45200217,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_fdc2e4170ddb71305963",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 194,
+      "text": "589) Net sales 369,373,093 262,107,219 Cost of sales 28 (324,172,876) (243,305,567) Gross profit 45,200,217 18,801,652 Administration expenses 29 1,336,888 948,292 Distribution costs 30 97,063 76,835 Other charges 31 3,471,691 1,192,534 (4…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
       "issuer_registry_binding": null
      },
      "parser": {
@@ -78459,6 +80291,154 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_8090d116130e26081a22",
+     "evidence_id": "finev_0112c8b6eef7375c0d1f",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "7,303,121",
+     "normalized_value": 7303121000000,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_3e1ec099af1a74f6b3dc",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 117,
+      "text": "ncome less applicable charges and taxation 677,838 236,901 398,215 (97,800) 1,215,154 Net Profit 7,303,121 8,056,215 8,639,661 5,226,235 29,225,232 Earnings/(loss) per share (Rupees) 68.50 75.56 81.03 49.03 274.12 Annual Report 2023 115",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_27d98dd144dd18942142",
+     "evidence_id": "finev_cdcb57b39040f4012cb3",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "9,936,726",
+     "normalized_value": 9936726000000,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_8d673c4895cee8d44d94",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 117,
+      "text": "ofit & loss items Net Sales 99,123,904 89,828,833 94,729,478 85,539,334 369,221,549 Gross profit 9,936,726 10,914,169 13,494,397 10,703,381 45,048,673 Profit before taxation from refinery operation 9,888,483 11,670,616 12,294,979 12,341,11…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_e59fbf10c32d60c3e285",
+     "evidence_id": "finev_18ed5d4ec0c44f5a4a7c",
+     "symbol": "ATRL",
+     "metric": "profit",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "20,184,490",
+     "normalized_value": 20184490,
+     "status": "audit_only",
+     "reasons": [
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_c703ad442b7df3fc839a",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 211,
+      "text": "80 Gain on revaluation of investment at fair value through OCI 3,639 4,368 Unappropriated profit 20,184,490 16,197,730 27,265,509 23,279,478 66,299,443 36,562,969",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_213d947fa7ba8b77d9d7",
      "evidence_id": "finev_692ab5692a97d06ad922",
      "symbol": "ATRL",
@@ -78654,6 +80634,382 @@
       "revision": null
      },
      "evidence_label": "missing_required_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_c21e5d697c7045d34fdc",
+     "evidence_id": "finev_2c064983533d0adbdaa6",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "4.6",
+     "normalized_value": 4.6,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_1ea601f5c9bcb1f09bd3",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 170,
+      "text": "% Future pension increases 10.25% 7.25% N/A N/A Demographic assumptions Rates of employee turnover 4.6% - 14% 4.6% - 14% 4.6% - 14% 4.6% - 14% Mortality rates SLIC (2001 SLIC (2001 SLIC (2001 SLIC (2001 -05) - 1 -05) - 1 -05) - 1 -05) - 1…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_6b37818962d5865a5049",
+     "evidence_id": "finev_fa59f7284d23f06332c9",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "369,373,093",
+     "normalized_value": 369373093,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_45ef8dd65fc02316177d",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 194,
+      "text": "8 Taxes, duties, levies, discount and price differential 27 (91,906,389) (43,412,589) Net sales 369,373,093 262,107,219 Cost of sales 28 (324,172,876) (243,305,567) Gross profit 45,200,217 18,801,652 Administration expenses 29 1,336,888 94…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_e7f640ba516fbc2b9ec8",
+     "evidence_id": "finev_ca501c5a05a09860386a",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "26",
+     "normalized_value": 26,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_6a4d2178bbc5349d4b73",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 194,
+      "text": "Attock Refinery Limited 192 2023 2022 Note Rs ‘000 Rs ‘000 Gross sales 26 461,279,482 305,519,808 Taxes, duties, levies, discount and price differential 27 (91,906,389) (43,412,589) Net sales 369,373,093 262,107,219 Cost of",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_fe1dd4135db94ce2ec0d",
+     "evidence_id": "finev_8a27d59f13e20f712521",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "25",
+     "normalized_value": 25,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_b231f9cd732c4c0016ee",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 132,
+      "text": "Attock Refinery Limited 130 2023 2022 Note Rs ‘000 Rs ‘000 Gross sales 25 461,127,938 305,396,404 Taxes, duties, levies, discount and price differential 26 (91,906,389) (43,412,589) Net sales 369,221,549 261,983,815 Cost of",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_85365cfe8fa0d99f8c3d",
+     "evidence_id": "finev_9dc02035576dad95149e",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "298,805,449",
+     "normalized_value": 298805449,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_be421bc12c61d412e277",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 222,
+      "text": "9,007 4,484,293 4,082,551 57,348 47,550 Summarised statements of comprehensive income Net revenue 298,805,449 251,875,728 473,938,329 370,074,929 17,271,061 20,961,819 184,189 161,769 (Loss)/profit for the year (4,463,086) 9,079,013 11,460…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_4ac3ff7c2b883e8426ed",
+     "evidence_id": "finev_84fd1b88c1a1d6f2a6bd",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "27",
+     "normalized_value": 27,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_f52936d08477726b08a1",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 132,
+      "text": "price differential 26 (91,906,389) (43,412,589) Net sales 369,221,549 261,983,815 Cost of sales 27 (324,172,876) (243,305,567) Gross profit 45,048,673 18,678,248 Administration expenses 28 1,241,089 866,868 Distribution costs 29 97,063 76,…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_cba6ed934feabc65ca85",
+     "evidence_id": "finev_c30f2a38b9a5e914318f",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "369,221,549",
+     "normalized_value": 369221549,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_f54eff676a18c286b3eb",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 132,
+      "text": "4 Taxes, duties, levies, discount and price differential 26 (91,906,389) (43,412,589) Net sales 369,221,549 261,983,815 Cost of sales 27 (324,172,876) (243,305,567) Gross profit 45,048,673 18,678,248 Administration expenses 28 1,241,089 86…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_1b37f03b95d9ce20dd2a",
+     "evidence_id": "finev_935b28cd33286679b798",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "28",
+     "normalized_value": 28,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_required_provenance",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_f651fab2f872d802e622",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 194,
+      "text": "price differential 27 (91,906,389) (43,412,589) Net sales 369,373,093 262,107,219 Cost of sales 28 (324,172,876) (243,305,567) Gross profit 45,200,217 18,801,652 Administration expenses 29 1,336,888 948,292 Distribution costs 30 97,063 76,…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
      "confidence": "low"
     },
     {
@@ -80343,8 +82699,9 @@
      "unit_multiplier": 1000000,
      "raw_value": "107,849,277",
      "normalized_value": 107849277000000,
-     "status": "audit_only",
+     "status": "quarantined",
      "reasons": [
+      "conflicting_values_retained_no_silent_selection",
       "legacy_extractor_not_model_eligible",
       "legacy_parser_revision_quarantine",
       "missing_consolidation_basis",
@@ -80374,7 +82731,7 @@
       "version": null,
       "revision": null
      },
-     "evidence_label": "missing_required_source",
+     "evidence_label": "contradicted_source",
      "confidence": "low"
     },
     {
@@ -80516,6 +82873,452 @@
       "available_on": "2026-09-08",
       "published_at": null,
       "retrieved_at": "2026-09-08 03:06",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_1718c0a6d2784699d9ff",
+     "evidence_id": "finev_9dcc849c29c3f2886924",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "369,221.55",
+     "normalized_value": 369221.55,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_18ab549e8af9f254b1c2",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 110,
+      "text": "65 18.62 Total Assets 176,760.46 100.00 132,905.98 100.00 STATEMENT OF PROFIT OR LOSS Net Sales 369,221.55 100.00 261,983.82 100.00 Cost of sales (324,172.88) (87.80) (243,305.57) (92.87) Gross profit/(loss) 45,048.67 12.20 18,678.25 7.13…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_da4d6fcd8b1e3e8265c9",
+     "evidence_id": "finev_d5e4c2267e5be0c02c1f",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "2023",
+     "normalized_value": 2023,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_3315f41c5d03c2953e39",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 116,
+      "text": "Tax Burden Interest Burden EBIT Marjin Net Profit Marjin Return on Equity Laverage Assets Turnover 2023 0.61 2022 0.57 2023 12.99 2022 6.65 2023 1 X X = = X 2023 2.09 Times 2022 1.97 Times 2023 26.62% 2022 19.27% X X 2022 1 2023 7.92 2022…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_21063edda237cd9b1e4f",
+     "evidence_id": "finev_4b5c4176a6dfb756529a",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "324,172.88",
+     "normalized_value": 324172.88,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_4a51a3b2070c86a1d938",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 100,
+      "text": "- 7.95 Turnover 369,221.55 261,983.82 127,730.41 119,819.44 176,754.54 129,596.57 Cost of Sales 324,172.88 243,305.57 130,298.90 124,999.91 180,815.67 130,675.23 Gross profit/(loss) 45,048.67 18,678.25 (2,568.49) (5,180.47) (4,061.13) (1,0…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_a1b9df8cf44427eb2f34",
+     "evidence_id": "finev_6a0a31f5825df57a2257",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "295,374",
+     "normalized_value": 295374,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_4a84890a1e0a44d2f1bf",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 163,
+      "text": "3 2022 Rs ‘000 Rs ‘000 25. GROSS SALES Local sales 460,832,564 303,167,945 Naphtha export sales 295,374 1,731,233 Reimbursement due from the Government under import parity pricing formula/Price differential claim - note 25.1 - 497,226 461,…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_763b888a025065f04e1e",
+     "evidence_id": "finev_4647cb5b88868c5c5d34",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "259,109",
+     "normalized_value": 259109,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_4be26f999cde2c482f77",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 231,
+      "text": "ts 162,459 106,480 Summarised statements of profit or loss and other comprehensive income Revenue 259,109 202,474 Expenses and taxation (211,266) (170,057) Profit after tax for the year 47,843 32,417 Other comprehensive income/(loss) 8,135…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_505b4e4e56594774c71f",
+     "evidence_id": "finev_bd44573d48aebe0d3cdd",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "369,221.55",
+     "normalized_value": 369221.55,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_7c1d9874f46b2d158fd9",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 100,
+      "text": "819.44 176,754.54 129,588.62 Reimbursement from/(to) Government - 497.23 (21.86) - - 7.95 Turnover 369,221.55 261,983.82 127,730.41 119,819.44 176,754.54 129,596.57 Cost of Sales 324,172.88 243,305.57 130,298.90 124,999.91 180,815.67 130,6…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_3c004125c22f55565094",
+     "evidence_id": "finev_995abccd14bff84dd4f1",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "460,832,564",
+     "normalized_value": 460832564,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_cbe3fed43eb8a168b403",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 163,
+      "text": "e rate of 17.17% (2022: 9.97%) per annum. 2023 2022 Rs ‘000 Rs ‘000 25. GROSS SALES Local sales 460,832,564 303,167,945 Naphtha export sales 295,374 1,731,233 Reimbursement due from the Government under import parity pricing formula/Price…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_9335467f6641c4cc2f4e",
+     "evidence_id": "finev_0bdd0dc59f4f0ee6220d",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "151,544",
+     "normalized_value": 151544,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_d24cba674dac14738707",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 227,
+      "text": "parity pricing formula/Price differential claim - note 26.1 - 497,226 - Subsidiary Local sales 151,544 123,404 461,279,482 305,519,808 26.1 This represents amount due from the Government of Pakistan (GoP) on account of shortfall in ex-refi…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_532f158d0d0c4fc03731",
+     "evidence_id": "finev_4c45b68cbf7b517c104a",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "raw_value": "99,123,904",
+     "normalized_value": 99123904000000,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:ac55612cba954d48abc1e506",
+      "fact_id": "fact_e36ae1f8a272155be9aa",
+      "content_sha256": "c2d358fd5e0f315e3aabf1e0882da768507aa5e8b44702b9dfe382d262f9681e",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+      "source": "Issuer registry",
+      "page": 117,
+      "text": "rter Fourth Quarter Total Rs ‘000 Rs ‘000 Rs ‘000 Rs ‘000 Rs ‘000 Profit & loss items Net Sales 99,123,904 89,828,833 94,729,478 85,539,334 369,221,549 Gross profit 9,936,726 10,914,169 13,494,397 10,703,381 45,048,673 Profit before taxati…",
+      "available_on": "2026-09-08",
+      "published_at": null,
+      "retrieved_at": "2026-09-08 03:45",
       "issuer_registry_binding": null
      },
      "parser": {
@@ -80896,6 +83699,13 @@
        "page": 265
       },
       {
+       "fact_id": "fact_4be26f999cde2c482f77",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 259109,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 231
+      },
+      {
        "fact_id": "fact_aa70e51f5cd31c0f43a6",
        "document_id": "issuer:369460cb9aebb04bf9672966",
        "normalized_value": 308841828,
@@ -80908,6 +83718,13 @@
        "normalized_value": 307662853,
        "source_url": "https://dps.psx.com.pk/download/document/260900.pdf",
        "page": 255
+      },
+      {
+       "fact_id": "fact_d24cba674dac14738707",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 151544,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 227
       }
      ]
     },
@@ -80941,6 +83758,13 @@
        "page": 140
       },
       {
+       "fact_id": "fact_18ab549e8af9f254b1c2",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 369221.55,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 110
+      },
+      {
        "fact_id": "fact_1ffa6d19f59c742f6848",
        "document_id": "issuer:369460cb9aebb04bf9672966",
        "normalized_value": 382916.67,
@@ -80953,6 +83777,13 @@
        "normalized_value": 0,
        "source_url": "https://dps.psx.com.pk/download/document/260900.pdf",
        "page": 199
+      },
+      {
+       "fact_id": "fact_3315f41c5d03c2953e39",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 2023,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 116
       },
       {
        "fact_id": "fact_39f76ff5b729ca97f72b",
@@ -80969,6 +83800,20 @@
        "page": 147
       },
       {
+       "fact_id": "fact_4a51a3b2070c86a1d938",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 324172.88,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 100
+      },
+      {
+       "fact_id": "fact_4a84890a1e0a44d2f1bf",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 295374,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 163
+      },
+      {
        "fact_id": "fact_756d7eed67e52accb91f",
        "document_id": "psx:260900",
        "normalized_value": 301329.81,
@@ -80976,11 +83821,25 @@
        "page": 130
       },
       {
+       "fact_id": "fact_7c1d9874f46b2d158fd9",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 369221.55,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 100
+      },
+      {
        "fact_id": "fact_b4adc645dd678f40a9be",
        "document_id": "psx:260900",
        "normalized_value": 291592.12,
        "source_url": "https://dps.psx.com.pk/download/document/260900.pdf",
        "page": 130
+      },
+      {
+       "fact_id": "fact_cbe3fed43eb8a168b403",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 460832564,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 163
       },
       {
        "fact_id": "fact_de1b8950aacc279456f0",
@@ -80995,6 +83854,127 @@
        "normalized_value": 382916.67,
        "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2024.pdf",
        "page": 120
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_ee1e7f77fc7097cb4f24",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "statement_type": null,
+     "unit": "reported",
+     "unit_multiplier": 1000000,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_47d345ab99e6fd709ff6",
+       "document_id": "issuer:369460cb9aebb04bf9672966",
+       "normalized_value": 107849277000000,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2024.pdf",
+       "page": 127
+      },
+      {
+       "fact_id": "fact_e36ae1f8a272155be9aa",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 99123904000000,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 117
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_b040a0ba110465af04fa",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "statement_type": null,
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_45ef8dd65fc02316177d",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 369373093,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 194
+      },
+      {
+       "fact_id": "fact_6a4d2178bbc5349d4b73",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 26,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 194
+      },
+      {
+       "fact_id": "fact_be421bc12c61d412e277",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 298805449,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 222
+      },
+      {
+       "fact_id": "fact_f651fab2f872d802e622",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 28,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 194
+      }
+     ]
+    },
+    {
+     "conflict_id": "finconflict_6f1f3049193061d3aa8c",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2023-06-30",
+     "period_type": "annual",
+     "duration_months": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "statement_type": null,
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "status": "quarantined",
+     "reason": "conflicting_values_retained_no_silent_selection",
+     "values": [
+      {
+       "fact_id": "fact_1ea601f5c9bcb1f09bd3",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 4.6,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 170
+      },
+      {
+       "fact_id": "fact_b231f9cd732c4c0016ee",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 25,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 132
+      },
+      {
+       "fact_id": "fact_f52936d08477726b08a1",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 27,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 132
+      },
+      {
+       "fact_id": "fact_f54eff676a18c286b3eb",
+       "document_id": "issuer:ac55612cba954d48abc1e506",
+       "normalized_value": 369221549,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
+       "page": 132
       }
      ]
     },
@@ -81278,6 +84258,54 @@
    ],
    "missing_slots": [
     {
+     "reconciliation_id": "finmissing_be96f5e84dccde3ca31d",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281722",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_5c153959232e19dc0ef2",
+     "symbol": "ATRL",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281722",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_1b63f129f9431144ff9f",
+     "symbol": "ATRL",
+     "metric": "basic_eps",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281722",
+      "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2026",
+      "matched_text": "YEAR ENDED JUNE 30, 2026"
+     }
+    },
+    {
      "reconciliation_id": "finmissing_7db7c6b58bf855e2fa96",
      "symbol": "ATRL",
      "metric": "revenue",
@@ -81285,7 +84313,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:257596",
@@ -81301,7 +84329,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:257596",
@@ -81317,60 +84345,12 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:257596",
       "title": "FINANCIAL RESULTS FOR THE YEAR ENDED JUNE 30, 2025",
       "matched_text": "YEAR ENDED JUNE 30, 2025"
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_6a20a47a4d5b87b2e099",
-     "symbol": "ATRL",
-     "metric": "revenue",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_9c33213ba73d4d4e538f",
-     "symbol": "ATRL",
-     "metric": "profit_after_tax_attributable",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_bd192d172dafcd9898f2",
-     "symbol": "ATRL",
-     "metric": "basic_eps",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
      }
     },
     {
@@ -83746,6 +86726,54 @@
    "conflicts": [],
    "missing_slots": [
     {
+     "reconciliation_id": "finmissing_67b1682a24d307494a7e",
+     "symbol": "NRL",
+     "metric": "revenue",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281715",
+      "title": "Financial Results for the Year Ended June 30, 2026",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_9a982403769012b84c4e",
+     "symbol": "NRL",
+     "metric": "profit_after_tax_attributable",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281715",
+      "title": "Financial Results for the Year Ended June 30, 2026",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
+    {
+     "reconciliation_id": "finmissing_689bae9c02d96f04c7ee",
+     "symbol": "NRL",
+     "metric": "basic_eps",
+     "period_end": "2026-06-30",
+     "period_type": "annual",
+     "status": "missing",
+     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
+     "slot": "annual_period_1",
+     "period_evidence_status": "explicit",
+     "source": {
+      "document_id": "psx:281715",
+      "title": "Financial Results for the Year Ended June 30, 2026",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
+    {
      "reconciliation_id": "finmissing_6187de059e0c05dc6b04",
      "symbol": "NRL",
      "metric": "revenue",
@@ -83753,7 +86781,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:257579",
@@ -83769,7 +86797,7 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:257579",
@@ -83785,60 +86813,12 @@
      "period_type": "annual",
      "status": "missing",
      "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_1",
+     "slot": "annual_period_2",
      "period_evidence_status": "explicit",
      "source": {
       "document_id": "psx:257579",
       "title": "Financial Results for the Year Ended June 30, 2025",
       "matched_text": "Year Ended June 30, 2025"
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_faf7bd8e00ecd0fa52fc",
-     "symbol": "NRL",
-     "metric": "revenue",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_b07b04f3342e24102094",
-     "symbol": "NRL",
-     "metric": "profit_after_tax_attributable",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
-     }
-    },
-    {
-     "reconciliation_id": "finmissing_88b000b2517287eb5de8",
-     "symbol": "NRL",
-     "metric": "basic_eps",
-     "period_end": null,
-     "period_type": "annual",
-     "status": "missing",
-     "reason": "missing_eligible_reported_fact_for_required_annual_slot",
-     "slot": "annual_period_2",
-     "period_evidence_status": "missing_explicit_annual_period_evidence",
-     "source": {
-      "document_id": null,
-      "title": null,
-      "matched_text": null
      }
     },
     {
@@ -83907,7 +86887,7 @@
    "status": "blocked",
    "eligible_fact_count": 2,
    "audit_only_fact_count": 37,
-   "quarantined_fact_count": 37,
+   "quarantined_fact_count": 39,
    "missing_slot_count": 9,
    "source_conflict_count": 5,
    "withheld_future_source_fact_count": 0,
@@ -84247,6 +87227,86 @@
        "ticker": "CNERGY",
        "registry_source": "state/company_intel/source_registry.json"
       }
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "unknown",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_4b32937813e22468a641",
+     "evidence_id": "finev_fae4d3c5a1a8e0c4a20e",
+     "symbol": "CNERGY",
+     "metric": "gross_profit",
+     "period_end": "2025-03-31",
+     "period_type": "interim",
+     "duration_months": 9,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "4,.299,149",
+     "normalized_value": 4299.148999999999,
+     "status": "quarantined",
+     "reasons": [
+      "not_annual_period",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set"
+     ],
+     "source": {
+      "document_id": "psx:275538",
+      "fact_id": "fact_bf82e892ae2cdfaf58158587",
+      "content_sha256": "c5130cc0577e647d4166f0d371199b48e9ebe01cc3566c4cbe9bc65c3f9088e3",
+      "source_url": "https://dps.psx.com.pk/download/document/275538.pdf",
+      "source": "PSX DPS",
+      "page": 8,
+      "text": "Gross profit I (los.s)",
+      "available_on": "2026-04-28",
+      "published_at": "2026-04-28T14:40:00+05:00",
+      "retrieved_at": "2026-08-25 17:22"
+     },
+     "parser": {
+      "version": "financial_statement_v2",
+      "revision": "block_geometry_v5"
+     },
+     "evidence_label": "unknown",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_60f84138bf084c669f37",
+     "evidence_id": "finev_177a356daac6f57e030f",
+     "symbol": "CNERGY",
+     "metric": "gross_profit",
+     "period_end": "2026-03-31",
+     "period_type": "interim",
+     "duration_months": 9,
+     "statement_type": "income_statement",
+     "consolidation": "consolidated",
+     "currency": "PKR",
+     "unit": "PKR",
+     "unit_multiplier": 1000,
+     "raw_value": "27,279,195",
+     "normalized_value": 27279195000.0,
+     "status": "quarantined",
+     "reasons": [
+      "not_annual_period",
+      "not_twelve_month_annual",
+      "outside_required_earnings_bridge_metric_set"
+     ],
+     "source": {
+      "document_id": "psx:275538",
+      "fact_id": "fact_2e84333d663feada2f6b1379",
+      "content_sha256": "c5130cc0577e647d4166f0d371199b48e9ebe01cc3566c4cbe9bc65c3f9088e3",
+      "source_url": "https://dps.psx.com.pk/download/document/275538.pdf",
+      "source": "PSX DPS",
+      "page": 8,
+      "text": "Gross profit I (los.s)",
+      "available_on": "2026-04-28",
+      "published_at": "2026-04-28T14:40:00+05:00",
+      "retrieved_at": "2026-08-25 17:22"
      },
      "parser": {
       "version": "financial_statement_v2",
@@ -87993,9 +91053,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/financial_evidence_reconciliation.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

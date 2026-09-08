@@ -197,9 +197,18 @@
      "source_url": "https://www.psopk.com/",
      "source": "issuer_source_registry",
      "previous_sha256": "e5790bb1e5ae8f7ab34fb64e1ebcc56d0f8fc3d8a3176cba35d110b363625c01"
+    },
+    {
+     "trigger_type": "post_baseline_source_change",
+     "alert_id": "ci_alert_b183d230c6266470d0be",
+     "date": "2026-09-08",
+     "title": "Financials",
+     "source_url": "https://psopk.com/en/investors/financial",
+     "source": "issuer_source_registry",
+     "previous_sha256": "10398364d303a56e06a127857ac5799332143873b797023b1af163cae954cfc2"
     }
    ],
-   "targeted_trigger_count": 1,
+   "targeted_trigger_count": 2,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -336,7 +345,7 @@
   },
   "PRL": {
    "symbol": "PRL",
-   "deterministic_scan_status": "degraded",
+   "deterministic_scan_status": "healthy",
    "targeted_work_status": "no_targeted_work_request",
    "targeted_triggers": [],
    "targeted_trigger_count": 0,
@@ -353,6 +362,50 @@
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
+     "trigger_type": "retained_material_change",
+     "change_id": "chg_c660eed45c80fb910c0da3bd",
+     "kind": "event",
+     "severity": "material",
+     "date": "2026-08-28",
+     "date_basis": null,
+     "title": "acquisition",
+     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+     "document_id": "psx:281937"
+    },
+    {
+     "trigger_type": "retained_material_change",
+     "change_id": "chg_90324fa0582048b278f9234d",
+     "kind": "event",
+     "severity": "material",
+     "date": "2026-08-28",
+     "date_basis": null,
+     "title": "regulatory action",
+     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+     "document_id": "psx:281937"
+    },
+    {
+     "trigger_type": "retained_material_change",
+     "change_id": "chg_50f5cf7aaae2891abdfceda1",
+     "kind": "event",
+     "severity": "critical",
+     "date": "2026-08-28",
+     "date_basis": null,
+     "title": "credit event",
+     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+     "document_id": "psx:281937"
+    },
+    {
+     "trigger_type": "retained_material_change",
+     "change_id": "chg_1213feb36b801767f89bb9b8",
+     "kind": "event",
+     "severity": "material",
+     "date": "2026-08-28",
+     "date_basis": null,
+     "title": "rating change",
+     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
+     "document_id": "psx:281937"
+    },
+    {
      "trigger_type": "post_baseline_source_change",
      "alert_id": "ci_alert_002d8e39cd06d1b09808",
      "date": "2026-09-08",
@@ -362,7 +415,7 @@
      "previous_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
    ],
-   "targeted_trigger_count": 1,
+   "targeted_trigger_count": 5,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -614,14 +667,14 @@
  "summary": {
   "company_count": 20,
   "targeted_candidate_count": 13,
-  "targeted_trigger_count": 21,
+  "targeted_trigger_count": 26,
   "scheduled_ai_task_count": 0
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "b961b6e147901055214b700989b96e6ba235c689",
-  "build_cutoff_at": "2026-09-08T03:16:29Z",
-  "generated_at": "2026-09-08T03:16:29Z",
+  "source_commit_sha": "30410b3c6bd824d5426434d7c154de499a7c3862",
+  "build_cutoff_at": "2026-09-08T03:55:21Z",
+  "generated_at": "2026-09-08T03:55:21Z",
   "artifact_path": "state/company_intel/work_routing_policy.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
