@@ -1,0 +1,111 @@
+---
+title: Why PE ratios mislead on PSX cyclicals
+description: A cyclical PSX stock's trailing PE looks cheap at the top of its earnings cycle and expensive at the bottom — with real cement and oil & gas numbers.
+pubDate: 2026-09-08
+cluster: Valuation
+draft: false
+---
+
+import Snapshot from '../../components/explain/Snapshot.astro';
+import Matrix from '../../components/explain/Matrix.astro';
+
+A trailing [PE](/blog/how-to-value-a-psx-company/) ratio divides today's price by the last reported
+year of profit. For a cyclical business — cement, steel, oil & gas exploration, sugar — that last
+reported year is a snapshot of wherever the cycle happens to be sitting, not a stand-in for what the
+business normally earns. The result runs backwards from how the number is usually read: PE looks
+cheapest right when a cyclical's profit is at its peak and about to turn down, and looks most
+expensive right when profit is at its trough and about to recover.
+
+<Snapshot
+  title="The cyclical PE trap, in short"
+  items={[
+    { k: 'Trailing PE', v: 'Price ÷ last reported profit', note: 'A snapshot of one year, not an average' },
+    { k: 'DGKC dividend/share', v: 'Rs 7.5 (2017) → Rs 1.0 (2019–22)', note: 'A real, filed payout swing — capacity barely changed' },
+    { k: "Today's cement PE", v: '7.2×–8.8×', note: 'LUCK, DGKC, MLCF — versus 10×–20× for steadier PSX names' },
+    { k: 'Source', v: 'PSX company announcements', note: 'Same filings that feed the desk\'s fair-value tool' },
+  ]}
+/>
+
+## Why the same formula gives an opposite signal
+
+Cement is the clearest PSX example because the sector's swings are large and well documented. A
+cement maker's profit moves with two things it does not control on its own: local retention prices,
+which move with capacity utilisation across the whole sector, and export demand and coal costs, which
+move with regional and global prices. None of that changes the kilns a company owns. So when the cycle
+is favourable, a cyclical reports a strong profit year, its trailing PE looks low, and it can appear
+statistically "cheap" against the market — precisely when the favourable pricing is least likely to
+persist. When the cycle turns, trailing profit falls, the same PE formula produces a high number, and
+the stock can look "expensive" right as the cycle bottoms and the setup for recovery improves. The
+ratio is doing exactly what it is defined to do; the mistake is reading one year of trailing profit as
+a durable earnings level rather than a point on a cycle.
+
+[D.G. Khan Cement](/psx/dgkc/)'s own dividend record, filed with PSX and shown below, is a visible
+downstream trace of that swing — a company does not cut its per-share payout to roughly a seventh of
+its former level and then hold it there for three years because its plants shrank:
+
+<Matrix
+  cols={['Ex-date', 'DGKC dividend (Rs/share)', 'Where the cycle was']}
+  rows={[
+    ['2017-10-19', '7.50', 'Multi-year sector high'],
+    ['2018-10-17', '4.25', 'Turning down'],
+    ['2019-10-10', '1.00', 'Trough'],
+    ['2021-10-18', '1.00', 'Trough, held'],
+    ['2022-10-13', '1.00', 'Trough, held'],
+    ['2025-10-13', '2.00', 'Partial recovery'],
+  ]}
+  caption="Dividend per share, not EPS — but the payout is a downstream consequence of reported profit, and PSX does not publish it retroactively. Source: PSX company announcements, as filed."
+/>
+
+This is a dividend record, not an EPS series — the desk does not have DGKC's audited EPS for every
+one of those years in hand for this piece — but a sevenfold payout swing on an unchanged asset base is
+itself evidence that the underlying profit the trailing PE was dividing by moved just as sharply.
+
+## What today's PE spread actually shows
+
+Checking the desk's own data layer — the same PSX company-announcement filings behind the
+[fair-value tool](/solutions/psx-company-fair-value/) — on 8 September 2026 shows PSX's cyclicals
+trading at consistently lower trailing multiples than its steadier-earnings names:
+
+<Matrix
+  cols={['Company', 'Sector', 'Trailing PE']}
+  rows={[
+    ['Lucky Cement (LUCK)', 'Cement', '7.20×'],
+    ['D.G. Khan Cement (DGKC)', 'Cement', '7.77×'],
+    ['Maple Leaf Cement (MLCF)', 'Cement', '8.78×'],
+    ['Pakistan Petroleum (PPL)', 'Oil & Gas Exploration', '8.09×'],
+    ['OGDC', 'Oil & Gas Exploration', '9.09×'],
+    ['Pakistan Tobacco (PAKT)', 'Tobacco', '10.41×'],
+    ['Meezan Bank (MEBL)', 'Commercial Banks', '11.36×'],
+    ['Systems Limited (SYS)', 'Technology & Communication', '15.91×'],
+    ['Nestlé Pakistan (NESTLE)', 'Food & Personal Care', '20.18×'],
+  ]}
+  caption="Trailing PE as of 7 September 2026. Many things separate these companies besides cyclicality — growth, leverage, sector risk — this is not proof that cheap equals mispriced. But the cyclicals sit together at the low end, which is what the mechanism above predicts."
+/>
+
+A single low PE inside that first group is not, by itself, a signal that the market has mispriced a
+cement or exploration name. It is at least as consistent with the market correctly pricing in a
+profit cycle that is not expected to repeat at its recent level.
+
+## Reading around the distortion
+
+The general fix is not to abandon trailing PE but to widen the window it is read against: several
+years of EPS spanning at least one full cycle, rather than the latest reported figure alone, and a
+comparison against the company's own history and sector rather than the market as a whole. Where that
+longer earnings history isn't in hand, [PB and dividend yield](/blog/how-to-value-a-psx-company/) are
+the more reliable cross-checks precisely because they don't collapse to a single trailing year the way
+PE does — book value moves slowly, and a payout record like DGKC's above is itself the tell that a
+trailing multiple needs a second look. Index-level comparisons carry their own version of this
+problem: the [KSE-100](/blog/kse-100-index-explained/) is dominated by a mix of cyclical and
+non-cyclical sectors, so its blended PE answers a different question than any one constituent's.
+Whatever a valuation concludes, sizing it into an actual position is a separate step — the desk's
+[position-size calculator](/tools/position-size-calculator/) covers that.
+
+## Checking any of this yourself
+
+- [PSX Data Portal Services — company announcements](https://dps.psx.com.pk/announcements/companies) — every listed company's filed results and dividend announcements, including DGKC's, in the order filed
+
+---
+
+*Research, not advice. This explains a distortion in one ratio, not a verdict on any company named
+above; nothing here is a recommendation to buy or sell anything. Always check a company's earnings
+history across a full cycle, not just the latest reported year, before leaning on its trailing PE.*
