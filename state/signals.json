@@ -1,24 +1,42 @@
 {
- "updated": "2026-09-08 08:16",
+ "updated": "2026-09-08 13:08",
  "note": "deterministic candidate setups from proven strategies triggering on the latest bar; backtest-proven but NOT auditor-verified. Research, not advice.",
  "active": [
   {
-   "id": "20260908-TPLT-donchian55_break",
+   "id": "20260908-TPLT-adx_trend_long",
    "ticker": "TPLT",
-   "strategy": "donchian55_break",
-   "template": "Donchian 55 breakout (turtle)",
-   "category": "breakout",
+   "strategy": "adx_trend_long",
+   "template": "ADX strong uptrend",
+   "category": "trend",
    "sector": "Technology & Communication",
-   "hold_sessions": 25,
+   "hold_sessions": 15,
    "backtest": {
-    "hit_rate": 0.714,
-    "net_expectancy_pct": 4.83,
-    "n": 14,
-    "oos_hit": 0.8
+    "hit_rate": 0.581,
+    "net_expectancy_pct": 1.76,
+    "n": 31,
+    "oos_hit": 0.625
+   },
+   "confidence": "medium",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "ADX strong uptrend is triggering now; on TPLT's own history it won 58% over 31 trades (+1.8% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260908-NICL-vol_dryup_surge",
+   "ticker": "NICL",
+   "strategy": "vol_dryup_surge",
+   "template": "Dry-up then surge",
+   "category": "volume",
+   "sector": "Chemical",
+   "hold_sessions": 9,
+   "backtest": {
+    "hit_rate": 0.647,
+    "net_expectancy_pct": 0.99,
+    "n": 17,
+    "oos_hit": 0.75
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Donchian 55 breakout (turtle) is triggering now; on TPLT's own history it won 71% over 14 trades (+4.8% net/trade), still profitable out-of-sample."
+   "thesis": "Dry-up then surge is triggering now; on NICL's own history it won 65% over 17 trades (+1.0% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260908-MUREB-lowvol_pullback",
@@ -39,22 +57,22 @@
    "thesis": "Low-volatility pullback is triggering now; on MUREB's own history it won 67% over 18 trades (+0.8% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260908-BGL-oversold_bounce",
-   "ticker": "BGL",
-   "strategy": "oversold_bounce",
-   "template": "RSI oversold bounce",
-   "category": "mean_reversion",
-   "sector": "Glass & Ceramics",
-   "hold_sessions": 8,
+   "id": "20260908-IPAK-rs_leader",
+   "ticker": "IPAK",
+   "strategy": "rs_leader",
+   "template": "Relative-strength leader",
+   "category": "momentum",
+   "sector": "Paper, Board & Packaging",
+   "hold_sessions": 12,
    "backtest": {
-    "hit_rate": 0.571,
-    "net_expectancy_pct": 0.59,
-    "n": 14,
+    "hit_rate": 0.6,
+    "net_expectancy_pct": 0.76,
+    "n": 10,
     "oos_hit": 0.6
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "RSI oversold bounce is triggering now; on BGL's own history it won 57% over 14 trades (+0.6% net/trade), still profitable out-of-sample."
+   "thesis": "Relative-strength leader is triggering now; on IPAK's own history it won 60% over 10 trades (+0.8% net/trade), still profitable out-of-sample."
   }
  ],
  "n_candidates": 5
