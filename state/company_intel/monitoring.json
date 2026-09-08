@@ -1,15 +1,15 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-09-08T09:07:28+05:00",
+ "as_of": "2026-09-08T09:34:53+05:00",
  "source_as_of": {
-  "source_registry": "2026-09-08T09:07:28+05:00",
-  "source_qa": "2026-09-08 04:08",
-  "change_intelligence": "2026-09-08 04:08",
+  "source_registry": "2026-09-08T09:34:53+05:00",
+  "source_qa": "2026-09-08 04:35",
+  "change_intelligence": "2026-09-08 04:35",
   "event_ledger": "2026-09-08 04:07",
   "operating_events": "2026-09-08",
-  "evidence_watchlist": "2026-09-08T04:07:00+05:00",
-  "guidance_contradictions": "2026-09-08T04:07:00+05:00"
+  "evidence_watchlist": "2026-09-08T04:34:00+05:00",
+  "guidance_contradictions": "2026-09-08T04:34:00+05:00"
  },
  "pilot_symbols": [
   "MLCF",
@@ -76,10 +76,10 @@
  },
  "summary": {
   "company_count": 20,
-  "alert_count": 152,
+  "alert_count": 151,
   "status_counts": {
-   "degraded": 10,
-   "healthy": 10,
+   "degraded": 9,
+   "healthy": 11,
    "stale": 0,
    "unknown": 0
   }
@@ -886,7 +886,7 @@
    "symbol": "PSO",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T09:06:34+05:00",
+   "latest_source_at": "2026-09-08T09:34:03+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
    "latest_event_at": "2026-04-29T11:43:00+05:00",
    "source_health": {
@@ -899,8 +899,7 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 17,
-     "source": 1
+     "issuer_document": 18
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -909,11 +908,11 @@
    },
    "alerts": [
     {
-     "alert_id": "ci_alert_9162bfeb4ab1892a9e87",
+     "alert_id": "ci_alert_5ee5bd500742d680969d",
      "symbol": "PSO",
      "type": "source_page_changed",
      "status": "observed",
-     "date": "2026-09-08T09:06:34+05:00",
+     "date": "2026-09-08T09:34:03+05:00",
      "title": "Financials",
      "reason": "monitored issuer page changed after a prior retained hash",
      "source": {
@@ -923,8 +922,8 @@
       "source": "issuer_source_registry"
      },
      "evidence_identity": {
-      "content_sha256": "1d33072e586e037b4670903c72db68c669f1ea466da978a06ad562ca147e0162",
-      "previous_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4"
+      "content_sha256": "ef9c6daa34c9f5b1d3112a1dd9a6fc34ddaf597fd55bd58ef33a32a4b44fd226",
+      "previous_sha256": "1d33072e586e037b4670903c72db68c669f1ea466da978a06ad562ca147e0162"
      }
     },
     {
@@ -987,26 +986,6 @@
      }
     },
     {
-     "alert_id": "ci_alert_adfa4f54fcaee4b3edae",
-     "symbol": "PSO",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Financials",
-     "reason": "Same-domain issuer page hash changed since the previous retained check.",
-     "source": {
-      "source_url": "https://psopk.com/en/investors/financial",
-      "document_id": null,
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_fe8ef592eaac8af287276906",
-      "kind": "source",
-      "date_basis": "last_changed_at"
-     }
-    },
-    {
      "alert_id": "ci_alert_ad7bea47f396a1c22900",
      "symbol": "PSO",
      "type": "retained_change",
@@ -1065,6 +1044,26 @@
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
+    },
+    {
+     "alert_id": "ci_alert_a76c65e74759583002e8",
+     "symbol": "PSO",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Annual Report 2020",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://psopk.com/files/financial-reports/pdf/pso_ar_2020.pdf",
+      "document_id": "issuer:4738cb3909251adcf35fb36b",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_b23c54fa625fd814fcbc9d73",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
     }
    ],
    "alert_count": 8,
@@ -1080,19 +1079,16 @@
   },
   "UBL": {
    "symbol": "UBL",
-   "status": "degraded",
-   "status_reason": "source registry or monitored source quality is degraded",
+   "status": "healthy",
+   "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:05:18+05:00",
    "latest_change_at": "2026-09-08T00:00:00+05:00",
    "latest_event_at": "2026-08-07T16:23:00+05:00",
    "source_health": {
-    "registry_status": "degraded",
+    "registry_status": "ok",
     "monitored_page_count": 2,
     "document_link_count": 20,
-    "quality_flags": [
-     "page_degraded",
-     "registry_degraded"
-    ],
+    "quality_flags": [],
     "missing_required_source": false
    },
    "activity": {
@@ -1313,32 +1309,9 @@
       "delivery_id": "delivery_038f8cc90a9ebe5c7a91",
       "matched_event_id": null
      }
-    },
-    {
-     "alert_id": "ci_alert_3decf7f2cdc49cfe074d",
-     "symbol": "UBL",
-     "type": "source_registry_degraded",
-     "status": "open",
-     "date": null,
-     "title": "issuer source registry degraded",
-     "reason": "page_degraded, registry_degraded",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/company/UBL",
-      "document_id": null,
-      "source_id": null,
-      "source": "issuer_source_registry"
-     },
-     "evidence_identity": {
-      "registry_status": "degraded",
-      "quality_flags": [
-       "page_degraded",
-       "registry_degraded"
-      ],
-      "missing_required_source": false
-     }
     }
    ],
-   "alert_count": 11,
+   "alert_count": 10,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -2105,9 +2078,9 @@
     "change_status": "active",
     "change_counts": {
      "issuer_document": 10,
-     "document": 3,
+     "document": 4,
      "source": 1,
-     "event": 4
+     "event": 3
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2215,6 +2188,26 @@
      }
     },
     {
+     "alert_id": "ci_alert_bac290d4c6ebade5a5cd",
+     "symbol": "BOP",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-08T00:00:00+05:00",
+     "title": "Categories of Shareholders",
+     "reason": "Official Issuer website document retained as other.",
+     "source": {
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Investor Realtions/Catogories of Shareholder - 31.12.2025.pdf",
+      "document_id": "issuer:9e52104278839599a6cad4c5",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_40e3c93b595d56fc4117f0fd",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
+    {
      "alert_id": "ci_alert_8c38dd3cf9a48019e5e0",
      "symbol": "BOP",
      "type": "retained_change",
@@ -2232,26 +2225,6 @@
       "change_id": "chg_dc6eb5a91253156c94d422e4",
       "kind": "document",
       "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_6cd6f56753ba26fd67ed",
-     "symbol": "BOP",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Notice of Witholding of amount of Cash Dividend (D-9)",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.bop.com.pk/Documents/Financials/Investor Realtions/Notice of Witholding of amount of Cash Dividend (D-9).pdf",
-      "document_id": "issuer:9cffb2bccf0bd4baa40a9999",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_d677b328c84ef66adde3e4cf",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
      }
     }
    ],
@@ -2796,21 +2769,21 @@
      }
     },
     {
-     "alert_id": "ci_alert_1df43da7d6ab29f547f7",
+     "alert_id": "ci_alert_4b13697d482dc43dd61d",
      "symbol": "ATRL",
      "type": "retained_change",
      "status": "observed",
      "date": "2026-09-08T00:00:00+05:00",
-     "title": "Download",
-     "reason": "Official Issuer website document retained as results.",
+     "title": "اردو میں پڑھنے کے لیے یہاں کلک کریں۔",
+     "reason": "Official Issuer website document retained as other.",
      "source": {
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_25.pdf",
-      "document_id": "issuer:7b937551821bd3c157c7e6ff",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/financials_annual_urdu_0310.pdf",
+      "document_id": "issuer:a33f0df64664f7c7b686be0a",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_25ca547295c0e9b2f1d2bb15",
+      "change_id": "chg_ed0949333785935cb1064764",
       "kind": "document",
       "date_basis": "retrieved_at"
      }
@@ -3965,9 +3938,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
-  "build_cutoff_at": "2026-09-08T04:18:54Z",
-  "generated_at": "2026-09-08T04:18:54Z",
+  "source_commit_sha": "73736b4be07578875561dbdf48d4278ed89032d9",
+  "build_cutoff_at": "2026-09-08T04:44:15Z",
+  "generated_at": "2026-09-08T04:44:15Z",
   "artifact_path": "state/company_intel/monitoring.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

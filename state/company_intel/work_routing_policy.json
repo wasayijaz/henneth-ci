@@ -216,12 +216,12 @@
     },
     {
      "trigger_type": "post_baseline_source_change",
-     "alert_id": "ci_alert_9162bfeb4ab1892a9e87",
+     "alert_id": "ci_alert_5ee5bd500742d680969d",
      "date": "2026-09-08",
      "title": "Financials",
      "source_url": "https://psopk.com/en/investors/financial",
      "source": "issuer_source_registry",
-     "previous_sha256": "934c7e2ad43cbe539e541e2a936b629fa547d28c50bbc37e43bc3afb829b23d4"
+     "previous_sha256": "1d33072e586e037b4670903c72db68c669f1ea466da978a06ad562ca147e0162"
     }
    ],
    "targeted_trigger_count": 2,
@@ -237,7 +237,7 @@
   },
   "UBL": {
    "symbol": "UBL",
-   "deterministic_scan_status": "degraded",
+   "deterministic_scan_status": "healthy",
    "targeted_work_status": "eligible_for_owner_review_request",
    "targeted_triggers": [
     {
@@ -411,17 +411,6 @@
      "document_id": "psx:281937"
     },
     {
-     "trigger_type": "retained_material_change",
-     "change_id": "chg_1213feb36b801767f89bb9b8",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-08-28",
-     "date_basis": null,
-     "title": "rating change",
-     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
-     "document_id": "psx:281937"
-    },
-    {
      "trigger_type": "post_baseline_source_change",
      "alert_id": "ci_alert_002d8e39cd06d1b09808",
      "date": "2026-09-08",
@@ -431,7 +420,7 @@
      "previous_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
    ],
-   "targeted_trigger_count": 5,
+   "targeted_trigger_count": 4,
    "allowed_targeted_work": [
     "owner_review",
     "single_company_ai_analysis"
@@ -683,14 +672,14 @@
  "summary": {
   "company_count": 20,
   "targeted_candidate_count": 14,
-  "targeted_trigger_count": 27,
+  "targeted_trigger_count": 26,
   "scheduled_ai_task_count": 0
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "3dad9cdbbc9fdc37dc3f3cffca2c081cbe0de608",
-  "build_cutoff_at": "2026-09-08T04:18:54Z",
-  "generated_at": "2026-09-08T04:18:54Z",
+  "source_commit_sha": "73736b4be07578875561dbdf48d4278ed89032d9",
+  "build_cutoff_at": "2026-09-08T04:44:15Z",
+  "generated_at": "2026-09-08T04:44:15Z",
   "artifact_path": "state/company_intel/work_routing_policy.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",
