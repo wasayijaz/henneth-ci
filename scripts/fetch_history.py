@@ -28,8 +28,8 @@ import requests
 from psx_data import (STATE, eod_history, load_config, load_json, market_of, save_json,
                       yahoo_symbol)
 
-WORKERS = 3                # concurrent fetchers; ~1.3 req/s total, polite to DPS/Yahoo
-DEADLINE_S = 780           # 13 min wall-clock guard, inside the 25-min job cap
+WORKERS = 6                # concurrent fetchers; ~2.6 req/s total, still polite to DPS/Yahoo
+DEADLINE_S = 1200          # 20 min wall-clock guard, inside the 40-min job cap (desk-data.yml)
 NEW_PROBE_PER_RUN = 12     # separate, round-robin budget for symbols with no history file yet
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 
