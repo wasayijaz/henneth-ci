@@ -24,7 +24,7 @@
   "NRL",
   "CNERGY"
  ],
- "as_of": "2026-09-08 08:11",
+ "as_of": "2026-09-09 07:37",
  "source": {
   "company_financial_series": "state/company_financial_series.json",
   "financial_coverage": "state/company_intel/financial_coverage.json",
@@ -48,7 +48,7 @@
   "company_count": 20,
   "eligible_fact_count": 35,
   "audit_only_fact_count": 1058,
-  "quarantined_fact_count": 661,
+  "quarantined_fact_count": 663,
   "missing_slot_count": 162,
   "source_conflict_count": 75,
   "withheld_future_source_fact_count": 0,
@@ -76736,7 +76736,7 @@
    "status": "blocked",
    "eligible_fact_count": 0,
    "audit_only_fact_count": 131,
-   "quarantined_fact_count": 76,
+   "quarantined_fact_count": 78,
    "missing_slot_count": 9,
    "source_conflict_count": 11,
    "withheld_future_source_fact_count": 0,
@@ -85692,6 +85692,106 @@
      "confidence": "low"
     },
     {
+     "reconciliation_id": "finrec_1e0c1381b9dae6559ab4",
+     "evidence_id": "finev_e314541e518cb5e2a84d",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "1",
+     "normalized_value": 1,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:5da8391eac4887bd724e8a69",
+      "fact_id": "fact_2bfbdc7cb4e794e298e5",
+      "content_sha256": "d3171e031c60e812f2c47d13128e9a58baa1dadfd3a05543e2a8eb1d25b23c52",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+      "source": "Issuer registry",
+      "page": 4,
+      "text": "68.93% Earnings before interest, taxes, depreciation, and amortization (EBITDA) 7.45% Net Sales 1 301,329.8 Operating Profit/Loss 1 20,983.47 Throughput Volumes 2 1.664 2025 Non-Financial Highlights Training Hours per Employee 6.93 Employe…",
+      "available_on": "2026-09-09",
+      "published_at": null,
+      "retrieved_at": "2026-09-09 07:36",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
+     "reconciliation_id": "finrec_7a1543f6c514849b73f7",
+     "evidence_id": "finev_6bda8e5174dfa1881d83",
+     "symbol": "ATRL",
+     "metric": "revenue",
+     "period_end": null,
+     "period_type": "unknown",
+     "duration_months": null,
+     "statement_type": null,
+     "consolidation": "unknown",
+     "currency": "PKR",
+     "unit": "reported",
+     "unit_multiplier": 1,
+     "raw_value": "6.36",
+     "normalized_value": 6.36,
+     "status": "quarantined",
+     "reasons": [
+      "conflicting_values_retained_no_silent_selection",
+      "legacy_extractor_not_model_eligible",
+      "legacy_parser_revision_quarantine",
+      "missing_consolidation_basis",
+      "missing_or_nonconsolidated_basis",
+      "missing_period_end",
+      "missing_required_provenance",
+      "not_annual_period",
+      "not_income_statement",
+      "not_twelve_month_annual",
+      "readiness_is_audit_only",
+      "unqualified_financial_fact_source"
+     ],
+     "source": {
+      "document_id": "issuer:5da8391eac4887bd724e8a69",
+      "fact_id": "fact_86ef3c34eb74c8ea52bb",
+      "content_sha256": "d3171e031c60e812f2c47d13128e9a58baa1dadfd3a05543e2a8eb1d25b23c52",
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+      "source": "Issuer registry",
+      "page": 4,
+      "text": "t Volumes 2 1.664 2025 Non-Financial Highlights Training Hours per Employee 6.93 Employee Turnover 6.36% Community & Infrastructure Development 1 19.6 Training / Education 1 32.16 Water withdrawal Cubic Meter (m3) 1,378,000 Percentage of W…",
+      "available_on": "2026-09-09",
+      "published_at": null,
+      "retrieved_at": "2026-09-09 07:36",
+      "issuer_registry_binding": null
+     },
+     "parser": {
+      "version": null,
+      "revision": null
+     },
+     "evidence_label": "contradicted_source",
+     "confidence": "low"
+    },
+    {
      "reconciliation_id": "finrec_8bdb1d78934b88d7a2cd",
      "evidence_id": "finev_6b61a1c5dec0d3d924c3",
      "symbol": "ATRL",
@@ -86948,6 +87048,13 @@
        "page": 110
       },
       {
+       "fact_id": "fact_2bfbdc7cb4e794e298e5",
+       "document_id": "issuer:5da8391eac4887bd724e8a69",
+       "normalized_value": 1,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+       "page": 4
+      },
+      {
        "fact_id": "fact_2e01090961823ce3dc19",
        "document_id": "psx:260900",
        "normalized_value": 0,
@@ -87009,6 +87116,13 @@
        "normalized_value": 369221.55,
        "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
        "page": 100
+      },
+      {
+       "fact_id": "fact_86ef3c34eb74c8ea52bb",
+       "document_id": "issuer:5da8391eac4887bd724e8a69",
+       "normalized_value": 6.36,
+       "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+       "page": 4
       },
       {
        "fact_id": "fact_a8f3a0afdcbcef388e1e",
@@ -94970,9 +95084,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0d772f1549aea92fe05cf3615300df1157009afa",
-  "build_cutoff_at": "2026-09-08T13:58:03Z",
-  "generated_at": "2026-09-08T13:58:03Z",
+  "source_commit_sha": "b304c8949358273e74fa591b92c6b2711b07ed02",
+  "build_cutoff_at": "2026-09-09T07:46:29Z",
+  "generated_at": "2026-09-09T07:46:29Z",
   "artifact_path": "state/company_intel/financial_evidence_reconciliation.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

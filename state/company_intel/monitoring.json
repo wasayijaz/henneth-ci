@@ -1,15 +1,15 @@
 {
  "schema_version": 1,
  "monitoring_version": "ci_monitoring_v1",
- "as_of": "2026-09-08T09:34:53+05:00",
+ "as_of": "2026-09-09T12:35:13+05:00",
  "source_as_of": {
-  "source_registry": "2026-09-08T09:34:53+05:00",
-  "source_qa": "2026-09-08 04:35",
-  "change_intelligence": "2026-09-08 04:35",
-  "event_ledger": "2026-09-08 04:07",
-  "operating_events": "2026-09-08",
-  "evidence_watchlist": "2026-09-08T04:34:00+05:00",
-  "guidance_contradictions": "2026-09-08T04:34:00+05:00"
+  "source_registry": "2026-09-09T12:35:13+05:00",
+  "source_qa": "2026-09-09 07:37",
+  "change_intelligence": "2026-09-09 07:37",
+  "event_ledger": "2026-09-09 07:37",
+  "operating_events": "2026-09-09",
+  "evidence_watchlist": "2026-09-09T07:36:00+05:00",
+  "guidance_contradictions": "2026-09-09T07:36:00+05:00"
  },
  "pilot_symbols": [
   "MLCF",
@@ -76,10 +76,10 @@
  },
  "summary": {
   "company_count": 20,
-  "alert_count": 151,
+  "alert_count": 153,
   "status_counts": {
-   "degraded": 9,
-   "healthy": 11,
+   "degraded": 8,
+   "healthy": 12,
    "stale": 0,
    "unknown": 0
   }
@@ -310,7 +310,7 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": null,
-   "latest_change_at": "2026-09-04T12:02:00+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-09-04T12:02:00+05:00",
    "source_health": {
     "registry_status": "degraded",
@@ -326,8 +326,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "event": 10,
-     "document": 7
+     "document": 8,
+     "event": 10
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -335,6 +335,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_8ef9438d882753a22cdf",
+     "symbol": "OGDC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Material Information",
+     "reason": "Official PSX DPS document retained as regulatory.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282420.pdf",
+      "document_id": "psx:282420",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_1c9de16a81182f7bbac51691",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_fd116f5ef28948872212",
      "symbol": "OGDC",
@@ -437,26 +457,6 @@
       "change_id": "chg_f09c065d5ee06ae94815ace8",
       "kind": "event",
       "date_basis": null
-     }
-    },
-    {
-     "alert_id": "ci_alert_ba571f8a74251a373561",
-     "symbol": "OGDC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-04-29T00:00:00+05:00",
-     "title": "FINANCIAL RESULTS FOR THE PERIOD ENDED MARCH 31 2026",
-     "reason": "Official PSX DPS document retained as results.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/275829.pdf",
-      "document_id": "psx:275829",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_a40884493973df3a00e05e92",
-      "kind": "document",
-      "date_basis": "published_at"
      }
     },
     {
@@ -886,8 +886,8 @@
    "symbol": "PSO",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T09:34:03+05:00",
-   "latest_change_at": "2026-09-08T00:00:00+05:00",
+   "latest_source_at": "2026-09-09T12:34:20+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-04-29T11:43:00+05:00",
    "source_health": {
     "registry_status": "ok",
@@ -899,7 +899,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 18
+     "source": 1,
+     "issuer_document": 17
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -908,11 +909,11 @@
    },
    "alerts": [
     {
-     "alert_id": "ci_alert_5ee5bd500742d680969d",
+     "alert_id": "ci_alert_1b4baab76dccaad7cc2a",
      "symbol": "PSO",
      "type": "source_page_changed",
      "status": "observed",
-     "date": "2026-09-08T09:34:03+05:00",
+     "date": "2026-09-09T12:34:20+05:00",
      "title": "Financials",
      "reason": "monitored issuer page changed after a prior retained hash",
      "source": {
@@ -922,8 +923,28 @@
       "source": "issuer_source_registry"
      },
      "evidence_identity": {
-      "content_sha256": "ef9c6daa34c9f5b1d3112a1dd9a6fc34ddaf597fd55bd58ef33a32a4b44fd226",
-      "previous_sha256": "1d33072e586e037b4670903c72db68c669f1ea466da978a06ad562ca147e0162"
+      "content_sha256": "fafaf9e806b997a8674e1df4328a8882a1cb303476d441a93d38e8ef91e67f75",
+      "previous_sha256": "ef9c6daa34c9f5b1d3112a1dd9a6fc34ddaf597fd55bd58ef33a32a4b44fd226"
+     }
+    },
+    {
+     "alert_id": "ci_alert_3da622d02cfb98d57944",
+     "symbol": "PSO",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Financials",
+     "reason": "Same-domain issuer page hash changed since the previous retained check.",
+     "source": {
+      "source_url": "https://psopk.com/en/investors/financial",
+      "document_id": null,
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_46a6f040245d0357f3f506a1",
+      "kind": "source",
+      "date_basis": "last_changed_at"
      }
     },
     {
@@ -1044,26 +1065,6 @@
       "kind": "issuer_document",
       "date_basis": "first_seen_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_a76c65e74759583002e8",
-     "symbol": "PSO",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Annual Report 2020",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://psopk.com/files/financial-reports/pdf/pso_ar_2020.pdf",
-      "document_id": "issuer:4738cb3909251adcf35fb36b",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_b23c54fa625fd814fcbc9d73",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
     }
    ],
    "alert_count": 8,
@@ -1081,8 +1082,8 @@
    "symbol": "UBL",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T08:05:18+05:00",
-   "latest_change_at": "2026-09-08T00:00:00+05:00",
+   "latest_source_at": "2026-09-09T12:34:24+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-08-07T16:23:00+05:00",
    "source_health": {
     "registry_status": "ok",
@@ -1094,7 +1095,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 18
+     "source": 1,
+     "issuer_document": 17
     },
     "watch_status": "active_watch",
     "active_watch_count": 3,
@@ -1102,6 +1104,45 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_c219d49da39435315284",
+     "symbol": "UBL",
+     "type": "source_page_changed",
+     "status": "observed",
+     "date": "2026-09-09T12:34:24+05:00",
+     "title": "National Financial Literacy Program",
+     "reason": "monitored issuer page changed after a prior retained hash",
+     "source": {
+      "source_url": "https://ubldigital.com/Banking/National-Financial-Literacy-Program",
+      "document_id": null,
+      "source_id": "src_a1c71c27092df68f76a505db",
+      "source": "issuer_source_registry"
+     },
+     "evidence_identity": {
+      "content_sha256": "1b9e49de175efadef99d70ead2ba6aeeb4d8fcbb22920cce57e67f21690c36d8",
+      "previous_sha256": "f8f0eef1c2e2bb20f72bbcaf998c82cc999bb848667c42f98cd7c7f207f98b67"
+     }
+    },
+    {
+     "alert_id": "ci_alert_3c1388d8b969985d4fc0",
+     "symbol": "UBL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "National Financial Literacy Program",
+     "reason": "Same-domain issuer page hash changed since the previous retained check.",
+     "source": {
+      "source_url": "https://ubldigital.com/Banking/National-Financial-Literacy-Program",
+      "document_id": null,
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_b0b23cb56bf34d28f9d174e2",
+      "kind": "source",
+      "date_basis": "last_changed_at"
+     }
+    },
     {
      "alert_id": "ci_alert_f1153b9b8c3c9d03f3f5",
      "symbol": "UBL",
@@ -1203,26 +1244,6 @@
      }
     },
     {
-     "alert_id": "ci_alert_b08bba63519ff4430ca3",
-     "symbol": "UBL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Prize Bond Branches",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://ubldigital.com/portals/0/Prize Bond Payment Branches.xlsx",
-      "document_id": "issuer:f8653e259dd4c0182f959492",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_d6916c6a4a58bce49340f525",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
      "alert_id": "ci_alert_f0bb5097d24c98a6b696",
      "symbol": "UBL",
      "type": "active_evidence_watch",
@@ -1311,7 +1332,7 @@
      }
     }
    ],
-   "alert_count": 10,
+   "alert_count": 11,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -1711,7 +1732,7 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:05:22+05:00",
-   "latest_change_at": "2026-09-08T00:00:00+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-08-18T03:23:00+05:00",
    "source_health": {
     "registry_status": "ok",
@@ -1723,8 +1744,8 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "source": 1,
      "document": 9,
+     "source": 1,
      "issuer_document": 8
     },
     "watch_status": "no_active_watch",
@@ -1733,6 +1754,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_12ff9a8fb82b87052163",
+     "symbol": "HUBC",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Disclosure of Material Information",
+     "reason": "Official PSX DPS document retained as other.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282424.pdf",
+      "document_id": "psx:282424",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_f75affd9b1f964b4abfd014a",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_8ff076ee01ad128149ab",
      "symbol": "HUBC",
@@ -1850,26 +1891,6 @@
       "change_id": "chg_bdd6f882264a31b1598359eb",
       "kind": "document",
       "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_a4f9f3e78220275e47a1",
-     "symbol": "HUBC",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-19T00:00:00+05:00",
-     "title": "Board Meeting for the Year Ended June 30, 2026 - The Hub Power Company Limited",
-     "reason": "Official PSX DPS document retained as board_meeting.",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281384.pdf",
-      "document_id": "psx:281384",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_8fa2eb4962c1690c8f4e9dcc",
-      "kind": "document",
-      "date_basis": "published_at"
      }
     },
     {
@@ -2065,7 +2086,7 @@
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
    "latest_source_at": "2026-09-08T08:05:29+05:00",
-   "latest_change_at": "2026-09-08T00:00:00+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-08-28T15:38:00+05:00",
    "source_health": {
     "registry_status": "ok",
@@ -2077,10 +2098,10 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
+     "document": 5,
      "issuer_document": 10,
-     "document": 4,
      "source": 1,
-     "event": 3
+     "event": 2
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2088,6 +2109,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_b982331be303efdc9d2e",
+     "symbol": "BOP",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Pattern of Shareholding",
+     "reason": "Official Issuer website document retained as other.",
+     "source": {
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Investor Realtions/Pattern - 31.12.2025.pdf",
+      "document_id": "issuer:33932d08a9fdaeedb067a9d8",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_d6201706fff659ca9733153d",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
     {
      "alert_id": "ci_alert_002d8e39cd06d1b09808",
      "symbol": "BOP",
@@ -2203,26 +2244,6 @@
      },
      "evidence_identity": {
       "change_id": "chg_40e3c93b595d56fc4117f0fd",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_8c38dd3cf9a48019e5e0",
-     "symbol": "BOP",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Presentation of Corporate Briefing Session 2026",
-     "reason": "Official Issuer website document retained as results.",
-     "source": {
-      "source_url": "https://www.bop.com.pk/Documents/Financials/Corporate Briefing Session 2026.pdf",
-      "document_id": "issuer:4e2eb7e439eed49809baebf1",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_dc6eb5a91253156c94d422e4",
       "kind": "document",
       "date_basis": "retrieved_at"
      }
@@ -2645,9 +2666,9 @@
    "symbol": "ATRL",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T08:05:40+05:00",
-   "latest_change_at": "2026-09-08T04:07:00+05:00",
-   "latest_event_at": "2026-09-08T04:07:00+05:00",
+   "latest_source_at": "2026-09-09T12:34:54+05:00",
+   "latest_change_at": "2026-09-09T07:36:00+05:00",
+   "latest_event_at": "2026-09-09T07:36:00+05:00",
    "source_health": {
     "registry_status": "ok",
     "monitored_page_count": 2,
@@ -2658,9 +2679,9 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "issuer_document": 9,
-     "document": 8,
-     "source": 1
+     "source": 2,
+     "document": 9,
+     "issuer_document": 7
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2668,6 +2689,65 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_fed700b7abcfe6cea454",
+     "symbol": "ATRL",
+     "type": "source_page_changed",
+     "status": "observed",
+     "date": "2026-09-09T12:34:54+05:00",
+     "title": "Annual Reports",
+     "reason": "monitored issuer page changed after a prior retained hash",
+     "source": {
+      "source_url": "https://www.arl.com.pk/financial-annual/",
+      "document_id": null,
+      "source_id": "src_381915e2830479dd12099fd2",
+      "source": "issuer_source_registry"
+     },
+     "evidence_identity": {
+      "content_sha256": "ea14cd08d774dfa06ed695d598bdb4f36a63f7a830e018847ca494924edd51da",
+      "previous_sha256": "94f75628af8a11a9519fbae3c39c58dff934eec7e6f7d4466019ba7cc6bf77e2"
+     }
+    },
+    {
+     "alert_id": "ci_alert_e35ea4428f98eff9ae86",
+     "symbol": "ATRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Annual Reports",
+     "reason": "Same-domain issuer page hash changed since the previous retained check.",
+     "source": {
+      "source_url": "https://www.arl.com.pk/financial-annual/",
+      "document_id": null,
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_00535721e0c1713669e690f2",
+      "kind": "source",
+      "date_basis": "last_changed_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_37d779fcff6ba16c1ca1",
+     "symbol": "ATRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "ESG-Report-2025",
+     "reason": "Official Issuer website document retained as results.",
+     "source": {
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+      "document_id": "issuer:5da8391eac4887bd724e8a69",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_9fa89b62480ea639540f9a27",
+      "kind": "document",
+      "date_basis": "retrieved_at"
+     }
+    },
     {
      "alert_id": "ci_alert_a3fdce3998200b9702df",
      "symbol": "ATRL",
@@ -2749,46 +2829,6 @@
      }
     },
     {
-     "alert_id": "ci_alert_548fa8b914a5d00170cd",
-     "symbol": "ATRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "Download",
-     "reason": "Official Issuer website document retained as results.",
-     "source": {
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/ARL_Annual_2023.pdf",
-      "document_id": "issuer:ac55612cba954d48abc1e506",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_f22a933236b51a8de1351c6a",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_4b13697d482dc43dd61d",
-     "symbol": "ATRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-09-08T00:00:00+05:00",
-     "title": "اردو میں پڑھنے کے لیے یہاں کلک کریں۔",
-     "reason": "Official Issuer website document retained as other.",
-     "source": {
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/financials_annual_urdu_0310.pdf",
-      "document_id": "issuer:a33f0df64664f7c7b686be0a",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_ed0949333785935cb1064764",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
      "alert_id": "ci_alert_608c3a9f8fff129cd979",
      "symbol": "ATRL",
      "type": "source_page_changed",
@@ -2808,7 +2848,7 @@
      }
     }
    ],
-   "alert_count": 7,
+   "alert_count": 8,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -2823,8 +2863,8 @@
    "symbol": "HBL",
    "status": "healthy",
    "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
-   "latest_source_at": "2026-09-08T08:05:44+05:00",
-   "latest_change_at": "2026-09-08T00:00:00+05:00",
+   "latest_source_at": "2026-09-09T12:34:57+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": null,
    "source_health": {
     "registry_status": "ok",
@@ -2836,9 +2876,9 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
+     "source": 2,
      "issuer_document": 10,
-     "document": 7,
-     "source": 1
+     "document": 6
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -2846,6 +2886,45 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_e37b09929c83a2fa5122",
+     "symbol": "HBL",
+     "type": "source_page_changed",
+     "status": "observed",
+     "date": "2026-09-09T12:34:57+05:00",
+     "title": "Investor Relations",
+     "reason": "monitored issuer page changed after a prior retained hash",
+     "source": {
+      "source_url": "https://www.hbl.com/investor-relations",
+      "document_id": null,
+      "source_id": "src_44b909c567d9403d79dcde6e",
+      "source": "issuer_source_registry"
+     },
+     "evidence_identity": {
+      "content_sha256": "97ce6a1d0bbd013ffb15ee455bc77598d667b37a3f6e1a25cdf7bc93da6e5376",
+      "previous_sha256": "5599d0de1174954960f04b7986e12f6d424b55c2255f814d86e27979f32f34a6"
+     }
+    },
+    {
+     "alert_id": "ci_alert_62b0f843f93b44762667",
+     "symbol": "HBL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Investor Relations",
+     "reason": "Same-domain issuer page hash changed since the previous retained check.",
+     "source": {
+      "source_url": "https://www.hbl.com/investor-relations",
+      "document_id": null,
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_46a80c0a9fe8c42c5ff8a999",
+      "kind": "source",
+      "date_basis": "last_changed_at"
+     }
+    },
     {
      "alert_id": "ci_alert_b34732c608d9ab57f3b3",
      "symbol": "HBL",
@@ -2964,29 +3043,9 @@
       "kind": "document",
       "date_basis": "retrieved_at"
      }
-    },
-    {
-     "alert_id": "ci_alert_d31961a7474899203e7b",
-     "symbol": "HBL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "List of Eligible Pensioners",
-     "reason": "Official Issuer website document retained as other.",
-     "source": {
-      "source_url": "https://www.hbl.com/assets/documents/Entitled_Pensionersas_of_30-06-2018.pdf",
-      "document_id": "issuer:7368630c3c9021e4f77ad006",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_fe4acd29e2082a2aa45374b3",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
     }
    ],
-   "alert_count": 7,
+   "alert_count": 8,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -3002,7 +3061,7 @@
    "status": "degraded",
    "status_reason": "source registry or monitored source quality is degraded",
    "latest_source_at": "2026-08-18T03:21:12+05:00",
-   "latest_change_at": "2026-08-27T06:37:00+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-08-27T06:37:00+05:00",
    "source_health": {
     "registry_status": "degraded",
@@ -3016,9 +3075,9 @@
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 11,
+     "document": 12,
      "issuer_document": 3,
-     "event": 4
+     "event": 3
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -3026,6 +3085,26 @@
     "guidance_contradiction_count": 0
    },
    "alerts": [
+    {
+     "alert_id": "ci_alert_0cc1e3ef47c43846301f",
+     "symbol": "MARI",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "Material Information",
+     "reason": "Official PSX DPS document retained as other.",
+     "source": {
+      "source_url": "https://dps.psx.com.pk/download/document/282421.pdf",
+      "document_id": "psx:282421",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_b296e40378e65e8294d62dbd",
+      "kind": "document",
+      "date_basis": "published_at"
+     }
+    },
     {
      "alert_id": "ci_alert_ab567af3c172c6779d45",
      "symbol": "MARI",
@@ -3124,26 +3203,6 @@
       "change_id": "chg_c2e95fc419ea1a927c487654",
       "kind": "document",
       "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_3084f82ab5f1425704b1",
-     "symbol": "MARI",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Gender Pay Gap",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.marienergies.com.pk/wp-content/uploads/2026/01/Gender-Pay-Gap-Statement.pdf",
-      "document_id": "issuer:38862f01a0d96448319edd19",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_5c0789ce132349acde48f093",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
      }
     },
     {
@@ -3575,28 +3634,22 @@
   },
   "NRL": {
    "symbol": "NRL",
-   "status": "degraded",
-   "status_reason": "source registry or monitored source quality is degraded",
-   "latest_source_at": "2026-08-18T03:21:20+05:00",
-   "latest_change_at": "2026-08-27T00:00:00+05:00",
+   "status": "healthy",
+   "status_reason": "retained monitoring sources are current enough and no degraded source gate is open",
+   "latest_source_at": "2026-09-09T12:35:02+05:00",
+   "latest_change_at": "2026-09-09T00:00:00+05:00",
    "latest_event_at": "2026-04-29T12:04:00+05:00",
    "source_health": {
-    "registry_status": "degraded",
+    "registry_status": "ok",
     "monitored_page_count": 2,
-    "document_link_count": 2,
-    "quality_flags": [
-     "page_degraded",
-     "registry_degraded"
-    ],
+    "document_link_count": 74,
+    "quality_flags": [],
     "missing_required_source": false
    },
    "activity": {
     "change_status": "active",
     "change_counts": {
-     "document": 9,
-     "issuer_document": 2,
-     "source": 1,
-     "event": 4
+     "issuer_document": 18
     },
     "watch_status": "no_active_watch",
     "active_watch_count": 0,
@@ -3605,23 +3658,123 @@
    },
    "alerts": [
     {
-     "alert_id": "ci_alert_05f0a0877032d221d179",
+     "alert_id": "ci_alert_f13fe5a242426945d4b2",
      "symbol": "NRL",
      "type": "retained_change",
      "status": "observed",
-     "date": "2026-08-27T00:00:00+05:00",
-     "title": "Financial Results for the Year Ended June 30, 2026",
-     "reason": "Official PSX DPS document retained as results.",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "annual_report_2009.pdf",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
      "source": {
-      "source_url": "https://dps.psx.com.pk/download/document/281715.pdf",
-      "document_id": "psx:281715",
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2008-09/annual_report_2009.pdf",
+      "document_id": "issuer:dcca2e5057eaac5caf680305",
       "source_id": null,
       "source": "change_intelligence"
      },
      "evidence_identity": {
-      "change_id": "chg_e1464fecbd169186a197f8af",
-      "kind": "document",
-      "date_basis": "published_at"
+      "change_id": "chg_becd53246738cbb1da548857",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_ed6e067d7d47a35be2bb",
+     "symbol": "NRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "annual_report_2013.pdf",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2012-13/annual_report_2013.pdf",
+      "document_id": "issuer:5b49329e54dd1cddedba7398",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_ed62d01b444c0424744dc49a",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_ccef261d1c466db1cb14",
+     "symbol": "NRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "nrl_annual_report_2016.pdf",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2015-16/NRL_ANNUAL_REPORT_2016.pdf",
+      "document_id": "issuer:55a882ce013ebfd7ed079d71",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_eb7f67618168be69bc9d59bd",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_b4e6a4bdea76b747a3d4",
+     "symbol": "NRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "nrl_annualreport_2025.pdf",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2024-25/NRL_AnnualReport_2025.pdf",
+      "document_id": "issuer:6539273b196fc7d8bf2f7dca",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_7dedad1d17d0c15344c66f1b",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_9f526080891cb9661a0f",
+     "symbol": "NRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "annualreport2026.pdf",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2025-26/AnnualReport2026.pdf",
+      "document_id": "issuer:fc5bf70a2219fd0639a66dbb",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_cb7c491fb8eb507c135fdb7a",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
+     }
+    },
+    {
+     "alert_id": "ci_alert_9e44b447ba40fe2e9719",
+     "symbol": "NRL",
+     "type": "retained_change",
+     "status": "observed",
+     "date": "2026-09-09T00:00:00+05:00",
+     "title": "nrl_annualrreport_2023-24_audited.pdf",
+     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "source": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2023-24/NRL_AnnualRreport_2023-24_Audited.pdf",
+      "document_id": "issuer:c3a6275292e89e8400f802f2",
+      "source_id": null,
+      "source": "change_intelligence"
+     },
+     "evidence_identity": {
+      "change_id": "chg_add2619edd08140e3637c4c7",
+      "kind": "issuer_document",
+      "date_basis": "first_seen_at"
      }
     },
     {
@@ -3642,132 +3795,9 @@
       "content_sha256": "a62fb87e11d42de544942a1c6d084453a73723effb4b7e753b8b3aaebfe35ab5",
       "previous_sha256": "639fb2f9e2c7ecc937fecf92be1a6b25435e45e5a5183eb45de8c2164ef08981"
      }
-    },
-    {
-     "alert_id": "ci_alert_f1f0d9526ec8842cd56e",
-     "symbol": "NRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "cbs_2024-25-nrl.pdf",
-     "reason": "Official Issuer website document retained as results.",
-     "source": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-      "document_id": "issuer:2ad2ec12df87dae68e766b04",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_5c219ea1aad796b57a891a26",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_ef4e8dfb6b3345053b6c",
-     "symbol": "NRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "GENDER DIVERSITY POLICY",
-     "reason": "Official Issuer website document retained as board_meeting.",
-     "source": {
-      "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf",
-      "document_id": "issuer:0e296697ff574423e7805454",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_6a844fef65a405cc784bbd5a",
-      "kind": "document",
-      "date_basis": "retrieved_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_eb3b7e174adaa7a774ed",
-     "symbol": "NRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "cbs_2024-25-nrl.pdf",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-      "document_id": "issuer:2ad2ec12df87dae68e766b04",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_ff6bad34cc75d874feec1c31",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_1c7aaf757d01b375f023",
-     "symbol": "NRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "Issuer website",
-     "reason": "Same-domain issuer page hash changed since the previous retained check.",
-     "source": {
-      "source_url": "https://www.nrlpak.com/",
-      "document_id": null,
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_e7d8d8552809f6b00f9751bd",
-      "kind": "source",
-      "date_basis": "last_changed_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_08767d563de7bd5dbbf0",
-     "symbol": "NRL",
-     "type": "retained_change",
-     "status": "observed",
-     "date": "2026-08-18T00:00:00+05:00",
-     "title": "GENDER DIVERSITY POLICY",
-     "reason": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "source": {
-      "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf",
-      "document_id": "issuer:0e296697ff574423e7805454",
-      "source_id": null,
-      "source": "change_intelligence"
-     },
-     "evidence_identity": {
-      "change_id": "chg_a4a614df9471b973413e438a",
-      "kind": "issuer_document",
-      "date_basis": "first_seen_at"
-     }
-    },
-    {
-     "alert_id": "ci_alert_bf26e3a4a0fbe4e47de6",
-     "symbol": "NRL",
-     "type": "source_registry_degraded",
-     "status": "open",
-     "date": null,
-     "title": "issuer source registry degraded",
-     "reason": "page_degraded, registry_degraded",
-     "source": {
-      "source_url": "https://dps.psx.com.pk/company/NRL",
-      "document_id": null,
-      "source_id": null,
-      "source": "issuer_source_registry"
-     },
-     "evidence_identity": {
-      "registry_status": "degraded",
-      "quality_flags": [
-       "page_degraded",
-       "registry_degraded"
-      ],
-      "missing_required_source": false
-     }
     }
    ],
-   "alert_count": 8,
+   "alert_count": 7,
    "limitations": [
     "research_only",
     "retained_state_only",
@@ -3938,9 +3968,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0d772f1549aea92fe05cf3615300df1157009afa",
-  "build_cutoff_at": "2026-09-08T13:58:03Z",
-  "generated_at": "2026-09-08T13:58:03Z",
+  "source_commit_sha": "b304c8949358273e74fa591b92c6b2711b07ed02",
+  "build_cutoff_at": "2026-09-09T07:46:29Z",
+  "generated_at": "2026-09-09T07:46:29Z",
   "artifact_path": "state/company_intel/monitoring.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

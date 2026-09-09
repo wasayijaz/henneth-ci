@@ -22,7 +22,7 @@
   "PSO",
   "UBL"
  ],
- "study_count": 80,
+ "study_count": 81,
  "studies": {
   "evt_b66212b80aa7a12b67b6": {
    "study_id": "study_b66212b80aa7a12b67b6",
@@ -1650,6 +1650,180 @@
   "evt_295c77f70e0fa11e8d89": {
    "study_id": "study_295c77f70e0fa11e8d89",
    "event_id": "evt_295c77f70e0fa11e8d89",
+   "symbol": "ATRL",
+   "event_type": "management_change",
+   "effective_date": null,
+   "data_cutoff": "2026-09-08",
+   "baseline": {
+    "selected_date": null,
+    "selected_close": null,
+    "status": "unavailable",
+    "reason": "invalid_effective_date",
+    "provenance": {
+     "history_file": "state/history/ATRL.json",
+     "selected_date": null
+    }
+   },
+   "horizons": {
+    "1Q": {
+     "target_date": null,
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "unavailable",
+     "reason": "invalid_effective_date",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": null,
+      "endpoint_date": null,
+      "target_date": null
+     }
+    },
+    "2Q": {
+     "target_date": null,
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "unavailable",
+     "reason": "invalid_effective_date",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": null,
+      "endpoint_date": null,
+      "target_date": null
+     }
+    },
+    "4Q": {
+     "target_date": null,
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "unavailable",
+     "reason": "invalid_effective_date",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": null,
+      "endpoint_date": null,
+      "target_date": null
+     }
+    },
+    "8Q": {
+     "target_date": null,
+     "selected_date": null,
+     "selected_close": null,
+     "return_pct": null,
+     "status": "unavailable",
+     "reason": "invalid_effective_date",
+     "provenance": {
+      "history_file": "state/history/ATRL.json",
+      "baseline_date": null,
+      "endpoint_date": null,
+      "target_date": null
+     }
+    }
+   },
+   "kse100_relative": {
+    "stock_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "index_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "relative_return_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "returns_pct": {
+     "1Q": null,
+     "2Q": null,
+     "4Q": null,
+     "8Q": null
+    },
+    "semantics": "stock_raw_price_return_minus_KSE100_raw_price_return",
+    "reasons": {
+     "1Q": "invalid_effective_date",
+     "2Q": "invalid_effective_date",
+     "4Q": "invalid_effective_date",
+     "8Q": "invalid_effective_date"
+    },
+    "provenance": {
+     "indices_file": "state/indices.json",
+     "selected_dates": {
+      "1Q": [
+       null,
+       null
+      ],
+      "2Q": [
+       null,
+       null
+      ],
+      "4Q": [
+       null,
+       null
+      ],
+      "8Q": [
+       null,
+       null
+      ]
+     }
+    }
+   },
+   "analogues": [],
+   "analogue_aggregate": {
+    "1Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "2Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "4Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    },
+    "8Q": {
+     "n": 0,
+     "mean_return_pct": null,
+     "status": "suppressed",
+     "reason": "n_lt_3"
+    }
+   },
+   "financial_outcomes": {
+    "revenue": null,
+    "margin": null,
+    "eps": null,
+    "roic": null,
+    "fcf": null,
+    "valuation": null,
+    "missing_inputs": [
+     "period_aligned_financials",
+     "event_attribution_model"
+    ]
+   },
+   "limitations": [
+    "raw_price_return_not_adjusted_or_total_return",
+    "historical_association_not_causal",
+    "current_sector_analogues_survivorship_bias"
+   ]
+  },
+  "evt_1958f385d3233f3d70cf": {
+   "study_id": "study_1958f385d3233f3d70cf",
+   "event_id": "evt_1958f385d3233f3d70cf",
    "symbol": "ATRL",
    "event_type": "management_change",
    "effective_date": null,
@@ -14799,9 +14973,9 @@
  "source": "state/company_intel/operating_events.json + state/history + state/indices.json",
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0d772f1549aea92fe05cf3615300df1157009afa",
-  "build_cutoff_at": "2026-09-08T13:58:03Z",
-  "generated_at": "2026-09-08T13:58:03Z",
+  "source_commit_sha": "b304c8949358273e74fa591b92c6b2711b07ed02",
+  "build_cutoff_at": "2026-09-09T07:46:29Z",
+  "generated_at": "2026-09-09T07:46:29Z",
   "artifact_path": "state/company_intel/event_studies.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

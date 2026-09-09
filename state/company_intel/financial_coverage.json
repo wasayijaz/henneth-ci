@@ -4764,7 +4764,7 @@
     ]
    },
    "audit_only_series": {
-    "audit_only_fact_count": 203,
+    "audit_only_fact_count": 205,
     "audit_only_metrics": [
      {
       "metric": "change_pct",
@@ -4784,7 +4784,7 @@
      },
      {
       "metric": "revenue",
-      "fact_count": 81
+      "fact_count": 83
      }
     ],
     "model_loadable_count": 4,
@@ -6324,8 +6324,24 @@
    "symbol": "NRL",
    "status": "queued_for_qualification",
    "classification": "financial_results_coverage",
-   "indexed_official_financial_doc_count": 9,
+   "indexed_official_financial_doc_count": 10,
    "indexed_official_financial_docs": [
+    {
+     "document_id": "psx:282408",
+     "title": "Transmission of Annual Report for the Year Ended June 30, 2026",
+     "doc_type": "financial_statement",
+     "classification": "financial_statement",
+     "published_at": "2026-09-08T14:38:00+05:00",
+     "source_url": "https://dps.psx.com.pk/download/document/282408.pdf",
+     "status": null,
+     "content_sha256": null,
+     "safe_period": {
+      "period_end": "2026-06-30",
+      "period_type": "annual",
+      "source": "title",
+      "matched_text": "Year Ended June 30, 2026"
+     }
+    },
     {
      "document_id": "psx:281715",
      "title": "Financial Results for the Year Ended June 30, 2026",
@@ -6576,6 +6592,19 @@
     "queue_id": "finqual_41ce8e658790be2a4113",
     "candidate_documents": [
      {
+      "document_id": "psx:282408",
+      "published_at": "2026-09-08T14:38:00+05:00",
+      "title": "Transmission of Annual Report for the Year Ended June 30, 2026",
+      "source_url": "https://dps.psx.com.pk/download/document/282408.pdf",
+      "safe_period": {
+       "period_end": "2026-06-30",
+       "period_type": "annual",
+       "source": "title",
+       "matched_text": "Year Ended June 30, 2026"
+      },
+      "reason": "official financial document candidate for future owner-approved bounded restage"
+     },
+     {
       "document_id": "psx:281715",
       "published_at": "2026-08-27T08:00:00+05:00",
       "title": "Financial Results for the Year Ended June 30, 2026",
@@ -6624,19 +6653,6 @@
        "period_type": "interim",
        "source": "title",
        "matched_text": "Period Ended December 31, 2025"
-      },
-      "reason": "official financial document candidate for future owner-approved bounded restage"
-     },
-     {
-      "document_id": "psx:270903",
-      "published_at": "2026-02-24T08:08:00+05:00",
-      "title": "Financial Results for the Half Year Ended December 31, 2025",
-      "source_url": "https://dps.psx.com.pk/download/document/270903.pdf",
-      "safe_period": {
-       "period_end": "2025-12-31",
-       "period_type": "interim",
-       "source": "title",
-       "matched_text": "Half Year Ended December 31, 2025"
       },
       "reason": "official financial document candidate for future owner-approved bounded restage"
      }
@@ -6913,9 +6929,9 @@
  },
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0d772f1549aea92fe05cf3615300df1157009afa",
-  "build_cutoff_at": "2026-09-08T13:58:03Z",
-  "generated_at": "2026-09-08T13:58:03Z",
+  "source_commit_sha": "b304c8949358273e74fa591b92c6b2711b07ed02",
+  "build_cutoff_at": "2026-09-09T07:46:29Z",
+  "generated_at": "2026-09-09T07:46:29Z",
   "artifact_path": "state/company_intel/financial_coverage.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

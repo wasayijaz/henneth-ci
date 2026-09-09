@@ -4,13 +4,41 @@
   "ATRL": {
    "ticker": "ATRL",
    "status": "active",
-   "latest_change_at": "2026-09-08",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "issuer_document": 9,
-    "document": 8,
-    "source": 1
+    "source": 2,
+    "document": 9,
+    "issuer_document": 7
    },
    "items": [
+    {
+     "id": "chg_00535721e0c1713669e690f2",
+     "kind": "source",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "last_changed_at",
+     "title": "Annual Reports",
+     "summary": "Same-domain issuer page hash changed since the previous retained check.",
+     "source_url": "https://www.arl.com.pk/financial-annual/",
+     "evidence": {
+      "source_url": "https://www.arl.com.pk/financial-annual/"
+     },
+     "source_kind": "financial_reports"
+    },
+    {
+     "id": "chg_9fa89b62480ea639540f9a27",
+     "kind": "document",
+     "severity": "routine",
+     "date": "2026-09-09",
+     "date_basis": "retrieved_at",
+     "title": "ESG-Report-2025",
+     "summary": "Official Issuer website document retained as results.",
+     "document_id": "issuer:5da8391eac4887bd724e8a69",
+     "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
+     "evidence": {
+      "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf"
+     }
+    },
     {
      "id": "chg_f1ecca5fb99443eb20ebd36e",
      "kind": "issuer_document",
@@ -241,50 +269,34 @@
       "source_url": "https://www.arl.com.pk/"
      },
      "source_kind": "issuer_home"
-    },
-    {
-     "id": "chg_4c460c9fb4306f5a7f2e3ea5",
-     "kind": "issuer_document",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "first_seen_at",
-     "title": "ESG-Report-2025",
-     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "document_id": "issuer:5da8391eac4887bd724e8a69",
-     "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf",
-     "evidence": {
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/ESG-Report-2025.pdf"
-     },
-     "source_page": "https://www.arl.com.pk/arl-sustainability-report-2025/"
-    },
-    {
-     "id": "chg_1fc5bce0383f3ab3e4510daf",
-     "kind": "issuer_document",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "first_seen_at",
-     "title": "Gender Diversity Policy",
-     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "document_id": "issuer:977c784c977db495156a0f9d",
-     "source_url": "https://www.arl.com.pk/wp-content/uploads/GENDER-DIVERSITY-POLICY.pdf",
-     "evidence": {
-      "source_url": "https://www.arl.com.pk/wp-content/uploads/GENDER-DIVERSITY-POLICY.pdf"
-     },
-     "source_page": "https://www.arl.com.pk/financial-annual/"
     }
    ]
   },
   "BOP": {
    "ticker": "BOP",
    "status": "active",
-   "latest_change_at": "2026-09-08",
+   "latest_change_at": "2026-09-09",
    "counts": {
+    "document": 5,
     "issuer_document": 10,
-    "document": 4,
     "source": 1,
-    "event": 3
+    "event": 2
    },
    "items": [
+    {
+     "id": "chg_d6201706fff659ca9733153d",
+     "kind": "document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "retrieved_at",
+     "title": "Pattern of Shareholding",
+     "summary": "Official Issuer website document retained as other.",
+     "document_id": "issuer:33932d08a9fdaeedb067a9d8",
+     "source_url": "https://www.bop.com.pk/Documents/Financials/Investor Realtions/Pattern - 31.12.2025.pdf",
+     "evidence": {
+      "source_url": "https://www.bop.com.pk/Documents/Financials/Investor Realtions/Pattern - 31.12.2025.pdf"
+     }
+    },
     {
      "id": "chg_e3d9f24a3021d824da6b6cb4",
      "kind": "issuer_document",
@@ -534,22 +546,6 @@
       "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
       "page": 32,
       "text": "contracts • forward Government securities transactions - forward lending Commitments for acquisition of: - property and equipment - intangible assets Commitments in respect of forward foreign exchange contracts Purchase Sale Commitments in…"
-     },
-     "priority_weight": 4
-    },
-    {
-     "id": "chg_90324fa0582048b278f9234d",
-     "kind": "event",
-     "severity": "material",
-     "date": "2026-08-28",
-     "title": "regulatory action",
-     "summary": "Official document language matched the desk's event classifier.",
-     "document_id": "psx:281937",
-     "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/281937.pdf",
-      "page": 32,
-      "text": "nnot be withdrawn at the discretion of the Bank without the risk of incurring significant penalty or expense. In addition, the Bank makes revocable commitments that do not attract any significant penalty or expense if the facility is unila…"
      },
      "priority_weight": 4
     }
@@ -1985,13 +1981,27 @@
   "HBL": {
    "ticker": "HBL",
    "status": "active",
-   "latest_change_at": "2026-09-08",
+   "latest_change_at": "2026-09-09",
    "counts": {
+    "source": 2,
     "issuer_document": 10,
-    "document": 7,
-    "source": 1
+    "document": 6
    },
    "items": [
+    {
+     "id": "chg_46a80c0a9fe8c42c5ff8a999",
+     "kind": "source",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "last_changed_at",
+     "title": "Investor Relations",
+     "summary": "Same-domain issuer page hash changed since the previous retained check.",
+     "source_url": "https://www.hbl.com/investor-relations",
+     "evidence": {
+      "source_url": "https://www.hbl.com/investor-relations"
+     },
+     "source_kind": "investor_relations"
+    },
     {
      "id": "chg_dbeba44653da7f47b321ac94",
      "kind": "issuer_document",
@@ -2239,33 +2249,33 @@
       "source_url": "https://www.hbl.com/assets/documents/Guarantee_Verification.pdf"
      },
      "source_page": "https://www.hbl.com/investor-relations"
-    },
-    {
-     "id": "chg_7829d8bb7488f14ee95d4bff",
-     "kind": "document",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "retrieved_at",
-     "title": "Saturday Open Branches List",
-     "summary": "Official Issuer website document retained as other.",
-     "document_id": "issuer:766dae323856fcd5f521447c",
-     "source_url": "https://www.hbl.com/assets/documents/Updated_Staurday_Branhces.pdf",
-     "evidence": {
-      "source_url": "https://www.hbl.com/assets/documents/Updated_Staurday_Branhces.pdf"
-     }
     }
    ]
   },
   "HUBC": {
    "ticker": "HUBC",
    "status": "active",
-   "latest_change_at": "2026-09-08",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "source": 1,
     "document": 9,
+    "source": 1,
     "issuer_document": 8
    },
    "items": [
+    {
+     "id": "chg_f75affd9b1f964b4abfd014a",
+     "kind": "document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "published_at",
+     "title": "Disclosure of Material Information",
+     "summary": "Official PSX DPS document retained as other.",
+     "document_id": "psx:282424",
+     "source_url": "https://dps.psx.com.pk/download/document/282424.pdf",
+     "evidence": {
+      "source_url": "https://dps.psx.com.pk/download/document/282424.pdf"
+     }
+    },
     {
      "id": "chg_2dc17e42db32ed71fea30591",
      "kind": "source",
@@ -2510,20 +2520,6 @@
      "source_url": "https://hubpower.com/wp-content/uploads/2024/11/HPHL-x-PSO-Press-Release.pdf",
      "evidence": {
       "source_url": "https://hubpower.com/wp-content/uploads/2024/11/HPHL-x-PSO-Press-Release.pdf"
-     }
-    },
-    {
-     "id": "chg_61e40bac834970bc20f7b102",
-     "kind": "document",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "retrieved_at",
-     "title": "Download Press Release",
-     "summary": "Official Issuer website document retained as other.",
-     "document_id": "issuer:1b5e17ebde661e894f05f467",
-     "source_url": "https://hubpower.com/wp-content/uploads/2023/02/HUBCO-ThalNova-COD.pdf",
-     "evidence": {
-      "source_url": "https://hubpower.com/wp-content/uploads/2023/02/HUBCO-ThalNova-COD.pdf"
      }
     }
    ]
@@ -2811,13 +2807,27 @@
   "MARI": {
    "ticker": "MARI",
    "status": "active",
-   "latest_change_at": "2026-08-27",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "document": 11,
+    "document": 12,
     "issuer_document": 3,
-    "event": 4
+    "event": 3
    },
    "items": [
+    {
+     "id": "chg_b296e40378e65e8294d62dbd",
+     "kind": "document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "published_at",
+     "title": "Material Information",
+     "summary": "Official PSX DPS document retained as other.",
+     "document_id": "psx:282421",
+     "source_url": "https://dps.psx.com.pk/download/document/282421.pdf",
+     "evidence": {
+      "source_url": "https://dps.psx.com.pk/download/document/282421.pdf"
+     }
+    },
     {
      "id": "chg_9d19272e419ee22720dfc934",
      "kind": "document",
@@ -3064,22 +3074,6 @@
       "text": "tained. d) There are no significant doubts regarding the company’s ability to continue as going concern. Mari Petroleum Company Limited Annual Integrated Report 2024 256 257"
      },
      "priority_weight": 5
-    },
-    {
-     "id": "chg_b160d278dc851fa91f6c85a2",
-     "kind": "event",
-     "severity": "material",
-     "date": "",
-     "title": "rating change",
-     "summary": "Official document language matched the desk's event classifier.",
-     "document_id": "issuer:6735e9d35ffb61088d139964",
-     "source_url": "https://www.marienergies.com.pk/wp-content/uploads/2025/09/Annual-Report-2024.pdf",
-     "evidence": {
-      "source_url": "https://www.marienergies.com.pk/wp-content/uploads/2025/09/Annual-Report-2024.pdf",
-      "page": 52,
-      "text": "es which demand a steady increase in MSPC’s computation capabilities, the system has been upgraded from 96 cores to 1024 cores for time, depth and parallel processing simultaneously. Advanced processing modules coupled with increase in com…"
-     },
-     "priority_weight": 3
     }
    ]
   },
@@ -3905,259 +3899,306 @@
   "NRL": {
    "ticker": "NRL",
    "status": "active",
-   "latest_change_at": "2026-08-27",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "document": 9,
-    "issuer_document": 2,
-    "source": 1,
-    "event": 4
+    "issuer_document": 18
    },
    "items": [
     {
-     "id": "chg_e1464fecbd169186a197f8af",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2026-08-27",
-     "date_basis": "published_at",
-     "title": "Financial Results for the Year Ended June 30, 2026",
-     "summary": "Official PSX DPS document retained as results.",
-     "document_id": "psx:281715",
-     "source_url": "https://dps.psx.com.pk/download/document/281715.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/281715.pdf"
-     }
-    },
-    {
-     "id": "chg_ff6bad34cc75d874feec1c31",
+     "id": "chg_fc8346165135a2564f97c696",
      "kind": "issuer_document",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "first_seen_at",
-     "title": "cbs_2024-25-nrl.pdf",
-     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "document_id": "issuer:2ad2ec12df87dae68e766b04",
-     "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-     "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf"
-     },
-     "source_page": "https://www.nrlpak.com/CorporateBriefingSession.aspx"
-    },
-    {
-     "id": "chg_e7d8d8552809f6b00f9751bd",
-     "kind": "source",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "last_changed_at",
-     "title": "Issuer website",
-     "summary": "Same-domain issuer page hash changed since the previous retained check.",
-     "source_url": "https://www.nrlpak.com/",
-     "evidence": {
-      "source_url": "https://www.nrlpak.com/"
-     },
-     "source_kind": "issuer_home"
-    },
-    {
-     "id": "chg_a4a614df9471b973413e438a",
-     "kind": "issuer_document",
-     "severity": "watch",
-     "date": "2026-08-18",
-     "date_basis": "first_seen_at",
-     "title": "GENDER DIVERSITY POLICY",
-     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "document_id": "issuer:0e296697ff574423e7805454",
-     "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf",
-     "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf"
-     },
-     "source_page": "https://www.nrlpak.com/CorporateBriefingSession.aspx"
-    },
-    {
-     "id": "chg_6a844fef65a405cc784bbd5a",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2026-08-18",
-     "date_basis": "retrieved_at",
-     "title": "GENDER DIVERSITY POLICY",
-     "summary": "Official Issuer website document retained as board_meeting.",
-     "document_id": "issuer:0e296697ff574423e7805454",
-     "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf",
-     "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/Gender_Diversity_Policy_2021-Website.pdf"
-     }
-    },
-    {
-     "id": "chg_5c219ea1aad796b57a891a26",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2026-08-18",
-     "date_basis": "retrieved_at",
-     "title": "cbs_2024-25-nrl.pdf",
-     "summary": "Official Issuer website document retained as results.",
-     "document_id": "issuer:2ad2ec12df87dae68e766b04",
-     "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-     "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf"
-     }
-    },
-    {
-     "id": "chg_c4e381b9b96460490b93b2f2",
-     "kind": "document",
-     "severity": "watch",
-     "date": "2026-07-30",
-     "date_basis": "published_at",
-     "title": "Material Information - Issuance of Sukuk - PKR 10,000,000,000/-",
-     "summary": "Official PSX DPS document retained as other.",
-     "document_id": "psx:280546",
-     "source_url": "https://dps.psx.com.pk/download/document/280546.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/280546.pdf"
-     }
-    },
-    {
-     "id": "chg_6dad3b6124dd2793ffd16ee3",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2026-06-11",
-     "date_basis": "published_at",
-     "title": "Board Meeting Other Than Financial Results",
-     "summary": "Official PSX DPS document retained as results.",
-     "document_id": "psx:278442",
-     "source_url": "https://dps.psx.com.pk/download/document/278442.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/278442.pdf"
-     }
-    },
-    {
-     "id": "chg_888260d48293d5111dbb80db",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2026-04-29",
-     "date_basis": "published_at",
-     "title": "Financial Results for the Quarter Ended March 31, 2026",
-     "summary": "Official PSX DPS document retained as results.",
-     "document_id": "psx:275684",
-     "source_url": "https://dps.psx.com.pk/download/document/275684.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/275684.pdf"
-     }
-    },
-    {
-     "id": "chg_4edabfe600d2ee5300e1d1c0",
-     "kind": "event",
-     "severity": "routine",
-     "date": "2026-04-29",
-     "title": "earnings",
-     "summary": "Official document language matched the desk's event classifier.",
-     "document_id": "psx:275684",
-     "source_url": "https://dps.psx.com.pk/download/document/275684.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/275684.pdf",
-      "page": 4,
-      "text": "ARCH 31, 2026 (UNAUDITED) 0 March 31, March 31, March 31, March 31, 0 2026 2025 2026 2025 Profit / (loss) after taxation 7,301,836 (2,757,335) 9,067,098 (14,490,240) Other comprehensive income - - - - Deferred tax thereon - - - - Total com…"
-     },
-     "priority_weight": 3
-    },
-    {
-     "id": "chg_468d6af0b8fc46c05fc120c0",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2026-02-24",
-     "date_basis": "published_at",
-     "title": "Financial Results for the Half Year Ended December 31, 2025",
-     "summary": "Official PSX DPS document retained as results.",
-     "document_id": "psx:270903",
-     "source_url": "https://dps.psx.com.pk/download/document/270903.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/270903.pdf"
-     }
-    },
-    {
-     "id": "chg_451d24f4b0ec8df9e54d19bd",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2025-10-28",
-     "date_basis": "published_at",
-     "title": "Financial Results for the Quarter Ended September 30, 2025",
-     "summary": "Official PSX DPS document retained as results.",
-     "document_id": "psx:263656",
-     "source_url": "https://dps.psx.com.pk/download/document/263656.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/263656.pdf"
-     }
-    },
-    {
-     "id": "chg_ff3cf5a5c66061ded818630f",
-     "kind": "document",
-     "severity": "routine",
-     "date": "2025-08-11",
-     "date_basis": "published_at",
-     "title": "Financial Results for the Year Ended June 30, 2025",
-     "summary": "Official PSX DPS document retained as results.",
-     "document_id": "psx:257579",
-     "source_url": "https://dps.psx.com.pk/download/document/257579.pdf",
-     "evidence": {
-      "source_url": "https://dps.psx.com.pk/download/document/257579.pdf"
-     }
-    },
-    {
-     "id": "chg_134ea449c10d315386fa556c",
-     "kind": "event",
      "severity": "material",
-     "date": "",
-     "title": "rating change",
-     "summary": "Official document language matched the desk's event classifier.",
-     "document_id": "issuer:2ad2ec12df87dae68e766b04",
-     "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2012.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:d39b1c22c9eef96aff653be7",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2011-12/annual_report_2012.pdf",
      "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-      "page": 2,
-      "text": "ited (25%) Attock Refinery Limited (25%) Islamic Development Bank (15%). The Long term credit rating of the Company is AA. Accreditations include: Certifications of ISO 14001:2015, 45001:2018 and 9001:2015. COMPANY OVERVIEW 2"
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2011-12/annual_report_2012.pdf"
      },
-     "priority_weight": 3
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
     },
     {
-     "id": "chg_e4ee324d4c27283194385a56",
-     "kind": "event",
-     "severity": "routine",
-     "date": "",
-     "title": "earnings",
-     "summary": "Official document language matched the desk's event classifier.",
-     "document_id": "issuer:2ad2ec12df87dae68e766b04",
-     "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
+     "id": "chg_ed62d01b444c0424744dc49a",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2013.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:5b49329e54dd1cddedba7398",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2012-13/annual_report_2013.pdf",
      "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-      "page": 5,
-      "text": ") 8,428 16,196 (7,768) 9,310 (15,790) Gross Refinery Margins Manufacturing Expenses Gross loss Finance Cost Loss after tax Rs. in million"
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2012-13/annual_report_2013.pdf"
      },
-     "priority_weight": 3
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
     },
     {
-     "id": "chg_287f8f26e2b162338a67b386",
-     "kind": "event",
-     "severity": "routine",
-     "date": "",
-     "title": "briefing",
-     "summary": "Official document language matched the desk's event classifier.",
-     "document_id": "issuer:2ad2ec12df87dae68e766b04",
-     "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
+     "id": "chg_eb7f67618168be69bc9d59bd",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "nrl_annual_report_2016.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:55a882ce013ebfd7ed079d71",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2015-16/NRL_ANNUAL_REPORT_2016.pdf",
      "evidence": {
-      "source_url": "https://www.nrlpak.com/pdf/CBS_2024-25-NRL.pdf",
-      "page": 1,
-      "text": "NATIONAL REFINERY LIMITED October 30, 2025 CORPORATE BRIEFING SESSION 2025"
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2015-16/NRL_ANNUAL_REPORT_2016.pdf"
      },
-     "priority_weight": 3
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_dab9b64a0453a6c6b9c110a1",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "nrl_annual_report_2021_final_low_(2)_company_website.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:a1c127162cc9280a9b167544",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2020-21/NRL_ANNUAL_REPORT_2021_Final_Low_(2)_Company_Website.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2020-21/NRL_ANNUAL_REPORT_2021_Final_Low_(2)_Company_Website.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_cb7c491fb8eb507c135fdb7a",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annualreport2026.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:fc5bf70a2219fd0639a66dbb",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2025-26/AnnualReport2026.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2025-26/AnnualReport2026.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_becd53246738cbb1da548857",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2009.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:dcca2e5057eaac5caf680305",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2008-09/annual_report_2009.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2008-09/annual_report_2009.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_add2619edd08140e3637c4c7",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "nrl_annualrreport_2023-24_audited.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:c3a6275292e89e8400f802f2",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2023-24/NRL_AnnualRreport_2023-24_Audited.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2023-24/NRL_AnnualRreport_2023-24_Audited.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_a1fed6563f01ed6c34d59109",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2011.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:1649b9e3149f97049f5ea451",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2010-11/annual_report_2011.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2010-11/annual_report_2011.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_9e5701e2205e0c88385193b9",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2015.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:dcbec749920db622c16bcdef",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2014-15/annual_report_2015.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2014-15/annual_report_2015.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_98bc9a5554b3d6d4fc9df3a8",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2014.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:219a1434e66fb66a8ec58155",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2013-14/annual_report_2014.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2013-14/annual_report_2014.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_7dedad1d17d0c15344c66f1b",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "nrl_annualreport_2025.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:6539273b196fc7d8bf2f7dca",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2024-25/NRL_AnnualReport_2025.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2024-25/NRL_AnnualReport_2025.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_6bf11f0445c075ba28815794",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "national_refinery_limited_annual_report_2018_final.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:2e6221cfbabe1e3cb4a905e7",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2017-18/National_Refinery_Limited_Annual_Report_2018_final.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2017-18/National_Refinery_Limited_Annual_Report_2018_final.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_52c8dbcbbc2ebeba2d0c4f7f",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "nrl_annual_report_2023.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:ac2abd5ebae0607ee17013c4",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2022-23/NRL_Annual_Report_2023.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2022-23/NRL_Annual_Report_2023.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_1f9b76e5b90c004b318b9fdd",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "nrl_annual_reoprt_2019_high-final.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:4957d23680934a9d1724f100",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2018-19/NRL_Annual_Reoprt_2019_High-FINAL.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2018-19/NRL_Annual_Reoprt_2019_High-FINAL.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_04bfa0f42ecb84204a1ef7a8",
+     "kind": "issuer_document",
+     "severity": "material",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "annual_report_2010.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:9e81b34b13144183a59fb44a",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2009-10/annual_report_2010.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2009-10/annual_report_2010.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_ffe11a84ac0e78ec6ef98893",
+     "kind": "issuer_document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "fs_september_30_2025.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:229bfcc2116f8a8bc9f69044",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2025-26/FS_September_30_2025.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2025-26/FS_September_30_2025.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_fcf3e077ca2620fde118e21c",
+     "kind": "issuer_document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "2nd_quarter_december_2020_02-02-2021-final.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:9d127a46cb7d566fbf7ed0f6",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2020-21/2nd_Quarter_December_2020_02-02-2021-Final.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2020-21/2nd_Quarter_December_2020_02-02-2021-Final.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
+    },
+    {
+     "id": "chg_ed117f953f00a4980b35ce0b",
+     "kind": "issuer_document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "first_seen_at",
+     "title": "2nd_quarter_24-2025_final.pdf",
+     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
+     "document_id": "issuer:2f0cf44f20097b756ba5b621",
+     "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2024-25/2nd_Quarter_24-2025_FINAL.pdf",
+     "evidence": {
+      "source_url": "https://www.nrlpak.com/pdf/FinancialReport/2024-25/2nd_Quarter_24-2025_FINAL.pdf"
+     },
+     "source_page": "https://www.nrlpak.com/FinancialReports.aspx"
     }
    ]
   },
   "OGDC": {
    "ticker": "OGDC",
    "status": "active",
-   "latest_change_at": "2026-09-04",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "event": 10,
-    "document": 7
+    "document": 8,
+    "event": 10
    },
    "items": [
+    {
+     "id": "chg_1c9de16a81182f7bbac51691",
+     "kind": "document",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "published_at",
+     "title": "Material Information",
+     "summary": "Official PSX DPS document retained as regulatory.",
+     "document_id": "psx:282420",
+     "source_url": "https://dps.psx.com.pk/download/document/282420.pdf",
+     "evidence": {
+      "source_url": "https://dps.psx.com.pk/download/document/282420.pdf"
+     }
+    },
     {
      "id": "chg_cd6161e1b77e56e3699403f2",
      "kind": "event",
@@ -4984,11 +5025,26 @@
   "PSO": {
    "ticker": "PSO",
    "status": "active",
-   "latest_change_at": "2026-09-08",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "issuer_document": 18
+    "source": 1,
+    "issuer_document": 17
    },
    "items": [
+    {
+     "id": "chg_46a6f040245d0357f3f506a1",
+     "kind": "source",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "last_changed_at",
+     "title": "Financials",
+     "summary": "Same-domain issuer page hash changed since the previous retained check.",
+     "source_url": "https://psopk.com/en/investors/financial",
+     "evidence": {
+      "source_url": "https://psopk.com/en/investors/financial"
+     },
+     "source_kind": "financial_reports"
+    },
     {
      "id": "chg_f87fc7e25de0875dc553e136",
      "kind": "issuer_document",
@@ -5241,21 +5297,6 @@
      "source_url": "https://psopk.com/source/financials/2026/Q1-FY26.pdf",
      "evidence": {
       "source_url": "https://psopk.com/source/financials/2026/Q1-FY26.pdf"
-     },
-     "source_page": "https://psopk.com/en/investors/financial"
-    },
-    {
-     "id": "chg_f113dfdf9fa1287295ef8407",
-     "kind": "issuer_document",
-     "severity": "watch",
-     "date": "2026-09-08",
-     "date_basis": "first_seen_at",
-     "title": "1st Quarterly Report 2020",
-     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "document_id": "issuer:00e0df3a3542ec590e3125ef",
-     "source_url": "https://psopk.com/files/financial-reports/quarterly-reports/2020/PSO%20First%20Quarter%20Report%20Oct%202019.pdf",
-     "evidence": {
-      "source_url": "https://psopk.com/files/financial-reports/quarterly-reports/2020/PSO%20First%20Quarter%20Report%20Oct%202019.pdf"
      },
      "source_page": "https://psopk.com/en/investors/financial"
     }
@@ -5526,11 +5567,26 @@
   "UBL": {
    "ticker": "UBL",
    "status": "active",
-   "latest_change_at": "2026-09-08",
+   "latest_change_at": "2026-09-09",
    "counts": {
-    "issuer_document": 18
+    "source": 1,
+    "issuer_document": 17
    },
    "items": [
+    {
+     "id": "chg_b0b23cb56bf34d28f9d174e2",
+     "kind": "source",
+     "severity": "watch",
+     "date": "2026-09-09",
+     "date_basis": "last_changed_at",
+     "title": "National Financial Literacy Program",
+     "summary": "Same-domain issuer page hash changed since the previous retained check.",
+     "source_url": "https://ubldigital.com/Banking/National-Financial-Literacy-Program",
+     "evidence": {
+      "source_url": "https://ubldigital.com/Banking/National-Financial-Literacy-Program"
+     },
+     "source_kind": "financial_reports"
+    },
     {
      "id": "chg_eca49649af4844bf3a82f539",
      "kind": "issuer_document",
@@ -5785,34 +5841,19 @@
       "source_url": "https://ubldigital.com/portals/0/pdf/List-of-Selected-Branches.pdf"
      },
      "source_page": "https://ubldigital.com/Banking/National-Financial-Literacy-Program"
-    },
-    {
-     "id": "chg_2a9e774b257c2b040cf31225",
-     "kind": "issuer_document",
-     "severity": "watch",
-     "date": "2026-09-08",
-     "date_basis": "first_seen_at",
-     "title": "Guidelines for Business Conduct for Banks",
-     "summary": "Same-domain issuer PDF link discovered from the monitored issuer website.",
-     "document_id": "issuer:69cd9fefe91874a78b4e4005",
-     "source_url": "https://ubldigital.com/portals/0/Pdf/Guidelines-for-Business-Conduct-for-Banks.pdf",
-     "evidence": {
-      "source_url": "https://ubldigital.com/portals/0/Pdf/Guidelines-for-Business-Conduct-for-Banks.pdf"
-     },
-     "source_page": "https://ubldigital.com/Banking/National-Financial-Literacy-Program"
     }
    ]
   }
  },
  "_meta": {
-  "updated": "2026-09-08 04:35",
+  "updated": "2026-09-09 07:37",
   "company_count": 22,
-  "item_count": 376,
+  "item_count": 379,
   "note": "Deterministic official-source change digest. Research, not advice.",
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "0d772f1549aea92fe05cf3615300df1157009afa",
-  "build_cutoff_at": "2026-09-08T13:58:03Z",
-  "generated_at": "2026-09-08T13:58:03Z",
+  "source_commit_sha": "b304c8949358273e74fa591b92c6b2711b07ed02",
+  "build_cutoff_at": "2026-09-09T07:46:29Z",
+  "generated_at": "2026-09-09T07:46:29Z",
   "artifact_path": "state/company_intel/change_intelligence.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

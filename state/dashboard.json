@@ -1,13 +1,13 @@
 {
- "updated": "2026-09-08 18:52",
+ "updated": "2026-09-09 07:45",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 60,
+  "score": 61,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260908-TPLT-adx_trend_long",
+   "id": "20260909-TPLT-adx_trend_long",
    "ticker": "TPLT",
    "strategy": "adx_trend_long",
    "template": "ADX strong uptrend",
@@ -25,7 +25,7 @@
    "thesis": "ADX strong uptrend is triggering now; on TPLT's own history it won 58% over 31 trades (+1.8% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260908-NICL-vol_dryup_surge",
+   "id": "20260909-NICL-vol_dryup_surge",
    "ticker": "NICL",
    "strategy": "vol_dryup_surge",
    "template": "Dry-up then surge",
@@ -43,7 +43,7 @@
    "thesis": "Dry-up then surge is triggering now; on NICL's own history it won 65% over 17 trades (+1.0% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260908-MUREB-lowvol_pullback",
+   "id": "20260909-MUREB-lowvol_pullback",
    "ticker": "MUREB",
    "strategy": "lowvol_pullback",
    "template": "Low-volatility pullback",
@@ -61,7 +61,7 @@
    "thesis": "Low-volatility pullback is triggering now; on MUREB's own history it won 67% over 18 trades (+0.8% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260908-IPAK-rs_leader",
+   "id": "20260909-IPAK-rs_leader",
    "ticker": "IPAK",
    "strategy": "rs_leader",
    "template": "Relative-strength leader",
@@ -110,16 +110,16 @@
    "score": 65.5
   },
   {
+   "ticker": "EFA",
+   "score": 64.7
+  },
+  {
    "ticker": "USDJI",
    "score": 64.7
   },
   {
    "ticker": "FHAM",
    "score": 64.5
-  },
-  {
-   "ticker": "EFA",
-   "score": 64.3
   }
  ],
  "movers_up": [
@@ -379,18 +379,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-09-04T17:15:00+05:00",
-   "mode": "full",
-   "ended": "2026-09-04T17:38:00+05:00",
-   "outcome": "regime risk-off (unchanged), geo-risk 62/100 moderate, daily-read: 'PSX strings together a second green session as global fear eases, but hot inflation keeps SBP on hold and today's live breakout signals sit in small, fundamentally shaky names' (tone cautious), pushed"
-  },
-  {
-   "started": "2026-09-04T18:00:00+05:00",
-   "mode": "room",
-   "ended": "2026-09-04T19:05:00+05:00",
-   "outcome": "Desk Room: 2 full debates (MCB, HBL) via gate run_full_now, 0 delta, 5 reaffirm (FFC/OGDC/BOP/CNERGY/UNITY); QA gate both flagged/medium (MCB: div-yield rolling-4Q vs trailing-365d, 3-of-4 vs 4-of-4 valuation methods; HBL: div-yield 7.58% vs 5.41% trailing-365d realized), no content fix applied per medium-severity rule; room_score 693 claims/149 resolved, 0 new persona/broker hits; i18n merged 26/26 Urdu fields (pillars arrays skipped, token discipline); preflight OK (WARN: degraded health, 102 backfilling tickers); published, pushed to main"
-  },
-  {
    "started": "2026-09-07T17:15:00+05:00",
    "mode": "full",
    "ended": "2026-09-07T17:20:00+05:00",
@@ -407,6 +395,18 @@
    "mode": "room",
    "ended": "2026-09-07T17:47:00+05:00",
    "outcome": "Desk Room loop blocked at step 1: repo still carries the unresolved autostash-pop conflict from an earlier session (~109 files under state/company_intel/, state/history/, state/dashboard.json, state/verify.json etc still hold literal <<<<<<< Updated upstream / ======= / >>>>>>> Stashed changes markers; stash@{0} labeled autostash still present, never dropped). Same corruption already logged in the entry above at 17:20-17:40 PKT, still unresolved. Did not run git pull --rebase --autostash (would compound the conflict), did not touch room_dossier.py/room_queue.py/room_gate.py or any script that reads the corrupted JSON, did not commit or push. No agents spawned, zero tokens spent on debate. Needs the owner to manually resolve the stash conflict (git status shows the file list) and drop stash@{0} before any cycle can run again."
+  },
+  {
+   "started": "2026-09-08T17:00:00+05:00",
+   "mode": "light-escalated",
+   "ended": "2026-09-08T18:49:00+05:00",
+   "outcome": "PM checkpoint (weekday close). Gate required (40 pending items + first_of_day). health ok. No open positions, monitor skipped. news-sentinel appended 2 items (265 total) -- KSE-100 confirmed close 172,642.16 -993.91pts/-0.57%, 4th straight losing session tied to US-Iran/Hormuz conflict (impact 3); OGDC FY26 record net profit Rs242.374bn +43% YoY, EPS Rs56.35, record dividend Rs17/share (impact 4) -> escalation.json fired. macro-agent ran: regime risk-off (unchanged, deepened) -- Iran finalizing Hormuz exclusion zone, Brent ~$99 7wk high, CPI 11.1% Aug, SBP MPC Sep14 hold expected, reserves $17.12bn unchanged; caught and discarded a misattributed '$297mn Aug C/A surplus' claim (real source was Aug 2020) to prevent propagation; sector tilt banks-on-govt-paper favoured, OMCs/autos/cement/power-IPPs/cyclicals avoid. market-analyst FIRST attempt failed mid-escalation on a session-wide rate limit (HTTP 429, resets 18:30 PKT) -- daily_read.json left stale through that gap; RETRIED after reset, succeeded: daily_read.json refreshed, tone cautious, banks sole favoured sector, 4-name watchlist (MUREB/NICL/IPAK/TPLT) each tied to a live dashboard trigger but flagged with an explicit fundamental caution (none rate 'attractive'), OGDC's strong result reported as fact not a buy case since the tape sold it off anyway, UNITY excluded per standing SECP/FIA fraud-probe precedent. build_dashboard+preflight OK (1 non-gating WARN: 102 backfilling tickers). Published data-only (47 pre-existing hand-authored/untracked files held back, not this session's), pushed to main -> Vercel deploying. Gate acked checkpoint-pm."
+  },
+  {
+   "started": "2026-09-08T13:30:00+05:00",
+   "mode": "full",
+   "ended": "2026-09-08T18:56:24+05:00",
+   "outcome": "regime risk-off, geo-risk 60 (moderate), daily read: defensive 4th down session on Hormuz oil shock/thin reserves, banks+E&P favoured; pushed to main"
   }
  ]
 }
