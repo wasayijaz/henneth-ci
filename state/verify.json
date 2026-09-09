@@ -166,6 +166,14 @@
    "msg": "methods disagree 3.1x — treat composite as a rough screen"
   }
  ],
+ "HMB": [
+  {
+   "sev": "medium",
+   "field": "fundamentals.div_yield",
+   "msg": "stated div_yield 12% vs 7.51% implied by trailing-365d dividends (Rs 7.50/share at close Rs 99.85) — 37% off",
+   "escalate": true
+  }
+ ],
  "ATRL": [
   {
    "sev": "low",
@@ -176,14 +184,6 @@
    "sev": "medium",
    "field": "fundamentals.div_yield",
    "msg": "stated div_yield 1.53% vs 0.46% implied by trailing-365d dividends (Rs 5.00/share at close Rs 1089.93) — 70% off",
-   "escalate": true
-  }
- ],
- "HMB": [
-  {
-   "sev": "medium",
-   "field": "fundamentals.div_yield",
-   "msg": "stated div_yield 12% vs 7.51% implied by trailing-365d dividends (Rs 7.50/share at close Rs 99.85) — 37% off",
    "escalate": true
   }
  ],
@@ -337,19 +337,19 @@
    "escalate": true
   }
  ],
+ "LCI": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 4.0x — treat composite as a rough screen"
+  }
+ ],
  "GLAXO": [
   {
    "sev": "medium",
    "field": "fundamentals.div_yield",
    "msg": "stated div_yield 5.26% vs 7.63% implied by trailing-365d dividends (Rs 24.00/share at close Rs 314.64) — 45% off",
    "escalate": true
-  }
- ],
- "LCI": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 4.0x — treat composite as a rough screen"
   }
  ],
  "AICL": [
@@ -394,19 +394,19 @@
    "msg": "a Topline call was priced at 39.34 vs session price 44.38"
   }
  ],
- "CNERGY": [
-  {
-   "sev": "low",
-   "field": "price_series",
-   "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
-  }
- ],
  "APL": [
   {
    "sev": "medium",
    "field": "fundamentals.div_yield",
    "msg": "stated div_yield 10.31% vs 2.26% implied by trailing-365d dividends (Rs 13.00/share at close Rs 575.2) — 78% off",
    "escalate": true
+  }
+ ],
+ "CNERGY": [
+  {
+   "sev": "low",
+   "field": "price_series",
+   "msg": "1 old (pre-decade) price glitch(es) — affects only long-run stats"
   }
  ],
  "GHNI": [
@@ -704,13 +704,6 @@
    "msg": "methods disagree 11.8x — treat composite as a rough screen"
   }
  ],
- "AKDSL": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 5.3x — treat composite as a rough screen"
-  }
- ],
  "GWLC": [
   {
    "sev": "low",
@@ -735,6 +728,13 @@
    "field": "fundamentals.div_yield",
    "msg": "stated div_yield 5.26% vs 2.68% implied by trailing-365d dividends (Rs 1.50/share at close Rs 55.99) — 49% off",
    "escalate": true
+  }
+ ],
+ "AKDSL": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 5.3x — treat composite as a rough screen"
   }
  ],
  "FCL": [
@@ -778,13 +778,6 @@
    "field": "fundamentals.div_yield",
    "msg": "stated div_yield 9.27% vs 7.48% implied by trailing-365d dividends (Rs 10.00/share at close Rs 133.75) — 19% off",
    "escalate": true
-  }
- ],
- "TATM": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 10.6x — treat composite as a rough screen"
   }
  ],
  "CSAP": [
@@ -838,6 +831,13 @@
    "escalate": true
   }
  ],
+ "TATM": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 10.6x — treat composite as a rough screen"
+  }
+ ],
  "BIFO": [
   {
    "sev": "medium",
@@ -880,13 +880,6 @@
    "escalate": true
   }
  ],
- "BERG": [
-  {
-   "sev": "low",
-   "field": "fairvalue.spread",
-   "msg": "methods disagree 3.3x — treat composite as a rough screen"
-  }
- ],
  "LSEVL": [
   {
    "sev": "high",
@@ -899,6 +892,13 @@
    "field": "fundamentals.div_yield",
    "msg": "stated div_yield 3.9% vs 8.32% implied by trailing-365d dividends (Rs 1.00/share at close Rs 12.02) — 113% off",
    "escalate": true
+  }
+ ],
+ "BERG": [
+  {
+   "sev": "low",
+   "field": "fairvalue.spread",
+   "msg": "methods disagree 3.3x — treat composite as a rough screen"
   }
  ],
  "MACFL": [
@@ -983,7 +983,7 @@
   }
  ],
  "_meta": {
-  "built": "2026-09-09 07:44",
+  "built": "2026-09-09 08:27",
   "tickers_with_issues": 106,
   "high_severity": 4,
   "escalate_to_agent": [
