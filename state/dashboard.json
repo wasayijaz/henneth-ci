@@ -1,46 +1,64 @@
 {
- "updated": "2026-09-09 08:28",
+ "updated": "2026-09-09 13:10",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 60,
+  "score": 63,
   "band": "moderate"
  },
  "signals": [
   {
-   "id": "20260909-TPLT-adx_trend_long",
-   "ticker": "TPLT",
-   "strategy": "adx_trend_long",
-   "template": "ADX strong uptrend",
-   "category": "trend",
-   "sector": "Technology & Communication",
-   "hold_sessions": 15,
-   "backtest": {
-    "hit_rate": 0.581,
-    "net_expectancy_pct": 1.76,
-    "n": 31,
-    "oos_hit": 0.625
-   },
-   "confidence": "medium",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "ADX strong uptrend is triggering now; on TPLT's own history it won 58% over 31 trades (+1.8% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260909-NICL-vol_dryup_surge",
+   "id": "20260909-NICL-donchian55_break",
    "ticker": "NICL",
-   "strategy": "vol_dryup_surge",
-   "template": "Dry-up then surge",
-   "category": "volume",
+   "strategy": "donchian55_break",
+   "template": "Donchian 55 breakout (turtle)",
+   "category": "breakout",
    "sector": "Chemical",
-   "hold_sessions": 9,
+   "hold_sessions": 25,
    "backtest": {
-    "hit_rate": 0.647,
-    "net_expectancy_pct": 0.99,
-    "n": 17,
-    "oos_hit": 0.75
+    "hit_rate": 0.636,
+    "net_expectancy_pct": 2.28,
+    "n": 11,
+    "oos_hit": 0.571
    },
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
-   "thesis": "Dry-up then surge is triggering now; on NICL's own history it won 65% over 17 trades (+1.0% net/trade), still profitable out-of-sample."
+   "thesis": "Donchian 55 breakout (turtle) is triggering now; on NICL's own history it won 64% over 11 trades (+2.3% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260909-IPAK-rs_leader",
+   "ticker": "IPAK",
+   "strategy": "rs_leader",
+   "template": "Relative-strength leader",
+   "category": "momentum",
+   "sector": "Paper, Board & Packaging",
+   "hold_sessions": 12,
+   "backtest": {
+    "hit_rate": 0.636,
+    "net_expectancy_pct": 0.94,
+    "n": 11,
+    "oos_hit": 0.636
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Relative-strength leader is triggering now; on IPAK's own history it won 64% over 11 trades (+0.9% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260909-THCCL-gap_up_hold",
+   "ticker": "THCCL",
+   "strategy": "gap_up_hold",
+   "template": "Gap-up hold",
+   "category": "momentum",
+   "sector": "Cement",
+   "hold_sessions": 6,
+   "backtest": {
+    "hit_rate": 0.579,
+    "net_expectancy_pct": 0.97,
+    "n": 19,
+    "oos_hit": 0.533
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Gap-up hold is triggering now; on THCCL's own history it won 58% over 19 trades (+1.0% net/trade), still profitable out-of-sample."
   },
   {
    "id": "20260909-MUREB-lowvol_pullback",
@@ -59,24 +77,6 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "Low-volatility pullback is triggering now; on MUREB's own history it won 67% over 18 trades (+0.8% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260909-IPAK-rs_leader",
-   "ticker": "IPAK",
-   "strategy": "rs_leader",
-   "template": "Relative-strength leader",
-   "category": "momentum",
-   "sector": "Paper, Board & Packaging",
-   "hold_sessions": 12,
-   "backtest": {
-    "hit_rate": 0.6,
-    "net_expectancy_pct": 0.76,
-    "n": 10,
-    "oos_hit": 0.6
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Relative-strength leader is triggering now; on IPAK's own history it won 60% over 10 trades (+0.8% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -124,56 +124,56 @@
  ],
  "movers_up": [
   {
-   "ticker": "PIM",
+   "ticker": "CLCPS",
+   "ret_1d": 19.0,
+   "close": 3.82
+  },
+  {
+   "ticker": "CHBL",
+   "ret_1d": 11.21,
+   "close": 9.92
+  },
+  {
+   "ticker": "SHCM",
    "ret_1d": 10.01,
-   "close": 56.6
+   "close": 55.07
   },
   {
    "ticker": "PSEL",
    "ret_1d": 10.0,
-   "close": 980.23
+   "close": 1078.25
   },
   {
-   "ticker": "SHEZ",
-   "ret_1d": 9.61,
-   "close": 268.54
-  },
-  {
-   "ticker": "EMCO",
-   "ret_1d": 8.88,
-   "close": 43.91
-  },
-  {
-   "ticker": "ASL",
-   "ret_1d": 7.78,
-   "close": 17.32
+   "ticker": "POWERPS",
+   "ret_1d": 10.0,
+   "close": 28.27
   }
  ],
  "movers_down": [
   {
-   "ticker": "BCL",
-   "ret_1d": -9.79,
-   "close": 70.95
-  },
-  {
-   "ticker": "CLVL",
-   "ret_1d": -9.99,
-   "close": 46.02
-  },
-  {
-   "ticker": "FPJM",
-   "ret_1d": -9.99,
-   "close": 20.63
+   "ticker": "TOWL",
+   "ret_1d": -10.0,
+   "close": 180.31
   },
   {
    "ticker": "ASTM",
    "ret_1d": -10.0,
-   "close": 112.63
+   "close": 101.37
   },
   {
-   "ticker": "DIIL",
+   "ticker": "BUXL",
    "ret_1d": -10.0,
-   "close": 76.29
+   "close": 1030.35
+  },
+  {
+   "ticker": "LEUL",
+   "ret_1d": -10.0,
+   "close": 80.38
+  },
+  {
+   "ticker": "FTSM",
+   "ret_1d": -10.03,
+   "close": 38.86
   }
  ],
  "news": [
