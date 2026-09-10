@@ -20,9 +20,10 @@ COMPUTER OFF — GitHub Actions cloud cron  (.github/workflows/desk-data.yml)   
     + Desk Room DETERMINISTIC scaffolding (dossiers · queue · gate · scoring)
   → publish.py → push → Vercel deploy → watchdog
 
-COMPUTER ON — app scheduled tasks (Claude app, ~/.claude/scheduled-tasks/)     tokens, owner present
+COMPUTER ON — Codex scheduled tasks (legacy runbooks in ~/.claude/scheduled-tasks/)  tokens, owner present
   the JUDGEMENT/agent work: news-sentinel · monitor · macro · daily read
-  · the Desk Room DEBATES (chartist/fundamentalist/bull/bear/chair) · weekly broker harvest
+  · the Desk Room DEBATES (chartist/fundamentalist/debate/verifier; no named-ticker chair)
+  · weekly broker harvest (sector chair only)
   → publish.py → push → Vercel deploy → watchdog
 
 ALWAYS — every visitor sees the full SAVED analysis 24/7 (debates, TA/FA, 52 backtests, scores),
@@ -255,17 +256,35 @@ into preflight and must be updated with any future change to that boundary.
 
 ---
 
-## 2. The ONE publish path — never hand-push state
+## 2. The Desk repository publish path — never hand-push state
 
 **Always publish with `python scripts/publish.py "<message>"`. Never `git push` state files by hand.**
 
-`publish.py` is the shared choke point every loop and the cloud use. It:
-1. runs `preflight.py` (the pre-deploy gate) — **if it fails, nothing publishes**, last-good site stays live;
-2. stages **`state/` only**, and commits only if something actually changed (a no-op otherwise);
-3. pushes **race-safely** — the cloud cron and app loops both push to `main`, so on a rejected
+`publish.py` is the shared repository commit/push path used by the Henneth Desk loops and local
+marketing-site work. It:
+1. acquires one OS-backed repository push lock in Git's common directory, shared by every local sibling
+   worktree. Research and site preparation may run concurrently, but only one local preflight/commit/push
+   transaction can run at a time. It waits for up to five minutes, then fails loudly and leaves the
+   prepared worktree intact. A crash releases the OS lock automatically;
+2. runs `preflight.py` (the pre-deploy gate) — **if it fails, nothing publishes**, last-good site stays live;
+3. stages **`state/` only**, and commits only if something actually changed (a no-op otherwise);
+4. pushes **race-safely** — the cloud cron and app loops both push to `main`, so on a rejected
    (non-fast-forward) push it rebases onto latest preferring our fresh state (`-X theirs`) and retries.
    Whatever the other side raced in regenerates next cycle, so nothing is lost.
-4. A push to `main` is the entire deploy — Vercel auto-builds in ~60s. There is no separate deploy step.
+5. For Git-linked Desk/marketing projects, a push to `main` is the deploy trigger — there is no
+   separate local deploy step. Henneth CI is the explicit exception described below.
+
+The local lock does not coordinate with GitHub-hosted runners because they do not share a filesystem.
+Desk cloud overlap remains covered by `desk-data.yml`'s concurrency group and `publish.py`'s
+rejected-push rebase/retry path. `python scripts/check_publish_lock.py` verifies sibling-worktree
+exclusion, normal release and automatic recovery after a publisher process exits abruptly.
+
+This lock serializes local Git mutation; it does not combine product release lifecycles. The current
+Desk cloud pipeline also generates retained CI state and the private CI slice before `publish.py`
+commits the shared repo. A push then causes `ci-contract.yml` to rebuild and validate those CI
+artifacts in a clean checkout. Those are artifact-generation and validation steps, not a CI
+production deployment. `ci.henneth.app` changes only through `ci-production-release.yml`'s protected
+validate -> restamp -> preview -> verify -> promote flow and its own GitHub concurrency group.
 
 ### 2a. Shipping CODE — the `--code` flag (added 2026-07-19)
 

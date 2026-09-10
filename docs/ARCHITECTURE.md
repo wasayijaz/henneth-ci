@@ -58,6 +58,7 @@ The product is a hybrid of five parts:
 | Risk limits published to the client | `scripts/build_dashboard.py` writes `state/desk_rules.json` (allow-list of rule constants only) | `app.js` `loadDeskRules()` |
 | Health gate (Rule 6) | `scripts/data_health.py` -> `state/health.json` — checks BOTH the freshest EOD date and **fleet** freshness (`STALE_FLEET_DAYS` / `STALE_FLEET_FRACTION`, reported as `oldest_eod` / `stale_fleet` / `stale_fleet_cutoff`); the freshest-date test alone is a `max()` and is blind to a frozen long tail | signal generation, terminal banners, watchdog |
 | Publish gate | `scripts/preflight.py` | `publish.py`, `build_dashboard.py`, the cloud workflow |
+| Local repository push concurrency | `scripts/publish_lock.py` -> OS lock in Git's common directory | every local `publish.py` invocation across sibling worktrees; this is Git serialization, not a product refresh or CI release |
 | CI contract gate | `.github/workflows/ci-contract.yml` | rebuilds deterministic CI artifacts from retained state in a clean checkout, then runs preflight; never fetches, publishes, or accepts stale generated state |
 | Live-site gate | `scripts/watchdog.py` | after every publish |
 | Account gate (data) | `middleware.js` | every `/state/*` request on the terminal |
@@ -176,6 +177,20 @@ There is no application server for the research product.
 ### 4b. Local judgement cycle
 
 `prompts/cycle-full.md` (pre-market / escalation) and `prompts/cycle-light.md` (intraday). Agents read `state/`, write `state/`, then the same `publish.py`. The cloud never holds an Anthropic key.
+
+Local routines may prepare in parallel in isolated worktrees. `publish.py` serializes only their
+final local preflight/commit/push transaction with `publish_lock.py`; sibling
+worktrees resolve the same Git common directory and therefore the same OS-backed lock. The lock is
+released by the operating system on a crash. GitHub runners have separate filesystems, so cloud/local
+overlap is still resolved by the Desk workflow concurrency setting plus `publish.py`'s
+non-fast-forward rebase/retry path.
+
+Henneth CI is a separate product and release system. The Desk cloud pipeline also rebuilds retained
+CI producers and the private slice in the shared repository, and a push can cause `ci-contract.yml`
+to validate that commit. Neither action refreshes or promotes `ci.henneth.app`. CI production remains
+exclusive to `ci-production-release.yml`: validate, protected environment, immutable preview,
+verification, exact-preview promotion, auth smoke tests, and release receipt. Its own GitHub
+concurrency group governs that release lane; the local repository lock does not.
 
 Deterministic `build_signals.py` already publishes candidate setups labelled `basis: "backtest-proven, unaudited"`. The Auditor can later upgrade a setup. Those are different objects. Do not collapse them.
 
@@ -372,7 +387,7 @@ There is no in-product RAG store, no embeddings pipeline, and no per-visitor age
 | Process | Where | What |
 |---|---|---|
 | `desk-data.yml` | GitHub Actions, weekdays 07/37 minutes past 03:00-11:00 UTC | `run_cloud.py` + `publish.py` + `watchdog.py` |
-| App scheduled tasks | owner's Claude app (OPERATIONS.md section 4, SYSTEM-REGISTRY.md) | news, monitor, macro, daily read, Desk Room debates, weekly harvest, weekly code review |
+| App scheduled tasks | owner's Codex app; legacy runbooks remain under `~/.claude/scheduled-tasks/` | news, monitor, macro, daily read, Desk Room debates, weekly harvest, weekly code review |
 | `lifecycle_email.py` | not scheduled live | welcome / nudge / digest |
 | `push_send.py` | runnable, inert without VAPID | web push |
 | Content tweet tasks | separate content system | not the desk |
@@ -385,7 +400,8 @@ The cloud workflow installs Python 3.12 (`.github/workflows/desk-data.yml`). Tha
 
 ## 13. Deployment architecture
 
-One repo, two Vercel projects, one publish choke point.
+One repo, three Vercel projects, and two distinct delivery lanes: ordinary Git-driven Desk/marketing
+deployments, plus Henneth CI's protected production release.
 
 **Terminal**
 
@@ -404,9 +420,11 @@ One repo, two Vercel projects, one publish choke point.
 - `site/vercel.json` pins Astro. Do not let Vercel import the root `vercel.json` into this project — that is the terminal build and it breaks the site.
 - Ignored-build-step gotcha for merge commits is documented in `site/README.md`.
 
-**Publish**
+**Local repository commit/push**
 
 - Always `python scripts/publish.py "message"`. Never hand-push `state/`.
+- Local sibling worktrees share one bounded repository push lock. If it remains busy for five minutes,
+  publishing stops and the prepared worktree stays intact for a later retry.
 - Default: stage `state/` + generated marketing extracts only.
 - `--code`: ships only files already staged by you. It never runs `git add -A`.
 - Rebase auto-resolve is allowed only for regenerable data. A conflict on a hand-authored file aborts.
@@ -424,7 +442,8 @@ One repo, two Vercel projects, one publish choke point.
 7. Strategy JSON that has produced a published backtest is frozen. New version = new file.
 8. SQL in `docs/` is not live until the owner applies it.
 9. `BILLING_LIVE` false means do not take money and do not lock members out.
-10. The two Vercel projects stay separate. The marketing build stays hermetic.
+10. The three Vercel projects stay separate. The marketing build stays hermetic and CI production
+    stays behind its controlled release workflow.
 
 ---
 

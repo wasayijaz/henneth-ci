@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Publish the desk to the live site (Vercel) — the one efficient push path.
+"""Publish local repository changes through the gated Git push path.
 
 Every loop/task calls this instead of re-implementing git. It:
-  1. runs the preflight gate (never publish a structurally broken cycle),
-  2. stages state/ ONLY (add --code to also ship hand-authored files),
-  3. commits + pushes ONLY if something actually changed,
-  4. a push to `main` auto-deploys on Vercel (~60s) — no other step.
+  1. acquires the shared cross-worktree repository push lane,
+  2. runs the preflight gate (never publish a structurally broken cycle),
+  3. stages state/ ONLY (add --code to also ship hand-authored files),
+  4. commits + pushes ONLY if something actually changed,
+  5. a push to `main` triggers eligible Git-linked Desk/marketing deploys.
+
+Henneth CI production is separate: this push can trigger its contract check, but
+only the protected CI release workflow can deploy and promote ci.henneth.app.
 
 Deterministic, zero tokens. Safe to call every run: a no-op when nothing changed.
 
@@ -23,15 +27,15 @@ Usage:
 or `git add -A`s them itself. Stage your own files by name first (`git status --porcelain` to
 confirm nothing else is dirty), then run with --code.
 """
+import os
 import subprocess
 import sys
 import time
 from pathlib import Path
 
+from publish_lock import PublishLock, PublishLockBusy, git_path
+
 ROOT = Path(__file__).resolve().parent.parent
-LOCK = ROOT / ".git" / "index.lock"
-
-
 def _run(cmd, **kw):
     return subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, **kw)
 
@@ -58,7 +62,8 @@ def _clear_stale_lock(retries=5, delay=2):
     Fail loud instead: if a git process actually holds the lock, wait for it; if nothing does,
     the lock is stale — clear it and say so.
     """
-    if not LOCK.exists():
+    lock = git_path(ROOT, "index.lock")
+    if not lock.exists():
         return
     for _ in range(retries):
         if not _git_running():
@@ -68,16 +73,16 @@ def _clear_stale_lock(retries=5, delay=2):
         print(f"publish: .git/index.lock present and a git process is still running after "
               f"{retries * delay}s — refusing to touch it. Wait for it to finish and re-run.")
         sys.exit(1)
-    if LOCK.exists():
+    if lock.exists():
         try:
-            LOCK.unlink()
+            lock.unlink()
         except OSError as e:
             print(f"publish: found stale .git/index.lock but could not remove it: {e}")
             sys.exit(1)
         print("publish: cleared a stale .git/index.lock (no git process was holding it) before staging.")
 
 
-def main():
+def _publish():
     # positional message only — otherwise `publish.py --code` would commit with the literal
     # message "--code"
     positional = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -246,7 +251,23 @@ def main():
         if not ok:
             print(f"publish: could not push after retries — last git error:\n{last_err[:400]}")
             sys.exit(1)
-    print(f"publish: pushed '{msg}' -> Vercel is deploying (~60s to https://desk.henneth.app/).")
+    print(
+        f"publish: pushed '{msg}' -> eligible Desk/marketing Vercel projects may deploy; "
+        "Henneth CI production is unchanged."
+    )
+
+
+def main():
+    task = (os.environ.get("HENNETH_AUTOMATION_ID")
+            or os.environ.get("GITHUB_WORKFLOW")
+            or "manual-publish")
+    try:
+        with PublishLock(ROOT, timeout_s=300, task=task) as lock:
+            print(f"publish: acquired shared repository push lane in {lock.common_dir}")
+            _publish()
+    except PublishLockBusy as exc:
+        print(f"publish: {exc}. Prepared work was left intact; retry after that publisher finishes.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
