@@ -51,11 +51,18 @@
     const dates = Object.keys(hist).sort();
     const latestDate = dates[dates.length - 1];
     const priorDate = dates[dates.length - 2];
-    const latest = latestDate ? Number(hist[latestDate]?.KSE100) : Number(indices?.live?.KSE100);
+    // Prefer the live tick over today's frozen first-capture history entry — same
+    // "prefer live" pattern as tickerRows() below and indexBoard()/the paper-trading
+    // benchmark in app.js. history[today] never updates again once written, so reading
+    // it as "current" goes stale the moment the index moves after that first snapshot.
+    const liveVal = Number(indices?.live?.KSE100);
+    const haveLive = Number.isFinite(liveVal);
+    const latest = haveLive ? liveVal : Number(hist[latestDate]?.KSE100);
     const prior = priorDate ? Number(hist[priorDate]?.KSE100) : NaN;
     const change = Number.isFinite(latest) && Number.isFinite(prior) ? latest - prior : NaN;
     const changePct = Number.isFinite(change) && prior ? (change / prior) * 100 : NaN;
-    return { latest, prior, change, changePct, date: latestDate || indices?.updated || "", priorDate: priorDate || "", values: dates.slice(-30).map(d => hist[d]?.KSE100) };
+    const date = haveLive ? (indices?.live_at || indices?.updated || latestDate || "") : (latestDate || indices?.updated || "");
+    return { latest, prior, change, changePct, date, priorDate: priorDate || "", values: dates.slice(-30).map(d => hist[d]?.KSE100) };
   }
 
   function sectorSummary(dr) {

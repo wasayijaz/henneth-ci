@@ -11,8 +11,10 @@ Two things needed this and neither could be fixed with what the desk had:
     and label them proxies. Nobody can hand us the past — but from today we can simply keep it.
     In a year this file IS the index history the desk currently lacks.
 
-Source: dps.psx.com.pk/indices (PSX's own live board). Append-only: one row per PKT trading date,
-never rewrites a past row. Network failure -> keep what we have, exit 0.
+Source: dps.psx.com.pk/indices (PSX's own live board). One row per PKT trading date, never rewrites
+a PAST date's row. Today's own row gets one correction at/after that day's PSX close (so it holds
+the true close, not whatever was live on the day's first run) — still never touched again after.
+Network failure -> keep what we have, exit 0.
 Writes state/indices.json.
 """
 import datetime as dt
@@ -70,11 +72,18 @@ def main():
         print("indices: KSE100 not found in the DPS board — markup may have changed; keeping stored data")
         sys.exit(0)
 
-    today = dt.datetime.now(PKT).date().isoformat()
+    now_dt = dt.datetime.now(PKT)
+    today = now_dt.date().isoformat()
     data["live"] = live
-    data["live_at"] = dt.datetime.now(PKT).strftime("%Y-%m-%d %H:%M")
-    # append-only: the first capture of a date wins, so a late-session re-run can't rewrite history
-    if today not in data["history"]:
+    data["live_at"] = now_dt.strftime("%Y-%m-%d %H:%M")
+    # First capture of a date always seeds history[today], so an intraday read has something.
+    # PSX closes Mon-Thu 15:30 PKT, Fri (later of the two sessions) 16:30 PKT — a run at/after
+    # that time corrects the entry to the true close instead of leaving it frozen at whatever
+    # level happened to be live on the day's first run. Post-close reruns just rewrite the same
+    # settled value, so this stays idempotent and never looks past the current run's own fetch.
+    close_time = dt.time(16, 30) if now_dt.weekday() == 4 else dt.time(15, 30)
+    after_close = now_dt.time() >= close_time
+    if today not in data["history"] or after_close:
         data["history"][today] = live
     data["updated"] = time.strftime("%Y-%m-%d %H:%M")
     data["source"] = "https://dps.psx.com.pk/indices (PSX's own board), captured once per trading day"
