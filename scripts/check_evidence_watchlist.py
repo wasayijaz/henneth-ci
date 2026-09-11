@@ -221,7 +221,7 @@ def main() -> None:
                 _fail((result.stdout or "") + (result.stderr or ""))
         if first.read_bytes() != second.read_bytes():
             _fail("builder output is not byte-idempotent")
-    slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
+    slice_data = load_json(ROOT / "ci-app" / "data" / "company_intelligence.json", {"tickers": []})
     by_symbol = {row.get("symbol"): row for row in slice_data.get("tickers") or []}
     if set(by_symbol) != set(pilot):
         _fail("CI slice pilot boundary mismatch")

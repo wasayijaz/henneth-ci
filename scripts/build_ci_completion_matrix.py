@@ -15,7 +15,7 @@ from typing import Any, Callable
 from psx_data import ROOT, STATE, load_json, save_json
 
 OUT = STATE / "company_intel" / "completion_matrix.json"
-CI_SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+CI_SLICE = ROOT / "ci-app" / "data" / "company_intelligence.json"
 
 STATUSES = ("complete", "partial", "blocked", "not_started", "unknown")
 
@@ -424,7 +424,7 @@ def build(write: bool = True) -> dict[str, Any]:
             [
                 _state("profile pilot list", "state/company_profiles.json", len(pilot) == 20 and len(set(pilot)) == 20, f"{len(pilot)} unique pilot symbols"),
                 _state("brain state pilot boundary", "state/company_intel/company_brains.json", _exact_pilot(brains, pilot), f"{_company_count(brains)} company rows"),
-                _state("CI slice pilot boundary", "Henneth Desk 2.CI.0/data/company_intelligence.json", len(ci_slice.get("tickers") or []) == len(pilot), f"{len(ci_slice.get('tickers') or [])} slice rows"),
+                _state("CI slice pilot boundary", "ci-app/data/company_intelligence.json", len(ci_slice.get("tickers") or []) == len(pilot), f"{len(ci_slice.get('tickers') or [])} slice rows"),
             ],
             ["Keep new Company Intelligence products keyed to company_profiles pilot.symbols."],
         ),
@@ -915,7 +915,7 @@ def build(write: bool = True) -> dict[str, Any]:
             "Scenario Lab UI contract is checked",
             [
                 _check("scenario lab UI checker", "scripts/check_company_scenario_lab_ui.mjs"),
-                _contains("scenario tab", "Henneth Desk 2.CI.0/app.js", ("scenarios",)),
+                _contains("scenario tab", "ci-app/app.js", ("scenarios",)),
             ],
             ["Keep UI display-only over emitted state."],
         ),
@@ -1001,8 +1001,8 @@ def build(write: bool = True) -> dict[str, Any]:
             "ask_henneth_backend",
             "Ask Henneth backend contract exists",
             [
-                _ok("owner-only Ask endpoint", "Henneth Desk 2.CI.0/api/ask.js"),
-                _ok("server-owned Ask contract", "Henneth Desk 2.CI.0/api/ask_contract.js"),
+                _ok("owner-only Ask endpoint", "ci-app/api/ask.js"),
+                _ok("server-owned Ask contract", "ci-app/api/ask_contract.js"),
                 _check("Ask contract checker", "scripts/check_ask_henneth.mjs"),
             ],
             ["Release smoke test with provider env and owner JWT before deployed availability is complete."],
@@ -1013,7 +1013,7 @@ def build(write: bool = True) -> dict[str, Any]:
             [
                 _check("Ask endpoint checker", "scripts/check_ask_henneth_endpoint.mjs"),
                 _check("root Ask hardening checker", "scripts/check_root_ask_hardening.mjs"),
-                _ok("CI data middleware", "Henneth Desk 2.CI.0/middleware.js"),
+                _ok("CI data middleware", "ci-app/middleware.js"),
             ],
             ["Live 401/403/200 owner-token smoke tests before release sign-off."],
         ),
@@ -1022,7 +1022,7 @@ def build(write: bool = True) -> dict[str, Any]:
             "Ask Henneth UI contract is checked",
             [
                 _check("Ask UI checker", "scripts/check_ask_henneth_ui.mjs"),
-                _contains("Ask UI markers", "Henneth Desk 2.CI.0/app.js", ("ask",)),
+                _contains("Ask UI markers", "ci-app/app.js", ("ask",)),
             ],
             ["Keep Ask UI display-only and owner-gated through the backend contract."],
         ),
@@ -1030,8 +1030,8 @@ def build(write: bool = True) -> dict[str, Any]:
             "company_navigation_tabs",
             "Company navigation exposes the primary tab registry",
             [
-                _contains("exact primary tab registry", "Henneth Desk 2.CI.0/app.js", PRIMARY_TABS),
-                _state("slice rows for navigation", "Henneth Desk 2.CI.0/data/company_intelligence.json", len(ci_slice.get("tickers") or []) == len(pilot), f"{len(ci_slice.get('tickers') or [])} slice rows"),
+                _contains("exact primary tab registry", "ci-app/app.js", PRIMARY_TABS),
+                _state("slice rows for navigation", "ci-app/data/company_intelligence.json", len(ci_slice.get("tickers") or []) == len(pilot), f"{len(ci_slice.get('tickers') or [])} slice rows"),
             ],
             ["Future tabs must read emitted state and avoid browser-side business derivation."],
         ),
@@ -1040,7 +1040,7 @@ def build(write: bool = True) -> dict[str, Any]:
             "Company navigation UI contract is checked",
             [
                 _check("company navigation UI checker", "scripts/check_company_navigation_ui.mjs"),
-                _contains("research tab marker", "Henneth Desk 2.CI.0/app.js", ("research",)),
+                _contains("research tab marker", "ci-app/app.js", ("research",)),
             ],
             ["Run UI checker after tab or routing changes."],
         ),
@@ -1082,8 +1082,8 @@ def build(write: bool = True) -> dict[str, Any]:
             "private_access_boundary",
             "Private access boundary protects CI data surfaces",
             [
-                _ok("CI data middleware", "Henneth Desk 2.CI.0/middleware.js"),
-                _ok("owner-only Ask endpoint", "Henneth Desk 2.CI.0/api/ask.js"),
+                _ok("CI data middleware", "ci-app/middleware.js"),
+                _ok("owner-only Ask endpoint", "ci-app/api/ask.js"),
                 _check("generated URL safety checker", "scripts/check_generated_url_safety.py"),
             ],
             ["Live access smoke tests are still required before deployment sign-off."],
@@ -1113,7 +1113,7 @@ def build(write: bool = True) -> dict[str, Any]:
             [
                 _ok("completion matrix builder", "scripts/build_ci_completion_matrix.py"),
                 _check("completion matrix checker", "scripts/check_ci_completion_matrix.py"),
-                _state("CI slice meta exists", "Henneth Desk 2.CI.0/data/company_intelligence.json", isinstance((ci_slice.get("meta") or {}).get("completion_matrix"), dict), "meta.completion_matrix present"),
+                _state("CI slice meta exists", "ci-app/data/company_intelligence.json", isinstance((ci_slice.get("meta") or {}).get("completion_matrix"), dict), "meta.completion_matrix present"),
             ],
             ["Builder/checker must be run whenever the completion registry changes."],
         ),

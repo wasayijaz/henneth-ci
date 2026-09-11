@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the private Company Intelligence app data slice.
 
-Writes Henneth Desk 2.CI.0/data/company_intelligence.json from existing state files.
+Writes ci-app/data/company_intelligence.json from existing state files.
 This is the only data file the CI app reads. It is a private research surface, but it still
 keeps the same rule: every displayed fact traces to the state layer or is marked unknown.
 """
@@ -14,7 +14,7 @@ from document_events import event_is_supported
 from build_ci_completion_matrix import slice_summary as _completion_matrix_summary
 from build_ci_artifact_integrity import utc_z
 
-APP_DIR = ROOT / "Henneth Desk 2.CI.0"
+APP_DIR = ROOT / "ci-app"
 OUT = APP_DIR / "data" / "company_intelligence.json"
 
 

@@ -1,4 +1,4 @@
-# Henneth Desk 2.CI.0
+# ci-app
 
 Private company-intelligence surface for the Henneth desk.
 

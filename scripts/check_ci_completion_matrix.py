@@ -219,7 +219,7 @@ def _assert_conditional_benchmark_readiness(matrix: dict) -> None:
 
 
 def _assert_slice_summary(matrix: dict) -> None:
-    slice_path = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+    slice_path = ROOT / "ci-app" / "data" / "company_intelligence.json"
     ci_slice = load_json(slice_path, {})
     expected = builder.slice_summary(matrix)
     actual = (ci_slice.get("meta") or {}).get("completion_matrix")

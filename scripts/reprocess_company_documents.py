@@ -75,7 +75,7 @@ CANONICAL_RELATIVE_PATHS = (
     Path("company_intel") / "financial_model_inputs.json",
     Path("company_intel") / "cement_operating_series.json",
 )
-CI_SLICE_PATH = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+CI_SLICE_PATH = ROOT / "ci-app" / "data" / "company_intelligence.json"
 
 
 class UnsafeInput(ValueError):

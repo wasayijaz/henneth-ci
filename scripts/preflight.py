@@ -17,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "state"
-APP = ROOT / "Henneth Desk 2.CI.0"
+APP = ROOT / "ci-app"
 SLICE = APP / "data" / "company_intelligence.json"
 
 

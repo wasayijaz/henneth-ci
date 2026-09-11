@@ -30,7 +30,7 @@ def forward_scenario(baseline: Mapping[str, Any], revenue_growth_pct: Any,
                      net_margin_pct: Any, exit_pe: Any) -> dict[str, float]:
     """Apply explicit growth, margin and exit multiple assumptions.
 
-    Deliberately mirrored in Henneth Desk 2.CI.0/app.js for the owner-side
+    Deliberately mirrored in ci-app/app.js for the owner-side
     interactive calculator; check_company_scenario_lab_ui.mjs locks the browser
     formulas and bounds to this canonical implementation.
     """

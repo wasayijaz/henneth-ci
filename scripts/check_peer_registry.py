@@ -85,7 +85,7 @@ def main():
             if required not in limitations:
                 raise SystemExit(f"{sym}: missing limitation {required}")
 
-    slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {})
+    slice_data = load_json(ROOT / "ci-app" / "data" / "company_intelligence.json", {})
     slice_rows = {row.get("symbol"): row for row in (slice_data.get("tickers") or []) if isinstance(row, dict)}
     if set(slice_rows) == set(pilot):
         for sym in pilot:

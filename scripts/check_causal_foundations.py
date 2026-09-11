@@ -140,7 +140,7 @@ def main():
         if without_root_meta(load(candidate)) != without_root_meta(load(OUT)):
             raise AssertionError("builder logical output is not idempotent")
 
-    slice_path = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+    slice_path = ROOT / "ci-app" / "data" / "company_intelligence.json"
     if slice_path.exists():
         slice_rows = {row.get("symbol"): row for row in load(slice_path).get("tickers") or []}
         for sym in pilot:

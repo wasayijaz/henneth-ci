@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const ciRoot = path.join(ROOT, "Henneth Desk 2.CI.0");
+const ciRoot = path.join(ROOT, "ci-app");
 const app = fs.readFileSync(path.join(ciRoot, "app.js"), "utf8");
 const index = fs.readFileSync(path.join(ciRoot, "index.html"), "utf8");
 const css = fs.readFileSync(path.join(ciRoot, "styles.css"), "utf8");

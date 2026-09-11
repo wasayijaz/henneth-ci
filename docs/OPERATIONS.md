@@ -36,7 +36,7 @@ runs on the owner's machine. The cloud never runs an agent (no API key by design
 
 ### 1a. Company Intelligence surface (2.CI.0 — owner-only live surface)
 
-`Henneth Desk 2.CI.0/` is a third static surface in this repository, not a copied desk. The root
+`ci-app/` is a third static surface in this repository, not a copied desk. The root
 pipeline remains authoritative. Its ordered company-intelligence segment is:
 
 The CI Ask endpoint is a separate owner-only edge function (`POST /api/ask`). It performs the
@@ -196,7 +196,7 @@ available. Bear/Base/Bull probabilities are deterministic (25/50/25); revenue, E
 valuation impacts remain `null` with `insufficient_data` when sourced period/unit/currency inputs
 are absent.
 
-Hosting is a separate Vercel project rooted at `Henneth Desk 2.CI.0/`, with `ci.henneth.app` attached.
+Hosting is a separate Vercel project rooted at `ci-app/`, with `ci.henneth.app` attached.
 `/data/*` fails closed unless a verified Supabase
 ES256 JWT carries the exact `sub` configured as `CI_OWNER_USER_ID`; a valid non-owner receives 403.
 There is no CI signup, service-role key, schema change or order path. Presentation changes must not
@@ -329,7 +329,7 @@ The Concept D homepage is static Astro code owned by `site/src/pages/index.astro
 hero media files under `site/public/concept-d/`. Include `Header.astro`, `Base.astro` or
 `global.css` only when the release actually changes them. This release belongs to the marketing
 site only; do not copy or stage it under `dashboard/`, `extension/`, the repository-root
-`public/`, or `Henneth Desk 2.CI.0/`.
+`public/`, or `ci-app/`.
 
 From a clean checkout, run `cd site && npm run build`, `python scripts/preflight.py` and
 `python scripts/design_lint.py`. Smoke-test 1440, 1024, 768, 620, 390 and 320 px, including

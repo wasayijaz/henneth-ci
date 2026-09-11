@@ -21,7 +21,7 @@ from typing import Any
 DATA_PATH = "/data/company_intelligence.json"
 TIMEOUT_SECONDS = 20
 # Public client configuration. Keep this synchronized with the authentication
-# client in Henneth Desk 2.CI.0/app.js; it is deliberately not a secret.
+# client in ci-app/app.js; it is deliberately not a secret.
 SUPABASE_URL = "https://qteoncckohuoatbjjykb.supabase.co"
 SUPABASE_PUBLISHABLE_KEY = "sb_publishable_aQu8P4yrAY7l8Y0AcLth5g_Z3VceUnw"
 VERCEL_BYPASS_SECRET_ENV = "VERCEL_AUTOMATION_BYPASS_SECRET"

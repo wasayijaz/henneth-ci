@@ -212,7 +212,7 @@ def main():
     assert after == OUT.read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_ci_slice.py")], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
-    slice_state = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
+    slice_state = load_json(ROOT / "ci-app" / "data" / "company_intelligence.json", {"tickers": []})
     by_symbol = {row.get("symbol"): row for row in slice_state.get("tickers") or []}
     assert set(by_symbol) == pilot
     for sym in pilot:

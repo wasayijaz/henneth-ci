@@ -17,7 +17,7 @@ from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 CI_STATE_DIR = ROOT / "state" / "company_intel"
-CI_SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+CI_SLICE = ROOT / "ci-app" / "data" / "company_intelligence.json"
 # Desk state writes wall-clock stamps in Pakistan Standard Time without an
 # explicit offset (fixed UTC+05:00, no DST). Naive timestamps must therefore
 # be interpreted as PKT: treating them as UTC made a real 13:36Z event look
@@ -239,7 +239,7 @@ def is_prospective_calendar_date(artifact: str, path: str, key: str, container: 
         "state/company_intel/event_review_windows.json"
     )
     is_ci_slice_artifact = normalized_artifact.endswith(
-        "Henneth Desk 2.CI.0/data/company_intelligence.json"
+        "ci-app/data/company_intelligence.json"
     )
     is_ci_slice_field = (
         is_ci_slice_artifact and ".event_review_windows." in f".{normalized_path}."
@@ -568,7 +568,7 @@ def run_self_tests() -> None:
     }
     stats = ScanStats()
     scan_node(
-        "Henneth Desk 2.CI.0/data/company_intelligence.json",
+        "ci-app/data/company_intelligence.json",
         ci_slice_calendar,
         "",
         node_cutoff(ci_slice_calendar),

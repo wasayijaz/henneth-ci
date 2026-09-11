@@ -16,7 +16,7 @@ There are two public surfaces, one owner-only surface, three Vercel projects, an
 |---|---|---|---|
 | Marketing site | https://henneth.app | `site/` (Astro, static) | `henneth-site`, root directory `site/` |
 | Research terminal | https://desk.henneth.app | `dashboard/` + committed `state/` | `psx-trade-desk`, repo root |
-| Company Intelligence | https://ci.henneth.app | `Henneth Desk 2.CI.0/` + generated private slice | separate CI project, root directory `Henneth Desk 2.CI.0/` |
+| Company Intelligence | https://ci.henneth.app | `ci-app/` + generated private slice | separate CI project, root directory `ci-app/` |
 
 The product is a hybrid of five parts:
 
@@ -24,7 +24,7 @@ The product is a hybrid of five parts:
 2. Judgement agents (`.claude/agents/` + `prompts/`) run on the owner's machine. They write analysis back into `state/`. Visitors read the saved analysis 24/7; agents refresh it, they are not needed to serve it.
 3. The terminal (`dashboard/`) is a static path-routed SPA. It reads `state/*.json` over HTTPS. It writes nothing to `state/`.
 4. Supabase holds auth, per-user rows, and the dedicated Henneth CI append-only archive. It never serves research to browsers: current research is still rendered from the private generated CI slice.
-5. Vercel serves static files. Edge middleware gates `/state/*` and CI `/data/*`. The CI project also exposes a separate owner-only `Henneth Desk 2.CI.0/api/ask.js`: it verifies the Supabase ES256 owner claim, loads only the requested company row, projects it through `api/ask_contract.js`, and builds the final answer/citations server-side around qualitative model output.
+5. Vercel serves static files. Edge middleware gates `/state/*` and CI `/data/*`. The CI project also exposes a separate owner-only `ci-app/api/ask.js`: it verifies the Supabase ES256 owner claim, loads only the requested company row, projects it through `api/ask_contract.js`, and builds the final answer/citations server-side around qualitative model output.
 
     PSX DPS / Yahoo / Firecrawl / TV
                     |
@@ -78,7 +78,7 @@ The product is a hybrid of five parts:
 | Judgment handoff | `scripts/document_queue.py` -> `state/document_synthesis_queue.json` | owner-approved local synthesis only |
 | Synthesis training batch | `scripts/prepare_synthesis_batch.py` -> ignored `.cache/company_intel/training_batch.json` | local librarian/verifier agents |
 | Approved CI briefs | `scripts/company_brief_review.py` -> `state/company_briefs.json`, `state/company_brief_receipts.json` | CI Brief view |
-| Company Intelligence slice | `scripts/build_ci_slice.py` -> `Henneth Desk 2.CI.0/data/company_intelligence.json` | private CI app only |
+| Company Intelligence slice | `scripts/build_ci_slice.py` -> `ci-app/data/company_intelligence.json` | private CI app only |
 | Operating events | `scripts/build_operating_events.py` -> `state/company_intel/operating_events.json` | evidence-backed Wave 1 index derived from canonical documents/events; v1 closed registry declares the five genuinely supported event classes, source systems and no-lookahead rules |
 | Signal clusters | `scripts/build_signal_clusters.py` -> `state/company_intel/signal_clusters.json` | versioned closed registry for source-qualified acquisition and management-change propositions; unsupported or future/unsafe evidence is rejected rather than clustered |
 | Sector driver graphs | `scripts/build_driver_graphs.py` + `sector_driver_models.py` -> `state/company_intel/driver_graphs.json` | full 20-company pilot across BANKS/CEMENT/E&P/REFINERY/FERTILIZER/AUTO_ASSEMBLER/POWER/OMC/HOLDING_COMPANY; declarative routing only, no company values |
@@ -117,10 +117,10 @@ The product is a hybrid of five parts:
 | Formal peer registry | `scripts/build_peer_registry.py` -> `state/company_intel/peer_registry.json` | exact 20-company CI pilot grouped only by retained PSX official sector label/code; formal peers are explicit pilot-sector cohorts, singleton sectors emit empty peer groups, and international registry stays unavailable |
 | Ownership source review | `scripts/build_ownership_source_manifest.py` -> `config/ownership_source_review_manifest.json` | metadata-only 20-company official-source review queue for annual-report schedules and PSX substantial-holder/free-float candidates; cannot fetch, extract or activate ownership facts |
 | Bounded document restage | `reprocess_company_documents.py` + metadata receipts under `state/company_intel/` | explicit first-batch IDs, scoped transient run directories, no shared queue mutation |
-| Company Intelligence data gate | `Henneth Desk 2.CI.0/middleware.js` | `/data/*` on the CI Vercel project |
-| Company Intelligence Ask UI | `Henneth Desk 2.CI.0/app.js` + `styles.css` | owner-only Ask tab; per-symbol request state and nine server-owned answer sections |
+| Company Intelligence data gate | `ci-app/middleware.js` | `/data/*` on the CI Vercel project |
+| Company Intelligence Ask UI | `ci-app/app.js` + `styles.css` | owner-only Ask tab; per-symbol request state and nine server-owned answer sections |
 | Company Intelligence Ask UI gate | `scripts/check_ask_henneth_ui.mjs` via `scripts/preflight.py` | 20-row static UI/auth/citation/section/responsive verification |
-| Company Intelligence navigation | `Henneth Desk 2.CI.0/app.js` + `styles.css` | exact 17-tab primary company navigation plus separate read-only research-tools row; domain views consume the CI slice only, while formal peers render the emitted registry and unavailable ownership, earnings and formal-valuation products stay explicit |
+| Company Intelligence navigation | `ci-app/app.js` + `styles.css` | exact 17-tab primary company navigation plus separate read-only research-tools row; domain views consume the CI slice only, while formal peers render the emitted registry and unavailable ownership, earnings and formal-valuation products stay explicit |
 | Company Intelligence navigation gate | `scripts/check_company_navigation_ui.mjs` via `scripts/preflight.py` | exact tab order/routing, tab-row keyboard isolation, 20-row rendering, emitted peer-registry rendering, blocked-state and no-browser-peer-derivation contract |
 | Brand / plan copy on the marketing site | `site/src/site.config.ts` | every Astro page |
 | Desk Room scaffolding | `scripts/room_*.py` | Room agents; terminal Room surfaces |
@@ -169,7 +169,7 @@ There is no application server for the research product.
 `post_close_recovery.py`, then `python scripts/publish.py`.
 
 `run_desk_cloud.py` is the ordered Desk-only list. It never regenerates or validates
-`state/company_intel/`, protected CI config, or `Henneth Desk 2.CI.0/data/`. Company Intelligence
+`state/company_intel/`, protected CI config, or `ci-app/data/`. Company Intelligence
 uses its own contract and controlled production-release workflows. `run_cloud.py` remains the
 full historical pipeline entry point for explicit combined development runs; it is not the Desk cron.
 Do not reorder the Desk list casually. Two order invariants:
@@ -236,8 +236,8 @@ document/page citations, blocks advice language, requires a clean verifier recei
 briefs only after explicit owner approval.
 
 `build_ci_slice.py` joins the bounded private view into one generated file under
-`Henneth Desk 2.CI.0/data/`. The app reads no other state file and never calls a market provider.
-Its separate Vercel project uses `Henneth Desk 2.CI.0/` as the project root. The shell and sign-in form load publicly, but
+`ci-app/data/`. The app reads no other state file and never calls a market provider.
+Its separate Vercel project uses `ci-app/` as the project root. The shell and sign-in form load publicly, but
 middleware verifies the existing Supabase ES256 access token and serves `/data/*` only when the
 signed `sub` equals `CI_OWNER_USER_ID`. No owner UUID, service-role key or signup path lives in the
 repository. Private user theses use the separately reviewed `company_theses` RLS contract. The

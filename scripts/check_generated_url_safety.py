@@ -35,7 +35,7 @@ def check_newslog_ingestion():
 
 
 def check_dashboard_sinks():
-    app = (ROOT / "Henneth Desk 2.CI.0" / "app.js").read_text(encoding="utf-8")
+    app = (ROOT / "ci-app" / "app.js").read_text(encoding="utf-8")
     require("const safeHref" in app, "CI app is missing safeHref")
     require("target=\"_blank\"" in app, "CI app source links must open in a separate tab")
 

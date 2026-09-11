@@ -241,7 +241,7 @@ def main():
    if not qualified_financial_fact_source(fact) and fact.get('readiness')=='model_loadable': raise AssertionError('legacy model load')
  # The published CI slice must carry the exact generated state. This is
  # comparison-only: it never rebuilds or mutates durable artifacts in a check.
- slice_path=ROOT/'Henneth Desk 2.CI.0/data/company_intelligence.json'; sl=load(slice_path)
+ slice_path=ROOT/'ci-app/data/company_intelligence.json'; sl=load(slice_path)
  if set(row.get('symbol') for row in sl.get('tickers',[]))!=pilot: raise AssertionError('slice pilot')
  state_comp=d.get('companies') or {}; slice_rows={row.get('symbol'):row for row in sl.get('tickers',[])}
  if any(slice_rows.get(sym,{}).get('financial_model_inputs')!=state_comp.get(sym) for sym in pilot): raise AssertionError('slice model-input mismatch')

@@ -29,10 +29,10 @@
   "overall_status": "blocked",
   "requirement_count": 69,
   "counts": {
-   "complete": 61,
-   "partial": 4,
+   "complete": 58,
+   "partial": 6,
    "blocked": 4,
-   "not_started": 0,
+   "not_started": 1,
    "unknown": 0
   },
   "complete_requirement_ids": [
@@ -84,17 +84,14 @@
    "thesis_monitoring_state",
    "management_delivery_state",
    "private_thesis_storage_contract",
-   "training_batch_handoff",
    "training_owner_receipts",
    "ask_henneth_backend",
-   "ask_henneth_endpoint_security",
    "ask_henneth_ui",
    "company_navigation_tabs",
    "company_navigation_checker",
    "peer_registry_state",
    "ownership_source_review_manifest",
    "private_access_boundary",
-   "root_state_publication_boundary",
    "ci_global_no_lookahead_gate",
    "completion_matrix_slice_summary"
   ],
@@ -125,7 +122,7 @@
     },
     {
      "label": "CI slice pilot boundary",
-     "path": "Henneth Desk 2.CI.0/data/company_intelligence.json",
+     "path": "ci-app/data/company_intelligence.json",
      "ok": true,
      "detail": "20 slice rows"
     }
@@ -1396,7 +1393,7 @@
     },
     {
      "label": "scenario tab",
-     "path": "Henneth Desk 2.CI.0/app.js",
+     "path": "ci-app/app.js",
      "ok": true,
      "detail": "all expected markers present"
     }
@@ -1551,7 +1548,7 @@
   {
    "id": "training_batch_handoff",
    "title": "Training-mode synthesis handoff exists",
-   "status": "complete",
+   "status": "partial",
    "evidence": [
     {
      "label": "training batch handoff",
@@ -1562,8 +1559,8 @@
     {
      "label": "training prompt",
      "path": "prompts/company-intelligence-training.md",
-     "ok": true,
-     "detail": "present"
+     "ok": false,
+     "detail": "missing"
     },
     {
      "label": "approval gate",
@@ -1607,13 +1604,13 @@
    "evidence": [
     {
      "label": "owner-only Ask endpoint",
-     "path": "Henneth Desk 2.CI.0/api/ask.js",
+     "path": "ci-app/api/ask.js",
      "ok": true,
      "detail": "present"
     },
     {
      "label": "server-owned Ask contract",
-     "path": "Henneth Desk 2.CI.0/api/ask_contract.js",
+     "path": "ci-app/api/ask_contract.js",
      "ok": true,
      "detail": "present"
     },
@@ -1632,7 +1629,7 @@
   {
    "id": "ask_henneth_endpoint_security",
    "title": "Ask Henneth endpoint security is checked",
-   "status": "complete",
+   "status": "partial",
    "evidence": [
     {
      "label": "Ask endpoint checker",
@@ -1643,12 +1640,12 @@
     {
      "label": "root Ask hardening checker",
      "path": "scripts/check_root_ask_hardening.mjs",
-     "ok": true,
+     "ok": false,
      "detail": "focused checker path"
     },
     {
      "label": "CI data middleware",
-     "path": "Henneth Desk 2.CI.0/middleware.js",
+     "path": "ci-app/middleware.js",
      "ok": true,
      "detail": "present"
     }
@@ -1671,7 +1668,7 @@
     },
     {
      "label": "Ask UI markers",
-     "path": "Henneth Desk 2.CI.0/app.js",
+     "path": "ci-app/app.js",
      "ok": true,
      "detail": "all expected markers present"
     }
@@ -1688,13 +1685,13 @@
    "evidence": [
     {
      "label": "exact primary tab registry",
-     "path": "Henneth Desk 2.CI.0/app.js",
+     "path": "ci-app/app.js",
      "ok": true,
      "detail": "all expected markers present"
     },
     {
      "label": "slice rows for navigation",
-     "path": "Henneth Desk 2.CI.0/data/company_intelligence.json",
+     "path": "ci-app/data/company_intelligence.json",
      "ok": true,
      "detail": "20 slice rows"
     }
@@ -1717,7 +1714,7 @@
     },
     {
      "label": "research tab marker",
-     "path": "Henneth Desk 2.CI.0/app.js",
+     "path": "ci-app/app.js",
      "ok": true,
      "detail": "all expected markers present"
     }
@@ -1792,13 +1789,13 @@
    "evidence": [
     {
      "label": "CI data middleware",
-     "path": "Henneth Desk 2.CI.0/middleware.js",
+     "path": "ci-app/middleware.js",
      "ok": true,
      "detail": "present"
     },
     {
      "label": "owner-only Ask endpoint",
-     "path": "Henneth Desk 2.CI.0/api/ask.js",
+     "path": "ci-app/api/ask.js",
      "ok": true,
      "detail": "present"
     },
@@ -1817,25 +1814,25 @@
   {
    "id": "root_state_publication_boundary",
    "title": "Root publication boundary excludes CI artifacts and protected config",
-   "status": "complete",
+   "status": "not_started",
    "evidence": [
     {
      "label": "root state publication boundary",
      "path": "scripts/root_state_publication.py",
-     "ok": true,
-     "detail": "present"
+     "ok": false,
+     "detail": "missing"
     },
     {
      "label": "root state publication checker",
      "path": "scripts/check_root_state_publication.py",
-     "ok": true,
+     "ok": false,
      "detail": "focused checker path"
     },
     {
      "label": "root config serving guard",
      "path": "scripts/serve.py",
-     "ok": true,
-     "detail": "all expected markers present"
+     "ok": false,
+     "detail": "missing markers: config/desk.json, must never be served"
     }
    ],
    "blockers": [],
@@ -1885,7 +1882,7 @@
     },
     {
      "label": "CI slice meta exists",
-     "path": "Henneth Desk 2.CI.0/data/company_intelligence.json",
+     "path": "ci-app/data/company_intelligence.json",
      "ok": true,
      "detail": "meta.completion_matrix present"
     }
@@ -1898,9 +1895,9 @@
  ],
  "_meta": {
   "generator_version": "ci_artifact_integrity_v1",
-  "source_commit_sha": "ecd2bb3db8626f72234adf69a779c8e5f6b66187",
-  "build_cutoff_at": "2026-09-11T15:12:55Z",
-  "generated_at": "2026-09-11T15:12:55Z",
+  "source_commit_sha": "04bb1e4335d75f519625577c056e84cd0cfdc159",
+  "build_cutoff_at": "2026-09-11T16:25:07Z",
+  "generated_at": "2026-09-11T16:25:07Z",
   "artifact_path": "state/company_intel/completion_matrix.json",
   "timestamp_semantics": {
    "build_cutoff_at": "generation boundary only; not a source-effective or source-published time",

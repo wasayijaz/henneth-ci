@@ -4,8 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const APP = fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "app.js"), "utf8");
-const SLICE = JSON.parse(fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json"), "utf8"));
+const APP = fs.readFileSync(path.join(ROOT, "ci-app", "app.js"), "utf8");
+const SLICE = JSON.parse(fs.readFileSync(path.join(ROOT, "ci-app", "data", "company_intelligence.json"), "utf8"));
 const STATE = JSON.parse(fs.readFileSync(path.join(ROOT, "state", "company_intel", "earnings_bridges.json"), "utf8"));
 let checks = 0;
 const assert = (condition, message) => { checks += 1; if (!condition) throw new Error(message); };

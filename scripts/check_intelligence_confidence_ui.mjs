@@ -2,12 +2,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildAnswerSections, projectCompany } from "../Henneth Desk 2.CI.0/api/ask_contract.js";
+import { buildAnswerSections, projectCompany } from "../ci-app/api/ask_contract.js";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json");
-const APP_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "app.js");
-const CSS_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css");
+const SLICE_PATH = path.join(ROOT, "ci-app", "data", "company_intelligence.json");
+const APP_PATH = path.join(ROOT, "ci-app", "app.js");
+const CSS_PATH = path.join(ROOT, "ci-app", "styles.css");
 let checks = 0;
 
 function assert(condition, message) {

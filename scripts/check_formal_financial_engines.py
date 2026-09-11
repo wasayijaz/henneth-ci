@@ -162,7 +162,7 @@ def assert_real_state() -> None:
     after = [path.read_bytes() for path in (builder.OUT_FORECASTS, builder.OUT_VALUATIONS, builder.OUT_EXPECTATIONS)]
     if result.returncode != 0 or before != after:
         fail("builder is not byte-idempotent")
-    slice_path = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+    slice_path = ROOT / "ci-app" / "data" / "company_intelligence.json"
     if load_json(slice_path, {"tickers": []}).get("tickers") is None:
         fail("CI slice unreadable")
 

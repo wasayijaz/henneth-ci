@@ -12,7 +12,7 @@ import build_ci_slice as builder
 from psx_data import load_json
 
 
-SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+SLICE = ROOT / "ci-app" / "data" / "company_intelligence.json"
 ASSUMPTIONS = ROOT / "state" / "company_intel" / "financial_engine_assumptions.json"
 
 

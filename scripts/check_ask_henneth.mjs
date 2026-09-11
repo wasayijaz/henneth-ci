@@ -11,10 +11,10 @@ import {
   validateModelOutput,
   validateModelSelection,
   validateRequest,
-} from "../Henneth Desk 2.CI.0/api/ask_contract.js";
+} from "../ci-app/api/ask_contract.js";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json");
+const SLICE_PATH = path.join(ROOT, "ci-app", "data", "company_intelligence.json");
 const REQUEST_LIMIT = 16 * 1024;
 const CONTEXT_LIMIT = 24 * 1024;
 const PILOT_SET = new Set(PILOT_SYMBOLS);

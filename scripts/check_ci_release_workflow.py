@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "ci-production-release.yml"
 PROJECT_LINK = ROOT / ".vercel" / "project.json"
-SUBDIR_PROJECT_LINK = ROOT / "Henneth Desk 2.CI.0" / ".vercel" / "project.json"
+SUBDIR_PROJECT_LINK = ROOT / "ci-app" / ".vercel" / "project.json"
 VERCEL_CLI_VERSION = "59.9.1"
 
 
@@ -64,8 +64,8 @@ def validate(text: str) -> list[str]:
         errors.append("release workflow must not use vercel pull; project-scoped CI tokens cannot reliably read project settings")
     if "--prebuilt" in text:
         errors.append("release workflow must deploy the restamped source preview, not a prebuilt artifact that requires vercel pull")
-    if "working-directory: Henneth Desk 2.CI.0" in text:
-        errors.append("release workflow must invoke Vercel from the repository root; the Vercel project root already points at Henneth Desk 2.CI.0")
+    if "working-directory: ci-app" in text:
+        errors.append("release workflow must invoke Vercel from the repository root; the Vercel project root already points at ci-app")
 
     # GitHub only exposes environment-scoped secrets to jobs that explicitly
     # name the environment. The preview job consumes the Vercel credentials,
@@ -80,6 +80,25 @@ def validate(text: str) -> list[str]:
         errors.append("preview job consumes protected Vercel secrets without ci-production environment")
     if "environment: ci-production" not in promote_job:
         errors.append("promote job must retain ci-production environment")
+
+    authenticated_secrets = (
+        "HENNETH_CI_OWNER_SMOKE_EMAIL",
+        "HENNETH_CI_OWNER_SMOKE_PASSWORD",
+        "HENNETH_CI_NON_OWNER_SMOKE_EMAIL",
+        "HENNETH_CI_NON_OWNER_SMOKE_PASSWORD",
+    )
+    preview_authenticated_command = 'python scripts/check_ci_release_http_smoke.py --base-url "$PREVIEW_URL" --require-authenticated'
+    production_authenticated_command = "python scripts/check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated"
+    if preview_authenticated_command not in preview_job:
+        errors.append("preview job must run authenticated owner/non-owner smoke before promotion")
+    if production_authenticated_command not in promote_job:
+        errors.append("promote job must retain authenticated owner/non-owner production smoke")
+    for secret_name in authenticated_secrets:
+        binding = f"{secret_name}: ${{{{ secrets.{secret_name} }}}}"
+        if binding not in preview_job:
+            errors.append(f"preview job is missing authenticated smoke secret binding: {secret_name}")
+        if binding not in promote_job:
+            errors.append(f"promote job is missing authenticated smoke secret binding: {secret_name}")
     return errors
 
 
@@ -98,14 +117,29 @@ def validate_project_link(root: Path = ROOT) -> list[str]:
             if project.get("projectId") != "prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh":
                 errors.append("release Vercel project link has the wrong projectId")
     if subdir_project_link.exists():
-        errors.append("release workflow must not keep a nested Henneth Desk 2.CI.0/.vercel/project.json link")
+        errors.append("release workflow must not keep a nested ci-app/.vercel/project.json link")
     return errors
 
 
 def self_test() -> int:
     passing = "\n".join((
-        "workflow_dispatch:", "validate:", "preview:", "promote:", "needs: validate", "needs: preview",
-        "environment: ci-production", "check_ci_product_contracts.py", "scripts/preflight.py",
+        "workflow_dispatch:", "validate:", "needs: validate", "needs: preview",
+        "  preview:",
+        "    environment: ci-production",
+        "    python scripts/check_ci_release_http_smoke.py --base-url \"$PREVIEW_URL\"",
+        "    python scripts/check_ci_release_http_smoke.py --base-url \"$PREVIEW_URL\" --require-authenticated",
+        "    HENNETH_CI_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_OWNER_SMOKE_EMAIL }}",
+        "    HENNETH_CI_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD }}",
+        "    HENNETH_CI_NON_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL }}",
+        "    HENNETH_CI_NON_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD }}",
+        "  promote:",
+        "    environment: ci-production",
+        "    python scripts/check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated",
+        "    HENNETH_CI_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_OWNER_SMOKE_EMAIL }}",
+        "    HENNETH_CI_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_OWNER_SMOKE_PASSWORD }}",
+        "    HENNETH_CI_NON_OWNER_SMOKE_EMAIL: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_EMAIL }}",
+        "    HENNETH_CI_NON_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD }}",
+        "check_ci_product_contracts.py", "scripts/preflight.py",
         "Set release artifact cutoff",
         "HENNETH_CI_BUILD_CUTOFF_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)",
         "Finalize CI artifacts for this release commit",

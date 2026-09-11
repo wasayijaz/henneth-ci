@@ -303,7 +303,7 @@ def main() -> None:
     result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_ci_slice.py")], capture_output=True, text=True, timeout=30)
     if result.returncode != 0:
         _fail(result.stdout + result.stderr)
-    slice_data = load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []})
+    slice_data = load_json(ROOT / "ci-app" / "data" / "company_intelligence.json", {"tickers": []})
     by_symbol = {row.get("symbol"): row for row in slice_data.get("tickers") or []}
     for symbol, state_row in expected.get("companies", {}).items():
         if (by_symbol.get(symbol) or {}).get("financial_evidence_reconciliation") != state_row:

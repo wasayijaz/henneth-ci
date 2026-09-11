@@ -4,9 +4,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const APP_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "app.js");
-const CSS_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "styles.css");
-const SLICE_PATH = path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json");
+const APP_PATH = path.join(ROOT, "ci-app", "app.js");
+const CSS_PATH = path.join(ROOT, "ci-app", "styles.css");
+const SLICE_PATH = path.join(ROOT, "ci-app", "data", "company_intelligence.json");
 const STATE_PATH = path.join(ROOT, "state", "company_intel", "evidence_watchlist.json");
 
 const app = fs.readFileSync(APP_PATH, "utf8");

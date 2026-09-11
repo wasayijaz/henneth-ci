@@ -25,7 +25,7 @@ from psx_data import ROOT, STATE, load_json, save_json
 
 
 CI_DIR = STATE / "company_intel"
-SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+SLICE = ROOT / "ci-app" / "data" / "company_intelligence.json"
 MANIFEST = CI_DIR / "artifact_integrity.json"
 GENERATOR_VERSION = "ci_artifact_integrity_v1"
 COMMIT_SHA = re.compile(r"^[0-9a-fA-F]{40}$")

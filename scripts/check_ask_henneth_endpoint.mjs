@@ -2,11 +2,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { PILOT_SYMBOLS } from "../Henneth Desk 2.CI.0/api/ask_contract.js";
-import { BODY_LIMIT, createHandler } from "../Henneth Desk 2.CI.0/api/ask.js";
+import { PILOT_SYMBOLS } from "../ci-app/api/ask_contract.js";
+import { BODY_LIMIT, createHandler } from "../ci-app/api/ask.js";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const SLICE = JSON.parse(fs.readFileSync(path.join(ROOT, "Henneth Desk 2.CI.0", "data", "company_intelligence.json"), "utf8"));
+const SLICE = JSON.parse(fs.readFileSync(path.join(ROOT, "ci-app", "data", "company_intelligence.json"), "utf8"));
 const row = SLICE.tickers.find((candidate) => candidate.symbol === "MLCF");
 let checks = 0;
 

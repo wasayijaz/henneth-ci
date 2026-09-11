@@ -2,12 +2,12 @@
 
 Henneth CI (Company Intelligence) is the private, static company-research surface split from the
 Henneth Desk. It turns retained company documents, financial evidence, operating events, and
-deterministic analysis into the `Henneth Desk 2.CI.0` Vercel app. It never places orders and never
+deterministic analysis into the `ci-app` Vercel app. It never places orders and never
 turns research into personalized advice.
 
 ## Layout
 
-- `Henneth Desk 2.CI.0/` — the static Vercel app. Its Vercel root is exactly this folder; do not
+- `ci-app/` — the static Vercel app. Its Vercel root is exactly this folder; do not
   move or rename it. The app reads only `data/company_intelligence.json`.
 - `scripts/` — CI producers, checks, the workflow gates, and `fetch_desk_inputs.py`.
 - `state/company_intel/` — CI-owned generated state.
@@ -31,7 +31,7 @@ and replaces files atomically. It exits non-zero for a missing token, failed dow
 input, or hash mismatch. The builder then rewrites:
 
 ```text
-Henneth Desk 2.CI.0/data/company_intelligence.json
+ci-app/data/company_intelligence.json
 ```
 
 For a local checkout that already contains the materialized inputs, only the second command is

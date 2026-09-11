@@ -119,7 +119,7 @@ def main():
         candidate = Path(temp) / "conditional.json"; result = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_conditional_benchmarks.py"), "--out", str(candidate)], capture_output=True, text=True, timeout=30)
         if result.returncode or without_root_meta(load_json(candidate, {})) != without_root_meta(load_json(OUT, {})):
             fail("builder logical output is not idempotent")
-    slice_rows = {row.get("symbol"): row for row in load_json(ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json", {"tickers": []}).get("tickers") or []}
+    slice_rows = {row.get("symbol"): row for row in load_json(ROOT / "ci-app" / "data" / "company_intelligence.json", {"tickers": []}).get("tickers") or []}
     for symbol in pilot:
         if (slice_rows.get(symbol) or {}).get("conditional_benchmarks") != data["companies"][symbol]: fail(f"{symbol}: slice mismatch")
     print(f"conditional_benchmarks: PASS ({len(pilot)} companies, {total} event benchmarks)")
