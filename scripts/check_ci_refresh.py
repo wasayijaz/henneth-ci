@@ -71,9 +71,23 @@ def check_failed_and_timed_out_producers_are_failures() -> None:
 
     with mock.patch.object(refresh_ci.subprocess, "run", side_effect=fake_run):
         failures, skipped = refresh_ci.run_chain(["first.py", "second.py"], "c" * 40)
-    assert failures == ["first.py:7", f"second.py:timeout>{refresh_ci.PRODUCER_TIMEOUT_S}s"]
+    assert failures == ["first.py:7"]
     assert skipped == []
-    assert all(call.get("timeout") == refresh_ci.PRODUCER_TIMEOUT_S for call in calls)
+    assert len(calls) == 1
+    assert calls[0].get("timeout") == refresh_ci.PRODUCER_TIMEOUT_S
+
+    timeout_calls = []
+
+    def timeout_run(args, **kwargs):
+        timeout_calls.append(kwargs)
+        raise refresh_ci.subprocess.TimeoutExpired(args, refresh_ci.PRODUCER_TIMEOUT_S)
+
+    with mock.patch.object(refresh_ci.subprocess, "run", side_effect=timeout_run):
+        failures, skipped = refresh_ci.run_chain(["timeout.py", "after.py"], "c" * 40)
+    assert failures == [f"timeout.py:timeout>{refresh_ci.PRODUCER_TIMEOUT_S}s"]
+    assert skipped == []
+    assert len(timeout_calls) == 1
+    assert timeout_calls[0].get("timeout") == refresh_ci.PRODUCER_TIMEOUT_S
 
 
 def check_ci_head_is_separate_from_desk_pin() -> None:
