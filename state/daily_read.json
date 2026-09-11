@@ -1,62 +1,92 @@
 {
  "date": "2026-09-11",
- "headline": "PSX bounced, but the tape is still being steered by oil and the Strait-of-Hormuz shock.",
+ "headline": "PSX rebounds, but the desk keeps a defensive read while oil stays above USD 100.",
  "tone": "cautious",
- "summary": "PSX recovered 1,646.81 points (+0.98%) to 170,511.85 on hopes of easing Gulf-Iran tensions, but that followed Thursday's 3,078.56-point drop and Brent still near $107. August remittances of $3.656bn help the external account, while 11.1% CPI and the September 14 SBP meeting keep the rate backdrop tight. The desk's read is still defensive: large banks keep the cleanest carry case, E&P has oil support but not immunity, and cyclicals need the oil/geopolitical pressure to cool before their setups deserve trust.",
+ "summary": "Official PSX data confirms KSE-100 closed September 10 at 168,865.04, down 3,078.55 pts (-1.79%), before Business Recorder's September 11 close of 170,511.85 (+1,646.81 pts, +0.98%). The rebound matters, but it does not erase the macro setup: state/global.json still has Brent 105.66 and WTI 100.76, CPI is 11.1%, and the September 14 MPC remains a hold-or-hike event. The desk's read stays cautious: banks are the cleaner fundamental pocket, E&P has valuation support but timing risk, and live triggers are low-confidence screen names only.",
  "sectors": [
   {
    "name": "Banks",
    "stance": "favoured",
-   "why": "Large banks still benefit from government-paper carry while SBP is expected to hold at 11.5%; UBL and MCB also screen with covered dividends in the retained fundamental file."
+   "why": "UBL and MCB screen attractive in the data layer: UBL P/E 7.11 with a 7.22% covered yield, MCB P/E 8.16 with a 9.01% covered yield. The carry backdrop remains intact while SBP sits at 11.5%, but the desk still treats the group as selective quality exposure."
   },
   {
    "name": "Oil & Gas E&P",
    "stance": "neutral",
-   "why": "Oil above $100 supports OGDC, PPL and MARI fundamentals, and Lundali-1 adds production, but the last week showed E&P can still sell off with the broader tape."
+   "why": "OGDC, PPL and POL screen cheap-to-fair with strong margins, and oil above USD 100 is book-supportive. Timing remains the issue: the sector still moved with the risk-off tape during the September 10 flush."
   },
   {
-   "name": "OMCs & refiners",
+   "name": "OMCs",
    "stance": "avoid",
-   "why": "The oil shock raises import and working-capital pressure; any benefit needs clearer pass-through than the desk has in state today."
+   "why": "Higher crude prices raise inventory, working-capital and pricing-pressure risk. The desk keeps this as an avoid pocket until margin and policy visibility improve."
   },
   {
-   "name": "Autos, cement & leveraged cyclicals",
+   "name": "Cement, autos and leveraged cyclicals",
    "stance": "avoid",
-   "why": "High oil, 11.1% CPI and no near-term rate-cut case leave this group exposed to cost and demand pressure."
+   "why": "CPI at 11.1%, no clear MPC easing setup, and the oil/import-cost shock all work against a broad cyclical re-rate."
   }
  ],
  "watchlist": [
   {
-   "ticker": "MUREB",
-   "angle": "Low-volatility pullback is triggering now: 67% hit rate over 18 trades and +0.77% net expectancy; fundamentals are mixed but usable, with P/E 7.31, 11% net margin and a 4.49% dividend yield.",
-   "risk": "Low-confidence backtest and small-cap liquidity; broad risk-off can overwhelm the setup."
+   "ticker": "PSEL",
+   "angle": "Proven strategy: macd_bull_zero is active now, with a 60% hit rate over 47 trades and +1.11% net expectancy. Fundamental rating: caution, driven by P/E 131.18, 1% net margin and no dividend. Catalyst: estimated results date 2026-10-02 in state/earnings_calendar.json.",
+   "risk": "Thin average traded value and expensive valuation leave little cushion if the results estimate disappoints."
   },
   {
    "ticker": "MSOT",
-   "angle": "%b momentum ride is triggering now with +1.73% net expectancy over 9 trades and 100% out-of-sample hit rate in a tiny sample.",
-   "risk": "Fundamentals are caution: P/E 15.53, only 2% net margin and no dividend."
+   "angle": "Proven strategy: bbpctb_momentum is active now, with a 67% hit rate over 9 trades and +1.73% net expectancy. Fundamental rating: caution, with thin 2% margin and no dividend. Catalyst: estimated results date 2026-10-06 in state/earnings_calendar.json.",
+   "risk": "Small sample and high volatility rank make this a screen name, not a high-conviction setup."
   },
   {
-   "ticker": "PSEL",
-   "angle": "MACD cross above zero is triggering now and the same company is tied to the Thatta Cement / Pakistan Services restructuring newsflow.",
-   "risk": "Fundamental support is weak in state: P/E 131.18, 1% net margin and no dividend."
+   "ticker": "FCL",
+   "angle": "Proven strategy: obv_divergence_up is active now, with a 56% hit rate over 27 trades and +0.68% net expectancy. Fundamental rating: caution despite fair P/E 8.41 and 5.59% dividend yield because margins are thin. Catalyst: estimated ex-dividend date 2026-10-15 in state/earnings_calendar.json.",
+   "risk": "Small-cap profile and 5.4% margin limit the defensive quality of the dividend angle."
   },
   {
    "ticker": "PTC",
-   "angle": "2-ATR stretch below 20MA is triggering now, with a 68% hit rate over 22 trades and +0.61% net expectancy.",
-   "risk": "Valuation is stretched in state, with P/E 69.29 and only 1.5% net margin."
+   "angle": "Proven strategy: atr_stretch_below is active now, with a 68% hit rate over 22 trades and +0.61% net expectancy. Fundamental rating: caution, with trailing P/E 69.29, 1.5% margin and no dividend. Catalyst: estimated results date 2026-10-16 in state/earnings_calendar.json.",
+   "risk": "The mean-reversion trigger is fighting weak trailing fundamentals and no payout support."
   }
  ],
  "catalysts": [
-  {"date": "2026-09-14", "event": "SBP MPC decision", "which_tickers": []},
-  {"date": "2026-09-14", "event": "PPL results estimate in retained calendar", "which_tickers": ["PPL"]},
-  {"date": "2026-09-15", "event": "THCCL results estimate in retained calendar", "which_tickers": ["THCCL"]},
-  {"date": "2026-09 (coming weeks)", "event": "IMF mission for next EFF/RSF review", "which_tickers": []}
+  {
+   "date": "2026-09-14",
+   "event": "SBP MPC decision; latest survey distribution was 87.5% hold and 12.5% 50bp hike.",
+   "which_tickers": []
+  },
+  {
+   "date": "2026-10-02",
+   "event": "PSEL results estimate.",
+   "which_tickers": [
+    "PSEL"
+   ]
+  },
+  {
+   "date": "2026-10-06",
+   "event": "MSOT results estimate.",
+   "which_tickers": [
+    "MSOT"
+   ]
+  },
+  {
+   "date": "2026-10-15",
+   "event": "FCL estimated ex-dividend date; estimated buy-by date 2026-10-14.",
+   "which_tickers": [
+    "FCL"
+   ]
+  },
+  {
+   "date": "2026-10-16",
+   "event": "PTC results estimate.",
+   "which_tickers": [
+    "PTC"
+   ]
+  }
  ],
  "risks": [
-  "A fresh oil spike would hit Pakistan's import bill and inflation expectations before it helps equity confidence.",
-  "Friday's rebound is still below the level before Thursday's drop, so one green session does not repair the trend.",
-  "Most live technical triggers in state carry caution fundamentals, which makes them fragile in a risk-off tape."
+  "Oil above USD 100 is the main macro risk because it hits inflation, the rupee and the import bill at the same time.",
+  "The September 11 rebound follows an official September 10 impact-4 selloff rather than replacing it.",
+  "All four current live technical signals are low-confidence and all four watchlist names carry caution-rated fundamentals.",
+  "Estimated company catalysts are unconfirmed and must not be treated as audited event dates."
  ],
  "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."
 }

@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-11 17:19",
+ "updated": "2026-09-11 18:12",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 67,
-  "band": "elevated"
+  "score": 61,
+  "band": "moderate"
  },
  "signals": [
   {
@@ -43,24 +43,6 @@
    "thesis": "MACD cross above zero is triggering now; on PSEL's own history it won 60% over 47 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
-   "id": "20260911-MUREB-lowvol_pullback",
-   "ticker": "MUREB",
-   "strategy": "lowvol_pullback",
-   "template": "Low-volatility pullback",
-   "category": "volatility",
-   "sector": "Food & Personal Care Products",
-   "hold_sessions": 10,
-   "backtest": {
-    "hit_rate": 0.667,
-    "net_expectancy_pct": 0.77,
-    "n": 18,
-    "oos_hit": 0.6
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Low-volatility pullback is triggering now; on MUREB's own history it won 67% over 18 trades (+0.8% net/trade), still profitable out-of-sample."
-  },
-  {
    "id": "20260911-PTC-atr_stretch_below",
    "ticker": "PTC",
    "strategy": "atr_stretch_below",
@@ -77,6 +59,24 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "2-ATR stretch below 20MA is triggering now; on PTC's own history it won 68% over 22 trades (+0.6% net/trade), still profitable out-of-sample."
+  },
+  {
+   "id": "20260911-FCL-obv_divergence_up",
+   "ticker": "FCL",
+   "strategy": "obv_divergence_up",
+   "template": "Volume leads price",
+   "category": "volume",
+   "sector": "Cable & Electrical Goods",
+   "hold_sessions": 15,
+   "backtest": {
+    "hit_rate": 0.556,
+    "net_expectancy_pct": 0.68,
+    "n": 27,
+    "oos_hit": 0.571
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -91,7 +91,7 @@
   },
   {
    "ticker": "GLD",
-   "score": 69.3
+   "score": 68.4
   },
   {
    "ticker": "INDU",
@@ -107,7 +107,7 @@
   },
   {
    "ticker": "USRUT",
-   "score": 65.5
+   "score": 65.1
   },
   {
    "ticker": "EFA",
@@ -177,39 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-09-05",
-   "source": "Business Recorder",
-   "headline": "Diesel price rises Rs3.74, petrol falls Rs3.13 per litre",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 2,
-   "summary": "OGRA/federal government adjustment effective Saturday Sept 5 through Monday Sept 7, 2026: petrol cut Rs3.13/litre to Rs345.87/litre; HSD diesel raised Rs3.74/litre to Rs378.05/litre, per Business Recorder, citing international oil market conditions. Routine fortnightly-mechanism adjustment, consistent with prior similarly small moves logged.",
-   "url": "https://www.brecorder.com/news/40437962/diesel-price-rises-rs374-petrol-falls-rs313-per-litre"
-  },
-  {
-   "ts": "2026-09-07",
-   "source": "Business Recorder",
-   "headline": "PSX: KSE-100 sheds nearly 1% amid selling pressure",
-   "tickers": [
-    "MACRO",
-    "OGDC",
-    "PRL",
-    "NBP",
-    "PPL",
-    "SSGC",
-    "ATRL",
-    "HUBC",
-    "PSO",
-    "FFC",
-    "MEBL",
-    "UBL"
-   ],
-   "impact": 4,
-   "summary": "KSE-100 confirmed close Mon Sept 7, 2026 at 173,636.07, down 1,692.75 points (-0.97%) from Friday Sept 4's confirmed close of 175,328.82 (already logged), per Business Recorder (3:55pm update, 'PSX: KSE-100 sheds nearly 1% amid selling pressure'). Third consecutive session of losses tied to the ongoing US-Iran conflict (following the Aug 31 impact-5 shock and Sept 2 impact-4 session, both already logged); index-heavy stocks named trading red across Business Recorder's rolling coverage of the session include OGDC (-2.38%), Pakistan Refinery/PRL (-10%), NBP (-1.27%), PPL (-1.88%), SSGC (-2.37%), plus ARL/ATRL, HUBCO, PSO, FFC, MEBL and UBL named earlier in the day. Sectors hit: automobile assemblers, cement, commercial banks, OMCs, refineries. Cited drivers: renewed US-Iran military tensions pushing oil prices higher, plus global inflation/rate-hike concerns. Logged as impact 4 (material, sharp market-wide move tied to continuing geopolitical/war shock, per desk criteria Rule 10), consistent with the Sept 2 entry of similar magnitude and cause.",
-   "url": "https://www.brecorder.com/news/40438276/psx-kse-100-sheds-nearly-1-amid-selling-pressure"
-  },
   {
    "ts": "2026-09-07",
    "source": "Business Recorder",
@@ -319,7 +286,7 @@
     "ATRL"
    ],
    "impact": 4,
-   "summary": "KSE-100 settled at 168,865.04 on September 10, 2026, down 3,078.56 points (-1.79%) from the prior close, after renewed US-Iran attacks and surging international crude prices triggered aggressive selling. Business Recorder linked the fall to inflation, external-account and macro-stability concerns; oil-heavy and bank tickers were explicitly tagged from the article metadata and related index-heavy names. Logged as impact 4 (material market-wide move tied to war/oil shock, per Rule 10).",
+   "summary": "KSE-100 settled at 168,865.04 on September 10, 2026, down 3,078.55 points (-1.79%) from the prior close, after renewed US-Iran attacks and surging international crude prices triggered aggressive selling. Business Recorder linked the fall to inflation, external-account and macro-stability concerns; oil-heavy and bank tickers were explicitly tagged from the article metadata and related index-heavy names. Logged as impact 4 (material market-wide move tied to war/oil shock, per Rule 10).",
    "url": "https://www.brecorder.com/news/40439013/psx-buying-returns-kse-100-up-over-1400-points-on-hopes-of-easing-middle-east-tensions"
   },
   {
@@ -382,7 +349,7 @@
     "PRL"
    ],
    "impact": 4,
-   "summary": "Business Recorder reported Brent at $107.08 and WTI above $100 for the first time since May after a 6% overnight oil jump on supply concerns tied to the Middle East conflict. Logged as impact 4 (sharp commodity move directly relevant to Pakistan external account, inflation and E&P/refinery/OMC sectors, per Rule 10).",
+   "summary": "Business Recorder reported Brent at USD 107.08 and WTI above USD 100 for the first time since May after a 6% overnight oil jump on supply concerns tied to the Middle East conflict. Logged as impact 4 (sharp commodity move directly relevant to Pakistan external account, inflation and E&P/refinery/OMC sectors, per Rule 10).",
    "url": "https://www.brecorder.com/latest-news"
   },
   {
@@ -395,28 +362,36 @@
    "impact": 3,
    "summary": "Business Recorder reported the IMF mission will visit Pakistan in the coming weeks for the next review of ongoing programs including the Extended Arrangement under the EFF and RSF. Logged as impact 3 (notable macro calendar/review item; no disbursement or programme change yet).",
    "url": "https://www.brecorder.com/news/40439040/imf-mission-to-visit-pakistan-in-coming-weeks-for-next-review"
+  },
+  {
+   "ts": "2026-09-10",
+   "source": "PSX",
+   "headline": "Official PSX market summary confirms September 10 KSE-100 close",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 4,
+   "summary": "Official PSX market data confirms KSE-100 closed at 168,865.04 on September 10, 2026, down 3,078.55 points (-1.79%). The desk therefore discards the earlier alternate close level from secondary reporting and keeps the September 10 move logged as impact 4 because it was a material market-wide selloff during the oil/geopolitical shock.",
+   "url": "https://www.psx.com.pk/psx/include71650/new-PSX-market-summary.php"
+  },
+  {
+   "ts": "2026-09-10",
+   "source": "Business Recorder",
+   "headline": "Oil surges 6%; Brent and US crude both surpass $100 on more tanker attacks",
+   "tickers": [
+    "MACRO",
+    "OGDC",
+    "PPL",
+    "POL",
+    "PSO"
+   ],
+   "impact": 4,
+   "summary": "Business Recorder reported on September 10, 2026 that oil settled about 6% higher after additional tanker attacks, with both Brent and WTI moving above $100 for the first time in seven weeks. The item reinforces the desk's import-bill, inflation and energy-sector timing risk channel. Logged as impact 4 because it materially affects the macro tape and the large E&P/energy-linked PSX names.",
+   "url": "https://www.brecorder.com/news/40438806/oil-surges-6-brent-and-us-crude-both-surpass-100-on-more-tanker-attacks"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-09-07T17:20:00+05:00",
-   "mode": "light-escalated",
-   "ended": "2026-09-07T17:40:00+05:00",
-   "outcome": "PM checkpoint, continuation of the blocked full cycle logged above. Gate required (health degraded: 263/456 symbols stale since 2026-08-26, plus first_of_day standing). No open positions (positions.json empty) — monitor skipped. news-sentinel appended 3 items to newslog.json (safe file, not part of the corruption); one item scored impact 4 (KSE-100 -0.97%, third losing session, tied to US-Iran/Strait of Hormuz conflict) so escalation fired: macro-agent ran and updated macro.json (regime risk-off, firmer than before, new Hormuz escalation vector); market-analyst ran and updated daily_read.json (tone defensive, caveated watchlist, UNITY excluded over SECP/FIA fraud probe) and independently re-confirmed the state/dashboard.json corruption (literal <<<<<<< Updated upstream / ======= / >>>>>>> Stashed changes markers around its 'updated' field — consistent with an unresolved git stash-pop conflict). build_dashboard.py and publish.py deliberately NOT run: ~109 files under state/company_intel/, state/history/, state/dashboard.json, state/verify.json etc. still carry literal git conflict markers on disk (unchanged from the entry above), preflight.py would fail or worse risk baking markers into published state. Nothing committed or pushed; live site untouched. Gate acked via build_checkpoint_trigger.py --ack checkpoint-pm per step 9 (mandatory even when downstream steps are declined) — this does not mark the health degradation itself as resolved, only that this checkpoint acted on the pending list. Corruption still needs manual resolution by the owner before any publish can run."
-  },
-  {
-   "started": "2026-09-07T17:45:00+05:00",
-   "mode": "room",
-   "ended": "2026-09-07T17:47:00+05:00",
-   "outcome": "Desk Room loop blocked at step 1: repo still carries the unresolved autostash-pop conflict from an earlier session (~109 files under state/company_intel/, state/history/, state/dashboard.json, state/verify.json etc still hold literal <<<<<<< Updated upstream / ======= / >>>>>>> Stashed changes markers; stash@{0} labeled autostash still present, never dropped). Same corruption already logged in the entry above at 17:20-17:40 PKT, still unresolved. Did not run git pull --rebase --autostash (would compound the conflict), did not touch room_dossier.py/room_queue.py/room_gate.py or any script that reads the corrupted JSON, did not commit or push. No agents spawned, zero tokens spent on debate. Needs the owner to manually resolve the stash conflict (git status shows the file list) and drop stash@{0} before any cycle can run again."
-  },
-  {
-   "started": "2026-09-08T17:00:00+05:00",
-   "mode": "light-escalated",
-   "ended": "2026-09-08T18:49:00+05:00",
-   "outcome": "PM checkpoint (weekday close). Gate required (40 pending items + first_of_day). health ok. No open positions, monitor skipped. news-sentinel appended 2 items (265 total) -- KSE-100 confirmed close 172,642.16 -993.91pts/-0.57%, 4th straight losing session tied to US-Iran/Hormuz conflict (impact 3); OGDC FY26 record net profit Rs242.374bn +43% YoY, EPS Rs56.35, record dividend Rs17/share (impact 4) -> escalation.json fired. macro-agent ran: regime risk-off (unchanged, deepened) -- Iran finalizing Hormuz exclusion zone, Brent ~$99 7wk high, CPI 11.1% Aug, SBP MPC Sep14 hold expected, reserves $17.12bn unchanged; caught and discarded a misattributed '$297mn Aug C/A surplus' claim (real source was Aug 2020) to prevent propagation; sector tilt banks-on-govt-paper favoured, OMCs/autos/cement/power-IPPs/cyclicals avoid. market-analyst FIRST attempt failed mid-escalation on a session-wide rate limit (HTTP 429, resets 18:30 PKT) -- daily_read.json left stale through that gap; RETRIED after reset, succeeded: daily_read.json refreshed, tone cautious, banks sole favoured sector, 4-name watchlist (MUREB/NICL/IPAK/TPLT) each tied to a live dashboard trigger but flagged with an explicit fundamental caution (none rate 'attractive'), OGDC's strong result reported as fact not a buy case since the tape sold it off anyway, UNITY excluded per standing SECP/FIA fraud-probe precedent. build_dashboard+preflight OK (1 non-gating WARN: 102 backfilling tickers). Published data-only (47 pre-existing hand-authored/untracked files held back, not this session's), pushed to main -> Vercel deploying. Gate acked checkpoint-pm."
-  },
   {
    "started": "2026-09-08T13:30:00+05:00",
    "mode": "full",
@@ -427,7 +402,25 @@
    "started": "2026-09-11T17:06:53+05:00",
    "mode": "light-escalated",
    "ended": "2026-09-11T17:23:00+05:00",
-   "outcome": "PM checkpoint (training mode). Gate required: 20 material pending items + first_of_day. No open positions, monitor skipped. news-sentinel inline appended 8 items (275 total), including Sept 10 KSE-100 -3,078.56pts/-1.79% and Sept 11 oil shock (Brent reported .08, WTI above ), so escalation.json remains true. macro.json and daily_read.json refreshed to risk-off/cautious. build_dashboard initially exposed stale deterministic CI manifests; refreshed completion matrix, ownership source manifest, owner financial-assumption handoff, CI slice and artifact integrity. Final preflight OK with 1 non-gating WARN: 102 newly-added tickers still backfilling history. Training mode: not published and gate not acked pending owner approval."
+   "outcome": "PM checkpoint (training mode). Gate required: 20 material pending items + first_of_day. No open positions, monitor skipped. news-sentinel inline appended 8 items (275 total), including Sept 10 KSE-100 -3,078.55pts/-1.79% and Sept 11 oil shock (Brent reported USD 107.08, WTI above USD 100), so escalation.json remains true. macro.json and daily_read.json refreshed to risk-off/cautious. build_dashboard initially exposed stale deterministic CI manifests; refreshed completion matrix, ownership source manifest, owner financial-assumption handoff, CI slice and artifact integrity. Final preflight OK with 1 non-gating WARN: 102 newly-added tickers still backfilling history. Training mode: not published and gate not acked pending owner approval."
+  },
+  {
+   "started": "2026-09-11T17:20:24+05:00",
+   "mode": "codex-heartbeat-training",
+   "ended": "2026-09-11T17:35:09+05:00",
+   "outcome": "Daily refresh prepared locally in isolated Codex worktree. Trading weekday confirmed and state/health.json was ok. Research QA corrected the Sept 10 KSE-100 close to the official PSX value: 168,865.04, down 3,078.55pts/-1.79%; escalation.json remains true for material macro/market risk. macro-agent updated macro.json to risk-off using state/global.json plus verified CPI/SBP/source context. market-analyst updated daily_read.json with cautious tone, banks favoured, E&P neutral, OMCs/cyclicals avoid, and watchlist entries tied to active strategies, fundamental ratings and dated catalysts. No checkpoint acknowledgement was performed."
+  },
+  {
+   "started": "2026-09-11T17:55:00+05:00",
+   "mode": "codex-heartbeat-training-rebase",
+   "ended": "2026-09-11T17:57:31+05:00",
+   "outcome": "After owner approval to push, the prepared refresh was held behind PM publication slot 1, then rebased onto origin/main's latest PM data before final publication. Dashboard/preflight were rerun on that base; CI/company_intel byproducts were restored out of the Desk refresh delta."
+  },
+  {
+   "started": "2026-09-11T18:07:40+05:00",
+   "mode": "codex-daily-refresh-qa-repair",
+   "ended": "2026-09-11T18:07:40+05:00",
+   "outcome": "Research QA repaired the daily refresh before publish: official PSX Sept 10 close 168,865.04 and -3,078.55pts/-1.79% replaced the conflicting secondary close everywhere; PM runlog dollar values repaired to Brent reported USD 107.08 and WTI above USD 100; watchlist entries now each tie active strategy, fundamental rating and dated catalyst."
   }
  ]
 }
