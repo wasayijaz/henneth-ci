@@ -116,14 +116,18 @@ def run(base_url: str, *, require_authenticated: bool = False) -> None:
     private_smoke(base_url, None, 401, "owner_required")
     if not require_authenticated:
         return
-    owner_token = fetch_access_token(
-        str(os.environ.get("HENNETH_CI_OWNER_SMOKE_EMAIL") or "").strip(),
-        str(os.environ.get("HENNETH_CI_OWNER_SMOKE_PASSWORD") or ""),
-    )
-    non_owner_token = fetch_access_token(
-        str(os.environ.get("HENNETH_CI_NON_OWNER_SMOKE_EMAIL") or "").strip(),
-        str(os.environ.get("HENNETH_CI_NON_OWNER_SMOKE_PASSWORD") or ""),
-    )
+    tokens = {}
+    for role in ("OWNER", "NON_OWNER"):
+        try:
+            tokens[role] = fetch_access_token(
+                str(os.environ.get(f"HENNETH_CI_{role}_SMOKE_EMAIL") or "").strip(),
+                str(os.environ.get(f"HENNETH_CI_{role}_SMOKE_PASSWORD") or ""),
+            )
+        except AssertionError as exc:
+            # Role only: never log the email, password, token or provider body.
+            fail(f"{role.lower()} smoke account: {exc}")
+    owner_token = tokens["OWNER"]
+    non_owner_token = tokens["NON_OWNER"]
     private_smoke(base_url, owner_token, 200, None)
     private_smoke(base_url, non_owner_token, 403, "forbidden")
 
