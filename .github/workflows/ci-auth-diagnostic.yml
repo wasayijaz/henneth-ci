@@ -21,7 +21,7 @@ jobs:
           HENNETH_CI_NON_OWNER_SMOKE_PASSWORD: ${{ secrets.HENNETH_CI_NON_OWNER_SMOKE_PASSWORD }}
         run: |
           python - <<'PY'
-          import os, sys
+          import hashlib, os, sys
           sys.path.insert(0, 'scripts')
           from check_ci_release_http_smoke import fetch_access_token
           failed = False
@@ -32,5 +32,8 @@ jobs:
               except AssertionError as exc:
                   failed = True
                   print(f'{role}: {exc}')
+                  if role == 'NON_OWNER':
+                      identity = os.environ['HENNETH_CI_NON_OWNER_SMOKE_EMAIL'].strip().lower()
+                      print('NON_OWNER_IDENTITY_SHA256: ' + hashlib.sha256(identity.encode()).hexdigest())
           raise SystemExit(1 if failed else 0)
           PY
