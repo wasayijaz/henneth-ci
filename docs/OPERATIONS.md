@@ -41,6 +41,12 @@ The only production release path is the controlled workflow:
 The protected `ci-production` environment supplies deployment and smoke credentials. Credential
 values never belong in this repository, state, logs, documentation, or the static app.
 
+The workflow's `preview` job means a staged URL, not Vercel's Preview environment.
+It uses `deploy --prod --skip-domain`: production configuration with no live-domain switch.
+Promoting a Preview-environment deployment creates a new production deployment, so it cannot
+satisfy the exact-tested-deployment contract. Both metadata checks require target `production`;
+the post-promotion check must still match the staged deployment ID exactly.
+
 The latest recorded attempt did not release: preview anonymous smoke passed, the authenticated
 owner/non-owner check failed at the password grant with HTTP 400, and promotion was skipped.
 

@@ -36,3 +36,10 @@ Accepted debt:
   The file remains private and must never be served.
 - 2026-09-11: The controlled release attempt did not succeed. Preview anonymous smoke passed;
   the authenticated owner/non-owner password grant returned HTTP 400, so promotion was skipped.
+- 2026-09-11: Dedicated non-owner smoke identity provisioned with owner approval; both saved
+  credential pairs passed GitHub diagnostic 34634153663. No personal account was modified.
+- 2026-09-11: Release 34635318113 passed all preview checks but `promote` created a different
+  production deployment. The unchanged exact-ID gate rejected it. Corrected staging to
+  `--prod --skip-domain` and added missing-flag/Preview-target regression tests. Same-ID and
+  owner/non-owner gates remain mandatory. Sources: https://vercel.com/docs/cli/promote and
+  https://vercel.com/docs/cli/deploy#skip-domain.

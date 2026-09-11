@@ -66,14 +66,16 @@ jobs:
         run: |
           python scripts/build_ci_artifact_integrity.py
           python scripts/check_ci_artifact_integrity.py
-      - name: Deploy immutable CI preview
+      # A Preview-environment deployment is rebuilt by `promote`. Stage a
+      # Production-environment build without assigning live domains instead.
+      - name: Deploy immutable staged CI production build
         id: deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: team_pAWpYAOOLZPwDFoqUeBguGIr
           VERCEL_PROJECT_ID: prj_6CYUpEbDTP0qIRl2U7XpaQrxeRrh
         run: |
-          url="$(npx --yes vercel@59.9.1 deploy --yes --token="$VERCEL_TOKEN" --meta githubCommitSha="$GITHUB_SHA" --meta githubCommitRef="$GITHUB_REF_NAME" --meta githubCommitRepo="$GITHUB_REPOSITORY")"
+          url="$(npx --yes vercel@59.9.1 deploy --yes --prod --skip-domain --token="$VERCEL_TOKEN" --meta githubCommitSha="$GITHUB_SHA" --meta githubCommitRef="$GITHUB_REF_NAME" --meta githubCommitRepo="$GITHUB_REPOSITORY")"
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - name: Verify preview is bound to this commit
         id: verify-preview

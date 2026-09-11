@@ -107,6 +107,8 @@ def validate_payload(
         fail("expected commit SHA must be a full 40-character lowercase hex SHA")
 
     deployment_id = _deployment_id(payload)
+    if payload.get("target") != "production":
+        fail("release deployment must be built for production before promotion")
     if expected_deployment_id and deployment_id != expected_deployment_id:
         fail("production URL does not resolve to the verified preview deployment id")
 
@@ -125,6 +127,7 @@ def self_test() -> int:
     fixture = {
         "uid": "dpl_test",
         "readyState": "READY",
+        "target": "production",
         "meta": {"githubCommitSha": commit_sha},
     }
     deployment_id, actual = validate_payload(fixture, expected_commit_sha=commit_sha)
@@ -132,6 +135,13 @@ def self_test() -> int:
         print("self-test failed: complete fixture produced wrong result")
         return 1
     mismatch = dict(fixture, meta={"githubCommitSha": "0" * 40})
+    try:
+        validate_payload(dict(fixture, target="preview"), expected_commit_sha=commit_sha)
+    except AssertionError:
+        pass
+    else:
+        print("self-test failed: Preview-environment deployment accepted for promotion")
+        return 1
     try:
         validate_payload(mismatch, expected_commit_sha=commit_sha)
     except AssertionError:

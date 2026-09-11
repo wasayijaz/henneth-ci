@@ -59,6 +59,10 @@ The Vercel project is externally configured with root directory `ci-app`. The ro
 only links this checkout to the CI project; deployment credentials and smoke credentials remain in
 the protected environment.
 
+Release staging uses Vercel's Production environment with `--skip-domain`, not its Preview
+environment. This gives a tested production-configured deployment whose ID is retained when
+promoted. The live domain is assigned only after anonymous and authenticated staging checks pass.
+
 No CI cron is approved. `scripts/publish.py` is a Desk/shared-repository publish mechanism and must
 never be used for CI. CI does not commit or push as part of refresh or release preparation.
 

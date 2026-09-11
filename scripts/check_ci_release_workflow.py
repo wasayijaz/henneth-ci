@@ -38,7 +38,7 @@ def validate(text: str) -> list[str]:
         "check_ci_vercel_deployment_commit.py --self-test",
         "check_ci_release_http_smoke.py --base-url \"$PREVIEW_URL\"",
         "check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated",
-        f"vercel@{VERCEL_CLI_VERSION} deploy --yes",
+        f"vercel@{VERCEL_CLI_VERSION} deploy --yes --prod --skip-domain",
         "--meta githubCommitSha=\"$GITHUB_SHA\"",
         f"vercel@{VERCEL_CLI_VERSION} promote \"$PREVIEW_URL\"",
         "Verify preview is bound to this commit",
@@ -149,7 +149,7 @@ def self_test() -> int:
         "check_ci_vercel_deployment_commit.py --self-test",
         "check_ci_release_http_smoke.py --base-url \"$PREVIEW_URL\"",
         "check_ci_release_http_smoke.py --base-url https://ci.henneth.app --require-authenticated",
-        f"vercel@{VERCEL_CLI_VERSION} deploy --yes", f"vercel@{VERCEL_CLI_VERSION} promote \"$PREVIEW_URL\"",
+        f"vercel@{VERCEL_CLI_VERSION} deploy --yes --prod --skip-domain", f"vercel@{VERCEL_CLI_VERSION} promote \"$PREVIEW_URL\"",
         "--meta githubCommitSha=\"$GITHUB_SHA\"",
         "Verify preview is bound to this commit",
         "check_ci_vercel_deployment_commit.py --deployment-url \"$PREVIEW_URL\" --commit-sha \"$GITHUB_SHA\"",
@@ -166,6 +166,10 @@ def self_test() -> int:
     if validate(passing):
         print("self-test failed: complete fixture rejected")
         return 1
+    for missing_flag in (" --prod", " --skip-domain"):
+        if not validate(passing.replace(missing_flag, "")):
+            print("self-test failed: non-staged deployment accepted")
+            return 1
     preview_unprotected = passing.replace("environment: ci-production", "", 1)
     if not validate(preview_unprotected):
         print("self-test failed: unprotected preview fixture accepted")
