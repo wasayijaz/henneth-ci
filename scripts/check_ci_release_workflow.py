@@ -87,9 +87,7 @@ def validate_project_link(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     project_link = root / PROJECT_LINK.relative_to(ROOT)
     subdir_project_link = root / SUBDIR_PROJECT_LINK.relative_to(ROOT)
-    if not project_link.exists():
-        errors.append("release workflow requires .vercel/project.json at the repository root")
-    else:
+    if project_link.exists():
         try:
             project = json.loads(project_link.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:

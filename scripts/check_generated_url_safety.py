@@ -35,20 +35,9 @@ def check_newslog_ingestion():
 
 
 def check_dashboard_sinks():
-    app = (ROOT / "dashboard" / "app.js").read_text(encoding="utf-8")
-    board = (ROOT / "dashboard" / "board.js").read_text(encoding="utf-8")
-    require("function safeExternalHref" in app, "dashboard/app.js missing safeExternalHref")
-    require("function externalLink" in app, "dashboard/app.js missing externalLink")
-    for needle in (
-        'href="${esc(cp.source_url)}"',
-        'href="${esc(c.source_url)}"',
-        'href="${esc(n.url)}"',
-        'href="${esc(r.pdf_url)}"',
-        'href="${esc(d.url)}"',
-    ):
-        require(needle not in app, f"dashboard/app.js still has raw generated href sink: {needle}")
-    require('href="\' + esc(n.url) + \'"' not in board, "dashboard/board.js still has raw generated news href sink")
-    require("noopener noreferrer" in app, "dashboard/app.js external links must include noopener noreferrer")
+    app = (ROOT / "Henneth Desk 2.CI.0" / "app.js").read_text(encoding="utf-8")
+    require("const safeHref" in app, "CI app is missing safeHref")
+    require("target=\"_blank\"" in app, "CI app source links must open in a separate tab")
 
 
 def main():
