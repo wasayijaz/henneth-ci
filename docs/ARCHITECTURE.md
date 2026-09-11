@@ -165,14 +165,19 @@ There is no application server for the research product.
 
 ### 4a. Cloud refresh (free, no agents)
 
-`.github/workflows/desk-data.yml` runs `python scripts/run_cloud.py` then `python scripts/publish.py`.
+`.github/workflows/desk-data.yml` runs `python scripts/run_desk_cloud.py`, the single-shot
+`post_close_recovery.py`, then `python scripts/publish.py`.
 
-`run_cloud.py` is the ordered list. Do not reorder casually. Two order invariants:
+`run_desk_cloud.py` is the ordered Desk-only list. It never regenerates or validates
+`state/company_intel/`, protected CI config, or `Henneth Desk 2.CI.0/data/`. Company Intelligence
+uses its own contract and controlled production-release workflows. `run_cloud.py` remains the
+full historical pipeline entry point for explicit combined development runs; it is not the Desk cron.
+Do not reorder the Desk list casually. Two order invariants:
 
 1. `liquidity.py` must run after both history fetches and before `fetch_fundamentals` / `predictability` / `backtest`. Out of order, `research_symbols()` falls back to core-only and backtests silently charge flat friction.
 2. `build_astro_lite.py` must run after `astro_engine.py`. It writes into `site/`, never `state/`.
 
-`build_public_slice.py` runs in `run_cloud.py` after the research it reads (and after `build_astro_lite.py`). It writes only the allow-listed extract into `site/src/data/public/`. `publish.py` commits that folder as generated data, same as `state/`. Adding a field to `state/` still does not publish it. If a pilot name is temporarily missing from the universe (for example an ex-dividend suffix like `FFCXD`), the extractor keeps the last published public row and marks it `stale` rather than deleting the marketing page.
+`build_public_slice.py` runs in `run_desk_cloud.py` after the research it reads (and after `build_astro_lite.py`). It writes only the allow-listed extract into `site/src/data/public/`. `publish.py` commits that folder as generated Desk data. Adding a field to `state/` still does not publish it. If a pilot name is temporarily missing from the universe (for example an ex-dividend suffix like `FFCXD`), the extractor keeps the last published public row and marks it `stale` rather than deleting the marketing page.
 
 ### 4b. Local judgement cycle
 
@@ -185,12 +190,18 @@ released by the operating system on a crash. GitHub runners have separate filesy
 overlap is still resolved by the Desk workflow concurrency setting plus `publish.py`'s
 non-fast-forward rebase/retry path.
 
-Henneth CI is a separate product and release system. The Desk cloud pipeline also rebuilds retained
-CI producers and the private slice in the shared repository, and a push can cause `ci-contract.yml`
-to validate that commit. Neither action refreshes or promotes `ci.henneth.app`. CI production remains
+Henneth CI is a separate product and release system. The Desk cloud pipeline does not rebuild retained
+CI producers or the private slice. A Desk push can still cause `ci-contract.yml` to validate the
+repository commit, but it does not refresh or promote `ci.henneth.app`. CI production remains
 exclusive to `ci-production-release.yml`: validate, protected environment, immutable preview,
 verification, exact-preview promotion, auth smoke tests, and release receipt. Its own GitHub
 concurrency group governs that release lane; the local repository lock does not.
+
+After the verified PSX close (15:30 PKT Monday-Thursday, 16:30 Friday),
+`post_close_integrity.py` requires today's KSE100 close, a timezone-aware post-close full-history
+completion, and same-day EOD bars for at least 99% of counters with positive session volume.
+Suspended and zero-trade counters retain their last real dated close. `preflight.py --desk` hard-fails
+on an incoherent snapshot; the workflow retries the Desk data path once before giving up.
 
 Deterministic `build_signals.py` already publishes candidate setups labelled `basis: "backtest-proven, unaudited"`. The Auditor can later upgrade a setup. Those are different objects. Do not collapse them.
 
@@ -386,13 +397,14 @@ There is no in-product RAG store, no embeddings pipeline, and no per-visitor age
 
 | Process | Where | What |
 |---|---|---|
-| `desk-data.yml` | GitHub Actions, weekdays 07/37 minutes past 03:00-11:00 UTC | `run_cloud.py` + `publish.py` + `watchdog.py` |
+| `desk-data.yml` | GitHub Actions, weekdays 07/37 minutes past 03:00-11:00 UTC | `run_desk_cloud.py` + post-close recovery + Desk-only `publish.py` + `watchdog.py` |
 | App scheduled tasks | owner's Codex app; legacy runbooks remain under `~/.claude/scheduled-tasks/` | news, monitor, macro, daily read, Desk Room debates, weekly harvest, weekly code review |
 | `lifecycle_email.py` | not scheduled live | welcome / nudge / digest |
 | `push_send.py` | runnable, inert without VAPID | web push |
 | Content tweet tasks | separate content system | not the desk |
 
-`SYSTEM-REGISTRY.md` is a cheap index and was last dated 2026-07-14. Prefer `run_cloud.py` and `OPERATIONS.md` when the registry disagrees.
+`SYSTEM-REGISTRY.md` is a cheap index and was last dated 2026-07-14. Prefer the product-specific
+pipeline (`run_desk_cloud.py` for Desk) and `OPERATIONS.md` when the registry disagrees.
 
 The cloud workflow installs Python 3.12 (`.github/workflows/desk-data.yml`). That is the canonical runtime for published numbers. The owner's machine may be 3.14. `requirements.txt` is the only dependency list.
 
@@ -512,7 +524,7 @@ Leave these alone unless the reason died.
 | Add a dashboard page | `PAGES` + a `pageX()` in `app.js`, nav in `index.html`. Do not start a second router |
 | Add a marketing page | `site/src/pages/...` + `site.config.ts` if it is brand-shaped |
 | Add an agent | `.claude/agents/`, one line in `SYSTEM-REGISTRY.md`, persist into `state/` |
-| Add a cron step | `run_cloud.py` if it is free/deterministic; owner's scheduled tasks if it needs Claude |
+| Add a Desk cron step | `run_desk_cloud.py` if it is free/deterministic and Desk-owned; CI workflow if CI-owned; owner's scheduled tasks if it needs an agent |
 | Touch auth or `/state/` | stop and read `middleware.js`, `GOTCHAS.md`, OPERATIONS.md section 9b |
 | Activate push or email | owner applies SQL + secrets; do not turn it on from code alone |
 

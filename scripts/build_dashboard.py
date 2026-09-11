@@ -15,8 +15,9 @@ SCRIPTS = Path(__file__).resolve().parent
 def main():
     # deterministic derived layers (free, no LLM) — run via build_dashboard so the
     # already-deployed workflow picks them up without a workflow edit.
-    for mod in ("compute_fairvalue", "build_signals", "build_ownership_source_manifest",
-                "build_company_scenario_lab", "build_ci_work_routing_policy"):
+    # Desk-only assembly. Company Intelligence has its own builders and release gate;
+    # rebuilding CI here coupled every commentary refresh to an unrelated product.
+    for mod in ("compute_fairvalue", "build_signals"):
         try:
             __import__(mod).main()
         except Exception as e:  # noqa: BLE001 — never let a derived layer break the board
@@ -95,12 +96,12 @@ def main():
                 "credential. Carries no desk output — every research file requires an account.",
     })
 
-    # PRE-DEPLOY GATE — this is the last step the CI pipeline runs before it copies
-    # state/ into the published site (workflow runs it under `set -e`). preflight
+    # PRE-DEPLOY GATE — this is the last Desk assembly step before publication. CI has
+    # a separate full contract and controlled production-release workflow. Desk preflight
     # trips only on STRUCTURAL corruption (empty quant, missing joined fields, NaN),
     # not on network-degraded-but-valid data, so a bad cycle aborts the job and the
     # last-good live site stays up instead of publishing a blank/broken board.
-    gate = subprocess.run([sys.executable, str(SCRIPTS / "preflight.py")])
+    gate = subprocess.run([sys.executable, str(SCRIPTS / "preflight.py"), "--desk"])
     if gate.returncode != 0:
         print("build_dashboard: PREFLIGHT FAILED — aborting so the broken board is NOT published")
         sys.exit(1)

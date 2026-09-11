@@ -9,6 +9,7 @@ import time
 from datetime import date, datetime, timedelta
 
 from psx_data import STATE, intraday_last, load_json, save_json
+from post_close_integrity import evaluate as evaluate_post_close
 
 MAX_STALE_SESSIONS_DAYS = 5  # last EOD date may lag this many calendar days
 
@@ -131,6 +132,9 @@ def main():
     if foreign and f_have < len(foreign):
         advisories.append(f"non-PSX history {f_have}/{len(foreign)} — research-tier only, does not gate signals")
 
+    post_close = evaluate_post_close()
+    if post_close["required"] and post_close["status"] != "ok":
+        problems.extend(f"post_close_integrity: {p}" for p in post_close["problems"])
     status = "ok" if not problems else "degraded"
     save_json(STATE / "health.json", {
         "checked": time.strftime("%Y-%m-%d %H:%M"),
@@ -147,6 +151,7 @@ def main():
         "stale_fleet": len(stale_fleet),
         "stale_fleet_cutoff": fleet_cutoff,
         "spot_check": spot,
+        "post_close_integrity": post_close,
     })
     print(f"health: {status}" + (f" — {'; '.join(problems)}" if problems else ""))
     sys.exit(0)

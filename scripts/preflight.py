@@ -12,6 +12,7 @@ rsi14 -> every RSI cell blanks). Cheap, deterministic, no tokens, no network.
 
 Usage:
     python scripts/preflight.py            # human report, exit 1 on FAIL
+    python scripts/preflight.py --desk     # Desk-only gate; CI has its own release gate
     python scripts/preflight.py --strict   # WARN also fails (use in CI)
 
 Exit codes: 0 = safe to deploy, 1 = do not deploy.
@@ -26,6 +27,8 @@ import math
 import os
 import subprocess
 import sys
+
+from post_close_integrity import evaluate as evaluate_post_close
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATE = os.path.join(ROOT, "state")
@@ -111,7 +114,7 @@ def run_node_check(path):
     return subprocess.run(["node", path], capture_output=True, text=True, timeout=30)
 
 
-def check_code_syntax():
+def check_code_syntax(include_ci=True):
     """Tier-1 code QA: a free, instant syntax gate on every publish (cloud + local + app
     tasks all route through this file). Catches "someone broke the build" before it ever
     reaches the live site — nothing else in the desk checked CODE syntax before this.
@@ -125,7 +128,9 @@ def check_code_syntax():
             fail(f"{os.path.relpath(path, ROOT)}: Python syntax error — {e.msg} (line {e.lineno})")
 
     # Every shipped dashboard/root-API/CI JavaScript file. Fail closed before either live surface builds.
-    js_roots = [os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "api"), os.path.join(ROOT, "Henneth Desk 2.CI.0")]
+    js_roots = [os.path.join(ROOT, "dashboard"), os.path.join(ROOT, "api")]
+    if include_ci:
+        js_roots.append(os.path.join(ROOT, "Henneth Desk 2.CI.0"))
     js_files = sorted(
         p for js_root in js_roots for p in glob.glob(os.path.join(js_root, "*.js"))
         if os.path.isfile(p)
@@ -1373,14 +1378,16 @@ def main():
         pass
     ap = argparse.ArgumentParser()
     ap.add_argument("--strict", action="store_true", help="treat warnings as failures")
+    ap.add_argument("--desk", action="store_true", help="validate the Desk product only")
     args = ap.parse_args()
     # Capture one explicit UTC cutoff at invocation start.  All generated CI
     # artifacts finalized below share this boundary, regardless of gate duration.
     build_cutoff_at = datetime.now(timezone.utc).replace(microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # --- Tier-1 code QA: instant, free, blocks a broken build before anything else runs ---
-    check_code_syntax()
-    check_ci_contract_workflow()
+    check_code_syntax(include_ci=not args.desk)
+    if not args.desk:
+        check_ci_contract_workflow()
     # --- Tier-1 accuracy QA: block assumed/hollow/stale content from reaching users ---
     check_provenance()
     # --- Tier-1 maths QA: Rule 4 + payout sign guard ---
@@ -1389,73 +1396,75 @@ def main():
     check_root_state_publication()
     # --- Generated URL safety: state URLs can only become http(s) browser links ---
     check_generated_url_safety()
-    check_document_intelligence()
-    check_company_intelligence_phase2()
-    check_operating_intelligence()
-    check_event_studies()
-    check_conditional_benchmarks()
-    check_conditional_benchmarks_ui()
-    check_signal_clusters()
     check_root_ask_hardening()
     check_today_ui()
     check_ask_henneth()
     check_ask_henneth_endpoint()
     check_ask_henneth_ui()
-    check_causal_foundations()
-    check_causal_foundations_ui()
-    check_financial_model_inputs()
-    check_cement_operating_series()
-    check_cement_historical_reconciliation()
-    check_supabase_archive_receipt()
-    check_private_thesis_storage_receipt()
-    check_cement_operating_series_ui()
-    check_financial_coverage()
-    check_financial_statement_v2_candidate_queue()
-    check_financial_reprocess_blockers()
-    check_forecast_contract()
-    check_owner_financial_assumptions()
-    check_financial_engine_assumptions()
-    check_formal_financial_engines()
-    check_ci_reference_cases()
-    check_financial_evidence_reconciliation()
-    check_earnings_bridges()
-    check_earnings_bridges_ui()
-    check_forecast_readiness_ui()
-    check_financial_coverage_ui()
-    check_historical_reference_cases_ui()
-    check_financial_evidence_reconciliation_ui()
-    check_company_scenario_lab()
-    check_company_scenario_lab_ui()
-    check_company_brains()
-    check_company_brain_formal_engines()
-    check_company_brain_source_index()
-    check_company_brain_ui()
-    check_ci_completion_matrix()
-    check_ci_global_no_lookahead()
-    check_company_navigation_ui()
-    check_thesis_monitoring_ui()
-    check_intelligence_confidence_ui()
-    check_company_theses_security()
-    check_company_theses_ui()
-    check_intelligence_confidence()
-    check_management_delivery()
-    check_guidance_contradictions()
-    check_evidence_watchlist()
-    check_ci_monitoring()
-    check_ci_work_routing_policy()
-    check_peer_registry()
-    check_evidence_watchlist_ui()
-    check_ci_monitoring_ui()
-    check_management_delivery_ui()
-    check_guidance_contradictions_ui()
-    check_reprocess_documents()
-    check_ci_reprocess_manifest()
-    check_ownership_source_manifest()
-    check_no_raw_artifacts()
+    if not args.desk:
+        check_document_intelligence()
+        check_company_intelligence_phase2()
+        check_operating_intelligence()
+        check_event_studies()
+        check_conditional_benchmarks()
+        check_conditional_benchmarks_ui()
+        check_signal_clusters()
+        check_causal_foundations()
+        check_causal_foundations_ui()
+        check_financial_model_inputs()
+        check_cement_operating_series()
+        check_cement_historical_reconciliation()
+        check_supabase_archive_receipt()
+        check_private_thesis_storage_receipt()
+        check_cement_operating_series_ui()
+        check_financial_coverage()
+        check_financial_statement_v2_candidate_queue()
+        check_financial_reprocess_blockers()
+        check_forecast_contract()
+        check_owner_financial_assumptions()
+        check_financial_engine_assumptions()
+        check_formal_financial_engines()
+        check_ci_reference_cases()
+        check_financial_evidence_reconciliation()
+        check_earnings_bridges()
+        check_earnings_bridges_ui()
+        check_forecast_readiness_ui()
+        check_financial_coverage_ui()
+        check_historical_reference_cases_ui()
+        check_financial_evidence_reconciliation_ui()
+        check_company_scenario_lab()
+        check_company_scenario_lab_ui()
+        check_company_brains()
+        check_company_brain_formal_engines()
+        check_company_brain_source_index()
+        check_company_brain_ui()
+        check_ci_completion_matrix()
+        check_ci_global_no_lookahead()
+        check_company_navigation_ui()
+        check_thesis_monitoring_ui()
+        check_intelligence_confidence_ui()
+        check_company_theses_security()
+        check_company_theses_ui()
+        check_intelligence_confidence()
+        check_management_delivery()
+        check_guidance_contradictions()
+        check_evidence_watchlist()
+        check_ci_monitoring()
+        check_ci_work_routing_policy()
+        check_peer_registry()
+        check_evidence_watchlist_ui()
+        check_ci_monitoring_ui()
+        check_management_delivery_ui()
+        check_guidance_contradictions_ui()
+        check_reprocess_documents()
+        check_ci_reprocess_manifest()
+        check_ownership_source_manifest()
+        check_no_raw_artifacts()
     # --- Company intelligence shape: every populated row, not a sample ---
     check_company_profiles()
-    check_ci_slice()
-    check_thesis_monitoring()
+    if not args.desk:
+        check_ci_slice()
+        check_thesis_monitoring()
 
     # --- files the dashboard hard-depends on, with the exact shape the UI reads ---
     check("health.json", top_keys=("status",))
@@ -1582,6 +1591,18 @@ def main():
                  f"symbols kept their last good bars and are frozen. Dominant error: {top}. If it is "
                  f"HTTP 429 the provider is rate-limiting; lower WORKERS or raise psx_data._MIN_INTERVAL.")
 
+    # A post-close release is one coherent session or it does not ship. `latest_eod` and
+    # loose multi-day fleet thresholds cannot detect a fresh index beside yesterday's tickers.
+    post_close = evaluate_post_close()
+    if post_close["required"] and post_close["status"] != "ok":
+        for problem in post_close["problems"]:
+            fail(f"post-close price integrity: {problem}")
+    elif post_close["required"]:
+        print(
+            f"post-close price integrity: {post_close['same_day_symbols']}/"
+            f"{post_close['traded_symbols']} traded counters current"
+        )
+
     # Desk Room layer (advisory — WARN not FAIL while the loop is young, so a missing
     # dossier can't block the core desk from deploying)
     check("dossiers.json", required=False)
@@ -1598,7 +1619,8 @@ def main():
     # Final CI release step. Ordinary checks above may rebuild state artifacts; stamp only after
     # they all finish, and keep integrity verification immediately last so no checker can erase
     # the envelope before the deploy decision is reported.
-    check_ci_artifact_integrity(build_cutoff_at)
+    if not args.desk:
+        check_ci_artifact_integrity(build_cutoff_at)
 
     # --- report ---
     print("Henneth - preflight")

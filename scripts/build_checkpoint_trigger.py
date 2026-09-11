@@ -170,7 +170,7 @@ def _standing(degraded: list[str], acked_at: str) -> list[dict[str, Any]]:
     return out
 
 
-def build() -> dict[str, Any]:
+def build(include_ci: bool = True) -> dict[str, Any]:
     degraded: list[str] = []
 
     acked_at = ""
@@ -178,7 +178,9 @@ def build() -> dict[str, Any]:
     if isinstance(ack, dict):
         acked_at = str(ack.get("acked_at") or "")
 
-    observed = _news_items(degraded) + _ci_items(degraded) + _health_item(degraded)
+    observed = _news_items(degraded) + _health_item(degraded)
+    if include_ci:
+        observed += _ci_items(degraded)
     standing = _standing(degraded, acked_at)
 
     previous = load_json(TRIGGER, None)
@@ -239,6 +241,7 @@ def build() -> dict[str, Any]:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Checkpoint trigger gate")
     ap.add_argument("--ack", metavar="LABEL", help="record that a checkpoint just ran")
+    ap.add_argument("--desk", action="store_true", help="exclude the separate CI product")
     args = ap.parse_args()
 
     if args.ack:
@@ -246,7 +249,7 @@ def main() -> int:
         print(f"checkpoint gate: acked by {args.ack}")
         return 0
 
-    payload = build()
+    payload = build(include_ci=not args.desk)
     save_json(TRIGGER, payload)
     print(
         f"checkpoint gate: required={payload['checkpoint_required']} "

@@ -34,7 +34,7 @@ _local = threading.local()
 # the rate DPS tolerates across a whole sweep: at 0.35s a stable ~24-symbol cluster (the stalest
 # tickers, which lead the queue) still 429'd on every run absorbing the provider's cold-start
 # burst penalty; 0.8s clears it. A 491-symbol sweep still finishes in ~7 min, well under the
-# job's DEADLINE_S (1200s) and the 40-min cloud cap. Slot reservation is done under the lock; the
+# job's DEADLINE_S (1200s) and the workflow cap. Slot reservation is done under the lock; the
 # sleep is not, so threads don't queue on a held lock.
 _MIN_INTERVAL = 0.8
 _rate_lock = threading.Lock()

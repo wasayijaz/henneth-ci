@@ -177,7 +177,7 @@ Setup, if a fresh checkout: `pip install -r requirements.txt` then `cd site && n
 `preflight.py` is the only hard gate — `publish.py` runs it first and refuses to publish on FAIL,
 so the last-good site stays live. `--strict` promotes WARNs to failures.
 
-Not side-effect-free, do not run casually: `scripts/run_cloud.py` (writes `state/`, needs network),
+Not side-effect-free, do not run casually: `scripts/run_desk_cloud.py` (writes Desk `state/`, needs network),
 `scripts/publish.py` (**pushes to `main` on success**).
 
 What does not exist, and should not be assumed: unit tests, integration tests, a Python linter or

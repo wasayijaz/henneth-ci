@@ -15,10 +15,10 @@ Two halves, on purpose. The split is what gives 24/7 freshness at controlled tok
 
 ```
 COMPUTER OFF — GitHub Actions cloud cron  (.github/workflows/desk-data.yml)   FREE, no tokens, no agents
-  every 30 min off-peak, market hours →  python scripts/run_cloud.py
+  every 30 min off-peak, market hours →  python scripts/run_desk_cloud.py
   = prices · quant · backtests · fair value · health · dashboard
     + Desk Room DETERMINISTIC scaffolding (dossiers · queue · gate · scoring)
-  → publish.py → push → Vercel deploy → watchdog
+  → post-close coherence/recovery → Desk-only preflight/publish → Vercel deploy → watchdog
 
 COMPUTER ON — Codex scheduled tasks (legacy runbooks in ~/.claude/scheduled-tasks/)  tokens, owner present
   the JUDGEMENT/agent work: news-sentinel · monitor · macro · daily read
@@ -266,8 +266,10 @@ marketing-site work. It:
    worktree. Research and site preparation may run concurrently, but only one local preflight/commit/push
    transaction can run at a time. It waits for up to five minutes, then fails loudly and leaves the
    prepared worktree intact. A crash releases the OS lock automatically;
-2. runs `preflight.py` (the pre-deploy gate) — **if it fails, nothing publishes**, last-good site stays live;
-3. stages **`state/` only**, and commits only if something actually changed (a no-op otherwise);
+2. runs `preflight.py --desk` (the Desk pre-deploy gate) — **if it fails, nothing publishes**, last-good site stays live; CI uses its own full contract/release gates;
+3. stages Desk-owned `state/` (explicitly excluding `state/company_intel/`) plus the generated
+   public marketing slice and moon ephemeris, and commits only if something actually changed
+   (a no-op otherwise);
 4. pushes **race-safely** — the cloud cron and app loops both push to `main`, so on a rejected
    (non-fast-forward) push it rebases onto latest preferring our fresh state (`-X theirs`) and retries.
    Whatever the other side raced in regenerates next cycle, so nothing is lost.
@@ -374,7 +376,7 @@ adding those needs the GitHub web UI; both tiers below avoid that entirely and n
 **Tier 1 — instant, free, every publish.** `check_code_syntax()` inside `preflight.py` (added 2026-07-15)
 `ast.parse`s every `scripts/*.py` and runs `node -c dashboard/app.js`, and FAILS the gate (blocks publish)
 on a real syntax error. Since `preflight.py` is the one gate every surface already runs through — the
-cloud cron (`desk-data.yml` → `run_cloud.py` → `preflight.py`), every app-scheduled task, and any manual
+cloud cron (`desk-data.yml` → `run_desk_cloud.py` → `preflight.py --desk`), every app-scheduled Desk task, and any manual
 `publish.py` call — this runs on literally every publish, everywhere, for zero added cost and no new
 infrastructure. It catches "the build is broken" the moment it happens, not up to a week later.
 

@@ -339,7 +339,8 @@ a batch at 3; agents writing directly cost ~10 orchestrator tokens each instead 
 
 Every push runs the same gate (`preflight.py`) before it publishes, so a broken cycle never reaches the live site. `scripts/publish.py "<msg>"` is the one push helper all loops use.
 
-**`publish.py` stages `state/` only.** It used to `git add -A`, which staged the whole working tree —
+**`publish.py` stages Desk state and generated public data only.** It explicitly excludes
+`state/company_intel/`. It used to `git add -A`, which staged the whole working tree —
 and since the cloud cron and every interactive session share one checkout, a routine data refresh could
 sweep up another session's half-finished edits and ship them under an unrelated commit message. Shipping
 code is now a deliberate `--code` opt-in; anything left unstaged is listed, never silently included or
@@ -349,8 +350,8 @@ silently dropped. The weekly code review is the only loop that needs the flag.
 
 ```bash
 python scripts/serve.py           # → http://localhost:8877/dashboard/
-python scripts/run_cloud.py       # the whole free pipeline (fetch → quant → … → preflight)
-python scripts/preflight.py       # deploy gate: exits non-zero if the data would render broken
+python scripts/run_desk_cloud.py  # Desk-only free pipeline (fetch → quant → … → Desk preflight)
+python scripts/preflight.py --desk # Desk deploy gate; exits non-zero if the Desk data is unsafe
 ```
 
 The dashboard uses clean paths: `/today`, `/ticker/HBL`, `/legal/privacy`, and the other routes

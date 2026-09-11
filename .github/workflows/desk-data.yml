@@ -25,9 +25,10 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     # The full-universe reprice (threaded sweep of every ticker) plus preflight + publish
-    # runs ~20-21min on a good day; Yahoo-latency variance pushed a real run past the old
-    # 25min cap and GitHub killed it mid-sweep before it could commit. 40 gives headroom.
-    timeout-minutes: 40
+    # runs ~20-21min on a good day. A post-close integrity failure may deliberately run one more
+    # full history sweep, so 70 minutes gives that bounded recovery enough room; ordinary healthy
+    # runs still finish in roughly the original window.
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,13 +43,9 @@ jobs:
           git config user.email "actions@github.com"
       - name: Deterministic pipeline (free, no agents)
         continue-on-error: true          # a mid-pipeline hiccup must not skip the gated publish
-        env:
-          # Optional server-only archive sink. Empty secrets leave supabase_ci_store.py in its
-          # explicit no-op mode; neither value is available to the browser or committed state.
-          HENNETH_CI_SUPABASE_URL: ${{ secrets.HENNETH_CI_SUPABASE_URL }}
-          HENNETH_CI_SUPABASE_SERVICE_KEY: ${{ secrets.HENNETH_CI_SUPABASE_SERVICE_KEY }}
-          HENNETH_CI_OWNER_USER_ID: ${{ secrets.HENNETH_CI_OWNER_USER_ID }}
-        run: python scripts/run_cloud.py
+        run: python scripts/run_desk_cloud.py
+      - name: Post-close coherence and single-shot recovery
+        run: python scripts/post_close_recovery.py
       - name: Publish if the data passes preflight (race-safe)
         run: |
           # publish.py exits 0 both when it ships AND when nothing changed (quiet cycle),
@@ -56,7 +53,7 @@ jobs:
           # The old loop ended on `sleep 5`, so the STEP exited 0 even when all 3 tries
           # failed — masking preflight failures behind a green run. Track success and fail
           # the step loudly if publish never succeeded, so a stuck cycle is visible.
-          # No `git pull --rebase` here: run_cloud.py leaves the tree dirty, so a rebase
+          # No `git pull --rebase` here: run_desk_cloud.py leaves the tree dirty, so a rebase
           # fails "cannot pull with rebase: You have unstaged changes" every attempt. It is
           # also redundant — publish.py already rebases race-safely on a rejected push.
           published=0

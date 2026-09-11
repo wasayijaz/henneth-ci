@@ -22,6 +22,7 @@ so the ~100 permanently-empty PSX board counters can never crowd the run — see
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 
 import requests
 
@@ -31,7 +32,7 @@ from psx_data import (STATE, eod_history, load_config, load_json, market_of, sav
 WORKERS = 6                # concurrent fetchers — a LATENCY-hiding knob only. The aggregate request
                            # rate is capped centrally by psx_data._throttle, so raising this hides
                            # network latency without raising the DPS request rate (no 429 storm).
-DEADLINE_S = 1200          # 20 min wall-clock guard, inside the 40-min job cap (desk-data.yml)
+DEADLINE_S = 1200          # 20 min wall-clock guard, inside the workflow job cap
 NEW_PROBE_PER_RUN = 12     # separate, round-robin budget for symbols with no history file yet
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) psx-desk/1.0"}
 
@@ -207,6 +208,9 @@ def main():
 
     save_json(STATE / "history_meta.json", {
         "updated": time.strftime("%Y-%m-%d %H:%M"),
+        # Unambiguous completion clock for the post-close publication gate. The legacy
+        # local-time `updated` field remains for existing displays.
+        "completed_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "ok": ok,
         "attempted": len(todo),
         "processed": processed,

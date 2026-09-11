@@ -4,7 +4,7 @@
 Every loop/task calls this instead of re-implementing git. It:
   1. acquires the shared cross-worktree repository push lane,
   2. runs the preflight gate (never publish a structurally broken cycle),
-  3. stages state/ ONLY (add --code to also ship hand-authored files),
+  3. stages Desk state/generated public data only (add --code for pre-staged code),
   4. commits + pushes ONLY if something actually changed,
   5. a push to `main` triggers eligible Git-linked Desk/marketing deploys.
 
@@ -90,8 +90,9 @@ def _publish():
 
     _clear_stale_lock()
 
-    # 1) preflight gate
-    pf = _run([sys.executable, "scripts/preflight.py"])
+    # 1) Desk preflight gate. Company Intelligence is a separate product with its own
+    # contract and protected release workflow; a CI mismatch must never withhold prices.
+    pf = _run([sys.executable, "scripts/preflight.py", "--desk"])
     print(pf.stdout.strip()[-400:])
     if pf.returncode != 0:
         print("publish: PREFLIGHT FAILED — not publishing (last-good site stays live).")
@@ -118,9 +119,11 @@ def _publish():
     if code_mode:
         print("publish: --code — only files YOU already staged (git add <file>) ship as code. "
               "Dirty-but-unstaged hand-authored files are left alone (they may be someone else's).")
-    add_state = _run(["git", "add", "-A", "--", "state/"])
+    add_state = _run([
+        "git", "add", "-A", "--", "state/", ":(exclude)state/company_intel/**",
+    ])
     if add_state.returncode != 0:
-        print("publish: `git add -- state/` failed:\n" + (add_state.stderr or add_state.stdout)[:300])
+        print("publish: staging Desk state failed:\n" + (add_state.stderr or add_state.stdout)[:300])
         sys.exit(1)
 
     # GENERATED ARTEFACTS THAT LIVE OUTSIDE state/.
@@ -136,7 +139,6 @@ def _publish():
     GENERATED = [
         "site/src/data/public/",
         "site/public/moon_ephem.bin",
-        "Henneth Desk 2.CI.0/data/",
     ]
     add_gen = _run(["git", "add", "-A", "--", *GENERATED])
     if add_gen.returncode != 0:
@@ -145,7 +147,8 @@ def _publish():
 
     def _is_auto(path: str) -> bool:
         p = path.replace("\\", "/")
-        return p.startswith("state/") or any(p.startswith(g) for g in GENERATED)
+        return ((p.startswith("state/") and not p.startswith("state/company_intel/"))
+                or any(p.startswith(g) for g in GENERATED))
 
     # what else is dirty? split into files the CALLER already staged themselves (index status
     # is non-blank/non-'?') vs files that are merely dirty in the working tree. Only the former
