@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-11 08:15",
+ "updated": "2026-09-11 17:19",
  "regime": "risk-off",
  "geo_risk": {
-  "score": 61,
-  "band": "moderate"
+  "score": 67,
+  "band": "elevated"
  },
  "signals": [
   {
@@ -43,6 +43,24 @@
    "thesis": "MACD cross above zero is triggering now; on PSEL's own history it won 60% over 47 trades (+1.1% net/trade), still profitable out-of-sample."
   },
   {
+   "id": "20260911-MUREB-lowvol_pullback",
+   "ticker": "MUREB",
+   "strategy": "lowvol_pullback",
+   "template": "Low-volatility pullback",
+   "category": "volatility",
+   "sector": "Food & Personal Care Products",
+   "hold_sessions": 10,
+   "backtest": {
+    "hit_rate": 0.667,
+    "net_expectancy_pct": 0.77,
+    "n": 18,
+    "oos_hit": 0.6
+   },
+   "confidence": "low",
+   "basis": "backtest-proven, unaudited",
+   "thesis": "Low-volatility pullback is triggering now; on MUREB's own history it won 67% over 18 trades (+0.8% net/trade), still profitable out-of-sample."
+  },
+  {
    "id": "20260911-PTC-atr_stretch_below",
    "ticker": "PTC",
    "strategy": "atr_stretch_below",
@@ -59,24 +77,6 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "2-ATR stretch below 20MA is triggering now; on PTC's own history it won 68% over 22 trades (+0.6% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260911-FCL-obv_divergence_up",
-   "ticker": "FCL",
-   "strategy": "obv_divergence_up",
-   "template": "Volume leads price",
-   "category": "volume",
-   "sector": "Cable & Electrical Goods",
-   "hold_sessions": 15,
-   "backtest": {
-    "hit_rate": 0.556,
-    "net_expectancy_pct": 0.68,
-    "n": 27,
-    "oos_hit": 0.571
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -91,7 +91,7 @@
   },
   {
    "ticker": "GLD",
-   "score": 68.4
+   "score": 69.3
   },
   {
    "ticker": "INDU",
@@ -107,7 +107,7 @@
   },
   {
    "ticker": "USRUT",
-   "score": 65.1
+   "score": 65.5
   },
   {
    "ticker": "EFA",
@@ -177,104 +177,6 @@
   }
  ],
  "news": [
-  {
-   "ts": "2026-09-02",
-   "source": "ProPakistani / Business Recorder / TechJuice",
-   "headline": "SECP issues final notices in Unity Foods unusual-trading probe; probe tied to separate FIA criminal case over alleged multi-billion-rupee irregularities",
-   "tickers": [
-    "UNITY"
-   ],
-   "impact": 5,
-   "summary": "SECP issued final notices on Sept 2, 2026 to four individuals - CEO Muhammad Farrukh, Safdar Sajjad, Fehmida Amin and Hina Safdar - requiring them to appear before its Karachi investigation team on Sept 3, 2026, after they neither appeared nor requested rescheduling from an Aug 31 summons, per ProPakistani. The formal SECP investigation (opened June 2, 2026 under Section 139 of the Securities Act 2015) covers alleged unusual/insider trading in Unity Foods Limited (PSX: UNITY) shares; Farrukh is specifically required to explain and provide records on the pledging of UNITY shares with banks. Per search-indexed reporting (ProPakistani, Business Recorder, TechJuice headlines), this SECP probe separately led to an FIA criminal case (around Aug 31, 2026) against Unity Foods' former management over alleged multi-billion-rupee financial irregularities; one search result cited a discrepancy of about Rs44.7bn between published accounts and internal records, not independently confirmed via a directly-fetched primary article this cycle. No PSX trading halt/suspension of UNITY shares reported in sources checked. Logged as impact 5 (severe - fraud/criminal-case allegations, default per desk criteria Rule 10); escalation flagged.",
-   "url": "https://propakistani.pk/2026/09/02/secp-issues-final-notices-in-unity-foods-unusual-trading-probe/"
-  },
-  {
-   "ts": "2026-09-02",
-   "source": "Business Recorder (intra-day update)",
-   "headline": "Pakistani rupee records gain against US dollar",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 1,
-   "summary": "The Pakistani rupee closed at Rs277.45/USD on Wednesday Sept 2, 2026, gaining Re0.01 versus Tuesday Sept 1's close of Rs277.46/USD, per Business Recorder's 'Intra-day update: rupee records gain against US dollar'. The dollar stayed broadly firm as renewed Middle East hostilities pushed oil prices higher and revived inflation concerns. Negligible single-day FX move; logged as impact 1 (routine), consistent with prior similarly small FX moves in this newslog.",
-   "url": "https://www.brecorder.com/news/40437585/intra-day-update-rupee-records-gain-against-us-dollar"
-  },
-  {
-   "ts": "2026-09-03",
-   "source": "Business Recorder",
-   "headline": "PSX: Stocks end marginally higher amid volatile trading",
-   "tickers": [
-    "MACRO",
-    "HUBC",
-    "MARI",
-    "OGDC",
-    "PPL",
-    "POL",
-    "HBL",
-    "MCB",
-    "MEBL",
-    "UBL"
-   ],
-   "impact": 3,
-   "summary": "KSE-100 confirmed close Thu Sept 3, 2026 at 174,929.68, up 153.09 points (+0.09%) from Wed Sept 2's confirmed close of 174,776.60 (already logged); intraday high 175,796.24, low 174,893.67, per Business Recorder ('PSX: Stocks end marginally higher amid volatile trading'). Index opened with strong buying, climbed sharply, then gave back most gains on late profit-taking before closing marginally higher. Positive momentum driven by automobile assemblers, cement, commercial banks, fertiliser and oil & gas exploration companies; index heavyweights HUBCO (HUBC), MARI, OGDC, PPL, POL, HBL, MCB, MEBL and UBL traded positive. Business Recorder cited Pakistan's $3bn Eurobond sale (separately logged this cycle) and continued Strait of Hormuz-related oil volatility as sentiment drivers. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries in this newslog.",
-   "url": "https://www.brecorder.com/news/40437729/psx-stocks-end-marginally-higher-amid-volatile-trading"
-  },
-  {
-   "ts": "2026-09-03",
-   "source": "Business Recorder / ProPakistani / Dawn.com / Aaj English",
-   "headline": "Pakistan raises record $3bn through largest-ever dual-tranche Eurobond sale",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 4,
-   "summary": "Pakistan raised $3 billion through a dual-tranche Eurobond sale announced Sept 3, 2026 - $1.75bn via a 5.5-year bond at a 7.5% coupon and $1.25bn via a 10-year bond at 7.9% - drawing nearly $6bn in orders (almost double the amount issued) from a broad, diversified base of institutional investors, per Business Recorder, ProPakistani, Dawn.com and Aaj English TV. Described as Pakistan's largest-ever single international bond issuance; proceeds earmarked for external financing needs including debt repayments. This confirms/upgrades the already-logged Aug 25, 2026 item ('Pakistan eyes $1-2bn return to global capital markets', impact 3) from a pending plan to a completed, priced transaction of larger size. Logged as impact 4 (material - confirmed major sovereign financing deal / sharp positive macro-financing development, per desk criteria Rule 10); escalation flagged.",
-   "url": "https://www.brecorder.com/news/40437728/pakistan-raises-3bn-through-eurobond-sale"
-  },
-  {
-   "ts": "2026-09-04",
-   "source": "Business Recorder",
-   "headline": "PSX: Volatility at bourse, KSE-100 gains nearly 400 points",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "KSE-100 confirmed close Fri Sept 4, 2026 at 175,328.82, up 399.14 points (+0.23%) from Thu Sept 3's confirmed close of 174,929.68 (already logged); intraday high 175,418.29, low 174,515.38, after opening weak and recovering on midday/late buying. No company-specific driver named; article cites global sentiment lift after a Fed official cooled rate-hike fears. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries in this newslog.",
-   "url": "https://www.brecorder.com/news/40437906/psx-volatility-at-bourse-kse-100-gains-nearly-400-points"
-  },
-  {
-   "ts": "2026-09-04",
-   "source": "Business Recorder",
-   "headline": "PSX partners with UK's MOBILIST programme for climate/sustainable investment",
-   "tickers": [
-    "PSX",
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "Pakistan Stock Exchange (PSX: PSX) announced a partnership with the UK government's MOBILIST programme to mobilise private investment in Pakistan's sustainable development and climate transition via listed products, supporting future IPOs and new SDG/net-zero-aligned listed instruments (cites the Parwaaz Green Action Bond as a prior example); no financial figures or transaction disclosed. Officials: Alison Blackburne (UK Deputy High Commissioner Karachi), Farrukh H. Sabzwari (PSX MD/CEO). Logged as impact 3 (notable strategic/institutional initiative, per desk criteria Rule 10), no immediate earnings impact.",
-   "url": "https://www.brecorder.com/news/40437846/finance-climate-investment-promotion-psx-partners-with-uks-mobilist"
-  },
-  {
-   "ts": "2026-09-04",
-   "source": "Business Recorder",
-   "headline": "PSX: Volatility keeps KSE-100 Index flat",
-   "tickers": [
-    "MACRO"
-   ],
-   "impact": 3,
-   "summary": "KSE-100 confirmed close Fri Sept 4, 2026 at 175,328.82, up 399.14 points (+0.23%) from Thu Sept 3's confirmed close of 174,929.68 (already logged); intraday low 174,515.38, high 175,418.29, per Business Recorder ('PSX: Volatility keeps KSE-100 Index flat'). Index opened weak, fell sharply from ~175,300 to the intraday low, then recovered on buying interest that emerged around midday and accelerated into the close; article attributes broader positive tone partly to a Federal Reserve official cooling US rate-hike fears and a global Asian-shares rally, no Pakistan-specific stock/sector driver named. Sub-1% net move; impact 3 (notable), consistent with prior similar-magnitude index-close entries in this newslog.",
-   "url": "https://www.brecorder.com/news/40437906/psx-volatility-keeps-kse-100-index-flat"
-  },
-  {
-   "ts": "2026-09-04",
-   "source": "Business Recorder",
-   "headline": "Pakistan Cables approves CECL's buy-back on entire stake for Rs350mn",
-   "tickers": [
-    "PCAL"
-   ],
-   "impact": 2,
-   "summary": "Pakistan Cables Limited (PSX: PCAL) approved the sale of its entire 17% shareholding (4,845,000 ordinary shares) in Chinoy Engineering & Construction (CECL) back to CECL at approximately Rs72.24/share, totaling approximately Rs350 million, per a company notice to PSX dated Sept 4, 2026 reported by Business Recorder. Transaction subject to corporate, regulatory and shareholder approvals; upon completion PCAL will hold zero shares in CECL. Logged as impact 2 (minor company item - divestment of a non-core minority stake, not a major contract or earnings event), per desk criteria Rule 10.",
-   "url": "https://www.brecorder.com/news/40437905/pakistan-cables-approves-cecls-buy-back-on-entire-stake-for-rs350mn"
-  },
   {
    "ts": "2026-09-05",
    "source": "Business Recorder",
@@ -374,16 +276,129 @@
    "impact": 2,
    "summary": "Sargodha-based fruit/vegetable exporter SE Fruits & Vegetables Limited (formerly Shaheen Enterprises) received PSX approval on Sept 7, 2026 to offer 30 million ordinary shares (32.01% of post-IPO capital) via book-building, floor price Rs40/share, max price Rs64/share, to raise Rs1.2bn-Rs1.92bn; lead managers Topline Securities and Growth Securities. Not yet a listed constituent of the desk universe. Logged as impact 2 (minor company item - pre-listing IPO approval), per desk criteria Rule 10.",
    "url": "https://www.brecorder.com/news/40438326/se-fruits-amp-vegetables-secures-psx-approval-for-ipo-to-raise-up-to-rs192bn"
+  },
+  {
+   "ts": "2026-09-09",
+   "source": "Business Recorder",
+   "headline": "OGDCL, MARI-backed Lundali-1 well starts gas production in Sindh",
+   "tickers": [
+    "OGDC",
+    "MARI",
+    "SSGC"
+   ],
+   "impact": 3,
+   "summary": "OGDCL and Mari Energies disclosed in PSX filings that Lundali-1 in the Sukhpur-II Block achieved first gas on September 6, 2026; the well is producing 10 MMscfd at 2,000 psi and supplying SSGC. Working interests named by Business Recorder: Prime Global Energies 25% operator, OGDC 30%, MARI 30%, Turkish Petroleum Overseas 15%. Logged as impact 3 (notable production start for listed E&P names, not a disclosed earnings surprise or major contract).",
+   "url": "https://www.brecorder.com/news/40438614"
+  },
+  {
+   "ts": "2026-09-09",
+   "source": "Business Recorder",
+   "headline": "Pakistan registers $3.656bn in remittances for August 2026",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "SBP data showed August 2026 workers' remittances at $3.656bn, up 16.5% YoY and 0.7% MoM; Jul-Aug FY27 inflows reached $7.3bn versus $6.4bn a year earlier. Saudi Arabia sent $873.5mn, UAE $749.8mn, UK $563.7mn, US $308.9mn and EU $496mn. Logged as impact 3 (notable external-account support, but not a surprise shock).",
+   "url": "https://www.brecorder.com/news/40438634"
+  },
+  {
+   "ts": "2026-09-10",
+   "source": "Business Recorder",
+   "headline": "PSX: KSE-100 sheds over 3,000 points on Middle East conflict, oil surge",
+   "tickers": [
+    "MACRO",
+    "OGDC",
+    "PPL",
+    "POL",
+    "MARI",
+    "HUBC",
+    "NBP",
+    "UBL",
+    "MCB",
+    "MEBL",
+    "ATRL"
+   ],
+   "impact": 4,
+   "summary": "KSE-100 settled at 168,865.04 on September 10, 2026, down 3,078.56 points (-1.79%) from the prior close, after renewed US-Iran attacks and surging international crude prices triggered aggressive selling. Business Recorder linked the fall to inflation, external-account and macro-stability concerns; oil-heavy and bank tickers were explicitly tagged from the article metadata and related index-heavy names. Logged as impact 4 (material market-wide move tied to war/oil shock, per Rule 10).",
+   "url": "https://www.brecorder.com/news/40439013/psx-buying-returns-kse-100-up-over-1400-points-on-hopes-of-easing-middle-east-tensions"
+  },
+  {
+   "ts": "2026-09-10",
+   "source": "Business Recorder",
+   "headline": "Thatta Cement moves towards restructuring of Pakistan Services Limited",
+   "tickers": [
+    "THCCL",
+    "PSEL"
+   ],
+   "impact": 3,
+   "summary": "Thatta Cement disclosed via PSX notice that it reached an in-principle understanding regarding the proposed restructuring of Pakistan Services Limited, subject to final definitive agreements. No transaction value, final terms or completion timetable disclosed. Logged as impact 3 (notable corporate restructuring development, still conditional).",
+   "url": "https://www.brecorder.com/news/amp/40438836"
+  },
+  {
+   "ts": "2026-09-10",
+   "source": "ProPakistani",
+   "headline": "Cherat Cement announces intention to acquire at least 30% of Nimir Industrial Chemicals",
+   "tickers": [
+    "CHCC",
+    "NICL"
+   ],
+   "impact": 3,
+   "summary": "Cherat Cement announced an intention to acquire at least 30% of Nimir Industrial Chemicals, covering at least 33.177mn NICL shares under a share purchase agreement, subject to regulatory approvals, commercial terms, due diligence and execution of required agreements. Logged as impact 3 (notable proposed acquisition; not yet definitive/closed).",
+   "url": "https://propakistani.pk/2026/09/10/cherat-cement-wants-to-buy-30-stake-in-nimir-industrial-chemicals/"
+  },
+  {
+   "ts": "2026-09-11",
+   "source": "Business Recorder",
+   "headline": "PSX: Buying returns, KSE-100 gains 1% on hopes of easing Middle East tensions",
+   "tickers": [
+    "MACRO",
+    "OGDC",
+    "PPL",
+    "PRL",
+    "NBP",
+    "MCB",
+    "MARI",
+    "MEBL",
+    "UBL",
+    "HUBC",
+    "ATRL"
+   ],
+   "impact": 3,
+   "summary": "KSE-100 recovered on Friday September 11, 2026 to close at 170,511.85, up 1,646.81 points (+0.98%), after an early low of 166,141.17 and a high of 170,764.79. Business Recorder attributed the rebound to reports of Gulf-Iran talks aimed at managing Strait of Hormuz shipping, while noting Brent touched $109.97 and the prior day had dropped 3,078.56 points. Logged as impact 3 (notable rebound below 1%, not a fresh impact-4 shock).",
+   "url": "https://www.brecorder.com/news/40439013/psx-buying-returns-kse-100-up-over-1400-points-on-hopes-of-easing-middle-east-tensions"
+  },
+  {
+   "ts": "2026-09-11",
+   "source": "Business Recorder",
+   "headline": "Oil jumps 6pc to USD107 on supply concerns",
+   "tickers": [
+    "MACRO",
+    "PSO",
+    "PPL",
+    "OGDC",
+    "MARI",
+    "POL",
+    "ATRL",
+    "PRL"
+   ],
+   "impact": 4,
+   "summary": "Business Recorder reported Brent at $107.08 and WTI above $100 for the first time since May after a 6% overnight oil jump on supply concerns tied to the Middle East conflict. Logged as impact 4 (sharp commodity move directly relevant to Pakistan external account, inflation and E&P/refinery/OMC sectors, per Rule 10).",
+   "url": "https://www.brecorder.com/latest-news"
+  },
+  {
+   "ts": "2026-09-11",
+   "source": "Business Recorder",
+   "headline": "IMF mission to visit Pakistan in coming weeks for next review",
+   "tickers": [
+    "MACRO"
+   ],
+   "impact": 3,
+   "summary": "Business Recorder reported the IMF mission will visit Pakistan in the coming weeks for the next review of ongoing programs including the Extended Arrangement under the EFF and RSF. Logged as impact 3 (notable macro calendar/review item; no disbursement or programme change yet).",
+   "url": "https://www.brecorder.com/news/40439040/imf-mission-to-visit-pakistan-in-coming-weeks-for-next-review"
   }
  ],
  "agent_wire": [],
  "runlog_tail": [
-  {
-   "started": "2026-09-07T17:15:00+05:00",
-   "mode": "full",
-   "ended": "2026-09-07T17:20:00+05:00",
-   "outcome": "BLOCKED before agents ran: working tree has 109 files (state/company_intel/* + state/dashboard.json, verify.json, sector_dossiers.json, leaderboard.json, research_index.json, public_probe.json, state/history/*.json, Henneth Desk 2.CI.0/data/company_intelligence.json) left unmerged (git UU) from a prior uncommitted merge, with literal <<<<<<< conflict markers baked into the JSON on disk (e.g. state/verify.json has 245, state/dashboard.json has 1). preflight.py reads state/company_intel/ so it would fail on invalid JSON; no agents run, nothing committed or pushed, live site untouched (origin/main unaffected, corruption is local-only). Needs manual conflict resolution by the owner before the next refresh can publish."
-  },
   {
    "started": "2026-09-07T17:20:00+05:00",
    "mode": "light-escalated",
@@ -407,6 +422,12 @@
    "mode": "full",
    "ended": "2026-09-08T18:56:24+05:00",
    "outcome": "regime risk-off, geo-risk 60 (moderate), daily read: defensive 4th down session on Hormuz oil shock/thin reserves, banks+E&P favoured; pushed to main"
+  },
+  {
+   "started": "2026-09-11T17:06:53+05:00",
+   "mode": "light-escalated",
+   "ended": "2026-09-11T17:23:00+05:00",
+   "outcome": "PM checkpoint (training mode). Gate required: 20 material pending items + first_of_day. No open positions, monitor skipped. news-sentinel inline appended 8 items (275 total), including Sept 10 KSE-100 -3,078.56pts/-1.79% and Sept 11 oil shock (Brent reported .08, WTI above ), so escalation.json remains true. macro.json and daily_read.json refreshed to risk-off/cautious. build_dashboard initially exposed stale deterministic CI manifests; refreshed completion matrix, ownership source manifest, owner financial-assumption handoff, CI slice and artifact integrity. Final preflight OK with 1 non-gating WARN: 102 newly-added tickers still backfilling history. Training mode: not published and gate not acked pending owner approval."
   }
  ]
 }
