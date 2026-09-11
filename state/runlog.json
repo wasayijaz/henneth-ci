@@ -436,5 +436,11 @@
   "mode": "codex-daily-refresh-qa-repair",
   "ended": "2026-09-11T18:07:40+05:00",
   "outcome": "Research QA repaired the daily refresh before publish: official PSX Sept 10 close 168,865.04 and -3,078.55pts/-1.79% replaced the conflicting secondary close everywhere; PM runlog dollar values repaired to Brent reported USD 107.08 and WTI above USD 100; watchlist entries now each tie active strategy, fundamental rating and dated catalyst."
+ },
+ {
+  "started": "2026-09-11T18:39:18+05:00",
+  "mode": "codex-official-close-data-repair",
+  "ended": "2026-09-11T18:39:18+05:00",
+  "outcome": "Owner screenshot check found the underlying data layer still stale after the narrative correction. Refreshed official PSX index levels to KSE-100 170,511.85 for 2026-09-11, market-watch snapshot to 487 symbols, and full stock EOD histories (479 ok, 12 failed; 452 PSX histories at 2026-09-11, 23 global proxies still at 2026-09-10 due their later market session). Recomputed liquidity, quant, predictability, backtests, correlation, fundamentals, fair value, signals, sectors, CI-derived references, public slice and dashboard. Active signals reduced to PSEL and PTC. Final preflight OK with the standing non-gating warning for 102 newly-added universe tickers still backfilling history."
  }
 ]

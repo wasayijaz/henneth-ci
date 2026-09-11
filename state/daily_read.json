@@ -2,7 +2,7 @@
  "date": "2026-09-11",
  "headline": "PSX rebounds, but the desk keeps a defensive read while oil stays above USD 100.",
  "tone": "cautious",
- "summary": "Official PSX data confirms KSE-100 closed September 10 at 168,865.04, down 3,078.55 pts (-1.79%), before Business Recorder's September 11 close of 170,511.85 (+1,646.81 pts, +0.98%). The rebound matters, but it does not erase the macro setup: state/global.json still has Brent 105.66 and WTI 100.76, CPI is 11.1%, and the September 14 MPC remains a hold-or-hike event. The desk's read stays cautious: banks are the cleaner fundamental pocket, E&P has valuation support but timing risk, and live triggers are low-confidence screen names only.",
+ "summary": "Official PSX data confirms the KSE-100 closed September 11 at 170,511.85, up 1,646.81 pts (+0.98%) from the official September 10 close of 168,865.04. The all-stock history refresh changed the live technical screen: only PSEL and PTC remain active after recomputing quant, backtests, fair value, signals and the dashboard. The rebound matters, but it does not erase the macro setup: state/global.json still has Brent 105.66 and WTI 100.76, CPI is 11.1%, and the September 14 MPC remains a hold-or-hike event. The desk's read stays cautious: banks are the cleaner fundamental pocket, E&P has valuation support but timing risk, and live triggers are low-confidence screen names only.",
  "sectors": [
   {
    "name": "Banks",
@@ -32,18 +32,8 @@
    "risk": "Thin average traded value and expensive valuation leave little cushion if the results estimate disappoints."
   },
   {
-   "ticker": "MSOT",
-   "angle": "Proven strategy: bbpctb_momentum is active now, with a 67% hit rate over 9 trades and +1.73% net expectancy. Fundamental rating: caution, with thin 2% margin and no dividend. Catalyst: estimated results date 2026-10-06 in state/earnings_calendar.json.",
-   "risk": "Small sample and high volatility rank make this a screen name, not a high-conviction setup."
-  },
-  {
-   "ticker": "FCL",
-   "angle": "Proven strategy: obv_divergence_up is active now, with a 56% hit rate over 27 trades and +0.68% net expectancy. Fundamental rating: caution despite fair P/E 8.41 and 5.59% dividend yield because margins are thin. Catalyst: estimated ex-dividend date 2026-10-15 in state/earnings_calendar.json.",
-   "risk": "Small-cap profile and 5.4% margin limit the defensive quality of the dividend angle."
-  },
-  {
    "ticker": "PTC",
-   "angle": "Proven strategy: atr_stretch_below is active now, with a 68% hit rate over 22 trades and +0.61% net expectancy. Fundamental rating: caution, with trailing P/E 69.29, 1.5% margin and no dividend. Catalyst: estimated results date 2026-10-16 in state/earnings_calendar.json.",
+   "angle": "Proven strategy: atr_stretch_below is active now, with a 68% hit rate over 22 trades and +0.61% net expectancy. Fundamental rating: caution, with trailing P/E 69.29, forward P/E 25.06, 1.5% net margin and no dividend. Catalyst: estimated results date 2026-10-16 in state/earnings_calendar.json.",
    "risk": "The mean-reversion trigger is fighting weak trailing fundamentals and no payout support."
   }
  ],
@@ -61,20 +51,6 @@
    ]
   },
   {
-   "date": "2026-10-06",
-   "event": "MSOT results estimate.",
-   "which_tickers": [
-    "MSOT"
-   ]
-  },
-  {
-   "date": "2026-10-15",
-   "event": "FCL estimated ex-dividend date; estimated buy-by date 2026-10-14.",
-   "which_tickers": [
-    "FCL"
-   ]
-  },
-  {
    "date": "2026-10-16",
    "event": "PTC results estimate.",
    "which_tickers": [
@@ -85,7 +61,7 @@
  "risks": [
   "Oil above USD 100 is the main macro risk because it hits inflation, the rupee and the import bill at the same time.",
   "The September 11 rebound follows an official September 10 impact-4 selloff rather than replacing it.",
-  "All four current live technical signals are low-confidence and all four watchlist names carry caution-rated fundamentals.",
+  "Both current live technical signals are low-confidence and both watchlist names carry caution-rated fundamentals.",
   "Estimated company catalysts are unconfirmed and must not be treated as audited event dates."
  ],
  "disclaimer": "Research, not advice. The desk generates signals; it does not place orders. Losses are expected."

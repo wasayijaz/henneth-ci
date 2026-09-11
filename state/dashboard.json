@@ -1,29 +1,11 @@
 {
- "updated": "2026-09-11 18:12",
+ "updated": "2026-09-11 18:46",
  "regime": "risk-off",
  "geo_risk": {
   "score": 61,
   "band": "moderate"
  },
  "signals": [
-  {
-   "id": "20260911-MSOT-bbpctb_momentum",
-   "ticker": "MSOT",
-   "strategy": "bbpctb_momentum",
-   "template": "%b momentum ride",
-   "category": "momentum",
-   "sector": "Apparel",
-   "hold_sessions": 8,
-   "backtest": {
-    "hit_rate": 0.667,
-    "net_expectancy_pct": 1.73,
-    "n": 9,
-    "oos_hit": 1.0
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "%b momentum ride is triggering now; on MSOT's own history it won 67% over 9 trades (+1.7% net/trade), still profitable out-of-sample."
-  },
   {
    "id": "20260911-PSEL-macd_bull_zero",
    "ticker": "PSEL",
@@ -59,24 +41,6 @@
    "confidence": "low",
    "basis": "backtest-proven, unaudited",
    "thesis": "2-ATR stretch below 20MA is triggering now; on PTC's own history it won 68% over 22 trades (+0.6% net/trade), still profitable out-of-sample."
-  },
-  {
-   "id": "20260911-FCL-obv_divergence_up",
-   "ticker": "FCL",
-   "strategy": "obv_divergence_up",
-   "template": "Volume leads price",
-   "category": "volume",
-   "sector": "Cable & Electrical Goods",
-   "hold_sessions": 15,
-   "backtest": {
-    "hit_rate": 0.556,
-    "net_expectancy_pct": 0.68,
-    "n": 27,
-    "oos_hit": 0.571
-   },
-   "confidence": "low",
-   "basis": "backtest-proven, unaudited",
-   "thesis": "Volume leads price is triggering now; on FCL's own history it won 56% over 27 trades (+0.7% net/trade), still profitable out-of-sample."
   }
  ],
  "positions": [],
@@ -124,56 +88,56 @@
  ],
  "movers_up": [
   {
-   "ticker": "CHBL",
-   "ret_1d": 10.08,
-   "close": 10.92
+   "ticker": "FPJM",
+   "ret_1d": 10.09,
+   "close": 18.77
   },
   {
-   "ticker": "SHCM",
+   "ticker": "BPL",
    "ret_1d": 10.01,
-   "close": 60.58
+   "close": 57.28
   },
   {
-   "ticker": "ELCM",
+   "ticker": "SASML",
    "ret_1d": 10.0,
-   "close": 230.11
+   "close": 341.36
   },
   {
-   "ticker": "PIM",
-   "ret_1d": 9.99,
-   "close": 68.48
+   "ticker": "ASTM",
+   "ret_1d": 9.94,
+   "close": 100.3
   },
   {
-   "ticker": "786",
-   "ret_1d": 9.98,
-   "close": 23.58
+   "ticker": "FTSM",
+   "ret_1d": 9.75,
+   "close": 38.72
   }
  ],
  "movers_down": [
   {
+   "ticker": "TOWL",
+   "ret_1d": -9.86,
+   "close": 146.28
+  },
+  {
+   "ticker": "PIM",
+   "ret_1d": -9.99,
+   "close": 61.64
+  },
+  {
    "ticker": "BUXL",
    "ret_1d": -10.0,
-   "close": 927.32
+   "close": 834.59
   },
   {
-   "ticker": "CLVL",
+   "ticker": "HUSI",
    "ret_1d": -10.0,
-   "close": 37.28
+   "close": 52.46
   },
   {
-   "ticker": "EMCO",
-   "ret_1d": -10.0,
-   "close": 40.96
-  },
-  {
-   "ticker": "TOWL",
-   "ret_1d": -10.0,
-   "close": 162.28
-  },
-  {
-   "ticker": "OBOY",
-   "ret_1d": -10.02,
-   "close": 15.99
+   "ticker": "USVIX",
+   "ret_1d": -10.09,
+   "close": 16.04
   }
  ],
  "news": [
@@ -393,12 +357,6 @@
  "agent_wire": [],
  "runlog_tail": [
   {
-   "started": "2026-09-08T13:30:00+05:00",
-   "mode": "full",
-   "ended": "2026-09-08T18:56:24+05:00",
-   "outcome": "regime risk-off, geo-risk 60 (moderate), daily read: defensive 4th down session on Hormuz oil shock/thin reserves, banks+E&P favoured; pushed to main"
-  },
-  {
    "started": "2026-09-11T17:06:53+05:00",
    "mode": "light-escalated",
    "ended": "2026-09-11T17:23:00+05:00",
@@ -421,6 +379,12 @@
    "mode": "codex-daily-refresh-qa-repair",
    "ended": "2026-09-11T18:07:40+05:00",
    "outcome": "Research QA repaired the daily refresh before publish: official PSX Sept 10 close 168,865.04 and -3,078.55pts/-1.79% replaced the conflicting secondary close everywhere; PM runlog dollar values repaired to Brent reported USD 107.08 and WTI above USD 100; watchlist entries now each tie active strategy, fundamental rating and dated catalyst."
+  },
+  {
+   "started": "2026-09-11T18:39:18+05:00",
+   "mode": "codex-official-close-data-repair",
+   "ended": "2026-09-11T18:39:18+05:00",
+   "outcome": "Owner screenshot check found the underlying data layer still stale after the narrative correction. Refreshed official PSX index levels to KSE-100 170,511.85 for 2026-09-11, market-watch snapshot to 487 symbols, and full stock EOD histories (479 ok, 12 failed; 452 PSX histories at 2026-09-11, 23 global proxies still at 2026-09-10 due their later market session). Recomputed liquidity, quant, predictability, backtests, correlation, fundamentals, fair value, signals, sectors, CI-derived references, public slice and dashboard. Active signals reduced to PSEL and PTC. Final preflight OK with the standing non-gating warning for 102 newly-added universe tickers still backfilling history."
   }
  ]
 }

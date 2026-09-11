@@ -32,10 +32,8 @@ PKT = dt.timezone(dt.timedelta(hours=5))
 # KSE100/KMI30/KSE30 are the headline benchmarks. The two ALL-SHARE indices matter more for this
 # desk than their profile suggests: the universe runs well past the KSE100 constituents, so a
 # claim about a mid-cap graded against the KSE100 is graded against an index it isn't in.
-# ALLSHR covers every listed company; KMIALLSHR is its Shariah-compliant counterpart — together
-# they give an honest benchmark for any ticker the desk covers. BKTI/OGTI are the two sector
-# indices with enough weight in the universe to be useful comparators.
-WANT = ("KSE100", "KMI30", "KSE30", "ALLSHR", "KMIALLSHR", "BKTI", "OGTI")
+# ALLSHR covers every listed company; KMIALLSHR is its Shariah-compliant counterpart. Keep every
+# official PSX index row as well, so the data layer does not silently omit valid board indices.
 
 
 def main():
@@ -60,8 +58,9 @@ def main():
     for cells in rows:
         if len(cells) < 4:
             continue
-        name = (cells[0] or "").strip().upper()
-        if name not in WANT:
+        raw_name = (cells[0] or "").strip().upper()
+        name = raw_name.split()[0]
+        if not name or name == "INDEX":
             continue
         try:
             live[name] = float(str(cells[3]).replace(",", ""))
