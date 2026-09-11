@@ -46,9 +46,11 @@ import is explicitly skipped, with retained state preserved, when its three
 credentials are unavailable.
 
 Every run writes a local receipt to `.cache/ci_refresh_receipt.json` and prints
-the result. Any producer failure reports `release not attempted` and exits
-non-zero. The script never commits, pushes, publishes, dispatches Actions, or
-promotes a release. The historical pinned replay importer remains available:
+the result. A missing audited producer, launch error, timeout, or first
+non-advisory producer failure stops the chain, reports `release not attempted`,
+and exits non-zero. The script never commits, pushes, publishes, dispatches
+Actions, or promotes a release. The historical pinned replay importer remains
+available:
 
 ```text
 python scripts/fetch_desk_inputs.py

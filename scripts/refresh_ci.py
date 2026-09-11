@@ -351,14 +351,15 @@ def run_chain(steps: list[str], ci_sha: str) -> tuple[list[str], list[str]]:
         except subprocess.TimeoutExpired:
             failures.append(f"{step}:timeout>{PRODUCER_TIMEOUT_S}s")
             print(f"FAILED {step}: timed out after {PRODUCER_TIMEOUT_S}s", flush=True)
-            continue
+            break
         except OSError as exc:
             failures.append(f"{step}:launch:{type(exc).__name__}")
             print(f"FAILED {step}: launch error {type(exc).__name__}", flush=True)
-            continue
+            break
         if result.returncode and step not in ADVISORY_STEPS:
             failures.append(f"{step}:{result.returncode}")
             print(f"FAILED {step} exit={result.returncode}", flush=True)
+            break
     return failures, skipped
 
 
