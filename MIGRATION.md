@@ -22,3 +22,8 @@ Accepted debt:
   repository; they are not migrated into source control.
 - `check_root_ask_ui.mjs` was deleted because it tests the Desk root `dashboard/app.js` endpoint,
   not the CI app. CI Ask checks remain under `check_ask_henneth*`.
+
+## Migration journal
+
+- 2026-09-11: Repository created on GitHub and standalone `main` pushed from the desk
+  baseline `ecd2bb3d`. Initial contract validation pending on Actions.
