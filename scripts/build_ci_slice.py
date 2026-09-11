@@ -5,13 +5,14 @@ Writes Henneth Desk 2.CI.0/data/company_intelligence.json from existing state fi
 This is the only data file the CI app reads. It is a private research surface, but it still
 keeps the same rule: every displayed fact traces to the state layer or is marked unknown.
 """
-import time
+import os
 from datetime import date
 from pathlib import Path
 
 from psx_data import ROOT, STATE, load_json, save_json
 from document_events import event_is_supported
 from build_ci_completion_matrix import slice_summary as _completion_matrix_summary
+from build_ci_artifact_integrity import utc_z
 
 APP_DIR = ROOT / "Henneth Desk 2.CI.0"
 OUT = APP_DIR / "data" / "company_intelligence.json"
@@ -1111,7 +1112,11 @@ def build():
 
     save_json(OUT, {
         "meta": {
-            "built": time.strftime("%Y-%m-%d %H:%M"),
+            # One explicit UTC boundary: the declared workflow cutoff when set,
+            # aware-now otherwise. Naive wall-clock here was once written by a
+            # UTC runner, misread as PKT by the no-lookahead checker, and
+            # falsely flagged desk stamps — never stamp this field naive.
+            "built": utc_z(os.environ.get("HENNETH_CI_BUILD_CUTOFF_AT")),
             "source": "Henneth state layer",
             "profile_source": profiles_state.get("source"),
             "profile_updated": profiles_state.get("updated"),

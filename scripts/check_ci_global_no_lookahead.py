@@ -22,9 +22,13 @@ CI_SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
 # explicit offset (fixed UTC+05:00, no DST). Naive timestamps must therefore
 # be interpreted as PKT: treating them as UTC made a real 13:36Z event look
 # like 18:36Z and tripped false "after cutoff" failures against UTC cutoffs.
-# Residual blind spot: a producer writing a *UTC* stamp without an offset
-# could hide up to five hours of genuine lookahead; producers should emit
-# offset-aware stamps (this is checked, not assumed, by the fixtures below).
+# Generated-envelope producers (build_ci_slice, build_peer_registry) must
+# stamp aware UTC via build_ci_artifact_integrity.utc_z — the cloud runner
+# once wrote a naive UTC wall-clock meta.built that, read as PKT, became a
+# cutoff five hours early and falsely flagged a desk stamp written before
+# the run. Naive remains interpreted as PKT, so any writer of naive UTC
+# stamps would still hide up to five hours of genuine lookahead; do not add
+# one (the fixtures below pin both sides of this contract).
 PKT = timezone(timedelta(hours=5))
 # The release receipt is an operator-verification record, not a generated
 # investor-facing data artifact. Its timestamps describe verification activity,
@@ -478,6 +482,33 @@ def run_self_tests() -> None:
     )
     if not stats.failures:
         raise AssertionError("naive PKT fixture did not catch a genuine lookahead")
+
+    # Regression: the real slice carries meta.built as its winning cutoff.
+    # An aware UTC built stamp (the only form builders may write) must pass a
+    # naive PKT desk stamp that precedes it, mirroring the 2026-09-11 incident
+    # in which a naive UTC built stamp was misread as PKT and flagged 18:36.
+    aware_built_wins_cutoff = {
+        "built": "2026-01-10T15:37:00Z",
+        "meta": {
+            "completion_matrix": {
+                "artifact": "state/company_intel/completion_matrix.json",
+                "as_of": "2026-01-10 18:36",
+                "overall_status": "partial",
+            }
+        },
+    }
+    stats = ScanStats()
+    scan_node(
+        "fixture/aware-built-naive-pkt-before.json",
+        aware_built_wins_cutoff,
+        "",
+        node_cutoff(aware_built_wins_cutoff),
+        stats,
+    )
+    if stats.failures:
+        raise AssertionError(f"aware built fixture failed: {stats.failures}")
+    if stats.compared < 1:
+        raise AssertionError("aware built fixture did not exercise a date comparison")
 
     passing = {
         "as_of": "2026-01-10T18:00:00+05:00",

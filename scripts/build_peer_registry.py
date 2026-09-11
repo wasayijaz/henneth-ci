@@ -5,13 +5,14 @@ retained official/exchange sector label already present in state/sectors.json.
 This is a pilot-sector cohort registry, not a comparables, valuation, or
 performance model.
 """
-import time
+import os
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from psx_data import STATE, load_json, save_json
+from build_ci_artifact_integrity import utc_z
 
 OUT = STATE / "company_intel" / "peer_registry.json"
 METHOD = "pilot_official_sector_cohort_v1"
@@ -90,7 +91,7 @@ def build():
         "schema_version": SCHEMA_VERSION,
         "method": METHOD,
         "version": "v1",
-        "as_of": sectors.get("updated") or profiles.get("updated") or time.strftime("%Y-%m-%d %H:%M"),
+        "as_of": sectors.get("updated") or profiles.get("updated") or utc_z(os.environ.get("HENNETH_CI_BUILD_CUTOFF_AT")),
         "source": {
             "sector_labels": sectors.get("source"),
             "pilot_symbols": "state/company_profiles.json pilot.symbols",
