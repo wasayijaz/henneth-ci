@@ -10,7 +10,7 @@ import argparse
 import json
 import sys
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -18,6 +18,14 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[1]
 CI_STATE_DIR = ROOT / "state" / "company_intel"
 CI_SLICE = ROOT / "Henneth Desk 2.CI.0" / "data" / "company_intelligence.json"
+# Desk state writes wall-clock stamps in Pakistan Standard Time without an
+# explicit offset (fixed UTC+05:00, no DST). Naive timestamps must therefore
+# be interpreted as PKT: treating them as UTC made a real 13:36Z event look
+# like 18:36Z and tripped false "after cutoff" failures against UTC cutoffs.
+# Residual blind spot: a producer writing a *UTC* stamp without an offset
+# could hide up to five hours of genuine lookahead; producers should emit
+# offset-aware stamps (this is checked, not assumed, by the fixtures below).
+PKT = timezone(timedelta(hours=5))
 # The release receipt is an operator-verification record, not a generated
 # investor-facing data artifact. Its timestamps describe verification activity,
 # never economic source timing; its dedicated checker owns its schema.
@@ -183,7 +191,7 @@ def is_after(left: DatePoint, right: DatePoint) -> bool:
 
 def comparable_datetime(value: datetime) -> datetime:
     if value.tzinfo is None:
-        return value
+        return value.replace(tzinfo=PKT).astimezone(timezone.utc).replace(tzinfo=None)
     return value.astimezone(timezone.utc).replace(tzinfo=None)
 
 
@@ -423,6 +431,54 @@ def run_scan(paths: Iterable[Path] | None = None) -> ScanStats:
 
 
 def run_self_tests() -> None:
+    # Regression: a naive PKT wall-clock stamp that precedes an aware UTC
+    # cutoff must not be flagged (2026-01-10 18:36 PKT == 13:36 UTC).
+    # The stamp sits in a nested node with no cutoff of its own so the root
+    # build_cutoff_at is inherited, mirroring the real slice structure.
+    naive_pkt_before_utc_cutoff = {
+        "build_cutoff_at": "2026-01-10T15:23:42Z",
+        "meta": {
+            "completion_matrix": {
+                "artifact": "state/company_intel/completion_matrix.json",
+                "as_of": "2026-01-10 18:36",
+                "overall_status": "partial",
+            }
+        },
+    }
+    stats = ScanStats()
+    scan_node(
+        "fixture/naive-pkt-before-cutoff.json",
+        naive_pkt_before_utc_cutoff,
+        "",
+        node_cutoff(naive_pkt_before_utc_cutoff),
+        stats,
+    )
+    if stats.failures:
+        raise AssertionError(f"naive PKT fixture failed: {stats.failures}")
+
+    # A naive stamp that is genuinely after the cutoff even under the PKT
+    # interpretation (21:00 PKT == 16:00 UTC) must still be flagged.
+    naive_pkt_genuinely_after = {
+        "build_cutoff_at": "2026-01-10T15:23:42Z",
+        "meta": {
+            "completion_matrix": {
+                "artifact": "state/company_intel/completion_matrix.json",
+                "as_of": "2026-01-10 21:00",
+                "overall_status": "partial",
+            }
+        },
+    }
+    stats = ScanStats()
+    scan_node(
+        "fixture/naive-pkt-after-cutoff.json",
+        naive_pkt_genuinely_after,
+        "",
+        node_cutoff(naive_pkt_genuinely_after),
+        stats,
+    )
+    if not stats.failures:
+        raise AssertionError("naive PKT fixture did not catch a genuine lookahead")
+
     passing = {
         "as_of": "2026-01-10T18:00:00+05:00",
         "events": [
