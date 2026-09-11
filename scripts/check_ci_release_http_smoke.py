@@ -36,7 +36,8 @@ def request(url: str, token: str | None = None) -> tuple[int, dict[str, Any] | N
     bypass_secret = str(os.environ.get(VERCEL_BYPASS_SECRET_ENV) or "").strip()
     if bypass_secret:
         headers["x-vercel-protection-bypass"] = bypass_secret
-        headers["x-vercel-set-bypass-cookie"] = "true"
+        # Each request authenticates with the header. Asking Vercel to set a
+        # cookie redirects, but this stateless client has no cookie jar.
     if token:
         headers["Authorization"] = f"Bearer {token}"
     try:
@@ -180,6 +181,9 @@ def self_test() -> int:
         request("https://ci.example.test/")
         if captured_request.get("headers", {}).get("x-vercel-protection-bypass") != "offline-bypass-secret":
             print("self-test failed: Vercel protection bypass header was not sent")
+            return 1
+        if "x-vercel-set-bypass-cookie" in captured_request.get("headers", {}):
+            print("self-test failed: stateless smoke requested a redirect cookie")
             return 1
         os.environ.pop(VERCEL_BYPASS_SECRET_ENV, None)
 
