@@ -17,6 +17,15 @@ source-qualified financial, valuation, and current-price-expectations outputs.
 
 ## Execution rules
 
+- **Repository invariant:** all Event-to-Value Alpha implementation, generated
+  CI state, checks, commits, and previews belong only to the standalone
+  `wasayijaz/henneth-ci` repository. Its canonical local clone is
+  `D:/PSX Trader X Claude/.codex-henneth-ci/henneth-ci`; clean worktrees are
+  allowed only when their Git common directory and `origin` resolve to that
+  standalone repository. The deployable app root is `ci-app/`.
+  `wasayijaz/henneth-desk` is an external, manifest-pinned input source only;
+  agents must stop before editing if their Git remote resolves to the Desk
+  repository.
 - The golden scope is exactly three companies: one E&P exploration case, one
   industrial/cement expansion case, and one sales-led expansion case.
 - Existing 20-company CI products remain searchable but do not receive new
